@@ -1,0 +1,13 @@
+@import 'variables.scss';
+.nav-item{
+  padding: 5px;
+  .nav-link{
+    color: rgba(0,0,0);
+    padding-left: 15px;
+    text-decoration: none;
+    .posicion{
+      margin-left: 15px;
+      vertical-align: super;
+    }
+  }
+}

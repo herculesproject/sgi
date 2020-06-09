@@ -1,0 +1,10 @@
+@import 'variables.scss';
+
+/* SIDENAV */
+.sidenav{
+  height: calc(100% - 74px);
+  .open{
+    width: 200px;
+  }
+}
+/* FIN SIDENAV */

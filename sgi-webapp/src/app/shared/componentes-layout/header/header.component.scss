@@ -1,0 +1,52 @@
+@import 'variables.scss';
+
+$padding: 15px;
+
+/* HEADER */
+.header{
+  padding: 0px;
+  border-bottom: solid 1px rgba(0, 0, 0, 0.12);
+  .menu{
+    width: 40px;
+    float: left;
+    display: inline;
+  }
+  .logos{
+    .hercules{
+      width: 65px;
+      float: left;
+      padding-left: $padding;
+      img{
+        width: 50px;
+      }
+    }
+    .universidad{
+      width: 100px;
+      float: left;
+      padding-top: 12px;
+      img{
+       width: 100px;
+      }
+    }
+  }
+  .icons-options{
+  .inline{
+      display: flex;
+    }
+    &.desktop{
+      padding-top: 10px;
+    }
+  }
+  #seleccionarModulo{
+    padding-left: $padding;
+    padding-right: $padding;
+    width: 100%;
+    mat-form-field{
+     width: 100%;
+    }
+  }
+  .mat-menu{
+    padding: $padding;
+  }
+}
+/* FIN HEADER */
