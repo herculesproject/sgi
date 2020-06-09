@@ -1,4 +1,6 @@
 # SGI - HÉRCULES
+[![pipeline status](http://gitlab.treelogic.local/operaciones/hercules/sgi/sgi-webapp/badges/master/pipeline.svg)](http://gitlab.treelogic.local/operaciones/hercules/sgi/sgi-webapp/commits/master)
+[![coverage report](http://gitlab.treelogic.local/operaciones/hercules/sgi/sgi-webapp/badges/master/coverage.svg)](http://gitlab.treelogic.local/operaciones/hercules/sgi/sgi-webapp/commits/master)
 
 Proyecto generado con [Angular CLI](https://github.com/angular/angular-cli) version 9.1.7.
 
