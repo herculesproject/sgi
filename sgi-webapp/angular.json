@@ -135,5 +135,8 @@
       }
     }
   },
-  "defaultProject": "sgi-webapp"
+  "defaultProject": "sgi-webapp",
+  "cli": {
+    "analytics": false
+  }
 }

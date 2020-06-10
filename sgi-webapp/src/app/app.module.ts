@@ -13,14 +13,19 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LoggerModule } from 'ngx-logger';
 
 import { environment } from '@env';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { ComponentsModule } from './components/components.module';
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
-    BrowserModule,
     AppRoutingModule,
+    BrowserModule,
     BrowserAnimationsModule,
     CoreModule,
     LoggerModule.forRoot({
@@ -29,10 +34,22 @@ import { environment } from '@env';
       serverLogLevel: environment.serverLogLevel
     }),
     SharedModule,
+    MaterialDesignModule.forRoot(),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (http: HttpClient) => {
+          return new TranslateHttpLoader(http);
+        },
+        deps: [HttpClient]
+      }
+    }),
     ReactiveFormsModule,
-    MaterialDesignModule.forRoot()
+    MaterialDesignModule.forRoot(),
+    ComponentsModule
   ],
-  providers: [],
+  providers: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

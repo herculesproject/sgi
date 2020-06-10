@@ -7,6 +7,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { HeaderComponent } from './componentes-layout/header/header.component';
 import { MenuSecundarioComponent } from './componentes-layout/menu-secundario/menu-secundario.component';
 import { MenuPrincipalComponent } from './componentes-layout/menu-principal/menu-principal.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [HeaderComponent, MenuSecundarioComponent, MenuPrincipalComponent],
@@ -15,7 +16,8 @@ import { MenuPrincipalComponent } from './componentes-layout/menu-principal/menu
     FlexLayoutModule,
     MaterialDesignModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TranslateModule
   ],
   exports: [
     MaterialDesignModule,

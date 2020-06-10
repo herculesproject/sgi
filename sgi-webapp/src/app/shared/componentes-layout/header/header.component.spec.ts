@@ -6,6 +6,10 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { NGXLogger } from 'ngx-logger';
 import TestUtils from '@core/test-utils';
 import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { SERVICES_IMPORTS } from '@core/services/exports/services-export';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -20,9 +24,20 @@ describe('HeaderComponent', () => {
       imports: [
         BrowserAnimationsModule,
         MaterialDesignModule,
-        RouterTestingModule
+        RouterTestingModule,
+        HttpClientModule,
+        TranslateModule.forRoot({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: (http: HttpClient) => {
+              return new TranslateHttpLoader(http);
+            },
+            deps: [HttpClient]
+          }
+        }),
       ],
       providers: [
+        SERVICES_IMPORTS,
         { provide: NGXLogger, useValue: loggerSpy }
       ],
       declarations: [HeaderComponent]

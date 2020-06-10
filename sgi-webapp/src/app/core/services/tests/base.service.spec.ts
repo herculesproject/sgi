@@ -5,7 +5,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { NGXLogger } from 'ngx-logger';
 
 import TestUtils from '@core/test-utils';
-import { BaseService } from './base.service';
+import { BaseService } from '../base.service';
 
 interface Entity {
   id?: number;

@@ -5,7 +5,7 @@
     <div fxFlex.xs="0 1 calc(65%-10px)" fxFlex.sm="0 1 calc(48%-10px)" fxFlex.md="0 1 calc(33%-10px)"
       fxFlex.gt-md="0 1 calc(33%-10px)">
       <div class="menu">
-        <button aria-label="Menú principal" fxHide fxShow.sm fxShow.xs mat-icon-button (click)="toggleSidenav()">
+        <button fxHide fxShow.sm fxShow.xs mat-icon-button (click)="toggleSidenav()">
           <mat-icon>menu</mat-icon>
         </button>
       </div>
@@ -27,7 +27,7 @@
     <!-- menu-secundario movil (xs-sm) -->
     <div fxHide fxShow.xs fxLayoutAlign="flex-end" fxFlex.xs="0 1 calc(35%-10px)" fxFlex.sm="0 1 calc(50%-10px)"
       fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(33%-10px)" class="icons-options devices">
-      <button aria-label="Menú secundario" mat-icon-button [matMenuTriggerFor]="menu"
+      <button mat-icon-button [matMenuTriggerFor]="menu"
         aria-label="Example icon-button with a menu">
         <mat-icon>more_vert</mat-icon>
       </button>
@@ -49,12 +49,12 @@
     <!-- Modulos app -->
     <div fxLayoutAlign.sm="center center" fxLayoutAlign.xs="center center" fxFlex.xs="0 1 calc(100%-10px)"
       fxFlex.sm="0 1 calc(100%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(33%-10px)">
-      <div class="select-modulo" id="seleccionarModulo">
+      <div class="select-modulo" id="seleccionarModulo" [formGroup]="formGroup">
         <mat-form-field>
-          <mat-select [(value)]="selected" (selectionChange)="navigateTo($event.value)">
-            <mat-option value="modulo1">Módulo: Catálogo de oferta científico-técnica</mat-option>
-            <mat-option value="modulo2">Módulo: Empresas de base tecnológica</mat-option>
-            <mat-option value="modulo3">Módulo: Propiedad industrial e intelectual</mat-option>
+          <mat-select formControlName="module" (selectionChange)="navigateTo($event.value)">
+            <mat-option [value]="'modulo1'">{{'header.module.cat' | translate}}</mat-option>
+            <mat-option [value]="'modulo2'">{{'header.module.ebt' | translate}}</mat-option>
+            <mat-option [value]="'modulo3'">{{'header.module.pii' | translate}}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>

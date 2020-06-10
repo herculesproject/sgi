@@ -19,7 +19,7 @@ export class GlobalErrorHandler implements ErrorHandler {
       stack: error.stack ? error.stack : ''
     };
 
-    // Log  the error
+    // Log the error
     logger.error(err);
 
     logger.debug(GlobalErrorHandler.name, 'handleError(error: Error)', 'end');

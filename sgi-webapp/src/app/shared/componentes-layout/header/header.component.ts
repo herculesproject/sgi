@@ -1,34 +1,47 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, AfterContentChecked } from '@angular/core';
 import { LayoutService } from '@core/services/layout.service';
 import { NGXLogger } from 'ngx-logger';
-import { Router } from '@angular/router';
+import { TraductorService } from '@core/services/traductor.service';
+import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
-
+export class HeaderComponent implements OnInit, AfterContentChecked {
+  formGroup: FormGroup;
   // width pantalla resoluciones pequenas
   screenWidth: number;
-
-  selected = 'modulo2';
-
   // toogle
-  toggleActive: boolean = false;
+  toggleActive: boolean;
+  select: string;
 
-  constructor(private logger: NGXLogger, private router: Router, private sidenav: LayoutService) {
+  constructor(
+    private logger: NGXLogger,
+    private sidenav: LayoutService,
+    public traductorServicio: TraductorService
+  ) {
     this.screenWidth = window.innerWidth;
   }
 
   ngOnInit(): void {
     this.logger.debug(HeaderComponent.name, 'ngOnInit()', 'start');
+    this.toggleActive = false;
+    this.select = 'modulo2';
+    this.formGroup = new FormGroup({
+      module: new FormControl(this.select, []),
+    });
     this.logger.debug(HeaderComponent.name, 'ngOnInit()', 'end');
   }
 
+  ngAfterContentChecked(): void {
+    this.formGroup.get('module').setValue(this.select);
+  }
+
   /**
-   * Cambiar el estado del menu acordeon
+   * Cambiar el estado del menú acordeón
    */
   toggleSidenav(): void {
     this.logger.debug(HeaderComponent.name, 'toggleSidenav()', 'start');
@@ -39,14 +52,11 @@ export class HeaderComponent implements OnInit {
 
   /**
    * Redirecciona al valor seleccionado en el select
-   * @param value identificador modulo
    */
-  navigateTo(value) {
+  navigateTo(value: string): void {
     this.logger.debug(HeaderComponent.name, 'navigateTo(value)', 'start');
-    console.log(value);
-    //this.router.navigate(['../', value]);
+    this.select = value;
     this.logger.debug(HeaderComponent.name, 'navigateTo(value)', 'end');
-
   }
 
 }

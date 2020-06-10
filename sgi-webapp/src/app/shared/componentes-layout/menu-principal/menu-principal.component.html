@@ -1,46 +1,46 @@
 <!-- Menu principal -->
 <mat-nav-list>
   <div class="opciones-menu">
-    <mat-list-item routerLink="/" [routerLinkActive]="['is-active']">
+    <mat-list-item routerLink="/productos" [routerLinkActive]="['is-active']">
       <a mat-list-item>
         <mat-icon>fullscreen</mat-icon>
-        <span>Productos </span>
+        <span>{{'menu.principal.products' | translate}}</span>
       </a>
     </mat-list-item>
-    <mat-list-item routerLink="/" [routerLinkActive]="['is-active']">
+    <mat-list-item routerLink="/peticiones" [routerLinkActive]="['is-active']">
       <a mat-list-item>
         <mat-icon> list_alt</mat-icon>
-        <span>Solicitudes </span>
+        <span>{{'menu.principal.requests' | translate}}</span>
       </a>
     </mat-list-item>
-    <mat-list-item routerLink="/" [routerLinkActive]="['is-active']">
+    <mat-list-item routerLink="/agrupacionesServicios" [routerLinkActive]="['is-active']">
       <a mat-list-item>
         <mat-icon>device_hub</mat-icon>
-        <span>Agrupaciones de servicios</span>
+        <span>{{'menu.principal.service-groupings' | translate}}</span>
       </a>
     </mat-list-item>
-    <mat-list-item routerLink="/" [routerLinkActive]="['is-active']">
+    <mat-list-item routerLink="/horarios" [routerLinkActive]="['is-active']">
       <a mat-list-item>
         <mat-icon>calendar_today</mat-icon>
-        <span>Horarios </span>
+        <span>{{'menu.principal.work-hours' | translate}}</span>
       </a>
     </mat-list-item>
-    <mat-list-item routerLink="/" [routerLinkActive]="['is-active']">
+    <mat-list-item routerLink="/unidadesMedida" [routerLinkActive]="['is-active']">
       <a mat-list-item>
         <mat-icon>equalizer</mat-icon>
-        <span>Unidades de medida </span>
+        <span>{{'menu.principal.measurement-units' | translate}}</span>
       </a>
     </mat-list-item>
-    <mat-list-item routerLink="/" [routerLinkActive]="['is-active']">
+    <mat-list-item routerLink="/tiposReservables" [routerLinkActive]="['is-active']">
       <a mat-list-item>
         <mat-icon>fullscreen</mat-icon>
-        <span>Tipos de fungible </span>
+        <span>{{'menu.principal.expendable-types' | translate}}</span>
       </a>
     </mat-list-item>
-    <mat-list-item routerLink="/" [routerLinkActive]="['is-active']">
+    <mat-list-item routerLink="/tiposFungible" [routerLinkActive]="['is-active']">
       <a mat-list-item>
         <mat-icon>fullscreen</mat-icon>
-        <span>Tipos de reservable </span>
+        <span>{{'menu.principal.bookable-types' | translate}}</span>
       </a>
     </mat-list-item>
 

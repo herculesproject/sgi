@@ -1,0 +1,28 @@
+{
+  "header": {
+    "module": {
+      "cat": "Module: Catalog of scientific-technical offer",
+      "ebt": "Module: Technology-based companies",
+      "pii": "Module: Industrial and intellectual property"
+    }
+  },
+  "menu": {
+    "principal": {
+      "bookable-types": "Bookable types",
+      "expendable-types": "Expendable types",
+      "products": "Products",
+      "measurement-units": "Measurement units",
+      "service-groupings": "Service groupings",
+      "requests": "Requests",
+      "work-hours": "Work hours"
+    },
+    "secondary": {
+      "account": "Account",
+      "add": "Add",
+      "graphics": "Graphics",
+      "lists": "Lists",
+      "notifications": "Notifications",
+      "settings": "Settings"
+    }
+  }
+}

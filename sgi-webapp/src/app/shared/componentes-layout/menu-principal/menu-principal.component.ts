@@ -8,7 +8,9 @@ import { NGXLogger } from 'ngx-logger';
 })
 export class MenuPrincipalComponent implements OnInit {
 
-  constructor(private logger: NGXLogger) { }
+  constructor(
+    private logger: NGXLogger
+  ) { }
 
   ngOnInit(): void {
     this.logger.debug(MenuPrincipalComponent.name, 'ngOnInit()', 'start');

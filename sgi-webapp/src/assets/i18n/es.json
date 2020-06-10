@@ -1,0 +1,28 @@
+{
+  "header": {
+    "module": {
+      "cat": "Módulo: Catálogo de oferta científico-técnica",
+      "ebt": "Módulo: Empresas de base tecnológica",
+      "pii": "Módulo: Propiedad industrial e intelectual"
+    }
+  },
+  "menu": {
+    "principal": {
+      "bookable-types": "Tipos de reservable",
+      "expendable-types": "Tipos de fungible",
+      "products": "Productos",
+      "measurement-units": "Unidades de medida",
+      "service-groupings": "Agrupaciones de servicios",
+      "requests": "Solicitudes",
+      "work-hours": "Horarios"
+    },
+    "secondary": {
+      "account": "Cuenta",
+      "add": "Añadir",
+      "graphics": "Gráficas",
+      "lists": "Listados",
+      "notifications": "Notificaciones",
+      "settings": "Ajustes"
+    }
+  }
+}
