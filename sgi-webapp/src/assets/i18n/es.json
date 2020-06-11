@@ -24,5 +24,15 @@
       "notifications": "Notificaciones",
       "settings": "Ajustes"
     }
+  },
+  "unidad-medida": {
+    "listado": {
+      "busqueda": "Búsqueda rápida",
+      "busqueda-placeholder": "Texto",
+      "abreviatura": "ABREVIATURA",
+      "descripcion": "DESCRIPCIÓN",
+      "acciones": "ACCIONES",
+      "nueva-unidad": "NUEVA UNIDAD DE MEDIDA"
+    }
   }
 }

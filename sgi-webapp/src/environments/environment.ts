@@ -8,8 +8,8 @@ export const environment = {
   production: false,
   logLevel: NgxLoggerLevel.DEBUG,
   serverLogLevel: NgxLoggerLevel.OFF,
-  serverLoggingUrl: ``,
-  apiUrl: '',
+  serverLoggingUrl: `http://localhost:8080/logs`,
+  apiUrl: 'http://localhost:8080',
 };
 
 /*

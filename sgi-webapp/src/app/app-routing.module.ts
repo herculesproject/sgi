@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { RootComponent } from './components/root/root.component';
+import { AuthGuard } from '@core/guards/auth.guard';
 
 /**
  * Definimos las urls de la aplicación
@@ -32,7 +33,9 @@ const routes: Routes = [
   },
   {
     path: 'unidadesMedida',
-    component: RootComponent,
+    loadChildren: () =>
+      import('./components/unidad-medida/unidad-medida.module').then(m => m.UnidadMedidaModule),
+    canActivate: [AuthGuard]
   },
   /**
    * Si no reconoce la url
@@ -47,4 +50,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
