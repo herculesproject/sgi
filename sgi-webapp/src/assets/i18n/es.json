@@ -54,12 +54,18 @@
       "titulo": "Creación de unidad de medida"
     },
     "listado": {
+      "titulo": "Listado unidad de medida",
       "busqueda": "Búsqueda rápida",
       "busqueda-placeholder": "Texto",
       "abreviatura": "ABREVIATURA",
       "descripcion": "DESCRIPCIÓN",
       "acciones": "ACCIONES",
-      "nueva-unidad": "NUEVA UNIDAD DE MEDIDA"
+      "eliminar": "¿Desea eliminar el producto?",
+      "nueva-unidad": "NUEVA UNIDAD DE MEDIDA",
+      "borrar": "Borrar",
+      "editar": "Editar",
+      "aceptar": "Aceptar",
+      "cancelar": "Cancelar"
     }
   }
 }

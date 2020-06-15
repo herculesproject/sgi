@@ -1,5 +1,6 @@
 <!-- Unidad Medida listado -->
-<section id="unidad-medida-listado">
+<section class="unidad-medida-listado">
+  <h2>{{'unidad-medida.listado.titulo' | translate}}</h2>
   <mat-form-field>
     <mat-label>{{'unidad-medida.listado.busqueda' | translate}}</mat-label>
     <input matInput (keyup)="applyFilter($event)"
@@ -24,10 +25,11 @@
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> {{'unidad-medida.listado.acciones' | translate}} </th>
       <td mat-cell *matCellDef="let unidadMedida;let i=index;">
-        <button mat-button>
+        <button mat-button matTooltip="{{'unidad-medida.listado.editar' | translate}}">
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-button>
+        <button mat-button matTooltip="{{'unidad-medida.listado.borrar' | translate}}"
+          (click)="borrarSeleccionado(unidadMedida.id, $event)">
           <mat-icon>close</mat-icon>
         </button>
       </td>

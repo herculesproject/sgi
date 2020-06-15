@@ -1,7 +1,10 @@
 @import "variables.scss";
 
-.full-width {
-  button {
-    margin-right: 15px;
+.unidad-medida-agregar{
+  .footer-button {
+    padding-top: 15px;
+    button {
+      margin-right: 15px;
+    }
   }
 }

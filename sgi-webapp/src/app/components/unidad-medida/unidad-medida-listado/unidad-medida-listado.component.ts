@@ -5,6 +5,9 @@ import { NGXLogger } from 'ngx-logger';
 import { MatSort } from '@angular/material/sort';
 import { UnidadMedidaService } from '@core/services/unidad-medida.service';
 import { UrlUtils } from '@core/utils/url-utils';
+import { switchMap } from 'rxjs/operators';
+import { TraductorService } from '@core/services/traductor.service';
+import { DialogService } from '@core/services/dialog.service';
 
 @Component({
   selector: 'app-unidad-medida-listado',
@@ -19,8 +22,10 @@ export class UnidadMedidaListadoComponent implements OnInit, OnDestroy {
 
   constructor(
     private logger: NGXLogger,
-    private unidadMedidaService: UnidadMedidaService
-  ) {}
+    private unidadMedidaService: UnidadMedidaService,
+    private readonly traductor: TraductorService,
+    private dialogService: DialogService
+  ) { }
 
   ngOnInit(): void {
     this.logger.debug(UnidadMedidaListadoComponent.name, 'ngOnInit()', 'start');
@@ -44,6 +49,39 @@ export class UnidadMedidaListadoComponent implements OnInit, OnDestroy {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  /**
+   * Elimina la unidad de listado con el id recibido por parametro.
+   * @param unidadMedidaId id unidad medida
+   * @param index posicion en la tabla
+   * @param $event evento
+   */
+  borrarSeleccionado(unidadMedidaId: number, $event: Event) {
+    this.logger.debug(UnidadMedidaListadoComponent.name,
+      'borrarSeleccionado(unidadMedidaId: number, $event: Event) - start');
+
+    $event.stopPropagation();
+    $event.preventDefault();
+
+    this.dialogService.dialogGenerico(this.traductor.getTexto('unidad-medida.listado.eliminar'),
+      this.traductor.getTexto('unidad-medida.listado.aceptar'), this.traductor.getTexto('unidad-medida.listado.cancelar'));
+
+    this.dialogService.getAccionConfirmada().subscribe(
+      (aceptado: boolean) => {
+        if (aceptado) {
+          this.unidadMedidaService.delete(unidadMedidaId).pipe(
+            switchMap(_ => {
+              return this.unidadMedidaService.findAll();
+            })
+          ).subscribe((unidadesMedida: UnidadMedida[]) => {
+            this.dataSource.data = unidadesMedida;
+          });
+        }
+        aceptado = false;
+      });
+
+    this.logger.debug(UnidadMedidaListadoComponent.name, 'borrarSeleccionado(unidadMedidaId: number, $event: Event) - end');
   }
 
   ngOnDestroy(): void {

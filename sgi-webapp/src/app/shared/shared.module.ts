@@ -8,12 +8,14 @@ import { HeaderComponent } from './componentes-layout/header/header.component';
 import { MenuSecundarioComponent } from './componentes-layout/menu-secundario/menu-secundario.component';
 import { MenuPrincipalComponent } from './componentes-layout/menu-principal/menu-principal.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { DialogComponent } from './componentes-shared/dialog/dialog.component';
 
 @NgModule({
   declarations: [
     HeaderComponent,
     MenuSecundarioComponent,
     MenuPrincipalComponent,
+    DialogComponent,
   ],
   imports: [
     RouterModule,

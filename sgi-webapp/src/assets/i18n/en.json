@@ -54,12 +54,18 @@
       "titulo": "Unit of measure creation"
     },
     "listado": {
+      "titulo": "Unit of measure list",
       "busqueda": "Quick search",
       "busqueda-placeholder": "Text",
       "abreviatura": "ABBREVIATION",
       "descripcion": "DESCRIPTION",
       "acciones": "ACTIONS",
-      "nueva-unidad": "NEW UNIT OF MEASURE"
+      "eliminar": "Do you want to delete the product?",
+      "nueva-unidad": "NEW UNIT OF MEASURE",
+      "borrar": "Remove",
+      "editar": "Edit",
+      "aceptar": "Accept",
+      "cancelar": "Cancel"
     }
   }
 }
