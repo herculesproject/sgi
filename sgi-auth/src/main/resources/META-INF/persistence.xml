@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="sgi" transaction-type="JTA">
+    <jta-data-source>java:jboss/datasources/SGIDS</jta-data-source>
+    <properties>
+      <property name="hibernate.cache.provider_class" value="org.hibernate.cache.NoCacheProvider" />
+      <property name="hibernate.cache.use_second_level_cache" value="false" />
+      <property name="hibernate.format_sql" value="true" />
+      <property name="hibernate.order_updates" value="true" />
+      <property name="hibernate.generate_statistics" value="true" />
+      <property name="hibernate.jdbc.use_streams_for_binary" value="true" />
+      <property name="hibernate.connection.autocommit" value="false" />
+      <property name="hibernate.connection.datasource" value="java:jboss/datasources/SGIDS" />
+      <property name="hibernate.jdbc.use_scrollable_resultset" value="false" />
+      <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
+      <property name="hibernate.current_session_context_class" value="jta" />
+      <property name="hibernate.transaction.factory_class" value="org.hibernate.transaction.JTATransactionFactory" />
+      <property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform" />
+      <property name="hibernate.packagesToScan" value="org.crue.hercules.sgi.federation.entity" />
+    </properties>
+  </persistence-unit>
+</persistence>
