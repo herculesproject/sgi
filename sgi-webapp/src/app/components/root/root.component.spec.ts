@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RootComponent } from './root.component';
 import { LoggerModule, NGXLogger } from 'ngx-logger';
 import { environment } from '@env';
-import TestUtils from '@core/test-utils';
+import TestUtils from '@core/utils/test-utils';
 
 describe('RootComponent', () => {
   let component: RootComponent;

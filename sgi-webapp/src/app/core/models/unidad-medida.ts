@@ -1,12 +1,17 @@
-export class UnidadMedida {
+import { FormGroup } from '@angular/forms';
+import { FormGroupUtil } from '@shared/config/form-group-util';
 
-  /** ID */
+/**
+ * Clase que simula a las unidades de medida
+ */
+export class UnidadMedida {
   id: number;
-  /** abreviatura */
   abreviatura: string;
-  /** descripcion */
   descripcion: string;
 
-  constructor() { }
-
+  constructor() {
+    this.id = null;
+    this.abreviatura = '';
+    this.descripcion = '';
+  }
 }

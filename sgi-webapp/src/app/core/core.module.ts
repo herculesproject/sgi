@@ -7,7 +7,6 @@ import { NGXLogger } from 'ngx-logger';
 import { throwIfAlreadyLoaded } from './guards/module-import.guard';
 import { AuthGuard } from './guards/auth.guard';
 import { GlobalErrorHandler } from './services/global-error.handler';
-import { SERVICES_IMPORTS } from './services/exports/services-export';
 import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
@@ -21,7 +20,6 @@ import { TranslateModule } from '@ngx-translate/core';
     TranslateModule
   ],
   providers: [
-    SERVICES_IMPORTS,
     {
       provide: NGXLogger,
       useClass: NGXLogger,

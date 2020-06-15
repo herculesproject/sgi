@@ -14,7 +14,7 @@ import { LoggerModule } from 'ngx-logger';
 
 import { environment } from '@env';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ComponentsModule } from './components/components.module';
 
@@ -46,7 +46,8 @@ import { ComponentsModule } from './components/components.module';
     }),
     ReactiveFormsModule,
     MaterialDesignModule.forRoot(),
-    ComponentsModule
+    ComponentsModule,
+    HttpClientModule
   ],
   providers: [
   ],

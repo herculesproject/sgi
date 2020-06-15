@@ -1,31 +1,58 @@
 {
-  "header": {
-    "module": {
+  "botones": {
+    "guardar": "Save",
+    "cancelar": "Cancel"
+  },
+  "cabecera": {
+    "modulo": {
       "cat": "Module: Catalog of scientific-technical offer",
       "ebt": "Module: Technology-based companies",
       "pii": "Module: Industrial and intellectual property"
     }
   },
+  "form-group": {
+    "error": "Errors have been found in the form. Please check it."
+  },
   "menu": {
     "principal": {
-      "bookable-types": "Bookable types",
-      "expendable-types": "Expendable types",
-      "products": "Products",
-      "measurement-units": "Measurement units",
-      "service-groupings": "Service groupings",
-      "requests": "Requests",
-      "work-hours": "Work hours"
+      "tipos-reservables": "Bookable types",
+      "tipos-fungibles": "Expendable types",
+      "productos": "Products",
+      "unidades-medida": "Measurement units",
+      "agrupaciones-servicios": "Service groupings",
+      "solicitudes": "Requests",
+      "horarios": "Work hours"
     },
-    "secondary": {
-      "account": "Account",
-      "add": "Add",
-      "graphics": "Graphics",
-      "lists": "Lists",
-      "notifications": "Notifications",
-      "settings": "Settings"
+    "secundario": {
+      "cuenta": "Account",
+      "agregar": "Add",
+      "graficas": "Graphics",
+      "listados": "Lists",
+      "notificaciones": "Notifications",
+      "ajustes": "Settings"
     }
   },
   "unidad-medida": {
+    "agregar": {
+      "abreviatura": {
+        "error": {
+          "maximo": "The abbreviation exceeds the maximum length",
+          "minimo": "The abbreviation does not exceed the minimum length",
+          "requerido": "Enter the abbreviation"
+        },
+        "titulo": "Abbreviation"
+      },
+      "correcto": "Unit of measure added correctly",
+      "descripcion": {
+        "error": {
+          "maximo": "Description exceeds maximum length",
+          "requerido": "Enter description"
+        },
+        "titulo": "Description"
+      },
+      "error": "Error adding unit of measure",
+      "titulo": "Unit of measure creation"
+    },
     "listado": {
       "busqueda": "Quick search",
       "busqueda-placeholder": "Text",

@@ -3,8 +3,9 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { NGXLogger } from 'ngx-logger';
 
-import TestUtils from '@core/test-utils';
+import TestUtils from '@core/utils/test-utils';
 import { AppComponent } from './app.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -13,7 +14,8 @@ describe('AppComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
+        RouterTestingModule,
+        HttpClientModule
       ],
       providers: [
         { provide: NGXLogger, useValue: loggerSpy }

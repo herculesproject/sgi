@@ -52,9 +52,9 @@
       <div class="select-modulo" id="seleccionarModulo" [formGroup]="formGroup">
         <mat-form-field>
           <mat-select formControlName="module" (selectionChange)="navigateTo($event.value)">
-            <mat-option [value]="'modulo1'">{{'header.module.cat' | translate}}</mat-option>
-            <mat-option [value]="'modulo2'">{{'header.module.ebt' | translate}}</mat-option>
-            <mat-option [value]="'modulo3'">{{'header.module.pii' | translate}}</mat-option>
+            <mat-option [value]="'modulo1'">{{'cabecera.modulo.cat' | translate}}</mat-option>
+            <mat-option [value]="'modulo2'">{{'cabecera.modulo.ebt' | translate}}</mat-option>
+            <mat-option [value]="'modulo3'">{{'cabecera.modulo.pii' | translate}}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>

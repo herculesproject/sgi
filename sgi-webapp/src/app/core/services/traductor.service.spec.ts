@@ -1,21 +1,22 @@
 import { TestBed } from '@angular/core/testing';
 
-import { UnidadMedidaService } from '../unidad-medida.service';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { LayoutService } from './layout.service';
 import { NGXLogger } from 'ngx-logger';
-import { LayoutService } from '../layout.service';
-import { SERVICES_IMPORTS } from '../exports/services-export';
-import TestUtils from '@core/test-utils';
+import TestUtils from '@core/utils/test-utils';
+import { TraductorService } from './traductor.service';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-describe('UnidadMedidaService', () => {
-  let service: UnidadMedidaService;
+describe('LayoutService', () => {
+  let service: TraductorService;
 
   beforeEach(() => {
-
     // Mock logger
-    const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(NGXLogger.name, TestUtils.getOwnMethodNames(NGXLogger.prototype));
+    const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(
+      NGXLogger.name,
+      TestUtils.getOwnMethodNames(NGXLogger.prototype)
+    );
 
     TestBed.configureTestingModule({
       imports: [
@@ -31,12 +32,14 @@ describe('UnidadMedidaService', () => {
         }),
       ],
       providers: [
-        { provide: NGXLogger, useValue: loggerSpy },
-        LayoutService,
-        SERVICES_IMPORTS,
+        {
+          provide: NGXLogger,
+          useValue: loggerSpy
+        },
+        LayoutService
       ]
     });
-    service = TestBed.inject(UnidadMedidaService);
+    service = TestBed.inject(TraductorService);
   });
 
   it('should be created', () => {

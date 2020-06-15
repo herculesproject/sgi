@@ -1,7 +1,9 @@
 import { ErrorHandler, Injectable, Injector } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class GlobalErrorHandler implements ErrorHandler {
 
 

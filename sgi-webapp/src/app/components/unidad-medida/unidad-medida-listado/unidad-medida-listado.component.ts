@@ -4,27 +4,32 @@ import { MatTableDataSource } from '@angular/material/table';
 import { NGXLogger } from 'ngx-logger';
 import { MatSort } from '@angular/material/sort';
 import { UnidadMedidaService } from '@core/services/unidad-medida.service';
+import { UrlUtils } from '@core/utils/url-utils';
 
 @Component({
   selector: 'app-unidad-medida-listado',
   templateUrl: './unidad-medida-listado.component.html',
-  styleUrls: ['./unidad-medida-listado.component.scss']
+  styleUrls: ['./unidad-medida-listado.component.scss'],
 })
 export class UnidadMedidaListadoComponent implements OnInit, OnDestroy {
-
+  UrlUtils = UrlUtils;
   displayedColumns: string[] = ['abreviatura', 'descripcion', 'acciones'];
   dataSource: MatTableDataSource<UnidadMedida>;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  constructor(private logger: NGXLogger, private unidadMedidaService: UnidadMedidaService) { }
+  constructor(
+    private logger: NGXLogger,
+    private unidadMedidaService: UnidadMedidaService
+  ) {}
 
   ngOnInit(): void {
     this.logger.debug(UnidadMedidaListadoComponent.name, 'ngOnInit()', 'start');
 
     this.dataSource = new MatTableDataSource<UnidadMedida>([]);
 
-    this.unidadMedidaService.findAll().subscribe(
-      (unidadesMedida: UnidadMedida[]) => {
+    this.unidadMedidaService
+      .findAll()
+      .subscribe((unidadesMedida: UnidadMedida[]) => {
         this.dataSource.data = unidadesMedida;
       });
 
@@ -42,9 +47,10 @@ export class UnidadMedidaListadoComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(UnidadMedidaListadoComponent.name, 'ngOnDestroy() - start');
+    this.logger.debug(
+      UnidadMedidaListadoComponent.name,
+      'ngOnDestroy() - start'
+    );
     this.logger.debug(UnidadMedidaListadoComponent.name, 'ngOnDestroy() - end');
   }
-
-
 }

@@ -2,40 +2,43 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { RootComponent } from './components/root/root.component';
 import { AuthGuard } from '@core/guards/auth.guard';
+import { UrlUtils } from '@core/utils/url-utils';
 
 /**
  * Definimos las urls de la aplicación
  */
 const routes: Routes = [
   {
-    path: 'agrupacionesServicios',
+    path: UrlUtils.agrupacionServicios,
     component: RootComponent,
   },
   {
-    path: 'horarios',
+    path: UrlUtils.horario,
     component: RootComponent,
   },
   {
-    path: 'productos',
+    path: UrlUtils.producto,
     component: RootComponent,
   },
   {
-    path: 'solicitudes',
+    path: UrlUtils.solicitud,
     component: RootComponent,
   },
   {
-    path: 'tiposFungible',
+    path: UrlUtils.tipoFungible,
     component: RootComponent,
   },
   {
-    path: 'tiposReservables',
+    path: UrlUtils.tipoReservables,
     component: RootComponent,
   },
   {
-    path: 'unidadesMedida',
+    path: UrlUtils.unidadMedida,
     loadChildren: () =>
-      import('./components/unidad-medida/unidad-medida.module').then(m => m.UnidadMedidaModule),
-    canActivate: [AuthGuard]
+      import('./components/unidad-medida/unidad-medida.module').then(
+        (m) => m.UnidadMedidaModule
+      ),
+    canActivate: [AuthGuard],
   },
   /**
    * Si no reconoce la url
@@ -50,4 +53,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

@@ -22,7 +22,9 @@ export class AppComponent implements OnInit, OnDestroy {
   // Subscription
   subscriptionMenuToogle: Subscription;
 
-  constructor(private logger: NGXLogger, private layoutService: LayoutService) {
+  constructor(
+    private logger: NGXLogger,
+    private layoutService: LayoutService) {
     this.screenWidth = window.innerWidth;
   }
 
@@ -33,7 +35,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscriptionMenuToogle = this.layoutService.getToogleSidenav().subscribe(menuToogle => {
       this.menuToogle = menuToogle;
     });
-
     this.logger.debug(AppComponent.name, 'ngOnInit()', 'end');
   }
 

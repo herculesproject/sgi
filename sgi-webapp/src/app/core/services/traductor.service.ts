@@ -9,9 +9,10 @@ import { NGXLogger } from 'ngx-logger';
  * Los ficheros con los textos se encuentran en la carpeta
  * "src/assets/i18n"
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class TraductorService {
-
   /**
    * Constructor del servicio
    *
@@ -33,8 +34,37 @@ export class TraductorService {
    * @param idioma Idioma seleccionado
    */
   cambiarLenguaje(idioma: string): void {
-    this.logger.debug(TraductorService.name, 'cambiarLenguaje(idioma: string)', 'start');
+    this.logger.debug(
+      TraductorService.name,
+      'cambiarLenguaje(idioma: string)',
+      'start'
+    );
     this.translateService.use(idioma);
-    this.logger.debug(TraductorService.name, 'cambiarLenguaje(idioma: string)', 'start');
+    this.logger.debug(
+      TraductorService.name,
+      'cambiarLenguaje(idioma: string)',
+      'end'
+    );
+  }
+
+  /**
+   * Devuelve una cadena traducida al idioma seleccionado en la aplicación.
+   * Este método se usa en las clases TS unicamente.
+   *
+   * @param identificador Identificador del contenido
+   */
+  getTexto(identificador: string): string {
+    this.logger.debug(
+      TraductorService.name,
+      'getTexto(identificador: string)',
+      'start'
+    );
+    const palabra = this.translateService.instant(identificador);
+    this.logger.debug(
+      TraductorService.name,
+      'getTexto(identificador: string)',
+      'start'
+    );
+    return palabra;
   }
 }

@@ -4,7 +4,7 @@ import { MenuSecundarioComponent } from './menu-secundario.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { NGXLogger } from 'ngx-logger';
-import TestUtils from '@core/test-utils';
+import TestUtils from '@core/utils/test-utils';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';

@@ -38,7 +38,7 @@
   </table>
 
   <div class="separation-button">
-    <button routerLink="/unidadesMedida/nuevaUnidadMedida" mat-button>
+    <button [routerLink]="UrlUtils.agregar" mat-button>
       <mat-icon>add_box</mat-icon> {{'unidad-medida.listado.nueva-unidad' | translate}}
     </button>
   </div>

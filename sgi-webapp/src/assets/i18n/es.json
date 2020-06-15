@@ -1,31 +1,58 @@
 {
-  "header": {
-    "module": {
+  "botones": {
+    "guardar": "Guardar",
+    "cancelar": "Cancelar"
+  },
+  "cabecera": {
+    "modulo": {
       "cat": "Módulo: Catálogo de oferta científico-técnica",
       "ebt": "Módulo: Empresas de base tecnológica",
       "pii": "Módulo: Propiedad industrial e intelectual"
     }
   },
+  "form-group": {
+    "error": "Se han encontrado errores en el formulario. Por favor revíselo"
+  },
   "menu": {
     "principal": {
-      "bookable-types": "Tipos de reservable",
-      "expendable-types": "Tipos de fungible",
-      "products": "Productos",
-      "measurement-units": "Unidades de medida",
-      "service-groupings": "Agrupaciones de servicios",
-      "requests": "Solicitudes",
-      "work-hours": "Horarios"
+      "tipos-reservables": "Tipos de reservable",
+      "tipos-fungibles": "Tipos de fungible",
+      "productos": "Productos",
+      "unidades-medida": "Unidades de medida",
+      "agrupaciones-servicios": "Agrupaciones de servicios",
+      "solicitudes": "Solicitudes",
+      "horarios": "Horarios"
     },
-    "secondary": {
-      "account": "Cuenta",
-      "add": "Añadir",
-      "graphics": "Gráficas",
-      "lists": "Listados",
-      "notifications": "Notificaciones",
-      "settings": "Ajustes"
+    "secundario": {
+      "cuenta": "Cuenta",
+      "agregar": "Agregar",
+      "graficas": "Gráficas",
+      "listados": "Listados",
+      "notificaciones": "Notificaciones",
+      "ajustes": "Ajustes"
     }
   },
   "unidad-medida": {
+    "agregar": {
+      "abreviatura": {
+        "error": {
+          "maximo": "La abreviatura supera la longitud máxima",
+          "minimo": "La abreviatura no supera la longitud mínima",
+          "requerido": "Introduzca la abreviatura"
+        },
+        "titulo": "Abreviatura"
+      },
+      "correcto": "Unidad de medida agregada correctamente",
+      "descripcion": {
+        "error": {
+          "maximo": "La descripción supera la longitud máxima",
+          "requerido": "Introduzca la descripción"
+        },
+        "titulo": "Descripción"
+      },
+      "error": "Error al agregar la unidad de medida",
+      "titulo": "Creación de unidad de medida"
+    },
     "listado": {
       "busqueda": "Búsqueda rápida",
       "busqueda-placeholder": "Texto",

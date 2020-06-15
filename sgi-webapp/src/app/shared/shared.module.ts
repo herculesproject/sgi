@@ -10,14 +10,18 @@ import { MenuPrincipalComponent } from './componentes-layout/menu-principal/menu
 import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-  declarations: [HeaderComponent, MenuSecundarioComponent, MenuPrincipalComponent],
+  declarations: [
+    HeaderComponent,
+    MenuSecundarioComponent,
+    MenuPrincipalComponent,
+  ],
   imports: [
     RouterModule,
     FlexLayoutModule,
     MaterialDesignModule,
     FormsModule,
     ReactiveFormsModule,
-    TranslateModule
+    TranslateModule,
   ],
   exports: [
     MaterialDesignModule,
@@ -26,7 +30,7 @@ import { TranslateModule } from '@ngx-translate/core';
     ReactiveFormsModule,
     HeaderComponent,
     MenuPrincipalComponent,
-    MenuSecundarioComponent
-  ]
+    MenuSecundarioComponent,
+  ],
 })
-export class SharedModule { }
+export class SharedModule {}
