@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { FormGroupUtil } from '@shared/config/form-group-util';
 import { UnidadMedida } from '@core/models/unidad-medida';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 import { TraductorService } from '@core/services/traductor.service';
 import { UnidadMedidaService } from '@core/services/unidad-medida.service';
 import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
+import { UrlUtils } from '@core/utils/url-utils';
 
 @Component({
   selector: 'app-unidad-medida-agregar-actualizar',
@@ -17,7 +18,7 @@ import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties
 export class UnidadMedidaAgregarActualizarComponent implements OnInit {
   formGroup: FormGroup;
   FormGroupUtil = FormGroupUtil;
-  private unidadMedida: UnidadMedida;
+  unidadMedida: UnidadMedida;
 
   desactivarAceptar: boolean;
   fxFlexProperties: FxFlexProperties;
@@ -25,6 +26,7 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
 
   constructor(
     private readonly logger: NGXLogger,
+    private activatedRoute: ActivatedRoute,
     private readonly router: Router,
     private readonly unidadMedidaService: UnidadMedidaService,
     public readonly traductor: TraductorService
@@ -36,12 +38,12 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
     this.fxFlexProperties.order = '2';
 
     this.fxLayoutProperties = new FxLayoutProperties();
-    this.fxLayoutProperties.gap = '10px';
+    this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.logger.debug(
       UnidadMedidaAgregarActualizarComponent.name,
       'ngOnInit()',
@@ -59,11 +61,48 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
         Validators.maxLength(100),
       ]),
     });
+    this.getUnidadMedida();
     this.logger.debug(
       UnidadMedidaAgregarActualizarComponent.name,
       'ngOnInit()',
       'end'
     );
+  }
+
+  /**
+   * Obtiene los datos de la unidad de medida a actualizar si existe
+   */
+  getUnidadMedida(): void {
+    // Obtiene los parámetros de la url
+    this.activatedRoute.params.subscribe((params: Params) => {
+      // Combrueba que exista el parámetro id
+      if (params.id) {
+        const id = Number(params.id);
+        // Obtiene los datos del back
+        this.unidadMedidaService.getOne(id).subscribe(
+          (unidadMedida: UnidadMedida) => {
+            this.unidadMedida = unidadMedida;
+            // Actualiza el formGroup
+            FormGroupUtil.setValue(
+              this.formGroup,
+              'abreviatura',
+              this.unidadMedida.abreviatura
+            );
+            FormGroupUtil.setValue(
+              this.formGroup,
+              'descripcion',
+              this.unidadMedida.descripcion
+            );
+          },
+          () => {
+            alert(
+              this.traductor.getTexto('unidad-medida.actualizar.no-encontrado')
+            );
+            this.router.navigateByUrl(UrlUtils.unidadMedida).then();
+          }
+        );
+      }
+    });
   }
 
   /**
@@ -90,7 +129,7 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
   }
 
   /**
-   * Envia los datos al back para guardar una unidad de medida
+   * Envia los datos al back para agregar o actualizar una unidad de medida
    */
   private sendApi(): void {
     this.logger.debug(
@@ -100,13 +139,38 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
     );
     this.createData();
     this.desactivarAceptar = true;
+
+    // Si no tiene id, lo creamos
+    if (this.unidadMedida.id === null) {
+      this.agregarUnidadMedida();
+    }
+    // Si tiene id, lo actualizamos
+    else {
+      this.actualizarUnidadMedida();
+    }
+    this.logger.debug(
+      UnidadMedidaAgregarActualizarComponent.name,
+      'sendApi()',
+      'end'
+    );
+  }
+
+  /**
+   * Crea una nueva unidad de medidad en el back
+   */
+  private agregarUnidadMedida() {
+    this.logger.debug(
+      UnidadMedidaAgregarActualizarComponent.name,
+      'agregarUnidadMedida()',
+      'start'
+    );
     this.unidadMedidaService.create(this.unidadMedida).subscribe(
       () => {
         alert(this.traductor.getTexto('unidad-medida.agregar.correcto'));
-        this.router.navigateByUrl('/unidadMedida').then();
+        this.router.navigateByUrl(UrlUtils.unidadMedida).then();
         this.logger.debug(
           UnidadMedidaAgregarActualizarComponent.name,
-          'sendApi()',
+          'agregarUnidadMedida()',
           'end'
         );
       },
@@ -115,11 +179,44 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
         this.desactivarAceptar = false;
         this.logger.debug(
           UnidadMedidaAgregarActualizarComponent.name,
-          'sendApi()',
+          'agregarUnidadMedida()',
           'end'
         );
       }
     );
+  }
+
+  /**
+   * Actualiza una unidad de medida existente en el back
+   */
+  private actualizarUnidadMedida() {
+    this.logger.debug(
+      UnidadMedidaAgregarActualizarComponent.name,
+      'actualizarUnidadMedida()',
+      'start'
+    );
+    this.unidadMedidaService
+      .update(this.unidadMedida, this.unidadMedida.id)
+      .subscribe(
+        () => {
+          alert(this.traductor.getTexto('unidad-medida.actualizar.correcto'));
+          this.router.navigateByUrl(UrlUtils.unidadMedida).then();
+          this.logger.debug(
+            UnidadMedidaAgregarActualizarComponent.name,
+            'actualizarUnidadMedida()',
+            'end'
+          );
+        },
+        () => {
+          alert(this.traductor.getTexto('unidad-medida.actualizar.error'));
+          this.desactivarAceptar = false;
+          this.logger.debug(
+            UnidadMedidaAgregarActualizarComponent.name,
+            'actualizarUnidadMedida()',
+            'end'
+          );
+        }
+      );
   }
 
   /**

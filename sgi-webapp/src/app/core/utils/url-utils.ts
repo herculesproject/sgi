@@ -12,5 +12,5 @@ export class UrlUtils {
 
   public static root = '';
   public static agregar = 'agregar';
-  public static actualizar = 'actualizar/:id';
+  public static actualizar = 'actualizar/';
 }

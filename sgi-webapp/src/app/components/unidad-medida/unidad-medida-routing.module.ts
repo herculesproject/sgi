@@ -14,7 +14,7 @@ const routes: Routes = [
     component: UnidadMedidaAgregarActualizarComponent,
   },
   {
-    path: UrlUtils.actualizar,
+    path: UrlUtils.actualizar + ':id',
     component: UnidadMedidaAgregarActualizarComponent,
   },
 ];

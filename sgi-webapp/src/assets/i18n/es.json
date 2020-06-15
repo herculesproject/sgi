@@ -33,6 +33,12 @@
     }
   },
   "unidad-medida": {
+    "actualizar": {
+      "correcto": "Unidad de medida actualizada correctamente",
+      "error": "Error al actualizar la unidad de medida",
+      "titulo": "Actualización de unidad de medida",
+      "no-encontrado": "Error al cargar los datos de la unidad de medida"
+    },
     "agregar": {
       "abreviatura": {
         "error": {
