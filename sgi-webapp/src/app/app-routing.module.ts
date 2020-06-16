@@ -26,7 +26,9 @@ const routes: Routes = [
   },
   {
     path: UrlUtils.tipoFungible,
-    component: RootComponent,
+    loadChildren: () =>
+      import('./components/tipo-fungible/tipo-fungible.module').then(m => m.TipoFungibleModule),
+    canActivate: [AuthGuard]
   },
   {
     path: UrlUtils.tipoReservables,
@@ -53,4 +55,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

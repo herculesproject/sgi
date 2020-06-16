@@ -73,5 +73,16 @@
       "aceptar": "Aceptar",
       "cancelar": "Cancelar"
     }
+  },
+  "tipo-fungible": {
+    "listado": {
+      "titulo": "Listado tipo fungible",
+      "busqueda": "Búsqueda rápida",
+      "busqueda-placeholder": "Texto",
+      "nombre": "NOMBRE",
+      "servicio": "SERVICIO",
+      "acciones": "ACCIONES",
+      "nuevo-tipo": "NUEVO TIPO FUNGIBLE"
+    }
   }
 }
