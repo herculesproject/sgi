@@ -8,6 +8,7 @@ import { UrlUtils } from '@core/utils/url-utils';
 import { switchMap } from 'rxjs/operators';
 import { TraductorService } from '@core/services/traductor.service';
 import { DialogService } from '@core/services/dialog.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
 
 @Component({
   selector: 'app-unidad-medida-listado',
@@ -24,7 +25,8 @@ export class UnidadMedidaListadoComponent implements OnInit, OnDestroy {
     private logger: NGXLogger,
     private unidadMedidaService: UnidadMedidaService,
     private readonly traductor: TraductorService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private snackBarService: SnackBarService
   ) { }
 
   ngOnInit(): void {
@@ -75,6 +77,8 @@ export class UnidadMedidaListadoComponent implements OnInit, OnDestroy {
               return this.unidadMedidaService.findAll();
             })
           ).subscribe((unidadesMedida: UnidadMedida[]) => {
+            this.snackBarService
+              .mostrarMensajeSuccess(this.traductor.getTexto('unidad-medida.listado.eliminarConfirmado'));
             this.dataSource.data = unidadesMedida;
           });
         }

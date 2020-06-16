@@ -9,6 +9,7 @@ import { MenuSecundarioComponent } from './componentes-layout/menu-secundario/me
 import { MenuPrincipalComponent } from './componentes-layout/menu-principal/menu-principal.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { DialogComponent } from './componentes-shared/dialog/dialog.component';
+import { SnackBarComponent } from './componentes-shared/snack-bar/snack-bar.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { DialogComponent } from './componentes-shared/dialog/dialog.component';
     MenuSecundarioComponent,
     MenuPrincipalComponent,
     DialogComponent,
+    SnackBarComponent,
   ],
   imports: [
     RouterModule,

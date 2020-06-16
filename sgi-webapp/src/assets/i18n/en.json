@@ -67,6 +67,7 @@
       "descripcion": "DESCRIPTION",
       "acciones": "ACTIONS",
       "eliminar": "Do you want to delete the product?",
+      "eliminarConfirmado": "Unit of measure removed successfully",
       "nueva-unidad": "NEW UNIT OF MEASURE",
       "borrar": "Remove",
       "editar": "Edit",

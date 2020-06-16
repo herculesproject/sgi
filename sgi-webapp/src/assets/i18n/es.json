@@ -67,6 +67,7 @@
       "descripcion": "DESCRIPCIÓN",
       "acciones": "ACCIONES",
       "eliminar": "¿Desea eliminar el producto?",
+      "eliminarConfirmado": "Unidad de medida eliminada correctamente",
       "nueva-unidad": "NUEVA UNIDAD DE MEDIDA",
       "borrar": "Borrar",
       "editar": "Editar",

@@ -8,6 +8,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { SnackBarService } from '@core/services/snack-bar.service';
 
 describe('UnidadMedidaListadoComponent', () => {
   let component: UnidadMedidaListadoComponent;
@@ -17,6 +18,10 @@ describe('UnidadMedidaListadoComponent', () => {
 
     // Mock logger
     const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(NGXLogger.name, TestUtils.getOwnMethodNames(NGXLogger.prototype));
+
+    // Mock SnackBarService
+    const snackBarServiceSpy: jasmine.SpyObj<SnackBarService> =
+      jasmine.createSpyObj(SnackBarService.name, TestUtils.getOwnMethodNames(SnackBarService.prototype));
 
     TestBed.configureTestingModule({
       imports: [
@@ -34,7 +39,8 @@ describe('UnidadMedidaListadoComponent', () => {
         }),
       ],
       providers: [
-        { provide: NGXLogger, useValue: loggerSpy }
+        { provide: NGXLogger, useValue: loggerSpy },
+        { provide: SnackBarService, useValue: snackBarServiceSpy },
       ],
       declarations: [UnidadMedidaListadoComponent]
     })

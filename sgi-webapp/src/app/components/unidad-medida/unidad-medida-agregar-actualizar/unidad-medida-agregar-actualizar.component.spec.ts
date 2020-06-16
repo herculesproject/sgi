@@ -4,11 +4,12 @@ import { UnidadMedidaAgregarActualizarComponent } from './unidad-medida-agregar-
 import { NGXLogger } from 'ngx-logger';
 import TestUtils from '@core/utils/test-utils';
 import { AppRoutingModule } from 'src/app/app-routing.module';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TraductorService } from '@core/services/traductor.service';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('UnidadMedidaAgregarActualizarComponent', () => {
   let component: UnidadMedidaAgregarActualizarComponent;
@@ -18,11 +19,18 @@ describe('UnidadMedidaAgregarActualizarComponent', () => {
     TestUtils.getOwnMethodNames(NGXLogger.prototype)
   );
 
+  // Mock SnackBarService
+  const snackBarServiceSpy: jasmine.SpyObj<SnackBarService> =
+    jasmine.createSpyObj(SnackBarService.name, TestUtils.getOwnMethodNames(SnackBarService.prototype));
+
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [UnidadMedidaAgregarActualizarComponent],
       providers: [
-        { provide: NGXLogger, useValue: loggerSpy }],
+        { provide: NGXLogger, useValue: loggerSpy },
+        { provide: SnackBarService, useValue: snackBarServiceSpy }
+      ],
       imports: [
         TranslateModule.forRoot({
           loader: {
@@ -34,7 +42,7 @@ describe('UnidadMedidaAgregarActualizarComponent', () => {
           }
         }),
         AppRoutingModule,
-        HttpClientModule,
+        HttpClientTestingModule,
         CommonModule,
         TranslateModule,
       ]

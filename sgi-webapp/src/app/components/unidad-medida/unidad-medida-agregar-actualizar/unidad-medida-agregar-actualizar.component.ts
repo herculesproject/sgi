@@ -9,6 +9,7 @@ import { UnidadMedidaService } from '@core/services/unidad-medida.service';
 import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
 import { UrlUtils } from '@core/utils/url-utils';
+import { SnackBarService } from '@core/services/snack-bar.service';
 
 @Component({
   selector: 'app-unidad-medida-agregar-actualizar',
@@ -29,7 +30,8 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private readonly router: Router,
     private readonly unidadMedidaService: UnidadMedidaService,
-    public readonly traductor: TraductorService
+    private readonly traductor: TraductorService,
+    private snackBarService: SnackBarService
   ) {
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
@@ -95,9 +97,8 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
             );
           },
           () => {
-            alert(
-              this.traductor.getTexto('unidad-medida.actualizar.no-encontrado')
-            );
+            this.snackBarService
+              .mostrarMensajeSuccess(this.traductor.getTexto('unidad-medida.actualizar.no-encontrado'));
             this.router.navigateByUrl(UrlUtils.unidadMedida).then();
           }
         );
@@ -119,7 +120,8 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
     if (FormGroupUtil.validFormGroup(this.formGroup)) {
       this.sendApi();
     } else {
-      alert(this.traductor.getTexto('form-group.error'));
+      this.snackBarService
+        .mostrarMensajeError(this.traductor.getTexto('form-group.error'));
     }
     this.logger.debug(
       UnidadMedidaAgregarActualizarComponent.name,
@@ -166,7 +168,7 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
     );
     this.unidadMedidaService.create(this.unidadMedida).subscribe(
       () => {
-        alert(this.traductor.getTexto('unidad-medida.agregar.correcto'));
+        this.snackBarService.mostrarMensajeSuccess(this.traductor.getTexto('unidad-medida.agregar.correcto'));
         this.router.navigateByUrl(UrlUtils.unidadMedida).then();
         this.logger.debug(
           UnidadMedidaAgregarActualizarComponent.name,
@@ -175,7 +177,7 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
         );
       },
       () => {
-        alert(this.traductor.getTexto('unidad-medida.agregar.error'));
+        this.snackBarService.mostrarMensajeError(this.traductor.getTexto('unidad-medida.agregar.error'));
         this.desactivarAceptar = false;
         this.logger.debug(
           UnidadMedidaAgregarActualizarComponent.name,
@@ -199,7 +201,7 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
       .update(this.unidadMedida, this.unidadMedida.id)
       .subscribe(
         () => {
-          alert(this.traductor.getTexto('unidad-medida.actualizar.correcto'));
+          this.snackBarService.mostrarMensajeSuccess(this.traductor.getTexto('unidad-medida.actualizar.correcto'));
           this.router.navigateByUrl(UrlUtils.unidadMedida).then();
           this.logger.debug(
             UnidadMedidaAgregarActualizarComponent.name,
@@ -208,7 +210,7 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
           );
         },
         () => {
-          alert(this.traductor.getTexto('unidad-medida.actualizar.error'));
+          this.snackBarService.mostrarMensajeError(this.traductor.getTexto('unidad-medida.actualizar.error'));
           this.desactivarAceptar = false;
           this.logger.debug(
             UnidadMedidaAgregarActualizarComponent.name,
