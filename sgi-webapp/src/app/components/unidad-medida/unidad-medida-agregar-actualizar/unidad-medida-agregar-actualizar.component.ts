@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { FormGroupUtil } from '@shared/config/form-group-util';
 import { UnidadMedida } from '@core/models/unidad-medida';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 import { TraductorService } from '@core/services/traductor.service';
 import { UnidadMedidaService } from '@core/services/unidad-medida.service';
@@ -10,6 +10,7 @@ import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
 import { UrlUtils } from '@core/utils/url-utils';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-unidad-medida-agregar-actualizar',
@@ -55,7 +56,6 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
     this.unidadMedida = new UnidadMedida();
     this.formGroup = new FormGroup({
       abreviatura: new FormControl(this.unidadMedida.abreviatura, [
-        Validators.required,
         Validators.maxLength(10),
         Validators.minLength(2),
       ]),
@@ -75,35 +75,59 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
    * Obtiene los datos de la unidad de medida a actualizar si existe
    */
   getUnidadMedida(): void {
-    // Obtiene los parámetros de la url
-    this.activatedRoute.params.subscribe((params: Params) => {
-      // Combrueba que exista el parámetro id
-      if (params.id) {
-        const id = Number(params.id);
-        // Obtiene los datos del back
-        this.unidadMedidaService.getOne(id).subscribe(
-          (unidadMedida: UnidadMedida) => {
-            this.unidadMedida = unidadMedida;
-            // Actualiza el formGroup
-            FormGroupUtil.setValue(
-              this.formGroup,
-              'abreviatura',
-              this.unidadMedida.abreviatura
+    this.logger.debug(
+      UnidadMedidaAgregarActualizarComponent.name,
+      'getUnidadMedida()',
+      'start'
+    );
+    let id: number;
+    // Obtiene el id
+    this.activatedRoute.params
+      .pipe(
+        switchMap((params: Params) => {
+          id = Number(params.id);
+          if (id) {
+            return this.unidadMedidaService.getOne(id);
+          }
+        })
+      )
+      .subscribe(
+        // Obtiene el objeto existente
+        (unidadMedida: UnidadMedida) => {
+          this.unidadMedida = unidadMedida;
+          // Actualiza el formGroup
+          FormGroupUtil.setValue(
+            this.formGroup,
+            'abreviatura',
+            this.unidadMedida.abreviatura
+          );
+          FormGroupUtil.setValue(
+            this.formGroup,
+            'descripcion',
+            this.unidadMedida.descripcion
+          );
+          this.logger.debug(
+            UnidadMedidaAgregarActualizarComponent.name,
+            'getUnidadMedida()',
+            'start'
+          );
+        },
+        // Si no encuentra
+        () => {
+          // Añadimos esta comprobación para que no nos eche al agregar uno nuevo
+          if (id) {
+            this.snackBarService.mostrarMensajeSuccess(
+              this.traductor.getTexto('unidad-medida.actualizar.no-encontrado')
             );
-            FormGroupUtil.setValue(
-              this.formGroup,
-              'descripcion',
-              this.unidadMedida.descripcion
-            );
-          },
-          () => {
-            this.snackBarService
-              .mostrarMensajeSuccess(this.traductor.getTexto('unidad-medida.actualizar.no-encontrado'));
             this.router.navigateByUrl(UrlUtils.unidadMedida).then();
           }
-        );
-      }
-    });
+          this.logger.debug(
+            UnidadMedidaAgregarActualizarComponent.name,
+            'getUnidadMedida()',
+            'end'
+          );
+        }
+      );
   }
 
   /**
@@ -111,17 +135,18 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
    * Si todos los datos son correctos, envia la información al back.
    * En caso contrario, avisa al usuario que campos son los incorrectos.
    */
-  sendForm(): void {
+  enviarForm(): void {
     this.logger.debug(
       UnidadMedidaAgregarActualizarComponent.name,
       'sendForm()',
       'start'
     );
     if (FormGroupUtil.validFormGroup(this.formGroup)) {
-      this.sendApi();
+      this.enviarApi();
     } else {
-      this.snackBarService
-        .mostrarMensajeError(this.traductor.getTexto('form-group.error'));
+      this.snackBarService.mostrarMensajeError(
+        this.traductor.getTexto('form-group.error')
+      );
     }
     this.logger.debug(
       UnidadMedidaAgregarActualizarComponent.name,
@@ -133,13 +158,13 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
   /**
    * Envia los datos al back para agregar o actualizar una unidad de medida
    */
-  private sendApi(): void {
+  private enviarApi(): void {
     this.logger.debug(
       UnidadMedidaAgregarActualizarComponent.name,
       'sendApi()',
       'start'
     );
-    this.createData();
+    this.getDatosForm();
     this.desactivarAceptar = true;
 
     // Si no tiene id, lo creamos
@@ -168,7 +193,9 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
     );
     this.unidadMedidaService.create(this.unidadMedida).subscribe(
       () => {
-        this.snackBarService.mostrarMensajeSuccess(this.traductor.getTexto('unidad-medida.agregar.correcto'));
+        this.snackBarService.mostrarMensajeSuccess(
+          this.traductor.getTexto('unidad-medida.agregar.correcto')
+        );
         this.router.navigateByUrl(UrlUtils.unidadMedida).then();
         this.logger.debug(
           UnidadMedidaAgregarActualizarComponent.name,
@@ -177,7 +204,9 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
         );
       },
       () => {
-        this.snackBarService.mostrarMensajeError(this.traductor.getTexto('unidad-medida.agregar.error'));
+        this.snackBarService.mostrarMensajeError(
+          this.traductor.getTexto('unidad-medida.agregar.error')
+        );
         this.desactivarAceptar = false;
         this.logger.debug(
           UnidadMedidaAgregarActualizarComponent.name,
@@ -201,7 +230,9 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
       .update(this.unidadMedida, this.unidadMedida.id)
       .subscribe(
         () => {
-          this.snackBarService.mostrarMensajeSuccess(this.traductor.getTexto('unidad-medida.actualizar.correcto'));
+          this.snackBarService.mostrarMensajeSuccess(
+            this.traductor.getTexto('unidad-medida.actualizar.correcto')
+          );
           this.router.navigateByUrl(UrlUtils.unidadMedida).then();
           this.logger.debug(
             UnidadMedidaAgregarActualizarComponent.name,
@@ -210,7 +241,9 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
           );
         },
         () => {
-          this.snackBarService.mostrarMensajeError(this.traductor.getTexto('unidad-medida.actualizar.error'));
+          this.snackBarService.mostrarMensajeError(
+            this.traductor.getTexto('unidad-medida.actualizar.error')
+          );
           this.desactivarAceptar = false;
           this.logger.debug(
             UnidadMedidaAgregarActualizarComponent.name,
@@ -224,7 +257,7 @@ export class UnidadMedidaAgregarActualizarComponent implements OnInit {
   /**
    * Método para actualizar la entidad con los datos de un formGroup
    */
-  private createData(): void {
+  private getDatosForm(): void {
     this.logger.debug(
       UnidadMedidaAgregarActualizarComponent.name,
       'createData()',

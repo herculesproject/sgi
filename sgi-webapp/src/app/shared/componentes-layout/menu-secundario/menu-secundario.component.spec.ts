@@ -14,7 +14,6 @@ describe('MenuSecundarioComponent', () => {
   let fixture: ComponentFixture<MenuSecundarioComponent>;
 
   beforeEach(async(() => {
-
     // Mock logger
     const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(
       NGXLogger.name,
@@ -32,16 +31,13 @@ describe('MenuSecundarioComponent', () => {
             useFactory: (http: HttpClient) => {
               return new TranslateHttpLoader(http);
             },
-            deps: [HttpClient]
-          }
+            deps: [HttpClient],
+          },
         }),
       ],
-      providers: [
-        { provide: NGXLogger, useValue: loggerSpy }
-      ],
-      declarations: [MenuSecundarioComponent]
-    })
-      .compileComponents();
+      providers: [{ provide: NGXLogger, useValue: loggerSpy }],
+      declarations: [MenuSecundarioComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

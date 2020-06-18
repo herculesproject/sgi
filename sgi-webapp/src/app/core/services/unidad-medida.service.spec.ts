@@ -7,6 +7,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NGXLogger } from 'ngx-logger';
 import { LayoutService } from './layout.service';
 import TestUtils from '@core/utils/test-utils';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('UnidadMedidaService', () => {
   let service: UnidadMedidaService;
@@ -30,6 +31,7 @@ describe('UnidadMedidaService', () => {
             deps: [HttpClient],
           },
         }),
+        RouterTestingModule
       ],
       providers: [
         { provide: NGXLogger, useValue: loggerSpy },

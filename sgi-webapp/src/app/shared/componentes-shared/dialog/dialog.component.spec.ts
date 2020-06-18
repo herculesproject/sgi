@@ -5,9 +5,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialogModule,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import { NGXLogger } from 'ngx-logger';
 import TestUtils from '@core/utils/test-utils';
+import { HeaderComponent } from '@shared/componentes-layout/header/header.component';
 
 describe('DialogComponent', () => {
   let component: DialogComponent;
@@ -15,10 +20,13 @@ describe('DialogComponent', () => {
 
   beforeEach(async(() => {
     // Mock logger
-    const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(NGXLogger.name, TestUtils.getOwnMethodNames(NGXLogger.prototype));
+    const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(
+      NGXLogger.name,
+      TestUtils.getOwnMethodNames(NGXLogger.prototype)
+    );
 
     const mockDialogRef = {
-      close: jasmine.createSpy('close')
+      close: jasmine.createSpy('close'),
     };
 
     // Mock MAT_DIALOG
@@ -30,19 +38,18 @@ describe('DialogComponent', () => {
         RouterTestingModule,
         MaterialDesignModule,
         HttpClientTestingModule,
-        MatDialogModule
+        MatDialogModule,
       ],
       providers: [
         {
           provide: MatDialogRef,
-          useValue: mockDialogRef
+          useValue: mockDialogRef,
         },
         { provide: NGXLogger, useValue: loggerSpy },
         { provide: MAT_DIALOG_DATA, useValue: matDialogData },
       ],
-      declarations: [DialogComponent]
-    })
-      .compileComponents();
+      declarations: [DialogComponent, HeaderComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -55,4 +62,3 @@ describe('DialogComponent', () => {
     expect(component).toBeTruthy();
   });
 });
-

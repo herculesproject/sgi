@@ -1,4 +1,10 @@
-import { FormControl, FormGroup, ValidatorFn } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ValidatorFn,
+  ValidationErrors,
+  AbstractControl,
+} from '@angular/forms';
 
 /**
  * Clase para manejar los formGroups de los formularios
@@ -14,9 +20,10 @@ export class FormGroupUtil {
   static validFormGroup(formGroup: FormGroup): boolean {
     let result = true;
     const list: string[] = Object.keys(formGroup.controls);
-    list.forEach((element) => {
-      if (formGroup.get(element).errors != null) {
-        formGroup.get(element).markAllAsTouched();
+    list.forEach((key) => {
+      const abstractControl: AbstractControl = formGroup.get(key);
+      if (this.getError(formGroup, key) != null) {
+        abstractControl.markAllAsTouched();
         result = false;
       }
     });
@@ -31,11 +38,9 @@ export class FormGroupUtil {
    * @param key Identificador del dato
    */
   static checkError(formGroup: FormGroup, key: string): boolean {
-    if (formGroup.get(key)) {
-      return (
-        formGroup.get(key).invalid &&
-        (formGroup.get(key).dirty || formGroup.get(key).touched)
-      );
+    const abstractControl: AbstractControl = formGroup.get(key);
+    if (abstractControl) {
+      return abstractControl.invalid && (abstractControl.dirty || abstractControl.touched);
     }
     return false;
   }
@@ -46,18 +51,27 @@ export class FormGroupUtil {
    * @param formGroup FormGroup a comprobar
    * @param key Identificador del dato
    */
-  static getError(formGroup: FormGroup, key: string) {
-    return formGroup.get(key).errors;
+  static getError(formGroup: FormGroup, key: string): ValidationErrors {
+    const abstractControl: AbstractControl = formGroup.get(key);
+    if (abstractControl) {
+      return abstractControl.errors;
+    }
+    return null;
   }
 
   /**
-   * Devuelve el valor de un dato concreto de un formGroup
+   * Devuelve el valor de un dato concreto de un formGroup.
+   * Si no existe el dato devuelve null
    *
    * @param formGroup FormGroup a comprobar
    * @param key Identificador del dato
    */
   static getValue(formGroup: FormGroup, key: string) {
-    return formGroup.get(key).value;
+    const abstractControl: AbstractControl = formGroup.get(key);
+    if (abstractControl) {
+      return abstractControl.value;
+    }
+    return null;
   }
 
   /**
@@ -67,8 +81,11 @@ export class FormGroupUtil {
    * @param key Identificador del dato
    * @param value Nuevo valor
    */
-  static setValue(formGroup: FormGroup, key: string, value: any) {
-    return formGroup.get(key).setValue(value);
+  static setValue(formGroup: FormGroup, key: string, value: any): void {
+    const abstractControl: AbstractControl = formGroup.get(key);
+    if (abstractControl) {
+      abstractControl.setValue(value);
+    }
   }
 
   /**
@@ -82,8 +99,11 @@ export class FormGroupUtil {
     formGroup: FormGroup,
     key: string,
     validator: ValidatorFn[]
-  ) {
-    return formGroup.setControl(key, new FormControl('', validator));
+  ): void {
+    const abstractControl: AbstractControl = formGroup.get(key);
+    if (abstractControl) {
+      formGroup.setControl(key, new FormControl('', validator));
+    }
   }
 
   /**

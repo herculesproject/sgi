@@ -7,7 +7,7 @@ import { NGXLogger } from 'ngx-logger';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'sgi-webapp';
@@ -22,9 +22,7 @@ export class AppComponent implements OnInit, OnDestroy {
   // Subscription
   subscriptionMenuToogle: Subscription;
 
-  constructor(
-    private logger: NGXLogger,
-    private layoutService: LayoutService) {
+  constructor(private logger: NGXLogger, private layoutService: LayoutService) {
     this.screenWidth = window.innerWidth;
   }
 
@@ -32,18 +30,19 @@ export class AppComponent implements OnInit, OnDestroy {
     this.logger.info('SGI WEBAPP - HERCULES');
     this.logger.debug(AppComponent.name, 'ngOnInit()', 'start');
 
-    this.subscriptionMenuToogle = this.layoutService.getToogleSidenav().subscribe(menuToogle => {
-      this.menuToogle = menuToogle;
-    });
+    this.subscriptionMenuToogle = this.layoutService
+      .getToogleSidenav()
+      .subscribe((menuToogle) => {
+        this.menuToogle = menuToogle;
+      });
     this.logger.debug(AppComponent.name, 'ngOnInit()', 'end');
   }
 
-
   ngOnDestroy(): void {
     this.logger.debug(AppComponent.name, 'ngOnDestroy()', 'start');
-    this.subscriptionMenuToogle.unsubscribe();
+    if (this.subscriptionMenuToogle) {
+      this.subscriptionMenuToogle.unsubscribe();
+    }
     this.logger.debug(AppComponent.name, 'ngOnDestroy()', 'end');
   }
-
-
 }

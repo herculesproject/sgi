@@ -4,6 +4,8 @@ import { RootComponent } from './root.component';
 import { LoggerModule, NGXLogger } from 'ngx-logger';
 import { environment } from '@env';
 import TestUtils from '@core/utils/test-utils';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HeaderComponent } from '@shared/componentes-layout/header/header.component';
 
 describe('RootComponent', () => {
   let component: RootComponent;
@@ -12,13 +14,14 @@ describe('RootComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [RootComponent],
+      declarations: [RootComponent, HeaderComponent],
       imports: [
         LoggerModule.forRoot({
           serverLoggingUrl: environment.serverLoggingUrl,
           level: environment.logLevel,
           serverLogLevel: environment.serverLogLevel
         }),
+        RouterTestingModule
       ],
       providers: [
         { provide: NGXLogger, useValue: loggerSpy },

@@ -1,11 +1,16 @@
-import { TestBed, getTestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {TestBed} from '@angular/core/testing';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 
-import { NGXLogger } from 'ngx-logger';
+import {NGXLogger} from 'ngx-logger';
 
 import TestUtils from '@core/utils/test-utils';
-import { BaseService } from './base.service';
+import {BaseService} from './base.service';
+import {MenuPrincipalComponent} from '@shared/componentes-layout/menu-principal/menu-principal.component';
+import {environment} from "@env";
 
 interface Entity {
   id?: number;
@@ -14,12 +19,15 @@ interface Entity {
 
 const NOT_FOUND = {
   status: 404,
-  statusText: 'Not Found'
+  statusText: 'Not Found',
 };
 
-xdescribe('BaseService', () => {
+describe('BaseService', () => {
   // Mock logger
-  const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(NGXLogger.name, TestUtils.getOwnMethodNames(NGXLogger.prototype));
+  const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(
+    NGXLogger.name,
+    TestUtils.getOwnMethodNames(NGXLogger.prototype)
+  );
 
   // Allow http call mocking
   let http: HttpClient;
@@ -30,7 +38,8 @@ xdescribe('BaseService', () => {
   // We store the service and the httpmock in variables we can access in every test and gets instanciated every time before a test runs
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule]
+      declarations: [MenuPrincipalComponent],
+      imports: [HttpClientTestingModule],
     });
 
     http = TestBed.inject(HttpClient);
@@ -47,7 +56,7 @@ xdescribe('BaseService', () => {
 
   it('create() should POST and return data', () => {
     // given: a new Entity
-    const newEntity: Entity = { name: 'Erik' } as Entity;
+    const newEntity: Entity = {name: 'Erik'} as Entity;
     // when: create method called
     service.create(newEntity).subscribe((res) => {
       // then: a new entity is created with the given name
@@ -55,19 +64,21 @@ xdescribe('BaseService', () => {
     });
 
     // then: the right backend API is called
-    const req = httpMock.expectOne('http://turnaround-server:8080/entities', 'GET to API');
+    const req = httpMock.expectOne(`${environment.apiUrl}/entities`,
+      'POST to API'
+    );
     // then: the right HTTP method is used to call the backend API
     expect(req.request.method).toBe('POST');
 
     // “fire” the request with the mocked result
-    req.flush({ id: 99, name: 'Erik' });
+    req.flush({id: 99, name: 'Erik'});
   });
 
   it('update() should PUT and return data', () => {
     // given: an existing Entity
     const existingEntity = {
       id: 1,
-      name: 'George'
+      name: 'George',
     };
     // when: entity udpated and update method called
     const updatedEntity = Object.create(existingEntity);
@@ -78,7 +89,9 @@ xdescribe('BaseService', () => {
     });
 
     // then: the right backend API is called
-    const req = httpMock.expectOne('http://turnaround-server:8080/entities/1', 'PUT to API');
+    const req = httpMock.expectOne(`${environment.apiUrl}/entities/1`,
+      'PUT to API'
+    );
     // then: the right HTTP method is used to call the backend API
     expect(req.request.method).toBe('PUT');
 
@@ -90,7 +103,7 @@ xdescribe('BaseService', () => {
     // given: a non existing Entity
     const nonExistingEntity = {
       id: 99,
-      name: 'George'
+      name: 'George',
     };
     // when: update method called
     service.update(nonExistingEntity, nonExistingEntity.id).subscribe(
@@ -104,7 +117,9 @@ xdescribe('BaseService', () => {
     );
 
     // then: the right backend API is called
-    const req = httpMock.expectOne('http://turnaround-server:8080/entities/99', 'PUT to API');
+    const req = httpMock.expectOne(`${environment.apiUrl}/entities/99`,
+      'PUT to API'
+    );
     // then: the right HTTP method is used to call the backend API
     expect(req.request.method).toBe('PUT');
 
@@ -122,7 +137,9 @@ xdescribe('BaseService', () => {
     });
 
     // then: the right backend API is called
-    const req = httpMock.expectOne('http://turnaround-server:8080/entities/1', 'DELETE to API');
+    const req = httpMock.expectOne(`${environment.apiUrl}/entities/1`,
+      'DELETE to API'
+    );
     // then: the right HTTP method is used to call the backend API
     expect(req.request.method).toBe('DELETE');
 
@@ -145,7 +162,9 @@ xdescribe('BaseService', () => {
     );
 
     // then: the right backend API is called
-    const req = httpMock.expectOne('http://turnaround-server:8080/entities/1', 'DELETE to API');
+    const req = httpMock.expectOne(`${environment.apiUrl}/entities/1`,
+      'DELETE to API'
+    );
     // then: the right HTTP method is used to call the backend API
     expect(req.request.method).toBe('DELETE');
 
@@ -156,9 +175,9 @@ xdescribe('BaseService', () => {
   it('findAll() should return data', () => {
     // given: existing entities
     const dummyEntityList = [
-      { id: 1, name: 'George' },
-      { id: 2, name: 'Janet' },
-      { id: 3, name: 'Emma' },
+      {id: 1, name: 'George'},
+      {id: 2, name: 'Janet'},
+      {id: 3, name: 'Emma'},
     ];
     // when: findAll method called
     service.findAll().subscribe((res) => {
@@ -167,7 +186,9 @@ xdescribe('BaseService', () => {
     });
 
     // then: the right backend API is called
-    const req = httpMock.expectOne('http://turnaround-server:8080/entities', 'GET to API');
+    const req = httpMock.expectOne(`${environment.apiUrl}/entities/all`,
+      'GET to API'
+    );
     // then: the right HTTP method is used to call the backend API
     expect(req.request.method).toBe('GET');
 
@@ -179,7 +200,7 @@ xdescribe('BaseService', () => {
     // given: existing entity
     const dummyEntity = {
       id: 1,
-      name: 'George'
+      name: 'George',
     };
     // when: findOne method called with existing entity id
     service.getOne(dummyEntity.id).subscribe((res) => {
@@ -188,7 +209,9 @@ xdescribe('BaseService', () => {
     });
 
     // then: the right backend API is called
-    const req = httpMock.expectOne('http://turnaround-server:8080/entities/1', 'GET to API');
+    const req = httpMock.expectOne(`${environment.apiUrl}/entities/1`,
+      'GET to API'
+    );
     // then: the right HTTP method is used to call the backend API
     expect(req.request.method).toBe('GET');
 
@@ -211,7 +234,9 @@ xdescribe('BaseService', () => {
     );
 
     // then: the right backend API is called
-    const req = httpMock.expectOne('http://turnaround-server:8080/entities/99', 'GET to API');
+    const req = httpMock.expectOne(`${environment.apiUrl}/entities/99`,
+      'GET to API'
+    );
     // then: the right HTTP method is used to call the backend API
     expect(req.request.method).toBe('GET');
 

@@ -5,46 +5,52 @@ import { NGXLogger } from 'ngx-logger';
 import TestUtils from '@core/utils/test-utils';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('UnidadMedidaListadoComponent', () => {
   let component: UnidadMedidaListadoComponent;
   let fixture: ComponentFixture<UnidadMedidaListadoComponent>;
 
   beforeEach(async(() => {
-
     // Mock logger
-    const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(NGXLogger.name, TestUtils.getOwnMethodNames(NGXLogger.prototype));
+    const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(
+      NGXLogger.name,
+      TestUtils.getOwnMethodNames(NGXLogger.prototype)
+    );
 
     // Mock SnackBarService
-    const snackBarServiceSpy: jasmine.SpyObj<SnackBarService> =
-      jasmine.createSpyObj(SnackBarService.name, TestUtils.getOwnMethodNames(SnackBarService.prototype));
+    const snackBarServiceSpy: jasmine.SpyObj<SnackBarService> = jasmine.createSpyObj(
+      SnackBarService.name,
+      TestUtils.getOwnMethodNames(SnackBarService.prototype)
+    );
 
     TestBed.configureTestingModule({
       imports: [
         BrowserAnimationsModule,
         MaterialDesignModule,
-        HttpClientModule,
+        HttpClientTestingModule,
         TranslateModule.forRoot({
           loader: {
             provide: TranslateLoader,
             useFactory: (http: HttpClient) => {
               return new TranslateHttpLoader(http);
             },
-            deps: [HttpClient]
-          }
+            deps: [HttpClient],
+          },
         }),
+        RouterTestingModule,
       ],
       providers: [
         { provide: NGXLogger, useValue: loggerSpy },
         { provide: SnackBarService, useValue: snackBarServiceSpy },
       ],
-      declarations: [UnidadMedidaListadoComponent]
-    })
-      .compileComponents();
+      declarations: [UnidadMedidaListadoComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -6,10 +6,24 @@ import TestUtils from '@core/utils/test-utils';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { from, Observable } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MenuSecundarioComponent } from '@shared/componentes-layout/menu-secundario/menu-secundario.component';
+import { ReactiveFormsModule } from '@angular/forms';
+
+class FakeRouter {
+  navigate(params) {}
+}
+class FakeActivatedRoute {
+  public params: Observable<any> = from([{ id: '2' }]);
+}
 
 describe('UnidadMedidaAgregarActualizarComponent', () => {
   let component: UnidadMedidaAgregarActualizarComponent;
@@ -20,16 +34,22 @@ describe('UnidadMedidaAgregarActualizarComponent', () => {
   );
 
   // Mock SnackBarService
-  const snackBarServiceSpy: jasmine.SpyObj<SnackBarService> =
-    jasmine.createSpyObj(SnackBarService.name, TestUtils.getOwnMethodNames(SnackBarService.prototype));
-
+  const snackBarServiceSpy: jasmine.SpyObj<SnackBarService> = jasmine.createSpyObj(
+    SnackBarService.name,
+    TestUtils.getOwnMethodNames(SnackBarService.prototype)
+  );
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [UnidadMedidaAgregarActualizarComponent],
+      declarations: [
+        UnidadMedidaAgregarActualizarComponent,
+        MenuSecundarioComponent,
+      ],
       providers: [
         { provide: NGXLogger, useValue: loggerSpy },
-        { provide: SnackBarService, useValue: snackBarServiceSpy }
+        { provide: SnackBarService, useValue: snackBarServiceSpy },
+        { provide: Router, useClass: FakeRouter },
+        { provide: ActivatedRoute, useClass: FakeActivatedRoute },
       ],
       imports: [
         TranslateModule.forRoot({
@@ -38,14 +58,18 @@ describe('UnidadMedidaAgregarActualizarComponent', () => {
             useFactory: (http: HttpClient) => {
               return new TranslateHttpLoader(http);
             },
-            deps: [HttpClient]
-          }
+            deps: [HttpClient],
+          },
         }),
         AppRoutingModule,
         HttpClientTestingModule,
         CommonModule,
         TranslateModule,
-      ]
+        MaterialDesignModule.forRoot(),
+        BrowserAnimationsModule,
+        FlexLayoutModule,
+        ReactiveFormsModule,
+      ],
     }).compileComponents();
   }));
 

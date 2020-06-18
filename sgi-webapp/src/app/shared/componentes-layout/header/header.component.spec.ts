@@ -9,15 +9,19 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { MenuSecundarioComponent } from '../menu-secundario/menu-secundario.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
 
   beforeEach(async(() => {
-
     // Mock logger
-    const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(NGXLogger.name, TestUtils.getOwnMethodNames(NGXLogger.prototype));
+    const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(
+      NGXLogger.name,
+      TestUtils.getOwnMethodNames(NGXLogger.prototype)
+    );
 
     TestBed.configureTestingModule({
       imports: [
@@ -31,16 +35,14 @@ describe('HeaderComponent', () => {
             useFactory: (http: HttpClient) => {
               return new TranslateHttpLoader(http);
             },
-            deps: [HttpClient]
-          }
+            deps: [HttpClient],
+          },
         }),
+        ReactiveFormsModule
       ],
-      providers: [
-        { provide: NGXLogger, useValue: loggerSpy }
-      ],
-      declarations: [HeaderComponent]
-    })
-      .compileComponents();
+      providers: [{ provide: NGXLogger, useValue: loggerSpy }],
+      declarations: [HeaderComponent, MenuSecundarioComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

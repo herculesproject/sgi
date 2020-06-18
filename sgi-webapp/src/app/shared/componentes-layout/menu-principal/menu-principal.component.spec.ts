@@ -8,6 +8,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('MenuPrincipalComponent', () => {
   let component: MenuPrincipalComponent;
@@ -32,6 +33,7 @@ describe('MenuPrincipalComponent', () => {
             deps: [HttpClient]
           }
         }),
+        RouterTestingModule.withRoutes([])
       ],
       providers: [
         { provide: NGXLogger, useValue: loggerSpy }
