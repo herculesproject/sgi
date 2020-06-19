@@ -38,6 +38,12 @@ Además, deben existir los siguientes directorios en tu directorio **HOME**:
 Así como el siguiente fichero (también en tu directorio **HOME**):
 *  **.gitconfig**: Se usa para compartir la configuración de git entre el host y el contenedor.
 
+## Documentación - Compodoc
+
+Compodoc es una herramienta de documentación para aplicaciones desarrolladas sobre Angular. Genera una documentación estática de la aplicación que ayuda a los desarrolladores a proporcionar una documentación clara y útil.
+
+Para generar la documentación ejecutar el comando `compodoc -p tsconfig.json`. Para acceder a la documentación ejecutamos el comando `npm run compodoc-serve` y accedemos a `http://127.0.0.1:8081/`.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.

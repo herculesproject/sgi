@@ -9,33 +9,33 @@ import { UrlUtils } from '@core/utils/url-utils';
  */
 const routes: Routes = [
   {
-    path: UrlUtils.agrupacionServicios,
+    path: UrlUtils.agrupacionServicios.valueOf(),
     component: RootComponent,
   },
   {
-    path: UrlUtils.horario,
+    path: UrlUtils.horario.valueOf(),
     component: RootComponent,
   },
   {
-    path: UrlUtils.producto,
+    path: UrlUtils.producto.valueOf(),
     component: RootComponent,
   },
   {
-    path: UrlUtils.solicitud,
+    path: UrlUtils.solicitud.valueOf(),
     component: RootComponent,
   },
   {
-    path: UrlUtils.tipoFungible,
+    path: UrlUtils.tipoFungible.valueOf(),
     loadChildren: () =>
       import('./components/tipo-fungible/tipo-fungible.module').then(m => m.TipoFungibleModule),
     canActivate: [AuthGuard]
   },
   {
-    path: UrlUtils.tipoReservables,
+    path: UrlUtils.tipoReservables.valueOf(),
     component: RootComponent,
   },
   {
-    path: UrlUtils.unidadMedida,
+    path: UrlUtils.unidadMedida.valueOf(),
     loadChildren: () =>
       import('./components/unidad-medida/unidad-medida.module').then(
         (m) => m.UnidadMedidaModule

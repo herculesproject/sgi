@@ -5,7 +5,7 @@ import { UrlUtils } from '@core/utils/url-utils';
 
 const routes: Routes = [
   {
-    path: UrlUtils.root,
+    path: UrlUtils.root.valueOf(),
     component: TipoFungibleListadoComponent,
   },
 ];

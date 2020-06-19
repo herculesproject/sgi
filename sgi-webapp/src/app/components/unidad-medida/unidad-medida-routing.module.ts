@@ -6,15 +6,15 @@ import { UrlUtils } from '@core/utils/url-utils';
 
 const routes: Routes = [
   {
-    path: UrlUtils.root,
+    path: UrlUtils.root.valueOf(),
     component: UnidadMedidaListadoComponent,
   },
   {
-    path: UrlUtils.agregar,
+    path: UrlUtils.agregar.valueOf(),
     component: UnidadMedidaAgregarActualizarComponent,
   },
   {
-    path: UrlUtils.actualizar + ':id',
+    path: UrlUtils.actualizar.valueOf() + ':id',
     component: UnidadMedidaAgregarActualizarComponent,
   },
 ];
@@ -23,4 +23,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class UnidadMedidaRoutingModule {}
+export class UnidadMedidaRoutingModule { }
