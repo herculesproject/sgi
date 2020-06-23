@@ -37,7 +37,8 @@ export class UnidadMedidaListadoComponent implements OnInit, OnDestroy {
     this.unidadMedidaService
       .findAll()
       .subscribe((unidadesMedida: UnidadMedida[]) => {
-        this.dataSource.data = unidadesMedida;
+        // Filtramos por activos
+        this.dataSource.data = unidadesMedida.filter((x) => x.activo);
       });
 
     this.dataSource.sort = this.sort;
@@ -79,7 +80,8 @@ export class UnidadMedidaListadoComponent implements OnInit, OnDestroy {
           ).subscribe((unidadesMedida: UnidadMedida[]) => {
             this.snackBarService
               .mostrarMensajeSuccess(this.traductor.getTexto('unidad-medida.listado.eliminarConfirmado'));
-            this.dataSource.data = unidadesMedida;
+            // Filtramos por activos
+            this.dataSource.data = unidadesMedida.filter((x) => x.activo);
           });
         }
         aceptado = false;
