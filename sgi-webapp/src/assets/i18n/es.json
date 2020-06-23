@@ -83,7 +83,12 @@
       "nombre": "NOMBRE",
       "servicio": "SERVICIO",
       "acciones": "ACCIONES",
-      "nuevo-tipo": "NUEVO TIPO FUNGIBLE"
+      "eliminar": "¿Desea eliminar el producto?",
+      "eliminarConfirmado": "Tipo fungible eliminado correctamente",
+      "nuevo-tipo": "NUEVO TIPO FUNGIBLE",
+      "editar": "Editar",
+      "aceptar": "Aceptar",
+      "cancelar": "Cancelar"
     }
   }
 }

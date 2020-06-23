@@ -5,6 +5,10 @@ import { MatSort } from '@angular/material/sort';
 import { TipoFungibleService } from '@core/services/tipo-fungible.service';
 import { NGXLogger } from 'ngx-logger';
 import { UrlUtils } from '@core/utils/url-utils';
+import { switchMap } from 'rxjs/operators';
+import { TraductorService } from '@core/services/traductor.service';
+import { DialogService } from '@core/services/dialog.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
 
 
 @Component({
@@ -20,7 +24,10 @@ export class TipoFungibleListadoComponent implements OnInit, OnDestroy {
 
   constructor(
     private logger: NGXLogger,
-    private tipoFungibleService: TipoFungibleService) { }
+    private tipoFungibleService: TipoFungibleService,
+    private readonly traductor: TraductorService,
+    private dialogService: DialogService,
+    private snackBarService: SnackBarService) { }
 
   ngOnInit(): void {
     this.logger.debug(TipoFungibleListadoComponent.name, 'ngOnInit()', 'start');
@@ -64,6 +71,41 @@ export class TipoFungibleListadoComponent implements OnInit, OnDestroy {
 
       return listAsFlatString(order).includes(transformedFilter);
     };
+  }
+
+  /**
+   * Elimina la unidad de listado con el id recibido por parametro.
+   * @param tipoFungibleId id unidad medida
+   * @param index posicion en la tabla
+   * @param $event evento
+   */
+  borrarSeleccionado(tipoFungibleId: number, $event: Event) {
+    this.logger.debug(TipoFungibleListadoComponent.name,
+      'borrarSeleccionado(tipoFungibleId: number, $event: Event) - start');
+
+    $event.stopPropagation();
+    $event.preventDefault();
+
+    this.dialogService.dialogGenerico(this.traductor.getTexto('tipo-fungible.listado.eliminar'),
+      this.traductor.getTexto('tipo-fungible.listado.aceptar'), this.traductor.getTexto('tipo-fungible.listado.cancelar'));
+
+    this.dialogService.getAccionConfirmada().subscribe(
+      (aceptado: boolean) => {
+        if (aceptado) {
+          this.tipoFungibleService.delete(tipoFungibleId).pipe(
+            switchMap(_ => {
+              return this.tipoFungibleService.findAll();
+            })
+          ).subscribe((tiposFungibles: TipoFungible[]) => {
+            this.snackBarService
+              .mostrarMensajeSuccess(this.traductor.getTexto('tipo-fungible.listado.eliminarConfirmado'));
+            this.dataSource.data = tiposFungibles;
+          });
+        }
+        aceptado = false;
+      });
+
+    this.logger.debug(TipoFungibleListadoComponent.name, 'borrarSeleccionado(tipoFungibleId: number, $event: Event) - end');
   }
 
   ngOnDestroy(): void {

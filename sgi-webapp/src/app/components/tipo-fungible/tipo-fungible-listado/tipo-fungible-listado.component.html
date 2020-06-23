@@ -28,7 +28,8 @@
         <button mat-button>
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-button>
+        <button mat-button matTooltip="{{'tipo-fungible.listado.borrar' | translate}}"
+          (click)="borrarSeleccionado(tipoFungible.id, $event)">
           <mat-icon>close</mat-icon>
         </button>
       </td>

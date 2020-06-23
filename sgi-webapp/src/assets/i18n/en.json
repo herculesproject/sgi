@@ -83,7 +83,13 @@
       "nombre": "NAME",
       "servicio": "SERVICE",
       "acciones": "ACTIONS",
-      "nuevo-tipo": "NEW FUNGIBLE TYPE"
+      "eliminar": "Do you want to delete the product?",
+      "eliminarConfirmado": "Fungible type removed successfully",
+      "nueva-unidad": "NEW FUNGIBLE TYPE",
+      "borrar": "Remove",
+      "editar": "Edit",
+      "aceptar": "Accept",
+      "cancelar": "Cancel"
     }
   }
 }
