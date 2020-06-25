@@ -123,9 +123,9 @@ export class TipoFungibleListadoComponent implements OnInit, OnDestroy {
     this.logger.debug(
       TipoFungibleListadoComponent.name, 'ngOnDestroy() - start');
 
-    this.tipoFungibleServiceSubscription.unsubscribe();
-    this.dialogServiceSubscription.unsubscribe();
-    this.tipoFungibleServiceDeleteSubscription.unsubscribe();
+    this.tipoFungibleServiceSubscription?.unsubscribe();
+    this.dialogServiceSubscription?.unsubscribe();
+    this.tipoFungibleServiceDeleteSubscription?.unsubscribe();
 
     this.logger.debug(
       TipoFungibleListadoComponent.name, 'ngOnDestroy() - end');

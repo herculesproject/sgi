@@ -18,7 +18,6 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ComponentsModule } from './components/components.module';
 
-
 @NgModule({
   declarations: [
     AppComponent,

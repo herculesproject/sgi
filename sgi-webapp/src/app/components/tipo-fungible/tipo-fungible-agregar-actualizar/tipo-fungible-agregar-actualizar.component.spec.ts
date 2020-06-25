@@ -8,6 +8,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 describe('TipoFungibleAgregarActualizarComponent', () => {
   let component: TipoFungibleAgregarActualizarComponent;
@@ -36,6 +37,7 @@ describe('TipoFungibleAgregarActualizarComponent', () => {
         HttpClientModule,
         CommonModule,
         TranslateModule,
+        MatAutocompleteModule,
       ]
     }).compileComponents();
   }));
