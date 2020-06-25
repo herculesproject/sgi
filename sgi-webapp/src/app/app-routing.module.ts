@@ -32,7 +32,9 @@ const routes: Routes = [
   },
   {
     path: UrlUtils.tipoReservables.valueOf(),
-    component: RootComponent,
+    loadChildren: () =>
+      import('./components/tipo-reservable/tipo-reservable.module').then(m => m.TipoReservableModule),
+    canActivate: [AuthGuard]
   },
   {
     path: UrlUtils.unidadMedida.valueOf(),

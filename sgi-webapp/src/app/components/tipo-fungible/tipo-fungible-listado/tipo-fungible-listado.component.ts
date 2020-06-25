@@ -9,6 +9,7 @@ import { switchMap } from 'rxjs/operators';
 import { TraductorService } from '@core/services/traductor.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -20,6 +21,10 @@ export class TipoFungibleListadoComponent implements OnInit, OnDestroy {
   UrlUtils = UrlUtils;
   displayedColumns: string[] = ['nombre', 'servicio', 'acciones'];
   dataSource: MatTableDataSource<TipoFungible>;
+  tipoFungibleServiceSubscription: Subscription;
+  dialogServiceSubscription: Subscription;
+  tipoFungibleServiceDeleteSubscription: Subscription;
+
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
@@ -34,7 +39,7 @@ export class TipoFungibleListadoComponent implements OnInit, OnDestroy {
 
     this.dataSource = new MatTableDataSource<TipoFungible>([]);
 
-    this.tipoFungibleService.findAll().subscribe(
+    this.tipoFungibleServiceSubscription = this.tipoFungibleService.findAll().subscribe(
       (tiposFungible: TipoFungible[]) => {
         this.dataSource.data = tiposFungible;
       });
@@ -48,6 +53,9 @@ export class TipoFungibleListadoComponent implements OnInit, OnDestroy {
    * @param event variable filtro
    */
   applyFilter(event: Event) {
+    this.logger.debug(TipoFungibleListadoComponent.name,
+      'applyFilter($event: Event) - start');
+
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
@@ -71,6 +79,9 @@ export class TipoFungibleListadoComponent implements OnInit, OnDestroy {
 
       return listAsFlatString(order).includes(transformedFilter);
     };
+
+    this.logger.debug(TipoFungibleListadoComponent.name,
+      'applyFilter($event: Event) - end');
   }
 
   /**
@@ -79,7 +90,7 @@ export class TipoFungibleListadoComponent implements OnInit, OnDestroy {
    * @param index posicion en la tabla
    * @param $event evento
    */
-  borrarSeleccionado(tipoFungibleId: number, $event: Event) {
+  borrarSeleccionado(tipoFungibleId: number, $event: Event): void {
     this.logger.debug(TipoFungibleListadoComponent.name,
       'borrarSeleccionado(tipoFungibleId: number, $event: Event) - start');
 
@@ -89,10 +100,10 @@ export class TipoFungibleListadoComponent implements OnInit, OnDestroy {
     this.dialogService.dialogGenerico(this.traductor.getTexto('tipo-fungible.listado.eliminar'),
       this.traductor.getTexto('tipo-fungible.listado.aceptar'), this.traductor.getTexto('tipo-fungible.listado.cancelar'));
 
-    this.dialogService.getAccionConfirmada().subscribe(
+    this.dialogServiceSubscription = this.dialogService.getAccionConfirmada().subscribe(
       (aceptado: boolean) => {
         if (aceptado) {
-          this.tipoFungibleService.delete(tipoFungibleId).pipe(
+          this.tipoFungibleServiceDeleteSubscription = this.tipoFungibleService.delete(tipoFungibleId).pipe(
             switchMap(_ => {
               return this.tipoFungibleService.findAll();
             })
@@ -111,6 +122,11 @@ export class TipoFungibleListadoComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.logger.debug(
       TipoFungibleListadoComponent.name, 'ngOnDestroy() - start');
+
+    this.tipoFungibleServiceSubscription.unsubscribe();
+    this.dialogServiceSubscription.unsubscribe();
+    this.tipoFungibleServiceDeleteSubscription.unsubscribe();
+
     this.logger.debug(
       TipoFungibleListadoComponent.name, 'ngOnDestroy() - end');
   }

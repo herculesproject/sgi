@@ -116,5 +116,26 @@
       "aceptar": "Accept",
       "cancelar": "Cancel"
     }
+  },
+  "tipo-reservable": {
+    "listado": {
+      "titulo": "Reservable type list",
+      "busqueda": "Quick search",
+      "busqueda-placeholder": "Text",
+      "descripcion": "DESCRIPTION",
+      "servicio": "SERVICE",
+      "estado": "STATE",
+      "duracionMin": "DUR.MÍN.",
+      "diasAntelacion": "D.ANTEL.",
+      "horasAnulacion": "H.ANUL.",
+      "dias": "DAYS",
+      "acciones": "ACTIONS",
+      "eliminar": "Do you want to delete the product?",
+      "eliminarConfirmado": "Reservable type removed successfully",
+      "nuevo-tipo": "NEW RESERVABLE TYPE",
+      "editar": "Edit",
+      "aceptar": "Accept",
+      "cancelar": "Cancel"
+    }
   }
 }

@@ -102,7 +102,7 @@
       "titulo": "Creación de tipo fungible"
     },
     "listado": {
-      "titulo": "Listado tipo fungible",
+      "titulo": "Listado tipo de fungible",
       "busqueda": "Búsqueda rápida",
       "busqueda-placeholder": "Texto",
       "nombre": "NOMBRE",
@@ -111,6 +111,27 @@
       "eliminar": "¿Desea eliminar el producto?",
       "eliminarConfirmado": "Tipo fungible eliminado correctamente",
       "nuevo-tipo": "NUEVO TIPO FUNGIBLE",
+      "editar": "Editar",
+      "aceptar": "Aceptar",
+      "cancelar": "Cancelar"
+    }
+  },
+  "tipo-reservable": {
+    "listado": {
+      "titulo": "Listado tipo de reservable",
+      "busqueda": "Búsqueda rápida",
+      "busqueda-placeholder": "Texto",
+      "descripcion": "DESCRIPCIÓN",
+      "servicio": "SERVICIO",
+      "estado": "ESTADO",
+      "duracionMin": "DUR.MÍN.",
+      "diasAntelacion": "D.ANTEL.",
+      "horasAnulacion": "H.ANUL.",
+      "dias": "DÍAS",
+      "acciones": "ACCIONES",
+      "eliminar": "¿Desea eliminar el producto?",
+      "eliminarConfirmado": "Tipo de reservable eliminado correctamente",
+      "nuevo-tipo": "NUEVO TIPO DE RESERVABLE",
       "editar": "Editar",
       "aceptar": "Aceptar",
       "cancelar": "Cancelar"
