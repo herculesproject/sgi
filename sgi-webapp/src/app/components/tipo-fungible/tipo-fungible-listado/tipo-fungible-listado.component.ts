@@ -74,8 +74,8 @@ export class TipoFungibleListadoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Elimina la unidad de listado con el id recibido por parametro.
-   * @param tipoFungibleId id unidad medida
+   * Elimina el tipo fungible del listado con el id recibido por parametro.
+   * @param tipoFungibleId id tipo fungible
    * @param index posicion en la tabla
    * @param $event evento
    */

@@ -76,6 +76,31 @@
     }
   },
   "tipo-fungible": {
+    "actualizar": {
+      "correcto": "Tipo fungible actualizado correctamente",
+      "error": "Error al actualizar el tipo fungible",
+      "titulo": "Actualización de tipo fungible",
+      "no-encontrado": "Error al cargar los datos del tipo fungible"
+    },
+    "agregar": {
+      "nombre": {
+        "error": {
+          "maximo": "El nombre supera la longitud máxima",
+          "minimo": "El nombre no supera la longitud mínima",
+          "requerido": "Introduzca el nombre"
+        },
+        "titulo": "Nombre"
+      },
+      "correcto": "Tipo fungible agregado correctamente",
+      "servicio": {
+        "error": {
+          "requerido": "Introduzca el servicio"
+        },
+        "titulo": "Servicio"
+      },
+      "error": "Error al agregar el tipo fungible",
+      "titulo": "Creación de tipo fungible"
+    },
     "listado": {
       "titulo": "Listado tipo fungible",
       "busqueda": "Búsqueda rápida",

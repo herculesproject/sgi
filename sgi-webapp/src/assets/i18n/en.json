@@ -76,6 +76,31 @@
     }
   },
   "tipo-fungible": {
+    "actualizar": {
+      "correcto": "Fungible type updated correctly",
+      "error": "Error updating fungible type",
+      "titulo": "Fungible type update",
+      "no-encontrado": "Error loading fungible type data"
+    },
+    "agregar": {
+      "nombre": {
+        "error": {
+          "maximo": "Name exceeds the maximum length",
+          "minimo": "Name does not exceed the minimum length",
+          "requerido": "Enter name"
+        },
+        "titulo": "Name"
+      },
+      "correcto": "Fungible type added correctly",
+      "servicio": {
+        "error": {
+          "requerido": "Enter service"
+        },
+        "titulo": "Service"
+      },
+      "error": "Error adding fungible type",
+      "titulo": "Fungible type creation"
+    },
     "listado": {
       "titulo": "Fungible type list",
       "busqueda": "Quick search",

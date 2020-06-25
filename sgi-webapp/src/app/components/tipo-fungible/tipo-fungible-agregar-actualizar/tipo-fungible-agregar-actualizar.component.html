@@ -1,0 +1,51 @@
+<!-- Tipo Fungible agregar/actualizar -->
+<section class="tipo-fungible-agregar">
+  <h2>{{'tipo-fungible.agregar.titulo' | translate}}</h2>
+  <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+    fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field appearance="fill">
+        <mat-label>{{'tipo-fungible.agregar.nombre.titulo' | translate}}</mat-label>
+        <input #nombre matInput formControlName="nombre" type="text" id="nombre"
+          placeholder="{{'tipo-fungible.agregar.nombre.titulo' | translate}}" required maxlength="100">
+        <mat-hint>{{nombre.value.length}} / 100</mat-hint>
+        <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'nombre') && formGroup.get('nombre').errors.required">
+          {{'tipo-fungible.agregar.nombre.error.requerido' | translate}}
+        </mat-error>
+        <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'nombre') && formGroup.get('nombre').errors.maxlength">
+          {{'tipo-fungible.agregar.nombre.error.maximo' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+
+
+      <mat-form-field class="input-form" appearance="fill">
+        <mat-label>{{'tipo-fungible.agregar.servicio.titulo' | translate}}</mat-label>
+        <input type="text" placeholder="Servicio" arial-label="Number" matInput formControlName="servicio"
+          [matAutocomplete]="auto" required>
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="getServicio">
+          <mat-option *ngFor="let servicio of filteredServicios | async" [value]="servicio">
+            {{servicio.nombre}}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'servicio') && formGroup.get('servicio').errors.required">
+          {{'tipo-fungible.agregar.servicio.error.requerido' | translate}}
+        </mat-error>
+      </mat-form-field>
+
+    </div>
+  </form>
+  <div class="footer-button">
+    <button fxFlex="20%" aria-label="Center Align" md-button mat-raised-button (click)="sendForm()"
+      [disabled]='desactivarAceptar'>
+      {{'botones.guardar'| translate}}
+    </button>
+    <button fxFlex="20%" class="md-primary" aria-label="Center Align" md-button mat-raised-button
+      [routerLink]="'/tipoFungible'">{{'botones.cancelar'| translate}}
+    </button>
+  </div>
+</section>
+<!-- Tipo Fungible agregar/actualizar -->
