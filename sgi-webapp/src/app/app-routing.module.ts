@@ -11,7 +11,9 @@ import { RootComponent } from './components/root/root.component';
 const routes: Routes = [
   {
     path: UrlUtils.agrupacionServicios.valueOf(),
-    component: RootComponent,
+    loadChildren: () =>
+      import('./components/agrupacion-servicio/agrupacion-servicio.module').then(m => m.AgrupacionServicioModule),
+    canActivate: [AuthGuard]
   },
   {
     path: UrlUtils.horario.valueOf(),

@@ -12,6 +12,8 @@ export class Servicio {
   contacto: string;
   /** seccion */
   seccion: Seccion;
+  /** activo */
+  activo: boolean;
 
   constructor() {
     this.id = null;
@@ -19,6 +21,7 @@ export class Servicio {
     this.abreviatura = '';
     this.contacto = '';
     this.seccion = null;
+    this.activo = true;
   }
 
 }

@@ -136,5 +136,60 @@
       "aceptar": "Aceptar",
       "cancelar": "Cancelar"
     }
+  },
+  "servicio": {
+    "listado": {
+      "titulo": "Servicios",
+      "busqueda": "Búsqueda rápida",
+      "busqueda-placeholder": "Texto",
+      "abreviatura": "ABREVIATURA",
+      "nombre": "NOMBRE",
+      "contacto": "CONTACTO",
+      "seccion": "SECCIÓN",
+      "acciones": "ACCIONES",
+      "nuevo-servicio": "AÑADIR NUEVO SERVICIO",
+      "editar": "Editar",
+      "eliminar": "¿Desea eliminar el servicio?",
+      "eliminarConfirmado": "Servicio eliminado correctamente",
+      "aceptar": "Aceptar",
+      "cancelar": "Cancelar",
+      "borrar": "Borrar"
+    },
+    "datos-generales": "Datos generales",
+    "nombre": {
+      "error": {
+        "maximo": "El nombre supera la longitud máxima",
+        "minimo": "El nombre no supera la longitud mínima",
+        "requerido": "Introduzca el nombre"
+      },
+      "titulo": "Nombre"
+    },
+    "abreviatura": {
+      "error": {
+        "maximo": "La abreviatura supera la longitud máxima",
+        "minimo": "La abreviatura no supera la longitud mínima",
+        "requerido": "Introduzca la abreviatura"
+      },
+      "titulo": "Abreviatura"
+    },
+    "contacto": {
+      "error": {
+        "maximo": "El email de contacto supera la longitud máxima",
+        "minimo": "El email de contacto no supera la longitud mínima",
+        "requerido": "Introduzca el email de contacto"
+      },
+      "titulo": "Email de contacto"
+    },
+    "seccion": "Sección",
+    "crear": {
+      "correcto": "Servicio creado correctamente",
+      "error": "Error al crear el servicio"
+    },
+    "actualizar": {
+      "correcto": "Servicio actualizado correctamente",
+      "error": "Error al actualizar el servicio",
+      "titulo": "Actualización de servicio",
+      "no-encontrado": "Error al cargar los datos del servicio"
+    }
   }
 }

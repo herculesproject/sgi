@@ -1,0 +1,53 @@
+<section class="servicio-section" [formGroup]="datosGeneralesFormGroup">
+
+  <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+    [fxFlexOrder]="fxFlexProperties.order">
+    <mat-form-field class="input-form" appearance="fill">
+      <mat-label>{{'servicio.nombre.titulo' | translate}}</mat-label>
+      <input #nombre matInput formControlName="nombre" type="text" id="nombre"
+        placeholder="{{'servicio.nombre.titulo' | translate}}" required maxlength="100">
+      <mat-hint>{{nombre.value.length}} / 100</mat-hint>
+      <mat-error
+        *ngIf="FormGroupUtil.checkError(datosGeneralesFormGroup, 'nombre') && datosGeneralesFormGroup.get('nombre').errors.maxlength">
+        {{'servicio.nombre.error.maximo' | translate}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+    [fxFlexOrder]="fxFlexProperties.order">
+    <mat-form-field class="input-form" appearance="fill">
+      <mat-label>{{'servicio.abreviatura.titulo' | translate}}</mat-label>
+      <input #abreviatura matInput formControlName="abreviatura" type="text" id="abreviatura"
+        placeholder="{{'servicio.abreviatura.titulo' | translate}}" required maxlength="10">
+      <mat-hint>{{abreviatura.value.length}} / 10</mat-hint>
+      <mat-error
+        *ngIf="FormGroupUtil.checkError(datosGeneralesFormGroup, 'abreviatura') && datosGeneralesFormGroup.get('abreviatura').errors.maxlength">
+        {{'servicio.abreviatura.error.maximo' | translate}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+    [fxFlexOrder]="fxFlexProperties.order">
+    <mat-form-field class="input-form" appearance="fill">
+      <mat-label>{{'servicio.contacto.titulo' | translate}}</mat-label>
+      <input #contacto matInput formControlName="contacto" type="text" id="contacto"
+        placeholder="{{'servicio.contacto.titulo' | translate}}" required maxlength="10">
+      <mat-hint>{{contacto.value.length}} / 10</mat-hint>
+      <mat-error
+        *ngIf="FormGroupUtil.checkError(datosGeneralesFormGroup, 'contacto') && datosGeneralesFormGroup.get('contacto').errors.maxlength">
+        {{'servicio.contacto.error.maximo' | translate}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+    [fxFlexOrder]="fxFlexProperties.order">
+    <mat-form-field class="input-form" appearance="fill">
+      <mat-label>{{'servicio.seccion' | translate}}</mat-label>
+      <input type="text" placeholder="Sección" arial-label="Number" matInput formControlName="seccion"
+        [matAutocomplete]="auto" required>
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="getSeccion">
+        <mat-option *ngFor="let seccion of filteredSecciones | async" [value]="seccion">
+          {{seccion.nombre}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+
+</section>

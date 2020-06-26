@@ -137,5 +137,60 @@
       "aceptar": "Accept",
       "cancelar": "Cancel"
     }
+  },
+  "servicio": {
+    "listado": {
+      "titulo": "Services",
+      "busqueda": "Quick search",
+      "busqueda-placeholder": "Text",
+      "abreviatura": "ABBREVIATION",
+      "nombre": "NAME",
+      "contacto": "CONTACT",
+      "seccion": "SECTION",
+      "acciones": "ACTIONS",
+      "nuevo-servicio": "NEW SERVICE",
+      "editar": "Edit",
+      "eliminar": "Do you want to delete the service?",
+      "eliminarConfirmado": "Service removed successfully",
+      "aceptar": "Accept",
+      "cancelar": "Cancel",
+      "borrar": "Remove"
+    },
+    "datos-generales": "General data",
+    "nombre": {
+      "error": {
+        "maximo": "The name exceeds the maximum length",
+        "minimo": "The name does not exceed the minimum length",
+        "requerido": "Enter the name"
+      },
+      "titulo": "Name"
+    },
+    "abreviatura": {
+      "error": {
+        "maximo": "The abbreviation exceeds the maximum length",
+        "minimo": "The abbreviation does not exceed the minimum length",
+        "requerido": "Enter the abbreviation"
+      },
+      "titulo": "Abbreviation"
+    },
+    "contacto": {
+      "error": {
+        "maximo": "The contact email exceeds the maximum length",
+        "minimo": "The contact email does not exceed the minimum length",
+        "requerido": "Enter the contact email"
+      },
+      "titulo": "Contact email"
+    },
+    "seccion": "Section",
+    "crear": {
+      "correcto": "Service added correctly",
+      "error": "Error adding service"
+    },
+    "actualizar": {
+      "correcto": "Service updated correctly",
+      "error": "Error updating service",
+      "titulo": "Service update",
+      "no-encontrado": "Error loading service data"
+    }
   }
 }
