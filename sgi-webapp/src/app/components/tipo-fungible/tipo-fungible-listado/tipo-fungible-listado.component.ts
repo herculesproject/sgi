@@ -1,21 +1,20 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { TipoFungible } from '@core/models/tipo-fungible';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
-import { TipoFungibleService } from '@core/services/tipo-fungible.service';
-import { NGXLogger } from 'ngx-logger';
-import { UrlUtils } from '@core/utils/url-utils';
-import { switchMap } from 'rxjs/operators';
-import { TraductorService } from '@core/services/traductor.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { TipoFungible } from '@core/models/tipo-fungible';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { TipoFungibleService } from '@core/services/tipo-fungible.service';
+import { TraductorService } from '@core/services/traductor.service';
+import { UrlUtils } from '@core/utils/url-utils';
+import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
-
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tipo-fungible-listado',
   templateUrl: './tipo-fungible-listado.component.html',
-  styleUrls: ['./tipo-fungible-listado.component.scss']
+  styleUrls: ['./tipo-fungible-listado.component.scss'],
 })
 export class TipoFungibleListadoComponent implements OnInit, OnDestroy {
   UrlUtils = UrlUtils;
@@ -32,15 +31,17 @@ export class TipoFungibleListadoComponent implements OnInit, OnDestroy {
     private tipoFungibleService: TipoFungibleService,
     private readonly traductor: TraductorService,
     private dialogService: DialogService,
-    private snackBarService: SnackBarService) { }
+    private snackBarService: SnackBarService
+  ) {}
 
   ngOnInit(): void {
     this.logger.debug(TipoFungibleListadoComponent.name, 'ngOnInit()', 'start');
 
     this.dataSource = new MatTableDataSource<TipoFungible>([]);
 
-    this.tipoFungibleServiceSubscription = this.tipoFungibleService.findAll().subscribe(
-      (tiposFungible: TipoFungible[]) => {
+    this.tipoFungibleServiceSubscription = this.tipoFungibleService
+      .findAll()
+      .subscribe((tiposFungible: TipoFungible[]) => {
         this.dataSource.data = tiposFungible;
       });
 
@@ -53,8 +54,10 @@ export class TipoFungibleListadoComponent implements OnInit, OnDestroy {
    * @param event variable filtro
    */
   applyFilter(event: Event) {
-    this.logger.debug(TipoFungibleListadoComponent.name,
-      'applyFilter($event: Event) - start');
+    this.logger.debug(
+      TipoFungibleListadoComponent.name,
+      'applyFilter($event: Event) - start'
+    );
 
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -80,8 +83,10 @@ export class TipoFungibleListadoComponent implements OnInit, OnDestroy {
       return listAsFlatString(order).includes(transformedFilter);
     };
 
-    this.logger.debug(TipoFungibleListadoComponent.name,
-      'applyFilter($event: Event) - end');
+    this.logger.debug(
+      TipoFungibleListadoComponent.name,
+      'applyFilter($event: Event) - end'
+    );
   }
 
   /**
@@ -91,44 +96,57 @@ export class TipoFungibleListadoComponent implements OnInit, OnDestroy {
    * @param $event evento
    */
   borrarSeleccionado(tipoFungibleId: number, $event: Event): void {
-    this.logger.debug(TipoFungibleListadoComponent.name,
-      'borrarSeleccionado(tipoFungibleId: number, $event: Event) - start');
+    this.logger.debug(
+      TipoFungibleListadoComponent.name,
+      'borrarSeleccionado(tipoFungibleId: number, $event: Event) - start'
+    );
 
     $event.stopPropagation();
     $event.preventDefault();
 
-    this.dialogService.dialogGenerico(this.traductor.getTexto('tipo-fungible.listado.eliminar'),
-      this.traductor.getTexto('tipo-fungible.listado.aceptar'), this.traductor.getTexto('tipo-fungible.listado.cancelar'));
+    this.dialogService.dialogGenerico(
+      this.traductor.getTexto('tipo-fungible.listado.eliminar'),
+      this.traductor.getTexto('tipo-fungible.listado.aceptar'),
+      this.traductor.getTexto('tipo-fungible.listado.cancelar')
+    );
 
-    this.dialogServiceSubscription = this.dialogService.getAccionConfirmada().subscribe(
-      (aceptado: boolean) => {
+    this.dialogServiceSubscription = this.dialogService
+      .getAccionConfirmada()
+      .subscribe((aceptado: boolean) => {
         if (aceptado) {
-          this.tipoFungibleServiceDeleteSubscription = this.tipoFungibleService.delete(tipoFungibleId).pipe(
-            switchMap(_ => {
-              return this.tipoFungibleService.findAll();
-            })
-          ).subscribe((tiposFungibles: TipoFungible[]) => {
-            this.snackBarService
-              .mostrarMensajeSuccess(this.traductor.getTexto('tipo-fungible.listado.eliminarConfirmado'));
-            this.dataSource.data = tiposFungibles;
-          });
+          this.tipoFungibleServiceDeleteSubscription = this.tipoFungibleService
+            .delete(tipoFungibleId)
+            .pipe(
+              switchMap((_) => {
+                return this.tipoFungibleService.findAll();
+              })
+            )
+            .subscribe((tiposFungibles: TipoFungible[]) => {
+              this.snackBarService.mostrarMensajeSuccess(
+                this.traductor.getTexto(
+                  'tipo-fungible.listado.eliminarConfirmado'
+                )
+              );
+              this.dataSource.data = tiposFungibles;
+            });
         }
         aceptado = false;
       });
 
-    this.logger.debug(TipoFungibleListadoComponent.name, 'borrarSeleccionado(tipoFungibleId: number, $event: Event) - end');
+    this.logger.debug(
+      TipoFungibleListadoComponent.name,
+      'borrarSeleccionado(tipoFungibleId: number, $event: Event) - end'
+    );
   }
 
   ngOnDestroy(): void {
     this.logger.debug(
-      TipoFungibleListadoComponent.name, 'ngOnDestroy() - start');
-
+      TipoFungibleListadoComponent.name,
+      'ngOnDestroy() - start'
+    );
     this.tipoFungibleServiceSubscription?.unsubscribe();
     this.dialogServiceSubscription?.unsubscribe();
     this.tipoFungibleServiceDeleteSubscription?.unsubscribe();
-
-    this.logger.debug(
-      TipoFungibleListadoComponent.name, 'ngOnDestroy() - end');
+    this.logger.debug(TipoFungibleListadoComponent.name, 'ngOnDestroy() - end');
   }
-
 }

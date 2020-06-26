@@ -1,15 +1,16 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { TipoReservable } from '@core/models/tipo-reservable';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
-import { TipoReservableService } from '@core/services/tipo-reservable.service';
 import { NGXLogger } from 'ngx-logger';
-import { UrlUtils } from '@core/utils/url-utils';
+import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { TraductorService } from '@core/services/traductor.service';
+
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { TipoReservable } from '@core/models/tipo-reservable';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { Subscription } from 'rxjs';
+import { TipoReservableService } from '@core/services/tipo-reservable.service';
+import { TraductorService } from '@core/services/traductor.service';
+import { UrlUtils } from '@core/utils/url-utils';
 
 @Component({
   selector: 'app-tipo-reservable-listado',
@@ -123,8 +124,8 @@ export class TipoReservableListadoComponent implements OnInit, OnDestroy {
     this.logger.debug(
       TipoReservableListadoComponent.name, 'ngOnDestroy() - start');
 
-    this.tipoReservableSubscription.unsubscribe();
-    this.dialogServiceSubscription.unsubscribe();
+    this.tipoReservableSubscription?.unsubscribe();
+    this.dialogServiceSubscription?.unsubscribe();
 
     this.logger.debug(
       TipoReservableListadoComponent.name, 'ngOnDestroy() - end');

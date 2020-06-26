@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { RootComponent } from './components/root/root.component';
+import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@core/guards/auth.guard';
 import { UrlUtils } from '@core/utils/url-utils';
+
+import { RootComponent } from './components/root/root.component';
 
 /**
  * Definimos las urls de la aplicación

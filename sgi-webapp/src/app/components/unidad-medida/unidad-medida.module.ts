@@ -1,27 +1,26 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { UnidadMedidaRoutingModule } from './unidad-medida-routing.module';
-import { UnidadMedidaListadoComponent } from './unidad-medida-listado/unidad-medida-listado.component';
-import { SharedModule } from '@shared/shared.module';
-import { UnidadMedidaAgregarActualizarComponent } from './unidad-medida-agregar-actualizar/unidad-medida-agregar-actualizar.component';
+import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { SharedModule } from '@shared/shared.module';
 
+import { UnidadMedidaActualizarComponent } from './unidad-medida-actualizar/unidad-medida-actualizar.component';
+import { UnidadMedidaCrearComponent } from './unidad-medida-crear/unidad-medida-crear.component';
+import { UnidadMedidaListadoComponent } from './unidad-medida-listado/unidad-medida-listado.component';
+import { UnidadMedidaRoutingModule } from './unidad-medida-routing.module';
 
 @NgModule({
   declarations: [
     UnidadMedidaListadoComponent,
-    UnidadMedidaAgregarActualizarComponent
+    UnidadMedidaCrearComponent,
+    UnidadMedidaActualizarComponent,
   ],
   imports: [
     SharedModule,
     CommonModule,
     UnidadMedidaRoutingModule,
-    TranslateModule
+    TranslateModule,
   ],
   providers: [],
-  exports: [
-    TranslateModule
-  ]
+  exports: [TranslateModule],
 })
-export class UnidadMedidaModule { }
+export class UnidadMedidaModule {}

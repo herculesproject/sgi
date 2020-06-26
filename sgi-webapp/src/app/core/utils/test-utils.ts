@@ -1,3 +1,8 @@
+import { NGXLogger } from 'ngx-logger';
+import { TranslateTestingModule } from 'ngx-translate-testing';
+
+import { SnackBarService } from '@core/services/snack-bar.service';
+
 /**
  * A Utility Class for testing.
  */
@@ -46,7 +51,11 @@ export default class TestUtils {
     for (; obj != null; obj = Object.getPrototypeOf(obj)) {
       const objProperties = Object.getOwnPropertyNames(obj);
       for (const property of objProperties) {
-        if (property !== 'constructor' && meths.indexOf(property) === -1 && typeof obj[property] === 'function') {
+        if (
+          property !== 'constructor' &&
+          meths.indexOf(property) === -1 &&
+          typeof obj[property] === 'function'
+        ) {
           meths.push(property);
         }
       }
@@ -54,4 +63,33 @@ export default class TestUtils {
     return meths;
   }
 
+  /**
+   * Devuelve módulo de test para cargar la internacionalización
+   */
+  static getIdiomas(): TranslateTestingModule {
+    return TranslateTestingModule.withTranslations({
+      en: require('src/assets/i18n/en.json'),
+      es: require('src/assets/i18n/es.json'),
+    }).withDefaultLanguage('es');
+  }
+
+  /**
+   * Devuelve el mock del logger
+   */
+  static getLoggerSpy(): jasmine.SpyObj<NGXLogger> {
+    return jasmine.createSpyObj(
+      NGXLogger.name,
+      TestUtils.getOwnMethodNames(NGXLogger.prototype)
+    );
+  }
+
+  /**
+   * Devuelve el mock del snackBarService
+   */
+  static getSnackBarServiceSpy(): jasmine.SpyObj<SnackBarService> {
+    return jasmine.createSpyObj(
+      SnackBarService.name,
+      TestUtils.getOwnMethodNames(SnackBarService.prototype)
+    );
+  }
 }

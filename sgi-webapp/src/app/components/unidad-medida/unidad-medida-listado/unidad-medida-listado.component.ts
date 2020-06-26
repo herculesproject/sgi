@@ -1,14 +1,14 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { UnidadMedida } from '@core/models/unidad-medida';
-import { MatTableDataSource } from '@angular/material/table';
-import { NGXLogger } from 'ngx-logger';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
-import { UnidadMedidaService } from '@core/services/unidad-medida.service';
-import { UrlUtils } from '@core/utils/url-utils';
-import { switchMap } from 'rxjs/operators';
-import { TraductorService } from '@core/services/traductor.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { UnidadMedida } from '@core/models/unidad-medida';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { TraductorService } from '@core/services/traductor.service';
+import { UnidadMedidaService } from '@core/services/unidad-medida.service';
+import { UrlUtils } from '@core/utils/url-utils';
+import { NGXLogger } from 'ngx-logger';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-unidad-medida-listado',

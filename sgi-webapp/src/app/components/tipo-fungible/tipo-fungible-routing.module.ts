@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { TipoFungibleListadoComponent } from './tipo-fungible-listado/tipo-fungible-listado.component';
+import { RouterModule, Routes } from '@angular/router';
 import { UrlUtils } from '@core/utils/url-utils';
-import { TipoFungibleAgregarActualizarComponent } from './tipo-fungible-agregar-actualizar/tipo-fungible-agregar-actualizar.component';
+
+import { TipoFungibleActualizarComponent } from './tipo-fungible-actualizar/tipo-fungible-actualizar.component';
+import { TipoFungibleCrearComponent } from './tipo-fungible-crear/tipo-fungible-crear.component';
+import { TipoFungibleListadoComponent } from './tipo-fungible-listado/tipo-fungible-listado.component';
 
 const routes: Routes = [
   {
@@ -11,11 +13,11 @@ const routes: Routes = [
   },
   {
     path: UrlUtils.agregar,
-    component: TipoFungibleAgregarActualizarComponent,
+    component: TipoFungibleCrearComponent,
   },
   {
     path: UrlUtils.actualizar + ':id',
-    component: TipoFungibleAgregarActualizarComponent,
+    component: TipoFungibleActualizarComponent,
   },
 ];
 

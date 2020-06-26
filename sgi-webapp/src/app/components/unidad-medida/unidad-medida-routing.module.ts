@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { UnidadMedidaListadoComponent } from './unidad-medida-listado/unidad-medida-listado.component';
-import { UnidadMedidaAgregarActualizarComponent } from './unidad-medida-agregar-actualizar/unidad-medida-agregar-actualizar.component';
+import { RouterModule, Routes } from '@angular/router';
 import { UrlUtils } from '@core/utils/url-utils';
+
+import { UnidadMedidaActualizarComponent } from './unidad-medida-actualizar/unidad-medida-actualizar.component';
+import { UnidadMedidaCrearComponent } from './unidad-medida-crear/unidad-medida-crear.component';
+import { UnidadMedidaListadoComponent } from './unidad-medida-listado/unidad-medida-listado.component';
 
 const routes: Routes = [
   {
@@ -11,11 +13,11 @@ const routes: Routes = [
   },
   {
     path: UrlUtils.agregar.valueOf(),
-    component: UnidadMedidaAgregarActualizarComponent,
+    component: UnidadMedidaCrearComponent,
   },
   {
     path: UrlUtils.actualizar.valueOf() + ':id',
-    component: UnidadMedidaAgregarActualizarComponent,
+    component: UnidadMedidaActualizarComponent,
   },
 ];
 
@@ -23,4 +25,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class UnidadMedidaRoutingModule { }
+export class UnidadMedidaRoutingModule {}
