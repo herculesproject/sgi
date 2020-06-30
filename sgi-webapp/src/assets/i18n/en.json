@@ -239,5 +239,36 @@
       "titulo": "Service update",
       "no-encontrado": "Error loading service data"
     }
+  },
+  "solicitud": {
+    "listado": {
+      "titulo": "Request",
+      "busqueda": "Quick search",
+      "busqueda-placeholder": "Text",
+      "servicio": "SERVICE",
+      "contacto": "CONTACT",
+      "acciones": "ACTIONS",
+      "editar": "Edit",
+      "aceptar": "Accpet",
+      "cancelar": "Cancel",
+      "seleccionarServicio": "Select the service to register"
+    },
+    "actualizar": {
+      "correcto": "Service successfully updated",
+      "error": "Error updating service",
+      "titulo": "Discharge of services",
+      "no-encontrado": "Error loading service data",
+      "normativa": {
+        "correcto": "The regulations have been updated correctly",
+        "aceptar": "I accept the regulations of the Catalog",
+        "enlace": "Access the Catalog regulations"
+      }
+    },
+    "alta": {
+      "correcto": "Service correctly registered",
+      "error": "Error when registering the service",
+      "titulo": "Discharge of services",
+      "no-encontrado": "Error loading service data"
+    }
   }
 }

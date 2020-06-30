@@ -25,7 +25,9 @@ const routes: Routes = [
   },
   {
     path: UrlUtils.solicitud.valueOf(),
-    component: RootComponent,
+    loadChildren: () =>
+      import('./components/solicitud/solicitud.module').then(m => m.SolicitudModule),
+    canActivate: [AuthGuard]
   },
   {
     path: UrlUtils.tipoFungible.valueOf(),

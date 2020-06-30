@@ -239,5 +239,36 @@
       "titulo": "Actualización de servicio",
       "no-encontrado": "Error al cargar los datos del servicio"
     }
+  },
+  "solicitud": {
+    "listado": {
+      "titulo": "Solicitud",
+      "busqueda": "Búsqueda rápida",
+      "busqueda-placeholder": "Texto",
+      "servicio": "SERVICIO",
+      "contacto": "CONTACTO",
+      "acciones": "ACCIONES",
+      "editar": "Editar",
+      "aceptar": "Aceptar",
+      "cancelar": "Cancelar",
+      "seleccionarServicio": "Seleccione el servicio en el que darse de alta"
+    },
+    "actualizar": {
+      "correcto": "Servicio actualizado correctamente",
+      "error": "Error al actualizar el servicio",
+      "titulo": "Servicios alta",
+      "no-encontrado": "Error al cargar los datos del servicio",
+      "normativa": {
+        "correcto": "La normativa se ha actualizado correctamente",
+        "aceptar": "Acepto la normativa del Catálogo",
+        "enlace": "Acceda a la normativa de Catálogo"
+      }
+    },
+    "alta": {
+      "correcto": "Servicio dado de alta correctamente",
+      "error": "Error al dar el servicio de alta",
+      "titulo": "Servicios alta",
+      "no-encontrado": "Error al cargar los datos del servicio"
+    }
   }
 }

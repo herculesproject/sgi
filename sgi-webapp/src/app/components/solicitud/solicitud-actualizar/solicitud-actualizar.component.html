@@ -1,0 +1,22 @@
+<!-- Solicitud actualizar -->
+<section class="solicitud-actualizar">
+  <h2>{{'solicitud.actualizar.titulo' | translate}}</h2>
+  <a href="/solicitud">{{'solicitud.actualizar.normativa.enlace' | translate}}</a>
+  <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+    fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-checkbox formControlName="aceptaCondiciones" type="text" id="aceptaCondiciones">
+        {{'solicitud.actualizar.normativa.aceptar' | translate}}</mat-checkbox>
+    </div>
+  </form>
+  <div class="footer-button">
+    <button fxFlex="20%" aria-label="Center Align" md-button mat-raised-button (click)="enviarForm()"
+      [disabled]='desactivarAceptar'>
+      {{'botones.guardar'| translate}}
+    </button>
+  </div>
+</section>
+<!-- Solicitud actualizar -->
+
+<app-solicitud-listado [registro]="registro"></app-solicitud-listado>
