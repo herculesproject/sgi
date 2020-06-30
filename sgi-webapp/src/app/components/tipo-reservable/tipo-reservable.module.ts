@@ -5,16 +5,23 @@ import { TipoReservableRoutingModule } from './tipo-reservable-routing.module';
 import { TipoReservableListadoComponent } from './tipo-reservable-listado/tipo-reservable-listado.component';
 import { SharedModule } from '@shared/shared.module';
 import { TranslateModule } from '@ngx-translate/core';
+import { TipoReservableCrearComponent } from './tipo-reservable-crear/tipo-reservable-crear.component';
+import { TipoReservableActualizarComponent } from './tipo-reservable-actualizar/tipo-reservable-actualizar.component';
+import { MatRadioModule } from '@angular/material/radio';
+
 
 
 @NgModule({
   declarations: [
-    TipoReservableListadoComponent],
+    TipoReservableListadoComponent,
+    TipoReservableCrearComponent,
+    TipoReservableActualizarComponent],
   imports: [
     SharedModule,
     CommonModule,
     TipoReservableRoutingModule,
-    TranslateModule
+    TranslateModule,
+    MatRadioModule
   ],
   providers: [],
   exports: [

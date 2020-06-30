@@ -32,7 +32,7 @@ export class TipoFungibleListadoComponent implements OnInit, OnDestroy {
     private readonly traductor: TraductorService,
     private dialogService: DialogService,
     private snackBarService: SnackBarService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.logger.debug(TipoFungibleListadoComponent.name, 'ngOnInit()', 'start');
@@ -46,6 +46,7 @@ export class TipoFungibleListadoComponent implements OnInit, OnDestroy {
       });
 
     this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = this.tipoFungibleSortingDataAccessor;
     this.logger.debug(TipoFungibleListadoComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -87,6 +88,23 @@ export class TipoFungibleListadoComponent implements OnInit, OnDestroy {
       TipoFungibleListadoComponent.name,
       'applyFilter($event: Event) - end'
     );
+  }
+
+  /**
+   * Personaliza los valores que se utilizan para hacer la ordenacion de los servicios.
+   */
+  tipoFungibleSortingDataAccessor = (tipoFungible: TipoFungible, propiedad: string) => {
+    this.logger.debug(TipoFungibleListadoComponent.name, 'tipoFungibleSortingDataAccessor()', 'start');
+    if (!tipoFungible) {
+      return;
+    }
+
+    switch (propiedad) {
+      case 'nombre':
+        return tipoFungible.nombre?.toLowerCase();
+      case 'servicio':
+        return tipoFungible.servicio.nombre?.toLowerCase();
+    }
   }
 
   /**

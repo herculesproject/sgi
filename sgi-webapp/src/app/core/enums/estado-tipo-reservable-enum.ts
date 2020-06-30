@@ -4,7 +4,7 @@
  */
 export enum EstadoTipoReservableEnum {
 
-  ALTA,
-  BAJA
+  alta = 'alta',
+  baja = 'baja'
 
 }

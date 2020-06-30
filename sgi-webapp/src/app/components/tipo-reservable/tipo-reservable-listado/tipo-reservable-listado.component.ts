@@ -11,6 +11,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { TipoReservableService } from '@core/services/tipo-reservable.service';
 import { TraductorService } from '@core/services/traductor.service';
 import { UrlUtils } from '@core/utils/url-utils';
+import { Servicio } from '@core/models/servicio';
 
 @Component({
   selector: 'app-tipo-reservable-listado',
@@ -20,13 +21,15 @@ import { UrlUtils } from '@core/utils/url-utils';
 export class TipoReservableListadoComponent implements OnInit, OnDestroy {
 
   UrlUtils = UrlUtils;
-  displayedColumns: string[] = ['descripcion', 'servicio', 'estado', 'duracionMin', 'diasAntelacion', 'horasAnulacion', 'dias', 'acciones'];
+  displayedColumns: string[] = ['descripcion', 'servicio', 'estado', 'duracionMin', 'diasAnteMax', 'horasAnteAnular', 'diasVistaMaxCalen', 'acciones'];
   dataSource: MatTableDataSource<TipoReservable>;
+
   tipoReservableSubscription: Subscription;
   dialogServiceSubscription: Subscription;
+  dialogServiceSubscriptionGetSubscription: Subscription;
+  tipoReservableServiceDeleteSubscription: Subscription;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-
 
   constructor(
     private logger: NGXLogger,
@@ -46,6 +49,7 @@ export class TipoReservableListadoComponent implements OnInit, OnDestroy {
       });
 
     this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = this.tipoReservableSortingDataAccessor;
     this.logger.debug(TipoReservableListadoComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -86,6 +90,33 @@ export class TipoReservableListadoComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Personaliza los valores que se utilizan para hacer la ordenacion de los servicios.
+   */
+  tipoReservableSortingDataAccessor = (tipoReservable: TipoReservable, propiedad: string) => {
+    this.logger.debug(TipoReservableListadoComponent.name, 'tipoReservableSortingDataAccessor()', 'start');
+    if (!tipoReservable) {
+      return;
+    }
+
+    switch (propiedad) {
+      case 'descripcion':
+        return tipoReservable.descripcion?.toLowerCase();
+      case 'servicio':
+        return tipoReservable.servicio.nombre?.toLowerCase();
+      case 'estado':
+        return tipoReservable.estado?.toLowerCase();
+      case 'duracionMin':
+        return tipoReservable.duracionMin;
+      case 'diasAnteMax':
+        return tipoReservable.diasAnteMax;
+      case 'horasAnteAnular':
+        return tipoReservable.horasAnteAnular;
+      case 'diasVistaMaxCalen':
+        return tipoReservable.diasVistaMaxCalen;
+    }
+  }
+
+  /**
    * Elimina la unidad de listado con el id recibido por parametro.
    * @param tipoReservableId id tipo reservable
    * @param index posicion en la tabla
@@ -101,10 +132,10 @@ export class TipoReservableListadoComponent implements OnInit, OnDestroy {
     this.dialogService.dialogGenerico(this.traductor.getTexto('tipo-reservable.listado.eliminar'),
       this.traductor.getTexto('tipo-reservable.listado.aceptar'), this.traductor.getTexto('tipo-reservable.listado.cancelar'));
 
-    this.dialogService.getAccionConfirmada().subscribe(
+    this.dialogServiceSubscriptionGetSubscription = this.dialogService.getAccionConfirmada().subscribe(
       (aceptado: boolean) => {
         if (aceptado) {
-          this.tipoReservableService.delete(tipoReservableId).pipe(
+          this.tipoReservableServiceDeleteSubscription = this.tipoReservableService.delete(tipoReservableId).pipe(
             switchMap(_ => {
               return this.tipoReservableService.findAll();
             })
@@ -126,6 +157,8 @@ export class TipoReservableListadoComponent implements OnInit, OnDestroy {
 
     this.tipoReservableSubscription?.unsubscribe();
     this.dialogServiceSubscription?.unsubscribe();
+    this.tipoReservableServiceDeleteSubscription?.unsubscribe();
+    this.dialogServiceSubscriptionGetSubscription?.unsubscribe();
 
     this.logger.debug(
       TipoReservableListadoComponent.name, 'ngOnDestroy() - end');

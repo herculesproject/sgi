@@ -118,6 +118,52 @@
     }
   },
   "tipo-reservable": {
+    "actualizar": {
+      "correcto": "Rservable type updated correctly",
+      "error": "Error updating reservable type",
+      "titulo": "Reservable type update",
+      "no-encontrado": "Error loading reservable type data"
+    },
+    "agregar": {
+      "descripcion": {
+        "error": {
+          "maximo": "Description exceeds the maximum length",
+          "minimo": "Description does not exceed the minimum length",
+          "requerido": "Enter description"
+        },
+        "titulo": "description"
+      },
+      "correcto": "Reservable type added correctly",
+      "servicio": {
+        "error": {
+          "requerido": "Enter service"
+        },
+        "titulo": "Service"
+      },
+      "duracionMin": {
+        "titulo": "duracionMin"
+      },
+      "diasAnteMax": {
+        "titulo": "diasAnteMax"
+      },
+      "diasVistaMaxCalen": {
+        "titulo": "diasVistaMaxCalen"
+      },
+      "horasAnteAnular": {
+        "titulo": "horasAnteAnular"
+      },
+      "horasAnteMin": {
+        "titulo": "horasAnteMin"
+      },
+      "reservaMulti": {
+        "titulo": "reservaMulti"
+      },
+      "estado": {
+        "titulo": "State"
+      },
+      "error": "Error adding reservable type",
+      "titulo": "Reservable type creation"
+    },
     "listado": {
       "titulo": "Reservable type list",
       "busqueda": "Quick search",
@@ -126,13 +172,14 @@
       "servicio": "SERVICE",
       "estado": "STATE",
       "duracionMin": "DUR.MÍN.",
-      "diasAntelacion": "D.ANTEL.",
-      "horasAnulacion": "H.ANUL.",
+      "diasAnteMax": "D.ANTEL.",
+      "horasAnteAnular": "H.ANUL.",
       "dias": "DAYS",
       "acciones": "ACTIONS",
       "eliminar": "Do you want to delete the product?",
       "eliminarConfirmado": "Reservable type removed successfully",
       "nuevo-tipo": "NEW RESERVABLE TYPE",
+      "borrar": "Remove",
       "editar": "Edit",
       "aceptar": "Accept",
       "cancelar": "Cancel"

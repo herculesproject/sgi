@@ -108,15 +108,62 @@
       "nombre": "NOMBRE",
       "servicio": "SERVICIO",
       "acciones": "ACCIONES",
-      "eliminar": "¿Desea eliminar el producto?",
+      "eliminar": "¿Desea eliminar el tipo de fungible?",
       "eliminarConfirmado": "Tipo fungible eliminado correctamente",
       "nuevo-tipo": "NUEVO TIPO FUNGIBLE",
+      "borrar": "Borrar",
       "editar": "Editar",
       "aceptar": "Aceptar",
       "cancelar": "Cancelar"
     }
   },
   "tipo-reservable": {
+    "actualizar": {
+      "correcto": "Tipo reservable actualizado correctamente",
+      "error": "Error al actualizar el tipo reservable",
+      "titulo": "Actualización de tipo reservable",
+      "no-encontrado": "Error al cargar los datos del tipo reservable"
+    },
+    "agregar": {
+      "descripcion": {
+        "error": {
+          "maximo": "La descripción supera la longitud máxima",
+          "minimo": "La descripción no supera la longitud mínima",
+          "requerido": "Introduzca la descripción"
+        },
+        "titulo": "Descripción"
+      },
+      "correcto": "Tipo reservable agregado correctamente",
+      "servicio": {
+        "error": {
+          "requerido": "Introduzca el servicio"
+        },
+        "titulo": "Servicio"
+      },
+      "duracionMin": {
+        "titulo": "Duración mínima (minutos)"
+      },
+      "diasAnteMax": {
+        "titulo": "Días de antelación máximo"
+      },
+      "diasVistaMaxCalen": {
+        "titulo": "Vista máxima del calendario (días)"
+      },
+      "horasAnteAnular": {
+        "titulo": "Horas antelación anular usuario"
+      },
+      "horasAnteMin": {
+        "titulo": "Horas de antelación mínima"
+      },
+      "reservaMulti": {
+        "titulo": "Reserva múltiple"
+      },
+      "estado": {
+        "titulo": "Estado"
+      },
+      "error": "Error al agregar el tipo reservable",
+      "titulo": "Creación de tipo reservable"
+    },
     "listado": {
       "titulo": "Listado tipo de reservable",
       "busqueda": "Búsqueda rápida",
@@ -125,13 +172,14 @@
       "servicio": "SERVICIO",
       "estado": "ESTADO",
       "duracionMin": "DUR.MÍN.",
-      "diasAntelacion": "D.ANTEL.",
-      "horasAnulacion": "H.ANUL.",
+      "diasAnteMax": "D.ANTEL.",
+      "horasAnteAnular": "H.ANUL.",
       "dias": "DÍAS",
       "acciones": "ACCIONES",
-      "eliminar": "¿Desea eliminar el producto?",
+      "eliminar": "¿Desea eliminar el tipo de reservable?",
       "eliminarConfirmado": "Tipo de reservable eliminado correctamente",
       "nuevo-tipo": "NUEVO TIPO DE RESERVABLE",
+      "borrar": "Borrar",
       "editar": "Editar",
       "aceptar": "Aceptar",
       "cancelar": "Cancelar"

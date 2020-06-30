@@ -34,21 +34,21 @@
     </ng-container>
 
     <!-- Días Antelacion Column -->
-    <ng-container matColumnDef="diasAntelacion">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'tipo-reservable.listado.diasAntelacion' | translate}}
+    <ng-container matColumnDef="diasAnteMax">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'tipo-reservable.listado.diasAnteMax' | translate}}
       </th>
       <td mat-cell *matCellDef="let tipoReservable"> {{tipoReservable.diasAnteMax}} </td>
     </ng-container>
 
     <!-- Horas Anulación Column -->
-    <ng-container matColumnDef="horasAnulacion">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'tipo-reservable.listado.horasAnulacion' | translate}}
+    <ng-container matColumnDef="horasAnteAnular">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'tipo-reservable.listado.horasAnteAnular' | translate}}
       </th>
       <td mat-cell *matCellDef="let tipoReservable"> {{tipoReservable.horasAnteAnular}} </td>
     </ng-container>
 
     <!-- Días Column -->
-    <ng-container matColumnDef="dias">
+    <ng-container matColumnDef="diasVistaMaxCalen">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'tipo-reservable.listado.dias' | translate}}
       </th>
       <td mat-cell *matCellDef="let tipoReservable"> {{tipoReservable.diasVistaMaxCalen}} </td>
@@ -58,7 +58,8 @@
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> {{'tipo-reservable.listado.acciones' | translate}} </th>
       <td mat-cell *matCellDef="let tipoReservable;let i=index;">
-        <button mat-button>
+        <button mat-button [routerLink]="UrlUtils.actualizar + tipoReservable.id"
+          matTooltip="{{'tipo-fungible.listado.editar' | translate}}">
           <mat-icon>edit</mat-icon>
         </button>
         <button mat-button matTooltip="{{'tipo-reservable.listado.borrar' | translate}}"

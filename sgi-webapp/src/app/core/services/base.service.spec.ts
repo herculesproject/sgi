@@ -1,16 +1,16 @@
-import {TestBed} from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
-import {NGXLogger} from 'ngx-logger';
+import { NGXLogger } from 'ngx-logger';
 
 import TestUtils from '@core/utils/test-utils';
-import {BaseService} from './base.service';
-import {MenuPrincipalComponent} from '@shared/componentes-layout/menu-principal/menu-principal.component';
-import {environment} from "@env";
+import { BaseService } from './base.service';
+import { MenuPrincipalComponent } from '@shared/componentes-layout/menu-principal/menu-principal.component';
+import { environment } from '@env';
 
 interface Entity {
   id?: number;
@@ -56,7 +56,7 @@ describe('BaseService', () => {
 
   it('create() should POST and return data', () => {
     // given: a new Entity
-    const newEntity: Entity = {name: 'Erik'} as Entity;
+    const newEntity: Entity = { name: 'Erik' } as Entity;
     // when: create method called
     service.create(newEntity).subscribe((res) => {
       // then: a new entity is created with the given name
@@ -71,7 +71,7 @@ describe('BaseService', () => {
     expect(req.request.method).toBe('POST');
 
     // “fire” the request with the mocked result
-    req.flush({id: 99, name: 'Erik'});
+    req.flush({ id: 99, name: 'Erik' });
   });
 
   it('update() should PUT and return data', () => {
@@ -175,9 +175,9 @@ describe('BaseService', () => {
   it('findAll() should return data', () => {
     // given: existing entities
     const dummyEntityList = [
-      {id: 1, name: 'George'},
-      {id: 2, name: 'Janet'},
-      {id: 3, name: 'Emma'},
+      { id: 1, name: 'George' },
+      { id: 2, name: 'Janet' },
+      { id: 3, name: 'Emma' },
     ];
     // when: findAll method called
     service.findAll().subscribe((res) => {
