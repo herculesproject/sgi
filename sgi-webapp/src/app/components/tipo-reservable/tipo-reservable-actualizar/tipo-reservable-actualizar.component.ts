@@ -76,14 +76,19 @@ export class TipoReservableActualizarComponent implements OnInit, OnDestroy {
         Validators.required,
       ]),
       duracionMin: new FormControl('', [
+        Validators.maxLength(3),
       ]),
       diasAnteMax: new FormControl('', [
+        Validators.maxLength(2),
       ]),
       diasVistaMaxCalen: new FormControl('', [
+        Validators.maxLength(2),
       ]),
       horasAnteAnular: new FormControl('', [
+        Validators.maxLength(3),
       ]),
       horasAnteMin: new FormControl('', [
+        Validators.maxLength(3),
       ]),
       reservaMulti: new FormControl('', [
       ]),
