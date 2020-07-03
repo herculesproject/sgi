@@ -1,23 +1,35 @@
 import { Injectable } from '@angular/core';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { SnackBarComponent } from '@shared/componentes-shared/snack-bar/snack-bar.component';
 import { NGXLogger } from 'ngx-logger';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+
+import { TraductorService } from './traductor.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SnackBarService {
+  snackBarConfig: MatSnackBarConfig;
 
-  snackBarConfig = new MatSnackBarConfig();
-
-
-  constructor(protected logger: NGXLogger, private snackBar: MatSnackBar) {
-    this.logger.debug(SnackBarService.name, 'constructor(protected logger: NGXLogger, private snackBar: MatSnackBar)', 'start');
-
+  constructor(
+    protected logger: NGXLogger,
+    private snackBar: MatSnackBar,
+    private readonly traductor: TraductorService
+  ) {
+    this.logger.debug(
+      SnackBarService.name,
+      'constructor(protected logger: NGXLogger, private snackBar: MatSnackBar)',
+      'start'
+    );
+    this.snackBarConfig = new MatSnackBarConfig();
     this.snackBarConfig.duration = 2000;
     this.snackBarConfig.verticalPosition = 'top';
 
-    this.logger.debug(SnackBarService.name, 'constructor(protected logger: NGXLogger, private snackBar: MatSnackBar)', 'end');
+    this.logger.debug(
+      SnackBarService.name,
+      'constructor(protected logger: NGXLogger, private snackBar: MatSnackBar)',
+      'end'
+    );
   }
 
   /**
@@ -27,13 +39,13 @@ export class SnackBarService {
    */
   mostrarMensajeError(mensaje: string | string[]): void {
     if (!mensaje) {
-      mensaje = 'Se ha producido un error';
+      mensaje = this.traductor.getTexto('snackBar.error');
     }
 
     this.snackBar.openFromComponent(SnackBarComponent, {
       ...this.snackBarConfig,
       data: mensaje,
-      panelClass: 'error-snack-bar'
+      panelClass: 'error-snack-bar',
     });
   }
 
@@ -46,8 +58,7 @@ export class SnackBarService {
     this.snackBar.openFromComponent(SnackBarComponent, {
       ...this.snackBarConfig,
       data: mensaje,
-      panelClass: 'success-snack-bar'
+      panelClass: 'success-snack-bar',
     });
   }
-
 }

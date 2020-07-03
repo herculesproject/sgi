@@ -72,7 +72,8 @@
       "borrar": "Borrar",
       "editar": "Editar",
       "aceptar": "Aceptar",
-      "cancelar": "Cancelar"
+      "cancelar": "Cancelar",
+      "error": "No se ha podido cargar el listado de unidades de medida"
     }
   },
   "tipo-fungible": {
@@ -270,5 +271,15 @@
       "titulo": "Servicios alta",
       "no-encontrado": "Error al cargar los datos del servicio"
     }
+  },
+  "snackBar": {
+    "error": "Se ha producido un error"
+  },
+  "paginator": {
+    "itemsPerPageLabel": "Elementos por página:",
+    "nextPageLabel": "Página siguiente",
+    "previousPageLabel": "Página anterior",
+    "lastPageLabel": "Ultima página",
+    "of": "de"
   }
 }

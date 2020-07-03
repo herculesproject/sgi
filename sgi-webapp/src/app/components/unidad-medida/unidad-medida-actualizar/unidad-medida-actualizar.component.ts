@@ -99,7 +99,7 @@ export class UnidadMedidaActualizarComponent implements OnInit, OnDestroy {
     const id = this.activatedRoute.snapshot.params.id;
     if (id && !isNaN(id)) {
       this.unidadMedidaServiceGetSubscription = this.unidadMedidaService
-        .getOne(Number(id))
+        .findById(Number(id))
         .subscribe(
           (unidadMedida: UnidadMedida) => {
             this.unidadMedida = unidadMedida;
@@ -171,7 +171,7 @@ export class UnidadMedidaActualizarComponent implements OnInit, OnDestroy {
     this.desactivarAceptar = true;
     this.getDatosForm();
     this.unidadMedidaServiceUpdateSubscription = this.unidadMedidaService
-      .update(this.unidadMedida, this.unidadMedida.id)
+      .update(this.unidadMedida.id, this.unidadMedida)
       .subscribe(
         () => {
           this.snackBarService.mostrarMensajeSuccess(

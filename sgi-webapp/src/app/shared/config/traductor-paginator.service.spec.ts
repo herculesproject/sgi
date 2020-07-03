@@ -1,22 +1,20 @@
 import { TestBed } from '@angular/core/testing';
 import TestUtils from '@core/utils/test-utils';
-import { MaterialDesignModule } from '@material/material-design.module';
 import { NGXLogger } from 'ngx-logger';
 
-import { SnackBarService } from './snack-bar.service';
+import { TraductorPaginatorService } from './traductor-paginator.service';
 
-describe('SnackBarService', () => {
-  let service: SnackBarService;
+describe('TraductorPaginatorService', () => {
+  let service: TraductorPaginatorService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TestUtils.getIdiomas(), MaterialDesignModule],
+      imports: [TestUtils.getIdiomas()],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-        SnackBarService
       ]
     });
-    service = TestBed.inject(SnackBarService);
+    service = TestBed.inject(TraductorPaginatorService);
   });
 
   it('should be created', () => {

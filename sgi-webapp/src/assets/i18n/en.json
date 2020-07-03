@@ -72,7 +72,8 @@
       "borrar": "Remove",
       "editar": "Edit",
       "aceptar": "Accept",
-      "cancelar": "Cancel"
+      "cancelar": "Cancel",
+      "error": "Couldn't load the list of measurement units"
     }
   },
   "tipo-fungible": {
@@ -270,5 +271,15 @@
       "titulo": "Discharge of services",
       "no-encontrado": "Error loading service data"
     }
+  },
+  "snackBar": {
+    "error": "An error has occurred"
+  },
+  "paginator": {
+    "itemsPerPageLabel": "Items per page:",
+    "nextPageLabel": "Next page",
+    "previousPageLabel": "Previous page",
+    "lastPageLabel": "Last page",
+    "of": "of"
   }
 }
