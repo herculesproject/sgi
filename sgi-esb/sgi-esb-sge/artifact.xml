@@ -2,4 +2,7 @@
     <artifact name="API_SGE" groupId="org.crue.hercules.api" version="0.0.1-SNAPSHOT" type="synapse/api" serverRole="EnterpriseServiceBus">
         <file>src/main/synapse-config/api/API_SGE.xml</file>
     </artifact>
+    <artifact name="sge-service" groupId="org.crue.hercules.endpoint" version="0.0.1-SNAPSHOT" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/endpoints/sge-service.xml</file>
+    </artifact>
 </artifacts>

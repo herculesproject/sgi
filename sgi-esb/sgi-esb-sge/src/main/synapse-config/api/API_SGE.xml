@@ -8,7 +8,9 @@
                 <format>{"Response" : "Sample Response"}</format>
                 <args/>
             </payloadFactory>
-            <loopback/>
+            <send>
+                <endpoint key="sge-service"/>
+            </send>
         </inSequence>
         <outSequence>
             <respond/>
@@ -24,7 +26,9 @@
                 <format>{"Response" : "Sample Response"}</format>
                 <args/>
             </payloadFactory>
-            <loopback/>
+            <send>
+                <endpoint key="sge-service"/>
+            </send>
         </inSequence>
         <outSequence>
             <respond/>
@@ -115,7 +119,9 @@
 ]</format>
                 <args/>
             </payloadFactory>
-            <loopback/>
+            <send>
+                <endpoint key="sge-service"/>
+            </send>
         </inSequence>
         <outSequence>
             <respond/>
@@ -145,7 +151,9 @@
 }</format>
                 <args/>
             </payloadFactory>
-            <loopback/>
+            <send>
+                <endpoint key="sge-service"/>
+            </send>
         </inSequence>
         <outSequence>
             <respond/>
@@ -160,7 +168,9 @@
                 <format>{"Response" : "Sample Response"}</format>
                 <args/>
             </payloadFactory>
-            <loopback/>
+            <send>
+                <endpoint key="sge-service"/>
+            </send>
         </inSequence>
         <outSequence>
             <respond/>
@@ -176,7 +186,9 @@
                 <format>{"Response" : "Sample Response"}</format>
                 <args/>
             </payloadFactory>
-            <loopback/>
+            <send>
+                <endpoint key="sge-service"/>
+            </send>
         </inSequence>
         <outSequence>
             <respond/>
@@ -222,7 +234,9 @@
 ]</format>
                 <args/>
             </payloadFactory>
-            <loopback/>
+            <send>
+                <endpoint key="sge-service"/>
+            </send>
         </inSequence>
         <outSequence>
             <respond/>
@@ -243,7 +257,9 @@
 }</format>
                 <args/>
             </payloadFactory>
-            <loopback/>
+            <send>
+                <endpoint key="sge-service"/>
+            </send>
         </inSequence>
         <outSequence>
             <respond/>
@@ -279,7 +295,9 @@
 ]</format>
                 <args/>
             </payloadFactory>
-            <loopback/>
+            <send>
+                <endpoint key="sge-service"/>
+            </send>
         </inSequence>
         <outSequence>
             <respond/>
@@ -298,7 +316,9 @@
 }</format>
                 <args/>
             </payloadFactory>
-            <loopback/>
+            <send>
+                <endpoint key="sge-service"/>
+            </send>
         </inSequence>
         <outSequence>
             <respond/>
