@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/sge" name="API_SGE" publishSwagger="/_system/governance/swagger_files/sge-api-swagger.yaml" version="1.0.0" version-type="context" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET" url-mapping="/codigosEconomicos">
+        <inSequence>
+            <!--This is generated API skeleton.-->
+            <!--Business Logic Goes Here-->
+            <payloadFactory media-type="json">
+                <format>{"Response" : "Sample Response"}</format>
+                <args/>
+            </payloadFactory>
+            <loopback/>
+        </inSequence>
+        <outSequence>
+            <respond/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/codigosEconomicos/{codigoEconomicoRef}">
+        <inSequence>
+            <!--This is generated API skeleton.-->
+            <property expression="get-property('uri.var.codigoEconomicoRef')" name="codigoEconomicoRef" scope="default" type="STRING"/>
+            <!--Business Logic Goes Here-->
+            <payloadFactory media-type="json">
+                <format>{"Response" : "Sample Response"}</format>
+                <args/>
+            </payloadFactory>
+            <loopback/>
+        </inSequence>
+        <outSequence>
+            <respond/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" url-mapping="/entidadesPagadoras">
+        <inSequence>
+            <!--This is generated API skeleton.-->
+            <!--Business Logic Goes Here-->
+            <payloadFactory media-type="json">
+                <format>{"Response" : "Sample Response"}</format>
+                <args/>
+            </payloadFactory>
+            <loopback/>
+        </inSequence>
+        <outSequence>
+            <respond/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/entidadesPagadoras/{entidadPagadoraRef}">
+        <inSequence>
+            <!--This is generated API skeleton.-->
+            <property expression="get-property('uri.var.entidadPagadoraRef')" name="entidadPagadoraRef" scope="default" type="STRING"/>
+            <!--Business Logic Goes Here-->
+            <payloadFactory media-type="json">
+                <format>{"Response" : "Sample Response"}</format>
+                <args/>
+            </payloadFactory>
+            <loopback/>
+        </inSequence>
+        <outSequence>
+            <respond/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" url-mapping="/facturas">
+        <inSequence>
+            <!--This is generated API skeleton.-->
+            <!--Business Logic Goes Here-->
+            <payloadFactory media-type="json">
+                <format>{"Response" : "Sample Response"}</format>
+                <args/>
+            </payloadFactory>
+            <loopback/>
+        </inSequence>
+        <outSequence>
+            <respond/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/facturas/{facturaRef}">
+        <inSequence>
+            <!--This is generated API skeleton.-->
+            <property expression="get-property('uri.var.facturaRef')" name="facturaRef" scope="default" type="STRING"/>
+            <!--Business Logic Goes Here-->
+            <payloadFactory media-type="json">
+                <format>{"Response" : "Sample Response"}</format>
+                <args/>
+            </payloadFactory>
+            <loopback/>
+        </inSequence>
+        <outSequence>
+            <respond/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" url-mapping="/tarifas">
+        <inSequence>
+            <!--This is generated API skeleton.-->
+            <!--Business Logic Goes Here-->
+            <payloadFactory media-type="json">
+                <format>{"Response" : "Sample Response"}</format>
+                <args/>
+            </payloadFactory>
+            <loopback/>
+        </inSequence>
+        <outSequence>
+            <respond/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/tarifas/{tarifaRef}">
+        <inSequence>
+            <!--This is generated API skeleton.-->
+            <property expression="get-property('uri.var.tarifaRef')" name="tarifaRef" scope="default" type="STRING"/>
+            <!--Business Logic Goes Here-->
+            <payloadFactory media-type="json">
+                <format>{"Response" : "Sample Response"}</format>
+                <args/>
+            </payloadFactory>
+            <loopback/>
+        </inSequence>
+        <outSequence>
+            <respond/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" url-mapping="/tiposTarifa">
+        <inSequence>
+            <!--This is generated API skeleton.-->
+            <!--Business Logic Goes Here-->
+            <payloadFactory media-type="json">
+                <format>{"Response" : "Sample Response"}</format>
+                <args/>
+            </payloadFactory>
+            <loopback/>
+        </inSequence>
+        <outSequence>
+            <respond/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+    <resource methods="GET" uri-template="/tiposTarifa/{tipoTarifaRef}">
+        <inSequence>
+            <!--This is generated API skeleton.-->
+            <property expression="get-property('uri.var.tipoTarifaRef')" name="tipoTarifaRef" scope="default" type="STRING"/>
+            <!--Business Logic Goes Here-->
+            <payloadFactory media-type="json">
+                <format>{"Response" : "Sample Response"}</format>
+                <args/>
+            </payloadFactory>
+            <loopback/>
+        </inSequence>
+        <outSequence>
+            <respond/>
+        </outSequence>
+        <faultSequence/>
+    </resource>
+</api>

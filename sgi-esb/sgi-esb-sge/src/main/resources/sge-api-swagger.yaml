@@ -1,0 +1,633 @@
+swagger: '2.0'
+info:
+  description: API para la integración con el Sistema de Gestión Económica.
+  title: API_SGE
+  version: 1.0.0
+host: 'http://192.168.3.127:8280'
+basePath: /sge
+schemes:
+  - http
+paths:
+  /codigosEconomicos:
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Nº de pagina
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page
+          required: false
+          type: integer
+          x-example: 2
+        - description: Nº de elementos por página
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page-Size
+          required: false
+          type: integer
+          x-example: 10
+        - description: >-
+            Criterios de busqueda. <hr> Lista de criterios de busqueda separada
+            por comas, donde un criterio de busqueda es el nombre de uno de los
+            campos de la entidad buscada seguido de la operación y el valor con
+            el que se hace la comparación. Las operaciones soportadas son: <ul>
+            <li><b>:</b> equals</li> <li><b>!:</b> not equals</li> <li><b>~</b>
+            like</li> <li><b>!~</b> not like</li> <li><b>></b> greather</li>
+            <li><b>>:</b> greather or equal</li> <li><b><</b> lower</li>
+            <li><b><:</b> lower or equal</li></ul>
+          in: query
+          name: q
+          required: false
+          type: string
+          x-example: 'codigoEconomicoRef!~tr0,codigo>100'
+        - description: >-
+            Criterios de ordenación de la busqueda. <hr/> Nombre del campo por
+            el que se ordena seguido de +/- para ordenar ascendente o
+            descendentemente.
+          in: query
+          name: s
+          required: false
+          type: string
+          x-example: codigoEconomicoRef-
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Page:
+              description: Nº de página
+              type: integer
+            X-Page-Count:
+              description: Nº de páginas
+              type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              type: integer
+          schema:
+            items:
+              $ref: '#/definitions/CodigoEconomico'
+            type: array
+        '204':
+          description: No hay codigos economicos para los criterios de busqueda utilizados.
+        '400':
+          description: Invalid params
+      tags:
+        - codigos economicos
+      description: >-
+        Devuelve la lista paginada con los codigos economicos que cumplen los
+        filtros.
+      operationId: findAllCodigosEconomicos
+      summary: Busca codigos economicos
+  '/codigosEconomicos/{codigoEconomicoRef}':
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Referencia del codigo economico
+          in: path
+          name: codigoEconomicoRef
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/CodigoEconomico'
+        '400':
+          description: codigoEconomicoRef no valida
+        '404':
+          description: codigo economico no encontrado
+      tags:
+        - codigos economicos
+      description: Devuelve la factura correspondiente a facturaRef
+      operationId: findCodigoEconomicoByCodigoEconomicoRef
+      summary: Busca un codigo economico por su codigoEconomicoRef
+  /entidadesPagadoras:
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Nº de pagina
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page
+          required: false
+          type: integer
+          x-example: 2
+        - description: Nº de elementos por página
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page-Size
+          required: false
+          type: integer
+          x-example: 10
+        - description: >-
+            Criterios de busqueda. <hr> Lista de criterios de busqueda separada
+            por comas, donde un criterio de busqueda es el nombre de uno de los
+            campos de la entidad buscada seguido de la operación y el valor con
+            el que se hace la comparación. Las operaciones soportadas son: <ul>
+            <li><b>:</b> equals</li> <li><b>!:</b> not equals</li> <li><b>~</b>
+            like</li> <li><b>!~</b> not like</li> <li><b>></b> greather</li>
+            <li><b>>:</b> greather or equal</li> <li><b><</b> lower</li>
+            <li><b><:</b> lower or equal</li></ul>
+          in: query
+          name: q
+          required: false
+          type: string
+          x-example: 'entidaPagadoraRef!~tr0,codigoPostal~321%'
+        - description: >-
+            Criterios de ordenación de la busqueda. <hr/> Nombre del campo por
+            el que se ordena seguido de +/- para ordenar ascendente o
+            descendentemente.
+          in: query
+          name: s
+          required: false
+          type: string
+          x-example: entidaPagadoraRef-
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Page:
+              description: Nº de página
+              type: integer
+            X-Page-Count:
+              description: Nº de páginas
+              type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              type: integer
+          schema:
+            items:
+              $ref: '#/definitions/EntidadPagadora'
+            type: array
+        '204':
+          description: >-
+            No hay entidades pagadoras para los criterios de busqueda
+            utilizados.
+        '400':
+          description: Invalid params
+      tags:
+        - entidades pagadoras
+      description: >-
+        Devuelve la lista paginada con las entidades pagadoras que cumplen los
+        filtros.
+      operationId: findAllEntidadesPagadoras
+      summary: Busca entidades pagadoras
+  '/entidadesPagadoras/{entidadPagadoraRef}':
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Referencia de la entidad pagadora
+          in: path
+          name: entidadPagadoraRef
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/EntidadPagadora'
+        '400':
+          description: entidadPagadoraRef no valido
+        '404':
+          description: entidad pagadora no encontrada
+      tags:
+        - entidades pagadoras
+      description: Devuelve la entidad pagadora correspondiente a entidadPagadoraRef
+      operationId: findEntidadPagadoraByEntidadPagadoraRef
+      summary: Busca una entidad pagadora por su entidadPagadoraRef
+  /facturas:
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Nº de pagina
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page
+          required: false
+          type: integer
+          x-example: 2
+        - description: Nº de elementos por página
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page-Size
+          required: false
+          type: integer
+          x-example: 10
+        - description: >-
+            Criterios de busqueda. <hr> Lista de criterios de busqueda separada
+            por comas, donde un criterio de busqueda es el nombre de uno de los
+            campos de la entidad buscada seguido de la operación y el valor con
+            el que se hace la comparación. Las operaciones soportadas son: <ul>
+            <li><b>:</b> equals</li> <li><b>!:</b> not equals</li> <li><b>~</b>
+            like</li> <li><b>!~</b> not like</li> <li><b>></b> greather</li>
+            <li><b>>:</b> greather or equal</li> <li><b><</b> lower</li>
+            <li><b><:</b> lower or equal</li></ul>
+          in: query
+          name: q
+          required: false
+          type: string
+          x-example: 'facturaRef!~tr0,ano>2010'
+        - description: >-
+            Criterios de ordenación de la busqueda. <hr/> Nombre del campo por
+            el que se ordena seguido de +/- para ordenar ascendente o
+            descendentemente.
+          in: query
+          name: s
+          required: false
+          type: string
+          x-example: facturaRef-
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Page:
+              description: Nº de página
+              type: integer
+            X-Page-Count:
+              description: Nº de páginas
+              type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              type: integer
+          schema:
+            items:
+              $ref: '#/definitions/Factura'
+            type: array
+        '204':
+          description: No hay facturas para los criterios de busqueda utilizados.
+        '400':
+          description: Invalid params
+      tags:
+        - facturas
+      description: Devuelve la lista paginada con las facturas que cumplen los filtros.
+      operationId: findAllFacturas
+      summary: Busca facturas
+  '/facturas/{facturaRef}':
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Referencia de la factura
+          in: path
+          name: facturaRef
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Factura'
+        '400':
+          description: facturaRef no valida
+        '404':
+          description: factura no encontrada
+      tags:
+        - facturas
+      description: Devuelve la factura correspondiente a facturaRef
+      operationId: findFacturaByFacturaRef
+      summary: Busca una factura por su facturaRef
+  /tarifas:
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Nº de pagina
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page
+          required: false
+          type: integer
+          x-example: 2
+        - description: Nº de elementos por página
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page-Size
+          required: false
+          type: integer
+          x-example: 10
+        - description: >-
+            Criterios de busqueda. <hr> Lista de criterios de busqueda separada
+            por comas, donde un criterio de busqueda es el nombre de uno de los
+            campos de la entidad buscada seguido de la operación y el valor con
+            el que se hace la comparación. Las operaciones soportadas son: <ul>
+            <li><b>:</b> equals</li> <li><b>!:</b> not equals</li> <li><b>~</b>
+            like</li> <li><b>!~</b> not like</li> <li><b>></b> greather</li>
+            <li><b>>:</b> greather or equal</li> <li><b><</b> lower</li>
+            <li><b><:</b> lower or equal</li></ul>
+          in: query
+          name: q
+          required: false
+          type: string
+          x-example: 'tarifaRef!~tr0,importe>100'
+        - description: >-
+            Criterios de ordenación de la busqueda. <hr/> Nombre del campo por
+            el que se ordena seguido de +/- para ordenar ascendente o
+            descendentemente.
+          in: query
+          name: s
+          required: false
+          type: string
+          x-example: tarifaRef-
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Page:
+              description: Nº de página
+              type: integer
+            X-Page-Count:
+              description: Nº de páginas
+              type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              type: integer
+          schema:
+            items:
+              $ref: '#/definitions/Tarifa'
+            type: array
+        '204':
+          description: No hay tarifas para los criterios de busqueda utilizados.
+        '400':
+          description: Invalid params
+      tags:
+        - tarifas
+      description: Devuelve la lista paginada con las tarifas que cumplen los filtros.
+      operationId: findAllTarifas
+      summary: Busca tarifas
+  '/tarifas/{tarifaRef}':
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Referencia de la tarifa
+          in: path
+          name: tarifaRef
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Tarifa'
+        '400':
+          description: tarifaRef no valido
+        '404':
+          description: tarifa no encontrada
+      tags:
+        - tarifas
+      description: Devuelve la tarifa correspondiente a tarifaRef
+      operationId: findTarifaByTarifaRef
+      summary: Busca una tarifa por su tarifaRef
+  /tiposTarifa:
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Nº de pagina
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page
+          required: false
+          type: integer
+          x-example: 2
+        - description: Nº de elementos por página
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page-Size
+          required: false
+          type: integer
+          x-example: 10
+        - description: >-
+            Criterios de busqueda. <hr> Lista de criterios de busqueda separada
+            por comas, donde un criterio de busqueda es el nombre de uno de los
+            campos de la entidad buscada seguido de la operación y el valor con
+            el que se hace la comparación. Las operaciones soportadas son: <ul>
+            <li><b>:</b> equals</li> <li><b>!:</b> not equals</li> <li><b>~</b>
+            like</li> <li><b>!~</b> not like</li> <li><b>></b> greather</li>
+            <li><b>>:</b> greather or equal</li> <li><b><</b> lower</li>
+            <li><b><:</b> lower or equal</li></ul>
+          in: query
+          name: q
+          required: false
+          type: string
+          x-example: 'tipoTarifaRef:tt0'
+        - description: >-
+            Criterios de ordenación de la busqueda. <hr/> Nombre del campo por
+            el que se ordena seguido de +/- para ordenar ascendente o
+            descendentemente.
+          in: query
+          name: s
+          required: false
+          type: string
+          x-example: tipoTarifaRef-
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Page:
+              description: Nº de página
+              type: integer
+            X-Page-Count:
+              description: Nº de páginas
+              type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              type: integer
+          schema:
+            items:
+              $ref: '#/definitions/TipoTarifa'
+            type: array
+        '204':
+          description: No hay tipos de tarifa para los criterios de busqueda utilizados.
+        '400':
+          description: Invalid params
+      tags:
+        - tipos tarifa
+      description: >-
+        Devuelve la lista paginada con los tipos de tarifa que cumplen los
+        filtros.
+      operationId: findAllTiposTarifa
+      summary: Busca tipos de tarifas
+  '/tiposTarifa/{tipoTarifaRef}':
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Referencia del tipo de tarifa
+          in: path
+          name: tipoTarifaRef
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/TipoTarifa'
+        '400':
+          description: tipoTarifaRef no valido
+        '404':
+          description: tipotarifa no encontrado
+      tags:
+        - tipos tarifa
+      description: Devuelve el tipoTarifa correspondiente a tipoTarifaRef
+      operationId: findTipoTarifaByTipoTarifaRef
+      summary: Busca un tipo tarifa por su tipoTarifaRef
+definitions:
+  CodigoEconomico:
+    properties:
+      codigo:
+        type: string
+      codigoEconomicoRef:
+        description: Identificador del codigo economico
+        type: string
+    type: object
+  EntidadPagadora:
+    properties:
+      CIF:
+        type: string
+      codigo:
+        type: string
+      codigoPostal:
+        type: string
+      direccion:
+        type: string
+      email:
+        type: string
+      entidadPagadoraRef:
+        description: Identificador de la entidad pagadora
+        type: string
+      localidad:
+        type: string
+      nombre:
+        type: string
+      observaciones:
+        type: string
+      telefono:
+        type: string
+      tipoTarifaRef:
+        type: string
+      unidadAdministrativa:
+        type: string
+    type: object
+  Factura:
+    properties:
+      ano:
+        type: integer
+      codigo:
+        type: string
+      concepto:
+        type: string
+      entidadPagadoraRef:
+        type: string
+      facturaRef:
+        description: Identificador de la factura
+        type: string
+      fechaGeneracion:
+        format: date-time
+        type: string
+      partida:
+        type: string
+      serie:
+        type: string
+      servicio:
+        type: string
+      subTercero:
+        type: string
+      tipoGasto:
+        type: string
+    type: object
+  Tarifa:
+    properties:
+      codigo:
+        type: string
+      descripcion:
+        type: string
+      importe:
+        format: float
+        type: number
+      tarifaRef:
+        description: Identificador de la tarifa
+        type: string
+    type: object
+  TipoTarifa:
+    properties:
+      descripcion:
+        type: string
+      tipoTarifaRef:
+        description: Identificador del tipo de tarifa
+        type: string
+    type: object
+tags:
+  - externalDocs:
+      description: Find out more
+      url: >-
+        https://confluence.treelogic.com/display/HERCULES/ESB-TarifasSGEIntegrator
+    description: Operaciones con tarifas
+    name: tarifas
+  - externalDocs:
+      description: Find out more
+      url: >-
+        https://confluence.treelogic.com/display/HERCULES/ESB-TarifasSGEIntegrator
+    description: Operaciones con tipos de tarifa
+    name: tipos tarifa
+  - externalDocs:
+      description: Find out more
+      url: >-
+        https://confluence.treelogic.com/display/HERCULES/ESB-TarifasSGEIntegrator
+    description: Operaciones con tipos de tarifa
+    name: entidades pagadoras
+  - externalDocs:
+      description: Find out more
+      url: >-
+        https://confluence.treelogic.com/display/HERCULES/ESB-TarifasSGEIntegrator
+    description: Operaciones con facturas
+    name: facturas
+externalDocs:
+  description: Find out more about SGE Tarifas
+  url: 'https://confluence.treelogic.com/display/HERCULES/SGI+-+ESB+-+SGE'
+x-components: {}
+
