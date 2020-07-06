@@ -36,7 +36,83 @@
             <!--This is generated API skeleton.-->
             <!--Business Logic Goes Here-->
             <payloadFactory media-type="json">
-                <format>{"Response" : "Sample Response"}</format>
+                <format>[
+    {
+        "cif": "CIF-001",
+        "entidadPagadoraRef": "ref-001",
+        "codigo": "codigo-001",
+        "CIF": "CIF-001",
+        "nombre": "entidad 001",
+        "direccion": "calle 001",
+        "codigoPostal": "12345",
+        "localidad": "localidad 001",
+        "email": "email001@email.es",
+        "telefono": "987654321",
+        "observaciones": "Observaciones 001",
+        "tipoTarifaRef": "ref-001",
+        "unidadAdministrativa": "unidad-001"
+    },
+    {
+        "cif": "CIF-002",
+        "entidadPagadoraRef": "ref-002",
+        "codigo": "codigo-002",
+        "CIF": "CIF-002",
+        "nombre": "entidad 002",
+        "direccion": "calle 002",
+        "codigoPostal": "12346",
+        "localidad": "localidad 002",
+        "email": "email002@email.es",
+        "telefono": "987654322",
+        "observaciones": "Observaciones 002",
+        "tipoTarifaRef": "ref-002",
+        "unidadAdministrativa": "unidad-002"
+    },
+    {
+        "cif": "CIF-003",
+        "entidadPagadoraRef": "ref-003",
+        "codigo": "codigo-003",
+        "CIF": "CIF-003",
+        "nombre": "entidad 003",
+        "direccion": "calle 003",
+        "codigoPostal": "12347",
+        "localidad": "localidad 003",
+        "email": "email003@email.es",
+        "telefono": "987654323",
+        "observaciones": "Observaciones 003",
+        "tipoTarifaRef": "ref-003",
+        "unidadAdministrativa": "unidad-003"
+    },
+    {
+        "cif": "CIF-004",
+        "entidadPagadoraRef": "ref-004",
+        "codigo": "codigo-004",
+        "CIF": "CIF-004",
+        "nombre": "entidad 004",
+        "direccion": "calle 004",
+        "codigoPostal": "12348",
+        "localidad": "localidad 004",
+        "email": "email004@email.es",
+        "telefono": "987654324",
+        "observaciones": "Observaciones 004",
+        "tipoTarifaRef": "ref-004",
+        "unidadAdministrativa": "unidad-004"
+    },
+    {
+        "cif": "CIF-005",
+        "entidadPagadoraRef": "ref-005",
+        "codigo": "codigo-005",
+        "CIF": "CIF-005",
+        "nombre": "entidad 005",
+        "direccion": "calle 005",
+        "codigoPostal": "12349",
+        "localidad": "localidad 005",
+        "email": "email005@email.es",
+        "telefono": "987654325",
+        "observaciones": "Observaciones 005",
+        "tipoTarifaRef": "ref-005",
+        "unidadAdministrativa": "unidad-005"
+    }
+]</format>
                 <args/>
             </payloadFactory>
             <loopback/>
@@ -52,7 +128,21 @@
             <property expression="get-property('uri.var.entidadPagadoraRef')" name="entidadPagadoraRef" scope="default" type="STRING"/>
             <!--Business Logic Goes Here-->
             <payloadFactory media-type="json">
-                <format>{"Response" : "Sample Response"}</format>
+                <format>{
+    "cif": "CIF-001",
+    "entidadPagadoraRef": "ref-001",
+    "codigo": "codigo-001",
+    "CIF": "CIF-001",
+    "nombre": "entidad 001",
+    "direccion": "calle 001",
+    "codigoPostal": "12345",
+    "localidad": "localidad 001",
+    "email": "email001@email.es",
+    "telefono": "987654321",
+    "observaciones": "Observaciones 001",
+    "tipoTarifaRef": "ref-001",
+    "unidadAdministrativa": "unidad-001"
+}</format>
                 <args/>
             </payloadFactory>
             <loopback/>
@@ -98,7 +188,38 @@
             <!--This is generated API skeleton.-->
             <!--Business Logic Goes Here-->
             <payloadFactory media-type="json">
-                <format>{"Response" : "Sample Response"}</format>
+                <format>[
+    {
+        "tarifaRef": "ref-001",
+        "codigo": "codigo-001",
+        "descripcion": "Tarifa 001",
+        "importe": 1.0
+    },
+    {
+        "tarifaRef": "ref-002",
+        "codigo": "codigo-002",
+        "descripcion": "Tarifa 002",
+        "importe": 2.0
+    },
+    {
+        "tarifaRef": "ref-003",
+        "codigo": "codigo-003",
+        "descripcion": "Tarifa 003",
+        "importe": 3.0
+    },
+    {
+        "tarifaRef": "ref-004",
+        "codigo": "codigo-004",
+        "descripcion": "Tarifa 004",
+        "importe": 4.0
+    },
+    {
+        "tarifaRef": "ref-005",
+        "codigo": "codigo-005",
+        "descripcion": "Tarifa 005",
+        "importe": 5.0
+    }
+]</format>
                 <args/>
             </payloadFactory>
             <loopback/>
@@ -114,7 +235,12 @@
             <property expression="get-property('uri.var.tarifaRef')" name="tarifaRef" scope="default" type="STRING"/>
             <!--Business Logic Goes Here-->
             <payloadFactory media-type="json">
-                <format>{"Response" : "Sample Response"}</format>
+                <format>{
+    "tarifaRef": "ref-001",
+    "codigo": "codigo-001",
+    "descripcion": "Tarifa 001",
+    "importe": 1.0
+}</format>
                 <args/>
             </payloadFactory>
             <loopback/>
@@ -129,7 +255,28 @@
             <!--This is generated API skeleton.-->
             <!--Business Logic Goes Here-->
             <payloadFactory media-type="json">
-                <format>{"Response" : "Sample Response"}</format>
+                <format>[
+    {
+        "tipoTarifaRef": "ref-001",
+        "descripcion": "Tipo tarifa 001"
+    },
+    {
+        "tipoTarifaRef": "ref-002",
+        "descripcion": "Tipo tarifa 002"
+    },
+    {
+        "tipoTarifaRef": "ref-003",
+        "descripcion": "Tipo tarifa 003"
+    },
+    {
+        "tipoTarifaRef": "ref-004",
+        "descripcion": "Tipo tarifa 004"
+    },
+    {
+        "tipoTarifaRef": "ref-005",
+        "descripcion": "Tipo tarifa 005"
+    }
+]</format>
                 <args/>
             </payloadFactory>
             <loopback/>
@@ -145,7 +292,10 @@
             <property expression="get-property('uri.var.tipoTarifaRef')" name="tipoTarifaRef" scope="default" type="STRING"/>
             <!--Business Logic Goes Here-->
             <payloadFactory media-type="json">
-                <format>{"Response" : "Sample Response"}</format>
+                <format>{
+    "tipoTarifaRef": "ref-001",
+    "descripcion": "Tipo tarifa 001"
+}</format>
                 <args/>
             </payloadFactory>
             <loopback/>
