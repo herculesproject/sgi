@@ -1,31 +1,32 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { RootComponent } from './root.component';
-import { LoggerModule, NGXLogger } from 'ngx-logger';
-import { environment } from '@env';
+import {RootComponent} from './root.component';
+import {NGXLogger} from 'ngx-logger';
 import TestUtils from '@core/utils/test-utils';
-import { RouterTestingModule } from '@angular/router/testing';
-import { HeaderComponent } from '@shared/componentes-layout/header/header.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MaterialDesignModule} from '@material/material-design.module';
+import {RouterTestingModule} from '@angular/router/testing';
+import {BreadcrumbComponent} from '@shared/breadcrumb/breadcrumb.component';
 
 describe('RootComponent', () => {
   let component: RootComponent;
   let fixture: ComponentFixture<RootComponent>;
-  const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(NGXLogger.name, TestUtils.getOwnMethodNames(NGXLogger.prototype));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [RootComponent, HeaderComponent],
+      declarations: [
+        RootComponent,
+        BreadcrumbComponent
+      ],
       imports: [
-        LoggerModule.forRoot({
-          serverLoggingUrl: environment.serverLoggingUrl,
-          level: environment.logLevel,
-          serverLogLevel: environment.serverLogLevel
-        }),
+        TestUtils.getIdiomas(),
+        BrowserAnimationsModule,
+        MaterialDesignModule,
         RouterTestingModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: loggerSpy },
-      ]
+        {provide: NGXLogger, useValue: TestUtils.getLoggerSpy()},
+      ],
     })
       .compileComponents();
   }));

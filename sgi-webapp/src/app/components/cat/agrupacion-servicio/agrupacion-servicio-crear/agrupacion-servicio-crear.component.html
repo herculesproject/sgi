@@ -1,0 +1,22 @@
+<mat-tab-group>
+
+  <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+    fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+
+    <mat-tab label="{{'servicio.datos-generales' | translate}}">
+      <app-agrupacion-servicio-datos-generales></app-agrupacion-servicio-datos-generales>
+    </mat-tab>
+
+  </form>
+
+</mat-tab-group>
+
+<div class="footer-button">
+  <button fxFlex="20%" aria-label="Center Align" md-button mat-raised-button (click)="enviarForm()"
+    [disabled]='desactivarAceptar'>
+    {{'botones.guardar'| translate}}
+  </button>
+  <button fxFlex="20%" class="md-primary" aria-label="Center Align" md-button mat-raised-button
+          [routerLink]="'/' + UrlUtils.cat + '/' + UrlUtils.agrupacionServicios">{{'botones.cancelar'| translate}}
+  </button>
+</div>

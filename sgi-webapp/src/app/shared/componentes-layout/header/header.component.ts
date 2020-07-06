@@ -1,43 +1,45 @@
-import { Component, OnInit, ChangeDetectionStrategy, AfterContentChecked } from '@angular/core';
-import { LayoutService } from '@core/services/layout.service';
-import { NGXLogger } from 'ngx-logger';
-import { TraductorService } from '@core/services/traductor.service';
-import { FormGroup, FormControl } from '@angular/forms';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {LayoutService} from '@core/services/layout.service';
+import {NGXLogger} from 'ngx-logger';
+import {Subscription} from 'rxjs';
+import {NavigationEnd, Router} from '@angular/router';
+import {filter} from 'rxjs/operators';
+import {TraductorService} from '@core/services/traductor.service';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit, AfterContentChecked {
-  formGroup: FormGroup;
-  // width pantalla resoluciones pequenas
-  screenWidth: number;
+export class HeaderComponent implements OnInit, OnDestroy {
+  anchoPantalla: number;
   // toogle
   toggleActive: boolean;
-  select: string;
+
+  nombreModulo: string;
+  private subscription: Subscription;
 
   constructor(
-    private logger: NGXLogger,
-    private sidenav: LayoutService,
-    public traductorServicio: TraductorService
+    private readonly logger: NGXLogger,
+    private readonly sidenav: LayoutService,
+    private readonly router: Router,
+    private readonly traductor: TraductorService,
   ) {
-    this.screenWidth = window.innerWidth;
+    this.anchoPantalla = window.innerWidth;
+    this.crearSubscripcionUrl();
   }
 
   ngOnInit(): void {
     this.logger.debug(HeaderComponent.name, 'ngOnInit()', 'start');
     this.toggleActive = false;
-    this.select = 'modulo2';
-    this.formGroup = new FormGroup({
-      module: new FormControl(this.select, []),
-    });
+    this.crearSubscripcionUrl();
     this.logger.debug(HeaderComponent.name, 'ngOnInit()', 'end');
   }
 
-  ngAfterContentChecked(): void {
-    this.formGroup.get('module').setValue(this.select);
+  ngOnDestroy(): void {
+    this.logger.debug(HeaderComponent.name, 'ngOnDestroy()', 'start');
+    this.subscription?.unsubscribe();
+    this.logger.debug(HeaderComponent.name, 'ngOnDestroy()', 'end');
   }
 
   /**
@@ -51,12 +53,19 @@ export class HeaderComponent implements OnInit, AfterContentChecked {
   }
 
   /**
-   * Redirecciona al valor seleccionado en el select
+   * Crea una subscripción para saber cuando cambia la url
+   * y mostrar el módulo actual seleccionado
    */
-  navigateTo(value: string): void {
-    this.logger.debug(HeaderComponent.name, 'navigateTo(value)', 'start');
-    this.select = value;
-    this.logger.debug(HeaderComponent.name, 'navigateTo(value)', 'end');
+  private crearSubscripcionUrl() {
+    this.logger.debug(HeaderComponent.name, 'crearSubscripcionUrl()', 'start');
+    this.subscription = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      const identificador = event.url.split('/')[1];
+      if (identificador && identificador !== '') {
+        this.nombreModulo = this.traductor.getTexto('cabecera.modulo.' + identificador);
+      }
+    });
+    this.logger.debug(HeaderComponent.name, 'crearSubscripcionUrl()', 'end');
   }
-
 }

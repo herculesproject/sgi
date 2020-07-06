@@ -1,21 +1,4 @@
 <!-- Header -->
 <app-header></app-header>
 <!-- FIN Header -->
-
-<!-- SIDENAV -->
-<mat-sidenav-container class="sidenav">
-  <mat-sidenav class="open" #sidenav [opened]="screenWidth > 960 || menuToogle"
-    [mode]="screenWidth > 960 ? 'side' : 'over'" [class.mat-elevation-z4]="true">
-    <mat-nav-list>
-      <app-menu-principal></app-menu-principal>
-    </mat-nav-list>
-  </mat-sidenav>
-
-  <!-- ROUTER COMPONENTS -->
-  <div class="layout-components">
-    <router-outlet></router-outlet>
-  </div>
-  <!-- FIN ROUTER COMPONENTS -->
-
-</mat-sidenav-container>
-<!-- FIN SIDENAV -->
+<router-outlet></router-outlet>

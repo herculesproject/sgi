@@ -1,0 +1,136 @@
+<!-- Tipo Reservable crear -->
+<section class="tipo-reservable-crear">
+  <h2>{{'tipo-reservable.crear.titulo' | translate}}</h2>
+  <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+    fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+
+    <!--Descripción-->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field appearance="fill">
+        <mat-label>{{'tipo-reservable.crear.descripcion.titulo' | translate}}</mat-label>
+        <input #descripcion matInput formControlName="descripcion" type="text" id="descripcion"
+          placeholder="{{'tipo-reservable.crear.descripcion.titulo' | translate}}" required maxlength="100">
+        <mat-hint>{{descripcion.value.length}} / 100</mat-hint>
+        <mat-error
+          *ngIf="FormGroupUtil.checkError(formGroup, 'descripcion') && formGroup.get('descripcion').errors.required">
+          {{'tipo-reservable.crear.descripcion.error.requerido' | translate}}
+        </mat-error>
+        <mat-error
+          *ngIf="FormGroupUtil.checkError(formGroup, 'descripcion') && formGroup.get('descripcion').errors.maxlength">
+          {{'tipo-reservable.crear.descripcion.error.maximo' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!--Servicio-->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field class="input-form" appearance="fill">
+        <mat-label>{{'tipo-reservable.crear.servicio.titulo' | translate}}</mat-label>
+        <input type="text" placeholder="Servicio" arial-label="Number" matInput formControlName="servicio"
+          [matAutocomplete]="auto" required>
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="getServicio">
+          <mat-option *ngFor="let servicio of filteredServicios | async" [value]="servicio">
+            {{servicio.nombre}}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'servicio') && formGroup.get('servicio').errors.required">
+          {{'tipo-reservable.crear.servicio.error.requerido' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!--Duración mínima en minutos-->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field appearance="fill">
+        <mat-label>{{'tipo-reservable.crear.duracionMin.titulo' | translate}}</mat-label>
+        <input #duracionMin matInput formControlName="duracionMin" type="text" id="duracionMin"
+          placeholder="{{'tipo-reservable.crear.duracionMin.titulo' | translate}}" maxlength="3" pattern="[0-9]{0,3}">
+        <mat-hint>{{duracionMin.value.length}} / 3</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <!--Días de antelación-->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field appearance="fill">
+        <mat-label>{{'tipo-reservable.crear.diasAnteMax.titulo' | translate}}</mat-label>
+        <input #diasAnteMax matInput formControlName="diasAnteMax" type="text" id="diasAnteMax"
+          placeholder="{{'tipo-reservable.crear.diasAnteMax.titulo' | translate}}" maxlength="2" pattern="[0-9]{0,2}">
+        <mat-hint>{{diasAnteMax.value.length}} / 2</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <!--Vista máxima de calendario en días-->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field appearance="fill">
+        <mat-label>{{'tipo-reservable.crear.diasVistaMaxCalen.titulo' | translate}}</mat-label>
+        <input #diasVistaMaxCalen matInput formControlName="diasVistaMaxCalen" type="text" id="diasVistaMaxCalen"
+          placeholder="{{'tipo-reservable.crear.diasVistaMaxCalen.titulo' | translate}}" maxlength="2"
+          pattern="[0-9]{0,2}">
+        <mat-hint>{{diasVistaMaxCalen.value.length}} / 2</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <!--Horas antelación anular usuario-->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field appearance="fill">
+        <mat-label>{{'tipo-reservable.crear.horasAnteAnular.titulo' | translate}}</mat-label>
+        <input #horasAnteAnular matInput formControlName="horasAnteAnular" type="text" id="horasAnteAnular"
+          placeholder="{{'tipo-reservable.crear.horasAnteAnular.titulo' | translate}}" maxlength="3"
+          pattern="[0-9]{0,3}">
+        <mat-hint>{{horasAnteAnular.value.length}} / 3</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <!--Hora antelación mínima-->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field appearance="fill">
+        <mat-label>{{'tipo-reservable.crear.horasAnteMin.titulo' | translate}}</mat-label>
+        <input #horasAnteMin matInput formControlName="horasAnteMin" type="text" id="horasAnteMin"
+          placeholder="{{'tipo-reservable.crear.horasAnteMin.titulo' | translate}}" maxlength="3"
+          pattern="[0-9]{0,3}">
+        <mat-hint>{{horasAnteMin.value.length}} / 3</mat-hint>
+      </mat-form-field>
+    </div>
+
+
+    <!--Reserva múltiple-->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-label>{{'tipo-reservable.crear.reservaMulti.titulo' | translate}}</mat-label>
+      <mat-radio-group formControlName="reservaMulti" id="reservaMulti">
+        <mat-radio-button value="false" [checked]="true">No</mat-radio-button>
+        <mat-radio-button value="true">Sí</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!--Estado-->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-label>{{'tipo-reservable.crear.estado.titulo' | translate}}</mat-label>
+      <mat-radio-group formControlName="estado" id="estado">
+        <mat-radio-button *ngFor="let estado of listaEstados() | keyvalue" [value]="estado.value"
+          [checked]="estado.value == estadoDefecto">
+          {{estado.value}}
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+  </form>
+  <div class="footer-button">
+    <button fxFlex="20%" aria-label="Center Align" md-button mat-raised-button (click)="sendForm()"
+      [disabled]='desactivarAceptar'>
+      {{'botones.guardar'| translate}}
+    </button>
+    <button fxFlex="20%" class="md-primary" aria-label="Center Align" md-button mat-raised-button
+            [routerLink]="'/'+UrlUtils.cat + '/' + UrlUtils.tipoReservables">{{'botones.cancelar'| translate}}
+    </button>
+  </div>
+</section>
+<!-- Tipo Reservable crear -->

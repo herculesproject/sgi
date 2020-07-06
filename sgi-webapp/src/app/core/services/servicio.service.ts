@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { Servicio } from '@core/models/servicio';
-import { NGXLogger } from 'ngx-logger';
-import { HttpClient } from '@angular/common/http';
-import { BaseService } from './base.service';
+import {Injectable} from '@angular/core';
+import {Servicio} from '@core/models/servicio';
+import {NGXLogger} from 'ngx-logger';
+import {HttpClient} from '@angular/common/http';
+import {BaseService} from './base.service';
 
 @Injectable({
   providedIn: 'root',

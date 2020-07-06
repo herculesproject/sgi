@@ -1,6 +1,5 @@
 <header class="navbar header">
   <div fxLayout.xs="row wrap" fxLayout="row wrap" fxLayoutGap="10px">
-
     <!-- Columna menu movil (xs-sm) y logos-->
     <div fxFlex.xs="0 1 calc(65%-10px)" fxFlex.sm="0 1 calc(48%-10px)" fxFlex.md="0 1 calc(33%-10px)"
       fxFlex.gt-md="0 1 calc(33%-10px)">
@@ -49,14 +48,8 @@
     <!-- Modulos app -->
     <div fxLayoutAlign.sm="center center" fxLayoutAlign.xs="center center" fxFlex.xs="0 1 calc(100%-10px)"
       fxFlex.sm="0 1 calc(100%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(33%-10px)">
-      <div class="select-modulo" id="seleccionarModulo" [formGroup]="formGroup">
-        <mat-form-field>
-          <mat-select formControlName="module" (selectionChange)="navigateTo($event.value)">
-            <mat-option [value]="'modulo1'">{{'cabecera.modulo.cat' | translate}}</mat-option>
-            <mat-option [value]="'modulo2'">{{'cabecera.modulo.ebt' | translate}}</mat-option>
-            <mat-option [value]="'modulo3'">{{'cabecera.modulo.pii' | translate}}</mat-option>
-          </mat-select>
-        </mat-form-field>
+      <div class="select-modulo" id="seleccionarModulo">
+        {{nombreModulo}}
       </div>
     </div>
     <!-- FIN Modulos app-->

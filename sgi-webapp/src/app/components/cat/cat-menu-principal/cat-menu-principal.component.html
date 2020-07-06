@@ -1,0 +1,49 @@
+<!-- Menu principal -->
+<mat-nav-list>
+  <div class="opciones-menu">
+    <mat-list-item [routerLink]="UrlUtils.producto" [routerLinkActive]="['is-active']">
+      <a mat-list-item>
+        <mat-icon>fullscreen</mat-icon>
+        <span>{{'menu.principal.productos' | translate}}</span>
+      </a>
+    </mat-list-item>
+    <mat-list-item [routerLink]="UrlUtils.solicitud" [routerLinkActive]="['is-active']">
+      <a mat-list-item>
+        <mat-icon> list_alt</mat-icon>
+        <span>{{'menu.principal.solicitudes' | translate}}</span>
+      </a>
+    </mat-list-item>
+    <mat-list-item [routerLink]="UrlUtils.agrupacionServicios" [routerLinkActive]="['is-active']">
+      <a mat-list-item>
+        <mat-icon>device_hub</mat-icon>
+        <span>{{'menu.principal.agrupaciones-servicios' | translate}}</span>
+      </a>
+    </mat-list-item>
+    <mat-list-item [routerLink]="UrlUtils.horario" [routerLinkActive]="['is-active']">
+      <a mat-list-item>
+        <mat-icon>calendar_today</mat-icon>
+        <span>{{'menu.principal.horarios' | translate}}</span>
+      </a>
+    </mat-list-item>
+    <mat-list-item [routerLink]="UrlUtils.unidadMedida" [routerLinkActive]="['is-active']">
+      <a mat-list-item>
+        <mat-icon>equalizer</mat-icon>
+        <span>{{'menu.principal.unidades-medida' | translate}}</span>
+      </a>
+    </mat-list-item>
+    <mat-list-item [routerLink]="UrlUtils.tipoReservables" [routerLinkActive]="['is-active']">
+      <a mat-list-item>
+        <mat-icon>fullscreen</mat-icon>
+        <span>{{'menu.principal.tipos-reservables' | translate}}</span>
+      </a>
+    </mat-list-item>
+    <mat-list-item [routerLink]="UrlUtils.tipoFungible" [routerLinkActive]="['is-active']">
+      <a mat-list-item>
+        <mat-icon>fullscreen</mat-icon>
+        <span>{{'menu.principal.tipos-fungibles' | translate}}</span>
+      </a>
+    </mat-list-item>
+
+  </div>
+</mat-nav-list>
+<!-- FIN Menu principal -->

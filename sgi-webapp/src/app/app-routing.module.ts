@@ -1,58 +1,39 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from '@core/guards/auth.guard';
-import { UrlUtils } from '@core/utils/url-utils';
-
-import { RootComponent } from './components/root/root.component';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {AuthGuard} from '@core/guards/auth.guard';
+import {UrlUtils} from '@core/utils/url-utils';
+import {RootComponent} from './components/root/root.component';
 
 /**
  * Definimos las urls de la aplicación
  */
 const routes: Routes = [
   {
-    path: UrlUtils.agrupacionServicios.valueOf(),
+    path: UrlUtils.cat.valueOf(),
     loadChildren: () =>
-      import('./components/agrupacion-servicio/agrupacion-servicio.module').then(m => m.AgrupacionServicioModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: UrlUtils.horario.valueOf(),
-    component: RootComponent,
-  },
-  {
-    path: UrlUtils.producto.valueOf(),
-    component: RootComponent,
-  },
-  {
-    path: UrlUtils.solicitud.valueOf(),
-    loadChildren: () =>
-      import('./components/solicitud/solicitud.module').then(m => m.SolicitudModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: UrlUtils.tipoFungible.valueOf(),
-    loadChildren: () =>
-      import('./components/tipo-fungible/tipo-fungible.module').then(m => m.TipoFungibleModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: UrlUtils.tipoReservables.valueOf(),
-    loadChildren: () =>
-      import('./components/tipo-reservable/tipo-reservable.module').then(m => m.TipoReservableModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: UrlUtils.unidadMedida.valueOf(),
-    loadChildren: () =>
-      import('./components/unidad-medida/unidad-medida.module').then(
-        (m) => m.UnidadMedidaModule
+      import('./components/cat/cat.module').then(
+        (m) => m.CatModule
       ),
     canActivate: [AuthGuard],
   },
-  /**
-   * Si no reconoce la url
-   */
-  { path: '**', component: RootComponent },
+  {
+    path: UrlUtils.ebt.valueOf(),
+    loadChildren: () =>
+    import('./components/ebt/ebt.module').then(
+      (m) => m.EbtModule
+    ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: UrlUtils.pii.valueOf(),
+    loadChildren: () =>
+      import('./components/pii/pii.module').then(
+        (m) => m.PiiModule
+      ),
+    canActivate: [AuthGuard],
+  },
+  {path: '', redirectTo: UrlUtils.cat.valueOf(), pathMatch: 'full'},
+  {path: '**', component: RootComponent},
 ];
 
 /**

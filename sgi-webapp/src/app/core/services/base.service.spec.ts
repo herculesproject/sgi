@@ -1,16 +1,12 @@
-import { TestBed } from '@angular/core/testing';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {TestBed} from '@angular/core/testing';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 
-import { NGXLogger } from 'ngx-logger';
+import {NGXLogger} from 'ngx-logger';
 
 import TestUtils from '@core/utils/test-utils';
-import { BaseService } from './base.service';
-import { MenuPrincipalComponent } from '@shared/componentes-layout/menu-principal/menu-principal.component';
-import { environment } from '@env';
+import {BaseService} from './base.service';
+import {environment} from '@env';
 
 interface Entity {
   id?: number;
@@ -38,7 +34,7 @@ describe('BaseService', () => {
   // We store the service and the httpmock in variables we can access in every test and gets instanciated every time before a test runs
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [MenuPrincipalComponent],
+      declarations: [],
       imports: [HttpClientTestingModule],
     });
 
@@ -123,7 +119,7 @@ describe('BaseService', () => {
     // then: the right HTTP method is used to call the backend API
     expect(req.request.method).toBe('PUT');
 
-    // "fire" the request with not found result
+    // 'fire' the request with not found result
     req.flush(null, NOT_FOUND);
   });
 
@@ -143,7 +139,7 @@ describe('BaseService', () => {
     // then: the right HTTP method is used to call the backend API
     expect(req.request.method).toBe('DELETE');
 
-    // "fire" the request with the modcked result
+    // 'fire' the request with the modcked result
     req.flush(null);
   });
 
@@ -168,7 +164,7 @@ describe('BaseService', () => {
     // then: the right HTTP method is used to call the backend API
     expect(req.request.method).toBe('DELETE');
 
-    // "fire" the request with not found result
+    // 'fire' the request with not found result
     req.flush('', NOT_FOUND);
   });
 
@@ -192,7 +188,7 @@ describe('BaseService', () => {
     // then: the right HTTP method is used to call the backend API
     expect(req.request.method).toBe('GET');
 
-    // "fire" the request with the modcked result
+    // 'fire' the request with the modcked result
     req.flush(dummyEntityList);
   });
 
@@ -215,7 +211,7 @@ describe('BaseService', () => {
     // then: the right HTTP method is used to call the backend API
     expect(req.request.method).toBe('GET');
 
-    // "fire" the request with the modcked result
+    // 'fire' the request with the modcked result
     req.flush(dummyEntity);
   });
 
@@ -240,7 +236,7 @@ describe('BaseService', () => {
     // then: the right HTTP method is used to call the backend API
     expect(req.request.method).toBe('GET');
 
-    // "fire" the request with not found result
+    // 'fire' the request with not found result
     req.flush('', NOT_FOUND);
   });
 });

@@ -4,9 +4,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
+import { SelectorModuloComponent } from '@shared/componentes-layout/selector-modulo/selector-modulo.component';
 
+import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { HeaderComponent } from './componentes-layout/header/header.component';
-import { MenuPrincipalComponent } from './componentes-layout/menu-principal/menu-principal.component';
 import { MenuSecundarioComponent } from './componentes-layout/menu-secundario/menu-secundario.component';
 import { DialogComponent } from './componentes-shared/dialog/dialog.component';
 import { SnackBarComponent } from './componentes-shared/snack-bar/snack-bar.component';
@@ -15,9 +16,10 @@ import { SnackBarComponent } from './componentes-shared/snack-bar/snack-bar.comp
   declarations: [
     HeaderComponent,
     MenuSecundarioComponent,
-    MenuPrincipalComponent,
     DialogComponent,
     SnackBarComponent,
+    SelectorModuloComponent,
+    BreadcrumbComponent
   ],
   imports: [
     RouterModule,
@@ -33,8 +35,8 @@ import { SnackBarComponent } from './componentes-shared/snack-bar/snack-bar.comp
     FormsModule,
     ReactiveFormsModule,
     HeaderComponent,
-    MenuPrincipalComponent,
     MenuSecundarioComponent,
+    BreadcrumbComponent,
   ],
 })
-export class SharedModule {}
+export class SharedModule { }

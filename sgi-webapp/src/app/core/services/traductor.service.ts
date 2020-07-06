@@ -16,6 +16,7 @@ export class TraductorService {
   /**
    * Constructor del servicio
    *
+   * @param logger Log del servicio
    * @param translateService Servicio encargado de traducir
    */
   constructor(

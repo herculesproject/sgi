@@ -1,4 +1,19 @@
 {
+  "breadcrumb": {
+    "cat": "Catálogo de oferta científico-técnica",
+    "ebt": "Empresas de base tecnológica",
+    "pii": "Propiedad industrial e intelectual",
+    "inicio": "Inicio",
+    "unidadMedida": "Unidad de medida",
+    "crear": "Crear",
+    "actualizar": "Actualizar",
+    "producto": "Productos",
+    "solicitud": "Solicitud",
+    "agrupacionServicios": "Agrupaciones de servicios",
+    "horario": "Horarios",
+    "tipoReservables": "Tipos de reservable",
+    "tipoFungible": "Tipos de fungible"
+  },
   "botones": {
     "guardar": "Guardar",
     "cancelar": "Cancelar"
@@ -25,11 +40,12 @@
     },
     "secundario": {
       "cuenta": "Cuenta",
-      "agregar": "Agregar",
+      "crear": "crear",
       "graficas": "Gráficas",
       "listados": "Listados",
       "notificaciones": "Notificaciones",
-      "ajustes": "Ajustes"
+      "ajustes": "Ajustes",
+      "selector-modulo": "Selector de módulo"
     }
   },
   "unidad-medida": {
@@ -39,7 +55,7 @@
       "titulo": "Actualización de unidad de medida",
       "no-encontrado": "Error al cargar los datos de la unidad de medida"
     },
-    "agregar": {
+    "crear": {
       "abreviatura": {
         "error": {
           "maximo": "La abreviatura supera la longitud máxima",
@@ -56,7 +72,7 @@
         },
         "titulo": "Descripción"
       },
-      "error": "Error al agregar la unidad de medida",
+      "error": "Error al crear la unidad de medida",
       "titulo": "Creación de unidad de medida"
     },
     "listado": {
@@ -83,7 +99,7 @@
       "titulo": "Actualización de tipo fungible",
       "no-encontrado": "Error al cargar los datos del tipo fungible"
     },
-    "agregar": {
+    "crear": {
       "nombre": {
         "error": {
           "maximo": "El nombre supera la longitud máxima",
@@ -99,7 +115,7 @@
         },
         "titulo": "Servicio"
       },
-      "error": "Error al agregar el tipo fungible",
+      "error": "Error al crear el tipo fungible",
       "titulo": "Creación de tipo fungible"
     },
     "listado": {
@@ -125,7 +141,7 @@
       "titulo": "Actualización de tipo reservable",
       "no-encontrado": "Error al cargar los datos del tipo reservable"
     },
-    "agregar": {
+    "crear": {
       "descripcion": {
         "error": {
           "maximo": "La descripción supera la longitud máxima",
@@ -162,7 +178,7 @@
       "estado": {
         "titulo": "Estado"
       },
-      "error": "Error al agregar el tipo reservable",
+      "error": "Error al crear el tipo reservable",
       "titulo": "Creación de tipo reservable"
     },
     "listado": {

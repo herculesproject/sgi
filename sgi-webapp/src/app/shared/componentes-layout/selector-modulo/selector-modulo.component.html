@@ -1,0 +1,13 @@
+<header class="modal-header-material">
+  <h1 mat-dialog-title>Seleccione un módulo
+    <button type="button" class="close" aria-label="Close" (click)="cerrarModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </h1>
+</header>
+<main>
+  <button *ngFor="let modulo of modulos" (click)="abrirModulo(modulo)">{{modulo}}</button>
+</main>
+<section id="modals-buttons" class="float-right" mat-dialog-actions>
+  <button (click)="cerrarModal()" class="btn btn-outline-danger input-modal" type="button">Cancelar</button>
+</section>

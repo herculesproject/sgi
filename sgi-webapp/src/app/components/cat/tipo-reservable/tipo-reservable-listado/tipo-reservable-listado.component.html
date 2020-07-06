@@ -1,0 +1,82 @@
+<!-- Tipo Reservable listado -->
+<section class="tipo-reservable-listado">
+  <h2>{{'tipo-reservable.listado.titulo' | translate}}</h2>
+  <mat-form-field>
+    <mat-label>{{'tipo-reservable.listado.busqueda' | translate}}</mat-label>
+    <input matInput (keyup)="applyFilter($event)"
+      placeholder="{{'tipo-reservable.listado.busqueda-placeholder' | translate}}">
+  </mat-form-field>
+
+  <table class="mat-elevation-z8 table-tipo" mat-table matSort [dataSource]="dataSource">
+
+    <!-- Descripción Column -->
+    <ng-container matColumnDef="descripcion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'tipo-reservable.listado.descripcion' | translate}} </th>
+      <td mat-cell *matCellDef="let tipoReservable"> {{tipoReservable.descripcion}} </td>
+    </ng-container>
+
+    <!-- Servicio Column -->
+    <ng-container matColumnDef="servicio">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'tipo-reservable.listado.servicio' | translate}} </th>
+      <td mat-cell *matCellDef="let tipoReservable"> {{tipoReservable.servicio.nombre}} </td>
+    </ng-container>
+
+    <!-- Estado Column -->
+    <ng-container matColumnDef="estado">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'tipo-reservable.listado.estado' | translate}} </th>
+      <td mat-cell *matCellDef="let tipoReservable"> {{tipoReservable.estado}} </td>
+    </ng-container>
+
+    <!-- Duracion Minima Column -->
+    <ng-container matColumnDef="duracionMin">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'tipo-reservable.listado.duracionMin' | translate}} </th>
+      <td mat-cell *matCellDef="let tipoReservable"> {{tipoReservable.duracionMin}} </td>
+    </ng-container>
+
+    <!-- Días Antelacion Column -->
+    <ng-container matColumnDef="diasAnteMax">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'tipo-reservable.listado.diasAnteMax' | translate}}
+      </th>
+      <td mat-cell *matCellDef="let tipoReservable"> {{tipoReservable.diasAnteMax}} </td>
+    </ng-container>
+
+    <!-- Horas Anulación Column -->
+    <ng-container matColumnDef="horasAnteAnular">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'tipo-reservable.listado.horasAnteAnular' | translate}}
+      </th>
+      <td mat-cell *matCellDef="let tipoReservable"> {{tipoReservable.horasAnteAnular}} </td>
+    </ng-container>
+
+    <!-- Días Column -->
+    <ng-container matColumnDef="diasVistaMaxCalen">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'tipo-reservable.listado.dias' | translate}}
+      </th>
+      <td mat-cell *matCellDef="let tipoReservable"> {{tipoReservable.diasVistaMaxCalen}} </td>
+    </ng-container>
+
+    <!-- Acciones Column -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> {{'tipo-reservable.listado.acciones' | translate}} </th>
+      <td mat-cell *matCellDef="let tipoReservable;let i=index;">
+        <button mat-button [routerLink]="UrlUtils.actualizar + tipoReservable.id"
+          matTooltip="{{'tipo-fungible.listado.editar' | translate}}">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-button matTooltip="{{'tipo-reservable.listado.borrar' | translate}}"
+          (click)="borrarSeleccionado(tipoReservable.id, $event)">
+          <mat-icon>close</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <div class="separation-button">
+    <button [routerLink]="UrlUtils.crear" mat-button>
+      <mat-icon>add_box</mat-icon> {{'tipo-reservable.listado.nuevo-tipo' | translate}}
+    </button>
+  </div>
+</section>
+<!-- FIN Tipo Reservable listado-->

@@ -1,4 +1,19 @@
 {
+  "breadcrumb": {
+    "cat": "Catalog of scientific-technical offer",
+    "ebt": "Technology-based companies",
+    "pii": "Industrial and intellectual property",
+    "inicio": "Home",
+    "unidadMedida": "Measurement units",
+    "crear": "Add",
+    "actualizar": "Update",
+    "producto": "Products",
+    "solicitud": "Requests",
+    "agrupacionServicios": "Service groupings",
+    "horario": "Work hours",
+    "tipoReservables": "Bookable",
+    "tipoFungible": "Fungible types"
+  },
   "botones": {
     "guardar": "Save",
     "cancelar": "Cancel"
@@ -25,11 +40,12 @@
     },
     "secundario": {
       "cuenta": "Account",
-      "agregar": "Add",
+      "crear": "Add",
       "graficas": "Graphics",
       "listados": "Lists",
       "notificaciones": "Notifications",
-      "ajustes": "Settings"
+      "ajustes": "Settings",
+      "selector-modulo": "Module selector"
     }
   },
   "unidad-medida": {
@@ -39,7 +55,7 @@
       "titulo": "Unit of measure update",
       "no-encontrado": "Error loading unit of measure data"
     },
-    "agregar": {
+    "crear": {
       "abreviatura": {
         "error": {
           "maximo": "The abbreviation exceeds the maximum length",
@@ -83,7 +99,7 @@
       "titulo": "Fungible type update",
       "no-encontrado": "Error loading fungible type data"
     },
-    "agregar": {
+    "crear": {
       "nombre": {
         "error": {
           "maximo": "Name exceeds the maximum length",
@@ -125,7 +141,7 @@
       "titulo": "Reservable type update",
       "no-encontrado": "Error loading reservable type data"
     },
-    "agregar": {
+    "crear": {
       "descripcion": {
         "error": {
           "maximo": "Description exceeds the maximum length",

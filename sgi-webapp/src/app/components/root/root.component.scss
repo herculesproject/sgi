@@ -1,0 +1,14 @@
+@import 'variables.scss';
+
+/* SIDENAV */
+.sidenav{
+  height: calc(100% - 74px);
+  .open{
+    width: 200px;
+  }
+  // Layout
+  .layout-components{
+    padding: 15px 30px 15px 30px;
+  }
+}
+/* FIN SIDENAV */

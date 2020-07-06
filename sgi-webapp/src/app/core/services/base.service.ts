@@ -1,10 +1,10 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 
-import { NGXLogger } from 'ngx-logger';
-import { throwError, Observable } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import {NGXLogger} from 'ngx-logger';
+import {Observable, throwError} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
 
-import { environment } from '@env';
+import {environment} from '@env';
 
 export class BaseService<T> {
   protected apiEndpoint: string;
@@ -101,7 +101,7 @@ export class BaseService<T> {
     return this.http
       .get<Array<T>>(this.apiEndpoint + '/all', {
         headers: new HttpHeaders().set('Accept', 'application/json'),
-        params: new HttpParams({ fromObject: { ...filtro } }),
+        params: new HttpParams({fromObject: {...filtro}}),
       })
       .pipe(
         map((res) => {

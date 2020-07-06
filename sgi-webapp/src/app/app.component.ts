@@ -11,37 +11,17 @@ import { Subscription } from 'rxjs';
 export class AppComponent implements OnInit, OnDestroy {
   title = 'sgi-webapp';
 
-  // width pantalla resoluciones pequenas
-  screenWidth: number;
-
-  selected = 'modulo2';
-
-  menuToogle: boolean;
-
-  // Subscription
-  subscriptionMenuToogle: Subscription;
-
-  constructor(private logger: NGXLogger, private layoutService: LayoutService) {
-    this.screenWidth = window.innerWidth;
+  constructor(private logger: NGXLogger) {
   }
 
   ngOnInit(): void {
     this.logger.info('SGI WEBAPP - HERCULES');
     this.logger.debug(AppComponent.name, 'ngOnInit()', 'start');
-
-    this.subscriptionMenuToogle = this.layoutService
-      .getToogleSidenav()
-      .subscribe((menuToogle) => {
-        this.menuToogle = menuToogle;
-      });
     this.logger.debug(AppComponent.name, 'ngOnInit()', 'end');
   }
 
   ngOnDestroy(): void {
     this.logger.debug(AppComponent.name, 'ngOnDestroy()', 'start');
-    if (this.subscriptionMenuToogle) {
-      this.subscriptionMenuToogle.unsubscribe();
-    }
     this.logger.debug(AppComponent.name, 'ngOnDestroy()', 'end');
   }
 }

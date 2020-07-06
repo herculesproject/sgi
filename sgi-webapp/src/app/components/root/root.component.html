@@ -1,0 +1,13 @@
+<!-- SIDENAV -->
+<mat-sidenav-container class="sidenav">
+  <mat-sidenav class="open" #sidenav [opened]="screenWidth > 960 || menuToogle"
+               [mode]="screenWidth > 960 ? 'side' : 'over'" [class.mat-elevation-z4]="true">
+    <mat-nav-list>
+      <ng-content></ng-content>
+    </mat-nav-list>
+  </mat-sidenav>
+  <div class="layout-components">
+    <app-breadcrumb></app-breadcrumb>
+    <router-outlet></router-outlet>
+  </div>
+</mat-sidenav-container>
