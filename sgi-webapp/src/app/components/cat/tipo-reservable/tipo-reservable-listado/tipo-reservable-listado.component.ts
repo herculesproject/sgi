@@ -1,119 +1,160 @@
 import { NGXLogger } from 'ngx-logger';
-import { Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Subscription, Observable, of, merge } from 'rxjs';
+import { catchError, tap, map } from 'rxjs/operators';
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { TipoReservable } from '@core/models/tipo-reservable';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TipoReservableService } from '@core/services/tipo-reservable.service';
 import { TraductorService } from '@core/services/traductor.service';
 import { UrlUtils } from '@core/utils/url-utils';
-import { Servicio } from '@core/models/servicio';
+import { Filter, FilterType, Direction } from '@core/services/types';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+
 
 @Component({
   selector: 'app-tipo-reservable-listado',
   templateUrl: './tipo-reservable-listado.component.html',
   styleUrls: ['./tipo-reservable-listado.component.scss']
 })
-export class TipoReservableListadoComponent implements OnInit, OnDestroy {
+export class TipoReservableListadoComponent implements AfterViewInit, OnDestroy {
 
   UrlUtils = UrlUtils;
-  displayedColumns: string[] = ['descripcion', 'servicio', 'estado', 'duracionMin', 'diasAnteMax', 'horasAnteAnular', 'diasVistaMaxCalen', 'acciones'];
+  columnas: string[];
+  elementosPagina: number[];
   dataSource: MatTableDataSource<TipoReservable>;
+
+  tiposReservable$: Observable<TipoReservable[]> = of();
+  totalElementos: number;
+  filter: Filter;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   tipoReservableSubscription: Subscription;
   dialogServiceSubscription: Subscription;
   dialogServiceSubscriptionGetSubscription: Subscription;
   tipoReservableServiceDeleteSubscription: Subscription;
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-
   constructor(
-    private logger: NGXLogger,
-    private tipoReservableService: TipoReservableService,
+    private readonly logger: NGXLogger,
+    private readonly tipoReservableService: TipoReservableService,
     private readonly traductor: TraductorService,
-    private dialogService: DialogService,
-    private snackBarService: SnackBarService) { }
-
-  ngOnInit(): void {
+    private readonly dialogService: DialogService,
+    private readonly snackBarService: SnackBarService) {
     this.logger.debug(TipoReservableListadoComponent.name, 'ngOnInit()', 'start');
-
-    this.dataSource = new MatTableDataSource<TipoReservable>([]);
-
-    this.tipoReservableSubscription = this.tipoReservableService.findAll().subscribe(
-      (tiposReservables: TipoReservable[]) => {
-        this.dataSource.data = tiposReservables;
-      });
-
-    this.dataSource.sort = this.sort;
-    this.dataSource.sortingDataAccessor = this.tipoReservableSortingDataAccessor;
-    this.logger.debug(TipoReservableListadoComponent.name, 'ngOnInit()', 'end');
-  }
-
-  /**
-   * Realiza una búsqueda rápida sobre la tabla
-   * @param event variable filtro
-   */
-  applyFilter(event: Event) {
-    this.logger.debug(TipoReservableListadoComponent.name,
-      'applyFilter($event: Event) - start');
-
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    // Realiza la búsqueda también sobre los datos de objetos mostrados en la tabla
-    this.dataSource.filterPredicate = (order, filter: string) => {
-      const transformedFilter = filter.trim().toLowerCase();
-
-      const listAsFlatString = (obj): string => {
-        let returnVal = '';
-
-        Object.values(obj).forEach((val) => {
-          if (typeof val !== 'object') {
-            returnVal = returnVal + ' ' + val;
-          } else if (val !== null) {
-            returnVal = returnVal + ' ' + listAsFlatString(val);
-          }
-        });
-
-        return returnVal.trim().toLowerCase();
-      };
-
-      return listAsFlatString(order).includes(transformedFilter);
+    this.columnas = ['descripcion', 'servicio', 'estado', 'duracionMin', 'diasAnteMax', 'horasAnteAnular', 'diasVistaMaxCalen', 'acciones'];
+    this.elementosPagina = [5, 10, 25, 100];
+    this.totalElementos = 0;
+    this.filter = {
+      field: undefined,
+      type: FilterType.NONE,
+      value: '',
     };
+    this.logger.debug(TipoReservableListadoComponent.name, 'ngOnInit()', 'end');
 
-    this.logger.debug(TipoReservableListadoComponent.name,
-      'applyFilter($event: Event) - end');
+  }
+
+  ngAfterViewInit(): void {
+    this.logger.debug(TipoReservableListadoComponent.name, 'ngAfterViewInit()', 'start');
+
+    // Merge events that trigger load table data
+    merge(
+      // Link pageChange event to fire new request
+      this.paginator.page,
+      // Link sortChange event to fire new request
+      this.sort.sortChange
+    )
+      .pipe(
+        tap(() => {
+          // Load table
+          this.loadTable();
+        })
+      )
+      .subscribe();
+    // First load
+    this.loadTable();
+    this.logger.debug(TipoReservableListadoComponent.name, 'ngAfterViewInit()', 'end');
+  }
+
+  private loadTable(reset?: boolean) {
+    this.logger.debug(TipoReservableListadoComponent.name, 'loadTable()', 'start');
+    // Do the request with paginator/sort/filter values
+    this.tiposReservable$ = this.tipoReservableService
+      .findAll({
+        page: {
+          index: reset ? 0 : this.paginator.pageIndex,
+          size: this.paginator.pageSize,
+        },
+        sort: {
+          direction: Direction.fromSortDirection(this.sort.direction),
+          field: this.sort.active,
+        },
+        filters: this.buildFilters(),
+      })
+      .pipe(
+        map((response) => {
+          // Map respose total
+          this.totalElementos = response.total;
+          // Reset pagination to first page
+          if (reset) {
+            this.paginator.pageIndex = 0;
+          }
+          this.logger.debug(TipoReservableListadoComponent.name, 'loadTable()', 'end');
+          // Return the values
+          return response.items;
+        }),
+        catchError(() => {
+          // On error reset pagination values
+          this.paginator.firstPage();
+          this.totalElementos = 0;
+          this.snackBarService.mostrarMensajeError(
+            this.traductor.getTexto('tipo-reservable.listado.error')
+          );
+          this.logger.debug(TipoReservableListadoComponent.name, 'loadTable()', 'end');
+          return of([]);
+        })
+      );
+  }
+
+  private buildFilters(): Filter[] {
+    this.logger.debug(TipoReservableListadoComponent.name, 'buildFilters()', 'start');
+    if (
+      this.filter.field &&
+      this.filter.type !== FilterType.NONE &&
+      this.filter.value
+    ) {
+      this.logger.debug(TipoReservableListadoComponent.name, 'buildFilters()', 'end');
+      return [this.filter];
+    }
+    this.logger.debug(TipoReservableListadoComponent.name, 'buildFilters()', 'end');
+    return [];
   }
 
   /**
-   * Personaliza los valores que se utilizan para hacer la ordenacion de los servicios.
+   * Load table data
    */
-  tipoReservableSortingDataAccessor = (tipoReservable: TipoReservable, propiedad: string) => {
-    this.logger.debug(TipoReservableListadoComponent.name, 'tipoReservableSortingDataAccessor()', 'start');
-    if (!tipoReservable) {
-      return;
-    }
+  public onSearch() {
+    this.logger.debug(TipoReservableListadoComponent.name, 'onSearch()', 'start');
+    this.loadTable(true);
+    this.logger.debug(TipoReservableListadoComponent.name, 'onSearch()', 'end');
 
-    switch (propiedad) {
-      case 'descripcion':
-        return tipoReservable.descripcion?.toLowerCase();
-      case 'servicio':
-        return tipoReservable.servicio.nombre?.toLowerCase();
-      case 'estado':
-        return tipoReservable.estado?.toLowerCase();
-      case 'duracionMin':
-        return tipoReservable.duracionMin;
-      case 'diasAnteMax':
-        return tipoReservable.diasAnteMax;
-      case 'horasAnteAnular':
-        return tipoReservable.horasAnteAnular;
-      case 'diasVistaMaxCalen':
-        return tipoReservable.diasVistaMaxCalen;
-    }
+  }
+
+  /**
+   * Clean filters an reload the table
+   */
+  public onClearFilters() {
+    this.logger.debug(TipoReservableListadoComponent.name, 'onClearFilters()', 'start');
+    this.filter = {
+      field: undefined,
+      type: FilterType.NONE,
+      value: '',
+    };
+    this.loadTable(true);
+    this.logger.debug(TipoReservableListadoComponent.name, 'onClearFilters()', 'end');
   }
 
   /**
@@ -122,33 +163,38 @@ export class TipoReservableListadoComponent implements OnInit, OnDestroy {
    * @param index posicion en la tabla
    * @param $event evento
    */
-  borrarSeleccionado(tipoReservableId: number, $event: Event): void {
+  borrarSeleccionado(tipoReservableId: number): void {
     this.logger.debug(TipoReservableListadoComponent.name,
-      'borrarSeleccionado(tipoReservableId: number, $event: Event) - start');
+      'borrarSeleccionado(tipoReservableId: number) - start');
 
-    $event.stopPropagation();
-    $event.preventDefault();
-
-    this.dialogService.dialogGenerico(this.traductor.getTexto('tipo-reservable.listado.eliminar'),
-      this.traductor.getTexto('tipo-reservable.listado.aceptar'), this.traductor.getTexto('tipo-reservable.listado.cancelar'));
+    this.dialogService.dialogGenerico(
+      this.traductor.getTexto('tipo-reservable.listado.eliminar'),
+      this.traductor.getTexto('tipo-reservable.listado.aceptar'),
+      this.traductor.getTexto('tipo-reservable.listado.cancelar')
+    );
 
     this.dialogServiceSubscriptionGetSubscription = this.dialogService.getAccionConfirmada().subscribe(
       (aceptado: boolean) => {
         if (aceptado) {
-          this.tipoReservableServiceDeleteSubscription = this.tipoReservableService.delete(tipoReservableId).pipe(
-            switchMap(_ => {
-              return this.tipoReservableService.findAll();
-            })
-          ).subscribe((tiposReservables: TipoReservable[]) => {
-            this.snackBarService
-              .mostrarMensajeSuccess(this.traductor.getTexto('tipo-reservable.listado.eliminarConfirmado'));
-            this.dataSource.data = tiposReservables;
-          });
+          this.tipoReservableServiceDeleteSubscription = this.tipoReservableService
+            .deleteById(tipoReservableId)
+            .pipe(
+              map(() => {
+                return this.loadTable();
+              })
+            ).subscribe(() => {
+              this.snackBarService
+                .mostrarMensajeSuccess(
+                  this.traductor.getTexto(
+                    'tipo-reservable.listado.eliminarConfirmado')
+                );
+            });
         }
         aceptado = false;
       });
 
-    this.logger.debug(TipoReservableListadoComponent.name, 'borrarSeleccionado(tipoReservableId: number, $event: Event) - end');
+    this.logger.debug(TipoReservableListadoComponent.name,
+      'borrarSeleccionado(tipoReservableId: number) - end');
   }
 
   ngOnDestroy(): void {

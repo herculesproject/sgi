@@ -124,7 +124,7 @@ export class TipoReservableActualizarComponent implements OnInit, OnDestroy {
         switchMap((params: Params) => {
           id = Number(params.id);
           if (id) {
-            return this.tipoReservableService.getOne(id);
+            return this.tipoReservableService.findById(Number(id));
           }
         })
       )
@@ -294,7 +294,7 @@ export class TipoReservableActualizarComponent implements OnInit, OnDestroy {
       'start'
     );
     this.tipoReservableServiceUpdateSubscription = this.tipoReservableService
-      .update(this.tipoReservable, this.tipoReservable.id)
+      .update(this.tipoReservable.id, this.tipoReservable)
       .subscribe(
         () => {
           this.snackBarService.mostrarMensajeSuccess(

@@ -125,7 +125,7 @@ export class TipoReservableCrearComponent implements OnInit, OnDestroy {
         switchMap((params: Params) => {
           id = Number(params.id);
           if (id) {
-            return this.tipoReservableService.getOne(id);
+            return this.tipoReservableService.findById(Number(id));
           }
         })
       )

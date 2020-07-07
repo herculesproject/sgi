@@ -1,13 +1,9 @@
 <!-- Tipo Reservable listado -->
 <section class="tipo-reservable-listado">
   <h2>{{'tipo-reservable.listado.titulo' | translate}}</h2>
-  <mat-form-field>
-    <mat-label>{{'tipo-reservable.listado.busqueda' | translate}}</mat-label>
-    <input matInput (keyup)="applyFilter($event)"
-      placeholder="{{'tipo-reservable.listado.busqueda-placeholder' | translate}}">
-  </mat-form-field>
 
-  <table class="mat-elevation-z8 table-tipo" mat-table matSort [dataSource]="dataSource">
+  <table mat-table class="mat-elevation-z8 table-tipo" [dataSource]="tiposReservable$ | async" matSort
+    matSortActive="id" matSortDirection="asc" matSortDisableClear>
 
     <!-- Descripción Column -->
     <ng-container matColumnDef="descripcion">
@@ -63,15 +59,18 @@
           <mat-icon>edit</mat-icon>
         </button>
         <button mat-button matTooltip="{{'tipo-reservable.listado.borrar' | translate}}"
-          (click)="borrarSeleccionado(tipoReservable.id, $event)">
+          (click)="borrarSeleccionado(tipoReservable.id)">
           <mat-icon>close</mat-icon>
         </button>
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
   </table>
+
+  <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
+  </mat-paginator>
 
   <div class="separation-button">
     <button [routerLink]="UrlUtils.crear" mat-button>

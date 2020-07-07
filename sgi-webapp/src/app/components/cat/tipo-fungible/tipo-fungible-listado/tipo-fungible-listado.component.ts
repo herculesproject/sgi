@@ -9,7 +9,6 @@ import { TraductorService } from '@core/services/traductor.service';
 import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of, Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 import { Direction, Filter, FilterType } from '@core/services/types';
 import { MatPaginator } from '@angular/material/paginator';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -24,8 +23,6 @@ export class TipoFungibleListadoComponent implements AfterViewInit, OnDestroy {
   columnas: string[];
   elementosPagina: number[];
 
-  // displayedColumns: string[] = ['nombre', 'servicio', 'acciones'];
-  dataSource: MatTableDataSource<TipoFungible>;
   tipoFungibleServiceSubscription: Subscription;
   dialogServiceSubscription: Subscription;
   tipoFungibleServiceDeleteSubscription: Subscription;

@@ -1,27 +1,22 @@
-import {Injectable} from '@angular/core';
-import {TipoReservable} from '@core/models/tipo-reservable';
-import {NGXLogger} from 'ngx-logger';
-import {HttpClient} from '@angular/common/http';
-import {BaseService} from './base.service';
+import { Injectable } from '@angular/core';
+import { TipoReservable } from '@core/models/tipo-reservable';
+import { NGXLogger } from 'ngx-logger';
+import { HttpClient } from '@angular/common/http';
+import { BaseRestService } from './base-rest.service';
+import { environment } from '@env';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TipoReservableService extends BaseService<TipoReservable> {
+export class TipoReservableService extends BaseRestService<TipoReservable> {
 
   public static TIPORESERVABLE_MAPPING = '/tiporeservables';
 
-  constructor(protected logger: NGXLogger, protected http: HttpClient) {
-    super(logger, http, TipoReservableService.TIPORESERVABLE_MAPPING);
-    this.logger.debug(
+  constructor(logger: NGXLogger, protected http: HttpClient) {
+    super(
       TipoReservableService.name,
-      'constructor(protected logger: NGXLogger, protected http: HttpClient)',
-      'start'
-    );
-    this.logger.debug(
-      TipoReservableService.name,
-      'constructor(protected logger: NGXLogger, protected http: HttpClient)',
-      'end'
-    );
+      logger,
+      `${environment.apiUrl}` + TipoReservableService.TIPORESERVABLE_MAPPING,
+      http);
   }
 }
