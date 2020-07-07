@@ -1,26 +1,18 @@
-import {Injectable} from '@angular/core';
-import {Servicio} from '@core/models/servicio';
-import {NGXLogger} from 'ngx-logger';
-import {HttpClient} from '@angular/common/http';
-import {BaseService} from './base.service';
+import { Injectable } from '@angular/core';
+import { Servicio } from '@core/models/servicio';
+import { NGXLogger } from 'ngx-logger';
+import { HttpClient } from '@angular/common/http';
+import { BaseRestService } from './base-rest.service';
+import { environment } from '@env';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ServicioService extends BaseService<Servicio> {
+export class ServicioService extends BaseRestService<Servicio> {
   public static SERVICIO_MAPPING = '/servicios';
 
-  constructor(protected logger: NGXLogger, protected http: HttpClient) {
-    super(logger, http, ServicioService.SERVICIO_MAPPING);
-    this.logger.debug(
-      ServicioService.name,
-      'constructor(protected logger: NGXLogger, protected http: HttpClient)',
-      'start'
-    );
-    this.logger.debug(
-      ServicioService.name,
-      'constructor(protected logger: NGXLogger, protected http: HttpClient)',
-      'end'
-    );
+  constructor(logger: NGXLogger, protected http: HttpClient) {
+    super(ServicioService.name, logger,
+      `${environment.apiUrl}` + ServicioService.SERVICIO_MAPPING, http);
   }
 }

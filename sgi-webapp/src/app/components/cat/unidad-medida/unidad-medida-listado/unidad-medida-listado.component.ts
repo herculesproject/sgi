@@ -1,16 +1,16 @@
-import {AfterViewInit, Component, OnDestroy, ViewChild} from '@angular/core';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {UnidadMedida} from '@core/models/unidad-medida';
-import {DialogService} from '@core/services/dialog.service';
-import {SnackBarService} from '@core/services/snack-bar.service';
-import {TraductorService} from '@core/services/traductor.service';
-import {Direction, Filter, FilterType} from '@core/services/types';
-import {UnidadMedidaService} from '@core/services/unidad-medida.service';
-import {UrlUtils} from '@core/utils/url-utils';
-import {NGXLogger} from 'ngx-logger';
-import {merge, Observable, of, Subscription} from 'rxjs';
-import {catchError, map, tap} from 'rxjs/operators';
+import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { UnidadMedida } from '@core/models/unidad-medida';
+import { DialogService } from '@core/services/dialog.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { TraductorService } from '@core/services/traductor.service';
+import { Direction, Filter, FilterType } from '@core/services/types';
+import { UnidadMedidaService } from '@core/services/unidad-medida.service';
+import { UrlUtils } from '@core/utils/url-utils';
+import { NGXLogger } from 'ngx-logger';
+import { merge, Observable, of, Subscription } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-unidad-medida-listado',

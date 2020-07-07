@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
@@ -12,8 +12,11 @@ import { TraductorService } from '@core/services/traductor.service';
 import { UrlUtils } from '@core/utils/url-utils';
 import { FormGroupUtil } from '@shared/config/form-group-util';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { Filter, FilterType, Direction } from '@core/services/types';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-tipo-fungible-actualizar',
@@ -24,8 +27,7 @@ export class TipoFungibleActualizarComponent implements OnInit, OnDestroy {
   formGroup: FormGroup;
   FormGroupUtil = FormGroupUtil;
   tipoFungible: TipoFungible;
-  servicioListado: Servicio[];
-  filteredServicios: Observable<Servicio[]>;
+
 
   desactivarAceptar: boolean;
   fxFlexProperties: FxFlexProperties;
@@ -36,6 +38,16 @@ export class TipoFungibleActualizarComponent implements OnInit, OnDestroy {
   tipoFungibleServiceUpdateSubscritpion: Subscription;
 
   UrlUtils = UrlUtils;
+
+  serviciosSubscription: Subscription;
+  servicioListado: Servicio[];
+  filteredServicios$: Observable<Servicio[]> = of();
+
+
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+
 
   constructor(
     private readonly logger: NGXLogger,
@@ -56,6 +68,7 @@ export class TipoFungibleActualizarComponent implements OnInit, OnDestroy {
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+
   }
 
   ngOnInit() {
@@ -64,6 +77,8 @@ export class TipoFungibleActualizarComponent implements OnInit, OnDestroy {
       'ngOnInit()',
       'start'
     );
+
+
     this.desactivarAceptar = false;
     this.formGroup = new FormGroup({
       nombre: new FormControl('', [
@@ -72,6 +87,7 @@ export class TipoFungibleActualizarComponent implements OnInit, OnDestroy {
       ]),
       servicio: new FormControl('', [Validators.required]),
     });
+
     this.getTipoFungible();
     this.getServicios();
     this.logger.debug(
@@ -138,15 +154,18 @@ export class TipoFungibleActualizarComponent implements OnInit, OnDestroy {
       'getServicios()',
       'start'
     );
-    this.servicioServiceAllSubscription = this.servicioService
-      .findAll()
-      .subscribe((servicioListado: Servicio[]) => {
-        this.servicioListado = servicioListado;
-        this.filteredServicios = this.formGroup.controls.servicio.valueChanges.pipe(
+
+    this.serviciosSubscription = this.servicioService
+      .findAll({})
+      .subscribe((response) => {
+        this.servicioListado = response.items;
+        this.filteredServicios$ = this.formGroup.controls.servicio.valueChanges.pipe(
           startWith(''),
-          map((value) => this._filter(value))
-        );
+          map((value) => this._filter(value)));
+        return response.items;
       });
+
+
     this.logger.debug(
       TipoFungibleActualizarComponent.name,
       'getServicios()',
@@ -262,6 +281,7 @@ export class TipoFungibleActualizarComponent implements OnInit, OnDestroy {
     this.tipoFungibleServiceOneSubscritpion?.unsubscribe();
     this.servicioServiceAllSubscription?.unsubscribe();
     this.tipoFungibleServiceUpdateSubscritpion?.unsubscribe();
+    this.serviciosSubscription?.unsubscribe();
     this.logger.debug(
       TipoFungibleActualizarComponent.name,
       'ngOnDestroy()',

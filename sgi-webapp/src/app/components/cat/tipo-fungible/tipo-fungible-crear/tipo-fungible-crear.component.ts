@@ -1,19 +1,19 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-import {FxFlexProperties} from '@core/models/flexLayout/fx-flex-properties';
-import {FxLayoutProperties} from '@core/models/flexLayout/fx-layout-properties';
-import {Servicio} from '@core/models/servicio';
-import {TipoFungible} from '@core/models/tipo-fungible';
-import {ServicioService} from '@core/services/servicio.service';
-import {SnackBarService} from '@core/services/snack-bar.service';
-import {TipoFungibleService} from '@core/services/tipo-fungible.service';
-import {TraductorService} from '@core/services/traductor.service';
-import {UrlUtils} from '@core/utils/url-utils';
-import {FormGroupUtil} from '@shared/config/form-group-util';
-import {NGXLogger} from 'ngx-logger';
-import {Observable, Subscription} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
+import { Servicio } from '@core/models/servicio';
+import { TipoFungible } from '@core/models/tipo-fungible';
+import { ServicioService } from '@core/services/servicio.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { TipoFungibleService } from '@core/services/tipo-fungible.service';
+import { TraductorService } from '@core/services/traductor.service';
+import { UrlUtils } from '@core/utils/url-utils';
+import { FormGroupUtil } from '@shared/config/form-group-util';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, Subscription } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tipo-fungible-crear',
@@ -23,8 +23,10 @@ import {map, startWith} from 'rxjs/operators';
 export class TipoFungibleCrearComponent implements OnInit, OnDestroy {
   formGroup: FormGroup;
   FormGroupUtil = FormGroupUtil;
+
+  serviciosSubscription: Subscription;
   servicioListado: Servicio[];
-  filteredServicios: Observable<Servicio[]>;
+  filteredServicios$: Observable<Servicio[]>;
 
   desactivarAceptar: boolean;
   fxFlexProperties: FxFlexProperties;
@@ -78,14 +80,15 @@ export class TipoFungibleCrearComponent implements OnInit, OnDestroy {
       'getServicios()',
       'start'
     );
-    this.servicioServiceAllSubscription = this.servicioService
-      .findAll()
-      .subscribe((servicioListado: Servicio[]) => {
-        this.servicioListado = servicioListado;
-        this.filteredServicios = this.formGroup.controls.servicio.valueChanges.pipe(
+
+    this.serviciosSubscription = this.servicioService
+      .findAll({})
+      .subscribe((response) => {
+        this.servicioListado = response.items;
+        this.filteredServicios$ = this.formGroup.controls.servicio.valueChanges.pipe(
           startWith(''),
-          map((value) => this._filter(value))
-        );
+          map((value) => this._filter(value)));
+        return response.items;
       });
 
     this.logger.debug(TipoFungibleCrearComponent.name, 'getServicios()', 'end');
@@ -179,6 +182,7 @@ export class TipoFungibleCrearComponent implements OnInit, OnDestroy {
     );
     this.tipoFungibleServiceCreateSubscription?.unsubscribe();
     this.servicioServiceAllSubscription?.unsubscribe();
+    this.serviciosSubscription?.unsubscribe();
     this.logger.debug(TipoFungibleCrearComponent.name, 'ngOnDestroy()', 'end');
   }
 }

@@ -1,20 +1,20 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {FormGroupUtil} from '@shared/config/form-group-util';
-import {ActivatedRoute, Params, Router} from '@angular/router';
-import {NGXLogger} from 'ngx-logger';
-import {TraductorService} from '@core/services/traductor.service';
-import {TipoReservableService} from '@core/services/tipo-reservable.service';
-import {FxFlexProperties} from '@core/models/flexLayout/fx-flex-properties';
-import {FxLayoutProperties} from '@core/models/flexLayout/fx-layout-properties';
-import {UrlUtils} from '@core/utils/url-utils';
-import {TipoReservable} from '@core/models/tipo-reservable';
-import {Servicio} from '@core/models/servicio';
-import {ServicioService} from '@core/services/servicio.service';
-import {Observable, Subscription} from 'rxjs';
-import {map, startWith, switchMap} from 'rxjs/operators';
-import {SnackBarService} from '@core/services/snack-bar.service';
-import {EstadoTipoReservableEnum} from '@core/enums/estado-tipo-reservable-enum';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormGroupUtil } from '@shared/config/form-group-util';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { NGXLogger } from 'ngx-logger';
+import { TraductorService } from '@core/services/traductor.service';
+import { TipoReservableService } from '@core/services/tipo-reservable.service';
+import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
+import { UrlUtils } from '@core/utils/url-utils';
+import { TipoReservable } from '@core/models/tipo-reservable';
+import { Servicio } from '@core/models/servicio';
+import { ServicioService } from '@core/services/servicio.service';
+import { Observable, Subscription } from 'rxjs';
+import { map, startWith, switchMap } from 'rxjs/operators';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { EstadoTipoReservableEnum } from '@core/enums/estado-tipo-reservable-enum';
 
 @Component({
   selector: 'app-tipo-reservable-crear',
@@ -27,7 +27,7 @@ export class TipoReservableCrearComponent implements OnInit, OnDestroy {
   FormGroupUtil = FormGroupUtil;
   tipoReservable: TipoReservable;
   servicioListado: Servicio[];
-  filteredServicios: Observable<Servicio[]>;
+  filteredServicios$: Observable<Servicio[]>;
   estadoDefecto: EstadoTipoReservableEnum;
 
   desactivarAceptar: boolean;
@@ -203,16 +203,17 @@ export class TipoReservableCrearComponent implements OnInit, OnDestroy {
       'getServicios()',
       'start'
     );
-    this.servicioServiceAllSubscription = this.servicioService.findAll().subscribe(
-      (servicioListado: Servicio[]) => {
-        this.servicioListado = servicioListado;
 
-        this.filteredServicios = this.formGroup.controls.servicio.valueChanges
-          .pipe(
-            startWith(''),
-            map(value => this._filter(value))
-          );
+    this.servicioServiceAllSubscription = this.servicioService
+      .findAll({})
+      .subscribe((response) => {
+        this.servicioListado = response.items;
+        this.filteredServicios$ = this.formGroup.controls.servicio.valueChanges.pipe(
+          startWith(''),
+          map((value) => this._filter(value)));
+        return response.items;
       });
+
     this.logger.debug(
       TipoReservableCrearComponent.name,
       'getServicios()',
@@ -225,7 +226,6 @@ export class TipoReservableCrearComponent implements OnInit, OnDestroy {
   }
 
   /* Autocompletar */
-
   private _filter(nombre: string): Servicio[] {
     const filterValue = nombre.toLowerCase();
 

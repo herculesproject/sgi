@@ -1,18 +1,24 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {ActivatedRoute, Params, Router} from '@angular/router';
-import {FxFlexProperties} from '@core/models/flexLayout/fx-flex-properties';
-import {FxLayoutProperties} from '@core/models/flexLayout/fx-layout-properties';
-import {Servicio} from '@core/models/servicio';
-import {ServicioService} from '@core/services/servicio.service';
-import {SnackBarService} from '@core/services/snack-bar.service';
-import {TraductorService} from '@core/services/traductor.service';
-import {UrlUtils} from '@core/utils/url-utils';
-import {FormGroupUtil} from '@shared/config/form-group-util';
-import {NGXLogger} from 'ngx-logger';
-import {Subscription} from 'rxjs';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
-import {AgrupacionServicioDatosGeneralesComponent} from '../agrupacion-servicio-formulario/agrupacion-servicio-datos-generales/agrupacion-servicio-datos-generales.component';
+import { NGXLogger } from 'ngx-logger';
+import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
+import { FormGroupUtil } from '@shared/config/form-group-util';
+
+import { Subscription, Observable, of } from 'rxjs';
+import { startWith, map, switchMap } from 'rxjs/operators';
+
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { TraductorService } from '@core/services/traductor.service';
+import { ServicioService } from '@core/services/servicio.service';
+
+import { Servicio } from '@core/models/servicio';
+
+import { UrlUtils } from '@core/utils/url-utils';
+
+import { AgrupacionServicioDatosGeneralesComponent } from '../agrupacion-servicio-formulario/agrupacion-servicio-datos-generales/agrupacion-servicio-datos-generales.component';
 
 
 @Component({
@@ -22,7 +28,7 @@ import {AgrupacionServicioDatosGeneralesComponent} from '../agrupacion-servicio-
 })
 export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy {
 
-  @ViewChild(AgrupacionServicioDatosGeneralesComponent, {static: true})
+  @ViewChild(AgrupacionServicioDatosGeneralesComponent, { static: true })
   datosGeneralesForm: AgrupacionServicioDatosGeneralesComponent;
 
   servicio: Servicio;
@@ -36,6 +42,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
 
   actualizarServicioSubscription: Subscription;
   UrlUtils = UrlUtils;
+  activatedRouteSubscription: Subscription;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -79,27 +86,32 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
   getServicio() {
     this.logger.debug(AgrupacionServicioActualizarComponent.name, 'getServicio()', 'start');
     // Obtiene los parámetros de la url
-    this.activatedRoute.params.subscribe((params: Params) => {
-      // Combrueba que exista el parámetro id
-      if (params.id) {
-        const id = Number(params.id);
-        // Obtiene los datos del back
-        this.servicioService.getOne(id).subscribe(
-          (servicio: Servicio) => {
-            this.servicio = servicio;
+    this.activatedRouteSubscription = this.activatedRoute.params.pipe(
+      switchMap((params: Params) => {
+        if (params.id) {
+          const id = Number(params.id);
+          return this.servicioService.findById(id);
+        }
+        return of(null);
 
-            this.datosGeneralesForm.setDatosForm(this.servicio);
+      })
+    ).subscribe(
+      (servicio: Servicio) => {
+        if (servicio) {
+          this.servicio = servicio;
 
-          },
-          () => {
-            alert(
-              this.traductor.getTexto('servicio.actualizar.no-encontrado')
-            );
-            this.router.navigateByUrl(`${UrlUtils.cat}/${UrlUtils.agrupacionServicios}`).then();
-          }
+          this.datosGeneralesForm.setDatosForm(this.servicio);
+        }
+      },
+      () => {
+
+        this.snackBarService.mostrarMensajeSuccess(
+          this.traductor.getTexto('servicio.actualizar.no-encontrado')
         );
-      }
-    });
+        this.router.navigateByUrl(UrlUtils.agrupacionServicios).then();
+
+      });
+
 
     this.logger.debug(AgrupacionServicioActualizarComponent.name, 'getServicio()', 'end');
   }
@@ -139,18 +151,17 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
     this.desactivarAceptar = true;
 
     this.servicio = this.datosGeneralesForm.getDatosForm(this.servicio);
-
     this.actualizarServicioSubscription =
-      this.servicioService.update(this.servicio, this.servicio.id)
+      this.servicioService.update(this.servicio.id, this.servicio)
         .subscribe(() => {
-            this.snackBarService.mostrarMensajeSuccess(
-              this.traductor.getTexto('servicio.actualizar.correcto')
-            );
-            this.router.navigateByUrl(`${UrlUtils.cat}/${UrlUtils.agrupacionServicios}`).then();
-            this.logger.debug(AgrupacionServicioActualizarComponent.name,
-              'actualizarServicio()',
-              'end');
-          },
+          this.snackBarService.mostrarMensajeSuccess(
+            this.traductor.getTexto('servicio.actualizar.correcto')
+          );
+          this.router.navigateByUrl(`${UrlUtils.cat}/${UrlUtils.agrupacionServicios}`).then();
+          this.logger.debug(AgrupacionServicioActualizarComponent.name,
+            'actualizarServicio()',
+            'end');
+        },
           () => {
             this.snackBarService.mostrarMensajeError(
               this.traductor.getTexto('servicio.actualizar.error')
@@ -161,6 +172,9 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
               'end');
           }
         );
+
+
+
 
     this.desactivarAceptar = false;
 
@@ -175,6 +189,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
       'ngOnDestroy()',
       'start');
     this.actualizarServicioSubscription?.unsubscribe();
+    this.activatedRouteSubscription?.unsubscribe();
 
     this.logger.debug(AgrupacionServicioActualizarComponent.name,
       'ngOnDestroy()',

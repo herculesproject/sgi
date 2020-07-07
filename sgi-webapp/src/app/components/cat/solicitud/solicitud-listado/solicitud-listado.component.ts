@@ -38,12 +38,12 @@ export class SolicitudListadoComponent implements OnInit, OnChanges, OnDestroy {
     this.logger.debug(SolicitudListadoComponent.name, 'ngOnInit()', 'start');
 
     this.dataSource = new MatTableDataSource<Servicio>([]);
-
-    this.servicioService.findAll().subscribe(
-      (servicios: Servicio[]) => {
-        this.dataSource.data = servicios;
-      });
-
+    /**
+        this.servicioService.findAll().subscribe(
+          (servicios: Servicio[]) => {
+            this.dataSource.data = servicios;
+          });
+       */
     this.dataSource.sort = this.sort;
     this.logger.debug(SolicitudListadoComponent.name, 'ngOnInit()', 'end');
   }

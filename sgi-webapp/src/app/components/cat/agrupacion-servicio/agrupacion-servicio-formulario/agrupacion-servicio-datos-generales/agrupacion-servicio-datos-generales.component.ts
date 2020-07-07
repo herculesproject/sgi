@@ -170,9 +170,10 @@ export class AgrupacionServicioDatosGeneralesComponent implements OnInit, OnDest
     this.logger.debug(AgrupacionServicioDatosGeneralesComponent.name,
       'getSecciones()',
       'start');
-    this.seccionesSubscription = this.seccionService.findAll().subscribe(
-      (secciones: Seccion[]) => {
-        this.seccionListado = secciones;
+
+    this.seccionesSubscription = this.seccionService.findAll({}).subscribe(
+      (response) => {
+        this.seccionListado = response.items;
 
         this.filteredSecciones = this.datosGeneralesFormGroup.controls.seccion.valueChanges
           .pipe(

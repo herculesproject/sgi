@@ -27,7 +27,7 @@
         <input type="text" placeholder="Servicio" arial-label="Number" matInput formControlName="servicio"
           [matAutocomplete]="auto" required>
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="getServicio">
-          <mat-option *ngFor="let servicio of filteredServicios | async" [value]="servicio">
+          <mat-option *ngFor="let servicio of filteredServicios$ | async" [value]="servicio">
             {{servicio.nombre}}
           </mat-option>
         </mat-autocomplete>
@@ -44,7 +44,7 @@
       {{'botones.guardar'| translate}}
     </button>
     <button fxFlex="20%" class="md-primary" aria-label="Center Align" md-button mat-raised-button
-            [routerLink]="'/' + UrlUtils.cat + '/' + UrlUtils.tipoFungible">{{'botones.cancelar'| translate}}
+      [routerLink]="'/' + UrlUtils.cat + '/' + UrlUtils.tipoFungible">{{'botones.cancelar'| translate}}
     </button>
   </div>
 </section>

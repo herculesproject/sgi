@@ -31,7 +31,7 @@
         <input type="text" placeholder="Servicio" arial-label="Number" matInput formControlName="servicio"
           [matAutocomplete]="auto" required>
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="getServicio">
-          <mat-option *ngFor="let servicio of filteredServicios | async" [value]="servicio">
+          <mat-option *ngFor="let servicio of filteredServicios$ | async" [value]="servicio">
             {{servicio.nombre}}
           </mat-option>
         </mat-autocomplete>
@@ -93,8 +93,7 @@
       <mat-form-field appearance="fill">
         <mat-label>{{'tipo-reservable.crear.horasAnteMin.titulo' | translate}}</mat-label>
         <input #horasAnteMin matInput formControlName="horasAnteMin" type="text" id="horasAnteMin"
-          placeholder="{{'tipo-reservable.crear.horasAnteMin.titulo' | translate}}" maxlength="3"
-          pattern="[0-9]{0,3}">
+          placeholder="{{'tipo-reservable.crear.horasAnteMin.titulo' | translate}}" maxlength="3" pattern="[0-9]{0,3}">
         <mat-hint>{{horasAnteMin.value.length}} / 3</mat-hint>
       </mat-form-field>
     </div>
@@ -129,7 +128,7 @@
       {{'botones.guardar'| translate}}
     </button>
     <button fxFlex="20%" class="md-primary" aria-label="Center Align" md-button mat-raised-button
-            [routerLink]="'/'+UrlUtils.cat + '/' + UrlUtils.tipoReservables">{{'botones.cancelar'| translate}}
+      [routerLink]="'/'+UrlUtils.cat + '/' + UrlUtils.tipoReservables">{{'botones.cancelar'| translate}}
     </button>
   </div>
 </section>

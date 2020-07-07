@@ -1,13 +1,10 @@
 <!-- Servicio listado -->
 <section class="servicio-listado">
   <h2>{{'servicio.listado.titulo' | translate}}</h2>
-  <mat-form-field>
-    <mat-label>{{'servicio.listado.busqueda' | translate}}</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="{{'servicio.listado.busqueda-placeholder' | translate}}">
 
-  </mat-form-field>
 
-  <table class="mat-elevation-z8 table-servicio" mat-table matSort [dataSource]="dataSource">
+  <table class="mat-elevation-z8 table-servicio" mat-table matSort [dataSource]="servicios$ | async" matSort
+    matSortActive="id" matSortDirection="asc" matSortDisableClear>
 
     <!-- Abreviatura Column -->
     <ng-container matColumnDef="abreviatura">
@@ -51,7 +48,8 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-
+  <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
+  </mat-paginator>
   <div class="separation-button">
     <button [routerLink]="UrlUtils.crear" mat-button>
       <mat-icon>add_box</mat-icon> {{'servicio.listado.nuevo-servicio' | translate}}
