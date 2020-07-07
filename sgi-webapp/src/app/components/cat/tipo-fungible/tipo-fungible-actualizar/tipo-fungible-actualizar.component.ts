@@ -94,7 +94,7 @@ export class TipoFungibleActualizarComponent implements OnInit, OnDestroy {
     const id = this.activatedRoute.snapshot.params.id;
     if (id && !isNaN(id)) {
       this.tipoFungibleServiceOneSubscritpion = this.tipoFungibleService
-        .getOne(id)
+        .findById(Number(id))
         .subscribe(
           (tipoFungible: TipoFungible) => {
             this.tipoFungible = tipoFungible;
@@ -203,7 +203,7 @@ export class TipoFungibleActualizarComponent implements OnInit, OnDestroy {
     this.getDatosForm();
     this.desactivarAceptar = true;
     this.tipoFungibleServiceUpdateSubscritpion = this.tipoFungibleService
-      .update(this.tipoFungible, this.tipoFungible.id)
+      .update(this.tipoFungible.id, this.tipoFungible)
       .subscribe(
         () => {
           this.snackBarService.mostrarMensajeSuccess(

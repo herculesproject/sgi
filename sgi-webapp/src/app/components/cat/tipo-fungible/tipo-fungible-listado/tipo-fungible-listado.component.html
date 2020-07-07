@@ -1,13 +1,9 @@
 <!-- Tipo Fungible listado -->
 <section class="tipo-fungible-listado">
   <h2>{{'tipo-fungible.listado.titulo' | translate}}</h2>
-  <mat-form-field>
-    <mat-label>{{'tipo-fungible.listado.busqueda' | translate}}</mat-label>
-    <input matInput (keyup)="applyFilter($event)"
-      placeholder="{{'tipo-fungible.listado.busqueda-placeholder' | translate}}">
-  </mat-form-field>
 
-  <table class="mat-elevation-z8 table-tipo" mat-table matSort [dataSource]="dataSource">
+  <table mat-table class="mat-elevation-z8 table-tipo" [dataSource]="tiposFungible$ | async" matSort matSortActive="id"
+    matSortDirection="asc" matSortDisableClear>
 
     <!-- Nombre Column -->
     <ng-container matColumnDef="nombre">
@@ -30,16 +26,17 @@
           <mat-icon>edit</mat-icon>
         </button>
         <button mat-button matTooltip="{{'tipo-fungible.listado.borrar' | translate}}"
-          (click)="borrarSeleccionado(tipoFungible.id, $event)">
+          (click)="borrarSeleccionado(tipoFungible.id)">
           <mat-icon>close</mat-icon>
         </button>
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
   </table>
-
+  <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
+  </mat-paginator>
   <div class="separation-button">
     <button [routerLink]="UrlUtils.crear" mat-button>
       <mat-icon>add_box</mat-icon> {{'tipo-fungible.listado.nuevo-tipo' | translate}}
