@@ -1,0 +1,3 @@
+databaseChangeLog:
+  - include:
+      file: classpath*:db/changelog/changes/20200601000000-initial-database.xml

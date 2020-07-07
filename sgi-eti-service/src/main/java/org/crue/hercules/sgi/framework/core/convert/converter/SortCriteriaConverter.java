@@ -1,0 +1,34 @@
+package org.crue.hercules.sgi.framework.core.convert.converter;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.crue.hercules.sgi.framework.data.sort.SortCriteria;
+import org.crue.hercules.sgi.framework.data.sort.SortOperation;
+
+import org.springframework.core.convert.converter.Converter;
+
+public class SortCriteriaConverter implements Converter<String, List<SortCriteria>> {
+  private static String wordRegex = "[A-Za-z0-9_ñÑ]*";
+  private static String operatorRegex = "(\\+|-)";
+  private static String fullRegex = "(" + wordRegex + ")" + operatorRegex + ",";
+  private static final Pattern sortPattern = Pattern.compile(fullRegex);
+
+  @Override
+  public List<SortCriteria> convert(String source) {
+    List<SortCriteria> sortCriterias = new ArrayList<>();
+    if (source != null) {
+      Matcher matcher = sortPattern.matcher(source.replace(' ', '+') + ",");
+      while (matcher.find()) {
+        SortCriteria sortCriteria = new SortCriteria();
+        sortCriteria.setKey(matcher.group(1));
+        sortCriteria.setOperation(SortOperation.fromString(matcher.group(2)));
+        sortCriterias.add(sortCriteria);
+      }
+    }
+    return sortCriterias;
+  }
+
+}
