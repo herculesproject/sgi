@@ -1,46 +1,48 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-
-import {SolicitudActualizarComponent} from './solicitud-actualizar.component';
-import {NGXLogger} from 'ngx-logger';
+import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
-import {AppRoutingModule} from 'src/app/app-routing.module';
-import {CommonModule} from '@angular/common';
-import {TranslateModule} from '@ngx-translate/core';
-import {SnackBarService} from '@core/services/snack-bar.service';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {MaterialDesignModule} from '@material/material-design.module';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {MenuSecundarioComponent} from '@shared/componentes-layout/menu-secundario/menu-secundario.component';
-import {ReactiveFormsModule} from '@angular/forms';
-import {SolicitudListadoComponent} from '../solicitud-listado/solicitud-listado.component';
-import {RouterTestingModule} from '@angular/router/testing';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { MenuSecundarioComponent } from '@shared/componentes-layout/menu-secundario/menu-secundario.component';
+import { NGXLogger } from 'ngx-logger';
+import i18n from 'src/assets/i18n/es.json';
+
+import { SolicitudListadoComponent } from '../solicitud-listado/solicitud-listado.component';
+import { SolicitudActualizarComponent } from './solicitud-actualizar.component';
 
 describe('SolicitudActualizarComponent', () => {
   let component: SolicitudActualizarComponent;
   let fixture: ComponentFixture<SolicitudActualizarComponent>;
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
         SolicitudActualizarComponent,
         MenuSecundarioComponent,
-        SolicitudListadoComponent
+        SolicitudListadoComponent,
       ],
       providers: [
-        {provide: NGXLogger, useValue: TestUtils.getLoggerSpy()},
-        {provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy()},
+        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+        {
+          provide: SnackBarService,
+          useValue: TestUtils.getSnackBarServiceSpy(),
+        },
       ],
       imports: [
         TestUtils.getIdiomas(),
-        AppRoutingModule,
+        RouterTestingModule.withRoutes([]),
         HttpClientTestingModule,
         CommonModule,
-        TranslateModule,
         MaterialDesignModule.forRoot(),
         BrowserAnimationsModule,
         FlexLayoutModule,
         ReactiveFormsModule,
-        RouterTestingModule.withRoutes([]),
       ],
     }).compileComponents();
   }));
@@ -51,7 +53,14 @@ describe('SolicitudActualizarComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('Debe crear el componente', () => {
     expect(component).toBeTruthy();
+    expect(component.desactivarAceptar).toBeFalse();
+    const botones = fixture.debugElement.queryAll(By.css('button'));
+    expect(botones.length).toBe(botones.length);
+    fixture.whenStable().then(() => {
+      const titulo = fixture.debugElement.query(By.css('h2')).nativeElement;
+      expect(titulo.innerHTML).toBe(i18n.solicitud.actualizar.titulo);
+    });
   });
 });

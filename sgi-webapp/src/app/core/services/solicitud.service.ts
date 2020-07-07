@@ -1,29 +1,25 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Registro } from '@core/models/registro';
-import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
 import { BaseService } from './base.service';
+import { environment } from '@env';
+import { NGXLogger } from 'ngx-logger';
+
+import { BaseRestService } from './base-rest.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class SolicitudService extends BaseService<Registro> {
-
-  public static SOLICITUD_MAPPING = '/registros';
+export class SolicitudService extends BaseRestService<Registro> {
+  public static REGISTRO_MAPPING = '/registros';
   public registro: Registro;
-
-  constructor(protected logger: NGXLogger, protected http: HttpClient) {
-    super(logger, http, SolicitudService.SOLICITUD_MAPPING);
-    this.logger.debug(
+  constructor(logger: NGXLogger, protected http: HttpClient) {
+    super(
       SolicitudService.name,
-      'constructor(protected logger: NGXLogger, protected http: HttpClient)',
-      'start'
-    );
-    this.logger.debug(
-      SolicitudService.name,
-      'constructor(protected logger: NGXLogger, protected http: HttpClient)',
-      'end'
+      logger,
+      `${environment.apiUrl}` + SolicitudService.REGISTRO_MAPPING,
+      http
     );
   }
 }

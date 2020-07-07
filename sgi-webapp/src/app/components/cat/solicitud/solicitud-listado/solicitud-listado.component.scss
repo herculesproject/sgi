@@ -1,18 +1,17 @@
 @import 'src/styles/variables';
 
 .solicitud-listado {
-  margin-top:30px;
-.table-tipo{
-  width: 100%;
-  .mat-row:nth-child(even){
-    background-color: map-get($palette-accent, 300);
+  .table-solicitud{
+    width: 100%;
+    .mat-row:nth-child(even){
+      background-color: map-get($palette-accent, 300);
+    }
+    .mat-row:nth-child(odd){
+      background-color: map-get($palette-accent, 100);
+    }
   }
-  .mat-row:nth-child(odd){
-    background-color: map-get($palette-accent, 100);
-  }
-}
 
-.separation-button {
-  padding-top: 15px;
-}
+  .separation-button {
+    padding-top: 15px;
+  }
 }

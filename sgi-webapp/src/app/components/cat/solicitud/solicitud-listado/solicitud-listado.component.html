@@ -1,13 +1,9 @@
 <!-- Solicitud listado -->
 <section class="solicitud-listado">
   <h4>{{'solicitud.listado.seleccionarServicio' | translate}}</h4>
-  <mat-form-field>
-    <mat-label>{{'solicitud.listado.busqueda' | translate}}</mat-label>
-    <input matInput (keyup)="applyFilter($event)"
-      placeholder="{{'solicitud.listado.busqueda-placeholder' | translate}}">
-  </mat-form-field>
 
-  <table class="mat-elevation-z8 table-tipo" mat-table matSort [dataSource]="dataSource">
+  <table mat-table class="mat-elevation-z8 table-solicitud" [dataSource]="servicio$ | async" matSort matSortActive="id"
+    matSortDirection="asc" matSortDisableClear>
 
     <!-- Servicio Column -->
     <ng-container matColumnDef="nombre">
@@ -31,9 +27,12 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
   </table>
+
+  <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
+  </mat-paginator>
 
 </section>
 <!-- FIN Solicitud listado-->

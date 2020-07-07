@@ -1,15 +1,19 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {Registro} from '@core/models/registro';
-import {MatTableDataSource} from '@angular/material/table';
-import {MatSort} from '@angular/material/sort';
-import {ServicioService} from '@core/services/servicio.service';
-import {SolicitudService} from '@core/services/solicitud.service';
-import {NGXLogger} from 'ngx-logger';
-import {UrlUtils} from '@core/utils/url-utils';
-import {TraductorService} from '@core/services/traductor.service';
-import {DialogService} from '@core/services/dialog.service';
-import {SnackBarService} from '@core/services/snack-bar.service';
-import {Servicio} from '@core/models/servicio';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, AfterViewInit } from '@angular/core';
+import { Registro } from '@core/models/registro';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { ServicioService } from '@core/services/servicio.service';
+import { SolicitudService } from '@core/services/solicitud.service';
+import { NGXLogger } from 'ngx-logger';
+import { UrlUtils } from '@core/utils/url-utils';
+import { TraductorService } from '@core/services/traductor.service';
+import { DialogService } from '@core/services/dialog.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { Servicio } from '@core/models/servicio';
+import { FilterType, Filter, Direction } from '@core/services/types';
+import { Observable, Subscription, merge, of } from 'rxjs';
+import { MatPaginator } from '@angular/material/paginator';
+import { tap, map, catchError } from 'rxjs/operators';
 
 
 @Component({
@@ -17,35 +21,100 @@ import {Servicio} from '@core/models/servicio';
   templateUrl: './solicitud-listado.component.html',
   styleUrls: ['./solicitud-listado.component.scss']
 })
-export class SolicitudListadoComponent implements OnInit, OnChanges, OnDestroy {
+export class SolicitudListadoComponent implements AfterViewInit, OnDestroy, OnChanges {
   UrlUtils = UrlUtils;
-  displayedColumns: string[] = ['nombre', 'contacto', 'acciones'];
-  dataSource: MatTableDataSource<Servicio>;
+  columnas: string[];
+  elementosPagina: number[];
+
+  servicio$: Observable<Servicio[]> = of();
+  totalElementos: number;
+  filter: Filter;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   servicioSeleccionado: Servicio;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
   @Input() registro: Registro;
+  updateSolicitudService: Subscription;
 
   constructor(
-    private logger: NGXLogger,
-    private servicioService: ServicioService,
-    private solicitudService: SolicitudService,
+    private readonly logger: NGXLogger,
+    private readonly solicitudService: SolicitudService,
+    private readonly servicioService: ServicioService,
     private readonly traductor: TraductorService,
     private dialogService: DialogService,
-    private snackBarService: SnackBarService) {
+    private snackBarService: SnackBarService
+  ) {
+    this.logger.debug(SolicitudListadoComponent.name, 'ngOnInit()', 'start');
+    this.columnas = ['nombre', 'contacto', 'acciones'];
+    this.elementosPagina = [5, 10, 25, 100];
+    this.totalElementos = 0;
+    this.filter = {
+      field: undefined,
+      type: FilterType.NONE,
+      value: '',
+    };
+    this.logger.debug(SolicitudListadoComponent.name, 'ngOnInit()', 'end');
   }
 
-  ngOnInit(): void {
-    this.logger.debug(SolicitudListadoComponent.name, 'ngOnInit()', 'start');
+  ngAfterViewInit(): void {
+    this.logger.debug(SolicitudListadoComponent.name, 'ngAfterViewInit()', 'start');
 
-    this.dataSource = new MatTableDataSource<Servicio>([]);
-    /**
-        this.servicioService.findAll().subscribe(
-          (servicios: Servicio[]) => {
-            this.dataSource.data = servicios;
-          });
-       */
-    this.dataSource.sort = this.sort;
-    this.logger.debug(SolicitudListadoComponent.name, 'ngOnInit()', 'end');
+    // Merge events that trigger load table data
+    merge(
+      // Link pageChange event to fire new request
+      this.paginator.page,
+      // Link sortChange event to fire new request
+      this.sort.sortChange
+    )
+      .pipe(
+        tap(() => {
+          // Load table
+          this.loadTable();
+        })
+      )
+      .subscribe();
+    // First load
+    this.loadTable();
+    this.logger.debug(SolicitudListadoComponent.name, 'ngAfterViewInit()', 'end');
+  }
+
+  private loadTable(reset?: boolean) {
+    this.logger.debug(SolicitudListadoComponent.name, 'loadTable()', 'start');
+    // Do the request with paginator/sort/filter values
+    this.servicio$ = this.servicioService
+      .findAll({
+        page: {
+          index: reset ? 0 : this.paginator.pageIndex,
+          size: this.paginator.pageSize,
+        },
+        sort: {
+          direction: Direction.fromSortDirection(this.sort.direction),
+          field: this.sort.active,
+        },
+        filters: this.buildFilters(),
+      })
+      .pipe(
+        map((response) => {
+          // Map respose total
+          this.totalElementos = response.total;
+          // Reset pagination to first page
+          if (reset) {
+            this.paginator.pageIndex = 0;
+          }
+          this.logger.debug(SolicitudListadoComponent.name, 'loadTable()', 'end');
+          // Return the values
+          return response.items;
+        }),
+        catchError(() => {
+          // On error reset pagination values
+          this.paginator.firstPage();
+          this.totalElementos = 0;
+          this.snackBarService.mostrarMensajeError(
+            this.traductor.getTexto('solicitud.listado.error')
+          );
+          this.logger.debug(SolicitudListadoComponent.name, 'loadTable()', 'end');
+          return of([]);
+        })
+      );
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -56,34 +125,42 @@ export class SolicitudListadoComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  private buildFilters(): Filter[] {
+    this.logger.debug(SolicitudListadoComponent.name, 'buildFilters()', 'start');
+    if (
+      this.filter.field &&
+      this.filter.type !== FilterType.NONE &&
+      this.filter.value
+    ) {
+      this.logger.debug(SolicitudListadoComponent.name, 'buildFilters()', 'end');
+      return [this.filter];
+    }
+    this.logger.debug(SolicitudListadoComponent.name, 'buildFilters()', 'end');
+    return [];
+  }
+
   /**
-   * Realiza una búsqueda rápida sobre la tabla
-   * @param event variable filtro
+   * Load table data
    */
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  public onSearch() {
+    this.logger.debug(SolicitudListadoComponent.name, 'onSearch()', 'start');
+    this.loadTable(true);
+    this.logger.debug(SolicitudListadoComponent.name, 'onSearch()', 'end');
 
-    // Realiza la búsqueda también sobre los datos de objetos mostrados en la tabla
-    this.dataSource.filterPredicate = (order, filter: string) => {
-      const transformedFilter = filter.trim().toLowerCase();
+  }
 
-      const listAsFlatString = (obj): string => {
-        let returnVal = '';
-
-        Object.values(obj).forEach((val) => {
-          if (typeof val !== 'object') {
-            returnVal = returnVal + ' ' + val;
-          } else if (val !== null) {
-            returnVal = returnVal + ' ' + listAsFlatString(val);
-          }
-        });
-
-        return returnVal.trim().toLowerCase();
-      };
-
-      return listAsFlatString(order).includes(transformedFilter);
+  /**
+   * Clean filters an reload the table
+   */
+  public onClearFilters() {
+    this.logger.debug(SolicitudListadoComponent.name, 'onClearFilters()', 'start');
+    this.filter = {
+      field: undefined,
+      type: FilterType.NONE,
+      value: '',
     };
+    this.loadTable(true);
+    this.logger.debug(SolicitudListadoComponent.name, 'onClearFilters()', 'end');
   }
 
   /**
@@ -106,8 +183,8 @@ export class SolicitudListadoComponent implements OnInit, OnChanges, OnDestroy {
       'start'
     );
     this.registro = this.solicitudService.registro;
-    this.solicitudService
-      .update(this.registro, this.registro.id)
+    this.updateSolicitudService = this.solicitudService
+      .update(this.registro.id, this.registro)
       .subscribe(
         () => {
           this.snackBarService.mostrarMensajeSuccess(
@@ -134,9 +211,11 @@ export class SolicitudListadoComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.logger.debug(
-      SolicitudListadoComponent.name, 'ngOnDestroy() - start');
-    this.logger.debug(
-      SolicitudListadoComponent.name, 'ngOnDestroy() - end');
+      SolicitudListadoComponent.name,
+      'ngOnDestroy() - start'
+    );
+    this.updateSolicitudService?.unsubscribe();
+    this.logger.debug(SolicitudListadoComponent.name, 'ngOnDestroy() - end');
   }
 
 }

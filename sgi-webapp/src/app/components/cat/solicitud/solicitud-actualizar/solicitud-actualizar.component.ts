@@ -1,24 +1,26 @@
-import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
-import {FormGroupUtil} from '@shared/config/form-group-util';
-import {Registro} from '@core/models/registro';
-import {RegistroFilter} from '@core/filters/registro.filter';
-import {ActivatedRoute, Params, Router} from '@angular/router';
-import {NGXLogger} from 'ngx-logger';
-import {TraductorService} from '@core/services/traductor.service';
-import {SolicitudService} from '@core/services/solicitud.service';
-import {FxFlexProperties} from '@core/models/flexLayout/fx-flex-properties';
-import {FxLayoutProperties} from '@core/models/flexLayout/fx-layout-properties';
-import {UrlUtils} from '@core/utils/url-utils';
-import {SnackBarService} from '@core/services/snack-bar.service';
-import {map, switchMap} from 'rxjs/operators';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { FormGroupUtil } from '@shared/config/form-group-util';
+import { Registro } from '@core/models/registro';
+import { RegistroFilter } from '@core/filters/registro.filter';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { NGXLogger } from 'ngx-logger';
+import { TraductorService } from '@core/services/traductor.service';
+import { SolicitudService } from '@core/services/solicitud.service';
+import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
+import { UrlUtils } from '@core/utils/url-utils';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { map, switchMap, catchError } from 'rxjs/operators';
+import { FindOptions, FilterType } from '@core/services/types';
+import { of, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-solicitud-actualizar',
   templateUrl: './solicitud-actualizar.component.html',
   styleUrls: ['./solicitud-actualizar.component.scss'],
 })
-export class SolicitudActualizarComponent implements OnInit {
+export class SolicitudActualizarComponent implements OnInit, OnDestroy {
   formGroup: FormGroup;
   FormGroupUtil = FormGroupUtil;
   registro: Registro;
@@ -27,6 +29,9 @@ export class SolicitudActualizarComponent implements OnInit {
   desactivarAceptar: boolean;
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
+
+  solicitudServiceGetSubscription: Subscription;
+  solicitudServiceUpdateSubscription: Subscription;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -77,67 +82,58 @@ export class SolicitudActualizarComponent implements OnInit {
       'getSolicitud()',
       'start'
     );
-    let id: number;
-    // Obtiene el id
-    this.activatedRoute.params
-      .pipe(
-        switchMap((params: Params) => {
-          id = Number(params.id);
-          if (id) {
-            return this.solicitudService.getOne(id);
-          } else {
-            const registroFilter = new RegistroFilter();
-            registroFilter.usuarioRef = usuarioRef;
-            // TODO rehacer cuando esté hecho el filtrado
-            return this.solicitudService.findAll(registroFilter).pipe(
-              map(reg => reg.filter(r => r.usuarioRef === usuarioRef))
-            );
-          }
-        })
-      )
-      .subscribe(
-        // Obtiene el objeto existente
-        (registro: Registro) => {
-          this.registro = registro[0];
-          this.solicitudService.registro = this.registro;
-          // Actualiza el formGroup
-          FormGroupUtil.setValue(
-            this.formGroup,
-            'aceptaCondiciones',
-            this.registro.aceptaCondiciones
-          );
-          FormGroupUtil.setValue(
-            this.formGroup,
-            'servicio',
-            this.registro.servicio
-          );
-          FormGroupUtil.setValue(
-            this.formGroup,
-            'registro',
-            this.registro
-          );
-          this.logger.debug(
-            SolicitudActualizarComponent.name,
-            'getSolicitud()',
-            'start'
-          );
-        },
-        // Si no encuentra
-        () => {
-          // Añadimos esta comprobación para que no nos eche al crear uno nuevo
-          if (id) {
-            this.snackBarService.mostrarMensajeSuccess(
-              this.traductor.getTexto('solicitud.actualizar.no-encontrado')
-            );
-            this.router.navigateByUrl(`${UrlUtils.cat}/${UrlUtils.solicitud}`).then();
-          }
-          this.logger.debug(
-            SolicitudActualizarComponent.name,
-            'getSolicitud()',
-            'end'
-          );
+    const findOptions: FindOptions = {
+      filters: [
+        {
+          field: 'usuarioRef',
+          type: FilterType.EQUALS,
+          value: usuarioRef,
         }
+      ]
+    };
+    this.solicitudServiceGetSubscription = this.solicitudService.findAll(findOptions).subscribe((response) => {
+      this.registro = response.items[0];
+      this.solicitudService.registro = this.registro;
+      // Actualiza el formGroup
+      FormGroupUtil.setValue(
+        this.formGroup,
+        'aceptaCondiciones',
+        this.registro.aceptaCondiciones
       );
+      FormGroupUtil.setValue(
+        this.formGroup,
+        'servicio',
+        this.registro.servicio
+      );
+      FormGroupUtil.setValue(
+        this.formGroup,
+        'registro',
+        this.registro
+      );
+      this.logger.debug(
+        SolicitudActualizarComponent.name,
+        'getSolicitud()',
+        'start'
+      );
+      // Return the values
+      return this.registro;
+    },
+      catchError(() => {
+        // On error reset pagination values
+        // Añadimos esta comprobación para que no nos eche al crear uno nuevo
+        this.snackBarService.mostrarMensajeSuccess(
+          this.traductor.getTexto('solicitud.actualizar.no-encontrado')
+        );
+        this.router.navigateByUrl(`${UrlUtils.cat}/${UrlUtils.solicitud}`).then();
+
+        this.logger.debug(
+          SolicitudActualizarComponent.name,
+          'getSolicitud()',
+          'end'
+        );
+        return of([]);
+      })
+    );
   }
 
   /**
@@ -204,8 +200,8 @@ export class SolicitudActualizarComponent implements OnInit {
       'start'
     );
     this.registro.servicio = this.solicitudService.registro.servicio;
-    this.solicitudService
-      .update(this.registro, this.registro.id)
+    this.solicitudServiceGetSubscription = this.solicitudService
+      .update(this.registro.id, this.registro)
       .subscribe(
         () => {
           this.snackBarService.mostrarMensajeSuccess(
@@ -250,6 +246,22 @@ export class SolicitudActualizarComponent implements OnInit {
     this.logger.debug(
       SolicitudActualizarComponent.name,
       'createData()',
+      'end'
+    );
+  }
+
+
+  ngOnDestroy(): void {
+    this.logger.debug(
+      SolicitudActualizarComponent.name,
+      'ngOnDestroy()',
+      'start'
+    );
+    this.solicitudServiceGetSubscription?.unsubscribe();
+    this.solicitudServiceUpdateSubscription?.unsubscribe();
+    this.logger.debug(
+      SolicitudActualizarComponent.name,
+      'ngOnDestroy()',
       'end'
     );
   }

@@ -1,46 +1,33 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-
-import {SolicitudListadoComponent} from './solicitud-listado.component';
-import {NGXLogger} from 'ngx-logger';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {MaterialDesignModule} from '@material/material-design.module';
-import {RouterTestingModule} from '@angular/router/testing';
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import {HttpClient} from '@angular/common/http';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { NGXLogger } from 'ngx-logger';
+
+import { SolicitudListadoComponent } from './solicitud-listado.component';
 
 describe('SolicitudListadoComponent', () => {
   let component: SolicitudListadoComponent;
   let fixture: ComponentFixture<SolicitudListadoComponent>;
 
   beforeEach(async(() => {
-    // Mock logger
-    const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(NGXLogger.name, TestUtils.getOwnMethodNames(NGXLogger.prototype));
-
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
+        BrowserAnimationsModule,
         MaterialDesignModule,
         HttpClientTestingModule,
-        BrowserAnimationsModule,
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: (http: HttpClient) => {
-              return new TranslateHttpLoader(http);
-            },
-            deps: [HttpClient]
-          }
-        }),
+        TestUtils.getIdiomas(),
+        RouterTestingModule,
       ],
       providers: [
-        { provide: NGXLogger, useValue: loggerSpy }
+        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+        { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
       ],
-      declarations: [SolicitudListadoComponent]
-    })
-      .compileComponents();
+      declarations: [SolicitudListadoComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

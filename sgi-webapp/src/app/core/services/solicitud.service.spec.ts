@@ -1,43 +1,26 @@
 import { TestBed } from '@angular/core/testing';
 
 import { SolicitudService } from './solicitud.service';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClientModule } from '@angular/common/http';
 import { NGXLogger } from 'ngx-logger';
 import { LayoutService } from './layout.service';
 import TestUtils from '@core/utils/test-utils';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('SolicitudService', () => {
   let service: SolicitudService;
 
   beforeEach(() => {
-
-    // Mock logger
-    const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(NGXLogger.name, TestUtils.getOwnMethodNames(NGXLogger.prototype));
-
-    // Mock SolicitudService
-    const solicitudServiceSpy = jasmine.createSpyObj(SolicitudService.name,
-      TestUtils.getMethodNames(SolicitudService.prototype));
-
     TestBed.configureTestingModule({
       imports: [
         HttpClientModule,
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: (http: HttpClient) => {
-              return new TranslateHttpLoader(http);
-            },
-            deps: [HttpClient]
-          },
-        }),
+        TestUtils.getIdiomas(),
+        RouterTestingModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: loggerSpy },
-        { provide: SolicitudService, useValue: solicitudServiceSpy },
+        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         LayoutService,
-      ]
+      ],
     });
     service = TestBed.inject(SolicitudService);
   });

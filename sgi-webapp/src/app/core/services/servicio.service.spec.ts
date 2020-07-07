@@ -1,45 +1,27 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ServicioService } from './servicio.service';
+import { HttpClientModule } from '@angular/common/http';
 import { NGXLogger } from 'ngx-logger';
-import TestUtils from '@core/utils/test-utils';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { LayoutService } from './layout.service';
+import TestUtils from '@core/utils/test-utils';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ServicioService', () => {
   let service: ServicioService;
 
   beforeEach(() => {
-
-    // Mock logger
-    const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(NGXLogger.name, TestUtils.getOwnMethodNames(NGXLogger.prototype));
-
-    // Mock ServicioService
-    const servicioServiceSpy = jasmine.createSpyObj(ServicioService.name,
-      TestUtils.getMethodNames(ServicioService.prototype));
-
     TestBed.configureTestingModule({
       imports: [
         HttpClientModule,
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: (http: HttpClient) => {
-              return new TranslateHttpLoader(http);
-            },
-            deps: [HttpClient]
-          },
-        }),
+        TestUtils.getIdiomas(),
+        RouterTestingModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: loggerSpy },
-        { provide: ServicioService, useValue: servicioServiceSpy },
+        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         LayoutService,
-      ]
+      ],
     });
-
     service = TestBed.inject(ServicioService);
   });
 
