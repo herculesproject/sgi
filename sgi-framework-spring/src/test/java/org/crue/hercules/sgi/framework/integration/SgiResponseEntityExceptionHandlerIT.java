@@ -27,15 +27,16 @@ public class SgiResponseEntityExceptionHandlerIT {
 
   @Configuration
   public static class TestWebConfig implements WebMvcConfigurer {
+
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    @ControllerAdvice
+    public static class TestResponseEntityExceptionHandler extends SgiResponseEntityExceptionHandler {
+    }
+
     @Bean
     public TestResponseEntityExceptionHandler testResponseEntityExceptionHandler() {
       return new TestResponseEntityExceptionHandler();
     }
-  }
-
-  @Order(Ordered.HIGHEST_PRECEDENCE)
-  @ControllerAdvice
-  public static class TestResponseEntityExceptionHandler extends SgiResponseEntityExceptionHandler {
   }
 
   @TestConfiguration
