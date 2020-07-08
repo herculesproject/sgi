@@ -6,5 +6,5 @@ import lombok.Data;
 public class QueryCriteria {
   private String key;
   private QueryOperation operation;
-  private Object value;
+  private String value;
 }

@@ -11,12 +11,10 @@ import org.crue.hercules.sgi.framework.data.search.QueryOperation;
 import org.springframework.core.convert.converter.Converter;
 
 public class QueryCriteriaConverter implements Converter<String, List<QueryCriteria>> {
-  private static String wordRegex = "[A-Za-z0-9_ñÑ]*";
-  private static String valueRegex = "[A-Za-z0-9_áéíóúäëïöüÁÉÍÓÚÄËÏÖÜñÑ\\-\\.%\\s]+";
+  private static String wordRegex = "[A-Za-z0-9_ñÑ\\.]*";
+  private static String valueRegex = "[A-Za-z0-9_áéíóúäëïöüÁÉÍÓÚÄËÏÖÜñÑ\\-\\.%\\s:]+";
   private static String operatorRegex = "(!?:|!?~|<:?|>:?)";
-  private static String timestampRegex = "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0 -9]{2}:[0-9]{2}:[0-9]{2}-[0-9]{2}:[0-9]{2}";
-  private static String fullRegex = "(" + wordRegex + ")" + operatorRegex + "(" + timestampRegex + "|" + "|"
-      + valueRegex + ")?,";
+  private static String fullRegex = "(" + wordRegex + ")" + operatorRegex + "(" + valueRegex + ")?,";
   private static final Pattern searchPattern = Pattern.compile(fullRegex);
 
   @Override
