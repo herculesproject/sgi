@@ -1,4 +1,4 @@
-package org.crue.hercules.sgi.framework.web;
+package org.crue.hercules.sgi.framework.integration;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,8 +7,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
-import org.crue.hercules.sgi.framework.web.servlet.config.WebConfig;
+import org.crue.hercules.sgi.framework.http.converter.json.PageMappingJackson2HttpMessageConverter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -16,8 +15,9 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -26,9 +26,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@WebMvcTest(WebConfig.class)
-public class WebConfigTest {
+@WebMvcTest(PageMappingJackson2HttpMessageConverterIT.TestWebConfig.class)
+public class PageMappingJackson2HttpMessageConverterIT {
 
   @Autowired
   private ObjectMapper mapper;
@@ -37,77 +38,32 @@ public class WebConfigTest {
   private MockMvc mockMvc;
 
   @Configuration
-  public static class TestWebConfig extends WebConfig {
+  public static class TestWebConfig implements WebMvcConfigurer {
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+      for (HttpMessageConverter<?> httpMessageConverter : converters) {
+        if (httpMessageConverter instanceof MappingJackson2HttpMessageConverter) {
+          // Override all MappingJackson2HttpMessageConverter with custom
+          // PageMappingJackson2HttpMessageConverter
+          // One is created by WebMvcConfigurationSupport
+          // One is created by AllEncompassingFormHttpMessageConverter
+          MappingJackson2HttpMessageConverter converter = (MappingJackson2HttpMessageConverter) httpMessageConverter;
+          PageMappingJackson2HttpMessageConverter newConverter = new PageMappingJackson2HttpMessageConverter(
+              converter.getObjectMapper());
+          converters.set(converters.indexOf(converter), newConverter);
+        }
+      }
+    }
   }
 
   @TestConfiguration
   @RestController
   public static class InnerWebConfigTestController {
-    @GetMapping("/test-request-pageable")
-    Pageable testPageable(@RequestPageable Pageable paging) {
-      return paging;
-    }
-
-    @GetMapping("/test-request-pageable-custom-headers")
-    Pageable testPageableCustomHeaders(@RequestPageable(pageHeader = "XX-P", pageSizeHeader = "XX-S") Pageable paging) {
-      return paging;
-    }
-
     @GetMapping("/test-response-page")
     Page<String> testPage(@RequestBody String[] data) {
       Page<String> page = new PageImpl<String>(Arrays.asList(data));
       return page;
     }
-  }
-
-  @Test
-  public void requestWithPageableAnnotation_and_PagingHeaders_returnsPageable() throws Exception {
-    // given: some Paging info
-    int pageNumber = 3;
-    int pageSize = 10;
-
-    // when: test-request-pageable controller with @RequestPageable annotations
-    mockMvc
-        .perform(MockMvcRequestBuilders.get("/test-request-pageable").header("X-Page", pageNumber)
-            .header("X-Page-Size", pageSize).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        // then: sent paging header data is returned as Pageable object
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.jsonPath("pageNumber").value(pageNumber))
-        .andExpect(MockMvcResultMatchers.jsonPath("pageSize").value(pageSize));
-  }
-
-  @Test
-  public void requestWithPageableAnnotation_and_No_PagingHeaders_returnsUnpagedPageable() throws Exception {
-    // given: no Paging info
-
-    // when: test-request-pageable controller with @RequestPageable annotations
-    mockMvc.perform(MockMvcRequestBuilders.get("/test-request-pageable").accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        // then: sent paging header data is returned as no paged object
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.jsonPath("unpaged").value(true));
-  }
-
-  @Test
-  public void requestWithPageableAnnotation_and_CustomPagingHeaders_returnsPageable() throws Exception {
-    // given: some Paging info
-    int pageNumber = 3;
-    int pageSize = 10;
-
-    // when: test-request-pageable controller with @RequestPageable annotations with
-    // customized header names
-    mockMvc
-        .perform(MockMvcRequestBuilders.get("/test-request-pageable-custom-headers").header("XX-P", pageNumber)
-            .header("XX-S", pageSize).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        // then: sent paging header data is returned as Pageable object
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.jsonPath("pageNumber").value(pageNumber))
-        .andExpect(MockMvcResultMatchers.jsonPath("pageSize").value(pageSize));
   }
 
   @Test
