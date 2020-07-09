@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/sgp" name="API-SGP" publishSwagger="/_system/governance/swagger_files/sgp-swagger.yaml" version="1.0.0" version-type="context" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET" url-mapping="/usuarios">
+        <inSequence>
+            <!--This is generated API skeleton.-->
+            <!--Business Logic Goes Here-->
+            <payloadFactory media-type="json">
+                <format>[
+    {
+        "usuarioRef": "ref-001",
+        "nombre": "nombre-001",
+        "primerApellido": "primerApellido-001",
+        "segundoApellido": "segundoApellido-001",
+        "email": "email-001@email.es"
+    },
+    {
+        "usuarioRef": "ref-002",
+        "nombre": "nombre-002",
+        "primerApellido": "primerApellido-002",
+        "segundoApellido": "segundoApellido-002",
+        "email": "email-002@email.es"
+    },
+    {
+        "usuarioRef": "ref-003",
+        "nombre": "nombre-003",
+        "primerApellido": "primerApellido-003",
+        "segundoApellido": "segundoApellido-003",
+        "email": "email-003@email.es"
+    },
+    {
+        "usuarioRef": "ref-004",
+        "nombre": "nombre-004",
+        "primerApellido": "primerApellido-004",
+        "segundoApellido": "segundoApellido-004",
+        "email": "email-004@email.es"
+    },
+    {
+        "usuarioRef": "ref-005",
+        "nombre": "nombre-005",
+        "primerApellido": "primerApellido-005",
+        "segundoApellido": "segundoApellido-005",
+        "email": "email-005@email.es"
+    }
+]</format>
+                <args/>
+            </payloadFactory>
+            <send>
+                <endpoint key="sgp-service"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <respond/>
+        </outSequence>
+        <faultSequence>
+            <switch source="get-property('ERROR_CODE')">
+                <case regex="101503|101504">
+                    <payloadFactory media-type="json">
+                        <format>[
+    {
+        "usuarioRef": "ref-001",
+        "nombre": "nombre-001",
+        "primerApellido": "primerApellido-001",
+        "segundoApellido": "segundoApellido-001",
+        "email": "email-001@email.es"
+    },
+    {
+        "usuarioRef": "ref-002",
+        "nombre": "nombre-002",
+        "primerApellido": "primerApellido-002",
+        "segundoApellido": "segundoApellido-002",
+        "email": "email-002@email.es"
+    },
+    {
+        "usuarioRef": "ref-003",
+        "nombre": "nombre-003",
+        "primerApellido": "primerApellido-003",
+        "segundoApellido": "segundoApellido-003",
+        "email": "email-003@email.es"
+    },
+    {
+        "usuarioRef": "ref-004",
+        "nombre": "nombre-004",
+        "primerApellido": "primerApellido-004",
+        "segundoApellido": "segundoApellido-004",
+        "email": "email-004@email.es"
+    },
+    {
+        "usuarioRef": "ref-005",
+        "nombre": "nombre-005",
+        "primerApellido": "primerApellido-005",
+        "segundoApellido": "segundoApellido-005",
+        "email": "email-005@email.es"
+    }
+]</format>
+                        <args/>
+                    </payloadFactory>
+                </case>
+                <default/>
+            </switch>
+            <respond/>
+        </faultSequence>
+    </resource>
+    <resource methods="GET" uri-template="/usuarios/{usuarioRef}">
+        <inSequence>
+            <!--This is generated API skeleton.-->
+            <property expression="get-property('uri.var.usuarioRef')" name="usuarioRef" scope="default" type="STRING"/>
+            <!--Business Logic Goes Here-->
+            <payloadFactory media-type="json">
+                <format>{
+    "usuarioRef": "ref-001",
+    "nombre": "nombre-001",
+    "primerApellido": "primerApellido-001",
+    "segundoApellido": "segundoApellido-001",
+    "email": "email-001@email.es"
+}</format>
+                <args/>
+            </payloadFactory>
+            <send>
+                <endpoint key="sgp-service"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <respond/>
+        </outSequence>
+        <faultSequence>
+            <switch source="get-property('ERROR_CODE')">
+                <case regex="101503|101504">
+                    <payloadFactory media-type="json">
+                        <format>{
+    "usuarioRef": "ref-001",
+    "nombre": "nombre-001",
+    "primerApellido": "primerApellido-001",
+    "segundoApellido": "segundoApellido-001",
+    "email": "email-001@email.es"
+}</format>
+                        <args/>
+                    </payloadFactory>
+                </case>
+                <default/>
+            </switch>
+            <respond/>
+        </faultSequence>
+    </resource>
+</api>
