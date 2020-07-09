@@ -15,11 +15,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("${server.error.path:${error.path:/error}}")
 public class SgiErrorController implements ErrorController {
 
+  /**
+   * @return String
+   */
+  @SuppressWarnings("deprecation")
   @Override
   public String getErrorPath() {
     return null;
   }
 
+  /**
+   * @param request  the HttpServletRequest
+   * @param response the HttpServletResponse
+   * @return Error
+   */
   @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public Error errorJson(HttpServletRequest request, HttpServletResponse response) {
     HttpStatus status = getStatus(request);
@@ -32,6 +41,10 @@ public class SgiErrorController implements ErrorController {
     return error;
   }
 
+  /**
+   * @param request the HttpServletRequest
+   * @return HttpStatus
+   */
   protected HttpStatus getStatus(HttpServletRequest request) {
     Integer statusCode = (Integer) request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
     if (statusCode == null) {

@@ -10,6 +10,10 @@ import org.crue.hercules.sgi.framework.data.search.QueryOperation;
 
 import org.springframework.core.convert.converter.Converter;
 
+/**
+ * A converter converts a source object of type {@code String} to a target of
+ * type {@code List<QueryCriteria>}.
+ */
 public class QueryCriteriaConverter implements Converter<String, List<QueryCriteria>> {
   private static String wordRegex = "[A-Za-z0-9_ñÑ\\.]*";
   private static String valueRegex = "[A-Za-z0-9_áéíóúäëïöüÁÉÍÓÚÄËÏÖÜñÑ\\-\\.%\\s:]+";
@@ -17,6 +21,17 @@ public class QueryCriteriaConverter implements Converter<String, List<QueryCrite
   private static String fullRegex = "(" + wordRegex + ")" + operatorRegex + "(" + valueRegex + ")?,";
   private static final Pattern searchPattern = Pattern.compile(fullRegex);
 
+  /**
+   * Convert the source object of type {@code String} to target type
+   * {@code List<QueryCriteria>}.
+   * 
+   * @param source the source object to convert, which must be an instance of
+   *               {@code String} (never {@code null})
+   * @return the converted object, which must be an instance of
+   *         {@code List<QueryCriteria>} (potentially {@code null})
+   * @throws IllegalArgumentException if the source cannot be converted to the
+   *                                  desired target type
+   */
   @Override
   public List<QueryCriteria> convert(String source) {
     List<QueryCriteria> searchCriterias = new ArrayList<>();

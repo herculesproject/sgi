@@ -16,14 +16,22 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.multipart.support.MultipartResolutionDelegate;
 
+/**
+ * Resolves method parameters into argument values in the context of a given
+ * request.
+ *
+ * @see HandlerMethodReturnValueHandler
+ */
 public class RequestPageableArgumentResolver implements HandlerMethodArgumentResolver {
 
   private SortCriteriaConverter converter;
@@ -32,12 +40,36 @@ public class RequestPageableArgumentResolver implements HandlerMethodArgumentRes
     this.converter = converter;
   }
 
+  /**
+   * Whether the given {@linkplain MethodParameter method parameter} is supported
+   * by this resolver.
+   * 
+   * @param parameter the method parameter to check
+   * @return {@code true} if this resolver supports the supplied parameter;
+   *         {@code false} otherwise
+   */
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
     return (parameter.hasParameterAnnotation(RequestPageable.class)
         && Pageable.class.isAssignableFrom(parameter.getNestedParameterType()));
   }
 
+  /**
+   * Resolves a method parameter into an argument value from a given request. A
+   * {@link ModelAndViewContainer} provides access to the model for the request. A
+   * {@link WebDataBinderFactory} provides a way to create a {@link WebDataBinder}
+   * instance when needed for data binding and type conversion purposes.
+   * 
+   * @param parameter     the method parameter to resolve. This parameter must
+   *                      have previously been passed to
+   *                      {@link #supportsParameter} which must have returned
+   *                      {@code true}.
+   * @param mavContainer  the ModelAndViewContainer for the current request
+   * @param webRequest    the current request
+   * @param binderFactory a factory for creating {@link WebDataBinder} instances
+   * @return the resolved argument value, or {@code null} if not resolvable
+   * @throws Exception in case of errors with the preparation of argument values
+   */
   @Override
   public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
       NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
@@ -68,6 +100,13 @@ public class RequestPageableArgumentResolver implements HandlerMethodArgumentRes
     return PageRequest.of(Integer.parseInt(xPage), Integer.parseInt(xPageSize), sort);
   }
 
+  /**
+   * @param name      the name
+   * @param parameter the MethodParameter
+   * @param request   the MethodParameter
+   * @return Object
+   * @throws Exception if a problem occurs
+   */
   protected Object resolveName(String name, MethodParameter parameter, NativeWebRequest request) throws Exception {
     HttpServletRequest servletRequest = request.getNativeRequest(HttpServletRequest.class);
 
@@ -95,6 +134,10 @@ public class RequestPageableArgumentResolver implements HandlerMethodArgumentRes
     return arg;
   }
 
+  /**
+   * @param criteria the list of {@link SortCriteria}
+   * @return List<Sort>
+   */
   private List<Sort> generateSortList(List<SortCriteria> criteria) {
     return criteria.stream().map((criterion) -> {
       switch (criterion.getOperation()) {
@@ -108,6 +151,10 @@ public class RequestPageableArgumentResolver implements HandlerMethodArgumentRes
     }).filter((sort) -> sort != null).collect(Collectors.toList());
   }
 
+  /**
+   * @param criteria the list of {@link Sort}
+   * @return Sort
+   */
   private Sort andSort(List<Sort> criteria) {
 
     Iterator<Sort> itr = criteria.iterator();

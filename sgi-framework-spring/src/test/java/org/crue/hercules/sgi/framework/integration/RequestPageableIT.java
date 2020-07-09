@@ -53,6 +53,9 @@ public class RequestPageableIT {
     }
   }
 
+  /**
+   * @throws Exception
+   */
   @Test
   public void requestWithPageableAnnotation_and_PagingHeaders_returnsPageable() throws Exception {
     // given: some Paging info
@@ -71,6 +74,9 @@ public class RequestPageableIT {
         .andExpect(MockMvcResultMatchers.jsonPath("pageSize").value(pageSize));
   }
 
+  /**
+   * @throws Exception
+   */
   @Test
   public void requestWithPageableAnnotation_and_No_PagingHeaders_returnsUnpagedPageable() throws Exception {
     // given: no Paging info
@@ -84,6 +90,9 @@ public class RequestPageableIT {
         .andExpect(MockMvcResultMatchers.jsonPath("unpaged").value(true));
   }
 
+  /**
+   * @throws Exception
+   */
   @Test
   public void requestWithPageableAnnotation_and_CustomPagingHeaders_returnsPageable() throws Exception {
     // given: some Paging info

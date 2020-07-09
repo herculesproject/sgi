@@ -16,6 +16,9 @@ public class SortCriteriaConverterTest {
   @InjectMocks
   SortCriteriaConverter sortCriteriaConverter;
 
+  /**
+   * @throws Exception
+   */
   @Test
   public void convertAscendingSortExpression_returnsAscendingSortCriteria() throws Exception {
     // given: an equals expression
@@ -32,6 +35,9 @@ public class SortCriteriaConverterTest {
     Assertions.assertThat(sortCriterias.get(0).getOperation()).isEqualTo(SortOperation.fromString(operator));
   }
 
+  /**
+   * @throws Exception
+   */
   @Test
   public void convertDescendingSortExpression_returnsDescendingSortCriteria() throws Exception {
     // given: an equals expression
@@ -48,6 +54,9 @@ public class SortCriteriaConverterTest {
     Assertions.assertThat(sortCriterias.get(0).getOperation()).isEqualTo(SortOperation.fromString(operator));
   }
 
+  /**
+   * @throws Exception
+   */
   @Test
   public void convert_multipleExpresion_returnsSortCriteriaList() throws Exception {
     // given: an equals expression
@@ -71,6 +80,9 @@ public class SortCriteriaConverterTest {
     }
   }
 
+  /**
+   * @throws Exception
+   */
   @Test
   public void convert_noExpresion_returnsEmptyList() throws Exception {
     // given: a no sort expression

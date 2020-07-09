@@ -48,6 +48,9 @@ public class SgiResponseEntityExceptionHandlerIT {
     }
   }
 
+  /**
+   * @throws Exception
+   */
   @Test
   public void requestWithPageableAnnotation_and_PagingHeaders_returnsPageable() throws Exception {
     // given: a controller method that throws an IlleagalArgumenException

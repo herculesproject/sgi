@@ -23,6 +23,15 @@ public class QuerySpecification<T> extends StringDynamicSpecification<T> {
 
   private final List<QueryCriteria> query;
 
+  /**
+   * Creates a WHERE clause for a query of the referenced entity in form of a
+   * {@link Predicate} for the given {@link Root} and {@link CriteriaQuery}.
+   *
+   * @param root must not be {@literal null}.
+   * @param cq   must not be {@literal null}.
+   * @param cb   must not be {@literal null}.
+   * @return a {@link Predicate}, may be {@literal null}.
+   */
   @Override
   public Predicate toPredicate(Root<T> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
     if (query == null || query.isEmpty()) {

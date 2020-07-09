@@ -47,34 +47,74 @@ public class Error {
     }
   }
 
+  /**
+   * Utility method for adding error.
+   *
+   * @param validationError the {@link ValidationError}
+   */
   private void addValidationError(ValidationError validationError) {
     if (validationErrors == null) {
       validationErrors = new ArrayList<>();
     }
+
     validationErrors.add(validationError);
   }
 
+  /**
+   * Utility method for adding error.
+   *
+   * @param object        the object with the error
+   * @param field         the field name with the error
+   * @param rejectedValue the rejected value
+   * @param message       the error message
+   */
   private void addValidationError(String object, String field, Object rejectedValue, String message) {
     addValidationError(new ValidationError(object, field, rejectedValue, message));
   }
 
+  /**
+   * Utility method for adding error.
+   *
+   * @param object  the object with the error
+   * @param message the error message
+   */
   private void addValidationError(String object, String message) {
     addValidationError(new ValidationError(object, message));
   }
 
+  /**
+   * Utility method for adding error. Usually when a @Validated validation fails.
+   *
+   * @param fieldError the FieldError
+   */
   private void addValidationError(FieldError fieldError) {
     this.addValidationError(fieldError.getObjectName(), fieldError.getField(), fieldError.getRejectedValue(),
         fieldError.getDefaultMessage());
   }
 
+  /**
+   * Utility method for adding errors. Usually when a @Validated validation fails.
+   *
+   * @param fieldErrors the FieldErrors
+   */
   public void addValidationErrors(List<FieldError> fieldErrors) {
     fieldErrors.forEach(this::addValidationError);
   }
 
+  /**
+   * Utility method for adding error. Usually when a @Validated validation fails.
+   *
+   * @param objectError the ObjectError
+   */
   private void addValidationError(ObjectError objectError) {
     this.addValidationError(objectError.getObjectName(), objectError.getDefaultMessage());
   }
 
+  /**
+   * Utility method for adding errors. Usually when a @Validated validation fails.
+   *
+   * @param globalErrors the ObjectErrors
+   */
   public void addValidationError(List<ObjectError> globalErrors) {
     globalErrors.forEach(this::addValidationError);
   }
@@ -90,6 +130,12 @@ public class Error {
         ((PathImpl) cv.getPropertyPath()).getLeafNode().asString(), cv.getInvalidValue(), cv.getMessage());
   }
 
+  /**
+   * Utility method for adding errors of ConstraintViolations. Usually when
+   * a @Validated validation fails.
+   *
+   * @param constraintViolations the ConstraintViolations
+   */
   public void addValidationErrors(Set<ConstraintViolation<?>> constraintViolations) {
     constraintViolations.forEach(this::addValidationError);
   }

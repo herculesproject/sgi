@@ -11,24 +11,61 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.lang.Nullable;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * A convenient base class for {@link ControllerAdvice @ControllerAdvice}
+ * classes that wish to provide centralized exception handling across all
+ * {@code @RequestMapping} methods through {@code @ExceptionHandler} methods.
+ *
+ * <p>
+ * This base class provides an {@code @ExceptionHandler} method for handling
+ * internal Spring MVC exceptions. This method returns a {@code ResponseEntity}
+ * for writing to the response with a {@link HttpMessageConverter message
+ * converter}, in contrast to
+ * {@link org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver
+ * DefaultHandlerExceptionResolver} which returns a
+ * {@link org.springframework.web.servlet.ModelAndView ModelAndView}.
+ *
+ * <p>
+ * If there is no need to write error content to the response body, or when
+ * using view resolution (e.g., via {@code ContentNegotiatingViewResolver}),
+ * then {@code DefaultHandlerExceptionResolver} is good enough.
+ *
+ * <p>
+ * Note that in order for an {@code @ControllerAdvice} subclass to be detected,
+ * {@link ExceptionHandlerExceptionResolver} must be configured.
+ *
+ * @see #handleException(Exception, WebRequest)
+ * @see org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver
+ */
 @Slf4j
 public abstract class SgiResponseEntityExceptionHandler
     extends org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler {
 
+  /**
+   * Provides handling for exceptions.
+   * 
+   * @param ex      the target exception
+   * @param request the current request
+   * @return ResponseEntity
+   * @throws Exception if a problem occurs
+   */
   @ExceptionHandler({ ConstraintViolationException.class, EntityNotFoundException.class,
       DataIntegrityViolationException.class, MethodArgumentTypeMismatchException.class, IllegalArgumentException.class,
       NotFoundException.class, IllegalSpecificationArgumentException.class,
@@ -71,6 +108,14 @@ public abstract class SgiResponseEntityExceptionHandler
     }
   }
 
+  /**
+   * @param ex      the Exception
+   * @param body    the body Object
+   * @param headers the HttpHeaders
+   * @param status  the HttpStatus
+   * @param request the WebRequest
+   * @return ResponseEntity
+   */
   @Override
   protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
       HttpStatus status, WebRequest request) {
@@ -80,6 +125,13 @@ public abstract class SgiResponseEntityExceptionHandler
     return super.handleExceptionInternal(ex, body, headers, status, request);
   }
 
+  /**
+   * @param ex      the Exception
+   * @param headers the HttpHeaders
+   * @param status  the HttpStatus
+   * @param request the WebRequest
+   * @return ResponseEntity
+   */
   @Override
   protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex,
       HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -87,6 +139,13 @@ public abstract class SgiResponseEntityExceptionHandler
     return handleExceptionInternal(ex, error, headers, error.getStatus(), request);
   }
 
+  /**
+   * @param ex      the Exception
+   * @param headers the HttpHeaders
+   * @param status  the HttpStatus
+   * @param request the WebRequest
+   * @return ResponseEntity
+   */
   @Override
   protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex,
       HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -98,6 +157,13 @@ public abstract class SgiResponseEntityExceptionHandler
     return handleExceptionInternal(ex, error, headers, error.getStatus(), request);
   }
 
+  /**
+   * @param ex      the Exception
+   * @param headers the HttpHeaders
+   * @param status  the HttpStatus
+   * @param request the WebRequest
+   * @return ResponseEntity
+   */
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
       HttpStatus status, WebRequest request) {
@@ -107,6 +173,13 @@ public abstract class SgiResponseEntityExceptionHandler
     return handleExceptionInternal(ex, error, headers, error.getStatus(), request);
   }
 
+  /**
+   * @param ex      the Exception
+   * @param headers the HttpHeaders
+   * @param status  the HttpStatus
+   * @param request the WebRequest
+   * @return ResponseEntity
+   */
   @Override
   protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers,
       HttpStatus status, WebRequest request) {
@@ -116,6 +189,13 @@ public abstract class SgiResponseEntityExceptionHandler
     return handleExceptionInternal(ex, error, headers, error.getStatus(), request);
   }
 
+  /**
+   * @param ex      the Exception
+   * @param headers the HttpHeaders
+   * @param status  the HttpStatus
+   * @param request the WebRequest
+   * @return ResponseEntity
+   */
   @Override
   protected ResponseEntity<Object> handleHttpMessageNotWritable(HttpMessageNotWritableException ex, HttpHeaders headers,
       HttpStatus status, WebRequest request) {
@@ -123,6 +203,13 @@ public abstract class SgiResponseEntityExceptionHandler
     return handleExceptionInternal(ex, error, headers, error.getStatus(), request);
   }
 
+  /**
+   * @param ex      the Exception
+   * @param headers the HttpHeaders
+   * @param status  the HttpStatus
+   * @param request the WebRequest
+   * @return ResponseEntity
+   */
   @Override
   protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,
       HttpStatus status, WebRequest request) {
@@ -131,6 +218,13 @@ public abstract class SgiResponseEntityExceptionHandler
     return handleExceptionInternal(ex, error, headers, error.getStatus(), request);
   }
 
+  /**
+   * @param ex      the Exception
+   * @param headers the HttpHeaders
+   * @param status  the HttpStatus
+   * @param request the WebRequest
+   * @return ResponseEntity
+   */
   protected ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex, HttpHeaders headers,
       HttpStatus status, WebRequest request) {
     Error error = new Error(status, "Validation error", ex);
@@ -138,11 +232,25 @@ public abstract class SgiResponseEntityExceptionHandler
     return handleExceptionInternal(ex, error, headers, status, request);
   }
 
+  /**
+   * @param ex      the Exception
+   * @param headers the HttpHeaders
+   * @param status  the HttpStatus
+   * @param request the WebRequest
+   * @return ResponseEntity
+   */
   protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex, HttpHeaders headers,
       HttpStatus status, WebRequest request) {
     return handleExceptionInternal(ex, null, headers, status, request);
   }
 
+  /**
+   * @param ex      the Exception
+   * @param headers the HttpHeaders
+   * @param status  the HttpStatus
+   * @param request the WebRequest
+   * @return ResponseEntity
+   */
   protected ResponseEntity<Object> handleDataIntegrityViolation(DataIntegrityViolationException ex, HttpHeaders headers,
       HttpStatus status, WebRequest request) {
     if (ex.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
@@ -153,6 +261,13 @@ public abstract class SgiResponseEntityExceptionHandler
     return handleExceptionInternal(ex, error, headers, status, request);
   }
 
+  /**
+   * @param ex      the Exception
+   * @param headers the HttpHeaders
+   * @param status  the HttpStatus
+   * @param request the WebRequest
+   * @return ResponseEntity
+   */
   protected ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex,
       HttpHeaders headers, HttpStatus status, WebRequest request) {
     Error error = new Error(status,
@@ -162,24 +277,52 @@ public abstract class SgiResponseEntityExceptionHandler
     return handleExceptionInternal(ex, error, headers, status, request);
   }
 
-  public final ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException ex, HttpHeaders headers,
-      HttpStatus status, WebRequest request) throws Exception {
+  /**
+   * @param ex      the Exception
+   * @param headers the HttpHeaders
+   * @param status  the HttpStatus
+   * @param request the WebRequest
+   * @return ResponseEntity
+   */
+  protected final ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException ex, HttpHeaders headers,
+      HttpStatus status, WebRequest request) {
     Error error = new Error(HttpStatus.BAD_REQUEST, "Malformed request", ex);
     return handleExceptionInternal(ex, error, headers, status, request);
   }
 
+  /**
+   * @param ex      the Exception
+   * @param headers the HttpHeaders
+   * @param status  the HttpStatus
+   * @param request the WebRequest
+   * @return ResponseEntity
+   */
   protected ResponseEntity<Object> handleNotFound(NotFoundException ex, HttpHeaders headers, HttpStatus status,
       WebRequest request) {
     Error error = new Error(status, "Data not found", ex);
     return handleExceptionInternal(ex, error, headers, status, request);
   }
 
+  /**
+   * @param ex      the Exception
+   * @param headers the HttpHeaders
+   * @param status  the HttpStatus
+   * @param request the WebRequest
+   * @return ResponseEntity
+   */
   protected ResponseEntity<Object> handleIllegalSpecificationArgument(IllegalSpecificationArgumentException ex,
       HttpHeaders headers, HttpStatus status, WebRequest request) {
     Error error = new Error(status, "Malformed query request", ex);
     return handleExceptionInternal(ex, error, headers, status, request);
   }
 
+  /**
+   * @param ex      the Exception
+   * @param headers the HttpHeaders
+   * @param status  the HttpStatus
+   * @param request the WebRequest
+   * @return ResponseEntity
+   */
   protected ResponseEntity<Object> handleUnsupportedSpecificationOperation(
       UnsupportedSpecificationOperationException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
     Error error = new Error(status, "Unsupported query request", ex);

@@ -20,30 +20,57 @@ import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
+
+
+/**
+ * Default implementation of the
+ * {@link org.springframework.data.repository.CrudRepository} interface. This
+ * will offer you a more sophisticated interface than the plain
+ * {@link EntityManager} .
+ */
 public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
 
   private EscapeCharacter escapeCharacter = EscapeCharacter.DEFAULT;
 
+  /**
+   * Creates a new {@link SgiJpaRepository} to manage objects of the given
+   * {@link JpaEntityInformation}.
+   *
+   * @param entityInformation must not be {@literal null}.
+   * @param entityManager     must not be {@literal null}.
+   */
   public SgiJpaRepository(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) {
     super(entityInformation, entityManager);
   }
 
+  /**
+   * Creates a new {@link SgiJpaRepository} to manage objects of the given
+   * domain type.
+   *
+   * @param domainClass must not be {@literal null}.
+   * @param em          must not be {@literal null}.
+   */
   public SgiJpaRepository(Class<T> domainClass, EntityManager em) {
     super(domainClass, em);
   }
 
+  /**
+   * Configures the {@link EscapeCharacter} to be used with the repository.
+   *
+   * @param escapeCharacter Must not be {@literal null}.
+   */
   @Override
   public void setEscapeCharacter(EscapeCharacter escapeCharacter) {
     this.escapeCharacter = escapeCharacter;
     super.setEscapeCharacter(escapeCharacter);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * org.springframework.data.repository.PagingAndSortingRepository#findAll(org.
-   * springframework.data.domain.Pageable)
+  /**
+   * Returns a {@link Page} of entities meeting the paging restriction provided in
+   * the {@code Pageable} object.
+   *
+   * @param pageable the Pageable
+   * @return a page of entities
    */
   @Override
   public Page<T> findAll(Pageable pageable) {
@@ -55,13 +82,12 @@ public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
     return findAll((Specification<T>) null, pageable);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * org.springframework.data.jpa.repository.JpaSpecificationExecutor#findAll(org.
-   * springframework.data.jpa.domain.Specification,
-   * org.springframework.data.domain.Pageable)
+  /**
+   * Returns a {@link Page} of entities matching the given {@link Specification}.
+   *
+   * @param spec     can be {@literal null}.
+   * @param pageable must not be {@literal null}.
+   * @return never {@literal null}.
    */
   @Override
   public Page<T> findAll(@Nullable Specification<T> spec, Pageable pageable) {
@@ -71,13 +97,13 @@ public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
         : readPage(query, getDomainClass(), pageable, spec);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * org.springframework.data.repository.query.QueryByExampleExecutor#findAll(org.
-   * springframework.data.domain.Example,
-   * org.springframework.data.domain.Pageable)
+  /**
+   * Returns a {@link Page} of entities matching the given {@link Example}. In
+   * case no match could be found, an empty {@link Page} is returned.
+   *
+   * @param example  must not be {@literal null}.
+   * @param pageable can be {@literal null}.
+   * @return a {@link Page} of entities matching the given {@link Example}.
    */
   @Override
   public <S extends T> Page<S> findAll(Example<S> example, Pageable pageable) {
@@ -95,7 +121,7 @@ public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
    *
    * @param spec     can be {@literal null}.
    * @param pageable must not be {@literal null}.
-   * @return
+   * @return TypedQuery
    */
   protected TypedQuery<T> getQuery(@Nullable Specification<T> spec, Pageable pageable) {
 
@@ -109,7 +135,7 @@ public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
    * @param spec        can be {@literal null}.
    * @param domainClass must not be {@literal null}.
    * @param pageable    must not be {@literal null}.
-   * @return
+   * @return TypedQuery
    */
   protected <S extends T> TypedQuery<S> getQuery(@Nullable Specification<S> spec, Class<S> domainClass,
       Pageable pageable) {
@@ -118,6 +144,10 @@ public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
     return getQuery(spec, domainClass, sort);
   }
 
+  /**
+   * @param pageable
+   * @return boolean
+   */
   private static boolean isUnpagedAndUnsorted(Pageable pageable) {
     return pageable.isUnpaged() && !pageable.getSort().isSorted();
   }
@@ -128,7 +158,7 @@ public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
    *
    * @author Christoph Strobl
    * @since 1.10
-   * @param <T>
+   * @param <T> the Type
    */
   private static class ExampleSpecification<T> implements Specification<T> {
 

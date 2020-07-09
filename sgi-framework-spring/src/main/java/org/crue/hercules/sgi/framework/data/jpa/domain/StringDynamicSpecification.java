@@ -89,7 +89,8 @@ public abstract class StringDynamicSpecification<T> implements Specification<T> 
    *
    * @param root       Entity root to scan
    * @param stringPath String path representation to get
-   * @return
+   * @param <Y>        the Type
+   * @return the Path
    * 
    * @throws IllegalSpecificationArgumentException If the field name don't exists
    */
@@ -125,9 +126,8 @@ public abstract class StringDynamicSpecification<T> implements Specification<T> 
   /**
    * Convert the string representation of an value to field class type.
    * 
-   * @param stringPath The String path of the field
-   * @param clazz      The target class of the field
-   * @param value      The value to convert
+   * @param clazz The target class of the field
+   * @param value The value to convert
    * 
    * @return the value converted to the target class
    * 

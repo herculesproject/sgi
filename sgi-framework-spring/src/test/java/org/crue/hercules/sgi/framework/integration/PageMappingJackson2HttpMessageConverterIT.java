@@ -66,6 +66,9 @@ public class PageMappingJackson2HttpMessageConverterIT {
     }
   }
 
+  /**
+   * @throws Exception
+   */
   @Test
   public void responsePaginatedData_returnsDataAndPagingHeaders() throws Exception {
     // given: a data array

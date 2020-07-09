@@ -17,6 +17,9 @@ public class QueryCriteriaConverterTest {
   @InjectMocks
   QueryCriteriaConverter queryCriteriaConverter;
 
+  /**
+   * @throws Exception
+   */
   @Test
   public void convertEqualsExpression_returnsEqualsQueryCriteria() throws Exception {
     // given: an equals expression
@@ -35,6 +38,9 @@ public class QueryCriteriaConverterTest {
     Assertions.assertThat(queryCriterias.get(0).getValue()).isEqualTo(value);
   }
 
+  /**
+   * @throws Exception
+   */
   @Test
   public void convertNotEqualsExpression_returnsEqualsQueryCriteria() throws Exception {
     // given: a not enquals expression
@@ -53,6 +59,9 @@ public class QueryCriteriaConverterTest {
     Assertions.assertThat(queryCriterias.get(0).getValue()).isEqualTo(value);
   }
 
+  /**
+   * @throws Exception
+   */
   @Test
   public void convertLikeExpression_returnsEqualsQueryCriteria() throws Exception {
     // given: a like expression
@@ -71,6 +80,9 @@ public class QueryCriteriaConverterTest {
     Assertions.assertThat(queryCriterias.get(0).getValue()).isEqualTo(value);
   }
 
+  /**
+   * @throws Exception
+   */
   @Test
   public void convertNotLikeExpression_returnsEqualsQueryCriteria() throws Exception {
     // given: a not like expression
@@ -89,6 +101,9 @@ public class QueryCriteriaConverterTest {
     Assertions.assertThat(queryCriterias.get(0).getValue()).isEqualTo(value);
   }
 
+  /**
+   * @throws Exception
+   */
   @Test
   public void convertGreaterExpression_returnsEqualsQueryCriteria() throws Exception {
     // given: a greater expression
@@ -107,6 +122,9 @@ public class QueryCriteriaConverterTest {
     Assertions.assertThat(queryCriterias.get(0).getValue()).isEqualTo(value);
   }
 
+  /**
+   * @throws Exception
+   */
   @Test
   public void convertGreaterOrEquealExpression_returnsEqualsQueryCriteria() throws Exception {
     // given: a greter or equeals expression
@@ -125,6 +143,9 @@ public class QueryCriteriaConverterTest {
     Assertions.assertThat(queryCriterias.get(0).getValue()).isEqualTo(value);
   }
 
+  /**
+   * @throws Exception
+   */
   @Test
   public void convertLowerExpression_returnsEqualsQueryCriteria() throws Exception {
     // given: a lower expression
@@ -143,6 +164,9 @@ public class QueryCriteriaConverterTest {
     Assertions.assertThat(queryCriterias.get(0).getValue()).isEqualTo(value);
   }
 
+  /**
+   * @throws Exception
+   */
   @Test
   public void convertLowerOrEqualExpression_returnsEqualsQueryCriteria() throws Exception {
     // given: a lower or equals expression
@@ -161,6 +185,9 @@ public class QueryCriteriaConverterTest {
     Assertions.assertThat(queryCriterias.get(0).getValue()).isEqualTo(value);
   }
 
+  /**
+   * @throws Exception
+   */
   @Test
   public void convert_withSpecialCharacters_returnsQueryCriteria() throws Exception {
     // given: an expression with special characters
@@ -179,6 +206,9 @@ public class QueryCriteriaConverterTest {
     Assertions.assertThat(queryCriterias.get(0).getValue()).isEqualTo(value);
   }
 
+  /**
+   * @throws Exception
+   */
   @Test
   public void convert_multipleExpresion_returnsQueryCriteriaList() throws Exception {
     // given: an equals expression
@@ -204,6 +234,9 @@ public class QueryCriteriaConverterTest {
     }
   }
 
+  /**
+   * @throws Exception
+   */
   @Test
   public void convert_noExpresion_returnsEmptyList() throws Exception {
     // given: a no query expression
