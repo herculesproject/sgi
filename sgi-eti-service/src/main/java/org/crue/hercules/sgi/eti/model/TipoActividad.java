@@ -13,6 +13,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * TipoActividad
+ */
+
 @Entity
 @Table(name = "tipo_actividad")
 @Data
@@ -25,7 +29,8 @@ public class TipoActividad extends BaseEntity {
    * Serial version
    */
   private static final long serialVersionUID = 1L;
-/** Id. */
+
+  /** Id. */
   @Id
   @Column(name = "id", nullable = false)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tipo_actividad_seq")

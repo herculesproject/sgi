@@ -17,4 +17,7 @@ public class ConstantesEti {
   /** PATH CONTROLLER TIPO MEMORIA */
   public static final String TIPO_MEMORIA_CONTROLLER_BASE_PATH = "/tipomemorias";
 
+  /** PATH CONTROLLER PETICION EVALUACIÓN */
+  public static final String PETICION_EVALUACION_CONTROLLER_BASE_PATH = "/peticionevaluaciones";
+
 }

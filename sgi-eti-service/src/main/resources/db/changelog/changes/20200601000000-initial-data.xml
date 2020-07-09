@@ -111,4 +111,61 @@
       <column name="activo" value="true" />
     </insert>
   </changeSet>
+
+  <changeSet author="master" id="20200601000000-peticion_evaluacion">
+    <insert tableName="peticion_evaluacion">
+      <column name="solicitud_convocatoria_ref" value="Ref solicitud convocatoria" />
+      <column name="codigo" value="Código PeticionEvaluacion1" />
+      <column name="titulo" value="PeticionEvaluacion1" />
+      <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='TipoActividad1')" />
+      <column name="fuente_financiacion_ref" value="Ref fuente financiacion" />
+      <column name="fecha_inicio" value="2020-07-09" />
+      <column name="fecha_fin" value="2021-07-09" />
+      <column name="resumen" value="Resumen" />
+      <column name="valor_social" value="3" />
+      <column name="otro_valor_social" value="Otro valor social" />
+      <column name="objetivos" value="Objetivos" />
+      <column name="dis_metodologico" value="Diseño metodológico" />
+      <column name="externo" value="false" />
+      <column name="tiene_fondos_propios" value="false" />
+      <column name="usuario_ref" value="user-001" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="peticion_evaluacion">
+      <column name="solicitud_convocatoria_ref" value="Ref solicitud convocatoria" />
+      <column name="codigo" value="Código PeticionEvaluacion2" />
+      <column name="titulo" value="PeticionEvaluacion2" />
+      <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='TipoActividad1')" />
+      <column name="fuente_financiacion_ref" value="Ref fuente financiacion" />
+      <column name="fecha_inicio" value="2020-07-09" />
+      <column name="fecha_fin" value="2021-07-09" />
+      <column name="resumen" value="Resumen" />
+      <column name="valor_social" value="3" />
+      <column name="otro_valor_social" value="Otro valor social" />
+      <column name="objetivos" value="Objetivos" />
+      <column name="dis_metodologico" value="Diseño metodológico" />
+      <column name="externo" value="false" />
+      <column name="tiene_fondos_propios" value="false" />
+      <column name="usuario_ref" value="user-002" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="peticion_evaluacion">
+      <column name="solicitud_convocatoria_ref" value="Ref solicitud convocatoria" />
+      <column name="codigo" value="Código PeticionEvaluacion3" />
+      <column name="titulo" value="PeticionEvaluacion3" />
+      <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='TipoActividad2')" />
+      <column name="fuente_financiacion_ref" value="Ref fuente financiacion" />
+      <column name="fecha_inicio" value="2020-07-09" />
+      <column name="fecha_fin" value="2021-07-09" />
+      <column name="resumen" value="Resumen" />
+      <column name="valor_social" value="3" />
+      <column name="otro_valor_social" value="Otro valor social" />
+      <column name="objetivos" value="Objetivos" />
+      <column name="dis_metodologico" value="Diseño metodológico" />
+      <column name="externo" value="false" />
+      <column name="tiene_fondos_propios" value="false" />
+      <column name="usuario_ref" value="user-003" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>

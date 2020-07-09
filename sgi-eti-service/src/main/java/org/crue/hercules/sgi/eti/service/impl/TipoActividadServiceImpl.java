@@ -118,7 +118,7 @@ public class TipoActividadServiceImpl implements TipoActividadService {
 
   @Transactional
   public TipoActividad update(final TipoActividad tipoActividadActualizar) {
-    log.debug("update(TipoActividad TipoActividadActualizar) - start");
+    log.debug("update(TipoActividad tipoActividadActualizar) - start");
 
     Assert.notNull(tipoActividadActualizar.getId(),
         "TipoActividad id no puede ser null para actualizar un tipo actividad");

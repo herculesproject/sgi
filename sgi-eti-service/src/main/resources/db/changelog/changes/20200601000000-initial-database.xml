@@ -20,6 +20,10 @@
     <createSequence sequenceName="formacion_especifica_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-peticion_evaluacion_seq">
+    <createSequence sequenceName="peticion_evaluacion_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -66,6 +70,36 @@
         <constraints nullable="false" primaryKey="true" primaryKeyName="formacion_especifica_pk" />
       </column>
       <column name="nombre" type="VARCHAR(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-peticion_evaluacion">
+    <createTable tableName="peticion_evaluacion">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="peticion_evaluacion_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="peticion_evaluacion_pk" />
+      </column>
+      <column name="solicitud_convocatoria_ref" type="VARCHAR(250)" />
+      <column name="codigo" type="VARCHAR(250)" />
+      <column name="titulo" type="VARCHAR(250)" />
+      <column name="tipo_actividad_id" type="BIGINT" />
+      <column name="fuente_financiacion_ref" type="VARCHAR(250)" />
+      <column name="fecha_inicio" type="DATE" />
+      <column name="fecha_fin" type="DATE" />
+      <column name="resumen" type="VARCHAR(2000)" />
+      <column name="valor_social" type="INT" />
+      <column name="otro_valor_social" type="VARCHAR(2000)" />
+      <column name="objetivos" type="VARCHAR(2000)" />
+      <column name="dis_metodologico" type="VARCHAR(2000)" />
+      <column name="externo" type="BOOLEAN" defaultValueBoolean="false">
+        <constraints nullable="false" />
+      </column>
+      <column name="tiene_fondos_propios" type="BOOLEAN" defaultValueBoolean="false">
+        <constraints nullable="false" />
+      </column>
+      <column name="usuario_ref" type="VARCHAR(250)" />
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>

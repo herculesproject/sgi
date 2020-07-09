@@ -119,9 +119,9 @@ public class TipoMemoriaController {
   @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
-    TipoMemoria tipoReservable = this.one(id);
-    tipoReservable.setActivo(Boolean.FALSE);
-    service.update(tipoReservable);
+    TipoMemoria tipoMemoria = this.one(id);
+    tipoMemoria.setActivo(Boolean.FALSE);
+    service.update(tipoMemoria);
     log.debug("delete(Long id) - end");
   }
 

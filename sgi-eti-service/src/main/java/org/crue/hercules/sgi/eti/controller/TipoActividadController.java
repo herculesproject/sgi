@@ -119,9 +119,9 @@ public class TipoActividadController {
   @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
-    TipoActividad tipoReservable = this.one(id);
-    tipoReservable.setActivo(Boolean.FALSE);
-    service.update(tipoReservable);
+    TipoActividad tipoActividad = this.one(id);
+    tipoActividad.setActivo(Boolean.FALSE);
+    service.update(tipoActividad);
     log.debug("delete(Long id) - end");
   }
 
