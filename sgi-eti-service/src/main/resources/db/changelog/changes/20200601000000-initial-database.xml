@@ -4,6 +4,10 @@
   <!-- ########################################################## -->
   <!-- SEQUENCE -->
   <!-- ########################################################## -->
+  <changeSet author="master" id="20200601000000-comite_seq">
+    <createSequence sequenceName="comite_seq" />
+  </changeSet>
+
   <changeSet author="master" id="20200601000000-tipo_actividad_seq">
     <createSequence sequenceName="tipo_actividad_seq" />
   </changeSet>
@@ -19,6 +23,18 @@
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
+
+  <changeSet author="master" id="20200601000000-comite">
+    <createTable tableName="comite">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="comite_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="comite_pk" />
+      </column>
+      <column name="comite" type="VARCHAR(50)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
 
   <changeSet author="master" id="20200601000000-tipo_actividad">
     <createTable tableName="tipo_actividad">

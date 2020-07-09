@@ -1,5 +1,36 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+  <changeSet author="master" id="20200601000000-comite">
+    <insert tableName="comite">
+      <column name="comite" value="Comite1" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="comite">
+      <column name="comite" value="Comite2" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="comite">
+      <column name="comite" value="Comite3" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="comite">
+      <column name="comite" value="Comite4" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="comite">
+      <column name="comite" value="Comite5" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="comite">
+      <column name="comite" value="Comite6" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="comite">
+      <column name="comite" value="Comite1" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
   <changeSet author="master" id="20200601000000-tipo_actividad">
     <insert tableName="tipo_actividad">
       <column name="nombre" value="TipoActividad1" />
