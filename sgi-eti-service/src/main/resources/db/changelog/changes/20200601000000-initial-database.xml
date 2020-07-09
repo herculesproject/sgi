@@ -4,10 +4,25 @@
   <!-- ########################################################## -->
   <!-- SEQUENCE -->
   <!-- ########################################################## -->
+  <changeSet author="master" id="20200601000000-tipo_actividad_seq">
+    <createSequence sequenceName="tipo_actividad_seq" />
+  </changeSet>
 
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
+
+  <changeSet author="master" id="20200601000000-tipo_actividad">
+    <createTable tableName="tipo_actividad">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_actividad_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_actividad_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
 
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
