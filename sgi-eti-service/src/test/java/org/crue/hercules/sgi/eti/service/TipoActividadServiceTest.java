@@ -70,10 +70,10 @@ public class TipoActividadServiceTest {
 
     BDDMockito.given(tipoActividadRepository.save(tipoActividadNew)).willReturn(tipoActividad);
 
-    // when: Creamos el proyecto
+    // when: Creamos el TipoActividad
     TipoActividad tipoActividadCreado = tipoActividadService.create(tipoActividadNew);
 
-    // then: El proyecto se crea correctamente
+    // then: El TipoActividad se crea correctamente
     Assertions.assertThat(tipoActividadCreado).isNotNull();
     Assertions.assertThat(tipoActividadCreado.getId()).isEqualTo(1L);
     Assertions.assertThat(tipoActividadCreado.getNombre()).isEqualTo("TipoActividadNew");

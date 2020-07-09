@@ -33,7 +33,7 @@ public class TipoActividadIT {
   @Test
   public void getTipoActividad_WithId_ReturnsTipoActividad() throws Exception {
     final ResponseEntity<TipoActividad> response = restTemplate.getForEntity(
-        ConstantesEti.TIPOACTIVIDAD_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, TipoActividad.class, 1L);
+        ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, TipoActividad.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -52,7 +52,7 @@ public class TipoActividadIT {
     nuevoTipoActividad.setNombre("TipoActividad1");
     nuevoTipoActividad.setActivo(Boolean.TRUE);
 
-    restTemplate.postForEntity(ConstantesEti.TIPOACTIVIDAD_CONTROLLER_BASE_PATH, nuevoTipoActividad,
+    restTemplate.postForEntity(ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH, nuevoTipoActividad,
         TipoActividad.class);
   }
 
@@ -64,7 +64,7 @@ public class TipoActividadIT {
     // when: Delete con id existente
     long id = 1L;
     final ResponseEntity<TipoActividad> response = restTemplate.exchange(
-        ConstantesEti.TIPOACTIVIDAD_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE, null,
+        ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE, null,
         TipoActividad.class, id);
 
     // then: 200
@@ -76,10 +76,10 @@ public class TipoActividadIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeTipoActividad_DoNotGetTipoActividad() throws Exception {
-    restTemplate.delete(ConstantesEti.TIPOACTIVIDAD_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
 
     final ResponseEntity<TipoActividad> response = restTemplate.getForEntity(
-        ConstantesEti.TIPOACTIVIDAD_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, TipoActividad.class, 1L);
+        ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, TipoActividad.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -97,7 +97,7 @@ public class TipoActividadIT {
 
     final ResponseEntity<TipoActividad> response = restTemplate.exchange(
 
-        ConstantesEti.TIPOACTIVIDAD_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT,
+        ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT,
         requestEntity, TipoActividad.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -118,7 +118,8 @@ public class TipoActividadIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPOACTIVIDAD_CONTROLLER_BASE_PATH).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH).build(false)
+        .toUri();
 
     final ResponseEntity<List<TipoActividad>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoActividad>>() {
@@ -147,7 +148,7 @@ public class TipoActividadIT {
     Long id = 5L;
     String query = "nombre~TipoActividad%,id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPOACTIVIDAD_CONTROLLER_BASE_PATH)
+    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH)
         .queryParam("q", query).build(false).toUri();
 
     // when: Búsqueda por query
@@ -171,7 +172,7 @@ public class TipoActividadIT {
     // when: Ordenación por nombre desc
     String query = "nombre-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPOACTIVIDAD_CONTROLLER_BASE_PATH)
+    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH)
         .queryParam("s", query).build(false).toUri();
 
     // when: Búsqueda por query
@@ -204,8 +205,8 @@ public class TipoActividadIT {
     // when: Filtra por nombre like e id equals
     String filter = "nombre~%00%";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPOACTIVIDAD_CONTROLLER_BASE_PATH).queryParam("s", sort)
-        .queryParam("q", filter).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH)
+        .queryParam("s", sort).queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<TipoActividad>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoActividad>>() {

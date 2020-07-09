@@ -26,4 +26,31 @@
       <column name="activo" value="true" />
     </insert>
   </changeSet>
+
+  <changeSet author="master" id="20200601000000-tipo_memoria">
+    <insert tableName="tipo_memoria">
+      <column name="nombre" value="TipoMemoria1" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_memoria">
+      <column name="nombre" value="TipoMemoria2" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_memoria">
+      <column name="nombre" value="TipoMemoria3" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_memoria">
+      <column name="nombre" value="TipoMemoria4" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_memoria">
+      <column name="nombre" value="TipoMemoria5" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_memoria">
+      <column name="nombre" value="TipoMemoria6" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>

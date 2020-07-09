@@ -55,7 +55,7 @@ public class TipoActividadControllerTest {
 
     mockMvc
         .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.TIPOACTIVIDAD_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+            .get(ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("TipoActividad1"));
@@ -69,7 +69,7 @@ public class TipoActividadControllerTest {
     });
     mockMvc
         .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.TIPOACTIVIDAD_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+            .get(ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -84,7 +84,7 @@ public class TipoActividadControllerTest {
 
     // when: Creamos un tipo actividad
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.TIPOACTIVIDAD_CONTROLLER_BASE_PATH)
+        .perform(MockMvcRequestBuilders.post(ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH)
             .contentType(MediaType.APPLICATION_JSON).content(nuevoTipoActividadJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo tipo actividad y lo devuelve
@@ -102,7 +102,7 @@ public class TipoActividadControllerTest {
 
     // when: Creamos un tipo actividad
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.TIPOACTIVIDAD_CONTROLLER_BASE_PATH)
+        .perform(MockMvcRequestBuilders.post(ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH)
             .contentType(MediaType.APPLICATION_JSON).content(nuevoTipoActividadJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
@@ -121,7 +121,7 @@ public class TipoActividadControllerTest {
 
     mockMvc
         .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.TIPOACTIVIDAD_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+            .put(ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceTipoActividadJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica el tipo actividad y lo devuelve
@@ -141,7 +141,7 @@ public class TipoActividadControllerTest {
         });
     mockMvc
         .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.TIPOACTIVIDAD_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+            .put(ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceTipoActividadJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
@@ -154,7 +154,7 @@ public class TipoActividadControllerTest {
 
     mockMvc
         .perform(MockMvcRequestBuilders
-            .delete(ConstantesEti.TIPOACTIVIDAD_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+            .delete(ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -174,7 +174,7 @@ public class TipoActividadControllerTest {
 
     // when: find unlimited
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.TIPOACTIVIDAD_CONTROLLER_BASE_PATH)
+        .perform(MockMvcRequestBuilders.get(ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred TipoActividad
@@ -209,7 +209,7 @@ public class TipoActividadControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.TIPOACTIVIDAD_CONTROLLER_BASE_PATH).header("X-Page", "3")
+        .perform(MockMvcRequestBuilders.get(ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH).header("X-Page", "3")
             .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked TipoActividads are returned with the right page information
@@ -313,7 +313,7 @@ public class TipoActividadControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.TIPOACTIVIDAD_CONTROLLER_BASE_PATH).param("q", query)
+        .perform(MockMvcRequestBuilders.get(ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH).param("q", query)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred TipoActividad

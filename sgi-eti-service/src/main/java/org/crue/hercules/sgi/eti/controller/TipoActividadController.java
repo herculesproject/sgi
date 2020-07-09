@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
  * TipoActividadController
  */
 @RestController
-@RequestMapping(ConstantesEti.TIPOACTIVIDAD_CONTROLLER_BASE_PATH)
+@RequestMapping(ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH)
 @Slf4j
 public class TipoActividadController {
 
