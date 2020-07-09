@@ -1,3 +1,4 @@
+<!-- Servicio tab datos generales-->
 <section class="servicio-section" [formGroup]="datosGeneralesFormGroup">
 
   <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
@@ -29,8 +30,8 @@
     <mat-form-field class="input-form" appearance="fill">
       <mat-label>{{'servicio.contacto.titulo' | translate}}</mat-label>
       <input #contacto matInput formControlName="contacto" type="text" id="contacto"
-        placeholder="{{'servicio.contacto.titulo' | translate}}" required maxlength="10">
-      <mat-hint>{{contacto.value.length}} / 10</mat-hint>
+        placeholder="{{'servicio.contacto.titulo' | translate}}" required maxlength="100">
+      <mat-hint>{{contacto.value.length}} / 100</mat-hint>
       <mat-error
         *ngIf="FormGroupUtil.checkError(datosGeneralesFormGroup, 'contacto') && datosGeneralesFormGroup.get('contacto').errors.maxlength">
         {{'servicio.contacto.error.maximo' | translate}}</mat-error>
@@ -51,3 +52,5 @@
   </div>
 
 </section>
+
+<!-- Servicio tab datos generales-->

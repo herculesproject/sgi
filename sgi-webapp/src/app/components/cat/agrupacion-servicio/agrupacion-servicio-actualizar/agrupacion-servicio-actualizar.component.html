@@ -9,6 +9,10 @@
 
     </mat-tab>
 
+    <mat-tab label="{{'servicio.gestor.titulo.tab' | translate}}">
+      <app-agrupacion-servicio-gestor> </app-agrupacion-servicio-gestor>
+    </mat-tab>
+
   </form>
 
 </mat-tab-group>
@@ -19,6 +23,6 @@
     {{'botones.guardar'| translate}}
   </button>
   <button fxFlex="20%" class="md-primary" aria-label="Center Align" md-button mat-raised-button
-          [routerLink]="'/' + UrlUtils.cat + '/' + UrlUtils.agrupacionServicios">{{'botones.cancelar'| translate}}
+    [routerLink]="'/' + UrlUtils.cat + '/' + UrlUtils.agrupacionServicios">{{'botones.cancelar'| translate}}
   </button>
 </div>

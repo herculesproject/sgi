@@ -221,6 +221,19 @@
       "borrar": "Borrar"
     },
     "datos-generales": "Datos generales",
+    "gestor": {
+      "titulo": {
+        "section": "Gestores del servicio",
+        "tab": "Gestores"
+      },
+      "gestor": "Gestor",
+      "aniadir": "Añadir gestor",
+      "listado": {
+        "nombre": "Nombre",
+        "apellidos": "Apellidos",
+        "dni": "Nº documento"
+      }
+    },
     "nombre": {
       "error": {
         "maximo": "El nombre supera la longitud máxima",

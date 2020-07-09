@@ -221,6 +221,19 @@
       "borrar": "Remove"
     },
     "datos-generales": "General data",
+    "gestor": {
+      "titulo": {
+        "section": "Service manager",
+        "tab": "Managers"
+      },
+      "gestor": "Manager",
+      "aniadir": "Add manager",
+      "listado": {
+        "nombre": "Name",
+        "apellidos": "Surnames",
+        "dni": "Document number"
+      }
+    },
     "nombre": {
       "error": {
         "maximo": "The name exceeds the maximum length",

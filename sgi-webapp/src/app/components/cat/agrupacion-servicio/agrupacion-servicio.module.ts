@@ -10,6 +10,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AgrupacionServicioActualizarComponent } from './agrupacion-servicio-actualizar/agrupacion-servicio-actualizar.component';
 import { AgrupacionServicioCrearComponent } from './agrupacion-servicio-crear/agrupacion-servicio-crear.component';
 import { AgrupacionServicioDatosGeneralesComponent } from './agrupacion-servicio-formulario/agrupacion-servicio-datos-generales/agrupacion-servicio-datos-generales.component';
+import { AgrupacionServicioGestorComponent } from './agrupacion-servicio-formulario/agrupacion-servicio-gestor/agrupacion-servicio-gestor.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { AgrupacionServicioDatosGeneralesComponent } from './agrupacion-servicio
     AgrupacionServicioListadoComponent,
     AgrupacionServicioActualizarComponent,
     AgrupacionServicioCrearComponent,
-    AgrupacionServicioDatosGeneralesComponent],
+    AgrupacionServicioDatosGeneralesComponent,
+    AgrupacionServicioGestorComponent],
   imports: [
     SharedModule,
     CommonModule,

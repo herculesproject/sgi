@@ -9,7 +9,6 @@ import { startWith, map } from 'rxjs/operators';
 import { SeccionService } from '@core/services/seccion.service';
 
 import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
 
 import { Seccion } from '@core/models/seccion';
 import { Servicio } from '@core/models/servicio';
@@ -24,7 +23,6 @@ import { FormGroupUtil } from '@shared/config/form-group-util';
 export class AgrupacionServicioDatosGeneralesComponent implements OnInit, OnDestroy {
 
   fxFlexProperties: FxFlexProperties;
-  fxLayoutProperties: FxLayoutProperties;
 
   datosGeneralesFormGroup: FormGroup;
 
@@ -45,10 +43,6 @@ export class AgrupacionServicioDatosGeneralesComponent implements OnInit, OnDest
     this.fxFlexProperties.gtMd = '0 1 calc(22%-10px)';
     this.fxFlexProperties.order = '2';
 
-    this.fxLayoutProperties = new FxLayoutProperties();
-    this.fxLayoutProperties.gap = '20px';
-    this.fxLayoutProperties.layout = 'row wrap';
-    this.fxLayoutProperties.xs = 'column';
   }
 
   ngOnInit(): void {

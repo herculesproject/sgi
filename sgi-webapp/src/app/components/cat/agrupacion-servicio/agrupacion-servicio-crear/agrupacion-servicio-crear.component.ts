@@ -1,25 +1,32 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {Router} from '@angular/router';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 
-import {Subscription} from 'rxjs';
 
-import {NGXLogger} from 'ngx-logger';
+import { NGXLogger } from 'ngx-logger';
 
-import {FxFlexProperties} from '@core/models/flexLayout/fx-flex-properties';
-import {FxLayoutProperties} from '@core/models/flexLayout/fx-layout-properties';
+import { Subscription, Observable, zip, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
-import {Servicio} from '@core/models/servicio';
+import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
 
-import {UrlUtils} from '@core/utils/url-utils';
+import { Servicio } from '@core/models/servicio';
+import { Supervision } from '@core/models/supervision';
+import { Gestor } from '@core/models/gestor';
 
-import {TraductorService} from '@core/services/traductor.service';
-import {SnackBarService} from '@core/services/snack-bar.service';
-import {ServicioService} from '@core/services/servicio.service';
 
-import {FormGroupUtil} from '@shared/config/form-group-util';
+import { TraductorService } from '@core/services/traductor.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { ServicioService } from '@core/services/servicio.service';
+import { SupervisionService } from '@core/services/supervision.service';
 
-import {AgrupacionServicioDatosGeneralesComponent} from '../agrupacion-servicio-formulario/agrupacion-servicio-datos-generales/agrupacion-servicio-datos-generales.component';
+import { UrlUtils } from '@core/utils/url-utils';
+
+import { FormGroupUtil } from '@shared/config/form-group-util';
+
+import { AgrupacionServicioDatosGeneralesComponent } from '../agrupacion-servicio-formulario/agrupacion-servicio-datos-generales/agrupacion-servicio-datos-generales.component';
+import { AgrupacionServicioGestorComponent } from '../agrupacion-servicio-formulario/agrupacion-servicio-gestor/agrupacion-servicio-gestor.component';
 
 @Component({
   selector: 'app-agrupacion-servicio-crear',
@@ -28,8 +35,10 @@ import {AgrupacionServicioDatosGeneralesComponent} from '../agrupacion-servicio-
 })
 export class AgrupacionServicioCrearComponent implements OnInit, OnDestroy {
   @ViewChild(AgrupacionServicioDatosGeneralesComponent, { static: true }) datosGeneralesForm: AgrupacionServicioDatosGeneralesComponent;
+  @ViewChild(AgrupacionServicioGestorComponent, { static: true }) gestorForm: AgrupacionServicioGestorComponent;
 
   servicio: Servicio;
+  gestoresServicio: Gestor[];
 
   formGroup: FormGroup;
 
@@ -47,8 +56,10 @@ export class AgrupacionServicioCrearComponent implements OnInit, OnDestroy {
     private readonly traductor: TraductorService,
     private snackBarService: SnackBarService,
     private servicioService: ServicioService,
+    private supervisionService: SupervisionService,
     private readonly router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+
   ) {
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
@@ -67,7 +78,8 @@ export class AgrupacionServicioCrearComponent implements OnInit, OnDestroy {
     this.logger.debug(AgrupacionServicioCrearComponent.name, 'ngOnInit()', 'start');
     this.desactivarAceptar = false;
     this.formGroup = this.formBuilder.group({
-      datosGenerales: this.datosGeneralesForm.createGroup()
+      datosGenerales: this.datosGeneralesForm.createGroup(),
+      gestores: this.gestorForm.createGroup()
     });
     this.logger.debug(AgrupacionServicioCrearComponent.name, 'ngOnInit()', 'end');
   }
@@ -106,9 +118,31 @@ export class AgrupacionServicioCrearComponent implements OnInit, OnDestroy {
       'start');
 
     this.desactivarAceptar = true;
+
     this.servicio = this.datosGeneralesForm.getDatosForm(new Servicio());
 
-    this.crearServicioSubscription = this.servicioService.create(this.servicio).subscribe(
+    this.crearServicioSubscription = this.servicioService.create(this.servicio).pipe(
+      switchMap((servicioCreado: Servicio) => {
+
+        let listObservables: Observable<any>[] = [];
+
+        const listObservablesCrearSupervision: Observable<Supervision>[] =
+          this.gestorForm.gestores.map(gestor => {
+            const supervision = new Supervision(gestor.usuarioRef, servicioCreado);
+            return this.supervisionService.create(supervision);
+
+          });
+
+        listObservables = listObservables.concat(listObservablesCrearSupervision);
+
+        if (listObservables.length === 0) {
+          return of([]);
+        } else {
+          return zip(...listObservables);
+        }
+
+      })
+    ).subscribe(
       () => {
         this.snackBarService.mostrarMensajeSuccess(
           this.traductor.getTexto('servicio.crear.correcto')
@@ -145,6 +179,7 @@ export class AgrupacionServicioCrearComponent implements OnInit, OnDestroy {
     this.logger.debug(AgrupacionServicioCrearComponent.name,
       'ngOnDestroy()',
       'start');
+
     this.crearServicioSubscription?.unsubscribe();
 
     this.logger.debug(AgrupacionServicioCrearComponent.name,
