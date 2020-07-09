@@ -16,19 +16,19 @@ import org.springframework.data.jpa.convert.QueryByExamplePredicateBuilder;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.query.EscapeCharacter;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
-public class SimpleJpaRepository<T, ID>
-    extends org.springframework.data.jpa.repository.support.SimpleJpaRepository<T, ID> {
+public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
 
   private EscapeCharacter escapeCharacter = EscapeCharacter.DEFAULT;
 
-  public SimpleJpaRepository(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) {
+  public SgiJpaRepository(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) {
     super(entityInformation, entityManager);
   }
 
-  public SimpleJpaRepository(Class<T> domainClass, EntityManager em) {
+  public SgiJpaRepository(Class<T> domainClass, EntityManager em) {
     super(domainClass, em);
   }
 
