@@ -231,7 +231,7 @@ public class TipoActividadServiceTest {
    * Función que devuelve un objeto TipoActividad
    * 
    * @param id     id del tipoActividad
-   * @param nombre la descripción del tipo de actividad
+   * @param nombre nombre del tipo de actividad
    * @return el objeto tipo actividad
    */
 

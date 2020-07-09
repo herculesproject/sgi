@@ -121,7 +121,7 @@ public class TipoActividadServiceImpl implements TipoActividadService {
     log.debug("update(TipoActividad TipoActividadActualizar) - start");
 
     Assert.notNull(tipoActividadActualizar.getId(),
-        "TipoActividad id no puede ser null para actualizar un tipo fungible");
+        "TipoActividad id no puede ser null para actualizar un tipo actividad");
 
     return tipoActividadRepository.findById(tipoActividadActualizar.getId()).map(TipoActividad -> {
       TipoActividad.setNombre(tipoActividadActualizar.getNombre());

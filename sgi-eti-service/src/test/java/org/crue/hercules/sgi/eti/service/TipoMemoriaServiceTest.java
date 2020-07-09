@@ -231,7 +231,7 @@ public class TipoMemoriaServiceTest {
    * Función que devuelve un objeto TipoMemoria
    * 
    * @param id     id del tipoMemoria
-   * @param nombre la descripción del tipo de Memoria
+   * @param nombre nombre del tipo de Memoria
    * @return el objeto tipo Memoria
    */
 

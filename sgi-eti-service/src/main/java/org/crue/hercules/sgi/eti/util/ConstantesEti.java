@@ -2,6 +2,9 @@ package org.crue.hercules.sgi.eti.util;
 
 public class ConstantesEti {
 
+  /** PATH CONTROLLER FORMACION ESPECIFICA */
+  public static final String FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH = "/formacionespecificas";
+
   /** PATH PARAMETER ID. */
   public static final String PATH_PARAMETER_ID = "/{id}";
 

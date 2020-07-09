@@ -12,6 +12,10 @@
     <createSequence sequenceName="tipo_memoria_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-formacion_especifica_seq">
+    <createSequence sequenceName="formacion_especifica_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -32,6 +36,18 @@
     <createTable tableName="tipo_memoria">
       <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_memoria_seq">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_memoria_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-formacion_especifica">
+    <createTable tableName="formacion_especifica">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="formacion_especifica_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="formacion_especifica_pk" />
       </column>
       <column name="nombre" type="VARCHAR(250)" />
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">

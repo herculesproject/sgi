@@ -118,7 +118,7 @@ public class TipoMemoriaServiceImpl implements TipoMemoriaService {
   public TipoMemoria update(final TipoMemoria tipoMemoriaActualizar) {
     log.debug("update(TipoMemoria TipoMemoriaActualizar) - start");
 
-    Assert.notNull(tipoMemoriaActualizar.getId(), "TipoMemoria id no puede ser null para actualizar un tipo fungible");
+    Assert.notNull(tipoMemoriaActualizar.getId(), "TipoMemoria id no puede ser null para actualizar un tipo memoria");
 
     return tipoMemoriaRepository.findById(tipoMemoriaActualizar.getId()).map(TipoMemoria -> {
       TipoMemoria.setNombre(tipoMemoriaActualizar.getNombre());
