@@ -124,9 +124,9 @@ public class FormacionEspecificaController {
   @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
-    FormacionEspecifica tipoReservable = this.one(id);
-    tipoReservable.setActivo(Boolean.FALSE);
-    service.update(tipoReservable);
+    FormacionEspecifica formacionEspecifica = this.one(id);
+    formacionEspecifica.setActivo(Boolean.FALSE);
+    service.update(formacionEspecifica);
     log.debug("delete(Long id) - end");
   }
 

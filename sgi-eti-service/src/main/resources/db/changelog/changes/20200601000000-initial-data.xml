@@ -58,56 +58,85 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-tipo_memoria">
-    <insert tableName="tipo_memoria">
+  <changeSet author="master" id="20200601000000-cargo_comite">
+    <insert tableName="cargo_comite">
+      <column name="nombre" value="TipoMemoria1" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="cargo_comite">
+      <column name="nombre" value="TipoMemoria2" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="cargo_comite">
+      <column name="nombre" value="TipoMemoria3" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="cargo_comite">
+      <column name="nombre" value="TipoMemoria4" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="cargo_comite">
+      <column name="nombre" value="TipoMemoria5" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="cargo_comite">
+      <column name="nombre" value="TipoMemoria6" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
+
+  <changeSet author="master" id="20200601000000-formacion_especifica">
+    <insert tableName="formacion_especifica">
       <column name="nombre" value="FormacionEspecifica1" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="tipo_memoria">
+    <insert tableName="formacion_especifica">
       <column name="nombre" value="FormacionEspecifica2" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="tipo_memoria">
+    <insert tableName="formacion_especifica">
       <column name="nombre" value="FormacionEspecifica3" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="tipo_memoria">
+    <insert tableName="formacion_especifica">
       <column name="nombre" value="FormacionEspecifica4" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="tipo_memoria">
+    <insert tableName="formacion_especifica">
       <column name="nombre" value="FormacionEspecifica5" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="tipo_memoria">
+    <insert tableName="formacion_especifica">
       <column name="nombre" value="FormacionEspecifica6" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>
 
+
   <changeSet author="master" id="20200601000000-formacion_especifica">
     <insert tableName="formacion_especifica">
-      <column name="nombre" value="TipoMemoria1" />
+      <column name="nombre" value="CargoComite1" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="formacion_especifica">
-      <column name="nombre" value="TipoMemoria2" />
+      <column name="nombre" value="CargoComite2" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="formacion_especifica">
-      <column name="nombre" value="TipoMemoria3" />
+      <column name="nombre" value="CargoComite3" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="formacion_especifica">
-      <column name="nombre" value="TipoMemoria4" />
+      <column name="nombre" value="CargoComite4" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="formacion_especifica">
-      <column name="nombre" value="TipoMemoria5" />
+      <column name="nombre" value="CargoComite5" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="formacion_especifica">
-      <column name="nombre" value="TipoMemoria6" />
+      <column name="nombre" value="CargoComite6" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>

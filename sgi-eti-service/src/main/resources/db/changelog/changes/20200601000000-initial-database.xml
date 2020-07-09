@@ -24,6 +24,10 @@
     <createSequence sequenceName="peticion_evaluacion_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-cargo_comite_seq">
+    <createSequence sequenceName="cargo_comite_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -100,6 +104,19 @@
         <constraints nullable="false" />
       </column>
       <column name="usuario_ref" type="VARCHAR(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-cargo_comite">
+    <createTable tableName="cargo_comite">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="cargo_comite_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="cargo_comite_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(250)" />
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>
