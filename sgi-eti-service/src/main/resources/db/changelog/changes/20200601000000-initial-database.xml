@@ -40,6 +40,10 @@
     <createSequence sequenceName="equipo_trabajo_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-dictamen_seq">
+    <createSequence sequenceName="dictamen_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -149,6 +153,18 @@
     <createTable tableName="tipo_estado_memoria">
       <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_estado_memoria_seq">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_estado_memoria_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-dictamen">
+    <createTable tableName="dictamen">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="dictamen_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="dictamen_pk" />
       </column>
       <column name="nombre" type="VARCHAR(250)" />
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">

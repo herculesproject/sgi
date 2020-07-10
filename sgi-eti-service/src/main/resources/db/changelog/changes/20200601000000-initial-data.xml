@@ -31,6 +31,33 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-dictamen">
+    <insert tableName="dictamen">
+      <column name="nombre" value="Dictamen1" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="dictamen">
+      <column name="nombre" value="Dictamen2" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="dictamen">
+      <column name="nombre" value="Dictamen3" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="dictamen">
+      <column name="nombre" value="Dictamen4" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="dictamen">
+      <column name="nombre" value="Dictamen5" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="dictamen">
+      <column name="nombre" value="Dictamen6" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
   <changeSet author="master" id="20200601000000-tipo_actividad">
     <insert tableName="tipo_actividad">
       <column name="nombre" value="TipoActividad1" />
