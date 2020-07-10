@@ -58,28 +58,28 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-cargo_comite">
-    <insert tableName="cargo_comite">
+  <changeSet author="master" id="20200601000000-tipo_memoria">
+    <insert tableName="tipo_memoria">
       <column name="nombre" value="TipoMemoria1" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="cargo_comite">
+    <insert tableName="tipo_memoria">
       <column name="nombre" value="TipoMemoria2" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="cargo_comite">
+    <insert tableName="tipo_memoria">
       <column name="nombre" value="TipoMemoria3" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="cargo_comite">
+    <insert tableName="tipo_memoria">
       <column name="nombre" value="TipoMemoria4" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="cargo_comite">
+    <insert tableName="tipo_memoria">
       <column name="nombre" value="TipoMemoria5" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="cargo_comite">
+    <insert tableName="tipo_memoria">
       <column name="nombre" value="TipoMemoria6" />
       <column name="activo" value="true" />
     </insert>
@@ -114,28 +114,28 @@
   </changeSet>
 
 
-  <changeSet author="master" id="20200601000000-formacion_especifica">
-    <insert tableName="formacion_especifica">
+  <changeSet author="master" id="20200601000000-cargo_comite">
+    <insert tableName="cargo_comite">
       <column name="nombre" value="CargoComite1" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="formacion_especifica">
+    <insert tableName="cargo_comite">
       <column name="nombre" value="CargoComite2" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="formacion_especifica">
+    <insert tableName="cargo_comite">
       <column name="nombre" value="CargoComite3" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="formacion_especifica">
+    <insert tableName="cargo_comite">
       <column name="nombre" value="CargoComite4" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="formacion_especifica">
+    <insert tableName="cargo_comite">
       <column name="nombre" value="CargoComite5" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="formacion_especifica">
+    <insert tableName="cargo_comite">
       <column name="nombre" value="CargoComite6" />
       <column name="activo" value="true" />
     </insert>
