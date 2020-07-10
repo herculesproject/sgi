@@ -1,0 +1,253 @@
+package org.crue.hercules.sgi.eti.integration;
+
+import java.net.URI;
+import java.util.List;
+
+import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
+import org.crue.hercules.sgi.eti.util.ConstantesEti;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.web.util.UriComponentsBuilder;
+
+/**
+ * Test de integracion de TipoEstadoActa.
+ */
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class TipoEstadoActaIT {
+
+  @Autowired
+  private TestRestTemplate restTemplate;
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void getTipoEstadoActa_WithId_ReturnsTipoEstadoActa() throws Exception {
+    final ResponseEntity<TipoEstadoActa> response = restTemplate.getForEntity(
+        ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, TipoEstadoActa.class,
+        1L);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    final TipoEstadoActa tipoEstadoActa = response.getBody();
+
+    Assertions.assertThat(tipoEstadoActa.getId()).isEqualTo(1L);
+    Assertions.assertThat(tipoEstadoActa.getNombre()).isEqualTo("TipoEstadoActa1");
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void addTipoEstadoActa_ReturnsTipoEstadoActa() throws Exception {
+
+    TipoEstadoActa nuevoTipoEstadoActa = new TipoEstadoActa();
+    nuevoTipoEstadoActa.setNombre("TipoEstadoActa1");
+    nuevoTipoEstadoActa.setActivo(Boolean.TRUE);
+
+    restTemplate.postForEntity(ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH, nuevoTipoEstadoActa,
+        TipoEstadoActa.class);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void removeTipoEstadoActa_Success() throws Exception {
+
+    // when: Delete con id existente
+    long id = 1L;
+    final ResponseEntity<TipoEstadoActa> response = restTemplate.exchange(
+        ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE, null,
+        TipoEstadoActa.class, id);
+
+    // then: 200
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void removeTipoEstadoActa_DoNotGetTipoEstadoActa() throws Exception {
+    restTemplate.delete(ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+
+    final ResponseEntity<TipoEstadoActa> response = restTemplate.getForEntity(
+        ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, TipoEstadoActa.class,
+        1L);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void replaceTipoEstadoActa_ReturnsTipoEstadoActa() throws Exception {
+
+    TipoEstadoActa replaceTipoEstadoActa = generarMockTipoEstadoActa(1L, "TipoEstadoActa1");
+
+    final HttpEntity<TipoEstadoActa> requestEntity = new HttpEntity<TipoEstadoActa>(replaceTipoEstadoActa,
+        new HttpHeaders());
+
+    final ResponseEntity<TipoEstadoActa> response = restTemplate.exchange(
+
+        ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT,
+        requestEntity, TipoEstadoActa.class, 1L);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    final TipoEstadoActa tipoEstadoActa = response.getBody();
+
+    Assertions.assertThat(tipoEstadoActa.getId()).isNotNull();
+    Assertions.assertThat(tipoEstadoActa.getNombre()).isEqualTo(replaceTipoEstadoActa.getNombre());
+    Assertions.assertThat(tipoEstadoActa.getActivo()).isEqualTo(replaceTipoEstadoActa.getActivo());
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAll_WithPaging_ReturnsTipoEstadoActaSubList() throws Exception {
+    // when: Obtiene la page=3 con pagesize=10
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "1");
+    headers.add("X-Page-Size", "5");
+
+    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH).build(false)
+        .toUri();
+
+    final ResponseEntity<List<TipoEstadoActa>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoEstadoActa>>() {
+        });
+
+    // then: Respuesta OK, TipoEstadoActas retorna la información de la página
+    // correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<TipoEstadoActa> tipoEstadoActas = response.getBody();
+    Assertions.assertThat(tipoEstadoActas.size()).isEqualTo(3);
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
+
+    // Contiene de nombre='TipoEstadoActa6' a 'TipoEstadoActa8'
+    Assertions.assertThat(tipoEstadoActas.get(0).getNombre()).isEqualTo("TipoEstadoActa6");
+    Assertions.assertThat(tipoEstadoActas.get(1).getNombre()).isEqualTo("TipoEstadoActa7");
+    Assertions.assertThat(tipoEstadoActas.get(2).getNombre()).isEqualTo("TipoEstadoActa8");
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAll_WithSearchQuery_ReturnsFilteredTipoEstadoActaList() throws Exception {
+    // when: Búsqueda por nombre like e id equals
+    Long id = 5L;
+    String query = "nombre~TipoEstadoActa%,id:" + id;
+
+    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH)
+        .queryParam("q", query).build(false).toUri();
+
+    // when: Búsqueda por query
+    final ResponseEntity<List<TipoEstadoActa>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
+        new ParameterizedTypeReference<List<TipoEstadoActa>>() {
+        });
+
+    // then: Respuesta OK, TipoEstadoActas retorna la información de la página
+    // correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<TipoEstadoActa> tipoEstadoActas = response.getBody();
+    Assertions.assertThat(tipoEstadoActas.size()).isEqualTo(1);
+    Assertions.assertThat(tipoEstadoActas.get(0).getId()).isEqualTo(id);
+    Assertions.assertThat(tipoEstadoActas.get(0).getNombre()).startsWith("TipoEstadoActa");
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAll_WithSortQuery_ReturnsOrderedTipoEstadoActaList() throws Exception {
+    // when: Ordenación por nombre desc
+    String query = "nombre-";
+
+    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH)
+        .queryParam("s", query).build(false).toUri();
+
+    // when: Búsqueda por query
+    final ResponseEntity<List<TipoEstadoActa>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
+        new ParameterizedTypeReference<List<TipoEstadoActa>>() {
+        });
+
+    // then: Respuesta OK, TipoEstadoActas retorna la información de la página
+    // correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<TipoEstadoActa> tipoEstadoActas = response.getBody();
+    Assertions.assertThat(tipoEstadoActas.size()).isEqualTo(8);
+    for (int i = 0; i < 8; i++) {
+      TipoEstadoActa tipoEstadoActa = tipoEstadoActas.get(i);
+      Assertions.assertThat(tipoEstadoActa.getId()).isEqualTo(8 - i);
+      Assertions.assertThat(tipoEstadoActa.getNombre()).isEqualTo("TipoEstadoActa" + String.format("%03d", 8 - i));
+    }
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAll_WithPagingSortingAndFiltering_ReturnsTipoEstadoActaSubList() throws Exception {
+    // when: Obtiene page=3 con pagesize=10
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    // when: Ordena por nombre desc
+    String sort = "nombre-";
+    // when: Filtra por nombre like e id equals
+    String filter = "nombre~%00%";
+
+    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH)
+        .queryParam("s", sort).queryParam("q", filter).build(false).toUri();
+
+    final ResponseEntity<List<TipoEstadoActa>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoEstadoActa>>() {
+        });
+
+    // then: Respuesta OK, TipoEstadoActas retorna la información de la página
+    // correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<TipoEstadoActa> tipoEstadoActas = response.getBody();
+    Assertions.assertThat(tipoEstadoActas.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("3");
+
+    // Contiene nombre='TipoEstadoActa001', 'TipoEstadoActa002',
+    // 'TipoEstadoActa003'
+    Assertions.assertThat(tipoEstadoActas.get(0).getNombre()).isEqualTo("TipoEstadoActa" + String.format("%03d", 3));
+    Assertions.assertThat(tipoEstadoActas.get(1).getNombre()).isEqualTo("TipoEstadoActa" + String.format("%03d", 2));
+    Assertions.assertThat(tipoEstadoActas.get(2).getNombre()).isEqualTo("TipoEstadoActa" + String.format("%03d", 1));
+
+  }
+
+  /**
+   * Función que devuelve un objeto TipoEstadoActa
+   * 
+   * @param id     id del TipoEstadoActa
+   * @param nombre la descripción del TipoEstadoActa
+   * @return el objeto tipoEstadoActa
+   */
+
+  public TipoEstadoActa generarMockTipoEstadoActa(Long id, String nombre) {
+
+    TipoEstadoActa tipoEstadoActa = new TipoEstadoActa();
+    tipoEstadoActa.setId(id);
+    tipoEstadoActa.setNombre(nombre);
+    tipoEstadoActa.setActivo(Boolean.TRUE);
+
+    return tipoEstadoActa;
+  }
+
+}

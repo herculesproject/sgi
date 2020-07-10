@@ -335,28 +335,55 @@
 
   <changeSet author="master" id="20200601000000-tipo_memoria_comite">
     <insert tableName="tipo_memoria_comite">
-      <column name="comite" valueComputed="(select id from eti.comite where comite='Comite1')" />
-      <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria1')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite1')" />
+      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria1')" />
     </insert>
     <insert tableName="tipo_memoria_comite">
-      <column name="comite" valueComputed="(select id from eti.comite where comite='Comite2')" />
-      <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria2')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite2')" />
+      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria2')" />
     </insert>
     <insert tableName="tipo_memoria_comite">
-      <column name="comite" valueComputed="(select id from eti.comite where comite='Comite3')" />
-      <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria3')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite3')" />
+      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria3')" />
     </insert>
     <insert tableName="tipo_memoria_comite">
-      <column name="comite" valueComputed="(select id from eti.comite where comite='Comite4')" />
-      <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria4')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite4')" />
+      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria4')" />
     </insert>
     <insert tableName="tipo_memoria_comite">
-      <column name="comite" valueComputed="(select id from eti.comite where comite='Comite5')" />
-      <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria5')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite5')" />
+      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria5')" />
     </insert>
     <insert tableName="tipo_memoria_comite">
-      <column name="comite" valueComputed="(select id from eti.comite where comite='Comite6')" />
-      <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria6')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite6')" />
+      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria6')" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-tipo_estado_acta">
+    <insert tableName="tipo_estado_acta">
+      <column name="nombre" value="TipoEstadoActa1" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_acta">
+      <column name="nombre" value="TipoEstadoActa2" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_acta">
+      <column name="nombre" value="TipoEstadoActa3" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_acta">
+      <column name="nombre" value="TipoEstadoActa4" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_acta">
+      <column name="nombre" value="TipoEstadoActa5" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_acta">
+      <column name="nombre" value="TipoEstadoActa6" />
+      <column name="activo" value="true" />
     </insert>
   </changeSet>
 

@@ -10,3 +10,6 @@ DELETE FROM eti.formacion_especifica
 DELETE FROM eti.cargo_comite
 DELETE FROM eti.dictamen
 DELETE FROM eti.tipo_comentario
+DELETE FROM eti.tipo_estado_acta
+
+
