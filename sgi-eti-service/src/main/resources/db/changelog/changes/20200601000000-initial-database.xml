@@ -44,6 +44,10 @@
     <createSequence sequenceName="dictamen_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-tipo_comentario_seq">
+    <createSequence sequenceName="tipo_comentario_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -183,16 +187,35 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-tipo_comentario">
+    <createTable tableName="tipo_comentario">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_comentario_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_comentario_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
   <!-- ########################################################## -->
-
   <changeSet author="master" id="20200601000000-tipo_memoria_comite_comite_FK">
     <addForeignKeyConstraint baseColumnNames="comite" baseTableName="tipo_memoria_comite" constraintName="tipo_memoria_comite_comite_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="comite" validate="true" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-tipo_memoria_comite_tipo_memoria_FK">
     <addForeignKeyConstraint baseColumnNames="tipo_memoria" baseTableName="tipo_memoria_comite" constraintName="tipo_memoria_comite_tipo_memoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_memoria" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-peticion_evaluacion_tipo_actividad_FK">
+    <addForeignKeyConstraint baseColumnNames="tipo_actividad_id" baseTableName="peticion_evaluacion" constraintName="peticion_evaluacion_tipo_actividad_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_actividad" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-equipo_trabajo_peticion_evaluacion_FK">
+    <addForeignKeyConstraint baseColumnNames="peticion_evaluacion_id" baseTableName="equipo_trabajo" constraintName="equipo_trabajo_peticion_evaluacion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="peticion_evaluacion" validate="true" />
   </changeSet>
 
   <!-- ########################################################## -->

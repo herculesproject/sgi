@@ -34,4 +34,7 @@ public class ConstantesEti {
 
   /** PATH CONTROLLER TIPO MEMORIA COMITE */
   public static final String TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH = "/tipomemoriacomites";
+
+  /** PATH CONTROLLER TIPO COMENTARIO */
+  public static final String TIPO_COMENTARIO_CONTROLLER_BASE_PATH = "/tipocomentarios";
 }

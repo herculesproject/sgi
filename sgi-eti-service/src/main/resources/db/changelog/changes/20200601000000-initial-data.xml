@@ -359,4 +359,31 @@
       <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria6')" />
     </insert>
   </changeSet>
+
+  <changeSet author="master" id="20200601000000-tipo_comentario">
+    <insert tableName="tipo_comentario">
+      <column name="nombre" value="TipoComentario1" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_comentario">
+      <column name="nombre" value="TipoComentario2" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_comentario">
+      <column name="nombre" value="TipoComentario3" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_comentario">
+      <column name="nombre" value="TipoComentario4" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_comentario">
+      <column name="nombre" value="TipoComentario5" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_comentario">
+      <column name="nombre" value="TipoComentario6" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>
