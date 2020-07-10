@@ -16,6 +16,10 @@
     <createSequence sequenceName="tipo_memoria_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-tipo_memoria_comite_seq">
+    <createSequence sequenceName="tipo_memoria_comite_seq" />
+  </changeSet>
+
   <changeSet author="master" id="20200601000000-formacion_especifica_seq">
     <createSequence sequenceName="formacion_especifica_seq" />
   </changeSet>
@@ -73,6 +77,16 @@
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-tipo_memoria_comite">
+    <createTable tableName="tipo_memoria_comite">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_memoria_comite_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_memoria_comite_pk" />
+      </column>
+      <column name="tipo_memoria" type="BIGINT" />
+      <column name="comite" type="BIGINT" />
     </createTable>
   </changeSet>
 
@@ -156,6 +170,14 @@
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
   <!-- ########################################################## -->
+
+  <changeSet author="master" id="20200601000000-tipo_memoria_comite_comite_FK">
+    <addForeignKeyConstraint baseColumnNames="comite" baseTableName="tipo_memoria_comite" constraintName="tipo_memoria_comite_comite_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="comite" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-tipo_memoria_comite_tipo_memoria_FK">
+    <addForeignKeyConstraint baseColumnNames="tipo_memoria" baseTableName="tipo_memoria_comite" constraintName="tipo_memoria_comite_tipo_memoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_memoria" validate="true" />
+  </changeSet>
 
   <!-- ########################################################## -->
   <!-- UNIQUE CONSTRAINT -->

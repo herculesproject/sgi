@@ -306,4 +306,30 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-tipo_memoria_comite">
+    <insert tableName="tipo_memoria_comite">
+      <column name="comite" valueComputed="(select id from eti.comite where comite='Comite1')" />
+      <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria1')" />
+    </insert>
+    <insert tableName="tipo_memoria_comite">
+      <column name="comite" valueComputed="(select id from eti.comite where comite='Comite2')" />
+      <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria2')" />
+    </insert>
+    <insert tableName="tipo_memoria_comite">
+      <column name="comite" valueComputed="(select id from eti.comite where comite='Comite3')" />
+      <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria3')" />
+    </insert>
+    <insert tableName="tipo_memoria_comite">
+      <column name="comite" valueComputed="(select id from eti.comite where comite='Comite4')" />
+      <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria4')" />
+    </insert>
+    <insert tableName="tipo_memoria_comite">
+      <column name="comite" valueComputed="(select id from eti.comite where comite='Comite5')" />
+      <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria5')" />
+    </insert>
+    <insert tableName="tipo_memoria_comite">
+      <column name="comite" valueComputed="(select id from eti.comite where comite='Comite6')" />
+      <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria6')" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>

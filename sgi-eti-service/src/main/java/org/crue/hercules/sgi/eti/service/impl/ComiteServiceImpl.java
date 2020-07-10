@@ -66,7 +66,7 @@ public class ComiteServiceImpl implements ComiteService {
    *
    * @param id el id de la entidad {@link Comite}.
    * @return la entidad {@link Comite}.
-   * @throws ComiteNotFoundException
+   * @throws ComiteNotFoundException excepción.
    */
   public Comite findById(final Long id) throws ComiteNotFoundException {
     log.debug("Petición a get Comite : {}  - start", id);
