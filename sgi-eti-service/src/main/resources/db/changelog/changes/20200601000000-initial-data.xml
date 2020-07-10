@@ -196,6 +196,87 @@
       <column name="usuario_ref" value="user-003" />
       <column name="activo" value="true" />
     </insert>
+    <insert tableName="peticion_evaluacion">
+      <column name="solicitud_convocatoria_ref" value="Ref solicitud convocatoria" />
+      <column name="codigo" value="Código PeticionEvaluacion4" />
+      <column name="titulo" value="PeticionEvaluacion4" />
+      <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='TipoActividad4')" />
+      <column name="fuente_financiacion_ref" value="Ref fuente financiacion" />
+      <column name="fecha_inicio" value="2020-07-09" />
+      <column name="fecha_fin" value="2021-07-09" />
+      <column name="resumen" value="Resumen" />
+      <column name="valor_social" value="3" />
+      <column name="otro_valor_social" value="Otro valor social" />
+      <column name="objetivos" value="Objetivos" />
+      <column name="dis_metodologico" value="Diseño metodológico" />
+      <column name="externo" value="false" />
+      <column name="tiene_fondos_propios" value="false" />
+      <column name="usuario_ref" value="user-004" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="peticion_evaluacion">
+      <column name="solicitud_convocatoria_ref" value="Ref solicitud convocatoria" />
+      <column name="codigo" value="Código PeticionEvaluacion5" />
+      <column name="titulo" value="PeticionEvaluacion5" />
+      <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='TipoActividad4')" />
+      <column name="fuente_financiacion_ref" value="Ref fuente financiacion" />
+      <column name="fecha_inicio" value="2020-07-09" />
+      <column name="fecha_fin" value="2021-07-09" />
+      <column name="resumen" value="Resumen" />
+      <column name="valor_social" value="3" />
+      <column name="otro_valor_social" value="Otro valor social" />
+      <column name="objetivos" value="Objetivos" />
+      <column name="dis_metodologico" value="Diseño metodológico" />
+      <column name="externo" value="false" />
+      <column name="tiene_fondos_propios" value="false" />
+      <column name="usuario_ref" value="user-005" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="peticion_evaluacion">
+      <column name="solicitud_convocatoria_ref" value="Ref solicitud convocatoria" />
+      <column name="codigo" value="Código PeticionEvaluacion6" />
+      <column name="titulo" value="PeticionEvaluacion6" />
+      <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='TipoActividad1')" />
+      <column name="fuente_financiacion_ref" value="Ref fuente financiacion" />
+      <column name="fecha_inicio" value="2020-07-09" />
+      <column name="fecha_fin" value="2021-07-09" />
+      <column name="resumen" value="Resumen" />
+      <column name="valor_social" value="3" />
+      <column name="otro_valor_social" value="Otro valor social" />
+      <column name="objetivos" value="Objetivos" />
+      <column name="dis_metodologico" value="Diseño metodológico" />
+      <column name="externo" value="false" />
+      <column name="tiene_fondos_propios" value="false" />
+      <column name="usuario_ref" value="user-006" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-equipo_trabajo">
+    <insert tableName="equipo_trabajo">
+      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion1')" />
+      <column name="usuario_ref" value="user-001" />
+    </insert>
+    <insert tableName="equipo_trabajo">
+      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
+      <column name="usuario_ref" value="user-002" />
+    </insert>
+    <insert tableName="equipo_trabajo">
+      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion3')" />
+      <column name="usuario_ref" value="user-003" />
+    </insert>
+    <insert tableName="equipo_trabajo">
+      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion4')" />
+      <column name="usuario_ref" value="user-004" />
+    </insert>
+    <insert tableName="equipo_trabajo">
+      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion5')" />
+      <column name="usuario_ref" value="user-005" />
+    </insert>
+    <insert tableName="equipo_trabajo">
+      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion6')" />
+      <column name="usuario_ref" value="user-006" />
+    </insert>
   </changeSet>
 
   <changeSet author="master" id="20200601000000-tipo_estado_memoria">
@@ -224,4 +305,5 @@
       <column name="activo" value="true" />
     </insert>
   </changeSet>
+
 </databaseChangeLog>

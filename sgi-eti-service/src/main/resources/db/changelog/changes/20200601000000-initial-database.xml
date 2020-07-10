@@ -32,6 +32,10 @@
     <createSequence sequenceName="tipo_estado_memoria_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-equipo_trabajo_seq">
+    <createSequence sequenceName="equipo_trabajo_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -136,6 +140,16 @@
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-equipo_trabajo">
+    <createTable tableName="equipo_trabajo">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="equipo_trabajo_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="equipo_trabajo_pk" />
+      </column>
+      <column name="peticion_evaluacion_id" type="BIGINT" />
+      <column name="usuario_ref" type="VARCHAR(250)" />
     </createTable>
   </changeSet>
 
