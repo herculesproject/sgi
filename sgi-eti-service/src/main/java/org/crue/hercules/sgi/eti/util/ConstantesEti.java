@@ -20,6 +20,9 @@ public class ConstantesEti {
   /** PATH CONTROLLER TIPO ACTIVIDAD */
   public static final String TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH = "/tipoactividades";
 
+  /** PATH CONTROLLER TIPO ESTADO MEMORIA */
+  public static final String TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH = "/tipoestadomemorias";
+
   /** PATH CONTROLLER TIPO MEMORIA */
   public static final String TIPO_MEMORIA_CONTROLLER_BASE_PATH = "/tipomemorias";
 

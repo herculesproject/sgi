@@ -120,11 +120,11 @@ public class CargoComiteServiceImpl implements CargoComiteService {
 
     Assert.notNull(cargoComiteActualizar.getId(), "CargoComite id no puede ser null para actualizar un tipo memoria");
 
-    return cargoComiteRepository.findById(cargoComiteActualizar.getId()).map(CargoComite -> {
-      CargoComite.setNombre(cargoComiteActualizar.getNombre());
-      CargoComite.setActivo(cargoComiteActualizar.getActivo());
+    return cargoComiteRepository.findById(cargoComiteActualizar.getId()).map(cargoComite -> {
+      cargoComite.setNombre(cargoComiteActualizar.getNombre());
+      cargoComite.setActivo(cargoComiteActualizar.getActivo());
 
-      CargoComite returnValue = cargoComiteRepository.save(CargoComite);
+      CargoComite returnValue = cargoComiteRepository.save(cargoComite);
       log.debug("update(CargoComite cargoComiteActualizar) - end");
       return returnValue;
     }).orElseThrow(() -> new CargoComiteNotFoundException(cargoComiteActualizar.getId()));

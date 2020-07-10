@@ -197,4 +197,31 @@
       <column name="activo" value="true" />
     </insert>
   </changeSet>
+
+  <changeSet author="master" id="20200601000000-tipo_estado_memoria">
+    <insert tableName="tipo_estado_memoria">
+      <column name="nombre" value="TipoEstadoMemoria1" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="nombre" value="TipoEstadoMemoria2" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="nombre" value="TipoEstadoMemoria3" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="nombre" value="TipoEstadoMemoria4" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="nombre" value="TipoEstadoMemoria5" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="nombre" value="TipoEstadoMemoria6" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>

@@ -28,6 +28,10 @@
     <createSequence sequenceName="cargo_comite_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-tipo_estado_memoria_seq">
+    <createSequence sequenceName="tipo_estado_memoria_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -115,6 +119,18 @@
     <createTable tableName="cargo_comite">
       <column name="id" type="BIGINT" defaultValueSequenceNext="cargo_comite_seq">
         <constraints nullable="false" primaryKey="true" primaryKeyName="cargo_comite_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-tipo_estado_memoria">
+    <createTable tableName="tipo_estado_memoria">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_estado_memoria_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_estado_memoria_pk" />
       </column>
       <column name="nombre" type="VARCHAR(250)" />
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">

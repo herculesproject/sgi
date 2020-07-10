@@ -120,11 +120,11 @@ public class TipoMemoriaServiceImpl implements TipoMemoriaService {
 
     Assert.notNull(tipoMemoriaActualizar.getId(), "TipoMemoria id no puede ser null para actualizar un tipo memoria");
 
-    return tipoMemoriaRepository.findById(tipoMemoriaActualizar.getId()).map(TipoMemoria -> {
-      TipoMemoria.setNombre(tipoMemoriaActualizar.getNombre());
-      TipoMemoria.setActivo(tipoMemoriaActualizar.getActivo());
+    return tipoMemoriaRepository.findById(tipoMemoriaActualizar.getId()).map(tipoMemoria -> {
+      tipoMemoria.setNombre(tipoMemoriaActualizar.getNombre());
+      tipoMemoria.setActivo(tipoMemoriaActualizar.getActivo());
 
-      TipoMemoria returnValue = tipoMemoriaRepository.save(TipoMemoria);
+      TipoMemoria returnValue = tipoMemoriaRepository.save(tipoMemoria);
       log.debug("update(TipoMemoria tipoMemoriaActualizar) - end");
       return returnValue;
     }).orElseThrow(() -> new TipoMemoriaNotFoundException(tipoMemoriaActualizar.getId()));

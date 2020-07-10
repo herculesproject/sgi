@@ -123,11 +123,11 @@ public class TipoActividadServiceImpl implements TipoActividadService {
     Assert.notNull(tipoActividadActualizar.getId(),
         "TipoActividad id no puede ser null para actualizar un tipo actividad");
 
-    return tipoActividadRepository.findById(tipoActividadActualizar.getId()).map(TipoActividad -> {
-      TipoActividad.setNombre(tipoActividadActualizar.getNombre());
-      TipoActividad.setActivo(tipoActividadActualizar.getActivo());
+    return tipoActividadRepository.findById(tipoActividadActualizar.getId()).map(tipoActividad -> {
+      tipoActividad.setNombre(tipoActividadActualizar.getNombre());
+      tipoActividad.setActivo(tipoActividadActualizar.getActivo());
 
-      TipoActividad returnValue = tipoActividadRepository.save(TipoActividad);
+      TipoActividad returnValue = tipoActividadRepository.save(tipoActividad);
       log.debug("update(TipoActividad tipoActividadActualizar) - end");
       return returnValue;
     }).orElseThrow(() -> new TipoActividadNotFoundException(tipoActividadActualizar.getId()));

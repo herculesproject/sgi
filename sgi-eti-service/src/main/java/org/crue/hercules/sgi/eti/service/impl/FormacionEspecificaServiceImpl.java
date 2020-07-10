@@ -128,11 +128,11 @@ public class FormacionEspecificaServiceImpl implements FormacionEspecificaServic
     Assert.notNull(formacionEspecificaActualizar.getId(),
         "FormacionEspecifica id no puede ser null para actualizar una formacion específica");
 
-    return formacionEspecificaRepository.findById(formacionEspecificaActualizar.getId()).map(FormacionEspecifica -> {
-      FormacionEspecifica.setNombre(formacionEspecificaActualizar.getNombre());
-      FormacionEspecifica.setActivo(formacionEspecificaActualizar.getActivo());
+    return formacionEspecificaRepository.findById(formacionEspecificaActualizar.getId()).map(formacionEspecifica -> {
+      formacionEspecifica.setNombre(formacionEspecificaActualizar.getNombre());
+      formacionEspecifica.setActivo(formacionEspecificaActualizar.getActivo());
 
-      FormacionEspecifica returnValue = formacionEspecificaRepository.save(FormacionEspecifica);
+      FormacionEspecifica returnValue = formacionEspecificaRepository.save(formacionEspecifica);
       log.debug("update(FormacionEspecifica formacionEspecificaActualizar) - end");
       return returnValue;
     }).orElseThrow(() -> new FormacionEspecificaNotFoundException(formacionEspecificaActualizar.getId()));
