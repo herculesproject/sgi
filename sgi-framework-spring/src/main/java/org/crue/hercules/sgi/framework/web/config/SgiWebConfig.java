@@ -10,15 +10,19 @@ import org.crue.hercules.sgi.framework.web.method.annotation.RequestPageableArgu
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.Formatter;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 /**
  * Defines callback methods to customize the Java-based configuration for Spring
@@ -30,6 +34,12 @@ public class SgiWebConfig implements WebMvcConfigurer {
   private static SortCriteriaConverter sortOperationConverter = new SortCriteriaConverter();
   private static RequestPageableArgumentResolver requestPageableArgumentResolver = new RequestPageableArgumentResolver(
       sortOperationConverter);
+
+  @Order(Ordered.HIGHEST_PRECEDENCE)
+  @ControllerAdvice
+  public static class SgiResponseEntityExceptionHandler
+      extends org.crue.hercules.sgi.framework.web.servlet.mvc.method.annotation.SgiResponseEntityExceptionHandler {
+  }
 
   /**
    * Configure cross origin requests processing.
@@ -110,4 +120,8 @@ public class SgiWebConfig implements WebMvcConfigurer {
     return new SgiErrorController();
   }
 
+  @Bean
+  public ResponseEntityExceptionHandler sgiResponseEntityExceptionHandler() {
+    return new SgiResponseEntityExceptionHandler();
+  }
 }

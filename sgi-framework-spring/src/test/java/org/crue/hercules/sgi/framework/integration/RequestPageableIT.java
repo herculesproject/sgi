@@ -1,15 +1,14 @@
 package org.crue.hercules.sgi.framework.integration;
 
-import java.util.List;
-
-import org.crue.hercules.sgi.framework.core.convert.converter.SortCriteriaConverter;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
-import org.crue.hercules.sgi.framework.web.method.annotation.RequestPageableArgumentResolver;
+import org.crue.hercules.sgi.framework.web.config.SgiWebConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,25 +17,16 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@WebMvcTest(RequestPageableIT.TestWebConfig.class)
+@WebMvcTest(excludeAutoConfiguration = SecurityAutoConfiguration.class)
 public class RequestPageableIT {
 
   @Autowired
   private MockMvc mockMvc;
 
   @Configuration
-  public static class TestWebConfig implements WebMvcConfigurer {
-    private static SortCriteriaConverter sortOperationConverter = new SortCriteriaConverter();
-    private static RequestPageableArgumentResolver requestPageableArgumentResolver = new RequestPageableArgumentResolver(
-        sortOperationConverter);
-
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-      resolvers.add(requestPageableArgumentResolver);
-    }
+  @Import({ SgiWebConfig.class })
+  public static class TestWebConfig {
   }
 
   @TestConfiguration

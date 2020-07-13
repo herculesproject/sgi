@@ -1,0 +1,102 @@
+package org.crue.hercules.sgi.framework.integration;
+
+import org.crue.hercules.sgi.framework.web.config.SgiSecurityConfig;
+import org.crue.hercules.sgi.framework.web.config.SgiWebConfig;
+import org.crue.hercules.sgi.framework.web.config.SgiWebSecurityConfig;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@WebMvcTest
+public class SgiMethodSecurityExpressionRootIT {
+
+  @Autowired
+  private MockMvc mockMvc;
+
+  @Configuration
+  @Import({ SgiSecurityConfig.class, SgiWebConfig.class, SgiWebSecurityConfig.class })
+  public static class TestWebConfig {
+  }
+
+  @TestConfiguration
+  @RestController
+  public static class InnerWebConfigTestController {
+    @PreAuthorize("hasAuthority('AUTH_UO1')")
+    @GetMapping("/test-auth")
+    void testAuth() {
+    }
+
+    @PreAuthorize("hasAuthorityForAnyUO('AUTH')")
+    @GetMapping("/test-auth-for-any-uo")
+    void testAuthForAnyUO() {
+    }
+  }
+
+  /**
+   * @throws Exception
+   */
+  @Test
+  @WithMockUser(username = "user", authorities = { "AUTH_UO1" })
+  public void requestTestAuth_WithAuthForUO1_returnsOk() throws Exception {
+    // given:
+
+    // when:
+    mockMvc.perform(MockMvcRequestBuilders.get("/test-auth")).andDo(MockMvcResultHandlers.print())
+        // then:
+        .andExpect(MockMvcResultMatchers.status().isOk());
+  }
+
+  /**
+   * @throws Exception
+   */
+  @Test
+  @WithMockUser(username = "user", authorities = { "AUTH_UO2" })
+  public void requestTestAuth_WithAuthForUO2_returnsUnauthorized() throws Exception {
+    // given:
+
+    // when:
+    mockMvc.perform(MockMvcRequestBuilders.get("/test-auth")).andDo(MockMvcResultHandlers.print())
+        // then:
+        .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+  }
+
+  /**
+   * @throws Exception
+   */
+  @Test
+  @WithMockUser(username = "user", authorities = { "AUTH_UO1" })
+  public void requestTestAuthForAnyUO_WithAuthForUO1_returnsOk() throws Exception {
+    // given:
+
+    // when:
+    mockMvc.perform(MockMvcRequestBuilders.get("/test-auth-for-any-uo")).andDo(MockMvcResultHandlers.print())
+        // then:
+        .andExpect(MockMvcResultMatchers.status().isOk());
+  }
+
+  /**
+   * @throws Exception
+   */
+  @Test
+  @WithMockUser(username = "user", authorities = { "AUTH_UO2" })
+  public void requestTestAuthForAnyUO_WithAuthForUO2_returnsOk() throws Exception {
+    // given:
+
+    // when:
+    mockMvc.perform(MockMvcRequestBuilders.get("/test-auth-for-any-uo")).andDo(MockMvcResultHandlers.print())
+        // then:
+        .andExpect(MockMvcResultMatchers.status().isOk());
+  }
+
+}

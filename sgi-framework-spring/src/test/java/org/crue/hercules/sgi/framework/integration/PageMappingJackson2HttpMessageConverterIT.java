@@ -7,17 +7,17 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.framework.http.converter.json.PageMappingJackson2HttpMessageConverter;
+import org.crue.hercules.sgi.framework.web.config.SgiWebConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -26,9 +26,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@WebMvcTest(PageMappingJackson2HttpMessageConverterIT.TestWebConfig.class)
+@WebMvcTest(excludeAutoConfiguration = SecurityAutoConfiguration.class)
 public class PageMappingJackson2HttpMessageConverterIT {
 
   @Autowired
@@ -38,22 +37,8 @@ public class PageMappingJackson2HttpMessageConverterIT {
   private MockMvc mockMvc;
 
   @Configuration
-  public static class TestWebConfig implements WebMvcConfigurer {
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-      for (HttpMessageConverter<?> httpMessageConverter : converters) {
-        if (httpMessageConverter instanceof MappingJackson2HttpMessageConverter) {
-          // Override all MappingJackson2HttpMessageConverter with custom
-          // PageMappingJackson2HttpMessageConverter
-          // One is created by WebMvcConfigurationSupport
-          // One is created by AllEncompassingFormHttpMessageConverter
-          MappingJackson2HttpMessageConverter converter = (MappingJackson2HttpMessageConverter) httpMessageConverter;
-          PageMappingJackson2HttpMessageConverter newConverter = new PageMappingJackson2HttpMessageConverter(
-              converter.getObjectMapper());
-          converters.set(converters.indexOf(converter), newConverter);
-        }
-      }
-    }
+  @Import({ SgiWebConfig.class })
+  public static class TestWebConfig {
   }
 
   @TestConfiguration

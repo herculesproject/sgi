@@ -1,42 +1,30 @@
 package org.crue.hercules.sgi.framework.integration;
 
-import org.crue.hercules.sgi.framework.web.servlet.mvc.method.annotation.SgiResponseEntityExceptionHandler;
+import org.crue.hercules.sgi.framework.web.config.SgiWebConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@WebMvcTest(SgiResponseEntityExceptionHandlerIT.TestWebConfig.class)
+@WebMvcTest(excludeAutoConfiguration = SecurityAutoConfiguration.class)
 public class SgiResponseEntityExceptionHandlerIT {
 
   @Autowired
   private MockMvc mockMvc;
 
   @Configuration
-  public static class TestWebConfig implements WebMvcConfigurer {
-
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    @ControllerAdvice
-    public static class TestResponseEntityExceptionHandler extends SgiResponseEntityExceptionHandler {
-    }
-
-    @Bean
-    public TestResponseEntityExceptionHandler testResponseEntityExceptionHandler() {
-      return new TestResponseEntityExceptionHandler();
-    }
+  @Import({ SgiWebConfig.class })
+  public static class TestWebConfig {
   }
 
   @TestConfiguration
