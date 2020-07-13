@@ -14,8 +14,14 @@ public class ConstantesEti {
   /** PATH CONTROLLER COMITE */
   public static final String TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH = "/tipoestadoactas";
 
+  /** PATH CONTROLLER EQUIPO TRABAJO */
+  public static final String EQUIPO_TRABAJO_CONTROLLER_BASE_PATH = "/equipotrabajos";
+
   /** PATH CONTROLLER FORMACION ESPECIFICA */
   public static final String FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH = "/formacionespecificas";
+
+  /** PATH CONTROLLER MEMORIA */
+  public static final String MEMORIA_CONTROLLER_BASE_PATH = "/memorias";
 
   /** PATH PARAMETER ID. */
   public static final String PATH_PARAMETER_ID = "/{id}";
@@ -31,9 +37,6 @@ public class ConstantesEti {
 
   /** PATH CONTROLLER TIPO MEMORIA */
   public static final String TIPO_MEMORIA_CONTROLLER_BASE_PATH = "/tipomemorias";
-
-  /** PATH CONTROLLER EQUIPO TRABAJO */
-  public static final String EQUIPO_TRABAJO_CONTROLLER_BASE_PATH = "/equipotrabajos";
 
   /** PATH CONTROLLER TIPO MEMORIA COMITE */
   public static final String TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH = "/tipomemoriacomites";

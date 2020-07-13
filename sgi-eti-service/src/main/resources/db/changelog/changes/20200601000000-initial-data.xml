@@ -413,4 +413,46 @@
       <column name="activo" value="true" />
     </insert>
   </changeSet>
+
+  <changeSet author="master" id="20200601000000-memoria">
+    <insert tableName="memoria">
+      <column name="num_referencia" value="ref-134" />
+      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion4'))" />
+      <column name="comite" valueComputed="(select id from eti.comite where comite='Comite1')" />
+      <column name="titulo" value="Memoria1" />
+      <column name="usuario_ref" value="user-8984" />
+      <column name="fecha_estado" value="2020-07-09" />
+      <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria1')" />
+      <column name="fecha_envio_secretaria" value="2020-07-09" />
+      <column name="requiere_retrospectiva" value="true" />
+      <column name="fecha_retrospectiva" value="2021-07-09" />
+      <column name="version" value="1" />
+    </insert>
+    <insert tableName="memoria">
+      <column name="num_referencia" value="ref-234" />
+      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion3'))" />
+      <column name="comite" valueComputed="(select id from eti.comite where comite='Comite1')" />
+      <column name="titulo" value="Memoria2" />
+      <column name="usuario_ref" value="user-9984" />
+      <column name="fecha_estado" value="2020-06-09" />
+      <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria1')" />
+      <column name="fecha_envio_secretaria" value="2020-06-09" />
+      <column name="requiere_retrospectiva" value="false" />
+      <column name="fecha_retrospectiva" value="null" />
+      <column name="version" value="5" />
+    </insert>
+    <insert tableName="memoria">
+      <column name="num_referencia" value="ref-934" />
+      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2'))" />
+      <column name="comite" valueComputed="(select id from eti.comite where comite='Comite1')" />
+      <column name="titulo" value="Memoria3" />
+      <column name="usuario_ref" value="user-852" />
+      <column name="fecha_estado" value="2020-06-09" />
+      <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria2')" />
+      <column name="fecha_envio_secretaria" value="2020-06-09" />
+      <column name="requiere_retrospectiva" value="true" />
+      <column name="fecha_retrospectiva" value="2020-06-20" />
+      <column name="version" value="2" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>
