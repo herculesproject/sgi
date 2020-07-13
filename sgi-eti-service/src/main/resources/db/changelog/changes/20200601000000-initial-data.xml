@@ -570,4 +570,38 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-tipo_documento">
+    <insert tableName="tipo_documento">
+      <column name="nombre" value="TipoDocumento1" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite1')" />
+
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="nombre" value="TipoDocumento2" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite2')" />
+
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="nombre" value="TipoDocumento3" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite3')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="nombre" value="TipoDocumento4" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite4')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="nombre" value="TipoDocumento5" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite5')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_comentario">
+      <column name="nombre" value="TipoDocumento6" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite6')" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>
