@@ -43,4 +43,7 @@ public class ConstantesEti {
 
   /** PATH CONTROLLER TIPO COMENTARIO */
   public static final String TIPO_COMENTARIO_CONTROLLER_BASE_PATH = "/tipocomentarios";
+
+  /** PATH CONTROLLER EVALUADOR */
+  public static final String EVALUADOR_CONTROLLER_BASE_PATH = "/evaluadores";
 }

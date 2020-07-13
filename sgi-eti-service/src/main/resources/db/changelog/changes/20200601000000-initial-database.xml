@@ -56,6 +56,10 @@
     <createSequence sequenceName="memoria_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-evaluador_seq">
+    <createSequence sequenceName="evaluador_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -240,6 +244,23 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-evaluador">
+    <createTable tableName="evaluador">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="evaluador_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="evaluador_pk" />
+      </column>
+      <column name="comite_id" type="BIGINT" />
+      <column name="cargo_comite_id" type="BIGINT" />
+      <column name="fecha_alta" type="DATE" />
+      <column name="fecha_baja" type="DATE" />
+      <column name="resumen" type="VARCHAR(2000)" />
+      <column name="usuario_ref" type="VARCHAR(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
   <!-- ########################################################## -->
@@ -284,6 +305,14 @@
     <addForeignKeyConstraint baseColumnNames="peticion_evaluacion_id" baseTableName="memoria" constraintName="memoria_peticion_evaluacion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="peticion_evaluacion" validate="true" />
   </changeSet>
 
+
+  <changeSet author="master" id="20200601000000-comite_evaluador_FK">
+    <addForeignKeyConstraint baseColumnNames="comite_id" baseTableName="evaluador" constraintName="comite_evaluador_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="comite" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-cargo_comite_evaluador_FK">
+    <addForeignKeyConstraint baseColumnNames="cargo_comite_id" baseTableName="evaluador" constraintName="cargo_comite_evaluador_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="cargo_comite" validate="true" />
+  </changeSet>
 
   <!-- ########################################################## -->
   <!-- UNIQUE CONSTRAINT -->

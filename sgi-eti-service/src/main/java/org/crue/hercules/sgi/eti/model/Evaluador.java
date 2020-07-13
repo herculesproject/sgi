@@ -1,0 +1,74 @@
+package org.crue.hercules.sgi.eti.model;
+
+import java.time.LocalDate;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+/**
+ * Evaluador
+ */
+
+@Entity
+@Table(name = "evaluador")
+@Data
+@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+@AllArgsConstructor
+public class Evaluador extends BaseEntity {
+
+  /**
+   * Serial version
+   */
+  private static final long serialVersionUID = 1L;
+
+  /** Id */
+  @Id
+  @Column(name = "id", nullable = false)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "evaluador_seq")
+  @SequenceGenerator(name = "evaluador_seq", sequenceName = "evaluador_seq", allocationSize = 1)
+  private Long id;
+
+  /** Cargo Comité */
+  @ManyToOne
+  @JoinColumn(name = "cargo_comite_id", nullable = false)
+  private CargoComite cargoComite;
+
+  /** Comité */
+  @ManyToOne
+  @JoinColumn(name = "comite_id", nullable = false)
+  private Comite comite;
+
+  /** Fecha Alta */
+  @Column(name = "fecha_alta")
+  private LocalDate fechaAlta;
+
+  /** Fecha Baja */
+  @Column(name = "fecha_baja")
+  private LocalDate fechaBaja;
+
+  /** Resumen */
+  @Column(name = "resumen", length = 2000, nullable = false)
+  private String resumen;
+
+  /** Referencia usuario */
+  @Column(name = "usuario_ref", length = 250, nullable = false)
+  private String usuarioRef;
+
+  /** Activo */
+  @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)
+  private Boolean activo;
+
+}

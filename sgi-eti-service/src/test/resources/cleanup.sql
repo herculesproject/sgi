@@ -1,6 +1,7 @@
 -- vacia la bd
 DELETE FROM eti.memoria
 DELETE FROM eti.tipo_memoria_comite
+DELETE FROM eti.evaluador
 DELETE FROM eti.comite
 DELETE FROM eti.equipo_trabajo
 DELETE FROM eti.peticion_evaluacion

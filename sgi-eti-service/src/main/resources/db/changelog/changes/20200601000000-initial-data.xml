@@ -455,4 +455,62 @@
       <column name="version" value="2" />
     </insert>
   </changeSet>
+
+  <changeSet author="master" id="20200601000000-evaluador">
+    <insert tableName="evaluador">
+      <column name="comite_id" valueComputed="(select id from eti.comite where nombre='Comite1')" />
+      <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='CargoComite1')" />
+      <column name="fecha_alta" value="2020-07-09" />
+      <column name="fecha_baja" value="2021-07-09" />
+      <column name="resumen" value="Evaluador1" />
+      <column name="usuario_ref" value="user-001" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="evaluador">
+      <column name="comite_id" valueComputed="(select id from eti.comite where nombre='Comite2')" />
+      <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='CargoComite2')" />
+      <column name="fecha_alta" value="2020-07-09" />
+      <column name="fecha_baja" value="2021-07-09" />
+      <column name="resumen" value="Evaluador2" />
+      <column name="usuario_ref" value="user-002" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="evaluador">
+      <column name="comite_id" valueComputed="(select id from eti.comite where nombre='Comite3')" />
+      <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='CargoComite3')" />
+      <column name="fecha_alta" value="2020-07-09" />
+      <column name="fecha_baja" value="2021-07-09" />
+      <column name="resumen" value="Evaluador3" />
+      <column name="usuario_ref" value="user-003" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="evaluador">
+      <column name="comite_id" valueComputed="(select id from eti.comite where nombre='Comite4')" />
+      <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='CargoComite4')" />
+      <column name="fecha_alta" value="2020-07-09" />
+      <column name="fecha_baja" value="2021-07-09" />
+      <column name="resumen" value="Evaluador4" />
+      <column name="usuario_ref" value="user-004" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="evaluador">
+      <column name="comite_id" valueComputed="(select id from eti.comite where nombre='Comite5')" />
+      <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='CargoComite5')" />
+      <column name="fecha_alta" value="2020-07-09" />
+      <column name="fecha_baja" value="2021-07-09" />
+      <column name="resumen" value="Evaluador5" />
+      <column name="usuario_ref" value="user-005" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="evaluador">
+      <column name="comite_id" valueComputed="(select id from eti.comite where nombre='Comite6')" />
+      <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='CargoComite6')" />
+      <column name="fecha_alta" value="2020-07-09" />
+      <column name="fecha_baja" value="2021-07-09" />
+      <column name="resumen" value="Evaluador6" />
+      <column name="usuario_ref" value="user-006" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>
