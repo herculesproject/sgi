@@ -1,0 +1,70 @@
+package org.crue.hercules.sgi.eti.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.Size;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "tarea")
+@Data
+@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+@AllArgsConstructor
+public class Tarea extends BaseEntity {
+
+  /**
+   * Serial version
+   */
+  private static final long serialVersionUID = 1L;
+  /** Id. */
+  @Id
+  @Column(name = "id", nullable = false)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tarea_seq")
+  @SequenceGenerator(name = "tarea_seq", sequenceName = "tarea_seq", allocationSize = 1)
+  private Long id;
+
+  /** Equipo trabajo */
+  @ManyToOne
+  @JoinColumn(name = "equipo_trabajo_id", nullable = false)
+  private EquipoTrabajo equipoTrabajo;
+
+  /** Memoria */
+  @ManyToOne
+  @JoinColumn(name = "memoria_id", nullable = false)
+  private Memoria memoria;
+
+  /** Tarea */
+  @Column(name = "tarea", length = 250, nullable = false)
+  private String tarea;
+
+  /** Formacion */
+  @Column(name = "formacion", length = 250, nullable = false)
+  private String formacion;
+
+  /** Formacion especifica */
+  @ManyToOne
+  @JoinColumn(name = "formacion_especifica_id", nullable = false)
+  private FormacionEspecifica formacionEspecifica;
+
+  /** Formacion */
+  @Column(name = "organismo", length = 250, nullable = true)
+  private String organismo;
+
+  /** Anio */
+  @Column(name = "anio", nullable = true)
+  @Size(max = 4)
+  private Integer anio;
+
+}

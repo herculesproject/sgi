@@ -60,6 +60,10 @@
     <createSequence sequenceName="evaluador_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-tarea_seq">
+    <createSequence sequenceName="tarea_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -261,6 +265,21 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-tarea">
+    <createTable tableName="tarea">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tarea_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tarea_pk" />
+      </column>
+      <column name="equipo_trabajo_id" type="BIGINT" />
+      <column name="memoria_id" type="BIGINT" />
+      <column name="tarea" type="VARCHAR(250)" />
+      <column name="formacion" type="VARCHAR(250)" />
+      <column name="formacion_especifica_id" type="BIGINT" />
+      <column name="organismo" type="VARCHAR(250)" />
+      <column name="anio" type="INT" />
+    </createTable>
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
   <!-- ########################################################## -->
@@ -305,6 +324,15 @@
     <addForeignKeyConstraint baseColumnNames="peticion_evaluacion_id" baseTableName="memoria" constraintName="memoria_peticion_evaluacion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="peticion_evaluacion" validate="true" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-tarea_equipo_trabajo_FK">
+    <addForeignKeyConstraint baseColumnNames="equipo_trabajo_id" baseTableName="tarea" constraintName="tarea_equipo_trabajo_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="equipo_trabajo" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-tarea_memoria_FK">
+    <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="tarea" constraintName="tarea_memoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="memoria" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-tarea_formacion_especifica_FK">
+    <addForeignKeyConstraint baseColumnNames="formacion_especifica_id" baseTableName="tarea" constraintName="tarea_formacion_especifica_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="formacion_especifica" validate="true" />
+  </changeSet>
 
   <changeSet author="master" id="20200601000000-comite_evaluador_FK">
     <addForeignKeyConstraint baseColumnNames="comite_id" baseTableName="evaluador" constraintName="comite_evaluador_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="comite" validate="true" />

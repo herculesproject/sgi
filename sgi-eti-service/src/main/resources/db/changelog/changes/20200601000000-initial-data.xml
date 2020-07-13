@@ -513,4 +513,61 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-tarea">
+    <insert tableName="tarea">
+      <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where comite='user-001')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
+      <column name="tarea" value="Tarea1" />
+      <column name="formacion" value="Formacion1" />
+      <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where nombre='FormacionEspecifica1')" />
+      <column name="organismo" value="Organismo1" />
+      <column name="anio" value="2020" />
+    </insert>
+    <insert tableName="tarea">
+      <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where comite='user-002')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
+      <column name="tarea" value="Tarea2" />
+      <column name="formacion" value="Formacion2" />
+      <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where nombre='FormacionEspecifica2')" />
+      <column name="organismo" value="Organismo2" />
+      <column name="anio" value="2020" />
+    </insert>
+    <insert tableName="tarea">
+      <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where comite='user-003')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
+      <column name="tarea" value="Tarea3" />
+      <column name="formacion" value="Formacion3" />
+      <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where nombre='FormacionEspecifica3')" />
+      <column name="organismo" value="Organismo3" />
+      <column name="anio" value="2020" />
+    </insert>
+    <insert tableName="tarea">
+      <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where comite='user-004')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
+      <column name="tarea" value="Tarea4" />
+      <column name="formacion" value="Formacion4" />
+      <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where nombre='FormacionEspecifica4')" />
+      <column name="organismo" value="Organismo4" />
+      <column name="anio" value="2021" />
+    </insert>
+    <insert tableName="tarea">
+      <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where comite='user-005')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
+      <column name="tarea" value="Tarea5" />
+      <column name="formacion" value="Formacion5" />
+      <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where nombre='FormacionEspecifica5')" />
+      <column name="organismo" value="Organismo5" />
+      <column name="anio" value="2021" />
+    </insert>
+    <insert tableName="tarea">
+      <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where comite='user-006')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
+      <column name="tarea" value="Tarea6" />
+      <column name="formacion" value="Formacion6" />
+      <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where nombre='FormacionEspecifica6')" />
+      <column name="organismo" value="Organismo6" />
+      <column name="anio" value="2021" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>

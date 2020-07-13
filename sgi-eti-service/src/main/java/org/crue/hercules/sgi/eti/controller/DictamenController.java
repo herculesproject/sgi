@@ -5,7 +5,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.Dictamen;
-import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.service.DictamenService;
 import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;

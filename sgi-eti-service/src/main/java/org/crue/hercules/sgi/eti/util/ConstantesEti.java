@@ -46,4 +46,8 @@ public class ConstantesEti {
 
   /** PATH CONTROLLER EVALUADOR */
   public static final String EVALUADOR_CONTROLLER_BASE_PATH = "/evaluadores";
+
+  /** PATH CONTROLLER TAREA */
+  public static final String TAREA_CONTROLLER_BASE_PATH = "/tareas";
+
 }
