@@ -10,6 +10,7 @@ import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormBuilder} from '@angular/forms';
 import {AgrupacionServicioDatosGeneralesComponent} from '../agrupacion-servicio-formulario/agrupacion-servicio-datos-generales/agrupacion-servicio-datos-generales.component';
+import {AgrupacionServicioGestorComponent} from '../agrupacion-servicio-formulario/agrupacion-servicio-gestor/agrupacion-servicio-gestor.component';
 
 describe('AgrupacionServicioCrearComponent', () => {
   let component: AgrupacionServicioCrearComponent;
@@ -35,7 +36,9 @@ describe('AgrupacionServicioCrearComponent', () => {
       ],
       declarations: [
         AgrupacionServicioCrearComponent,
-        AgrupacionServicioDatosGeneralesComponent]
+        AgrupacionServicioDatosGeneralesComponent,
+        AgrupacionServicioGestorComponent
+      ]
     })
       .compileComponents();
   }));

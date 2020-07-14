@@ -7,12 +7,10 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {MaterialDesignModule} from '@material/material-design.module';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {HttpClient} from '@angular/common/http';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {SnackBarService} from '@core/services/snack-bar.service';
 import {FormBuilder} from '@angular/forms';
 import {AgrupacionServicioDatosGeneralesComponent} from '../agrupacion-servicio-formulario/agrupacion-servicio-datos-generales/agrupacion-servicio-datos-generales.component';
+import {AgrupacionServicioGestorComponent} from '../agrupacion-servicio-formulario/agrupacion-servicio-gestor/agrupacion-servicio-gestor.component';
 
 describe('AgrupacionServicioActualizarComponent', () => {
   let component: AgrupacionServicioActualizarComponent;
@@ -29,15 +27,7 @@ describe('AgrupacionServicioActualizarComponent', () => {
         MaterialDesignModule,
         HttpClientTestingModule,
         BrowserAnimationsModule,
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: (http: HttpClient) => {
-              return new TranslateHttpLoader(http);
-            },
-            deps: [HttpClient]
-          }
-        }),
+        TestUtils.getIdiomas()
       ],
       providers: [
         {provide: NGXLogger, useValue: TestUtils.getLoggerSpy()},
@@ -46,7 +36,8 @@ describe('AgrupacionServicioActualizarComponent', () => {
       ],
       declarations: [
         AgrupacionServicioActualizarComponent,
-        AgrupacionServicioDatosGeneralesComponent
+        AgrupacionServicioDatosGeneralesComponent,
+        AgrupacionServicioGestorComponent
       ]
     })
       .compileComponents();
