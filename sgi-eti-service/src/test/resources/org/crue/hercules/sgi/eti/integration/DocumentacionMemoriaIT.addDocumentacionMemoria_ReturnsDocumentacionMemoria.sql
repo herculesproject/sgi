@@ -12,8 +12,8 @@ INSERT INTO eti.peticion_evaluacion (id, titulo, codigo, solicitud_convocatoria_
 VALUES(1, 'PeticionEvaluacion1', 'Codigo', 'Ref solicitud convocatoria', 1, 'Ref fuente financiadora', '2020-07-09', '2021-07-09', 'Resumen', 3, 'Otro valor social', 'Objetivos', 'Metodologico', false, false, 'user-001', true);
 
 -- MEMORIA 
-INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, usuario_ref, fecha_estado, tipo_memoria_id, fecha_envio_secretaria, requiere_retrospectiva, fecha_retrospectiva, version)
- VALUES (1, 'ref-5588', 1, 1, 'Memoria1', 'userref-55698', '2020-06-05',1, null, false, null, 1);
+INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, usuario_ref, tipo_memoria_id, fecha_envio_secretaria, requiere_retrospectiva, fecha_retrospectiva, version)
+ VALUES (1, 'ref-5588', 1, 1, 'Memoria1', 'userref-55698', 1, null, false, null, 1);
 
  -- TIPO DOCUMENTO 
 INSERT INTO eti.tipo_documento (id, nombre, comite_id, activo) VALUES (1, 'TipoDocumento1', 1, true);
