@@ -76,6 +76,10 @@
     <createSequence sequenceName="acta_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-informe_formulario_seq">
+    <createSequence sequenceName="informe_formulario_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -323,6 +327,16 @@
       </column>
     </createTable>
   </changeSet>
+  <changeSet author="master" id="20200601000000-informe_formulario">
+    <createTable tableName="informe_formulario">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="informe_formulario_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="informe_formulario_pk" />
+      </column>
+      <column name="memoria_id" type="BIGINT" />
+      <column name="documento_ref" type="VARCHAR(250)" />
+      <column name="version" type="INT" />
+    </createTable>
+  </changeSet>
 
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
@@ -393,8 +407,14 @@
   <changeSet author="master" id="20200601000000-estado_acta_acta_FK">
     <addForeignKeyConstraint baseColumnNames="acta_id" baseTableName="estado_acta" constraintName="estado_acta_acta_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="acta" validate="true" />
   </changeSet>
+
   <changeSet author="master" id="20200601000000-estado_acta_tipo_estado_acta_FK">
     <addForeignKeyConstraint baseColumnNames="tipo_estado_acta_id" baseTableName="estado_acta" constraintName="estado_acta_tipo_estado_acta_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_estado_acta" validate="true" />
+  </changeSet>
+
+
+  <changeSet author="master" id="20200601000000-memoria_informe_formulario_FK">
+    <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="informe_formulario" constraintName="memoria_informe_formulario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="memoria" validate="true" />
   </changeSet>
 
   <!-- ########################################################## -->

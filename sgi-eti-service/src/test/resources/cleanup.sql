@@ -1,5 +1,6 @@
 -- vacia la bd
 DELETE FROM eti.tarea
+DELETE FROM eti.informe_formulario
 DELETE FROM eti.memoria
 DELETE FROM eti.tipo_memoria_comite
 DELETE FROM eti.evaluador

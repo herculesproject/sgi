@@ -632,4 +632,37 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-informe_formulario">
+    <insert tableName="informe_formulario">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria1')" />
+      <column name="documento_ref" value="documento-001" />
+      <column name="version" value="4" />
+    </insert>
+    <insert tableName="informe_formulario">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria2')" />
+      <column name="documento_ref" value="documento-002" />
+      <column name="version" value="4" />
+    </insert>
+    <insert tableName="informe_formulario">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria3')" />
+      <column name="documento_ref" value="documento-003" />
+      <column name="version" value="4" />
+    </insert>
+    <insert tableName="informe_formulario">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria4')" />
+      <column name="documento_ref" value="documento-004" />
+      <column name="version" value="4" />
+    </insert>
+    <insert tableName="informe_formulario">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria5')" />
+      <column name="documento_ref" value="documento-005" />
+      <column name="version" value="4" />
+    </insert>
+    <insert tableName="informe_formulario">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria6')" />
+      <column name="documento_ref" value="documento-006" />
+      <column name="version" value="4" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>

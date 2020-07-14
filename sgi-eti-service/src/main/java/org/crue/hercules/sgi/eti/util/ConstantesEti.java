@@ -56,4 +56,6 @@ public class ConstantesEti {
   /** PATH CONTROLLER ESTADO ACTA */
   public static final String ESTADO_ACTA_CONTROLLER_BASE_PATH = "/estadosactas";
 
+  /** PATH CONTROLLER INFORME FORMULARIO */
+  public static final String INFORME_FORMULARIO_CONTROLLER_BASE_PATH = "/informeformularios";
 }
