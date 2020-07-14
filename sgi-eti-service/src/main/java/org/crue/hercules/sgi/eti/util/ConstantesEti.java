@@ -11,6 +11,9 @@ public class ConstantesEti {
   /** PATH CONTROLLER DICTAMEN */
   public static final String DICTAMEN_CONTROLLER_BASE_PATH = "/dictamenes";
 
+  /** PATH CONTROLLER DOCUMENTACION MEMORIA */
+  public static final String DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH = "/documentacionmemorias";
+
   /** PATH CONTROLLER TIPO ESTADO ACTA */
   public static final String TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH = "/tipoestadoactas";
 

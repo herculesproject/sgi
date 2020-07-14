@@ -80,6 +80,10 @@
     <createSequence sequenceName="informe_formulario_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-documentacion_memoria_seq">
+    <createSequence sequenceName="documentacion_memoria_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -338,6 +342,17 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-documentacion_memoria">
+    <createTable tableName="documentacion_memoria">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="documentacion_memoria_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="documentacion_memoria_pk" />
+      </column>
+      <column name="memoria_id" type="BIGINT" />
+      <column name="tipo_documento_id" type="BIGINT" />
+      <column name="documento_ref" type="VARCHAR(250)" />
+    </createTable>
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
   <!-- ########################################################## -->
@@ -415,6 +430,14 @@
 
   <changeSet author="master" id="20200601000000-memoria_informe_formulario_FK">
     <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="informe_formulario" constraintName="memoria_informe_formulario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="memoria" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-documentacion_memoria_memoria_FK">
+    <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="documentacion_memoria" constraintName="documentacion_memoria_memoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="memoria" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-documentacion_memoria_tipo_documento_FK">
+    <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="documentacion_memoria" constraintName="documentacion_memoria_tipo_documento_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true" />
   </changeSet>
 
   <!-- ########################################################## -->

@@ -259,6 +259,7 @@ public class TipoDocumentoServiceTest {
    * 
    * @param id     id del TipoDocumento
    * @param nombre nombre del TipoDocumento
+   * @param comite comite del TipoDocumento
    * @return el objeto TipoDocumento
    */
 

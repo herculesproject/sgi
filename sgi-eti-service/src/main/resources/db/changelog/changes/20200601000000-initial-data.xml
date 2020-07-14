@@ -25,10 +25,6 @@
       <column name="comite" value="Comite6" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="comite">
-      <column name="comite" value="Comite1" />
-      <column name="activo" value="true" />
-    </insert>
   </changeSet>
 
   <changeSet author="master" id="20200601000000-dictamen">
@@ -665,4 +661,41 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-documentacion_memoria">
+    <insert tableName="documentacion_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria1')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where nombre='TipoDocumento1')" />
+      <column name="documento_ref" value="DocumentoRef1" />
+    </insert>
+
+    <insert tableName="documentacion_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria2')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where nombre='TipoDocumento2')" />
+      <column name="documento_ref" value="DocumentoRef2" />
+    </insert>
+
+    <insert tableName="documentacion_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria3')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where nombre='TipoDocumento3')" />
+      <column name="documento_ref" value="DocumentoRef3" />
+    </insert>
+
+    <insert tableName="documentacion_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria4')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where nombre='TipoDocumento4')" />
+      <column name="documento_ref" value="DocumentoRef4" />
+    </insert>
+
+    <insert tableName="documentacion_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria5')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where nombre='TipoDocumento5')" />
+      <column name="documento_ref" value="DocumentoRef5" />
+    </insert>
+
+    <insert tableName="documentacion_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria6')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where nombre='TipoDocumento6')" />
+      <column name="documento_ref" value="DocumentoRef6" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>
