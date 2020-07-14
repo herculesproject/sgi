@@ -84,6 +84,11 @@
     <createSequence sequenceName="documentacion_memoria_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-estado_memoria_seq">
+    <createSequence sequenceName="estado_memoria_seq" />
+  </changeSet>
+
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -257,7 +262,6 @@
       <column name="comite_id" type="BIGINT" />
       <column name="titulo" type="VARCHAR(250)" />
       <column name="usuario_ref" type="VARCHAR(250)" />
-      <column name="fecha_estado" type="DATE" />
       <column name="tipo_memoria_id" type="BIGINT" />
       <column name="fecha_envio_secretaria" type="DATE" />
       <column name="requiere_retrospectiva" type="BOOLEAN" defaultValueBoolean="false">
@@ -353,6 +357,17 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-estado_memoria">
+    <createTable tableName="estado_memoria">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="estado_memoria_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="estado_memoria_pk" />
+      </column>
+      <column name="memoria_id" type="BIGINT" />
+      <column name="tipo_estado_memoria_id" type="BIGINT" />
+      <column name="fecha_estado" type="DATETIME" />
+    </createTable>
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
   <!-- ########################################################## -->
@@ -438,6 +453,14 @@
 
   <changeSet author="master" id="20200601000000-documentacion_memoria_tipo_documento_FK">
     <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="documentacion_memoria" constraintName="documentacion_memoria_tipo_documento_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-estado_memoria_memoria_FK">
+    <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="estado_memoria" constraintName="estado_memoria_memoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="memoria" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-estado_memoria_tipo_estado_memoria_FK">
+    <addForeignKeyConstraint baseColumnNames="tipo_estado_memoria_id" baseTableName="estado_memoria" constraintName="estado_memoria_tipo_estado_memoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_estado_memoria" validate="true" />
   </changeSet>
 
   <!-- ########################################################## -->

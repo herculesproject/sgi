@@ -14,14 +14,20 @@ public class ConstantesEti {
   /** PATH CONTROLLER DOCUMENTACION MEMORIA */
   public static final String DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH = "/documentacionmemorias";
 
-  /** PATH CONTROLLER TIPO ESTADO ACTA */
-  public static final String TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH = "/tipoestadoactas";
-
   /** PATH CONTROLLER EQUIPO TRABAJO */
   public static final String EQUIPO_TRABAJO_CONTROLLER_BASE_PATH = "/equipotrabajos";
 
+  /** PATH CONTROLLER ESTADO MEMORIA */
+  public static final String ESTADO_MEMORIA_CONTROLLER_BASE_PATH = "/estadomemorias";
+
+  /** PATH CONTROLLER EVALUADOR */
+  public static final String EVALUADOR_CONTROLLER_BASE_PATH = "/evaluadores";
+
   /** PATH CONTROLLER FORMACION ESPECIFICA */
   public static final String FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH = "/formacionespecificas";
+
+  /** PATH CONTROLLER INFORME FORMULARIO */
+  public static final String INFORME_FORMULARIO_CONTROLLER_BASE_PATH = "/informeformularios";
 
   /** PATH CONTROLLER MEMORIA */
   public static final String MEMORIA_CONTROLLER_BASE_PATH = "/memorias";
@@ -32,8 +38,14 @@ public class ConstantesEti {
   /** PATH CONTROLLER PETICION EVALUACIÓN */
   public static final String PETICION_EVALUACION_CONTROLLER_BASE_PATH = "/peticionevaluaciones";
 
+  /** PATH CONTROLLER TAREA */
+  public static final String TAREA_CONTROLLER_BASE_PATH = "/tareas";
+
   /** PATH CONTROLLER TIPO ACTIVIDAD */
   public static final String TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH = "/tipoactividades";
+
+  /** PATH CONTROLLER TIPO ESTADO ACTA */
+  public static final String TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH = "/tipoestadoactas";
 
   /** PATH CONTROLLER TIPO ESTADO MEMORIA */
   public static final String TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH = "/tipoestadomemorias";
@@ -50,15 +62,7 @@ public class ConstantesEti {
   /** PATH CONTROLLER TIPO COMENTARIO */
   public static final String TIPO_COMENTARIO_CONTROLLER_BASE_PATH = "/tipocomentarios";
 
-  /** PATH CONTROLLER EVALUADOR */
-  public static final String EVALUADOR_CONTROLLER_BASE_PATH = "/evaluadores";
-
-  /** PATH CONTROLLER TAREA */
-  public static final String TAREA_CONTROLLER_BASE_PATH = "/tareas";
-
   /** PATH CONTROLLER ESTADO ACTA */
   public static final String ESTADO_ACTA_CONTROLLER_BASE_PATH = "/estadosactas";
 
-  /** PATH CONTROLLER INFORME FORMULARIO */
-  public static final String INFORME_FORMULARIO_CONTROLLER_BASE_PATH = "/informeformularios";
 }

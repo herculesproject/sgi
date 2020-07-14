@@ -278,8 +278,8 @@ public class InformeFormularioServiceTest {
     tipoMemoria.setNombre("TipoMemoria1");
     tipoMemoria.setActivo(Boolean.TRUE);
 
-    Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria1", "user-001", LocalDate.now(),
-        tipoMemoria, LocalDate.now(), Boolean.FALSE, LocalDate.now(), 3);
+    Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria1", "user-001", tipoMemoria,
+        LocalDate.now(), Boolean.FALSE, LocalDate.now(), 3);
 
     InformeFormulario informeFormulario = new InformeFormulario();
     informeFormulario.setId(id);

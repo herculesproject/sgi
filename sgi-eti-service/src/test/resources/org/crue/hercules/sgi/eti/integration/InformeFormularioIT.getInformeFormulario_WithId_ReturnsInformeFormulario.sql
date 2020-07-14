@@ -12,10 +12,10 @@ INSERT INTO eti.peticion_evaluacion (id, titulo, codigo, solicitud_convocatoria_
 VALUES(1, 'PeticionEvaluacion1', 'Codigo', 'Ref solicitud convocatoria', 1, 'Ref fuente financiadora', '2020-07-09', '2021-07-09', 'Resumen', 3, 'Otro valor social', 'Objetivos', 'Metodologico', false, false, 'user-001', true);
 
 -- MEMORIA 
-INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, usuario_ref, fecha_estado, tipo_memoria_id, fecha_envio_secretaria, requiere_retrospectiva, fecha_retrospectiva, version)
- VALUES (1, 'ref-5588', 1, 2, 'Memoria1', 'userref-55698', '2020-06-05',1, null, false, null, 1);
-INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, usuario_ref, fecha_estado, tipo_memoria_id, fecha_envio_secretaria, requiere_retrospectiva, fecha_retrospectiva, version)
- VALUES (2, 'ref-3534', 1, 2, 'Memoria2', 'userref-5698', '2020-07-05',1, null, false, null, 1);
+INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, usuario_ref, tipo_memoria_id, fecha_envio_secretaria, requiere_retrospectiva, fecha_retrospectiva, version)
+ VALUES (1, 'ref-5588', 1, 2, 'Memoria1', 'userref-55698', 1, null, false, null, 1);
+INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, usuario_ref, tipo_memoria_id, fecha_envio_secretaria, requiere_retrospectiva, fecha_retrospectiva, version)
+ VALUES (2, 'ref-3534', 1, 2, 'Memoria2', 'userref-5698', 1, null, false, null, 1);
 
   -- INFORME FORMULARIO 
 INSERT INTO eti.informe_formulario (id, memoria_id, documento_ref, version)

@@ -254,7 +254,7 @@ public class MemoriaServiceTest {
   private Memoria generarMockMemoria(Long id, String numReferencia, String titulo, Integer version) {
 
     return new Memoria(id, numReferencia, generarMockPeticionEvaluacion(id, titulo + " PeticionEvaluacion" + id),
-        generarMockComite(id, "comite" + id, true), titulo, "user-00" + id, LocalDate.now(),
+        generarMockComite(id, "comite" + id, true), titulo, "user-00" + id,
         generarMockTipoMemoria(1L, "TipoMemoria1", true), LocalDate.now(), Boolean.TRUE, LocalDate.now(), version);
   }
 
@@ -265,7 +265,7 @@ public class MemoriaServiceTest {
    * @param titulo el título de PeticionEvaluacion
    * @return el objeto PeticionEvaluacion
    */
-  public PeticionEvaluacion generarMockPeticionEvaluacion(Long id, String titulo) {
+  private PeticionEvaluacion generarMockPeticionEvaluacion(Long id, String titulo) {
     TipoActividad tipoActividad = new TipoActividad();
     tipoActividad.setId(1L);
     tipoActividad.setNombre("TipoActividad1");

@@ -71,11 +71,6 @@ public class Memoria extends BaseEntity {
   @NotNull
   private String usuarioRef;
 
-  /** Fecha estado. */
-  @Column(name = "fecha_estado", nullable = false)
-  @NotNull
-  private LocalDate fechaEstado;
-
   /** Tipo Memoria */
   @ManyToOne
   @JoinColumn(name = "tipo_memoria_id", nullable = false)

@@ -417,7 +417,6 @@
       <column name="comite" valueComputed="(select id from eti.comite where comite='Comite1')" />
       <column name="titulo" value="Memoria1" />
       <column name="usuario_ref" value="user-8984" />
-      <column name="fecha_estado" value="2020-07-09" />
       <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria1')" />
       <column name="fecha_envio_secretaria" value="2020-07-09" />
       <column name="requiere_retrospectiva" value="true" />
@@ -430,7 +429,6 @@
       <column name="comite" valueComputed="(select id from eti.comite where comite='Comite1')" />
       <column name="titulo" value="Memoria2" />
       <column name="usuario_ref" value="user-9984" />
-      <column name="fecha_estado" value="2020-06-09" />
       <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria1')" />
       <column name="fecha_envio_secretaria" value="2020-06-09" />
       <column name="requiere_retrospectiva" value="false" />
@@ -443,7 +441,6 @@
       <column name="comite" valueComputed="(select id from eti.comite where comite='Comite1')" />
       <column name="titulo" value="Memoria3" />
       <column name="usuario_ref" value="user-852" />
-      <column name="fecha_estado" value="2020-06-09" />
       <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria2')" />
       <column name="fecha_envio_secretaria" value="2020-06-09" />
       <column name="requiere_retrospectiva" value="true" />
@@ -698,4 +695,27 @@
       <column name="documento_ref" value="DocumentoRef6" />
     </insert>
   </changeSet>
+  <changeSet author="master" id="20200601000000-estado_memoria">
+    <insert tableName="estado_memoria">
+      <column name="memoria" valueComputed="(select id from eti.memoria where titulo='Memoria1')" />
+      <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='TipoEstadoMemoria1')" />
+      <column name="fecha_estado" value="2020-06-15 21:06:44" />
+    </insert>
+    <insert tableName="estado_memoria">
+      <column name="memoria" valueComputed="(select id from eti.memoria where titulo='Memoria2')" />
+      <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='TipoEstadoMemoria1')" />
+      <column name="fecha_estado" value="2020-06-18 20:35:20" />
+    </insert>
+    <insert tableName="estado_memoria">
+      <column name="memoria" valueComputed="(select id from eti.memoria where titulo='Memoria2')" />
+      <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='TipoEstadoMemoria2')" />
+      <column name="fecha_estado" value="2020-06-20 12:40:20" />
+    </insert>
+    <insert tableName="estado_memoria">
+      <column name="memoria" valueComputed="(select id from eti.memoria where titulo='Memoria2')" />
+      <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='TipoEstadoMemoria3')" />
+      <column name="fecha_estado" value="2020-06-21 10:20:45" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>

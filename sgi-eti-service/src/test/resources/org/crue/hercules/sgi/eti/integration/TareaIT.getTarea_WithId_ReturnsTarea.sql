@@ -15,8 +15,8 @@ INSERT INTO eti.comite (id, comite, activo) VALUES (2, 'Comite2', true);
 INSERT INTO eti.tipo_memoria (id, nombre, activo) VALUES (1, 'TipoMemoria1', true);
 
 -- MEMORIA 
-INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, usuario_ref, fecha_estado, tipo_memoria_id, fecha_envio_secretaria, requiere_retrospectiva, fecha_retrospectiva, version)
- VALUES (200, 'ref-5588', 1, 2, 'Memoria001', 'userref-55698', '2020-06-05',1, null, false, null, 1);
+INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, usuario_ref,  tipo_memoria_id, fecha_envio_secretaria, requiere_retrospectiva, fecha_retrospectiva, version)
+ VALUES (200, 'ref-5588', 1, 2, 'Memoria001', 'userref-55698',1, null, false, null, 1);
 
 -- FORMACIÓN ESPECÍFICA 
 INSERT INTO eti.formacion_especifica (id, nombre, activo) VALUES (300, 'FormacionEspecifica001', true);

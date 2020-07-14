@@ -125,7 +125,6 @@ public class MemoriaServiceImpl implements MemoriaService {
       memoria.setComite((memoriaActualizar.getComite()));
       memoria.setTitulo(memoriaActualizar.getTitulo());
       memoria.setUsuarioRef(memoriaActualizar.getUsuarioRef());
-      memoria.setFechaEstado(memoriaActualizar.getFechaEstado());
       memoria.setTipoMemoria(memoriaActualizar.getTipoMemoria());
       memoria.setFechaEnvioSecretaria(memoriaActualizar.getFechaEnvioSecretaria());
       memoria.setRequiereRetrospectiva(memoriaActualizar.getRequiereRetrospectiva());

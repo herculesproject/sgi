@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.controller;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,13 +10,15 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
+import org.crue.hercules.sgi.eti.exceptions.EstadoMemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
+import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
-import org.crue.hercules.sgi.eti.service.MemoriaService;
+import org.crue.hercules.sgi.eti.service.EstadoMemoriaService;
 import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
@@ -39,10 +42,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * MemoriaControllerTest
+ * EstadoMemoriaControllerTest
  */
-@WebMvcTest(MemoriaController.class)
-public class MemoriaControllerTest {
+@WebMvcTest(EstadoMemoriaController.class)
+public class EstadoMemoriaControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
@@ -51,67 +54,66 @@ public class MemoriaControllerTest {
   private ObjectMapper mapper;
 
   @MockBean
-  private MemoriaService memoriaService;
+  private EstadoMemoriaService estadoMemoriaService;
 
   @Test
-  public void getMemoria_WithId_ReturnsMemoria() throws Exception {
-    BDDMockito.given(memoriaService.findById(ArgumentMatchers.anyLong()))
-        .willReturn((generarMockMemoria(1L, "numRef-5598", "Memoria1", 1)));
+  public void getEstadoMemoria_WithId_ReturnsEstadoMemoria() throws Exception {
+    BDDMockito.given(estadoMemoriaService.findById(ArgumentMatchers.anyLong()))
+        .willReturn((generarMockEstadoMemoria(1L, 1L)));
 
     mockMvc
         .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+            .get(ConstantesEti.ESTADO_MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("Memoria1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("Memoria001"))
+        .andExpect(MockMvcResultMatchers.jsonPath("tipoEstadoMemoria.nombre").value("TipoEstadoMemoria001"));
     ;
   }
 
   @Test
-  public void getMemoria_NotFound_Returns404() throws Exception {
-    BDDMockito.given(memoriaService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
-      throw new MemoriaNotFoundException(invocation.getArgument(0));
+  public void getEstadoMemoria_NotFound_Returns404() throws Exception {
+    BDDMockito.given(estadoMemoriaService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
+      throw new EstadoMemoriaNotFoundException(invocation.getArgument(0));
     });
     mockMvc
         .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+            .get(ConstantesEti.ESTADO_MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test
-  public void newMemoria_ReturnsMemoria() throws Exception {
-    // given: Una memoria nueva
-    String nuevaMemoriaJson = "{\"numReferencia\": \"numRef-5599\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
-        + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-19\","
-        + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}";
+  public void newEstadoMemoria_ReturnsEstadoMemoria() throws Exception {
+    // given: Un nuevo estado memoria
+    String nuevoEstadoMemoriaJson = "{\"memoria\": {\"id\": 1}, \"tipoEstadoMemoria\": {\"id\": 1}, \"fechaEstado\": \"2016-03-19T13:56:39.492\"}";
 
-    Memoria memoria = generarMockMemoria(1L, "numRef-5598", "Memoria1", 1);
+    EstadoMemoria estadoMemoria = generarMockEstadoMemoria(1L, 1L);
 
-    BDDMockito.given(memoriaService.create(ArgumentMatchers.<Memoria>any())).willReturn(memoria);
+    BDDMockito.given(estadoMemoriaService.create(ArgumentMatchers.<EstadoMemoria>any())).willReturn(estadoMemoria);
 
-    // when: Creamos una memoria
+    // when: Creamos un estado memoria
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevaMemoriaJson))
+        .perform(MockMvcRequestBuilders.post(ConstantesEti.ESTADO_MEMORIA_CONTROLLER_BASE_PATH)
+            .contentType(MediaType.APPLICATION_JSON).content(nuevoEstadoMemoriaJson))
         .andDo(MockMvcResultHandlers.print())
-        // then: Crea el nuevo tipo memoria y lo devuelve
+        // then: Crea el nuevo estado memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("Memoria1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("Memoria001"))
+        .andExpect(MockMvcResultMatchers.jsonPath("tipoEstadoMemoria.nombre").value("TipoEstadoMemoria001"));
   }
 
   @Test
-  public void newMemoria_Error_Returns400() throws Exception {
-    // given: Una memoria nueva que produce un error al crearse
-    String nuevaMemoriaJson = "{\"numReferencia\": \"numRef-5599\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
-        + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"19/06/2020\","
-        + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}";
+  public void newEstadoMemoria_Error_Returns400() throws Exception {
+    // given: Un nuevo estado memoria que produce un error al crearse
+    String nuevoEstadoMemoriaJson = "{\"memoria\": {\"id\": 1}, \"tipoEstadoMemoria\": {\"id\": 1}, \"fechaEstado\": \"2016-03-19T13:56:39.492\"}";
 
-    BDDMockito.given(memoriaService.create(ArgumentMatchers.<Memoria>any())).willThrow(new IllegalArgumentException());
+    BDDMockito.given(estadoMemoriaService.create(ArgumentMatchers.<EstadoMemoria>any()))
+        .willThrow(new IllegalArgumentException());
 
-    // when: Creamos una memoria
+    // when: Creamos un estado memoria
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevaMemoriaJson))
+        .perform(MockMvcRequestBuilders.post(ConstantesEti.ESTADO_MEMORIA_CONTROLLER_BASE_PATH)
+            .contentType(MediaType.APPLICATION_JSON).content(nuevoEstadoMemoriaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -119,112 +121,109 @@ public class MemoriaControllerTest {
   }
 
   @Test
-  public void replaceMemoria_ReturnsMemoria() throws Exception {
-    // given: Una memoria a modificar
-    String replaceMemoriaJson = "{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
-        + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1 replace\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
-        + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}";
+  public void replaceEstadoMemoria_ReturnsEstadoMemoria() throws Exception {
+    // given: Un estado memoria a modificar
+    String replaceEstadoMemoriaJson = "{\"id\": 1 ,\"memoria\": {\"id\": 2}, \"tipoEstadoMemoria\": {\"id\": 2}, \"fechaEstado\": \"2016-03-19T13:56:39.492\"}";
 
-    Memoria memoria = generarMockMemoria(1L, "numRef-5598", "Memoria1", 1);
+    EstadoMemoria memoria = generarMockEstadoMemoria(1L, 2L);
 
-    BDDMockito.given(memoriaService.update(ArgumentMatchers.<Memoria>any())).willReturn(memoria);
+    BDDMockito.given(estadoMemoriaService.update(ArgumentMatchers.<EstadoMemoria>any())).willReturn(memoria);
 
     mockMvc
-        .perform(
-            MockMvcRequestBuilders.put(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
-                .contentType(MediaType.APPLICATION_JSON).content(replaceMemoriaJson))
+        .perform(MockMvcRequestBuilders
+            .put(ConstantesEti.ESTADO_MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+            .contentType(MediaType.APPLICATION_JSON).content(replaceEstadoMemoriaJson))
         .andDo(MockMvcResultHandlers.print())
-        // then: Modifica la memoria y lo devuelve
+        // then: Modifica el estado memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("Memoria1"))
-        .andExpect(MockMvcResultMatchers.jsonPath("numReferencia").value("numRef-5598"));
+        .andExpect(MockMvcResultMatchers.jsonPath("memoria.id").value(2L))
+        .andExpect(MockMvcResultMatchers.jsonPath("tipoEstadoMemoria.id").value(2L));
 
   }
 
   @Test
-  public void replaceMemoria_NotFound() throws Exception {
+  public void replaceEstadoMemoria_NotFound() throws Exception {
     // given: Una memoria a modificar
-    String replaceMemoriaJson = "{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
-        + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1 replace\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
-        + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}";
+    String replaceEstadoMemoriaJson = "{\"id\": 1 ,\"memoria\": {\"id\": 2}, \"tipoEstadoMemoria\": {\"id\": 1}, \"fechaEstado\": \"2016-03-19T13:56:39.492\"}";
 
-    BDDMockito.given(memoriaService.update(ArgumentMatchers.<Memoria>any())).will((InvocationOnMock invocation) -> {
-      throw new MemoriaNotFoundException(((Memoria) invocation.getArgument(0)).getId());
-    });
+    BDDMockito.given(estadoMemoriaService.update(ArgumentMatchers.<EstadoMemoria>any()))
+        .will((InvocationOnMock invocation) -> {
+          throw new EstadoMemoriaNotFoundException(((EstadoMemoria) invocation.getArgument(0)).getId());
+        });
     mockMvc
-        .perform(
-            MockMvcRequestBuilders.put(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
-                .contentType(MediaType.APPLICATION_JSON).content(replaceMemoriaJson))
+        .perform(MockMvcRequestBuilders
+            .put(ConstantesEti.ESTADO_MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+            .contentType(MediaType.APPLICATION_JSON).content(replaceEstadoMemoriaJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
   }
 
   @Test
-  public void removeMemoria_ReturnsOk() throws Exception {
-    BDDMockito.given(memoriaService.findById(ArgumentMatchers.anyLong()))
-        .willReturn(generarMockMemoria(1L, "numRef-5598", "Memoria1", 1));
+  public void removeEstadoMemoria_ReturnsOk() throws Exception {
+    BDDMockito.given(estadoMemoriaService.findById(ArgumentMatchers.anyLong()))
+        .willReturn(generarMockEstadoMemoria(1L, 1L));
 
     mockMvc
         .perform(MockMvcRequestBuilders
-            .delete(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+            .delete(ConstantesEti.ESTADO_MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
-  public void findAll_Unlimited_ReturnsFullMemoriaList() throws Exception {
-    // given: One hundred Memoria
-    List<Memoria> memorias = new ArrayList<>();
+  public void findAll_Unlimited_ReturnsFullEstadoMemoriaList() throws Exception {
+    // given: One hundred EstadoMemoria
+    List<EstadoMemoria> memorias = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      memorias.add(generarMockMemoria(Long.valueOf(i), "numRef-55" + String.valueOf(i),
-          "Memoria" + String.format("%03d", i), i));
+      memorias.add(generarMockEstadoMemoria(Long.valueOf(i), Long.valueOf(i)));
     }
 
     BDDMockito
-        .given(memoriaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .given(
+            estadoMemoriaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(memorias));
 
     // when: find unlimited
     mockMvc
-        .perform(
-            MockMvcRequestBuilders.get(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.get(ConstantesEti.ESTADO_MEMORIA_CONTROLLER_BASE_PATH)
+            .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
-        // then: Get a page one hundred Memoria
+        // then: Get a page one hundred EstadoMemoria
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
   }
 
   @Test
-  public void findAll_WithPaging_ReturnsMemoriaSubList() throws Exception {
-    // given: One hundred Memoria
-    List<Memoria> memorias = new ArrayList<>();
+  public void findAll_WithPaging_ReturnsEstadoMemoriaSubList() throws Exception {
+    // given: One hundred EstadoMemoria
+    List<EstadoMemoria> memorias = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      memorias.add(generarMockMemoria(Long.valueOf(i), "numRef-55" + String.valueOf(i),
-          "Memoria" + String.format("%03d", i), i));
+      memorias.add(generarMockEstadoMemoria(Long.valueOf(i), Long.valueOf(i)));
     }
 
     BDDMockito
-        .given(memoriaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<Memoria>>() {
+        .given(
+            estadoMemoriaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<EstadoMemoria>>() {
           @Override
-          public Page<Memoria> answer(InvocationOnMock invocation) throws Throwable {
+          public Page<EstadoMemoria> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(1, Pageable.class);
             int size = pageable.getPageSize();
             int index = pageable.getPageNumber();
             int fromIndex = size * index;
             int toIndex = fromIndex + size;
-            List<Memoria> content = memorias.subList(fromIndex, toIndex);
-            Page<Memoria> page = new PageImpl<>(content, pageable, memorias.size());
+            List<EstadoMemoria> content = memorias.subList(fromIndex, toIndex);
+            Page<EstadoMemoria> page = new PageImpl<>(content, pageable, memorias.size());
             return page;
           }
         });
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH).header("X-Page", "3")
+        .perform(MockMvcRequestBuilders.get(ConstantesEti.ESTADO_MEMORIA_CONTROLLER_BASE_PATH).header("X-Page", "3")
             .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
-        // then: the asked Memorias are returned with the right page information
+        // then: the asked EstadoMemorias are returned with the right page information
         // in headers
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
@@ -234,41 +233,43 @@ public class MemoriaControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10))).andReturn();
 
     // this uses a TypeReference to inform Jackson about the Lists's generic type
-    List<Memoria> actual = mapper.readValue(requestResult.getResponse().getContentAsString(),
-        new TypeReference<List<Memoria>>() {
+    List<EstadoMemoria> actual = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<EstadoMemoria>>() {
         });
 
-    // containing titulo='Memoria031' to 'Memoria040'
+    // containing titulo='EstadoMemoria031' to 'EstadoMemoria040'
     for (int i = 0, j = 31; i < 10; i++, j++) {
-      Memoria memoria = actual.get(i);
-      Assertions.assertThat(memoria.getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
+      EstadoMemoria estadoMemoria = actual.get(i);
+      Assertions.assertThat(estadoMemoria.getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
+      Assertions.assertThat(estadoMemoria.getTipoEstadoMemoria().getNombre())
+          .isEqualTo("TipoEstadoMemoria" + String.format("%03d", j));
     }
   }
 
   @Test
-  public void findAll_WithSearchQuery_ReturnsFilteredMemoriaList() throws Exception {
-    // given: One hundred Memoria and a search query
-    List<Memoria> memorias = new ArrayList<>();
+  public void findAll_WithSearchQuery_ReturnsFilteredEstadoMemoriaList() throws Exception {
+    // given: One hundred EstadoMemoria and a search query
+    List<EstadoMemoria> estadoMemorias = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      memorias.add(generarMockMemoria(Long.valueOf(i), "numRef-55" + String.valueOf(i),
-          "Memoria" + String.format("%03d", i), i));
+      estadoMemorias.add(generarMockEstadoMemoria(Long.valueOf(i), Long.valueOf(i)));
     }
-    String query = "titulo~Memoria%,id:5";
+    String query = "id:5";
 
     BDDMockito
-        .given(memoriaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<Memoria>>() {
+        .given(
+            estadoMemoriaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<EstadoMemoria>>() {
           @Override
-          public Page<Memoria> answer(InvocationOnMock invocation) throws Throwable {
+          public Page<EstadoMemoria> answer(InvocationOnMock invocation) throws Throwable {
             List<QueryCriteria> queryCriterias = invocation.<List<QueryCriteria>>getArgument(0);
 
-            List<Memoria> content = new ArrayList<>();
-            for (Memoria memoria : memorias) {
+            List<EstadoMemoria> content = new ArrayList<>();
+            for (EstadoMemoria estadoMemoria : estadoMemorias) {
               boolean add = true;
               for (QueryCriteria queryCriteria : queryCriterias) {
-                Field field = ReflectionUtils.findField(Memoria.class, queryCriteria.getKey());
+                Field field = ReflectionUtils.findField(EstadoMemoria.class, queryCriteria.getKey());
                 field.setAccessible(true);
-                String fieldValue = ReflectionUtils.getField(field, memoria).toString();
+                String fieldValue = ReflectionUtils.getField(field, estadoMemoria).toString();
                 switch (queryCriteria.getOperation()) {
                   case EQUALS:
                     if (!fieldValue.equals(queryCriteria.getValue())) {
@@ -315,32 +316,49 @@ public class MemoriaControllerTest {
                 }
               }
               if (add) {
-                content.add(memoria);
+                content.add(estadoMemoria);
               }
             }
-            Page<Memoria> page = new PageImpl<>(content);
+            Page<EstadoMemoria> page = new PageImpl<>(content);
             return page;
           }
         });
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH).param("q", query)
+        .perform(MockMvcRequestBuilders.get(ConstantesEti.ESTADO_MEMORIA_CONTROLLER_BASE_PATH).param("q", query)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
-        // then: Get a page one hundred Memoria
+        // then: Get a page one hundred EstadoMemoria
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
   }
 
   /**
-   * Función que devuelve un objeto Memoria.
+   * Función que devuelve un objeto estado memoria
+   * 
+   * @param id                   id del estado memoria
+   * @param idDatosEstadoMemoria id de la memoria y del tipo estado memoria
+   * @return el objeto estado memoria
+   */
+  private EstadoMemoria generarMockEstadoMemoria(Long id, Long idDatosEstadoMemoria) {
+    return new EstadoMemoria(id,
+        generarMockMemoria(idDatosEstadoMemoria, "ref-9898", "Memoria" + String.format("%03d", idDatosEstadoMemoria),
+            1),
+        generarMockTipoEstadoMemoria(idDatosEstadoMemoria,
+            "TipoEstadoMemoria" + String.format("%03d", idDatosEstadoMemoria), Boolean.TRUE),
+        LocalDateTime.now());
+
+  }
+
+  /**
+   * Función que devuelve un objeto EstadoMemoria.
    * 
    * @param id            id del memoria.
    * @param numReferencia número de la referencia de la memoria.
    * @param titulo        titulo de la memoria.
    * @param version       version de la memoria.
-   * @return el objeto tipo Memoria
+   * @return el objeto tipo EstadoMemoria
    */
 
   private Memoria generarMockMemoria(Long id, String numReferencia, String titulo, Integer version) {
@@ -406,6 +424,18 @@ public class MemoriaControllerTest {
    */
   private TipoMemoria generarMockTipoMemoria(Long id, String nombre, Boolean activo) {
     return new TipoMemoria(id, nombre, activo);
+
+  }
+
+  /**
+   * Función que devuelve un objeto tipo estado memoria.
+   * 
+   * @param id     identificador del tipo estado memoria.
+   * @param nombre nobmre.
+   * @param activo indicador de activo.
+   */
+  private TipoEstadoMemoria generarMockTipoEstadoMemoria(Long id, String nombre, Boolean activo) {
+    return new TipoEstadoMemoria(id, nombre, activo);
 
   }
 
