@@ -69,9 +69,9 @@ public class TareaServiceImpl implements TareaService {
    */
   public Tarea findById(final Long id) throws TareaNotFoundException {
     log.debug("Petición a get Tarea : {}  - start", id);
-    final Tarea Tarea = tareaRepository.findById(id).orElseThrow(() -> new TareaNotFoundException(id));
+    final Tarea tarea = tareaRepository.findById(id).orElseThrow(() -> new TareaNotFoundException(id));
     log.debug("Petición a get Tarea : {}  - end", id);
-    return Tarea;
+    return tarea;
 
   }
 
@@ -115,7 +115,7 @@ public class TareaServiceImpl implements TareaService {
   public Tarea update(final Tarea tareaActualizar) {
     log.debug("update(Tarea tareaActualizar) - start");
 
-    Assert.notNull(tareaActualizar.getId(), "Tarea id no puede ser null para actualizar una petición de evaluación");
+    Assert.notNull(tareaActualizar.getId(), "Tarea id no puede ser null para actualizar una tarea");
 
     return tareaRepository.findById(tareaActualizar.getId()).map(tarea -> {
       tarea.setEquipoTrabajo(tareaActualizar.getEquipoTrabajo());

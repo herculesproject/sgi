@@ -604,4 +604,32 @@
       <column name="activo" value="true" />
     </insert>
   </changeSet>
+
+  <changeSet author="master" id="20200601000000-acta">
+    <insert tableName="acta">
+      <column name="id" value="1" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-estado-acta">
+    <insert tableName="estado_acta">
+      <column name="id" value="1" />
+      <column name="acta_id" valueComputed="(select id from eti.acta)" />
+      <column name="tipo_estado_acta_id" valueComputed="(select id from eti.tipo_estado_acta where comite='TipoEstadoActa1')" />
+      <column name="fecha_estado" value="2020-07-14 19:30:00" />
+    </insert>
+    <insert tableName="estado_acta">
+      <column name="id" value="2" />
+      <column name="acta_id" valueComputed="(select id from eti.acta)" />
+      <column name="tipo_estado_acta_id" valueComputed="(select id from eti.tipo_estado_acta where comite='TipoEstadoActa2')" />
+      <column name="fecha_estado" value="2020-07-14 19:31:00" />
+    </insert>
+    <insert tableName="estado_acta">
+      <column name="id" value="3" />
+      <column name="acta_id" valueComputed="(select id from eti.acta)" />
+      <column name="tipo_estado_acta_id" valueComputed="(select id from eti.tipo_estado_acta where comite='TipoEstadoActa3')" />
+      <column name="fecha_estado" value="2020-07-14 19:33:00" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>

@@ -2,7 +2,7 @@ package org.crue.hercules.sgi.eti.service;
 
 import java.util.List;
 
-import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
+import org.crue.hercules.sgi.eti.exceptions.TareaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
@@ -51,7 +51,7 @@ public interface TareaService {
    *
    * @param id el id de la entidad {@link Tarea}.
    */
-  void delete(Long id) throws PeticionEvaluacionNotFoundException;
+  void delete(Long id) throws TareaNotFoundException;
 
   /**
    * Elimina todos las {@link Tarea}.

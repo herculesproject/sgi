@@ -68,6 +68,13 @@
     <createSequence sequenceName="tipo_documento_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-estado_acta_seq">
+    <createSequence sequenceName="estado_acta_seq" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-acta_seq">
+    <createSequence sequenceName="acta_seq" />
+  </changeSet>
 
   <!-- ########################################################## -->
   <!-- TABLE -->
@@ -298,6 +305,25 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-estado-acta">
+    <createTable tableName="estado_acta">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="estado_acta_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="estado_acta_pk" />
+      </column>
+      <column name="acta_id" type="BIGINT" />
+      <column name="tipo_estado_acta_id" type="BIGINT" />
+      <column name="fecha_estado" type="DATETIME" />
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-acta">
+    <createTable tableName="acta">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="acta_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="acta_pk" />
+      </column>
+    </createTable>
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
   <!-- ########################################################## -->
@@ -362,6 +388,13 @@
 
   <changeSet author="master" id="20200601000000-tipo_documento_comite_FK">
     <addForeignKeyConstraint baseColumnNames="comite_id" baseTableName="tipo_documento" constraintName="tipo_documento_comite_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="comite" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-estado_acta_acta_FK">
+    <addForeignKeyConstraint baseColumnNames="acta_id" baseTableName="estado_acta" constraintName="estado_acta_acta_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="acta" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-estado_acta_tipo_estado_acta_FK">
+    <addForeignKeyConstraint baseColumnNames="tipo_estado_acta_id" baseTableName="estado_acta" constraintName="estado_acta_tipo_estado_acta_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_estado_acta" validate="true" />
   </changeSet>
 
   <!-- ########################################################## -->

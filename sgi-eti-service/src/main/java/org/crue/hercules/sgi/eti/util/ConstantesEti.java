@@ -11,7 +11,7 @@ public class ConstantesEti {
   /** PATH CONTROLLER DICTAMEN */
   public static final String DICTAMEN_CONTROLLER_BASE_PATH = "/dictamenes";
 
-  /** PATH CONTROLLER COMITE */
+  /** PATH CONTROLLER TIPO ESTADO ACTA */
   public static final String TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH = "/tipoestadoactas";
 
   /** PATH CONTROLLER EQUIPO TRABAJO */
@@ -52,5 +52,8 @@ public class ConstantesEti {
 
   /** PATH CONTROLLER TAREA */
   public static final String TAREA_CONTROLLER_BASE_PATH = "/tareas";
+
+  /** PATH CONTROLLER ESTADO ACTA */
+  public static final String ESTADO_ACTA_CONTROLLER_BASE_PATH = "/estadosactas";
 
 }
