@@ -1,7 +1,11 @@
 package org.crue.hercules.sgi.framework.security.access.expression;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.security.access.expression.SecurityExpressionRoot;
@@ -14,6 +18,7 @@ import org.springframework.util.Assert;
 public class SgiMethodSecurityExpressionRoot extends SecurityExpressionRoot
     implements MethodSecurityExpressionOperations {
   private Set<String> roles;
+  private Map<String, List<String>> rolesMap;
   private RoleHierarchy roleHierarchy;
   private String defaultRolePrefix = "ROLE_";
 
@@ -72,6 +77,14 @@ public class SgiMethodSecurityExpressionRoot extends SecurityExpressionRoot
     return hasAnyAuthorityNameForAnyUO(defaultRolePrefix, roles);
   }
 
+  public final String[] getAuthorityUOs(String authority) {
+    return getAuthorityNameUOs(null, authority);
+  }
+
+  public final String[] getRolUOs(String authority) {
+    return getAuthorityNameUOs(defaultRolePrefix, authority);
+  }
+
   private boolean hasAnyAuthorityNameForAnyUO(String prefix, String... roles) {
     Set<String> roleSet = getAuthoritySet();
 
@@ -83,6 +96,17 @@ public class SgiMethodSecurityExpressionRoot extends SecurityExpressionRoot
     }
 
     return false;
+  }
+
+  private String[] getAuthorityNameUOs(String prefix, String role) {
+    Map<String, List<String>> roleMap = getAuthorityMap();
+    String defaultedRole = getRoleWithDefaultPrefix(prefix, role);
+    List<String> uoList = roleMap.get(defaultedRole);
+    String[] uoArray = new String[] {};
+    if (uoList != null) {
+      return uoList.toArray(uoArray);
+    }
+    return uoArray;
   }
 
   /**
@@ -140,6 +164,20 @@ public class SgiMethodSecurityExpressionRoot extends SecurityExpressionRoot
     return roles;
   }
 
+  private Map<String, List<String>> getAuthorityMap() {
+    if (rolesMap == null) {
+      Collection<? extends GrantedAuthority> userAuthorities = authentication.getAuthorities();
+
+      if (roleHierarchy != null) {
+        userAuthorities = roleHierarchy.getReachableGrantedAuthorities(userAuthorities);
+      }
+
+      rolesMap = authorityListToMapWithUOs(userAuthorities);
+    }
+
+    return rolesMap;
+  }
+
   /**
    * Converts an array of GrantedAuthority objects to a Set.
    * 
@@ -156,6 +194,39 @@ public class SgiMethodSecurityExpressionRoot extends SecurityExpressionRoot
     }
 
     return set;
+  }
+
+  /**
+   * Converts an array of GrantedAuthority objects to a Map of Authorities and
+   * Unidades Organizativas.
+   * 
+   * @return a Map of the Strings obtained from each call to
+   *         GrantedAuthority.getAuthority()
+   */
+  private static Map<String, List<String>> authorityListToMapWithUOs(
+      Collection<? extends GrantedAuthority> userAuthorities) {
+    Assert.notNull(userAuthorities, "userAuthorities cannot be null");
+    Map<String, List<String>> map = new HashMap<>();
+
+    for (GrantedAuthority authority : userAuthorities) {
+      String auth = authority.getAuthority();
+      String uo = null;
+      int index = auth.indexOf("_");
+      if (index != -1) {
+        uo = auth.substring(index + 1, auth.length());
+        auth = auth.substring(0, index);
+      }
+      List<String> uoList = map.get(auth);
+      if (uoList == null) {
+        uoList = new ArrayList<>();
+      }
+      if (uo != null) {
+        uoList.add(uo);
+      }
+      map.put(auth, uoList);
+    }
+
+    return map;
   }
 
   private static String getAuthorityWithoutUO(String authority) {
