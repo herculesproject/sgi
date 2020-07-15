@@ -88,6 +88,9 @@
     <createSequence sequenceName="estado_memoria_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-tipo_convocatoria_reunion_seq">
+    <createSequence sequenceName="tipo_convocatoria_reunion_seq" />
+  </changeSet>
 
   <!-- ########################################################## -->
   <!-- TABLE -->
@@ -365,6 +368,18 @@
       <column name="memoria_id" type="BIGINT" />
       <column name="tipo_estado_memoria_id" type="BIGINT" />
       <column name="fecha_estado" type="DATETIME" />
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-tipo_convocatoria_reunion">
+    <createTable tableName="tipo_convocatoria_reunion">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_convocatoria_reunion_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_convocatoria_reunion_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
     </createTable>
   </changeSet>
 

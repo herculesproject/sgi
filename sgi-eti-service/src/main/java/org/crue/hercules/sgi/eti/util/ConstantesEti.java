@@ -44,6 +44,9 @@ public class ConstantesEti {
   /** PATH CONTROLLER TIPO ACTIVIDAD */
   public static final String TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH = "/tipoactividades";
 
+  /** PATH CONTROLLER TIPO CONVOCATORIA REUNION */
+  public static final String TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH = "/tipoconvocatoriareuniones";
+
   /** PATH CONTROLLER TIPO ESTADO ACTA */
   public static final String TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH = "/tipoestadoactas";
 

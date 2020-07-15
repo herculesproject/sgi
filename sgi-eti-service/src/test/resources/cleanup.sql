@@ -20,5 +20,6 @@ DELETE FROM eti.tipo_comentario
 DELETE FROM eti.estado_acta
 DELETE FROM eti.acta
 DELETE FROM eti.tipo_estado_acta
+DELETE FROM eti.tipo_convocatoria_reunion
 
 
