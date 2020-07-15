@@ -2,6 +2,8 @@ package org.crue.hercules.sgi.framework.web.config;
 
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.crue.hercules.sgi.framework.core.convert.converter.QueryCriteriaConverter;
 import org.crue.hercules.sgi.framework.core.convert.converter.SortCriteriaConverter;
 import org.crue.hercules.sgi.framework.http.converter.json.PageMappingJackson2HttpMessageConverter;
@@ -123,5 +125,10 @@ public class SgiWebConfig implements WebMvcConfigurer {
   @Bean
   public ResponseEntityExceptionHandler sgiResponseEntityExceptionHandler() {
     return new SgiResponseEntityExceptionHandler();
+  }
+
+  @Bean
+  public PageMappingJackson2HttpMessageConverter pageMappingJackson2HttpMessageConverter(ObjectMapper objectMapper) {
+    return new PageMappingJackson2HttpMessageConverter(objectMapper);
   }
 }
