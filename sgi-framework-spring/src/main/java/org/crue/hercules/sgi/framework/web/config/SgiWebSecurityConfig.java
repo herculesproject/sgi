@@ -17,10 +17,10 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 @EnableWebSecurity
 public class SgiWebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired
-  AccessDeniedHandler accessDeniedHandler;
+  private AccessDeniedHandler accessDeniedHandler;
 
   @Autowired
-  AuthenticationEntryPoint authenticationEntryPoint;
+  private AuthenticationEntryPoint authenticationEntryPoint;
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {

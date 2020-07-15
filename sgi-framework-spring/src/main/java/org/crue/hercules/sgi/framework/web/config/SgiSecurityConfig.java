@@ -12,7 +12,7 @@ import org.springframework.security.config.annotation.method.configuration.Globa
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SgiSecurityConfig extends GlobalMethodSecurityConfiguration {
-  private DefaultMethodSecurityExpressionHandler defaultMethodExpressionHandler = new SgiMethodSecurityExpressionHandler();
+  protected DefaultMethodSecurityExpressionHandler defaultMethodExpressionHandler = new SgiMethodSecurityExpressionHandler();
 
   /**
    * Provide a {@link MethodSecurityExpressionHandler} that is registered with the
