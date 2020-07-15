@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.crue.hercules.sgi.framework.web.error.Error;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
@@ -26,6 +27,7 @@ public class SgiAccessDeniedHandler implements AccessDeniedHandler {
       throws IOException, ServletException {
     Error error = new Error(HttpStatus.UNAUTHORIZED, "Unauthorized", ex);
     response.setStatus(error.getStatus().value());
+    response.setContentType(MediaType.APPLICATION_JSON.toString());
     OutputStream out = response.getOutputStream();
     mapper.writeValue(out, error);
     out.flush();
