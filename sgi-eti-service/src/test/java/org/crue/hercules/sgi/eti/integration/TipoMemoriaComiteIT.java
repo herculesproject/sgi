@@ -242,11 +242,12 @@ public class TipoMemoriaComiteIT {
   }
 
   /**
-   * Función que devuelve un objeto TipoMemoria
+   * Función que devuelve un objeto TipoMemoriaComite
    * 
-   * @param id     id del tipoMemoria
-   * @param nombre la descripción del tipo de memoria
-   * @return el objeto tipo memoria
+   * @param id          id de TipoMemoriaComite
+   * @param comite      el Comite de TipoMemoriaComite
+   * @param tipoMemoria el TipoMemoria de TipoMemoriaComite
+   * @return el objeto TipoMemoriaComite
    */
 
   public TipoMemoriaComite generarMockTipoMemoriaComite(Long id, Comite comite, TipoMemoria tipoMemoria) {

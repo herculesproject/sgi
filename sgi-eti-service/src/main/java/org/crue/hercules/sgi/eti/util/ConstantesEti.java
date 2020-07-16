@@ -16,6 +16,9 @@ public class ConstantesEti {
   /** PATH CONTROLLER COMITE */
   public static final String COMITE_CONTROLLER_BASE_PATH = "/comites";
 
+  /** PATH CONTROLLER COMITE FORMULARIO */
+  public static final String COMITE_FORMULARIO_CONTROLLER_BASE_PATH = "/comiteformularios";
+
   /** PATH CONTROLLER CONVOCATORIA_REUNION */
   public static final String CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH = "/convocatoriareuniones";
 

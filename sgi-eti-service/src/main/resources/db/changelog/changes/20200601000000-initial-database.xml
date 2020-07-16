@@ -112,6 +112,10 @@
     <createSequence sequenceName="evaluacion_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-comite_formulario_seq">
+    <createSequence sequenceName="comite_formulario_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -546,6 +550,16 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-comite_formulario">
+    <createTable tableName="comite_formulario">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="comite_formulario_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="comite_formulario_pk" />
+      </column>
+      <column name="comite_id" type="BIGINT" />
+      <column name="formulario_id" type="BIGINT" />
+    </createTable>
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
   <!-- ########################################################## -->
@@ -677,6 +691,14 @@
 
   <changeSet author="master" id="20200601000000-evaluacion_convocatoria_reunion_FK">
     <addForeignKeyConstraint baseColumnNames="convocatoria_reunion_id" baseTableName="evaluacion" constraintName="evaluacion_convocatoria_reunion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="convocatoria_reunion" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-comite_formulario_comite_FK">
+    <addForeignKeyConstraint baseColumnNames="comite_id" baseTableName="comite_formulario" constraintName="comite_formulario_comite_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="comite" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-comite_formulario_formulario_FK">
+    <addForeignKeyConstraint baseColumnNames="formulario_id" baseTableName="comite_formulario" constraintName="comite_formulario_formulario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="formulario" validate="true" />
   </changeSet>
 
   <!-- ########################################################## -->

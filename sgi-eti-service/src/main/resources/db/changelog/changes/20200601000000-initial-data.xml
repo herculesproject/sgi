@@ -949,4 +949,31 @@
       <column name="activo" value="true" />
     </insert>
   </changeSet>
+
+  <changeSet author="master" id="20200601000000-comite_formulario">
+    <insert tableName="comite_formulario">
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite1')" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
+    </insert>
+    <insert tableName="comite_formulario">
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite2')" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M20')" />
+    </insert>
+    <insert tableName="comite_formulario">
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite3')" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M40')" />
+    </insert>
+    <insert tableName="comite_formulario">
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite4')" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='Seguimiento Anual')" />
+    </insert>
+    <insert tableName="comite_formulario">
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite5')" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='Seguimiento Final')" />
+    </insert>
+    <insert tableName="comite_formulario">
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite6')" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='Retrospectiva')" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>
