@@ -28,7 +28,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 /**
- * EstadoServiceTest
+ * EstadoActaServiceTest
  */
 @ExtendWith(MockitoExtension.class)
 public class EstadoActaServiceTest {
@@ -50,9 +50,7 @@ public class EstadoActaServiceTest {
     EstadoActa estadoActa = estadoActaService.findById(1L);
 
     Assertions.assertThat(estadoActa.getId()).isEqualTo(1L);
-
-    Assertions.assertThat(estadoActa.getId()).isEqualTo(1L);
-
+    Assertions.assertThat(estadoActa.getActa().getId()).isEqualTo(100L);
   }
 
   @Test

@@ -1,3 +1,4 @@
+
 -- COMITE
 INSERT INTO eti.comite (id, comite, activo) VALUES (1, 'Comite1', true);
 
@@ -13,7 +14,4 @@ VALUES(100, 1, '2020-07-01 00:00:00.000', '2020-08-01', 'Lugar 01', 'Orden del d
 
 -- ACTA
 INSERT INTO eti.acta (id, convocatoria_reunion_id, hora_inicio, minuto_inicio, hora_fin, minuto_fin, resumen, numero, inactiva, activo)
-  VALUES (100, 100, 10, 15, 12, 0, 'Resumen123', 123, true, true);
-
--- TIPO ESTADO ACTA
-INSERT INTO eti.tipo_estado_acta (id, nombre, activo) VALUES (200, 'tipo1', true);
+  VALUES (2, 100, 10, 15, 12, 0, 'Resumen124', 124, true, true);

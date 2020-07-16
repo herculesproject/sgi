@@ -340,13 +340,6 @@
     </createTable>
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-acta">
-    <createTable tableName="acta">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="acta_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="acta_pk" />
-      </column>
-    </createTable>
-  </changeSet>
   <changeSet author="master" id="20200601000000-informe_formulario">
     <createTable tableName="informe_formulario">
       <column name="id" type="BIGINT" defaultValueSequenceNext="informe_formulario_seq">
@@ -438,6 +431,41 @@
       </column>
       <column name="nombre" type="VARCHAR(50)" />
       <column name="descripcion" type="VARCHAR(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-acta">
+    <createTable tableName="acta">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="acta_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="acta_pk" />
+      </column>
+      <column name="convocatoria_reunion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="hora_inicio" type="INT">
+        <constraints nullable="false" />
+      </column>
+      <column name="minuto_inicio" type="INT">
+        <constraints nullable="false" />
+      </column>
+      <column name="hora_fin" type="INT">
+        <constraints nullable="false" />
+      </column>
+      <column name="minuto_fin" type="INT">
+        <constraints nullable="false" />
+      </column>
+      <column name="resumen" type="VARCHAR(2000)">
+        <constraints nullable="false" />
+      </column>
+      <column name="numero" type="INT">
+        <constraints nullable="false" />
+      </column>
+      <column name="inactiva" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>
@@ -545,6 +573,10 @@
 
   <changeSet author="master" id="20200601000000-convocatoria_reunion_tipo_convocatoria_reunion_FK">
     <addForeignKeyConstraint baseColumnNames="tipo_convocatoria_reunion_id" baseTableName="convocatoria_reunion" constraintName="convocatoria_reunion_tipo_convocatoria_reunion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_convocatoria_reunion" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-acta_convocatoria_reunion_FK">
+    <addForeignKeyConstraint baseColumnNames="convocatoria_reunion_id" baseTableName="acta" constraintName="acta_convocatoria_reunion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="convocatoria_reunion" validate="true" />
   </changeSet>
 
   <!-- ########################################################## -->

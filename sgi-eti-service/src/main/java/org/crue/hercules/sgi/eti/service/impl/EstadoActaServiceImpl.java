@@ -27,8 +27,8 @@ import lombok.extern.slf4j.Slf4j;
 public class EstadoActaServiceImpl implements EstadoActaService {
   private final EstadoActaRepository estadoActaRepository;
 
-  public EstadoActaServiceImpl(EstadoActaRepository tareaRepository) {
-    this.estadoActaRepository = tareaRepository;
+  public EstadoActaServiceImpl(EstadoActaRepository estadoActaRepository) {
+    this.estadoActaRepository = estadoActaRepository;
   }
 
   /**

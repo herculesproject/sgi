@@ -2,6 +2,9 @@ package org.crue.hercules.sgi.eti.util;
 
 public class ConstantesEti {
 
+  /** PATH CONTROLLER ACTA */
+  public static final String ACTA_CONTROLLER_BASE_PATH = "/actas";
+
   /** PATH CONTROLLER CARGO COMITE */
   public static final String CARGO_COMITE_CONTROLLER_BASE_PATH = "/cargocomites";
 
@@ -16,6 +19,9 @@ public class ConstantesEti {
 
   /** PATH CONTROLLER DOCUMENTACION MEMORIA */
   public static final String DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH = "/documentacionmemorias";
+
+  /** PATH CONTROLLER ESTADO ACTA */
+  public static final String ESTADO_ACTA_CONTROLLER_BASE_PATH = "/estadosactas";
 
   /** PATH CONTROLLER EQUIPO TRABAJO */
   public static final String EQUIPO_TRABAJO_CONTROLLER_BASE_PATH = "/equipotrabajos";
@@ -70,8 +76,5 @@ public class ConstantesEti {
 
   /** PATH CONTROLLER TIPO COMENTARIO */
   public static final String TIPO_COMENTARIO_CONTROLLER_BASE_PATH = "/tipocomentarios";
-
-  /** PATH CONTROLLER ESTADO ACTA */
-  public static final String ESTADO_ACTA_CONTROLLER_BASE_PATH = "/estadosactas";
 
 }

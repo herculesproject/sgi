@@ -557,12 +557,6 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-acta">
-    <insert tableName="acta">
-      <column name="id" value="1" />
-    </insert>
-  </changeSet>
-
   <changeSet author="master" id="20200601000000-estado-acta">
     <insert tableName="estado_acta">
       <column name="id" value="1" />
@@ -797,6 +791,45 @@
     <insert tableName="formulario">
       <column name="nombre" value="Retrospectiva" />
       <column name="descripcion" value="Descripcion6" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-acta">
+    <insert tableName="acta">
+      <column name="id" value="1" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-1')" />
+      <column name="hora_inicio" value="10" />
+      <column name="minuto_inicio" value="15" />
+      <column name="hora_fin" value="12" />
+      <column name="minuto_fin" value="0" />
+      <column name="resumen" value="Resumen1" />
+      <column name="numero" value="1" />
+      <column name="inactiva" value="true" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="acta">
+      <column name="id" value="2" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-2')" />
+      <column name="hora_inicio" value="18" />
+      <column name="minuto_inicio" value="0" />
+      <column name="hora_fin" value="19" />
+      <column name="minuto_fin" value="45" />
+      <column name="resumen" value="Resumen2" />
+      <column name="numero" value="2" />
+      <column name="inactiva" value="false" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="acta">
+      <column name="id" value="3" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-3')" />
+      <column name="hora_inicio" value="11" />
+      <column name="minuto_inicio" value="30" />
+      <column name="hora_fin" value="12" />
+      <column name="minuto_fin" value="30" />
+      <column name="resumen" value="Resumen3" />
+      <column name="numero" value="3" />
+      <column name="inactiva" value="true" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>
