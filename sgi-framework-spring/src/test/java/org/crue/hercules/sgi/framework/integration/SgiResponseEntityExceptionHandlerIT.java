@@ -22,12 +22,15 @@ public class SgiResponseEntityExceptionHandlerIT {
   @Autowired
   private MockMvc mockMvc;
 
-  @Configuration
+  @Configuration // A nested @Configuration class wild be used instead of the
+                 // application’s primary configuration.
   @Import({ SgiWebConfig.class })
   public static class TestWebConfig {
   }
 
-  @TestConfiguration
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
   @RestController
   public static class InnerWebConfigTestController {
     @GetMapping("/test-illegal-argument-exception")
