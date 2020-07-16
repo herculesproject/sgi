@@ -29,6 +29,9 @@ public class ConstantesEti {
   /** PATH CONTROLLER FORMACION ESPECIFICA */
   public static final String FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH = "/formacionespecificas";
 
+  /** PATH CONTROLLER FORMULARIO */
+  public static final String FORMULARIO_CONTROLLER_BASE_PATH = "/formularios";
+
   /** PATH CONTROLLER INFORME FORMULARIO */
   public static final String INFORME_FORMULARIO_CONTROLLER_BASE_PATH = "/informeformularios";
 

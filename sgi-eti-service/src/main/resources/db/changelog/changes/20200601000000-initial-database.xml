@@ -96,6 +96,11 @@
     <createSequence sequenceName="convocatoria_reunion_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-formulario_seq">
+    <createSequence sequenceName="formulario_seq" />
+  </changeSet>
+
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -420,6 +425,19 @@
         <constraints nullable="false" />
       </column>
       <column name="fecha_envio" type="DATE" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-formulario">
+    <createTable tableName="formulario">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="formulario_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="formulario_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(50)" />
+      <column name="descripcion" type="VARCHAR(250)" />
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>

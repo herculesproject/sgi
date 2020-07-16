@@ -1,0 +1,250 @@
+package org.crue.hercules.sgi.eti.integration;
+
+import java.net.URI;
+import java.util.List;
+
+import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.model.Formulario;
+import org.crue.hercules.sgi.eti.util.ConstantesEti;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.web.util.UriComponentsBuilder;
+
+/**
+ * Test de integracion de Formulario.
+ */
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class FormularioIT {
+
+  @Autowired
+  private TestRestTemplate restTemplate;
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void getFormulario_WithId_ReturnsFormulario() throws Exception {
+    final ResponseEntity<Formulario> response = restTemplate.getForEntity(
+        ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, Formulario.class, 1L);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    final Formulario formulario = response.getBody();
+
+    Assertions.assertThat(formulario.getId()).isEqualTo(1L);
+    Assertions.assertThat(formulario.getNombre()).isEqualTo("M10");
+    Assertions.assertThat(formulario.getDescripcion()).isEqualTo("Descripcion");
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void addFormulario_ReturnsFormulario() throws Exception {
+
+    Formulario nuevoFormulario = new Formulario();
+    nuevoFormulario.setNombre("M10");
+    nuevoFormulario.setActivo(Boolean.TRUE);
+
+    restTemplate.postForEntity(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH, nuevoFormulario, Formulario.class);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void removeFormulario_Success() throws Exception {
+
+    // when: Delete con id existente
+    long id = 1L;
+    final ResponseEntity<Formulario> response = restTemplate.exchange(
+        ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE, null,
+        Formulario.class, id);
+
+    // then: 200
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void removeFormulario_DoNotGetFormulario() throws Exception {
+    restTemplate.delete(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+
+    final ResponseEntity<Formulario> response = restTemplate.getForEntity(
+        ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, Formulario.class, 1L);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void replaceFormulario_ReturnsFormulario() throws Exception {
+
+    Formulario replaceFormulario = generarMockFormulario(1L, "M10", "Descripcion");
+
+    final HttpEntity<Formulario> requestEntity = new HttpEntity<Formulario>(replaceFormulario, new HttpHeaders());
+
+    final ResponseEntity<Formulario> response = restTemplate.exchange(
+
+        ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
+        Formulario.class, 1L);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    final Formulario formulario = response.getBody();
+
+    Assertions.assertThat(formulario.getId()).isNotNull();
+    Assertions.assertThat(formulario.getNombre()).isEqualTo(replaceFormulario.getNombre());
+    Assertions.assertThat(formulario.getDescripcion()).isEqualTo(replaceFormulario.getDescripcion());
+    Assertions.assertThat(formulario.getActivo()).isEqualTo(replaceFormulario.getActivo());
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAll_WithPaging_ReturnsFormularioSubList() throws Exception {
+    // when: Obtiene la page=3 con pagesize=10
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "1");
+    headers.add("X-Page-Size", "3");
+
+    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH).build(false).toUri();
+
+    final ResponseEntity<List<Formulario>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        new HttpEntity<>(headers), new ParameterizedTypeReference<List<Formulario>>() {
+        });
+
+    // then: Respuesta OK, Formularios retorna la información de la página
+    // correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Formulario> formularios = response.getBody();
+    Assertions.assertThat(formularios.size()).isEqualTo(3);
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("3");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("6");
+
+    // Contiene de nombre='Seguimiento Anual', 'Seguimiento Final' y 'Retrospectiva'
+    Assertions.assertThat(formularios.get(0).getNombre()).isEqualTo("Seguimiento Anual");
+    Assertions.assertThat(formularios.get(1).getNombre()).isEqualTo("Seguimiento Final");
+    Assertions.assertThat(formularios.get(2).getNombre()).isEqualTo("Retrospectiva");
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAll_WithSearchQuery_ReturnsFilteredFormularioList() throws Exception {
+    // when: Búsqueda por nombre like e id equals
+    Long id = 3L;
+    String query = "nombre~M%,id:" + id;
+
+    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH).queryParam("q", query)
+        .build(false).toUri();
+
+    // when: Búsqueda por query
+    final ResponseEntity<List<Formulario>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
+        new ParameterizedTypeReference<List<Formulario>>() {
+        });
+
+    // then: Respuesta OK, Formularios retorna la información de la página
+    // correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Formulario> formularios = response.getBody();
+    Assertions.assertThat(formularios.size()).isEqualTo(1);
+    Assertions.assertThat(formularios.get(0).getId()).isEqualTo(id);
+    Assertions.assertThat(formularios.get(0).getNombre()).startsWith("M");
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAll_WithSortQuery_ReturnsOrderedFormularioList() throws Exception {
+    // when: Ordenación por nombre desc
+    String query = "nombre-";
+
+    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH).queryParam("s", query)
+        .build(false).toUri();
+
+    // when: Búsqueda por query
+    final ResponseEntity<List<Formulario>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
+        new ParameterizedTypeReference<List<Formulario>>() {
+        });
+
+    // then: Respuesta OK, Formularios retorna la información de la página
+    // correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Formulario> formularios = response.getBody();
+    Assertions.assertThat(formularios.size()).isEqualTo(6);
+    Assertions.assertThat(formularios.get(0).getId()).isEqualTo(5);
+    Assertions.assertThat(formularios.get(0).getNombre()).isEqualTo("Seguimiento Final");
+    Assertions.assertThat(formularios.get(3).getId()).isEqualTo(3);
+    Assertions.assertThat(formularios.get(3).getNombre()).isEqualTo("M30");
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAll_WithPagingSortingAndFiltering_ReturnsFormularioSubList() throws Exception {
+    // when: Obtiene page=3 con pagesize=10
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    // when: Ordena por nombre desc
+    String sort = "nombre-";
+    // when: Filtra por nombre like
+    String filter = "nombre~%0%";
+
+    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
+
+    final ResponseEntity<List<Formulario>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        new HttpEntity<>(headers), new ParameterizedTypeReference<List<Formulario>>() {
+        });
+
+    // then: Respuesta OK, Formularios retorna la información de la página
+    // correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Formulario> formularios = response.getBody();
+    Assertions.assertThat(formularios.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("3");
+
+    // Contiene nombre='M10', 'M20' y 'M30'
+    Assertions.assertThat(formularios.get(0).getNombre()).isEqualTo("M30");
+    Assertions.assertThat(formularios.get(1).getNombre()).isEqualTo("M20");
+    Assertions.assertThat(formularios.get(2).getNombre()).isEqualTo("M10");
+
+  }
+
+  /**
+   * Función que devuelve un objeto Formulario
+   * 
+   * @param id     id del Formulario
+   * @param nombre la descripción del Formulario
+   * @return el objeto Formulario
+   */
+
+  public Formulario generarMockFormulario(Long id, String nombre, String descripcion) {
+
+    Formulario formulario = new Formulario();
+    formulario.setId(id);
+    formulario.setNombre(nombre);
+    formulario.setDescripcion(descripcion);
+    formulario.setActivo(Boolean.TRUE);
+
+    return formulario;
+  }
+
+}

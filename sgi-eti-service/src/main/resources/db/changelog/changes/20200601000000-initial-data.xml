@@ -768,5 +768,37 @@
       <column name="activo" value="true" />
     </insert>
   </changeSet>
+  <changeSet author="master" id="20200601000000-formulario">
+    <insert tableName="formulario">
+      <column name="nombre" value="M10" />
+      <column name="descripcion" value="Descripcion1" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="formulario">
+      <column name="nombre" value="M20" />
+      <column name="descripcion" value="Descripcion2" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="formulario">
+      <column name="nombre" value="M30" />
+      <column name="descripcion" value="Descripcion3" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="formulario">
+      <column name="nombre" value="Seguimiento Anual" />
+      <column name="descripcion" value="Descripcion4" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="formulario">
+      <column name="nombre" value="Seguimiento Final" />
+      <column name="descripcion" value="Descripcion5" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="formulario">
+      <column name="nombre" value="Retrospectiva" />
+      <column name="descripcion" value="Descripcion6" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
 
 </databaseChangeLog>
