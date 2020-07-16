@@ -1,15 +1,15 @@
 package org.crue.hercules.sgi.framework.web.config;
 
 import org.crue.hercules.sgi.framework.security.access.expression.SgiMethodSecurityExpressionHandler;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.ExpressionBasedPreInvocationAdvice;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
+import org.springframework.stereotype.Component;
 
-@Configuration
+@Component
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SgiSecurityConfig extends GlobalMethodSecurityConfiguration {
   protected DefaultMethodSecurityExpressionHandler defaultMethodExpressionHandler = new SgiMethodSecurityExpressionHandler();

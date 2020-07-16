@@ -9,9 +9,7 @@ import org.crue.hercules.sgi.framework.core.convert.converter.SortCriteriaConver
 import org.crue.hercules.sgi.framework.http.converter.json.PageMappingJackson2HttpMessageConverter;
 import org.crue.hercules.sgi.framework.web.controller.SgiErrorController;
 import org.crue.hercules.sgi.framework.web.method.annotation.RequestPageableArgumentResolver;
-import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.converter.Converter;
@@ -19,6 +17,7 @@ import org.springframework.format.Formatter;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -30,7 +29,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  * Defines callback methods to customize the Java-based configuration for Spring
  * MVC enabled via {@code @EnableWebMvc}.
  */
-@Configuration
+@Component
+// If you add @EnableWebMvc Spring Boot's autoconfiguration is disabled
 public class SgiWebConfig implements WebMvcConfigurer {
   private static QueryCriteriaConverter queryOperationConverter = new QueryCriteriaConverter();
   private static SortCriteriaConverter sortOperationConverter = new SortCriteriaConverter();
