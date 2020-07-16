@@ -105,11 +105,11 @@ public class BloqueFormularioIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-    final BloqueFormulario tipoActividad = response.getBody();
+    final BloqueFormulario bloqueFormulario = response.getBody();
 
-    Assertions.assertThat(tipoActividad.getId()).isNotNull();
-    Assertions.assertThat(tipoActividad.getNombre()).isEqualTo(replaceBloqueFormulario.getNombre());
-    Assertions.assertThat(tipoActividad.getActivo()).isEqualTo(replaceBloqueFormulario.getActivo());
+    Assertions.assertThat(bloqueFormulario.getId()).isNotNull();
+    Assertions.assertThat(bloqueFormulario.getNombre()).isEqualTo(replaceBloqueFormulario.getNombre());
+    Assertions.assertThat(bloqueFormulario.getActivo()).isEqualTo(replaceBloqueFormulario.getActivo());
   }
 
   @Sql
@@ -189,9 +189,9 @@ public class BloqueFormularioIT {
     final List<BloqueFormulario> bloqueFormularios = response.getBody();
     Assertions.assertThat(bloqueFormularios.size()).isEqualTo(8);
     for (int i = 0; i < 8; i++) {
-      BloqueFormulario tipoActividad = bloqueFormularios.get(i);
-      Assertions.assertThat(tipoActividad.getId()).isEqualTo(8 - i);
-      Assertions.assertThat(tipoActividad.getNombre()).isEqualTo("BloqueFormulario" + String.format("%03d", 8 - i));
+      BloqueFormulario bloqueFormulario = bloqueFormularios.get(i);
+      Assertions.assertThat(bloqueFormulario.getId()).isEqualTo(8 - i);
+      Assertions.assertThat(bloqueFormulario.getNombre()).isEqualTo("BloqueFormulario" + String.format("%03d", 8 - i));
     }
   }
 
