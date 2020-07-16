@@ -9,16 +9,16 @@ import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-@RestController
+@ResponseBody
+// Can't use @RestController as this is declared as a Bean in SgiWebConfig
 @RequestMapping("${server.error.path:${error.path:/error}}")
 public class SgiErrorController implements ErrorController {
 
   /**
    * @return String
    */
-  @SuppressWarnings("deprecation")
   @Override
   public String getErrorPath() {
     return null;
