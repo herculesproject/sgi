@@ -1,0 +1,81 @@
+-- COMITÉ
+INSERT INTO eti.comite (id, comite, activo) VALUES (1, 'Comite1', true);
+
+-- TIPO ACTIVIDAD 
+INSERT INTO eti.tipo_actividad (id, nombre, activo) VALUES (1, 'TipoActividad1', true);
+
+-- TIPO MEMORIA 
+INSERT INTO eti.tipo_memoria (id, nombre, activo) VALUES (1, 'TipoMemoria1', true);
+
+--PETICION EVALUACION
+INSERT INTO eti.peticion_evaluacion (id, titulo, codigo, solicitud_convocatoria_ref, tipo_actividad_id, fuente_financiacion_ref, fecha_inicio, fecha_fin, resumen, valor_social, otro_valor_social, objetivos, dis_metodologico, externo, tiene_fondos_propios, usuario_ref, activo)
+VALUES(1, 'PeticionEvaluacion1', 'Codigo', 'Ref solicitud convocatoria', 1, 'Ref fuente financiadora', '2020-07-09', '2021-07-09', 'Resumen', 3, 'Otro valor social', 'Objetivos', 'Metodologico', false, false, 'user-001', true);
+
+-- MEMORIA 
+INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, usuario_ref, tipo_memoria_id, fecha_envio_secretaria, requiere_retrospectiva, fecha_retrospectiva, version)
+ VALUES (1, 'ref-5588', 1, 1, 'Memoria1', 'userref-55698', 1, null, false, null, 1);
+INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, usuario_ref, tipo_memoria_id, fecha_envio_secretaria, requiere_retrospectiva, fecha_retrospectiva, version)
+ VALUES (2, 'ref-3534', 1, 1, 'Memoria2', 'userref-5698', 1, null, false, null, 1);
+INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, usuario_ref, tipo_memoria_id, fecha_envio_secretaria, requiere_retrospectiva, fecha_retrospectiva, version)
+ VALUES (3, 'ref-657', 1, 1, 'Memoria3', 'userref-757', 1, null, false, null, 1);
+INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, usuario_ref, tipo_memoria_id, fecha_envio_secretaria, requiere_retrospectiva, fecha_retrospectiva, version)
+ VALUES (4, 'ref-4698', 1, 1, 'Memoria4', 'userref-654', 1, null, false, null, 1);
+INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, usuario_ref, tipo_memoria_id, fecha_envio_secretaria, requiere_retrospectiva, fecha_retrospectiva, version)
+ VALUES (5, 'ref-4657', 1, 1, 'Memoria5', 'userref-777', 1, null, false, null, 1);
+INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, usuario_ref, tipo_memoria_id, fecha_envio_secretaria, requiere_retrospectiva, fecha_retrospectiva, version)
+ VALUES (6, 'ref-6658', 1, 1, 'Memoria6', 'userref-55465', 1, null, false, null, 1);
+INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, usuario_ref, tipo_memoria_id, fecha_envio_secretaria, requiere_retrospectiva, fecha_retrospectiva, version)
+ VALUES (7, 'ref-3635', 1, 1, 'Memoria7', 'userref-4444', 1, null, false, null, 1);
+INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, usuario_ref, tipo_memoria_id, fecha_envio_secretaria, requiere_retrospectiva, fecha_retrospectiva, version)
+ VALUES (8, 'ref-777', 1, 1, 'Memoria8', 'userref-5555', 1, null, false, null, 1);
+
+-- DICTAMEN
+INSERT INTO eti.dictamen (id, nombre, activo) VALUES (1, 'Dictamen1', true);
+INSERT INTO eti.dictamen (id, nombre, activo) VALUES (2, 'Dictamen2', true);
+INSERT INTO eti.dictamen (id, nombre, activo) VALUES (3, 'Dictamen3', true);
+INSERT INTO eti.dictamen (id, nombre, activo) VALUES (4, 'Dictamen4', true);
+INSERT INTO eti.dictamen (id, nombre, activo) VALUES (5, 'Dictamen5', true);
+INSERT INTO eti.dictamen (id, nombre, activo) VALUES (6, 'Dictamen6', true);
+INSERT INTO eti.dictamen (id, nombre, activo) VALUES (7, 'Dictamen7', true);
+INSERT INTO eti.dictamen (id, nombre, activo) VALUES (8, 'Dictamen8', true);
+
+-- TIPO CONVOCATORIA REUNION 
+INSERT INTO eti.tipo_convocatoria_reunion (id, nombre, activo) VALUES (1, 'Ordinaria', true);
+INSERT INTO eti.tipo_convocatoria_reunion (id, nombre, activo) VALUES (2, 'Extraordinaria', true);
+INSERT INTO eti.tipo_convocatoria_reunion (id, nombre, activo) VALUES (3, 'Seguimiento', true);
+
+-- CONVOCATORIA REUNION
+INSERT INTO ETI.CONVOCATORIA_REUNION
+(ID, COMITE_ID, FECHA_EVALUACION, FECHA_LIMITE, LUGAR, ORDEN_DIA, CODIGO, TIPO_CONVOCATORIA_REUNION_ID, HORA_INICIO, MINUTO_INICIO, FECHA_ENVIO, ACTIVO)
+VALUES(1, 1, '2020-07-01 00:00:00.000', '2020-08-01', 'Lugar 1', 'Orden del día convocatoria reunión 01', 'CR-1', 1, 8, 30, '2020-07-13', true);
+INSERT INTO ETI.CONVOCATORIA_REUNION
+(ID, COMITE_ID, FECHA_EVALUACION, FECHA_LIMITE, LUGAR, ORDEN_DIA, CODIGO, TIPO_CONVOCATORIA_REUNION_ID, HORA_INICIO, MINUTO_INICIO, FECHA_ENVIO, ACTIVO)
+VALUES(2, 1, '2020-07-02 00:00:00.000', '2020-08-02', 'Lugar 2', 'Orden del día convocatoria reunión 2', 'CR-2', 2, 9, 30, '2020-07-13', true);
+INSERT INTO ETI.CONVOCATORIA_REUNION
+(ID, COMITE_ID, FECHA_EVALUACION, FECHA_LIMITE, LUGAR, ORDEN_DIA, CODIGO, TIPO_CONVOCATORIA_REUNION_ID, HORA_INICIO, MINUTO_INICIO, FECHA_ENVIO, ACTIVO)
+VALUES(3, 1, '2020-07-03 00:00:00.000', '2020-08-03', 'Lugar 3', 'Orden del día convocatoria reunión 3', 'CR-3', 1, 10, 30, '2020-07-13', true);
+INSERT INTO ETI.CONVOCATORIA_REUNION
+(ID, COMITE_ID, FECHA_EVALUACION, FECHA_LIMITE, LUGAR, ORDEN_DIA, CODIGO, TIPO_CONVOCATORIA_REUNION_ID, HORA_INICIO, MINUTO_INICIO, FECHA_ENVIO, ACTIVO)
+VALUES(4, 1, '2020-07-04 00:00:00.000', '2020-08-04', 'Lugar 4', 'Orden del día convocatoria reunión 4', 'CR-4', 2, 11, 30, '2020-07-13', true);
+INSERT INTO ETI.CONVOCATORIA_REUNION
+(ID, COMITE_ID, FECHA_EVALUACION, FECHA_LIMITE, LUGAR, ORDEN_DIA, CODIGO, TIPO_CONVOCATORIA_REUNION_ID, HORA_INICIO, MINUTO_INICIO, FECHA_ENVIO, ACTIVO)
+VALUES(5, 1, '2020-07-05 00:00:00.000', '2020-08-05', 'Lugar 5', 'Orden del día convocatoria reunión 5', 'CR-5', 1, 12, 30, '2020-07-13', true);
+INSERT INTO ETI.CONVOCATORIA_REUNION
+(ID, COMITE_ID, FECHA_EVALUACION, FECHA_LIMITE, LUGAR, ORDEN_DIA, CODIGO, TIPO_CONVOCATORIA_REUNION_ID, HORA_INICIO, MINUTO_INICIO, FECHA_ENVIO, ACTIVO)
+VALUES(6, 1, '2020-07-05 00:00:00.000', '2020-08-05', 'Lugar 5', 'Orden del día convocatoria reunión 6', 'CR-6', 3, 12, 30, '2020-07-13', true);
+INSERT INTO ETI.CONVOCATORIA_REUNION
+(ID, COMITE_ID, FECHA_EVALUACION, FECHA_LIMITE, LUGAR, ORDEN_DIA, CODIGO, TIPO_CONVOCATORIA_REUNION_ID, HORA_INICIO, MINUTO_INICIO, FECHA_ENVIO, ACTIVO)
+VALUES(7, 1, '2020-07-05 00:00:00.000', '2020-08-05', 'Lugar 5', 'Orden del día convocatoria reunión 7', 'CR-7', 1, 12, 30, '2020-07-13', true);
+INSERT INTO ETI.CONVOCATORIA_REUNION
+(ID, COMITE_ID, FECHA_EVALUACION, FECHA_LIMITE, LUGAR, ORDEN_DIA, CODIGO, TIPO_CONVOCATORIA_REUNION_ID, HORA_INICIO, MINUTO_INICIO, FECHA_ENVIO, ACTIVO)
+VALUES(8, 1, '2020-07-05 00:00:00.000', '2020-08-05', 'Lugar 5', 'Orden del día convocatoria reunión 8', 'CR-8', 3, 12, 30, '2020-07-13', true);
+
+-- EVALUACION
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, es_rev_minima, version, activo) VALUES(1, 1, 1, 1, true, 2, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, es_rev_minima, version, activo) VALUES(2, 2, 2, 2, true, 2, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, es_rev_minima, version, activo) VALUES(3, 3, 3, 3, true, 2, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, es_rev_minima, version, activo) VALUES(4, 4, 4, 4, true, 3, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, es_rev_minima, version, activo) VALUES(5, 5, 5, 5, true, 3, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, es_rev_minima, version, activo) VALUES(6, 6, 6, 6, true, 5, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, es_rev_minima, version, activo) VALUES(7, 7, 7, 7, true, 6, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, es_rev_minima, version, activo) VALUES(8, 8, 8, 8, true, 4, true);

@@ -143,7 +143,6 @@
       <column name="nombre" value="VOCAL" />
       <column name="activo" value="true" />
     </insert>
-
   </changeSet>
 
   <changeSet author="master" id="20200601000000-peticion_evaluacion">
@@ -872,6 +871,7 @@
       <column name="activo" value="true" />
     </insert>
   </changeSet>
+
   <changeSet author="master" id="20200601000000-asistentes">
     <insert tableName="asistentes">
       <column name="evaluador_id" valueComputed="(select id from eti.evaluador where usuario_ref='user-005')" />
@@ -899,4 +899,54 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-evaluacion">
+    <insert tableName="evaluacion">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria1')" />
+      <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Dictamen1')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-1')" />
+      <column name="fecha_dictamen" value="2020-07-09" />
+      <column name="res_rev_minima" value="true" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="evaluacion">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria2')" />
+      <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Dictamen2')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-2')" />
+      <column name="fecha_dictamen" value="2020-07-09" />
+      <column name="res_rev_minima" value="true" />
+      <column name="activo" value="false" />
+    </insert>
+    <insert tableName="evaluacion">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria3')" />
+      <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Dictamen3')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-3')" />
+      <column name="fecha_dictamen" value="2020-07-09" />
+      <column name="res_rev_minima" value="true" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="evaluacion">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria4')" />
+      <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Dictamen4')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-4')" />
+      <column name="fecha_dictamen" value="2020-07-09" />
+      <column name="res_rev_minima" value="false" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="evaluacion">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria5')" />
+      <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Dictamen5')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-5')" />
+      <column name="fecha_dictamen" value="2020-07-09" />
+      <column name="res_rev_minima" value="true" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="evaluacion">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria6')" />
+      <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Dictamen6')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-6')" />
+      <column name="fecha_dictamen" value="2020-07-09" />
+      <column name="res_rev_minima" value="true" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>

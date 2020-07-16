@@ -108,6 +108,9 @@
     <createSequence sequenceName="asistentes_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-evaluacion_seq">
+    <createSequence sequenceName="evaluacion_seq" />
+  </changeSet>
 
   <!-- ########################################################## -->
   <!-- TABLE -->
@@ -505,6 +508,44 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-evaluacion">
+    <createTable tableName="evaluacion">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="evaluacion_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="evaluacion_pk" />
+      </column>
+      <column name="memoria_id" type="BIGINT" />
+      <column name="dictamen_id" type="BIGINT" />
+      <column name="convocatoria_reunion_id" type="BIGINT" />
+      <column name="fecha_dictamen" type="DATE" />
+      <column name="version" type="INT" />
+      <column name="es_rev_minima" type="BOOLEAN" defaultValueBoolean="false">
+        <constraints nullable="false" />
+      </column>
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-evaluacion">
+    <createTable tableName="evaluacion">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="evaluacion_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="evaluacion_pk" />
+      </column>
+      <column name="memoria_id" type="BIGINT" />
+      <column name="dictamen_id" type="BIGINT" />
+      <column name="convocatoria_reunion_id" type="BIGINT" />
+      <column name="fecha_dictamen" type="DATE" />
+      <column name="version" type="INT" />
+      <column name="es_rev_minima" type="BOOLEAN" defaultValueBoolean="false">
+        <constraints nullable="false" />
+      </column>
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
   <!-- ########################################################## -->
@@ -616,12 +657,26 @@
     <addForeignKeyConstraint baseColumnNames="formulario_id" baseTableName="bloque_formulario" constraintName="bloque_formulario_formulario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="formulario" validate="true" />
   </changeSet>
 
+
   <changeSet author="master" id="20200601000000-asistentes_evaluador_FK">
     <addForeignKeyConstraint baseColumnNames="evaluador_id" baseTableName="asistentes" constraintName="asistentes_evaluador_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="evaluador" validate="true" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-asistentes_convocatoria_reunion_FK">
     <addForeignKeyConstraint baseColumnNames="convocatoria_reunion_id" baseTableName="asistentes" constraintName="asistentes_convocatoria_reunion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="convocatoria_reunion" validate="true" />
+  </changeSet>
+
+
+  <changeSet author="master" id="20200601000000-evaluacion_memoria_FK">
+    <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="evaluacion" constraintName="evaluacion_memoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="memoria" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-evaluacion_dictamen_FK">
+    <addForeignKeyConstraint baseColumnNames="dictamen_id" baseTableName="evaluacion" constraintName="evaluacion_dictamen_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="dictamen" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-evaluacion_convocatoria_reunion_FK">
+    <addForeignKeyConstraint baseColumnNames="convocatoria_reunion_id" baseTableName="evaluacion" constraintName="evaluacion_convocatoria_reunion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="convocatoria_reunion" validate="true" />
   </changeSet>
 
   <!-- ########################################################## -->

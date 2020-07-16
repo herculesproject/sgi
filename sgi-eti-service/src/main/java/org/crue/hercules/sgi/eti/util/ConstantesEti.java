@@ -34,6 +34,9 @@ public class ConstantesEti {
   /** PATH CONTROLLER ESTADO MEMORIA */
   public static final String ESTADO_MEMORIA_CONTROLLER_BASE_PATH = "/estadomemorias";
 
+  /** PATH CONTROLLER EVALUACION */
+  public static final String EVALUACION_CONTROLLER_BASE_PATH = "/evaluaciones";
+
   /** PATH CONTROLLER EVALUADOR */
   public static final String EVALUADOR_CONTROLLER_BASE_PATH = "/evaluadores";
 
