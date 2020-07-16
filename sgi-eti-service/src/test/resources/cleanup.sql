@@ -5,6 +5,7 @@ DELETE FROM eti.informe_formulario
 DELETE FROM eti.estado_memoria
 DELETE FROM eti.memoria
 DELETE FROM eti.tipo_memoria_comite
+DELETE FROM eti.asistentes
 DELETE FROM eti.evaluador
 DELETE FROM eti.equipo_trabajo
 DELETE FROM eti.peticion_evaluacion

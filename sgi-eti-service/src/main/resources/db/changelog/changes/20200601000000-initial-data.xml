@@ -872,4 +872,31 @@
       <column name="activo" value="true" />
     </insert>
   </changeSet>
+  <changeSet author="master" id="20200601000000-asistentes">
+    <insert tableName="asistentes">
+      <column name="evaluador_id" valueComputed="(select id from eti.evaluador where usuario_ref='user-005')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-6')" />
+      <column name="asistencia" value="true" />
+      <column name="motivo" value="Motivo 1" />
+    </insert>
+    <insert tableName="asistentes">
+      <column name="evaluador_id" valueComputed="(select id from eti.evaluador where usuario_ref='user-004')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-3')" />
+      <column name="asistencia" value="false" />
+      <column name="motivo" value="Motivo 2" />
+    </insert>
+    <insert tableName="asistentes">
+      <column name="evaluador_id" valueComputed="(select id from eti.evaluador where usuario_ref='user-005')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-4')" />
+      <column name="asistencia" value="true" />
+      <column name="motivo" value="Motivo 3" />
+    </insert>
+    <insert tableName="asistentes">
+      <column name="evaluador_id" valueComputed="(select id from eti.evaluador where usuario_ref='user-004')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-2')" />
+      <column name="asistencia" value="true" />
+      <column name="motivo" value="Motivo 4" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>
