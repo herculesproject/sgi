@@ -834,4 +834,42 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-bloque_formulario">
+    <insert tableName="bloque_formulario">
+      <column name="nombre" value="BloqueFormulario1" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where descripcion='Descripcion1')" />
+      <column name="orden" value="6" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="bloque_formulario">
+      <column name="nombre" value="BloqueFormulario2" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where descripcion='Descripcion2')" />
+      <column name="orden" value="5" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="bloque_formulario">
+      <column name="nombre" value="BloqueFormulario3" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where descripcion='Descripcion3')" />
+      <column name="orden" value="4" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="bloque_formulario">
+      <column name="nombre" value="BloqueFormulario4" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where descripcion='Descripcion4')" />
+      <column name="orden" value="3" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="bloque_formulario">
+      <column name="nombre" value="BloqueFormulario5" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where descripcion='Descripcion5')" />
+      <column name="orden" value="2" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="bloque_formulario">
+      <column name="nombre" value="BloqueFormulario6" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where descripcion='Descripcion6')" />
+      <column name="orden" value="1" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>

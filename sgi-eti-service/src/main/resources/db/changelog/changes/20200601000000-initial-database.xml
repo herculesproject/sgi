@@ -100,6 +100,9 @@
     <createSequence sequenceName="formulario_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-bloque_formulario_seq">
+    <createSequence sequenceName="bloque_formulario_seq" />
+  </changeSet>
 
   <!-- ########################################################## -->
   <!-- TABLE -->
@@ -471,6 +474,19 @@
       </column>
     </createTable>
   </changeSet>
+  <changeSet author="master" id="20200601000000-bloque_formulario">
+    <createTable tableName="bloque_formulario">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="bloque_formulario_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="bloque_formulario_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(250)" />
+      <column name="formulario_id" type="BIGINT" />
+      <column name="orden" type="INT" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
 
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
@@ -577,6 +593,11 @@
 
   <changeSet author="master" id="20200601000000-acta_convocatoria_reunion_FK">
     <addForeignKeyConstraint baseColumnNames="convocatoria_reunion_id" baseTableName="acta" constraintName="acta_convocatoria_reunion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="convocatoria_reunion" validate="true" />
+  </changeSet>
+
+
+  <changeSet author="master" id="20200601000000-bloque_formulario_formulario_FK">
+    <addForeignKeyConstraint baseColumnNames="formulario_id" baseTableName="bloque_formulario" constraintName="bloque_formulario_formulario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="formulario" validate="true" />
   </changeSet>
 
   <!-- ########################################################## -->
