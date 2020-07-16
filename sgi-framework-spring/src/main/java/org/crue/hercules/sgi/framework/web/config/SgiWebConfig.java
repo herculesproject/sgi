@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.framework.core.convert.converter.SortCriteriaConver
 import org.crue.hercules.sgi.framework.http.converter.json.PageMappingJackson2HttpMessageConverter;
 import org.crue.hercules.sgi.framework.web.controller.SgiErrorController;
 import org.crue.hercules.sgi.framework.web.method.annotation.RequestPageableArgumentResolver;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

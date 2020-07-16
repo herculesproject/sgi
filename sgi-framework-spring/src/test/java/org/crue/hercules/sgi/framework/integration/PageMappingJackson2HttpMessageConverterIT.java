@@ -38,7 +38,7 @@ public class PageMappingJackson2HttpMessageConverterIT {
 
   @Configuration // A nested @Configuration class wild be used instead of the
                  // application’s primary configuration.
-  @Import({ SgiWebConfig.class })
+  @Import(SgiWebConfig.class)
   public static class TestWebConfig {
   }
 
