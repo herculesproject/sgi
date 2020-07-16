@@ -40,7 +40,7 @@ public class CargoComiteIT {
     final CargoComite cargoComite = response.getBody();
 
     Assertions.assertThat(cargoComite.getId()).isEqualTo(1L);
-    Assertions.assertThat(cargoComite.getNombre()).isEqualTo("CargoComite1");
+    Assertions.assertThat(cargoComite.getNombre()).isEqualTo("PRESIDENTE");
   }
 
   @Sql
@@ -114,7 +114,7 @@ public class CargoComiteIT {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
-    headers.add("X-Page-Size", "5");
+    headers.add("X-Page-Size", "1");
 
     URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH).build(false).toUri();
 
@@ -126,15 +126,13 @@ public class CargoComiteIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<CargoComite> cargoComites = response.getBody();
-    Assertions.assertThat(cargoComites.size()).isEqualTo(3);
+    Assertions.assertThat(cargoComites.size()).isEqualTo(1);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("1");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("2");
 
-    // Contiene de nombre='CargoComite6' a 'CargoComite8'
-    Assertions.assertThat(cargoComites.get(0).getNombre()).isEqualTo("CargoComite6");
-    Assertions.assertThat(cargoComites.get(1).getNombre()).isEqualTo("CargoComite7");
-    Assertions.assertThat(cargoComites.get(2).getNombre()).isEqualTo("CargoComite8");
+    // Contiene de nombre='VOCAL'
+    Assertions.assertThat(cargoComites.get(0).getNombre()).isEqualTo("VOCAL");
   }
 
   @Sql
@@ -142,8 +140,8 @@ public class CargoComiteIT {
   @Test
   public void findAll_WithSearchQuery_ReturnsFilteredCargoComiteList() throws Exception {
     // when: Búsqueda por nombre like e id equals
-    Long id = 5L;
-    String query = "nombre~CargoComite%,id:" + id;
+    Long id = 1L;
+    String query = "nombre~PRESI%,id:" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH).queryParam("q", query)
         .build(false).toUri();
@@ -159,7 +157,7 @@ public class CargoComiteIT {
     final List<CargoComite> cargoComites = response.getBody();
     Assertions.assertThat(cargoComites.size()).isEqualTo(1);
     Assertions.assertThat(cargoComites.get(0).getId()).isEqualTo(id);
-    Assertions.assertThat(cargoComites.get(0).getNombre()).startsWith("CargoComite");
+    Assertions.assertThat(cargoComites.get(0).getNombre()).startsWith("PRESIDENTE");
   }
 
   @Sql
@@ -181,12 +179,11 @@ public class CargoComiteIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<CargoComite> cargoComites = response.getBody();
-    Assertions.assertThat(cargoComites.size()).isEqualTo(8);
-    for (int i = 0; i < 8; i++) {
-      CargoComite cargoComite = cargoComites.get(i);
-      Assertions.assertThat(cargoComite.getId()).isEqualTo(8 - i);
-      Assertions.assertThat(cargoComite.getNombre()).isEqualTo("CargoComite" + String.format("%03d", 8 - i));
-    }
+    Assertions.assertThat(cargoComites.size()).isEqualTo(2);
+    Assertions.assertThat(cargoComites.get(0).getId()).isEqualTo(2);
+    Assertions.assertThat(cargoComites.get(0).getNombre()).isEqualTo("VOCAL");
+    Assertions.assertThat(cargoComites.get(1).getId()).isEqualTo(1);
+    Assertions.assertThat(cargoComites.get(1).getNombre()).isEqualTo("PRESIDENTE");
   }
 
   @Sql
@@ -200,7 +197,7 @@ public class CargoComiteIT {
     // when: Ordena por nombre desc
     String sort = "nombre-";
     // when: Filtra por nombre like e id equals
-    String filter = "nombre~%00%";
+    String filter = "nombre~%VOCAL%";
 
     URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -213,17 +210,14 @@ public class CargoComiteIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<CargoComite> cargoComites = response.getBody();
-    Assertions.assertThat(cargoComites.size()).isEqualTo(3);
+    Assertions.assertThat(cargoComites.size()).isEqualTo(1);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("1");
 
-    // Contiene nombre='CargoComite001', 'CargoComite002',
-    // 'CargoComite003'
-    Assertions.assertThat(cargoComites.get(0).getNombre()).isEqualTo("CargoComite" + String.format("%03d", 3));
-    Assertions.assertThat(cargoComites.get(1).getNombre()).isEqualTo("CargoComite" + String.format("%03d", 2));
-    Assertions.assertThat(cargoComites.get(2).getNombre()).isEqualTo("CargoComite" + String.format("%03d", 1));
+    // Contiene nombre='VOCAL'
+    Assertions.assertThat(cargoComites.get(0).getNombre()).isEqualTo("VOCAL");
 
   }
 

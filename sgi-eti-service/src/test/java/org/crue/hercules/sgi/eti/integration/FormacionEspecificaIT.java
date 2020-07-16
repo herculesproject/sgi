@@ -41,7 +41,7 @@ public class FormacionEspecificaIT {
     final FormacionEspecifica formacionEspecifica = response.getBody();
 
     Assertions.assertThat(formacionEspecifica.getId()).isEqualTo(1L);
-    Assertions.assertThat(formacionEspecifica.getNombre()).isEqualTo("FormacionEspecifica1");
+    Assertions.assertThat(formacionEspecifica.getNombre()).isEqualTo("A: Cuidado de los animales");
   }
 
   @Sql
@@ -136,10 +136,10 @@ public class FormacionEspecificaIT {
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
 
-    // Contiene de nombre='FormacionEspecifica6' a 'FormacionEspecifica8'
-    Assertions.assertThat(formacionEspecificas.get(0).getNombre()).isEqualTo("FormacionEspecifica6");
-    Assertions.assertThat(formacionEspecificas.get(1).getNombre()).isEqualTo("FormacionEspecifica7");
-    Assertions.assertThat(formacionEspecificas.get(2).getNombre()).isEqualTo("FormacionEspecifica8");
+    // Contiene de nombre='F: Veterinario designado' a 'H: No requiere'
+    Assertions.assertThat(formacionEspecificas.get(0).getNombre()).isEqualTo("F: Veterinario designado");
+    Assertions.assertThat(formacionEspecificas.get(1).getNombre()).isEqualTo("G: Sin especificar");
+    Assertions.assertThat(formacionEspecificas.get(2).getNombre()).isEqualTo("H: No requiere");
   }
 
   @Sql
@@ -148,7 +148,7 @@ public class FormacionEspecificaIT {
   public void findAll_WithSearchQuery_ReturnsFilteredFormacionEspecificaList() throws Exception {
     // when: Búsqueda por nombre like e id equals
     Long id = 5L;
-    String query = "nombre~FormacionEspecifica%,id:" + id;
+    String query = "nombre~animales%,id:" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH)
         .queryParam("q", query).build(false).toUri();
@@ -164,7 +164,7 @@ public class FormacionEspecificaIT {
     final List<FormacionEspecifica> formacionEspecificas = response.getBody();
     Assertions.assertThat(formacionEspecificas.size()).isEqualTo(1);
     Assertions.assertThat(formacionEspecificas.get(0).getId()).isEqualTo(id);
-    Assertions.assertThat(formacionEspecificas.get(0).getNombre()).startsWith("FormacionEspecifica");
+    Assertions.assertThat(formacionEspecificas.get(0).getNombre()).startsWith("E: Responsable de la");
   }
 
   @Sql
@@ -187,12 +187,12 @@ public class FormacionEspecificaIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<FormacionEspecifica> formacionEspecificas = response.getBody();
     Assertions.assertThat(formacionEspecificas.size()).isEqualTo(8);
-    for (int i = 0; i < 8; i++) {
-      FormacionEspecifica formacionEspecifica = formacionEspecificas.get(i);
-      Assertions.assertThat(formacionEspecifica.getId()).isEqualTo(8 - i);
-      Assertions.assertThat(formacionEspecifica.getNombre())
-          .isEqualTo("FormacionEspecifica" + String.format("%03d", 8 - i));
-    }
+    Assertions.assertThat(formacionEspecificas.get(0).getId()).isEqualTo(8);
+    Assertions.assertThat(formacionEspecificas.get(0).getNombre()).isEqualTo("H: No requiere");
+
+    Assertions.assertThat(formacionEspecificas.get(7).getId()).isEqualTo(1);
+    Assertions.assertThat(formacionEspecificas.get(7).getNombre()).isEqualTo("A: Cuidado de los animales");
+
   }
 
   @Sql
@@ -206,7 +206,7 @@ public class FormacionEspecificaIT {
     // when: Ordena por nombre desc
     String sort = "nombre-";
     // when: Filtra por nombre like e id equals
-    String filter = "nombre~%00%";
+    String filter = "nombre~%animales%";
 
     URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH)
         .queryParam("s", sort).queryParam("q", filter).build(false).toUri();
@@ -225,14 +225,13 @@ public class FormacionEspecificaIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("3");
 
-    // Contiene nombre='FormacionEspecifica001', 'FormacionEspecifica002',
-    // 'FormacionEspecifica003'
+    // Contiene nombre='E: Responsable de la supervisión <<in situ>> del bienestar y
+    // cuidado de los animales', 'B: Eutanasia de los animales',
+    // 'A: Cuidado de los animales'
     Assertions.assertThat(formacionEspecificas.get(0).getNombre())
-        .isEqualTo("FormacionEspecifica" + String.format("%03d", 3));
-    Assertions.assertThat(formacionEspecificas.get(1).getNombre())
-        .isEqualTo("FormacionEspecifica" + String.format("%03d", 2));
-    Assertions.assertThat(formacionEspecificas.get(2).getNombre())
-        .isEqualTo("FormacionEspecifica" + String.format("%03d", 1));
+        .isEqualTo("E: Responsable de la supervisión <<in situ>> del bienestar y cuidado de los animales");
+    Assertions.assertThat(formacionEspecificas.get(1).getNombre()).isEqualTo("B: Eutanasia de los animales");
+    Assertions.assertThat(formacionEspecificas.get(2).getNombre()).isEqualTo("A: Cuidado de los animales");
 
   }
 

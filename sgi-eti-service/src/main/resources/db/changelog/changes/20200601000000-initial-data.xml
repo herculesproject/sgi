@@ -29,56 +29,45 @@
 
   <changeSet author="master" id="20200601000000-dictamen">
     <insert tableName="dictamen">
-      <column name="nombre" value="Dictamen1" />
+      <column name="nombre" value="Favorable" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="dictamen">
-      <column name="nombre" value="Dictamen2" />
+      <column name="nombre" value="Favorable pendiente de revisión mínima" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="dictamen">
-      <column name="nombre" value="Dictamen3" />
+      <column name="nombre" value="Pendiente de correcciones" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="dictamen">
-      <column name="nombre" value="Dictamen4" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="dictamen">
-      <column name="nombre" value="Dictamen5" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="dictamen">
-      <column name="nombre" value="Dictamen6" />
+      <column name="nombre" value="No procede evaluar" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>
 
   <changeSet author="master" id="20200601000000-tipo_actividad">
     <insert tableName="tipo_actividad">
-      <column name="nombre" value="TipoActividad1" />
+      <column name="nombre" value="Proyecto de investigación" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_actividad">
-      <column name="nombre" value="TipoActividad2" />
+      <column name="nombre" value="Práctica docente" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_actividad">
-      <column name="nombre" value="TipoActividad3" />
+      <column name="nombre" value="Tesis doctoral" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_actividad">
-      <column name="nombre" value="TipoActividad4" />
+      <column name="nombre" value="Trabajo Fin de Máster" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_actividad">
-      <column name="nombre" value="TipoActividad5" />
+      <column name="nombre" value="Trabajo Fin de Grado" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="tipo_actividad">
-      <column name="nombre" value="TipoActividad6" />
-      <column name="activo" value="true" />
-    </insert>
+
   </changeSet>
 
   <changeSet author="master" id="20200601000000-tipo_memoria">
@@ -111,27 +100,35 @@
 
   <changeSet author="master" id="20200601000000-formacion_especifica">
     <insert tableName="formacion_especifica">
-      <column name="nombre" value="FormacionEspecifica1" />
+      <column name="nombre" value="A: Cuidado de los animales" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="formacion_especifica">
-      <column name="nombre" value="FormacionEspecifica2" />
+      <column name="nombre" value="B: Eutanasia de los animales" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="formacion_especifica">
-      <column name="nombre" value="FormacionEspecifica3" />
+      <column name="nombre" value="C: Realización de los procedimientos" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="formacion_especifica">
-      <column name="nombre" value="FormacionEspecifica4" />
+      <column name="nombre" value="D: Diseño de los proyectos y procedimientos" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="formacion_especifica">
-      <column name="nombre" value="FormacionEspecifica5" />
+      <column name="nombre" value="E: Responsable de la supervisión &lt;&lt;in situ&gt;&gt; del bienestar y cuidado de los animales" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="formacion_especifica">
-      <column name="nombre" value="FormacionEspecifica6" />
+      <column name="nombre" value="F: Veterinario designado" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="formacion_especifica">
+      <column name="nombre" value="G: Sin especificar" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="formacion_especifica">
+      <column name="nombre" value="H: No requiere" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>
@@ -139,29 +136,14 @@
 
   <changeSet author="master" id="20200601000000-cargo_comite">
     <insert tableName="cargo_comite">
-      <column name="nombre" value="CargoComite1" />
+      <column name="nombre" value="PRESIDENTE" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="cargo_comite">
-      <column name="nombre" value="CargoComite2" />
+      <column name="nombre" value="VOCAL" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="cargo_comite">
-      <column name="nombre" value="CargoComite3" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="cargo_comite">
-      <column name="nombre" value="CargoComite4" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="cargo_comite">
-      <column name="nombre" value="CargoComite5" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="cargo_comite">
-      <column name="nombre" value="CargoComite6" />
-      <column name="activo" value="true" />
-    </insert>
+
   </changeSet>
 
   <changeSet author="master" id="20200601000000-peticion_evaluacion">
@@ -304,27 +286,43 @@
 
   <changeSet author="master" id="20200601000000-tipo_estado_memoria">
     <insert tableName="tipo_estado_memoria">
-      <column name="nombre" value="TipoEstadoMemoria1" />
+      <column name="nombre" value="En elaboración" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_estado_memoria">
-      <column name="nombre" value="TipoEstadoMemoria2" />
+      <column name="nombre" value="Completada" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_estado_memoria">
-      <column name="nombre" value="TipoEstadoMemoria3" />
+      <column name="nombre" value="En secretaría" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_estado_memoria">
-      <column name="nombre" value="TipoEstadoMemoria4" />
+      <column name="nombre" value="En secretaría revisión mínima" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_estado_memoria">
-      <column name="nombre" value="TipoEstadoMemoria5" />
+      <column name="nombre" value="En evaluación" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_estado_memoria">
-      <column name="nombre" value="TipoEstadoMemoria6" />
+      <column name="nombre" value="Favorable Pendiente de Modificaciones Mínimas" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="nombre" value="Pendiente de correcciones" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="nombre" value="No procede evaluar" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="nombre" value="Fin evaluación" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="nombre" value="Archivado" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>
@@ -358,66 +356,35 @@
 
   <changeSet author="master" id="20200601000000-tipo_estado_acta">
     <insert tableName="tipo_estado_acta">
-      <column name="nombre" value="TipoEstadoActa1" />
+      <column name="nombre" value="En elaboración" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_estado_acta">
-      <column name="nombre" value="TipoEstadoActa2" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_estado_acta">
-      <column name="nombre" value="TipoEstadoActa3" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_estado_acta">
-      <column name="nombre" value="TipoEstadoActa4" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_estado_acta">
-      <column name="nombre" value="TipoEstadoActa5" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_estado_acta">
-      <column name="nombre" value="TipoEstadoActa6" />
+      <column name="nombre" value="Finalizada" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>
 
   <changeSet author="master" id="20200601000000-tipo_comentario">
     <insert tableName="tipo_comentario">
-      <column name="nombre" value="TipoComentario1" />
+      <column name="nombre" value="GESTOR" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_comentario">
-      <column name="nombre" value="TipoComentario2" />
+      <column name="nombre" value="EVALUADOR" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="tipo_comentario">
-      <column name="nombre" value="TipoComentario3" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_comentario">
-      <column name="nombre" value="TipoComentario4" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_comentario">
-      <column name="nombre" value="TipoComentario5" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_comentario">
-      <column name="nombre" value="TipoComentario6" />
-      <column name="activo" value="true" />
-    </insert>
+
   </changeSet>
 
   <changeSet author="master" id="20200601000000-memoria">
     <insert tableName="memoria">
       <column name="num_referencia" value="ref-134" />
-      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion4'))" />
-      <column name="comite" valueComputed="(select id from eti.comite where comite='Comite1')" />
+      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion4')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite1')" />
       <column name="titulo" value="Memoria1" />
       <column name="usuario_ref" value="user-8984" />
-      <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria1')" />
+      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria1')" />
       <column name="fecha_envio_secretaria" value="2020-07-09" />
       <column name="requiere_retrospectiva" value="true" />
       <column name="fecha_retrospectiva" value="2021-07-09" />
@@ -425,11 +392,11 @@
     </insert>
     <insert tableName="memoria">
       <column name="num_referencia" value="ref-234" />
-      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion3'))" />
-      <column name="comite" valueComputed="(select id from eti.comite where comite='Comite1')" />
+      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion3')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite1')" />
       <column name="titulo" value="Memoria2" />
       <column name="usuario_ref" value="user-9984" />
-      <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria1')" />
+      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria1')" />
       <column name="fecha_envio_secretaria" value="2020-06-09" />
       <column name="requiere_retrospectiva" value="false" />
       <column name="fecha_retrospectiva" value="null" />
@@ -437,11 +404,11 @@
     </insert>
     <insert tableName="memoria">
       <column name="num_referencia" value="ref-934" />
-      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2'))" />
-      <column name="comite" valueComputed="(select id from eti.comite where comite='Comite1')" />
+      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite1')" />
       <column name="titulo" value="Memoria3" />
       <column name="usuario_ref" value="user-852" />
-      <column name="tipo_memoria" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria2')" />
+      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria2')" />
       <column name="fecha_envio_secretaria" value="2020-06-09" />
       <column name="requiere_retrospectiva" value="true" />
       <column name="fecha_retrospectiva" value="2020-06-20" />
@@ -451,8 +418,8 @@
 
   <changeSet author="master" id="20200601000000-evaluador">
     <insert tableName="evaluador">
-      <column name="comite_id" valueComputed="(select id from eti.comite where nombre='Comite1')" />
-      <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='CargoComite1')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite1')" />
+      <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='PRESIDENTE')" />
       <column name="fecha_alta" value="2020-07-09" />
       <column name="fecha_baja" value="2021-07-09" />
       <column name="resumen" value="Evaluador1" />
@@ -460,8 +427,8 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="evaluador">
-      <column name="comite_id" valueComputed="(select id from eti.comite where nombre='Comite2')" />
-      <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='CargoComite2')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite2')" />
+      <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='VOCAL')" />
       <column name="fecha_alta" value="2020-07-09" />
       <column name="fecha_baja" value="2021-07-09" />
       <column name="resumen" value="Evaluador2" />
@@ -469,8 +436,8 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="evaluador">
-      <column name="comite_id" valueComputed="(select id from eti.comite where nombre='Comite3')" />
-      <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='CargoComite3')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite3')" />
+      <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='VOCAL')" />
       <column name="fecha_alta" value="2020-07-09" />
       <column name="fecha_baja" value="2021-07-09" />
       <column name="resumen" value="Evaluador3" />
@@ -478,8 +445,8 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="evaluador">
-      <column name="comite_id" valueComputed="(select id from eti.comite where nombre='Comite4')" />
-      <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='CargoComite4')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite4')" />
+      <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='PRESIDENTE')" />
       <column name="fecha_alta" value="2020-07-09" />
       <column name="fecha_baja" value="2021-07-09" />
       <column name="resumen" value="Evaluador4" />
@@ -487,8 +454,8 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="evaluador">
-      <column name="comite_id" valueComputed="(select id from eti.comite where nombre='Comite5')" />
-      <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='CargoComite5')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite5')" />
+      <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='VOCAL')" />
       <column name="fecha_alta" value="2020-07-09" />
       <column name="fecha_baja" value="2021-07-09" />
       <column name="resumen" value="Evaluador5" />
@@ -496,8 +463,8 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="evaluador">
-      <column name="comite_id" valueComputed="(select id from eti.comite where nombre='Comite6')" />
-      <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='CargoComite6')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite6')" />
+      <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='VOCAL')" />
       <column name="fecha_alta" value="2020-07-09" />
       <column name="fecha_baja" value="2021-07-09" />
       <column name="resumen" value="Evaluador6" />
@@ -508,7 +475,7 @@
 
   <changeSet author="master" id="20200601000000-tarea">
     <insert tableName="tarea">
-      <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where comite='user-001')" />
+      <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where usuario_ref='user-001')" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
       <column name="tarea" value="Tarea1" />
       <column name="formacion" value="Formacion1" />
@@ -517,7 +484,7 @@
       <column name="anio" value="2020" />
     </insert>
     <insert tableName="tarea">
-      <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where comite='user-002')" />
+      <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where usuario_ref='user-002')" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
       <column name="tarea" value="Tarea2" />
       <column name="formacion" value="Formacion2" />
@@ -526,7 +493,7 @@
       <column name="anio" value="2020" />
     </insert>
     <insert tableName="tarea">
-      <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where comite='user-003')" />
+      <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where usuario_ref='user-003')" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
       <column name="tarea" value="Tarea3" />
       <column name="formacion" value="Formacion3" />
@@ -535,7 +502,7 @@
       <column name="anio" value="2020" />
     </insert>
     <insert tableName="tarea">
-      <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where comite='user-004')" />
+      <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where usuario_ref='user-004')" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
       <column name="tarea" value="Tarea4" />
       <column name="formacion" value="Formacion4" />
@@ -544,7 +511,7 @@
       <column name="anio" value="2021" />
     </insert>
     <insert tableName="tarea">
-      <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where comite='user-005')" />
+      <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where usuario_ref='user-005')" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
       <column name="tarea" value="Tarea5" />
       <column name="formacion" value="Formacion5" />
@@ -553,7 +520,7 @@
       <column name="anio" value="2021" />
     </insert>
     <insert tableName="tarea">
-      <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where comite='user-006')" />
+      <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where usuario_ref='user-006')" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
       <column name="tarea" value="Tarea6" />
       <column name="formacion" value="Formacion6" />
@@ -566,34 +533,26 @@
   <changeSet author="master" id="20200601000000-tipo_documento">
     <insert tableName="tipo_documento">
       <column name="nombre" value="TipoDocumento1" />
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite1')" />
-
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="nombre" value="TipoDocumento2" />
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite2')" />
-
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="nombre" value="TipoDocumento3" />
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite3')" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="nombre" value="TipoDocumento4" />
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite4')" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="nombre" value="TipoDocumento5" />
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite5')" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="tipo_comentario">
+    <insert tableName="tipo_documento">
       <column name="nombre" value="TipoDocumento6" />
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite6')" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>
@@ -608,19 +567,19 @@
     <insert tableName="estado_acta">
       <column name="id" value="1" />
       <column name="acta_id" valueComputed="(select id from eti.acta)" />
-      <column name="tipo_estado_acta_id" valueComputed="(select id from eti.tipo_estado_acta where comite='TipoEstadoActa1')" />
+      <column name="tipo_estado_acta_id" valueComputed="(select id from eti.tipo_estado_acta where nombre='En elaboración')" />
       <column name="fecha_estado" value="2020-07-14 19:30:00" />
     </insert>
     <insert tableName="estado_acta">
       <column name="id" value="2" />
       <column name="acta_id" valueComputed="(select id from eti.acta)" />
-      <column name="tipo_estado_acta_id" valueComputed="(select id from eti.tipo_estado_acta where comite='TipoEstadoActa2')" />
+      <column name="tipo_estado_acta_id" valueComputed="(select id from eti.tipo_estado_acta where nombre='Finalizada')" />
       <column name="fecha_estado" value="2020-07-14 19:31:00" />
     </insert>
     <insert tableName="estado_acta">
       <column name="id" value="3" />
       <column name="acta_id" valueComputed="(select id from eti.acta)" />
-      <column name="tipo_estado_acta_id" valueComputed="(select id from eti.tipo_estado_acta where comite='TipoEstadoActa3')" />
+      <column name="tipo_estado_acta_id" valueComputed="(select id from eti.tipo_estado_acta where nombre='Finalizada')" />
       <column name="fecha_estado" value="2020-07-14 19:33:00" />
     </insert>
   </changeSet>
@@ -693,50 +652,38 @@
 
   <changeSet author="master" id="20200601000000-estado_memoria">
     <insert tableName="estado_memoria">
-      <column name="memoria" valueComputed="(select id from eti.memoria where titulo='Memoria1')" />
-      <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='TipoEstadoMemoria1')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria1')" />
+      <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='En evaluación')" />
       <column name="fecha_estado" value="2020-06-15 21:06:44" />
     </insert>
     <insert tableName="estado_memoria">
-      <column name="memoria" valueComputed="(select id from eti.memoria where titulo='Memoria2')" />
-      <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='TipoEstadoMemoria1')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria2')" />
+      <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='En secretaría')" />
       <column name="fecha_estado" value="2020-06-18 20:35:20" />
     </insert>
     <insert tableName="estado_memoria">
-      <column name="memoria" valueComputed="(select id from eti.memoria where titulo='Memoria2')" />
-      <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='TipoEstadoMemoria2')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria2')" />
+      <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='Favorable Pendiente de Modificaciones Mínimas')" />
       <column name="fecha_estado" value="2020-06-20 12:40:20" />
     </insert>
     <insert tableName="estado_memoria">
-      <column name="memoria" valueComputed="(select id from eti.memoria where titulo='Memoria2')" />
-      <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='TipoEstadoMemoria3')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria2')" />
+      <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='Completada')" />
       <column name="fecha_estado" value="2020-06-21 10:20:45" />
     </insert>
   </changeSet>
 
   <changeSet author="master" id="20200601000000-tipo_convocatoria_reunion">
     <insert tableName="tipo_convocatoria_reunion">
-      <column name="nombre" value="TipoConvocatoriaReunion1" />
+      <column name="nombre" value="Ordinaria" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_convocatoria_reunion">
-      <column name="nombre" value="TipoConvocatoriaReunion2" />
+      <column name="nombre" value="Extraordinaria" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_convocatoria_reunion">
-      <column name="nombre" value="TipoConvocatoriaReunion3" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_convocatoria_reunion">
-      <column name="nombre" value="TipoConvocatoriaReunion4" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_convocatoria_reunion">
-      <column name="nombre" value="TipoConvocatoriaReunion5" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_convocatoria_reunion">
-      <column name="nombre" value="TipoConvocatoriaReunion6" />
+      <column name="nombre" value="Seguimiento" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>

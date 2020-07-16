@@ -41,7 +41,7 @@ public class TipoConvocatoriaReunionIT {
     final TipoConvocatoriaReunion tipoConvocatoriaReunion = response.getBody();
 
     Assertions.assertThat(tipoConvocatoriaReunion.getId()).isEqualTo(1L);
-    Assertions.assertThat(tipoConvocatoriaReunion.getNombre()).isEqualTo("TipoConvocatoriaReunion1");
+    Assertions.assertThat(tipoConvocatoriaReunion.getNombre()).isEqualTo("Ordinaria");
   }
 
   @Sql
@@ -120,7 +120,7 @@ public class TipoConvocatoriaReunionIT {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
-    headers.add("X-Page-Size", "5");
+    headers.add("X-Page-Size", "1");
 
     URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .build(false).toUri();
@@ -134,15 +134,13 @@ public class TipoConvocatoriaReunionIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoConvocatoriaReunion> tipoConvocatoriaReunions = response.getBody();
-    Assertions.assertThat(tipoConvocatoriaReunions.size()).isEqualTo(3);
+    Assertions.assertThat(tipoConvocatoriaReunions.size()).isEqualTo(1);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("1");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("3");
 
-    // Contiene de nombre='TipoConvocatoriaReunion6' a 'TipoConvocatoriaReunion8'
-    Assertions.assertThat(tipoConvocatoriaReunions.get(0).getNombre()).isEqualTo("TipoConvocatoriaReunion6");
-    Assertions.assertThat(tipoConvocatoriaReunions.get(1).getNombre()).isEqualTo("TipoConvocatoriaReunion7");
-    Assertions.assertThat(tipoConvocatoriaReunions.get(2).getNombre()).isEqualTo("TipoConvocatoriaReunion8");
+    // Contiene de nombre='Extraordinaria'
+    Assertions.assertThat(tipoConvocatoriaReunions.get(0).getNombre()).isEqualTo("Extraordinaria");
   }
 
   @Sql
@@ -150,8 +148,8 @@ public class TipoConvocatoriaReunionIT {
   @Test
   public void findAll_WithSearchQuery_ReturnsFilteredTipoConvocatoriaReunionList() throws Exception {
     // when: Búsqueda por nombre like e id equals
-    Long id = 5L;
-    String query = "nombre~TipoConvocatoriaReunion%,id:" + id;
+    Long id = 3L;
+    String query = "nombre~Seguimiento%,id:" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .queryParam("q", query).build(false).toUri();
@@ -168,7 +166,7 @@ public class TipoConvocatoriaReunionIT {
     final List<TipoConvocatoriaReunion> tipoConvocatoriaReunions = response.getBody();
     Assertions.assertThat(tipoConvocatoriaReunions.size()).isEqualTo(1);
     Assertions.assertThat(tipoConvocatoriaReunions.get(0).getId()).isEqualTo(id);
-    Assertions.assertThat(tipoConvocatoriaReunions.get(0).getNombre()).startsWith("TipoConvocatoriaReunion");
+    Assertions.assertThat(tipoConvocatoriaReunions.get(0).getNombre()).startsWith("Seguimiento");
   }
 
   @Sql
@@ -191,13 +189,11 @@ public class TipoConvocatoriaReunionIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoConvocatoriaReunion> tipoConvocatoriaReunions = response.getBody();
-    Assertions.assertThat(tipoConvocatoriaReunions.size()).isEqualTo(8);
-    for (int i = 0; i < 8; i++) {
-      TipoConvocatoriaReunion tipoConvocatoriaReunion = tipoConvocatoriaReunions.get(i);
-      Assertions.assertThat(tipoConvocatoriaReunion.getId()).isEqualTo(8 - i);
-      Assertions.assertThat(tipoConvocatoriaReunion.getNombre())
-          .isEqualTo("TipoConvocatoriaReunion" + String.format("%03d", 8 - i));
-    }
+    Assertions.assertThat(tipoConvocatoriaReunions.size()).isEqualTo(3);
+    Assertions.assertThat(tipoConvocatoriaReunions.get(0).getId()).isEqualTo(3);
+    Assertions.assertThat(tipoConvocatoriaReunions.get(0).getNombre()).isEqualTo("Seguimiento");
+    Assertions.assertThat(tipoConvocatoriaReunions.get(2).getId()).isEqualTo(2);
+    Assertions.assertThat(tipoConvocatoriaReunions.get(2).getNombre()).isEqualTo("Extraordinaria");
   }
 
   @Sql
@@ -210,8 +206,8 @@ public class TipoConvocatoriaReunionIT {
     headers.add("X-Page-Size", "3");
     // when: Ordena por nombre desc
     String sort = "nombre-";
-    // when: Filtra por nombre like e id equals
-    String filter = "nombre~%00%";
+    // when: Filtra por nombre like
+    String filter = "nombre~%extra%";
 
     URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
         .queryParam("s", sort).queryParam("q", filter).build(false).toUri();
@@ -225,20 +221,14 @@ public class TipoConvocatoriaReunionIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoConvocatoriaReunion> tipoConvocatoriaReunions = response.getBody();
-    Assertions.assertThat(tipoConvocatoriaReunions.size()).isEqualTo(3);
+    Assertions.assertThat(tipoConvocatoriaReunions.size()).isEqualTo(1);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("1");
 
-    // Contiene nombre='TipoConvocatoriaReunion001', 'TipoConvocatoriaReunion002',
-    // 'TipoConvocatoriaReunion003'
-    Assertions.assertThat(tipoConvocatoriaReunions.get(0).getNombre())
-        .isEqualTo("TipoConvocatoriaReunion" + String.format("%03d", 3));
-    Assertions.assertThat(tipoConvocatoriaReunions.get(1).getNombre())
-        .isEqualTo("TipoConvocatoriaReunion" + String.format("%03d", 2));
-    Assertions.assertThat(tipoConvocatoriaReunions.get(2).getNombre())
-        .isEqualTo("TipoConvocatoriaReunion" + String.format("%03d", 1));
+    // Contiene nombre='Extraordinaria'
+    Assertions.assertThat(tipoConvocatoriaReunions.get(0).getNombre()).isEqualTo("Extraordinaria");
 
   }
 

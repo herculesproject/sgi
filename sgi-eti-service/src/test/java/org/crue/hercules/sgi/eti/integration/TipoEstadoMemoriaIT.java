@@ -41,7 +41,7 @@ public class TipoEstadoMemoriaIT {
     final TipoEstadoMemoria tipoEstadoMemoria = response.getBody();
 
     Assertions.assertThat(tipoEstadoMemoria.getId()).isEqualTo(1L);
-    Assertions.assertThat(tipoEstadoMemoria.getNombre()).isEqualTo("TipoEstadoMemoria1");
+    Assertions.assertThat(tipoEstadoMemoria.getNombre()).isEqualTo("En elaboración");
   }
 
   @Sql
@@ -131,15 +131,19 @@ public class TipoEstadoMemoriaIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoEstadoMemoria> tipoEstadoMemorias = response.getBody();
-    Assertions.assertThat(tipoEstadoMemorias.size()).isEqualTo(3);
+    Assertions.assertThat(tipoEstadoMemorias.size()).isEqualTo(5);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("10");
 
-    // Contiene de nombre='TipoEstadoMemoria6' a 'TipoEstadoMemoria8'
-    Assertions.assertThat(tipoEstadoMemorias.get(0).getNombre()).isEqualTo("TipoEstadoMemoria6");
-    Assertions.assertThat(tipoEstadoMemorias.get(1).getNombre()).isEqualTo("TipoEstadoMemoria7");
-    Assertions.assertThat(tipoEstadoMemorias.get(2).getNombre()).isEqualTo("TipoEstadoMemoria8");
+    // Contiene de nombre='Favorable Pendiente de Modificaciones Mínimas', 'No procede evaluar', 'Fin evaluación' y 
+    // 'Archivado'
+    Assertions.assertThat(tipoEstadoMemorias.get(0).getNombre())
+        .isEqualTo("Favorable Pendiente de Modificaciones Mínimas");
+    Assertions.assertThat(tipoEstadoMemorias.get(1).getNombre()).isEqualTo("Pendiente de correcciones");
+    Assertions.assertThat(tipoEstadoMemorias.get(2).getNombre()).isEqualTo("No procede evaluar");
+    Assertions.assertThat(tipoEstadoMemorias.get(3).getNombre()).isEqualTo("Fin evaluación");
+    Assertions.assertThat(tipoEstadoMemorias.get(4).getNombre()).isEqualTo("Archivado");
   }
 
   @Sql
@@ -148,7 +152,7 @@ public class TipoEstadoMemoriaIT {
   public void findAll_WithSearchQuery_ReturnsFilteredTipoEstadoMemoriaList() throws Exception {
     // when: Búsqueda por nombre like e id equals
     Long id = 5L;
-    String query = "nombre~TipoEstadoMemoria%,id:" + id;
+    String query = "nombre~en%,id:" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH)
         .queryParam("q", query).build(false).toUri();
@@ -164,7 +168,7 @@ public class TipoEstadoMemoriaIT {
     final List<TipoEstadoMemoria> tipoEstadoMemorias = response.getBody();
     Assertions.assertThat(tipoEstadoMemorias.size()).isEqualTo(1);
     Assertions.assertThat(tipoEstadoMemorias.get(0).getId()).isEqualTo(id);
-    Assertions.assertThat(tipoEstadoMemorias.get(0).getNombre()).startsWith("TipoEstadoMemoria");
+    Assertions.assertThat(tipoEstadoMemorias.get(0).getNombre()).startsWith("En evaluación");
   }
 
   @Sql
@@ -186,13 +190,29 @@ public class TipoEstadoMemoriaIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoEstadoMemoria> tipoEstadoMemorias = response.getBody();
-    Assertions.assertThat(tipoEstadoMemorias.size()).isEqualTo(8);
-    for (int i = 0; i < 8; i++) {
-      TipoEstadoMemoria tipoEstadoMemoria = tipoEstadoMemorias.get(i);
-      Assertions.assertThat(tipoEstadoMemoria.getId()).isEqualTo(8 - i);
-      Assertions.assertThat(tipoEstadoMemoria.getNombre())
-          .isEqualTo("TipoEstadoMemoria" + String.format("%03d", 8 - i));
-    }
+    Assertions.assertThat(tipoEstadoMemorias.size()).isEqualTo(10);
+
+    Assertions.assertThat(tipoEstadoMemorias.get(0).getId()).isEqualTo(7);
+    Assertions.assertThat(tipoEstadoMemorias.get(0).getNombre()).isEqualTo("Pendiente de correcciones");
+    Assertions.assertThat(tipoEstadoMemorias.get(1).getId()).isEqualTo(8);
+    Assertions.assertThat(tipoEstadoMemorias.get(1).getNombre()).isEqualTo("No procede evaluar");
+    Assertions.assertThat(tipoEstadoMemorias.get(2).getId()).isEqualTo(9);
+    Assertions.assertThat(tipoEstadoMemorias.get(2).getNombre()).isEqualTo("Fin evaluación");
+    Assertions.assertThat(tipoEstadoMemorias.get(3).getId()).isEqualTo(6);
+    Assertions.assertThat(tipoEstadoMemorias.get(3).getNombre())
+        .isEqualTo("Favorable Pendiente de Modificaciones Mínimas");
+    Assertions.assertThat(tipoEstadoMemorias.get(4).getId()).isEqualTo(4);
+    Assertions.assertThat(tipoEstadoMemorias.get(4).getNombre()).isEqualTo("En secretaría revisión mínima");
+    Assertions.assertThat(tipoEstadoMemorias.get(5).getId()).isEqualTo(3);
+    Assertions.assertThat(tipoEstadoMemorias.get(5).getNombre()).isEqualTo("En secretaría");
+    Assertions.assertThat(tipoEstadoMemorias.get(6).getId()).isEqualTo(5);
+    Assertions.assertThat(tipoEstadoMemorias.get(6).getNombre()).isEqualTo("En evaluación");
+    Assertions.assertThat(tipoEstadoMemorias.get(7).getId()).isEqualTo(1);
+    Assertions.assertThat(tipoEstadoMemorias.get(7).getNombre()).isEqualTo("En elaboración");
+    Assertions.assertThat(tipoEstadoMemorias.get(8).getId()).isEqualTo(2);
+    Assertions.assertThat(tipoEstadoMemorias.get(8).getNombre()).isEqualTo("Completada");
+    Assertions.assertThat(tipoEstadoMemorias.get(9).getId()).isEqualTo(10);
+    Assertions.assertThat(tipoEstadoMemorias.get(9).getNombre()).isEqualTo("Archivado");
   }
 
   @Sql
@@ -205,8 +225,8 @@ public class TipoEstadoMemoriaIT {
     headers.add("X-Page-Size", "3");
     // when: Ordena por nombre desc
     String sort = "nombre-";
-    // when: Filtra por nombre like e id equals
-    String filter = "nombre~%00%";
+    // when: Filtra por nombre like
+    String filter = "nombre~%en%";
 
     URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH)
         .queryParam("s", sort).queryParam("q", filter).build(false).toUri();
@@ -223,16 +243,15 @@ public class TipoEstadoMemoriaIT {
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("6");
 
-    // Contiene nombre='TipoEstadoMemoria001', 'TipoEstadoMemoria002',
-    // 'TipoEstadoMemoria003'
-    Assertions.assertThat(tipoEstadoMemorias.get(0).getNombre())
-        .isEqualTo("TipoEstadoMemoria" + String.format("%03d", 3));
+    // Contiene nombre='Pendiente de correcciones', 'Favorable Pendiente de
+    // Modificaciones Mínimas',
+    // 'En secretaría revisión mínima'
+    Assertions.assertThat(tipoEstadoMemorias.get(0).getNombre()).isEqualTo("Pendiente de correcciones");
     Assertions.assertThat(tipoEstadoMemorias.get(1).getNombre())
-        .isEqualTo("TipoEstadoMemoria" + String.format("%03d", 2));
-    Assertions.assertThat(tipoEstadoMemorias.get(2).getNombre())
-        .isEqualTo("TipoEstadoMemoria" + String.format("%03d", 1));
+        .isEqualTo("Favorable Pendiente de Modificaciones Mínimas");
+    Assertions.assertThat(tipoEstadoMemorias.get(2).getNombre()).isEqualTo("En secretaría revisión mínima");
 
   }
 

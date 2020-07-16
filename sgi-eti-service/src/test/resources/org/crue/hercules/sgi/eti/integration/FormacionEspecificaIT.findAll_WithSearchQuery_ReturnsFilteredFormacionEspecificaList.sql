@@ -1,9 +1,9 @@
 -- FORMACIÓN ESPECÍFICA 
-INSERT INTO eti.formacion_especifica (id, nombre, activo) VALUES (1, 'FormacionEspecifica1', true);
-INSERT INTO eti.formacion_especifica (id, nombre, activo) VALUES (2, 'FormacionEspecifica2', true);
-INSERT INTO eti.formacion_especifica (id, nombre, activo) VALUES (3, 'FormacionEspecifica3', true);
-INSERT INTO eti.formacion_especifica (id, nombre, activo) VALUES (4, 'FormacionEspecifica4', true);
-INSERT INTO eti.formacion_especifica (id, nombre, activo) VALUES (5, 'FormacionEspecifica5', true);
-INSERT INTO eti.formacion_especifica (id, nombre, activo) VALUES (6, 'FormacionEspecifica6', true);
-INSERT INTO eti.formacion_especifica (id, nombre, activo) VALUES (7, 'FormacionEspecifica7', true);
-INSERT INTO eti.formacion_especifica (id, nombre, activo) VALUES (8, 'FormacionEspecifica8', true);
+INSERT INTO eti.formacion_especifica (id, nombre, activo) VALUES (1, 'A: Cuidado de los animales', true);
+INSERT INTO eti.formacion_especifica (id, nombre, activo) VALUES (2, 'B: Eutanasia de los animales', true);
+INSERT INTO eti.formacion_especifica (id, nombre, activo) VALUES (3, 'C: Realización de los procedimientos', true);
+INSERT INTO eti.formacion_especifica (id, nombre, activo) VALUES (4, 'D: Diseño de los proyectos y procedimientos', true);
+INSERT INTO eti.formacion_especifica (id, nombre, activo) VALUES (5, 'E: Responsable de la supervisión &lt;&lt;in situ&gt;&gt; del bienestar y cuidado de los animales', true);
+INSERT INTO eti.formacion_especifica (id, nombre, activo) VALUES (6, 'F: Veterinario designado', true);
+INSERT INTO eti.formacion_especifica (id, nombre, activo) VALUES (7, 'G: Sin especificar', true);
+INSERT INTO eti.formacion_especifica (id, nombre, activo) VALUES (8, 'H: No requiere', true);

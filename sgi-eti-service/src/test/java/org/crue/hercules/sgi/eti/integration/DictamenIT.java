@@ -40,7 +40,7 @@ public class DictamenIT {
     final Dictamen dictamen = response.getBody();
 
     Assertions.assertThat(dictamen.getId()).isEqualTo(1L);
-    Assertions.assertThat(dictamen.getNombre()).isEqualTo("Dictamen1");
+    Assertions.assertThat(dictamen.getNombre()).isEqualTo("Favorable");
   }
 
   @Sql
@@ -114,7 +114,7 @@ public class DictamenIT {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
-    headers.add("X-Page-Size", "5");
+    headers.add("X-Page-Size", "2");
 
     URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH).build(false).toUri();
 
@@ -126,15 +126,14 @@ public class DictamenIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Dictamen> dictamens = response.getBody();
-    Assertions.assertThat(dictamens.size()).isEqualTo(3);
+    Assertions.assertThat(dictamens.size()).isEqualTo(2);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("4");
 
-    // Contiene de nombre='Dictamen6' a 'Dictamen8'
-    Assertions.assertThat(dictamens.get(0).getNombre()).isEqualTo("Dictamen6");
-    Assertions.assertThat(dictamens.get(1).getNombre()).isEqualTo("Dictamen7");
-    Assertions.assertThat(dictamens.get(2).getNombre()).isEqualTo("Dictamen8");
+    // Contiene de nombre='Pendiente de correcciones' a 'Dictamen8'
+    Assertions.assertThat(dictamens.get(0).getNombre()).isEqualTo("Pendiente de correcciones");
+    Assertions.assertThat(dictamens.get(1).getNombre()).isEqualTo("No procede evaluar");
   }
 
   @Sql
@@ -142,8 +141,8 @@ public class DictamenIT {
   @Test
   public void findAll_WithSearchQuery_ReturnsFilteredDictamenList() throws Exception {
     // when: Búsqueda por nombre like e id equals
-    Long id = 5L;
-    String query = "nombre~Dictamen%,id:" + id;
+    Long id = 2L;
+    String query = "nombre~favorable%,id:" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH).queryParam("q", query)
         .build(false).toUri();
@@ -159,7 +158,7 @@ public class DictamenIT {
     final List<Dictamen> dictamens = response.getBody();
     Assertions.assertThat(dictamens.size()).isEqualTo(1);
     Assertions.assertThat(dictamens.get(0).getId()).isEqualTo(id);
-    Assertions.assertThat(dictamens.get(0).getNombre()).startsWith("Dictamen");
+    Assertions.assertThat(dictamens.get(0).getNombre()).startsWith("Favorable");
   }
 
   @Sql
@@ -181,12 +180,11 @@ public class DictamenIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Dictamen> dictamens = response.getBody();
-    Assertions.assertThat(dictamens.size()).isEqualTo(8);
-    for (int i = 0; i < 8; i++) {
-      Dictamen dictamen = dictamens.get(i);
-      Assertions.assertThat(dictamen.getId()).isEqualTo(8 - i);
-      Assertions.assertThat(dictamen.getNombre()).isEqualTo("Dictamen" + String.format("%03d", 8 - i));
-    }
+    Assertions.assertThat(dictamens.size()).isEqualTo(4);
+    Assertions.assertThat(dictamens.get(0).getId()).isEqualTo(3);
+    Assertions.assertThat(dictamens.get(0).getNombre()).isEqualTo("Pendiente de correcciones");
+    Assertions.assertThat(dictamens.get(3).getId()).isEqualTo(1);
+    Assertions.assertThat(dictamens.get(3).getNombre()).isEqualTo("Favorable");
   }
 
   @Sql
@@ -199,8 +197,8 @@ public class DictamenIT {
     headers.add("X-Page-Size", "3");
     // when: Ordena por nombre desc
     String sort = "nombre-";
-    // when: Filtra por nombre like e id equals
-    String filter = "nombre~%00%";
+    // when: Filtra por nombre like
+    String filter = "nombre~%pendiente%";
 
     URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -213,16 +211,15 @@ public class DictamenIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Dictamen> dictamens = response.getBody();
-    Assertions.assertThat(dictamens.size()).isEqualTo(3);
+    Assertions.assertThat(dictamens.size()).isEqualTo(2);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("2");
 
-    // Contiene nombre='Dictamen001', 'Dictamen002', 'Dictamen003'
-    Assertions.assertThat(dictamens.get(0).getNombre()).isEqualTo("Dictamen" + String.format("%03d", 3));
-    Assertions.assertThat(dictamens.get(1).getNombre()).isEqualTo("Dictamen" + String.format("%03d", 2));
-    Assertions.assertThat(dictamens.get(2).getNombre()).isEqualTo("Dictamen" + String.format("%03d", 1));
+    // Contiene nombre='Favorable pendiente de revisión mínima', 'Favorable'
+    Assertions.assertThat(dictamens.get(0).getNombre()).isEqualTo("Pendiente de correcciones");
+    Assertions.assertThat(dictamens.get(1).getNombre()).isEqualTo("Favorable pendiente de revisión mínima");
 
   }
 

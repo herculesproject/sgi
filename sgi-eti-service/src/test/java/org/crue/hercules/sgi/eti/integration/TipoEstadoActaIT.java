@@ -41,7 +41,7 @@ public class TipoEstadoActaIT {
     final TipoEstadoActa tipoEstadoActa = response.getBody();
 
     Assertions.assertThat(tipoEstadoActa.getId()).isEqualTo(1L);
-    Assertions.assertThat(tipoEstadoActa.getNombre()).isEqualTo("TipoEstadoActa1");
+    Assertions.assertThat(tipoEstadoActa.getNombre()).isEqualTo("En elaboración");
   }
 
   @Sql
@@ -118,7 +118,7 @@ public class TipoEstadoActaIT {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
-    headers.add("X-Page-Size", "5");
+    headers.add("X-Page-Size", "1");
 
     URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH).build(false)
         .toUri();
@@ -131,15 +131,13 @@ public class TipoEstadoActaIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoEstadoActa> tipoEstadoActas = response.getBody();
-    Assertions.assertThat(tipoEstadoActas.size()).isEqualTo(3);
+    Assertions.assertThat(tipoEstadoActas.size()).isEqualTo(1);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("1");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("2");
 
-    // Contiene de nombre='TipoEstadoActa6' a 'TipoEstadoActa8'
-    Assertions.assertThat(tipoEstadoActas.get(0).getNombre()).isEqualTo("TipoEstadoActa6");
-    Assertions.assertThat(tipoEstadoActas.get(1).getNombre()).isEqualTo("TipoEstadoActa7");
-    Assertions.assertThat(tipoEstadoActas.get(2).getNombre()).isEqualTo("TipoEstadoActa8");
+    // Contiene de nombre='Finalizada'
+    Assertions.assertThat(tipoEstadoActas.get(0).getNombre()).isEqualTo("Finalizada");
   }
 
   @Sql
@@ -147,8 +145,8 @@ public class TipoEstadoActaIT {
   @Test
   public void findAll_WithSearchQuery_ReturnsFilteredTipoEstadoActaList() throws Exception {
     // when: Búsqueda por nombre like e id equals
-    Long id = 5L;
-    String query = "nombre~TipoEstadoActa%,id:" + id;
+    Long id = 1L;
+    String query = "nombre~En%,id:" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH)
         .queryParam("q", query).build(false).toUri();
@@ -164,7 +162,7 @@ public class TipoEstadoActaIT {
     final List<TipoEstadoActa> tipoEstadoActas = response.getBody();
     Assertions.assertThat(tipoEstadoActas.size()).isEqualTo(1);
     Assertions.assertThat(tipoEstadoActas.get(0).getId()).isEqualTo(id);
-    Assertions.assertThat(tipoEstadoActas.get(0).getNombre()).startsWith("TipoEstadoActa");
+    Assertions.assertThat(tipoEstadoActas.get(0).getNombre()).startsWith("En elaboración");
   }
 
   @Sql
@@ -186,12 +184,12 @@ public class TipoEstadoActaIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoEstadoActa> tipoEstadoActas = response.getBody();
-    Assertions.assertThat(tipoEstadoActas.size()).isEqualTo(8);
-    for (int i = 0; i < 8; i++) {
-      TipoEstadoActa tipoEstadoActa = tipoEstadoActas.get(i);
-      Assertions.assertThat(tipoEstadoActa.getId()).isEqualTo(8 - i);
-      Assertions.assertThat(tipoEstadoActa.getNombre()).isEqualTo("TipoEstadoActa" + String.format("%03d", 8 - i));
-    }
+    Assertions.assertThat(tipoEstadoActas.size()).isEqualTo(2);
+    Assertions.assertThat(tipoEstadoActas.get(0).getId()).isEqualTo(2);
+    Assertions.assertThat(tipoEstadoActas.get(0).getNombre()).isEqualTo("Finalizada");
+
+    Assertions.assertThat(tipoEstadoActas.get(1).getId()).isEqualTo(1);
+    Assertions.assertThat(tipoEstadoActas.get(1).getNombre()).isEqualTo("En elaboración");
   }
 
   @Sql
@@ -204,8 +202,8 @@ public class TipoEstadoActaIT {
     headers.add("X-Page-Size", "3");
     // when: Ordena por nombre desc
     String sort = "nombre-";
-    // when: Filtra por nombre like e id equals
-    String filter = "nombre~%00%";
+    // when: Filtra por nombre like
+    String filter = "nombre~%finalizada%";
 
     URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH)
         .queryParam("s", sort).queryParam("q", filter).build(false).toUri();
@@ -218,17 +216,14 @@ public class TipoEstadoActaIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoEstadoActa> tipoEstadoActas = response.getBody();
-    Assertions.assertThat(tipoEstadoActas.size()).isEqualTo(3);
+    Assertions.assertThat(tipoEstadoActas.size()).isEqualTo(1);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("1");
 
-    // Contiene nombre='TipoEstadoActa001', 'TipoEstadoActa002',
-    // 'TipoEstadoActa003'
-    Assertions.assertThat(tipoEstadoActas.get(0).getNombre()).isEqualTo("TipoEstadoActa" + String.format("%03d", 3));
-    Assertions.assertThat(tipoEstadoActas.get(1).getNombre()).isEqualTo("TipoEstadoActa" + String.format("%03d", 2));
-    Assertions.assertThat(tipoEstadoActas.get(2).getNombre()).isEqualTo("TipoEstadoActa" + String.format("%03d", 1));
+    // Contiene nombre='Finalizada'
+    Assertions.assertThat(tipoEstadoActas.get(0).getNombre()).isEqualTo("Finalizada");
 
   }
 
