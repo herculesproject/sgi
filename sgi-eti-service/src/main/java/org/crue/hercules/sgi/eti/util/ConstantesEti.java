@@ -8,6 +8,9 @@ public class ConstantesEti {
   /** PATH CONTROLLER COMITE */
   public static final String COMITE_CONTROLLER_BASE_PATH = "/comites";
 
+  /** PATH CONTROLLER CONVOCATORIA_REUNION */
+  public static final String CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH = "/convocatoriareuniones";
+
   /** PATH CONTROLLER DICTAMEN */
   public static final String DICTAMEN_CONTROLLER_BASE_PATH = "/dictamenes";
 

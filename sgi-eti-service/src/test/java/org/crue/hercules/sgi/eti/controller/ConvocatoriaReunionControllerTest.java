@@ -1,0 +1,481 @@
+package org.crue.hercules.sgi.eti.controller;
+
+import java.lang.reflect.Field;
+import java.nio.charset.Charset;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.service.ConvocatoriaReunionService;
+import org.crue.hercules.sgi.eti.util.ConstantesEti;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.exception.NotFoundException;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.BDDMockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.util.ReflectionUtils;
+
+/**
+ * ConvocatoriaReunionControllerTest
+ */
+@WebMvcTest(ConvocatoriaReunionController.class)
+public class ConvocatoriaReunionControllerTest {
+
+  @Autowired
+  private MockMvc mockMvc;
+
+  @Autowired
+  private ObjectMapper mapper;
+
+  @MockBean
+  private ConvocatoriaReunionService service;
+
+  @Test
+  public void create_ReturnsConvocatoriaReunion() throws Exception {
+
+    // given: Nueva entidad sin Id
+    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+
+    ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
+    String nuevoConvocatoriaReunionJson = mapper.writeValueAsString(response);
+
+    BDDMockito.given(service.create(ArgumentMatchers.<ConvocatoriaReunion>any())).willReturn(response);
+
+    // when: Se crea la entidad
+    mockMvc
+        .perform(MockMvcRequestBuilders.post(url).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoConvocatoriaReunionJson))
+        .andDo(MockMvcResultHandlers.print())
+        // then: La entidad se crea correctamente
+        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(response.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("comite").value(response.getComite()))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaEvaluacion").value(response.getFechaEvaluacion().toString()))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
+        .andExpect(MockMvcResultMatchers.jsonPath("lugar").value(response.getLugar()))
+        .andExpect(MockMvcResultMatchers.jsonPath("ordenDia").value(response.getOrdenDia()))
+        .andExpect(MockMvcResultMatchers.jsonPath("codigo").value(response.getCodigo()))
+        .andExpect(MockMvcResultMatchers.jsonPath("tipoConvocatoriaReunion").value(response.getTipoConvocatoriaReunion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("horaInicio").value(response.getHoraInicio()))
+        .andExpect(MockMvcResultMatchers.jsonPath("minutoInicio").value(response.getMinutoInicio()))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaEnvio").value(response.getFechaEnvio().toString()))
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(response.getActivo()));
+  }
+
+  @Test
+  public void create_WithId_Returns400() throws Exception {
+
+    // given: Nueva entidad con Id
+    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    String nuevoConvocatoriaReunionJson = mapper.writeValueAsString(getMockData(1L, 1L, 1L));
+
+    BDDMockito.given(service.create(ArgumentMatchers.<ConvocatoriaReunion>any()))
+        .willThrow(new IllegalArgumentException());
+
+    // when: Se crea la entidad
+    // then: Se produce error porque ya tiene Id
+    mockMvc
+        .perform(MockMvcRequestBuilders.post(url).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoConvocatoriaReunionJson))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+
+  @Test
+  public void update_WithExistingId_ReturnsConvocatoriaReunion() throws Exception {
+
+    // given: Entidad existente que se va a actualizar
+    ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
+    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(ConstantesEti.PATH_PARAMETER_ID)//
+        .toString();
+    String replaceConvocatoriaReunionJson = mapper.writeValueAsString(response);
+
+    BDDMockito.given(service.update(ArgumentMatchers.<ConvocatoriaReunion>any())).willReturn(response);
+
+    // when: Se actualiza la entidad
+    mockMvc
+        .perform(MockMvcRequestBuilders.put(url, response.getId()).contentType(MediaType.APPLICATION_JSON)
+            .content(replaceConvocatoriaReunionJson))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Los datos se actualizan correctamente
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(response.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("comite").value(response.getComite()))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaEvaluacion").value(response.getFechaEvaluacion().toString()))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
+        .andExpect(MockMvcResultMatchers.jsonPath("lugar").value(response.getLugar()))
+        .andExpect(MockMvcResultMatchers.jsonPath("ordenDia").value(response.getOrdenDia()))
+        .andExpect(MockMvcResultMatchers.jsonPath("codigo").value(response.getCodigo()))
+        .andExpect(MockMvcResultMatchers.jsonPath("tipoConvocatoriaReunion").value(response.getTipoConvocatoriaReunion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("horaInicio").value(response.getHoraInicio()))
+        .andExpect(MockMvcResultMatchers.jsonPath("minutoInicio").value(response.getMinutoInicio()))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaEnvio").value(response.getFechaEnvio().toString()))
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(response.getActivo()));
+  }
+
+  @Test
+  public void update_WithNoExistingId_Returns404() throws Exception {
+
+    // given: Entidad a actualizar que no existe
+    ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
+    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(ConstantesEti.PATH_PARAMETER_ID)//
+        .toString();
+    String replaceConvocatoriaReunionJson = mapper.writeValueAsString(response);
+
+    BDDMockito.given(service.update(ArgumentMatchers.<ConvocatoriaReunion>any()))
+        .will((InvocationOnMock invocation) -> {
+          throw new NotFoundException();
+        });
+
+    // when: Se actualiza la entidad
+    mockMvc
+        .perform(MockMvcRequestBuilders.put(url, response.getId()).contentType(MediaType.APPLICATION_JSON)
+            .content(replaceConvocatoriaReunionJson))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se produce error porque no encuentra la entidad a actualizar
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  public void delete_WithExistingId_Return204() throws Exception {
+
+    // given: Entidad existente
+    ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
+    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(ConstantesEti.PATH_PARAMETER_ID)//
+        .toString();
+
+    BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willReturn(response);
+
+    // when: Se elimina la entidad
+    mockMvc.perform(MockMvcRequestBuilders.delete(url, response.getId()).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: La entidad se elimina correctamente
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  public void delete_WithNoExistingId_Returns404() throws Exception {
+
+    // given: Id de una entidad que no existe
+    ConvocatoriaReunion unidaMedida = getMockData(1L, 1L, 1L);
+    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(ConstantesEti.PATH_PARAMETER_ID)//
+        .toString();
+
+    BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
+      throw new NotFoundException();
+    });
+
+    // when: Se elimina la entidad
+    mockMvc.perform(MockMvcRequestBuilders.delete(url, unidaMedida.getId()).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se produce error porque no encuentra la entidad a eliminar
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  public void findById_WithExistingId_ReturnsConvocatoriaReunion() throws Exception {
+
+    // given: Entidad con un determinado Id
+    ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
+    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(ConstantesEti.PATH_PARAMETER_ID)//
+        .toString();
+
+    BDDMockito.given(service.findById(response.getId())).willReturn(response);
+
+    // when: Se busca la entidad por ese Id
+    mockMvc.perform(MockMvcRequestBuilders.get(url, response.getId()).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recupera la entidad con el Id
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(response.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("comite").value(response.getComite()))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaEvaluacion").value(response.getFechaEvaluacion().toString()))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
+        .andExpect(MockMvcResultMatchers.jsonPath("lugar").value(response.getLugar()))
+        .andExpect(MockMvcResultMatchers.jsonPath("ordenDia").value(response.getOrdenDia()))
+        .andExpect(MockMvcResultMatchers.jsonPath("codigo").value(response.getCodigo()))
+        .andExpect(MockMvcResultMatchers.jsonPath("tipoConvocatoriaReunion").value(response.getTipoConvocatoriaReunion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("horaInicio").value(response.getHoraInicio()))
+        .andExpect(MockMvcResultMatchers.jsonPath("minutoInicio").value(response.getMinutoInicio()))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaEnvio").value(response.getFechaEnvio().toString()))
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(response.getActivo()));
+  }
+
+  @Test
+  public void findById_WithNoExistingId_Returns404() throws Exception {
+
+    // given: No existe entidad con el id indicado
+    ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
+
+    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(ConstantesEti.PATH_PARAMETER_ID)//
+        .toString();
+
+    BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
+      throw new NotFoundException();
+    });
+
+    // when: Se busca entidad con ese id
+    mockMvc.perform(MockMvcRequestBuilders.get(url, response.getId()).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se produce error porque no encuentra la entidad con ese Id
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  public void findAll_Unlimited_ReturnsFullConvocatoriaReunionList() throws Exception {
+
+    // given: Datos existentes
+    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+
+    List<ConvocatoriaReunion> response = new LinkedList<ConvocatoriaReunion>();
+    response.add(getMockData(1L, 1L, 1L));
+    response.add(getMockData(2L, 1L, 2L));
+
+    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(response));
+
+    // when: Se buscan todos los datos
+    MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(url).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recuperan todos los datos
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2))).andReturn();
+
+    Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
+        new TypeReference<List<ConvocatoriaReunion>>() {
+        })).isEqualTo(response);
+
+  }
+
+  @Test
+  public void findAll_Unlimited_Returns204() throws Exception {
+
+    // given: No hay datos
+    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+
+    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(Collections.emptyList()));
+    // when: Se buscan todos los datos
+    mockMvc.perform(MockMvcRequestBuilders.get(url)).andDo(MockMvcResultHandlers.print())
+        // then: Se recupera lista vacía);
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  public void findAll_WithPaging_ReturnsDemoSubList() throws Exception {
+
+    // given: Datos existentes
+    String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+
+    List<ConvocatoriaReunion> response = new LinkedList<>();
+    response.add(getMockData(1L, 1L, 1L));
+    response.add(getMockData(2L, 1L, 2L));
+    response.add(getMockData(3L, 2L, 3L));
+
+    // página 1 con 2 elementos por página
+    Pageable pageable = PageRequest.of(1, 2);
+    Page<ConvocatoriaReunion> pageResponse = new PageImpl<>(response.subList(2, 3), pageable, response.size());
+
+    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(pageResponse);
+
+    // when: Se buscan todos los datos paginados
+    MvcResult result = mockMvc
+        .perform(MockMvcRequestBuilders.get(url).header("X-Page", pageable.getPageNumber())
+            .header("X-Page-Size", pageable.getPageSize()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recuperan los datos correctamente según la paginación solicitada
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", String.valueOf(pageable.getPageNumber())))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", String.valueOf(pageable.getPageSize())))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", String.valueOf(response.size())))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1))).andReturn();
+
+    Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
+        new TypeReference<List<ConvocatoriaReunion>>() {
+        })).isEqualTo(response.subList(2, 3));
+  }
+
+  @Test
+  public void findAll_WithPaging_Returns204() throws Exception {
+
+    // given: Datos existentes
+    String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+
+    List<ConvocatoriaReunion> response = new LinkedList<ConvocatoriaReunion>();
+    Pageable pageable = PageRequest.of(1, 2);
+    Page<ConvocatoriaReunion> pageResponse = new PageImpl<>(response, pageable, response.size());
+
+    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(pageResponse);
+
+    // when: Se buscan todos los datos paginados
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(url).header("X-Page", pageable.getPageNumber())
+            .header("X-Page-Size", pageable.getPageSize()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recupera lista de datos paginados vacía
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  public void findAll_WithSearchQuery_ReturnsFilteredConvocatoriaReunionList() throws Exception {
+
+    // given: Datos existentes
+    List<ConvocatoriaReunion> response = new LinkedList<>();
+    response.add(getMockData(1L, 1L, 1L));
+    response.add(getMockData(2L, 1L, 2L));
+    response.add(getMockData(3L, 2L, 1L));
+    response.add(getMockData(4L, 2L, 2L));
+    response.add(getMockData(5L, 3L, 3L));
+
+    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+
+    // search
+    String query = "codigo~CR-0%,id:3";
+
+    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ConvocatoriaReunion>>() {
+          @Override
+          public Page<ConvocatoriaReunion> answer(InvocationOnMock invocation) throws Throwable {
+            List<QueryCriteria> queryCriterias = invocation.<List<QueryCriteria>>getArgument(0);
+
+            List<ConvocatoriaReunion> content = new LinkedList<>();
+            for (ConvocatoriaReunion item : response) {
+              boolean add = true;
+              for (QueryCriteria queryCriteria : queryCriterias) {
+                Field field = ReflectionUtils.findField(ConvocatoriaReunion.class, queryCriteria.getKey());
+                field.setAccessible(true);
+                String fieldValue = ReflectionUtils.getField(field, item).toString();
+                switch (queryCriteria.getOperation()) {
+                  case EQUALS:
+                    if (!fieldValue.equals(queryCriteria.getValue())) {
+                      add = false;
+                    }
+                    break;
+                  case GREATER:
+                    if (!(fieldValue.compareTo(queryCriteria.getValue().toString()) > 0)) {
+                      add = false;
+                    }
+                    break;
+                  case GREATER_OR_EQUAL:
+                    if (!(fieldValue.compareTo(queryCriteria.getValue().toString()) >= 0)) {
+                      add = false;
+                    }
+                    break;
+                  case LIKE:
+                    if (!fieldValue.matches((queryCriteria.getValue().toString().replaceAll("%", ".*")))) {
+                      add = false;
+                    }
+                    break;
+                  case LOWER:
+                    if (!(fieldValue.compareTo(queryCriteria.getValue().toString()) < 0)) {
+                      add = false;
+                    }
+                    break;
+                  case LOWER_OR_EQUAL:
+                    if (!(fieldValue.compareTo(queryCriteria.getValue().toString()) <= 0)) {
+                      add = false;
+                    }
+                    break;
+                  case NOT_EQUALS:
+                    if (fieldValue.equals(queryCriteria.getValue())) {
+                      add = false;
+                    }
+                    break;
+                  case NOT_LIKE:
+                    if (fieldValue.matches((queryCriteria.getValue().toString().replaceAll("%", ".*")))) {
+                      add = false;
+                    }
+                    break;
+                  default:
+                    break;
+                }
+              }
+              if (add) {
+                content.add(item);
+              }
+            }
+            Page<ConvocatoriaReunion> page = new PageImpl<>(content);
+            return page;
+          }
+        });
+
+    // when: Se buscan los datos con el filtro indicado
+    MvcResult result = mockMvc
+        .perform(MockMvcRequestBuilders.get(url).param("q", query).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recuperan los datos filtrados
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1))).andReturn();
+
+    Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
+        new TypeReference<List<ConvocatoriaReunion>>() {
+        })).isEqualTo(response.subList(2, 3));
+  }
+
+  /**
+   * Genera un objeto {@link ConvocatoriaReunion}
+   * 
+   * @param id
+   * @param comiteId
+   * @param tipoId
+   * @return ConvocatoriaReunion
+   */
+  private ConvocatoriaReunion getMockData(Long id, Long comiteId, Long tipoId) {
+
+    Comite comite = new Comite(comiteId, "Comite" + comiteId, Boolean.TRUE);
+
+    String tipo_txt = (tipoId==1L)?"Ordinaria":(tipoId==2L)?"Extraordinaria":"Seguimiento";
+    TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(tipoId, tipo_txt, Boolean.TRUE);
+
+    String txt = (id % 2 == 0) ? String.valueOf(id) : "0" + String.valueOf(id);
+
+    final ConvocatoriaReunion data = new ConvocatoriaReunion();
+    data.setId(id);
+    data.setComite(comite);
+    data.setFechaEvaluacion(LocalDateTime.of(2020, 7, id.intValue(), 0, 0, 1));
+    data.setFechaLimite(LocalDate.of(2020, 8, id.intValue()));
+    data.setLugar("Lugar " + txt);
+    data.setOrdenDia("Orden del día convocatoria reunión " + txt);
+    data.setCodigo("CR-" + txt);
+    data.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
+    data.setHoraInicio(7 + id.intValue());
+    data.setMinutoInicio(30);
+    data.setFechaEnvio(LocalDate.of(2020, 7, 13));
+    data.setActivo(Boolean.TRUE);
+
+    return data;
+  }
+}

@@ -11,6 +11,8 @@ DELETE FROM eti.peticion_evaluacion
 DELETE FROM eti.tipo_actividad
 DELETE FROM eti.tipo_memoria
 DELETE FROM eti.tipo_documento
+DELETE FROM eti.convocatoria_reunion
+DELETE FROM eti.tipo_convocatoria_reunion
 DELETE FROM eti.comite
 DELETE FROM eti.tipo_estado_memoria
 DELETE FROM eti.formacion_especifica
@@ -20,6 +22,6 @@ DELETE FROM eti.tipo_comentario
 DELETE FROM eti.estado_acta
 DELETE FROM eti.acta
 DELETE FROM eti.tipo_estado_acta
-DELETE FROM eti.tipo_convocatoria_reunion
+
 
 
