@@ -1,18 +1,14 @@
 package org.crue.hercules.sgi.eti.service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
-import org.crue.hercules.sgi.eti.model.Comite;
-import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
-import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
-import org.crue.hercules.sgi.eti.repository.ConvocatoriaReunionRepository;
-import org.crue.hercules.sgi.eti.service.impl.ConvocatoriaReunionServiceImpl;
+import org.crue.hercules.sgi.eti.exceptions.ComponenteFormularioNotFoundException;
+import org.crue.hercules.sgi.eti.model.ComponenteFormulario;
+import org.crue.hercules.sgi.eti.repository.ComponenteFormularioRepository;
+import org.crue.hercules.sgi.eti.service.impl.ComponenteFormularioServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,32 +23,32 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 /**
- * ConvocatoriaReunionServiceTest
+ * ComponenteFormularioServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class ConvocatoriaReunionServiceTest {
+public class ComponenteFormularioServiceTest {
 
   @Mock
-  private ConvocatoriaReunionRepository repository;
+  private ComponenteFormularioRepository repository;
 
-  private ConvocatoriaReunionService service;
+  private ComponenteFormularioService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new ConvocatoriaReunionServiceImpl(repository);
+    service = new ComponenteFormularioServiceImpl(repository);
   }
 
   @Test
-  public void create_ReturnsConvocatoriaReunion() {
+  public void create_ReturnsComponenteFormulario() {
 
     // given: Nueva entidad sin Id
-    ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
+    ComponenteFormulario response = getMockData(1L);
     response.setId(null);
 
     BDDMockito.given(repository.save(response)).willReturn(response);
 
     // when: Se crea la entidad
-    ConvocatoriaReunion result = service.create(response);
+    ComponenteFormulario result = service.create(response);
 
     // then: La entidad se crea correctamente
     Assertions.assertThat(result).isEqualTo(response);
@@ -62,60 +58,60 @@ public class ConvocatoriaReunionServiceTest {
   public void create_WithId_ThrowsIllegalArgumentException() {
 
     // given: Nueva entidad con Id
-    ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
+    ComponenteFormulario response = getMockData(1L);
     // when: Se crea la entidad
     // then: Se produce error porque ya tiene Id
     Assertions.assertThatThrownBy(() -> service.create(response)).isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
-  public void update_WithExistingId_ReturnsConvocatoriaReunion() {
+  public void update_WithExistingId_ReturnsComponenteFormulario() {
 
     // given: Entidad existente que se va a actualizar
-    ConvocatoriaReunion convocatoriaReunion = getMockData(1L, 1L, 1L);
-    ConvocatoriaReunion convocatoriaReunionActualizada = getMockData(2L, 1L, 2L);
-    convocatoriaReunionActualizada.setId(convocatoriaReunion.getId());
+    ComponenteFormulario componenteFormulario = getMockData(1L);
+    ComponenteFormulario componenteFormularioActualizada = getMockData(2L);
+    componenteFormularioActualizada.setId(componenteFormulario.getId());
 
-    BDDMockito.given(repository.findById(convocatoriaReunion.getId())).willReturn(Optional.of(convocatoriaReunion));
-    BDDMockito.given(repository.save(convocatoriaReunionActualizada)).willReturn(convocatoriaReunionActualizada);
+    BDDMockito.given(repository.findById(componenteFormulario.getId())).willReturn(Optional.of(componenteFormulario));
+    BDDMockito.given(repository.save(componenteFormularioActualizada)).willReturn(componenteFormularioActualizada);
 
     // when: Se actualiza la entidad
-    ConvocatoriaReunion result = service.update(convocatoriaReunionActualizada);
+    ComponenteFormulario result = service.update(componenteFormularioActualizada);
 
     // then: Los datos se actualizan correctamente
-    Assertions.assertThat(result).isEqualTo(convocatoriaReunionActualizada);
+    Assertions.assertThat(result).isEqualTo(componenteFormularioActualizada);
   }
 
   @Test
   public void update_WithNoExistingId_ThrowsNotFoundException() {
 
     // given: Entidad a actualizar que no existe
-    ConvocatoriaReunion convocatoriaReunionActualizada = getMockData(1L, 1L, 1L);
+    ComponenteFormulario componenteFormularioActualizada = getMockData(1L);
 
     // when: Se actualiza la entidad
     // then: Se produce error porque no encuentra la entidad a actualizar
-    Assertions.assertThatThrownBy(() -> service.update(convocatoriaReunionActualizada))
-        .isInstanceOf(ConvocatoriaReunionNotFoundException.class);
+    Assertions.assertThatThrownBy(() -> service.update(componenteFormularioActualizada))
+        .isInstanceOf(ComponenteFormularioNotFoundException.class);
   }
 
   @Test
   public void update_WithoutId_ThrowsIllegalArgumentException() {
 
     // given: Entidad a actualizar sin Id
-    ConvocatoriaReunion convocatoriaReunionActualizada = getMockData(1L, 1L, 1L);
-    convocatoriaReunionActualizada.setId(null);
+    ComponenteFormulario componenteFormularioActualizada = getMockData(1L);
+    componenteFormularioActualizada.setId(null);
 
     // when: Se actualiza la entidad
     // then: Se produce error porque no tiene Id
-    Assertions.assertThatThrownBy(() -> service.update(convocatoriaReunionActualizada))
+    Assertions.assertThatThrownBy(() -> service.update(componenteFormularioActualizada))
         .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
-  public void delete_WithExistingId_DeletesConvocatoriaReunion() {
+  public void delete_WithExistingId_DeletesComponenteFormulario() {
 
     // given: Entidad existente
-    ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
+    ComponenteFormulario response = getMockData(1L);
 
     BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
     BDDMockito.doNothing().when(repository).deleteById(response.getId());
@@ -126,7 +122,7 @@ public class ConvocatoriaReunionServiceTest {
     // then: La entidad se elimina correctamente
     BDDMockito.given(repository.findById(response.getId())).willReturn(Optional.empty());
     Assertions.assertThatThrownBy(() -> service.findById(response.getId()))
-        .isInstanceOf(ConvocatoriaReunionNotFoundException.class);
+        .isInstanceOf(ComponenteFormularioNotFoundException.class);
   }
 
   @Test
@@ -137,7 +133,7 @@ public class ConvocatoriaReunionServiceTest {
 
     // when: Se elimina la entidad
     // then: Se produce error porque no encuentra la entidad a actualizar
-    Assertions.assertThatThrownBy(() -> service.delete(id)).isInstanceOf(ConvocatoriaReunionNotFoundException.class);
+    Assertions.assertThatThrownBy(() -> service.delete(id)).isInstanceOf(ComponenteFormularioNotFoundException.class);
   }
 
   @Test
@@ -152,14 +148,14 @@ public class ConvocatoriaReunionServiceTest {
   }
 
   @Test
-  public void find_WithExistingId_ReturnsConvocatoriaReunion() {
+  public void find_WithExistingId_ReturnsComponenteFormulario() {
 
     // given: Entidad con un determinado Id
-    ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
+    ComponenteFormulario response = getMockData(1L);
     BDDMockito.given(repository.findById(response.getId())).willReturn(Optional.of(response));
 
     // when: Se busca la entidad por ese Id
-    ConvocatoriaReunion result = service.findById(response.getId());
+    ComponenteFormulario result = service.findById(response.getId());
 
     // then: Se recupera la entidad con el Id
     Assertions.assertThat(result).isEqualTo(response);
@@ -174,22 +170,22 @@ public class ConvocatoriaReunionServiceTest {
 
     // when: Se busca entidad con ese id
     // then: Se produce error porque no encuentra la entidad con ese Id
-    Assertions.assertThatThrownBy(() -> service.findById(id)).isInstanceOf(ConvocatoriaReunionNotFoundException.class);
+    Assertions.assertThatThrownBy(() -> service.findById(id)).isInstanceOf(ComponenteFormularioNotFoundException.class);
   }
 
   @Test
-  public void findAll_Unlimited_ReturnsFullConvocatoriaReunionList() {
+  public void findAll_Unlimited_ReturnsFullComponenteFormularioList() {
 
     // given: Datos existentes
-    List<ConvocatoriaReunion> response = new LinkedList<ConvocatoriaReunion>();
-    response.add(getMockData(1L, 1L, 1L));
-    response.add(getMockData(2L, 1L, 2L));
+    List<ComponenteFormulario> response = new LinkedList<ComponenteFormulario>();
+    response.add(getMockData(1L));
+    response.add(getMockData(2L));
 
-    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaReunion>>any(),
+    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ComponenteFormulario>>any(),
         ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(response));
 
     // when: Se buscan todos las datos
-    Page<ConvocatoriaReunion> result = service.findAll(null, Pageable.unpaged());
+    Page<ComponenteFormulario> result = service.findAll(null, Pageable.unpaged());
 
     // then: Se recuperan todos los datos
     Assertions.assertThat(result.getContent()).isEqualTo(response);
@@ -202,11 +198,11 @@ public class ConvocatoriaReunionServiceTest {
   public void findAll_Unlimited_ReturnEmptyPage() {
 
     // given: No hay datos
-    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaReunion>>any(),
-        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(new LinkedList<ConvocatoriaReunion>()));
+    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ComponenteFormulario>>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(new LinkedList<ComponenteFormulario>()));
 
     // when: Se buscan todos las datos
-    Page<ConvocatoriaReunion> result = service.findAll(null, Pageable.unpaged());
+    Page<ComponenteFormulario> result = service.findAll(null, Pageable.unpaged());
 
     // then: Se recupera lista vacía
     Assertions.assertThat(result.isEmpty());
@@ -216,20 +212,20 @@ public class ConvocatoriaReunionServiceTest {
   public void findAll_WithPaging_ReturnsPage() {
 
     // given: Datos existentes
-    List<ConvocatoriaReunion> response = new LinkedList<ConvocatoriaReunion>();
-    response.add(getMockData(1L, 1L, 1L));
-    response.add(getMockData(2L, 1L, 2L));
-    response.add(getMockData(3L, 2L, 3L));
+    List<ComponenteFormulario> response = new LinkedList<ComponenteFormulario>();
+    response.add(getMockData(1L));
+    response.add(getMockData(2L));
+    response.add(getMockData(3L));
 
     // página 1 con 2 elementos por página
     Pageable pageable = PageRequest.of(1, 2);
-    Page<ConvocatoriaReunion> pageResponse = new PageImpl<>(response.subList(2, 3), pageable, response.size());
+    Page<ComponenteFormulario> pageResponse = new PageImpl<>(response.subList(2, 3), pageable, response.size());
 
-    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaReunion>>any(),
+    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ComponenteFormulario>>any(),
         ArgumentMatchers.<Pageable>any())).willReturn(pageResponse);
 
     // when: Se buscan los datos paginados
-    Page<ConvocatoriaReunion> result = service.findAll(null, pageable);
+    Page<ComponenteFormulario> result = service.findAll(null, pageable);
 
     // then: Se recuperan los datos correctamente según la paginación solicitada
     Assertions.assertThat(result).isEqualTo(pageResponse);
@@ -243,50 +239,33 @@ public class ConvocatoriaReunionServiceTest {
   public void findAll_WithPaging_ReturnEmptyPage() {
 
     // given: No hay datos
-    List<ConvocatoriaReunion> response = new LinkedList<ConvocatoriaReunion>();
+    List<ComponenteFormulario> response = new LinkedList<ComponenteFormulario>();
     Pageable pageable = PageRequest.of(1, 2);
-    Page<ConvocatoriaReunion> pageResponse = new PageImpl<>(response, pageable, response.size());
+    Page<ComponenteFormulario> pageResponse = new PageImpl<>(response, pageable, response.size());
 
-    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaReunion>>any(),
+    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ComponenteFormulario>>any(),
         ArgumentMatchers.<Pageable>any())).willReturn(pageResponse);
 
     // when: Se buscan los datos paginados
-    Page<ConvocatoriaReunion> result = service.findAll(null, pageable);
+    Page<ComponenteFormulario> result = service.findAll(null, pageable);
 
     // then: Se recupera lista de datos paginados vacía
     Assertions.assertThat(result).isEmpty();
   }
 
   /**
-   * Genera un objeto {@link ConvocatoriaReunion}
+   * Genera un objeto {@link ComponenteFormulario}
    * 
    * @param id
-   * @param comiteId
-   * @param tipoId
-   * @return ConvocatoriaReunion
+   * @return ComponenteFormulario
    */
-  private ConvocatoriaReunion getMockData(Long id, Long comiteId, Long tipoId) {
-
-    Comite comite = new Comite(comiteId, "Comite" + comiteId, Boolean.TRUE);
-
-    String tipo_txt = (tipoId == 1L) ? "Ordinaria" : (tipoId == 2L) ? "Extraordinaria" : "Seguimiento";
-    TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(tipoId, tipo_txt, Boolean.TRUE);
+  private ComponenteFormulario getMockData(Long id) {
 
     String txt = (id % 2 == 0) ? String.valueOf(id) : "0" + String.valueOf(id);
 
-    final ConvocatoriaReunion data = new ConvocatoriaReunion();
+    final ComponenteFormulario data = new ComponenteFormulario();
     data.setId(id);
-    data.setComite(comite);
-    data.setFechaEvaluacion(LocalDateTime.of(2020, 7, id.intValue(), 0, 0, 0));
-    data.setFechaLimite(LocalDate.of(2020, 8, id.intValue()));
-    data.setLugar("Lugar " + txt);
-    data.setOrdenDia("Orden del día convocatoria reunión " + txt);
-    data.setCodigo("CR-" + txt);
-    data.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
-    data.setHoraInicio(7 + id.intValue());
-    data.setMinutoInicio(30);
-    data.setFechaEnvio(LocalDate.of(2020, 7, 13));
-    data.setActivo(Boolean.TRUE);
+    data.setEsquema("EsquemaComponenteFormulario" + txt);
 
     return data;
   }

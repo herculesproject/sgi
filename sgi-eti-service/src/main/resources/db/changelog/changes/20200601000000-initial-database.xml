@@ -120,6 +120,10 @@
     <createSequence sequenceName="formulario_memoria_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-componente_formulario_seq">
+    <createSequence sequenceName="componente_formulario_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -578,6 +582,17 @@
       </column>
       <column name="comite_id" type="BIGINT" />
       <column name="formulario_id" type="BIGINT" />
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-componente_formulario">
+    <createTable tableName="componente_formulario">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="componente_formulario_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="componente_formulario_pk" />
+      </column>
+      <column name="esquema" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
     </createTable>
   </changeSet>
 

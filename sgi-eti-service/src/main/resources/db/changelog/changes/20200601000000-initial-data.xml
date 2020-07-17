@@ -150,7 +150,7 @@
       <column name="solicitud_convocatoria_ref" value="Ref solicitud convocatoria" />
       <column name="codigo" value="Código PeticionEvaluacion1" />
       <column name="titulo" value="PeticionEvaluacion1" />
-      <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='TipoActividad1')" />
+      <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='Proyecto de investigación')" />
       <column name="fuente_financiacion_ref" value="Ref fuente financiacion" />
       <column name="fecha_inicio" value="2020-07-09" />
       <column name="fecha_fin" value="2021-07-09" />
@@ -168,7 +168,7 @@
       <column name="solicitud_convocatoria_ref" value="Ref solicitud convocatoria" />
       <column name="codigo" value="Código PeticionEvaluacion2" />
       <column name="titulo" value="PeticionEvaluacion2" />
-      <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='TipoActividad1')" />
+      <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='Proyecto de investigación')" />
       <column name="fuente_financiacion_ref" value="Ref fuente financiacion" />
       <column name="fecha_inicio" value="2020-07-09" />
       <column name="fecha_fin" value="2021-07-09" />
@@ -186,7 +186,7 @@
       <column name="solicitud_convocatoria_ref" value="Ref solicitud convocatoria" />
       <column name="codigo" value="Código PeticionEvaluacion3" />
       <column name="titulo" value="PeticionEvaluacion3" />
-      <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='TipoActividad2')" />
+      <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='Práctica docente')" />
       <column name="fuente_financiacion_ref" value="Ref fuente financiacion" />
       <column name="fecha_inicio" value="2020-07-09" />
       <column name="fecha_fin" value="2021-07-09" />
@@ -204,7 +204,7 @@
       <column name="solicitud_convocatoria_ref" value="Ref solicitud convocatoria" />
       <column name="codigo" value="Código PeticionEvaluacion4" />
       <column name="titulo" value="PeticionEvaluacion4" />
-      <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='TipoActividad4')" />
+      <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='Trabajo Fin de Máster')" />
       <column name="fuente_financiacion_ref" value="Ref fuente financiacion" />
       <column name="fecha_inicio" value="2020-07-09" />
       <column name="fecha_fin" value="2021-07-09" />
@@ -222,7 +222,7 @@
       <column name="solicitud_convocatoria_ref" value="Ref solicitud convocatoria" />
       <column name="codigo" value="Código PeticionEvaluacion5" />
       <column name="titulo" value="PeticionEvaluacion5" />
-      <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='TipoActividad4')" />
+      <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='Trabajo Fin de Máster')" />
       <column name="fuente_financiacion_ref" value="Ref fuente financiacion" />
       <column name="fecha_inicio" value="2020-07-09" />
       <column name="fecha_fin" value="2021-07-09" />
@@ -240,7 +240,7 @@
       <column name="solicitud_convocatoria_ref" value="Ref solicitud convocatoria" />
       <column name="codigo" value="Código PeticionEvaluacion6" />
       <column name="titulo" value="PeticionEvaluacion6" />
-      <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='TipoActividad1')" />
+      <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='Proyecto de investigación')" />
       <column name="fuente_financiacion_ref" value="Ref fuente financiacion" />
       <column name="fecha_inicio" value="2020-07-09" />
       <column name="fecha_fin" value="2021-07-09" />
@@ -905,7 +905,7 @@
       <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Dictamen1')" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-1')" />
       <column name="fecha_dictamen" value="2020-07-09" />
-      <column name="res_rev_minima" value="true" />
+      <column name="es_rev_minima" value="true" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="evaluacion">
@@ -913,7 +913,7 @@
       <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Dictamen2')" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-2')" />
       <column name="fecha_dictamen" value="2020-07-09" />
-      <column name="res_rev_minima" value="true" />
+      <column name="es_rev_minima" value="true" />
       <column name="activo" value="false" />
     </insert>
     <insert tableName="evaluacion">
@@ -921,7 +921,7 @@
       <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Dictamen3')" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-3')" />
       <column name="fecha_dictamen" value="2020-07-09" />
-      <column name="res_rev_minima" value="true" />
+      <column name="es_rev_minima" value="true" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="evaluacion">
@@ -929,7 +929,7 @@
       <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Dictamen4')" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-4')" />
       <column name="fecha_dictamen" value="2020-07-09" />
-      <column name="res_rev_minima" value="false" />
+      <column name="es_rev_minima" value="false" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="evaluacion">
@@ -937,7 +937,7 @@
       <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Dictamen5')" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-5')" />
       <column name="fecha_dictamen" value="2020-07-09" />
-      <column name="res_rev_minima" value="true" />
+      <column name="es_rev_minima" value="true" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="evaluacion">
@@ -945,7 +945,7 @@
       <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Dictamen6')" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-6')" />
       <column name="fecha_dictamen" value="2020-07-09" />
-      <column name="res_rev_minima" value="true" />
+      <column name="es_rev_minima" value="true" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>
@@ -1007,6 +1007,27 @@
     <insert tableName="comite_formulario">
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite6')" />
       <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='Retrospectiva')" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-componente_formulario">
+    <insert tableName="componente_formulario">
+      <column name="esquema" value="EsquemaComponenteFormulario1" />
+    </insert>
+    <insert tableName="componente_formulario">
+      <column name="esquema" value="EsquemaComponenteFormulario2" />
+    </insert>
+    <insert tableName="componente_formulario">
+      <column name="esquema" value="EsquemaComponenteFormulario3" />
+    </insert>
+    <insert tableName="componente_formulario">
+      <column name="esquema" value="EsquemaComponenteFormulario4" />
+    </insert>
+    <insert tableName="componente_formulario">
+      <column name="esquema" value="EsquemaComponenteFormulario5" />
+    </insert>
+    <insert tableName="componente_formulario">
+      <column name="esquema" value="EsquemaComponenteFormulario6" />
     </insert>
   </changeSet>
 

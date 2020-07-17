@@ -43,7 +43,7 @@ public class ConvocatoriaReunionServiceImpl implements ConvocatoriaReunionServic
   public ConvocatoriaReunion create(ConvocatoriaReunion convocatoriaReunion) {
     log.debug("create(ConvocatoriaReunion convocatoriaReunion) - start");
     Assert.isNull(convocatoriaReunion.getId(),
-        "ConvocatoriaReunion id must be null to create a new ConvocatoriaReunion");
+        "ConvocatoriaReunion id debe ser null para crear una nueva ConvocatoriaReunion");
     ConvocatoriaReunion returnValue = repository.save(convocatoriaReunion);
     log.debug("create(ConvocatoriaReunion convocatoriaReunion) - end");
     return returnValue;
@@ -68,7 +68,7 @@ public class ConvocatoriaReunionServiceImpl implements ConvocatoriaReunionServic
     log.debug("update(ConvocatoriaReunion convocatoriaReunionActualizar) - start");
 
     Assert.notNull(convocatoriaReunionActualizar.getId(),
-        "ConvocatoriaReunion id tiene que ser null para crear una nueva convocatoriaReunion");
+        "ConvocatoriaReunion id id no puede ser null para actualizar una convocatoriaReunion");
 
     return repository.findById(convocatoriaReunionActualizar.getId()).map(convocatoriaReunion -> {
       convocatoriaReunion.setComite(convocatoriaReunionActualizar.getComite());
