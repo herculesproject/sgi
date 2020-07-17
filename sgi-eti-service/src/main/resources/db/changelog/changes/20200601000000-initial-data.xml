@@ -1031,4 +1031,55 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-apartado_formulario">
+    <insert tableName="apartado_formulario">
+      <column name="bloque_formulario_id" valueComputed="(select id from eti.bloque_formulario where nombre = 'BloqueFormulario1')" />
+      <column name="nombre" value="ApartadoFormulario1" />
+      <column name="apartado_formulario_padre_id" />
+      <column name="orden" value="1" />
+      <column name="componente_formulario_id" valueComputed="(select id from eti.componente_formulario where esquema = 'EsquemaComponenteFormulario1')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="apartado_formulario">
+      <column name="bloque_formulario_id" valueComputed="(select id from eti.bloque_formulario where nombre = 'BloqueFormulario1')" />
+      <column name="nombre" value="ApartadoFormulario2" />
+      <column name="apartado_formulario_padre_id" valueComputed="(select id from eti.apartado_formulario where nombre = 'ApartadoFormulario1')" />
+      <column name="orden" value="2" />
+      <column name="componente_formulario_id" valueComputed="(select id from eti.componente_formulario where esquema = 'EsquemaComponenteFormulario1')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="apartado_formulario">
+      <column name="bloque_formulario_id" valueComputed="(select id from eti.bloque_formulario where nombre = 'BloqueFormulario1')" />
+      <column name="nombre" value="ApartadoFormulario3" />
+      <column name="apartado_formulario_padre_id" valueComputed="(select id from eti.apartado_formulario where nombre = 'ApartadoFormulario1')" />
+      <column name="orden" value="3" />
+      <column name="componente_formulario_id" valueComputed="(select id from eti.componente_formulario where esquema = 'EsquemaComponenteFormulario1')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="apartado_formulario">
+      <column name="bloque_formulario_id" valueComputed="(select id from eti.bloque_formulario where nombre = 'BloqueFormulario2')" />
+      <column name="nombre" value="ApartadoFormulario4" />
+      <column name="apartado_formulario_padre_id" />
+      <column name="orden" value="4" />
+      <column name="componente_formulario_id" valueComputed="(select id from eti.componente_formulario where esquema = 'EsquemaComponenteFormulario2')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="apartado_formulario">
+      <column name="bloque_formulario_id" valueComputed="(select id from eti.bloque_formulario where nombre = 'BloqueFormulario2')" />
+      <column name="nombre" value="ApartadoFormulario5" />
+      <column name="apartado_formulario_padre_id" valueComputed="(select id from eti.apartado_formulario where nombre = 'ApartadoFormulario4')" />
+      <column name="orden" value="5" />
+      <column name="componente_formulario_id" valueComputed="(select id from eti.componente_formulario where esquema = 'EsquemaComponenteFormulario2')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="apartado_formulario">
+      <column name="bloque_formulario_id" valueComputed="(select id from eti.bloque_formulario where nombre = 'BloqueFormulario2')" />
+      <column name="nombre" value="ApartadoFormulario6" />
+      <column name="apartado_formulario_padre_id" valueComputed="(select id from eti.apartado_formulario where nombre = 'ApartadoFormulario4')" />
+      <column name="orden" value="6" />
+      <column name="componente_formulario_id" valueComputed="(select id from eti.componente_formulario where esquema = 'EsquemaComponenteFormulario2')" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>

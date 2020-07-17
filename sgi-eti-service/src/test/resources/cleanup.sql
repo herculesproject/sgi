@@ -19,6 +19,8 @@ DELETE FROM eti.acta
 DELETE FROM eti.tipo_estado_acta
 DELETE FROM eti.convocatoria_reunion
 DELETE FROM eti.tipo_convocatoria_reunion
+DELETE FROM eti.apartado_formulario
+DELETE FROM eti.componente_formulario
 DELETE FROM eti.bloque_formulario
 DELETE FROM eti.comite_formulario
 DELETE FROM eti.comite

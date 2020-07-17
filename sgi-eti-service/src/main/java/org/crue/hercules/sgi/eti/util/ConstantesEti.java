@@ -5,6 +5,9 @@ public class ConstantesEti {
   /** PATH CONTROLLER ACTA */
   public static final String ACTA_CONTROLLER_BASE_PATH = "/actas";
 
+  /** PATH CONTROLLER APARTADO FORMULARIO */
+  public static final String APARTADO_FORMULARIO_CONTROLLER_BASE_PATH = "/apartadoformularios";
+
   /** PATH CONTROLLER ASISTENTES */
   public static final String ASISTENTES_CONTROLLER_BASE_PATH = "/asistentes";
 
