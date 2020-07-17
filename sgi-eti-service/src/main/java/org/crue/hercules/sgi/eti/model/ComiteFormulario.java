@@ -43,6 +43,6 @@ public class ComiteFormulario extends BaseEntity {
 
   /** Formulario */
   @ManyToOne
-  @JoinColumn(name = "formulario_id", nullable = false)
+  @JoinColumn(name = "formulario_id", nullable = true)
   private Formulario formulario;
 }

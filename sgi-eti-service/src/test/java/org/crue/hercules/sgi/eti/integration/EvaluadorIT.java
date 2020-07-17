@@ -103,11 +103,11 @@ public class EvaluadorIT {
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-    final Evaluador tipoActividad = response.getBody();
+    final Evaluador evaluador = response.getBody();
 
-    Assertions.assertThat(tipoActividad.getId()).isNotNull();
-    Assertions.assertThat(tipoActividad.getResumen()).isEqualTo(replaceEvaluador.getResumen());
-    Assertions.assertThat(tipoActividad.getActivo()).isEqualTo(replaceEvaluador.getActivo());
+    Assertions.assertThat(evaluador.getId()).isNotNull();
+    Assertions.assertThat(evaluador.getResumen()).isEqualTo(replaceEvaluador.getResumen());
+    Assertions.assertThat(evaluador.getActivo()).isEqualTo(replaceEvaluador.getActivo());
   }
 
   @Sql
@@ -186,9 +186,9 @@ public class EvaluadorIT {
     final List<Evaluador> evaluadores = response.getBody();
     Assertions.assertThat(evaluadores.size()).isEqualTo(8);
     for (int i = 0; i < 8; i++) {
-      Evaluador tipoActividad = evaluadores.get(i);
-      Assertions.assertThat(tipoActividad.getId()).isEqualTo(8 - i);
-      Assertions.assertThat(tipoActividad.getResumen()).isEqualTo("Evaluador" + String.format("%03d", 8 - i));
+      Evaluador evaluador = evaluadores.get(i);
+      Assertions.assertThat(evaluador.getId()).isEqualTo(8 - i);
+      Assertions.assertThat(evaluador.getResumen()).isEqualTo("Evaluador" + String.format("%03d", 8 - i));
     }
   }
 

@@ -6,7 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
@@ -37,8 +37,9 @@ public class Acta extends BaseEntity {
   @SequenceGenerator(name = "acta_seq", sequenceName = "acta_seq", allocationSize = 1)
   private Long id;
 
-  @ManyToOne
+  @OneToOne
   @JoinColumn(name = "convocatoria_reunion_id", nullable = false)
+  @NotNull
   private ConvocatoriaReunion convocatoriaReunion;
 
   /** Hora inicio */

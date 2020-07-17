@@ -132,6 +132,10 @@
     <createSequence sequenceName="configuracion_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-evaluador_evaluacion_seq">
+    <createSequence sequenceName="evaluador_evaluacion_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -639,6 +643,16 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-evaluador_evaluacion">
+    <createTable tableName="evaluador_evaluacion">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="evaluador_evaluacion_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="evaluador_evaluacion_pk" />
+      </column>
+      <column name="evaluador_id" type="BIGINT" />
+      <column name="evaluacion_id" type="BIGINT" />
+    </createTable>
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
   <!-- ########################################################## -->
@@ -796,6 +810,14 @@
 
   <changeSet author="master" id="20200601000000-apartado_formulario_componente_formulario_FK">
     <addForeignKeyConstraint baseColumnNames="componente_formulario_id" baseTableName="apartado_formulario" constraintName="apartado_formulario_componente_formulario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="componente_formulario" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-evaluador_evaluacion_evaluador_FK">
+    <addForeignKeyConstraint baseColumnNames="evaluador_id" baseTableName="evaluador_evaluacion" constraintName="evaluador_evaluacion_evaluador_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="evaluador" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-evaluador_evaluacion_evaluacion_FK">
+    <addForeignKeyConstraint baseColumnNames="evaluacion_id" baseTableName="evaluador_evaluacion" constraintName="evaluador_evaluacion_evaluacion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="evaluacion" validate="true" />
   </changeSet>
 
   <!-- ########################################################## -->

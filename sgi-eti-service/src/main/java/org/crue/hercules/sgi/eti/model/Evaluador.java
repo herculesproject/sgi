@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -43,12 +44,13 @@ public class Evaluador extends BaseEntity {
 
   /** Cargo Comité */
   @ManyToOne
-  @JoinColumn(name = "cargo_comite_id", nullable = false)
+  @JoinColumn(name = "cargo_comite_id", nullable = true)
   private CargoComite cargoComite;
 
   /** Comité */
   @ManyToOne
   @JoinColumn(name = "comite_id", nullable = false)
+  @NotNull
   private Comite comite;
 
   /** Fecha Alta */

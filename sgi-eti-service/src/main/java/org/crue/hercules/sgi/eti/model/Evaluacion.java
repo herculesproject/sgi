@@ -46,16 +46,18 @@ public class Evaluacion extends BaseEntity {
   /** Memoria */
   @ManyToOne
   @JoinColumn(name = "memoria_id", nullable = false)
+  @NotNull
   private Memoria memoria;
 
   /** Convocatoria reunión */
   @ManyToOne
   @JoinColumn(name = "convocatoria_reunion_id", nullable = false)
+  @NotNull
   private ConvocatoriaReunion convocatoriaReunion;
 
   /** Dictamen */
   @ManyToOne
-  @JoinColumn(name = "dictamen_id", nullable = false)
+  @JoinColumn(name = "dictamen_id", nullable = true)
   private Dictamen dictamen;
 
   /** Fecha Dictamen */

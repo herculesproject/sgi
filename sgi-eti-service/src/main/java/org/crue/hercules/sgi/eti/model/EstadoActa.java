@@ -39,12 +39,12 @@ public class EstadoActa extends BaseEntity {
 
   /** Acta */
   @ManyToOne
-  @JoinColumn(name = "acta_id", nullable = false)
+  @JoinColumn(name = "acta_id", nullable = true)
   private Acta acta;
 
   /** Tipo Estado Acta */
   @ManyToOne
-  @JoinColumn(name = "tipo_estado_acta_id", nullable = false)
+  @JoinColumn(name = "tipo_estado_acta_id", nullable = true)
   private TipoEstadoActa tipoEstadoActa;
 
   /** Tarea */

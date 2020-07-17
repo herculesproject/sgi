@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -46,6 +47,7 @@ public class EquipoTrabajo extends BaseEntity {
   /** Peticion Evaluación */
   @ManyToOne
   @JoinColumn(name = "peticion_evaluacion_id", nullable = false)
+  @NotNull
   private PeticionEvaluacion peticionEvaluacion;
 
 }

@@ -9,7 +9,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,16 +16,16 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * DocumentacionMemoria
+ * EvaluadorEvaluacion
  */
 
 @Entity
-@Table(name = "documentacion_memoria")
+@Table(name = "evaluador_evaluacion")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class DocumentacionMemoria extends BaseEntity {
+public class EvaluadorEvaluacion extends BaseEntity {
 
   /**
    * Serial version
@@ -36,24 +35,18 @@ public class DocumentacionMemoria extends BaseEntity {
   /** Id */
   @Id
   @Column(name = "id", nullable = false)
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "documentacion_memoria_seq")
-  @SequenceGenerator(name = "documentacion_memoria_seq", sequenceName = "documentacion_memoria_seq", allocationSize = 1)
-  @NotNull
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "evaluador_evaluacion_seq")
+  @SequenceGenerator(name = "evaluador_evaluacion_seq", sequenceName = "evaluador_evaluacion_seq", allocationSize = 1)
   private Long id;
 
-  /** Memoria */
+  /** Evaluador */
   @ManyToOne
-  @JoinColumn(name = "memoria_id", nullable = true)
-  private Memoria memoria;
+  @JoinColumn(name = "evaluador_id", nullable = true)
+  private Evaluador evaluador;
 
-  /** Tipo Documento */
+  /** Evaluación */
   @ManyToOne
-  @JoinColumn(name = "tipo_documento_id", nullable = true)
-  private TipoDocumento tipoDocumento;
-
-  /** Referencia documento */
-  @Column(name = "documento_ref", length = 250, nullable = false)
-  @NotNull
-  private String documentoRef;
+  @JoinColumn(name = "evaluacion_id", nullable = true)
+  private Evaluacion evaluacion;
 
 }

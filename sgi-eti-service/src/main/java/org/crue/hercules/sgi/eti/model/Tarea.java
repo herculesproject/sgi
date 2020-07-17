@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
@@ -38,11 +39,13 @@ public class Tarea extends BaseEntity {
   /** Equipo trabajo */
   @ManyToOne
   @JoinColumn(name = "equipo_trabajo_id", nullable = false)
+  @NotNull
   private EquipoTrabajo equipoTrabajo;
 
   /** Memoria */
   @ManyToOne
   @JoinColumn(name = "memoria_id", nullable = false)
+  @NotNull
   private Memoria memoria;
 
   /** Tarea */
@@ -55,7 +58,7 @@ public class Tarea extends BaseEntity {
 
   /** Formacion especifica */
   @ManyToOne
-  @JoinColumn(name = "formacion_especifica_id", nullable = false)
+  @JoinColumn(name = "formacion_especifica_id", nullable = true)
   private FormacionEspecifica formacionEspecifica;
 
   /** Formacion */

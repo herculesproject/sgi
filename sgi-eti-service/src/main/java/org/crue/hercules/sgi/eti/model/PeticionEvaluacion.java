@@ -56,7 +56,7 @@ public class PeticionEvaluacion extends BaseEntity {
 
   /** Tipo Actividad */
   @ManyToOne
-  @JoinColumn(name = "tipo_actividad_id", nullable = false)
+  @JoinColumn(name = "tipo_actividad_id", nullable = true)
   private TipoActividad tipoActividad;
 
   /** Referencia fuente financiacion */

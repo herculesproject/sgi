@@ -796,7 +796,6 @@
 
   <changeSet author="master" id="20200601000000-acta">
     <insert tableName="acta">
-      <column name="id" value="1" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-1')" />
       <column name="hora_inicio" value="10" />
       <column name="minuto_inicio" value="15" />
@@ -808,7 +807,6 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="acta">
-      <column name="id" value="2" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-2')" />
       <column name="hora_inicio" value="18" />
       <column name="minuto_inicio" value="0" />
@@ -820,7 +818,6 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="acta">
-      <column name="id" value="3" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-3')" />
       <column name="hora_inicio" value="11" />
       <column name="minuto_inicio" value="30" />
@@ -1112,6 +1109,33 @@
       <column name="clave" value="Configuracion6" />
       <column name="valor" value="Valor conf6" />
       <column name="descripcion" value="Descripcion conf6" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-evaluador_evaluacion">
+    <insert tableName="evaluador_evaluacion">
+      <column name="evaluador_id" valueComputed="(select id from eti.evaluador where resumen='Evaluador1')" />
+      <column name="evaluacion_id" valueComputed="(select id from eti.evaluacion where id='1')" />
+    </insert>
+    <insert tableName="evaluador_evaluacion">
+      <column name="evaluador_id" valueComputed="(select id from eti.evaluador where resumen='Evaluador2')" />
+      <column name="evaluacion_id" valueComputed="(select id from eti.evaluacion where id='1')" />
+    </insert>
+    <insert tableName="evaluador_evaluacion">
+      <column name="evaluador_id" valueComputed="(select id from eti.evaluador where resumen='Evaluador3')" />
+      <column name="evaluacion_id" valueComputed="(select id from eti.evaluacion where id='1')" />
+    </insert>
+    <insert tableName="evaluador_evaluacion">
+      <column name="evaluador_id" valueComputed="(select id from eti.evaluador where resumen='Evaluador4')" />
+      <column name="evaluacion_id" valueComputed="(select id from eti.evaluacion where id='1')" />
+    </insert>
+    <insert tableName="evaluador_evaluacion">
+      <column name="evaluador_id" valueComputed="(select id from eti.evaluador where resumen='Evaluador5')" />
+      <column name="evaluacion_id" valueComputed="(select id from eti.evaluacion where id='1')" />
+    </insert>
+    <insert tableName="evaluador_evaluacion">
+      <column name="evaluador_id" valueComputed="(select id from eti.evaluador where resumen='Evaluador6')" />
+      <column name="evaluacion_id" valueComputed="(select id from eti.evaluacion where id='1')" />
     </insert>
   </changeSet>
 </databaseChangeLog>

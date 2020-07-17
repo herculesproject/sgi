@@ -6,9 +6,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,8 +40,9 @@ public class TipoDocumento extends BaseEntity {
   private String nombre;
 
   /** Comite. */
-  @OneToOne
-  @JoinColumn(name = "comite_id", nullable = true)
+  @ManyToOne
+  @JoinColumn(name = "comite_id", nullable = false)
+  @NotNull
   private Comite comite;
 
   /** Activo */

@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -42,11 +43,13 @@ public class Asistentes extends BaseEntity {
   /** Evaluador */
   @ManyToOne
   @JoinColumn(name = "evaluador_id", nullable = false)
+  @NotNull
   private Evaluador evaluador;
 
   /** Convocatoria reunión */
   @ManyToOne
   @JoinColumn(name = "convocatoria_reunion_id", nullable = false)
+  @NotNull
   private ConvocatoriaReunion convocatoriaReunion;
 
   /** Asistencia */
