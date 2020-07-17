@@ -5,7 +5,6 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.ActaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.TareaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Acta;
-import org.crue.hercules.sgi.eti.model.EstadoActa;
 import org.crue.hercules.sgi.eti.repository.ActaRepository;
 import org.crue.hercules.sgi.eti.service.ActaService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
@@ -100,7 +99,7 @@ public class ActaServiceImpl implements ActaService {
    * @param actaActualizar {@link Acta} con los datos actualizados.
    * @return El {@link Acta} actualizado.
    * @throws ActaNotFoundException    Si no existe ningún {@link Acta} con ese id.
-   * @throws IllegalArgumentException Si el {@link EstadoActa} no tiene id.
+   * @throws IllegalArgumentException Si el {@link Acta} no tiene id.
    */
   @Transactional
   public Acta update(final Acta actaActualizar) {

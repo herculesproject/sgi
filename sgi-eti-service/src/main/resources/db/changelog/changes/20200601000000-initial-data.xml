@@ -950,6 +950,39 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-formulario_memoria">
+    <insert tableName="formulario_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where descripcion='Descripcion1')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="formulario_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where descripcion='Descripcion2')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="formulario_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where descripcion='Descripcion3')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="formulario_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-234')" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where descripcion='Descripcion4')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="formulario_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-234')" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where descripcion='Descripcion5')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="formulario_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-234')" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where descripcion='Descripcion6')" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
   <changeSet author="master" id="20200601000000-comite_formulario">
     <insert tableName="comite_formulario">
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite1')" />
@@ -976,4 +1009,5 @@
       <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='Retrospectiva')" />
     </insert>
   </changeSet>
+
 </databaseChangeLog>

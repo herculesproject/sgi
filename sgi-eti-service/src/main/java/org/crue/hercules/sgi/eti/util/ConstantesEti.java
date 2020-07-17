@@ -1,14 +1,15 @@
 package org.crue.hercules.sgi.eti.util;
 
 public class ConstantesEti {
-  /** PATH CONTROLLER BLOQUE FORMULARIO */
-  public static final String BLOQUE_FORMULARIO_CONTROLLER_BASE_PATH = "/bloqueformularios";
 
   /** PATH CONTROLLER ACTA */
   public static final String ACTA_CONTROLLER_BASE_PATH = "/actas";
 
   /** PATH CONTROLLER ASISTENTES */
   public static final String ASISTENTES_CONTROLLER_BASE_PATH = "/asistentes";
+
+  /** PATH CONTROLLER BLOQUE FORMULARIO */
+  public static final String BLOQUE_FORMULARIO_CONTROLLER_BASE_PATH = "/bloqueformularios";
 
   /** PATH CONTROLLER CARGO COMITE */
   public static final String CARGO_COMITE_CONTROLLER_BASE_PATH = "/cargocomites";
@@ -48,6 +49,9 @@ public class ConstantesEti {
 
   /** PATH CONTROLLER FORMULARIO */
   public static final String FORMULARIO_CONTROLLER_BASE_PATH = "/formularios";
+
+  /** PATH CONTROLLER FORMULARIO MEMORIA */
+  public static final String FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH = "/formulariosmemorias";
 
   /** PATH CONTROLLER INFORME FORMULARIO */
   public static final String INFORME_FORMULARIO_CONTROLLER_BASE_PATH = "/informeformularios";
