@@ -1082,4 +1082,36 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-configuracion">
+    <insert tableName="configuracion">
+      <column name="clave" value="Configuracion1" />
+      <column name="valor" value="Valor conf1" />
+      <column name="descripcion" value="Descripcion conf1" />
+    </insert>
+    <insert tableName="configuracion">
+      <column name="clave" value="Configuracion2" />
+      <column name="valor" value="Valor conf2" />
+      <column name="descripcion" value="Descripcion conf2" />
+    </insert>
+    <insert tableName="configuracion">
+      <column name="clave" value="Configuracion3" />
+      <column name="valor" value="Valor conf3" />
+      <column name="descripcion" value="Descripcion conf3" />
+    </insert>
+    <insert tableName="configuracion">
+      <column name="clave" value="Configuracion4" />
+      <column name="valor" value="Valor conf4" />
+      <column name="descripcion" value="Descripcion conf4" />
+    </insert>
+    <insert tableName="configuracion">
+      <column name="clave" value="Configuracion5" />
+      <column name="valor" value="Valor conf5" />
+      <column name="descripcion" value="Descripcion conf5" />
+    </insert>
+    <insert tableName="configuracion">
+      <column name="clave" value="Configuracion6" />
+      <column name="valor" value="Valor conf6" />
+      <column name="descripcion" value="Descripcion conf6" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>

@@ -26,6 +26,9 @@ public class ConstantesEti {
   /** PATH CONTROLLER COMPONENTE FORMULARIO */
   public static final String COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH = "/componenteformularios";
 
+  /** PATH CONTROLLER CONFIGURACION */
+  public static final String CONFIGURACION_CONTROLLER_BASE_PATH = "/configuraciones";
+
   /** PATH CONTROLLER CONVOCATORIA_REUNION */
   public static final String CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH = "/convocatoriareuniones";
 

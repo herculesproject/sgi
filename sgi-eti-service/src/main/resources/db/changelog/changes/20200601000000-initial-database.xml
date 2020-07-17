@@ -128,6 +128,10 @@
     <createSequence sequenceName="apartado_formulario_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-configuracion_seq">
+    <createSequence sequenceName="configuracion_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -624,6 +628,16 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-configuracion">
+    <createTable tableName="configuracion">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="configuracion_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="configuracion_pk" />
+      </column>
+      <column name="clave" type="VARCHAR(250)" />
+      <column name="valor" type="VARCHAR(250)" />
+      <column name="descripcion" type="VARCHAR(2000)" />
+    </createTable>
+  </changeSet>
 
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
