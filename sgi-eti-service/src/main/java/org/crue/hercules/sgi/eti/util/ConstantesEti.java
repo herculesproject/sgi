@@ -17,6 +17,9 @@ public class ConstantesEti {
   /** PATH CONTROLLER CARGO COMITE */
   public static final String CARGO_COMITE_CONTROLLER_BASE_PATH = "/cargocomites";
 
+  /** PATH CONTROLLER COMENTARIO */
+  public static final String COMENTARIO_CONTROLLER_BASE_PATH = "/comentarios";
+
   /** PATH CONTROLLER COMITE */
   public static final String COMITE_CONTROLLER_BASE_PATH = "/comites";
 

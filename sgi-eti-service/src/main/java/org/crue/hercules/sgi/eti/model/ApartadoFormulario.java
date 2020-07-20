@@ -24,8 +24,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ApartadoFormulario extends BaseEntity {
 
+  /**
+   * Serial version
+   */
   private static final long serialVersionUID = 1L;
-
   /** Id. */
   @Id
   @Column(name = "id", nullable = false)

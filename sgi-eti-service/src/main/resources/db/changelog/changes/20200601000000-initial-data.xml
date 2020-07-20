@@ -899,7 +899,7 @@
   <changeSet author="master" id="20200601000000-evaluacion">
     <insert tableName="evaluacion">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria1')" />
-      <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Dictamen1')" />
+      <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Favorable')" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-1')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
@@ -907,7 +907,7 @@
     </insert>
     <insert tableName="evaluacion">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria2')" />
-      <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Dictamen2')" />
+      <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Favorable')" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-2')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
@@ -915,7 +915,7 @@
     </insert>
     <insert tableName="evaluacion">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria3')" />
-      <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Dictamen3')" />
+      <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Favorable')" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-3')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
@@ -923,7 +923,7 @@
     </insert>
     <insert tableName="evaluacion">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria4')" />
-      <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Dictamen4')" />
+      <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Favorable')" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-4')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="false" />
@@ -931,7 +931,7 @@
     </insert>
     <insert tableName="evaluacion">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria5')" />
-      <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Dictamen5')" />
+      <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Favorable')" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-5')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
@@ -939,7 +939,7 @@
     </insert>
     <insert tableName="evaluacion">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria6')" />
-      <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Dictamen6')" />
+      <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Favorable')" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-6')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
@@ -1138,4 +1138,26 @@
       <column name="evaluacion_id" valueComputed="(select id from eti.evaluacion where id='1')" />
     </insert>
   </changeSet>
+
+  <changeSet author="master" id="20200601000000-comentario">
+    <insert tableName="comentario">
+      <column name="apartado_formulario_id" valueComputed="(select id from eti.apartado_formulario where nombre='ApartadoFormulario1')" />
+      <column name="evaluacion_id" valueComputed="(select e.id from eti.evaluacion e join eti.memoria m on e.memoria_id=m.id where m.titulo='Memoria1')" />
+      <column name="tipo_comentario_id" valueComputed="(select id from eti.tipo_comentario where nombre='GESTOR')" />
+      <column name="texto" value="Comentario1" />
+    </insert>
+    <insert tableName="comentario">
+      <column name="apartado_formulario_id" valueComputed="(select id from eti.apartado_formulario where nombre='ApartadoFormulario2')" />
+      <column name="evaluacion_id" valueComputed="(select e.id from eti.evaluacion e join eti.memoria m on e.memoria_id=m.id where m.titulo='Memoria2')" />
+      <column name="tipo_comentario_id" valueComputed="(select id from eti.tipo_comentario where nombre='GESTOR')" />
+      <column name="texto" value="Comentario2" />
+    </insert>
+    <insert tableName="comentario">
+      <column name="apartado_formulario_id" valueComputed="(select id from eti.apartado_formulario where nombre='ApartadoFormulario3')" />
+      <column name="evaluacion_id" valueComputed="(select e.id from eti.evaluacion e join eti.memoria m on e.memoria_id=m.id where m.titulo='Memoria3')" />
+      <column name="tipo_comentario_id" valueComputed="(select id from eti.tipo_comentario where nombre='GESTOR')" />
+      <column name="texto" value="Comentario3" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>
