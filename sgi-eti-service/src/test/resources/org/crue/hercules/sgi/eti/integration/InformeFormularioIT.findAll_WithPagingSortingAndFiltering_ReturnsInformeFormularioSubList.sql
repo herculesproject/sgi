@@ -29,20 +29,41 @@ INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, 
 INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, usuario_ref, tipo_memoria_id, fecha_envio_secretaria, requiere_retrospectiva, fecha_retrospectiva, version)
  VALUES (8, 'ref-777', 1, 2, 'Memoria8', 'userref-5555', 1, null, false, null, 1);
 
+-- FORMULARIO 
+INSERT INTO eti.formulario (id, nombre, descripcion, activo) VALUES (1, 'M10', 'Descripcion', true);
+
+-- FORMULARIO MEMORIA
+INSERT INTO eti.formulario_memoria (id, memoria_id, formulario_id, activo)
+  VALUES (1, 1, 1, true);
+INSERT INTO eti.formulario_memoria (id, memoria_id, formulario_id, activo)
+  VALUES (2, 2, 1, true);  
+INSERT INTO eti.formulario_memoria (id, memoria_id, formulario_id, activo)
+  VALUES (3, 3, 1, true);
+INSERT INTO eti.formulario_memoria (id, memoria_id, formulario_id, activo)
+  VALUES (4, 4, 1, true);
+INSERT INTO eti.formulario_memoria (id, memoria_id, formulario_id, activo)
+  VALUES (5, 5, 1, true);
+INSERT INTO eti.formulario_memoria (id, memoria_id, formulario_id, activo)
+  VALUES (6, 6, 1, true);
+INSERT INTO eti.formulario_memoria (id, memoria_id, formulario_id, activo)
+  VALUES (7, 7, 1, true);
+INSERT INTO eti.formulario_memoria (id, memoria_id, formulario_id, activo)
+  VALUES (8, 8, 1, true);
+
   -- INFORME FORMULARIO 
-INSERT INTO eti.informe_formulario (id, memoria_id, documento_ref, version)
+INSERT INTO eti.informe_formulario (id, formulario_memoria_id, documento_ref, version)
  VALUES (1, 1, 'DocumentoFormulario001', 1);
- INSERT INTO eti.informe_formulario (id, memoria_id, documento_ref, version)
+ INSERT INTO eti.informe_formulario (id, formulario_memoria_id, documento_ref, version)
  VALUES (2, 2, 'DocumentoFormulario002', 2);
- INSERT INTO eti.informe_formulario (id, memoria_id, documento_ref, version)
+ INSERT INTO eti.informe_formulario (id, formulario_memoria_id, documento_ref, version)
  VALUES (3, 3, 'DocumentoFormulario003', 3);
- INSERT INTO eti.informe_formulario (id, memoria_id, documento_ref, version)
+ INSERT INTO eti.informe_formulario (id, formulario_memoria_id, documento_ref, version)
  VALUES (4, 4, 'DocumentoFormulario4', 4);
- INSERT INTO eti.informe_formulario (id, memoria_id, documento_ref, version)
+ INSERT INTO eti.informe_formulario (id, formulario_memoria_id, documento_ref, version)
  VALUES (5, 5, 'DocumentoFormulario5', 5);
- INSERT INTO eti.informe_formulario (id, memoria_id, documento_ref, version)
+ INSERT INTO eti.informe_formulario (id, formulario_memoria_id, documento_ref, version)
  VALUES (6, 6, 'DocumentoFormulario6', 6);
- INSERT INTO eti.informe_formulario (id, memoria_id, documento_ref, version)
+ INSERT INTO eti.informe_formulario (id, formulario_memoria_id, documento_ref, version)
  VALUES (7, 7, 'DocumentoFormulario7', 7);
- INSERT INTO eti.informe_formulario (id, memoria_id, documento_ref, version)
+ INSERT INTO eti.informe_formulario (id, formulario_memoria_id, documento_ref, version)
  VALUES (8, 8, 'DocumentoFormulario8', 8);

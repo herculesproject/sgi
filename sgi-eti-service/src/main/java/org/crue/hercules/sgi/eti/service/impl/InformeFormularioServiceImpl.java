@@ -129,7 +129,7 @@ public class InformeFormularioServiceImpl implements InformeFormularioService {
 
     return informeFormularioRepository.findById(informeFormularioActualizar.getId()).map(informeFormulario -> {
       informeFormulario.setDocumentoRef(informeFormularioActualizar.getDocumentoRef());
-      informeFormulario.setMemoria(informeFormularioActualizar.getMemoria());
+      informeFormulario.setFormularioMemoria(informeFormularioActualizar.getFormularioMemoria());
       informeFormulario.setVersion(informeFormularioActualizar.getVersion());
 
       InformeFormulario returnValue = informeFormularioRepository.save(informeFormulario);

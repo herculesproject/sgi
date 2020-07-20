@@ -388,7 +388,7 @@
       <column name="id" type="BIGINT" defaultValueSequenceNext="informe_formulario_seq">
         <constraints nullable="false" primaryKey="true" primaryKeyName="informe_formulario_pk" />
       </column>
-      <column name="memoria_id" type="BIGINT" />
+      <column name="formulario_memoria_id" type="BIGINT" />
       <column name="documento_ref" type="VARCHAR(250)" />
       <column name="version" type="INT" />
     </createTable>
@@ -749,8 +749,8 @@
   </changeSet>
 
 
-  <changeSet author="master" id="20200601000000-memoria_informe_formulario_FK">
-    <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="informe_formulario" constraintName="memoria_informe_formulario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="memoria" validate="true" />
+  <changeSet author="master" id="20200601000000-informe_formulario_formulario_memoria_FK">
+    <addForeignKeyConstraint baseColumnNames="formulario_memoria_id" baseTableName="informe_formulario" constraintName="informe_formulario_formulario_memoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="formulario_memoria" validate="true" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-documentacion_memoria_memoria_FK">

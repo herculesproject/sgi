@@ -41,10 +41,10 @@ public class InformeFormulario extends BaseEntity {
   @SequenceGenerator(name = "informe_formulario_seq", sequenceName = "informe_formulario_seq", allocationSize = 1)
   private Long id;
 
-  /** Memoria */
+  /** Formulario Memoria */
   @ManyToOne
-  @JoinColumn(name = "memoria_id", nullable = false)
-  private Memoria memoria;
+  @JoinColumn(name = "formulario_memoria_id", nullable = true)
+  private FormularioMemoria formularioMemoria;
 
   /** Referencia documento */
   @Column(name = "documento_ref", length = 250, nullable = false)

@@ -17,9 +17,18 @@ INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, 
 INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, usuario_ref, tipo_memoria_id, fecha_envio_secretaria, requiere_retrospectiva, fecha_retrospectiva, version)
  VALUES (2, 'ref-3534', 1, 2, 'Memoria2', 'userref-5698', 1, null, false, null, 1);
 
+-- FORMULARIO 
+INSERT INTO eti.formulario (id, nombre, descripcion, activo) VALUES (1, 'M10', 'Descripcion', true);
+
+-- FORMULARIO MEMORIA
+INSERT INTO eti.formulario_memoria (id, memoria_id, formulario_id, activo)
+  VALUES (1, 1, 1, true);
+INSERT INTO eti.formulario_memoria (id, memoria_id, formulario_id, activo)
+  VALUES (2, 2, 1, true);
+
   -- INFORME FORMULARIO 
-INSERT INTO eti.informe_formulario (id, memoria_id, documento_ref, version)
+INSERT INTO eti.informe_formulario (id, formulario_memoria_id, documento_ref, version)
  VALUES (1, 1, 'DocumentoFormulario1', 1);
- INSERT INTO eti.informe_formulario (id, memoria_id, documento_ref, version)
+ INSERT INTO eti.informe_formulario (id, formulario_memoria_id, documento_ref, version)
  VALUES (2, 2, 'DocumentoFormulario2', 2);
 

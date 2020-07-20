@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Formulario;
+import org.crue.hercules.sgi.eti.model.FormularioMemoria;
 import org.crue.hercules.sgi.eti.model.InformeFormulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
@@ -280,13 +282,15 @@ public class InformeFormularioIT {
     tipoMemoria.setNombre("TipoMemoria1");
     tipoMemoria.setActivo(Boolean.TRUE);
 
-    Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria1", "user-001", 
-        tipoMemoria, LocalDate.now(), Boolean.FALSE, LocalDate.now(), 3);
+    Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria1", "user-001", tipoMemoria,
+        LocalDate.now(), Boolean.FALSE, LocalDate.now(), 3);
+    Formulario formulario = new Formulario(1L, "FORM-1", "Formulario1", Boolean.TRUE);
+    FormularioMemoria formularioMemoria = new FormularioMemoria(1L, memoria, formulario, Boolean.TRUE);
 
     InformeFormulario informeFormulario = new InformeFormulario();
     informeFormulario.setId(id);
     informeFormulario.setDocumentoRef(documentoRef);
-    informeFormulario.setMemoria(memoria);
+    informeFormulario.setFormularioMemoria(formularioMemoria);
     informeFormulario.setVersion(3);
 
     return informeFormulario;
