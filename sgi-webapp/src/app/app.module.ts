@@ -9,7 +9,7 @@ import {environment} from '@env';
 import {MaterialDesignModule} from '@material/material-design.module';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import {TraductorPaginatorService} from '@shared/config/traductor-paginator.service';
+import {TraductorPaginatorService} from '@core/services/traductor-paginator.service';
 import {SharedModule} from '@shared/shared.module';
 import {LoggerModule} from 'ngx-logger';
 
@@ -17,6 +17,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {ComponentsModule} from './components/components.module';
 import {SelectorModuloComponent} from '@shared/componentes-layout/selector-modulo/selector-modulo.component';
+import {PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import {SelectorModuloComponent} from '@shared/componentes-layout/selector-modul
     ReactiveFormsModule,
     MaterialDesignModule.forRoot(),
     ComponentsModule,
-    HttpClientModule
+    HttpClientModule,
+    PerfectScrollbarModule
   ],
   providers: [
     {provide: MatPaginatorIntl, useClass: TraductorPaginatorService},
@@ -54,6 +56,10 @@ import {SelectorModuloComponent} from '@shared/componentes-layout/selector-modul
   entryComponents: [
     SelectorModuloComponent
   ],
+  exports: [
+    AppComponent
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

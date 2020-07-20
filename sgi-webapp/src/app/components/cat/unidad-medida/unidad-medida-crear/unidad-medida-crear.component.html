@@ -2,7 +2,7 @@
 <section class="unidad-medida-crear">
   <h2>{{'unidad-medida.crear.titulo' | translate}}</h2>
   <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
-    fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+    [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field appearance="fill">

@@ -10,7 +10,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { TipoFungibleService } from '@core/services/tipo-fungible.service';
 import { TraductorService } from '@core/services/traductor.service';
 import { UrlUtils } from '@core/utils/url-utils';
-import { FormGroupUtil } from '@shared/config/form-group-util';
+import { FormGroupUtil } from '@core/services/form-group-util';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';

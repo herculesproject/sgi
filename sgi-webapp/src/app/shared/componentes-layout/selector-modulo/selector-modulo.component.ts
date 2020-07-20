@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { UrlUtils } from '@core/utils/url-utils';
-import { NGXLogger } from 'ngx-logger';
+import {Component, OnInit} from '@angular/core';
+import {MatDialogRef} from '@angular/material/dialog';
+import {Router} from '@angular/router';
+import {UrlUtils} from '@core/utils/url-utils';
+import {NGXLogger} from 'ngx-logger';
 
 @Component({
   selector: 'app-selector-modulo',
@@ -17,7 +17,7 @@ export class SelectorModuloComponent implements OnInit {
     public dialogRef: MatDialogRef<SelectorModuloComponent>,
     private router: Router
   ) {
-    this.modulos = [UrlUtils.cat, UrlUtils.ebt, UrlUtils.pii];
+    this.modulos = [UrlUtils.cat, UrlUtils.ebt, UrlUtils.pii, UrlUtils.eti];
   }
 
   ngOnInit(): void {

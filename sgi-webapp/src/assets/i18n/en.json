@@ -3,6 +3,7 @@
     "cat": "Catalog of scientific-technical offer",
     "ebt": "Technology-based companies",
     "pii": "Industrial and intellectual property",
+    "eti": "Ethics",
     "inicio": "Home",
     "unidadMedida": "Measurement units",
     "crear": "Add",
@@ -12,7 +13,20 @@
     "agrupacionServicios": "Service groupings",
     "horario": "Work hours",
     "tipoReservables": "Bookable",
-    "tipoFungible": "Fungible types"
+    "tipoFungible": "Fungible types",
+    "convocatoria": "Calls",
+    "datos": "My data",
+    "cvn": "My CVN",
+    "produccionCientifica": "Scientific production",
+    "ofertaTecnologica": "Technological offer",
+    "solicitudesConvocatoria": "Call requests",
+    "proyectos": "Projects",
+    "propiedadIntelectual": "Intellectual property",
+    "empresasBaseTecnologica": "Technology-based companies",
+    "gruposInvestigacion": "Investigation groups",
+    "areaEspecializacion": "Areas of expertise",
+    "evaluacionEtica": "Ethics evaluations",
+    "solicitudesSAI": "SAI requests"
   },
   "botones": {
     "guardar": "Save",
@@ -22,11 +36,90 @@
     "modulo": {
       "cat": "Module: Catalog of scientific-technical offer",
       "ebt": "Module: Technology-based companies",
-      "pii": "Module: Industrial and intellectual property"
+      "pii": "Module: Industrial and intellectual property",
+      "eti": "Module: Ethics"
+    }
+  },
+  "convocatoria": {
+    "menu": {
+      "datos-generales": "General data",
+      "organismos-convocantes": "Convening bodies",
+      "organismos-financiadores": "Financing organizations",
+      "enlaces": "Links",
+      "plazos": "Deadlines and phases",
+      "periodos": "Justification periods",
+      "seguimiento-cientifico": "Scientific monitoring",
+      "documentos": "Documents",
+      "requisitos-ip": "IP requirements",
+      "requisitos-equipo": "Team requirements",
+      "elegibilidad": "Eligibility",
+      "conceptos-economicos": "Economic concepts",
+      "configuracion-solicitudes": "Configuration requests",
+      "areas-tematicas": "Thematic areas",
+      "palabras-clave": "Keywords"
     }
   },
   "form-group": {
     "error": "Errors have been found in the form. Please check it."
+  },
+  "evaluacion-etica": {
+    "crear": {
+      "titulo": "New evaluation request",
+      "datos-generales": {
+        "cabecera": "General Data",
+        "titulo": {
+          "error": {
+            "requerido": "Enter the title"
+          },
+          "titulo": "Title"
+        },
+        "tipoActividad": {
+          "error": {
+            "requerido": "Enter the type of activity"
+          },
+          "titulo": "Type of activity"
+        },
+        "tipoFinanciacion": {
+          "error": {
+            "requerido": "Enter the type of financing"
+          },
+          "titulo": "Type of financing"
+        },
+        "fechaInicio": {
+          "error": {
+            "requerido": "Enter the start date"
+          },
+          "titulo": "Start date"
+        },
+        "fechaFin": {
+          "error": {
+            "requerido": "Enter the end date"
+          },
+          "titulo": "End date"
+        },
+        "resumen": {
+          "error": {
+            "requerido": "Enter the summary"
+          },
+          "titulo": "Summary"
+        },
+        "valorSocial": {
+          "error": {
+            "requerido": "Enter the social value"
+          },
+          "titulo": "Social value"
+        }
+      },
+      "equipo-investigador": "Research team",
+      "asignacion-tareas": "Assignment of tasks",
+      "memorias": "Memories"
+    }
+  },
+  "footer": {
+    "evaluacionEtica": {
+      "crear": "New evaluation request",
+      "guardar": "Add request"
+    }
   },
   "menu": {
     "principal": {
@@ -36,7 +129,20 @@
       "unidades-medida": "Measurement units",
       "agrupaciones-servicios": "Service groupings",
       "solicitudes": "Requests",
-      "horarios": "Work hours"
+      "horarios": "Work hours",
+      "convocatoria": "Calls",
+      "datos": "My data",
+      "cvn": "My CVN",
+      "produccionCientifica": "Scientific production",
+      "ofertaTecnologica": "Technological offer",
+      "solicitudesConvocatoria": "Call requests",
+      "proyectos": "Projects",
+      "propiedadIntelectual": "Intellectual property",
+      "empresasBaseTecnologica": "Technology-based companies",
+      "gruposInvestigacion": "Investigation groups",
+      "areaEspecializacion": "Areas of expertise",
+      "evaluacionEtica": "Ethics evaluations",
+      "solicitudesSAI": "SAI requests"
     },
     "secundario": {
       "cuenta": "Account",

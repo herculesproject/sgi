@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from '@core/guards/auth.guard';
-import { UrlUtils } from '@core/utils/url-utils';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {AuthGuard} from '@core/guards/auth.guard';
+import {UrlUtils} from '@core/utils/url-utils';
 
-import { CatRootComponent } from './cat-root/cat-root.component';
+import {CatRootComponent} from './cat-root/cat-root.component';
 
 const routes: Routes = [
   {
@@ -13,7 +13,8 @@ const routes: Routes = [
         loadChildren: () =>
           import('./agrupacion-servicio/agrupacion-servicio.module').then(
             (m) => m.AgrupacionServicioModule
-          )
+          ),
+        canActivate: [AuthGuard],
       },
       {
         path: UrlUtils.horario.valueOf(),
@@ -28,7 +29,8 @@ const routes: Routes = [
         loadChildren: () =>
           import('./solicitud/solicitud.module').then(
             (m) => m.SolicitudModule
-          )
+          ),
+        canActivate: [AuthGuard],
       },
       {
         path: UrlUtils.tipoFungible.valueOf(),
@@ -54,7 +56,7 @@ const routes: Routes = [
           ),
         canActivate: [AuthGuard],
       },
-      { path: '**', component: null },
+      {path: '**', component: null},
     ]
   },
 ];

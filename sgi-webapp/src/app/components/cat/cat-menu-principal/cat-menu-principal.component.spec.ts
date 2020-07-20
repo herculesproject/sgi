@@ -16,27 +16,16 @@ describe('MenuPrincipalComponent', () => {
 
   beforeEach(async(() => {
 
-    // Mock logger
-    const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(NGXLogger.name, TestUtils.getOwnMethodNames(NGXLogger.prototype));
-
     TestBed.configureTestingModule({
       imports: [
         BrowserAnimationsModule,
         MaterialDesignModule,
         HttpClientModule,
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: (http: HttpClient) => {
-              return new TranslateHttpLoader(http);
-            },
-            deps: [HttpClient]
-          }
-        }),
+        TestUtils.getIdiomas(),
         RouterTestingModule.withRoutes([])
       ],
       providers: [
-        { provide: NGXLogger, useValue: loggerSpy }
+        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() }
       ],
       declarations: [CatMenuPrincipalComponent]
     })

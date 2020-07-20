@@ -13,4 +13,6 @@ export class UnidadMedida {
     this.descripcion = '';
     this.activo = true;
   }
+
+  equals
 }

@@ -1,4 +1,11 @@
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn
+} from '@angular/forms';
+import {Subscription} from 'rxjs';
 
 /**
  * Clase para manejar los formGroups de los formularios
@@ -9,13 +16,13 @@ export class FormGroupUtil {
    * Si nos ha fallos devuelve true.
    * En caso contrario, marca todos los campos con errores y devuelve false.
    *
-   * @param formGroup FormGroup
+   * @param formGroup FormGroup a comprobar
    */
   static validFormGroup(formGroup: FormGroup): boolean {
     if (formGroup) {
       let result = true;
       const list: string[] = Object.keys(formGroup.controls);
-      list.forEach((key) => {
+      list.forEach((key: string) => {
         const abstractControl: AbstractControl = formGroup.get(key);
         if (this.getError(formGroup, key) != null) {
           abstractControl.markAllAsTouched();
@@ -25,6 +32,26 @@ export class FormGroupUtil {
       return result;
     }
     return false;
+  }
+
+  /**
+   * Devuelve el número de errores que contiene un formGroup
+   *
+   * @param formGroup FormGroup a comprobar
+   */
+  static getNumErrors(formGroup: FormGroup): number {
+    let errors = 0;
+    if (formGroup) {
+      const list: string[] = Object.keys(formGroup.controls);
+      list.forEach((key: string) => {
+        const abstractControl: AbstractControl = formGroup.get(key);
+        if (this.getError(formGroup, key) != null) {
+          errors++;
+          abstractControl.markAllAsTouched();
+        }
+      });
+    }
+    return errors;
   }
 
   /**
@@ -119,7 +146,7 @@ export class FormGroupUtil {
   }
 
   /**
-   * Añade un nuevo dato a un formGRoup
+   * Añade un nuevo dato a un formGroup
    *
    * @param formGroup FormGroup a comprobar
    * @param key Identificador del dato
@@ -133,5 +160,44 @@ export class FormGroupUtil {
     if (formGroup && formControl) {
       formGroup.addControl(key, formControl);
     }
+  }
+
+  /**
+   * Crea una subcripción a un dato del formGroup
+   *
+   * @param formGroup FormGroup a comprobar
+   * @param key Identificador del dato
+   * @param fun Función que se ejecuta cada vez que cambia el dato
+   */
+  static subscribeOneValue(
+    formGroup: FormGroup, key: string, fun: (res?) => void): Subscription {
+    if (formGroup) {
+      const abstractControl: AbstractControl = formGroup.get(key);
+      if (abstractControl) {
+        return abstractControl.valueChanges.subscribe(value => {
+          fun(value);
+        });
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Crea una subcripción a todos los datos del formGroup
+   *
+   * @param formGroup FormGroup a comprobar
+   * @param fun Función que se ejecuta cada vez que cambia el dato al que esta
+   * subcrito
+   */
+  static subscribeValues(formGroup: FormGroup, fun: (res?) => void): Subscription[] {
+    if (formGroup) {
+      const result: Subscription[] = [];
+      const list: string[] = Object.keys(formGroup.controls);
+      list.forEach((key: string) => {
+        result.push(this.subscribeOneValue(formGroup, key, fun));
+      });
+      return result;
+    }
+    return null;
   }
 }

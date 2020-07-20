@@ -12,7 +12,7 @@ import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
 
 import { Seccion } from '@core/models/seccion';
 import { Servicio } from '@core/models/servicio';
-import { FormGroupUtil } from '@shared/config/form-group-util';
+import { FormGroupUtil } from '@core/services/form-group-util';
 
 
 @Component({

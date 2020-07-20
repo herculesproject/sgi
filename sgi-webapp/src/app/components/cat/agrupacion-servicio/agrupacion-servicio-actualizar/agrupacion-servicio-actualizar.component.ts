@@ -5,7 +5,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
-import { FormGroupUtil } from '@shared/config/form-group-util';
+import { FormGroupUtil } from '@core/services/form-group-util';
 
 import { Subscription, Observable, of, zip } from 'rxjs';
 import { switchMap } from 'rxjs/operators';

@@ -1,32 +1,29 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-
-
-import { NGXLogger } from 'ngx-logger';
-
-import { Subscription, Observable, zip, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-
 import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
-
+import { Gestor } from '@core/models/gestor';
 import { Servicio } from '@core/models/servicio';
 import { Supervision } from '@core/models/supervision';
-import { Gestor } from '@core/models/gestor';
-
-
-import { TraductorService } from '@core/services/traductor.service';
-import { SnackBarService } from '@core/services/snack-bar.service';
+import { FormGroupUtil } from '@core/services/form-group-util';
 import { ServicioService } from '@core/services/servicio.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { SupervisionService } from '@core/services/supervision.service';
-
+import { TraductorService } from '@core/services/traductor.service';
 import { UrlUtils } from '@core/utils/url-utils';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, of, Subscription, zip } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
-import { FormGroupUtil } from '@shared/config/form-group-util';
+import {
+  AgrupacionServicioDatosGeneralesComponent,
+} from '../agrupacion-servicio-formulario/agrupacion-servicio-datos-generales/agrupacion-servicio-datos-generales.component';
+import {
+  AgrupacionServicioGestorComponent,
+} from '../agrupacion-servicio-formulario/agrupacion-servicio-gestor/agrupacion-servicio-gestor.component';
 
-import { AgrupacionServicioDatosGeneralesComponent } from '../agrupacion-servicio-formulario/agrupacion-servicio-datos-generales/agrupacion-servicio-datos-generales.component';
-import { AgrupacionServicioGestorComponent } from '../agrupacion-servicio-formulario/agrupacion-servicio-gestor/agrupacion-servicio-gestor.component';
+
 
 @Component({
   selector: 'app-agrupacion-servicio-crear',

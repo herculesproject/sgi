@@ -3,6 +3,7 @@
     "cat": "Catálogo de oferta científico-técnica",
     "ebt": "Empresas de base tecnológica",
     "pii": "Propiedad industrial e intelectual",
+    "eti": "Ética",
     "inicio": "Inicio",
     "unidadMedida": "Unidad de medida",
     "crear": "Crear",
@@ -12,7 +13,20 @@
     "agrupacionServicios": "Agrupaciones de servicios",
     "horario": "Horarios",
     "tipoReservables": "Tipos de reservable",
-    "tipoFungible": "Tipos de fungible"
+    "tipoFungible": "Tipos de fungible",
+    "convocatoria": "Convocatorias",
+    "datos": "Mis datos",
+    "cvn": "Mi CVN",
+    "produccionCientifica": "Producción científica",
+    "ofertaTecnologica": "Oferta tecnológica",
+    "solicitudesConvocatoria": "Solicitudes de convocatoria",
+    "proyectos": "Proyectos",
+    "propiedadIntelectual": "Propiedad intelectúal",
+    "empresasBaseTecnologica": "Empresas de base tecnológica",
+    "gruposInvestigacion": "Grupos de investigación",
+    "areaEspecializacion": "Áreas de especialización",
+    "evaluacionEtica": "Evaluaciones de ética",
+    "solicitudesSAI": "Solicitudes de SAI"
   },
   "botones": {
     "guardar": "Guardar",
@@ -22,11 +36,90 @@
     "modulo": {
       "cat": "Módulo: Catálogo de oferta científico-técnica",
       "ebt": "Módulo: Empresas de base tecnológica",
-      "pii": "Módulo: Propiedad industrial e intelectual"
+      "pii": "Módulo: Propiedad industrial e intelectual",
+      "eti": "Módulo: Ética"
+    }
+  },
+  "convocatoria": {
+    "menu": {
+      "datos-generales": "Datos generales",
+      "organismos-convocantes": "Organismos convocantes",
+      "organismos-financiadores": "Organismos financiadores",
+      "enlaces": "Enlaces",
+      "plazos": "Plazos y fases",
+      "periodos": "Periodos justificación",
+      "seguimiento-cientifico": "Seguimiento científico",
+      "documentos": "Documentos",
+      "requisitos-ip": "Requisitos IP",
+      "requisitos-equipo": "Requisitos equipo",
+      "elegibilidad": "Elegibilidad",
+      "conceptos-economicos": "Conceptos económicos",
+      "configuracion-solicitudes": "Configuración solicitudes",
+      "areas-tematicas": "Áreas temáticas",
+      "palabras-clave": "Palabras clave"
     }
   },
   "form-group": {
     "error": "Se han encontrado errores en el formulario. Por favor revíselo"
+  },
+  "evaluacion-etica": {
+    "crear": {
+      "titulo": "Nueva solicitud de evaluación",
+      "datos-generales": {
+        "cabecera": "Datos Generales",
+        "titulo": {
+          "error": {
+            "requerido": "Introduzca el titulo"
+          },
+          "titulo": "Título"
+        },
+        "tipoActividad": {
+          "error": {
+            "requerido": "Introduzca el tipo de actividad"
+          },
+          "titulo": "Tipo de actividad"
+        },
+        "tipoFinanciacion": {
+          "error": {
+            "requerido": "Introduzca el tipo de financiación"
+          },
+          "titulo": "Tipo de financiación"
+        },
+        "fechaInicio": {
+          "error": {
+            "requerido": "Introduzca la fecha de inicio"
+          },
+          "titulo": "Fecha de inicio"
+        },
+        "fechaFin": {
+          "error": {
+            "requerido": "Introduzca la fecha de fin"
+          },
+          "titulo": "Fecha de fin"
+        },
+        "resumen": {
+          "error": {
+            "requerido": "Introduzca el resumen"
+          },
+          "titulo": "Resumen"
+        },
+        "valorSocial": {
+          "error": {
+            "requerido": "Introduzca el valor social"
+          },
+          "titulo": "Valor social"
+        }
+      },
+      "equipo-investigador": "Equipo investigador",
+      "asignacion-tareas": "Asignación de tareas",
+      "memorias": "Memorias"
+    }
+  },
+  "footer": {
+    "evaluacionEtica": {
+      "crear": "Nueva solicitud de evaluación",
+      "guardar": "Añadir solicitud"
+    }
   },
   "menu": {
     "principal": {
@@ -36,7 +129,20 @@
       "unidades-medida": "Unidades de medida",
       "agrupaciones-servicios": "Agrupaciones de servicios",
       "solicitudes": "Solicitudes",
-      "horarios": "Horarios"
+      "horarios": "Horarios",
+      "convocatoria": "Convocatorias",
+      "datos": "Mis datos",
+      "cvn": "Mi CVN",
+      "produccionCientifica": "Producción científica",
+      "ofertaTecnologica": "Oferta tecnológica",
+      "solicitudesConvocatoria": "Solicitudes de convocatoria",
+      "proyectos": "Proyectos",
+      "propiedadIntelectual": "Propiedad intelectúal",
+      "empresasBaseTecnologica": "Empresas de base tecnológica",
+      "gruposInvestigacion": "Grupos de investigación",
+      "areaEspecializacion": "Áreas de especialización",
+      "evaluacionEtica": "Evaluaciones de ética",
+      "solicitudesSAI": "Solicitudes de SAI"
     },
     "secundario": {
       "cuenta": "Cuenta",

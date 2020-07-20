@@ -9,8 +9,11 @@ import {SelectorModuloComponent} from '@shared/componentes-layout/selector-modul
 import {BreadcrumbComponent} from './breadcrumb/breadcrumb.component';
 import {HeaderComponent} from './componentes-layout/header/header.component';
 import {MenuSecundarioComponent} from './componentes-layout/menu-secundario/menu-secundario.component';
-import {DialogComponent} from './componentes-shared/dialog/dialog.component';
-import {SnackBarComponent} from './componentes-shared/snack-bar/snack-bar.component';
+import {DialogComponent} from './dialog/dialog.component';
+import {SnackBarComponent} from './snack-bar/snack-bar.component';
+import {FooterCrearComponent} from './footers/footer-crear/footer-crear.component';
+import {FooterGuardarComponent} from './footers/footer-guardar/footer-guardar.component';
+import { GenericTabLabelComponent } from './formularios-tabs/generic-tab-label/generic-tab-label.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +23,9 @@ import {SnackBarComponent} from './componentes-shared/snack-bar/snack-bar.compon
     SnackBarComponent,
     SelectorModuloComponent,
     BreadcrumbComponent,
+    FooterCrearComponent,
+    FooterGuardarComponent,
+    GenericTabLabelComponent,
   ],
   imports: [
     RouterModule,
@@ -29,14 +35,18 @@ import {SnackBarComponent} from './componentes-shared/snack-bar/snack-bar.compon
     ReactiveFormsModule,
     TranslateModule,
   ],
-  exports: [
-    MaterialDesignModule,
-    FlexLayoutModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HeaderComponent,
-    MenuSecundarioComponent,
-    BreadcrumbComponent,
-  ],
+    exports: [
+        MaterialDesignModule,
+        FlexLayoutModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HeaderComponent,
+        MenuSecundarioComponent,
+        BreadcrumbComponent,
+        FooterCrearComponent,
+        FooterGuardarComponent,
+        GenericTabLabelComponent,
+    ],
 })
-export class SharedModule { }
+export class SharedModule {
+}

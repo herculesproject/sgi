@@ -19,9 +19,9 @@ const routes: Routes = [
   {
     path: UrlUtils.ebt.valueOf(),
     loadChildren: () =>
-    import('./components/ebt/ebt.module').then(
-      (m) => m.EbtModule
-    ),
+      import('./components/ebt/ebt.module').then(
+        (m) => m.EbtModule
+      ),
     canActivate: [AuthGuard],
   },
   {
@@ -29,6 +29,14 @@ const routes: Routes = [
     loadChildren: () =>
       import('./components/pii/pii.module').then(
         (m) => m.PiiModule
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: UrlUtils.eti.valueOf(),
+    loadChildren: () =>
+      import('./components/eti/eti.module').then(
+        (m) => m.EtiModule
       ),
     canActivate: [AuthGuard],
   },

@@ -24,7 +24,7 @@ export abstract class BaseRestService<T> {
    *
    * @param serviceName The service name to appear in log
    * @param logger The logger to use
-   * @param endpointRelativePath The endpoint relative URL path
+   * @param endpointUrl
    * @param http The HttpClient to use
    */
   constructor(

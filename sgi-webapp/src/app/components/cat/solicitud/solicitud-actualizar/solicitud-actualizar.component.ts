@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { FormGroupUtil } from '@shared/config/form-group-util';
+import { FormGroupUtil } from '@core/services/form-group-util';
 import { Registro } from '@core/models/registro';
 import { RegistroFilter } from '@core/filters/registro.filter';
 import { ActivatedRoute, Params, Router } from '@angular/router';

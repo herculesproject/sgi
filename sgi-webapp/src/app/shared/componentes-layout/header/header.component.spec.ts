@@ -6,9 +6,7 @@ import {MaterialDesignModule} from '@material/material-design.module';
 import {NGXLogger} from 'ngx-logger';
 import TestUtils from '@core/utils/test-utils';
 import {RouterTestingModule} from '@angular/router/testing';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import {HttpClientModule} from '@angular/common/http';
 import {MenuSecundarioComponent} from '../menu-secundario/menu-secundario.component';
 import {ReactiveFormsModule} from '@angular/forms';
 
@@ -17,30 +15,16 @@ describe('HeaderComponent', () => {
   let fixture: ComponentFixture<HeaderComponent>;
 
   beforeEach(async(() => {
-    // Mock logger
-    const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(
-      NGXLogger.name,
-      TestUtils.getOwnMethodNames(NGXLogger.prototype)
-    );
-
     TestBed.configureTestingModule({
       imports: [
         BrowserAnimationsModule,
         MaterialDesignModule,
         RouterTestingModule,
         HttpClientModule,
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: (http: HttpClient) => {
-              return new TranslateHttpLoader(http);
-            },
-            deps: [HttpClient],
-          },
-        }),
+        TestUtils.getIdiomas(),
         ReactiveFormsModule
       ],
-      providers: [{ provide: NGXLogger, useValue: loggerSpy }],
+      providers: [{provide: NGXLogger, useValue: TestUtils.getLoggerSpy()}],
       declarations: [HeaderComponent, MenuSecundarioComponent],
     }).compileComponents();
   }));

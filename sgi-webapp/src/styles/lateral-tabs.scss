@@ -1,0 +1,35 @@
+:host {
+  ::ng-deep {
+    .mat-tab-group {
+      margin-top: 10px;
+      flex-direction: row;
+      max-height: 600px; // TODO calcular dinamicamente
+    }
+
+    .mat-tab-list {
+      overflow-y: auto;
+    }
+
+    .mat-tab-header-pagination {
+      display: none !important;
+    }
+
+    .mat-tab-labels {
+      flex-direction: column;
+    }
+
+    .mat-tab-label {
+      padding: 0 25px 0 10px !important;
+      justify-content: left !important;
+    }
+
+    .mat-ink-bar {
+      display: none;
+    }
+
+    .mat-tab-body-wrapper {
+      margin-left: 10px;
+      flex: 1 1 auto;
+    }
+  }
+}

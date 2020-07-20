@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { FormGroupUtil } from '@shared/config/form-group-util';
+import { FormGroupUtil } from '@core/services/form-group-util';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 import { TraductorService } from '@core/services/traductor.service';
