@@ -18,7 +18,6 @@ import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.service.AsistentesService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -55,14 +54,15 @@ public class AsistentesControllerTest {
   @MockBean
   private AsistentesService asistenteService;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String ASISTENTE_CONTROLLER_BASE_PATH = "/asistentes";
+
   @Test
   public void getAsistentes_WithId_ReturnsAsistentes() throws Exception {
     BDDMockito.given(asistenteService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockAsistentes(1L, "Motivo 1", Boolean.TRUE)));
 
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.ASISTENTES_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("motivo").value("Motivo 1"))
@@ -77,9 +77,7 @@ public class AsistentesControllerTest {
     BDDMockito.given(asistenteService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new AsistentesNotFoundException(invocation.getArgument(0));
     });
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.ASISTENTES_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -94,8 +92,8 @@ public class AsistentesControllerTest {
 
     // when: Creamos Asistentes
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.ASISTENTES_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevoAsistentesJson))
+        .perform(MockMvcRequestBuilders.post(ASISTENTE_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoAsistentesJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea los nuevos Asistentes y los devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
@@ -112,8 +110,8 @@ public class AsistentesControllerTest {
 
     // when: Creamos Asistentes
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.ASISTENTES_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevoAsistentesJson))
+        .perform(MockMvcRequestBuilders.post(ASISTENTE_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoAsistentesJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -130,8 +128,7 @@ public class AsistentesControllerTest {
     BDDMockito.given(asistenteService.update(ArgumentMatchers.<Asistentes>any())).willReturn(asistente);
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.ASISTENTES_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceAsistentesJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica Asistentes y los devuelve
@@ -150,8 +147,7 @@ public class AsistentesControllerTest {
           throw new AsistentesNotFoundException(((Asistentes) invocation.getArgument(0)).getId());
         });
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.ASISTENTES_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceAsistentesJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
@@ -163,8 +159,7 @@ public class AsistentesControllerTest {
         .willReturn(generarMockAsistentes(1L, "Motivo 1", Boolean.TRUE));
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .delete(ConstantesEti.ASISTENTES_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.delete(ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -182,9 +177,7 @@ public class AsistentesControllerTest {
         .willReturn(new PageImpl<>(asistentes));
 
     // when: find unlimited
-    mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.ASISTENTES_CONTROLLER_BASE_PATH)
-            .accept(MediaType.APPLICATION_JSON))
+    mockMvc.perform(MockMvcRequestBuilders.get(ASISTENTE_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred Asistentes
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -217,7 +210,7 @@ public class AsistentesControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.ASISTENTES_CONTROLLER_BASE_PATH).header("X-Page", "3")
+        .perform(MockMvcRequestBuilders.get(ASISTENTE_CONTROLLER_BASE_PATH).header("X-Page", "3")
             .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked Asistentess are returned with the right page information
@@ -321,7 +314,7 @@ public class AsistentesControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.ASISTENTES_CONTROLLER_BASE_PATH).param("q", query)
+        .perform(MockMvcRequestBuilders.get(ASISTENTE_CONTROLLER_BASE_PATH).param("q", query)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred Asistentes

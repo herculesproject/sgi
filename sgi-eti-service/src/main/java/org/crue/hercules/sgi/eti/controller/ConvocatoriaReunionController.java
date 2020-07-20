@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.service.ConvocatoriaReunionService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -30,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
  * ConvocatoriaReunionController
  */
 @RestController
-@RequestMapping(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+@RequestMapping("/convocatoriareuniones")
 @Slf4j
 public class ConvocatoriaReunionController {
 
@@ -79,7 +78,7 @@ public class ConvocatoriaReunionController {
    * @throws IllegalArgumentException Si la entidad {@link ConvocatoriaReunion} no
    *                                  tiene id.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   ConvocatoriaReunion replaceConvocatoriaReunion(@Valid @RequestBody ConvocatoriaReunion convocatoriaReunion,
       @PathVariable Long id) {
     log.debug("replaceConvocatoriaReunion(ConvocatoriaReunion convocatoriaReunion, Long id) - start");
@@ -98,7 +97,7 @@ public class ConvocatoriaReunionController {
    * @throws IllegalArgumentException Si la entidad {@link ConvocatoriaReunion} no
    *                                  tiene id.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
@@ -139,7 +138,7 @@ public class ConvocatoriaReunionController {
    *                                  {@link ConvocatoriaReunion} con ese id.
    * @throws IllegalArgumentException Si no se informa id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   private ConvocatoriaReunion one(@PathVariable Long id) {
     log.debug("one(Long id) - start");
     ConvocatoriaReunion returnValue = service.findById(id);

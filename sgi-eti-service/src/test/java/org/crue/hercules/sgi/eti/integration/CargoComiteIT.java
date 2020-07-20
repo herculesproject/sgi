@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.CargoComite;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,12 +27,15 @@ public class CargoComiteIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String CARGO_COMITE_CONTROLLER_BASE_PATH = "/cargocomites";
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getCargoComite_WithId_ReturnsCargoComite() throws Exception {
-    final ResponseEntity<CargoComite> response = restTemplate.getForEntity(
-        ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, CargoComite.class, 1L);
+    final ResponseEntity<CargoComite> response = restTemplate
+        .getForEntity(CARGO_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, CargoComite.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -52,7 +54,7 @@ public class CargoComiteIT {
     nuevoCargoComite.setNombre("CargoComite1");
     nuevoCargoComite.setActivo(Boolean.TRUE);
 
-    restTemplate.postForEntity(ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH, nuevoCargoComite, CargoComite.class);
+    restTemplate.postForEntity(CARGO_COMITE_CONTROLLER_BASE_PATH, nuevoCargoComite, CargoComite.class);
   }
 
   @Sql
@@ -63,8 +65,7 @@ public class CargoComiteIT {
     // when: Delete con id existente
     long id = 1L;
     final ResponseEntity<CargoComite> response = restTemplate.exchange(
-        ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE, null,
-        CargoComite.class, id);
+        CARGO_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, CargoComite.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -75,10 +76,10 @@ public class CargoComiteIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeCargoComite_DoNotGetCargoComite() throws Exception {
-    restTemplate.delete(ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(CARGO_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<CargoComite> response = restTemplate.getForEntity(
-        ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, CargoComite.class, 1L);
+    final ResponseEntity<CargoComite> response = restTemplate
+        .getForEntity(CARGO_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, CargoComite.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -95,8 +96,7 @@ public class CargoComiteIT {
 
     final ResponseEntity<CargoComite> response = restTemplate.exchange(
 
-        ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT,
-        requestEntity, CargoComite.class, 1L);
+        CARGO_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity, CargoComite.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -116,7 +116,7 @@ public class CargoComiteIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "1");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(CARGO_COMITE_CONTROLLER_BASE_PATH).build(false).toUri();
 
     final ResponseEntity<List<CargoComite>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<CargoComite>>() {
@@ -143,8 +143,8 @@ public class CargoComiteIT {
     Long id = 1L;
     String query = "nombre~PRESI%,id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH).queryParam("q", query)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(CARGO_COMITE_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
+        .toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<CargoComite>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -167,8 +167,8 @@ public class CargoComiteIT {
     // when: Ordenación por nombre desc
     String query = "nombre-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH).queryParam("s", query)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(CARGO_COMITE_CONTROLLER_BASE_PATH).queryParam("s", query).build(false)
+        .toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<CargoComite>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -199,7 +199,7 @@ public class CargoComiteIT {
     // when: Filtra por nombre like e id equals
     String filter = "nombre~%VOCAL%";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH).queryParam("s", sort)
+    URI uri = UriComponentsBuilder.fromUriString(CARGO_COMITE_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<CargoComite>> response = restTemplate.exchange(uri, HttpMethod.GET,

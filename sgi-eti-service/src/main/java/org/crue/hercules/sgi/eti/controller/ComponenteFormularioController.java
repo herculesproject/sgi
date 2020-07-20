@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.ComponenteFormulario;
 import org.crue.hercules.sgi.eti.service.ComponenteFormularioService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -30,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
  * ComponenteFormularioController
  */
 @RestController
-@RequestMapping(ConstantesEti.COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH)
+@RequestMapping("/componenteformularios")
 @Slf4j
 public class ComponenteFormularioController {
 
@@ -81,7 +80,7 @@ public class ComponenteFormularioController {
    *                                               {@link ComponenteFormulario} no
    *                                               tiene id.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   ComponenteFormulario replaceComponenteFormulario(@Valid @RequestBody ComponenteFormulario componenteFormulario,
       @PathVariable Long id) {
     log.debug("replaceComponenteFormulario(ComponenteFormulario componenteFormulario, Long id) - start");
@@ -102,7 +101,7 @@ public class ComponenteFormularioController {
    *                                               {@link ComponenteFormulario} no
    *                                               tiene id.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
@@ -142,7 +141,7 @@ public class ComponenteFormularioController {
    *                                               con ese id.
    * @throws IllegalArgumentException              Si no se informa id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   private ComponenteFormulario one(@PathVariable Long id) {
     log.debug("one(Long id) - start");
     ComponenteFormulario returnValue = service.findById(id);

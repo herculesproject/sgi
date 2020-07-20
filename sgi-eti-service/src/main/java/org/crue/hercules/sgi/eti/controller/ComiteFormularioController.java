@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.ComiteFormulario;
 import org.crue.hercules.sgi.eti.service.ComiteFormularioService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * ComiteFormularioController
  */
 @RestController
-@RequestMapping(ConstantesEti.COMITE_FORMULARIO_CONTROLLER_BASE_PATH)
+@RequestMapping("/comiteformularios")
 @Slf4j
 public class ComiteFormularioController {
 
@@ -88,7 +87,7 @@ public class ComiteFormularioController {
    * @param id                      id {@link ComiteFormulario} a actualizar.
    * @return {@link ComiteFormulario} actualizado.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   ComiteFormulario replaceComiteFormulario(@Valid @RequestBody ComiteFormulario updatedComiteFormulario,
       @PathVariable Long id) {
     log.debug("replaceComiteFormulario(ComiteFormulario updatedComiteFormulario, Long id) - start");
@@ -104,7 +103,7 @@ public class ComiteFormularioController {
    * @param id Identificador de {@link ComiteFormulario}.
    * @return {@link ComiteFormulario} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   ComiteFormulario one(@PathVariable Long id) {
     log.debug("ComiteFormulario one(Long id) - start");
     ComiteFormulario returnValue = service.findById(id);
@@ -117,7 +116,7 @@ public class ComiteFormularioController {
    * 
    * @param id Identificador de {@link ComiteFormulario}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     service.deleteById(id);

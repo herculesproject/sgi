@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Configuracion;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,12 +27,15 @@ public class ConfiguracionIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String CONFIGURACION_CONTROLLER_BASE_PATH = "/configuraciones";
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getConfiguracion_WithId_ReturnsConfiguracion() throws Exception {
-    final ResponseEntity<Configuracion> response = restTemplate.getForEntity(
-        ConstantesEti.CONFIGURACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, Configuracion.class, 1L);
+    final ResponseEntity<Configuracion> response = restTemplate
+        .getForEntity(CONFIGURACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, Configuracion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -51,8 +53,7 @@ public class ConfiguracionIT {
     Configuracion nuevoConfiguracion = new Configuracion();
     nuevoConfiguracion.setClave("Configuracion1");
 
-    restTemplate.postForEntity(ConstantesEti.CONFIGURACION_CONTROLLER_BASE_PATH, nuevoConfiguracion,
-        Configuracion.class);
+    restTemplate.postForEntity(CONFIGURACION_CONTROLLER_BASE_PATH, nuevoConfiguracion, Configuracion.class);
   }
 
   @Sql
@@ -63,8 +64,7 @@ public class ConfiguracionIT {
     // when: Delete con id existente
     long id = 1L;
     final ResponseEntity<Configuracion> response = restTemplate.exchange(
-        ConstantesEti.CONFIGURACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE, null,
-        Configuracion.class, id);
+        CONFIGURACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, Configuracion.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -75,10 +75,10 @@ public class ConfiguracionIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeConfiguracion_DoNotGetConfiguracion() throws Exception {
-    restTemplate.delete(ConstantesEti.CONFIGURACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(CONFIGURACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<Configuracion> response = restTemplate.getForEntity(
-        ConstantesEti.CONFIGURACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, Configuracion.class, 1L);
+    final ResponseEntity<Configuracion> response = restTemplate
+        .getForEntity(CONFIGURACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, Configuracion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -95,8 +95,7 @@ public class ConfiguracionIT {
         new HttpHeaders());
 
     final ResponseEntity<Configuracion> response = restTemplate.exchange(
-        ConstantesEti.CONFIGURACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT,
-        requestEntity, Configuracion.class, 1L);
+        CONFIGURACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity, Configuracion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -115,7 +114,7 @@ public class ConfiguracionIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.CONFIGURACION_CONTROLLER_BASE_PATH).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(CONFIGURACION_CONTROLLER_BASE_PATH).build(false).toUri();
 
     final ResponseEntity<List<Configuracion>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<Configuracion>>() {
@@ -145,8 +144,8 @@ public class ConfiguracionIT {
     Long id = 5L;
     String query = "clave~Configuracion%,id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.CONFIGURACION_CONTROLLER_BASE_PATH)
-        .queryParam("q", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(CONFIGURACION_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
+        .toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<Configuracion>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -169,8 +168,8 @@ public class ConfiguracionIT {
     // when: Ordenación por id desc
     String query = "id-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.CONFIGURACION_CONTROLLER_BASE_PATH)
-        .queryParam("s", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(CONFIGURACION_CONTROLLER_BASE_PATH).queryParam("s", query).build(false)
+        .toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<Configuracion>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -202,7 +201,7 @@ public class ConfiguracionIT {
     // when: Filtra por clave like
     String filter = "clave~%00%";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.CONFIGURACION_CONTROLLER_BASE_PATH).queryParam("s", sort)
+    URI uri = UriComponentsBuilder.fromUriString(CONFIGURACION_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<Configuracion>> response = restTemplate.exchange(uri, HttpMethod.GET,

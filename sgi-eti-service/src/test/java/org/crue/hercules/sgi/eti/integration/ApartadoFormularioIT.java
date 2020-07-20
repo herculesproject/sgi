@@ -9,7 +9,6 @@ import org.crue.hercules.sgi.eti.model.ApartadoFormulario;
 import org.crue.hercules.sgi.eti.model.BloqueFormulario;
 import org.crue.hercules.sgi.eti.model.ComponenteFormulario;
 import org.crue.hercules.sgi.eti.model.Formulario;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,6 +31,9 @@ public class ApartadoFormularioIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String APARTADO_FORMULARIO_CONTROLLER_BASE_PATH = "/apartadoformularios";
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
@@ -41,7 +43,7 @@ public class ApartadoFormularioIT {
     final ApartadoFormulario newApartadoFormulario = getMockData(2L, 1L, 1L, null);
     newApartadoFormulario.setId(null);
 
-    final String url = new StringBuilder(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
 
     // when: Se crea la entidad
     final ResponseEntity<ApartadoFormulario> response = restTemplate.postForEntity(url, newApartadoFormulario,
@@ -64,8 +66,8 @@ public class ApartadoFormularioIT {
     final ApartadoFormulario updatedApartadoFormulario = getMockData(3L, 1L, 1L, 1L);
     updatedApartadoFormulario.setId(2L);
 
-    final String url = new StringBuilder(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
-        .append(ConstantesEti.PATH_PARAMETER_ID)//
+    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
         .toString();
 
     HttpEntity<ApartadoFormulario> request = new HttpEntity<>(updatedApartadoFormulario);
@@ -87,8 +89,8 @@ public class ApartadoFormularioIT {
     // given: Entidad existente con la propiedad activo a true
     Long id = 1L;
 
-    final String url = new StringBuilder(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
-        .append(ConstantesEti.PATH_PARAMETER_ID)//
+    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
         .toString();
 
     ResponseEntity<ApartadoFormulario> response = restTemplate.getForEntity(url, ApartadoFormulario.class, id);
@@ -114,8 +116,8 @@ public class ApartadoFormularioIT {
     // given: Entidad con un determinado Id
     final ApartadoFormulario apartadoFormulario = getMockData(1L, 1L, 1L, null);
 
-    final String url = new StringBuilder(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
-        .append(ConstantesEti.PATH_PARAMETER_ID)//
+    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
         .toString();
 
     // when: Se busca la entidad por ese Id
@@ -133,8 +135,8 @@ public class ApartadoFormularioIT {
 
     // given: No existe entidad con el id indicado
     Long id = 1L;
-    final String url = new StringBuilder(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
-        .append(ConstantesEti.PATH_PARAMETER_ID)//
+    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
         .toString();
 
     // when: Se busca la entidad por ese Id
@@ -154,7 +156,7 @@ public class ApartadoFormularioIT {
     response.add(getMockData(1L, 1L, 1L, null));
     response.add(getMockData(2L, 1L, 1L, 1L));
 
-    final String url = new StringBuilder(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
 
     // when: Se buscan todos los datos
     final ResponseEntity<List<ApartadoFormulario>> result = restTemplate.exchange(url, HttpMethod.GET, null,
@@ -180,7 +182,7 @@ public class ApartadoFormularioIT {
     headers.add("X-Page", "2");
     headers.add("X-Page-Size", "2");
 
-    final String url = new StringBuilder(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
 
     // when: Se buscan los datos paginados
     final ResponseEntity<List<ApartadoFormulario>> result = restTemplate.exchange(url, HttpMethod.GET,
@@ -211,8 +213,8 @@ public class ApartadoFormularioIT {
     Long id = 3L;
     String query = "nombre~ApartadoFormulario0%,id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)
-        .queryParam("q", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).queryParam("q", query)
+        .build(false).toUri();
 
     // when: Se buscan los datos con el filtro indicado
     final ResponseEntity<List<ApartadoFormulario>> result = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -240,8 +242,8 @@ public class ApartadoFormularioIT {
     // sort by id desc
     String sort = "id-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)
-        .queryParam("s", sort).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .build(false).toUri();
 
     // when: Se buscan los datos con la ordenación indicada
     final ResponseEntity<List<ApartadoFormulario>> result = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -279,8 +281,8 @@ public class ApartadoFormularioIT {
     // search
     String query = "nombre~ApartadoFormulario0%";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)
-        .queryParam("s", sort).queryParam("q", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .queryParam("q", query).build(false).toUri();
 
     // when: Se buscan los datos paginados con el filtro y orden indicados
     final ResponseEntity<List<ApartadoFormulario>> result = restTemplate.exchange(uri, HttpMethod.GET,

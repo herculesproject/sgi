@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.EstadoActa;
 import org.crue.hercules.sgi.eti.service.EstadoActaService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * EstatoActaController
  */
 @RestController
-@RequestMapping(ConstantesEti.ESTADO_ACTA_CONTROLLER_BASE_PATH)
+@RequestMapping("/estadoactas")
 @Slf4j
 public class EstadoActaController {
 
@@ -88,7 +87,7 @@ public class EstadoActaController {
    * @param id                id {@link EstadoActa} a actualizar.
    * @return {@link EstadoActa} actualizado.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   EstadoActa replaceEstadoActa(@Valid @RequestBody EstadoActa updatedEstadoActa, @PathVariable Long id) {
     log.debug("replaceEstadoActa(EstadoActa updatedEstadoActa, Long id) - start");
     updatedEstadoActa.setId(id);
@@ -103,7 +102,7 @@ public class EstadoActaController {
    * @param id Identificador de {@link EstadoActa}.
    * @return {@link EstadoActa} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   EstadoActa one(@PathVariable Long id) {
     log.debug("EstadoActa one(Long id) - start");
     EstadoActa returnValue = service.findById(id);
@@ -116,7 +115,7 @@ public class EstadoActaController {
    * 
    * @param id Identificador de {@link EstadoActa}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     service.delete(id);

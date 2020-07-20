@@ -7,7 +7,6 @@ import javax.validation.Valid;
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.service.ComiteService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -31,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
  * ComiteController
  */
 @RestController
-@RequestMapping(ConstantesEti.COMITE_CONTROLLER_BASE_PATH)
+@RequestMapping("/comites")
 @Slf4j
 public class ComiteController {
 
@@ -71,7 +70,7 @@ public class ComiteController {
    * @param id            id {@link Comite} a actualizar.
    * @return {@link Comite} actualizado.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   Comite replaceComite(@Valid @RequestBody Comite updatedComite, @PathVariable Long id) {
     log.debug("replaceComite(Comite updatedComite, Long id) - start");
     updatedComite.setId(id);
@@ -86,7 +85,7 @@ public class ComiteController {
    * @param id Identificador de {@link Comite}.
    * @return {@link Comite} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   private Comite one(@PathVariable Long id) {
     log.debug("one(Long id) - start");
     Comite returnValue = service.findById(id);
@@ -100,7 +99,7 @@ public class ComiteController {
    * @param id Identificador de {@link Comite}.
    * @throws ComiteNotFoundException
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) throws ComiteNotFoundException {
     log.debug("deleteComite(Long id) - start");
     Comite comite = this.one(id);

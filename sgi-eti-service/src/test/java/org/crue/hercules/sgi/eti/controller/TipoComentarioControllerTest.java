@@ -11,7 +11,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.TipoComentarioNotFoundException;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.crue.hercules.sgi.eti.service.TipoComentarioService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -48,14 +47,15 @@ public class TipoComentarioControllerTest {
   @MockBean
   private TipoComentarioService tipoComentarioService;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String TIPO_COMENTARIO_CONTROLLER_BASE_PATH = "/tipocomentarios";
+
   @Test
   public void getTipoComentario_WithId_ReturnsTipoComentario() throws Exception {
     BDDMockito.given(tipoComentarioService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockTipoComentario(1L, "TipoComentario1")));
 
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.TIPO_COMENTARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(TIPO_COMENTARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("TipoComentario1"));
@@ -67,9 +67,7 @@ public class TipoComentarioControllerTest {
     BDDMockito.given(tipoComentarioService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new TipoComentarioNotFoundException(invocation.getArgument(0));
     });
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.TIPO_COMENTARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(TIPO_COMENTARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -84,7 +82,7 @@ public class TipoComentarioControllerTest {
 
     // when: Creamos un TipoComentario
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.TIPO_COMENTARIO_CONTROLLER_BASE_PATH)
+        .perform(MockMvcRequestBuilders.post(TIPO_COMENTARIO_CONTROLLER_BASE_PATH)
             .contentType(MediaType.APPLICATION_JSON).content(nuevoTipoComentarioJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo TipoComentario y lo devuelve
@@ -102,7 +100,7 @@ public class TipoComentarioControllerTest {
 
     // when: Creamos un TipoComentario
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.TIPO_COMENTARIO_CONTROLLER_BASE_PATH)
+        .perform(MockMvcRequestBuilders.post(TIPO_COMENTARIO_CONTROLLER_BASE_PATH)
             .contentType(MediaType.APPLICATION_JSON).content(nuevoTipoComentarioJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
@@ -120,8 +118,7 @@ public class TipoComentarioControllerTest {
     BDDMockito.given(tipoComentarioService.update(ArgumentMatchers.<TipoComentario>any())).willReturn(tipoComentario);
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.TIPO_COMENTARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(TIPO_COMENTARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceTipoComentarioJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica el TipoComentario y lo devuelve
@@ -140,8 +137,7 @@ public class TipoComentarioControllerTest {
           throw new TipoComentarioNotFoundException(((TipoComentario) invocation.getArgument(0)).getId());
         });
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.TIPO_COMENTARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(TIPO_COMENTARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceTipoComentarioJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
@@ -153,8 +149,7 @@ public class TipoComentarioControllerTest {
         .willReturn(generarMockTipoComentario(1L, "TipoComentario1"));
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .delete(ConstantesEti.TIPO_COMENTARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.delete(TIPO_COMENTARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -172,9 +167,7 @@ public class TipoComentarioControllerTest {
         .willReturn(new PageImpl<>(tipoComentarios));
 
     // when: find unlimited
-    mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.TIPO_COMENTARIO_CONTROLLER_BASE_PATH)
-            .accept(MediaType.APPLICATION_JSON))
+    mockMvc.perform(MockMvcRequestBuilders.get(TIPO_COMENTARIO_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred TipoComentario
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -207,7 +200,7 @@ public class TipoComentarioControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.TIPO_COMENTARIO_CONTROLLER_BASE_PATH).header("X-Page", "3")
+        .perform(MockMvcRequestBuilders.get(TIPO_COMENTARIO_CONTROLLER_BASE_PATH).header("X-Page", "3")
             .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked TipoComentarios are returned with the right page information
@@ -310,7 +303,7 @@ public class TipoComentarioControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.TIPO_COMENTARIO_CONTROLLER_BASE_PATH).param("q", query)
+        .perform(MockMvcRequestBuilders.get(TIPO_COMENTARIO_CONTROLLER_BASE_PATH).param("q", query)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred TipoComentario

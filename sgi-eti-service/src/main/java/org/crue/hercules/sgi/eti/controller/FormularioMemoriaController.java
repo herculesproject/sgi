@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.FormularioMemoria;
 import org.crue.hercules.sgi.eti.service.FormularioMemoriaService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * FormularioMemoriaController
  */
 @RestController
-@RequestMapping(ConstantesEti.FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH)
+@RequestMapping("/formulariomemorias")
 @Slf4j
 public class FormularioMemoriaController {
 
@@ -88,7 +87,7 @@ public class FormularioMemoriaController {
    * @param id                       id {@link FormularioMemoria} a actualizar.
    * @return {@link FormularioMemoria} actualizado.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   FormularioMemoria replaceFormularioMemoria(@Valid @RequestBody FormularioMemoria updatedFormularioMemoria,
       @PathVariable Long id) {
     log.debug("replaceFormularioMemoria(FormularioMemoria updatedFormularioMemoria, Long id) - start");
@@ -104,7 +103,7 @@ public class FormularioMemoriaController {
    * @param id Identificador de {@link FormularioMemoria}.
    * @return {@link FormularioMemoria} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   FormularioMemoria one(@PathVariable Long id) {
     log.debug("FormularioMemoria one(Long id) - start");
     FormularioMemoria returnValue = service.findById(id);
@@ -117,7 +116,7 @@ public class FormularioMemoriaController {
    * 
    * @param id Identificador de {@link FormularioMemoria}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     FormularioMemoria formularioMemoria = this.one(id);

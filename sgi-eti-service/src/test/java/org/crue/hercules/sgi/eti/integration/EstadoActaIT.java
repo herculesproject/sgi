@@ -8,7 +8,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.EstadoActa;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,12 +30,15 @@ public class EstadoActaIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String ESTADO_ACTA_CONTROLLER_BASE_PATH = "/estadoactas";
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getEstadoActa_WithId_ReturnsEstadoActa() throws Exception {
-    final ResponseEntity<EstadoActa> response = restTemplate.getForEntity(
-        ConstantesEti.ESTADO_ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, EstadoActa.class, 1L);
+    final ResponseEntity<EstadoActa> response = restTemplate
+        .getForEntity(ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, EstadoActa.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -58,8 +60,8 @@ public class EstadoActaIT {
 
     EstadoActa nuevoEstadoActa = generarMockEstadoActa(null);
 
-    final ResponseEntity<EstadoActa> response = restTemplate
-        .postForEntity(ConstantesEti.ESTADO_ACTA_CONTROLLER_BASE_PATH, nuevoEstadoActa, EstadoActa.class);
+    final ResponseEntity<EstadoActa> response = restTemplate.postForEntity(ESTADO_ACTA_CONTROLLER_BASE_PATH,
+        nuevoEstadoActa, EstadoActa.class);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
@@ -81,9 +83,8 @@ public class EstadoActaIT {
 
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<EstadoActa> response = restTemplate.exchange(
-        ConstantesEti.ESTADO_ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE, null,
-        EstadoActa.class, id);
+    final ResponseEntity<EstadoActa> response = restTemplate
+        .exchange(ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, EstadoActa.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -93,10 +94,10 @@ public class EstadoActaIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeEstadoActa_DoNotGetEstadoActa() throws Exception {
-    restTemplate.delete(ConstantesEti.ESTADO_ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<EstadoActa> response = restTemplate.getForEntity(
-        ConstantesEti.ESTADO_ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, EstadoActa.class, 1L);
+    final ResponseEntity<EstadoActa> response = restTemplate
+        .getForEntity(ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, EstadoActa.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
@@ -111,8 +112,7 @@ public class EstadoActaIT {
     final HttpEntity<EstadoActa> requestEntity = new HttpEntity<EstadoActa>(replaceEstadoActa, new HttpHeaders());
 
     final ResponseEntity<EstadoActa> response = restTemplate.exchange(
-        ConstantesEti.ESTADO_ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
-        EstadoActa.class, 1L);
+        ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity, EstadoActa.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -136,7 +136,7 @@ public class EstadoActaIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.ESTADO_ACTA_CONTROLLER_BASE_PATH).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(ESTADO_ACTA_CONTROLLER_BASE_PATH).build(false).toUri();
 
     final ResponseEntity<List<EstadoActa>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<EstadoActa>>() {
@@ -164,8 +164,8 @@ public class EstadoActaIT {
     Long id = 5L;
     String query = "id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.ESTADO_ACTA_CONTROLLER_BASE_PATH).queryParam("q", query)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(ESTADO_ACTA_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
+        .toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<EstadoActa>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -186,8 +186,8 @@ public class EstadoActaIT {
     // when: Ordenación por id desc
     String sort = "id-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.ESTADO_ACTA_CONTROLLER_BASE_PATH).queryParam("s", sort)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(ESTADO_ACTA_CONTROLLER_BASE_PATH).queryParam("s", sort).build(false)
+        .toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<EstadoActa>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -217,7 +217,7 @@ public class EstadoActaIT {
     // when: Filtra por id menor
     String filter = "id<4";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.ESTADO_ACTA_CONTROLLER_BASE_PATH).queryParam("s", sort)
+    URI uri = UriComponentsBuilder.fromUriString(ESTADO_ACTA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<EstadoActa>> response = restTemplate.exchange(uri, HttpMethod.GET,

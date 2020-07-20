@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * MemoriaController
  */
 @RestController
-@RequestMapping(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH)
+@RequestMapping("/memorias")
 @Slf4j
 public class MemoriaController {
 
@@ -88,7 +87,7 @@ public class MemoriaController {
    * @param id             id {@link Memoria} a actualizar.
    * @return {@link Memoria} actualizada.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   Memoria replaceMemoria(@Valid @RequestBody Memoria updatedMemoria, @PathVariable Long id) {
     log.debug("replaceMemoria(Memoria updatedMemoria, Long id) - start");
     updatedMemoria.setId(id);
@@ -103,7 +102,7 @@ public class MemoriaController {
    * @param id Identificador de {@link Memoria}.
    * @return {@link Memoria} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   Memoria one(@PathVariable Long id) {
     log.debug("Memoria one(Long id) - start");
     Memoria returnValue = service.findById(id);
@@ -116,7 +115,7 @@ public class MemoriaController {
    * 
    * @param id Identificador de {@link Memoria}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     service.delete(id);

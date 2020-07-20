@@ -8,7 +8,6 @@ import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.FormacionEspecifica;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Tarea;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,12 +30,15 @@ public class TareaIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String TAREA_CONTROLLER_BASE_PATH = "/tareas";
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getTarea_WithId_ReturnsTarea() throws Exception {
-    final ResponseEntity<Tarea> response = restTemplate
-        .getForEntity(ConstantesEti.TAREA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, Tarea.class, 1L);
+    final ResponseEntity<Tarea> response = restTemplate.getForEntity(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        Tarea.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -62,8 +64,8 @@ public class TareaIT {
 
     Tarea nuevaTarea = generarMockTarea(null, "Tarea");
 
-    final ResponseEntity<Tarea> response = restTemplate.postForEntity(ConstantesEti.TAREA_CONTROLLER_BASE_PATH,
-        nuevaTarea, Tarea.class);
+    final ResponseEntity<Tarea> response = restTemplate.postForEntity(TAREA_CONTROLLER_BASE_PATH, nuevaTarea,
+        Tarea.class);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
@@ -89,9 +91,8 @@ public class TareaIT {
 
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<Tarea> response = restTemplate.exchange(
-        ConstantesEti.TAREA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE, null,
-        Tarea.class, id);
+    final ResponseEntity<Tarea> response = restTemplate.exchange(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.DELETE, null, Tarea.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -102,10 +103,10 @@ public class TareaIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeTarea_DoNotGetTarea() throws Exception {
-    restTemplate.delete(ConstantesEti.TAREA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<Tarea> response = restTemplate
-        .getForEntity(ConstantesEti.TAREA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, Tarea.class, 1L);
+    final ResponseEntity<Tarea> response = restTemplate.getForEntity(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        Tarea.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
@@ -119,9 +120,8 @@ public class TareaIT {
 
     final HttpEntity<Tarea> requestEntity = new HttpEntity<Tarea>(replaceTarea, new HttpHeaders());
 
-    final ResponseEntity<Tarea> response = restTemplate.exchange(
-        ConstantesEti.TAREA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
-        Tarea.class, 1L);
+    final ResponseEntity<Tarea> response = restTemplate.exchange(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.PUT, requestEntity, Tarea.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -149,7 +149,7 @@ public class TareaIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TAREA_CONTROLLER_BASE_PATH).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(TAREA_CONTROLLER_BASE_PATH).build(false).toUri();
 
     final ResponseEntity<List<Tarea>> response = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(headers),
         new ParameterizedTypeReference<List<Tarea>>() {
@@ -178,8 +178,8 @@ public class TareaIT {
     Long id = 5L;
     String query = "tarea~Tarea%,id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TAREA_CONTROLLER_BASE_PATH).queryParam("q", query)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(TAREA_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
+        .toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<Tarea>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -202,8 +202,7 @@ public class TareaIT {
     // when: Ordenación por tarea desc
     String sort = "tarea-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TAREA_CONTROLLER_BASE_PATH).queryParam("s", sort)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(TAREA_CONTROLLER_BASE_PATH).queryParam("s", sort).build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<Tarea>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -235,7 +234,7 @@ public class TareaIT {
     // when: Filtra por tarea like
     String filter = "tarea~%00%";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TAREA_CONTROLLER_BASE_PATH).queryParam("s", sort)
+    URI uri = UriComponentsBuilder.fromUriString(TAREA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<Tarea>> response = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(headers),

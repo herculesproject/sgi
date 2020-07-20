@@ -16,7 +16,6 @@ import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -53,14 +52,15 @@ public class MemoriaControllerTest {
   @MockBean
   private MemoriaService memoriaService;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String MEMORIA_CONTROLLER_BASE_PATH = "/memorias";
+
   @Test
   public void getMemoria_WithId_ReturnsMemoria() throws Exception {
     BDDMockito.given(memoriaService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockMemoria(1L, "numRef-5598", "Memoria1", 1)));
 
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("Memoria1"));
@@ -72,9 +72,7 @@ public class MemoriaControllerTest {
     BDDMockito.given(memoriaService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new MemoriaNotFoundException(invocation.getArgument(0));
     });
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -91,8 +89,8 @@ public class MemoriaControllerTest {
 
     // when: Creamos una memoria
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevaMemoriaJson))
+        .perform(MockMvcRequestBuilders.post(MEMORIA_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevaMemoriaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo tipo memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
@@ -110,8 +108,8 @@ public class MemoriaControllerTest {
 
     // when: Creamos una memoria
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevaMemoriaJson))
+        .perform(MockMvcRequestBuilders.post(MEMORIA_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevaMemoriaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -130,9 +128,8 @@ public class MemoriaControllerTest {
     BDDMockito.given(memoriaService.update(ArgumentMatchers.<Memoria>any())).willReturn(memoria);
 
     mockMvc
-        .perform(
-            MockMvcRequestBuilders.put(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
-                .contentType(MediaType.APPLICATION_JSON).content(replaceMemoriaJson))
+        .perform(MockMvcRequestBuilders.put(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .contentType(MediaType.APPLICATION_JSON).content(replaceMemoriaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica la memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
@@ -152,9 +149,8 @@ public class MemoriaControllerTest {
       throw new MemoriaNotFoundException(((Memoria) invocation.getArgument(0)).getId());
     });
     mockMvc
-        .perform(
-            MockMvcRequestBuilders.put(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
-                .contentType(MediaType.APPLICATION_JSON).content(replaceMemoriaJson))
+        .perform(MockMvcRequestBuilders.put(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .contentType(MediaType.APPLICATION_JSON).content(replaceMemoriaJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
   }
@@ -165,8 +161,7 @@ public class MemoriaControllerTest {
         .willReturn(generarMockMemoria(1L, "numRef-5598", "Memoria1", 1));
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .delete(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.delete(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -185,9 +180,7 @@ public class MemoriaControllerTest {
         .willReturn(new PageImpl<>(memorias));
 
     // when: find unlimited
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.get(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
+    mockMvc.perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred Memoria
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -221,7 +214,7 @@ public class MemoriaControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH).header("X-Page", "3")
+        .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH).header("X-Page", "3")
             .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked Memorias are returned with the right page information
@@ -325,7 +318,7 @@ public class MemoriaControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH).param("q", query)
+        .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH).param("q", query)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred Memoria

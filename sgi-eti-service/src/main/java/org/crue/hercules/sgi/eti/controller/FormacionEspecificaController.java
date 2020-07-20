@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.FormacionEspecifica;
 import org.crue.hercules.sgi.eti.service.FormacionEspecificaService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * FormacionEspecificaController
  */
 @RestController
-@RequestMapping(ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH)
+@RequestMapping("/formacionespecificas")
 @Slf4j
 public class FormacionEspecificaController {
 
@@ -92,7 +91,7 @@ public class FormacionEspecificaController {
    *                                   actualizar.
    * @return {@link FormacionEspecifica} actualizada.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   FormacionEspecifica replaceFormacionEspecifica(@Valid @RequestBody FormacionEspecifica updatedFormacionEspecifica,
       @PathVariable Long id) {
     log.debug("replaceFormacionEspecifica(FormacionEspecifica updatedFormacionEspecifica, Long id) - start");
@@ -108,7 +107,7 @@ public class FormacionEspecificaController {
    * @param id Identificador de {@link FormacionEspecifica}.
    * @return {@link FormacionEspecifica} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   FormacionEspecifica one(@PathVariable Long id) {
     log.debug("FormacionEspecifica one(Long id) - start");
     FormacionEspecifica returnValue = service.findById(id);
@@ -121,7 +120,7 @@ public class FormacionEspecificaController {
    * 
    * @param id Identificador de {@link FormacionEspecifica}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     FormacionEspecifica formacionEspecifica = this.one(id);

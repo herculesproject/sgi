@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.service.TareaService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * TareaController
  */
 @RestController
-@RequestMapping(ConstantesEti.TAREA_CONTROLLER_BASE_PATH)
+@RequestMapping("/tareas")
 @Slf4j
 public class TareaController {
 
@@ -88,7 +87,7 @@ public class TareaController {
    * @param id           id {@link Tarea} a actualizar.
    * @return {@link Tarea} actualizada.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   Tarea replaceTarea(@Valid @RequestBody Tarea updatedTarea, @PathVariable Long id) {
     log.debug("replaceTarea(Tarea updatedTarea, Long id) - start");
     updatedTarea.setId(id);
@@ -103,7 +102,7 @@ public class TareaController {
    * @param id Identificador de {@link Tarea}.
    * @return {@link Tarea} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   Tarea one(@PathVariable Long id) {
     log.debug("Tarea one(Long id) - start");
     Tarea returnValue = service.findById(id);
@@ -116,7 +115,7 @@ public class TareaController {
    * 
    * @param id Identificador de {@link Tarea}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     service.delete(id);

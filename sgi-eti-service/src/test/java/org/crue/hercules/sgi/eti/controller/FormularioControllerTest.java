@@ -11,7 +11,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.FormularioNotFoundException;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.service.FormularioService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -48,14 +47,15 @@ public class FormularioControllerTest {
   @MockBean
   private FormularioService formularioService;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String FORMULARIO_CONTROLLER_BASE_PATH = "/formularios";
+
   @Test
   public void getFormulario_WithId_ReturnsFormulario() throws Exception {
     BDDMockito.given(formularioService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockFormulario(1L, "Formulario1", "Descripcion1")));
 
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("Formulario1"))
@@ -68,9 +68,7 @@ public class FormularioControllerTest {
     BDDMockito.given(formularioService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new FormularioNotFoundException(invocation.getArgument(0));
     });
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -85,8 +83,8 @@ public class FormularioControllerTest {
 
     // when: Creamos un Formulario
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevoFormularioJson))
+        .perform(MockMvcRequestBuilders.post(FORMULARIO_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoFormularioJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo Formulario y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
@@ -104,8 +102,8 @@ public class FormularioControllerTest {
 
     // when: Creamos un Formulario
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevoFormularioJson))
+        .perform(MockMvcRequestBuilders.post(FORMULARIO_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoFormularioJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -122,8 +120,7 @@ public class FormularioControllerTest {
     BDDMockito.given(formularioService.update(ArgumentMatchers.<Formulario>any())).willReturn(formulario);
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceFormularioJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica el Formulario y lo devuelve
@@ -143,8 +140,7 @@ public class FormularioControllerTest {
           throw new FormularioNotFoundException(((Formulario) invocation.getArgument(0)).getId());
         });
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceFormularioJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
@@ -156,8 +152,7 @@ public class FormularioControllerTest {
         .willReturn(generarMockFormulario(1L, "Formulario1", "Descripcion1"));
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .delete(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.delete(FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -175,9 +170,7 @@ public class FormularioControllerTest {
         .willReturn(new PageImpl<>(formularios));
 
     // when: find unlimited
-    mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH)
-            .accept(MediaType.APPLICATION_JSON))
+    mockMvc.perform(MockMvcRequestBuilders.get(FORMULARIO_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred Formulario
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -210,7 +203,7 @@ public class FormularioControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH).header("X-Page", "3")
+        .perform(MockMvcRequestBuilders.get(FORMULARIO_CONTROLLER_BASE_PATH).header("X-Page", "3")
             .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked Formularios are returned with the right page information
@@ -313,7 +306,7 @@ public class FormularioControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH).param("q", query)
+        .perform(MockMvcRequestBuilders.get(FORMULARIO_CONTROLLER_BASE_PATH).param("q", query)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred Formulario

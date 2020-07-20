@@ -10,7 +10,6 @@ import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,12 +32,15 @@ public class MemoriaIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String MEMORIA_CONTROLLER_BASE_PATH = "/memorias";
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getMemoria_WithId_ReturnsMemoria() throws Exception {
-    final ResponseEntity<Memoria> response = restTemplate
-        .getForEntity(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, Memoria.class, 1L);
+    final ResponseEntity<Memoria> response = restTemplate.getForEntity(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        Memoria.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -56,7 +58,7 @@ public class MemoriaIT {
 
     Memoria nuevaMemoria = generarMockMemoria(1L, "ref-5588", "Memoria1", 1);
 
-    restTemplate.postForEntity(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH, nuevaMemoria, Memoria.class);
+    restTemplate.postForEntity(MEMORIA_CONTROLLER_BASE_PATH, nuevaMemoria, Memoria.class);
   }
 
   @Sql
@@ -66,9 +68,8 @@ public class MemoriaIT {
 
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<Memoria> response = restTemplate.exchange(
-        ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE, null,
-        Memoria.class, id);
+    final ResponseEntity<Memoria> response = restTemplate.exchange(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.DELETE, null, Memoria.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -79,10 +80,10 @@ public class MemoriaIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeMemoria_DoNotGetMemoria() throws Exception {
-    restTemplate.delete(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<Memoria> response = restTemplate
-        .getForEntity(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, Memoria.class, 1L);
+    final ResponseEntity<Memoria> response = restTemplate.getForEntity(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        Memoria.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -99,8 +100,7 @@ public class MemoriaIT {
 
     final ResponseEntity<Memoria> response = restTemplate.exchange(
 
-        ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
-        Memoria.class, 1L);
+        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity, Memoria.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -120,7 +120,7 @@ public class MemoriaIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH).build(false).toUri();
 
     final ResponseEntity<List<Memoria>> response = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(headers),
         new ParameterizedTypeReference<List<Memoria>>() {
@@ -149,8 +149,8 @@ public class MemoriaIT {
     Long id = 5L;
     String query = "titulo~Memoria%,id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH).queryParam("q", query)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
+        .toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<Memoria>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -173,8 +173,8 @@ public class MemoriaIT {
     // when: Ordenación por titulo desc
     String query = "titulo-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH).queryParam("s", query)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH).queryParam("s", query).build(false)
+        .toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<Memoria>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -206,7 +206,7 @@ public class MemoriaIT {
     // when: Filtra por titulo like e id equals
     String filter = "titulo~%00%";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.MEMORIA_CONTROLLER_BASE_PATH).queryParam("s", sort)
+    URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<Memoria>> response = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(headers),

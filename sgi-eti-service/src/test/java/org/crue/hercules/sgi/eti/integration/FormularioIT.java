@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Formulario;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,12 +27,15 @@ public class FormularioIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String FORMULARIO_CONTROLLER_BASE_PATH = "/formularios";
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getFormulario_WithId_ReturnsFormulario() throws Exception {
-    final ResponseEntity<Formulario> response = restTemplate.getForEntity(
-        ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, Formulario.class, 1L);
+    final ResponseEntity<Formulario> response = restTemplate
+        .getForEntity(FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, Formulario.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -53,7 +55,7 @@ public class FormularioIT {
     nuevoFormulario.setNombre("M10");
     nuevoFormulario.setActivo(Boolean.TRUE);
 
-    restTemplate.postForEntity(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH, nuevoFormulario, Formulario.class);
+    restTemplate.postForEntity(FORMULARIO_CONTROLLER_BASE_PATH, nuevoFormulario, Formulario.class);
   }
 
   @Sql
@@ -63,9 +65,8 @@ public class FormularioIT {
 
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<Formulario> response = restTemplate.exchange(
-        ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE, null,
-        Formulario.class, id);
+    final ResponseEntity<Formulario> response = restTemplate
+        .exchange(FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, Formulario.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -76,10 +77,10 @@ public class FormularioIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeFormulario_DoNotGetFormulario() throws Exception {
-    restTemplate.delete(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<Formulario> response = restTemplate.getForEntity(
-        ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, Formulario.class, 1L);
+    final ResponseEntity<Formulario> response = restTemplate
+        .getForEntity(FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, Formulario.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -96,8 +97,7 @@ public class FormularioIT {
 
     final ResponseEntity<Formulario> response = restTemplate.exchange(
 
-        ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
-        Formulario.class, 1L);
+        FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity, Formulario.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -118,7 +118,7 @@ public class FormularioIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "3");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(FORMULARIO_CONTROLLER_BASE_PATH).build(false).toUri();
 
     final ResponseEntity<List<Formulario>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<Formulario>>() {
@@ -147,8 +147,8 @@ public class FormularioIT {
     Long id = 3L;
     String query = "nombre~M%,id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH).queryParam("q", query)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(FORMULARIO_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
+        .toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<Formulario>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -171,8 +171,8 @@ public class FormularioIT {
     // when: Ordenación por nombre desc
     String query = "nombre-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH).queryParam("s", query)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(FORMULARIO_CONTROLLER_BASE_PATH).queryParam("s", query).build(false)
+        .toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<Formulario>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -204,7 +204,7 @@ public class FormularioIT {
     // when: Filtra por nombre like
     String filter = "nombre~%0%";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH).queryParam("s", sort)
+    URI uri = UriComponentsBuilder.fromUriString(FORMULARIO_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<Formulario>> response = restTemplate.exchange(uri, HttpMethod.GET,

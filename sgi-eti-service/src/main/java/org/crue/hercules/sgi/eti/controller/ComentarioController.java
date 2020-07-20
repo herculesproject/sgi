@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.service.ComentarioService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * ComentarioController
  */
 @RestController
-@RequestMapping(ConstantesEti.COMENTARIO_CONTROLLER_BASE_PATH)
+@RequestMapping("/comentarios")
 @Slf4j
 public class ComentarioController {
 
@@ -88,7 +87,7 @@ public class ComentarioController {
    * @param id                id {@link Comentario} a actualizar.
    * @return {@link Comentario} actualizado.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   Comentario replaceComentario(@Valid @RequestBody Comentario updatedComentario, @PathVariable Long id) {
     log.debug("replaceComentario(Comentario updatedComentario, Long id) - start");
     updatedComentario.setId(id);
@@ -103,7 +102,7 @@ public class ComentarioController {
    * @param id Identificador de {@link Comentario}.
    * @return {@link Comentario} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   Comentario one(@PathVariable Long id) {
     log.debug("Comentario one(Long id) - start");
     Comentario returnValue = service.findById(id);
@@ -116,7 +115,7 @@ public class ComentarioController {
    * 
    * @param id Identificador de {@link Comentario}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     service.delete(id);

@@ -13,7 +13,6 @@ import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -50,6 +49,9 @@ public class DocumentacionMemoriaControllerTest {
   @MockBean
   private DocumentacionMemoriaService documentacionMemoriaService;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH = "/documentacionmemorias";
+
   @Test
   public void getDocumentacionMemoria_WithId_ReturnsDocumentacionMemoria() throws Exception {
 
@@ -59,9 +61,7 @@ public class DocumentacionMemoriaControllerTest {
     BDDMockito.given(documentacionMemoriaService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockDocumentacionMemoria(1L, memoria, tipoDocumento)));
 
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("Memoria1"))
@@ -77,9 +77,7 @@ public class DocumentacionMemoriaControllerTest {
         .will((InvocationOnMock invocation) -> {
           throw new DocumentacionMemoriaNotFoundException(invocation.getArgument(0));
         });
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -99,7 +97,7 @@ public class DocumentacionMemoriaControllerTest {
 
     // when: Creamos un DocumentacionMemoria
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH)
+        .perform(MockMvcRequestBuilders.post(DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH)
             .contentType(MediaType.APPLICATION_JSON).content(nuevoDocumentacionMemoriaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo DocumentacionMemoria y lo devuelve
@@ -121,7 +119,7 @@ public class DocumentacionMemoriaControllerTest {
 
     // when: Creamos una DocumentacionMemoria
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH)
+        .perform(MockMvcRequestBuilders.post(DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH)
             .contentType(MediaType.APPLICATION_JSON).content(nuevoDocumentacionMemoriaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
@@ -144,8 +142,7 @@ public class DocumentacionMemoriaControllerTest {
         .willReturn(documentacionMemoria);
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceDocumentacionMemoriaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica el DocumentacionMemoria y lo devuelve
@@ -167,8 +164,7 @@ public class DocumentacionMemoriaControllerTest {
           throw new DocumentacionMemoriaNotFoundException(((DocumentacionMemoria) invocation.getArgument(0)).getId());
         });
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceDocumentacionMemoriaJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
@@ -184,8 +180,7 @@ public class DocumentacionMemoriaControllerTest {
         .willReturn(generarMockDocumentacionMemoria(1L, memoria, tipoDocumento));
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .delete(ConstantesEti.DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.delete(DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -207,8 +202,8 @@ public class DocumentacionMemoriaControllerTest {
 
     // when: find unlimited
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH)
-            .accept(MediaType.APPLICATION_JSON))
+        .perform(
+            MockMvcRequestBuilders.get(DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred DocumentacionMemoria
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -244,8 +239,8 @@ public class DocumentacionMemoriaControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH)
-            .header("X-Page", "3").header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.get(DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH).header("X-Page", "3")
+            .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked DocumentacionMemorias are returned with the right page
         // information
@@ -353,7 +348,7 @@ public class DocumentacionMemoriaControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH).param("q", query)
+        .perform(MockMvcRequestBuilders.get(DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH).param("q", query)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred DocumentacionMemoria

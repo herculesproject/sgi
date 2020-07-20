@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.ApartadoFormulario;
 import org.crue.hercules.sgi.eti.service.ApartadoFormularioService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -30,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
  * ApartadoFormularioController
  */
 @RestController
-@RequestMapping(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)
+@RequestMapping("/apartadoformularios")
 @Slf4j
 public class ApartadoFormularioController {
 
@@ -79,7 +78,7 @@ public class ApartadoFormularioController {
    *                                             {@link ApartadoFormulario} no
    *                                             tiene id.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   ApartadoFormulario replaceApartadoFormulario(@Valid @RequestBody ApartadoFormulario apartadoFormulario,
       @PathVariable Long id) {
     log.debug("replaceApartadoFormulario(ApartadoFormulario apartadoFormulario, Long id) - start");
@@ -100,7 +99,7 @@ public class ApartadoFormularioController {
    *                                             {@link ApartadoFormulario} no
    *                                             tiene id.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
@@ -142,7 +141,7 @@ public class ApartadoFormularioController {
    *                                             ese id.
    * @throws IllegalArgumentException            Si no se informa id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   private ApartadoFormulario one(@PathVariable Long id) {
     log.debug("one(Long id) - start");
     ApartadoFormulario returnValue = service.findById(id);

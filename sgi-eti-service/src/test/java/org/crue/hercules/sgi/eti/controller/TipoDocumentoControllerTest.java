@@ -12,7 +12,6 @@ import org.crue.hercules.sgi.eti.exceptions.TipoDocumentoNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.crue.hercules.sgi.eti.service.TipoDocumentoService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -49,6 +48,9 @@ public class TipoDocumentoControllerTest {
   @MockBean
   private TipoDocumentoService tipoDocumentoService;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String TIPO_DOCUMENTO_CONTROLLER_BASE_PATH = "/tipodocumentos";
+
   @Test
   public void getTipoDocumento_WithId_ReturnsTipoDocumento() throws Exception {
 
@@ -57,9 +59,7 @@ public class TipoDocumentoControllerTest {
     BDDMockito.given(tipoDocumentoService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockTipoDocumento(1L, "TipoDocumento1", comite)));
 
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("TipoDocumento1"));
@@ -71,9 +71,7 @@ public class TipoDocumentoControllerTest {
     BDDMockito.given(tipoDocumentoService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new TipoDocumentoNotFoundException(invocation.getArgument(0));
     });
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -90,7 +88,7 @@ public class TipoDocumentoControllerTest {
 
     // when: Creamos un tipo Documento
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.TIPO_DOCUMENTO_CONTROLLER_BASE_PATH)
+        .perform(MockMvcRequestBuilders.post(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH)
             .contentType(MediaType.APPLICATION_JSON).content(nuevoTipoDocumentoJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo tipo Documento y lo devuelve
@@ -108,7 +106,7 @@ public class TipoDocumentoControllerTest {
 
     // when: Creamos un tipo Documento
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.TIPO_DOCUMENTO_CONTROLLER_BASE_PATH)
+        .perform(MockMvcRequestBuilders.post(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH)
             .contentType(MediaType.APPLICATION_JSON).content(nuevoTipoDocumentoJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
@@ -129,8 +127,7 @@ public class TipoDocumentoControllerTest {
     BDDMockito.given(tipoDocumentoService.update(ArgumentMatchers.<TipoDocumento>any())).willReturn(tipoDocumento);
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceTipoDocumentoJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica el tipo Documento y lo devuelve
@@ -149,8 +146,7 @@ public class TipoDocumentoControllerTest {
           throw new TipoDocumentoNotFoundException(((TipoDocumento) invocation.getArgument(0)).getId());
         });
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceTipoDocumentoJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
@@ -165,8 +161,7 @@ public class TipoDocumentoControllerTest {
         .willReturn(generarMockTipoDocumento(1L, "TipoDocumento1", comite));
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .delete(ConstantesEti.TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.delete(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -188,9 +183,7 @@ public class TipoDocumentoControllerTest {
         .willReturn(new PageImpl<>(tipoDocumentos));
 
     // when: find unlimited
-    mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.TIPO_DOCUMENTO_CONTROLLER_BASE_PATH)
-            .accept(MediaType.APPLICATION_JSON))
+    mockMvc.perform(MockMvcRequestBuilders.get(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred TipoDocumento
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -227,7 +220,7 @@ public class TipoDocumentoControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.TIPO_DOCUMENTO_CONTROLLER_BASE_PATH).header("X-Page", "3")
+        .perform(MockMvcRequestBuilders.get(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH).header("X-Page", "3")
             .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked TipoDocumentos are returned with the right page information
@@ -334,7 +327,7 @@ public class TipoDocumentoControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.TIPO_DOCUMENTO_CONTROLLER_BASE_PATH).param("q", query)
+        .perform(MockMvcRequestBuilders.get(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH).param("q", query)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred TipoDocumento

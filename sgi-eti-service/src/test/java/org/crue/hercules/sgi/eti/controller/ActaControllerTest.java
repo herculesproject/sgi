@@ -12,7 +12,6 @@ import org.crue.hercules.sgi.eti.exceptions.ActaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.service.ActaService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -49,13 +48,14 @@ public class ActaControllerTest {
   @MockBean
   private ActaService actaService;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String ACTA_CONTROLLER_BASE_PATH = "/actas";
+
   @Test
   public void getActa_WithId_ReturnsActa() throws Exception {
     BDDMockito.given(actaService.findById(ArgumentMatchers.anyLong())).willReturn((generarMockActa(1L, 123)));
 
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.get(ConstantesEti.ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaReunion.id").value(100))
@@ -74,9 +74,7 @@ public class ActaControllerTest {
     BDDMockito.given(actaService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new ActaNotFoundException(invocation.getArgument(0));
     });
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.get(ConstantesEti.ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -91,8 +89,8 @@ public class ActaControllerTest {
 
     // when: Creamos un acta
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.ACTA_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevoActaJson))
+        .perform(MockMvcRequestBuilders.post(ACTA_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoActaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo acta y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
@@ -116,8 +114,8 @@ public class ActaControllerTest {
 
     // when: Creamos un acta
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.ACTA_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevoActaJson))
+        .perform(MockMvcRequestBuilders.post(ACTA_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoActaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -133,9 +131,8 @@ public class ActaControllerTest {
     BDDMockito.given(actaService.update(ArgumentMatchers.<Acta>any())).willReturn(actaActualizado);
 
     mockMvc
-        .perform(
-            MockMvcRequestBuilders.put(ConstantesEti.ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
-                .contentType(MediaType.APPLICATION_JSON).content(replaceActaJson))
+        .perform(MockMvcRequestBuilders.put(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .contentType(MediaType.APPLICATION_JSON).content(replaceActaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica el acta y lo devuelve
         .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaReunion.id").value(100))
@@ -158,9 +155,8 @@ public class ActaControllerTest {
       throw new ActaNotFoundException(((Acta) invocation.getArgument(0)).getId());
     });
     mockMvc
-        .perform(
-            MockMvcRequestBuilders.put(ConstantesEti.ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
-                .contentType(MediaType.APPLICATION_JSON).content(replaceActaJson))
+        .perform(MockMvcRequestBuilders.put(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .contentType(MediaType.APPLICATION_JSON).content(replaceActaJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -169,9 +165,8 @@ public class ActaControllerTest {
     BDDMockito.given(actaService.findById(ArgumentMatchers.anyLong())).willReturn(generarMockActa(1L, 123));
 
     mockMvc
-        .perform(
-            MockMvcRequestBuilders.delete(ConstantesEti.ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
-                .contentType(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.delete(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
@@ -187,8 +182,7 @@ public class ActaControllerTest {
         .willReturn(new PageImpl<>(actas));
 
     // when: find unlimited
-    mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.ACTA_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
+    mockMvc.perform(MockMvcRequestBuilders.get(ACTA_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred actas
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -220,8 +214,8 @@ public class ActaControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.ACTA_CONTROLLER_BASE_PATH).header("X-Page", "3")
-            .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.get(ACTA_CONTROLLER_BASE_PATH).header("X-Page", "3").header("X-Page-Size", "10")
+            .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked actas are returned with the right page information in
         // headers
@@ -322,8 +316,8 @@ public class ActaControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.ACTA_CONTROLLER_BASE_PATH).param("q", query)
-            .accept(MediaType.APPLICATION_JSON))
+        .perform(
+            MockMvcRequestBuilders.get(ACTA_CONTROLLER_BASE_PATH).param("q", query).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one acta
         .andExpect(MockMvcResultMatchers.status().isOk())

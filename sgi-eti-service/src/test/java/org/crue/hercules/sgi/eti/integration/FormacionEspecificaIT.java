@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.FormacionEspecifica;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,13 +27,15 @@ public class FormacionEspecificaIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH = "/formacionespecificas";
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getFormacionEspecifica_WithId_ReturnsFormacionEspecifica() throws Exception {
-    final ResponseEntity<FormacionEspecifica> response = restTemplate.getForEntity(
-        ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID,
-        FormacionEspecifica.class, 1L);
+    final ResponseEntity<FormacionEspecifica> response = restTemplate
+        .getForEntity(FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, FormacionEspecifica.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -53,7 +54,7 @@ public class FormacionEspecificaIT {
     nuevoFormacionEspecifica.setNombre("FormacionEspecifica1");
     nuevoFormacionEspecifica.setActivo(Boolean.TRUE);
 
-    restTemplate.postForEntity(ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH, nuevoFormacionEspecifica,
+    restTemplate.postForEntity(FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH, nuevoFormacionEspecifica,
         FormacionEspecifica.class);
   }
 
@@ -65,8 +66,8 @@ public class FormacionEspecificaIT {
     // when: Delete con id existente
     long id = 1L;
     final ResponseEntity<FormacionEspecifica> response = restTemplate.exchange(
-        ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE,
-        null, FormacionEspecifica.class, id);
+        FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null,
+        FormacionEspecifica.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -77,11 +78,10 @@ public class FormacionEspecificaIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeFormacionEspecifica_DoNotGetFormacionEspecifica() throws Exception {
-    restTemplate.delete(ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<FormacionEspecifica> response = restTemplate.getForEntity(
-        ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID,
-        FormacionEspecifica.class, 1L);
+    final ResponseEntity<FormacionEspecifica> response = restTemplate
+        .getForEntity(FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, FormacionEspecifica.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -99,8 +99,8 @@ public class FormacionEspecificaIT {
 
     final ResponseEntity<FormacionEspecifica> response = restTemplate.exchange(
 
-        ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT,
-        requestEntity, FormacionEspecifica.class, 1L);
+        FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
+        FormacionEspecifica.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -120,8 +120,7 @@ public class FormacionEspecificaIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH).build(false)
-        .toUri();
+    URI uri = UriComponentsBuilder.fromUriString(FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH).build(false).toUri();
 
     final ResponseEntity<List<FormacionEspecifica>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<FormacionEspecifica>>() {
@@ -150,8 +149,8 @@ public class FormacionEspecificaIT {
     Long id = 5L;
     String query = "nombre~animales%,id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH)
-        .queryParam("q", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH).queryParam("q", query)
+        .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<FormacionEspecifica>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -174,8 +173,8 @@ public class FormacionEspecificaIT {
     // when: Ordenación por nombre desc
     String query = "nombre-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH)
-        .queryParam("s", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH).queryParam("s", query)
+        .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<FormacionEspecifica>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -208,8 +207,8 @@ public class FormacionEspecificaIT {
     // when: Filtra por nombre like e id equals
     String filter = "nombre~%animales%";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH)
-        .queryParam("s", sort).queryParam("q", filter).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<FormacionEspecifica>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<FormacionEspecifica>>() {

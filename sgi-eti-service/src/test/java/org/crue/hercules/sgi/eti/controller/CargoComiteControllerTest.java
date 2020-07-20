@@ -11,7 +11,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.CargoComiteNotFoundException;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.service.CargoComiteService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -48,14 +47,15 @@ public class CargoComiteControllerTest {
   @MockBean
   private CargoComiteService cargoComiteService;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String CARGO_COMITE_CONTROLLER_BASE_PATH = "/cargocomites";
+
   @Test
   public void getCargoComite_WithId_ReturnsCargoComite() throws Exception {
     BDDMockito.given(cargoComiteService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockCargoComite(1L, "CargoComite1")));
 
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(CARGO_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("CargoComite1"));
@@ -67,9 +67,7 @@ public class CargoComiteControllerTest {
     BDDMockito.given(cargoComiteService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new CargoComiteNotFoundException(invocation.getArgument(0));
     });
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(CARGO_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -84,8 +82,8 @@ public class CargoComiteControllerTest {
 
     // when: Creamos un cargo comité
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevoCargoComiteJson))
+        .perform(MockMvcRequestBuilders.post(CARGO_COMITE_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoCargoComiteJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo cargo comité y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
@@ -102,8 +100,8 @@ public class CargoComiteControllerTest {
 
     // when: Creamos un cargo comité
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevoCargoComiteJson))
+        .perform(MockMvcRequestBuilders.post(CARGO_COMITE_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoCargoComiteJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -120,8 +118,7 @@ public class CargoComiteControllerTest {
     BDDMockito.given(cargoComiteService.update(ArgumentMatchers.<CargoComite>any())).willReturn(cargoComite);
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(CARGO_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceCargoComiteJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica el cargo comité y lo devuelve
@@ -140,8 +137,7 @@ public class CargoComiteControllerTest {
           throw new CargoComiteNotFoundException(((CargoComite) invocation.getArgument(0)).getId());
         });
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(CARGO_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceCargoComiteJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
@@ -153,8 +149,7 @@ public class CargoComiteControllerTest {
         .willReturn(generarMockCargoComite(1L, "CargoComite1"));
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .delete(ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.delete(CARGO_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -173,9 +168,7 @@ public class CargoComiteControllerTest {
         .willReturn(new PageImpl<>(cargoComites));
 
     // when: find unlimited
-    mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH)
-            .accept(MediaType.APPLICATION_JSON))
+    mockMvc.perform(MockMvcRequestBuilders.get(CARGO_COMITE_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred CargoComite
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -209,7 +202,7 @@ public class CargoComiteControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH).header("X-Page", "3")
+        .perform(MockMvcRequestBuilders.get(CARGO_COMITE_CONTROLLER_BASE_PATH).header("X-Page", "3")
             .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked CargoComites are returned with the right page information
@@ -313,7 +306,7 @@ public class CargoComiteControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH).param("q", query)
+        .perform(MockMvcRequestBuilders.get(CARGO_COMITE_CONTROLLER_BASE_PATH).param("q", query)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred CargoComite

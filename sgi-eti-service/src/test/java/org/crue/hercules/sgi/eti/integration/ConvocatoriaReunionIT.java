@@ -10,7 +10,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,6 +32,9 @@ public class ConvocatoriaReunionIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH = "/convocatoriareuniones";
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
@@ -42,7 +44,7 @@ public class ConvocatoriaReunionIT {
     final ConvocatoriaReunion newConvocatoriaReunion = getMockData(1L, 1L, 1L);
     newConvocatoriaReunion.setId(null);
 
-    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
 
     // when: Se crea la entidad
     final ResponseEntity<ConvocatoriaReunion> response = restTemplate.postForEntity(url, newConvocatoriaReunion,
@@ -65,8 +67,8 @@ public class ConvocatoriaReunionIT {
     final ConvocatoriaReunion updatedConvocatoriaReunion = getMockData(2L, 1L, 2L);
     updatedConvocatoriaReunion.setId(1L);
 
-    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(ConstantesEti.PATH_PARAMETER_ID)//
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
         .toString();
 
     HttpEntity<ConvocatoriaReunion> request = new HttpEntity<>(updatedConvocatoriaReunion);
@@ -88,8 +90,8 @@ public class ConvocatoriaReunionIT {
     // given: Entidad existente con la propiedad activo a true
     Long id = 1L;
 
-    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(ConstantesEti.PATH_PARAMETER_ID)//
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
         .toString();
 
     ResponseEntity<ConvocatoriaReunion> response = restTemplate.getForEntity(url, ConvocatoriaReunion.class, id);
@@ -115,8 +117,8 @@ public class ConvocatoriaReunionIT {
     // given: Entidad con un determinado Id
     final ConvocatoriaReunion convocatoriaReunion = getMockData(1L, 1L, 1L);
 
-    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(ConstantesEti.PATH_PARAMETER_ID)//
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
         .toString();
 
     // when: Se busca la entidad por ese Id
@@ -134,8 +136,8 @@ public class ConvocatoriaReunionIT {
 
     // given: No existe entidad con el id indicado
     Long id = 1L;
-    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(ConstantesEti.PATH_PARAMETER_ID)//
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
         .toString();
 
     // when: Se busca la entidad por ese Id
@@ -155,7 +157,7 @@ public class ConvocatoriaReunionIT {
     response.add(getMockData(1L, 1L, 1L));
     response.add(getMockData(2L, 1L, 2L));
 
-    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
 
     // when: Se buscan todos los datos
     final ResponseEntity<List<ConvocatoriaReunion>> result = restTemplate.exchange(url, HttpMethod.GET, null,
@@ -181,7 +183,7 @@ public class ConvocatoriaReunionIT {
     headers.add("X-Page", "2");
     headers.add("X-Page-Size", "2");
 
-    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
 
     // when: Se buscan los datos paginados
     final ResponseEntity<List<ConvocatoriaReunion>> result = restTemplate.exchange(url, HttpMethod.GET,
@@ -212,8 +214,8 @@ public class ConvocatoriaReunionIT {
     Long id = 3L;
     String query = "codigo~CR-0%,id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
-        .queryParam("q", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).queryParam("q", query)
+        .build(false).toUri();
 
     // when: Se buscan los datos con el filtro indicado
     final ResponseEntity<List<ConvocatoriaReunion>> result = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -241,8 +243,8 @@ public class ConvocatoriaReunionIT {
     // sort by id desc
     String sort = "id-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
-        .queryParam("s", sort).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .build(false).toUri();
 
     // when: Se buscan los datos con la ordenación indicada
     final ResponseEntity<List<ConvocatoriaReunion>> result = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -280,8 +282,8 @@ public class ConvocatoriaReunionIT {
     // search
     String query = "codigo~CR-0%";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
-        .queryParam("s", sort).queryParam("q", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .queryParam("q", query).build(false).toUri();
 
     // when: Se buscan los datos paginados con el filtro y orden indicados
     final ResponseEntity<List<ConvocatoriaReunion>> result = restTemplate.exchange(uri, HttpMethod.GET,

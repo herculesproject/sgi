@@ -11,7 +11,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.TipoEstadoMemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.service.TipoEstadoMemoriaService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -48,14 +47,15 @@ public class TipoEstadoMemoriaControllerTest {
   @MockBean
   private TipoEstadoMemoriaService tipoEstadoMemoriaService;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH = "/tipoestadomemorias";
+
   @Test
   public void getTipoEstadoMemoria_WithId_ReturnsTipoEstadoMemoria() throws Exception {
     BDDMockito.given(tipoEstadoMemoriaService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockTipoEstadoMemoria(1L, "TipoEstadoMemoria1")));
 
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("TipoEstadoMemoria1"));
@@ -68,9 +68,7 @@ public class TipoEstadoMemoriaControllerTest {
         .will((InvocationOnMock invocation) -> {
           throw new TipoEstadoMemoriaNotFoundException(invocation.getArgument(0));
         });
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -86,7 +84,7 @@ public class TipoEstadoMemoriaControllerTest {
 
     // when: Creamos un tipo estado memoria
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH)
+        .perform(MockMvcRequestBuilders.post(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH)
             .contentType(MediaType.APPLICATION_JSON).content(nuevoTipoEstadoMemoriaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo tipo memoria y lo devuelve
@@ -104,7 +102,7 @@ public class TipoEstadoMemoriaControllerTest {
 
     // when: Creamos un tipo estado memoria
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH)
+        .perform(MockMvcRequestBuilders.post(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH)
             .contentType(MediaType.APPLICATION_JSON).content(nuevoTipoEstadoMemoriaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
@@ -123,8 +121,7 @@ public class TipoEstadoMemoriaControllerTest {
         .willReturn(tipoEstadoMemoria);
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceTipoEstadoMemoriaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica el tipo estado memoria y lo devuelve
@@ -143,8 +140,7 @@ public class TipoEstadoMemoriaControllerTest {
           throw new TipoEstadoMemoriaNotFoundException(((TipoEstadoMemoria) invocation.getArgument(0)).getId());
         });
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceTipoEstadoMemoriaJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
@@ -156,8 +152,7 @@ public class TipoEstadoMemoriaControllerTest {
         .willReturn(generarMockTipoEstadoMemoria(1L, "TipoEstadoMemoria1"));
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .delete(ConstantesEti.TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.delete(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -177,8 +172,8 @@ public class TipoEstadoMemoriaControllerTest {
 
     // when: find unlimited
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH)
-            .accept(MediaType.APPLICATION_JSON))
+        .perform(
+            MockMvcRequestBuilders.get(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred TipoEstadoMemoria
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -212,8 +207,8 @@ public class TipoEstadoMemoriaControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH)
-            .header("X-Page", "3").header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.get(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH).header("X-Page", "3")
+            .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked TipoEstadoMemorias are returned with the right page
         // information
@@ -317,7 +312,7 @@ public class TipoEstadoMemoriaControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH).param("q", query)
+        .perform(MockMvcRequestBuilders.get(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH).param("q", query)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred TipoEstadoMemoria

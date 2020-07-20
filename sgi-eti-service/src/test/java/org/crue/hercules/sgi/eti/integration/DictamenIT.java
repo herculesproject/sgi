@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Dictamen;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,12 +27,15 @@ public class DictamenIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String DICTAMEN_CONTROLLER_BASE_PATH = "/dictamenes";
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getDictamen_WithId_ReturnsDictamen() throws Exception {
-    final ResponseEntity<Dictamen> response = restTemplate.getForEntity(
-        ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, Dictamen.class, 1L);
+    final ResponseEntity<Dictamen> response = restTemplate
+        .getForEntity(DICTAMEN_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, Dictamen.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -52,7 +54,7 @@ public class DictamenIT {
     nuevoDictamen.setNombre("Dictamen1");
     nuevoDictamen.setActivo(Boolean.TRUE);
 
-    restTemplate.postForEntity(ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH, nuevoDictamen, Dictamen.class);
+    restTemplate.postForEntity(DICTAMEN_CONTROLLER_BASE_PATH, nuevoDictamen, Dictamen.class);
   }
 
   @Sql
@@ -62,9 +64,8 @@ public class DictamenIT {
 
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<Dictamen> response = restTemplate.exchange(
-        ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE, null,
-        Dictamen.class, id);
+    final ResponseEntity<Dictamen> response = restTemplate.exchange(DICTAMEN_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.DELETE, null, Dictamen.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -75,10 +76,10 @@ public class DictamenIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeDictamen_DoNotGetDictamen() throws Exception {
-    restTemplate.delete(ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(DICTAMEN_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<Dictamen> response = restTemplate.getForEntity(
-        ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, Dictamen.class, 1L);
+    final ResponseEntity<Dictamen> response = restTemplate
+        .getForEntity(DICTAMEN_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, Dictamen.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -95,8 +96,7 @@ public class DictamenIT {
 
     final ResponseEntity<Dictamen> response = restTemplate.exchange(
 
-        ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
-        Dictamen.class, 1L);
+        DICTAMEN_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity, Dictamen.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -116,7 +116,7 @@ public class DictamenIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "2");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(DICTAMEN_CONTROLLER_BASE_PATH).build(false).toUri();
 
     final ResponseEntity<List<Dictamen>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<Dictamen>>() {
@@ -144,8 +144,8 @@ public class DictamenIT {
     Long id = 2L;
     String query = "nombre~favorable%,id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH).queryParam("q", query)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(DICTAMEN_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
+        .toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<Dictamen>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -168,8 +168,8 @@ public class DictamenIT {
     // when: Ordenación por nombre desc
     String query = "nombre-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH).queryParam("s", query)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(DICTAMEN_CONTROLLER_BASE_PATH).queryParam("s", query).build(false)
+        .toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<Dictamen>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -200,7 +200,7 @@ public class DictamenIT {
     // when: Filtra por nombre like
     String filter = "nombre~%pendiente%";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH).queryParam("s", sort)
+    URI uri = UriComponentsBuilder.fromUriString(DICTAMEN_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<Dictamen>> response = restTemplate.exchange(uri, HttpMethod.GET,

@@ -17,7 +17,6 @@ import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.service.ConvocatoriaReunionService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -55,11 +54,14 @@ public class ConvocatoriaReunionControllerTest {
   @MockBean
   private ConvocatoriaReunionService service;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH = "/convocatoriareuniones";
+
   @Test
   public void create_ReturnsConvocatoriaReunion() throws Exception {
 
     // given: Nueva entidad sin Id
-    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
 
     ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
     String nuevoConvocatoriaReunionJson = mapper.writeValueAsString(response);
@@ -92,7 +94,7 @@ public class ConvocatoriaReunionControllerTest {
   public void create_WithId_Returns400() throws Exception {
 
     // given: Nueva entidad con Id
-    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
     String nuevoConvocatoriaReunionJson = mapper.writeValueAsString(getMockData(1L, 1L, 1L));
 
     BDDMockito.given(service.create(ArgumentMatchers.<ConvocatoriaReunion>any()))
@@ -111,8 +113,8 @@ public class ConvocatoriaReunionControllerTest {
 
     // given: Entidad existente que se va a actualizar
     ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
-    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(ConstantesEti.PATH_PARAMETER_ID)//
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
         .toString();
     String replaceConvocatoriaReunionJson = mapper.writeValueAsString(response);
 
@@ -145,8 +147,8 @@ public class ConvocatoriaReunionControllerTest {
 
     // given: Entidad a actualizar que no existe
     ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
-    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(ConstantesEti.PATH_PARAMETER_ID)//
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
         .toString();
     String replaceConvocatoriaReunionJson = mapper.writeValueAsString(response);
 
@@ -169,8 +171,8 @@ public class ConvocatoriaReunionControllerTest {
 
     // given: Entidad existente
     ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
-    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(ConstantesEti.PATH_PARAMETER_ID)//
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
         .toString();
 
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willReturn(response);
@@ -187,8 +189,8 @@ public class ConvocatoriaReunionControllerTest {
 
     // given: Id de una entidad que no existe
     ConvocatoriaReunion convocatoriaReunion = getMockData(1L, 1L, 1L);
-    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(ConstantesEti.PATH_PARAMETER_ID)//
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
         .toString();
 
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
@@ -209,8 +211,8 @@ public class ConvocatoriaReunionControllerTest {
 
     // given: Entidad con un determinado Id
     ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
-    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(ConstantesEti.PATH_PARAMETER_ID)//
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
         .toString();
 
     BDDMockito.given(service.findById(response.getId())).willReturn(response);
@@ -241,8 +243,8 @@ public class ConvocatoriaReunionControllerTest {
     // given: No existe entidad con el id indicado
     ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
 
-    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
-        .append(ConstantesEti.PATH_PARAMETER_ID)//
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
         .toString();
 
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
@@ -260,7 +262,7 @@ public class ConvocatoriaReunionControllerTest {
   public void findAll_Unlimited_ReturnsFullConvocatoriaReunionList() throws Exception {
 
     // given: Datos existentes
-    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
 
     List<ConvocatoriaReunion> response = new LinkedList<ConvocatoriaReunion>();
     response.add(getMockData(1L, 1L, 1L));
@@ -286,7 +288,7 @@ public class ConvocatoriaReunionControllerTest {
   public void findAll_Unlimited_Returns204() throws Exception {
 
     // given: No hay datos
-    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
 
     BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(Collections.emptyList()));
@@ -300,7 +302,7 @@ public class ConvocatoriaReunionControllerTest {
   public void findAll_WithPaging_ReturnsDemoSubList() throws Exception {
 
     // given: Datos existentes
-    String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
 
     List<ConvocatoriaReunion> response = new LinkedList<>();
     response.add(getMockData(1L, 1L, 1L));
@@ -336,7 +338,7 @@ public class ConvocatoriaReunionControllerTest {
   public void findAll_WithPaging_Returns204() throws Exception {
 
     // given: Datos existentes
-    String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
 
     List<ConvocatoriaReunion> response = new LinkedList<ConvocatoriaReunion>();
     Pageable pageable = PageRequest.of(1, 2);
@@ -365,7 +367,7 @@ public class ConvocatoriaReunionControllerTest {
     response.add(getMockData(4L, 2L, 2L));
     response.add(getMockData(5L, 3L, 3L));
 
-    final String url = new StringBuilder(ConstantesEti.CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
 
     // search
     String query = "codigo~CR-0%,id:3";

@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * EvaluacionController
  */
 @RestController
-@RequestMapping(ConstantesEti.EVALUACION_CONTROLLER_BASE_PATH)
+@RequestMapping("/evaluaciones")
 @Slf4j
 public class EvaluacionController {
 
@@ -88,7 +87,7 @@ public class EvaluacionController {
    * @param id                id {@link Evaluacion} a actualizar.
    * @return {@link Evaluacion} actualizado.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   Evaluacion replaceEvaluacion(@Valid @RequestBody Evaluacion updatedEvaluacion, @PathVariable Long id) {
     log.debug("replaceEvaluacion(Evaluacion updatedEvaluacion, Long id) - start");
     updatedEvaluacion.setId(id);
@@ -103,7 +102,7 @@ public class EvaluacionController {
    * @param id Identificador de {@link Evaluacion}.
    * @return {@link Evaluacion} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   Evaluacion one(@PathVariable Long id) {
     log.debug("Evaluacion one(Long id) - start");
     Evaluacion returnValue = service.findById(id);
@@ -116,7 +115,7 @@ public class EvaluacionController {
    * 
    * @param id Identificador de {@link Evaluacion}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     Evaluacion evaluacion = this.one(id);

@@ -13,7 +13,6 @@ import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ComiteFormulario;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.service.ComiteFormularioService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -49,6 +48,9 @@ public class ComiteFormularioControllerTest {
   @MockBean
   private ComiteFormularioService comiteFormularioService;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String COMITE_FORMULARIO_CONTROLLER_BASE_PATH = "/comiteformularios";
+
   @Test
   public void getComiteFormulario_WithId_ReturnsComiteFormulario() throws Exception {
 
@@ -58,9 +60,7 @@ public class ComiteFormularioControllerTest {
     BDDMockito.given(comiteFormularioService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockComiteFormulario(1L, comite, formulario)));
 
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.COMITE_FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("formulario").value(formulario))
@@ -74,9 +74,7 @@ public class ComiteFormularioControllerTest {
         .will((InvocationOnMock invocation) -> {
           throw new ComiteFormularioNotFoundException(invocation.getArgument(0));
         });
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.COMITE_FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -96,7 +94,7 @@ public class ComiteFormularioControllerTest {
 
     // when: Creamos un ComiteFormulario
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.COMITE_FORMULARIO_CONTROLLER_BASE_PATH)
+        .perform(MockMvcRequestBuilders.post(COMITE_FORMULARIO_CONTROLLER_BASE_PATH)
             .contentType(MediaType.APPLICATION_JSON).content(nuevoComiteFormularioJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo ComiteFormulario y lo devuelve
@@ -115,7 +113,7 @@ public class ComiteFormularioControllerTest {
 
     // when: Creamos un ComiteFormulario
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.COMITE_FORMULARIO_CONTROLLER_BASE_PATH)
+        .perform(MockMvcRequestBuilders.post(COMITE_FORMULARIO_CONTROLLER_BASE_PATH)
             .contentType(MediaType.APPLICATION_JSON).content(nuevoComiteFormularioJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
@@ -138,8 +136,7 @@ public class ComiteFormularioControllerTest {
         .willReturn(comiteFormulario);
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.COMITE_FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceComiteFormularioJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica el ComiteFormulario y lo devuelve
@@ -159,8 +156,7 @@ public class ComiteFormularioControllerTest {
           throw new ComiteFormularioNotFoundException(((ComiteFormulario) invocation.getArgument(0)).getId());
         });
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.COMITE_FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceComiteFormularioJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
@@ -176,8 +172,7 @@ public class ComiteFormularioControllerTest {
         .willReturn(generarMockComiteFormulario(1L, comite, formulario));
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .delete(ConstantesEti.COMITE_FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.delete(COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -200,8 +195,7 @@ public class ComiteFormularioControllerTest {
 
     // when: find unlimited
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.COMITE_FORMULARIO_CONTROLLER_BASE_PATH)
-            .accept(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.get(COMITE_FORMULARIO_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred ComiteFormulario
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -239,7 +233,7 @@ public class ComiteFormularioControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.COMITE_FORMULARIO_CONTROLLER_BASE_PATH).header("X-Page", "3")
+        .perform(MockMvcRequestBuilders.get(COMITE_FORMULARIO_CONTROLLER_BASE_PATH).header("X-Page", "3")
             .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked ComiteFormularios are returned with the right page
@@ -348,7 +342,7 @@ public class ComiteFormularioControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.COMITE_FORMULARIO_CONTROLLER_BASE_PATH).param("q", query)
+        .perform(MockMvcRequestBuilders.get(COMITE_FORMULARIO_CONTROLLER_BASE_PATH).param("q", query)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred ComiteFormulario

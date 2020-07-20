@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.crue.hercules.sgi.eti.service.TipoComentarioService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * TipoComentarioController
  */
 @RestController
-@RequestMapping(ConstantesEti.TIPO_COMENTARIO_CONTROLLER_BASE_PATH)
+@RequestMapping("/tipocomentarios")
 @Slf4j
 public class TipoComentarioController {
 
@@ -88,7 +87,7 @@ public class TipoComentarioController {
    * @param id                    id {@link TipoComentario} a actualizar.
    * @return {@link TipoComentario} actualizado.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   TipoComentario replaceTipoComentario(@Valid @RequestBody TipoComentario updatedTipoComentario,
       @PathVariable Long id) {
     log.debug("replaceTipoComentario(TipoComentario updatedTipoComentario, Long id) - start");
@@ -104,7 +103,7 @@ public class TipoComentarioController {
    * @param id Identificador de {@link TipoComentario}.
    * @return {@link TipoComentario} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   TipoComentario one(@PathVariable Long id) {
     log.debug("TipoComentario one(Long id) - start");
     TipoComentario returnValue = service.findById(id);
@@ -117,7 +116,7 @@ public class TipoComentarioController {
    * 
    * @param id Identificador de {@link TipoComentario}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     TipoComentario tipoComentario = this.one(id);

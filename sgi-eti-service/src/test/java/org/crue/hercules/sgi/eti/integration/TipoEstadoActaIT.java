@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,13 +27,15 @@ public class TipoEstadoActaIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH = "/tipoestadoactas";
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getTipoEstadoActa_WithId_ReturnsTipoEstadoActa() throws Exception {
-    final ResponseEntity<TipoEstadoActa> response = restTemplate.getForEntity(
-        ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, TipoEstadoActa.class,
-        1L);
+    final ResponseEntity<TipoEstadoActa> response = restTemplate
+        .getForEntity(TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, TipoEstadoActa.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -53,8 +54,7 @@ public class TipoEstadoActaIT {
     nuevoTipoEstadoActa.setNombre("TipoEstadoActa1");
     nuevoTipoEstadoActa.setActivo(Boolean.TRUE);
 
-    restTemplate.postForEntity(ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH, nuevoTipoEstadoActa,
-        TipoEstadoActa.class);
+    restTemplate.postForEntity(TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH, nuevoTipoEstadoActa, TipoEstadoActa.class);
   }
 
   @Sql
@@ -65,8 +65,7 @@ public class TipoEstadoActaIT {
     // when: Delete con id existente
     long id = 1L;
     final ResponseEntity<TipoEstadoActa> response = restTemplate.exchange(
-        ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE, null,
-        TipoEstadoActa.class, id);
+        TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, TipoEstadoActa.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -77,11 +76,10 @@ public class TipoEstadoActaIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeTipoEstadoActa_DoNotGetTipoEstadoActa() throws Exception {
-    restTemplate.delete(ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<TipoEstadoActa> response = restTemplate.getForEntity(
-        ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, TipoEstadoActa.class,
-        1L);
+    final ResponseEntity<TipoEstadoActa> response = restTemplate
+        .getForEntity(TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, TipoEstadoActa.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -99,8 +97,8 @@ public class TipoEstadoActaIT {
 
     final ResponseEntity<TipoEstadoActa> response = restTemplate.exchange(
 
-        ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT,
-        requestEntity, TipoEstadoActa.class, 1L);
+        TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity, TipoEstadoActa.class,
+        1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -120,8 +118,7 @@ public class TipoEstadoActaIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "1");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH).build(false)
-        .toUri();
+    URI uri = UriComponentsBuilder.fromUriString(TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH).build(false).toUri();
 
     final ResponseEntity<List<TipoEstadoActa>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoEstadoActa>>() {
@@ -148,8 +145,8 @@ public class TipoEstadoActaIT {
     Long id = 1L;
     String query = "nombre~En%,id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH)
-        .queryParam("q", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH).queryParam("q", query)
+        .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<TipoEstadoActa>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -172,8 +169,8 @@ public class TipoEstadoActaIT {
     // when: Ordenación por nombre desc
     String query = "nombre-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH)
-        .queryParam("s", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH).queryParam("s", query)
+        .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<TipoEstadoActa>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -205,8 +202,8 @@ public class TipoEstadoActaIT {
     // when: Filtra por nombre like
     String filter = "nombre~%finalizada%";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH)
-        .queryParam("s", sort).queryParam("q", filter).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<TipoEstadoActa>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoEstadoActa>>() {

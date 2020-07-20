@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.Asistentes;
 import org.crue.hercules.sgi.eti.service.AsistentesService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * AsistentesController
  */
 @RestController
-@RequestMapping(ConstantesEti.ASISTENTES_CONTROLLER_BASE_PATH)
+@RequestMapping("/asistentes")
 @Slf4j
 public class AsistentesController {
 
@@ -88,7 +87,7 @@ public class AsistentesController {
    * @param id                id {@link Asistentes} a actualizar.
    * @return {@link Asistentes} actualizado.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   Asistentes replaceAsistentes(@Valid @RequestBody Asistentes updatedAsistentes, @PathVariable Long id) {
     log.debug("replaceAsistentes(Asistentes updatedAsistentes, Long id) - start");
     updatedAsistentes.setId(id);
@@ -103,7 +102,7 @@ public class AsistentesController {
    * @param id Identificador de {@link Asistentes}.
    * @return {@link Asistentes} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   Asistentes one(@PathVariable Long id) {
     log.debug("Asistentes one(Long id) - start");
     Asistentes returnValue = service.findById(id);
@@ -116,7 +115,7 @@ public class AsistentesController {
    * 
    * @param id Identificador de {@link Asistentes}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     service.delete(id);

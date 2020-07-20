@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.Configuracion;
 import org.crue.hercules.sgi.eti.service.ConfiguracionService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * ConfiguracionController
  */
 @RestController
-@RequestMapping(ConstantesEti.CONFIGURACION_CONTROLLER_BASE_PATH)
+@RequestMapping("/configuraciones")
 @Slf4j
 public class ConfiguracionController {
 
@@ -88,7 +87,7 @@ public class ConfiguracionController {
    * @param id                   id {@link Configuracion} a actualizar.
    * @return {@link Configuracion} actualizado.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   Configuracion replaceConfiguracion(@Valid @RequestBody Configuracion updatedConfiguracion, @PathVariable Long id) {
     log.debug("replaceConfiguracion(Configuracion updatedConfiguracion, Long id) - start");
     updatedConfiguracion.setId(id);
@@ -103,7 +102,7 @@ public class ConfiguracionController {
    * @param id Identificador de {@link Configuracion}.
    * @return {@link Configuracion} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   Configuracion one(@PathVariable Long id) {
     log.debug("Configuracion one(Long id) - start");
     Configuracion returnValue = service.findById(id);
@@ -116,7 +115,7 @@ public class ConfiguracionController {
    * 
    * @param id Identificador de {@link Configuracion}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     service.delete(id);

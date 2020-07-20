@@ -8,7 +8,6 @@ import org.crue.hercules.sgi.eti.model.ApartadoFormulario;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,12 +30,15 @@ public class ComentarioIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String COMENTARIO_CONTROLLER_BASE_PATH = "/comentarios";
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getComentario_WithId_ReturnsComentario() throws Exception {
-    final ResponseEntity<Comentario> response = restTemplate.getForEntity(
-        ConstantesEti.COMENTARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, Comentario.class, 1L);
+    final ResponseEntity<Comentario> response = restTemplate
+        .getForEntity(COMENTARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, Comentario.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -59,8 +61,8 @@ public class ComentarioIT {
 
     Comentario nuevoComentario = generarMockComentario(null, "Comentario");
 
-    final ResponseEntity<Comentario> response = restTemplate
-        .postForEntity(ConstantesEti.COMENTARIO_CONTROLLER_BASE_PATH, nuevoComentario, Comentario.class);
+    final ResponseEntity<Comentario> response = restTemplate.postForEntity(COMENTARIO_CONTROLLER_BASE_PATH,
+        nuevoComentario, Comentario.class);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
@@ -83,9 +85,8 @@ public class ComentarioIT {
 
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<Comentario> response = restTemplate.exchange(
-        ConstantesEti.COMENTARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE, null,
-        Comentario.class, id);
+    final ResponseEntity<Comentario> response = restTemplate
+        .exchange(COMENTARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, Comentario.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -95,10 +96,10 @@ public class ComentarioIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeComentario_DoNotGetComentario() throws Exception {
-    restTemplate.delete(ConstantesEti.COMENTARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(COMENTARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<Comentario> response = restTemplate.getForEntity(
-        ConstantesEti.COMENTARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, Comentario.class, 1L);
+    final ResponseEntity<Comentario> response = restTemplate
+        .getForEntity(COMENTARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, Comentario.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
@@ -113,8 +114,7 @@ public class ComentarioIT {
     final HttpEntity<Comentario> requestEntity = new HttpEntity<Comentario>(replaceComentario, new HttpHeaders());
 
     final ResponseEntity<Comentario> response = restTemplate.exchange(
-        ConstantesEti.COMENTARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
-        Comentario.class, 1L);
+        COMENTARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity, Comentario.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -139,7 +139,7 @@ public class ComentarioIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.COMENTARIO_CONTROLLER_BASE_PATH).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(COMENTARIO_CONTROLLER_BASE_PATH).build(false).toUri();
 
     final ResponseEntity<List<Comentario>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<Comentario>>() {
@@ -168,8 +168,8 @@ public class ComentarioIT {
     Long id = 5L;
     String query = "texto~Comentario%,id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.COMENTARIO_CONTROLLER_BASE_PATH).queryParam("q", query)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(COMENTARIO_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
+        .toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<Comentario>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -192,8 +192,8 @@ public class ComentarioIT {
     // when: Ordenación por texto desc
     String sort = "texto-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.COMENTARIO_CONTROLLER_BASE_PATH).queryParam("s", sort)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(COMENTARIO_CONTROLLER_BASE_PATH).queryParam("s", sort).build(false)
+        .toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<Comentario>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -226,7 +226,7 @@ public class ComentarioIT {
     // when: Filtra por texto like
     String filter = "texto~%00%";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.COMENTARIO_CONTROLLER_BASE_PATH).queryParam("s", sort)
+    URI uri = UriComponentsBuilder.fromUriString(COMENTARIO_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<Comentario>> response = restTemplate.exchange(uri, HttpMethod.GET,

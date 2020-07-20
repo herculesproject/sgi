@@ -6,7 +6,6 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,12 +28,15 @@ public class ActaIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String ACTA_CONTROLLER_BASE_PATH = "/actas";
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getActa_WithId_ReturnsActa() throws Exception {
-    final ResponseEntity<Acta> response = restTemplate
-        .getForEntity(ConstantesEti.ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, Acta.class, 1L);
+    final ResponseEntity<Acta> response = restTemplate.getForEntity(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        Acta.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -59,8 +61,7 @@ public class ActaIT {
 
     Acta nuevoActa = generarMockActa(null, 123);
 
-    final ResponseEntity<Acta> response = restTemplate.postForEntity(ConstantesEti.ACTA_CONTROLLER_BASE_PATH, nuevoActa,
-        Acta.class);
+    final ResponseEntity<Acta> response = restTemplate.postForEntity(ACTA_CONTROLLER_BASE_PATH, nuevoActa, Acta.class);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
@@ -85,9 +86,8 @@ public class ActaIT {
 
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<Acta> response = restTemplate.exchange(
-        ConstantesEti.ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE, null, Acta.class,
-        id);
+    final ResponseEntity<Acta> response = restTemplate.exchange(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.DELETE, null, Acta.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -97,10 +97,10 @@ public class ActaIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeActa_DoNotGetActa() throws Exception {
-    restTemplate.delete(ConstantesEti.ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<Acta> response = restTemplate
-        .getForEntity(ConstantesEti.ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, Acta.class, 1L);
+    final ResponseEntity<Acta> response = restTemplate.getForEntity(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        Acta.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
@@ -114,9 +114,8 @@ public class ActaIT {
 
     final HttpEntity<Acta> requestEntity = new HttpEntity<Acta>(replaceActa, new HttpHeaders());
 
-    final ResponseEntity<Acta> response = restTemplate.exchange(
-        ConstantesEti.ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
-        Acta.class, 1L);
+    final ResponseEntity<Acta> response = restTemplate.exchange(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.PUT, requestEntity, Acta.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -143,7 +142,7 @@ public class ActaIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.ACTA_CONTROLLER_BASE_PATH).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(ACTA_CONTROLLER_BASE_PATH).build(false).toUri();
 
     final ResponseEntity<List<Acta>> response = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(headers),
         new ParameterizedTypeReference<List<Acta>>() {
@@ -171,8 +170,7 @@ public class ActaIT {
     Long id = 5L;
     String query = "id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.ACTA_CONTROLLER_BASE_PATH).queryParam("q", query)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(ACTA_CONTROLLER_BASE_PATH).queryParam("q", query).build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<Acta>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -193,8 +191,7 @@ public class ActaIT {
     // when: Ordenación por id desc
     String sort = "id-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.ACTA_CONTROLLER_BASE_PATH).queryParam("s", sort)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(ACTA_CONTROLLER_BASE_PATH).queryParam("s", sort).build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<Acta>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -224,7 +221,7 @@ public class ActaIT {
     // when: Filtra por id menor
     String filter = "id<4";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.ACTA_CONTROLLER_BASE_PATH).queryParam("s", sort)
+    URI uri = UriComponentsBuilder.fromUriString(ACTA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<Acta>> response = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(headers),

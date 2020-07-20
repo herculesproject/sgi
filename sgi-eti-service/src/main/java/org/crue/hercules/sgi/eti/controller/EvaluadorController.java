@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.service.EvaluadorService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * EvaluadorController
  */
 @RestController
-@RequestMapping(ConstantesEti.EVALUADOR_CONTROLLER_BASE_PATH)
+@RequestMapping("/evaluadores")
 @Slf4j
 public class EvaluadorController {
 
@@ -88,7 +87,7 @@ public class EvaluadorController {
    * @param id               id {@link Evaluador} a actualizar.
    * @return {@link Evaluador} actualizado.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   Evaluador replaceEvaluador(@Valid @RequestBody Evaluador updatedEvaluador, @PathVariable Long id) {
     log.debug("replaceEvaluador(Evaluador updatedEvaluador, Long id) - start");
     updatedEvaluador.setId(id);
@@ -103,7 +102,7 @@ public class EvaluadorController {
    * @param id Identificador de {@link Evaluador}.
    * @return {@link Evaluador} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   Evaluador one(@PathVariable Long id) {
     log.debug("Evaluador one(Long id) - start");
     Evaluador returnValue = service.findById(id);
@@ -116,7 +115,7 @@ public class EvaluadorController {
    * 
    * @param id Identificador de {@link Evaluador}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     Evaluador evaluador = this.one(id);

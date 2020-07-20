@@ -14,7 +14,6 @@ import org.crue.hercules.sgi.eti.model.FormacionEspecifica;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.service.TareaService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -51,13 +50,14 @@ public class TareaControllerTest {
   @MockBean
   private TareaService tareaService;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String TAREA_CONTROLLER_BASE_PATH = "/tareas";
+
   @Test
   public void getTarea_WithId_ReturnsTarea() throws Exception {
     BDDMockito.given(tareaService.findById(ArgumentMatchers.anyLong())).willReturn((generarMockTarea(1L, "Tarea1")));
 
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.get(ConstantesEti.TAREA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("tarea").value("Tarea1"));
@@ -69,9 +69,7 @@ public class TareaControllerTest {
     BDDMockito.given(tareaService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new TareaNotFoundException(invocation.getArgument(0));
     });
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.get(ConstantesEti.TAREA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -86,8 +84,8 @@ public class TareaControllerTest {
 
     // when: Creamos una tarea
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.TAREA_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevaTareaJson))
+        .perform(MockMvcRequestBuilders.post(TAREA_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevaTareaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea la nueva tarea y la devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
@@ -103,8 +101,8 @@ public class TareaControllerTest {
 
     // when: Creamos una tarea
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.TAREA_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevaTareaJson))
+        .perform(MockMvcRequestBuilders.post(TAREA_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevaTareaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -120,9 +118,8 @@ public class TareaControllerTest {
     BDDMockito.given(tareaService.update(ArgumentMatchers.<Tarea>any())).willReturn(tareaActualizada);
 
     mockMvc
-        .perform(
-            MockMvcRequestBuilders.put(ConstantesEti.TAREA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
-                .contentType(MediaType.APPLICATION_JSON).content(replaceTareaJson))
+        .perform(MockMvcRequestBuilders.put(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .contentType(MediaType.APPLICATION_JSON).content(replaceTareaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica la tarea y la devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
@@ -138,9 +135,8 @@ public class TareaControllerTest {
       throw new TareaNotFoundException(((Tarea) invocation.getArgument(0)).getId());
     });
     mockMvc
-        .perform(
-            MockMvcRequestBuilders.put(ConstantesEti.TAREA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
-                .contentType(MediaType.APPLICATION_JSON).content(replaceTareaJson))
+        .perform(MockMvcRequestBuilders.put(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .contentType(MediaType.APPLICATION_JSON).content(replaceTareaJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -149,8 +145,7 @@ public class TareaControllerTest {
     BDDMockito.given(tareaService.findById(ArgumentMatchers.anyLong())).willReturn(generarMockTarea(1L, "Tarea1"));
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .delete(ConstantesEti.TAREA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.delete(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -168,9 +163,7 @@ public class TareaControllerTest {
         .willReturn(new PageImpl<>(tareas));
 
     // when: find unlimited
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.get(ConstantesEti.TAREA_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
+    mockMvc.perform(MockMvcRequestBuilders.get(TAREA_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred tareas
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -203,7 +196,7 @@ public class TareaControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.TAREA_CONTROLLER_BASE_PATH).header("X-Page", "3")
+        .perform(MockMvcRequestBuilders.get(TAREA_CONTROLLER_BASE_PATH).header("X-Page", "3")
             .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked tareas are returned with the right page information in
@@ -306,8 +299,8 @@ public class TareaControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.TAREA_CONTROLLER_BASE_PATH).param("q", query)
-            .accept(MediaType.APPLICATION_JSON))
+        .perform(
+            MockMvcRequestBuilders.get(TAREA_CONTROLLER_BASE_PATH).param("q", query).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one tarea
         .andExpect(MockMvcResultMatchers.status().isOk())

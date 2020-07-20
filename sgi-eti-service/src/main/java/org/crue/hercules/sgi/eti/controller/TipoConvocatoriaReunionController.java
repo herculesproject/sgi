@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.service.TipoConvocatoriaReunionService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * TipoConvocatoriaReunionController
  */
 @RestController
-@RequestMapping(ConstantesEti.TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
+@RequestMapping("/tipoconvocatoriareuniones")
 @Slf4j
 public class TipoConvocatoriaReunionController {
 
@@ -93,7 +92,7 @@ public class TipoConvocatoriaReunionController {
    *                                       actualizar.
    * @return {@link TipoConvocatoriaReunion} actualizado.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   TipoConvocatoriaReunion replaceTipoConvocatoriaReunion(
       @Valid @RequestBody TipoConvocatoriaReunion updatedTipoConvocatoriaReunion, @PathVariable Long id) {
     log.debug(
@@ -110,7 +109,7 @@ public class TipoConvocatoriaReunionController {
    * @param id Identificador de {@link TipoConvocatoriaReunion}.
    * @return {@link TipoConvocatoriaReunion} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   TipoConvocatoriaReunion one(@PathVariable Long id) {
     log.debug("TipoConvocatoriaReunion one(Long id) - start");
     TipoConvocatoriaReunion returnValue = service.findById(id);
@@ -123,7 +122,7 @@ public class TipoConvocatoriaReunionController {
    * 
    * @param id Identificador de {@link TipoConvocatoriaReunion}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     TipoConvocatoriaReunion tipoConvocatoriaReunion = this.one(id);

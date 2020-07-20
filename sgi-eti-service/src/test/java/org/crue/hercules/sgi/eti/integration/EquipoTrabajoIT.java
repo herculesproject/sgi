@@ -8,7 +8,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,12 +30,15 @@ public class EquipoTrabajoIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String EQUIPO_TRABAJO_CONTROLLER_BASE_PATH = "/equipotrabajos";
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getEquipoTrabajo_WithId_ReturnsEquipoTrabajo() throws Exception {
-    final ResponseEntity<EquipoTrabajo> response = restTemplate.getForEntity(
-        ConstantesEti.EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, EquipoTrabajo.class, 1L);
+    final ResponseEntity<EquipoTrabajo> response = restTemplate
+        .getForEntity(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, EquipoTrabajo.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -55,8 +57,8 @@ public class EquipoTrabajoIT {
     EquipoTrabajo nuevoEquipoTrabajo = generarMockEquipoTrabajo(null,
         generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1"));
 
-    final ResponseEntity<EquipoTrabajo> response = restTemplate
-        .postForEntity(ConstantesEti.EQUIPO_TRABAJO_CONTROLLER_BASE_PATH, nuevoEquipoTrabajo, EquipoTrabajo.class);
+    final ResponseEntity<EquipoTrabajo> response = restTemplate.postForEntity(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH,
+        nuevoEquipoTrabajo, EquipoTrabajo.class);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
@@ -75,8 +77,7 @@ public class EquipoTrabajoIT {
     // when: Delete con id existente
     long id = 1L;
     final ResponseEntity<EquipoTrabajo> response = restTemplate.exchange(
-        ConstantesEti.EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE, null,
-        EquipoTrabajo.class, id);
+        EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, EquipoTrabajo.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -87,10 +88,10 @@ public class EquipoTrabajoIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeEquipoTrabajo_DoNotGetEquipoTrabajo() throws Exception {
-    restTemplate.delete(ConstantesEti.EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<EquipoTrabajo> response = restTemplate.getForEntity(
-        ConstantesEti.EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, EquipoTrabajo.class, 1L);
+    final ResponseEntity<EquipoTrabajo> response = restTemplate
+        .getForEntity(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, EquipoTrabajo.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -109,8 +110,8 @@ public class EquipoTrabajoIT {
 
     final ResponseEntity<EquipoTrabajo> response = restTemplate.exchange(
 
-        ConstantesEti.EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT,
-        requestEntity, EquipoTrabajo.class, 1L);
+        EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity, EquipoTrabajo.class,
+        1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -131,8 +132,7 @@ public class EquipoTrabajoIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.EQUIPO_TRABAJO_CONTROLLER_BASE_PATH).build(false)
-        .toUri();
+    URI uri = UriComponentsBuilder.fromUriString(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH).build(false).toUri();
 
     final ResponseEntity<List<EquipoTrabajo>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<EquipoTrabajo>>() {
@@ -161,8 +161,8 @@ public class EquipoTrabajoIT {
     // when: Búsqueda por id equals
     String query = "id:5";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.EQUIPO_TRABAJO_CONTROLLER_BASE_PATH)
-        .queryParam("q", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH).queryParam("q", query)
+        .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<EquipoTrabajo>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -185,8 +185,8 @@ public class EquipoTrabajoIT {
     // when: Ordenación por usuarioRef desc
     String query = "usuarioRef-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.EQUIPO_TRABAJO_CONTROLLER_BASE_PATH)
-        .queryParam("s", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH).queryParam("s", query)
+        .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<EquipoTrabajo>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -220,8 +220,8 @@ public class EquipoTrabajoIT {
     // when: Filtra por usuarioRef like
     String filter = "usuarioRef~%00%";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.EQUIPO_TRABAJO_CONTROLLER_BASE_PATH)
-        .queryParam("s", sort).queryParam("q", filter).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<EquipoTrabajo>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<EquipoTrabajo>>() {

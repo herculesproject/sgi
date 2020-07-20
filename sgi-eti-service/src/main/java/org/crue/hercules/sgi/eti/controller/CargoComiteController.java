@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.service.CargoComiteService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * CargoComiteController
  */
 @RestController
-@RequestMapping(ConstantesEti.CARGO_COMITE_CONTROLLER_BASE_PATH)
+@RequestMapping("/cargocomites")
 @Slf4j
 public class CargoComiteController {
 
@@ -88,7 +87,7 @@ public class CargoComiteController {
    * @param id                 id {@link CargoComite} a actualizar.
    * @return {@link CargoComite} actualizado.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   CargoComite replaceCargoComite(@Valid @RequestBody CargoComite updatedCargoComite, @PathVariable Long id) {
     log.debug("replaceCargoComite(CargoComite updatedCargoComite, Long id) - start");
     updatedCargoComite.setId(id);
@@ -103,7 +102,7 @@ public class CargoComiteController {
    * @param id Identificador de {@link CargoComite}.
    * @return {@link CargoComite} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   CargoComite one(@PathVariable Long id) {
     log.debug("CargoComite one(Long id) - start");
     CargoComite returnValue = service.findById(id);
@@ -116,7 +115,7 @@ public class CargoComiteController {
    * 
    * @param id Identificador de {@link CargoComite}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     CargoComite cargoComite = this.one(id);

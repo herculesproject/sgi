@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.service.PeticionEvaluacionService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * PeticionEvaluacionController
  */
 @RestController
-@RequestMapping(ConstantesEti.PETICION_EVALUACION_CONTROLLER_BASE_PATH)
+@RequestMapping("/peticionevaluaciones")
 @Slf4j
 public class PeticionEvaluacionController {
 
@@ -91,7 +90,7 @@ public class PeticionEvaluacionController {
    * @param id                        id {@link PeticionEvaluacion} a actualizar.
    * @return {@link PeticionEvaluacion} actualizado.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   PeticionEvaluacion replacePeticionEvaluacion(@Valid @RequestBody PeticionEvaluacion updatedPeticionEvaluacion,
       @PathVariable Long id) {
     log.debug("replacePeticionEvaluacion(PeticionEvaluacion updatedPeticionEvaluacion, Long id) - start");
@@ -107,7 +106,7 @@ public class PeticionEvaluacionController {
    * @param id Identificador de {@link PeticionEvaluacion}.
    * @return {@link PeticionEvaluacion} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   PeticionEvaluacion one(@PathVariable Long id) {
     log.debug("PeticionEvaluacion one(Long id) - start");
     PeticionEvaluacion returnValue = service.findById(id);
@@ -120,7 +119,7 @@ public class PeticionEvaluacionController {
    * 
    * @param id Identificador de {@link PeticionEvaluacion}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     PeticionEvaluacion peticionEvaluacion = this.one(id);

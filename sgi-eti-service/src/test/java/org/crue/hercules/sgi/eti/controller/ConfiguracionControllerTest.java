@@ -11,7 +11,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.ConfiguracionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Configuracion;
 import org.crue.hercules.sgi.eti.service.ConfiguracionService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -48,14 +47,15 @@ public class ConfiguracionControllerTest {
   @MockBean
   private ConfiguracionService configuracionService;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String CONFIGURACION_CONTROLLER_BASE_PATH = "/configuraciones";
+
   @Test
   public void getConfiguracion_WithId_ReturnsConfiguracion() throws Exception {
     BDDMockito.given(configuracionService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockConfiguracion(1L, "Configuracion1")));
 
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.CONFIGURACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(CONFIGURACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("clave").value("Configuracion1"));
@@ -67,9 +67,7 @@ public class ConfiguracionControllerTest {
     BDDMockito.given(configuracionService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new ConfiguracionNotFoundException(invocation.getArgument(0));
     });
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.CONFIGURACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(CONFIGURACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -84,8 +82,8 @@ public class ConfiguracionControllerTest {
 
     // when: Creamos una configuracion
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.CONFIGURACION_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevoConfiguracionJson))
+        .perform(MockMvcRequestBuilders.post(CONFIGURACION_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoConfiguracionJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea la nueva configuracion y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
@@ -102,8 +100,8 @@ public class ConfiguracionControllerTest {
 
     // when: Creamos un configuracion
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.CONFIGURACION_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevoConfiguracionJson))
+        .perform(MockMvcRequestBuilders.post(CONFIGURACION_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoConfiguracionJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -120,8 +118,7 @@ public class ConfiguracionControllerTest {
     BDDMockito.given(configuracionService.update(ArgumentMatchers.<Configuracion>any())).willReturn(configuracion);
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.CONFIGURACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(CONFIGURACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceConfiguracionJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica la configuracion y lo devuelve
@@ -139,8 +136,7 @@ public class ConfiguracionControllerTest {
           throw new ConfiguracionNotFoundException(((Configuracion) invocation.getArgument(0)).getId());
         });
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.CONFIGURACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(CONFIGURACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceConfiguracionJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
@@ -152,8 +148,7 @@ public class ConfiguracionControllerTest {
         .willReturn(generarMockConfiguracion(1L, null));
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .delete(ConstantesEti.CONFIGURACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.delete(CONFIGURACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -172,9 +167,7 @@ public class ConfiguracionControllerTest {
         .willReturn(new PageImpl<>(configuraciones));
 
     // when: find unlimited
-    mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.CONFIGURACION_CONTROLLER_BASE_PATH)
-            .accept(MediaType.APPLICATION_JSON))
+    mockMvc.perform(MockMvcRequestBuilders.get(CONFIGURACION_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred Configuracion
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -208,7 +201,7 @@ public class ConfiguracionControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.CONFIGURACION_CONTROLLER_BASE_PATH).header("X-Page", "3")
+        .perform(MockMvcRequestBuilders.get(CONFIGURACION_CONTROLLER_BASE_PATH).header("X-Page", "3")
             .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked Configuraciones are returned with the right page information
@@ -312,7 +305,7 @@ public class ConfiguracionControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.CONFIGURACION_CONTROLLER_BASE_PATH).param("q", query)
+        .perform(MockMvcRequestBuilders.get(CONFIGURACION_CONTROLLER_BASE_PATH).param("q", query)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred Configuracion

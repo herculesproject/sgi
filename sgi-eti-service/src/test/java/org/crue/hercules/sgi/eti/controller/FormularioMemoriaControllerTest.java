@@ -13,7 +13,6 @@ import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.FormularioMemoria;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.service.FormularioMemoriaService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -50,14 +49,15 @@ public class FormularioMemoriaControllerTest {
   @MockBean
   private FormularioMemoriaService formularioMemoriaService;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH = "/formulariomemorias";
+
   @Test
   public void getFormularioMemoria_WithId_ReturnsFormularioMemoria() throws Exception {
     BDDMockito.given(formularioMemoriaService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockFormularioMemoria(1L)));
 
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("memoria").exists())
@@ -73,9 +73,7 @@ public class FormularioMemoriaControllerTest {
         .will((InvocationOnMock invocation) -> {
           throw new FormularioMemoriaNotFoundException(invocation.getArgument(0));
         });
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -91,7 +89,7 @@ public class FormularioMemoriaControllerTest {
 
     // when: Creamos un formulario memoria
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH)
+        .perform(MockMvcRequestBuilders.post(FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH)
             .contentType(MediaType.APPLICATION_JSON).content(nuevoFormularioMemoriaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo formulario memoria y lo devuelve
@@ -113,7 +111,7 @@ public class FormularioMemoriaControllerTest {
 
     // when: Creamos un formularioMemoria
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH)
+        .perform(MockMvcRequestBuilders.post(FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH)
             .contentType(MediaType.APPLICATION_JSON).content(nuevoFormularioMemoriaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
@@ -131,8 +129,7 @@ public class FormularioMemoriaControllerTest {
         .willReturn(formularioMemoriaActualizado);
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceFormularioMemoriaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica el formulario memoria y lo devuelve
@@ -153,8 +150,7 @@ public class FormularioMemoriaControllerTest {
           throw new FormularioMemoriaNotFoundException(((FormularioMemoria) invocation.getArgument(0)).getId());
         });
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceFormularioMemoriaJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
@@ -165,8 +161,7 @@ public class FormularioMemoriaControllerTest {
         .willReturn(generarMockFormularioMemoria(1L));
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .delete(ConstantesEti.FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.delete(FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -185,8 +180,7 @@ public class FormularioMemoriaControllerTest {
 
     // when: find unlimited
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH)
-            .accept(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.get(FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred formularios memorias
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -219,7 +213,7 @@ public class FormularioMemoriaControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH).header("X-Page", "3")
+        .perform(MockMvcRequestBuilders.get(FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH).header("X-Page", "3")
             .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked formularios memorias are returned with the right page
@@ -322,7 +316,7 @@ public class FormularioMemoriaControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH).param("q", query)
+        .perform(MockMvcRequestBuilders.get(FORMULARIO_MEMORIA_CONTROLLER_BASE_PATH).param("q", query)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one formularios memorias

@@ -11,7 +11,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.service.ComiteService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -48,6 +47,9 @@ public class ComiteControllerTest {
   @MockBean
   private ComiteService comiteService;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String COMITE_CONTROLLER_BASE_PATH = "/comites";
+
   /* Retorna una lista Comite y comprueba los datos */
   @Test
   public void getComite_ReturnsComiteList() throws Exception {
@@ -61,9 +63,7 @@ public class ComiteControllerTest {
         .given(comiteService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(comiteLista));
 
-    mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.COMITE_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON))
+    mockMvc.perform(MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)))
 
@@ -84,8 +84,8 @@ public class ComiteControllerTest {
         .given(comiteService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(comiteResponseList));
 
-    mockMvc.perform(MockMvcRequestBuilders.get(ConstantesEti.COMITE_CONTROLLER_BASE_PATH))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+    mockMvc.perform(MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH)).andDo(MockMvcResultHandlers.print())
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   /* Retorna un Comite por id y comprueba los datos */
@@ -95,9 +95,7 @@ public class ComiteControllerTest {
     BDDMockito.given(comiteService.findById(ArgumentMatchers.anyLong()))
         .willReturn((new Comite(1L, "Comite1", Boolean.TRUE)));
 
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.get(ConstantesEti.COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("comite").value("Comite1"));
@@ -109,9 +107,7 @@ public class ComiteControllerTest {
     BDDMockito.given(comiteService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new ComiteNotFoundException(invocation.getArgument(0));
     });
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.get(ConstantesEti.COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -131,8 +127,8 @@ public class ComiteControllerTest {
     // when: Creamos un Comite
 
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.COMITE_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevoComiteJson))
+        .perform(MockMvcRequestBuilders.post(COMITE_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoComiteJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo Comite y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
@@ -148,8 +144,8 @@ public class ComiteControllerTest {
 
     // when: Creamos un Comite
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.COMITE_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevoComiteJson))
+        .perform(MockMvcRequestBuilders.post(COMITE_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoComiteJson))
         .andDo(MockMvcResultHandlers.print())
 
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -169,9 +165,8 @@ public class ComiteControllerTest {
     BDDMockito.given(comiteService.update(ArgumentMatchers.<Comite>any())).willReturn(comite);
 
     mockMvc
-        .perform(
-            MockMvcRequestBuilders.put(ConstantesEti.COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
-                .contentType(MediaType.APPLICATION_JSON).content(replaceComiteJson))
+        .perform(MockMvcRequestBuilders.put(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .contentType(MediaType.APPLICATION_JSON).content(replaceComiteJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica el Comite y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
@@ -192,9 +187,8 @@ public class ComiteControllerTest {
       throw new ComiteNotFoundException(((Comite) invocation.getArgument(0)).getId());
     });
     mockMvc
-        .perform(
-            MockMvcRequestBuilders.put(ConstantesEti.COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
-                .contentType(MediaType.APPLICATION_JSON).content(replaceComiteJson))
+        .perform(MockMvcRequestBuilders.put(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .contentType(MediaType.APPLICATION_JSON).content(replaceComiteJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
   }
@@ -206,9 +200,7 @@ public class ComiteControllerTest {
     BDDMockito.given(comiteService.findById(ArgumentMatchers.anyLong()))
         .willReturn(new Comite(1L, "Comite1", Boolean.TRUE));
 
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .delete(ConstantesEti.COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.delete(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
@@ -240,7 +232,7 @@ public class ComiteControllerTest {
 
     // when: Obtiene page=3 con pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.COMITE_CONTROLLER_BASE_PATH).header("X-Page", "3")
+        .perform(MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH).header("X-Page", "3")
             .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: El Comite retorn la información de la página correcta en el
@@ -346,7 +338,7 @@ public class ComiteControllerTest {
 
     // when: Encuenta la búsqueda de la query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.COMITE_CONTROLLER_BASE_PATH).param("q", query)
+        .perform(MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH).param("q", query)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Obtiene la página

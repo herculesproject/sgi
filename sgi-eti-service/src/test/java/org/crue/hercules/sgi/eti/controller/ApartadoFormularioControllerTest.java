@@ -16,7 +16,6 @@ import org.crue.hercules.sgi.eti.model.BloqueFormulario;
 import org.crue.hercules.sgi.eti.model.ComponenteFormulario;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.service.ApartadoFormularioService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -54,11 +53,14 @@ public class ApartadoFormularioControllerTest {
   @MockBean
   private ApartadoFormularioService service;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String APARTADO_FORMULARIO_CONTROLLER_BASE_PATH = "/apartadoformularios";
+
   @Test
   public void create_ReturnsApartadoFormulario() throws Exception {
 
     // given: Nueva entidad sin Id
-    final String url = new StringBuilder(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
 
     ApartadoFormulario response = getMockData(1L, 1L, 1L, null);
     String nuevoApartadoFormularioJson = mapper.writeValueAsString(response);
@@ -86,7 +88,7 @@ public class ApartadoFormularioControllerTest {
   public void create_WithId_Returns400() throws Exception {
 
     // given: Nueva entidad con Id
-    final String url = new StringBuilder(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
     String nuevoApartadoFormularioJson = mapper.writeValueAsString(getMockData(1L, 1L, 1L, null));
 
     BDDMockito.given(service.create(ArgumentMatchers.<ApartadoFormulario>any()))
@@ -105,8 +107,8 @@ public class ApartadoFormularioControllerTest {
 
     // given: Entidad existente que se va a actualizar
     ApartadoFormulario response = getMockData(1L, 1L, 1L, null);
-    final String url = new StringBuilder(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
-        .append(ConstantesEti.PATH_PARAMETER_ID)//
+    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
         .toString();
     String replaceApartadoFormularioJson = mapper.writeValueAsString(response);
 
@@ -134,8 +136,8 @@ public class ApartadoFormularioControllerTest {
 
     // given: Entidad a actualizar que no existe
     ApartadoFormulario response = getMockData(1L, 1L, 1L, null);
-    final String url = new StringBuilder(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
-        .append(ConstantesEti.PATH_PARAMETER_ID)//
+    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
         .toString();
     String replaceApartadoFormularioJson = mapper.writeValueAsString(response);
 
@@ -157,8 +159,8 @@ public class ApartadoFormularioControllerTest {
 
     // given: Entidad existente
     ApartadoFormulario response = getMockData(1L, 1L, 1L, null);
-    final String url = new StringBuilder(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
-        .append(ConstantesEti.PATH_PARAMETER_ID)//
+    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
         .toString();
 
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willReturn(response);
@@ -175,8 +177,8 @@ public class ApartadoFormularioControllerTest {
 
     // given: Id de una entidad que no existe
     ApartadoFormulario apartadoFormulario = getMockData(1L, 1L, 1L, null);
-    final String url = new StringBuilder(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
-        .append(ConstantesEti.PATH_PARAMETER_ID)//
+    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
         .toString();
 
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
@@ -196,8 +198,8 @@ public class ApartadoFormularioControllerTest {
 
     // given: Entidad con un determinado Id
     ApartadoFormulario response = getMockData(1L, 1L, 1L, null);
-    final String url = new StringBuilder(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
-        .append(ConstantesEti.PATH_PARAMETER_ID)//
+    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
         .toString();
 
     BDDMockito.given(service.findById(response.getId())).willReturn(response);
@@ -223,8 +225,8 @@ public class ApartadoFormularioControllerTest {
     // given: No existe entidad con el id indicado
     ApartadoFormulario response = getMockData(1L, 1L, 1L, null);
 
-    final String url = new StringBuilder(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
-        .append(ConstantesEti.PATH_PARAMETER_ID)//
+    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
         .toString();
 
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
@@ -242,7 +244,7 @@ public class ApartadoFormularioControllerTest {
   public void findAll_Unlimited_ReturnsFullApartadoFormularioList() throws Exception {
 
     // given: Datos existentes
-    final String url = new StringBuilder(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
 
     List<ApartadoFormulario> response = new LinkedList<ApartadoFormulario>();
     response.add(getMockData(1L, 1L, 1L, null));
@@ -268,7 +270,7 @@ public class ApartadoFormularioControllerTest {
   public void findAll_Unlimited_Returns204() throws Exception {
 
     // given: No hay datos
-    final String url = new StringBuilder(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
 
     BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(Collections.emptyList()));
@@ -282,7 +284,7 @@ public class ApartadoFormularioControllerTest {
   public void findAll_WithPaging_ReturnsDemoSubList() throws Exception {
 
     // given: Datos existentes
-    String url = new StringBuilder(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
+    String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
 
     List<ApartadoFormulario> response = new LinkedList<>();
     response.add(getMockData(1L, 1L, 1L, null));
@@ -318,7 +320,7 @@ public class ApartadoFormularioControllerTest {
   public void findAll_WithPaging_Returns204() throws Exception {
 
     // given: Datos existentes
-    String url = new StringBuilder(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
+    String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
 
     List<ApartadoFormulario> response = new LinkedList<ApartadoFormulario>();
     Pageable pageable = PageRequest.of(1, 2);
@@ -347,7 +349,7 @@ public class ApartadoFormularioControllerTest {
     response.add(getMockData(4L, 2L, 2L, null));
     response.add(getMockData(5L, 2L, 2L, 4L));
 
-    final String url = new StringBuilder(ConstantesEti.APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
 
     // search
     String query = "nombre~ApartadoFormulario0%,id:3";

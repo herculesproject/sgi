@@ -24,7 +24,6 @@ import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.service.EvaluadorEvaluacionService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -61,14 +60,15 @@ public class EvaluadorEvaluacionControllerTest {
   @MockBean
   private EvaluadorEvaluacionService evaluadorEvaluacionService;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH = "/evaluadorevaluaciones";
+
   @Test
   public void getEvaluadorEvaluacion_WithId_ReturnsEvaluadorEvaluacion() throws Exception {
     BDDMockito.given(evaluadorEvaluacionService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockEvaluadorEvaluacion(1L)));
 
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("evaluador.resumen").value("Evaluador"));
@@ -81,9 +81,7 @@ public class EvaluadorEvaluacionControllerTest {
         .will((InvocationOnMock invocation) -> {
           throw new EvaluadorEvaluacionNotFoundException(invocation.getArgument(0));
         });
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -101,7 +99,7 @@ public class EvaluadorEvaluacionControllerTest {
 
     // when: Creamos un EvaluadorEvaluacion
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH)
+        .perform(MockMvcRequestBuilders.post(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH)
             .contentType(MediaType.APPLICATION_JSON).content(nuevoEvaluadorEvaluacionJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo EvaluadorEvaluacion y lo devuelve
@@ -122,7 +120,7 @@ public class EvaluadorEvaluacionControllerTest {
 
     // when: Creamos un EvaluadorEvaluacion
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH)
+        .perform(MockMvcRequestBuilders.post(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH)
             .contentType(MediaType.APPLICATION_JSON).content(nuevoEvaluadorEvaluacionJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
@@ -146,8 +144,7 @@ public class EvaluadorEvaluacionControllerTest {
         .willReturn(evaluadorEvaluacion);
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceEvaluadorEvaluacionJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica el EvaluadorEvaluacion y lo devuelve
@@ -169,8 +166,7 @@ public class EvaluadorEvaluacionControllerTest {
           throw new EvaluadorEvaluacionNotFoundException(((EvaluadorEvaluacion) invocation.getArgument(0)).getId());
         });
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceEvaluadorEvaluacionJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
@@ -182,8 +178,7 @@ public class EvaluadorEvaluacionControllerTest {
         .willReturn(generarMockEvaluadorEvaluacion(1L));
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .delete(ConstantesEti.EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.delete(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -201,8 +196,8 @@ public class EvaluadorEvaluacionControllerTest {
 
     // when: find unlimited
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH)
-            .accept(MediaType.APPLICATION_JSON))
+        .perform(
+            MockMvcRequestBuilders.get(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred EvaluadorEvaluacion
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -234,8 +229,8 @@ public class EvaluadorEvaluacionControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH)
-            .header("X-Page", "3").header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.get(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH).header("X-Page", "3")
+            .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked EvaluadorEvaluacions are returned with the right page
         // information
@@ -337,7 +332,7 @@ public class EvaluadorEvaluacionControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH).param("q", query)
+        .perform(MockMvcRequestBuilders.get(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH).param("q", query)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred EvaluadorEvaluacion

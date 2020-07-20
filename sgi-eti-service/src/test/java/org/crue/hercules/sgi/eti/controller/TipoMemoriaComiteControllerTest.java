@@ -13,7 +13,6 @@ import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoriaComite;
 import org.crue.hercules.sgi.eti.service.TipoMemoriaComiteService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -49,6 +48,9 @@ public class TipoMemoriaComiteControllerTest {
   @MockBean
   private TipoMemoriaComiteService tipoMemoriaComiteService;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH = "/tipomemoriacomites";
+
   @Test
   public void getTipoMemoriaComite_WithId_ReturnsTipoMemoriaComite() throws Exception {
 
@@ -58,9 +60,7 @@ public class TipoMemoriaComiteControllerTest {
     BDDMockito.given(tipoMemoriaComiteService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockTipoMemoriaComite(1L, comite, tipoMemoria)));
 
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoMemoria").value(tipoMemoria))
@@ -74,9 +74,7 @@ public class TipoMemoriaComiteControllerTest {
         .will((InvocationOnMock invocation) -> {
           throw new TipoMemoriaComiteNotFoundException(invocation.getArgument(0));
         });
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -96,7 +94,7 @@ public class TipoMemoriaComiteControllerTest {
 
     // when: Creamos un tipo memoria comite
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH)
+        .perform(MockMvcRequestBuilders.post(TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH)
             .contentType(MediaType.APPLICATION_JSON).content(nuevoTipoMemoriaComiteJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo tipo memoria comite y lo devuelve
@@ -114,7 +112,7 @@ public class TipoMemoriaComiteControllerTest {
 
     // when: Creamos un tipo memoria
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH)
+        .perform(MockMvcRequestBuilders.post(TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH)
             .contentType(MediaType.APPLICATION_JSON).content(nuevoTipoMemoriaComiteJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
@@ -137,8 +135,7 @@ public class TipoMemoriaComiteControllerTest {
         .willReturn(tipoMemoriaComite);
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceTipoMemoriaComiteJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica el tipo memoria comite y lo devuelve
@@ -157,8 +154,7 @@ public class TipoMemoriaComiteControllerTest {
           throw new TipoMemoriaComiteNotFoundException(((TipoMemoriaComite) invocation.getArgument(0)).getId());
         });
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceTipoMemoriaComiteJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
@@ -174,8 +170,7 @@ public class TipoMemoriaComiteControllerTest {
         .willReturn(generarMockTipoMemoriaComite(1L, comite, tipoMemoria));
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .delete(ConstantesEti.TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.delete(TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -198,8 +193,8 @@ public class TipoMemoriaComiteControllerTest {
 
     // when: find unlimited
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH)
-            .accept(MediaType.APPLICATION_JSON))
+        .perform(
+            MockMvcRequestBuilders.get(TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred TipoMemoriaComite
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -237,8 +232,8 @@ public class TipoMemoriaComiteControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH)
-            .header("X-Page", "3").header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.get(TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH).header("X-Page", "3")
+            .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked TipoMemoriaComites are returned with the right page
         // information
@@ -346,7 +341,7 @@ public class TipoMemoriaComiteControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH).param("q", query)
+        .perform(MockMvcRequestBuilders.get(TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH).param("q", query)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred TipoMemoriaComite

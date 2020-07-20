@@ -7,7 +7,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Asistentes;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,12 +29,15 @@ public class AsistentesIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String ASISTENTE_CONTROLLER_BASE_PATH = "/asistentes";
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getAsistentes_WithId_ReturnsAsistentes() throws Exception {
-    final ResponseEntity<Asistentes> response = restTemplate.getForEntity(
-        ConstantesEti.ASISTENTES_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, Asistentes.class, 1L);
+    final ResponseEntity<Asistentes> response = restTemplate
+        .getForEntity(ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, Asistentes.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -61,7 +63,7 @@ public class AsistentesIT {
     nuevoAsistente.setEvaluador(new Evaluador());
     nuevoAsistente.getEvaluador().setId(1L);
 
-    restTemplate.postForEntity(ConstantesEti.ASISTENTES_CONTROLLER_BASE_PATH, nuevoAsistente, Asistentes.class);
+    restTemplate.postForEntity(ASISTENTE_CONTROLLER_BASE_PATH, nuevoAsistente, Asistentes.class);
   }
 
   @Sql
@@ -71,9 +73,8 @@ public class AsistentesIT {
 
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<Asistentes> response = restTemplate.exchange(
-        ConstantesEti.ASISTENTES_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE, null,
-        Asistentes.class, id);
+    final ResponseEntity<Asistentes> response = restTemplate
+        .exchange(ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, Asistentes.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -84,10 +85,10 @@ public class AsistentesIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeAsistentes_DoNotGetAsistentes() throws Exception {
-    restTemplate.delete(ConstantesEti.ASISTENTES_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<Asistentes> response = restTemplate.getForEntity(
-        ConstantesEti.ASISTENTES_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, Asistentes.class, 1L);
+    final ResponseEntity<Asistentes> response = restTemplate
+        .getForEntity(ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, Asistentes.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -110,8 +111,7 @@ public class AsistentesIT {
 
     final ResponseEntity<Asistentes> response = restTemplate.exchange(
 
-        ConstantesEti.ASISTENTES_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
-        Asistentes.class, 1L);
+        ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity, Asistentes.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -134,7 +134,7 @@ public class AsistentesIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "3");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.ASISTENTES_CONTROLLER_BASE_PATH).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(ASISTENTE_CONTROLLER_BASE_PATH).build(false).toUri();
 
     final ResponseEntity<List<Asistentes>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<Asistentes>>() {
@@ -164,8 +164,8 @@ public class AsistentesIT {
     Long id = 5L;
     String query = "motivo~motivo%,id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.ASISTENTES_CONTROLLER_BASE_PATH).queryParam("q", query)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(ASISTENTE_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
+        .toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<Asistentes>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -188,8 +188,8 @@ public class AsistentesIT {
     // when: Ordenación por motivo desc
     String query = "motivo-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.ASISTENTES_CONTROLLER_BASE_PATH).queryParam("s", query)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(ASISTENTE_CONTROLLER_BASE_PATH).queryParam("s", query).build(false)
+        .toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<Asistentes>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -221,7 +221,7 @@ public class AsistentesIT {
     // when: Filtra por motivo like
     String filter = "motivo~%motivo%";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.ASISTENTES_CONTROLLER_BASE_PATH).queryParam("s", sort)
+    URI uri = UriComponentsBuilder.fromUriString(ASISTENTE_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<Asistentes>> response = restTemplate.exchange(uri, HttpMethod.GET,

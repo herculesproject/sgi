@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.InformeFormulario;
 import org.crue.hercules.sgi.eti.service.InformeFormularioService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * InformeFormularioController
  */
 @RestController
-@RequestMapping(ConstantesEti.INFORME_FORMULARIO_CONTROLLER_BASE_PATH)
+@RequestMapping("/informeformularios")
 @Slf4j
 public class InformeFormularioController {
 
@@ -88,7 +87,7 @@ public class InformeFormularioController {
    * @param id                       id {@link InformeFormulario} a actualizar.
    * @return {@link InformeFormulario} actualizado.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   InformeFormulario replaceInformeFormulario(@Valid @RequestBody InformeFormulario updatedInformeFormulario,
       @PathVariable Long id) {
     log.debug("replaceInformeFormulario(InformeFormulario updatedInformeFormulario, Long id) - start");
@@ -104,7 +103,7 @@ public class InformeFormularioController {
    * @param id Identificador de {@link InformeFormulario}.
    * @return {@link InformeFormulario} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   InformeFormulario one(@PathVariable Long id) {
     log.debug("InformeFormulario one(Long id) - start");
     InformeFormulario returnValue = service.findById(id);
@@ -117,7 +116,7 @@ public class InformeFormularioController {
    * 
    * @param id Identificador de {@link InformeFormulario}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     service.delete(id);

@@ -14,7 +14,6 @@ import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.EstadoActa;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 import org.crue.hercules.sgi.eti.service.EstadoActaService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -51,13 +50,14 @@ public class EstadoActaControllerTest {
   @MockBean
   private EstadoActaService estadoActaService;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String ESTADO_ACTA_CONTROLLER_BASE_PATH = "/estadoactas";
+
   @Test
   public void getEstadoActa_WithId_ReturnsEstadoActa() throws Exception {
     BDDMockito.given(estadoActaService.findById(ArgumentMatchers.anyLong())).willReturn((generarMockEstadoActa(1L)));
 
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.ESTADO_ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("acta.id").value(100))
@@ -70,9 +70,7 @@ public class EstadoActaControllerTest {
     BDDMockito.given(estadoActaService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new EstadoActaNotFoundException(invocation.getArgument(0));
     });
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.ESTADO_ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -87,8 +85,8 @@ public class EstadoActaControllerTest {
 
     // when: Creamos un estado acta
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.ESTADO_ACTA_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevoEstadoActaJson))
+        .perform(MockMvcRequestBuilders.post(ESTADO_ACTA_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoEstadoActaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo estado acta y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
@@ -106,8 +104,8 @@ public class EstadoActaControllerTest {
 
     // when: Creamos un estado acta
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.ESTADO_ACTA_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevoEstadoActaJson))
+        .perform(MockMvcRequestBuilders.post(ESTADO_ACTA_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoEstadoActaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -123,8 +121,7 @@ public class EstadoActaControllerTest {
     BDDMockito.given(estadoActaService.update(ArgumentMatchers.<EstadoActa>any())).willReturn(estadoActaActualizado);
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.ESTADO_ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceEstadoActaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica el estado acta y lo devuelve
@@ -143,8 +140,7 @@ public class EstadoActaControllerTest {
           throw new EstadoActaNotFoundException(((EstadoActa) invocation.getArgument(0)).getId());
         });
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.ESTADO_ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceEstadoActaJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
@@ -154,8 +150,7 @@ public class EstadoActaControllerTest {
     BDDMockito.given(estadoActaService.findById(ArgumentMatchers.anyLong())).willReturn(generarMockEstadoActa(1L));
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .delete(ConstantesEti.ESTADO_ACTA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.delete(ESTADO_ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -173,9 +168,7 @@ public class EstadoActaControllerTest {
         .willReturn(new PageImpl<>(estadosActas));
 
     // when: find unlimited
-    mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.ESTADO_ACTA_CONTROLLER_BASE_PATH)
-            .accept(MediaType.APPLICATION_JSON))
+    mockMvc.perform(MockMvcRequestBuilders.get(ESTADO_ACTA_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred estados actas
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -208,7 +201,7 @@ public class EstadoActaControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.ESTADO_ACTA_CONTROLLER_BASE_PATH).header("X-Page", "3")
+        .perform(MockMvcRequestBuilders.get(ESTADO_ACTA_CONTROLLER_BASE_PATH).header("X-Page", "3")
             .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked estados actas are returned with the right page information in
@@ -311,7 +304,7 @@ public class EstadoActaControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.ESTADO_ACTA_CONTROLLER_BASE_PATH).param("q", query)
+        .perform(MockMvcRequestBuilders.get(ESTADO_ACTA_CONTROLLER_BASE_PATH).param("q", query)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one estado acta

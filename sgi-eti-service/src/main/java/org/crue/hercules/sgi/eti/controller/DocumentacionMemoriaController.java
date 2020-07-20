@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * DocumentacionMemoriaController
  */
 @RestController
-@RequestMapping(ConstantesEti.DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH)
+@RequestMapping("/documentacionmemorias")
 @Slf4j
 public class DocumentacionMemoriaController {
 
@@ -92,7 +91,7 @@ public class DocumentacionMemoriaController {
    *                                    actualizar.
    * @return {@link DocumentacionMemoria} actualizado.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   DocumentacionMemoria replaceDocumentacionMemoria(@Valid @RequestBody DocumentacionMemoria updatedDocumentacionMemoria,
       @PathVariable Long id) {
     log.debug("replaceDocumentacionMemoria(DocumentacionMemoria updatedDocumentacionMemoria, Long id) - start");
@@ -108,7 +107,7 @@ public class DocumentacionMemoriaController {
    * @param id Identificador de {@link DocumentacionMemoria}.
    * @return {@link DocumentacionMemoria} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   DocumentacionMemoria one(@PathVariable Long id) {
     log.debug("DocumentacionMemoria one(Long id) - start");
     DocumentacionMemoria returnValue = service.findById(id);
@@ -121,7 +120,7 @@ public class DocumentacionMemoriaController {
    * 
    * @param id Identificador de {@link DocumentacionMemoria}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     service.delete(id);

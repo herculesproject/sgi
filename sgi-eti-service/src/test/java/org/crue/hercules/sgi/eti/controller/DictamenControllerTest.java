@@ -11,7 +11,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.DictamenNotFoundException;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.service.DictamenService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -48,14 +47,15 @@ public class DictamenControllerTest {
   @MockBean
   private DictamenService dictamenService;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String DICTAMEN_CONTROLLER_BASE_PATH = "/dictamenes";
+
   @Test
   public void getDictamen_WithId_ReturnsDictamen() throws Exception {
     BDDMockito.given(dictamenService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockDictamen(1L, "Dictamen1")));
 
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(DICTAMEN_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("Dictamen1"));
@@ -67,9 +67,7 @@ public class DictamenControllerTest {
     BDDMockito.given(dictamenService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new DictamenNotFoundException(invocation.getArgument(0));
     });
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(DICTAMEN_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -84,8 +82,8 @@ public class DictamenControllerTest {
 
     // when: Creamos un dictamen
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevoDictamenJson))
+        .perform(MockMvcRequestBuilders.post(DICTAMEN_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoDictamenJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo dictamen y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
@@ -102,8 +100,8 @@ public class DictamenControllerTest {
 
     // when: Creamos un dictamen
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevoDictamenJson))
+        .perform(MockMvcRequestBuilders.post(DICTAMEN_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoDictamenJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -120,8 +118,7 @@ public class DictamenControllerTest {
     BDDMockito.given(dictamenService.update(ArgumentMatchers.<Dictamen>any())).willReturn(dictamen);
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(DICTAMEN_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceDictamenJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica el dictamen y lo devuelve
@@ -139,8 +136,7 @@ public class DictamenControllerTest {
       throw new DictamenNotFoundException(((Dictamen) invocation.getArgument(0)).getId());
     });
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(DICTAMEN_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceDictamenJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
@@ -152,8 +148,7 @@ public class DictamenControllerTest {
         .willReturn(generarMockDictamen(1L, "Dictamen1"));
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .delete(ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.delete(DICTAMEN_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -171,9 +166,7 @@ public class DictamenControllerTest {
         .willReturn(new PageImpl<>(dictamenes));
 
     // when: find unlimited
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.get(ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
+    mockMvc.perform(MockMvcRequestBuilders.get(DICTAMEN_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred Dictamen
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -206,7 +199,7 @@ public class DictamenControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH).header("X-Page", "3")
+        .perform(MockMvcRequestBuilders.get(DICTAMEN_CONTROLLER_BASE_PATH).header("X-Page", "3")
             .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked Dictamens are returned with the right page information
@@ -309,7 +302,7 @@ public class DictamenControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH).param("q", query)
+        .perform(MockMvcRequestBuilders.get(DICTAMEN_CONTROLLER_BASE_PATH).param("q", query)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred Dictamen

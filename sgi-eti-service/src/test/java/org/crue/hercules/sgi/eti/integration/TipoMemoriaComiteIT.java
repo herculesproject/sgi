@@ -7,7 +7,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoriaComite;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,8 +26,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 
 public class TipoMemoriaComiteIT {
+
   @Autowired
   private TestRestTemplate restTemplate;
+
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH = "/tipomemoriacomites";
 
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -38,9 +41,8 @@ public class TipoMemoriaComiteIT {
     Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
     TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria1", Boolean.TRUE);
 
-    final ResponseEntity<TipoMemoriaComite> response = restTemplate.getForEntity(
-        ConstantesEti.TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID,
-        TipoMemoriaComite.class, 1L);
+    final ResponseEntity<TipoMemoriaComite> response = restTemplate
+        .getForEntity(TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, TipoMemoriaComite.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -63,7 +65,7 @@ public class TipoMemoriaComiteIT {
     nuevoTipoMemoriaComite.setComite(comite);
     nuevoTipoMemoriaComite.setTipoMemoria(tipoMemoria);
 
-    restTemplate.postForEntity(ConstantesEti.TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH, nuevoTipoMemoriaComite,
+    restTemplate.postForEntity(TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH, nuevoTipoMemoriaComite,
         TipoMemoriaComite.class);
   }
 
@@ -75,8 +77,8 @@ public class TipoMemoriaComiteIT {
     // when: Delete con id existente
     long id = 1L;
     final ResponseEntity<TipoMemoriaComite> response = restTemplate.exchange(
-        ConstantesEti.TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE,
-        null, TipoMemoriaComite.class, id);
+        TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, TipoMemoriaComite.class,
+        id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -87,11 +89,10 @@ public class TipoMemoriaComiteIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeTipoMemoriaComite_DoNotGetTipoMemoriaComite() throws Exception {
-    restTemplate.delete(ConstantesEti.TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<TipoMemoriaComite> response = restTemplate.getForEntity(
-        ConstantesEti.TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID,
-        TipoMemoriaComite.class, 1L);
+    final ResponseEntity<TipoMemoriaComite> response = restTemplate
+        .getForEntity(TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, TipoMemoriaComite.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -112,8 +113,8 @@ public class TipoMemoriaComiteIT {
 
     final ResponseEntity<TipoMemoriaComite> response = restTemplate.exchange(
 
-        ConstantesEti.TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT,
-        requestEntity, TipoMemoriaComite.class, 1L);
+        TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
+        TipoMemoriaComite.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -133,8 +134,7 @@ public class TipoMemoriaComiteIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH).build(false)
-        .toUri();
+    URI uri = UriComponentsBuilder.fromUriString(TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH).build(false).toUri();
 
     final ResponseEntity<List<TipoMemoriaComite>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoMemoriaComite>>() {
@@ -163,8 +163,8 @@ public class TipoMemoriaComiteIT {
     Long id = 5L;
     String query = "id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH)
-        .queryParam("q", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH).queryParam("q", query)
+        .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<TipoMemoriaComite>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -186,8 +186,8 @@ public class TipoMemoriaComiteIT {
     // when: Ordenación por id desc
     String query = "id-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH)
-        .queryParam("s", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH).queryParam("s", query)
+        .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<TipoMemoriaComite>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -220,8 +220,8 @@ public class TipoMemoriaComiteIT {
     // when: Filtra por id equals
     String filter = "id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH)
-        .queryParam("s", sort).queryParam("q", filter).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<TipoMemoriaComite>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoMemoriaComite>>() {

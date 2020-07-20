@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.service.DictamenService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * DictamenController
  */
 @RestController
-@RequestMapping(ConstantesEti.DICTAMEN_CONTROLLER_BASE_PATH)
+@RequestMapping("/dictamenes")
 @Slf4j
 public class DictamenController {
 
@@ -88,7 +87,7 @@ public class DictamenController {
    * @param id              id {@link Dictamen} a actualizar.
    * @return {@link Dictamen} actualizado.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   Dictamen replaceDictamen(@Valid @RequestBody Dictamen updatedDictamen, @PathVariable Long id) {
     log.debug("replaceDictamen(Dictamen updatedDictamen, Long id) - start");
     updatedDictamen.setId(id);
@@ -103,7 +102,7 @@ public class DictamenController {
    * @param id Identificador de {@link Dictamen}.
    * @return {@link Dictamen} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   Dictamen one(@PathVariable Long id) {
     log.debug("Dictamen one(Long id) - start");
     Dictamen returnValue = service.findById(id);
@@ -116,7 +115,7 @@ public class DictamenController {
    * 
    * @param id Identificador de {@link Dictamen}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     Dictamen dictamen = this.one(id);

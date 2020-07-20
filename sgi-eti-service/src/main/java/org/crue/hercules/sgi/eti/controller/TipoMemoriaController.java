@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.service.TipoMemoriaService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * TipoMemoriaController
  */
 @RestController
-@RequestMapping(ConstantesEti.TIPO_MEMORIA_CONTROLLER_BASE_PATH)
+@RequestMapping("/tipomemorias")
 @Slf4j
 public class TipoMemoriaController {
 
@@ -88,7 +87,7 @@ public class TipoMemoriaController {
    * @param id                 id {@link TipoMemoria} a actualizar.
    * @return {@link TipoMemoria} actualizado.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   TipoMemoria replaceTipoMemoria(@Valid @RequestBody TipoMemoria updatedTipoMemoria, @PathVariable Long id) {
     log.debug("replaceTipoMemoria(TipoMemoria updatedTipoMemoria, Long id) - start");
     updatedTipoMemoria.setId(id);
@@ -103,7 +102,7 @@ public class TipoMemoriaController {
    * @param id Identificador de {@link TipoMemoria}.
    * @return {@link TipoMemoria} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   TipoMemoria one(@PathVariable Long id) {
     log.debug("TipoMemoria one(Long id) - start");
     TipoMemoria returnValue = service.findById(id);
@@ -116,7 +115,7 @@ public class TipoMemoriaController {
    * 
    * @param id Identificador de {@link TipoMemoria}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     TipoMemoria tipoMemoria = this.one(id);

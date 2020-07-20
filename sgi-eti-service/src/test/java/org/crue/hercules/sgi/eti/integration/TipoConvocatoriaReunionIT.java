@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,13 +27,15 @@ public class TipoConvocatoriaReunionIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH = "/tipoconvocatoriareuniones";
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getTipoConvocatoriaReunion_WithId_ReturnsTipoConvocatoriaReunion() throws Exception {
     final ResponseEntity<TipoConvocatoriaReunion> response = restTemplate.getForEntity(
-        ConstantesEti.TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID,
-        TipoConvocatoriaReunion.class, 1L);
+        TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, TipoConvocatoriaReunion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -53,8 +54,8 @@ public class TipoConvocatoriaReunionIT {
     nuevoTipoConvocatoriaReunion.setNombre("TipoConvocatoriaReunion1");
     nuevoTipoConvocatoriaReunion.setActivo(Boolean.TRUE);
 
-    restTemplate.postForEntity(ConstantesEti.TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH,
-        nuevoTipoConvocatoriaReunion, TipoConvocatoriaReunion.class);
+    restTemplate.postForEntity(TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH, nuevoTipoConvocatoriaReunion,
+        TipoConvocatoriaReunion.class);
   }
 
   @Sql
@@ -65,8 +66,8 @@ public class TipoConvocatoriaReunionIT {
     // when: Delete con id existente
     long id = 1L;
     final ResponseEntity<TipoConvocatoriaReunion> response = restTemplate.exchange(
-        ConstantesEti.TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID,
-        HttpMethod.DELETE, null, TipoConvocatoriaReunion.class, id);
+        TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null,
+        TipoConvocatoriaReunion.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -77,12 +78,10 @@ public class TipoConvocatoriaReunionIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeTipoConvocatoriaReunion_DoNotGetTipoConvocatoriaReunion() throws Exception {
-    restTemplate.delete(ConstantesEti.TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID,
-        1L);
+    restTemplate.delete(TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
     final ResponseEntity<TipoConvocatoriaReunion> response = restTemplate.getForEntity(
-        ConstantesEti.TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID,
-        TipoConvocatoriaReunion.class, 1L);
+        TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, TipoConvocatoriaReunion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -101,8 +100,8 @@ public class TipoConvocatoriaReunionIT {
 
     final ResponseEntity<TipoConvocatoriaReunion> response = restTemplate.exchange(
 
-        ConstantesEti.TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT,
-        requestEntity, TipoConvocatoriaReunion.class, 1L);
+        TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
+        TipoConvocatoriaReunion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -122,8 +121,7 @@ public class TipoConvocatoriaReunionIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "1");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).build(false).toUri();
 
     final ResponseEntity<List<TipoConvocatoriaReunion>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoConvocatoriaReunion>>() {
@@ -151,8 +149,8 @@ public class TipoConvocatoriaReunionIT {
     Long id = 3L;
     String query = "nombre~Seguimiento%,id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
-        .queryParam("q", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).queryParam("q", query)
+        .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<TipoConvocatoriaReunion>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -176,8 +174,8 @@ public class TipoConvocatoriaReunionIT {
     // when: Ordenación por nombre desc
     String query = "nombre-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
-        .queryParam("s", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).queryParam("s", query)
+        .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<TipoConvocatoriaReunion>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -209,8 +207,8 @@ public class TipoConvocatoriaReunionIT {
     // when: Filtra por nombre like
     String filter = "nombre~%extra%";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)
-        .queryParam("s", sort).queryParam("q", filter).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<TipoConvocatoriaReunion>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoConvocatoriaReunion>>() {

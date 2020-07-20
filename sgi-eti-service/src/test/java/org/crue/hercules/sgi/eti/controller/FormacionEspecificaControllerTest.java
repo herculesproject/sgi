@@ -11,7 +11,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.FormacionEspecificaNotFoundException;
 import org.crue.hercules.sgi.eti.model.FormacionEspecifica;
 import org.crue.hercules.sgi.eti.service.FormacionEspecificaService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -48,14 +47,15 @@ public class FormacionEspecificaControllerTest {
   @MockBean
   private FormacionEspecificaService formacionEspecificaService;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH = "/formacionespecificas";
+
   @Test
   public void getFormacionEspecifica_WithId_ReturnsFormacionEspecifica() throws Exception {
     BDDMockito.given(formacionEspecificaService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockFormacionEspecifica(1L, "FormacionEspecifica1")));
 
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("FormacionEspecifica1"));
@@ -68,9 +68,7 @@ public class FormacionEspecificaControllerTest {
         .will((InvocationOnMock invocation) -> {
           throw new FormacionEspecificaNotFoundException(invocation.getArgument(0));
         });
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L))
+    mockMvc.perform(MockMvcRequestBuilders.get(FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -86,7 +84,7 @@ public class FormacionEspecificaControllerTest {
 
     // when: Creamos una formación específica
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH)
+        .perform(MockMvcRequestBuilders.post(FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH)
             .contentType(MediaType.APPLICATION_JSON).content(nuevoFormacionEspecificaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea la nueva formación específica y lo devuelve
@@ -104,7 +102,7 @@ public class FormacionEspecificaControllerTest {
 
     // when: Creamos una formación específica
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH)
+        .perform(MockMvcRequestBuilders.post(FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH)
             .contentType(MediaType.APPLICATION_JSON).content(nuevoFormacionEspecificaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
@@ -123,8 +121,7 @@ public class FormacionEspecificaControllerTest {
         .willReturn(formacionEspecifica);
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceFormacionEspecificaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica la formación específica y la devuelve
@@ -143,8 +140,7 @@ public class FormacionEspecificaControllerTest {
           throw new FormacionEspecificaNotFoundException(((FormacionEspecifica) invocation.getArgument(0)).getId());
         });
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON).content(replaceFormacionEspecificaJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
@@ -156,8 +152,7 @@ public class FormacionEspecificaControllerTest {
         .willReturn(generarMockFormacionEspecifica(1L, "FormacionEspecifica1"));
 
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .delete(ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.delete(FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
@@ -176,8 +171,8 @@ public class FormacionEspecificaControllerTest {
 
     // when: find unlimited
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH)
-            .accept(MediaType.APPLICATION_JSON))
+        .perform(
+            MockMvcRequestBuilders.get(FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred FormacionEspecifica
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -210,8 +205,8 @@ public class FormacionEspecificaControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH)
-            .header("X-Page", "3").header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.get(FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH).header("X-Page", "3")
+            .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked FormacionEspecificas are returned with the right page
         // information
@@ -315,7 +310,7 @@ public class FormacionEspecificaControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ConstantesEti.FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH).param("q", query)
+        .perform(MockMvcRequestBuilders.get(FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH).param("q", query)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred FormacionEspecifica

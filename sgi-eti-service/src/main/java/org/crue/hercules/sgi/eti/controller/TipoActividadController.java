@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.service.TipoActividadService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * TipoActividadController
  */
 @RestController
-@RequestMapping(ConstantesEti.TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH)
+@RequestMapping("/tipoactividades")
 @Slf4j
 public class TipoActividadController {
 
@@ -88,7 +87,7 @@ public class TipoActividadController {
    * @param id                   id {@link TipoActividad} a actualizar.
    * @return {@link TipoActividad} actualizado.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   TipoActividad replaceTipoActividad(@Valid @RequestBody TipoActividad updatedTipoActividad, @PathVariable Long id) {
     log.debug("replaceTipoActividad(TipoActividad updatedTipoActividad, Long id) - start");
     updatedTipoActividad.setId(id);
@@ -103,7 +102,7 @@ public class TipoActividadController {
    * @param id Identificador de {@link TipoActividad}.
    * @return {@link TipoActividad} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   TipoActividad one(@PathVariable Long id) {
     log.debug("TipoActividad one(Long id) - start");
     TipoActividad returnValue = service.findById(id);
@@ -116,7 +115,7 @@ public class TipoActividadController {
    * 
    * @param id Identificador de {@link TipoActividad}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     TipoActividad tipoActividad = this.one(id);

@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.service.EquipoTrabajoService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * EquipoTrabajoController
  */
 @RestController
-@RequestMapping(ConstantesEti.EQUIPO_TRABAJO_CONTROLLER_BASE_PATH)
+@RequestMapping("/equipotrabajos")
 @Slf4j
 public class EquipoTrabajoController {
 
@@ -88,7 +87,7 @@ public class EquipoTrabajoController {
    * @param id                   id {@link EquipoTrabajo} a actualizar.
    * @return {@link EquipoTrabajo} actualizado.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   EquipoTrabajo replaceEquipoTrabajo(@Valid @RequestBody EquipoTrabajo updatedEquipoTrabajo, @PathVariable Long id) {
     log.debug("replaceEquipoTrabajo(EquipoTrabajo updatedEquipoTrabajo, Long id) - start");
     updatedEquipoTrabajo.setId(id);
@@ -103,7 +102,7 @@ public class EquipoTrabajoController {
    * @param id Identificador de {@link EquipoTrabajo}.
    * @return {@link EquipoTrabajo} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   EquipoTrabajo one(@PathVariable Long id) {
     log.debug("EquipoTrabajo one(Long id) - start");
     EquipoTrabajo returnValue = service.findById(id);
@@ -116,7 +115,7 @@ public class EquipoTrabajoController {
    * 
    * @param id Identificador de {@link EquipoTrabajo}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     service.delete(id);

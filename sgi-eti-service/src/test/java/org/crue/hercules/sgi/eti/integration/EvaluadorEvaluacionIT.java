@@ -10,7 +10,6 @@ import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.EvaluadorEvaluacion;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,13 +32,15 @@ public class EvaluadorEvaluacionIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH = "/evaluadorevaluaciones";
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getEvaluadorEvaluacion_WithId_ReturnsEvaluadorEvaluacion() throws Exception {
-    final ResponseEntity<EvaluadorEvaluacion> response = restTemplate.getForEntity(
-        ConstantesEti.EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID,
-        EvaluadorEvaluacion.class, 1L);
+    final ResponseEntity<EvaluadorEvaluacion> response = restTemplate
+        .getForEntity(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, EvaluadorEvaluacion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -56,7 +57,7 @@ public class EvaluadorEvaluacionIT {
 
     EvaluadorEvaluacion nuevoEvaluadorEvaluacion = generarMockEvaluadorEvaluacion(null);
 
-    restTemplate.postForEntity(ConstantesEti.EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH, nuevoEvaluadorEvaluacion,
+    restTemplate.postForEntity(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH, nuevoEvaluadorEvaluacion,
         EvaluadorEvaluacion.class);
   }
 
@@ -68,8 +69,8 @@ public class EvaluadorEvaluacionIT {
     // when: Delete con id existente
     long id = 1L;
     final ResponseEntity<EvaluadorEvaluacion> response = restTemplate.exchange(
-        ConstantesEti.EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE,
-        null, EvaluadorEvaluacion.class, id);
+        EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null,
+        EvaluadorEvaluacion.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -80,11 +81,10 @@ public class EvaluadorEvaluacionIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeEvaluadorEvaluacion_DoNotGetEvaluadorEvaluacion() throws Exception {
-    restTemplate.delete(ConstantesEti.EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<EvaluadorEvaluacion> response = restTemplate.getForEntity(
-        ConstantesEti.EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID,
-        EvaluadorEvaluacion.class, 1L);
+    final ResponseEntity<EvaluadorEvaluacion> response = restTemplate
+        .getForEntity(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, EvaluadorEvaluacion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -102,8 +102,8 @@ public class EvaluadorEvaluacionIT {
 
     final ResponseEntity<EvaluadorEvaluacion> response = restTemplate.exchange(
 
-        ConstantesEti.EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT,
-        requestEntity, EvaluadorEvaluacion.class, 1L);
+        EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
+        EvaluadorEvaluacion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -123,8 +123,7 @@ public class EvaluadorEvaluacionIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH).build(false)
-        .toUri();
+    URI uri = UriComponentsBuilder.fromUriString(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH).build(false).toUri();
 
     final ResponseEntity<List<EvaluadorEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<EvaluadorEvaluacion>>() {
@@ -153,8 +152,8 @@ public class EvaluadorEvaluacionIT {
     Long id = 5L;
     String query = "id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH)
-        .queryParam("q", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH).queryParam("q", query)
+        .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<EvaluadorEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -176,8 +175,8 @@ public class EvaluadorEvaluacionIT {
     // when: Ordenación por id desc
     String query = "id-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH)
-        .queryParam("s", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", query)
+        .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<EvaluadorEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -209,8 +208,8 @@ public class EvaluadorEvaluacionIT {
     Long id = 5L;
     String filter = "id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH)
-        .queryParam("s", sort).queryParam("q", filter).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<EvaluadorEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<EvaluadorEvaluacion>>() {

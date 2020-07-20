@@ -6,7 +6,6 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +28,9 @@ public class TipoDocumentoIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String TIPO_DOCUMENTO_CONTROLLER_BASE_PATH = "/tipodocumentos";
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
@@ -36,8 +38,8 @@ public class TipoDocumentoIT {
 
     Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
 
-    final ResponseEntity<TipoDocumento> response = restTemplate.getForEntity(
-        ConstantesEti.TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, TipoDocumento.class, 1L);
+    final ResponseEntity<TipoDocumento> response = restTemplate
+        .getForEntity(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, TipoDocumento.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -60,8 +62,7 @@ public class TipoDocumentoIT {
     nuevoTipoDocumento.setComite(comite);
     nuevoTipoDocumento.setActivo(Boolean.TRUE);
 
-    restTemplate.postForEntity(ConstantesEti.TIPO_DOCUMENTO_CONTROLLER_BASE_PATH, nuevoTipoDocumento,
-        TipoDocumento.class);
+    restTemplate.postForEntity(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH, nuevoTipoDocumento, TipoDocumento.class);
   }
 
   @Sql
@@ -72,8 +73,7 @@ public class TipoDocumentoIT {
     // when: Delete con id existente
     long id = 1L;
     final ResponseEntity<TipoDocumento> response = restTemplate.exchange(
-        ConstantesEti.TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE, null,
-        TipoDocumento.class, id);
+        TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, TipoDocumento.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -84,10 +84,10 @@ public class TipoDocumentoIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeTipoDocumento_DoNotGetTipoDocumento() throws Exception {
-    restTemplate.delete(ConstantesEti.TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<TipoDocumento> response = restTemplate.getForEntity(
-        ConstantesEti.TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, TipoDocumento.class, 1L);
+    final ResponseEntity<TipoDocumento> response = restTemplate
+        .getForEntity(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, TipoDocumento.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -107,8 +107,8 @@ public class TipoDocumentoIT {
 
     final ResponseEntity<TipoDocumento> response = restTemplate.exchange(
 
-        ConstantesEti.TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT,
-        requestEntity, TipoDocumento.class, 1L);
+        TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity, TipoDocumento.class,
+        1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -129,8 +129,7 @@ public class TipoDocumentoIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_DOCUMENTO_CONTROLLER_BASE_PATH).build(false)
-        .toUri();
+    URI uri = UriComponentsBuilder.fromUriString(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH).build(false).toUri();
 
     final ResponseEntity<List<TipoDocumento>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoDocumento>>() {
@@ -159,8 +158,8 @@ public class TipoDocumentoIT {
     Long id = 5L;
     String query = "nombre~TipoDocumento%,id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_DOCUMENTO_CONTROLLER_BASE_PATH)
-        .queryParam("q", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH).queryParam("q", query)
+        .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<TipoDocumento>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -183,8 +182,8 @@ public class TipoDocumentoIT {
     // when: Ordenación por nombre desc
     String query = "nombre-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_DOCUMENTO_CONTROLLER_BASE_PATH)
-        .queryParam("s", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH).queryParam("s", query)
+        .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<TipoDocumento>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -216,8 +215,8 @@ public class TipoDocumentoIT {
     // when: Filtra por nombre like e id equals
     String filter = "nombre~%00%";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.TIPO_DOCUMENTO_CONTROLLER_BASE_PATH)
-        .queryParam("s", sort).queryParam("q", filter).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<TipoDocumento>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoDocumento>>() {

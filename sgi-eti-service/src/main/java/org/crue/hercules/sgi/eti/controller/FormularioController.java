@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.service.FormularioService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * FormularioController
  */
 @RestController
-@RequestMapping(ConstantesEti.FORMULARIO_CONTROLLER_BASE_PATH)
+@RequestMapping("/formularios")
 @Slf4j
 public class FormularioController {
 
@@ -88,7 +87,7 @@ public class FormularioController {
    * @param id                id {@link Formulario} a actualizar.
    * @return {@link Formulario} actualizado.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   Formulario replaceFormulario(@Valid @RequestBody Formulario updatedFormulario, @PathVariable Long id) {
     log.debug("replaceFormulario(Formulario updatedFormulario, Long id) - start");
     updatedFormulario.setId(id);
@@ -103,7 +102,7 @@ public class FormularioController {
    * @param id Identificador de {@link Formulario}.
    * @return {@link Formulario} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   Formulario one(@PathVariable Long id) {
     log.debug("Formulario one(Long id) - start");
     Formulario returnValue = service.findById(id);
@@ -116,7 +115,7 @@ public class FormularioController {
    * 
    * @param id Identificador de {@link Formulario}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     Formulario formulario = this.one(id);

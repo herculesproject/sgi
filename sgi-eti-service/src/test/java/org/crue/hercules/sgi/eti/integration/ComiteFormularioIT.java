@@ -7,7 +7,6 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.ComiteFormulario;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,8 +26,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 
 public class ComiteFormularioIT {
+
   @Autowired
   private TestRestTemplate restTemplate;
+
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String COMITE_FORMULARIO_CONTROLLER_BASE_PATH = "/comiteformularios";
 
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -38,9 +41,8 @@ public class ComiteFormularioIT {
     Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
     Formulario formulario = new Formulario(1L, "M10", "Descripcion", Boolean.TRUE);
 
-    final ResponseEntity<ComiteFormulario> response = restTemplate.getForEntity(
-        ConstantesEti.COMITE_FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, ComiteFormulario.class,
-        1L);
+    final ResponseEntity<ComiteFormulario> response = restTemplate
+        .getForEntity(COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, ComiteFormulario.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -63,8 +65,7 @@ public class ComiteFormularioIT {
     nuevoComiteFormulario.setComite(comite);
     nuevoComiteFormulario.setFormulario(formulario);
 
-    restTemplate.postForEntity(ConstantesEti.COMITE_FORMULARIO_CONTROLLER_BASE_PATH, nuevoComiteFormulario,
-        ComiteFormulario.class);
+    restTemplate.postForEntity(COMITE_FORMULARIO_CONTROLLER_BASE_PATH, nuevoComiteFormulario, ComiteFormulario.class);
   }
 
   @Sql
@@ -75,8 +76,8 @@ public class ComiteFormularioIT {
     // when: Delete con id existente
     long id = 1L;
     final ResponseEntity<ComiteFormulario> response = restTemplate.exchange(
-        ConstantesEti.COMITE_FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE, null,
-        ComiteFormulario.class, id);
+        COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, ComiteFormulario.class,
+        id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -87,11 +88,10 @@ public class ComiteFormularioIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeComiteFormulario_DoNotGetComiteFormulario() throws Exception {
-    restTemplate.delete(ConstantesEti.COMITE_FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<ComiteFormulario> response = restTemplate.getForEntity(
-        ConstantesEti.COMITE_FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, ComiteFormulario.class,
-        1L);
+    final ResponseEntity<ComiteFormulario> response = restTemplate
+        .getForEntity(COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, ComiteFormulario.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -112,8 +112,8 @@ public class ComiteFormularioIT {
 
     final ResponseEntity<ComiteFormulario> response = restTemplate.exchange(
 
-        ConstantesEti.COMITE_FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT,
-        requestEntity, ComiteFormulario.class, 1L);
+        COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
+        ComiteFormulario.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -133,8 +133,7 @@ public class ComiteFormularioIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.COMITE_FORMULARIO_CONTROLLER_BASE_PATH).build(false)
-        .toUri();
+    URI uri = UriComponentsBuilder.fromUriString(COMITE_FORMULARIO_CONTROLLER_BASE_PATH).build(false).toUri();
 
     final ResponseEntity<List<ComiteFormulario>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<ComiteFormulario>>() {
@@ -163,8 +162,8 @@ public class ComiteFormularioIT {
     Long id = 5L;
     String query = "id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.COMITE_FORMULARIO_CONTROLLER_BASE_PATH)
-        .queryParam("q", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(COMITE_FORMULARIO_CONTROLLER_BASE_PATH).queryParam("q", query)
+        .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<ComiteFormulario>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -186,8 +185,8 @@ public class ComiteFormularioIT {
     // when: Ordenación por id desc
     String query = "id-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.COMITE_FORMULARIO_CONTROLLER_BASE_PATH)
-        .queryParam("s", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(COMITE_FORMULARIO_CONTROLLER_BASE_PATH).queryParam("s", query)
+        .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<ComiteFormulario>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -220,8 +219,8 @@ public class ComiteFormularioIT {
     // when: Filtra por id equals
     String filter = "id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.COMITE_FORMULARIO_CONTROLLER_BASE_PATH)
-        .queryParam("s", sort).queryParam("q", filter).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(COMITE_FORMULARIO_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<ComiteFormulario>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<ComiteFormulario>>() {

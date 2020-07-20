@@ -6,7 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.BloqueFormulario;
 import org.crue.hercules.sgi.eti.service.BloqueFormularioService;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * BloqueFormularioController
  */
 @RestController
-@RequestMapping(ConstantesEti.BLOQUE_FORMULARIO_CONTROLLER_BASE_PATH)
+@RequestMapping("/bloqueformularios")
 @Slf4j
 public class BloqueFormularioController {
 
@@ -88,7 +87,7 @@ public class BloqueFormularioController {
    * @param id                      id {@link BloqueFormulario} a actualizar.
    * @return {@link BloqueFormulario} actualizado.
    */
-  @PutMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @PutMapping("/{id}")
   BloqueFormulario replaceBloqueFormulario(@Valid @RequestBody BloqueFormulario updatedBloqueFormulario,
       @PathVariable Long id) {
     log.debug("replaceBloqueFormulario(BloqueFormulario updatedBloqueFormulario, Long id) - start");
@@ -104,7 +103,7 @@ public class BloqueFormularioController {
    * @param id Identificador de {@link BloqueFormulario}.
    * @return {@link BloqueFormulario} correspondiente al id.
    */
-  @GetMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @GetMapping("/{id}")
   BloqueFormulario one(@PathVariable Long id) {
     log.debug("BloqueFormulario one(Long id) - start");
     BloqueFormulario returnValue = service.findById(id);
@@ -117,7 +116,7 @@ public class BloqueFormularioController {
    * 
    * @param id Identificador de {@link BloqueFormulario}.
    */
-  @DeleteMapping(ConstantesEti.PATH_PARAMETER_ID)
+  @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     BloqueFormulario bloqueFormulario = this.one(id);

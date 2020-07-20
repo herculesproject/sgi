@@ -15,7 +15,6 @@ import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,12 +37,15 @@ public class EvaluacionIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String EVALUACION_CONTROLLER_BASE_PATH = "/evaluaciones";
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getEvaluacion_WithId_ReturnsEvaluacion() throws Exception {
-    final ResponseEntity<Evaluacion> response = restTemplate.getForEntity(
-        ConstantesEti.EVALUACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, Evaluacion.class, 1L);
+    final ResponseEntity<Evaluacion> response = restTemplate
+        .getForEntity(EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, Evaluacion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -63,7 +65,7 @@ public class EvaluacionIT {
     Evaluacion nuevoEvaluacion = new Evaluacion();
     nuevoEvaluacion.setActivo(Boolean.TRUE);
 
-    restTemplate.postForEntity(ConstantesEti.EVALUACION_CONTROLLER_BASE_PATH, nuevoEvaluacion, Evaluacion.class);
+    restTemplate.postForEntity(EVALUACION_CONTROLLER_BASE_PATH, nuevoEvaluacion, Evaluacion.class);
   }
 
   @Sql
@@ -73,9 +75,8 @@ public class EvaluacionIT {
 
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<Evaluacion> response = restTemplate.exchange(
-        ConstantesEti.EVALUACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE, null,
-        Evaluacion.class, id);
+    final ResponseEntity<Evaluacion> response = restTemplate
+        .exchange(EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, Evaluacion.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -86,10 +87,10 @@ public class EvaluacionIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeEvaluacion_DoNotGetEvaluacion() throws Exception {
-    restTemplate.delete(ConstantesEti.EVALUACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<Evaluacion> response = restTemplate.getForEntity(
-        ConstantesEti.EVALUACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, Evaluacion.class, 1L);
+    final ResponseEntity<Evaluacion> response = restTemplate
+        .getForEntity(EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, Evaluacion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -105,8 +106,7 @@ public class EvaluacionIT {
     final HttpEntity<Evaluacion> requestEntity = new HttpEntity<Evaluacion>(replaceEvaluacion, new HttpHeaders());
 
     final ResponseEntity<Evaluacion> response = restTemplate.exchange(
-        ConstantesEti.EVALUACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
-        Evaluacion.class, 1L);
+        EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity, Evaluacion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -127,7 +127,7 @@ public class EvaluacionIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.EVALUACION_CONTROLLER_BASE_PATH).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(EVALUACION_CONTROLLER_BASE_PATH).build(false).toUri();
 
     final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<Evaluacion>>() {
@@ -165,8 +165,8 @@ public class EvaluacionIT {
     Long id = 5L;
     String query = "esRevMinima:true,id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.EVALUACION_CONTROLLER_BASE_PATH).queryParam("q", query)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(EVALUACION_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
+        .toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -191,8 +191,8 @@ public class EvaluacionIT {
     // when: Ordenación por id desc
     String query = "id-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", query)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", query).build(false)
+        .toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -209,7 +209,8 @@ public class EvaluacionIT {
       Assertions.assertThat(evaluacion.getId()).isEqualTo(8 - i);
       Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%03d", 8 - i));
       Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen" + String.format("%03d", 8 - i));
-      Assertions.assertThat(evaluacion.getConvocatoriaReunion().getCodigo()).isEqualTo("CR-" + String.format("%03d", 8 - i));
+      Assertions.assertThat(evaluacion.getConvocatoriaReunion().getCodigo())
+          .isEqualTo("CR-" + String.format("%03d", 8 - i));
     }
   }
 
@@ -226,7 +227,7 @@ public class EvaluacionIT {
     // when: Filtra por version equals
     String filter = "version:2";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", sort)
+    URI uri = UriComponentsBuilder.fromUriString(EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
@@ -342,7 +343,7 @@ public class EvaluacionIT {
     evaluacion.setConvocatoriaReunion(convocatoriaReunion);
     evaluacion.setVersion(2);
     evaluacion.setActivo(Boolean.TRUE);
-    
+
     return evaluacion;
   }
 

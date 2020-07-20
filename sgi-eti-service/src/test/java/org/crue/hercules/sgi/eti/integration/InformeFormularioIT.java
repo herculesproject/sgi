@@ -13,7 +13,6 @@ import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,13 +35,15 @@ public class InformeFormularioIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String INFORME_FORMULARIO_CONTROLLER_BASE_PATH = "/informeformularios";
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getInformeFormulario_WithId_ReturnsInformeFormulario() throws Exception {
-    final ResponseEntity<InformeFormulario> response = restTemplate.getForEntity(
-        ConstantesEti.INFORME_FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID,
-        InformeFormulario.class, 1L);
+    final ResponseEntity<InformeFormulario> response = restTemplate
+        .getForEntity(INFORME_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, InformeFormulario.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -60,7 +61,7 @@ public class InformeFormularioIT {
     InformeFormulario nuevoInformeFormulario = new InformeFormulario();
     nuevoInformeFormulario.setDocumentoRef("DocumentoFormulario1");
 
-    restTemplate.postForEntity(ConstantesEti.INFORME_FORMULARIO_CONTROLLER_BASE_PATH, nuevoInformeFormulario,
+    restTemplate.postForEntity(INFORME_FORMULARIO_CONTROLLER_BASE_PATH, nuevoInformeFormulario,
         InformeFormulario.class);
   }
 
@@ -72,8 +73,8 @@ public class InformeFormularioIT {
     // when: Delete con id existente
     long id = 1L;
     final ResponseEntity<InformeFormulario> response = restTemplate.exchange(
-        ConstantesEti.INFORME_FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE,
-        null, InformeFormulario.class, id);
+        INFORME_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, InformeFormulario.class,
+        id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -84,11 +85,10 @@ public class InformeFormularioIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeInformeFormulario_DoNotGetInformeFormulario() throws Exception {
-    restTemplate.delete(ConstantesEti.INFORME_FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(INFORME_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<InformeFormulario> response = restTemplate.getForEntity(
-        ConstantesEti.INFORME_FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID,
-        InformeFormulario.class, 1L);
+    final ResponseEntity<InformeFormulario> response = restTemplate
+        .getForEntity(INFORME_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, InformeFormulario.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -106,8 +106,8 @@ public class InformeFormularioIT {
 
     final ResponseEntity<InformeFormulario> response = restTemplate.exchange(
 
-        ConstantesEti.INFORME_FORMULARIO_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT,
-        requestEntity, InformeFormulario.class, 1L);
+        INFORME_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
+        InformeFormulario.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -126,8 +126,7 @@ public class InformeFormularioIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.INFORME_FORMULARIO_CONTROLLER_BASE_PATH).build(false)
-        .toUri();
+    URI uri = UriComponentsBuilder.fromUriString(INFORME_FORMULARIO_CONTROLLER_BASE_PATH).build(false).toUri();
 
     final ResponseEntity<List<InformeFormulario>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<InformeFormulario>>() {
@@ -156,8 +155,8 @@ public class InformeFormularioIT {
     Long id = 5L;
     String query = "documentoRef~DocumentoFormulario%,id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.INFORME_FORMULARIO_CONTROLLER_BASE_PATH)
-        .queryParam("q", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(INFORME_FORMULARIO_CONTROLLER_BASE_PATH).queryParam("q", query)
+        .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<InformeFormulario>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -180,8 +179,8 @@ public class InformeFormularioIT {
     // when: Ordenación por documentoRef desc
     String query = "documentoRef-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.INFORME_FORMULARIO_CONTROLLER_BASE_PATH)
-        .queryParam("s", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(INFORME_FORMULARIO_CONTROLLER_BASE_PATH).queryParam("s", query)
+        .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<InformeFormulario>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -214,8 +213,8 @@ public class InformeFormularioIT {
     // when: Filtra por documentoRef like e id equals
     String filter = "documentoRef~%00%";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.INFORME_FORMULARIO_CONTROLLER_BASE_PATH)
-        .queryParam("s", sort).queryParam("q", filter).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(INFORME_FORMULARIO_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<InformeFormulario>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<InformeFormulario>>() {

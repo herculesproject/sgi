@@ -7,7 +7,6 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
-import org.crue.hercules.sgi.eti.util.ConstantesEti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,13 +29,15 @@ public class PeticionEvaluacionIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PETICION_EVALUACION_CONTROLLER_BASE_PATH = "/peticionevaluaciones";
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getPeticionEvaluacion_WithId_ReturnsPeticionEvaluacion() throws Exception {
-    final ResponseEntity<PeticionEvaluacion> response = restTemplate.getForEntity(
-        ConstantesEti.PETICION_EVALUACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID,
-        PeticionEvaluacion.class, 1L);
+    final ResponseEntity<PeticionEvaluacion> response = restTemplate
+        .getForEntity(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, PeticionEvaluacion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -55,7 +56,7 @@ public class PeticionEvaluacionIT {
     nuevoPeticionEvaluacion.setTitulo("PeticionEvaluacion1");
     nuevoPeticionEvaluacion.setActivo(Boolean.TRUE);
 
-    restTemplate.postForEntity(ConstantesEti.PETICION_EVALUACION_CONTROLLER_BASE_PATH, nuevoPeticionEvaluacion,
+    restTemplate.postForEntity(PETICION_EVALUACION_CONTROLLER_BASE_PATH, nuevoPeticionEvaluacion,
         PeticionEvaluacion.class);
   }
 
@@ -67,8 +68,8 @@ public class PeticionEvaluacionIT {
     // when: Delete con id existente
     long id = 1L;
     final ResponseEntity<PeticionEvaluacion> response = restTemplate.exchange(
-        ConstantesEti.PETICION_EVALUACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.DELETE,
-        null, PeticionEvaluacion.class, id);
+        PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, PeticionEvaluacion.class,
+        id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -79,11 +80,10 @@ public class PeticionEvaluacionIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removePeticionEvaluacion_DoNotGetPeticionEvaluacion() throws Exception {
-    restTemplate.delete(ConstantesEti.PETICION_EVALUACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<PeticionEvaluacion> response = restTemplate.getForEntity(
-        ConstantesEti.PETICION_EVALUACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID,
-        PeticionEvaluacion.class, 1L);
+    final ResponseEntity<PeticionEvaluacion> response = restTemplate
+        .getForEntity(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, PeticionEvaluacion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -101,8 +101,8 @@ public class PeticionEvaluacionIT {
 
     final ResponseEntity<PeticionEvaluacion> response = restTemplate.exchange(
 
-        ConstantesEti.PETICION_EVALUACION_CONTROLLER_BASE_PATH + ConstantesEti.PATH_PARAMETER_ID, HttpMethod.PUT,
-        requestEntity, PeticionEvaluacion.class, 1L);
+        PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
+        PeticionEvaluacion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -122,8 +122,7 @@ public class PeticionEvaluacionIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.PETICION_EVALUACION_CONTROLLER_BASE_PATH).build(false)
-        .toUri();
+    URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH).build(false).toUri();
 
     final ResponseEntity<List<PeticionEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<PeticionEvaluacion>>() {
@@ -152,8 +151,8 @@ public class PeticionEvaluacionIT {
     Long id = 5L;
     String query = "titulo~PeticionEvaluacion%,id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.PETICION_EVALUACION_CONTROLLER_BASE_PATH)
-        .queryParam("q", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH).queryParam("q", query)
+        .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<PeticionEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -176,8 +175,8 @@ public class PeticionEvaluacionIT {
     // when: Ordenación por titulo desc
     String query = "titulo-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.PETICION_EVALUACION_CONTROLLER_BASE_PATH)
-        .queryParam("s", query).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", query)
+        .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<PeticionEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
@@ -209,8 +208,8 @@ public class PeticionEvaluacionIT {
     // when: Filtra por titulo like e id equals
     String filter = "titulo~%00%";
 
-    URI uri = UriComponentsBuilder.fromUriString(ConstantesEti.PETICION_EVALUACION_CONTROLLER_BASE_PATH)
-        .queryParam("s", sort).queryParam("q", filter).build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<PeticionEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
         new HttpEntity<>(headers), new ParameterizedTypeReference<List<PeticionEvaluacion>>() {
