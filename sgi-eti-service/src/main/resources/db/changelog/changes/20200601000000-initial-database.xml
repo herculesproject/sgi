@@ -140,6 +140,10 @@
     <createSequence sequenceName="evaluador_evaluacion_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-respuesta_formulario_seq">
+    <createSequence sequenceName="respuesta_formulario_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -657,6 +661,19 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-respuesta_formulario">
+    <createTable tableName="respuesta_formulario">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="respuesta_formulario_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="respuesta_formulario_pk" />
+      </column>
+      <column name="formulario_memoria_id" type="BIGINT" />
+      <column name="componente_formulario_id" type="BIGINT" />
+      <column name="valor" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
   <!-- ########################################################## -->
@@ -834,6 +851,14 @@
 
   <changeSet author="master" id="20200601000000-comentario_tipo_comentario_FK">
     <addForeignKeyConstraint baseColumnNames="tipo_comentario_id" baseTableName="comentario" constraintName="comentario_tipo_comentario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_comentario" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-respuesta_formulario_formulario_memoria_FK">
+    <addForeignKeyConstraint baseColumnNames="formulario_memoria_id" baseTableName="respuesta_formulario" constraintName="respuesta_formulario_formulario_memoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="formulario_memoria" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-respuesta_formulario_componente_formulario_FK">
+    <addForeignKeyConstraint baseColumnNames="componente_formulario_id" baseTableName="respuesta_formulario" constraintName="respuesta_formulario_componente_formulario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="componente_formulario" validate="true" />
   </changeSet>
 
   <!-- ########################################################## -->

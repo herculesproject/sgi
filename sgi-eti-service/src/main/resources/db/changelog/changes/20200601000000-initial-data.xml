@@ -1160,4 +1160,37 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-respuesta_formulario">
+    <insert tableName="respuesta_formulario">
+      <column name="formulario_memoria_id" valueComputed="(select id from eti.formulario_memoria where id=1)" />
+      <column name="componente_formulario_id" valueComputed="(select id from eti.componente_formulario where id=1)" />
+      <column name="valor" value="Valor1" />
+    </insert>
+    <insert tableName="respuesta_formulario">
+      <column name="formulario_memoria_id" valueComputed="(select id from eti.formulario_memoria where id=2)" />
+      <column name="componente_formulario_id" valueComputed="(select id from eti.componente_formulario where id=2)" />
+      <column name="valor" value="Valor2" />
+    </insert>
+    <insert tableName="respuesta_formulario">
+      <column name="formulario_memoria_id" valueComputed="(select id from eti.formulario_memoria where id=3)" />
+      <column name="componente_formulario_id" valueComputed="(select id from eti.componente_formulario where id=3)" />
+      <column name="valor" value="Valor3" />
+    </insert>
+    <insert tableName="respuesta_formulario">
+      <column name="formulario_memoria_id" valueComputed="(select id from eti.formulario_memoria where id=4)" />
+      <column name="componente_formulario_id" valueComputed="(select id from eti.componente_formulario where id=4)" />
+      <column name="valor" value="Valor4" />
+    </insert>
+    <insert tableName="respuesta_formulario">
+      <column name="formulario_memoria_id" valueComputed="(select id from eti.formulario_memoria where id=5)" />
+      <column name="componente_formulario_id" valueComputed="(select id from eti.componente_formulario where id=5)" />
+      <column name="valor" value="Valor5" />
+    </insert>
+    <insert tableName="respuesta_formulario">
+      <column name="formulario_memoria_id" valueComputed="(select id from eti.formulario_memoria where id=6)" />
+      <column name="componente_formulario_id" valueComputed="(select id from eti.componente_formulario where id=6)" />
+      <column name="valor" value="Valor6" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>

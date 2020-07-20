@@ -1,4 +1,5 @@
 -- vacia la bd
+DELETE FROM eti.respuesta_formulario
 DELETE FROM eti.documentacion_memoria
 DELETE FROM eti.tarea
 DELETE FROM eti.informe_formulario
@@ -34,3 +35,5 @@ DELETE FROM eti.tipo_comentario
 DELETE FROM eti.formulario
 DELETE FROM eti.componente_formulario
 DELETE FROM eti.configuracion
+
+
