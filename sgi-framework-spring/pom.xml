@@ -55,18 +55,16 @@
 
     <!-- Dependencies versions -->
     <jsr305.version>1.3.7</jsr305.version>
-    <!-- Keycloak Version (must match deployed version) -->
-    <org.keycloak.version>10.0.1</org.keycloak.version>
+    <wiremock.version>2.27.1</wiremock.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.keycloak.bom</groupId>
-        <artifactId>keycloak-adapter-bom</artifactId>
-        <version>${org.keycloak.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
+        <groupId>com.github.tomakehurst</groupId>
+        <artifactId>wiremock-jre8</artifactId>
+        <version>${wiremock.version}</version>
+        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -91,6 +89,10 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -111,14 +113,6 @@
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <scope>runtime</scope>
-    </dependency>
-
-    <!-- ============================================== -->
-    <!-- ================= KEYCLOAK =================== -->
-    <!-- ============================================== -->
-    <dependency>
-      <groupId>org.keycloak</groupId>
-      <artifactId>keycloak-spring-security-adapter</artifactId>
     </dependency>
 
     <!-- ============================================== -->
@@ -150,6 +144,20 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
+    </dependency>
+
+    <!-- ============================================== -->
+    <!-- =============== TEST SUPPORT ================= -->
+    <!-- ============================================== -->
+    <dependency>
+      <groupId>com.github.tomakehurst</groupId>
+      <artifactId>wiremock-jre8</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-test</artifactId>
+      <scope>compile</scope>
     </dependency>
 
     <!-- ============================================== -->
