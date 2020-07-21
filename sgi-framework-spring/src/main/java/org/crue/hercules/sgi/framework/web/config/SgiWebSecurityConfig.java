@@ -19,6 +19,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -30,6 +31,8 @@ public class SgiWebSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     http.exceptionHandling().accessDeniedHandler(accessDeniedHandler())
         .authenticationEntryPoint(authenticationEntryPoint()).and()
+        // CSRF protection by cookie
+        .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
         // Require authentication for all requests except for error
         .authorizeRequests().antMatchers("/error").permitAll().antMatchers("/**").authenticated().and()
         // Validate tokens through configured OpenID Provider
