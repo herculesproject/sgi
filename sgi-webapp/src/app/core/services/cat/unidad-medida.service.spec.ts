@@ -1,11 +1,11 @@
-import {TestBed} from '@angular/core/testing';
-
-import {UnidadMedidaService} from './unidad-medida.service';
-import {HttpClientModule} from '@angular/common/http';
-import {NGXLogger} from 'ngx-logger';
-import {LayoutService} from './layout.service';
+import { HttpClientModule } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
-import {RouterTestingModule} from '@angular/router/testing';
+import { NGXLogger } from 'ngx-logger';
+
+import { LayoutService } from '../layout.service';
+import { UnidadMedidaService } from './unidad-medida.service';
 
 describe('UnidadMedidaService', () => {
   let service: UnidadMedidaService;
@@ -18,7 +18,7 @@ describe('UnidadMedidaService', () => {
         RouterTestingModule
       ],
       providers: [
-        {provide: NGXLogger, useValue: TestUtils.getLoggerSpy()},
+        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         LayoutService,
       ],
     });

@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { Registro } from '@core/models/registro';
+import { Registro } from '@core/models/cat/registro';
 import { HttpClient } from '@angular/common/http';
-import { BaseService } from './base.service';
 import { environment } from '@env';
 import { NGXLogger } from 'ngx-logger';
 
-import { BaseRestService } from './base-rest.service';
+import { BaseRestService } from '../base-rest.service';
 
 @Injectable({
   providedIn: 'root',

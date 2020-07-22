@@ -1,18 +1,17 @@
-import { NGXLogger } from 'ngx-logger';
-import { Subscription, Observable, of, merge } from 'rxjs';
-import { catchError, tap, map } from 'rxjs/operators';
-
-import { Component, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { TipoReservable } from '@core/models/tipo-reservable';
+import { MatTableDataSource } from '@angular/material/table';
+import { TipoReservable } from '@core/models/cat/tipo-reservable';
+import { TipoReservableService } from '@core/services/cat/tipo-reservable.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { TipoReservableService } from '@core/services/tipo-reservable.service';
 import { TraductorService } from '@core/services/traductor.service';
+import { Direction, Filter, FilterType } from '@core/services/types';
 import { UrlUtils } from '@core/utils/url-utils';
-import { Filter, FilterType, Direction } from '@core/services/types';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { NGXLogger } from 'ngx-logger';
+import { merge, Observable, of, Subscription } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 
 @Component({
@@ -111,7 +110,7 @@ export class TipoReservableListadoComponent implements AfterViewInit, OnDestroy 
           this.paginator.firstPage();
           this.totalElementos = 0;
           this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('tipo-reservable.listado.error')
+            this.traductor.getTexto('cat.tipo-reservable.listado.error')
           );
           this.logger.debug(TipoReservableListadoComponent.name, 'loadTable()', 'end');
           return of([]);
@@ -168,9 +167,9 @@ export class TipoReservableListadoComponent implements AfterViewInit, OnDestroy 
       'borrarSeleccionado(tipoReservableId: number) - start');
 
     this.dialogService.dialogGenerico(
-      this.traductor.getTexto('tipo-reservable.listado.eliminar'),
-      this.traductor.getTexto('tipo-reservable.listado.aceptar'),
-      this.traductor.getTexto('tipo-reservable.listado.cancelar')
+      this.traductor.getTexto('cat.tipo-reservable.listado.eliminar'),
+      this.traductor.getTexto('cat.tipo-reservable.listado.aceptar'),
+      this.traductor.getTexto('cat.tipo-reservable.listado.cancelar')
     );
 
     this.dialogServiceSubscriptionGetSubscription = this.dialogService.getAccionConfirmada().subscribe(

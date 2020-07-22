@@ -1,15 +1,16 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {AuthGuard} from '@core/guards/auth.guard';
-import {UrlUtils} from '@core/utils/url-utils';
-import {RootComponent} from './components/root/root.component';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from '@core/guards/auth.guard';
+import { UrlUtils } from '@core/utils/url-utils';
+
+import { RootComponent } from './components/root/root.component';
 
 /**
  * Definimos las urls de la aplicación
  */
 const routes: Routes = [
   {
-    path: UrlUtils.cat.valueOf(),
+    path: UrlUtils.cat.root.valueOf(),
     loadChildren: () =>
       import('./components/cat/cat.module').then(
         (m) => m.CatModule
@@ -17,7 +18,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: UrlUtils.ebt.valueOf(),
+    path: UrlUtils.ebt.root.valueOf(),
     loadChildren: () =>
       import('./components/ebt/ebt.module').then(
         (m) => m.EbtModule
@@ -25,7 +26,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: UrlUtils.pii.valueOf(),
+    path: UrlUtils.pii.root.valueOf(),
     loadChildren: () =>
       import('./components/pii/pii.module').then(
         (m) => m.PiiModule
@@ -33,15 +34,15 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: UrlUtils.eti.valueOf(),
+    path: UrlUtils.eti.root.valueOf(),
     loadChildren: () =>
       import('./components/eti/eti.module').then(
         (m) => m.EtiModule
       ),
     canActivate: [AuthGuard],
   },
-  {path: '', redirectTo: UrlUtils.cat.valueOf(), pathMatch: 'full'},
-  {path: '**', component: RootComponent},
+  { path: '', redirectTo: UrlUtils.cat.root.valueOf(), pathMatch: 'full' },
+  { path: '**', component: RootComponent },
 ];
 
 /**

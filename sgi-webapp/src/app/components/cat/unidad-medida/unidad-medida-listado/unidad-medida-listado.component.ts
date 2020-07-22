@@ -1,20 +1,20 @@
-import {Component, OnDestroy} from '@angular/core';
-import {UnidadMedida} from '@core/models/unidad-medida';
-import {DialogService} from '@core/services/dialog.service';
-import {SnackBarService} from '@core/services/snack-bar.service';
-import {TraductorService} from '@core/services/traductor.service';
-import {UnidadMedidaService} from '@core/services/unidad-medida.service';
-import {NGXLogger} from 'ngx-logger';
-import {Observable, of, Subscription} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {AbstractPaginacionComponent} from '@shared/paginacion/abstract-paginacion/abstract-paginacion.component';
+import { Component, OnDestroy } from '@angular/core';
+import { UnidadMedida } from '@core/models/cat/unidad-medida';
+import { UnidadMedidaService } from '@core/services/cat/unidad-medida.service';
+import { DialogService } from '@core/services/dialog.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { TraductorService } from '@core/services/traductor.service';
+import { AbstractPaginacionComponent } from '@shared/paginacion/abstract-paginacion/abstract-paginacion.component';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, of, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-unidad-medida-listado',
   templateUrl: './unidad-medida-listado.component.html',
   styleUrls: ['./unidad-medida-listado.component.scss'],
 })
-export class UnidadMedidaListadoComponent extends AbstractPaginacionComponent implements OnDestroy {
+export class UnidadMedidaListadoComponent extends AbstractPaginacionComponent<UnidadMedida> implements OnDestroy {
   unidadesMedida$: Observable<UnidadMedida[]>;
   borrarUnidadService: Subscription;
 
@@ -44,7 +44,7 @@ export class UnidadMedidaListadoComponent extends AbstractPaginacionComponent im
   protected mostrarMensajeErrorLoadTable(): void {
     this.logger.debug(UnidadMedidaListadoComponent.name, 'mostrarMensajeErrorLoadTable()', 'start');
     this.snackBarService.mostrarMensajeError(
-      this.traductor.getTexto('unidad-medida.listado.error')
+      this.traductor.getTexto('cat.unidad-medida.listado.error')
     );
     this.logger.debug(UnidadMedidaListadoComponent.name, 'mostrarMensajeErrorLoadTable()', 'end');
   }
@@ -59,9 +59,9 @@ export class UnidadMedidaListadoComponent extends AbstractPaginacionComponent im
       'borrarSeleccionado(unidadMedidaId: number) - start'
     );
     this.dialogService.dialogGenerico(
-      this.traductor.getTexto('unidad-medida.listado.eliminar'),
-      this.traductor.getTexto('unidad-medida.listado.aceptar'),
-      this.traductor.getTexto('unidad-medida.listado.cancelar')
+      this.traductor.getTexto('cat.unidad-medida.listado.eliminar'),
+      this.traductor.getTexto('cat.unidad-medida.listado.aceptar'),
+      this.traductor.getTexto('cat.unidad-medida.listado.cancelar')
     );
     this.dialogService.getAccionConfirmada().subscribe((aceptado: boolean) => {
       if (aceptado) {

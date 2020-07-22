@@ -1,20 +1,20 @@
 <!-- Tipo Fungible actualizar -->
 <section class="tipo-fungible-crear">
-  <h2>{{'tipo-fungible.actualizar.titulo' | translate}}</h2>
+  <h2>{{'cat.tipo-fungible.actualizar.titulo' | translate}}</h2>
   <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
     fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field appearance="fill">
-        <mat-label>{{'tipo-fungible.crear.nombre.titulo' | translate}}</mat-label>
+        <mat-label>{{'cat.tipo-fungible.crear.nombre.titulo' | translate}}</mat-label>
         <input #nombre matInput formControlName="nombre" type="text" id="nombre"
-          placeholder="{{'tipo-fungible.crear.nombre.titulo' | translate}}" required maxlength="100">
+          placeholder="{{'cat.tipo-fungible.crear.nombre.titulo' | translate}}" required maxlength="100">
         <mat-hint>{{nombre.value.length}} / 100</mat-hint>
         <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'nombre') && formGroup.get('nombre').errors.required">
-          {{'tipo-fungible.crear.nombre.error.requerido' | translate}}
+          {{'cat.tipo-fungible.crear.nombre.error.requerido' | translate}}
         </mat-error>
         <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'nombre') && formGroup.get('nombre').errors.maxlength">
-          {{'tipo-fungible.crear.nombre.error.maximo' | translate}}
+          {{'cat.tipo-fungible.crear.nombre.error.maximo' | translate}}
         </mat-error>
       </mat-form-field>
     </div>
@@ -23,7 +23,7 @@
 
 
       <mat-form-field class="input-form" appearance="fill">
-        <mat-label>{{'tipo-fungible.crear.servicio.titulo' | translate}}</mat-label>
+        <mat-label>{{'cat.tipo-fungible.crear.servicio.titulo' | translate}}</mat-label>
         <input type="text" placeholder="Servicio" arial-label="Number" matInput formControlName="servicio"
           [matAutocomplete]="auto" required>
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="getServicio">
@@ -32,7 +32,7 @@
           </mat-option>
         </mat-autocomplete>
         <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'servicio') && formGroup.get('servicio').errors.required">
-          {{'tipo-fungible.crear.servicio.error.requerido' | translate}}
+          {{'cat.tipo-fungible.crear.servicio.error.requerido' | translate}}
         </mat-error>
       </mat-form-field>
 
@@ -44,7 +44,7 @@
       {{'botones.guardar'| translate}}
     </button>
     <button fxFlex="20%" class="md-primary" aria-label="Center Align" md-button mat-raised-button
-      [routerLink]="'/' + UrlUtils.cat + '/' + UrlUtils.tipoFungible">{{'botones.cancelar'| translate}}
+      [routerLink]="'/' + UrlUtils.cat.root + '/' + UrlUtils.cat.tipoFungible">{{'botones.cancelar'| translate}}
     </button>
   </div>
 </section>

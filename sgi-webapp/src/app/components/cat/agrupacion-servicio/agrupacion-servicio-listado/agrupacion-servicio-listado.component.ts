@@ -1,22 +1,16 @@
-import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
+import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-
-import { NGXLogger } from 'ngx-logger';
-
-import { Subscription, merge, Observable, of } from 'rxjs';
-import { tap, map, catchError } from 'rxjs/operators';
-
-import { UrlUtils } from '@core/utils/url-utils';
-
-import { Filter, FilterType, Direction } from '@core/services/types';
-
-import { Servicio } from '@core/models/servicio';
-
+import { MatSort } from '@angular/material/sort';
+import { Servicio } from '@core/models/cat/servicio';
+import { ServicioService } from '@core/services/cat/servicio.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { ServicioService } from '@core/services/servicio.service';
 import { TraductorService } from '@core/services/traductor.service';
+import { Direction, Filter, FilterType } from '@core/services/types';
+import { UrlUtils } from '@core/utils/url-utils';
+import { NGXLogger } from 'ngx-logger';
+import { merge, Observable, of, Subscription } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-agrupacion-servicio-listado',
@@ -117,7 +111,7 @@ export class AgrupacionServicioListadoComponent implements AfterViewInit, OnDest
           this.paginator.firstPage();
           this.totalElementos = 0;
           this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('servicio.listado.error')
+            this.traductor.getTexto('cat.servicio.listado.error')
           );
           this.logger.debug(AgrupacionServicioListadoComponent.name, 'loadTable()', 'end');
           return of([]);
@@ -161,8 +155,8 @@ export class AgrupacionServicioListadoComponent implements AfterViewInit, OnDest
     $event.stopPropagation();
     $event.preventDefault();
 
-    this.dialogService.dialogGenerico(this.traductor.getTexto('servicio.listado.eliminar'),
-      this.traductor.getTexto('servicio.listado.aceptar'), this.traductor.getTexto('servicio.listado.cancelar'));
+    this.dialogService.dialogGenerico(this.traductor.getTexto('cat.servicio.listado.eliminar'),
+      this.traductor.getTexto('cat.servicio.listado.aceptar'), this.traductor.getTexto('cat.servicio.listado.cancelar'));
 
     this.dialogSubscription = this.dialogService.getAccionConfirmada().subscribe(
       (aceptado: boolean) => {
@@ -175,7 +169,7 @@ export class AgrupacionServicioListadoComponent implements AfterViewInit, OnDest
             ).subscribe(() => {
               this.snackBarService
                 .mostrarMensajeSuccess(
-                  this.traductor.getTexto('servicio.listado.eliminarConfirmado'));
+                  this.traductor.getTexto('cat.servicio.listado.eliminarConfirmado'));
             });
         }
         aceptado = false;

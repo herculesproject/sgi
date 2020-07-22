@@ -1,17 +1,17 @@
 <section>
-  <h2>{{ 'evaluacion-etica.crear.equipo-investigador' | translate }}</h2>
+  <h2>{{'eti.evaluacion-etica.crear.equipo-investigador' | translate }}</h2>
   <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
         [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
     <!-- Título -->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
          [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field appearance="fill">
-        <mat-label>{{'evaluacion-etica.crear.datos-generales.titulo.titulo' | translate}}</mat-label>
+        <mat-label>{{'eti.evaluacion-etica.crear.datos-generales.titulo.titulo' | translate}}</mat-label>
         <input matInput formControlName="titulo" type="text" (input)="checkWarning()"
-               placeholder="{{'evaluacion-etica.crear.datos-generales.titulo.titulo' | translate}}" required>
+               placeholder="{{'eti.evaluacion-etica.crear.datos-generales.titulo.titulo' | translate}}" required>
         <mat-error
           *ngIf="FormGroupUtil.checkError(formGroup, 'titulo') && formGroup.get('titulo').errors.required">
-          {{'evaluacion-etica.crear.datos-generales.titulo.error.requerido' | translate}}
+          {{'eti.evaluacion-etica.crear.datos-generales.titulo.error.requerido' | translate}}
         </mat-error>
       </mat-form-field>
     </div>

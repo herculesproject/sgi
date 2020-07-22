@@ -1,5 +1,5 @@
 import { Servicio } from './servicio';
-import { EstadoTipoReservableEnum } from '@core/enums/estado-tipo-reservable-enum';
+import { EstadoTipoReservableEnum } from '@core/enums/cat/estado-tipo-reservable-enum';
 
 export class TipoReservable {
 

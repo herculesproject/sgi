@@ -6,12 +6,12 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 
-import { SeccionService } from '@core/services/seccion.service';
+import { SeccionService } from '@core/services/cat/seccion.service';
 
 import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
 
-import { Seccion } from '@core/models/seccion';
-import { Servicio } from '@core/models/servicio';
+import { Seccion } from '@core/models/cat/seccion';
+import { Servicio } from '@core/models/cat/servicio';
 import { FormGroupUtil } from '@core/services/form-group-util';
 
 

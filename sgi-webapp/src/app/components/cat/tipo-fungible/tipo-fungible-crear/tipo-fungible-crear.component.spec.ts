@@ -65,7 +65,7 @@ describe('TipoFungibleCrearComponent', () => {
     expect(botones.length).toBe(2);
     fixture.whenStable().then(() => {
       const titulo = fixture.debugElement.query(By.css('h2')).nativeElement;
-      expect(titulo.innerHTML).toBe(i18n['tipo-fungible'].crear.titulo);
+      expect(titulo.innerHTML).toBe(i18n.cat['tipo-fungible'].crear.titulo);
     });
   });
 });

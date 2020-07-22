@@ -1,19 +1,18 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { FormGroupUtil } from '@core/services/form-group-util';
-import { Registro } from '@core/models/registro';
-import { RegistroFilter } from '@core/filters/registro.filter';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { NGXLogger } from 'ngx-logger';
-import { TraductorService } from '@core/services/traductor.service';
-import { SolicitudService } from '@core/services/solicitud.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Registro } from '@core/models/cat/registro';
 import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
-import { UrlUtils } from '@core/utils/url-utils';
+import { SolicitudService } from '@core/services/cat/solicitud.service';
+import { FormGroupUtil } from '@core/services/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { map, switchMap, catchError } from 'rxjs/operators';
-import { FindOptions, FilterType } from '@core/services/types';
+import { TraductorService } from '@core/services/traductor.service';
+import { FilterType, FindOptions } from '@core/services/types';
+import { UrlUtils } from '@core/utils/url-utils';
+import { NGXLogger } from 'ngx-logger';
 import { of, Subscription } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-solicitud-actualizar',
@@ -122,9 +121,9 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
         // On error reset pagination values
         // Añadimos esta comprobación para que no nos eche al crear uno nuevo
         this.snackBarService.mostrarMensajeSuccess(
-          this.traductor.getTexto('solicitud.actualizar.no-encontrado')
+          this.traductor.getTexto('cat.solicitud.actualizar.no-encontrado')
         );
-        this.router.navigateByUrl(`${UrlUtils.cat}/${UrlUtils.solicitud}`).then();
+        this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.solicitud}`).then();
 
         this.logger.debug(
           SolicitudActualizarComponent.name,
@@ -176,7 +175,7 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
     // Si no tiene id, mensaje de no encontrado
     if (this.registro.id === null) {
       this.snackBarService.mostrarMensajeError(
-        this.traductor.getTexto('solicitud.actualizar.no-encontrado')
+        this.traductor.getTexto('cat.solicitud.actualizar.no-encontrado')
       );
     }
     // Si tiene id, lo actualizamos
@@ -205,9 +204,9 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this.snackBarService.mostrarMensajeSuccess(
-            this.traductor.getTexto('solicitud.actualizar.normativa.correcto')
+            this.traductor.getTexto('cat.solicitud.actualizar.normativa.correcto')
           );
-          this.router.navigateByUrl(`${UrlUtils.cat}/${UrlUtils.solicitud}`).then();
+          this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.solicitud}`).then();
           this.desactivarAceptar = false;
           this.logger.debug(
             SolicitudActualizarComponent.name,
@@ -217,7 +216,7 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
         },
         () => {
           this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('solicitud.actualizar.normativa.error')
+            this.traductor.getTexto('cat.solicitud.actualizar.normativa.error')
           );
           this.desactivarAceptar = false;
           this.logger.debug(

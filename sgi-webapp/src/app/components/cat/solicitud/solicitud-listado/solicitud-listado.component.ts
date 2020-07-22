@@ -1,19 +1,18 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, AfterViewInit } from '@angular/core';
-import { Registro } from '@core/models/registro';
-import { MatTableDataSource } from '@angular/material/table';
+import { AfterViewInit, Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { ServicioService } from '@core/services/servicio.service';
-import { SolicitudService } from '@core/services/solicitud.service';
-import { NGXLogger } from 'ngx-logger';
-import { UrlUtils } from '@core/utils/url-utils';
-import { TraductorService } from '@core/services/traductor.service';
+import { Registro } from '@core/models/cat/registro';
+import { Servicio } from '@core/models/cat/servicio';
+import { ServicioService } from '@core/services/cat/servicio.service';
+import { SolicitudService } from '@core/services/cat/solicitud.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { Servicio } from '@core/models/servicio';
-import { FilterType, Filter, Direction } from '@core/services/types';
-import { Observable, Subscription, merge, of } from 'rxjs';
-import { MatPaginator } from '@angular/material/paginator';
-import { tap, map, catchError } from 'rxjs/operators';
+import { TraductorService } from '@core/services/traductor.service';
+import { Direction, Filter, FilterType } from '@core/services/types';
+import { UrlUtils } from '@core/utils/url-utils';
+import { NGXLogger } from 'ngx-logger';
+import { merge, Observable, of, Subscription } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 
 @Component({
@@ -109,7 +108,7 @@ export class SolicitudListadoComponent implements AfterViewInit, OnDestroy, OnCh
           this.paginator.firstPage();
           this.totalElementos = 0;
           this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('solicitud.listado.error')
+            this.traductor.getTexto('cat.solicitud.listado.error')
           );
           this.logger.debug(SolicitudListadoComponent.name, 'loadTable()', 'end');
           return of([]);
@@ -188,7 +187,7 @@ export class SolicitudListadoComponent implements AfterViewInit, OnDestroy, OnCh
       .subscribe(
         () => {
           this.snackBarService.mostrarMensajeSuccess(
-            this.traductor.getTexto('solicitud.alta.correcto')
+            this.traductor.getTexto('cat.solicitud.alta.correcto')
           );
           this.logger.debug(
             SolicitudListadoComponent.name,
@@ -198,7 +197,7 @@ export class SolicitudListadoComponent implements AfterViewInit, OnDestroy, OnCh
         },
         () => {
           this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('solicitud.alta.error')
+            this.traductor.getTexto('cat.solicitud.alta.error')
           );
           this.logger.debug(
             SolicitudListadoComponent.name,

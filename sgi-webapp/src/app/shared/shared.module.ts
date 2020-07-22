@@ -14,6 +14,7 @@ import {SnackBarComponent} from './snack-bar/snack-bar.component';
 import {FooterCrearComponent} from './footers/footer-crear/footer-crear.component';
 import {FooterGuardarComponent} from './footers/footer-guardar/footer-guardar.component';
 import { GenericTabLabelComponent } from './formularios-tabs/generic-tab-label/generic-tab-label.component';
+import { AbstractFormularioComponent } from './formularios-tabs/abstract-formulario/abstract-formulario.component';
 
 @NgModule({
   declarations: [

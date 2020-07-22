@@ -1,0 +1,106 @@
+<section>
+  <h2>{{'eti.acta.crear.datosGenerales.cabecera' | translate}}</h2>
+  <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+    [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field appearance="fill">
+        <mat-label>{{'eti.acta.crear.datosGenerales.convocatoriaReunion.titulo' | translate}}</mat-label>
+        <mat-select matNativeControl required formControlName="convocatoriaReunion">
+          <mat-option *ngFor="let convocatoria of convocatoriasReunion" [value]="convocatoria">
+            {{convocatoria.codigo}}
+          </mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="FormGroupUtil.checkError(formGroup, 'convocatoriaReunion') && formGroup.get('convocatoriaReunion').errors.vacio">
+          {{'eti.acta.crear.datosGenerales.convocatoriaReunion.error.vacio' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field appearance="fill">
+        <mat-label>{{'eti.acta.crear.datosGenerales.horaInicio.titulo' | translate}}</mat-label>
+        <input matInput formControlName="horaInicio" id="horaInicio" type="number"
+          placeholder="{{'eti.acta.crear.datosGenerales.horaInicio.titulo' | translate}}" required>
+        <mat-error
+          *ngIf="FormGroupUtil.checkError(formGroup, 'horaInicio') && formGroup.get('horaInicio').errors.vacio">
+          {{'eti.acta.crear.datosGenerales.horaInicio.error.vacio' | translate}}
+        </mat-error>
+        <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'horaInicio') && formGroup.get('horaInicio').errors.NaN">
+          {{'eti.acta.crear.datosGenerales.horaInicio.error.NaN' | translate}}
+        </mat-error>
+        <mat-error
+          *ngIf="FormGroupUtil.checkError(formGroup, 'horaInicio') && formGroup.get('horaInicio').errors.noValido">
+          {{'eti.acta.crear.datosGenerales.horaInicio.error.noValido' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field appearance="fill">
+        <mat-label>{{'eti.acta.crear.datosGenerales.minutoInicio.titulo' | translate}}</mat-label>
+        <input matInput formControlName="minutoInicio" id="minutoInicio" type="number"
+          placeholder="{{'eti.acta.crear.datosGenerales.minutoInicio.titulo' | translate}}" required>
+        <mat-error
+          *ngIf="FormGroupUtil.checkError(formGroup, 'minutoInicio') && formGroup.get('minutoInicio').errors.vacio">
+          {{'eti.acta.crear.datosGenerales.minutoInicio.error.vacio' | translate}}
+        </mat-error>
+        <mat-error
+          *ngIf="FormGroupUtil.checkError(formGroup, 'minutoInicio') && formGroup.get('minutoInicio').errors.NaN">
+          {{'eti.acta.crear.datosGenerales.minutoInicio.error.NaN' | translate}}
+        </mat-error>
+        <mat-error
+          *ngIf="FormGroupUtil.checkError(formGroup, 'minutoInicio') && formGroup.get('minutoInicio').errors.noValido">
+          {{'eti.acta.crear.datosGenerales.minutoInicio.error.noValido' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field appearance="fill">
+        <mat-label>{{'eti.acta.crear.datosGenerales.horaFin.titulo' | translate}}</mat-label>
+        <input matInput formControlName="horaFin" id="horaFin" type="number"
+          placeholder="{{'eti.acta.crear.datosGenerales.horaFin.titulo' | translate}}" required>
+        <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'horaFin') && formGroup.get('horaFin').errors.vacio">
+          {{'eti.acta.crear.datosGenerales.horaFin.error.vacio' | translate}}
+        </mat-error>
+        <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'horaFin') && formGroup.get('horaFin').errors.NaN">
+          {{'eti.acta.crear.datosGenerales.horaFin.error.NaN' | translate}}
+        </mat-error>
+        <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'horaFin') && formGroup.get('horaFin').errors.noValido">
+          {{'eti.acta.crear.datosGenerales.horaFin.error.noValido' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field appearance="fill">
+        <mat-label>{{'eti.acta.crear.datosGenerales.minutoFin.titulo' | translate}}</mat-label>
+        <input matInput formControlName="minutoFin" id="minutoFin" type="number"
+          placeholder="{{'eti.acta.crear.datosGenerales.minutoFin.titulo' | translate}}" required>
+        <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'minutoFin') && formGroup.get('minutoFin').errors.vacio">
+          {{'eti.acta.crear.datosGenerales.minutoFin.error.vacio' | translate}}
+        </mat-error>
+        <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'minutoFin') && formGroup.get('minutoFin').errors.NaN">
+          {{'eti.acta.crear.datosGenerales.minutoFin.error.NaN' | translate}}
+        </mat-error>
+        <mat-error
+          *ngIf="FormGroupUtil.checkError(formGroup, 'minutoFin') && formGroup.get('minutoFin').errors.noValido">
+          {{'eti.acta.crear.datosGenerales.minutoFin.error.noValido' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field appearance="fill">
+        <mat-label>{{'eti.acta.crear.datosGenerales.resumen.titulo' | translate}}</mat-label>
+        <textarea matInput formControlName="resumen" id="resumen"
+          placeholder="{{'eti.acta.crear.datosGenerales.resumen.titulo' | translate}}" required></textarea>
+        <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'resumen') && formGroup.get('resumen').errors.required">
+          {{'eti.acta.crear.datosGenerales.resumen.error.required' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</section>

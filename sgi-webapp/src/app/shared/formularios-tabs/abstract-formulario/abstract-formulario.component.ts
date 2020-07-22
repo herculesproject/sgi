@@ -12,10 +12,10 @@ import {SnackBarService} from '@core/services/snack-bar.service';
   styleUrls: ['./abstract-formulario.component.scss']
 })
 export abstract class AbstractFormularioComponent implements OnInit, OnDestroy, AfterViewInit {
-
   configPerfectScrollBar: {};
   tabOrigen: number;
   errorTabs: string[];
+  textoCrear: string;
 
   tabs: Map<number, AbstractTabComponent<any>>;
   subscripciones: Subscription[];

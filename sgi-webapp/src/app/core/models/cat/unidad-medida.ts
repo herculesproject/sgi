@@ -2,9 +2,16 @@
  * Clase que simula a las unidades de medida
  */
 export class UnidadMedida {
+  /** Id */
   id: number;
+
+  /** Abreviatura */
   abreviatura: string;
+
+  /** Descripción */
   descripcion: string;
+
+  /** Activo */
   activo: boolean;
 
   constructor() {
@@ -13,6 +20,4 @@ export class UnidadMedida {
     this.descripcion = '';
     this.activo = true;
   }
-
-  equals
 }

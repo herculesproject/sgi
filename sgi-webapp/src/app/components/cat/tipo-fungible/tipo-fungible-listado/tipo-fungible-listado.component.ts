@@ -1,155 +1,56 @@
-import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { TipoFungible } from '@core/models/tipo-fungible';
+import { Component, OnDestroy } from '@angular/core';
+import { TipoFungible } from '@core/models/cat/tipo-fungible';
+import { TipoFungibleService } from '@core/services/cat/tipo-fungible.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { TipoFungibleService } from '@core/services/tipo-fungible.service';
 import { TraductorService } from '@core/services/traductor.service';
-import { UrlUtils } from '@core/utils/url-utils';
+import { AbstractPaginacionComponent } from '@shared/paginacion/abstract-paginacion/abstract-paginacion.component';
 import { NGXLogger } from 'ngx-logger';
-import { merge, Observable, of, Subscription } from 'rxjs';
-import { Direction, Filter, FilterType } from '@core/services/types';
-import { MatPaginator } from '@angular/material/paginator';
-import { catchError, map, tap } from 'rxjs/operators';
+import { Observable, of, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tipo-fungible-listado',
   templateUrl: './tipo-fungible-listado.component.html',
   styleUrls: ['./tipo-fungible-listado.component.scss'],
 })
-export class TipoFungibleListadoComponent implements AfterViewInit, OnDestroy {
-  UrlUtils = UrlUtils;
-  columnas: string[];
-  elementosPagina: number[];
-
-  tipoFungibleServiceSubscription: Subscription;
+export class TipoFungibleListadoComponent extends AbstractPaginacionComponent<TipoFungible> implements OnDestroy {
+  tiposFungible$: Observable<TipoFungible[]>;
   dialogServiceSubscription: Subscription;
   tipoFungibleServiceDeleteSubscription: Subscription;
-
-  tiposFungible$: Observable<TipoFungible[]> = of();
-  totalElementos: number;
-  filter: Filter;
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  tipoFungibleServiceSubscription: Subscription;
 
   constructor(
-    private readonly logger: NGXLogger,
+    protected readonly logger: NGXLogger,
     private readonly tipoFungibleService: TipoFungibleService,
     private readonly traductor: TraductorService,
     private readonly dialogService: DialogService,
     private readonly snackBarService: SnackBarService
   ) {
-    this.logger.debug(TipoFungibleListadoComponent.name, 'ngOnInit()', 'start');
+    super(logger, tipoFungibleService);
+    this.logger.debug(TipoFungibleListadoComponent.name, 'constructor()', 'start');
+    this.tiposFungible$ = of();
+    this.logger.debug(TipoFungibleListadoComponent.name, 'constructor()', 'end');
+  }
+
+  protected inicializarColumnas() {
+    this.logger.debug(TipoFungibleListadoComponent.name, 'inicializarColumnas()', 'start');
     this.columnas = ['nombre', 'servicio', 'acciones'];
-    this.elementosPagina = [5, 10, 25, 100];
-    this.totalElementos = 0;
-    this.filter = {
-      field: undefined,
-      type: FilterType.NONE,
-      value: '',
-    };
-    this.logger.debug(TipoFungibleListadoComponent.name, 'ngOnInit()', 'end');
+    this.logger.debug(TipoFungibleListadoComponent.name, 'inicializarColumnas()', 'end');
   }
 
-  ngAfterViewInit(): void {
-    this.logger.debug(TipoFungibleListadoComponent.name, 'ngAfterViewInit()', 'start');
-
-    // Merge events that trigger load table data
-    merge(
-      // Link pageChange event to fire new request
-      this.paginator.page,
-      // Link sortChange event to fire new request
-      this.sort.sortChange
-    )
-      .pipe(
-        tap(() => {
-          // Load table
-          this.loadTable();
-        })
-      )
-      .subscribe();
-    // First load
-    this.loadTable();
-    this.logger.debug(TipoFungibleListadoComponent.name, 'ngAfterViewInit()', 'end');
-  }
-
-  private loadTable(reset?: boolean) {
+  protected loadTable(reset?: boolean) {
     this.logger.debug(TipoFungibleListadoComponent.name, 'loadTable()', 'start');
-    // Do the request with paginator/sort/filter values
-    this.tiposFungible$ = this.tipoFungibleService
-      .findAll({
-        page: {
-          index: reset ? 0 : this.paginator.pageIndex,
-          size: this.paginator.pageSize,
-        },
-        sort: {
-          direction: Direction.fromSortDirection(this.sort.direction),
-          field: this.sort.active,
-        },
-        filters: this.buildFilters(),
-      })
-      .pipe(
-        map((response) => {
-          // Map respose total
-          this.totalElementos = response.total;
-          // Reset pagination to first page
-          if (reset) {
-            this.paginator.pageIndex = 0;
-          }
-          this.logger.debug(TipoFungibleListadoComponent.name, 'loadTable()', 'end');
-          // Return the values
-          return response.items;
-        }),
-        catchError(() => {
-          // On error reset pagination values
-          this.paginator.firstPage();
-          this.totalElementos = 0;
-          this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('tipo-fungible.listado.error')
-          );
-          this.logger.debug(TipoFungibleListadoComponent.name, 'loadTable()', 'end');
-          return of([]);
-        })
-      );
+    this.tiposFungible$ = this.getObservableLoadTable(reset);
+    this.logger.debug(TipoFungibleListadoComponent.name, 'loadTable()', 'end');
   }
 
-  private buildFilters(): Filter[] {
-    this.logger.debug(TipoFungibleListadoComponent.name, 'buildFilters()', 'start');
-    if (
-      this.filter.field &&
-      this.filter.type !== FilterType.NONE &&
-      this.filter.value
-    ) {
-      this.logger.debug(TipoFungibleListadoComponent.name, 'buildFilters()', 'end');
-      return [this.filter];
-    }
-    this.logger.debug(TipoFungibleListadoComponent.name, 'buildFilters()', 'end');
-    return [];
-  }
-
-  /**
-   * Load table data
-   */
-  public onSearch() {
-    this.logger.debug(TipoFungibleListadoComponent.name, 'onSearch()', 'start');
-    this.loadTable(true);
-    this.logger.debug(TipoFungibleListadoComponent.name, 'onSearch()', 'end');
-
-  }
-
-  /**
-   * Clean filters an reload the table
-   */
-  public onClearFilters() {
-    this.logger.debug(TipoFungibleListadoComponent.name, 'onClearFilters()', 'start');
-    this.filter = {
-      field: undefined,
-      type: FilterType.NONE,
-      value: '',
-    };
-    this.loadTable(true);
-    this.logger.debug(TipoFungibleListadoComponent.name, 'onClearFilters()', 'end');
+  protected mostrarMensajeErrorLoadTable(): void {
+    this.logger.debug(TipoFungibleListadoComponent.name, 'mostrarMensajeErrorLoadTable()', 'start');
+    this.snackBarService.mostrarMensajeError(
+      this.traductor.getTexto('cat.tipo-fungible.listado.error')
+    );
+    this.logger.debug(TipoFungibleListadoComponent.name, 'mostrarMensajeErrorLoadTable()', 'end');
   }
 
   /**
@@ -162,9 +63,9 @@ export class TipoFungibleListadoComponent implements AfterViewInit, OnDestroy {
       'borrarSeleccionado(tipoFungibleId: number) - start'
     );
     this.dialogService.dialogGenerico(
-      this.traductor.getTexto('tipo-fungible.listado.eliminar'),
-      this.traductor.getTexto('tipo-fungible.listado.aceptar'),
-      this.traductor.getTexto('tipo-fungible.listado.cancelar')
+      this.traductor.getTexto('cat.tipo-fungible.listado.eliminar'),
+      this.traductor.getTexto('cat.tipo-fungible.listado.aceptar'),
+      this.traductor.getTexto('cat.tipo-fungible.listado.cancelar')
     );
 
     this.dialogServiceSubscription = this.dialogService
@@ -180,9 +81,7 @@ export class TipoFungibleListadoComponent implements AfterViewInit, OnDestroy {
             )
             .subscribe(() => {
               this.snackBarService.mostrarMensajeSuccess(
-                this.traductor.getTexto(
-                  'tipo-fungible.listado.eliminarConfirmado'
-                )
+                this.traductor.getTexto('tipo-fungible.listado.eliminarConfirmado')
               );
             });
         }
@@ -196,10 +95,7 @@ export class TipoFungibleListadoComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(
-      TipoFungibleListadoComponent.name,
-      'ngOnDestroy() - start'
-    );
+    this.logger.debug(TipoFungibleListadoComponent.name, 'ngOnDestroy() - start');
     this.tipoFungibleServiceSubscription?.unsubscribe();
     this.dialogServiceSubscription?.unsubscribe();
     this.tipoFungibleServiceDeleteSubscription?.unsubscribe();

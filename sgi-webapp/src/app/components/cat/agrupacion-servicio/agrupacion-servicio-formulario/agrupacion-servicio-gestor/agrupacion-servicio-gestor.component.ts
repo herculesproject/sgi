@@ -4,9 +4,9 @@ import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
 import { NGXLogger } from 'ngx-logger';
 
-import { Usuario } from '@core/models/usuario';
-import { Observable, of, BehaviorSubject, Subject, ReplaySubject } from 'rxjs';
-import { Supervision } from '@core/models/supervision';
+import { Usuario } from '@core/models/cat/usuario';
+import { Subject, ReplaySubject } from 'rxjs';
+import { Supervision } from '@core/models/cat/supervision';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TraductorService } from '@core/services/traductor.service';
 
@@ -129,7 +129,7 @@ export class AgrupacionServicioGestorComponent implements OnInit {
 
     if (gestorAsociado.length > 0) {
       this.snackBarService.mostrarMensajeError(
-        this.traductor.getTexto('servicio.gestor.existe')
+        this.traductor.getTexto('cat.servicio.gestor.existe')
       );
     } else {
       this.gestores.push(gestorSeleccionado);

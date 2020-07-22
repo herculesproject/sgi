@@ -1,167 +1,66 @@
 {
-  "breadcrumb": {
-    "cat": "Catalog of scientific-technical offer",
-    "ebt": "Technology-based companies",
-    "pii": "Industrial and intellectual property",
-    "eti": "Ethics",
-    "inicio": "Home",
-    "unidadMedida": "Measurement units",
-    "crear": "Add",
-    "actualizar": "Update",
-    "producto": "Products",
-    "solicitud": "Requests",
-    "agrupacionServicios": "Service groupings",
-    "horario": "Work hours",
-    "tipoReservables": "Bookable",
-    "tipoFungible": "Fungible types",
-    "convocatoria": "Calls",
-    "datos": "My data",
-    "cvn": "My CVN",
-    "produccionCientifica": "Scientific production",
-    "ofertaTecnologica": "Technological offer",
-    "solicitudesConvocatoria": "Call requests",
-    "proyectos": "Projects",
-    "propiedadIntelectual": "Intellectual property",
-    "empresasBaseTecnologica": "Technology-based companies",
-    "gruposInvestigacion": "Investigation groups",
-    "areaEspecializacion": "Areas of expertise",
-    "evaluacionEtica": "Ethics evaluations",
-    "solicitudesSAI": "SAI requests"
-  },
   "botones": {
-    "guardar": "Save",
-    "cancelar": "Cancel"
+    "cancelar": "Cancel",
+    "guardar": "Save"
+  },
+  "breadcrumb": {
+    "actualizar": "Update",
+    "agrupacionServicios": "Service groupings",
+    "areaEspecializacion": "Areas of expertise",
+    "cat": "Catalog of scientific-technical offer",
+    "convocatoria": "Calls",
+    "crear": "Add",
+    "cvn": "My CVN",
+    "datos": "My data",
+    "ebt": "Technology-based companies",
+    "empresasBaseTecnologica": "Technology-based companies",
+    "eti": "Ethics",
+    "evaluacionEtica": "Ethics evaluations",
+    "gruposInvestigacion": "Investigation groups",
+    "horario": "Work hours",
+    "inicio": "Home",
+    "ofertaTecnologica": "Technological offer",
+    "pii": "Industrial and intellectual property",
+    "produccionCientifica": "Scientific production",
+    "producto": "Products",
+    "propiedadIntelectual": "Intellectual property",
+    "proyectos": "Projects",
+    "solicitud": "Requests",
+    "solicitudesConvocatoria": "Call requests",
+    "solicitudesSAI": "SAI requests",
+    "tipoFungible": "Fungible types",
+    "tipoReservables": "Bookable",
+    "unidadMedida": "Measurement units"
   },
   "cabecera": {
     "modulo": {
       "cat": "Module: Catalog of scientific-technical offer",
       "ebt": "Module: Technology-based companies",
-      "pii": "Module: Industrial and intellectual property",
-      "eti": "Module: Ethics"
+      "eti": "Module: Ethics",
+      "pii": "Module: Industrial and intellectual property"
     }
   },
-  "convocatoria": {
-    "menu": {
-      "datos-generales": "General data",
-      "organismos-convocantes": "Convening bodies",
-      "organismos-financiadores": "Financing organizations",
-      "enlaces": "Links",
-      "plazos": "Deadlines and phases",
-      "periodos": "Justification periods",
-      "seguimiento-cientifico": "Scientific monitoring",
-      "documentos": "Documents",
-      "requisitos-ip": "IP requirements",
-      "requisitos-equipo": "Team requirements",
-      "elegibilidad": "Eligibility",
-      "conceptos-economicos": "Economic concepts",
-      "configuracion-solicitudes": "Configuration requests",
-      "areas-tematicas": "Thematic areas",
-      "palabras-clave": "Keywords"
-    }
-  },
-  "form-group": {
-    "error": "Errors have been found in the form. Please check it."
-  },
-  "evaluacion-etica": {
-    "crear": {
-      "titulo": "New evaluation request",
-      "datos-generales": {
-        "cabecera": "General Data",
-        "titulo": {
-          "error": {
-            "requerido": "Enter the title"
-          },
-          "titulo": "Title"
-        },
-        "tipoActividad": {
-          "error": {
-            "requerido": "Enter the type of activity"
-          },
-          "titulo": "Type of activity"
-        },
-        "tipoFinanciacion": {
-          "error": {
-            "requerido": "Enter the type of financing"
-          },
-          "titulo": "Type of financing"
-        },
-        "fechaInicio": {
-          "error": {
-            "requerido": "Enter the start date"
-          },
-          "titulo": "Start date"
-        },
-        "fechaFin": {
-          "error": {
-            "requerido": "Enter the end date"
-          },
-          "titulo": "End date"
-        },
-        "resumen": {
-          "error": {
-            "requerido": "Enter the summary"
-          },
-          "titulo": "Summary"
-        },
-        "valorSocial": {
-          "error": {
-            "requerido": "Enter the social value"
-          },
-          "titulo": "Social value"
-        }
-      },
-      "equipo-investigador": "Research team",
-      "asignacion-tareas": "Assignment of tasks",
-      "memorias": "Memories"
-    }
-  },
-  "footer": {
-    "evaluacionEtica": {
-      "crear": "New evaluation request",
-      "guardar": "Add request"
-    }
-  },
-  "menu": {
-    "principal": {
-      "tipos-reservables": "Bookable types",
-      "tipos-fungibles": "Expendable types",
-      "productos": "Products",
-      "unidades-medida": "Measurement units",
-      "agrupaciones-servicios": "Service groupings",
-      "solicitudes": "Requests",
-      "horarios": "Work hours",
-      "convocatoria": "Calls",
-      "datos": "My data",
-      "cvn": "My CVN",
-      "produccionCientifica": "Scientific production",
-      "ofertaTecnologica": "Technological offer",
-      "solicitudesConvocatoria": "Call requests",
-      "proyectos": "Projects",
-      "propiedadIntelectual": "Intellectual property",
-      "empresasBaseTecnologica": "Technology-based companies",
-      "gruposInvestigacion": "Investigation groups",
-      "areaEspecializacion": "Areas of expertise",
-      "evaluacionEtica": "Ethics evaluations",
-      "solicitudesSAI": "SAI requests"
+  "cat": {
+    "convocatoria": {
+      "menu": {
+        "areas-tematicas": "Thematic areas",
+        "conceptos-economicos": "Economic concepts",
+        "configuracion-solicitudes": "Configuration requests",
+        "datos-generales": "General data",
+        "documentos": "Documents",
+        "elegibilidad": "Eligibility",
+        "enlaces": "Links",
+        "organismos-convocantes": "Convening bodies",
+        "organismos-financiadores": "Financing organizations",
+        "palabras-clave": "Keywords",
+        "periodos": "Justification periods",
+        "plazos": "Deadlines and phases",
+        "requisitos-equipo": "Team requirements",
+        "requisitos-ip": "IP requirements",
+        "seguimiento-cientifico": "Scientific monitoring"
+      }
     },
-    "secundario": {
-      "cuenta": "Account",
-      "crear": "Add",
-      "graficas": "Graphics",
-      "listados": "Lists",
-      "notificaciones": "Notifications",
-      "ajustes": "Settings",
-      "selector-modulo": "Module selector"
-    }
-  },
-  "unidad-medida": {
-    "actualizar": {
-      "correcto": "Unit of measure updated correctly",
-      "error": "Error updating unit of measure",
-      "titulo": "Unit of measure update",
-      "no-encontrado": "Error loading unit of measure data"
-    },
-    "crear": {
+    "servicio": {
       "abreviatura": {
         "error": {
           "maximo": "The abbreviation exceeds the maximum length",
@@ -170,251 +69,430 @@
         },
         "titulo": "Abbreviation"
       },
-      "correcto": "Unit of measure added correctly",
-      "descripcion": {
-        "error": {
-          "maximo": "Description exceeds maximum length",
-          "requerido": "Enter description"
-        },
-        "titulo": "Description"
+      "actualizar": {
+        "correcto": "Service updated correctly",
+        "error": "Error updating service",
+        "no-encontrado": "Error loading service data",
+        "titulo": "Service update"
       },
-      "error": "Error adding unit of measure",
-      "titulo": "Unit of measure creation"
-    },
-    "listado": {
-      "titulo": "Unit of measure list",
-      "busqueda": "Quick search",
-      "busqueda-placeholder": "Text",
-      "abreviatura": "ABBREVIATION",
-      "descripcion": "DESCRIPTION",
-      "acciones": "ACTIONS",
-      "eliminar": "Do you want to delete the product?",
-      "eliminarConfirmado": "Unit of measure removed successfully",
-      "nueva-unidad": "NEW UNIT OF MEASURE",
-      "borrar": "Remove",
-      "editar": "Edit",
-      "aceptar": "Accept",
-      "cancelar": "Cancel",
-      "error": "Couldn't load the list of measurement units"
-    }
-  },
-  "tipo-fungible": {
-    "actualizar": {
-      "correcto": "Fungible type updated correctly",
-      "error": "Error updating fungible type",
-      "titulo": "Fungible type update",
-      "no-encontrado": "Error loading fungible type data"
-    },
-    "crear": {
+      "contacto": {
+        "error": {
+          "maximo": "The contact email exceeds the maximum length",
+          "minimo": "The contact email does not exceed the minimum length",
+          "requerido": "Enter the contact email"
+        },
+        "titulo": "Contact email"
+      },
+      "crear": {
+        "correcto": "Service added correctly",
+        "error": "Error adding service"
+      },
+      "datos-generales": "General data",
+      "gestor": {
+        "aniadir": "Add manager",
+        "gestor": "Manager",
+        "listado": {
+          "apellidos": "Surnames",
+          "dni": "Document number",
+          "nombre": "Name"
+        },
+        "titulo": {
+          "section": "Service manager",
+          "tab": "Managers"
+        }
+      },
+      "listado": {
+        "abreviatura": "ABBREVIATION",
+        "acciones": "ACTIONS",
+        "aceptar": "Accept",
+        "borrar": "Remove",
+        "busqueda": "Quick search",
+        "busqueda-placeholder": "Text",
+        "cancelar": "Cancel",
+        "contacto": "CONTACT",
+        "editar": "Edit",
+        "eliminar": "Do you want to delete the service?",
+        "eliminarConfirmado": "Service removed successfully",
+        "error": "The list of services could not be loaded",
+        "nombre": "NAME",
+        "nuevo-servicio": "NEW SERVICE",
+        "seccion": "SECTION",
+        "titulo": "Services"
+      },
       "nombre": {
         "error": {
-          "maximo": "Name exceeds the maximum length",
-          "minimo": "Name does not exceed the minimum length",
-          "requerido": "Enter name"
+          "maximo": "The name exceeds the maximum length",
+          "minimo": "The name does not exceed the minimum length",
+          "requerido": "Enter the name"
         },
         "titulo": "Name"
       },
-      "correcto": "Fungible type added correctly",
-      "servicio": {
-        "error": {
-          "requerido": "Enter service"
+      "seccion": "Section"
+    },
+    "solicitud": {
+      "actualizar": {
+        "correcto": "Service successfully updated",
+        "error": "Error updating service",
+        "no-encontrado": "Error loading service data",
+        "normativa": {
+          "aceptar": "I accept the regulations of the Catalog",
+          "correcto": "The regulations have been updated correctly",
+          "enlace": "Access the Catalog regulations"
         },
-        "titulo": "Service"
+        "titulo": "Discharge of services"
       },
-      "error": "Error adding fungible type",
-      "titulo": "Fungible type creation"
-    },
-    "listado": {
-      "titulo": "Fungible type list",
-      "busqueda": "Quick search",
-      "busqueda-placeholder": "Text",
-      "nombre": "NAME",
-      "servicio": "SERVICE",
-      "acciones": "ACTIONS",
-      "eliminar": "Do you want to delete the product?",
-      "eliminarConfirmado": "Fungible type removed successfully",
-      "nueva-unidad": "NEW FUNGIBLE TYPE",
-      "borrar": "Remove",
-      "editar": "Edit",
-      "aceptar": "Accept",
-      "cancelar": "Cancel"
-    }
-  },
-  "tipo-reservable": {
-    "actualizar": {
-      "correcto": "Rservable type updated correctly",
-      "error": "Error updating reservable type",
-      "titulo": "Reservable type update",
-      "no-encontrado": "Error loading reservable type data"
-    },
-    "crear": {
-      "descripcion": {
-        "error": {
-          "maximo": "Description exceeds the maximum length",
-          "minimo": "Description does not exceed the minimum length",
-          "requerido": "Enter description"
-        },
-        "titulo": "description"
+      "alta": {
+        "correcto": "Service correctly registered",
+        "error": "Error when registering the service",
+        "no-encontrado": "Error loading service data",
+        "titulo": "Discharge of services"
       },
-      "correcto": "Reservable type added correctly",
-      "servicio": {
-        "error": {
-          "requerido": "Enter service"
-        },
-        "titulo": "Service"
-      },
-      "duracionMin": {
-        "titulo": "duracionMin"
-      },
-      "diasAnteMax": {
-        "titulo": "diasAnteMax"
-      },
-      "diasVistaMaxCalen": {
-        "titulo": "diasVistaMaxCalen"
-      },
-      "horasAnteAnular": {
-        "titulo": "horasAnteAnular"
-      },
-      "horasAnteMin": {
-        "titulo": "horasAnteMin"
-      },
-      "reservaMulti": {
-        "titulo": "reservaMulti"
-      },
-      "estado": {
-        "titulo": "State"
-      },
-      "error": "Error adding reservable type",
-      "titulo": "Reservable type creation"
-    },
-    "listado": {
-      "titulo": "Reservable type list",
-      "busqueda": "Quick search",
-      "busqueda-placeholder": "Text",
-      "descripcion": "DESCRIPTION",
-      "servicio": "SERVICE",
-      "estado": "STATE",
-      "duracionMin": "DUR.MÍN.",
-      "diasAnteMax": "D.ANTEL.",
-      "horasAnteAnular": "H.ANUL.",
-      "dias": "DAYS",
-      "acciones": "ACTIONS",
-      "eliminar": "Do you want to delete the product?",
-      "eliminarConfirmado": "Reservable type removed successfully",
-      "nuevo-tipo": "NEW RESERVABLE TYPE",
-      "borrar": "Remove",
-      "editar": "Edit",
-      "aceptar": "Accept",
-      "cancelar": "Cancel"
-    }
-  },
-  "servicio": {
-    "listado": {
-      "titulo": "Services",
-      "busqueda": "Quick search",
-      "busqueda-placeholder": "Text",
-      "abreviatura": "ABBREVIATION",
-      "nombre": "NAME",
-      "contacto": "CONTACT",
-      "seccion": "SECTION",
-      "acciones": "ACTIONS",
-      "nuevo-servicio": "NEW SERVICE",
-      "editar": "Edit",
-      "eliminar": "Do you want to delete the service?",
-      "eliminarConfirmado": "Service removed successfully",
-      "aceptar": "Accept",
-      "cancelar": "Cancel",
-      "borrar": "Remove"
-    },
-    "datos-generales": "General data",
-    "gestor": {
-      "titulo": {
-        "section": "Service manager",
-        "tab": "Managers"
-      },
-      "gestor": "Manager",
-      "aniadir": "Add manager",
       "listado": {
-        "nombre": "Name",
-        "apellidos": "Surnames",
-        "dni": "Document number"
+        "acciones": "ACTIONS",
+        "aceptar": "Accpet",
+        "busqueda": "Quick search",
+        "busqueda-placeholder": "Text",
+        "cancelar": "Cancel",
+        "contacto": "CONTACT",
+        "editar": "Edit",
+        "error": "The list of services could not be loaded",
+        "seleccionarServicio": "Select the service to register",
+        "servicio": "SERVICE",
+        "titulo": "Request"
       }
     },
-    "nombre": {
-      "error": {
-        "maximo": "The name exceeds the maximum length",
-        "minimo": "The name does not exceed the minimum length",
-        "requerido": "Enter the name"
+    "tipo-fungible": {
+      "actualizar": {
+        "correcto": "Fungible type updated correctly",
+        "error": "Error updating fungible type",
+        "no-encontrado": "Error loading fungible type data",
+        "titulo": "Fungible type update"
       },
-      "titulo": "Name"
-    },
-    "abreviatura": {
-      "error": {
-        "maximo": "The abbreviation exceeds the maximum length",
-        "minimo": "The abbreviation does not exceed the minimum length",
-        "requerido": "Enter the abbreviation"
+      "crear": {
+        "correcto": "Fungible type added correctly",
+        "error": "Error adding fungible type",
+        "nombre": {
+          "error": {
+            "maximo": "Name exceeds the maximum length",
+            "minimo": "Name does not exceed the minimum length",
+            "requerido": "Enter name"
+          },
+          "titulo": "Name"
+        },
+        "servicio": {
+          "error": {
+            "requerido": "Enter service"
+          },
+          "titulo": "Service"
+        },
+        "titulo": "Fungible type creation"
       },
-      "titulo": "Abbreviation"
-    },
-    "contacto": {
-      "error": {
-        "maximo": "The contact email exceeds the maximum length",
-        "minimo": "The contact email does not exceed the minimum length",
-        "requerido": "Enter the contact email"
-      },
-      "titulo": "Contact email"
-    },
-    "seccion": "Section",
-    "crear": {
-      "correcto": "Service added correctly",
-      "error": "Error adding service"
-    },
-    "actualizar": {
-      "correcto": "Service updated correctly",
-      "error": "Error updating service",
-      "titulo": "Service update",
-      "no-encontrado": "Error loading service data"
-    }
-  },
-  "solicitud": {
-    "listado": {
-      "titulo": "Request",
-      "busqueda": "Quick search",
-      "busqueda-placeholder": "Text",
-      "servicio": "SERVICE",
-      "contacto": "CONTACT",
-      "acciones": "ACTIONS",
-      "editar": "Edit",
-      "aceptar": "Accpet",
-      "cancelar": "Cancel",
-      "seleccionarServicio": "Select the service to register"
-    },
-    "actualizar": {
-      "correcto": "Service successfully updated",
-      "error": "Error updating service",
-      "titulo": "Discharge of services",
-      "no-encontrado": "Error loading service data",
-      "normativa": {
-        "correcto": "The regulations have been updated correctly",
-        "aceptar": "I accept the regulations of the Catalog",
-        "enlace": "Access the Catalog regulations"
+      "listado": {
+        "acciones": "ACTIONS",
+        "aceptar": "Accept",
+        "borrar": "Remove",
+        "busqueda": "Quick search",
+        "busqueda-placeholder": "Text",
+        "cancelar": "Cancel",
+        "editar": "Edit",
+        "eliminar": "Do you want to delete the product?",
+        "eliminarConfirmado": "Fungible type removed successfully",
+        "error": "The list of consumable types could not be loaded",
+        "nombre": "NAME",
+        "nueva-unidad": "NEW FUNGIBLE TYPE",
+        "servicio": "SERVICE",
+        "titulo": "Fungible type list"
       }
     },
-    "alta": {
-      "correcto": "Service correctly registered",
-      "error": "Error when registering the service",
-      "titulo": "Discharge of services",
-      "no-encontrado": "Error loading service data"
+    "tipo-reservable": {
+      "actualizar": {
+        "correcto": "Rservable type updated correctly",
+        "error": "Error updating reservable type",
+        "no-encontrado": "Error loading reservable type data",
+        "titulo": "Reservable type update"
+      },
+      "crear": {
+        "correcto": "Reservable type added correctly",
+        "descripcion": {
+          "error": {
+            "maximo": "Description exceeds the maximum length",
+            "minimo": "Description does not exceed the minimum length",
+            "requerido": "Enter description"
+          },
+          "titulo": "description"
+        },
+        "diasAnteMax": {
+          "titulo": "diasAnteMax"
+        },
+        "diasVistaMaxCalen": {
+          "titulo": "diasVistaMaxCalen"
+        },
+        "duracionMin": {
+          "titulo": "duracionMin"
+        },
+        "error": "Error adding reservable type",
+        "estado": {
+          "titulo": "State"
+        },
+        "horasAnteAnular": {
+          "titulo": "horasAnteAnular"
+        },
+        "horasAnteMin": {
+          "titulo": "horasAnteMin"
+        },
+        "reservaMulti": {
+          "titulo": "reservaMulti"
+        },
+        "servicio": {
+          "error": {
+            "requerido": "Enter service"
+          },
+          "titulo": "Service"
+        },
+        "titulo": "Reservable type creation"
+      },
+      "listado": {
+        "acciones": "ACTIONS",
+        "aceptar": "Accept",
+        "borrar": "Remove",
+        "busqueda": "Quick search",
+        "busqueda-placeholder": "Text",
+        "cancelar": "Cancel",
+        "descripcion": "DESCRIPTION",
+        "dias": "DAYS",
+        "diasAnteMax": "D.ANTEL.",
+        "duracionMin": "DUR.MÃN.",
+        "editar": "Edit",
+        "eliminar": "Do you want to delete the product?",
+        "eliminarConfirmado": "Reservable type removed successfully",
+        "error": "The list of bookable types could not be loaded",
+        "estado": "STATE",
+        "horasAnteAnular": "H.ANUL.",
+        "nuevo-tipo": "NEW RESERVABLE TYPE",
+        "servicio": "SERVICE",
+        "titulo": "Reservable type list"
+      }
+    },
+    "unidad-medida": {
+      "actualizar": {
+        "correcto": "Unit of measure updated correctly",
+        "error": "Error updating unit of measure",
+        "no-encontrado": "Error loading unit of measure data",
+        "titulo": "Unit of measure update"
+      },
+      "crear": {
+        "abreviatura": {
+          "error": {
+            "maximo": "The abbreviation exceeds the maximum length",
+            "minimo": "The abbreviation does not exceed the minimum length",
+            "requerido": "Enter the abbreviation"
+          },
+          "titulo": "Abbreviation"
+        },
+        "correcto": "Unit of measure added correctly",
+        "descripcion": {
+          "error": {
+            "maximo": "Description exceeds maximum length",
+            "requerido": "Enter description"
+          },
+          "titulo": "Description"
+        },
+        "error": "Error adding unit of measure",
+        "titulo": "Unit of measure creation"
+      },
+      "listado": {
+        "abreviatura": "ABBREVIATION",
+        "acciones": "ACTIONS",
+        "aceptar": "Accept",
+        "borrar": "Remove",
+        "busqueda": "Quick search",
+        "busqueda-placeholder": "Text",
+        "cancelar": "Cancel",
+        "descripcion": "DESCRIPTION",
+        "editar": "Edit",
+        "eliminar": "Do you want to delete the product?",
+        "eliminarConfirmado": "Unit of measure removed successfully",
+        "error": "Couldn't load the list of measurement units",
+        "nueva-unidad": "NEW UNIT OF MEASURE",
+        "titulo": "Unit of measure list"
+      }
     }
   },
-  "snackBar": {
-    "error": "An error has occurred"
+  "eti": {
+    "acta": {
+      "crear": {
+        "asistentes": {
+          "cabecera": "Assistants"
+        },
+        "correcto": "The record was created correctly",
+        "datosGenerales": {
+          "cabecera": "General Data",
+          "convocatoriaReunion": {
+            "error": {
+              "cargar": "Failed to load evaluation meetings",
+              "vacio": "Select an evaluation meeting"
+            },
+            "titulo": "Evaluation meeting"
+          },
+          "horaFin": {
+            "error": {
+              "NaN": "The end time is not number",
+              "noValido": "The end time is not valid",
+              "vacio": "Enter the end time"
+            },
+            "titulo": "End Time"
+          },
+          "horaInicio": {
+            "error": {
+              "NaN": "The start time is not number",
+              "noValido": "The start time is not valid",
+              "vacio": "Enter the start time"
+            },
+            "titulo": "Start Time"
+          },
+          "minutoFin": {
+            "error": {
+              "NaN": "The end minute is not number",
+              "noValido": "The end minute is not valid",
+              "vacio": "Enter the end minute"
+            },
+            "titulo": "End Minute"
+          },
+          "minutoInicio": {
+            "error": {
+              "NaN": "The start minute is not number",
+              "noValido": "The starting minute is not valid",
+              "vacio": "Enter the start minute"
+            },
+            "titulo": "Start Minute"
+          },
+          "resumen": {
+            "error": {
+              "required": "Enter the summary"
+            },
+            "titulo": "Summary"
+          }
+        },
+        "error": "A problem occurred while saving the minutes",
+        "memorias": {
+          "cabecera": "Memories"
+        },
+        "titulo": "New record"
+      }
+    },
+    "evaluacion-etica": {
+      "crear": {
+        "asignacion-tareas": "Assignment of tasks",
+        "datos-generales": {
+          "cabecera": "General Data",
+          "fechaFin": {
+            "error": {
+              "requerido": "Enter the end date"
+            },
+            "titulo": "End date"
+          },
+          "fechaInicio": {
+            "error": {
+              "requerido": "Enter the start date"
+            },
+            "titulo": "Start date"
+          },
+          "resumen": {
+            "error": {
+              "requerido": "Enter the summary"
+            },
+            "titulo": "Summary"
+          },
+          "tipoActividad": {
+            "error": {
+              "requerido": "Enter the type of activity"
+            },
+            "titulo": "Type of activity"
+          },
+          "tipoFinanciacion": {
+            "error": {
+              "requerido": "Enter the type of financing"
+            },
+            "titulo": "Type of financing"
+          },
+          "titulo": {
+            "error": {
+              "requerido": "Enter the title"
+            },
+            "titulo": "Title"
+          },
+          "valorSocial": {
+            "error": {
+              "requerido": "Enter the social value"
+            },
+            "titulo": "Social value"
+          }
+        },
+        "equipo-investigador": "Research team",
+        "memorias": "Memories",
+        "titulo": "New evaluation request"
+      }
+    }
+  },
+  "footer": {
+    "eti": {
+      "acta": {
+        "crear": "New record",
+        "guardar": "Save record"
+      },
+      "evaluacionEtica": {
+        "crear": "New evaluation request",
+        "guardar": "Save request"
+      }
+    }
+  },
+  "form-group": {
+    "error": "Errors have been found in the form. Please check it."
+  },
+  "menu": {
+    "principal": {
+      "cat": {
+        "agrupaciones-servicios": "Service groupings",
+        "horarios": "Work hours",
+        "productos": "Products",
+        "solicitudes": "Requests",
+        "tipos-fungibles": "Expendable types",
+        "tipos-reservables": "Bookable types",
+        "unidades-medida": "Measurement units"
+      },
+      "eti": {
+        "areaEspecializacion": "Areas of expertise",
+        "cvn": "My CVN",
+        "datos": "My data",
+        "empresasBaseTecnologica": "Technology-based companies",
+        "evaluacionEtica": "Ethics evaluations",
+        "gruposInvestigacion": "Investigation groups",
+        "ofertaTecnologica": "Technological offer",
+        "produccionCientifica": "Scientific production",
+        "propiedadIntelectual": "Intellectual property",
+        "proyectos": "Projects",
+        "solicitudesConvocatoria": "Call requests",
+        "solicitudesSAI": "SAI requests"
+      }
+    },
+    "secundario": {
+      "ajustes": "Settings",
+      "crear": "Add",
+      "cuenta": "Account",
+      "graficas": "Graphics",
+      "listados": "Lists",
+      "notificaciones": "Notifications",
+      "selector-modulo": "Module selector"
+    }
   },
   "paginator": {
     "itemsPerPageLabel": "Items per page:",
-    "nextPageLabel": "Next page",
-    "previousPageLabel": "Previous page",
     "lastPageLabel": "Last page",
-    "of": "of"
+    "nextPageLabel": "Next page",
+    "of": "of",
+    "previousPageLabel": "Previous page"
+  },
+  "snackBar": {
+    "error": "An error has occurred"
   }
 }

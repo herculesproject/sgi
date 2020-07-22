@@ -1,167 +1,66 @@
 {
-  "breadcrumb": {
-    "cat": "Catálogo de oferta científico-técnica",
-    "ebt": "Empresas de base tecnológica",
-    "pii": "Propiedad industrial e intelectual",
-    "eti": "Ética",
-    "inicio": "Inicio",
-    "unidadMedida": "Unidad de medida",
-    "crear": "Crear",
-    "actualizar": "Actualizar",
-    "producto": "Productos",
-    "solicitud": "Solicitud",
-    "agrupacionServicios": "Agrupaciones de servicios",
-    "horario": "Horarios",
-    "tipoReservables": "Tipos de reservable",
-    "tipoFungible": "Tipos de fungible",
-    "convocatoria": "Convocatorias",
-    "datos": "Mis datos",
-    "cvn": "Mi CVN",
-    "produccionCientifica": "Producción científica",
-    "ofertaTecnologica": "Oferta tecnológica",
-    "solicitudesConvocatoria": "Solicitudes de convocatoria",
-    "proyectos": "Proyectos",
-    "propiedadIntelectual": "Propiedad intelectúal",
-    "empresasBaseTecnologica": "Empresas de base tecnológica",
-    "gruposInvestigacion": "Grupos de investigación",
-    "areaEspecializacion": "Áreas de especialización",
-    "evaluacionEtica": "Evaluaciones de ética",
-    "solicitudesSAI": "Solicitudes de SAI"
-  },
   "botones": {
-    "guardar": "Guardar",
-    "cancelar": "Cancelar"
+    "cancelar": "Cancelar",
+    "guardar": "Guardar"
+  },
+  "breadcrumb": {
+    "actualizar": "Actualizar",
+    "agrupacionServicios": "Agrupaciones de servicios",
+    "areaEspecializacion": "Áreas de especialización",
+    "cat": "Catálogo de oferta científico-técnica",
+    "convocatoria": "Convocatorias",
+    "crear": "Crear",
+    "cvn": "Mi CVN",
+    "datos": "Mis datos",
+    "ebt": "Empresas de base tecnológica",
+    "empresasBaseTecnologica": "Empresas de base tecnológica",
+    "eti": "Ética",
+    "evaluacionEtica": "Evaluaciones de ética",
+    "gruposInvestigacion": "Grupos de investigación",
+    "horario": "Horarios",
+    "inicio": "Inicio",
+    "ofertaTecnologica": "Oferta tecnológica",
+    "pii": "Propiedad industrial e intelectual",
+    "produccionCientifica": "Producción científica",
+    "producto": "Productos",
+    "propiedadIntelectual": "Propiedad intelectúal",
+    "proyectos": "Proyectos",
+    "solicitud": "Solicitud",
+    "solicitudesConvocatoria": "Solicitudes de convocatoria",
+    "solicitudesSAI": "Solicitudes de SAI",
+    "tipoFungible": "Tipos de fungible",
+    "tipoReservables": "Tipos de reservable",
+    "unidadMedida": "Unidad de medida"
   },
   "cabecera": {
     "modulo": {
       "cat": "Módulo: Catálogo de oferta científico-técnica",
       "ebt": "Módulo: Empresas de base tecnológica",
-      "pii": "Módulo: Propiedad industrial e intelectual",
-      "eti": "Módulo: Ética"
+      "eti": "Módulo: Ética",
+      "pii": "Módulo: Propiedad industrial e intelectual"
     }
   },
-  "convocatoria": {
-    "menu": {
-      "datos-generales": "Datos generales",
-      "organismos-convocantes": "Organismos convocantes",
-      "organismos-financiadores": "Organismos financiadores",
-      "enlaces": "Enlaces",
-      "plazos": "Plazos y fases",
-      "periodos": "Periodos justificación",
-      "seguimiento-cientifico": "Seguimiento científico",
-      "documentos": "Documentos",
-      "requisitos-ip": "Requisitos IP",
-      "requisitos-equipo": "Requisitos equipo",
-      "elegibilidad": "Elegibilidad",
-      "conceptos-economicos": "Conceptos económicos",
-      "configuracion-solicitudes": "Configuración solicitudes",
-      "areas-tematicas": "Áreas temáticas",
-      "palabras-clave": "Palabras clave"
-    }
-  },
-  "form-group": {
-    "error": "Se han encontrado errores en el formulario. Por favor revíselo"
-  },
-  "evaluacion-etica": {
-    "crear": {
-      "titulo": "Nueva solicitud de evaluación",
-      "datos-generales": {
-        "cabecera": "Datos Generales",
-        "titulo": {
-          "error": {
-            "requerido": "Introduzca el titulo"
-          },
-          "titulo": "Título"
-        },
-        "tipoActividad": {
-          "error": {
-            "requerido": "Introduzca el tipo de actividad"
-          },
-          "titulo": "Tipo de actividad"
-        },
-        "tipoFinanciacion": {
-          "error": {
-            "requerido": "Introduzca el tipo de financiación"
-          },
-          "titulo": "Tipo de financiación"
-        },
-        "fechaInicio": {
-          "error": {
-            "requerido": "Introduzca la fecha de inicio"
-          },
-          "titulo": "Fecha de inicio"
-        },
-        "fechaFin": {
-          "error": {
-            "requerido": "Introduzca la fecha de fin"
-          },
-          "titulo": "Fecha de fin"
-        },
-        "resumen": {
-          "error": {
-            "requerido": "Introduzca el resumen"
-          },
-          "titulo": "Resumen"
-        },
-        "valorSocial": {
-          "error": {
-            "requerido": "Introduzca el valor social"
-          },
-          "titulo": "Valor social"
-        }
-      },
-      "equipo-investigador": "Equipo investigador",
-      "asignacion-tareas": "Asignación de tareas",
-      "memorias": "Memorias"
-    }
-  },
-  "footer": {
-    "evaluacionEtica": {
-      "crear": "Nueva solicitud de evaluación",
-      "guardar": "Añadir solicitud"
-    }
-  },
-  "menu": {
-    "principal": {
-      "tipos-reservables": "Tipos de reservable",
-      "tipos-fungibles": "Tipos de fungible",
-      "productos": "Productos",
-      "unidades-medida": "Unidades de medida",
-      "agrupaciones-servicios": "Agrupaciones de servicios",
-      "solicitudes": "Solicitudes",
-      "horarios": "Horarios",
-      "convocatoria": "Convocatorias",
-      "datos": "Mis datos",
-      "cvn": "Mi CVN",
-      "produccionCientifica": "Producción científica",
-      "ofertaTecnologica": "Oferta tecnológica",
-      "solicitudesConvocatoria": "Solicitudes de convocatoria",
-      "proyectos": "Proyectos",
-      "propiedadIntelectual": "Propiedad intelectúal",
-      "empresasBaseTecnologica": "Empresas de base tecnológica",
-      "gruposInvestigacion": "Grupos de investigación",
-      "areaEspecializacion": "Áreas de especialización",
-      "evaluacionEtica": "Evaluaciones de ética",
-      "solicitudesSAI": "Solicitudes de SAI"
+  "cat": {
+    "convocatoria": {
+      "menu": {
+        "areas-tematicas": "Áreas temáticas",
+        "conceptos-economicos": "Conceptos económicos",
+        "configuracion-solicitudes": "Configuración solicitudes",
+        "datos-generales": "Datos generales",
+        "documentos": "Documentos",
+        "elegibilidad": "Elegibilidad",
+        "enlaces": "Enlaces",
+        "organismos-convocantes": "Organismos convocantes",
+        "organismos-financiadores": "Organismos financiadores",
+        "palabras-clave": "Palabras clave",
+        "periodos": "Periodos justificación",
+        "plazos": "Plazos y fases",
+        "requisitos-equipo": "Requisitos equipo",
+        "requisitos-ip": "Requisitos IP",
+        "seguimiento-cientifico": "Seguimiento científico"
+      }
     },
-    "secundario": {
-      "cuenta": "Cuenta",
-      "crear": "crear",
-      "graficas": "Gráficas",
-      "listados": "Listados",
-      "notificaciones": "Notificaciones",
-      "ajustes": "Ajustes",
-      "selector-modulo": "Selector de módulo"
-    }
-  },
-  "unidad-medida": {
-    "actualizar": {
-      "correcto": "Unidad de medida actualizada correctamente",
-      "error": "Error al actualizar la unidad de medida",
-      "titulo": "Actualización de unidad de medida",
-      "no-encontrado": "Error al cargar los datos de la unidad de medida"
-    },
-    "crear": {
+    "servicio": {
       "abreviatura": {
         "error": {
           "maximo": "La abreviatura supera la longitud máxima",
@@ -170,42 +69,56 @@
         },
         "titulo": "Abreviatura"
       },
-      "correcto": "Unidad de medida agregada correctamente",
-      "descripcion": {
-        "error": {
-          "maximo": "La descripción supera la longitud máxima",
-          "requerido": "Introduzca la descripción"
-        },
-        "titulo": "Descripción"
+      "actualizar": {
+        "correcto": "Servicio actualizado correctamente",
+        "error": "Error al actualizar el servicio",
+        "no-encontrado": "Error al cargar los datos del servicio",
+        "titulo": "Actualización de servicio"
       },
-      "error": "Error al crear la unidad de medida",
-      "titulo": "Creación de unidad de medida"
-    },
-    "listado": {
-      "titulo": "Listado unidad de medida",
-      "busqueda": "Búsqueda rápida",
-      "busqueda-placeholder": "Texto",
-      "abreviatura": "ABREVIATURA",
-      "descripcion": "DESCRIPCIÓN",
-      "acciones": "ACCIONES",
-      "eliminar": "¿Desea eliminar el producto?",
-      "eliminarConfirmado": "Unidad de medida eliminada correctamente",
-      "nueva-unidad": "NUEVA UNIDAD DE MEDIDA",
-      "borrar": "Borrar",
-      "editar": "Editar",
-      "aceptar": "Aceptar",
-      "cancelar": "Cancelar",
-      "error": "No se ha podido cargar el listado de unidades de medida"
-    }
-  },
-  "tipo-fungible": {
-    "actualizar": {
-      "correcto": "Tipo fungible actualizado correctamente",
-      "error": "Error al actualizar el tipo fungible",
-      "titulo": "Actualización de tipo fungible",
-      "no-encontrado": "Error al cargar los datos del tipo fungible"
-    },
-    "crear": {
+      "contacto": {
+        "error": {
+          "maximo": "El email de contacto supera la longitud máxima",
+          "minimo": "El email de contacto no supera la longitud mínima",
+          "requerido": "Introduzca el email de contacto"
+        },
+        "titulo": "Email de contacto"
+      },
+      "crear": {
+        "correcto": "Servicio creado correctamente",
+        "error": "Error al crear el servicio"
+      },
+      "datos-generales": "Datos generales",
+      "gestor": {
+        "aniadir": "Añadir gestor",
+        "gestor": "Gestor",
+        "listado": {
+          "apellidos": "Apellidos",
+          "dni": "Nº documento",
+          "nombre": "Nombre"
+        },
+        "titulo": {
+          "section": "Gestores del servicio",
+          "tab": "Gestores"
+        }
+      },
+      "listado": {
+        "abreviatura": "ABREVIATURA",
+        "acciones": "ACCIONES",
+        "aceptar": "Aceptar",
+        "borrar": "Borrar",
+        "busqueda": "Búsqueda rápida",
+        "busqueda-placeholder": "Texto",
+        "cancelar": "Cancelar",
+        "contacto": "CONTACTO",
+        "editar": "Editar",
+        "eliminar": "¿Desea eliminar el servicio?",
+        "eliminarConfirmado": "Servicio eliminado correctamente",
+        "error": "No se ha podido cargar el listado de servicios",
+        "nombre": "NOMBRE",
+        "nuevo-servicio": "AÑADIR NUEVO SERVICIO",
+        "seccion": "SECCIÓN",
+        "titulo": "Servicios"
+      },
       "nombre": {
         "error": {
           "maximo": "El nombre supera la longitud máxima",
@@ -214,207 +127,373 @@
         },
         "titulo": "Nombre"
       },
-      "correcto": "Tipo fungible agregado correctamente",
-      "servicio": {
-        "error": {
-          "requerido": "Introduzca el servicio"
+      "seccion": "Sección"
+    },
+    "solicitud": {
+      "actualizar": {
+        "correcto": "Servicio actualizado correctamente",
+        "error": "Error al actualizar el servicio",
+        "no-encontrado": "Error al cargar los datos del servicio",
+        "normativa": {
+          "aceptar": "Acepto la normativa del Catálogo",
+          "correcto": "La normativa se ha actualizado correctamente",
+          "enlace": "Acceda a la normativa de Catálogo"
         },
-        "titulo": "Servicio"
+        "titulo": "Servicios alta"
       },
-      "error": "Error al crear el tipo fungible",
-      "titulo": "Creación de tipo fungible"
-    },
-    "listado": {
-      "titulo": "Listado tipo de fungible",
-      "busqueda": "Búsqueda rápida",
-      "busqueda-placeholder": "Texto",
-      "nombre": "NOMBRE",
-      "servicio": "SERVICIO",
-      "acciones": "ACCIONES",
-      "eliminar": "¿Desea eliminar el tipo de fungible?",
-      "eliminarConfirmado": "Tipo fungible eliminado correctamente",
-      "nuevo-tipo": "NUEVO TIPO FUNGIBLE",
-      "borrar": "Borrar",
-      "editar": "Editar",
-      "aceptar": "Aceptar",
-      "cancelar": "Cancelar"
-    }
-  },
-  "tipo-reservable": {
-    "actualizar": {
-      "correcto": "Tipo reservable actualizado correctamente",
-      "error": "Error al actualizar el tipo reservable",
-      "titulo": "Actualización de tipo reservable",
-      "no-encontrado": "Error al cargar los datos del tipo reservable"
-    },
-    "crear": {
-      "descripcion": {
-        "error": {
-          "maximo": "La descripción supera la longitud máxima",
-          "minimo": "La descripción no supera la longitud mínima",
-          "requerido": "Introduzca la descripción"
-        },
-        "titulo": "Descripción"
+      "alta": {
+        "correcto": "Servicio dado de alta correctamente",
+        "error": "Error al dar el servicio de alta",
+        "no-encontrado": "Error al cargar los datos del servicio",
+        "titulo": "Servicios alta"
       },
-      "correcto": "Tipo reservable agregado correctamente",
-      "servicio": {
-        "error": {
-          "requerido": "Introduzca el servicio"
-        },
-        "titulo": "Servicio"
-      },
-      "duracionMin": {
-        "titulo": "Duración mínima (minutos)"
-      },
-      "diasAnteMax": {
-        "titulo": "Días de antelación máximo"
-      },
-      "diasVistaMaxCalen": {
-        "titulo": "Vista máxima del calendario (días)"
-      },
-      "horasAnteAnular": {
-        "titulo": "Horas antelación anular usuario"
-      },
-      "horasAnteMin": {
-        "titulo": "Horas de antelación mínima"
-      },
-      "reservaMulti": {
-        "titulo": "Reserva múltiple"
-      },
-      "estado": {
-        "titulo": "Estado"
-      },
-      "error": "Error al crear el tipo reservable",
-      "titulo": "Creación de tipo reservable"
-    },
-    "listado": {
-      "titulo": "Listado tipo de reservable",
-      "busqueda": "Búsqueda rápida",
-      "busqueda-placeholder": "Texto",
-      "descripcion": "DESCRIPCIÓN",
-      "servicio": "SERVICIO",
-      "estado": "ESTADO",
-      "duracionMin": "DUR.MÍN.",
-      "diasAnteMax": "D.ANTEL.",
-      "horasAnteAnular": "H.ANUL.",
-      "dias": "DÍAS",
-      "acciones": "ACCIONES",
-      "eliminar": "¿Desea eliminar el tipo de reservable?",
-      "eliminarConfirmado": "Tipo de reservable eliminado correctamente",
-      "nuevo-tipo": "NUEVO TIPO DE RESERVABLE",
-      "borrar": "Borrar",
-      "editar": "Editar",
-      "aceptar": "Aceptar",
-      "cancelar": "Cancelar"
-    }
-  },
-  "servicio": {
-    "listado": {
-      "titulo": "Servicios",
-      "busqueda": "Búsqueda rápida",
-      "busqueda-placeholder": "Texto",
-      "abreviatura": "ABREVIATURA",
-      "nombre": "NOMBRE",
-      "contacto": "CONTACTO",
-      "seccion": "SECCIÓN",
-      "acciones": "ACCIONES",
-      "nuevo-servicio": "AÑADIR NUEVO SERVICIO",
-      "editar": "Editar",
-      "eliminar": "¿Desea eliminar el servicio?",
-      "eliminarConfirmado": "Servicio eliminado correctamente",
-      "aceptar": "Aceptar",
-      "cancelar": "Cancelar",
-      "borrar": "Borrar"
-    },
-    "datos-generales": "Datos generales",
-    "gestor": {
-      "titulo": {
-        "section": "Gestores del servicio",
-        "tab": "Gestores"
-      },
-      "gestor": "Gestor",
-      "aniadir": "Añadir gestor",
       "listado": {
-        "nombre": "Nombre",
-        "apellidos": "Apellidos",
-        "dni": "Nº documento"
+        "acciones": "ACCIONES",
+        "aceptar": "Aceptar",
+        "busqueda": "Búsqueda rápida",
+        "busqueda-placeholder": "Texto",
+        "cancelar": "Cancelar",
+        "contacto": "CONTACTO",
+        "editar": "Editar",
+        "error": "No se ha podido cargar el listado de los servicios",
+        "seleccionarServicio": "Seleccione el servicio en el que darse de alta",
+        "servicio": "SERVICIO",
+        "titulo": "Solicitud"
       }
     },
-    "nombre": {
-      "error": {
-        "maximo": "El nombre supera la longitud máxima",
-        "minimo": "El nombre no supera la longitud mínima",
-        "requerido": "Introduzca el nombre"
+    "tipo-fungible": {
+      "actualizar": {
+        "correcto": "Tipo fungible actualizado correctamente",
+        "error": "Error al actualizar el tipo fungible",
+        "no-encontrado": "Error al cargar los datos del tipo fungible",
+        "titulo": "Actualización de tipo fungible"
       },
-      "titulo": "Nombre"
-    },
-    "abreviatura": {
-      "error": {
-        "maximo": "La abreviatura supera la longitud máxima",
-        "minimo": "La abreviatura no supera la longitud mínima",
-        "requerido": "Introduzca la abreviatura"
+      "crear": {
+        "correcto": "Tipo fungible agregado correctamente",
+        "error": "Error al crear el tipo fungible",
+        "nombre": {
+          "error": {
+            "maximo": "El nombre supera la longitud máxima",
+            "minimo": "El nombre no supera la longitud mínima",
+            "requerido": "Introduzca el nombre"
+          },
+          "titulo": "Nombre"
+        },
+        "servicio": {
+          "error": {
+            "requerido": "Introduzca el servicio"
+          },
+          "titulo": "Servicio"
+        },
+        "titulo": "Creación de tipo fungible"
       },
-      "titulo": "Abreviatura"
-    },
-    "contacto": {
-      "error": {
-        "maximo": "El email de contacto supera la longitud máxima",
-        "minimo": "El email de contacto no supera la longitud mínima",
-        "requerido": "Introduzca el email de contacto"
-      },
-      "titulo": "Email de contacto"
-    },
-    "seccion": "Sección",
-    "crear": {
-      "correcto": "Servicio creado correctamente",
-      "error": "Error al crear el servicio"
-    },
-    "actualizar": {
-      "correcto": "Servicio actualizado correctamente",
-      "error": "Error al actualizar el servicio",
-      "titulo": "Actualización de servicio",
-      "no-encontrado": "Error al cargar los datos del servicio"
-    }
-  },
-  "solicitud": {
-    "listado": {
-      "titulo": "Solicitud",
-      "busqueda": "Búsqueda rápida",
-      "busqueda-placeholder": "Texto",
-      "servicio": "SERVICIO",
-      "contacto": "CONTACTO",
-      "acciones": "ACCIONES",
-      "editar": "Editar",
-      "aceptar": "Aceptar",
-      "cancelar": "Cancelar",
-      "seleccionarServicio": "Seleccione el servicio en el que darse de alta"
-    },
-    "actualizar": {
-      "correcto": "Servicio actualizado correctamente",
-      "error": "Error al actualizar el servicio",
-      "titulo": "Servicios alta",
-      "no-encontrado": "Error al cargar los datos del servicio",
-      "normativa": {
-        "correcto": "La normativa se ha actualizado correctamente",
-        "aceptar": "Acepto la normativa del Catálogo",
-        "enlace": "Acceda a la normativa de Catálogo"
+      "listado": {
+        "acciones": "ACCIONES",
+        "aceptar": "Aceptar",
+        "borrar": "Borrar",
+        "busqueda": "Búsqueda rápida",
+        "busqueda-placeholder": "Texto",
+        "cancelar": "Cancelar",
+        "editar": "Editar",
+        "eliminar": "¿Desea eliminar el tipo de fungible?",
+        "eliminarConfirmado": "Tipo fungible eliminado correctamente",
+        "error": "No se ha podido cargar el listado de los tipos fungibles",
+        "nombre": "NOMBRE",
+        "nuevo-tipo": "NUEVO TIPO FUNGIBLE",
+        "servicio": "SERVICIO",
+        "titulo": "Listado tipo de fungible"
       }
     },
-    "alta": {
-      "correcto": "Servicio dado de alta correctamente",
-      "error": "Error al dar el servicio de alta",
-      "titulo": "Servicios alta",
-      "no-encontrado": "Error al cargar los datos del servicio"
+    "tipo-reservable": {
+      "actualizar": {
+        "correcto": "Tipo reservable actualizado correctamente",
+        "error": "Error al actualizar el tipo reservable",
+        "no-encontrado": "Error al cargar los datos del tipo reservable",
+        "titulo": "Actualización de tipo reservable"
+      },
+      "crear": {
+        "correcto": "Tipo reservable agregado correctamente",
+        "descripcion": {
+          "error": {
+            "maximo": "La descripción supera la longitud máxima",
+            "minimo": "La descripción no supera la longitud mínima",
+            "requerido": "Introduzca la descripción"
+          },
+          "titulo": "Descripción"
+        },
+        "diasAnteMax": {
+          "titulo": "Días de antelación máximo"
+        },
+        "diasVistaMaxCalen": {
+          "titulo": "Vista máxima del calendario (días)"
+        },
+        "duracionMin": {
+          "titulo": "Duración mínima (minutos)"
+        },
+        "error": "Error al crear el tipo reservable",
+        "estado": {
+          "titulo": "Estado"
+        },
+        "horasAnteAnular": {
+          "titulo": "Horas antelación anular usuario"
+        },
+        "horasAnteMin": {
+          "titulo": "Horas de antelación mínima"
+        },
+        "reservaMulti": {
+          "titulo": "Reserva múltiple"
+        },
+        "servicio": {
+          "error": {
+            "requerido": "Introduzca el servicio"
+          },
+          "titulo": "Servicio"
+        },
+        "titulo": "Creación de tipo reservable"
+      },
+      "listado": {
+        "acciones": "ACCIONES",
+        "aceptar": "Aceptar",
+        "borrar": "Borrar",
+        "busqueda": "Búsqueda rápida",
+        "busqueda-placeholder": "Texto",
+        "cancelar": "Cancelar",
+        "descripcion": "DESCRIPCIÓN",
+        "dias": "DÍAS",
+        "diasAnteMax": "D.ANTEL.",
+        "duracionMin": "DUR.MÍN.",
+        "editar": "Editar",
+        "eliminar": "¿Desea eliminar el tipo de reservable?",
+        "eliminarConfirmado": "Tipo de reservable eliminado correctamente",
+        "error": "No se ha podido cargar el listado de los tipos de reservable",
+        "estado": "ESTADO",
+        "horasAnteAnular": "H.ANUL.",
+        "nuevo-tipo": "NUEVO TIPO DE RESERVABLE",
+        "servicio": "SERVICIO",
+        "titulo": "Listado tipo de reservable"
+      }
+    },
+    "unidad-medida": {
+      "actualizar": {
+        "correcto": "Unidad de medida actualizada correctamente",
+        "error": "Error al actualizar la unidad de medida",
+        "no-encontrado": "Error al cargar los datos de la unidad de medida",
+        "titulo": "Actualización de unidad de medida"
+      },
+      "crear": {
+        "abreviatura": {
+          "error": {
+            "maximo": "La abreviatura supera la longitud máxima",
+            "minimo": "La abreviatura no supera la longitud mínima",
+            "requerido": "Introduzca la abreviatura"
+          },
+          "titulo": "Abreviatura"
+        },
+        "correcto": "Unidad de medida agregada correctamente",
+        "descripcion": {
+          "error": {
+            "maximo": "La descripción supera la longitud máxima",
+            "requerido": "Introduzca la descripción"
+          },
+          "titulo": "Descripción"
+        },
+        "error": "Error al crear la unidad de medida",
+        "titulo": "Creación de unidad de medida"
+      },
+      "listado": {
+        "abreviatura": "ABREVIATURA",
+        "acciones": "ACCIONES",
+        "aceptar": "Aceptar",
+        "borrar": "Borrar",
+        "busqueda": "Búsqueda rápida",
+        "busqueda-placeholder": "Texto",
+        "cancelar": "Cancelar",
+        "descripcion": "DESCRIPCIÓN",
+        "editar": "Editar",
+        "eliminar": "¿Desea eliminar el producto?",
+        "eliminarConfirmado": "Unidad de medida eliminada correctamente",
+        "error": "No se ha podido cargar el listado de unidades de medida",
+        "nueva-unidad": "NUEVA UNIDAD DE MEDIDA",
+        "titulo": "Listado unidad de medida"
+      }
     }
   },
-  "snackBar": {
-    "error": "Se ha producido un error"
+  "eti": {
+    "acta": {
+      "crear": {
+        "asistentes": {
+          "cabecera": "Asistentes"
+        },
+        "correcto": "Se ha creado correctamente el acta",
+        "datosGenerales": {
+          "cabecera": "Datos Generales",
+          "convocatoriaReunion": {
+            "error": {
+              "cargar": "No se han podido cargar las reuniones de evaluación",
+              "vacio": "Seleccione una reunión de evaluación"
+            },
+            "titulo": "Reunión de evaluación"
+          },
+          "horaFin": {
+            "error": {
+              "NaN": "La hora fin no es número",
+              "noValido": "No es válido la hora fin",
+              "vacio": "Introduzca la hora fin"
+            },
+            "titulo": "Hora Fin"
+          },
+          "horaInicio": {
+            "error": {
+              "NaN": "La hora inicio no es número",
+              "noValido": "No es válido la hora inicio",
+              "vacio": "Introduzca la hora inicio"
+            },
+            "titulo": "Hora Inicio"
+          },
+          "minutoFin": {
+            "error": {
+              "NaN": "El minuto fin no es número",
+              "noValido": "No es válido el minuto fin",
+              "vacio": "Introduzca el minuto fin"
+            },
+            "titulo": "Minuto Fin"
+          },
+          "minutoInicio": {
+            "error": {
+              "NaN": "El minuto inicio no es número",
+              "noValido": "No es válido el minuto inicio",
+              "vacio": "Introduzca el minuto inicio"
+            },
+            "titulo": "Minuto Inicio"
+          },
+          "resumen": {
+            "error": {
+              "required": "Introduzca un resumen"
+            },
+            "titulo": "Resumen"
+          }
+        },
+        "error": "Ha ocurrido un problema al guardar el acta",
+        "memorias": {
+          "cabecera": "Memorias"
+        },
+        "titulo": "Nueva acta"
+      }
+    },
+    "evaluacion-etica": {
+      "crear": {
+        "asignacion-tareas": "Asignación de tareas",
+        "datos-generales": {
+          "cabecera": "Datos Generales",
+          "fechaFin": {
+            "error": {
+              "requerido": "Introduzca la fecha de fin"
+            },
+            "titulo": "Fecha de fin"
+          },
+          "fechaInicio": {
+            "error": {
+              "requerido": "Introduzca la fecha de inicio"
+            },
+            "titulo": "Fecha de inicio"
+          },
+          "resumen": {
+            "error": {
+              "requerido": "Introduzca el resumen"
+            },
+            "titulo": "Resumen"
+          },
+          "tipoActividad": {
+            "error": {
+              "requerido": "Introduzca el tipo de actividad"
+            },
+            "titulo": "Tipo de actividad"
+          },
+          "tipoFinanciacion": {
+            "error": {
+              "requerido": "Introduzca el tipo de financiación"
+            },
+            "titulo": "Tipo de financiación"
+          },
+          "titulo": {
+            "error": {
+              "requerido": "Introduzca el titulo"
+            },
+            "titulo": "Título"
+          },
+          "valorSocial": {
+            "error": {
+              "requerido": "Introduzca el valor social"
+            },
+            "titulo": "Valor social"
+          }
+        },
+        "equipo-investigador": "Equipo investigador",
+        "memorias": "Memorias",
+        "titulo": "Nueva solicitud de evaluación"
+      }
+    }
+  },
+  "footer": {
+    "eti": {
+      "acta": {
+        "crear": "Nueva acta",
+        "guardar": "Guardar acta"
+      },
+      "evaluacionEtica": {
+        "crear": "Nueva solicitud de evaluación",
+        "guardar": "Guardar solicitud"
+      }
+    }
+  },
+  "form-group": {
+    "error": "Se han encontrado errores en el formulario. Por favor revíselo"
+  },
+  "menu": {
+    "principal": {
+      "cat": {
+        "agrupaciones-servicios": "Agrupaciones de servicios",
+        "horarios": "Horarios",
+        "productos": "Productos",
+        "solicitudes": "Solicitudes",
+        "tipos-fungibles": "Tipos de fungible",
+        "tipos-reservables": "Tipos de reservable",
+        "unidades-medida": "Unidades de medida"
+      },
+      "eti": {
+        "acta": "Actas",
+        "areaEspecializacion": "Áreas de especialización",
+        "cvn": "Mi CVN",
+        "datos": "Mis datos",
+        "empresasBaseTecnologica": "Empresas de base tecnológica",
+        "evaluacionEtica": "Evaluaciones de ética",
+        "gruposInvestigacion": "Grupos de investigación",
+        "ofertaTecnologica": "Oferta tecnológica",
+        "produccionCientifica": "Producción científica",
+        "propiedadIntelectual": "Propiedad intelectúal",
+        "proyectos": "Proyectos",
+        "solicitudesConvocatoria": "Solicitudes de convocatoria",
+        "solicitudesSAI": "Solicitudes de SAI"
+      }
+    },
+    "secundario": {
+      "ajustes": "Ajustes",
+      "crear": "crear",
+      "cuenta": "Cuenta",
+      "graficas": "Gráficas",
+      "listados": "Listados",
+      "notificaciones": "Notificaciones",
+      "selector-modulo": "Selector de módulo"
+    }
   },
   "paginator": {
     "itemsPerPageLabel": "Elementos por página:",
-    "nextPageLabel": "Página siguiente",
-    "previousPageLabel": "Página anterior",
     "lastPageLabel": "Ultima página",
-    "of": "de"
+    "nextPageLabel": "Página siguiente",
+    "of": "de",
+    "previousPageLabel": "Página anterior"
+  },
+  "snackBar": {
+    "error": "Se ha producido un error"
   }
 }

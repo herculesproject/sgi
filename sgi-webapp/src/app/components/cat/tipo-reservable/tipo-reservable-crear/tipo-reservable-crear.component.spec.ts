@@ -1,21 +1,21 @@
-import {NGXLogger} from 'ngx-logger';
+import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatRadioModule } from '@angular/material/radio';
+import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import TestUtils from '@core/utils/test-utils';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { MenuSecundarioComponent } from '@shared/componentes-layout/menu-secundario/menu-secundario.component';
+import { NGXLogger } from 'ngx-logger';
 import i18n from 'src/assets/i18n/es.json';
 
-import {CommonModule} from '@angular/common';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {ReactiveFormsModule} from '@angular/forms';
-import {By} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {RouterTestingModule} from '@angular/router/testing';
-import {SnackBarService} from '@core/services/snack-bar.service';
-import TestUtils from '@core/utils/test-utils';
-import {MaterialDesignModule} from '@material/material-design.module';
-import {MenuSecundarioComponent} from '@shared/componentes-layout/menu-secundario/menu-secundario.component';
-import {TipoReservableListadoComponent} from '../tipo-reservable-listado/tipo-reservable-listado.component';
-import {TipoReservableCrearComponent} from './tipo-reservable-crear.component';
-import {MatRadioModule} from '@angular/material/radio';
+import { TipoReservableListadoComponent } from '../tipo-reservable-listado/tipo-reservable-listado.component';
+import { TipoReservableCrearComponent } from './tipo-reservable-crear.component';
 
 
 describe('TipoReservableCrearComponent', () => {
@@ -63,7 +63,7 @@ describe('TipoReservableCrearComponent', () => {
     expect(botones.length).toBe(2);
     fixture.whenStable().then(() => {
       const titulo = fixture.debugElement.query(By.css('h2')).nativeElement;
-      expect(titulo.innerHTML).toBe(i18n['tipo-reservable'].crear.titulo);
+      expect(titulo.innerHTML).toBe(i18n.cat['tipo-reservable'].crear.titulo);
     });
   });
 });

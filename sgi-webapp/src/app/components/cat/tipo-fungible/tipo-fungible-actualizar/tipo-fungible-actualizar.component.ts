@@ -1,22 +1,21 @@
-import { Component, OnDestroy, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Servicio } from '@core/models/cat/servicio';
+import { TipoFungible } from '@core/models/cat/tipo-fungible';
 import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
-import { Servicio } from '@core/models/servicio';
-import { TipoFungible } from '@core/models/tipo-fungible';
-import { ServicioService } from '@core/services/servicio.service';
+import { ServicioService } from '@core/services/cat/servicio.service';
+import { TipoFungibleService } from '@core/services/cat/tipo-fungible.service';
+import { FormGroupUtil } from '@core/services/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { TipoFungibleService } from '@core/services/tipo-fungible.service';
 import { TraductorService } from '@core/services/traductor.service';
 import { UrlUtils } from '@core/utils/url-utils';
-import { FormGroupUtil } from '@core/services/form-group-util';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, Subscription, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { Filter, FilterType, Direction } from '@core/services/types';
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-tipo-fungible-actualizar',
@@ -132,9 +131,9 @@ export class TipoFungibleActualizarComponent implements OnInit, OnDestroy {
           },
           () => {
             this.snackBarService.mostrarMensajeSuccess(
-              this.traductor.getTexto('tipo-fungible.actualizar.no-encontrado')
+              this.traductor.getTexto('cat.tipo-fungible.actualizar.no-encontrado')
             );
-            this.router.navigateByUrl(`${UrlUtils.cat}/${UrlUtils.tipoFungible}`).then();
+            this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.tipoFungible}`).then();
             this.logger.debug(
               TipoFungibleActualizarComponent.name,
               'getTipoFungible()',
@@ -226,18 +225,14 @@ export class TipoFungibleActualizarComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this.snackBarService.mostrarMensajeSuccess(
-            this.traductor.getTexto('tipo-fungible.actualizar.correcto')
+            this.traductor.getTexto('cat.tipo-fungible.actualizar.correcto')
           );
-          this.router.navigateByUrl(`${UrlUtils.cat}/${UrlUtils.tipoFungible}`).then();
-          this.logger.debug(
-            TipoFungibleActualizarComponent.name,
-            'enviarApi()',
-            'end'
-          );
+          this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.tipoFungible}`).then();
+          this.logger.debug(TipoFungibleActualizarComponent.name, 'enviarApi()', 'end');
         },
         () => {
           this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('tipo-fungible.actualizar.error')
+            this.traductor.getTexto('cat.tipo-fungible.actualizar.error')
           );
           this.desactivarAceptar = false;
           this.logger.debug(

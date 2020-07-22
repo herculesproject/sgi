@@ -1,16 +1,16 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {FxFlexProperties} from '@core/models/flexLayout/fx-flex-properties';
-import {FxLayoutProperties} from '@core/models/flexLayout/fx-layout-properties';
-import {UnidadMedida} from '@core/models/unidad-medida';
-import {SnackBarService} from '@core/services/snack-bar.service';
-import {TraductorService} from '@core/services/traductor.service';
-import {UnidadMedidaService} from '@core/services/unidad-medida.service';
-import {UrlUtils} from '@core/utils/url-utils';
-import {FormGroupUtil} from '@core/services/form-group-util';
-import {NGXLogger} from 'ngx-logger';
-import {Subscription} from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
+import { UnidadMedida } from '@core/models/cat/unidad-medida';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { TraductorService } from '@core/services/traductor.service';
+import { UnidadMedidaService } from '@core/services/cat/unidad-medida.service';
+import { UrlUtils } from '@core/utils/url-utils';
+import { FormGroupUtil } from '@core/services/form-group-util';
+import { NGXLogger } from 'ngx-logger';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-unidad-medida-actualizar',
@@ -122,9 +122,9 @@ export class UnidadMedidaActualizarComponent implements OnInit, OnDestroy {
           },
           () => {
             this.snackBarService.mostrarMensajeSuccess(
-              this.traductor.getTexto('unidad-medida.actualizar.no-encontrado')
+              this.traductor.getTexto('cat.unidad-medida.actualizar.no-encontrado')
             );
-            this.router.navigateByUrl(`${UrlUtils.cat}/${UrlUtils.unidadMedida}`).then();
+            this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.unidadMedidas}`).then();
             this.logger.debug(
               UnidadMedidaActualizarComponent.name,
               'getUnidadMedida()',
@@ -176,9 +176,9 @@ export class UnidadMedidaActualizarComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this.snackBarService.mostrarMensajeSuccess(
-            this.traductor.getTexto('unidad-medida.actualizar.correcto')
+            this.traductor.getTexto('cat.unidad-medida.actualizar.correcto')
           );
-          this.router.navigateByUrl(`${UrlUtils.cat}/${UrlUtils.unidadMedida}`).then();
+          this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.unidadMedidas}`).then();
           this.logger.debug(
             UnidadMedidaActualizarComponent.name,
             'enviarApi()',
@@ -187,7 +187,7 @@ export class UnidadMedidaActualizarComponent implements OnInit, OnDestroy {
         },
         () => {
           this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('unidad-medida.actualizar.error')
+            this.traductor.getTexto('cat.unidad-medida.actualizar.error')
           );
           this.desactivarAceptar = false;
           this.logger.debug(

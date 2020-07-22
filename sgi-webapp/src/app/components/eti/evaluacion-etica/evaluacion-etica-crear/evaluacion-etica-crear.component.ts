@@ -17,7 +17,6 @@ export class EvaluacionEticaCrearComponent extends AbstractFormularioComponent {
   @ViewChild('datosGeneralesComponent') datosGeneralesComponent: EvaluacionEticaDatosGeneralesComponent;
   @ViewChild('equipoInvestigadorComponent') equipoInvestigadorComponent: EvaluacionEticaEquipoInvestigadorComponent;
   @ViewChild('asignacionTareasComponent') asignacionTareasComponent: EvaluacionEticaAsignacionTareasComponent;
-  textoCrear: string;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -37,7 +36,6 @@ export class EvaluacionEticaCrearComponent extends AbstractFormularioComponent {
   enviarDatos(): void {
     this.logger.debug(EvaluacionEticaCrearComponent.name, 'guardarDatos()', 'start');
     this.subscripciones.push(this.tabs.get(0).mandarPeticion().subscribe((res1) => {
-      console.log(res1);
       // this.tabs.get(0).actualizarDatos(res1);
       this.tabs.get(0).warning = false;
       this.subscripciones.push(this.tabs.get(1).mandarPeticion().subscribe((res2) => {

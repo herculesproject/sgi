@@ -1,17 +1,17 @@
 <section>
-  <h2>{{ 'evaluacion-etica.crear.datos-generales.cabecera' | translate }}</h2>
+  <h2>{{'eti.evaluacion-etica.crear.datos-generales.cabecera' | translate }}</h2>
   <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
         [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
     <!-- Título -->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
          [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field appearance="fill">
-        <mat-label>{{'evaluacion-etica.crear.datos-generales.titulo.titulo' | translate}}</mat-label>
+        <mat-label>{{'eti.evaluacion-etica.crear.datos-generales.titulo.titulo' | translate}}</mat-label>
         <input matInput formControlName="titulo" type="text" (input)="checkWarning()"
-               placeholder="{{'evaluacion-etica.crear.datos-generales.titulo.titulo' | translate}}" required>
+               placeholder="{{'eti.evaluacion-etica.crear.datos-generales.titulo.titulo' | translate}}" required>
         <mat-error
           *ngIf="FormGroupUtil.checkError(formGroup, 'titulo') && formGroup.get('titulo').errors.required">
-          {{'evaluacion-etica.crear.datos-generales.titulo.error.requerido' | translate}}
+          {{'eti.evaluacion-etica.crear.datos-generales.titulo.error.requerido' | translate}}
         </mat-error>
       </mat-form-field>
     </div>
@@ -20,12 +20,12 @@
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
          [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field appearance="fill">
-        <mat-label>{{'evaluacion-etica.crear.datos-generales.tipoActividad.titulo' | translate}}</mat-label>
+        <mat-label>{{'eti.evaluacion-etica.crear.datos-generales.tipoActividad.titulo' | translate}}</mat-label>
         <input matInput formControlName="tipoActividad" type="text" (input)="checkWarning()"
-               placeholder="{{'evaluacion-etica.crear.datos-generales.tipoActividad.titulo' | translate}}" required>
+               placeholder="{{'eti.evaluacion-etica.crear.datos-generales.tipoActividad.titulo' | translate}}" required>
         <mat-error
           *ngIf="FormGroupUtil.checkError(formGroup, 'tipoActividad') && formGroup.get('tipoActividad').errors.required">
-          {{'evaluacion-etica.crear.datos-generales.tipoActividad.error.requerido' | translate}}
+          {{'eti.evaluacion-etica.crear.datos-generales.tipoActividad.error.requerido' | translate}}
         </mat-error>
       </mat-form-field>
     </div>
@@ -34,12 +34,12 @@
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
          [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field appearance="fill">
-        <mat-label>{{'evaluacion-etica.crear.datos-generales.tipoFinanciacion.titulo' | translate}}</mat-label>
+        <mat-label>{{'eti.evaluacion-etica.crear.datos-generales.tipoFinanciacion.titulo' | translate}}</mat-label>
         <input matInput formControlName="tipoFinanciacion" type="text" (input)="checkWarning()"
-               placeholder="{{'evaluacion-etica.crear.datos-generales.tipoFinanciacion.titulo' | translate}}" required>
+               placeholder="{{'eti.evaluacion-etica.crear.datos-generales.tipoFinanciacion.titulo' | translate}}" required>
         <mat-error
           *ngIf="FormGroupUtil.checkError(formGroup, 'tipoFinanciacion') && formGroup.get('tipoFinanciacion').errors.required">
-          {{'evaluacion-etica.crear.datos-generales.tipoFinanciacion.error.requerido' | translate}}
+          {{'eti.evaluacion-etica.crear.datos-generales.tipoFinanciacion.error.requerido' | translate}}
         </mat-error>
       </mat-form-field>
     </div>
@@ -48,12 +48,12 @@
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
          [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field appearance="fill">
-        <mat-label>{{'evaluacion-etica.crear.datos-generales.fechaInicio.titulo' | translate}}</mat-label>
+        <mat-label>{{'eti.evaluacion-etica.crear.datos-generales.fechaInicio.titulo' | translate}}</mat-label>
         <input matInput formControlName="fechaInicio" type="date" (input)="checkWarning()"
-               placeholder="{{'evaluacion-etica.crear.datos-generales.fechaInicio.titulo' | translate}}" required>
+               placeholder="{{'eti.evaluacion-etica.crear.datos-generales.fechaInicio.titulo' | translate}}" required>
         <mat-error
           *ngIf="FormGroupUtil.checkError(formGroup, 'fechaInicio') && formGroup.get('fechaInicio').errors.required">
-          {{'evaluacion-etica.crear.datos-generales.fechaInicio.error.requerido' | translate}}
+          {{'eti.evaluacion-etica.crear.datos-generales.fechaInicio.error.requerido' | translate}}
         </mat-error>
       </mat-form-field>
     </div>
@@ -62,12 +62,12 @@
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
          [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field appearance="fill">
-        <mat-label>{{'evaluacion-etica.crear.datos-generales.fechaFin.titulo' | translate}}</mat-label>
+        <mat-label>{{'eti.evaluacion-etica.crear.datos-generales.fechaFin.titulo' | translate}}</mat-label>
         <input matInput formControlName="fechaFin" type="date" (input)="checkWarning()"
-               placeholder="{{'evaluacion-etica.crear.datos-generales.fechaFin.titulo' | translate}}" required>
+               placeholder="{{'eti.evaluacion-etica.crear.datos-generales.fechaFin.titulo' | translate}}" required>
         <mat-error
           *ngIf="FormGroupUtil.checkError(formGroup, 'fechaFin') && formGroup.get('fechaFin').errors.required">
-          {{'evaluacion-etica.crear.datos-generales.fechaFin.error.requerido' | translate}}
+          {{'eti.evaluacion-etica.crear.datos-generales.fechaFin.error.requerido' | translate}}
         </mat-error>
       </mat-form-field>
     </div>
@@ -76,13 +76,13 @@
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
          [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field appearance="fill">
-        <mat-label>{{'evaluacion-etica.crear.datos-generales.resumen.titulo' | translate}}</mat-label>
+        <mat-label>{{'eti.evaluacion-etica.crear.datos-generales.resumen.titulo' | translate}}</mat-label>
         <textarea matInput formControlName="resumen" type="text" (input)="checkWarning()"
-                  placeholder="{{'evaluacion-etica.crear.datos-generales.resumen.titulo' | translate}}"
+                  placeholder="{{'eti.evaluacion-etica.crear.datos-generales.resumen.titulo' | translate}}"
                   required></textarea>
         <mat-error
           *ngIf="FormGroupUtil.checkError(formGroup, 'resumen') && formGroup.get('resumen').errors.required">
-          {{'evaluacion-etica.crear.datos-generales.resumen.error.requerido' | translate}}
+          {{'eti.evaluacion-etica.crear.datos-generales.resumen.error.requerido' | translate}}
         </mat-error>
       </mat-form-field>
     </div>
@@ -91,13 +91,13 @@
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
          [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field appearance="fill">
-        <mat-label>{{'evaluacion-etica.crear.datos-generales.valorSocial.titulo' | translate}}</mat-label>
+        <mat-label>{{'eti.evaluacion-etica.crear.datos-generales.valorSocial.titulo' | translate}}</mat-label>
         <textarea matInput formControlName="valorSocial" type="text" (input)="checkWarning()"
-                  placeholder="{{'evaluacion-etica.crear.datos-generales.valorSocial.titulo' | translate}}"
+                  placeholder="{{'eti.evaluacion-etica.crear.datos-generales.valorSocial.titulo' | translate}}"
                   required></textarea>
         <mat-error
           *ngIf="FormGroupUtil.checkError(formGroup, 'valorSocial') && formGroup.get('valorSocial').errors.required">
-          {{'evaluacion-etica.crear.datos-generales.valorSocial.error.requerido' | translate}}
+          {{'eti.evaluacion-etica.crear.datos-generales.valorSocial.error.requerido' | translate}}
         </mat-error>
       </mat-form-field>
     </div>

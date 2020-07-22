@@ -1,16 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Servicio } from '@core/models/cat/servicio';
+import { TipoFungible } from '@core/models/cat/tipo-fungible';
 import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
-import { Servicio } from '@core/models/servicio';
-import { TipoFungible } from '@core/models/tipo-fungible';
-import { ServicioService } from '@core/services/servicio.service';
+import { ServicioService } from '@core/services/cat/servicio.service';
+import { TipoFungibleService } from '@core/services/cat/tipo-fungible.service';
+import { FormGroupUtil } from '@core/services/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { TipoFungibleService } from '@core/services/tipo-fungible.service';
 import { TraductorService } from '@core/services/traductor.service';
 import { UrlUtils } from '@core/utils/url-utils';
-import { FormGroupUtil } from '@core/services/form-group-util';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -134,9 +134,9 @@ export class TipoFungibleCrearComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this.snackBarService.mostrarMensajeSuccess(
-            this.traductor.getTexto('tipo-fungible.crear.correcto')
+            this.traductor.getTexto('cat.tipo-fungible.crear.correcto')
           );
-          this.router.navigateByUrl(`${UrlUtils.cat}/${UrlUtils.tipoFungible}`).then();
+          this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.tipoFungible}`).then();
           this.logger.debug(
             TipoFungibleCrearComponent.name,
             'enviarApi()',
@@ -145,7 +145,7 @@ export class TipoFungibleCrearComponent implements OnInit, OnDestroy {
         },
         () => {
           this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('tipo-fungible.crear.error')
+            this.traductor.getTexto('cat.tipo-fungible.crear.error')
           );
           this.desactivarAceptar = false;
           this.logger.debug(

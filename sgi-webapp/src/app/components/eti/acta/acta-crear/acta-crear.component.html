@@ -1,0 +1,44 @@
+<h1>{{'eti.acta.crear.titulo' | translate}}</h1>
+<mat-tab-group headerPosition="above" (selectedTabChange)="cambioTab($event)">
+  <!-- Datos generales -->
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <app-generic-tab-label [abstractTab]="datosGenerales" [errors]="errorTabs[0]"
+        textoLabel="eti.acta.crear.datosGenerales.cabecera">
+      </app-generic-tab-label>
+    </ng-template>
+    <perfect-scrollbar [config]="configPerfectScrollBar">
+      <app-acta-crear-datos-generales #datosGenerales (eventEmitter)="setErroresTab(0, $event)">
+      </app-acta-crear-datos-generales>
+    </perfect-scrollbar>
+  </mat-tab>
+
+  <!-- Memorias -->
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <app-generic-tab-label [abstractTab]="memorias" [errors]="errorTabs[1]"
+        textoLabel="eti.acta.crear.memorias.cabecera">
+      </app-generic-tab-label>
+    </ng-template>
+    <perfect-scrollbar [config]="configPerfectScrollBar">
+      <app-acta-crear-memorias #memorias (eventEmitter)="setErroresTab(1, $event)">
+      </app-acta-crear-memorias>
+    </perfect-scrollbar>
+  </mat-tab>
+
+  <!-- Asistentes -->
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <app-generic-tab-label [abstractTab]="asistentes" [errors]="errorTabs[2]"
+        textoLabel="eti.acta.crear.asistentes.cabecera">
+      </app-generic-tab-label>
+    </ng-template>
+    <perfect-scrollbar [config]="configPerfectScrollBar">
+      <app-acta-crear-asistentes #asistentes (eventEmitter)="setErroresTab(2, $event)">
+      </app-acta-crear-asistentes>
+    </perfect-scrollbar>
+  </mat-tab>
+</mat-tab-group>
+
+<!-- Footer -->
+<app-footer-guardar [texto]="textoCrear" (emitter)="guardarDatos()"></app-footer-guardar>

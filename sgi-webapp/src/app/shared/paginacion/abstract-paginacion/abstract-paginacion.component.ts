@@ -1,32 +1,31 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {NGXLogger} from 'ngx-logger';
-import {Direction, Filter, FilterType, ListResult} from '@core/services/types';
-import {UrlUtils} from '@core/utils/url-utils';
-import {merge, Observable, of} from 'rxjs';
-import {catchError, map, tap} from 'rxjs/operators';
-import {MatSort} from '@angular/material/sort';
-import {MatPaginator} from '@angular/material/paginator';
-import {BaseRestService} from '@core/services/base-rest.service';
-import {UnidadMedida} from '@core/models/unidad-medida';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { BaseRestService } from '@core/services/base-rest.service';
+import { Direction, Filter, FilterType, ListResult } from '@core/services/types';
+import { UrlUtils } from '@core/utils/url-utils';
+import { NGXLogger } from 'ngx-logger';
+import { merge, of, Observable } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-abstract-paginacion',
   templateUrl: './abstract-paginacion.component.html',
   styleUrls: ['./abstract-paginacion.component.scss']
 })
-export abstract class AbstractPaginacionComponent implements OnInit, AfterViewInit {
+export abstract class AbstractPaginacionComponent<T> implements OnInit, AfterViewInit {
   UrlUtils = UrlUtils;
   columnas: string[];
   elementosPagina: number[];
   totalElementos: number;
   filter: Filter;
 
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   protected constructor(
     protected readonly logger: NGXLogger,
-    protected readonly service: BaseRestService<any>,
+    protected readonly service: BaseRestService<T>,
   ) {
     this.elementosPagina = [5, 10, 25, 100];
   }
@@ -102,7 +101,7 @@ export abstract class AbstractPaginacionComponent implements OnInit, AfterViewIn
    *
    * @param reset Inidica si reinicializa la paginación
    */
-  protected getObservableLoadTable(reset?: boolean): Observable<any> {
+  protected getObservableLoadTable(reset?: boolean): Observable<T[]> {
     this.logger.debug(AbstractPaginacionComponent.name, 'getObservableLoadTable()', 'start');
     // Do the request with paginator/sort/filter values
     return this.service.findAll({
@@ -117,7 +116,7 @@ export abstract class AbstractPaginacionComponent implements OnInit, AfterViewIn
       filters: this.buildFilters(),
     })
       .pipe(
-        map((response: ListResult<UnidadMedida>) => {
+        map((response: ListResult<T>) => {
           // Map respose total
           this.totalElementos = response.total;
           // Reset pagination to first page
@@ -147,7 +146,7 @@ export abstract class AbstractPaginacionComponent implements OnInit, AfterViewIn
   /**
    * Carga los datos de la tabla
    *
-   * @param reset Inidica si reinicializa la paginación
+   * @param reset Indica si reinicializa la paginación
    */
   protected abstract loadTable(reset?: boolean);
 

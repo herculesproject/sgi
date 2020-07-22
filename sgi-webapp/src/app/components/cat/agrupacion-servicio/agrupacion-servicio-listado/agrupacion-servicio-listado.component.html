@@ -1,6 +1,6 @@
 <!-- Servicio listado -->
 <section class="servicio-listado">
-  <h2>{{'servicio.listado.titulo' | translate}}</h2>
+  <h2>{{'cat.servicio.listado.titulo' | translate}}</h2>
 
 
   <table class="mat-elevation-z8 table-servicio" mat-table matSort [dataSource]="servicios$ | async" matSort
@@ -8,37 +8,37 @@
 
     <!-- Abreviatura Column -->
     <ng-container matColumnDef="abreviatura">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'servicio.listado.abreviatura' | translate}} </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'cat.servicio.listado.abreviatura' | translate}} </th>
       <td mat-cell *matCellDef="let servicio"> {{servicio.abreviatura}} </td>
     </ng-container>
 
     <!-- Nombre Column -->
     <ng-container matColumnDef="nombre">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'servicio.listado.nombre' | translate}} </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'cat.servicio.listado.nombre' | translate}} </th>
       <td mat-cell *matCellDef="let servicio"> {{servicio.nombre}} </td>
     </ng-container>
 
     <!-- Contacto Column -->
     <ng-container matColumnDef="contacto">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'servicio.listado.contacto' | translate}} </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'cat.servicio.listado.contacto' | translate}} </th>
       <td mat-cell *matCellDef="let servicio"> {{servicio.contacto}} </td>
     </ng-container>
 
     <!-- Sección Column -->
     <ng-container matColumnDef="seccion">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'servicio.listado.seccion' | translate}} </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'cat.servicio.listado.seccion' | translate}} </th>
       <td mat-cell *matCellDef="let servicio"> {{servicio.seccion.nombre}} </td>
     </ng-container>
 
     <!-- Acciones Column -->
     <ng-container matColumnDef="acciones">
-      <th mat-header-cell *matHeaderCellDef> {{'servicio.listado.acciones' | translate}} </th>
+      <th mat-header-cell *matHeaderCellDef> {{'cat.servicio.listado.acciones' | translate}} </th>
       <td mat-cell *matCellDef="let servicio;let i=index;">
         <button mat-button [routerLink]="UrlUtils.actualizar + servicio.id"
-          matTooltip="{{'servicio.listado.editar' | translate}}">
+          matTooltip="{{'cat.servicio.listado.editar' | translate}}">
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-button matTooltip="{{'servicio.listado.borrar' | translate}}"
+        <button mat-button matTooltip="{{'cat.servicio.listado.borrar' | translate}}"
           (click)="borrarSeleccionado(servicio.id, $event)">
           <mat-icon>close</mat-icon>
         </button>
@@ -52,7 +52,7 @@
   </mat-paginator>
   <div class="separation-button">
     <button [routerLink]="UrlUtils.crear" mat-button>
-      <mat-icon>add_box</mat-icon> {{'servicio.listado.nuevo-servicio' | translate}}
+      <mat-icon>add_box</mat-icon> {{'cat.servicio.listado.nuevo-servicio' | translate}}
     </button>
   </div>
 </section>

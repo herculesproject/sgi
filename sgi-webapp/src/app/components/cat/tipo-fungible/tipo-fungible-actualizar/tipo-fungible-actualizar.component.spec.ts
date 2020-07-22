@@ -1,6 +1,3 @@
-import { NGXLogger } from 'ngx-logger';
-import i18n from 'src/assets/i18n/es.json';
-
 import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
@@ -12,13 +9,11 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import {
-    MenuSecundarioComponent
-} from '@shared/componentes-layout/menu-secundario/menu-secundario.component';
+import { MenuSecundarioComponent } from '@shared/componentes-layout/menu-secundario/menu-secundario.component';
+import { NGXLogger } from 'ngx-logger';
+import i18n from 'src/assets/i18n/es.json';
 
-import {
-    TipoFungibleListadoComponent
-} from '../tipo-fungible-listado/tipo-fungible-listado.component';
+import { TipoFungibleListadoComponent } from '../tipo-fungible-listado/tipo-fungible-listado.component';
 import { TipoFungibleActualizarComponent } from './tipo-fungible-actualizar.component';
 
 describe('TipoFungibleActualizarComponent', () => {
@@ -65,7 +60,7 @@ describe('TipoFungibleActualizarComponent', () => {
     expect(botones.length).toBe(2);
     fixture.whenStable().then(() => {
       const titulo = fixture.debugElement.query(By.css('h2')).nativeElement;
-      expect(titulo.innerHTML).toBe(i18n['tipo-fungible'].actualizar.titulo);
+      expect(titulo.innerHTML).toBe(i18n.cat['tipo-fungible'].actualizar.titulo);
     });
   });
 });

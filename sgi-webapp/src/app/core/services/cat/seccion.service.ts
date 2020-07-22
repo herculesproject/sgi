@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
 
-import { Seccion } from '@core/models/seccion';
+import { Seccion } from '@core/models/cat/seccion';
 
-import { BaseRestService } from './base-rest.service';
+import { BaseRestService } from '../base-rest.service';
 import { environment } from '@env';
 
 @Injectable({

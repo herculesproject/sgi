@@ -1,13 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {NGXLogger} from 'ngx-logger';
-import {AbstractTabComponent} from '@shared/formularios-tabs/abstract-tab/abstract-tab.component';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {UnidadMedida} from '@core/models/unidad-medida';
-import {UnidadMedidaService} from '@core/services/unidad-medida.service';
-import {Observable} from 'rxjs';
-import {FxFlexProperties} from '@core/models/flexLayout/fx-flex-properties';
-import {FxLayoutProperties} from '@core/models/flexLayout/fx-layout-properties';
-import {FormGroupUtil} from '@core/services/form-group-util';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UnidadMedida } from '@core/models/cat/unidad-medida';
+import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
+import { UnidadMedidaService } from '@core/services/cat/unidad-medida.service';
+import { FormGroupUtil } from '@core/services/form-group-util';
+import { AbstractTabComponent } from '@shared/formularios-tabs/abstract-tab/abstract-tab.component';
+import { NGXLogger } from 'ngx-logger';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-evaluacion-etica-equipo-investigador',
@@ -36,19 +36,22 @@ export class EvaluacionEticaEquipoInvestigadorComponent extends AbstractTabCompo
     this.fxLayoutProperties.xs = 'column';
   }
 
-  ngOnInit(): void {
-    super.ngOnInit();
-    this.logger.debug(EvaluacionEticaEquipoInvestigadorComponent.name, 'ngOnInit()', 'start');
-    this.formGroup = new FormGroup({
+  crearFormGroup(): FormGroup {
+    this.logger.debug(EvaluacionEticaEquipoInvestigadorComponent.name, 'crearFormGroup()', 'start');
+    const formGroup = new FormGroup({
       titulo: new FormControl('2', [Validators.required]),
     });
-    this.logger.debug(EvaluacionEticaEquipoInvestigadorComponent.name, 'ngOnInit()', 'end');
+    this.logger.debug(EvaluacionEticaEquipoInvestigadorComponent.name, 'crearFormGroup()', 'end');
+    return formGroup;
   }
 
   getDatosIniciales(): {} {
-    return {
+    this.logger.debug(EvaluacionEticaEquipoInvestigadorComponent.name, 'getDatosIniciales()', 'start');
+    const datos = {
       titulo: '2'
     };
+    this.logger.debug(EvaluacionEticaEquipoInvestigadorComponent.name, 'getDatosIniciales()', 'end');
+    return datos;
   }
 
   crearObservable(): Observable<UnidadMedida> {
@@ -58,5 +61,9 @@ export class EvaluacionEticaEquipoInvestigadorComponent extends AbstractTabCompo
     unidad.descripcion = EvaluacionEticaEquipoInvestigadorComponent.name;
     this.logger.debug(EvaluacionEticaEquipoInvestigadorComponent.name, 'crearObservable()', 'end');
     return this.unidadMedidaService.create(unidad);
+  }
+
+  getDatosFormulario(): {} {
+    return this.formGroup.value;
   }
 }

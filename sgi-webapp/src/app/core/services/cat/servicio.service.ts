@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Servicio } from '@core/models/servicio';
+import { Servicio } from '@core/models/cat/servicio';
 import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
-import { BaseRestService } from './base-rest.service';
+import { BaseRestService } from '../base-rest.service';
 import { environment } from '@env';
 
 @Injectable({

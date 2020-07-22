@@ -14,7 +14,7 @@ export class EvaluacionEticaListadoComponent implements OnInit {
     private readonly logger: NGXLogger,
     private readonly traductor: TraductorService,
   ) {
-    this.textoCrear = this.traductor.getTexto('footer.evaluacionEtica.crear');
+    this.textoCrear = this.traductor.getTexto('footer.eti.evaluacionEtica.crear');
   }
 
   ngOnInit(): void {

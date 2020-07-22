@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Supervision } from '@core/models/cat/supervision';
+import { environment } from '@env';
 import { NGXLogger } from 'ngx-logger';
 
+import { BaseRestService } from '../base-rest.service';
 
-import { BaseRestService } from './base-rest.service';
-import { Supervision } from '@core/models/supervision';
-import { environment } from '@env';
 
 @Injectable({
   providedIn: 'root'

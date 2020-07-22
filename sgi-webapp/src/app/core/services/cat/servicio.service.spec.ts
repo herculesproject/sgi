@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SolicitudService } from './solicitud.service';
+import { ServicioService } from './servicio.service';
 import { HttpClientModule } from '@angular/common/http';
 import { NGXLogger } from 'ngx-logger';
-import { LayoutService } from './layout.service';
+import { LayoutService } from '../layout.service';
 import TestUtils from '@core/utils/test-utils';
 import { RouterTestingModule } from '@angular/router/testing';
 
-describe('SolicitudService', () => {
-  let service: SolicitudService;
+describe('ServicioService', () => {
+  let service: ServicioService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -22,7 +22,7 @@ describe('SolicitudService', () => {
         LayoutService,
       ],
     });
-    service = TestBed.inject(SolicitudService);
+    service = TestBed.inject(ServicioService);
   });
 
   it('should be created', () => {

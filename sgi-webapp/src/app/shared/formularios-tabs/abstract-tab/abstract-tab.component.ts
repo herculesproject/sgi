@@ -1,8 +1,8 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {FormGroup} from '@angular/forms';
-import {NGXLogger} from 'ngx-logger';
-import {Observable, Subscription} from 'rxjs';
-import {FormGroupUtil} from '@core/services/form-group-util';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { FormGroupUtil } from '@core/services/form-group-util';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-abstract-tab',
@@ -13,6 +13,7 @@ export abstract class AbstractTabComponent<T> implements OnInit, OnDestroy {
   warning: boolean;
   error: boolean;
   datosIniciales: T;
+  datosFormulario: T;
 
   formGroup: FormGroup;
   @Output() eventEmitter: EventEmitter<string>;
@@ -27,12 +28,14 @@ export abstract class AbstractTabComponent<T> implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.logger.debug(AbstractTabComponent.name, 'ngOnInit()', 'start');
-    this.formGroup = new FormGroup({});
+    this.datosIniciales = this.getDatosIniciales();
+    this.datosFormulario = this.getDatosIniciales();
+    this.formGroup = this.crearFormGroup();
     this.primeraComprobacion = true;
     this.subscripciones = [];
     this.warning = false;
     this.error = false;
-    this.datosIniciales = this.getDatosIniciales();
+
     this.logger.debug(AbstractTabComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -84,7 +87,9 @@ export abstract class AbstractTabComponent<T> implements OnInit, OnDestroy {
    */
   protected equals(): boolean {
     this.logger.debug(AbstractTabComponent.name, 'equals()', 'start');
-    const result = JSON.stringify(this.datosIniciales) === JSON.stringify(this.formGroup.value);
+    const datosIniciales = JSON.stringify(this.datosIniciales);
+    const datosFormulario = JSON.stringify(this.getDatosFormulario());
+    const result = datosIniciales === datosFormulario;
     this.logger.debug(AbstractTabComponent.name, 'equals()', 'end');
     return result;
   }
@@ -92,7 +97,7 @@ export abstract class AbstractTabComponent<T> implements OnInit, OnDestroy {
   /**
    * Ejecuta la llamada al servidor
    */
-  mandarPeticion(): Observable<any> {
+  mandarPeticion(): Observable<T> {
     return this.crearObservable();
   }
 
@@ -112,13 +117,20 @@ export abstract class AbstractTabComponent<T> implements OnInit, OnDestroy {
   actualizarDatos(res: T) {
     this.warning = false;
     this.datosIniciales = res;
+    this.datosFormulario = res;
   }
 
   /**
    * Crea la petición de la tab que se ejecutará cuando se guarde la
    * información en el servidor
    */
-  abstract crearObservable(): Observable<any>;
+  abstract crearObservable(): Observable<T>;
+
+
+  /**
+   * Crea el formGroup que usará la pestaña
+   */
+  abstract crearFormGroup(): FormGroup;
 
   /**
    * Carga los datos por defecto para la pestaña
@@ -127,4 +139,8 @@ export abstract class AbstractTabComponent<T> implements OnInit, OnDestroy {
    */
   abstract getDatosIniciales(valor?: any): T;
 
+  /**
+   * Carga los datos del formulario a la entidad correspodiente
+   */
+  abstract getDatosFormulario(): T;
 }

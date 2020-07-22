@@ -1,43 +1,43 @@
 <!-- Unidad Medida crear -->
 <section class="unidad-medida-crear">
-  <h2>{{'unidad-medida.crear.titulo' | translate}}</h2>
+  <h2>{{'cat.unidad-medida.crear.titulo' | translate}}</h2>
   <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
     [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field appearance="fill">
-        <mat-label>{{'unidad-medida.crear.descripcion.titulo' | translate}}</mat-label>
+        <mat-label>{{'cat.unidad-medida.crear.descripcion.titulo' | translate}}</mat-label>
         <input #descripcion matInput formControlName="descripcion" type="text" id="descripcion"
-          placeholder="{{'unidad-medida.crear.descripcion.titulo' | translate}}" required>
+          placeholder="{{'cat.unidad-medida.crear.descripcion.titulo' | translate}}" required>
         <mat-hint>{{descripcion.value.length}} / 100</mat-hint>
         <mat-error
           *ngIf="FormGroupUtil.checkError(formGroup, 'descripcion') && formGroup.get('descripcion').errors.required">
-          {{'unidad-medida.crear.descripcion.error.requerido' | translate}}
+          {{'cat.unidad-medida.crear.descripcion.error.requerido' | translate}}
         </mat-error>
         <mat-error
           *ngIf="FormGroupUtil.checkError(formGroup, 'descripcion') && formGroup.get('descripcion').errors.maxlength">
-          {{'unidad-medida.crear.descripcion.error.maximo' | translate}}
+          {{'cat.unidad-medida.crear.descripcion.error.maximo' | translate}}
         </mat-error>
       </mat-form-field>
     </div>
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field appearance="fill">
-        <mat-label>{{'unidad-medida.crear.abreviatura.titulo' | translate}}</mat-label>
+        <mat-label>{{'cat.unidad-medida.crear.abreviatura.titulo' | translate}}</mat-label>
         <input #abreviatura matInput formControlName="abreviatura" type="text" id="abreviatura"
-          placeholder="{{'unidad-medida.crear.abreviatura.titulo' | translate}}" required>
+          placeholder="{{'cat.unidad-medida.crear.abreviatura.titulo' | translate}}" required>
         <mat-hint>{{abreviatura.value.length}} / 10</mat-hint>
         <mat-error
           *ngIf="FormGroupUtil.checkError(formGroup, 'abreviatura') && formGroup.get('abreviatura').errors.required">
-          {{'unidad-medida.crear.abreviatura.error.requerido' | translate}}
+          {{'cat.unidad-medida.crear.abreviatura.error.requerido' | translate}}
         </mat-error>
         <mat-error
           *ngIf="FormGroupUtil.checkError(formGroup, 'abreviatura') && formGroup.get('abreviatura').errors.maxlength">
-          {{'unidad-medida.crear.abreviatura.error.maximo' | translate}}
+          {{'cat.unidad-medida.crear.abreviatura.error.maximo' | translate}}
         </mat-error>
         <mat-error
           *ngIf="FormGroupUtil.checkError(formGroup, 'abreviatura') && formGroup.get('abreviatura').errors.minlength">
-          {{'unidad-medida.crear.abreviatura.error.minimo' | translate}}
+          {{'cat.unidad-medida.crear.abreviatura.error.minimo' | translate}}
         </mat-error>
       </mat-form-field>
     </div>
@@ -48,7 +48,7 @@
       {{'botones.guardar'| translate}}
     </button>
     <button fxFlex="20%" class="md-primary" aria-label="Center Align" md-button mat-raised-button
-            [routerLink]="'/' + UrlUtils.cat + '/' + UrlUtils.unidadMedida">{{'botones.cancelar'| translate}}
+      [routerLink]="'/' + UrlUtils.cat.root + '/' + UrlUtils.cat.unidadMedidas">{{'botones.cancelar'| translate}}
     </button>
   </div>
 </section>

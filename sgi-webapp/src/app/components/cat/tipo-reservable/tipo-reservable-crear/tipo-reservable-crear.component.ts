@@ -1,20 +1,20 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { FormGroupUtil } from '@core/services/form-group-util';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { NGXLogger } from 'ngx-logger';
-import { TraductorService } from '@core/services/traductor.service';
-import { TipoReservableService } from '@core/services/tipo-reservable.service';
+import { EstadoTipoReservableEnum } from '@core/enums/cat/estado-tipo-reservable-enum';
+import { Servicio } from '@core/models/cat/servicio';
+import { TipoReservable } from '@core/models/cat/tipo-reservable';
 import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
+import { ServicioService } from '@core/services/cat/servicio.service';
+import { TipoReservableService } from '@core/services/cat/tipo-reservable.service';
+import { FormGroupUtil } from '@core/services/form-group-util';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { TraductorService } from '@core/services/traductor.service';
 import { UrlUtils } from '@core/utils/url-utils';
-import { TipoReservable } from '@core/models/tipo-reservable';
-import { Servicio } from '@core/models/servicio';
-import { ServicioService } from '@core/services/servicio.service';
+import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { EstadoTipoReservableEnum } from '@core/enums/estado-tipo-reservable-enum';
 
 @Component({
   selector: 'app-tipo-reservable-crear',
@@ -180,9 +180,9 @@ export class TipoReservableCrearComponent implements OnInit, OnDestroy {
           // Añadimos esta comprobación para que no nos eche al crear uno nuevo
           if (id) {
             this.snackBarService.mostrarMensajeSuccess(
-              this.traductor.getTexto('tipo-reservable.actualizar.no-encontrado')
+              this.traductor.getTexto('cat.tipo-reservable.actualizar.no-encontrado')
             );
-            this.router.navigateByUrl(`${UrlUtils.cat}/${UrlUtils.tipoReservables}`).then();
+            this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.tipoReservables}`).then();
           }
           this.logger.debug(
             TipoReservableCrearComponent.name,
@@ -289,9 +289,9 @@ export class TipoReservableCrearComponent implements OnInit, OnDestroy {
     this.tipoReservableServiceCreateSubscription = this.tipoReservableService.create(this.tipoReservable).subscribe(
       () => {
         this.snackBarService.mostrarMensajeSuccess(
-          this.traductor.getTexto('tipo-reservable.crear.correcto')
+          this.traductor.getTexto('cat.tipo-reservable.crear.correcto')
         );
-        this.router.navigateByUrl(`${UrlUtils.cat}/${UrlUtils.tipoReservables}`).then();
+        this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.tipoReservables}`).then();
         this.logger.debug(
           TipoReservableCrearComponent.name,
           'crearTipoReservable()',
@@ -300,7 +300,7 @@ export class TipoReservableCrearComponent implements OnInit, OnDestroy {
       },
       () => {
         this.snackBarService.mostrarMensajeError(
-          this.traductor.getTexto('tipo-reservable.crear.error')
+          this.traductor.getTexto('cat.tipo-reservable.crear.error')
         );
         this.desactivarAceptar = false;
         this.logger.debug(

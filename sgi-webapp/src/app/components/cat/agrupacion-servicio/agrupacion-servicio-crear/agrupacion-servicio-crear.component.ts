@@ -1,15 +1,15 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Gestor } from '@core/models/cat/gestor';
+import { Servicio } from '@core/models/cat/servicio';
+import { Supervision } from '@core/models/cat/supervision';
 import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
-import { Gestor } from '@core/models/gestor';
-import { Servicio } from '@core/models/servicio';
-import { Supervision } from '@core/models/supervision';
+import { ServicioService } from '@core/services/cat/servicio.service';
+import { SupervisionService } from '@core/services/cat/supervision.service';
 import { FormGroupUtil } from '@core/services/form-group-util';
-import { ServicioService } from '@core/services/servicio.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SupervisionService } from '@core/services/supervision.service';
 import { TraductorService } from '@core/services/traductor.service';
 import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
@@ -142,9 +142,9 @@ export class AgrupacionServicioCrearComponent implements OnInit, OnDestroy {
     ).subscribe(
       () => {
         this.snackBarService.mostrarMensajeSuccess(
-          this.traductor.getTexto('servicio.crear.correcto')
+          this.traductor.getTexto('cat.servicio.crear.correcto')
         );
-        this.router.navigateByUrl(`${UrlUtils.cat}/${UrlUtils.agrupacionServicios}`).then();
+        this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.agrupacionServicios}`).then();
         this.logger.debug(
           AgrupacionServicioCrearComponent.name,
           'crearServicio()',
@@ -153,7 +153,7 @@ export class AgrupacionServicioCrearComponent implements OnInit, OnDestroy {
       },
       () => {
         this.snackBarService.mostrarMensajeError(
-          this.traductor.getTexto('servicio.crear.error')
+          this.traductor.getTexto('cat.servicio.crear.error')
         );
         this.desactivarAceptar = false;
         this.logger.debug(

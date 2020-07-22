@@ -1,29 +1,27 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-
-import { NGXLogger } from 'ngx-logger';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Servicio } from '@core/models/cat/servicio';
+import { Supervision } from '@core/models/cat/supervision';
 import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
+import { ServicioService } from '@core/services/cat/servicio.service';
+import { SupervisionService } from '@core/services/cat/supervision.service';
 import { FormGroupUtil } from '@core/services/form-group-util';
-
-import { Subscription, Observable, of, zip } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TraductorService } from '@core/services/traductor.service';
-import { ServicioService } from '@core/services/servicio.service';
-import { SupervisionService } from '@core/services/supervision.service';
-
-import { Servicio } from '@core/models/servicio';
-import { Supervision } from '@core/models/supervision';
-
-import { UrlUtils } from '@core/utils/url-utils';
-
 import { Filter, FilterType } from '@core/services/types';
+import { UrlUtils } from '@core/utils/url-utils';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, of, Subscription, zip } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
-import { AgrupacionServicioDatosGeneralesComponent } from '../agrupacion-servicio-formulario/agrupacion-servicio-datos-generales/agrupacion-servicio-datos-generales.component';
-import { AgrupacionServicioGestorComponent } from '../agrupacion-servicio-formulario/agrupacion-servicio-gestor/agrupacion-servicio-gestor.component';
+import {
+  AgrupacionServicioDatosGeneralesComponent,
+} from '../agrupacion-servicio-formulario/agrupacion-servicio-datos-generales/agrupacion-servicio-datos-generales.component';
+import {
+  AgrupacionServicioGestorComponent,
+} from '../agrupacion-servicio-formulario/agrupacion-servicio-gestor/agrupacion-servicio-gestor.component';
 
 
 @Component({
@@ -122,12 +120,11 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
           });
         } else {
           this.snackBarService.mostrarMensajeSuccess(
-            this.traductor.getTexto('servicio.actualizar.no-encontrado')
+            this.traductor.getTexto('cat.servicio.actualizar.no-encontrado')
           );
-          this.router.navigateByUrl(UrlUtils.agrupacionServicios).then();
+          this.router.navigateByUrl(UrlUtils.cat.agrupacionServicios).then();
           return of(null);
         }
-
       })
     ).subscribe(
       (response) => {
@@ -137,14 +134,10 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
       },
       () => {
         this.snackBarService.mostrarMensajeSuccess(
-          this.traductor.getTexto('servicio.actualizar.no-encontrado')
+          this.traductor.getTexto('cat.servicio.actualizar.no-encontrado')
         );
-        this.router.navigateByUrl(UrlUtils.agrupacionServicios).then();
-
-
+        this.router.navigateByUrl(UrlUtils.cat.agrupacionServicios).then();
       });
-
-
     this.logger.debug(AgrupacionServicioActualizarComponent.name, 'getServicio()', 'end');
   }
 
@@ -204,9 +197,9 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
       ).subscribe(
         () => {
           this.snackBarService.mostrarMensajeSuccess(
-            this.traductor.getTexto('servicio.actualizar.correcto')
+            this.traductor.getTexto('cat.servicio.actualizar.correcto')
           );
-          this.router.navigateByUrl(`${UrlUtils.cat}/${UrlUtils.agrupacionServicios}`).then();
+          this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.agrupacionServicios}`).then();
           this.logger.debug(
             AgrupacionServicioActualizarComponent.name,
             'actualizarServicio()',
@@ -215,7 +208,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
         },
         () => {
           this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('servicio.actualizar.error')
+            this.traductor.getTexto('cat.servicio.actualizar.error')
           );
           this.desactivarAceptar = false;
           this.logger.debug(

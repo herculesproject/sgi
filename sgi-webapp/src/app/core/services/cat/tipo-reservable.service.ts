@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
-import { TipoReservable } from '@core/models/tipo-reservable';
-import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
-import { BaseRestService } from './base-rest.service';
+import { Injectable } from '@angular/core';
+import { TipoReservable } from '@core/models/cat/tipo-reservable';
 import { environment } from '@env';
+import { NGXLogger } from 'ngx-logger';
+
+import { BaseRestService } from '../base-rest.service';
 
 @Injectable({
   providedIn: 'root'

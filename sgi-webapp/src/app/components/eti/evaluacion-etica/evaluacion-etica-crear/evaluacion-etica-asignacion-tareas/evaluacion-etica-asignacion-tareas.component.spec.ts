@@ -1,13 +1,13 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FlexModule } from '@angular/flex-layout';
+import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import TestUtils from '@core/utils/test-utils';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { NGXLogger } from 'ngx-logger';
 
-import {EvaluacionEticaAsignacionTareasComponent} from './evaluacion-etica-asignacion-tareas.component';
-import {NGXLogger} from 'ngx-logger';
-import TestUtils from '../../../../../core/utils/test-utils';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {FlexModule} from '@angular/flex-layout';
-import {MaterialDesignModule} from '@material/material-design.module';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {ReactiveFormsModule} from '@angular/forms';
+import { EvaluacionEticaAsignacionTareasComponent } from './evaluacion-etica-asignacion-tareas.component';
 
 describe('EvaluacionEticaEquipoAsignacionTareasComponent', () => {
   let component: EvaluacionEticaAsignacionTareasComponent;
@@ -25,7 +25,7 @@ describe('EvaluacionEticaEquipoAsignacionTareasComponent', () => {
         ReactiveFormsModule
       ],
       providers: [
-        {provide: NGXLogger, useValue: TestUtils.getLoggerSpy()},
+        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
       ],
     })
       .compileComponents();
