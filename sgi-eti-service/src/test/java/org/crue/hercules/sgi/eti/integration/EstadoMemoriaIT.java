@@ -277,7 +277,8 @@ public class EstadoMemoriaIT {
 
     return new Memoria(id, numReferencia, generarMockPeticionEvaluacion(id, titulo + " PeticionEvaluacion" + id),
         generarMockComite(id, "comite" + id, true), titulo, "user-00" + id,
-        generarMockTipoMemoria(1L, "TipoMemoria1", true), LocalDate.now(), Boolean.TRUE, LocalDate.now(), version);
+        generarMockTipoMemoria(1L, "TipoMemoria1", true), LocalDate.now(), Boolean.TRUE, LocalDate.now(), version,
+        generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE));
   }
 
   /**

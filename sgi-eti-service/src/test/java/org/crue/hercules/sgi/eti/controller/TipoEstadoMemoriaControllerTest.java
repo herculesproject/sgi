@@ -323,9 +323,9 @@ public class TipoEstadoMemoriaControllerTest {
   /**
    * Función que devuelve un objeto TipoEstadoMemoria
    * 
-   * @param id     id del tipoEstadoMemoria
-   * @param nombre el nombre del tipo estado de memoria
-   * @return el objeto tipo estado memoria
+   * @param id     id del TipoEstadoMemoria
+   * @param nombre el nombre del TipoEstadoMemoria
+   * @return el objeto TipoEstadoMemoria
    */
 
   public TipoEstadoMemoria generarMockTipoEstadoMemoria(Long id, String nombre) {

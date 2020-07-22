@@ -258,9 +258,9 @@ public class TipoEstadoMemoriaIT {
   /**
    * Función que devuelve un objeto TipoEstadoMemoria
    * 
-   * @param id     id del tipoEstadoMemoria
-   * @param nombre nombre del tipo estado de memoria
-   * @return el objeto tipo estado memoria
+   * @param id     id del TipoEstadoMemoria
+   * @param nombre nombre del TipoEstadoMemoria
+   * @return el objeto TipoEstadoMemoria
    */
 
   public TipoEstadoMemoria generarMockTipoEstadoMemoria(Long id, String nombre) {

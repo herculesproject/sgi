@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -95,5 +96,11 @@ public class Memoria extends BaseEntity {
   @NotNull
   @Size(max = 8)
   private Integer version;
+
+  /** Estado Memoria Actual */
+  @OneToOne
+  @JoinColumn(name = "estado_actual_id", nullable = false)
+  @NotNull
+  private TipoEstadoMemoria estadoActual;
 
 }

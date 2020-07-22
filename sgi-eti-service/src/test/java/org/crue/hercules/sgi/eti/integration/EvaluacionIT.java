@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -316,7 +317,8 @@ public class EvaluacionIT {
     tipoMemoria.setActivo(Boolean.TRUE);
 
     Memoria memoria = new Memoria(id, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
-        tipoMemoria, LocalDate.now(), Boolean.FALSE, LocalDate.now(), 3);
+        tipoMemoria, LocalDate.now(), Boolean.FALSE, LocalDate.now(), 3,
+        new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE));
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
 

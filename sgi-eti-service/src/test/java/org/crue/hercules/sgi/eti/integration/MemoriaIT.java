@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
+import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -245,7 +246,8 @@ public class MemoriaIT {
 
     return new Memoria(id, numReferencia, generarMockPeticionEvaluacion(id, titulo + " PeticionEvaluacion" + id),
         generarMockComite(id, "comite" + id, true), titulo, "user-00" + id,
-        generarMockTipoMemoria(1L, "TipoMemoria1", true), LocalDate.now(), Boolean.TRUE, LocalDate.now(), version);
+        generarMockTipoMemoria(1L, "TipoMemoria1", true), LocalDate.now(), Boolean.TRUE, LocalDate.now(), version,
+        generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE));
   }
 
   /**
@@ -304,6 +306,18 @@ public class MemoriaIT {
    */
   private TipoMemoria generarMockTipoMemoria(Long id, String nombre, Boolean activo) {
     return new TipoMemoria(id, nombre, activo);
+
+  }
+
+  /**
+   * Función que devuelve un objeto TipoEstadoMemoria.
+   * 
+   * @param id     identificador del TipoEstadoMemoria.
+   * @param nombre nombre.
+   * @param activo indicador de activo.
+   */
+  private TipoEstadoMemoria generarMockTipoEstadoMemoria(Long id, String nombre, Boolean activo) {
+    return new TipoEstadoMemoria(id, nombre, activo);
 
   }
 

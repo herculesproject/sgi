@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.eti.model.InformeFormulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
+import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -282,7 +283,7 @@ public class InformeFormularioIT {
     tipoMemoria.setActivo(Boolean.TRUE);
 
     Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria1", "user-001", tipoMemoria,
-        LocalDate.now(), Boolean.FALSE, LocalDate.now(), 3);
+        LocalDate.now(), Boolean.FALSE, LocalDate.now(), 3, new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE));
     Formulario formulario = new Formulario(1L, "FORM-1", "Formulario1", Boolean.TRUE);
     FormularioMemoria formularioMemoria = new FormularioMemoria(1L, memoria, formulario, Boolean.TRUE);
 

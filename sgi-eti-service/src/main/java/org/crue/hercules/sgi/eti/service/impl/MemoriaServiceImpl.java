@@ -38,7 +38,7 @@ public class MemoriaServiceImpl implements MemoriaService {
    */
   @Transactional
   public Memoria create(Memoria memoria) {
-    log.debug("Petición a create Memoria : {} - start", memoria);
+    log.debug("Memoria create(Memoria memoria) - start");
     Assert.isNull(memoria.getId(), "Memoria id tiene que ser null para crear un nueva memoria");
 
     return memoriaRepository.save(memoria);
@@ -130,6 +130,7 @@ public class MemoriaServiceImpl implements MemoriaService {
       memoria.setRequiereRetrospectiva(memoriaActualizar.getRequiereRetrospectiva());
       memoria.setFechaRetrospectiva(memoriaActualizar.getFechaRetrospectiva());
       memoria.setVersion(memoriaActualizar.getVersion());
+      memoria.setEstadoActual(memoriaActualizar.getEstadoActual());
 
       Memoria returnValue = memoriaRepository.save(memoria);
       log.debug("update(Memoria memoriaActualizar) - end");

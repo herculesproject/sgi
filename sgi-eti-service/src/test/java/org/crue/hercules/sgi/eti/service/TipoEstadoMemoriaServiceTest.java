@@ -91,15 +91,17 @@ public class TipoEstadoMemoriaServiceTest {
 
   @Test
   public void update_ReturnsTipoEstadoMemoria() {
-    // given: Un nuevo tipo estado Memoria con el servicio actualizado
-    TipoEstadoMemoria tipoEstadoMemoriaServicioActualizado = generarMockTipoEstadoMemoria(1L, "TipoEstadoMemoria1 actualizada");
+    // given: Un nuevo TipoEstadoMemoria con el servicio actualizado
+    TipoEstadoMemoria tipoEstadoMemoriaServicioActualizado = generarMockTipoEstadoMemoria(1L,
+        "TipoEstadoMemoria1 actualizada");
 
     TipoEstadoMemoria tipoEstadoMemoria = generarMockTipoEstadoMemoria(1L, "TipoEstadoMemoria1");
 
     BDDMockito.given(tipoEstadoMemoriaRepository.findById(1L)).willReturn(Optional.of(tipoEstadoMemoria));
-    BDDMockito.given(tipoEstadoMemoriaRepository.save(tipoEstadoMemoria)).willReturn(tipoEstadoMemoriaServicioActualizado);
+    BDDMockito.given(tipoEstadoMemoriaRepository.save(tipoEstadoMemoria))
+        .willReturn(tipoEstadoMemoriaServicioActualizado);
 
-    // when: Actualizamos el tipo estado Memoria
+    // when: Actualizamos el TipoEstadoMemoria
     TipoEstadoMemoria tipoEstadoMemoriaActualizado = tipoEstadoMemoriaService.update(tipoEstadoMemoria);
 
     // then: El tipo estado Memoria se actualiza correctamente.
@@ -172,7 +174,8 @@ public class TipoEstadoMemoriaServiceTest {
     // given: One hundred TipoEstadoMemoria
     List<TipoEstadoMemoria> tipoEstadoMemorias = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      tipoEstadoMemorias.add(generarMockTipoEstadoMemoria(Long.valueOf(i), "TipoEstadoMemoria" + String.format("%03d", i)));
+      tipoEstadoMemorias
+          .add(generarMockTipoEstadoMemoria(Long.valueOf(i), "TipoEstadoMemoria" + String.format("%03d", i)));
     }
 
     BDDMockito.given(tipoEstadoMemoriaRepository.findAll(ArgumentMatchers.<Specification<TipoEstadoMemoria>>any(),
@@ -193,7 +196,8 @@ public class TipoEstadoMemoriaServiceTest {
     // given: One hundred TipoEstadoMemorias
     List<TipoEstadoMemoria> tipoEstadoMemorias = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      tipoEstadoMemorias.add(generarMockTipoEstadoMemoria(Long.valueOf(i), "TipoEstadoMemoria" + String.format("%03d", i)));
+      tipoEstadoMemorias
+          .add(generarMockTipoEstadoMemoria(Long.valueOf(i), "TipoEstadoMemoria" + String.format("%03d", i)));
     }
 
     BDDMockito.given(tipoEstadoMemoriaRepository.findAll(ArgumentMatchers.<Specification<TipoEstadoMemoria>>any(),
@@ -230,7 +234,7 @@ public class TipoEstadoMemoriaServiceTest {
   /**
    * Función que devuelve un objeto TipoEstadoMemoria
    * 
-   * @param id     id del tipoEstadoMemoria
+   * @param id     id del TipoEstadoMemoria
    * @param nombre nombre del TipoEstadoMemoria
    * @return el objeto TipoEstadoMemoria
    */

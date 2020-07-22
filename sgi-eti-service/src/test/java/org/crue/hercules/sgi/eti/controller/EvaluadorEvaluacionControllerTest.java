@@ -22,6 +22,7 @@ import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.service.EvaluadorEvaluacionService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -400,7 +401,8 @@ public class EvaluadorEvaluacionControllerTest {
     tipoMemoria.setActivo(Boolean.TRUE);
 
     Memoria memoria = new Memoria(id, "numRef-001", peticionEvaluacion, comite, "Memoria" + id, "user-00" + id,
-        tipoMemoria, LocalDate.now(), Boolean.FALSE, LocalDate.now(), 3);
+        tipoMemoria, LocalDate.now(), Boolean.FALSE, LocalDate.now(), 3,
+        new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE));
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
 
