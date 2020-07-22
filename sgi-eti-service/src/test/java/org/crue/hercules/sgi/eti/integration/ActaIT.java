@@ -6,6 +6,7 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,6 +51,7 @@ public class ActaIT {
     Assertions.assertThat(acta.getMinutoFin()).as("minutoFin").isEqualTo(0);
     Assertions.assertThat(acta.getResumen()).as("resumen").isEqualTo("Resumen123");
     Assertions.assertThat(acta.getNumero()).as("numero").isEqualTo(123);
+    Assertions.assertThat(acta.getEstadoActual().getId()).as("estadoActual.id").isEqualTo(1L);
     Assertions.assertThat(acta.getInactiva()).as("inactiva").isEqualTo(true);
     Assertions.assertThat(acta.getActivo()).as("activo").isEqualTo(true);
   }
@@ -75,6 +77,7 @@ public class ActaIT {
     Assertions.assertThat(acta.getMinutoFin()).as("minutoFin").isEqualTo(0);
     Assertions.assertThat(acta.getResumen()).as("resumen").isEqualTo("Resumen123");
     Assertions.assertThat(acta.getNumero()).as("numero").isEqualTo(123);
+    Assertions.assertThat(acta.getEstadoActual().getId()).as("estadoActual.id").isEqualTo(1L);
     Assertions.assertThat(acta.getInactiva()).as("inactiva").isEqualTo(true);
     Assertions.assertThat(acta.getActivo()).as("activo").isEqualTo(true);
   }
@@ -129,6 +132,7 @@ public class ActaIT {
     Assertions.assertThat(acta.getMinutoFin()).as("minutoFin").isEqualTo(0);
     Assertions.assertThat(acta.getResumen()).as("resumen").isEqualTo("Resumen456");
     Assertions.assertThat(acta.getNumero()).as("numero").isEqualTo(456);
+    Assertions.assertThat(acta.getEstadoActual().getId()).as("estadoActual.id").isEqualTo(1L);
     Assertions.assertThat(acta.getInactiva()).as("inactiva").isEqualTo(true);
     Assertions.assertThat(acta.getActivo()).as("activo").isEqualTo(true);
   }
@@ -254,6 +258,11 @@ public class ActaIT {
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(100L);
 
+    TipoEstadoActa tipoEstadoActa = new TipoEstadoActa();
+    tipoEstadoActa.setId(1L);
+    tipoEstadoActa.setNombre("En elaboración");
+    tipoEstadoActa.setActivo(Boolean.TRUE);
+
     Acta acta = new Acta();
     acta.setId(id);
     acta.setConvocatoriaReunion(convocatoriaReunion);
@@ -263,6 +272,7 @@ public class ActaIT {
     acta.setMinutoFin(0);
     acta.setResumen("Resumen" + numero);
     acta.setNumero(numero);
+    acta.setEstadoActual(tipoEstadoActa);
     acta.setInactiva(true);
     acta.setActivo(true);
 

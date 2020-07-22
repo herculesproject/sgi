@@ -11,6 +11,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.ActaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 import org.crue.hercules.sgi.eti.service.ActaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
@@ -65,6 +66,7 @@ public class ActaControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("minutoFin").value(0))
         .andExpect(MockMvcResultMatchers.jsonPath("resumen").value("Resumen123"))
         .andExpect(MockMvcResultMatchers.jsonPath("numero").value(123))
+        .andExpect(MockMvcResultMatchers.jsonPath("estadoActual.id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("inactiva").value(true))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true));
   }
@@ -81,7 +83,7 @@ public class ActaControllerTest {
   @Test
   public void newActa_ReturnsActa() throws Exception {
     // given: Un acta nuevo
-    String nuevoActaJson = "{\"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": \"Resumen123\", \"numero\": 123, \"inactiva\": true, \"activo\": true}";
+    String nuevoActaJson = "{\"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": \"Resumen123\", \"numero\": 123, \"estadoActual\": {\"id\": 1}, \"inactiva\": true, \"activo\": true}";
 
     Acta acta = generarMockActa(1L, 123);
 
@@ -101,6 +103,7 @@ public class ActaControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("minutoFin").value(0))
         .andExpect(MockMvcResultMatchers.jsonPath("resumen").value("Resumen123"))
         .andExpect(MockMvcResultMatchers.jsonPath("numero").value(123))
+        .andExpect(MockMvcResultMatchers.jsonPath("estadoActual.id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("inactiva").value(true))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true));
   }
@@ -108,7 +111,7 @@ public class ActaControllerTest {
   @Test
   public void newActa_Error_Returns400() throws Exception {
     // given: Un acta nuevo que produce un error al crearse
-    String nuevoActaJson = "{\"id\": 1, \"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": \"Resumen123\", \"numero\": 123, \"inactiva\": true, \"activo\": true}";
+    String nuevoActaJson = "{\"id\": 1, \"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": \"Resumen123\", \"numero\": 123, \"estadoActual\": {\"id\": 1}, \"inactiva\": true, \"activo\": true}";
 
     BDDMockito.given(actaService.create(ArgumentMatchers.<Acta>any())).willThrow(new IllegalArgumentException());
 
@@ -124,7 +127,7 @@ public class ActaControllerTest {
   @Test
   public void replaceActa_ReturnsActa() throws Exception {
     // given: Un acta a modificar
-    String replaceActaJson = "{\"id\": 1, \"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": \"Resumen123\", \"numero\": 123, \"inactiva\": true, \"activo\": true}";
+    String replaceActaJson = "{\"id\": 1, \"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": \"Resumen123\", \"numero\": 123, \"estadoActual\": {\"id\": 1}, \"inactiva\": true, \"activo\": true}";
 
     Acta actaActualizado = generarMockActa(1L, 456);
 
@@ -142,6 +145,7 @@ public class ActaControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("minutoFin").value(0))
         .andExpect(MockMvcResultMatchers.jsonPath("resumen").value("Resumen456"))
         .andExpect(MockMvcResultMatchers.jsonPath("numero").value(456))
+        .andExpect(MockMvcResultMatchers.jsonPath("estadoActual.id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("inactiva").value(true))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true));
   }
@@ -149,7 +153,7 @@ public class ActaControllerTest {
   @Test
   public void replaceActa_NotFound() throws Exception {
     // given: Un acta a modificar
-    String replaceActaJson = "{\"id\": 1, \"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": \"Resumen123\", \"numero\": 123, \"inactiva\": true, \"activo\": true}";
+    String replaceActaJson = "{\"id\": 1, \"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": \"Resumen123\", \"numero\": 123, \"estadoActual\": {\"id\": 1}, \"inactiva\": true, \"activo\": true}";
 
     BDDMockito.given(actaService.update(ArgumentMatchers.<Acta>any())).will((InvocationOnMock invocation) -> {
       throw new ActaNotFoundException(((Acta) invocation.getArgument(0)).getId());
@@ -335,6 +339,11 @@ public class ActaControllerTest {
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(100L);
 
+    TipoEstadoActa tipoEstadoActa = new TipoEstadoActa();
+    tipoEstadoActa.setId(id);
+    tipoEstadoActa.setNombre("En elaboración");
+    tipoEstadoActa.setActivo(Boolean.TRUE);
+
     Acta acta = new Acta();
     acta.setId(id);
     acta.setConvocatoriaReunion(convocatoriaReunion);
@@ -344,6 +353,7 @@ public class ActaControllerTest {
     acta.setMinutoFin(0);
     acta.setResumen("Resumen" + numero);
     acta.setNumero(numero);
+    acta.setEstadoActual(tipoEstadoActa);
     acta.setInactiva(true);
     acta.setActivo(true);
 

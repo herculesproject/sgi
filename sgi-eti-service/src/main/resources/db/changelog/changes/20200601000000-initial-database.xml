@@ -506,6 +506,7 @@
       <column name="numero" type="INT">
         <constraints nullable="false" />
       </column>
+      <column name="estado_actual_id" type="BIGINT" />
       <column name="inactiva" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>
@@ -859,6 +860,10 @@
 
   <changeSet author="master" id="20200601000000-respuesta_formulario_componente_formulario_FK">
     <addForeignKeyConstraint baseColumnNames="componente_formulario_id" baseTableName="respuesta_formulario" constraintName="respuesta_formulario_componente_formulario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="componente_formulario" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-acta_tipo_estado_acta_FK">
+    <addForeignKeyConstraint baseColumnNames="estado_actual_id" baseTableName="acta" constraintName="acta_tipo_estado_acta_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_estado_acta" validate="true" />
   </changeSet>
 
   <!-- ########################################################## -->

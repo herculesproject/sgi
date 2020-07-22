@@ -79,6 +79,12 @@ public class Acta extends BaseEntity {
   @Column(name = "numero", nullable = false)
   private Integer numero;
 
+  /** Tipo Estado Acta */
+  @OneToOne
+  @JoinColumn(name = "estado_actual_id", nullable = false)
+  @NotNull
+  private TipoEstadoActa estadoActual;
+
   /** Inactiva */
   @Column(name = "inactiva", columnDefinition = "boolean default true", nullable = false)
   @NotNull

@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.ActaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 import org.crue.hercules.sgi.eti.repository.ActaRepository;
 import org.crue.hercules.sgi.eti.service.impl.ActaServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,6 +56,7 @@ public class ActaServiceTest {
     Assertions.assertThat(acta.getMinutoFin()).as("minutoFin").isEqualTo(0);
     Assertions.assertThat(acta.getResumen()).as("resumen").isEqualTo("Resumen123");
     Assertions.assertThat(acta.getNumero()).as("numero").isEqualTo(123);
+    Assertions.assertThat(acta.getEstadoActual().getId()).as("estadoActual.id").isEqualTo(1);
     Assertions.assertThat(acta.getInactiva()).as("inactiva").isEqualTo(true);
     Assertions.assertThat(acta.getActivo()).as("activo").isEqualTo(true);
   }
@@ -88,6 +90,7 @@ public class ActaServiceTest {
     Assertions.assertThat(actaCreado.getMinutoFin()).as("minutoFin").isEqualTo(0);
     Assertions.assertThat(actaCreado.getResumen()).as("resumen").isEqualTo("Resumen123");
     Assertions.assertThat(actaCreado.getNumero()).as("numero").isEqualTo(123);
+    Assertions.assertThat(actaCreado.getEstadoActual().getId()).as("estadoActual.id").isEqualTo(1);
     Assertions.assertThat(actaCreado.getInactiva()).as("inactiva").isEqualTo(true);
     Assertions.assertThat(actaCreado.getActivo()).as("activo").isEqualTo(true);
   }
@@ -103,6 +106,7 @@ public class ActaServiceTest {
 
   @Test
   public void update_ReturnsActa() {
+
     // given: Un nuevo acta con el resumen actualizado
     Acta actaResumenActualizado = generarMockActa(1L, 123);
     actaResumenActualizado.setResumen("Resumen actualizado");
@@ -118,6 +122,7 @@ public class ActaServiceTest {
     // then: El acta se actualiza correctamente.
     Assertions.assertThat(actaActualizado.getId()).isEqualTo(1L);
     Assertions.assertThat(actaActualizado.getResumen()).isEqualTo("Resumen actualizado");
+
   }
 
   @Test
@@ -249,6 +254,11 @@ public class ActaServiceTest {
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(100L);
 
+    TipoEstadoActa tipoEstadoActa = new TipoEstadoActa();
+    tipoEstadoActa.setId(1L);
+    tipoEstadoActa.setNombre("En elaboración");
+    tipoEstadoActa.setActivo(Boolean.TRUE);
+
     Acta acta = new Acta();
     acta.setId(id);
     acta.setConvocatoriaReunion(convocatoriaReunion);
@@ -258,6 +268,7 @@ public class ActaServiceTest {
     acta.setMinutoFin(0);
     acta.setResumen("Resumen" + numero);
     acta.setNumero(numero);
+    acta.setEstadoActual(tipoEstadoActa);
     acta.setInactiva(true);
     acta.setActivo(true);
 

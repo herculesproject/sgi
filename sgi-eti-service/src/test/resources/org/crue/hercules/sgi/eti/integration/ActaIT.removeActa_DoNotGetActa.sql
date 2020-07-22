@@ -12,6 +12,9 @@ INSERT INTO ETI.CONVOCATORIA_REUNION
 (ID, COMITE_ID, FECHA_EVALUACION, FECHA_LIMITE, LUGAR, ORDEN_DIA, CODIGO, TIPO_CONVOCATORIA_REUNION_ID, HORA_INICIO, MINUTO_INICIO, FECHA_ENVIO, ACTIVO)
 VALUES(100, 1, '2020-07-01 00:00:00.000', '2020-08-01', 'Lugar 01', 'Orden del día convocatoria reunión 01', 'CR-01', 1, 8, 30, '2020-07-13', true);
 
+-- TIPO ESTADO ACTA 
+INSERT INTO eti.tipo_estado_acta (id, nombre, activo) VALUES (1, 'En elaboración', true);
+
 -- ACTA
-INSERT INTO eti.acta (id, convocatoria_reunion_id, hora_inicio, minuto_inicio, hora_fin, minuto_fin, resumen, numero, inactiva, activo)
-  VALUES (2, 100, 10, 15, 12, 0, 'Resumen124', 124, true, true);
+INSERT INTO eti.acta (id, convocatoria_reunion_id, hora_inicio, minuto_inicio, hora_fin, minuto_fin, resumen, numero, estado_actual_id, inactiva, activo)
+  VALUES (2, 100, 10, 15, 12, 0, 'Resumen124', 124, 1, true, true);

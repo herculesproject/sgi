@@ -39,7 +39,7 @@ public class ActaServiceImpl implements ActaService {
    */
   @Transactional
   public Acta create(Acta acta) {
-    log.debug("Petición a create Acta : {} - start", acta);
+    log.debug("Acta create (Acta acta) - start");
     Assert.isNull(acta.getId(), "Acta id tiene que ser null para crear un nuevo acta");
 
     return actaRepository.save(acta);
@@ -69,9 +69,9 @@ public class ActaServiceImpl implements ActaService {
    * @throws ActaNotFoundException Si no existe ningún {@link Acta} con ese id.
    */
   public Acta findById(final Long id) throws TareaNotFoundException {
-    log.debug("Petición a get Acta : {}  - start", id);
+    log.debug("Acta findById (Acta acta)  - start", id);
     final Acta acta = actaRepository.findById(id).orElseThrow(() -> new ActaNotFoundException(id));
-    log.debug("Petición a get Acta : {}  - end", id);
+    log.debug("Acta findById (Acta acta)  - end", id);
     return acta;
 
   }
@@ -115,6 +115,7 @@ public class ActaServiceImpl implements ActaService {
       acta.setMinutoFin(actaActualizar.getMinutoFin());
       acta.setResumen(actaActualizar.getResumen());
       acta.setNumero(actaActualizar.getNumero());
+      acta.setEstadoActual(actaActualizar.getEstadoActual());
       acta.setInactiva(actaActualizar.getInactiva());
       acta.setActivo(actaActualizar.getActivo());
 

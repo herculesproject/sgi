@@ -556,27 +556,6 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-estado-acta">
-    <insert tableName="estado_acta">
-      <column name="id" value="1" />
-      <column name="acta_id" valueComputed="(select id from eti.acta)" />
-      <column name="tipo_estado_acta_id" valueComputed="(select id from eti.tipo_estado_acta where nombre='En elaboración')" />
-      <column name="fecha_estado" value="2020-07-14 19:30:00" />
-    </insert>
-    <insert tableName="estado_acta">
-      <column name="id" value="2" />
-      <column name="acta_id" valueComputed="(select id from eti.acta)" />
-      <column name="tipo_estado_acta_id" valueComputed="(select id from eti.tipo_estado_acta where nombre='Finalizada')" />
-      <column name="fecha_estado" value="2020-07-14 19:31:00" />
-    </insert>
-    <insert tableName="estado_acta">
-      <column name="id" value="3" />
-      <column name="acta_id" valueComputed="(select id from eti.acta)" />
-      <column name="tipo_estado_acta_id" valueComputed="(select id from eti.tipo_estado_acta where nombre='Finalizada')" />
-      <column name="fecha_estado" value="2020-07-14 19:33:00" />
-    </insert>
-  </changeSet>
-
   <changeSet author="master" id="20200601000000-documentacion_memoria">
     <insert tableName="documentacion_memoria">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria1')" />
@@ -770,6 +749,7 @@
       <column name="minuto_fin" value="0" />
       <column name="resumen" value="Resumen1" />
       <column name="numero" value="1" />
+      <column name="estado_actual_id" valueComputed="(select id from eti.tipo_estado_acta where nombre='En elaboración')" />
       <column name="inactiva" value="true" />
       <column name="activo" value="true" />
     </insert>
@@ -781,6 +761,7 @@
       <column name="minuto_fin" value="45" />
       <column name="resumen" value="Resumen2" />
       <column name="numero" value="2" />
+      <column name="estado_actual_id" valueComputed="(select id from eti.tipo_estado_acta where nombre='En elaboración')" />
       <column name="inactiva" value="false" />
       <column name="activo" value="true" />
     </insert>
@@ -792,8 +773,30 @@
       <column name="minuto_fin" value="30" />
       <column name="resumen" value="Resumen3" />
       <column name="numero" value="3" />
+      <column name="estado_actual_id" valueComputed="(select id from eti.tipo_estado_acta where nombre='Finalizada')" />
       <column name="inactiva" value="true" />
       <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-estado-acta">
+    <insert tableName="estado_acta">
+      <column name="id" value="1" />
+      <column name="acta_id" valueComputed="(select id from eti.acta where id='1')" />
+      <column name="tipo_estado_acta_id" valueComputed="(select id from eti.tipo_estado_acta where nombre='En elaboración')" />
+      <column name="fecha_estado" value="2020-07-14 19:30:00" />
+    </insert>
+    <insert tableName="estado_acta">
+      <column name="id" value="2" />
+      <column name="acta_id" valueComputed="(select id from eti.acta where id='2')" />
+      <column name="tipo_estado_acta_id" valueComputed="(select id from eti.tipo_estado_acta where nombre='Finalizada')" />
+      <column name="fecha_estado" value="2020-07-14 19:31:00" />
+    </insert>
+    <insert tableName="estado_acta">
+      <column name="id" value="3" />
+      <column name="acta_id" valueComputed="(select id from eti.acta where id='3')" />
+      <column name="tipo_estado_acta_id" valueComputed="(select id from eti.tipo_estado_acta where nombre='Finalizada')" />
+      <column name="fecha_estado" value="2020-07-14 19:33:00" />
     </insert>
   </changeSet>
 

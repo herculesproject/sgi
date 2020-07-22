@@ -47,7 +47,7 @@ public class EstadoActa extends BaseEntity {
   @JoinColumn(name = "tipo_estado_acta_id", nullable = true)
   private TipoEstadoActa tipoEstadoActa;
 
-  /** Tarea */
+  /** Fecha Estado */
   @Column(name = "fecha_estado", nullable = false)
   private LocalDateTime fechaEstado;
 
