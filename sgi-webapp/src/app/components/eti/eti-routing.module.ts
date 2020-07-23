@@ -26,7 +26,11 @@ const routes: Routes = [
       },
       {
         path: UrlUtils.eti.solicitudesConvocatoria.valueOf(),
-        component: null,
+        loadChildren: () =>
+          import('./convocatoria-reunion/convocatoria-reunion.module').then(
+            (m) => m.ConvocatoriaReunionModule
+          ),
+        canActivate: [AuthGuard],
       },
       {
         path: UrlUtils.eti.proyectos.valueOf(),

@@ -380,6 +380,42 @@
         "titulo": "New record"
       }
     },
+    "convocatoriaReunion": {
+      "listado": {
+        "acciones": "Acciones",
+        "aceptar": "Aceptar",
+        "borrar": "Borrar",
+        "cancelar": "Cancelar",
+        "codigo": "Código",
+        "comite": "Comité",
+        "tipoConvocatoriaReunion": "Convocatoria",
+        "editar": "Editar",
+        "eliminar": "¿Desea eliminar la convocatoria?",
+        "eliminarConfirmado": "Convocatoria eliminada correctamente",
+        "enviar": "Enviar",
+        "error": "No se ha podido cargar el listado de convocatorias",
+        "fechaEnvio": "Fecha envío",
+        "fechaEvaluacion": "Fecha evaluación",
+        "hora": "Hora",
+        "lugar": "Lugar",
+        "nuevaConvocatoriaReunion": "Añadir nueva convocatoria",
+        "titulo": "Convocatorias"
+      },
+      "buscador": {
+        "comite": {
+          "titulo": "Comité"
+        },
+        "fechaEvaluacionDesde": {
+          "titulo": "Fecha evaluación desde"
+        },
+        "fechaEvaluacionHasta": {
+          "titulo": "Fecha evaluación hasta"
+        },
+        "tipoConvocatoriaReunion": {
+          "titulo": "Convocatoria"
+        }
+      }
+    },
     "evaluacion-etica": {
       "crear": {
         "asignacion-tareas": "Assignment of tasks",
