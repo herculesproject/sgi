@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,6 +54,7 @@ public class ComentarioController {
    * @param paging pageable
    */
   @GetMapping()
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-COMENTARIO-VER')")
   ResponseEntity<Page<Comentario>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
@@ -73,6 +75,7 @@ public class ComentarioController {
    * @return Nueva {@link Comentario} creada.
    */
   @PostMapping
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-COMENTARIO-EDITAR')")
   ResponseEntity<Comentario> newComentario(@Valid @RequestBody Comentario nuevoComentario) {
     log.debug("newComentario(Comentario nuevoComentario) - start");
     Comentario returnValue = service.create(nuevoComentario);
@@ -88,6 +91,7 @@ public class ComentarioController {
    * @return {@link Comentario} actualizado.
    */
   @PutMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-COMENTARIO-EDITAR')")
   Comentario replaceComentario(@Valid @RequestBody Comentario updatedComentario, @PathVariable Long id) {
     log.debug("replaceComentario(Comentario updatedComentario, Long id) - start");
     updatedComentario.setId(id);
@@ -103,6 +107,7 @@ public class ComentarioController {
    * @return {@link Comentario} correspondiente al id.
    */
   @GetMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-COMENTARIO-VER')")
   Comentario one(@PathVariable Long id) {
     log.debug("Comentario one(Long id) - start");
     Comentario returnValue = service.findById(id);
@@ -116,6 +121,7 @@ public class ComentarioController {
    * @param id Identificador de {@link Comentario}.
    */
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-COMENTARIO-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     service.delete(id);

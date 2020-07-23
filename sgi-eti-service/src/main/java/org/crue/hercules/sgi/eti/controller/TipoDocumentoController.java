@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,6 +54,7 @@ public class TipoDocumentoController {
    * @param paging pageable
    */
   @GetMapping()
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPODOCUMENTO-VER')")
   ResponseEntity<Page<TipoDocumento>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
@@ -73,6 +75,7 @@ public class TipoDocumentoController {
    * @return Nuevo {@link TipoDocumento} creado.
    */
   @PostMapping
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPODOCUMENTO-EDITAR')")
   ResponseEntity<TipoDocumento> newTipoDocumento(@Valid @RequestBody TipoDocumento nuevoTipoDocumento) {
     log.debug("newTipoDocumento(TipoDocumento nuevoTipoDocumento) - start");
     TipoDocumento returnValue = service.create(nuevoTipoDocumento);
@@ -88,6 +91,7 @@ public class TipoDocumentoController {
    * @return {@link TipoDocumento} actualizado.
    */
   @PutMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPODOCUMENTO-EDITAR')")
   TipoDocumento replaceTipoDocumento(@Valid @RequestBody TipoDocumento updatedTipoDocumento, @PathVariable Long id) {
     log.debug("replaceTipoDocumento(TipoDocumento updatedTipoDocumento, Long id) - start");
     updatedTipoDocumento.setId(id);
@@ -103,6 +107,7 @@ public class TipoDocumentoController {
    * @return {@link TipoDocumento} correspondiente al id.
    */
   @GetMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPODOCUMENTO-VER')")
   TipoDocumento one(@PathVariable Long id) {
     log.debug("TipoDocumento one(Long id) - start");
     TipoDocumento returnValue = service.findById(id);
@@ -116,6 +121,7 @@ public class TipoDocumentoController {
    * @param id Identificador de {@link TipoDocumento}.
    */
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPODOCUMENTO-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     TipoDocumento tipoDocumento = this.one(id);

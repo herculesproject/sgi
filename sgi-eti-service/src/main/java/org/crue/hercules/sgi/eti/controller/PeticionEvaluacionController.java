@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,6 +54,7 @@ public class PeticionEvaluacionController {
    * @param paging pageable
    */
   @GetMapping()
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-PETICIONEVALUACION-VER')")
   ResponseEntity<Page<PeticionEvaluacion>> findAll(
       @RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
@@ -75,6 +77,7 @@ public class PeticionEvaluacionController {
    * @return Nuevo {@link PeticionEvaluacion} creado.
    */
   @PostMapping
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-PETICIONEVALUACION-EDITAR')")
   ResponseEntity<PeticionEvaluacion> newPeticionEvaluacion(
       @Valid @RequestBody PeticionEvaluacion nuevoPeticionEvaluacion) {
     log.debug("newPeticionEvaluacion(PeticionEvaluacion nuevoPeticionEvaluacion) - start");
@@ -91,6 +94,7 @@ public class PeticionEvaluacionController {
    * @return {@link PeticionEvaluacion} actualizado.
    */
   @PutMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-PETICIONEVALUACION-EDITAR')")
   PeticionEvaluacion replacePeticionEvaluacion(@Valid @RequestBody PeticionEvaluacion updatedPeticionEvaluacion,
       @PathVariable Long id) {
     log.debug("replacePeticionEvaluacion(PeticionEvaluacion updatedPeticionEvaluacion, Long id) - start");
@@ -107,6 +111,7 @@ public class PeticionEvaluacionController {
    * @return {@link PeticionEvaluacion} correspondiente al id.
    */
   @GetMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-PETICIONEVALUACION-VER')")
   PeticionEvaluacion one(@PathVariable Long id) {
     log.debug("PeticionEvaluacion one(Long id) - start");
     PeticionEvaluacion returnValue = service.findById(id);
@@ -120,6 +125,7 @@ public class PeticionEvaluacionController {
    * @param id Identificador de {@link PeticionEvaluacion}.
    */
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-PETICIONEVALUACION-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     PeticionEvaluacion peticionEvaluacion = this.one(id);

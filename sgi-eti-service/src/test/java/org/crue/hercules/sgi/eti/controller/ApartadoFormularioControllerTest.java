@@ -17,6 +17,8 @@ import org.crue.hercules.sgi.eti.model.ComponenteFormulario;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.service.ApartadoFormularioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -25,12 +27,21 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -42,6 +53,7 @@ import org.springframework.util.ReflectionUtils;
  * ApartadoFormularioControllerTest
  */
 @WebMvcTest(ApartadoFormularioController.class)
+@ActiveProfiles("SECURITY_MOCK")
 public class ApartadoFormularioControllerTest {
 
   @Autowired
@@ -56,7 +68,43 @@ public class ApartadoFormularioControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String APARTADO_FORMULARIO_CONTROLLER_BASE_PATH = "/apartadoformularios";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable() //
+          .authorizeRequests().antMatchers("/error").permitAll() //
+          .antMatchers("/**").authenticated() //
+          .anyRequest().denyAll() //
+          .and() //
+          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint) //
+          .and() //
+          .httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-APARTADOFORMULARIO-EDITAR" })
   public void create_ReturnsApartadoFormulario() throws Exception {
 
     // given: Nueva entidad sin Id
@@ -85,6 +133,7 @@ public class ApartadoFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-APARTADOFORMULARIO-EDITAR" })
   public void create_WithId_Returns400() throws Exception {
 
     // given: Nueva entidad con Id
@@ -103,6 +152,7 @@ public class ApartadoFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-APARTADOFORMULARIO-EDITAR" })
   public void update_WithExistingId_ReturnsApartadoFormulario() throws Exception {
 
     // given: Entidad existente que se va a actualizar
@@ -132,6 +182,7 @@ public class ApartadoFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-APARTADOFORMULARIO-EDITAR" })
   public void update_WithNoExistingId_Returns404() throws Exception {
 
     // given: Entidad a actualizar que no existe
@@ -155,6 +206,7 @@ public class ApartadoFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-APARTADOFORMULARIO-EDITAR" })
   public void delete_WithExistingId_Return204() throws Exception {
 
     // given: Entidad existente
@@ -173,6 +225,7 @@ public class ApartadoFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-APARTADOFORMULARIO-EDITAR" })
   public void delete_WithNoExistingId_Returns404() throws Exception {
 
     // given: Id de una entidad que no existe
@@ -194,6 +247,7 @@ public class ApartadoFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-APARTADOFORMULARIO-VER" })
   public void findById_WithExistingId_ReturnsApartadoFormulario() throws Exception {
 
     // given: Entidad con un determinado Id
@@ -220,6 +274,7 @@ public class ApartadoFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-APARTADOFORMULARIO-VER" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
 
     // given: No existe entidad con el id indicado
@@ -241,6 +296,7 @@ public class ApartadoFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-APARTADOFORMULARIO-VER" })
   public void findAll_Unlimited_ReturnsFullApartadoFormularioList() throws Exception {
 
     // given: Datos existentes
@@ -267,6 +323,7 @@ public class ApartadoFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-APARTADOFORMULARIO-VER" })
   public void findAll_Unlimited_Returns204() throws Exception {
 
     // given: No hay datos
@@ -281,6 +338,7 @@ public class ApartadoFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-APARTADOFORMULARIO-VER" })
   public void findAll_WithPaging_ReturnsDemoSubList() throws Exception {
 
     // given: Datos existentes
@@ -317,6 +375,7 @@ public class ApartadoFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-APARTADOFORMULARIO-VER" })
   public void findAll_WithPaging_Returns204() throws Exception {
 
     // given: Datos existentes
@@ -339,6 +398,7 @@ public class ApartadoFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-APARTADOFORMULARIO-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredApartadoFormularioList() throws Exception {
 
     // given: Datos existentes

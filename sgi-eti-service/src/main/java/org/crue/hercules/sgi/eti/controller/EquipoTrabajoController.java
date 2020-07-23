@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,6 +54,7 @@ public class EquipoTrabajoController {
    * @param paging pageable
    */
   @GetMapping()
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-EQUIPOTRABAJO-VER')")
   ResponseEntity<Page<EquipoTrabajo>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
@@ -73,7 +75,8 @@ public class EquipoTrabajoController {
    * @return Nuevo {@link EquipoTrabajo} creado.
    */
   @PostMapping
-  ResponseEntity<EquipoTrabajo> newEquipoTrabajo(@Valid @RequestBody EquipoTrabajo nuevoEquipoTrabajo) {
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-EQUIPOTRABAJO-EDITAR')")
+  public ResponseEntity<EquipoTrabajo> newEquipoTrabajo(@Valid @RequestBody EquipoTrabajo nuevoEquipoTrabajo) {
     log.debug("newEquipoTrabajo(EquipoTrabajo nuevoEquipoTrabajo) - start");
     EquipoTrabajo returnValue = service.create(nuevoEquipoTrabajo);
     log.debug("newEquipoTrabajo(EquipoTrabajo nuevoEquipoTrabajo) - end");
@@ -88,6 +91,7 @@ public class EquipoTrabajoController {
    * @return {@link EquipoTrabajo} actualizado.
    */
   @PutMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-EQUIPOTRABAJO-EDITAR')")
   EquipoTrabajo replaceEquipoTrabajo(@Valid @RequestBody EquipoTrabajo updatedEquipoTrabajo, @PathVariable Long id) {
     log.debug("replaceEquipoTrabajo(EquipoTrabajo updatedEquipoTrabajo, Long id) - start");
     updatedEquipoTrabajo.setId(id);
@@ -103,6 +107,7 @@ public class EquipoTrabajoController {
    * @return {@link EquipoTrabajo} correspondiente al id.
    */
   @GetMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-EQUIPOTRABAJO-VER')")
   EquipoTrabajo one(@PathVariable Long id) {
     log.debug("EquipoTrabajo one(Long id) - start");
     EquipoTrabajo returnValue = service.findById(id);
@@ -116,6 +121,7 @@ public class EquipoTrabajoController {
    * @param id Identificador de {@link EquipoTrabajo}.
    */
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-EQUIPOTRABAJO-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     service.delete(id);

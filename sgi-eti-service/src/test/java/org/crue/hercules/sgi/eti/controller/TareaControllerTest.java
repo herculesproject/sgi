@@ -35,10 +35,23 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.ReflectionUtils;
 
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.test.context.ActiveProfiles;
+
 /**
  * TareaControllerTest
  */
 @WebMvcTest(TareaController.class)
+@ActiveProfiles("SECURITY_MOCK")
 public class TareaControllerTest {
 
   @Autowired
@@ -53,7 +66,43 @@ public class TareaControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String TAREA_CONTROLLER_BASE_PATH = "/tareas";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable() //
+          .authorizeRequests().antMatchers("/error").permitAll() //
+          .antMatchers("/**").authenticated() //
+          .anyRequest().denyAll() //
+          .and() //
+          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint) //
+          .and() //
+          .httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TAREA-VER" })
   public void getTarea_WithId_ReturnsTarea() throws Exception {
     BDDMockito.given(tareaService.findById(ArgumentMatchers.anyLong())).willReturn((generarMockTarea(1L, "Tarea1")));
 
@@ -65,6 +114,7 @@ public class TareaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TAREA-VER" })
   public void getTarea_NotFound_Returns404() throws Exception {
     BDDMockito.given(tareaService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new TareaNotFoundException(invocation.getArgument(0));
@@ -74,6 +124,7 @@ public class TareaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TAREA-EDITAR" })
   public void newTarea_ReturnsTarea() throws Exception {
     // given: Una tarea nueva
     String nuevaTareaJson = "{\"tarea\": \"Tarea1\", \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": \"Formacion1\", \"formacionEspecifica\": {\"id\": 300}, \"organismo\": \"Organismo1\", \"anio\": 2020}";
@@ -93,6 +144,7 @@ public class TareaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TAREA-EDITAR" })
   public void newTarea_Error_Returns400() throws Exception {
     // given: Una tarea nueva que produce un error al crearse
     String nuevaTareaJson = "{\"id\": 1, \"tarea\": \"Tarea1\", \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": \"Formacion1\", \"formacionEspecifica\": {\"id\": 300}, \"organismo\": \"Organismo1\", \"anio\": 2020}";
@@ -109,6 +161,7 @@ public class TareaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TAREA-EDITAR" })
   public void replaceTarea_ReturnsTarea() throws Exception {
     // given: Una tarea a modificar
     String replaceTareaJson = "{\"id\": 1, \"tarea\": \"Tarea1 actualizada\", \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": \"Formacion1\", \"formacionEspecifica\": {\"id\": 300}, \"organismo\": \"Organismo1\", \"anio\": 2020}";
@@ -127,6 +180,7 @@ public class TareaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TAREA-EDITAR" })
   public void replaceTarea_NotFound() throws Exception {
     // given: Una tarea a modificar
     String replaceTareaJson = "{\"id\": 1, \"tarea\": \"Tarea1 actualizada\", \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": \"Formacion1\", \"formacionEspecifica\": {\"id\": 300}, \"organismo\": \"Organismo1\", \"anio\": 2020}";
@@ -141,6 +195,7 @@ public class TareaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TAREA-EDITAR" })
   public void removeTarea_ReturnsOk() throws Exception {
     BDDMockito.given(tareaService.findById(ArgumentMatchers.anyLong())).willReturn(generarMockTarea(1L, "Tarea1"));
 
@@ -151,6 +206,7 @@ public class TareaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TAREA-VER" })
   public void findAll_Unlimited_ReturnsFullTareaList() throws Exception {
     // given: One hundred tareas
     List<Tarea> tareas = new ArrayList<>();
@@ -171,6 +227,7 @@ public class TareaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TAREA-VER" })
   public void findAll_WithPaging_ReturnsTareaSubList() throws Exception {
     // given: One hundred tareas
     List<Tarea> tareas = new ArrayList<>();
@@ -221,6 +278,7 @@ public class TareaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TAREA-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredTareaList() throws Exception {
     // given: One hundred tareas and a search query
     List<Tarea> tareas = new ArrayList<>();

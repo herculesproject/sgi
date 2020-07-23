@@ -15,6 +15,8 @@ import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.crue.hercules.sgi.eti.service.ComentarioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -23,11 +25,19 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -41,6 +51,9 @@ import org.springframework.util.ReflectionUtils;
 @WebMvcTest(ComentarioController.class)
 public class ComentarioControllerTest {
 
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String COMENTARIO_CONTROLLER_BASE_PATH = "/comentarios";
+
   @Autowired
   private MockMvc mockMvc;
 
@@ -50,10 +63,43 @@ public class ComentarioControllerTest {
   @MockBean
   private ComentarioService comentarioService;
 
-  private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String COMENTARIO_CONTROLLER_BASE_PATH = "/comentarios";
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable() //
+          .authorizeRequests().antMatchers("/error").permitAll() //
+          .antMatchers("/**").authenticated() //
+          .anyRequest().denyAll() //
+          .and() //
+          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint) //
+          .and() //
+          .httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMENTARIO-VER" })
   public void getComentario_WithId_ReturnsComentario() throws Exception {
     BDDMockito.given(comentarioService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockComentario(1L, "Comentario1")));
@@ -70,6 +116,7 @@ public class ComentarioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMENTARIO-VER" })
   public void getComentario_NotFound_Returns404() throws Exception {
     BDDMockito.given(comentarioService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new ComentarioNotFoundException(invocation.getArgument(0));
@@ -79,6 +126,7 @@ public class ComentarioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMENTARIO-EDITAR" })
   public void newComentario_ReturnsComentario() throws Exception {
     // given: Un comentario nuevo
     String nuevoComentarioJson = "{\"apartadoFormulario\": {\"id\": 100}, \"evaluacion\": {\"id\": 200}, \"tipoComentario\": {\"id\": 300}, \"texto\": \"Comentario1\"}";
@@ -103,6 +151,7 @@ public class ComentarioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMENTARIO-EDITAR" })
   public void newComentario_Error_Returns400() throws Exception {
     // given: Un comentario nuevo que produce un error al crearse
     String nuevoComentarioJson = "{\"id\": 1, \"apartadoFormulario\": {\"id\": 100}, \"evaluacion\": {\"id\": 200}, \"tipoComentario\": {\"id\": 300}, \"texto\": \"Comentario1\"}";
@@ -120,6 +169,7 @@ public class ComentarioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMENTARIO-EDITAR" })
   public void replaceComentario_ReturnsComentario() throws Exception {
     // given: Un comentario a modificar
     String replaceComentarioJson = "{\"id\": 1, \"apartadoFormulario\": {\"id\": 100}, \"evaluacion\": {\"id\": 200}, \"tipoComentario\": {\"id\": 300}, \"texto\": \"Comentario1\"}";
@@ -143,6 +193,7 @@ public class ComentarioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMENTARIO-EDITAR" })
   public void replaceComentario_NotFound() throws Exception {
     // given: Un comentario a modificar
     String replaceComentarioJson = "{\"id\": 1, \"apartadoFormulario\": {\"id\": 100}, \"evaluacion\": {\"id\": 200}, \"tipoComentario\": {\"id\": 300}, \"texto\": \"Comentario1\"}";
@@ -158,6 +209,7 @@ public class ComentarioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMENTARIO-EDITAR" })
   public void removeComentario_ReturnsOk() throws Exception {
     BDDMockito.given(comentarioService.findById(ArgumentMatchers.anyLong()))
         .willReturn(generarMockComentario(1L, "Comentario1"));
@@ -169,6 +221,7 @@ public class ComentarioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMENTARIO-VER" })
   public void findAll_Unlimited_ReturnsFullComentarioList() throws Exception {
     // given: One hundred comentarios
     List<Comentario> comentarios = new ArrayList<>();
@@ -189,6 +242,7 @@ public class ComentarioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMENTARIO-VER" })
   public void findAll_WithPaging_ReturnsComentarioSubList() throws Exception {
     // given: One hundred comentarios
     List<Comentario> comentarios = new ArrayList<>();
@@ -239,6 +293,7 @@ public class ComentarioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMENTARIO-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredComentarioList() throws Exception {
     // given: One hundred comentarios and a search query
     List<Comentario> comentarios = new ArrayList<>();

@@ -14,6 +14,8 @@ import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 import org.crue.hercules.sgi.eti.service.ActaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -22,11 +24,20 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -38,6 +49,7 @@ import org.springframework.util.ReflectionUtils;
  * ActaControllerTest
  */
 @WebMvcTest(ActaController.class)
+@ActiveProfiles("SECURITY_MOCK")
 public class ActaControllerTest {
 
   @Autowired
@@ -52,7 +64,43 @@ public class ActaControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String ACTA_CONTROLLER_BASE_PATH = "/actas";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable() //
+          .authorizeRequests().antMatchers("/error").permitAll() //
+          .antMatchers("/**").authenticated() //
+          .anyRequest().denyAll() //
+          .and() //
+          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint) //
+          .and() //
+          .httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACTA-VER" })
   public void getActa_WithId_ReturnsActa() throws Exception {
     BDDMockito.given(actaService.findById(ArgumentMatchers.anyLong())).willReturn((generarMockActa(1L, 123)));
 
@@ -72,6 +120,7 @@ public class ActaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACTA-VER" })
   public void getActa_NotFound_Returns404() throws Exception {
     BDDMockito.given(actaService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new ActaNotFoundException(invocation.getArgument(0));
@@ -81,6 +130,7 @@ public class ActaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACTA-EDITAR" })
   public void newActa_ReturnsActa() throws Exception {
     // given: Un acta nuevo
     String nuevoActaJson = "{\"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": \"Resumen123\", \"numero\": 123, \"estadoActual\": {\"id\": 1}, \"inactiva\": true, \"activo\": true}";
@@ -109,6 +159,7 @@ public class ActaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACTA-EDITAR" })
   public void newActa_Error_Returns400() throws Exception {
     // given: Un acta nuevo que produce un error al crearse
     String nuevoActaJson = "{\"id\": 1, \"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": \"Resumen123\", \"numero\": 123, \"estadoActual\": {\"id\": 1}, \"inactiva\": true, \"activo\": true}";
@@ -125,6 +176,7 @@ public class ActaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACTA-EDITAR" })
   public void replaceActa_ReturnsActa() throws Exception {
     // given: Un acta a modificar
     String replaceActaJson = "{\"id\": 1, \"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": \"Resumen123\", \"numero\": 123, \"estadoActual\": {\"id\": 1}, \"inactiva\": true, \"activo\": true}";
@@ -151,6 +203,7 @@ public class ActaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACTA-EDITAR" })
   public void replaceActa_NotFound() throws Exception {
     // given: Un acta a modificar
     String replaceActaJson = "{\"id\": 1, \"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": \"Resumen123\", \"numero\": 123, \"estadoActual\": {\"id\": 1}, \"inactiva\": true, \"activo\": true}";
@@ -165,6 +218,7 @@ public class ActaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACTA-EDITAR" })
   public void removeActa_ReturnsOk() throws Exception {
     BDDMockito.given(actaService.findById(ArgumentMatchers.anyLong())).willReturn(generarMockActa(1L, 123));
 
@@ -175,6 +229,7 @@ public class ActaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACTA-VER" })
   public void findAll_Unlimited_ReturnsFullActaList() throws Exception {
     // given: One hundred actas
     List<Acta> actas = new ArrayList<>();
@@ -194,6 +249,7 @@ public class ActaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACTA-VER" })
   public void findAll_WithPaging_ReturnsActaSubList() throws Exception {
     // given: One hundred actas
     List<Acta> actas = new ArrayList<>();
@@ -243,6 +299,7 @@ public class ActaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACTA-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredActaList() throws Exception {
     // given: One hundred actas and a search query
     List<Acta> actas = new ArrayList<>();

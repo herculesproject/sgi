@@ -23,10 +23,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.test.context.ActiveProfiles;
+
 /**
  * Test de integracion de EvaluadorEvaluacion.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("SECURITY_MOCK")
 public class EvaluadorEvaluacionIT {
 
   @Autowired
@@ -35,11 +51,47 @@ public class EvaluadorEvaluacionIT {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH = "/evaluadorevaluaciones";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+      PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+      auth.inMemoryAuthentication().passwordEncoder(encoder).withUser("user").password(encoder.encode("secret"))
+          .authorities("ETI-EVALUADOREVALUACION-EDITAR", "ETI-EVALUADOREVALUACION-VER");
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.cors().and().csrf().disable().authorizeRequests().antMatchers("/error").permitAll().antMatchers("/**")
+          .authenticated().anyRequest().denyAll().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint).and().httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getEvaluadorEvaluacion_WithId_ReturnsEvaluadorEvaluacion() throws Exception {
-    final ResponseEntity<EvaluadorEvaluacion> response = restTemplate
+    final ResponseEntity<EvaluadorEvaluacion> response = restTemplate.withBasicAuth("user", "secret")
         .getForEntity(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, EvaluadorEvaluacion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -68,7 +120,7 @@ public class EvaluadorEvaluacionIT {
 
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<EvaluadorEvaluacion> response = restTemplate.exchange(
+    final ResponseEntity<EvaluadorEvaluacion> response = restTemplate.withBasicAuth("user", "secret").exchange(
         EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null,
         EvaluadorEvaluacion.class, id);
 
@@ -83,7 +135,7 @@ public class EvaluadorEvaluacionIT {
   public void removeEvaluadorEvaluacion_DoNotGetEvaluadorEvaluacion() throws Exception {
     restTemplate.delete(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<EvaluadorEvaluacion> response = restTemplate
+    final ResponseEntity<EvaluadorEvaluacion> response = restTemplate.withBasicAuth("user", "secret")
         .getForEntity(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, EvaluadorEvaluacion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -100,7 +152,7 @@ public class EvaluadorEvaluacionIT {
     final HttpEntity<EvaluadorEvaluacion> requestEntity = new HttpEntity<EvaluadorEvaluacion>(
         replaceEvaluadorEvaluacion, new HttpHeaders());
 
-    final ResponseEntity<EvaluadorEvaluacion> response = restTemplate.exchange(
+    final ResponseEntity<EvaluadorEvaluacion> response = restTemplate.withBasicAuth("user", "secret").exchange(
 
         EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
         EvaluadorEvaluacion.class, 1L);
@@ -125,8 +177,8 @@ public class EvaluadorEvaluacionIT {
 
     URI uri = UriComponentsBuilder.fromUriString(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH).build(false).toUri();
 
-    final ResponseEntity<List<EvaluadorEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        new HttpEntity<>(headers), new ParameterizedTypeReference<List<EvaluadorEvaluacion>>() {
+    final ResponseEntity<List<EvaluadorEvaluacion>> response = restTemplate.withBasicAuth("user", "secret").exchange(
+        uri, HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<EvaluadorEvaluacion>>() {
         });
 
     // then: Respuesta OK, EvaluadorEvaluaciones retorna la información de la página
@@ -156,8 +208,8 @@ public class EvaluadorEvaluacionIT {
         .build(false).toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<EvaluadorEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
-        new ParameterizedTypeReference<List<EvaluadorEvaluacion>>() {
+    final ResponseEntity<List<EvaluadorEvaluacion>> response = restTemplate.withBasicAuth("user", "secret")
+        .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<List<EvaluadorEvaluacion>>() {
         });
 
     // then: Respuesta OK, EvaluadorEvaluaciones retorna la información de la página
@@ -179,8 +231,8 @@ public class EvaluadorEvaluacionIT {
         .build(false).toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<EvaluadorEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
-        new ParameterizedTypeReference<List<EvaluadorEvaluacion>>() {
+    final ResponseEntity<List<EvaluadorEvaluacion>> response = restTemplate.withBasicAuth("user", "secret")
+        .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<List<EvaluadorEvaluacion>>() {
         });
 
     // then: Respuesta OK, EvaluadorEvaluaciones retorna la información de la página
@@ -211,8 +263,8 @@ public class EvaluadorEvaluacionIT {
     URI uri = UriComponentsBuilder.fromUriString(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
-    final ResponseEntity<List<EvaluadorEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        new HttpEntity<>(headers), new ParameterizedTypeReference<List<EvaluadorEvaluacion>>() {
+    final ResponseEntity<List<EvaluadorEvaluacion>> response = restTemplate.withBasicAuth("user", "secret").exchange(
+        uri, HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<EvaluadorEvaluacion>>() {
         });
 
     // then: Respuesta OK, EvaluadorEvaluaciones retorna la información de la página

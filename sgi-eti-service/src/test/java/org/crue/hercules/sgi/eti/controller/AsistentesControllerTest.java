@@ -39,10 +39,23 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.ReflectionUtils;
 
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.test.context.ActiveProfiles;
+
 /**
  * AsistentesControllerTest
  */
 @WebMvcTest(AsistentesController.class)
+@ActiveProfiles("SECURITY_MOCK")
 public class AsistentesControllerTest {
 
   @Autowired
@@ -57,7 +70,43 @@ public class AsistentesControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String ASISTENTE_CONTROLLER_BASE_PATH = "/asistentes";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable() //
+          .authorizeRequests().antMatchers("/error").permitAll() //
+          .antMatchers("/**").authenticated() //
+          .anyRequest().denyAll() //
+          .and() //
+          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint) //
+          .and() //
+          .httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ASISTENTES-VER" })
   public void getAsistentes_WithId_ReturnsAsistentes() throws Exception {
     BDDMockito.given(asistenteService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockAsistentes(1L, "Motivo 1", Boolean.TRUE)));
@@ -73,6 +122,7 @@ public class AsistentesControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ASISTENTES-VER" })
   public void getAsistentes_NotFound_Returns404() throws Exception {
     BDDMockito.given(asistenteService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new AsistentesNotFoundException(invocation.getArgument(0));
@@ -82,6 +132,7 @@ public class AsistentesControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ASISTENTES-EDITAR" })
   public void newAsistentes_ReturnsAsistentes() throws Exception {
     // given: Una entidad Asistentes nueva
     String nuevoAsistentesJson = "{ \"motivo\": \"Motivo 1\", \"asistenecia\": \"true\", \"convocatoriaReunion\": {\"id\": \"1\"}, \"evaluador\": {\"id\": \"1\"}}";
@@ -101,6 +152,7 @@ public class AsistentesControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ASISTENTES-EDITAR" })
   public void newAsistentes_Error_Returns400() throws Exception {
     // given: Unos Asistentes nuevos que produce un error al crearse
     String nuevoAsistentesJson = "{ \"motivo\": \"Motivo1\", \"asistenecia\": \"true\", \"convocatoriaReunion\": {\"id\": \"1\"}, \"evaluador\": {\"id\": \"1\"}}";
@@ -119,6 +171,7 @@ public class AsistentesControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ASISTENTES-EDITAR" })
   public void replaceAsistentes_ReturnsAsistentes() throws Exception {
     // given: Asistentes a modificar
     String replaceAsistentesJson = "{\"id\": 1, \"motivo\": \"Motivo1\", \"asistenecia\": \"true\", \"convocatoriaReunion\": {\"id\": \"1\"}, \"evaluador\": {\"id\": \"1\"}}";
@@ -138,6 +191,7 @@ public class AsistentesControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ASISTENTES-EDITAR" })
   public void replaceAsistentes_NotFound() throws Exception {
     // given: Asistentes a modificar
     String replaceAsistentesJson = "{\"id\": 1, \"motivo\": \"Motivo1\", \"asistenecia\": \"true\", \"convocatoriaReunion\": {\"id\": \"1\"}, \"evaluador\": {\"id\": \"1\"}}";
@@ -154,6 +208,7 @@ public class AsistentesControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ASISTENTES-EDITAR" })
   public void removeAsistentes_ReturnsOk() throws Exception {
     BDDMockito.given(asistenteService.findById(ArgumentMatchers.anyLong()))
         .willReturn(generarMockAsistentes(1L, "Motivo 1", Boolean.TRUE));
@@ -165,6 +220,7 @@ public class AsistentesControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ASISTENTES-VER" })
   public void findAll_Unlimited_ReturnsFullAsistentesList() throws Exception {
     // given: One hundred Asistentes
     List<Asistentes> asistentes = new ArrayList<>();
@@ -185,6 +241,7 @@ public class AsistentesControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ASISTENTES-VER" })
   public void findAll_WithPaging_ReturnsAsistentesSubList() throws Exception {
     // given: One hundred Asistentes
     List<Asistentes> asistentes = new ArrayList<>();
@@ -235,6 +292,7 @@ public class AsistentesControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ASISTENTES-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredAsistentesList() throws Exception {
     // given: One hundred Asistentes and a search query
     List<Asistentes> asistentes = new ArrayList<>();

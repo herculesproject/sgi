@@ -3,18 +3,33 @@ package org.crue.hercules.sgi.eti.integration;
 import java.net.URI;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -22,6 +37,8 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de TipoEstadoMemoria.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("SECURITY_MOCK")
+
 public class TipoEstadoMemoriaIT {
 
   @Autowired
@@ -30,11 +47,47 @@ public class TipoEstadoMemoriaIT {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH = "/tipoestadomemorias";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+      PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+      auth.inMemoryAuthentication().passwordEncoder(encoder).withUser("user").password(encoder.encode("secret"))
+          .authorities("ETI-TIPOESTADOMEMORIA-EDITAR", "ETI-TIPOESTADOMEMORIA-VER");
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.cors().and().csrf().disable().authorizeRequests().antMatchers("/error").permitAll().antMatchers("/**")
+          .authenticated().anyRequest().denyAll().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint).and().httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getTipoEstadoMemoria_WithId_ReturnsTipoEstadoMemoria() throws Exception {
-    final ResponseEntity<TipoEstadoMemoria> response = restTemplate
+    final ResponseEntity<TipoEstadoMemoria> response = restTemplate.withBasicAuth("user", "secret")
         .getForEntity(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, TipoEstadoMemoria.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -54,8 +107,8 @@ public class TipoEstadoMemoriaIT {
     nuevoTipoEstadoMemoria.setNombre("TipoEstadoMemoria1");
     nuevoTipoEstadoMemoria.setActivo(Boolean.TRUE);
 
-    restTemplate.postForEntity(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH, nuevoTipoEstadoMemoria,
-        TipoEstadoMemoria.class);
+    restTemplate.withBasicAuth("user", "secret").postForEntity(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH,
+        nuevoTipoEstadoMemoria, TipoEstadoMemoria.class);
   }
 
   @Sql
@@ -65,7 +118,7 @@ public class TipoEstadoMemoriaIT {
 
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<TipoEstadoMemoria> response = restTemplate.exchange(
+    final ResponseEntity<TipoEstadoMemoria> response = restTemplate.withBasicAuth("user", "secret").exchange(
         TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, TipoEstadoMemoria.class,
         id);
 
@@ -78,9 +131,10 @@ public class TipoEstadoMemoriaIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeTipoEstadoMemoria_DoNotGetTipoEstadoMemoria() throws Exception {
-    restTemplate.delete(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
+    restTemplate.withBasicAuth("user", "secret").delete(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        1L);
 
-    final ResponseEntity<TipoEstadoMemoria> response = restTemplate
+    final ResponseEntity<TipoEstadoMemoria> response = restTemplate.withBasicAuth("user", "secret")
         .getForEntity(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, TipoEstadoMemoria.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -97,7 +151,7 @@ public class TipoEstadoMemoriaIT {
     final HttpEntity<TipoEstadoMemoria> requestEntity = new HttpEntity<TipoEstadoMemoria>(replaceTipoEstadoMemoria,
         new HttpHeaders());
 
-    final ResponseEntity<TipoEstadoMemoria> response = restTemplate.exchange(
+    final ResponseEntity<TipoEstadoMemoria> response = restTemplate.withBasicAuth("user", "secret").exchange(
 
         TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
         TipoEstadoMemoria.class, 1L);
@@ -122,8 +176,8 @@ public class TipoEstadoMemoriaIT {
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH).build(false).toUri();
 
-    final ResponseEntity<List<TipoEstadoMemoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoEstadoMemoria>>() {
+    final ResponseEntity<List<TipoEstadoMemoria>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoEstadoMemoria>>() {
         });
 
     // then: Respuesta OK, TipoEstadoMemorias retorna la información de la página
@@ -158,8 +212,8 @@ public class TipoEstadoMemoriaIT {
         .build(false).toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<TipoEstadoMemoria>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
-        new ParameterizedTypeReference<List<TipoEstadoMemoria>>() {
+    final ResponseEntity<List<TipoEstadoMemoria>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, null, new ParameterizedTypeReference<List<TipoEstadoMemoria>>() {
         });
 
     // then: Respuesta OK, TipoEstadoMemorias retorna la información de la página
@@ -182,8 +236,8 @@ public class TipoEstadoMemoriaIT {
         .build(false).toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<TipoEstadoMemoria>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
-        new ParameterizedTypeReference<List<TipoEstadoMemoria>>() {
+    final ResponseEntity<List<TipoEstadoMemoria>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, null, new ParameterizedTypeReference<List<TipoEstadoMemoria>>() {
         });
 
     // then: Respuesta OK, TipoEstadoMemorias retorna la información de la página
@@ -231,8 +285,8 @@ public class TipoEstadoMemoriaIT {
     URI uri = UriComponentsBuilder.fromUriString(TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
-    final ResponseEntity<List<TipoEstadoMemoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoEstadoMemoria>>() {
+    final ResponseEntity<List<TipoEstadoMemoria>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoEstadoMemoria>>() {
         });
 
     // then: Respuesta OK, TipoEstadoMemorias retorna la información de la página

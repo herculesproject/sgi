@@ -16,6 +16,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.crue.hercules.sgi</groupId>
+      <artifactId>sgi-framework</artifactId>
+      <version>${sgi-framework.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
@@ -71,6 +76,11 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-jpamodelgen</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
       <scope>runtime</scope>
@@ -89,11 +99,28 @@
       <artifactId>validation-api</artifactId>
       <version>2.0.1.Final</version>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.keycloak</groupId>
+      <artifactId>keycloak-spring-security-adapter</artifactId>
+    </dependency>
+     <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
 
   </dependencies>
 
   <properties>
     <java.version>1.8</java.version>
+    <sgi-framework.version>0.0.1-SNAPSHOT</sgi-framework.version>
+    <!-- Keycloak Version (must match deployed version) -->
+    <org.keycloak.version>10.0.1</org.keycloak.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -137,6 +164,23 @@
     <skip.unit.tests>false</skip.unit.tests>
     <skip.startlocalpostgres>true</skip.startlocalpostgres>
   </properties>
+
+  <dependencyManagement>
+      <dependencies>
+        <dependency>
+          <groupId>org.keycloak.bom</groupId>
+          <artifactId>keycloak-adapter-bom</artifactId>
+          <version>${org.keycloak.version}</version>
+          <type>pom</type>
+          <scope>import</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.hibernate</groupId>
+          <artifactId>hibernate-jpamodelgen</artifactId>
+          <version>${org.hibernate-jpamodelgen.version}</version>
+        </dependency>
+      </dependencies>
+    </dependencyManagement>
 
 
   <profiles>
@@ -302,14 +346,12 @@
               <artifactId>lombok</artifactId>
               <version>${lombok.version}</version>
             </path>
-
             <!-- JPA Static Metamodel Generator -->
             <path>
               <groupId>org.hibernate</groupId>
               <artifactId>hibernate-jpamodelgen</artifactId>
               <version>${org.hibernate-jpamodelgen.version}</version>
             </path>
-
           </annotationProcessorPaths>
         </configuration>
       </plugin>

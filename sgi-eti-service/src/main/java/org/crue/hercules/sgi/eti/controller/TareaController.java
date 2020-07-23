@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,6 +54,7 @@ public class TareaController {
    * @param paging pageable
    */
   @GetMapping()
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-TAREA-VER')")
   ResponseEntity<Page<Tarea>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
@@ -73,7 +75,8 @@ public class TareaController {
    * @return Nueva {@link Tarea} creada.
    */
   @PostMapping
-  ResponseEntity<Tarea> newTarea(@Valid @RequestBody Tarea nuevaTarea) {
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-TAREA-EDITAR')")
+  public ResponseEntity<Tarea> newTarea(@Valid @RequestBody Tarea nuevaTarea) {
     log.debug("newTarea(Tarea nuevaTarea) - start");
     Tarea returnValue = service.create(nuevaTarea);
     log.debug("newTarea(Tarea nuevaTarea) - end");
@@ -88,6 +91,7 @@ public class TareaController {
    * @return {@link Tarea} actualizada.
    */
   @PutMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-TAREA-EDITAR')")
   Tarea replaceTarea(@Valid @RequestBody Tarea updatedTarea, @PathVariable Long id) {
     log.debug("replaceTarea(Tarea updatedTarea, Long id) - start");
     updatedTarea.setId(id);
@@ -103,6 +107,7 @@ public class TareaController {
    * @return {@link Tarea} correspondiente al id.
    */
   @GetMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-TAREA-VER')")
   Tarea one(@PathVariable Long id) {
     log.debug("Tarea one(Long id) - start");
     Tarea returnValue = service.findById(id);
@@ -116,6 +121,7 @@ public class TareaController {
    * @param id Identificador de {@link Tarea}.
    */
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-TAREA-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     service.delete(id);

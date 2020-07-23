@@ -34,10 +34,23 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.ReflectionUtils;
 
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.test.context.ActiveProfiles;
+
 /**
  * TipoMemoriaComiteControllerTest
  */
 @WebMvcTest(TipoMemoriaComiteController.class)
+@ActiveProfiles("SECURITY_MOCK")
 public class TipoMemoriaComiteControllerTest {
   @Autowired
   private MockMvc mockMvc;
@@ -51,7 +64,43 @@ public class TipoMemoriaComiteControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String TIPO_MEMORIA_COMITE_CONTROLLER_BASE_PATH = "/tipomemoriacomites";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable() //
+          .authorizeRequests().antMatchers("/error").permitAll() //
+          .antMatchers("/**").authenticated() //
+          .anyRequest().denyAll() //
+          .and() //
+          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint) //
+          .and() //
+          .httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIACOMITE-VER" })
   public void getTipoMemoriaComite_WithId_ReturnsTipoMemoriaComite() throws Exception {
 
     Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
@@ -69,6 +118,7 @@ public class TipoMemoriaComiteControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIACOMITE-VER" })
   public void getTipoMemoriaComite_NotFound_Returns404() throws Exception {
     BDDMockito.given(tipoMemoriaComiteService.findById(ArgumentMatchers.anyLong()))
         .will((InvocationOnMock invocation) -> {
@@ -79,6 +129,7 @@ public class TipoMemoriaComiteControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIACOMITE-EDITAR" })
   public void newTipoMemoriaComite_ReturnsTipoMemoriaComite() throws Exception {
 
     Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
@@ -103,6 +154,7 @@ public class TipoMemoriaComiteControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIACOMITE-EDITAR" })
   public void newTipoMemoriaComite_Error_Returns400() throws Exception {
     // given: Un tipo memoria comite nuevo que produce un error al crearse
     String nuevoTipoMemoriaComiteJson = "{\"comite\": {\"comite\": \"Comite1\", \"activo\": \"true\"}, \"tipoMemoria\": {\"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}}";
@@ -121,6 +173,7 @@ public class TipoMemoriaComiteControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIACOMITE-EDITAR" })
   public void replaceTipoMemoriaComite_ReturnsTipoMemoriaComite() throws Exception {
 
     Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
@@ -145,6 +198,7 @@ public class TipoMemoriaComiteControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIACOMITE-EDITAR" })
   public void replaceTipoMemoriaComite_NotFound() throws Exception {
     // given: Un tipo memoria comite a modificar
     String replaceTipoMemoriaComiteJson = "{\"comite\": {\"comite\": \"Comite1\", \"activo\": \"true\"}, \"tipoMemoria\": {\"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}}";
@@ -161,6 +215,7 @@ public class TipoMemoriaComiteControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIACOMITE-EDITAR" })
   public void removeTipoMemoriaComite_ReturnsOk() throws Exception {
 
     Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
@@ -176,6 +231,7 @@ public class TipoMemoriaComiteControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIACOMITE-VER" })
   public void findAll_Unlimited_ReturnsFullTipoMemoriaComiteList() throws Exception {
 
     Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
@@ -202,6 +258,7 @@ public class TipoMemoriaComiteControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIACOMITE-VER" })
   public void findAll_WithPaging_ReturnsTipoMemoriaComiteSubList() throws Exception {
 
     Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
@@ -258,6 +315,7 @@ public class TipoMemoriaComiteControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIACOMITE-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredTipoMemoriaComiteList() throws Exception {
 
     Comite comite = new Comite(1L, "Comite", Boolean.TRUE);

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,6 +54,7 @@ public class BloqueFormularioController {
    * @param paging pageable
    */
   @GetMapping()
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-BLOQUEFORMULARIO-VER')")
   ResponseEntity<Page<BloqueFormulario>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
@@ -73,7 +75,9 @@ public class BloqueFormularioController {
    * @return Nuevo {@link BloqueFormulario} creado.
    */
   @PostMapping
-  ResponseEntity<BloqueFormulario> newBloqueFormulario(@Valid @RequestBody BloqueFormulario nuevoBloqueFormulario) {
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-BLOQUEFORMULARIO-EDITAR')")
+  public ResponseEntity<BloqueFormulario> newBloqueFormulario(
+      @Valid @RequestBody BloqueFormulario nuevoBloqueFormulario) {
     log.debug("newBloqueFormulario(BloqueFormulario nuevoBloqueFormulario) - start");
     BloqueFormulario returnValue = service.create(nuevoBloqueFormulario);
     log.debug("newBloqueFormulario(BloqueFormulario nuevoBloqueFormulario) - end");
@@ -88,6 +92,7 @@ public class BloqueFormularioController {
    * @return {@link BloqueFormulario} actualizado.
    */
   @PutMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-BLOQUEFORMULARIO-EDITAR')")
   BloqueFormulario replaceBloqueFormulario(@Valid @RequestBody BloqueFormulario updatedBloqueFormulario,
       @PathVariable Long id) {
     log.debug("replaceBloqueFormulario(BloqueFormulario updatedBloqueFormulario, Long id) - start");
@@ -104,6 +109,7 @@ public class BloqueFormularioController {
    * @return {@link BloqueFormulario} correspondiente al id.
    */
   @GetMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-BLOQUEFORMULARIO-VER')")
   BloqueFormulario one(@PathVariable Long id) {
     log.debug("BloqueFormulario one(Long id) - start");
     BloqueFormulario returnValue = service.findById(id);
@@ -117,6 +123,7 @@ public class BloqueFormularioController {
    * @param id Identificador de {@link BloqueFormulario}.
    */
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-BLOQUEFORMULARIO-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     BloqueFormulario bloqueFormulario = this.one(id);

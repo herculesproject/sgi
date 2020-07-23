@@ -34,10 +34,23 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.ReflectionUtils;
 
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.test.context.ActiveProfiles;
+
 /**
  * DocumentacionMemoriaControllerTest
  */
 @WebMvcTest(DocumentacionMemoriaController.class)
+@ActiveProfiles("SECURITY_MOCK")
 public class DocumentacionMemoriaControllerTest {
 
   @Autowired
@@ -52,7 +65,43 @@ public class DocumentacionMemoriaControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH = "/documentacionmemorias";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable() //
+          .authorizeRequests().antMatchers("/error").permitAll() //
+          .antMatchers("/**").authenticated() //
+          .anyRequest().denyAll() //
+          .and() //
+          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint) //
+          .and() //
+          .httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DOCUMENTACIONMEMORIA-VER" })
   public void getDocumentacionMemoria_WithId_ReturnsDocumentacionMemoria() throws Exception {
 
     Memoria memoria = generarMockMemoria(1L, "Memoria1");
@@ -72,6 +121,7 @@ public class DocumentacionMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DOCUMENTACIONMEMORIA-VER" })
   public void getDocumentacionMemoria_NotFound_Returns404() throws Exception {
     BDDMockito.given(documentacionMemoriaService.findById(ArgumentMatchers.anyLong()))
         .will((InvocationOnMock invocation) -> {
@@ -82,13 +132,14 @@ public class DocumentacionMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DOCUMENTACIONMEMORIA-EDITAR" })
   public void newDocumentacionMemoria_ReturnsDocumentacionMemoria() throws Exception {
 
     Memoria memoria = generarMockMemoria(1L, "Memoria1");
     TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
 
     // given: Una DocumentacionMemoria nueva
-    String nuevoDocumentacionMemoriaJson = "{\"documentoRef\": \"doc-001\", \"memoria\": {\"titulo\": \"Memoria1\"}, \"tipoDocumento\": {\"nombre\": \"TipoDocumento1\"}}";
+    String nuevoDocumentacionMemoriaJson = "{\"documentoRef\": \"doc-001\", \"memoria\": {\"id\": \"1\"}, \"tipoDocumento\": {\"id\": \"1\"}}";
 
     DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(1L, memoria, tipoDocumento);
 
@@ -109,10 +160,11 @@ public class DocumentacionMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DOCUMENTACIONMEMORIA-EDITAR" })
   public void newDocumentacionMemoria_Error_Returns400() throws Exception {
 
     // given: Una DocumentacionMemoria nueva que produce un error al crearse
-    String nuevoDocumentacionMemoriaJson = "{\"documentoRef\": \"doc-001\", \"memoria\": {\"titulo\": \"Memoria1\"}, \"tipoDocumento\": {\"nombre\": \"TipoDocumento1\"}}";
+    String nuevoDocumentacionMemoriaJson = "{ \"documentoRef\": \"doc-001\", \"memoria\": {\"id\": \"1\"}, \"tipoDocumento\": {\"id\": \"1\"}}";
 
     BDDMockito.given(documentacionMemoriaService.create(ArgumentMatchers.<DocumentacionMemoria>any()))
         .willThrow(new IllegalArgumentException());
@@ -128,13 +180,14 @@ public class DocumentacionMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DOCUMENTACIONMEMORIA-EDITAR" })
   public void replaceDocumentacionMemoria_ReturnsDocumentacionMemoria() throws Exception {
 
     Memoria memoria = generarMockMemoria(1L, "Memoria1");
     TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
 
     // given: Un DocumentacionMemoria a modificar
-    String replaceDocumentacionMemoriaJson = "{\"documentoRef\": \"doc-001\", \"memoria\": {\"titulo\": \"Memoria1\"}, \"tipoDocumento\": {\"nombre\": \"TipoDocumento1\"}}";
+    String replaceDocumentacionMemoriaJson = "{\"id\": \"1\", \"documentoRef\": \"doc-001\", \"memoria\": {\"id\": \"1\"}, \"tipoDocumento\": {\"id\": \"1\"}}";
 
     DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(1L, memoria, tipoDocumento);
 
@@ -154,10 +207,11 @@ public class DocumentacionMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DOCUMENTACIONMEMORIA-EDITAR" })
   public void replaceDocumentacionMemoria_NotFound() throws Exception {
 
     // given: Una DocumentacionMemoria a modificar
-    String replaceDocumentacionMemoriaJson = "{\"documentoRef\": \"doc-001\", \"memoria\": {\"titulo\": \"Memoria1\"}, \"tipoDocumento\": {\"nombre\": \"TipoDocumento1\"}}";
+    String replaceDocumentacionMemoriaJson = "{\"id\": \"1\", \"documentoRef\": \"doc-001\", \"memoria\": {\"id\": \"1\"}, \"tipoDocumento\": {\"id\": \"1\"}}";
 
     BDDMockito.given(documentacionMemoriaService.update(ArgumentMatchers.<DocumentacionMemoria>any()))
         .will((InvocationOnMock invocation) -> {
@@ -171,6 +225,7 @@ public class DocumentacionMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DOCUMENTACIONMEMORIA-EDITAR" })
   public void removeDocumentacionMemoria_ReturnsOk() throws Exception {
 
     Memoria memoria = generarMockMemoria(1L, "Memoria1");
@@ -186,6 +241,7 @@ public class DocumentacionMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DOCUMENTACIONMEMORIA-VER" })
   public void findAll_Unlimited_ReturnsFullDocumentacionMemoriaList() throws Exception {
 
     TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
@@ -211,6 +267,7 @@ public class DocumentacionMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DOCUMENTACIONMEMORIA-VER" })
   public void findAll_WithPaging_ReturnsDocumentacionMemoriaSubList() throws Exception {
 
     TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
@@ -267,6 +324,7 @@ public class DocumentacionMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DOCUMENTACIONMEMORIA-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredDocumentacionMemoriaList() throws Exception {
 
     TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);

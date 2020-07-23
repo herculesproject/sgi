@@ -1,13 +1,14 @@
 package org.crue.hercules.sgi.eti.config;
 
+import org.crue.hercules.sgi.framework.web.config.SgiWebConfig;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * WebConfig Fw
+ * SgiWebConfig Fw
  * 
  * Framework Web configuration.
  */
 @Configuration
-public class WebConfig extends org.crue.hercules.sgi.framework.web.servlet.config.WebConfig {
+public class WebConfig extends SgiWebConfig {
 
 }

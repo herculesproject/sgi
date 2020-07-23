@@ -15,6 +15,8 @@ import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.service.EvaluadorService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -23,11 +25,19 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -53,7 +63,43 @@ public class EvaluadorControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String EVALUADOR_CONTROLLER_BASE_PATH = "/evaluadores";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable() //
+          .authorizeRequests().antMatchers("/error").permitAll() //
+          .antMatchers("/**").authenticated() //
+          .anyRequest().denyAll() //
+          .and() //
+          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint) //
+          .and() //
+          .httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVALUADOR-VER" })
   public void getEvaluador_WithId_ReturnsEvaluador() throws Exception {
     BDDMockito.given(evaluadorService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockEvaluador(1L, "Evaluador1")));
@@ -66,6 +112,7 @@ public class EvaluadorControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVALUADOR-VER" })
   public void getEvaluador_NotFound_Returns404() throws Exception {
     BDDMockito.given(evaluadorService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new EvaluadorNotFoundException(invocation.getArgument(0));
@@ -75,11 +122,13 @@ public class EvaluadorControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVALUADOR-EDITAR" })
   public void newEvaluador_ReturnsEvaluador() throws Exception {
     // given: Un evaluador nuevo
-    String nuevoEvaluadorJson = "{\"resumen\": \"Evaluador1\", \"activo\": \"true\"}";
-
     Evaluador evaluador = generarMockEvaluador(1L, "Evaluador1");
+    evaluador.setId(null);
+    String nuevoEvaluadorJson = mapper.writeValueAsString(evaluador);
+    evaluador.setId(1L);
 
     BDDMockito.given(evaluadorService.create(ArgumentMatchers.<Evaluador>any())).willReturn(evaluador);
 
@@ -94,6 +143,7 @@ public class EvaluadorControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVALUADOR-EDITAR" })
   public void newEvaluador_Error_Returns400() throws Exception {
     // given: Un evaluador nuevo que produce un error al crearse
     String nuevoEvaluadorJson = "{\"resumen\": \"Evaluador1\", \"activo\": \"true\"}";
@@ -112,11 +162,11 @@ public class EvaluadorControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVALUADOR-EDITAR" })
   public void replaceEvaluador_ReturnsEvaluador() throws Exception {
     // given: Un evaluador a modificar
-    String replaceEvaluadorJson = "{\"id\": 1, \"resumen\": \"Evaluador1\"}";
-
     Evaluador evaluador = generarMockEvaluador(1L, "Replace Evaluador1");
+    String replaceEvaluadorJson = mapper.writeValueAsString(evaluador);
 
     BDDMockito.given(evaluadorService.update(ArgumentMatchers.<Evaluador>any())).willReturn(evaluador);
 
@@ -131,9 +181,10 @@ public class EvaluadorControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVALUADOR-EDITAR" })
   public void replaceEvaluador_NotFound() throws Exception {
     // given: Un evaluador a modificar
-    String replaceEvaluadorJson = "{\"id\": 1, \"resumen\": \"Evaluador1\", \"activo\": \"true\"}";
+    String replaceEvaluadorJson = mapper.writeValueAsString(generarMockEvaluador(1L, "Evaluador1"));
 
     BDDMockito.given(evaluadorService.update(ArgumentMatchers.<Evaluador>any())).will((InvocationOnMock invocation) -> {
       throw new EvaluadorNotFoundException(((Evaluador) invocation.getArgument(0)).getId());
@@ -146,6 +197,7 @@ public class EvaluadorControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVALUADOR-EDITAR" })
   public void removeEvaluador_ReturnsOk() throws Exception {
     BDDMockito.given(evaluadorService.findById(ArgumentMatchers.anyLong()))
         .willReturn(generarMockEvaluador(1L, "Evaluador1"));
@@ -157,6 +209,7 @@ public class EvaluadorControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVALUADOR-VER" })
   public void findAll_Unlimited_ReturnsFullEvaluadorList() throws Exception {
     // given: One hundred Evaluador
     List<Evaluador> evaluadores = new ArrayList<>();
@@ -177,6 +230,7 @@ public class EvaluadorControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVALUADOR-VER" })
   public void findAll_WithPaging_ReturnsEvaluadorSubList() throws Exception {
     // given: One hundred Evaluador
     List<Evaluador> evaluadores = new ArrayList<>();
@@ -228,6 +282,7 @@ public class EvaluadorControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVALUADOR-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredEvaluadorList() throws Exception {
     // given: One hundred Evaluador and a search query
     List<Evaluador> evaluadores = new ArrayList<>();

@@ -21,10 +21,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.test.context.ActiveProfiles;
+
 /**
  * Test de integracion de Tarea.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("SECURITY_MOCK")
 public class TareaIT {
 
   @Autowired
@@ -33,12 +49,48 @@ public class TareaIT {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String TAREA_CONTROLLER_BASE_PATH = "/tareas";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+      PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+      auth.inMemoryAuthentication().passwordEncoder(encoder).withUser("user").password(encoder.encode("secret"))
+          .authorities("ETI-TAREA-EDITAR", "ETI-TAREA-VER");
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.cors().and().csrf().disable().authorizeRequests().antMatchers("/error").permitAll().antMatchers("/**")
+          .authenticated().anyRequest().denyAll().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint).and().httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getTarea_WithId_ReturnsTarea() throws Exception {
-    final ResponseEntity<Tarea> response = restTemplate.getForEntity(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        Tarea.class, 1L);
+    final ResponseEntity<Tarea> response = restTemplate.withBasicAuth("user", "secret")
+        .getForEntity(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, Tarea.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -64,8 +116,8 @@ public class TareaIT {
 
     Tarea nuevaTarea = generarMockTarea(null, "Tarea");
 
-    final ResponseEntity<Tarea> response = restTemplate.postForEntity(TAREA_CONTROLLER_BASE_PATH, nuevaTarea,
-        Tarea.class);
+    final ResponseEntity<Tarea> response = restTemplate.withBasicAuth("user", "secret")
+        .postForEntity(TAREA_CONTROLLER_BASE_PATH, nuevaTarea, Tarea.class);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
@@ -91,8 +143,8 @@ public class TareaIT {
 
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<Tarea> response = restTemplate.exchange(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.DELETE, null, Tarea.class, id);
+    final ResponseEntity<Tarea> response = restTemplate.withBasicAuth("user", "secret")
+        .exchange(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, Tarea.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -103,10 +155,10 @@ public class TareaIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeTarea_DoNotGetTarea() throws Exception {
-    restTemplate.delete(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
+    restTemplate.withBasicAuth("user", "secret").delete(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<Tarea> response = restTemplate.getForEntity(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        Tarea.class, 1L);
+    final ResponseEntity<Tarea> response = restTemplate.withBasicAuth("user", "secret")
+        .getForEntity(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, Tarea.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
@@ -120,8 +172,8 @@ public class TareaIT {
 
     final HttpEntity<Tarea> requestEntity = new HttpEntity<Tarea>(replaceTarea, new HttpHeaders());
 
-    final ResponseEntity<Tarea> response = restTemplate.exchange(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.PUT, requestEntity, Tarea.class, 1L);
+    final ResponseEntity<Tarea> response = restTemplate.withBasicAuth("user", "secret")
+        .exchange(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity, Tarea.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -151,8 +203,8 @@ public class TareaIT {
 
     URI uri = UriComponentsBuilder.fromUriString(TAREA_CONTROLLER_BASE_PATH).build(false).toUri();
 
-    final ResponseEntity<List<Tarea>> response = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(headers),
-        new ParameterizedTypeReference<List<Tarea>>() {
+    final ResponseEntity<List<Tarea>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<Tarea>>() {
         });
 
     // then: Respuesta OK, tareas retorna la información de la página
@@ -182,8 +234,8 @@ public class TareaIT {
         .toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<Tarea>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
-        new ParameterizedTypeReference<List<Tarea>>() {
+    final ResponseEntity<List<Tarea>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, null, new ParameterizedTypeReference<List<Tarea>>() {
         });
 
     // then: Respuesta OK, Tareas retorna la información de la página
@@ -205,8 +257,8 @@ public class TareaIT {
     URI uri = UriComponentsBuilder.fromUriString(TAREA_CONTROLLER_BASE_PATH).queryParam("s", sort).build(false).toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<Tarea>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
-        new ParameterizedTypeReference<List<Tarea>>() {
+    final ResponseEntity<List<Tarea>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, null, new ParameterizedTypeReference<List<Tarea>>() {
         });
 
     // then: Respuesta OK, Tareas retorna la información de la página
@@ -237,8 +289,8 @@ public class TareaIT {
     URI uri = UriComponentsBuilder.fromUriString(TAREA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
-    final ResponseEntity<List<Tarea>> response = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(headers),
-        new ParameterizedTypeReference<List<Tarea>>() {
+    final ResponseEntity<List<Tarea>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<Tarea>>() {
         });
 
     // then: Respuesta OK, Tareas retorna la información de la página

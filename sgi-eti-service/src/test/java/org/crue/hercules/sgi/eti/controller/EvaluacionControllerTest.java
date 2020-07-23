@@ -43,10 +43,23 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.ReflectionUtils;
 
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.test.context.ActiveProfiles;
+
 /**
  * EvaluacionControllerTest
  */
 @WebMvcTest(EvaluacionController.class)
+@ActiveProfiles("SECURITY_MOCK")
 public class EvaluacionControllerTest {
 
   @Autowired
@@ -61,7 +74,43 @@ public class EvaluacionControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String EVALUACION_CONTROLLER_BASE_PATH = "/evaluaciones";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable() //
+          .authorizeRequests().antMatchers("/error").permitAll() //
+          .antMatchers("/**").authenticated() //
+          .anyRequest().denyAll() //
+          .and() //
+          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint) //
+          .and() //
+          .httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVALUACION-VER" })
   public void getEvaluacion_WithId_ReturnsEvaluacion() throws Exception {
     BDDMockito.given(evaluacionService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockEvaluacion(1L, null)));
@@ -75,6 +124,7 @@ public class EvaluacionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVALUACION-VER" })
   public void getEvaluacion_NotFound_Returns404() throws Exception {
     BDDMockito.given(evaluacionService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new EvaluacionNotFoundException(invocation.getArgument(0));
@@ -84,12 +134,13 @@ public class EvaluacionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVALUACION-EDITAR" })
   public void newEvaluacion_ReturnsEvaluacion() throws Exception {
     // given: Una evaluacion nueva
     String nuevoEvaluacionJson = "{\"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
         + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1 replace\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
-        + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"esRevMinima\": \"true\", \"activo\": \"true\"}";
-
+        + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"convocatoriaReunion\": {\"id\": 1},"
+        + "\"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"esRevMinima\": \"true\", \"activo\": \"true\",\"version\": \"1\"}";
     Evaluacion evaluacion = generarMockEvaluacion(1L, null);
 
     BDDMockito.given(evaluacionService.create(ArgumentMatchers.<Evaluacion>any())).willReturn(evaluacion);
@@ -107,6 +158,7 @@ public class EvaluacionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVALUACION-EDITAR" })
   public void newEvaluacion_Error_Returns400() throws Exception {
     // given: Una evaluacion nueva que produce un error al crearse
     String nuevoEvaluacionJson = "{\"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
@@ -127,11 +179,13 @@ public class EvaluacionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVALUACION-EDITAR" })
   public void replaceEvaluacion_ReturnsEvaluacion() throws Exception {
     // given: Una evaluacion a modificar
     String replaceEvaluacionJson = "{\"id\": 1, \"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
         + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1 replace\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
-        + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"esRevMinima\": \"true\", \"activo\": \"true\"}";
+        + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"convocatoriaReunion\": {\"id\": 1},"
+        + "\"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"esRevMinima\": \"true\", \"activo\": \"true\",\"version\": \"1\"}";
 
     Evaluacion evaluacion = generarMockEvaluacion(1L, " Replace");
 
@@ -150,11 +204,13 @@ public class EvaluacionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVALUACION-EDITAR" })
   public void replaceEvaluacion_NotFound() throws Exception {
     // given: Una evaluacion a modificar
     String replaceEvaluacionJson = "{\"id\": 1, \"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
         + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1 replace\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
-        + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"esRevMinima\": \"true\", \"activo\": \"true\"}";
+        + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"convocatoriaReunion\": {\"id\": 1},"
+        + "\"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"esRevMinima\": \"true\", \"activo\": \"true\",\"version\": \"1\"}";
 
     BDDMockito.given(evaluacionService.update(ArgumentMatchers.<Evaluacion>any()))
         .will((InvocationOnMock invocation) -> {
@@ -168,6 +224,7 @@ public class EvaluacionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVALUACION-EDITAR" })
   public void removeEvaluacion_ReturnsOk() throws Exception {
     BDDMockito.given(evaluacionService.findById(ArgumentMatchers.anyLong()))
         .willReturn(generarMockEvaluacion(1L, null));
@@ -179,6 +236,7 @@ public class EvaluacionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVALUACION-VER" })
   public void findAll_Unlimited_ReturnsFullEvaluacionList() throws Exception {
     // given: One hundred Evaluacion
     List<Evaluacion> evaluaciones = new ArrayList<>();
@@ -199,6 +257,7 @@ public class EvaluacionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVALUACION-VER" })
   public void findAll_WithPaging_ReturnsEvaluacionSubList() throws Exception {
     // given: One hundred Evaluacion
     List<Evaluacion> evaluaciones = new ArrayList<>();
@@ -253,6 +312,7 @@ public class EvaluacionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVALUACION-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredEvaluacionList() throws Exception {
     // given: One hundred Evaluacion and a search query
     List<Evaluacion> evaluaciones = new ArrayList<>();

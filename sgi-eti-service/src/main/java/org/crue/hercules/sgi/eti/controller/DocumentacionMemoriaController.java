@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,6 +54,7 @@ public class DocumentacionMemoriaController {
    * @param paging pageable
    */
   @GetMapping()
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-DOCUMENTACIONMEMORIA-VER')")
   ResponseEntity<Page<DocumentacionMemoria>> findAll(
       @RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
@@ -75,7 +77,8 @@ public class DocumentacionMemoriaController {
    * @return Nuevo {@link DocumentacionMemoria} creado.
    */
   @PostMapping
-  ResponseEntity<DocumentacionMemoria> newDocumentacionMemoria(
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-DOCUMENTACIONMEMORIA-EDITAR')")
+  public ResponseEntity<DocumentacionMemoria> newDocumentacionMemoria(
       @Valid @RequestBody DocumentacionMemoria nuevoDocumentacionMemoria) {
     log.debug("newDocumentacionMemoria(DocumentacionMemoria nuevoDocumentacionMemoria) - start");
     DocumentacionMemoria returnValue = service.create(nuevoDocumentacionMemoria);
@@ -92,6 +95,7 @@ public class DocumentacionMemoriaController {
    * @return {@link DocumentacionMemoria} actualizado.
    */
   @PutMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-DOCUMENTACIONMEMORIA-EDITAR')")
   DocumentacionMemoria replaceDocumentacionMemoria(@Valid @RequestBody DocumentacionMemoria updatedDocumentacionMemoria,
       @PathVariable Long id) {
     log.debug("replaceDocumentacionMemoria(DocumentacionMemoria updatedDocumentacionMemoria, Long id) - start");
@@ -108,6 +112,7 @@ public class DocumentacionMemoriaController {
    * @return {@link DocumentacionMemoria} correspondiente al id.
    */
   @GetMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-DOCUMENTACIONMEMORIA-VER')")
   DocumentacionMemoria one(@PathVariable Long id) {
     log.debug("DocumentacionMemoria one(Long id) - start");
     DocumentacionMemoria returnValue = service.findById(id);
@@ -121,6 +126,7 @@ public class DocumentacionMemoriaController {
    * @param id Identificador de {@link DocumentacionMemoria}.
    */
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-DOCUMENTACIONMEMORIA-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     service.delete(id);

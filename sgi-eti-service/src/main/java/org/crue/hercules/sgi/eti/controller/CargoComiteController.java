@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,6 +54,7 @@ public class CargoComiteController {
    * @param paging pageable
    */
   @GetMapping()
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-CARGOCOMITE-VER')")
   ResponseEntity<Page<CargoComite>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
@@ -73,7 +75,8 @@ public class CargoComiteController {
    * @return Nuevo {@link CargoComite} creado.
    */
   @PostMapping
-  ResponseEntity<CargoComite> newCargoComite(@Valid @RequestBody CargoComite nuevoCargoComite) {
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-CARGOCOMITE-EDITAR')")
+  public ResponseEntity<CargoComite> newCargoComite(@Valid @RequestBody CargoComite nuevoCargoComite) {
     log.debug("newCargoComite(CargoComite nuevoCargoComite) - start");
     CargoComite returnValue = service.create(nuevoCargoComite);
     log.debug("newCargoComite(CargoComite nuevoCargoComite) - end");
@@ -88,6 +91,7 @@ public class CargoComiteController {
    * @return {@link CargoComite} actualizado.
    */
   @PutMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-CARGOCOMITE-EDITAR')")
   CargoComite replaceCargoComite(@Valid @RequestBody CargoComite updatedCargoComite, @PathVariable Long id) {
     log.debug("replaceCargoComite(CargoComite updatedCargoComite, Long id) - start");
     updatedCargoComite.setId(id);
@@ -103,6 +107,7 @@ public class CargoComiteController {
    * @return {@link CargoComite} correspondiente al id.
    */
   @GetMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-CARGOCOMITE-VER')")
   CargoComite one(@PathVariable Long id) {
     log.debug("CargoComite one(Long id) - start");
     CargoComite returnValue = service.findById(id);
@@ -116,6 +121,7 @@ public class CargoComiteController {
    * @param id Identificador de {@link CargoComite}.
    */
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-CARGOCOMITE-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     CargoComite cargoComite = this.one(id);

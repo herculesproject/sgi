@@ -12,7 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -67,7 +66,6 @@ public class Evaluacion extends BaseEntity {
   /** Version */
   @Column(name = "version", nullable = false)
   @NotNull
-  @Size(max = 8)
   private Integer version;
 
   /** Es revisión mínima */

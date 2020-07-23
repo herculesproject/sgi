@@ -13,7 +13,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -42,7 +41,6 @@ public class Memoria extends BaseEntity {
   @Column(name = "id", nullable = false)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "memoria_seq")
   @SequenceGenerator(name = "memoria_seq", sequenceName = "memoria_seq", allocationSize = 1)
-  @NotNull
   private Long id;
 
   /** Referencia memoria */
@@ -94,7 +92,6 @@ public class Memoria extends BaseEntity {
   /** Version */
   @Column(name = "version", nullable = false)
   @NotNull
-  @Size(max = 8)
   private Integer version;
 
   /** Estado Memoria Actual */

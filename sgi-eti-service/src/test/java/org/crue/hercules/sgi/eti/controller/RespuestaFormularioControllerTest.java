@@ -36,10 +36,23 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.ReflectionUtils;
 
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.test.context.ActiveProfiles;
+
 /**
  * RespuestaFormularioControllerTest
  */
 @WebMvcTest(RespuestaFormularioController.class)
+@ActiveProfiles("SECURITY_MOCK")
 public class RespuestaFormularioControllerTest {
 
   @Autowired
@@ -54,7 +67,43 @@ public class RespuestaFormularioControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String RESPUESTA_FORMULARIO_CONTROLLER_BASE_PATH = "/respuestaformularios";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable() //
+          .authorizeRequests().antMatchers("/error").permitAll() //
+          .antMatchers("/**").authenticated() //
+          .anyRequest().denyAll() //
+          .and() //
+          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint) //
+          .and() //
+          .httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-RESPUESTAFORMULARIO-VER" })
   public void getRespuestaFormulario_WithId_ReturnsRespuestaFormulario() throws Exception {
     BDDMockito.given(respuestaFormularioService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockRespuestaFormulario(1L)));
@@ -67,6 +116,7 @@ public class RespuestaFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-RESPUESTAFORMULARIO-VER" })
   public void getRespuestaFormulario_NotFound_Returns404() throws Exception {
     BDDMockito.given(respuestaFormularioService.findById(ArgumentMatchers.anyLong()))
         .will((InvocationOnMock invocation) -> {
@@ -77,6 +127,7 @@ public class RespuestaFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-RESPUESTAFORMULARIO-EDITAR" })
   public void newRespuestaFormulario_ReturnsRespuestaFormulario() throws Exception {
     // given: Un RespuestaFormulario nuevo
     String nuevoRespuestaFormularioJson = "{\"valor\": \"Valor1\", \"formularioMemoria\": {\"memoria\": {\"id\": 1}, \"formulario\": {\"id\": 1}, \"activo\": true}, \"componenteFormulario\": {\"esquema\": \"Esquema1\"}}";
@@ -97,6 +148,7 @@ public class RespuestaFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-RESPUESTAFORMULARIO-EDITAR" })
   public void newRespuestaFormulario_Error_Returns400() throws Exception {
     // given: Un RespuestaFormulario nuevo que produce un error al crearse
     String nuevoRespuestaFormularioJson = "{\"valor\": \"Valor1\", \"formularioMemoria\": {\"memoria\": {\"id\": 1}, \"formulario\": {\"id\": 1}, \"activo\": true}, \"componenteFormulario\": {\"esquema\": \"Esquema1\"}}";
@@ -115,6 +167,7 @@ public class RespuestaFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-RESPUESTAFORMULARIO-EDITAR" })
   public void replaceRespuestaFormulario_ReturnsRespuestaFormulario() throws Exception {
     // given: Un RespuestaFormulario a modificar
     String replaceRespuestaFormularioJson = "{\"id\": 1, \"valor\": \"Valor1\", \"formularioMemoria\": {\"memoria\": {\"id\": 1}, \"formulario\": {\"id\": 1}, \"activo\": true}, \"componenteFormulario\": {\"esquema\": \"Esquema1\"}}";
@@ -136,6 +189,7 @@ public class RespuestaFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-RESPUESTAFORMULARIO-EDITAR" })
   public void replaceRespuestaFormulario_NotFound() throws Exception {
     // given: Un RespuestaFormulario a modificar
     String replaceRespuestaFormularioJson = "{\"id\": 1, \"valor\": \"Valor1\", \"formularioMemoria\": {\"memoria\": {\"id\": 1}, \"formulario\": {\"id\": 1}, \"activo\": true}, \"componenteFormulario\": {\"esquema\": \"Esquema1\"}}";
@@ -152,6 +206,7 @@ public class RespuestaFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-RESPUESTAFORMULARIO-EDITAR" })
   public void removeRespuestaFormulario_ReturnsOk() throws Exception {
     BDDMockito.given(respuestaFormularioService.findById(ArgumentMatchers.anyLong()))
         .willReturn(generarMockRespuestaFormulario(1L));
@@ -163,6 +218,7 @@ public class RespuestaFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-RESPUESTAFORMULARIO-VER" })
   public void findAll_Unlimited_ReturnsFullRespuestaFormularioList() throws Exception {
     // given: One hundred RespuestaFormulario
     List<RespuestaFormulario> RespuestaFormularios = new ArrayList<>();
@@ -184,6 +240,7 @@ public class RespuestaFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-RESPUESTAFORMULARIO-VER" })
   public void findAll_WithPaging_ReturnsRespuestaFormularioSubList() throws Exception {
     // given: One hundred RespuestaFormulario
     List<RespuestaFormulario> respuestaFormularios = new ArrayList<>();
@@ -234,6 +291,7 @@ public class RespuestaFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-RESPUESTAFORMULARIO-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredRespuestaFormularioList() throws Exception {
     // given: One hundred RespuestaFormulario and a search query
     List<RespuestaFormulario> respuestaFormularios = new ArrayList<>();

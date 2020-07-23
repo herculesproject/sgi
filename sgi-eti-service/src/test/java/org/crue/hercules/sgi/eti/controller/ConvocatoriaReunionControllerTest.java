@@ -39,10 +39,23 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.ReflectionUtils;
 
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.test.context.ActiveProfiles;
+
 /**
  * ConvocatoriaReunionControllerTest
  */
 @WebMvcTest(ConvocatoriaReunionController.class)
+@ActiveProfiles("SECURITY_MOCK")
 public class ConvocatoriaReunionControllerTest {
 
   @Autowired
@@ -57,7 +70,43 @@ public class ConvocatoriaReunionControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH = "/convocatoriareuniones";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable() //
+          .authorizeRequests().antMatchers("/error").permitAll() //
+          .antMatchers("/**").authenticated() //
+          .anyRequest().denyAll() //
+          .and() //
+          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint) //
+          .and() //
+          .httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-EDITAR" })
   public void create_ReturnsConvocatoriaReunion() throws Exception {
 
     // given: Nueva entidad sin Id
@@ -91,6 +140,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-EDITAR" })
   public void create_WithId_Returns400() throws Exception {
 
     // given: Nueva entidad con Id
@@ -109,6 +159,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-EDITAR" })
   public void update_WithExistingId_ReturnsConvocatoriaReunion() throws Exception {
 
     // given: Entidad existente que se va a actualizar
@@ -143,6 +194,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-EDITAR" })
   public void update_WithNoExistingId_Returns404() throws Exception {
 
     // given: Entidad a actualizar que no existe
@@ -167,6 +219,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-EDITAR" })
   public void delete_WithExistingId_Return204() throws Exception {
 
     // given: Entidad existente
@@ -185,6 +238,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-EDITAR" })
   public void delete_WithNoExistingId_Returns404() throws Exception {
 
     // given: Id de una entidad que no existe
@@ -207,6 +261,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-VER" })
   public void findById_WithExistingId_ReturnsConvocatoriaReunion() throws Exception {
 
     // given: Entidad con un determinado Id
@@ -238,6 +293,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-VER" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
 
     // given: No existe entidad con el id indicado
@@ -259,6 +315,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-VER" })
   public void findAll_Unlimited_ReturnsFullConvocatoriaReunionList() throws Exception {
 
     // given: Datos existentes
@@ -285,6 +342,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-VER" })
   public void findAll_Unlimited_Returns204() throws Exception {
 
     // given: No hay datos
@@ -299,6 +357,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-VER" })
   public void findAll_WithPaging_ReturnsDemoSubList() throws Exception {
 
     // given: Datos existentes
@@ -335,6 +394,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-VER" })
   public void findAll_WithPaging_Returns204() throws Exception {
 
     // given: Datos existentes
@@ -357,6 +417,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredConvocatoriaReunionList() throws Exception {
 
     // given: Datos existentes

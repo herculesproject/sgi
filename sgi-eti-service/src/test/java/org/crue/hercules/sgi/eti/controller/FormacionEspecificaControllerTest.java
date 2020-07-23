@@ -32,10 +32,23 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.ReflectionUtils;
 
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.test.context.ActiveProfiles;
+
 /**
  * FormacionEspecificaControllerTest
  */
 @WebMvcTest(FormacionEspecificaController.class)
+@ActiveProfiles("SECURITY_MOCK")
 public class FormacionEspecificaControllerTest {
 
   @Autowired
@@ -50,7 +63,43 @@ public class FormacionEspecificaControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String FORMACION_ESPECIFICA_CONTROLLER_BASE_PATH = "/formacionespecificas";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable() //
+          .authorizeRequests().antMatchers("/error").permitAll() //
+          .antMatchers("/**").authenticated() //
+          .anyRequest().denyAll() //
+          .and() //
+          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint) //
+          .and() //
+          .httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-FORMACIONESPECIFICA-VER" })
   public void getFormacionEspecifica_WithId_ReturnsFormacionEspecifica() throws Exception {
     BDDMockito.given(formacionEspecificaService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockFormacionEspecifica(1L, "FormacionEspecifica1")));
@@ -63,6 +112,7 @@ public class FormacionEspecificaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-FORMACIONESPECIFICA-VER" })
   public void getFormacionEspecifica_NotFound_Returns404() throws Exception {
     BDDMockito.given(formacionEspecificaService.findById(ArgumentMatchers.anyLong()))
         .will((InvocationOnMock invocation) -> {
@@ -73,6 +123,7 @@ public class FormacionEspecificaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-FORMACIONESPECIFICA-EDITAR" })
   public void newFormacionEspecifica_ReturnsFormacionEspecifica() throws Exception {
     // given: Una formación específica nueva
     String nuevoFormacionEspecificaJson = "{\"nombre\": \"FormacionEspecifica1\", \"activo\": \"true\"}";
@@ -93,6 +144,7 @@ public class FormacionEspecificaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-FORMACIONESPECIFICA-EDITAR" })
   public void newFormacionEspecifica_Error_Returns400() throws Exception {
     // given: Una formación específica nueva que produce un error al crearse
     String nuevoFormacionEspecificaJson = "{\"nombre\": \"FormacionEspecifica1\", \"activo\": \"true\"}";
@@ -111,6 +163,7 @@ public class FormacionEspecificaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-FORMACIONESPECIFICA-EDITAR" })
   public void replaceFormacionEspecifica_ReturnsFormacionEspecifica() throws Exception {
     // given: Una formación específica a modificar
     String replaceFormacionEspecificaJson = "{\"id\": 1, \"nombre\": \"FormacionEspecifica1\", \"activo\": \"true\"}";
@@ -131,6 +184,7 @@ public class FormacionEspecificaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-FORMACIONESPECIFICA-EDITAR" })
   public void replaceFormacionEspecifica_NotFound() throws Exception {
     // given: Una formación específica a modificar
     String replaceFormacionEspecificaJson = "{\"id\": 1, \"nombre\": \"FormacionEspecifica1\", \"activo\": \"true\"}";
@@ -147,6 +201,7 @@ public class FormacionEspecificaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-FORMACIONESPECIFICA-EDITAR" })
   public void removeFormacionEspecifica_ReturnsOk() throws Exception {
     BDDMockito.given(formacionEspecificaService.findById(ArgumentMatchers.anyLong()))
         .willReturn(generarMockFormacionEspecifica(1L, "FormacionEspecifica1"));
@@ -158,6 +213,7 @@ public class FormacionEspecificaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-FORMACIONESPECIFICA-VER" })
   public void findAll_Unlimited_ReturnsFullFormacionEspecificaList() throws Exception {
     // given: One hundred FormacionEspecifica
     List<FormacionEspecifica> formacionEspecificas = new ArrayList<>();
@@ -180,6 +236,7 @@ public class FormacionEspecificaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-FORMACIONESPECIFICA-VER" })
   public void findAll_WithPaging_ReturnsFormacionEspecificaSubList() throws Exception {
     // given: One hundred FormacionEspecifica
     List<FormacionEspecifica> formacionEspecificas = new ArrayList<>();
@@ -232,6 +289,7 @@ public class FormacionEspecificaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-FORMACIONESPECIFICA-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredFormacionEspecificaList() throws Exception {
     // given: One hundred FormacionEspecifica and a search query
     List<FormacionEspecifica> formacionEspecificas = new ArrayList<>();

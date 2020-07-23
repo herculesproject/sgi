@@ -12,6 +12,8 @@ import org.crue.hercules.sgi.eti.exceptions.TipoEstadoMemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.service.TipoEstadoMemoriaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -20,11 +22,19 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -50,7 +60,43 @@ public class TipoEstadoMemoriaControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String TIPO_ESTADO_MEMORIA_CONTROLLER_BASE_PATH = "/tipoestadomemorias";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable() //
+          .authorizeRequests().antMatchers("/error").permitAll() //
+          .antMatchers("/**").authenticated() //
+          .anyRequest().denyAll() //
+          .and() //
+          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint) //
+          .and() //
+          .httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOESTADOMEMORIA-VER" })
   public void getTipoEstadoMemoria_WithId_ReturnsTipoEstadoMemoria() throws Exception {
     BDDMockito.given(tipoEstadoMemoriaService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockTipoEstadoMemoria(1L, "TipoEstadoMemoria1")));
@@ -63,6 +109,7 @@ public class TipoEstadoMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOESTADOMEMORIA-VER" })
   public void getTipoEstadoMemoria_NotFound_Returns404() throws Exception {
     BDDMockito.given(tipoEstadoMemoriaService.findById(ArgumentMatchers.anyLong()))
         .will((InvocationOnMock invocation) -> {
@@ -73,6 +120,7 @@ public class TipoEstadoMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOESTADOMEMORIA-EDITAR" })
   public void newTipoEstadoMemoria_ReturnsTipoEstadoMemoria() throws Exception {
     // given: Un tipo estado memoria nuevo
     String nuevoTipoEstadoMemoriaJson = "{\"nombre\": \"TipoEstadoMemoria1\", \"activo\": \"true\"}";
@@ -93,6 +141,7 @@ public class TipoEstadoMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOESTADOMEMORIA-EDITAR" })
   public void newTipoEstadoMemoria_Error_Returns400() throws Exception {
     // given: Un tipo estado memoria nuevo que produce un error al crearse
     String nuevoTipoEstadoMemoriaJson = "{\"nombre\": \"TipoEstadoMemoria1\", \"activo\": \"true\"}";
@@ -111,6 +160,7 @@ public class TipoEstadoMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOESTADOMEMORIA-EDITAR" })
   public void replaceTipoEstadoMemoria_ReturnsTipoEstadoMemoria() throws Exception {
     // given: Un tipo estado memoria a modificar
     String replaceTipoEstadoMemoriaJson = "{\"id\": 1, \"nombre\": \"TipoEstadoMemoria1\", \"activo\": \"true\"}";
@@ -131,6 +181,7 @@ public class TipoEstadoMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOESTADOMEMORIA-EDITAR" })
   public void replaceTipoEstadoMemoria_NotFound() throws Exception {
     // given: Un tipo estado memoria a modificar
     String replaceTipoEstadoMemoriaJson = "{\"id\": 1, \"nombre\": \"TipoEstadoMemoria1\", \"activo\": \"true\"}";
@@ -147,6 +198,7 @@ public class TipoEstadoMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOESTADOMEMORIA-EDITAR" })
   public void removeTipoEstadoMemoria_ReturnsOk() throws Exception {
     BDDMockito.given(tipoEstadoMemoriaService.findById(ArgumentMatchers.anyLong()))
         .willReturn(generarMockTipoEstadoMemoria(1L, "TipoEstadoMemoria1"));
@@ -158,6 +210,7 @@ public class TipoEstadoMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOESTADOMEMORIA-VER" })
   public void findAll_Unlimited_ReturnsFullTipoEstadoMemoriaList() throws Exception {
     // given: One hundred TipoEstadoMemoria
     List<TipoEstadoMemoria> tipoEstadoMemorias = new ArrayList<>();
@@ -181,6 +234,7 @@ public class TipoEstadoMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOESTADOMEMORIA-VER" })
   public void findAll_WithPaging_ReturnsTipoEstadoMemoriaSubList() throws Exception {
     // given: One hundred TipoEstadoMemoria
     List<TipoEstadoMemoria> tipoEstadoMemorias = new ArrayList<>();
@@ -233,6 +287,7 @@ public class TipoEstadoMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOESTADOMEMORIA-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredTipoEstadoMemoriaList() throws Exception {
     // given: One hundred TipoEstadoMemoria and a search query
     List<TipoEstadoMemoria> tipoEstadoMemorias = new ArrayList<>();

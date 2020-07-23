@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,6 +54,7 @@ public class RespuestaFormularioController {
    * @param paging pageable
    */
   @GetMapping()
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-RESPUESTAFORMULARIO-VER')")
   ResponseEntity<Page<RespuestaFormulario>> findAll(
       @RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
@@ -75,7 +77,8 @@ public class RespuestaFormularioController {
    * @return Nuevo {@link RespuestaFormulario} creado.
    */
   @PostMapping
-  ResponseEntity<RespuestaFormulario> newRespuestaFormulario(
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-RESPUESTAFORMULARIO-EDITAR')")
+  public ResponseEntity<RespuestaFormulario> newRespuestaFormulario(
       @Valid @RequestBody RespuestaFormulario nuevoRespuestaFormulario) {
     log.debug("newRespuestaFormulario(RespuestaFormulario nuevoRespuestaFormulario) - start");
     RespuestaFormulario returnValue = service.create(nuevoRespuestaFormulario);
@@ -92,6 +95,7 @@ public class RespuestaFormularioController {
    * @return {@link RespuestaFormulario} actualizado.
    */
   @PutMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-RESPUESTAFORMULARIO-EDITAR')")
   RespuestaFormulario replaceRespuestaFormulario(@Valid @RequestBody RespuestaFormulario updatedRespuestaFormulario,
       @PathVariable Long id) {
     log.debug("replaceRespuestaFormulario(RespuestaFormulario updatedRespuestaFormulario, Long id) - start");
@@ -108,6 +112,7 @@ public class RespuestaFormularioController {
    * @return {@link RespuestaFormulario} correspondiente al id.
    */
   @GetMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-RESPUESTAFORMULARIO-VER')")
   RespuestaFormulario one(@PathVariable Long id) {
     log.debug("RespuestaFormulario one(Long id) - start");
     RespuestaFormulario returnValue = service.findById(id);
@@ -121,6 +126,7 @@ public class RespuestaFormularioController {
    * @param id Identificador de {@link RespuestaFormulario}.
    */
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-RESPUESTAFORMULARIO-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     service.delete(id);

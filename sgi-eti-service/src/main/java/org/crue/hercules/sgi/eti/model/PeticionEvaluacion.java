@@ -11,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -77,7 +76,6 @@ public class PeticionEvaluacion extends BaseEntity {
 
   /** Valor social */
   @Column(name = "valor_social", nullable = false)
-  @Size(max = 8)
   private Integer valorSocial;
 
   /** Otro valor social */

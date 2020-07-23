@@ -32,10 +32,23 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.ReflectionUtils;
 
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.test.context.ActiveProfiles;
+
 /**
  * TipoConvocatoriaReunionControllerTest
  */
 @WebMvcTest(TipoConvocatoriaReunionController.class)
+@ActiveProfiles("SECURITY_MOCK")
 public class TipoConvocatoriaReunionControllerTest {
 
   @Autowired
@@ -50,7 +63,43 @@ public class TipoConvocatoriaReunionControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH = "/tipoconvocatoriareuniones";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable() //
+          .authorizeRequests().antMatchers("/error").permitAll() //
+          .antMatchers("/**").authenticated() //
+          .anyRequest().denyAll() //
+          .and() //
+          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint) //
+          .and() //
+          .httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOCONVOCATORIAREUNION-VER" })
   public void getTipoConvocatoriaReunion_WithId_ReturnsTipoConvocatoriaReunion() throws Exception {
     BDDMockito.given(tipoConvocatoriaReunionService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockTipoConvocatoriaReunion(1L, "TipoConvocatoriaReunion1")));
@@ -63,6 +112,7 @@ public class TipoConvocatoriaReunionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOCONVOCATORIAREUNION-VER" })
   public void getTipoConvocatoriaReunion_NotFound_Returns404() throws Exception {
     BDDMockito.given(tipoConvocatoriaReunionService.findById(ArgumentMatchers.anyLong()))
         .will((InvocationOnMock invocation) -> {
@@ -73,6 +123,7 @@ public class TipoConvocatoriaReunionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOCONVOCATORIAREUNION-EDITAR" })
   public void newTipoConvocatoriaReunion_ReturnsTipoConvocatoriaReunion() throws Exception {
     // given: Un TipoConvocatoriaReunion nuevo
     String nuevoTipoConvocatoriaReunionJson = "{\"nombre\": \"TipoConvocatoriaReunion1\", \"activo\": \"true\"}";
@@ -94,6 +145,7 @@ public class TipoConvocatoriaReunionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOCONVOCATORIAREUNION-EDITAR" })
   public void newTipoConvocatoriaReunion_Error_Returns400() throws Exception {
     // given: Un TipoConvocatoriaReunion nuevo que produce un error al crearse
     String nuevoTipoConvocatoriaReunionJson = "{\"nombre\": \"TipoConvocatoriaReunion1\", \"activo\": \"true\"}";
@@ -112,6 +164,7 @@ public class TipoConvocatoriaReunionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOCONVOCATORIAREUNION-EDITAR" })
   public void replaceTipoConvocatoriaReunion_ReturnsTipoConvocatoriaReunion() throws Exception {
     // given: Un TipoConvocatoriaReunion a modificar
     String replaceTipoConvocatoriaReunionJson = "{\"id\": 1, \"nombre\": \"TipoConvocatoriaReunion1\", \"activo\": \"true\"}";
@@ -133,6 +186,7 @@ public class TipoConvocatoriaReunionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOCONVOCATORIAREUNION-EDITAR" })
   public void replaceTipoConvocatoriaReunion_NotFound() throws Exception {
     // given: Un TipoConvocatoriaReunion a modificar
     String replaceTipoConvocatoriaReunionJson = "{\"id\": 1, \"nombre\": \"TipoConvocatoriaReunion1\", \"activo\": \"true\"}";
@@ -150,6 +204,7 @@ public class TipoConvocatoriaReunionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOCONVOCATORIAREUNION-EDITAR" })
   public void removeTipoConvocatoriaReunion_ReturnsOk() throws Exception {
     BDDMockito.given(tipoConvocatoriaReunionService.findById(ArgumentMatchers.anyLong()))
         .willReturn(generarMockTipoConvocatoriaReunion(1L, "TipoConvocatoriaReunion1"));
@@ -161,6 +216,7 @@ public class TipoConvocatoriaReunionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOCONVOCATORIAREUNION-VER" })
   public void findAll_Unlimited_ReturnsFullTipoConvocatoriaReunionList() throws Exception {
     // given: One hundred TipoConvocatoriaReunion
     List<TipoConvocatoriaReunion> tipoConvocatoriaReuniones = new ArrayList<>();
@@ -183,6 +239,7 @@ public class TipoConvocatoriaReunionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOCONVOCATORIAREUNION-VER" })
   public void findAll_WithPaging_ReturnsTipoConvocatoriaReunionSubList() throws Exception {
     // given: One hundred TipoConvocatoriaReunion
     List<TipoConvocatoriaReunion> tipoConvocatoriaReuniones = new ArrayList<>();
@@ -236,6 +293,7 @@ public class TipoConvocatoriaReunionControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOCONVOCATORIAREUNION-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredTipoConvocatoriaReunionList() throws Exception {
     // given: One hundred TipoConvocatoriaReunion and a search query
     List<TipoConvocatoriaReunion> tipoConvocatoriaReuniones = new ArrayList<>();

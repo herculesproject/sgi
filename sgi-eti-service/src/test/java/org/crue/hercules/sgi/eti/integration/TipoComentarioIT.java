@@ -3,18 +3,33 @@ package org.crue.hercules.sgi.eti.integration;
 import java.net.URI;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -22,6 +37,8 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de TipoComentario.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("SECURITY_MOCK")
+
 public class TipoComentarioIT {
 
   @Autowired
@@ -30,11 +47,47 @@ public class TipoComentarioIT {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String TIPO_COMENTARIO_CONTROLLER_BASE_PATH = "/tipocomentarios";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+      PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+      auth.inMemoryAuthentication().passwordEncoder(encoder).withUser("user").password(encoder.encode("secret"))
+          .authorities("ETI-TIPOCOMENTARIO-EDITAR", "ETI-TIPOCOMENTARIO-VER");
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.cors().and().csrf().disable().authorizeRequests().antMatchers("/error").permitAll().antMatchers("/**")
+          .authenticated().anyRequest().denyAll().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint).and().httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getTipoComentario_WithId_ReturnsTipoComentario() throws Exception {
-    final ResponseEntity<TipoComentario> response = restTemplate
+    final ResponseEntity<TipoComentario> response = restTemplate.withBasicAuth("user", "secret")
         .getForEntity(TIPO_COMENTARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, TipoComentario.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -54,7 +107,8 @@ public class TipoComentarioIT {
     nuevoTipoComentario.setNombre("TipoComentario1");
     nuevoTipoComentario.setActivo(Boolean.TRUE);
 
-    restTemplate.postForEntity(TIPO_COMENTARIO_CONTROLLER_BASE_PATH, nuevoTipoComentario, TipoComentario.class);
+    restTemplate.withBasicAuth("user", "secret").postForEntity(TIPO_COMENTARIO_CONTROLLER_BASE_PATH,
+        nuevoTipoComentario, TipoComentario.class);
   }
 
   @Sql
@@ -64,7 +118,7 @@ public class TipoComentarioIT {
 
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<TipoComentario> response = restTemplate.exchange(
+    final ResponseEntity<TipoComentario> response = restTemplate.withBasicAuth("user", "secret").exchange(
         TIPO_COMENTARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, TipoComentario.class, id);
 
     // then: 200
@@ -76,9 +130,10 @@ public class TipoComentarioIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeTipoComentario_DoNotGetTipoComentario() throws Exception {
-    restTemplate.delete(TIPO_COMENTARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
+    restTemplate.withBasicAuth("user", "secret").withBasicAuth("user", "secret")
+        .delete(TIPO_COMENTARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<TipoComentario> response = restTemplate
+    final ResponseEntity<TipoComentario> response = restTemplate.withBasicAuth("user", "secret")
         .getForEntity(TIPO_COMENTARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, TipoComentario.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -95,7 +150,7 @@ public class TipoComentarioIT {
     final HttpEntity<TipoComentario> requestEntity = new HttpEntity<TipoComentario>(replaceTipoComentario,
         new HttpHeaders());
 
-    final ResponseEntity<TipoComentario> response = restTemplate.exchange(
+    final ResponseEntity<TipoComentario> response = restTemplate.withBasicAuth("user", "secret").exchange(
 
         TIPO_COMENTARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity, TipoComentario.class,
         1L);
@@ -120,8 +175,8 @@ public class TipoComentarioIT {
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_COMENTARIO_CONTROLLER_BASE_PATH).build(false).toUri();
 
-    final ResponseEntity<List<TipoComentario>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoComentario>>() {
+    final ResponseEntity<List<TipoComentario>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoComentario>>() {
         });
 
     // then: Respuesta OK, TipoComentarios retorna la información de la página
@@ -149,8 +204,8 @@ public class TipoComentarioIT {
         .build(false).toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<TipoComentario>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
-        new ParameterizedTypeReference<List<TipoComentario>>() {
+    final ResponseEntity<List<TipoComentario>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, null, new ParameterizedTypeReference<List<TipoComentario>>() {
         });
 
     // then: Respuesta OK, TipoComentarios retorna la información de la página
@@ -173,8 +228,8 @@ public class TipoComentarioIT {
         .build(false).toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<TipoComentario>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
-        new ParameterizedTypeReference<List<TipoComentario>>() {
+    final ResponseEntity<List<TipoComentario>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, null, new ParameterizedTypeReference<List<TipoComentario>>() {
         });
 
     // then: Respuesta OK, TipoComentarios retorna la información de la página
@@ -204,8 +259,8 @@ public class TipoComentarioIT {
     URI uri = UriComponentsBuilder.fromUriString(TIPO_COMENTARIO_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
-    final ResponseEntity<List<TipoComentario>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoComentario>>() {
+    final ResponseEntity<List<TipoComentario>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoComentario>>() {
         });
 
     // then: Respuesta OK, TipoComentarios retorna la información de la página

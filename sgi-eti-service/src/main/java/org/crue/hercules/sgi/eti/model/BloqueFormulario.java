@@ -10,7 +10,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -53,7 +52,6 @@ public class BloqueFormulario extends BaseEntity {
   /** Orden */
   @Column(name = "orden", nullable = false)
   @NotNull
-  @Size(max = 8)
   private Integer orden;
 
   /** Activo */

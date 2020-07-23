@@ -41,10 +41,23 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.ReflectionUtils;
 
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.test.context.ActiveProfiles;
+
 /**
  * InformeFormularioControllerTest
  */
 @WebMvcTest(InformeFormularioController.class)
+@ActiveProfiles("SECURITY_MOCK")
 public class InformeFormularioControllerTest {
 
   @Autowired
@@ -59,7 +72,43 @@ public class InformeFormularioControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String INFORME_FORMULARIO_CONTROLLER_BASE_PATH = "/informeformularios";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable() //
+          .authorizeRequests().antMatchers("/error").permitAll() //
+          .antMatchers("/**").authenticated() //
+          .anyRequest().denyAll() //
+          .and() //
+          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint) //
+          .and() //
+          .httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-INFORMEFORMULARIO-VER" })
   public void getInformeFormulario_WithId_ReturnsInformeFormulario() throws Exception {
     BDDMockito.given(informeFormularioService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockInformeFormulario(1L, "Documento1")));
@@ -72,6 +121,7 @@ public class InformeFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-INFORMEFORMULARIO-VER" })
   public void getInformeFormulario_NotFound_Returns404() throws Exception {
     BDDMockito.given(informeFormularioService.findById(ArgumentMatchers.anyLong()))
         .will((InvocationOnMock invocation) -> {
@@ -82,6 +132,7 @@ public class InformeFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-INFORMEFORMULARIO-EDITAR" })
   public void newInformeFormulario_ReturnsInformeFormulario() throws Exception {
     // given: Un informeFormulario nuevo
     String nuevoInformeFormularioJson = "{\"documentoRef\": \"Documento1\", \"version\": \"2\"}";
@@ -102,6 +153,7 @@ public class InformeFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-INFORMEFORMULARIO-EDITAR" })
   public void newInformeFormulario_Error_Returns400() throws Exception {
     // given: Un informeFormulario nuevo que produce un error al crearse
     String nuevoInformeFormularioJson = "{\"documentoRef\": \"Documento1\", \"version\": \"2\"}";
@@ -120,6 +172,7 @@ public class InformeFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-INFORMEFORMULARIO-EDITAR" })
   public void replaceInformeFormulario_ReturnsInformeFormulario() throws Exception {
     // given: Un informeFormulario a modificar
     String replaceInformeFormularioJson = "{\"id\": 1, \"documentoRef\": \"Documento1\", \"version\": \"2\"}";
@@ -140,6 +193,7 @@ public class InformeFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-INFORMEFORMULARIO-EDITAR" })
   public void replaceInformeFormulario_NotFound() throws Exception {
     // given: Un informeFormulario a modificar
     String replaceInformeFormularioJson = "{\"id\": 1, \"documentoRef\": \"Documento1\", \"version\": \"2\"}";
@@ -156,6 +210,7 @@ public class InformeFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-INFORMEFORMULARIO-EDITAR" })
   public void removeInformeFormulario_ReturnsOk() throws Exception {
     BDDMockito.given(informeFormularioService.findById(ArgumentMatchers.anyLong()))
         .willReturn(generarMockInformeFormulario(1L, "Documento1"));
@@ -167,6 +222,7 @@ public class InformeFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-INFORMEFORMULARIO-VER" })
   public void findAll_Unlimited_ReturnsFullInformeFormularioList() throws Exception {
     // given: One hundred InformeFormulario
     List<InformeFormulario> informeFormularios = new ArrayList<>();
@@ -188,6 +244,7 @@ public class InformeFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-INFORMEFORMULARIO-VER" })
   public void findAll_WithPaging_ReturnsInformeFormularioSubList() throws Exception {
     // given: One hundred InformeFormulario
     List<InformeFormulario> informeFormularios = new ArrayList<>();
@@ -239,6 +296,7 @@ public class InformeFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-INFORMEFORMULARIO-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredInformeFormularioList() throws Exception {
     // given: One hundred InformeFormulario and a search query
     List<InformeFormulario> informeFormularios = new ArrayList<>();

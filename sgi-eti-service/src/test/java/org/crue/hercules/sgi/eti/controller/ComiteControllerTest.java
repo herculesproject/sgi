@@ -32,10 +32,23 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.ReflectionUtils;
 
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.test.context.ActiveProfiles;
+
 /**
  * ComiteControllerTest
  */
 @WebMvcTest(ComiteController.class)
+@ActiveProfiles("SECURITY_MOCK")
 public class ComiteControllerTest {
 
   @Autowired
@@ -50,8 +63,44 @@ public class ComiteControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String COMITE_CONTROLLER_BASE_PATH = "/comites";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable() //
+          .authorizeRequests().antMatchers("/error").permitAll() //
+          .antMatchers("/**").authenticated() //
+          .anyRequest().denyAll() //
+          .and() //
+          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint) //
+          .and() //
+          .httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   /* Retorna una lista Comite y comprueba los datos */
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMITE-VER" })
   public void getComite_ReturnsComiteList() throws Exception {
 
     List<Comite> comiteLista = new ArrayList<>();
@@ -76,6 +125,7 @@ public class ComiteControllerTest {
 
   /* Retorna una lista vacía */
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMITE-VER" })
   public void getComite_ReturnsEmptyList() throws Exception {
 
     List<Comite> comiteResponseList = new ArrayList<Comite>();
@@ -90,6 +140,7 @@ public class ComiteControllerTest {
 
   /* Retorna un Comite por id y comprueba los datos */
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMITE-VER" })
   public void getComite_WithId_ReturnsComite() throws Exception {
 
     BDDMockito.given(comiteService.findById(ArgumentMatchers.anyLong()))
@@ -103,6 +154,7 @@ public class ComiteControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMITE-VER" })
   public void getComite_NotFound_Returns404() throws Exception {
     BDDMockito.given(comiteService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new ComiteNotFoundException(invocation.getArgument(0));
@@ -113,6 +165,7 @@ public class ComiteControllerTest {
 
   /* Crear Comite */
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMITE-EDITAR" })
   public void addComite_ReturnsComite() throws Exception {
 
     // given: Un Comite nuevo
@@ -136,6 +189,7 @@ public class ComiteControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMITE-EDITAR" })
   public void addComite_Error_Returns400() throws Exception {
     // given: Un Comite nuevo que produce un error al crearse
     String nuevoComiteJson = "{\"id\": 1, \"comite\": \"Comite1\"}";
@@ -154,6 +208,7 @@ public class ComiteControllerTest {
 
   /* Modificar un Comite */
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMITE-EDITAR" })
   public void replaceComite_ReturnsComite() throws Exception {
     // given: Un Comite a modificar
     String replaceComiteJson = "{\"comite\": \"Comite1\"}";
@@ -175,6 +230,7 @@ public class ComiteControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMITE-EDITAR" })
   public void replaceComite_NotFound() throws Exception {
     // given: Un Comite a modificar
     String replaceComiteJson = "{\"id\": \"1\",\"comite\": \"Comite1\"}";
@@ -195,6 +251,7 @@ public class ComiteControllerTest {
 
   /* Eliminar un Comite */
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMITE-EDITAR" })
   public void deleteComite() throws Exception {
 
     BDDMockito.given(comiteService.findById(ArgumentMatchers.anyLong()))
@@ -206,6 +263,7 @@ public class ComiteControllerTest {
 
   /* Retorna lista paginada Comite */
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMITE-VER" })
   public void findAll_WithPaging_ReturnsComiteSubList() throws Exception {
 
     // given: Cien Comite
@@ -258,6 +316,7 @@ public class ComiteControllerTest {
 
   /* Retorna lista filtrada Comite */
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMITE-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredComiteList() throws Exception {
 
     // given: Dos Comite y una query

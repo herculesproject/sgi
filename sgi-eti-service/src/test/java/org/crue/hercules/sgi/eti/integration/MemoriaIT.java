@@ -24,10 +24,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.test.context.ActiveProfiles;
+
 /**
  * Test de integracion de Memoria.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("SECURITY_MOCK")
 public class MemoriaIT {
 
   @Autowired
@@ -36,12 +52,48 @@ public class MemoriaIT {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String MEMORIA_CONTROLLER_BASE_PATH = "/memorias";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+      PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+      auth.inMemoryAuthentication().passwordEncoder(encoder).withUser("user").password(encoder.encode("secret"))
+          .authorities("ETI-MEMORIA-EDITAR", "ETI-MEMORIA-VER");
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.cors().and().csrf().disable().authorizeRequests().antMatchers("/error").permitAll().antMatchers("/**")
+          .authenticated().anyRequest().denyAll().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint).and().httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getMemoria_WithId_ReturnsMemoria() throws Exception {
-    final ResponseEntity<Memoria> response = restTemplate.getForEntity(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        Memoria.class, 1L);
+    final ResponseEntity<Memoria> response = restTemplate.withBasicAuth("user", "secret")
+        .getForEntity(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, Memoria.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -59,7 +111,8 @@ public class MemoriaIT {
 
     Memoria nuevaMemoria = generarMockMemoria(1L, "ref-5588", "Memoria1", 1);
 
-    restTemplate.postForEntity(MEMORIA_CONTROLLER_BASE_PATH, nuevaMemoria, Memoria.class);
+    restTemplate.withBasicAuth("user", "secret").postForEntity(MEMORIA_CONTROLLER_BASE_PATH, nuevaMemoria,
+        Memoria.class);
   }
 
   @Sql
@@ -69,8 +122,8 @@ public class MemoriaIT {
 
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<Memoria> response = restTemplate.exchange(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.DELETE, null, Memoria.class, id);
+    final ResponseEntity<Memoria> response = restTemplate.withBasicAuth("user", "secret")
+        .exchange(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, Memoria.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -81,10 +134,10 @@ public class MemoriaIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeMemoria_DoNotGetMemoria() throws Exception {
-    restTemplate.delete(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
+    restTemplate.withBasicAuth("user", "secret").delete(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<Memoria> response = restTemplate.getForEntity(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        Memoria.class, 1L);
+    final ResponseEntity<Memoria> response = restTemplate.withBasicAuth("user", "secret")
+        .getForEntity(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, Memoria.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -99,7 +152,7 @@ public class MemoriaIT {
 
     final HttpEntity<Memoria> requestEntity = new HttpEntity<Memoria>(replaceMemoria, new HttpHeaders());
 
-    final ResponseEntity<Memoria> response = restTemplate.exchange(
+    final ResponseEntity<Memoria> response = restTemplate.withBasicAuth("user", "secret").exchange(
 
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity, Memoria.class, 1L);
 
@@ -123,8 +176,8 @@ public class MemoriaIT {
 
     URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH).build(false).toUri();
 
-    final ResponseEntity<List<Memoria>> response = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(headers),
-        new ParameterizedTypeReference<List<Memoria>>() {
+    final ResponseEntity<List<Memoria>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<Memoria>>() {
         });
 
     // then: Respuesta OK, Memorias retorna la información de la página
@@ -154,8 +207,8 @@ public class MemoriaIT {
         .toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<Memoria>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
-        new ParameterizedTypeReference<List<Memoria>>() {
+    final ResponseEntity<List<Memoria>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, null, new ParameterizedTypeReference<List<Memoria>>() {
         });
 
     // then: Respuesta OK, Memorias retorna la información de la página
@@ -178,8 +231,8 @@ public class MemoriaIT {
         .toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<Memoria>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
-        new ParameterizedTypeReference<List<Memoria>>() {
+    final ResponseEntity<List<Memoria>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, null, new ParameterizedTypeReference<List<Memoria>>() {
         });
 
     // then: Respuesta OK, Memorias retorna la información de la página
@@ -210,8 +263,8 @@ public class MemoriaIT {
     URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
-    final ResponseEntity<List<Memoria>> response = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(headers),
-        new ParameterizedTypeReference<List<Memoria>>() {
+    final ResponseEntity<List<Memoria>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<Memoria>>() {
         });
 
     // then: Respuesta OK, Memorias retorna la información de la página

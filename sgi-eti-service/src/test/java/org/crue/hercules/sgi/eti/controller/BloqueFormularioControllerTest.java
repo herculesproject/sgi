@@ -33,10 +33,23 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.ReflectionUtils;
 
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.test.context.ActiveProfiles;
+
 /**
  * BloqueFormularioControllerTest
  */
 @WebMvcTest(BloqueFormularioController.class)
+@ActiveProfiles("SECURITY_MOCK")
 public class BloqueFormularioControllerTest {
 
   @Autowired
@@ -51,7 +64,43 @@ public class BloqueFormularioControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String BLOQUE_FORMULARIO_CONTROLLER_BASE_PATH = "/bloqueformularios";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable() //
+          .authorizeRequests().antMatchers("/error").permitAll() //
+          .antMatchers("/**").authenticated() //
+          .anyRequest().denyAll() //
+          .and() //
+          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint) //
+          .and() //
+          .httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-BLOQUEFORMULARIO-VER" })
   public void getBloqueFormulario_WithId_ReturnsBloqueFormulario() throws Exception {
     BDDMockito.given(bloqueFormularioService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockBloqueFormulario(1L, "BloqueFormulario1")));
@@ -64,6 +113,7 @@ public class BloqueFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-BLOQUEFORMULARIO-VER" })
   public void getBloqueFormulario_NotFound_Returns404() throws Exception {
     BDDMockito.given(bloqueFormularioService.findById(ArgumentMatchers.anyLong()))
         .will((InvocationOnMock invocation) -> {
@@ -74,9 +124,10 @@ public class BloqueFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-BLOQUEFORMULARIO-EDITAR" })
   public void newBloqueFormulario_ReturnsBloqueFormulario() throws Exception {
     // given: Un bloqueFormulario nuevo
-    String nuevoBloqueFormularioJson = "{\"nombre\": \"BloqueFormulario1\", \"activo\": \"true\"}";
+    String nuevoBloqueFormularioJson = "{\"nombre\": \"BloqueFormulario1\", \"activo\": \"true\",\"orden\": 1}";
 
     BloqueFormulario bloqueFormulario = generarMockBloqueFormulario(1L, "BloqueFormulario1");
 
@@ -94,6 +145,7 @@ public class BloqueFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-BLOQUEFORMULARIO-EDITAR" })
   public void newBloqueFormulario_Error_Returns400() throws Exception {
     // given: Un bloqueFormulario nuevo que produce un error al crearse
     String nuevoBloqueFormularioJson = "{\"nombre\": \"BloqueFormulario1\", \"activo\": \"true\"}";
@@ -112,9 +164,10 @@ public class BloqueFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-BLOQUEFORMULARIO-EDITAR" })
   public void replaceBloqueFormulario_ReturnsBloqueFormulario() throws Exception {
     // given: Un bloqueFormulario a modificar
-    String replaceBloqueFormularioJson = "{\"id\": 1, \"nombre\": \"BloqueFormulario1\"}";
+    String replaceBloqueFormularioJson = "{\"id\": 1, \"nombre\": \"BloqueFormulario1\", \"orden\": 1, \"activo\": true}";
 
     BloqueFormulario bloqueFormulario = generarMockBloqueFormulario(1L, "Replace BloqueFormulario1");
 
@@ -132,9 +185,10 @@ public class BloqueFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-BLOQUEFORMULARIO-EDITAR" })
   public void replaceBloqueFormulario_NotFound() throws Exception {
     // given: Un bloqueFormulario a modificar
-    String replaceBloqueFormularioJson = "{\"id\": 1, \"nombre\": \"BloqueFormulario1\", \"activo\": \"true\"}";
+    String replaceBloqueFormularioJson = "{\"id\": 1, \"nombre\": \"BloqueFormulario1\", \"orden\": 1 ,\"activo\": \"true\"}";
 
     BDDMockito.given(bloqueFormularioService.update(ArgumentMatchers.<BloqueFormulario>any()))
         .will((InvocationOnMock invocation) -> {
@@ -148,6 +202,7 @@ public class BloqueFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-BLOQUEFORMULARIO-EDITAR" })
   public void removeBloqueFormulario_ReturnsOk() throws Exception {
     BDDMockito.given(bloqueFormularioService.findById(ArgumentMatchers.anyLong()))
         .willReturn(generarMockBloqueFormulario(1L, "BloqueFormulario1"));
@@ -159,6 +214,7 @@ public class BloqueFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-BLOQUEFORMULARIO-VER" })
   public void findAll_Unlimited_ReturnsFullBloqueFormularioList() throws Exception {
     // given: One hundred BloqueFormulario
     List<BloqueFormulario> bloqueFormularios = new ArrayList<>();
@@ -181,6 +237,7 @@ public class BloqueFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-BLOQUEFORMULARIO-VER" })
   public void findAll_WithPaging_ReturnsBloqueFormularioSubList() throws Exception {
     // given: One hundred BloqueFormulario
     List<BloqueFormulario> bloqueFormularios = new ArrayList<>();
@@ -232,6 +289,7 @@ public class BloqueFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-BLOQUEFORMULARIO-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredBloqueFormularioList() throws Exception {
     // given: One hundred BloqueFormulario and a search query
     List<BloqueFormulario> bloqueFormularios = new ArrayList<>();

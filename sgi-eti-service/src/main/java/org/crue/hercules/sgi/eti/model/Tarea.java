@@ -10,7 +10,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -67,7 +66,6 @@ public class Tarea extends BaseEntity {
 
   /** Anio */
   @Column(name = "anio", nullable = true)
-  @Size(max = 4)
   private Integer anio;
 
 }

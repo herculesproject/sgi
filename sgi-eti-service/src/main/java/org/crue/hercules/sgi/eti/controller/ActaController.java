@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,6 +54,7 @@ public class ActaController {
    * @param paging pageable
    */
   @GetMapping()
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-ACTA-VER')")
   ResponseEntity<Page<Acta>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
@@ -73,7 +75,8 @@ public class ActaController {
    * @return Nuevo {@link Acta} creado.
    */
   @PostMapping
-  ResponseEntity<Acta> newActa(@Valid @RequestBody Acta nuevoActa) {
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-ACTA-EDITAR')")
+  public ResponseEntity<Acta> newActa(@Valid @RequestBody Acta nuevoActa) {
     log.debug("newActa(Acta nuevoActa) - start");
     Acta returnValue = service.create(nuevoActa);
     log.debug("newActa(Acta nuevoActa) - end");
@@ -88,6 +91,7 @@ public class ActaController {
    * @return {@link Acta} actualizado.
    */
   @PutMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-ACTA-EDITAR')")
   Acta replaceActa(@Valid @RequestBody Acta updatedActa, @PathVariable Long id) {
     log.debug("replaceActa(Acta updatedActa, Long id) - start");
     updatedActa.setId(id);
@@ -103,6 +107,7 @@ public class ActaController {
    * @return {@link Acta} correspondiente al id.
    */
   @GetMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-ACTA-VER')")
   Acta one(@PathVariable Long id) {
     log.debug("Acta one(Long id) - start");
     Acta returnValue = service.findById(id);
@@ -116,6 +121,7 @@ public class ActaController {
    * @param id Identificador de {@link Acta}.
    */
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-ACTA-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     Acta acta = this.one(id);

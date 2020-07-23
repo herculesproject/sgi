@@ -38,7 +38,6 @@ public class DocumentacionMemoria extends BaseEntity {
   @Column(name = "id", nullable = false)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "documentacion_memoria_seq")
   @SequenceGenerator(name = "documentacion_memoria_seq", sequenceName = "documentacion_memoria_seq", allocationSize = 1)
-  @NotNull
   private Long id;
 
   /** Memoria */

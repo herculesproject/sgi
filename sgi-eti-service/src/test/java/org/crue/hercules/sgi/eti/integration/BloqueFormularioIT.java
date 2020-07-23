@@ -19,10 +19,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.test.context.ActiveProfiles;
+
 /**
  * Test de integracion de BloqueFormulario.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("SECURITY_MOCK")
 public class BloqueFormularioIT {
 
   @Autowired
@@ -31,11 +47,47 @@ public class BloqueFormularioIT {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String BLOQUE_FORMULARIO_CONTROLLER_BASE_PATH = "/bloqueformularios";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+      PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+      auth.inMemoryAuthentication().passwordEncoder(encoder).withUser("user").password(encoder.encode("secret"))
+          .authorities("ETI-BLOQUEFORMULARIO-EDITAR", "ETI-BLOQUEFORMULARIO-VER");
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.cors().and().csrf().disable().authorizeRequests().antMatchers("/error").permitAll().antMatchers("/**")
+          .authenticated().anyRequest().denyAll().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint).and().httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getBloqueFormulario_WithId_ReturnsBloqueFormulario() throws Exception {
-    final ResponseEntity<BloqueFormulario> response = restTemplate
+    final ResponseEntity<BloqueFormulario> response = restTemplate.withBasicAuth("user", "secret")
         .getForEntity(BLOQUE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, BloqueFormulario.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -55,7 +107,8 @@ public class BloqueFormularioIT {
     nuevoBloqueFormulario.setNombre("BloqueFormulario1");
     nuevoBloqueFormulario.setActivo(Boolean.TRUE);
 
-    restTemplate.postForEntity(BLOQUE_FORMULARIO_CONTROLLER_BASE_PATH, nuevoBloqueFormulario, BloqueFormulario.class);
+    restTemplate.withBasicAuth("user", "secret").postForEntity(BLOQUE_FORMULARIO_CONTROLLER_BASE_PATH,
+        nuevoBloqueFormulario, BloqueFormulario.class);
   }
 
   @Sql
@@ -65,7 +118,7 @@ public class BloqueFormularioIT {
 
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<BloqueFormulario> response = restTemplate.exchange(
+    final ResponseEntity<BloqueFormulario> response = restTemplate.withBasicAuth("user", "secret").exchange(
         BLOQUE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, BloqueFormulario.class,
         id);
 
@@ -80,7 +133,7 @@ public class BloqueFormularioIT {
   public void removeBloqueFormulario_DoNotGetBloqueFormulario() throws Exception {
     restTemplate.delete(BLOQUE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<BloqueFormulario> response = restTemplate
+    final ResponseEntity<BloqueFormulario> response = restTemplate.withBasicAuth("user", "secret")
         .getForEntity(BLOQUE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, BloqueFormulario.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -97,7 +150,7 @@ public class BloqueFormularioIT {
     final HttpEntity<BloqueFormulario> requestEntity = new HttpEntity<BloqueFormulario>(replaceBloqueFormulario,
         new HttpHeaders());
 
-    final ResponseEntity<BloqueFormulario> response = restTemplate.exchange(
+    final ResponseEntity<BloqueFormulario> response = restTemplate.withBasicAuth("user", "secret").exchange(
 
         BLOQUE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
         BloqueFormulario.class, 1L);
@@ -122,8 +175,8 @@ public class BloqueFormularioIT {
 
     URI uri = UriComponentsBuilder.fromUriString(BLOQUE_FORMULARIO_CONTROLLER_BASE_PATH).build(false).toUri();
 
-    final ResponseEntity<List<BloqueFormulario>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        new HttpEntity<>(headers), new ParameterizedTypeReference<List<BloqueFormulario>>() {
+    final ResponseEntity<List<BloqueFormulario>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<BloqueFormulario>>() {
         });
 
     // then: Respuesta OK, BloqueFormularios retorna la información de la página
@@ -153,8 +206,8 @@ public class BloqueFormularioIT {
         .build(false).toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<BloqueFormulario>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
-        new ParameterizedTypeReference<List<BloqueFormulario>>() {
+    final ResponseEntity<List<BloqueFormulario>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, null, new ParameterizedTypeReference<List<BloqueFormulario>>() {
         });
 
     // then: Respuesta OK, BloqueFormularios retorna la información de la página
@@ -177,8 +230,8 @@ public class BloqueFormularioIT {
         .build(false).toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<BloqueFormulario>> response = restTemplate.exchange(uri, HttpMethod.GET, null,
-        new ParameterizedTypeReference<List<BloqueFormulario>>() {
+    final ResponseEntity<List<BloqueFormulario>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, null, new ParameterizedTypeReference<List<BloqueFormulario>>() {
         });
 
     // then: Respuesta OK, BloqueFormularios retorna la información de la página
@@ -209,8 +262,8 @@ public class BloqueFormularioIT {
     URI uri = UriComponentsBuilder.fromUriString(BLOQUE_FORMULARIO_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
-    final ResponseEntity<List<BloqueFormulario>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        new HttpEntity<>(headers), new ParameterizedTypeReference<List<BloqueFormulario>>() {
+    final ResponseEntity<List<BloqueFormulario>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<BloqueFormulario>>() {
         });
 
     // then: Respuesta OK, BloqueFormularios retorna la información de la página

@@ -12,6 +12,8 @@ import org.crue.hercules.sgi.eti.exceptions.DictamenNotFoundException;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.service.DictamenService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -20,11 +22,19 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -33,7 +43,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * DictamenControllerTest
+ * DictamenControllerTest x
  */
 @WebMvcTest(DictamenController.class)
 public class DictamenControllerTest {
@@ -50,7 +60,43 @@ public class DictamenControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String DICTAMEN_CONTROLLER_BASE_PATH = "/dictamenes";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable() //
+          .authorizeRequests().antMatchers("/error").permitAll() //
+          .antMatchers("/**").authenticated() //
+          .anyRequest().denyAll() //
+          .and() //
+          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint) //
+          .and() //
+          .httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DICTAMEN-VER" })
   public void getDictamen_WithId_ReturnsDictamen() throws Exception {
     BDDMockito.given(dictamenService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockDictamen(1L, "Dictamen1")));
@@ -63,6 +109,7 @@ public class DictamenControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DICTAMEN-VER" })
   public void getDictamen_NotFound_Returns404() throws Exception {
     BDDMockito.given(dictamenService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new DictamenNotFoundException(invocation.getArgument(0));
@@ -72,6 +119,7 @@ public class DictamenControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DICTAMEN-EDITAR" })
   public void newDictamen_ReturnsDictamen() throws Exception {
     // given: Un dictamen nuevo
     String nuevoDictamenJson = "{\"nombre\": \"Dictamen1\", \"activo\": \"true\"}";
@@ -91,6 +139,7 @@ public class DictamenControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DICTAMEN-EDITAR" })
   public void newDictamen_Error_Returns400() throws Exception {
     // given: Un dictamen nuevo que produce un error al crearse
     String nuevoDictamenJson = "{\"nombre\": \"Dictamen1\", \"activo\": \"true\"}";
@@ -109,6 +158,7 @@ public class DictamenControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DICTAMEN-EDITAR" })
   public void replaceDictamen_ReturnsDictamen() throws Exception {
     // given: Un dictamen a modificar
     String replaceDictamenJson = "{\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}";
@@ -128,6 +178,7 @@ public class DictamenControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DICTAMEN-EDITAR" })
   public void replaceDictamen_NotFound() throws Exception {
     // given: Un dictamen a modificar
     String replaceDictamenJson = "{\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}";
@@ -143,6 +194,7 @@ public class DictamenControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DICTAMEN-EDITAR" })
   public void removeDictamen_ReturnsOk() throws Exception {
     BDDMockito.given(dictamenService.findById(ArgumentMatchers.anyLong()))
         .willReturn(generarMockDictamen(1L, "Dictamen1"));
@@ -154,6 +206,7 @@ public class DictamenControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DICTAMEN-VER" })
   public void findAll_Unlimited_ReturnsFullDictamenList() throws Exception {
     // given: One hundred Dictamen
     List<Dictamen> dictamenes = new ArrayList<>();
@@ -174,6 +227,7 @@ public class DictamenControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DICTAMEN-VER" })
   public void findAll_WithPaging_ReturnsDictamenSubList() throws Exception {
     // given: One hundred Dictamen
     List<Dictamen> dictamenes = new ArrayList<>();
@@ -224,6 +278,7 @@ public class DictamenControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DICTAMEN-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredDictamenList() throws Exception {
     // given: One hundred Dictamen and a search query
     List<Dictamen> dictamenes = new ArrayList<>();

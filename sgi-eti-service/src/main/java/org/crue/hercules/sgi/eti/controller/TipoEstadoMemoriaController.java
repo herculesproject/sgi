@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,6 +54,7 @@ public class TipoEstadoMemoriaController {
    * @param paging pageable
    */
   @GetMapping()
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOESTADOMEMORIA-VER')")
   ResponseEntity<Page<TipoEstadoMemoria>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
@@ -73,6 +75,7 @@ public class TipoEstadoMemoriaController {
    * @return Nuevo {@link TipoEstadoMemoria} creado.
    */
   @PostMapping
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOESTADOMEMORIA-EDITAR')")
   ResponseEntity<TipoEstadoMemoria> newTipoEstadoMemoria(@Valid @RequestBody TipoEstadoMemoria nuevoTipoEstadoMemoria) {
     log.debug("newTipoEstadoMemoria(TipoEstadoMemoria nuevoTipoEstadoMemoria) - start");
     TipoEstadoMemoria returnValue = service.create(nuevoTipoEstadoMemoria);
@@ -88,6 +91,7 @@ public class TipoEstadoMemoriaController {
    * @return {@link TipoEstadoMemoria} actualizado.
    */
   @PutMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOESTADOMEMORIA-EDITAR')")
   TipoEstadoMemoria replaceTipoEstadoMemoria(@Valid @RequestBody TipoEstadoMemoria updatedTipoEstadoMemoria,
       @PathVariable Long id) {
     log.debug("replaceTipoEstadoMemoria(TipoEstadoMemoria updatedTipoEstadoMemoria, Long id) - start");
@@ -104,6 +108,7 @@ public class TipoEstadoMemoriaController {
    * @return {@link TipoEstadoMemoria} correspondiente al id.
    */
   @GetMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOESTADOMEMORIA-VER')")
   TipoEstadoMemoria one(@PathVariable Long id) {
     log.debug("TipoEstadoMemoria one(Long id) - start");
     TipoEstadoMemoria returnValue = service.findById(id);
@@ -117,6 +122,7 @@ public class TipoEstadoMemoriaController {
    * @param id Identificador de {@link TipoEstadoMemoria}.
    */
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOESTADOMEMORIA-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     TipoEstadoMemoria tipoEstadoMemoria = this.one(id);

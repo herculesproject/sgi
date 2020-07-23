@@ -14,6 +14,8 @@ import org.crue.hercules.sgi.eti.model.ComiteFormulario;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.service.ComiteFormularioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -22,11 +24,19 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -39,6 +49,10 @@ import org.springframework.util.ReflectionUtils;
  */
 @WebMvcTest(ComiteFormularioController.class)
 public class ComiteFormularioControllerTest {
+
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String COMITE_FORMULARIO_CONTROLLER_BASE_PATH = "/comiteformularios";
+
   @Autowired
   private MockMvc mockMvc;
 
@@ -48,10 +62,43 @@ public class ComiteFormularioControllerTest {
   @MockBean
   private ComiteFormularioService comiteFormularioService;
 
-  private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String COMITE_FORMULARIO_CONTROLLER_BASE_PATH = "/comiteformularios";
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable() //
+          .authorizeRequests().antMatchers("/error").permitAll() //
+          .antMatchers("/**").authenticated() //
+          .anyRequest().denyAll() //
+          .and() //
+          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint) //
+          .and() //
+          .httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMITEFORMULARIO-VER" })
   public void getComiteFormulario_WithId_ReturnsComiteFormulario() throws Exception {
 
     Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
@@ -69,6 +116,7 @@ public class ComiteFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMITEFORMULARIO-VER" })
   public void getComiteFormulario_NotFound_Returns404() throws Exception {
     BDDMockito.given(comiteFormularioService.findById(ArgumentMatchers.anyLong()))
         .will((InvocationOnMock invocation) -> {
@@ -79,6 +127,7 @@ public class ComiteFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMITEFORMULARIO-EDITAR" })
   public void newComiteFormulario_ReturnsComiteFormulario() throws Exception {
 
     Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
@@ -104,6 +153,7 @@ public class ComiteFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMITEFORMULARIO-EDITAR" })
   public void newComiteFormulario_Error_Returns400() throws Exception {
     // given: Un ComiteFormulario nuevo que produce un error al crearse
     String nuevoComiteFormularioJson = "{\"comite\": {\"comite\": \"Comite1\", \"activo\": \"true\"}, \"formulario\": {\"nombre\": \"M10\", \"descripcion\": \"Descripcion\", \"activo\": \"true\"}}";
@@ -122,6 +172,7 @@ public class ComiteFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMITEFORMULARIO-EDITAR" })
   public void replaceComiteFormulario_ReturnsComiteFormulario() throws Exception {
 
     Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
@@ -147,6 +198,7 @@ public class ComiteFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMITEFORMULARIO-EDITAR" })
   public void replaceComiteFormulario_NotFound() throws Exception {
     // given: Un ComiteFormulario a modificar
     String replaceComiteFormularioJson = "{\"comite\": {\"comite\": \"Comite1\", \"activo\": \"true\"}, \"formulario\": {\"nombre\": \"M10\", \"descripcion\": \"Descripcion\", \"activo\": \"true\"}}";
@@ -163,6 +215,7 @@ public class ComiteFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMITEFORMULARIO-EDITAR" })
   public void removeComiteFormulario_ReturnsOk() throws Exception {
 
     Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
@@ -178,6 +231,7 @@ public class ComiteFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMITEFORMULARIO-VER" })
   public void findAll_Unlimited_ReturnsFullComiteFormularioList() throws Exception {
 
     Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
@@ -203,6 +257,7 @@ public class ComiteFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMITEFORMULARIO-VER" })
   public void findAll_WithPaging_ReturnsComiteFormularioSubList() throws Exception {
 
     Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
@@ -259,6 +314,7 @@ public class ComiteFormularioControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-COMITEFORMULARIO-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredComiteFormularioList() throws Exception {
 
     Comite comite = new Comite(1L, "Comite", Boolean.TRUE);

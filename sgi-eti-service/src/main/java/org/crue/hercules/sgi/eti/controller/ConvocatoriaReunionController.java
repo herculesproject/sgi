@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -54,10 +55,11 @@ public class ConvocatoriaReunionController {
    * @return La entidad {@link ConvocatoriaReunion} creada.
    * @throws IllegalArgumentException Si la entidad {@link ConvocatoriaReunion}
    *                                  tiene id.
-   * @return ResponseEntity<ConvocatoriaReunion>
+   * @return Nuevo {@link ConvocatoriaReunion} creado.
    */
   @PostMapping()
-  ResponseEntity<ConvocatoriaReunion> newConvocatoriaReunion(
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-CONVOCATORIAREUNION-EDITAR')")
+  public ResponseEntity<ConvocatoriaReunion> newConvocatoriaReunion(
       @Valid @RequestBody ConvocatoriaReunion convocatoriaReunion) {
     log.debug("newConvocatoriaReunion(ConvocatoriaReunion convocatoriaReunion) - start");
     ConvocatoriaReunion returnValue = service.create(convocatoriaReunion);
@@ -79,6 +81,7 @@ public class ConvocatoriaReunionController {
    *                                  tiene id.
    */
   @PutMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-CONVOCATORIAREUNION-EDITAR')")
   ConvocatoriaReunion replaceConvocatoriaReunion(@Valid @RequestBody ConvocatoriaReunion convocatoriaReunion,
       @PathVariable Long id) {
     log.debug("replaceConvocatoriaReunion(ConvocatoriaReunion convocatoriaReunion, Long id) - start");
@@ -98,6 +101,7 @@ public class ConvocatoriaReunionController {
    *                                  tiene id.
    */
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-CONVOCATORIAREUNION-EDITAR')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
@@ -117,6 +121,7 @@ public class ConvocatoriaReunionController {
    *         filtradas.
    */
   @GetMapping()
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-CONVOCATORIAREUNION-VER')")
   ResponseEntity<Page<ConvocatoriaReunion>> findAll(
       @RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
@@ -139,7 +144,8 @@ public class ConvocatoriaReunionController {
    * @throws IllegalArgumentException Si no se informa id.
    */
   @GetMapping("/{id}")
-  private ConvocatoriaReunion one(@PathVariable Long id) {
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-CONVOCATORIAREUNION-VER')")
+  ConvocatoriaReunion one(@PathVariable Long id) {
     log.debug("one(Long id) - start");
     ConvocatoriaReunion returnValue = service.findById(id);
     log.debug("one(Long id) - end");

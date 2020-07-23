@@ -32,10 +32,23 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.ReflectionUtils;
 
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.test.context.ActiveProfiles;
+
 /**
  * TipoMemoriaControllerTest
  */
 @WebMvcTest(TipoMemoriaController.class)
+@ActiveProfiles("SECURITY_MOCK")
 public class TipoMemoriaControllerTest {
 
   @Autowired
@@ -50,7 +63,43 @@ public class TipoMemoriaControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String TIPO_MEMORIA_CONTROLLER_BASE_PATH = "/tipomemorias";
 
+  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
+  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
+                     // application’s primary configuration, a nested @TestConfiguration class is
+                     // used in addition to your application’s primary configuration.
+  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private AccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http.csrf().disable() //
+          .authorizeRequests().antMatchers("/error").permitAll() //
+          .antMatchers("/**").authenticated() //
+          .anyRequest().denyAll() //
+          .and() //
+          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+          .authenticationEntryPoint(authenticationEntryPoint) //
+          .and() //
+          .httpBasic();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
+      return new SgiAccessDeniedHandler(mapper);
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
+      return new SgiAuthenticationEntryPoint(mapper);
+    }
+  }
+
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIA-VER" })
   public void getTipoMemoria_WithId_ReturnsTipoMemoria() throws Exception {
     BDDMockito.given(tipoMemoriaService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockTipoMemoria(1L, "TipoMemoria1")));
@@ -63,6 +112,7 @@ public class TipoMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIA-VER" })
   public void getTipoMemoria_NotFound_Returns404() throws Exception {
     BDDMockito.given(tipoMemoriaService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new TipoMemoriaNotFoundException(invocation.getArgument(0));
@@ -72,6 +122,7 @@ public class TipoMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIA-EDITAR" })
   public void newTipoMemoria_ReturnsTipoMemoria() throws Exception {
     // given: Un tipo memoria nuevo
     String nuevoTipoMemoriaJson = "{\"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}";
@@ -91,6 +142,7 @@ public class TipoMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIA-EDITAR" })
   public void newTipoMemoria_Error_Returns400() throws Exception {
     // given: Un tipo memoria nuevo que produce un error al crearse
     String nuevoTipoMemoriaJson = "{\"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}";
@@ -109,6 +161,7 @@ public class TipoMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIA-EDITAR" })
   public void replaceTipoMemoria_ReturnsTipoMemoria() throws Exception {
     // given: Un tipo memoria a modificar
     String replaceTipoMemoriaJson = "{\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}";
@@ -128,6 +181,7 @@ public class TipoMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIA-EDITAR" })
   public void replaceTipoMemoria_NotFound() throws Exception {
     // given: Un tipo memoria a modificar
     String replaceTipoMemoriaJson = "{\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}";
@@ -144,6 +198,7 @@ public class TipoMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIA-EDITAR" })
   public void removeTipoMemoria_ReturnsOk() throws Exception {
     BDDMockito.given(tipoMemoriaService.findById(ArgumentMatchers.anyLong()))
         .willReturn(generarMockTipoMemoria(1L, "TipoMemoria1"));
@@ -155,6 +210,7 @@ public class TipoMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIA-VER" })
   public void findAll_Unlimited_ReturnsFullTipoMemoriaList() throws Exception {
     // given: One hundred TipoMemoria
     List<TipoMemoria> tipoMemorias = new ArrayList<>();
@@ -176,6 +232,7 @@ public class TipoMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIA-VER" })
   public void findAll_WithPaging_ReturnsTipoMemoriaSubList() throws Exception {
     // given: One hundred TipoMemoria
     List<TipoMemoria> tipoMemorias = new ArrayList<>();
@@ -227,6 +284,7 @@ public class TipoMemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIA-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredTipoMemoriaList() throws Exception {
     // given: One hundred TipoMemoria and a search query
     List<TipoMemoria> tipoMemorias = new ArrayList<>();

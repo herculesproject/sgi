@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,6 +54,7 @@ public class DictamenController {
    * @param paging pageable
    */
   @GetMapping()
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-DICTAMEN-VER')")
   ResponseEntity<Page<Dictamen>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
@@ -73,6 +75,7 @@ public class DictamenController {
    * @return Nuevo {@link Dictamen} creado.
    */
   @PostMapping
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-DICTAMEN-EDITAR')")
   ResponseEntity<Dictamen> newDictamen(@Valid @RequestBody Dictamen nuevoDictamen) {
     log.debug("newDictamen(Dictamen nuevoDictamen) - start");
     Dictamen returnValue = service.create(nuevoDictamen);
@@ -88,6 +91,7 @@ public class DictamenController {
    * @return {@link Dictamen} actualizado.
    */
   @PutMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-DICTAMEN-EDITAR')")
   Dictamen replaceDictamen(@Valid @RequestBody Dictamen updatedDictamen, @PathVariable Long id) {
     log.debug("replaceDictamen(Dictamen updatedDictamen, Long id) - start");
     updatedDictamen.setId(id);
@@ -103,6 +107,7 @@ public class DictamenController {
    * @return {@link Dictamen} correspondiente al id.
    */
   @GetMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-DICTAMEN-VER')")
   Dictamen one(@PathVariable Long id) {
     log.debug("Dictamen one(Long id) - start");
     Dictamen returnValue = service.findById(id);
@@ -116,6 +121,7 @@ public class DictamenController {
    * @param id Identificador de {@link Dictamen}.
    */
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-DICTAMEN-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     Dictamen dictamen = this.one(id);
