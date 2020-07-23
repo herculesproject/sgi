@@ -2,10 +2,7 @@ package org.crue.hercules.sgi.eti.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -28,8 +25,6 @@ public class FormacionEspecifica extends BaseEntity {
   /** Id. */
   @Id
   @Column(name = "id", nullable = false)
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "formacion_especifica_seq")
-  @SequenceGenerator(name = "formacion_especifica_seq", sequenceName = "formacion_especifica_seq", allocationSize = 1)
   private Long id;
 
   /** Nombre. */

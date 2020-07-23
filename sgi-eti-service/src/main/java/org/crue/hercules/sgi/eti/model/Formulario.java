@@ -2,10 +2,7 @@ package org.crue.hercules.sgi.eti.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -33,8 +30,6 @@ public class Formulario extends BaseEntity {
   /** Id. */
   @Id
   @Column(name = "id", nullable = false)
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "formulario_seq")
-  @SequenceGenerator(name = "formulario_seq", sequenceName = "formulario_seq", allocationSize = 1)
   private Long id;
 
   /** Nombre. */

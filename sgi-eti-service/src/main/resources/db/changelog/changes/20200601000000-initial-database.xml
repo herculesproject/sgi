@@ -8,48 +8,12 @@
     <createSequence sequenceName="comite_seq" />
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-tipo_actividad_seq">
-    <createSequence sequenceName="tipo_actividad_seq" />
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-tipo_memoria_seq">
-    <createSequence sequenceName="tipo_memoria_seq" />
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-tipo_memoria_comite_seq">
-    <createSequence sequenceName="tipo_memoria_comite_seq" />
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-formacion_especifica_seq">
-    <createSequence sequenceName="formacion_especifica_seq" />
-  </changeSet>
-
   <changeSet author="master" id="20200601000000-peticion_evaluacion_seq">
     <createSequence sequenceName="peticion_evaluacion_seq" />
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-cargo_comite_seq">
-    <createSequence sequenceName="cargo_comite_seq" />
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-tipo_estado_memoria_seq">
-    <createSequence sequenceName="tipo_estado_memoria_seq" />
-  </changeSet>
-
   <changeSet author="master" id="20200601000000-equipo_trabajo_seq">
     <createSequence sequenceName="equipo_trabajo_seq" />
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-dictamen_seq">
-    <createSequence sequenceName="dictamen_seq" />
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-tipo_comentario_seq">
-    <createSequence sequenceName="tipo_comentario_seq" />
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-tipo_estado_acta_seq">
-    <createSequence sequenceName="tipo_estado_acta_seq" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-memoria_seq">
@@ -62,10 +26,6 @@
 
   <changeSet author="master" id="20200601000000-tarea_seq">
     <createSequence sequenceName="tarea_seq" />
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-tipo_documento_seq">
-    <createSequence sequenceName="tipo_documento_seq" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-estado_acta_seq">
@@ -88,16 +48,8 @@
     <createSequence sequenceName="estado_memoria_seq" />
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-tipo_convocatoria_reunion_seq">
-    <createSequence sequenceName="tipo_convocatoria_reunion_seq" />
-  </changeSet>
-
   <changeSet author="master" id="20200601000000-convocatoria_reunion_seq">
     <createSequence sequenceName="convocatoria_reunion_seq" />
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-formulario_seq">
-    <createSequence sequenceName="formulario_seq" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-bloque_formulario_seq">
@@ -162,7 +114,7 @@
 
   <changeSet author="master" id="20200601000000-tipo_actividad">
     <createTable tableName="tipo_actividad">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_actividad_seq">
+      <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_actividad_pk" />
       </column>
       <column name="nombre" type="VARCHAR(250)" />
@@ -174,7 +126,7 @@
 
   <changeSet author="master" id="20200601000000-tipo_memoria">
     <createTable tableName="tipo_memoria">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_memoria_seq">
+      <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_memoria_pk" />
       </column>
       <column name="nombre" type="VARCHAR(250)" />
@@ -186,7 +138,7 @@
 
   <changeSet author="master" id="20200601000000-tipo_memoria_comite">
     <createTable tableName="tipo_memoria_comite">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_memoria_comite_seq">
+      <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_memoria_comite_pk" />
       </column>
       <column name="tipo_memoria_id" type="BIGINT" />
@@ -196,7 +148,7 @@
 
   <changeSet author="master" id="20200601000000-formacion_especifica">
     <createTable tableName="formacion_especifica">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="formacion_especifica_seq">
+      <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="formacion_especifica_pk" />
       </column>
       <column name="nombre" type="VARCHAR(250)" />
@@ -239,7 +191,7 @@
 
   <changeSet author="master" id="20200601000000-cargo_comite">
     <createTable tableName="cargo_comite">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="cargo_comite_seq">
+      <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="cargo_comite_pk" />
       </column>
       <column name="nombre" type="VARCHAR(250)" />
@@ -251,7 +203,7 @@
 
   <changeSet author="master" id="20200601000000-tipo_estado_memoria">
     <createTable tableName="tipo_estado_memoria">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_estado_memoria_seq">
+      <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_estado_memoria_pk" />
       </column>
       <column name="nombre" type="VARCHAR(250)" />
@@ -263,7 +215,7 @@
 
   <changeSet author="master" id="20200601000000-dictamen">
     <createTable tableName="dictamen">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="dictamen_seq">
+      <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="dictamen_pk" />
       </column>
       <column name="nombre" type="VARCHAR(250)" />
@@ -285,7 +237,7 @@
 
   <changeSet author="master" id="20200601000000-tipo_comentario">
     <createTable tableName="tipo_comentario">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_comentario_seq">
+      <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_comentario_pk" />
       </column>
       <column name="nombre" type="VARCHAR(250)" />
@@ -297,7 +249,7 @@
 
   <changeSet author="master" id="20200601000000-tipo_estado_acta">
     <createTable tableName="tipo_estado_acta">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_estado_acta_seq">
+      <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_estado_acta_pk" />
       </column>
       <column name="nombre" type="VARCHAR(250)" />
@@ -362,7 +314,7 @@
 
   <changeSet author="master" id="20200601000000-tipo_documento">
     <createTable tableName="tipo_documento">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_documento_seq">
+      <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_documento_pk" />
       </column>
       <column name="nombre" type="VARCHAR(250)" />
@@ -419,7 +371,7 @@
 
   <changeSet author="master" id="20200601000000-tipo_convocatoria_reunion">
     <createTable tableName="tipo_convocatoria_reunion">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_convocatoria_reunion_seq">
+      <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_convocatoria_reunion_pk" />
       </column>
       <column name="nombre" type="VARCHAR(250)" />
@@ -431,7 +383,7 @@
 
   <changeSet author="master" id="20200601000000-convocatoria_reunion">
     <createTable tableName="convocatoria_reunion">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_actividad_seq">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="convocatoria_reunion_seq">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_reunion_pk" />
       </column>
       <column name="comite_id" type="BIGINT">
@@ -470,7 +422,7 @@
 
   <changeSet author="master" id="20200601000000-formulario">
     <createTable tableName="formulario">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="formulario_seq">
+      <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="formulario_pk" />
       </column>
       <column name="nombre" type="VARCHAR(50)" />
