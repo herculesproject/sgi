@@ -37,5 +37,4 @@ DELETE FROM eti.componente_formulario
 DELETE FROM eti.configuracion
 DELETE FROM eti.tipo_evaluacion
 DELETE FROM eti.estado_retrospectiva
-
-
+DELETE FROM eti.tipo_tarea

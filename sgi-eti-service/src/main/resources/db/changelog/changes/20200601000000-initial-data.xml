@@ -1385,4 +1385,22 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-tipo_tarea">
+    <insert tableName="tipo_tarea">
+      <column name="id" value="1" />
+      <column name="nombre" value="Diseño de proyecto y procedimientos" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_tarea">
+      <column name="id" value="2" />
+      <column name="nombre" value="Eutanasia" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_tarea">
+      <column name="id" value="3" />
+      <column name="nombre" value="Manipulación de animales" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>
