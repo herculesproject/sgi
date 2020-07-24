@@ -53,11 +53,11 @@ INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, 
 INSERT INTO eti.tipo_documento (id, nombre, formulario_id, activo) VALUES (1, 'TipoDocumento1', 1, true);
 
 -- DOCUMENTACIÓN MEMORIA
-INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref) VALUES (1, 1, 1, 'doc-001');
-INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref) VALUES (2, 2, 1, 'doc-002');
-INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref) VALUES (3, 3, 1, 'doc-003');
-INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref) VALUES (4, 4, 1, 'doc-004');
-INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref) VALUES (5, 5, 1, 'doc-005');
-INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref) VALUES (6, 6, 1, 'doc-006');
-INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref) VALUES (7, 7, 1, 'doc-007');
-INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref) VALUES (8, 8, 1, 'doc-008');
+INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref, aportado) VALUES (1, 1, 1, 'doc-001', true);
+INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref, aportado) VALUES (2, 2, 1, 'doc-002', true);
+INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref, aportado) VALUES (3, 3, 1, 'doc-003', true);
+INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref, aportado) VALUES (4, 4, 1, 'doc-004', true);
+INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref, aportado) VALUES (5, 5, 1, 'doc-005', true);
+INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref, aportado) VALUES (6, 6, 1, 'doc-006', true);
+INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref, aportado) VALUES (7, 7, 1, 'doc-007', true);
+INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref, aportado) VALUES (8, 8, 1, 'doc-008', true);

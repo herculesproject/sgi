@@ -355,6 +355,9 @@
       <column name="memoria_id" type="BIGINT" />
       <column name="tipo_documento_id" type="BIGINT" />
       <column name="documento_ref" type="VARCHAR(250)" />
+      <column name="aportado" type="BOOLEAN" defaultValueBoolean="false">
+        <constraints nullable="false" />
+      </column>
     </createTable>
   </changeSet>
 

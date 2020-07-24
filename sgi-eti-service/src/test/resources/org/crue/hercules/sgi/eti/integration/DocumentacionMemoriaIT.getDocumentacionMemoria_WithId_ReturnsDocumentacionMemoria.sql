@@ -25,4 +25,4 @@ INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, 
 INSERT INTO eti.tipo_documento (id, nombre, formulario_id, activo) VALUES (1, 'TipoDocumento1', 1, true);
 
 -- DOCUMENTACIÓN MEMORIA
-INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref) VALUES (1, 1, 1, 'doc-001');
+INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref, aportado) VALUES (1, 1, 1, 'doc-001', true);

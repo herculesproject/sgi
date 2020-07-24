@@ -430,6 +430,7 @@ public class DocumentacionMemoriaControllerTest {
     documentacionMemoria.setMemoria(memoria);
     documentacionMemoria.setTipoDocumento(tipoDocumento);
     documentacionMemoria.setDocumentoRef("doc-00" + id);
+    documentacionMemoria.setAportado(Boolean.TRUE);
 
     return documentacionMemoria;
   }

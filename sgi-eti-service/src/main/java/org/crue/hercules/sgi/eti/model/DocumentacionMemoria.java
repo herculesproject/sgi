@@ -55,4 +55,8 @@ public class DocumentacionMemoria extends BaseEntity {
   @NotNull
   private String documentoRef;
 
+  /** Aportado */
+  @Column(name = "aportado", columnDefinition = "boolean default false", nullable = false)
+  private Boolean aportado;
+
 }

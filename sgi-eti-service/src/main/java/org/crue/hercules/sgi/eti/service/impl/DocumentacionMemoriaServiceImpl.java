@@ -134,6 +134,7 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
       documentacionMemoria.setDocumentoRef(documentacionMemoriaActualizar.getDocumentoRef());
       documentacionMemoria.setMemoria(documentacionMemoriaActualizar.getMemoria());
       documentacionMemoria.setTipoDocumento(documentacionMemoriaActualizar.getTipoDocumento());
+      documentacionMemoria.setAportado(documentacionMemoriaActualizar.getAportado());
 
       DocumentacionMemoria returnValue = DocumentacionMemoriaRepository.save(documentacionMemoria);
       log.debug("update(DocumentacionMemoria DocumentacionMemoriaActualizar) - end");
