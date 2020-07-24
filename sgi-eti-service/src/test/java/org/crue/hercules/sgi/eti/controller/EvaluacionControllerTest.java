@@ -20,6 +20,7 @@ import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -119,6 +120,7 @@ public class EvaluacionControllerTest {
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("dictamen.nombre").value("Dictamen1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("tipoEvaluacion.nombre").value("TipoEvaluacion1"))
         .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("Memoria1"));
     ;
   }
@@ -140,7 +142,7 @@ public class EvaluacionControllerTest {
     String nuevoEvaluacionJson = "{\"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
         + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1 replace\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
         + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"convocatoriaReunion\": {\"id\": 1},"
-        + "\"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"esRevMinima\": \"true\", \"activo\": \"true\",\"version\": \"1\"}";
+        + "\"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"tipoEvaluacion\": {\"id\": 1, \"nombre\": \"TipoEvaluacion1\", \"activo\": \"true\"},\"esRevMinima\": \"true\", \"activo\": \"true\",\"version\": \"1\"}";
     Evaluacion evaluacion = generarMockEvaluacion(1L, null);
 
     BDDMockito.given(evaluacionService.create(ArgumentMatchers.<Evaluacion>any())).willReturn(evaluacion);
@@ -154,6 +156,7 @@ public class EvaluacionControllerTest {
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("Memoria1"))
         .andExpect(MockMvcResultMatchers.jsonPath("dictamen.nombre").value("Dictamen1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("tipoEvaluacion.nombre").value("TipoEvaluacion1"))
         .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaReunion.codigo").value("CR-1"));
   }
 
@@ -163,7 +166,7 @@ public class EvaluacionControllerTest {
     // given: Una evaluacion nueva que produce un error al crearse
     String nuevoEvaluacionJson = "{\"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
         + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1 replace\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
-        + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"esRevMinima\": \"true\", \"activo\": \"true\"}";
+        + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"tipoEvaluacion\": {\"id\": 1, \"nombre\": \"TipoEvaluacion1\", \"activo\": \"true\"}, \"esRevMinima\": \"true\", \"activo\": \"true\"}";
 
     BDDMockito.given(evaluacionService.create(ArgumentMatchers.<Evaluacion>any()))
         .willThrow(new IllegalArgumentException());
@@ -185,7 +188,7 @@ public class EvaluacionControllerTest {
     String replaceEvaluacionJson = "{\"id\": 1, \"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
         + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1 replace\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
         + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"convocatoriaReunion\": {\"id\": 1},"
-        + "\"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"esRevMinima\": \"true\", \"activo\": \"true\",\"version\": \"1\"}";
+        + "\"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"tipoEvaluacion\": {\"id\": 1, \"nombre\": \"TipoEvaluacion1\", \"activo\": \"true\"}, \"esRevMinima\": \"true\", \"activo\": \"true\",\"version\": \"1\"}";
 
     Evaluacion evaluacion = generarMockEvaluacion(1L, " Replace");
 
@@ -199,6 +202,7 @@ public class EvaluacionControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("Memoria Replace"))
         .andExpect(MockMvcResultMatchers.jsonPath("dictamen.nombre").value("Dictamen Replace"))
+        .andExpect(MockMvcResultMatchers.jsonPath("tipoEvaluacion.nombre").value("TipoEvaluacion1"))
         .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaReunion.codigo").value("CR- Replace"));
 
   }
@@ -210,7 +214,7 @@ public class EvaluacionControllerTest {
     String replaceEvaluacionJson = "{\"id\": 1, \"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
         + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1 replace\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
         + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"convocatoriaReunion\": {\"id\": 1},"
-        + "\"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"esRevMinima\": \"true\", \"activo\": \"true\",\"version\": \"1\"}";
+        + "\"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"tipoEvaluacion\": {\"id\": 1, \"nombre\": \"TipoEvaluacion1\", \"activo\": \"true\"}, \"esRevMinima\": \"true\", \"activo\": \"true\",\"version\": \"1\"}";
 
     BDDMockito.given(evaluacionService.update(ArgumentMatchers.<Evaluacion>any()))
         .will((InvocationOnMock invocation) -> {
@@ -467,6 +471,11 @@ public class EvaluacionControllerTest {
     convocatoriaReunion.setFechaEnvio(LocalDate.now());
     convocatoriaReunion.setActivo(Boolean.TRUE);
 
+    TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
+    tipoEvaluacion.setId(1L);
+    tipoEvaluacion.setNombre("TipoEvaluacion1");
+    tipoEvaluacion.setActivo(Boolean.TRUE);
+
     Evaluacion evaluacion = new Evaluacion();
     evaluacion.setId(id);
     evaluacion.setDictamen(dictamen);
@@ -474,6 +483,7 @@ public class EvaluacionControllerTest {
     evaluacion.setFechaDictamen(LocalDate.now());
     evaluacion.setMemoria(memoria);
     evaluacion.setConvocatoriaReunion(convocatoriaReunion);
+    evaluacion.setTipoEvaluacion(tipoEvaluacion);
     evaluacion.setVersion(2);
     evaluacion.setActivo(Boolean.TRUE);
 

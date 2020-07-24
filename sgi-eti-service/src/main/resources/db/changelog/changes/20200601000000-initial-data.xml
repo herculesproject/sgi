@@ -1003,6 +1003,7 @@
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria1')" />
       <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Favorable')" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-1')" />
+      <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Retrospectiva')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
       <column name="activo" value="true" />
@@ -1011,6 +1012,7 @@
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria2')" />
       <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Favorable')" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-2')" />
+      <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
       <column name="activo" value="false" />
@@ -1019,6 +1021,7 @@
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria3')" />
       <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Favorable')" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-3')" />
+      <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Seguimiento anual')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
       <column name="activo" value="true" />
@@ -1027,6 +1030,7 @@
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria4')" />
       <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Favorable')" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-4')" />
+      <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Seguimiento final')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="false" />
       <column name="activo" value="true" />
@@ -1035,6 +1039,7 @@
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria5')" />
       <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Favorable')" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-5')" />
+      <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Retrospectiva')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
       <column name="activo" value="true" />
@@ -1043,6 +1048,7 @@
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria6')" />
       <column name="dictamen_id" valueComputed="(select id from eti.dictamen where nombre='Favorable')" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-6')" />
+      <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
       <column name="activo" value="true" />

@@ -36,8 +36,11 @@ VALUES(1, 1, '2020-07-01 00:00:00.000', '2020-08-01', 'Lugar 1', 'Orden del día
 INSERT INTO eti.evaluador (id, resumen, comite_id, cargo_comite_id, fecha_alta, fecha_baja, usuario_ref, activo)
 VALUES (1, 'Evaluador1', 1, 1, '2020-07-01', '2021-07-01', 'user-001', true);
 
+-- TIPO EVALUACION
+INSERT INTO eti.tipo_evaluacion (id, nombre, activo) VALUES (1, 'TipoEvaluacion1', true);
+
 -- EVALUACION
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, es_rev_minima, fecha_dictamen, version, activo) VALUES(1, 1, 1, 1, true, '2020-07-10', 1, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, fecha_dictamen, version, activo) VALUES(1, 1, 1, 1, 1, true, '2020-07-10', 1, true);
 
 -- EVALUADOR EVALUACION
 INSERT INTO eti.evaluador_evaluacion (id, evaluador_id, evaluacion_id) VALUES (2, 1, 1);

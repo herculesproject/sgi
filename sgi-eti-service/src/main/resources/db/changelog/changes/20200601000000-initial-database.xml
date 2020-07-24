@@ -505,6 +505,7 @@
       </column>
       <column name="memoria_id" type="BIGINT" />
       <column name="dictamen_id" type="BIGINT" />
+      <column name="tipo_evaluacion_id" type="BIGINT" />
       <column name="convocatoria_reunion_id" type="BIGINT" />
       <column name="fecha_dictamen" type="DATE" />
       <column name="version" type="INT" />
@@ -789,6 +790,10 @@
 
   <changeSet author="master" id="20200601000000-evaluacion_convocatoria_reunion_FK">
     <addForeignKeyConstraint baseColumnNames="convocatoria_reunion_id" baseTableName="evaluacion" constraintName="evaluacion_convocatoria_reunion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="convocatoria_reunion" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-evaluacion_tipo_evaluacion_FK">
+    <addForeignKeyConstraint baseColumnNames="tipo_evaluacion_id" baseTableName="evaluacion" constraintName="evaluacion_tipo_evaluacion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_evaluacion" validate="true" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-comite_formulario_comite_FK">

@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,6 +109,7 @@ public class EvaluacionIT {
     Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria1");
     Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen1");
     Assertions.assertThat(evaluacion.getConvocatoriaReunion().getCodigo()).isEqualTo("CR-1");
+    Assertions.assertThat(evaluacion.getTipoEvaluacion().getNombre()).isEqualTo("TipoEvaluacion1");
   }
 
   @Sql
@@ -170,6 +172,7 @@ public class EvaluacionIT {
     Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria1");
     Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen1");
     Assertions.assertThat(evaluacion.getConvocatoriaReunion().getCodigo()).isEqualTo("CR-1");
+    Assertions.assertThat(evaluacion.getTipoEvaluacion().getNombre()).isEqualTo("TipoEvaluacion1");
   }
 
   @Sql
@@ -389,6 +392,11 @@ public class EvaluacionIT {
     convocatoriaReunion.setFechaEnvio(LocalDate.now());
     convocatoriaReunion.setActivo(Boolean.TRUE);
 
+    TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
+    tipoEvaluacion.setId(1L);
+    tipoEvaluacion.setNombre("TipoEvaluacion1");
+    tipoEvaluacion.setActivo(Boolean.TRUE);
+
     Evaluacion evaluacion = new Evaluacion();
     evaluacion.setId(id);
     evaluacion.setDictamen(dictamen);
@@ -397,6 +405,7 @@ public class EvaluacionIT {
     evaluacion.setMemoria(memoria);
     evaluacion.setConvocatoriaReunion(convocatoriaReunion);
     evaluacion.setVersion(2);
+    evaluacion.setTipoEvaluacion(tipoEvaluacion);
     evaluacion.setActivo(Boolean.TRUE);
 
     return evaluacion;
