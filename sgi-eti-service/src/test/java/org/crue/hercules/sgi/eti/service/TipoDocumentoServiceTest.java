@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.TipoDocumentoNotFoundException;
-import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.crue.hercules.sgi.eti.repository.TipoDocumentoRepository;
 import org.crue.hercules.sgi.eti.service.impl.TipoDocumentoServiceImpl;
@@ -44,10 +44,8 @@ public class TipoDocumentoServiceTest {
   @Test
   public void find_WithId_ReturnsTipoDocumento() {
 
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
-
     BDDMockito.given(tipoDocumentoRepository.findById(1L))
-        .willReturn(Optional.of(generarMockTipoDocumento(1L, "TipoDocumento1", comite)));
+        .willReturn(Optional.of(generarMockTipoDocumento(1L, "TipoDocumento1")));
 
     TipoDocumento tipoDocumento = tipoDocumentoService.findById(1L);
 
@@ -67,13 +65,16 @@ public class TipoDocumentoServiceTest {
 
   @Test
   public void create_ReturnsTipoDocumento() {
-
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setNombre("M10");
+    formulario.setDescripcion("Formulario M10");
+    formulario.setActivo(Boolean.TRUE);
 
     // given: Un nuevo TipoDocumento
-    TipoDocumento tipoDocumentoNew = generarMockTipoDocumento(null, "TipoDocumentoNew", comite);
+    TipoDocumento tipoDocumentoNew = generarMockTipoDocumento(null, "TipoDocumentoNew");
 
-    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L, "TipoDocumentoNew", comite);
+    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L, "TipoDocumentoNew");
 
     BDDMockito.given(tipoDocumentoRepository.save(tipoDocumentoNew)).willReturn(tipoDocumento);
 
@@ -84,16 +85,13 @@ public class TipoDocumentoServiceTest {
     Assertions.assertThat(tipoDocumentoCreado).isNotNull();
     Assertions.assertThat(tipoDocumentoCreado.getId()).isEqualTo(1L);
     Assertions.assertThat(tipoDocumentoCreado.getNombre()).isEqualTo("TipoDocumentoNew");
-    Assertions.assertThat(tipoDocumentoCreado.getComite()).isEqualTo(comite);
+    Assertions.assertThat(tipoDocumentoCreado.getFormulario()).isEqualTo(formulario);
   }
 
   @Test
   public void create_TipoDocumentoWithId_ThrowsIllegalArgumentException() {
-
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
-
     // given: Un nuevo tipo de Documento que ya tiene id
-    TipoDocumento tipoDocumentoNew = generarMockTipoDocumento(1L, "TipoDocumentoNew", comite);
+    TipoDocumento tipoDocumentoNew = generarMockTipoDocumento(1L, "TipoDocumentoNew");
 
     // when: Creamos el tipo de Documento
     // then: Lanza una excepcion porque el tipo Documento ya tiene id
@@ -103,13 +101,16 @@ public class TipoDocumentoServiceTest {
 
   @Test
   public void update_ReturnsTipoDocumento() {
+    TipoDocumento tipoDocumentoServicioActualizado = generarMockTipoDocumento(1L, "TipoDocumento1 actualizada");
 
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setNombre("M10");
+    formulario.setDescripcion("Formulario M10");
+    formulario.setActivo(Boolean.TRUE);
 
     // given: Un nuevo tipo Documento con el servicio actualizado
-    TipoDocumento tipoDocumentoServicioActualizado = generarMockTipoDocumento(1L, "TipoDocumento1 actualizada", comite);
-
-    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L, "TipoDocumento1", comite);
+    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L, "TipoDocumento1");
 
     BDDMockito.given(tipoDocumentoRepository.findById(1L)).willReturn(Optional.of(tipoDocumento));
     BDDMockito.given(tipoDocumentoRepository.save(tipoDocumento)).willReturn(tipoDocumentoServicioActualizado);
@@ -120,17 +121,14 @@ public class TipoDocumentoServiceTest {
     // then: El tipo Documento se actualiza correctamente.
     Assertions.assertThat(tipoDocumentoActualizado.getId()).isEqualTo(1L);
     Assertions.assertThat(tipoDocumentoActualizado.getNombre()).isEqualTo("TipoDocumento1 actualizada");
-    Assertions.assertThat(tipoDocumentoActualizado.getComite()).isEqualTo(comite);
+    Assertions.assertThat(tipoDocumentoActualizado.getFormulario()).isEqualTo(formulario);
 
   }
 
   @Test
   public void update_ThrowsTipoDocumentoNotFoundException() {
-
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
-
     // given: Un nuevo tipo Documento a actualizar
-    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L, "TipoDocumento", comite);
+    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L, "TipoDocumento");
 
     // then: Lanza una excepcion porque el tipo Documento no existe
     Assertions.assertThatThrownBy(() -> tipoDocumentoService.update(tipoDocumento))
@@ -140,11 +138,8 @@ public class TipoDocumentoServiceTest {
 
   @Test
   public void update_WithoutId_ThrowsIllegalArgumentException() {
-
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
-
     // given: Un TipoDocumento que venga sin id
-    TipoDocumento tipoDocumento = generarMockTipoDocumento(null, "TipoDocumento", comite);
+    TipoDocumento tipoDocumento = generarMockTipoDocumento(null, "TipoDocumento");
 
     Assertions.assertThatThrownBy(
         // when: update TipoDocumento
@@ -190,13 +185,10 @@ public class TipoDocumentoServiceTest {
 
   @Test
   public void findAll_Unlimited_ReturnsFullTipoDocumentoList() {
-
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
-
     // given: One hundred TipoDocumento
     List<TipoDocumento> tipoDocumentos = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      tipoDocumentos.add(generarMockTipoDocumento(Long.valueOf(i), "TipoDocumento" + String.format("%03d", i), comite));
+      tipoDocumentos.add(generarMockTipoDocumento(Long.valueOf(i), "TipoDocumento" + String.format("%03d", i)));
     }
 
     BDDMockito.given(tipoDocumentoRepository.findAll(ArgumentMatchers.<Specification<TipoDocumento>>any(),
@@ -214,13 +206,10 @@ public class TipoDocumentoServiceTest {
 
   @Test
   public void findAll_WithPaging_ReturnsPage() {
-
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
-
     // given: One hundred TipoDocumentos
     List<TipoDocumento> tipoDocumentos = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      tipoDocumentos.add(generarMockTipoDocumento(Long.valueOf(i), "TipoDocumento" + String.format("%03d", i), comite));
+      tipoDocumentos.add(generarMockTipoDocumento(Long.valueOf(i), "TipoDocumento" + String.format("%03d", i)));
     }
 
     BDDMockito.given(tipoDocumentoRepository.findAll(ArgumentMatchers.<Specification<TipoDocumento>>any(),
@@ -257,18 +246,23 @@ public class TipoDocumentoServiceTest {
   /**
    * Función que devuelve un objeto TipoDocumento
    * 
-   * @param id     id del TipoDocumento
-   * @param nombre nombre del TipoDocumento
-   * @param comite comite del TipoDocumento
-   * @return el objeto TipoDocumento
+   * @param id     id del tipoDocumento
+   * @param nombre la descripción del tipoDocumento
+   * @return el objeto tipoDocumento
    */
 
-  public TipoDocumento generarMockTipoDocumento(Long id, String nombre, Comite comite) {
+  public TipoDocumento generarMockTipoDocumento(Long id, String nombre) {
+
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setNombre("M10");
+    formulario.setDescripcion("Formulario M10");
+    formulario.setActivo(Boolean.TRUE);
 
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId(id);
     tipoDocumento.setNombre(nombre);
-    tipoDocumento.setComite(comite);
+    tipoDocumento.setFormulario(formulario);
     tipoDocumento.setActivo(Boolean.TRUE);
 
     return tipoDocumento;

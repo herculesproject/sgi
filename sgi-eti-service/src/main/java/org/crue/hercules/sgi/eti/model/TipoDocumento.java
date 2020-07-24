@@ -34,11 +34,11 @@ public class TipoDocumento extends BaseEntity {
   @Column(name = "nombre", length = 250, nullable = false)
   private String nombre;
 
-  /** Comite. */
+  /** Formulario. */
   @ManyToOne
-  @JoinColumn(name = "comite_id", nullable = false)
+  @JoinColumn(name = "formulario_id", nullable = false)
   @NotNull
-  private Comite comite;
+  private Formulario formulario;
 
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)

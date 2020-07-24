@@ -125,7 +125,7 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
 
     return tipoDocumentoRepository.findById(tipoDocumentoActualizar.getId()).map(tipoDocumento -> {
       tipoDocumento.setNombre(tipoDocumentoActualizar.getNombre());
-      tipoDocumento.setComite(tipoDocumentoActualizar.getComite());
+      tipoDocumento.setFormulario(tipoDocumentoActualizar.getFormulario());
       tipoDocumento.setActivo(tipoDocumentoActualizar.getActivo());
 
       TipoDocumento returnValue = tipoDocumentoRepository.save(tipoDocumento);

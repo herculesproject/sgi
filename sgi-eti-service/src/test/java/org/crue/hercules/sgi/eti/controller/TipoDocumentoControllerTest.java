@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.TipoDocumentoNotFoundException;
-import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.crue.hercules.sgi.eti.service.TipoDocumentoService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -100,10 +100,8 @@ public class TipoDocumentoControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-VER" })
   public void getTipoDocumento_WithId_ReturnsTipoDocumento() throws Exception {
 
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
-
     BDDMockito.given(tipoDocumentoService.findById(ArgumentMatchers.anyLong()))
-        .willReturn((generarMockTipoDocumento(1L, "TipoDocumento1", comite)));
+        .willReturn((generarMockTipoDocumento(1L, "TipoDocumento1")));
 
     mockMvc.perform(MockMvcRequestBuilders.get(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
@@ -125,12 +123,10 @@ public class TipoDocumentoControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-EDITAR" })
   public void newTipoDocumento_ReturnsTipoDocumento() throws Exception {
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
-
     // given: Un tipo Documento nuevo
-    String nuevoTipoDocumentoJson = "{\"id\": \"1\",\"nombre\": \"TipoDocumento1\", \"comite\": {\"comite\": \"Comite1\"}}";
+    String nuevoTipoDocumentoJson = "{\"id\": \"1\",\"nombre\": \"TipoDocumento1\", \"formulario\": {\"nombre\": \"M10\"}}";
 
-    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L, "TipoDocumento1", comite);
+    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L, "TipoDocumento1");
 
     BDDMockito.given(tipoDocumentoService.create(ArgumentMatchers.<TipoDocumento>any())).willReturn(tipoDocumento);
 
@@ -148,7 +144,7 @@ public class TipoDocumentoControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-EDITAR" })
   public void newTipoDocumento_Error_Returns400() throws Exception {
     // given: Un tipo Documento nuevo que produce un error al crearse
-    String nuevoTipoDocumentoJson = "{\"id\": \"1\",\"nombre\": \"TipoDocumento1\", \"comite\": {\"comite\": \"Comite1\"}}";
+    String nuevoTipoDocumentoJson = "{\"id\": \"1\",\"nombre\": \"TipoDocumento1\", \"formulario\": {\"nombre\": \"M10\"}}";
 
     BDDMockito.given(tipoDocumentoService.create(ArgumentMatchers.<TipoDocumento>any()))
         .willThrow(new IllegalArgumentException());
@@ -166,13 +162,10 @@ public class TipoDocumentoControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-EDITAR" })
   public void replaceTipoDocumento_ReturnsTipoDocumento() throws Exception {
-
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
-
     // given: Un tipo Documento a modificar
-    String replaceTipoDocumentoJson = "{\"id\": \"1\",\"nombre\": \"TipoDocumento1\", \"comite\": {\"comite\": \"Comite1\"}}";
+    String replaceTipoDocumentoJson = "{\"id\": \"1\",\"nombre\": \"TipoDocumento1\", \"formulario\": {\"nombre\": \"M10\"}}";
 
-    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L, "Replace TipoDocumento1", comite);
+    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L, "Replace TipoDocumento1");
 
     BDDMockito.given(tipoDocumentoService.update(ArgumentMatchers.<TipoDocumento>any())).willReturn(tipoDocumento);
 
@@ -190,7 +183,7 @@ public class TipoDocumentoControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-EDITAR" })
   public void replaceTipoDocumento_NotFound() throws Exception {
     // given: Un tipo Documento a modificar
-    String replaceTipoDocumentoJson = "{\"id\": \"1\",\"nombre\": \"TipoDocumento1\", \"comite\": {\"comite\": \"Comite1\"}}";
+    String replaceTipoDocumentoJson = "{\"id\": \"1\",\"nombre\": \"TipoDocumento1\", \"formulario\": {\"nombre\": \"M10\"}}";
 
     BDDMockito.given(tipoDocumentoService.update(ArgumentMatchers.<TipoDocumento>any()))
         .will((InvocationOnMock invocation) -> {
@@ -207,10 +200,8 @@ public class TipoDocumentoControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-EDITAR" })
   public void removeTipoDocumento_ReturnsOk() throws Exception {
 
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
-
     BDDMockito.given(tipoDocumentoService.findById(ArgumentMatchers.anyLong()))
-        .willReturn(generarMockTipoDocumento(1L, "TipoDocumento1", comite));
+        .willReturn(generarMockTipoDocumento(1L, "TipoDocumento1"));
 
     mockMvc
         .perform(MockMvcRequestBuilders.delete(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
@@ -221,13 +212,10 @@ public class TipoDocumentoControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-VER" })
   public void findAll_Unlimited_ReturnsFullTipoDocumentoList() throws Exception {
-
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
-
     // given: One hundred TipoDocumento
     List<TipoDocumento> tipoDocumentos = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      tipoDocumentos.add(generarMockTipoDocumento(Long.valueOf(i), "TipoDocumento" + String.format("%03d", i), comite));
+      tipoDocumentos.add(generarMockTipoDocumento(Long.valueOf(i), "TipoDocumento" + String.format("%03d", i)));
     }
 
     BDDMockito
@@ -246,13 +234,10 @@ public class TipoDocumentoControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-VER" })
   public void findAll_WithPaging_ReturnsTipoDocumentoSubList() throws Exception {
-
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
-
     // given: One hundred TipoDocumento
     List<TipoDocumento> tipoDocumentos = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      tipoDocumentos.add(generarMockTipoDocumento(Long.valueOf(i), "TipoDocumento" + String.format("%03d", i), comite));
+      tipoDocumentos.add(generarMockTipoDocumento(Long.valueOf(i), "TipoDocumento" + String.format("%03d", i)));
     }
 
     BDDMockito
@@ -301,13 +286,10 @@ public class TipoDocumentoControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-TIPODOCUMENTO-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredTipoDocumentoList() throws Exception {
-
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
-
     // given: One hundred TipoDocumento and a search query
     List<TipoDocumento> tipoDocumentos = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      tipoDocumentos.add(generarMockTipoDocumento(Long.valueOf(i), "TipoDocumento" + String.format("%03d", i), comite));
+      tipoDocumentos.add(generarMockTipoDocumento(Long.valueOf(i), "TipoDocumento" + String.format("%03d", i)));
     }
     String query = "nombre~TipoDocumento%,id:5";
 
@@ -398,12 +380,18 @@ public class TipoDocumentoControllerTest {
    * @return el objeto tipoDocumento
    */
 
-  public TipoDocumento generarMockTipoDocumento(Long id, String nombre, Comite comite) {
+  public TipoDocumento generarMockTipoDocumento(Long id, String nombre) {
+
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setNombre("M10");
+    formulario.setDescripcion("Formulario M10");
+    formulario.setActivo(Boolean.TRUE);
 
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId(id);
     tipoDocumento.setNombre(nombre);
-    tipoDocumento.setComite(comite);
+    tipoDocumento.setFormulario(formulario);
     tipoDocumento.setActivo(Boolean.TRUE);
 
     return tipoDocumento;

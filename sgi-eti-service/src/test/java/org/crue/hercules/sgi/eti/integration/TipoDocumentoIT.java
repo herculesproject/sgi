@@ -6,7 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
 import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
@@ -89,7 +89,11 @@ public class TipoDocumentoIT {
   @Test
   public void getTipoDocumento_WithId_ReturnsTipoDocumento() throws Exception {
 
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setNombre("M10");
+    formulario.setDescripcion("Formulario M10");
+    formulario.setActivo(Boolean.TRUE);
 
     final ResponseEntity<TipoDocumento> response = restTemplate.withBasicAuth("user", "secret")
         .getForEntity(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, TipoDocumento.class, 1L);
@@ -100,7 +104,7 @@ public class TipoDocumentoIT {
 
     Assertions.assertThat(tipoDocumento.getId()).isEqualTo(1L);
     Assertions.assertThat(tipoDocumento.getNombre()).isEqualTo("TipoDocumento1");
-    Assertions.assertThat(tipoDocumento.getComite()).isEqualTo(comite);
+    Assertions.assertThat(tipoDocumento.getFormulario()).isEqualTo(formulario);
   }
 
   @Sql
@@ -108,12 +112,7 @@ public class TipoDocumentoIT {
   @Test
   public void addTipoDocumento_ReturnsTipoDocumento() throws Exception {
 
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
-
-    TipoDocumento nuevoTipoDocumento = new TipoDocumento();
-    nuevoTipoDocumento.setNombre("TipoDocumento1");
-    nuevoTipoDocumento.setComite(comite);
-    nuevoTipoDocumento.setActivo(Boolean.TRUE);
+    TipoDocumento nuevoTipoDocumento = generarMockTipoDocumento(1L, "TipoDocumento1");
 
     restTemplate.withBasicAuth("user", "secret").postForEntity(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH, nuevoTipoDocumento,
         TipoDocumento.class);
@@ -152,9 +151,13 @@ public class TipoDocumentoIT {
   @Test
   public void replaceTipoDocumento_ReturnsTipoDocumento() throws Exception {
 
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setNombre("M10");
+    formulario.setDescripcion("Formulario M10");
+    formulario.setActivo(Boolean.TRUE);
 
-    TipoDocumento replaceTipoDocumento = generarMockTipoDocumento(1L, "TipoDocumento1", comite);
+    TipoDocumento replaceTipoDocumento = generarMockTipoDocumento(1L, "TipoDocumento1");
 
     final HttpEntity<TipoDocumento> requestEntity = new HttpEntity<TipoDocumento>(replaceTipoDocumento,
         new HttpHeaders());
@@ -170,7 +173,7 @@ public class TipoDocumentoIT {
 
     Assertions.assertThat(tipoDocumento.getId()).isNotNull();
     Assertions.assertThat(tipoDocumento.getNombre()).isEqualTo(replaceTipoDocumento.getNombre());
-    Assertions.assertThat(tipoDocumento.getComite()).isEqualTo(replaceTipoDocumento.getComite());
+    Assertions.assertThat(tipoDocumento.getFormulario()).isEqualTo(replaceTipoDocumento.getFormulario());
     Assertions.assertThat(tipoDocumento.getActivo()).isEqualTo(replaceTipoDocumento.getActivo());
   }
 
@@ -302,12 +305,18 @@ public class TipoDocumentoIT {
    * @return el objeto tipoDocumento
    */
 
-  public TipoDocumento generarMockTipoDocumento(Long id, String nombre, Comite comite) {
+  public TipoDocumento generarMockTipoDocumento(Long id, String nombre) {
+
+    Formulario formulario = new Formulario();
+    formulario.setId(1L);
+    formulario.setNombre("M10");
+    formulario.setDescripcion("Formulario M10");
+    formulario.setActivo(Boolean.TRUE);
 
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId(id);
     tipoDocumento.setNombre(nombre);
-    tipoDocumento.setComite(comite);
+    tipoDocumento.setFormulario(formulario);
     tipoDocumento.setActivo(Boolean.TRUE);
 
     return tipoDocumento;

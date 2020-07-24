@@ -613,71 +613,85 @@
     <insert tableName="tipo_documento">
       <column name="id" value="1" />
       <column name="nombre" value="Seguimiento Anual" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" value="2" />
       <column name="nombre" value="Seguimiento Final" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M20')" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" value="3" />
       <column name="nombre" value="Retrospectiva" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" value="4" />
       <column name="nombre" value="Documento de consentimiento" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" value="5" />
       <column name="nombre" value="Documento de cesión de datos" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M20')" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" value="6" />
       <column name="nombre" value="Documento de autorización" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" value="7" />
       <column name="nombre" value="Documento de aceptación de colaboración" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" value="8" />
       <column name="nombre" value="Informe de la Comisión de Garantías" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" value="9" />
       <column name="nombre" value="Acuerdo de transferencia de muestras" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" value="10" />
       <column name="nombre" value="Documento de registro de tratamiento de datos" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" value="11" />
       <column name="nombre" value="Documentación adicional" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" value="12" />
       <column name="nombre" value="Aclaraciones al comité" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" value="13" />
       <column name="nombre" value="Acreditaciones" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_documento">
       <column name="id" value="14" />
       <column name="nombre" value="Informe veterinario" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>
@@ -1106,7 +1120,7 @@
     </insert>
     <insert tableName="comite_formulario">
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite3')" />
-      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M40')" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
     </insert>
     <insert tableName="comite_formulario">
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite4')" />

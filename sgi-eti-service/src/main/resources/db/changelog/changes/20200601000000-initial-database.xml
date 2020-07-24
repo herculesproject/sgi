@@ -318,7 +318,7 @@
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_documento_pk" />
       </column>
       <column name="nombre" type="VARCHAR(250)" />
-      <column name="comite_id" type="BIGINT" />
+      <column name="formulario_id" type="BIGINT" />
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>
@@ -495,7 +495,7 @@
     </createTable>
   </changeSet>
 
-<changeSet author="master" id="20200601000000-evaluacion">
+  <changeSet author="master" id="20200601000000-evaluacion">
     <createTable tableName="evaluacion">
       <column name="id" type="BIGINT" defaultValueSequenceNext="evaluacion_seq">
         <constraints nullable="false" primaryKey="true" primaryKeyName="evaluacion_pk" />
@@ -705,8 +705,8 @@
     <addForeignKeyConstraint baseColumnNames="cargo_comite_id" baseTableName="evaluador" constraintName="cargo_comite_evaluador_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="cargo_comite" validate="true" />
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-tipo_documento_comite_FK">
-    <addForeignKeyConstraint baseColumnNames="comite_id" baseTableName="tipo_documento" constraintName="tipo_documento_comite_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="comite" validate="true" />
+  <changeSet author="master" id="20200601000000-tipo_documento_formulario_FK">
+    <addForeignKeyConstraint baseColumnNames="formulario_id" baseTableName="tipo_documento" constraintName="tipo_documento_formulario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="formulario" validate="true" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-estado_acta_acta_FK">
