@@ -2,8 +2,6 @@ package org.crue.hercules.sgi.eti.controller;
 
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,12 +10,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
-import org.crue.hercules.sgi.eti.model.Comite;
-import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
-import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
-import org.crue.hercules.sgi.eti.service.ConvocatoriaReunionService;
+import org.crue.hercules.sgi.eti.exceptions.EstadoRetrospectivaNotFoundException;
+import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
+import org.crue.hercules.sgi.eti.service.EstadoRetrospectivaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
+import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -26,12 +24,20 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -39,24 +45,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.ReflectionUtils;
 
-import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
-import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.test.context.ActiveProfiles;
-
 /**
- * ConvocatoriaReunionControllerTest
+ * EstadoRetrospectivaControllerTest
  */
-@WebMvcTest(ConvocatoriaReunionController.class)
-@ActiveProfiles("SECURITY_MOCK")
-public class ConvocatoriaReunionControllerTest {
+@WebMvcTest(EstadoRetrospectivaController.class)
+public class EstadoRetrospectivaControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
@@ -65,10 +58,10 @@ public class ConvocatoriaReunionControllerTest {
   private ObjectMapper mapper;
 
   @MockBean
-  private ConvocatoriaReunionService service;
+  private EstadoRetrospectivaService service;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH = "/convocatoriareuniones";
+  private static final String COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH = "/estadoretrospectivas";
 
   @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
   @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
@@ -106,125 +99,105 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-EDITAR" })
-  public void create_ReturnsConvocatoriaReunion() throws Exception {
+  @WithMockUser(username = "user", authorities = { "ETI-ESTADORETROSPECTIVA-EDITAR" })
+  public void create_ReturnsEstadoRetrospectiva() throws Exception {
 
     // given: Nueva entidad sin Id
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH).toString();
 
-    ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
-    String nuevoConvocatoriaReunionJson = mapper.writeValueAsString(response);
+    EstadoRetrospectiva response = getMockData(1L);
+    String nuevoEstadoRetrospectivaJson = mapper.writeValueAsString(response);
 
-    BDDMockito.given(service.create(ArgumentMatchers.<ConvocatoriaReunion>any())).willReturn(response);
+    BDDMockito.given(service.create(ArgumentMatchers.<EstadoRetrospectiva>any())).willReturn(response);
 
     // when: Se crea la entidad
     mockMvc
         .perform(MockMvcRequestBuilders.post(url).contentType(MediaType.APPLICATION_JSON)
-            .content(nuevoConvocatoriaReunionJson))
+            .content(nuevoEstadoRetrospectivaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: La entidad se crea correctamente
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(response.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("comite").value(response.getComite()))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaEvaluacion").value(response.getFechaEvaluacion().toString()))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
-        .andExpect(MockMvcResultMatchers.jsonPath("lugar").value(response.getLugar()))
-        .andExpect(MockMvcResultMatchers.jsonPath("ordenDia").value(response.getOrdenDia()))
-        .andExpect(MockMvcResultMatchers.jsonPath("codigo").value(response.getCodigo()))
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("tipoConvocatoriaReunion").value(response.getTipoConvocatoriaReunion()))
-        .andExpect(MockMvcResultMatchers.jsonPath("horaInicio").value(response.getHoraInicio()))
-        .andExpect(MockMvcResultMatchers.jsonPath("minutoInicio").value(response.getMinutoInicio()))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaEnvio").value(response.getFechaEnvio().toString()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(response.getNombre()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(response.getActivo()));
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-ESTADORETROSPECTIVA-EDITAR" })
   public void create_WithId_Returns400() throws Exception {
 
     // given: Nueva entidad con Id
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
-    String nuevoConvocatoriaReunionJson = mapper.writeValueAsString(getMockData(1L, 1L, 1L));
+    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH).toString();
+    String nuevoEstadoRetrospectivaJson = mapper.writeValueAsString(getMockData(1L));
 
-    BDDMockito.given(service.create(ArgumentMatchers.<ConvocatoriaReunion>any()))
+    BDDMockito.given(service.create(ArgumentMatchers.<EstadoRetrospectiva>any()))
         .willThrow(new IllegalArgumentException());
 
     // when: Se crea la entidad
     // then: Se produce error porque ya tiene Id
     mockMvc
         .perform(MockMvcRequestBuilders.post(url).contentType(MediaType.APPLICATION_JSON)
-            .content(nuevoConvocatoriaReunionJson))
+            .content(nuevoEstadoRetrospectivaJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isBadRequest());
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-EDITAR" })
-  public void update_WithExistingId_ReturnsConvocatoriaReunion() throws Exception {
+  @WithMockUser(username = "user", authorities = { "ETI-ESTADORETROSPECTIVA-EDITAR" })
+  public void update_WithExistingId_ReturnsEstadoRetrospectiva() throws Exception {
 
     // given: Entidad existente que se va a actualizar
-    ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+    EstadoRetrospectiva response = getMockData(1L);
+    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH)//
         .append(PATH_PARAMETER_ID)//
         .toString();
-    String replaceConvocatoriaReunionJson = mapper.writeValueAsString(response);
+    String replaceEstadoRetrospectivaJson = mapper.writeValueAsString(response);
 
-    BDDMockito.given(service.update(ArgumentMatchers.<ConvocatoriaReunion>any())).willReturn(response);
+    BDDMockito.given(service.update(ArgumentMatchers.<EstadoRetrospectiva>any())).willReturn(response);
 
     // when: Se actualiza la entidad
     mockMvc
         .perform(MockMvcRequestBuilders.put(url, response.getId()).contentType(MediaType.APPLICATION_JSON)
-            .content(replaceConvocatoriaReunionJson))
+            .content(replaceEstadoRetrospectivaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Los datos se actualizan correctamente
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(response.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("comite").value(response.getComite()))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaEvaluacion").value(response.getFechaEvaluacion().toString()))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
-        .andExpect(MockMvcResultMatchers.jsonPath("lugar").value(response.getLugar()))
-        .andExpect(MockMvcResultMatchers.jsonPath("ordenDia").value(response.getOrdenDia()))
-        .andExpect(MockMvcResultMatchers.jsonPath("codigo").value(response.getCodigo()))
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("tipoConvocatoriaReunion").value(response.getTipoConvocatoriaReunion()))
-        .andExpect(MockMvcResultMatchers.jsonPath("horaInicio").value(response.getHoraInicio()))
-        .andExpect(MockMvcResultMatchers.jsonPath("minutoInicio").value(response.getMinutoInicio()))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaEnvio").value(response.getFechaEnvio().toString()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(response.getNombre()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(response.getActivo()));
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-ESTADORETROSPECTIVA-EDITAR" })
   public void update_WithNoExistingId_Returns404() throws Exception {
 
     // given: Entidad a actualizar que no existe
-    ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+    EstadoRetrospectiva response = getMockData(1L);
+    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH)//
         .append(PATH_PARAMETER_ID)//
         .toString();
-    String replaceConvocatoriaReunionJson = mapper.writeValueAsString(response);
+    String replaceEstadoRetrospectivaJson = mapper.writeValueAsString(response);
 
-    BDDMockito.given(service.update(ArgumentMatchers.<ConvocatoriaReunion>any()))
+    BDDMockito.given(service.update(ArgumentMatchers.<EstadoRetrospectiva>any()))
         .will((InvocationOnMock invocation) -> {
-          throw new ConvocatoriaReunionNotFoundException(((ConvocatoriaReunion) invocation.getArgument(0)).getId());
+          throw new EstadoRetrospectivaNotFoundException(((EstadoRetrospectiva) invocation.getArgument(0)).getId());
         });
 
     // when: Se actualiza la entidad
     mockMvc
         .perform(MockMvcRequestBuilders.put(url, response.getId()).contentType(MediaType.APPLICATION_JSON)
-            .content(replaceConvocatoriaReunionJson))
+            .content(replaceEstadoRetrospectivaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Se produce error porque no encuentra la entidad a actualizar
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-ESTADORETROSPECTIVA-EDITAR" })
   public void delete_WithExistingId_Return204() throws Exception {
 
     // given: Entidad existente
-    ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+    EstadoRetrospectiva response = getMockData(1L);
+    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH)//
         .append(PATH_PARAMETER_ID)//
         .toString();
 
@@ -238,35 +211,34 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-ESTADORETROSPECTIVA-EDITAR" })
   public void delete_WithNoExistingId_Returns404() throws Exception {
 
     // given: Id de una entidad que no existe
-    ConvocatoriaReunion convocatoriaReunion = getMockData(1L, 1L, 1L);
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+    EstadoRetrospectiva EstadoRetrospectiva = getMockData(1L);
+    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH)//
         .append(PATH_PARAMETER_ID)//
         .toString();
 
-    BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
-      throw new ConvocatoriaReunionNotFoundException(invocation.getArgument(0));
-    });
+    BDDMockito.willThrow(new EstadoRetrospectivaNotFoundException(0L)).given(service)
+        .delete(ArgumentMatchers.<Long>any());
 
     // when: Se elimina la entidad
     mockMvc
         .perform(
-            MockMvcRequestBuilders.delete(url, convocatoriaReunion.getId()).contentType(MediaType.APPLICATION_JSON))
+            MockMvcRequestBuilders.delete(url, EstadoRetrospectiva.getId()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Se produce error porque no encuentra la entidad a eliminar
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-VER" })
-  public void findById_WithExistingId_ReturnsConvocatoriaReunion() throws Exception {
+  @WithMockUser(username = "user", authorities = { "ETI-ESTADORETROSPECTIVA-VER" })
+  public void findById_WithExistingId_ReturnsEstadoRetrospectiva() throws Exception {
 
     // given: Entidad con un determinado Id
-    ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+    EstadoRetrospectiva response = getMockData(1L);
+    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH)//
         .append(PATH_PARAMETER_ID)//
         .toString();
 
@@ -278,33 +250,23 @@ public class ConvocatoriaReunionControllerTest {
         // then: Se recupera la entidad con el Id
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(response.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("comite").value(response.getComite()))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaEvaluacion").value(response.getFechaEvaluacion().toString()))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
-        .andExpect(MockMvcResultMatchers.jsonPath("lugar").value(response.getLugar()))
-        .andExpect(MockMvcResultMatchers.jsonPath("ordenDia").value(response.getOrdenDia()))
-        .andExpect(MockMvcResultMatchers.jsonPath("codigo").value(response.getCodigo()))
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("tipoConvocatoriaReunion").value(response.getTipoConvocatoriaReunion()))
-        .andExpect(MockMvcResultMatchers.jsonPath("horaInicio").value(response.getHoraInicio()))
-        .andExpect(MockMvcResultMatchers.jsonPath("minutoInicio").value(response.getMinutoInicio()))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaEnvio").value(response.getFechaEnvio().toString()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(response.getNombre()))
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(response.getActivo()));
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-ESTADORETROSPECTIVA-VER" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
 
     // given: No existe entidad con el id indicado
-    ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
+    EstadoRetrospectiva response = getMockData(1L);
 
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH)//
         .append(PATH_PARAMETER_ID)//
         .toString();
 
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
-      throw new ConvocatoriaReunionNotFoundException(invocation.getArgument(0));
+      throw new EstadoRetrospectivaNotFoundException(invocation.getArgument(0));
     });
 
     // when: Se busca entidad con ese id
@@ -315,15 +277,15 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-VER" })
-  public void findAll_Unlimited_ReturnsFullConvocatoriaReunionList() throws Exception {
+  @WithMockUser(username = "user", authorities = { "ETI-ESTADORETROSPECTIVA-VER" })
+  public void findAll_Unlimited_ReturnsFullEstadoRetrospectivaList() throws Exception {
 
     // given: Datos existentes
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH).toString();
 
-    List<ConvocatoriaReunion> response = new LinkedList<ConvocatoriaReunion>();
-    response.add(getMockData(1L, 1L, 1L));
-    response.add(getMockData(2L, 1L, 2L));
+    List<EstadoRetrospectiva> response = new LinkedList<EstadoRetrospectiva>();
+    response.add(getMockData(1L));
+    response.add(getMockData(2L));
 
     BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(response));
@@ -336,17 +298,17 @@ public class ConvocatoriaReunionControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2))).andReturn();
 
     Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
-        new TypeReference<List<ConvocatoriaReunion>>() {
+        new TypeReference<List<EstadoRetrospectiva>>() {
         })).isEqualTo(response);
 
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-ESTADORETROSPECTIVA-VER" })
   public void findAll_Unlimited_Returns204() throws Exception {
 
     // given: No hay datos
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH).toString();
 
     BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(Collections.emptyList()));
@@ -357,20 +319,20 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-VER" })
-  public void findAll_WithPaging_ReturnsConvocatoriaReunionSubList() throws Exception {
+  @WithMockUser(username = "user", authorities = { "ETI-ESTADORETROSPECTIVA-VER" })
+  public void findAll_WithPaging_ReturnsEstadoRetrospectivaSubList() throws Exception {
 
     // given: Datos existentes
-    String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH).toString();
 
-    List<ConvocatoriaReunion> response = new LinkedList<>();
-    response.add(getMockData(1L, 1L, 1L));
-    response.add(getMockData(2L, 1L, 2L));
-    response.add(getMockData(3L, 2L, 3L));
+    List<EstadoRetrospectiva> response = new LinkedList<>();
+    response.add(getMockData(1L));
+    response.add(getMockData(2L));
+    response.add(getMockData(3L));
 
     // página 1 con 2 elementos por página
     Pageable pageable = PageRequest.of(1, 2);
-    Page<ConvocatoriaReunion> pageResponse = new PageImpl<>(response.subList(2, 3), pageable, response.size());
+    Page<EstadoRetrospectiva> pageResponse = new PageImpl<>(response.subList(2, 3), pageable, response.size());
 
     BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willReturn(pageResponse);
@@ -389,20 +351,20 @@ public class ConvocatoriaReunionControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1))).andReturn();
 
     Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
-        new TypeReference<List<ConvocatoriaReunion>>() {
+        new TypeReference<List<EstadoRetrospectiva>>() {
         })).isEqualTo(response.subList(2, 3));
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-ESTADORETROSPECTIVA-VER" })
   public void findAll_WithPaging_Returns204() throws Exception {
 
     // given: Datos existentes
-    String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH).toString();
 
-    List<ConvocatoriaReunion> response = new LinkedList<ConvocatoriaReunion>();
+    List<EstadoRetrospectiva> response = new LinkedList<EstadoRetrospectiva>();
     Pageable pageable = PageRequest.of(1, 2);
-    Page<ConvocatoriaReunion> pageResponse = new PageImpl<>(response, pageable, response.size());
+    Page<EstadoRetrospectiva> pageResponse = new PageImpl<>(response, pageable, response.size());
 
     BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willReturn(pageResponse);
@@ -417,33 +379,33 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-VER" })
-  public void findAll_WithSearchQuery_ReturnsFilteredConvocatoriaReunionList() throws Exception {
+  @WithMockUser(username = "user", authorities = { "ETI-ESTADORETROSPECTIVA-VER" })
+  public void findAll_WithSearchQuery_ReturnsFilteredEstadoRetrospectivaList() throws Exception {
 
     // given: Datos existentes
-    List<ConvocatoriaReunion> response = new LinkedList<>();
-    response.add(getMockData(1L, 1L, 1L));
-    response.add(getMockData(2L, 1L, 2L));
-    response.add(getMockData(3L, 2L, 1L));
-    response.add(getMockData(4L, 2L, 2L));
-    response.add(getMockData(5L, 3L, 3L));
+    List<EstadoRetrospectiva> response = new LinkedList<>();
+    response.add(getMockData(1L));
+    response.add(getMockData(2L));
+    response.add(getMockData(3L));
+    response.add(getMockData(4L));
+    response.add(getMockData(5L));
 
-    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH).toString();
 
     // search
-    String query = "codigo~CR-0%,id:3";
+    String query = "nombre~NombreEstadoRetrospectiva0%,id:3";
 
     BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<ConvocatoriaReunion>>() {
+        .willAnswer(new Answer<Page<EstadoRetrospectiva>>() {
           @Override
-          public Page<ConvocatoriaReunion> answer(InvocationOnMock invocation) throws Throwable {
+          public Page<EstadoRetrospectiva> answer(InvocationOnMock invocation) throws Throwable {
             List<QueryCriteria> queryCriterias = invocation.<List<QueryCriteria>>getArgument(0);
 
-            List<ConvocatoriaReunion> content = new LinkedList<>();
-            for (ConvocatoriaReunion item : response) {
+            List<EstadoRetrospectiva> content = new LinkedList<>();
+            for (EstadoRetrospectiva item : response) {
               boolean add = true;
               for (QueryCriteria queryCriteria : queryCriterias) {
-                Field field = ReflectionUtils.findField(ConvocatoriaReunion.class, queryCriteria.getKey());
+                Field field = ReflectionUtils.findField(EstadoRetrospectiva.class, queryCriteria.getKey());
                 field.setAccessible(true);
                 String fieldValue = ReflectionUtils.getField(field, item).toString();
                 switch (queryCriteria.getOperation()) {
@@ -495,7 +457,7 @@ public class ConvocatoriaReunionControllerTest {
                 content.add(item);
               }
             }
-            Page<ConvocatoriaReunion> page = new PageImpl<>(content);
+            Page<EstadoRetrospectiva> page = new PageImpl<>(content);
             return page;
           }
         });
@@ -509,39 +471,23 @@ public class ConvocatoriaReunionControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1))).andReturn();
 
     Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
-        new TypeReference<List<ConvocatoriaReunion>>() {
+        new TypeReference<List<EstadoRetrospectiva>>() {
         })).isEqualTo(response.subList(2, 3));
   }
 
   /**
-   * Genera un objeto {@link ConvocatoriaReunion}
+   * Genera un objeto {@link EstadoRetrospectiva}
    * 
    * @param id
-   * @param comiteId
-   * @param tipoId
-   * @return ConvocatoriaReunion
+   * @return EstadoRetrospectiva
    */
-  private ConvocatoriaReunion getMockData(Long id, Long comiteId, Long tipoId) {
-
-    Comite comite = new Comite(comiteId, "Comite" + comiteId, Boolean.TRUE);
-
-    String tipo_txt = (tipoId == 1L) ? "Ordinaria" : (tipoId == 2L) ? "Extraordinaria" : "Seguimiento";
-    TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(tipoId, tipo_txt, Boolean.TRUE);
+  private EstadoRetrospectiva getMockData(Long id) {
 
     String txt = (id % 2 == 0) ? String.valueOf(id) : "0" + String.valueOf(id);
 
-    final ConvocatoriaReunion data = new ConvocatoriaReunion();
+    final EstadoRetrospectiva data = new EstadoRetrospectiva();
     data.setId(id);
-    data.setComite(comite);
-    data.setFechaEvaluacion(LocalDateTime.of(2020, 7, id.intValue(), 0, 0, 1));
-    data.setFechaLimite(LocalDate.of(2020, 8, id.intValue()));
-    data.setLugar("Lugar " + txt);
-    data.setOrdenDia("Orden del día convocatoria reunión " + txt);
-    data.setCodigo("CR-" + txt);
-    data.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
-    data.setHoraInicio(7 + id.intValue());
-    data.setMinutoInicio(30);
-    data.setFechaEnvio(LocalDate.of(2020, 7, 13));
+    data.setNombre("NombreEstadoRetrospectiva" + txt);
     data.setActivo(Boolean.TRUE);
 
     return data;

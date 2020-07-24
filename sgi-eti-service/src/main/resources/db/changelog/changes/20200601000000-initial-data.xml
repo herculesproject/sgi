@@ -1351,4 +1351,32 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-estado_retrospectiva">
+    <insert tableName="estado_retrospectiva">
+      <column name="id" value="1" />
+      <column name="nombre" value="Pendiente" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="estado_retrospectiva">
+      <column name="id" value="2" />
+      <column name="nombre" value="Completada" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="estado_retrospectiva">
+      <column name="id" value="3" />
+      <column name="nombre" value="En secretaría" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="estado_retrospectiva">
+      <column name="id" value="4" />
+      <column name="nombre" value="En evaluación" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="estado_retrospectiva">
+      <column name="id" value="5" />
+      <column name="nombre" value="Fin evaluación" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>

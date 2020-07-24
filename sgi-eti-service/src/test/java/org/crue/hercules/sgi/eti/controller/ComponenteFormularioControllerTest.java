@@ -317,7 +317,7 @@ public class ComponenteFormularioControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-COMPONENTEFORMULARIO-VER" })
-  public void findAll_WithPaging_ReturnsDemoSubList() throws Exception {
+  public void findAll_WithPaging_ReturnsComponenteFormularioSubList() throws Exception {
 
     // given: Datos existentes
     String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH).toString();

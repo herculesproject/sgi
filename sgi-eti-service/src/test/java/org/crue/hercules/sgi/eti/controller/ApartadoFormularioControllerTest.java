@@ -339,7 +339,7 @@ public class ApartadoFormularioControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-APARTADOFORMULARIO-VER" })
-  public void findAll_WithPaging_ReturnsDemoSubList() throws Exception {
+  public void findAll_WithPaging_ReturnsApartadoFormularioSubList() throws Exception {
 
     // given: Datos existentes
     String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
