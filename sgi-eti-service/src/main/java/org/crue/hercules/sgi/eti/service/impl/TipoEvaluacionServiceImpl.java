@@ -1,0 +1,136 @@
+package org.crue.hercules.sgi.eti.service.impl;
+
+import java.util.List;
+
+import org.crue.hercules.sgi.eti.exceptions.TipoEvaluacionNotFoundException;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
+import org.crue.hercules.sgi.eti.repository.TipoEvaluacionRepository;
+import org.crue.hercules.sgi.eti.service.TipoEvaluacionService;
+import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * Service Implementation para la gestión de {@link TipoEvaluacion}.
+ */
+@Service
+@Slf4j
+@Transactional(readOnly = true)
+public class TipoEvaluacionServiceImpl implements TipoEvaluacionService {
+  private final TipoEvaluacionRepository tipoEvaluacionRepository;
+
+  public TipoEvaluacionServiceImpl(TipoEvaluacionRepository tipoEvaluacionRepository) {
+    this.tipoEvaluacionRepository = tipoEvaluacionRepository;
+  }
+
+  /**
+   * Guarda la entidad {@link TipoEvaluacion}.
+   *
+   * @param tipoEvaluacion la entidad {@link TipoEvaluacion} a guardar.
+   * @return la entidad {@link TipoEvaluacion} persistida.
+   */
+  @Transactional
+  public TipoEvaluacion create(TipoEvaluacion tipoEvaluacion) {
+    log.debug("Petición a create TipoEvaluacion : {} - start", tipoEvaluacion);
+    Assert.isNull(tipoEvaluacion.getId(), "TipoEvaluacion id tiene que ser null para crear un nuevo tipoEvaluacion");
+
+    return tipoEvaluacionRepository.save(tipoEvaluacion);
+  }
+
+  /**
+   * Obtiene todas las entidades {@link TipoEvaluacion} paginadas y filtadas.
+   *
+   * @param paging la información de paginación.
+   * @param query  información del filtro.
+   * @return el listado de entidades {@link TipoEvaluacion} paginadas y filtradas.
+   */
+  public Page<TipoEvaluacion> findAll(List<QueryCriteria> query, Pageable paging) {
+    log.debug("findAllTipoEvaluacion(List<QueryCriteria> query,Pageable paging) - start");
+    Specification<TipoEvaluacion> spec = new QuerySpecification<TipoEvaluacion>(query);
+
+    Page<TipoEvaluacion> returnValue = tipoEvaluacionRepository.findAll(spec, paging);
+    log.debug("findAllTipoEvaluacion(List<QueryCriteria> query,Pageable paging) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene una entidad {@link TipoEvaluacion} por id.
+   *
+   * @param id el id de la entidad {@link TipoEvaluacion}.
+   * @return la entidad {@link TipoEvaluacion}.
+   * @throws TipoEvaluacionNotFoundException Si no existe ningún
+   *                                         {@link TipoEvaluacion}e con ese id.
+   */
+  public TipoEvaluacion findById(final Long id) throws TipoEvaluacionNotFoundException {
+    log.debug("Petición a get TipoEvaluacion : {}  - start", id);
+    final TipoEvaluacion tipoEvaluacion = tipoEvaluacionRepository.findById(id)
+        .orElseThrow(() -> new TipoEvaluacionNotFoundException(id));
+    log.debug("Petición a get TipoEvaluacion : {}  - end", id);
+    return tipoEvaluacion;
+
+  }
+
+  /**
+   * Elimina una entidad {@link TipoEvaluacion} por id.
+   *
+   * @param id el id de la entidad {@link TipoEvaluacion}.
+   */
+  @Transactional
+  public void delete(Long id) throws TipoEvaluacionNotFoundException {
+    log.debug("Petición a delete TipoEvaluacion : {}  - start", id);
+    Assert.notNull(id, "El id de TipoEvaluacion no puede ser null.");
+    if (!tipoEvaluacionRepository.existsById(id)) {
+      throw new TipoEvaluacionNotFoundException(id);
+    }
+    tipoEvaluacionRepository.deleteById(id);
+    log.debug("Petición a delete TipoEvaluacion : {}  - end", id);
+  }
+
+  /**
+   * Elimina todos los registros {@link TipoEvaluacion}.
+   */
+  @Transactional
+  public void deleteAll() {
+    log.debug("Petición a deleteAll de TipoEvaluacion: {} - start");
+    tipoEvaluacionRepository.deleteAll();
+    log.debug("Petición a deleteAll de TipoEvaluacion: {} - end");
+
+  }
+
+  /**
+   * Actualiza los datos del {@link TipoEvaluacion}.
+   * 
+   * @param tipoEvaluacionActualizar {@link TipoEvaluacion} con los datos
+   *                                 actualizados.
+   * @return El {@link TipoEvaluacion} actualizado.
+   * @throws TipoEvaluacionNotFoundException Si no existe ningún
+   *                                         {@link TipoEvaluacion} con ese id.
+   * @throws IllegalArgumentException        Si el {@link TipoEvaluacion} no tiene
+   *                                         id.
+   */
+
+  @Transactional
+  public TipoEvaluacion update(final TipoEvaluacion tipoEvaluacionActualizar) {
+    log.debug("update(TipoEvaluacion TipoEvaluacionActualizar) - start");
+
+    Assert.notNull(tipoEvaluacionActualizar.getId(),
+        "TipoEvaluacion id no puede ser null para actualizar un tipo Evaluacion");
+
+    return tipoEvaluacionRepository.findById(tipoEvaluacionActualizar.getId()).map(tipoEvaluacion -> {
+      tipoEvaluacion.setNombre(tipoEvaluacionActualizar.getNombre());
+      tipoEvaluacion.setActivo(tipoEvaluacionActualizar.getActivo());
+
+      TipoEvaluacion returnValue = tipoEvaluacionRepository.save(tipoEvaluacion);
+      log.debug("update(TipoEvaluacion tipoEvaluacionActualizar) - end");
+      return returnValue;
+    }).orElseThrow(() -> new TipoEvaluacionNotFoundException(tipoEvaluacionActualizar.getId()));
+  }
+
+}

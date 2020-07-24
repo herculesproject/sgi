@@ -1308,4 +1308,27 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-tipo_evaluacion">
+    <insert tableName="tipo_evaluacion">
+      <column name="id" value="1" />
+      <column name="nombre" value="Retrospectiva" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_evaluacion">
+      <column name="id" value="2" />
+      <column name="nombre" value="Memoria" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_evaluacion">
+      <column name="id" value="3" />
+      <column name="nombre" value="Seguimiento anual" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_evaluacion">
+      <column name="id" value="4" />
+      <column name="nombre" value="Seguimiento final" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>

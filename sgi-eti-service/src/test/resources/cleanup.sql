@@ -35,5 +35,6 @@ DELETE FROM eti.tipo_comentario
 DELETE FROM eti.formulario
 DELETE FROM eti.componente_formulario
 DELETE FROM eti.configuracion
+DELETE FROM eti.tipo_evaluacion
 
 
