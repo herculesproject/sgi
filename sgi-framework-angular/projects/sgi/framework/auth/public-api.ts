@@ -8,3 +8,8 @@ export * from './auth.enum';
 export { SgiAuthService, IAuthStatus } from './auth.service';
 export { SgiAuthRoute, SgiAuthRoutes } from './auth.route';
 export * from './auth.guard';
+export * from './directives/has-any-authority-for-any-uo.directive';
+export * from './directives/has-any-authority.directive';
+export * from './directives/has-authority-for-any-uo.directive';
+export * from './directives/has-authority.directive';
+export * from './directives/if-authenticated.directive';

@@ -17,8 +17,13 @@
     ],
     "paths": {
       "@sgi/framework": [
-        "dist/sgi/framework/sgi-framework",
         "dist/sgi/framework"
+      ],
+      "@sgi/framework/auth": [
+        "dist/sgi/framework/auth"
+      ],
+      "@sgi/framework/http": [
+        "dist/sgi/framework/http"
       ]
     }
   },
