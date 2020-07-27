@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.integration;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
+import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
 import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
 import org.junit.jupiter.api.Test;
@@ -35,18 +37,18 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
- * Test de integracion de EstadoRetrospectiva.
+ * Test de integracion de Retrospectiva.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("SECURITY_MOCK")
 
-public class EstadoRetrospectivaIT {
+public class RetrospectivaIT {
 
   @Autowired
   private TestRestTemplate restTemplate;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH = "/estadoretrospectivas";
+  private static final String RETROSPECTIVA_CONTROLLER_BASE_PATH = "/retrospectivas";
 
   @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
   @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
@@ -63,7 +65,7 @@ public class EstadoRetrospectivaIT {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
       PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
       auth.inMemoryAuthentication().passwordEncoder(encoder).withUser("user").password(encoder.encode("secret"))
-          .authorities("ETI-ESTADORETROSPECTIVA-EDITAR", "ETI-ESTADORETROSPECTIVA-VER");
+          .authorities("ETI-RETROSPECTIVA-EDITAR", "ETI-RETROSPECTIVA-VER");
     }
 
     @Override
@@ -84,50 +86,51 @@ public class EstadoRetrospectivaIT {
     }
   }
 
+  @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void create_ReturnsEstadoRetrospectiva() throws Exception {
+  public void create_ReturnsRetrospectiva() throws Exception {
 
     // given: Nueva entidad
-    final EstadoRetrospectiva newEstadoRetrospectiva = getMockData(1L);
-    // newEstadoRetrospectiva.setId(null);
+    final Retrospectiva newRetrospectiva = getMockData(1L);
+    newRetrospectiva.setId(null);
 
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
 
     // when: Se crea la entidad
-    final ResponseEntity<EstadoRetrospectiva> response = restTemplate.withBasicAuth("user", "secret").postForEntity(url,
-        newEstadoRetrospectiva, EstadoRetrospectiva.class);
+    final ResponseEntity<Retrospectiva> response = restTemplate.withBasicAuth("user", "secret").postForEntity(url,
+        newRetrospectiva, Retrospectiva.class);
 
     // then: La entidad se crea correctamente
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-    final EstadoRetrospectiva estadoRetrospectiva = response.getBody();
-    Assertions.assertThat(estadoRetrospectiva.getId()).isNotNull();
-    newEstadoRetrospectiva.setId(estadoRetrospectiva.getId());
-    Assertions.assertThat(estadoRetrospectiva).isEqualTo(newEstadoRetrospectiva);
+    final Retrospectiva retrospectiva = response.getBody();
+    Assertions.assertThat(retrospectiva.getId()).isNotNull();
+    newRetrospectiva.setId(retrospectiva.getId());
+    Assertions.assertThat(retrospectiva).isEqualTo(newRetrospectiva);
   }
 
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void update_WithExistingId_ReturnsEstadoRetrospectiva() throws Exception {
+  public void update_WithExistingId_ReturnsRetrospectiva() throws Exception {
 
     // given: Entidad existente que se va a actualizar
-    final EstadoRetrospectiva updatedEstadoRetrospectiva = getMockData(2L);
-    updatedEstadoRetrospectiva.setId(1L);
+    final Retrospectiva updatedRetrospectiva = getMockData(2L);
+    updatedRetrospectiva.setId(1L);
 
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)//
+    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)//
         .append(PATH_PARAMETER_ID)//
         .toString();
 
-    HttpEntity<EstadoRetrospectiva> request = new HttpEntity<>(updatedEstadoRetrospectiva);
+    HttpEntity<Retrospectiva> request = new HttpEntity<>(updatedRetrospectiva);
 
     // when: Se actualiza la entidad
-    final ResponseEntity<EstadoRetrospectiva> response = restTemplate.withBasicAuth("user", "secret").exchange(url,
-        HttpMethod.PUT, request, EstadoRetrospectiva.class, updatedEstadoRetrospectiva.getId());
+    final ResponseEntity<Retrospectiva> response = restTemplate.withBasicAuth("user", "secret").exchange(url,
+        HttpMethod.PUT, request, Retrospectiva.class, updatedRetrospectiva.getId());
 
     // then: Los datos se actualizan correctamente
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(response.getBody()).isEqualTo(updatedEstadoRetrospectiva);
+    Assertions.assertThat(response.getBody()).isEqualTo(updatedRetrospectiva);
   }
 
   @Sql
@@ -138,46 +141,44 @@ public class EstadoRetrospectivaIT {
     // given: Entidad existente
     Long id = 1L;
 
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)//
+    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)//
         .append(PATH_PARAMETER_ID)//
         .toString();
 
-    ResponseEntity<EstadoRetrospectiva> response = restTemplate.withBasicAuth("user", "secret").getForEntity(url,
-        EstadoRetrospectiva.class, id);
+    ResponseEntity<Retrospectiva> response = restTemplate.withBasicAuth("user", "secret").getForEntity(url,
+        Retrospectiva.class, id);
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(response.getBody().getActivo()).isEqualTo(Boolean.TRUE);
 
     // when: Se elimina la entidad
-    response = restTemplate.withBasicAuth("user", "secret").exchange(url, HttpMethod.DELETE, null,
-        EstadoRetrospectiva.class, id);
+    response = restTemplate.withBasicAuth("user", "secret").exchange(url, HttpMethod.DELETE, null, Retrospectiva.class,
+        id);
 
     // then: La entidad se elimina correctamente
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-    response = restTemplate.withBasicAuth("user", "secret").getForEntity(url, EstadoRetrospectiva.class, id);
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(response.getBody().getActivo()).isEqualTo(Boolean.FALSE);
+    response = restTemplate.withBasicAuth("user", "secret").getForEntity(url, Retrospectiva.class, id);
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
 
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findById_WithExistingId_ReturnsEstadoRetrospectiva() throws Exception {
+  public void findById_WithExistingId_ReturnsRetrospectiva() throws Exception {
 
     // given: Entidad con un determinado Id
-    final EstadoRetrospectiva estadoRetrospectiva = getMockData(1L);
+    final Retrospectiva retrospectiva = getMockData(1L);
 
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)//
+    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)//
         .append(PATH_PARAMETER_ID)//
         .toString();
 
     // when: Se busca la entidad por ese Id
-    ResponseEntity<EstadoRetrospectiva> response = restTemplate.withBasicAuth("user", "secret").getForEntity(url,
-        EstadoRetrospectiva.class, estadoRetrospectiva.getId());
+    ResponseEntity<Retrospectiva> response = restTemplate.withBasicAuth("user", "secret").getForEntity(url,
+        Retrospectiva.class, retrospectiva.getId());
 
     // then: Se recupera la entidad con el Id
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(response.getBody()).isEqualTo(estadoRetrospectiva);
+    Assertions.assertThat(response.getBody()).isEqualTo(retrospectiva);
   }
 
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
@@ -186,13 +187,13 @@ public class EstadoRetrospectivaIT {
 
     // given: No existe entidad con el id indicado
     Long id = 1L;
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)//
+    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH)//
         .append(PATH_PARAMETER_ID)//
         .toString();
 
     // when: Se busca la entidad por ese Id
-    ResponseEntity<EstadoRetrospectiva> response = restTemplate.withBasicAuth("user", "secret").getForEntity(url,
-        EstadoRetrospectiva.class, id);
+    ResponseEntity<Retrospectiva> response = restTemplate.withBasicAuth("user", "secret").getForEntity(url,
+        Retrospectiva.class, id);
 
     // then: Se produce error porque no encuentra la entidad con ese Id
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -201,18 +202,18 @@ public class EstadoRetrospectivaIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_Unlimited_ReturnsFullEstadoRetrospectivaList() throws Exception {
+  public void findAll_Unlimited_ReturnsFullRetrospectivaList() throws Exception {
 
     // given: Datos existentes
-    List<EstadoRetrospectiva> response = new LinkedList<>();
+    List<Retrospectiva> response = new LinkedList<>();
     response.add(getMockData(1L));
     response.add(getMockData(2L));
 
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
 
     // when: Se buscan todos los datos
-    final ResponseEntity<List<EstadoRetrospectiva>> result = restTemplate.withBasicAuth("user", "secret").exchange(url,
-        HttpMethod.GET, null, new ParameterizedTypeReference<List<EstadoRetrospectiva>>() {
+    final ResponseEntity<List<Retrospectiva>> result = restTemplate.withBasicAuth("user", "secret").exchange(url,
+        HttpMethod.GET, null, new ParameterizedTypeReference<List<Retrospectiva>>() {
         });
 
     // then: Se recuperan todos los datos
@@ -223,10 +224,10 @@ public class EstadoRetrospectivaIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithPaging_ReturnsEstadoRetrospectivaSubList() throws Exception {
+  public void findAll_WithPaging_ReturnsRetrospectivaSubList() throws Exception {
 
     // given: Datos existentes
-    List<EstadoRetrospectiva> response = new LinkedList<>();
+    List<Retrospectiva> response = new LinkedList<>();
     response.add(getMockData(5L));
 
     // página 2 con 2 elementos por página
@@ -234,11 +235,11 @@ public class EstadoRetrospectivaIT {
     headers.add("X-Page", "2");
     headers.add("X-Page-Size", "2");
 
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
 
     // when: Se buscan los datos paginados
-    final ResponseEntity<List<EstadoRetrospectiva>> result = restTemplate.withBasicAuth("user", "secret").exchange(url,
-        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<EstadoRetrospectiva>>() {
+    final ResponseEntity<List<Retrospectiva>> result = restTemplate.withBasicAuth("user", "secret").exchange(url,
+        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<Retrospectiva>>() {
         });
 
     // then: Se recuperan los datos correctamente según la paginación solicitada
@@ -255,22 +256,22 @@ public class EstadoRetrospectivaIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithSearchQuery_ReturnsFilteredEstadoRetrospectivaList() throws Exception {
+  public void findAll_WithSearchQuery_ReturnsFilteredRetrospectivaList() throws Exception {
 
     // given: Datos existentes
-    List<EstadoRetrospectiva> response = new LinkedList<>();
+    List<Retrospectiva> response = new LinkedList<>();
     response.add(getMockData(3L));
 
     // search by codigo like, id equals
     Long id = 3L;
-    String query = "nombre~EstadoRetrospectiva0%,id:" + id;
+    String query = "fechaRetrospectiva<=2020-07-03,id:" + id;
 
-    URI uri = UriComponentsBuilder.fromUriString(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).queryParam("q", query)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(RETROSPECTIVA_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
+        .toUri();
 
     // when: Se buscan los datos con el filtro indicado
-    final ResponseEntity<List<EstadoRetrospectiva>> result = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, null, new ParameterizedTypeReference<List<EstadoRetrospectiva>>() {
+    final ResponseEntity<List<Retrospectiva>> result = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, null, new ParameterizedTypeReference<List<Retrospectiva>>() {
         });
 
     // then: Se recuperan los datos filtrados
@@ -287,19 +288,19 @@ public class EstadoRetrospectivaIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithSortQuery_ReturnsOrderedEstadoRetrospectivaList() throws Exception {
+  public void findAll_WithSortQuery_ReturnsOrderedRetrospectivaList() throws Exception {
 
     // given: Datos existentes
 
     // sort by id desc
     String sort = "id-";
 
-    URI uri = UriComponentsBuilder.fromUriString(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).queryParam("s", sort)
-        .build(false).toUri();
+    URI uri = UriComponentsBuilder.fromUriString(RETROSPECTIVA_CONTROLLER_BASE_PATH).queryParam("s", sort).build(false)
+        .toUri();
 
     // when: Se buscan los datos con la ordenación indicada
-    final ResponseEntity<List<EstadoRetrospectiva>> result = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, null, new ParameterizedTypeReference<List<EstadoRetrospectiva>>() {
+    final ResponseEntity<List<Retrospectiva>> result = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, null, new ParameterizedTypeReference<List<Retrospectiva>>() {
         });
 
     // then: Se recuperan los datos filtrados, ordenados y paginados
@@ -316,10 +317,10 @@ public class EstadoRetrospectivaIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithPagingSortingAndFiltering_ReturnsEstadoRetrospectivaSubList() throws Exception {
+  public void findAll_WithPagingSortingAndFiltering_ReturnsRetrospectivaSubList() throws Exception {
 
     // given: Datos existentes
-    List<EstadoRetrospectiva> response = new LinkedList<>();
+    List<Retrospectiva> response = new LinkedList<>();
     response.add(getMockData(1L));
 
     // página 1 con 2 elementos por página
@@ -331,14 +332,14 @@ public class EstadoRetrospectivaIT {
     String sort = "id-";
 
     // search
-    String query = "nombre~EstadoRetrospectiva0%";
+    String query = "estadoRetrospectiva.nombre~Retrospectiva0%";
 
-    URI uri = UriComponentsBuilder.fromUriString(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).queryParam("s", sort)
+    URI uri = UriComponentsBuilder.fromUriString(RETROSPECTIVA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", query).build(false).toUri();
 
     // when: Se buscan los datos paginados con el filtro y orden indicados
-    final ResponseEntity<List<EstadoRetrospectiva>> result = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<EstadoRetrospectiva>>() {
+    final ResponseEntity<List<Retrospectiva>> result = restTemplate.withBasicAuth("user", "secret").exchange(uri,
+        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<Retrospectiva>>() {
         });
 
     // then: Se recuperan los datos filtrados, ordenados y paginados
@@ -353,12 +354,28 @@ public class EstadoRetrospectivaIT {
   }
 
   /**
+   * Genera un objeto {@link Retrospectiva}
+   * 
+   * @param id
+   * @return Retrospectiva
+   */
+  private Retrospectiva getMockData(Long id) {
+
+    final Retrospectiva data = new Retrospectiva();
+    data.setId(id);
+    data.setEstadoRetrospectiva(getMockDataEstadoRetrospectiva((id % 2 == 0) ? 2L : 1L));
+    data.setFechaRetrospectiva(LocalDate.of(2020, 7, id.intValue()));
+
+    return data;
+  }
+
+  /**
    * Genera un objeto {@link EstadoRetrospectiva}
    * 
    * @param id
    * @return EstadoRetrospectiva
    */
-  private EstadoRetrospectiva getMockData(Long id) {
+  private EstadoRetrospectiva getMockDataEstadoRetrospectiva(Long id) {
 
     String txt = (id % 2 == 0) ? String.valueOf(id) : "0" + String.valueOf(id);
 

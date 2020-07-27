@@ -1372,6 +1372,24 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-tipo_tarea">
+    <insert tableName="tipo_tarea">
+      <column name="id" value="1" />
+      <column name="nombre" value="Diseño de proyecto y procedimientos" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_tarea">
+      <column name="id" value="2" />
+      <column name="nombre" value="Eutanasia" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_tarea">
+      <column name="id" value="3" />
+      <column name="nombre" value="Manipulación de animales" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
   <changeSet author="master" id="20200601000000-estado_retrospectiva">
     <insert tableName="estado_retrospectiva">
       <column name="id" value="1" />
@@ -1400,21 +1418,30 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-tipo_tarea">
-    <insert tableName="tipo_tarea">
-      <column name="id" value="1" />
-      <column name="nombre" value="Diseño de proyecto y procedimientos" />
-      <column name="activo" value="true" />
+  <changeSet author="master" id="20200601000000-retrospectiva">
+    <insert tableName="retrospectiva">
+      <column name="estado_retrospectiva_id" valueComputed="(select id from eti.estado_retrospectiva where nombre='Pendiente')" />
+      <column name="fecha_retrospectiva" value="2020-07-01" />
     </insert>
-    <insert tableName="tipo_tarea">
-      <column name="id" value="2" />
-      <column name="nombre" value="Eutanasia" />
-      <column name="activo" value="true" />
+    <insert tableName="retrospectiva">
+      <column name="estado_retrospectiva_id" valueComputed="(select id from eti.estado_retrospectiva where nombre='Completada')" />
+      <column name="fecha_retrospectiva" value="2020-07-05" />
     </insert>
-    <insert tableName="tipo_tarea">
-      <column name="id" value="3" />
-      <column name="nombre" value="Manipulación de animales" />
-      <column name="activo" value="true" />
+    <insert tableName="retrospectiva">
+      <column name="estado_retrospectiva_id" valueComputed="(select id from eti.estado_retrospectiva where nombre='En secretaría')" />
+      <column name="fecha_retrospectiva" value="2020-07-10" />
+    </insert>
+    <insert tableName="retrospectiva">
+      <column name="estado_retrospectiva_id" valueComputed="(select id from eti.estado_retrospectiva where nombre='En evaluación')" />
+      <column name="fecha_retrospectiva" value="2020-07-15" />
+    </insert>
+    <insert tableName="retrospectiva">
+      <column name="estado_retrospectiva_id" valueComputed="(select id from eti.estado_retrospectiva where nombre='Fin evaluación')" />
+      <column name="fecha_retrospectiva" value="2020-07-20" />
+    </insert>
+    <insert tableName="retrospectiva">
+      <column name="estado_retrospectiva_id" valueComputed="(select id from eti.estado_retrospectiva where nombre='Pendiente')" />
+      <column name="fecha_retrospectiva" value="2020-07-25" />
     </insert>
   </changeSet>
 

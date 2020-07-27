@@ -109,7 +109,9 @@ public class EstadoRetrospectivaController {
   @PreAuthorize("hasAuthorityForAnyUO('ETI-ESTADORETROSPECTIVA-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
-    service.delete(id);
+    EstadoRetrospectiva estadoRetrospectiva = this.one(id);
+    estadoRetrospectiva.setActivo(Boolean.FALSE);
+    service.update(estadoRetrospectiva);
     log.debug("delete(Long id) - end");
   }
 
