@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.DictamenNotFoundException;
 import org.crue.hercules.sgi.eti.model.Dictamen;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.service.DictamenService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
@@ -104,7 +105,8 @@ public class DictamenControllerTest {
     mockMvc.perform(MockMvcRequestBuilders.get(DICTAMEN_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("Dictamen1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("Dictamen1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("tipoEvaluacion.nombre").value("TipoEvaluacion1"));
     ;
   }
 
@@ -122,7 +124,7 @@ public class DictamenControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-DICTAMEN-EDITAR" })
   public void newDictamen_ReturnsDictamen() throws Exception {
     // given: Un dictamen nuevo
-    String nuevoDictamenJson = "{\"nombre\": \"Dictamen1\", \"activo\": \"true\"}";
+    String nuevoDictamenJson = "{\"nombre\": \"Dictamen1\", \"tipoEvaluacion\": {\"id\": \"1\", \"nombre\": \"TipoEvaluacion1\", \"activo\": \"true\"}, \"activo\": \"true\"}";
 
     Dictamen dictamen = generarMockDictamen(1L, "Dictamen1");
 
@@ -135,7 +137,8 @@ public class DictamenControllerTest {
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo dictamen y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("Dictamen1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("Dictamen1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("tipoEvaluacion.nombre").value("TipoEvaluacion1"));
   }
 
   @Test
@@ -161,7 +164,7 @@ public class DictamenControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-DICTAMEN-EDITAR" })
   public void replaceDictamen_ReturnsDictamen() throws Exception {
     // given: Un dictamen a modificar
-    String replaceDictamenJson = "{\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}";
+    String replaceDictamenJson = "{\"id\": 1, \"nombre\": \"Dictamen1\", \"tipoEvaluacion\": {\"id\": \"1\", \"nombre\": \"TipoEvaluacion1\", \"activo\": \"true\"}, \"activo\": \"true\"}";
 
     Dictamen dictamen = generarMockDictamen(1L, "Replace Dictamen1");
 
@@ -181,7 +184,7 @@ public class DictamenControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-DICTAMEN-EDITAR" })
   public void replaceDictamen_NotFound() throws Exception {
     // given: Un dictamen a modificar
-    String replaceDictamenJson = "{\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}";
+    String replaceDictamenJson = "{\"id\": 1, \"nombre\": \"Dictamen1\", \"tipoEvaluacion\": {\"id\": \"1\", \"nombre\": \"TipoEvaluacion1\", \"activo\": \"true\"}, \"activo\": \"true\"}";
 
     BDDMockito.given(dictamenService.update(ArgumentMatchers.<Dictamen>any())).will((InvocationOnMock invocation) -> {
       throw new DictamenNotFoundException(((Dictamen) invocation.getArgument(0)).getId());
@@ -375,9 +378,15 @@ public class DictamenControllerTest {
 
   public Dictamen generarMockDictamen(Long id, String nombre) {
 
+    TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
+    tipoEvaluacion.setId(1L);
+    tipoEvaluacion.setNombre("TipoEvaluacion1");
+    tipoEvaluacion.setActivo(Boolean.TRUE);
+
     Dictamen dictamen = new Dictamen();
     dictamen.setId(id);
     dictamen.setNombre(nombre);
+    dictamen.setTipoEvaluacion(tipoEvaluacion);
     dictamen.setActivo(Boolean.TRUE);
 
     return dictamen;

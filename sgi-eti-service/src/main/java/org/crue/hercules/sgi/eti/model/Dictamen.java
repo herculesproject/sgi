@@ -3,6 +3,8 @@ package org.crue.hercules.sgi.eti.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -30,6 +32,11 @@ public class Dictamen extends BaseEntity {
   /** Nombre. */
   @Column(name = "nombre", length = 250, nullable = false)
   private String nombre;
+
+  /** Tipo evaluacion. */
+  @ManyToOne
+  @JoinColumn(name = "tipo_evaluacion_id", nullable = true)
+  private TipoEvaluacion tipoEvaluacion;
 
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)

@@ -121,6 +121,7 @@ public class DictamenServiceImpl implements DictamenService {
 
     return dictamenRepository.findById(dictamenActualizar.getId()).map(dictamen -> {
       dictamen.setNombre(dictamenActualizar.getNombre());
+      dictamen.setTipoEvaluacion(dictamenActualizar.getTipoEvaluacion());
       dictamen.setActivo(dictamenActualizar.getActivo());
 
       Dictamen returnValue = dictamenRepository.save(dictamen);

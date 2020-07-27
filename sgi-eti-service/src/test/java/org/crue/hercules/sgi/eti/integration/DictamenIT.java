@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Dictamen;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
 import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
 import org.junit.jupiter.api.Test;
@@ -103,8 +104,14 @@ public class DictamenIT {
   @Test
   public void addDictamen_ReturnsDictamen() throws Exception {
 
+    TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
+    tipoEvaluacion.setId(1L);
+    tipoEvaluacion.setNombre("TipoEvaluacion1");
+    tipoEvaluacion.setActivo(Boolean.TRUE);
+
     Dictamen nuevoDictamen = new Dictamen();
     nuevoDictamen.setNombre("Dictamen1");
+    nuevoDictamen.setTipoEvaluacion(tipoEvaluacion);
     nuevoDictamen.setActivo(Boolean.TRUE);
 
     restTemplate.withBasicAuth("user", "secret").postForEntity(DICTAMEN_CONTROLLER_BASE_PATH, nuevoDictamen,
@@ -158,6 +165,8 @@ public class DictamenIT {
 
     Assertions.assertThat(dictamen.getId()).isNotNull();
     Assertions.assertThat(dictamen.getNombre()).isEqualTo(replaceDictamen.getNombre());
+    Assertions.assertThat(dictamen.getTipoEvaluacion().getNombre())
+        .isEqualTo(replaceDictamen.getTipoEvaluacion().getNombre());
     Assertions.assertThat(dictamen.getActivo()).isEqualTo(replaceDictamen.getActivo());
   }
 
@@ -176,18 +185,18 @@ public class DictamenIT {
         HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<Dictamen>>() {
         });
 
-    // then: Respuesta OK, Dictamens retorna la información de la página
+    // then: Respuesta OK, Dictamenes retorna la información de la página
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<Dictamen> dictamens = response.getBody();
-    Assertions.assertThat(dictamens.size()).isEqualTo(2);
+    final List<Dictamen> dictamenes = response.getBody();
+    Assertions.assertThat(dictamenes.size()).isEqualTo(2);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("4");
 
-    // Contiene de nombre='Pendiente de correcciones' a 'Dictamen8'
-    Assertions.assertThat(dictamens.get(0).getNombre()).isEqualTo("Pendiente de correcciones");
-    Assertions.assertThat(dictamens.get(1).getNombre()).isEqualTo("No procede evaluar");
+    // Contiene de nombre='Pendiente de correcciones' y 'No procede evaluar'
+    Assertions.assertThat(dictamenes.get(0).getNombre()).isEqualTo("Pendiente de correcciones");
+    Assertions.assertThat(dictamenes.get(1).getNombre()).isEqualTo("No procede evaluar");
   }
 
   @Sql
@@ -206,13 +215,13 @@ public class DictamenIT {
         HttpMethod.GET, null, new ParameterizedTypeReference<List<Dictamen>>() {
         });
 
-    // then: Respuesta OK, Dictamens retorna la información de la página
+    // then: Respuesta OK, Dictamenes retorna la información de la página
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<Dictamen> dictamens = response.getBody();
-    Assertions.assertThat(dictamens.size()).isEqualTo(1);
-    Assertions.assertThat(dictamens.get(0).getId()).isEqualTo(id);
-    Assertions.assertThat(dictamens.get(0).getNombre()).startsWith("Favorable");
+    final List<Dictamen> dictamenes = response.getBody();
+    Assertions.assertThat(dictamenes.size()).isEqualTo(1);
+    Assertions.assertThat(dictamenes.get(0).getId()).isEqualTo(id);
+    Assertions.assertThat(dictamenes.get(0).getNombre()).startsWith("Favorable");
   }
 
   @Sql
@@ -230,15 +239,15 @@ public class DictamenIT {
         HttpMethod.GET, null, new ParameterizedTypeReference<List<Dictamen>>() {
         });
 
-    // then: Respuesta OK, Dictamens retorna la información de la página
+    // then: Respuesta OK, Dictamenes retorna la información de la página
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<Dictamen> dictamens = response.getBody();
-    Assertions.assertThat(dictamens.size()).isEqualTo(4);
-    Assertions.assertThat(dictamens.get(0).getId()).isEqualTo(3);
-    Assertions.assertThat(dictamens.get(0).getNombre()).isEqualTo("Pendiente de correcciones");
-    Assertions.assertThat(dictamens.get(3).getId()).isEqualTo(1);
-    Assertions.assertThat(dictamens.get(3).getNombre()).isEqualTo("Favorable");
+    final List<Dictamen> dictamenes = response.getBody();
+    Assertions.assertThat(dictamenes.size()).isEqualTo(4);
+    Assertions.assertThat(dictamenes.get(0).getId()).isEqualTo(3);
+    Assertions.assertThat(dictamenes.get(0).getNombre()).isEqualTo("Pendiente de correcciones");
+    Assertions.assertThat(dictamenes.get(3).getId()).isEqualTo(1);
+    Assertions.assertThat(dictamenes.get(3).getNombre()).isEqualTo("Favorable");
   }
 
   @Sql
@@ -261,19 +270,19 @@ public class DictamenIT {
         HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<Dictamen>>() {
         });
 
-    // then: Respuesta OK, Dictamens retorna la información de la página
+    // then: Respuesta OK, Dictamenes retorna la información de la página
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<Dictamen> dictamens = response.getBody();
-    Assertions.assertThat(dictamens.size()).isEqualTo(2);
+    final List<Dictamen> dictamenes = response.getBody();
+    Assertions.assertThat(dictamenes.size()).isEqualTo(2);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("2");
 
     // Contiene nombre='Favorable pendiente de revisión mínima', 'Favorable'
-    Assertions.assertThat(dictamens.get(0).getNombre()).isEqualTo("Pendiente de correcciones");
-    Assertions.assertThat(dictamens.get(1).getNombre()).isEqualTo("Favorable pendiente de revisión mínima");
+    Assertions.assertThat(dictamenes.get(0).getNombre()).isEqualTo("Pendiente de correcciones");
+    Assertions.assertThat(dictamenes.get(1).getNombre()).isEqualTo("Favorable pendiente de revisión mínima");
 
   }
 
@@ -287,9 +296,15 @@ public class DictamenIT {
 
   public Dictamen generarMockDictamen(Long id, String nombre) {
 
+    TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
+    tipoEvaluacion.setId(1L);
+    tipoEvaluacion.setNombre("TipoEvaluacion1");
+    tipoEvaluacion.setActivo(Boolean.TRUE);
+
     Dictamen dictamen = new Dictamen();
     dictamen.setId(id);
     dictamen.setNombre(nombre);
+    dictamen.setTipoEvaluacion(tipoEvaluacion);
     dictamen.setActivo(Boolean.TRUE);
 
     return dictamen;

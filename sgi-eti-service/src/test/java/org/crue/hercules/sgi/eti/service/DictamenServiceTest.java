@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.DictamenNotFoundException;
 import org.crue.hercules.sgi.eti.model.Dictamen;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.repository.DictamenRepository;
 import org.crue.hercules.sgi.eti.service.impl.DictamenServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,13 +43,13 @@ public class DictamenServiceTest {
 
   @Test
   public void find_WithId_ReturnsDictamen() {
-    BDDMockito.given(dictamenRepository.findById(1L)).willReturn(Optional.of(generarMockDictamen(1L, "Dicatamen1")));
+    BDDMockito.given(dictamenRepository.findById(1L)).willReturn(Optional.of(generarMockDictamen(1L, "Dictamen1")));
 
     Dictamen dictamen = dictamenService.findById(1L);
 
     Assertions.assertThat(dictamen.getId()).isEqualTo(1L);
-
-    Assertions.assertThat(dictamen.getNombre()).isEqualTo("Dicatamen1");
+    Assertions.assertThat(dictamen.getNombre()).isEqualTo("Dictamen1");
+    Assertions.assertThat(dictamen.getTipoEvaluacion().getNombre()).isEqualTo("TipoEvaluacion1");
 
   }
 
@@ -234,9 +235,15 @@ public class DictamenServiceTest {
    */
   public Dictamen generarMockDictamen(Long id, String nombre) {
 
+    TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
+    tipoEvaluacion.setId(1L);
+    tipoEvaluacion.setNombre("TipoEvaluacion1");
+    tipoEvaluacion.setActivo(Boolean.TRUE);
+
     Dictamen dictamen = new Dictamen();
     dictamen.setId(id);
     dictamen.setNombre(nombre);
+    dictamen.setTipoEvaluacion(tipoEvaluacion);
     dictamen.setActivo(Boolean.TRUE);
 
     return dictamen;

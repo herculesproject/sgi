@@ -48,6 +48,21 @@
       <column name="nombre" value="No procede evaluar" />
       <column name="activo" value="true" />
     </insert>
+    <insert tableName="dictamen">
+      <column name="id" value="5" />
+      <column name="nombre" value="Solicitud de modificaciones" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="dictamen">
+      <column name="id" value="6" />
+      <column name="nombre" value="Solicitud de aclaraciones" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="dictamen">
+      <column name="id" value="7" />
+      <column name="nombre" value="Desfavorable" />
+      <column name="activo" value="true" />
+    </insert>
   </changeSet>
 
   <changeSet author="master" id="20200601000000-tipo_actividad">
