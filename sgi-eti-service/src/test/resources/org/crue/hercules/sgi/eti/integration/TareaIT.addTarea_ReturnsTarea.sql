@@ -23,3 +23,6 @@ INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, 
 
 -- FORMACIÓN ESPECÍFICA 
 INSERT INTO eti.formacion_especifica (id, nombre, activo) VALUES (300, 'FormacionEspecifica001', true);
+
+-- TIPO TAREA
+INSERT INTO eti.tipo_tarea (id, nombre, activo) VALUES (1, 'Eutanasia', true);

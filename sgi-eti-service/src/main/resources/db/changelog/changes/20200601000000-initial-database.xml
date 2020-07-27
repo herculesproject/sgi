@@ -314,6 +314,7 @@
       <column name="formacion_especifica_id" type="BIGINT" />
       <column name="organismo" type="VARCHAR(250)" />
       <column name="anio" type="INT" />
+      <column name="tipo_tarea_id" type="BIGINT" />
     </createTable>
   </changeSet>
 
@@ -746,6 +747,9 @@
   </changeSet>
   <changeSet author="master" id="20200601000000-tarea_formacion_especifica_FK">
     <addForeignKeyConstraint baseColumnNames="formacion_especifica_id" baseTableName="tarea" constraintName="tarea_formacion_especifica_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="formacion_especifica" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-tarea_tipo_tarea_FK">
+    <addForeignKeyConstraint baseColumnNames="tipo_tarea_id" baseTableName="tarea" constraintName="tarea_tipo_tarea_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_tarea" validate="true" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-comite_evaluador_FK">

@@ -68,4 +68,9 @@ public class Tarea extends BaseEntity {
   @Column(name = "anio", nullable = true)
   private Integer anio;
 
+  /** Tipo tarea */
+  @ManyToOne
+  @JoinColumn(name = "tipo_tarea_id", nullable = false)
+  private TipoTarea tipoTarea;
+
 }

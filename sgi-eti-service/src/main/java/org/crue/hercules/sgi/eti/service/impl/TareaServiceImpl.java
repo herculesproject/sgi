@@ -125,6 +125,7 @@ public class TareaServiceImpl implements TareaService {
       tarea.setFormacionEspecifica(tareaActualizar.getFormacionEspecifica());
       tarea.setOrganismo(tareaActualizar.getOrganismo());
       tarea.setAnio(tareaActualizar.getAnio());
+      tarea.setTipoTarea(tareaActualizar.getTipoTarea());
 
       Tarea returnValue = tareaRepository.save(tarea);
       log.debug("update(Tarea tareaActualizar) - end");

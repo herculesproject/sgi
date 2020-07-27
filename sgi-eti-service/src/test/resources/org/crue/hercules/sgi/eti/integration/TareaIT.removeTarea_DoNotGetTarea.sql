@@ -24,6 +24,9 @@ INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, 
 -- FORMACIÓN ESPECÍFICA 
 INSERT INTO eti.formacion_especifica (id, nombre, activo) VALUES (300, 'FormacionEspecifica001', true);
 
+-- TIPO TAREA
+INSERT INTO eti.tipo_tarea (id, nombre, activo) VALUES (1, 'Eutanasia', true);
+
 -- TAREA
-INSERT INTO eti.tarea (id, equipo_trabajo_id, memoria_id, tarea, formacion, formacion_especifica_id, organismo, anio)
-  VALUES (2, 100, 200, 'Tarea2', 'Formacion2', 300, 'Organismo2', 2020);
+INSERT INTO eti.tarea (id, equipo_trabajo_id, memoria_id, tarea, formacion, formacion_especifica_id, organismo, anio, tipo_tarea_id)
+  VALUES (2, 100, 200, 'Tarea2', 'Formacion2', 300, 'Organismo2', 2020, 1);

@@ -576,6 +576,7 @@
       <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where nombre='FormacionEspecifica1')" />
       <column name="organismo" value="Organismo1" />
       <column name="anio" value="2020" />
+      <column name="tipo_tarea_id" valueComputed="(select id from eti.tipo_tarea where nombre='Eutanasia')" />
     </insert>
     <insert tableName="tarea">
       <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where usuario_ref='user-002')" />
@@ -585,6 +586,7 @@
       <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where nombre='FormacionEspecifica2')" />
       <column name="organismo" value="Organismo2" />
       <column name="anio" value="2020" />
+      <column name="tipo_tarea_id" valueComputed="(select id from eti.tipo_tarea where nombre='Eutanasia')" />
     </insert>
     <insert tableName="tarea">
       <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where usuario_ref='user-003')" />
@@ -594,6 +596,7 @@
       <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where nombre='FormacionEspecifica3')" />
       <column name="organismo" value="Organismo3" />
       <column name="anio" value="2020" />
+      <column name="tipo_tarea_id" valueComputed="(select id from eti.tipo_tarea where nombre='Manipulación de animales')" />
     </insert>
     <insert tableName="tarea">
       <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where usuario_ref='user-004')" />
@@ -603,6 +606,7 @@
       <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where nombre='FormacionEspecifica4')" />
       <column name="organismo" value="Organismo4" />
       <column name="anio" value="2021" />
+      <column name="tipo_tarea_id" valueComputed="(select id from eti.tipo_tarea where nombre='Eutanasia')" />
     </insert>
     <insert tableName="tarea">
       <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where usuario_ref='user-005')" />
@@ -612,6 +616,7 @@
       <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where nombre='FormacionEspecifica5')" />
       <column name="organismo" value="Organismo5" />
       <column name="anio" value="2021" />
+      <column name="tipo_tarea_id" valueComputed="(select id from eti.tipo_tarea where nombre='Diseño de proyecto y procedimientos')" />
     </insert>
     <insert tableName="tarea">
       <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where usuario_ref='user-006')" />
@@ -621,6 +626,7 @@
       <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where nombre='FormacionEspecifica6')" />
       <column name="organismo" value="Organismo6" />
       <column name="anio" value="2021" />
+      <column name="tipo_tarea_id" valueComputed="(select id from eti.tipo_tarea where nombre='Manipulación de animales')" />
     </insert>
   </changeSet>
 

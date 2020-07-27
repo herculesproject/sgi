@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.FormacionEspecifica;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Tarea;
+import org.crue.hercules.sgi.eti.model.TipoTarea;
 import org.crue.hercules.sgi.eti.service.TareaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
@@ -382,6 +383,11 @@ public class TareaControllerTest {
     FormacionEspecifica formacionEspecifica = new FormacionEspecifica();
     formacionEspecifica.setId(300L);
 
+    TipoTarea tipoTarea = new TipoTarea();
+    tipoTarea.setId(1L);
+    tipoTarea.setNombre("Eutanasia");
+    tipoTarea.setActivo(Boolean.TRUE);
+
     Tarea tarea = new Tarea();
     tarea.setId(id);
     tarea.setEquipoTrabajo(equipoTrabajo);
@@ -391,6 +397,7 @@ public class TareaControllerTest {
     tarea.setFormacionEspecifica(formacionEspecifica);
     tarea.setOrganismo("Organismo" + id);
     tarea.setAnio(2020);
+    tarea.setTipoTarea(tipoTarea);
 
     return tarea;
   }
