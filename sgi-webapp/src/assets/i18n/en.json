@@ -1,9 +1,12 @@
 {
   "botones": {
+    "buscar": "Search",
     "cancelar": "Cancel",
-    "guardar": "Save"
+    "guardar": "Save",
+    "limpiar": "Clean"
   },
   "breadcrumb": {
+    "actas": "Minutes",
     "actualizar": "Update",
     "agrupacionServicios": "Service groupings",
     "areaEspecializacion": "Areas of expertise",
@@ -378,6 +381,19 @@
           "cabecera": "Memories"
         },
         "titulo": "New record"
+      },
+      "listado": {
+        "comite": "Committee",
+        "convocatoria": "Call",
+        "editar": "Edit",
+        "error": "The list of minutes could not be loaded",
+        "estado": "State",
+        "fechaEvaluacion": "Evaluation Date",
+        "numeroActa": "Nº Minutes",
+        "numeroIniciales": "Nº Initials",
+        "numeroRevisiones": "Nº Revisions",
+        "numeroTotal": "Nº Total",
+        "titulo": "Minutes"
       }
     },
     "convocatoriaReunion": {
@@ -497,6 +513,7 @@
         "unidades-medida": "Measurement units"
       },
       "eti": {
+        "acta": "Minute",
         "areaEspecializacion": "Areas of expertise",
         "cvn": "My CVN",
         "datos": "My data",

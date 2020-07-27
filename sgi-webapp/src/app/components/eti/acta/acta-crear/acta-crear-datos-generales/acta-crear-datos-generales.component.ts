@@ -1,21 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Acta } from '@core/models/eti/acta';
-import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
+
+import { NGXLogger } from 'ngx-logger';
+import { Observable } from 'rxjs';
+
 import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
-import { ActaService } from '@core/services/eti/acta.service';
+
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { FormGroupUtil } from '@core/services/form-group-util';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { TraductorService } from '@core/services/traductor.service';
-import { ListResult } from '@core/services/types';
+
+;
+import { AbstractTabComponent } from '@shared/formularios-tabs/abstract-tab/abstract-tab.component';
+
 import { HoraValidador } from '@core/validators/hora-validator';
 import { MinutoValidador } from '@core/validators/minuto-validator';
 import { NullIdValidador } from '@core/validators/null-id-validador';
-import { AbstractTabComponent } from '@shared/formularios-tabs/abstract-tab/abstract-tab.component';
-import { NGXLogger } from 'ngx-logger';
-import { Observable } from 'rxjs';
+
+import { ListResult } from '@core/services/types'
+
+import { ActaService } from '@core/services/eti/acta.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { TraductorService } from '@core/services/traductor.service';
+
+import { Acta } from '@core/models/eti/acta';
+import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 
 @Component({
   selector: 'app-acta-crear-datos-generales',

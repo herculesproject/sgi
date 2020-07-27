@@ -2,54 +2,45 @@ import { Comite } from './comite';
 import { TipoConvocatoriaReunion } from './tipo-convocatoria-reunion';
 
 export class ConvocatoriaReunion {
-  /** Id */
-  id: number;
 
+  /** ID */
+  id: number;
   /** Comite */
   comite: Comite;
-
-  /** Fecha Evaluación */
+  /** Tipo Convocatoria Reunion */
+  tipoConvocatoriaReunion: TipoConvocatoriaReunion;
+  /** Fecha evaluación */
   fechaEvaluacion: Date;
-
-  /** Fecha Límite */
+  /** Hora fin */
+  horaInicio: number;
+  /** Minuto inicio */
+  minutoInicio: number;
+  /** Fecha Limite */
   fechaLimite: Date;
-
   /** Lugar */
   lugar: string;
-
-  /** Orden del día */
+  /** Orden día */
   ordenDia: string;
-
-  /** Código */
+  /** Código   */
   codigo: string;
-
-  /** Tipo Convocatoria Reunión */
-  tipoConvocatoriaReunion: TipoConvocatoriaReunion;
-
-  /** Hora Inicio */
-  horaInicio: number;
-
-  /** Minuto Inicio */
-  minutoInicio: number;
-
   /** Fecha Envío */
   fechaEnvio: Date;
-
-  /** Control de borrado lógico */
+  /** Activo */
   activo: boolean;
 
   constructor() {
     this.id = null;
-    this.comite = new Comite();
+    this.comite = null;
+    this.tipoConvocatoriaReunion = null;
     this.fechaEvaluacion = null;
+    this.horaInicio = null;
+    this.minutoInicio = null;
     this.fechaLimite = null;
-    this.lugar = '';
-    this.ordenDia = '';
-    this.codigo = '';
-    this.tipoConvocatoriaReunion = new TipoConvocatoriaReunion();
-    this.horaInicio = 0;
-    this.minutoInicio = 0;
+    this.lugar = null;
+    this.ordenDia = null;
+    this.codigo = null;
     this.fechaEnvio = null;
-    this.activo = false;
+    this.activo = true;
   }
+
 }

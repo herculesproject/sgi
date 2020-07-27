@@ -6,6 +6,7 @@
     "limpiar": "Limpiar"
   },
   "breadcrumb": {
+    "actas": "Actas",
     "actualizar": "Actualizar",
     "agrupacionServicios": "Agrupaciones de servicios",
     "areaEspecializacion": "Áreas de especialización",
@@ -380,6 +381,20 @@
           "cabecera": "Memorias"
         },
         "titulo": "Nueva acta"
+      },
+      "listado": {
+        "acciones": "Acciones",
+        "comite": "Comité",
+        "convocatoria": "Convocatoria",
+        "editar": "Editar",
+        "error": "No se ha podido cargar el listado de actas",
+        "estado": "Estado",
+        "fechaEvaluacion": "Fecha Evaluación",
+        "numeroActa": "Nº Acta",
+        "numeroIniciales": "Nº Iniciales",
+        "numeroRevisiones": "Nº Revisiones",
+        "numeroTotal": "Nº Total",
+        "titulo": "Actas"
       }
     },
     "convocatoriaReunion": {

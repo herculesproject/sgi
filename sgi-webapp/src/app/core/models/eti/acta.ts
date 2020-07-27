@@ -1,5 +1,5 @@
 import { ConvocatoriaReunion } from './convocatoria-reunion';
-import { EstadoActa } from './estado-acta';
+import { TipoEstadoActa } from './tipo-estado-acta';
 
 export class Acta {
   /** Id */
@@ -32,8 +32,8 @@ export class Acta {
   /** Activo */
   activo: boolean;
 
-  /** Estado Acta */
-  estadoActa: EstadoActa;
+  /** Estado Actual */
+  estadoActual: TipoEstadoActa;
 
   constructor() {
     this.id = null;
@@ -46,6 +46,6 @@ export class Acta {
     this.numero = 0;
     this.inactiva = false;
     this.activo = true;
-    this.estadoActa = new EstadoActa();
+    this.estadoActual = new TipoEstadoActa();
   }
 }

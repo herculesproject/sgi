@@ -2,7 +2,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import TestUtils from '@core/utils/test-utils';
 import { NGXLogger } from 'ngx-logger';
-import { TipoConvocatoriaReunionService } from './tipoConvocatoriaReunion.service';
+import { TipoConvocatoriaReunionService } from './tipo-convocatoria-reunion.service';
 
 
 describe('TipoConvocatoriaReunionService', () => {

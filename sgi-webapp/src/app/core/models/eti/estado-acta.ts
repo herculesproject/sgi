@@ -1,18 +1,22 @@
-import { TipoEstadoActa } from '@core/enums/eti/tipo-estado-acta';
+import { Acta } from './acta';
+import { TipoEstadoActa } from './tipo-estado-acta';
 
 export class EstadoActa {
-  /** Id */
+
+  /** ID */
   id: number;
-
-  /** Tipo Estado Acta  */
+  /** Acta */
+  acta: Acta;
+  /** Tipo estado acta */
   tipoEstadoActa: TipoEstadoActa;
-
   /** Fecha Estado */
   fechaEstado: Date;
 
   constructor() {
     this.id = null;
-    this.tipoEstadoActa = TipoEstadoActa.EN_ELABORACION;
+    this.tipoEstadoActa = null;
     this.fechaEstado = null;
+    this.acta = null;
   }
+
 }

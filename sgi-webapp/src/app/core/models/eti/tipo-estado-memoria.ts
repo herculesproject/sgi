@@ -1,5 +1,5 @@
 
-export class TipoConvocatoriaReunion {
+export class TipoEstadoMemoria {
 
   /** ID */
   id: number;

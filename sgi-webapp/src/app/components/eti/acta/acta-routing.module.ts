@@ -3,11 +3,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { UrlUtils } from '@core/utils/url-utils';
 
 import { ActaCrearComponent } from './acta-crear/acta-crear.component';
+import { ActaListadoComponent } from './acta-listado/acta-listado.component';
 
 const routes: Routes = [
   {
     path: UrlUtils.root.valueOf(),
-    component: null,
+    component: ActaListadoComponent,
   },
   {
     path: UrlUtils.crear.valueOf(),

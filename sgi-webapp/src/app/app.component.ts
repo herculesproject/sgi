@@ -1,7 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { LayoutService } from '@core/services/layout.service';
 import { NGXLogger } from 'ngx-logger';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',

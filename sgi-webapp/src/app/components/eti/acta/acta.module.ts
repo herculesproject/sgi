@@ -13,13 +13,15 @@ import {
 import { ActaCrearMemoriasComponent } from './acta-crear/acta-crear-memorias/acta-crear-memorias.component';
 import { ActaCrearComponent } from './acta-crear/acta-crear.component';
 import { ActaRoutingModule } from './acta-routing.module';
+import { ActaListadoComponent } from './acta-listado/acta-listado.component';
 
 @NgModule({
   declarations: [
     ActaCrearComponent,
     ActaCrearDatosGeneralesComponent,
     ActaCrearMemoriasComponent,
-    ActaCrearAsistentesComponent
+    ActaCrearAsistentesComponent,
+    ActaListadoComponent
   ],
   imports: [
     SharedModule,

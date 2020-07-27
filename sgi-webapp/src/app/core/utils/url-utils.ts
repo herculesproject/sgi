@@ -27,15 +27,18 @@ export class UrlUtils {
     cvn: 'cvn',
     datos: 'datos',
     empresasBaseTecnologica: 'empresasBaseTecnologica',
+    evaluacion: 'evaluaciones',
     evaluacionEtica: 'evaluacionEtica',
     gruposInvestigacion: 'gruposInvestigacion',
+    memorias: 'memorias',
     ofertaTecnologica: 'ofertaTecnologica',
     produccionCientifica: 'produccionCientifica',
     propiedadIntelectual: 'propiedadIntelectual',
     proyectos: 'proyectos',
     root: 'eti',
     solicitudesConvocatoria: 'solicitudesConvocatoria',
-    solicitudesSAI: 'solicitudesSAI'
+    solicitudesSAI: 'solicitudesSAI',
+    tipoEstadoActa: 'tipoestadoactas'
   };
 
   static pii = {

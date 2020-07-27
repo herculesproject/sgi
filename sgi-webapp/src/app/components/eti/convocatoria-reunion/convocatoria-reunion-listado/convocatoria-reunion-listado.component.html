@@ -80,6 +80,7 @@
     </button>
   </div>
 
+
   <!-- Listado de convocatorias reunión -->
   <table class="mat-elevation-z8 table-convocatoria-reunion" mat-table matSort
     [dataSource]="convocatoriaReunion$ | async" matSort matSortActive="id" matSortDirection="asc" matSortDisableClear>
@@ -162,6 +163,5 @@
   </table>
   <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
   </mat-paginator>
-
 </section>
 <!-- FIN Convocatoria reunion listado-->

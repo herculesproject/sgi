@@ -1,10 +1,12 @@
 
-export class TipoConvocatoriaReunion {
+export class TipoMemoria {
 
   /** ID */
   id: number;
+
   /** Nombre */
   nombre: string;
+
   /** Activo */
   activo: boolean;
 

@@ -18,7 +18,7 @@ import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties
 import { FormGroupUtil } from '@core/services/form-group-util';
 import { Comite } from '@core/models/eti/comite';
 import { ComiteService } from '@core/services/eti/comite.service';
-import { TipoConvocatoriaReunionService } from '@core/services/eti/tipoConvocatoriaReunion.service';
+import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocatoria-reunion.service';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
 
 @Component({
