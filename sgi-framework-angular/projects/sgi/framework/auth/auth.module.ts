@@ -1,4 +1,4 @@
-import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { NgModule, APP_INITIALIZER, ModuleWithProviders } from '@angular/core';
 import { HasAuthorityForAnyUODirective } from './directives/has-authority-for-any-uo.directive';
 import { IfAuthenticatedDirective } from './directives/if-authenticated.directive';
 import { HasAnyAuthorityForAnyUODirective } from './directives/has-any-authority-for-any-uo.directive';
@@ -24,24 +24,6 @@ import { SGI_AUTH_CONFIG } from './auth.config';
     HasAuthorityDirective,
     HasAnyAuthorityDirective,
   ],
-  providers: [
-    {
-      provide: SgiAuthService,
-      useFactory: authFactory,
-      deps: [SgiAuthMode, NGXLogger, Router, PlatformLocation],
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: authInitializer,
-      multi: true,
-      deps: [SgiAuthService, SGI_AUTH_CONFIG],
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: SgiAuthHttpInterceptor,
-      multi: true
-    }
-  ],
   exports: [
     HasAuthorityForAnyUODirective,
     IfAuthenticatedDirective,
@@ -50,4 +32,28 @@ import { SGI_AUTH_CONFIG } from './auth.config';
     HasAnyAuthorityDirective
   ]
 })
-export class SgiAuthModule { }
+export class SgiAuthModule {
+  static forRoot(): ModuleWithProviders<SgiAuthModule> {
+    return {
+      ngModule: SgiAuthModule,
+      providers: [
+        {
+          provide: SgiAuthService,
+          useFactory: authFactory,
+          deps: [SgiAuthMode, NGXLogger, Router, PlatformLocation],
+        },
+        {
+          provide: APP_INITIALIZER,
+          useFactory: authInitializer,
+          multi: true,
+          deps: [SgiAuthService, SGI_AUTH_CONFIG],
+        },
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: SgiAuthHttpInterceptor,
+          multi: true
+        }
+      ]
+    };
+  }
+}
