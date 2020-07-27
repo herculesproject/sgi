@@ -191,7 +191,7 @@
       <column name="codigo" value="Código PeticionEvaluacion1" />
       <column name="titulo" value="PeticionEvaluacion1" />
       <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='Proyecto de investigación')" />
-      <column name="fuente_financiacion_ref" value="Ref fuente financiacion" />
+      <column name="fuente_financiacion" value="Fuente financiación" />
       <column name="fecha_inicio" value="2020-07-09" />
       <column name="fecha_fin" value="2021-07-09" />
       <column name="resumen" value="Resumen" />
@@ -209,7 +209,7 @@
       <column name="codigo" value="Código PeticionEvaluacion2" />
       <column name="titulo" value="PeticionEvaluacion2" />
       <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='Proyecto de investigación')" />
-      <column name="fuente_financiacion_ref" value="Ref fuente financiacion" />
+      <column name="fuente_financiacion" value="Fuente financiación" />
       <column name="fecha_inicio" value="2020-07-09" />
       <column name="fecha_fin" value="2021-07-09" />
       <column name="resumen" value="Resumen" />
@@ -227,7 +227,7 @@
       <column name="codigo" value="Código PeticionEvaluacion3" />
       <column name="titulo" value="PeticionEvaluacion3" />
       <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='Práctica docente')" />
-      <column name="fuente_financiacion_ref" value="Ref fuente financiacion" />
+      <column name="fuente_financiacion" value="Fuente financiación" />
       <column name="fecha_inicio" value="2020-07-09" />
       <column name="fecha_fin" value="2021-07-09" />
       <column name="resumen" value="Resumen" />
@@ -245,7 +245,7 @@
       <column name="codigo" value="Código PeticionEvaluacion4" />
       <column name="titulo" value="PeticionEvaluacion4" />
       <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='Trabajo Fin de Máster')" />
-      <column name="fuente_financiacion_ref" value="Ref fuente financiacion" />
+      <column name="fuente_financiacion" value="Fuente financiación" />
       <column name="fecha_inicio" value="2020-07-09" />
       <column name="fecha_fin" value="2021-07-09" />
       <column name="resumen" value="Resumen" />
@@ -263,7 +263,7 @@
       <column name="codigo" value="Código PeticionEvaluacion5" />
       <column name="titulo" value="PeticionEvaluacion5" />
       <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='Trabajo Fin de Máster')" />
-      <column name="fuente_financiacion_ref" value="Ref fuente financiacion" />
+      <column name="fuente_financiacion" value="Fuente financiación" />
       <column name="fecha_inicio" value="2020-07-09" />
       <column name="fecha_fin" value="2021-07-09" />
       <column name="resumen" value="Resumen" />
@@ -281,7 +281,7 @@
       <column name="codigo" value="Código PeticionEvaluacion6" />
       <column name="titulo" value="PeticionEvaluacion6" />
       <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='Proyecto de investigación')" />
-      <column name="fuente_financiacion_ref" value="Ref fuente financiacion" />
+      <column name="fuente_financiacion" value="Fuente financiación" />
       <column name="fecha_inicio" value="2020-07-09" />
       <column name="fecha_fin" value="2021-07-09" />
       <column name="resumen" value="Resumen" />

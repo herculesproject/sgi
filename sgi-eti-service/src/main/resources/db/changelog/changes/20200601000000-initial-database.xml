@@ -167,7 +167,7 @@
       <column name="codigo" type="VARCHAR(250)" />
       <column name="titulo" type="VARCHAR(250)" />
       <column name="tipo_actividad_id" type="BIGINT" />
-      <column name="fuente_financiacion_ref" type="VARCHAR(250)" />
+      <column name="fuente_financiacion" type="VARCHAR(250)" />
       <column name="fecha_inicio" type="DATE" />
       <column name="fecha_fin" type="DATE" />
       <column name="resumen" type="VARCHAR(2000)" />

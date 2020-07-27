@@ -316,7 +316,7 @@ public class EquipoTrabajoIT {
     peticionEvaluacion.setExterno(Boolean.FALSE);
     peticionEvaluacion.setFechaFin(LocalDate.now());
     peticionEvaluacion.setFechaInicio(LocalDate.now());
-    peticionEvaluacion.setFuenteFinanciacionRef("Referencia fuente financiacion" + id);
+    peticionEvaluacion.setFuenteFinanciacion("Fuente financiación" + id);
     peticionEvaluacion.setObjetivos("Objetivos" + id);
     peticionEvaluacion.setOtroValorSocial("Otro valor social" + id);
     peticionEvaluacion.setResumen("Resumen" + id);

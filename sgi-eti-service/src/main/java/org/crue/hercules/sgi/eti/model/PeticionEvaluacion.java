@@ -58,9 +58,9 @@ public class PeticionEvaluacion extends BaseEntity {
   @JoinColumn(name = "tipo_actividad_id", nullable = true)
   private TipoActividad tipoActividad;
 
-  /** Referencia fuente financiacion */
-  @Column(name = "fuente_financiacion_ref", length = 250, nullable = false)
-  private String fuenteFinanciacionRef;
+  /** Fuente financiacion */
+  @Column(name = "fuente_financiacion", length = 250, nullable = false)
+  private String fuenteFinanciacion;
 
   /** Fecha Inicio. */
   @Column(name = "fecha_inicio")

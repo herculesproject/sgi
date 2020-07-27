@@ -133,7 +133,7 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
       peticionEvaluacion.setExterno(peticionEvaluacionActualizar.getExterno());
       peticionEvaluacion.setFechaFin(peticionEvaluacionActualizar.getFechaFin());
       peticionEvaluacion.setFechaInicio(peticionEvaluacionActualizar.getFechaInicio());
-      peticionEvaluacion.setFuenteFinanciacionRef(peticionEvaluacionActualizar.getFuenteFinanciacionRef());
+      peticionEvaluacion.setFuenteFinanciacion(peticionEvaluacionActualizar.getFuenteFinanciacion());
       peticionEvaluacion.setObjetivos(peticionEvaluacionActualizar.getObjetivos());
       peticionEvaluacion.setOtroValorSocial(peticionEvaluacionActualizar.getOtroValorSocial());
       peticionEvaluacion.setResumen(peticionEvaluacionActualizar.getResumen());

@@ -298,7 +298,7 @@ public class EvaluadorEvaluacionServiceTest {
     peticionEvaluacion.setExterno(Boolean.FALSE);
     peticionEvaluacion.setFechaFin(LocalDate.now());
     peticionEvaluacion.setFechaInicio(LocalDate.now());
-    peticionEvaluacion.setFuenteFinanciacionRef("Referencia fuente financiacion");
+    peticionEvaluacion.setFuenteFinanciacion("Fuente financiación");
     peticionEvaluacion.setObjetivos("Objetivos1");
     peticionEvaluacion.setOtroValorSocial("Otro valor social1");
     peticionEvaluacion.setResumen("Resumen");
