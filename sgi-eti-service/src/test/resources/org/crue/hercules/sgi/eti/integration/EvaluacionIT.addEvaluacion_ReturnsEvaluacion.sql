@@ -14,9 +14,19 @@ VALUES(2, 'PeticionEvaluacion1', 'Codigo', 'Ref solicitud convocatoria', 2, 'Fue
  -- TIPO ESTADO MEMORIA 
 INSERT INTO eti.tipo_estado_memoria (id, nombre, activo) VALUES (1, 'En elaboración', true);
 
+-- ESTADO RETROSPECTIVA
+INSERT INTO ETI.ESTADO_RETROSPECTIVA
+(ID, NOMBRE, ACTIVO)
+VALUES(1, 'EstadoRetrospectiva01', true);
+
+-- RETROSPECTIVA
+INSERT INTO ETI.RETROSPECTIVA
+(ID, ESTADO_RETROSPECTIVA_ID, FECHA_RETROSPECTIVA)
+VALUES(1, 1, '2020-07-01');        
+
 -- MEMORIA 
-INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, usuario_ref, tipo_memoria_id, fecha_envio_secretaria, requiere_retrospectiva, fecha_retrospectiva, version, estado_actual_id)
- VALUES (2, 'ref-5588', 2, 2, 'Memoria1', 'userref-55698', 2, null, false, null, 1, 1);
+INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, usuario_ref, tipo_memoria_id, estado_actual_id, fecha_envio_secretaria, requiere_retrospectiva, retrospectiva_id, version, activo)
+ VALUES (2, 'ref-5588', 2, 2, 'Memoria1', 'userref-55698', 2, 1, null, false, 1, 1, true);
 
  -- DICTAMEN
 INSERT INTO eti.dictamen (id, nombre, activo) VALUES (2, 'Dictamen1', true);

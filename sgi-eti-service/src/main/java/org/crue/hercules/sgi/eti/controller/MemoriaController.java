@@ -124,7 +124,9 @@ public class MemoriaController {
   @PreAuthorize("hasAuthorityForAnyUO('ETI-MEMORIA-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
-    service.delete(id);
+    Memoria memoria = this.one(id);
+    memoria.setActivo(Boolean.FALSE);
+    service.update(memoria);
     log.debug("delete(Long id) - end");
   }
 

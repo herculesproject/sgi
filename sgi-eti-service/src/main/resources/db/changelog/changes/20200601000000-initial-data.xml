@@ -468,6 +468,61 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-estado_retrospectiva">
+    <insert tableName="estado_retrospectiva">
+      <column name="id" value="1" />
+      <column name="nombre" value="Pendiente" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="estado_retrospectiva">
+      <column name="id" value="2" />
+      <column name="nombre" value="Completada" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="estado_retrospectiva">
+      <column name="id" value="3" />
+      <column name="nombre" value="En secretaría" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="estado_retrospectiva">
+      <column name="id" value="4" />
+      <column name="nombre" value="En evaluación" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="estado_retrospectiva">
+      <column name="id" value="5" />
+      <column name="nombre" value="Fin evaluación" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-retrospectiva">
+    <insert tableName="retrospectiva">
+      <column name="estado_retrospectiva_id" valueComputed="(select id from eti.estado_retrospectiva where nombre='Pendiente')" />
+      <column name="fecha_retrospectiva" value="2020-07-01" />
+    </insert>
+    <insert tableName="retrospectiva">
+      <column name="estado_retrospectiva_id" valueComputed="(select id from eti.estado_retrospectiva where nombre='Completada')" />
+      <column name="fecha_retrospectiva" value="2020-07-05" />
+    </insert>
+    <insert tableName="retrospectiva">
+      <column name="estado_retrospectiva_id" valueComputed="(select id from eti.estado_retrospectiva where nombre='En secretaría')" />
+      <column name="fecha_retrospectiva" value="2020-07-10" />
+    </insert>
+    <insert tableName="retrospectiva">
+      <column name="estado_retrospectiva_id" valueComputed="(select id from eti.estado_retrospectiva where nombre='En evaluación')" />
+      <column name="fecha_retrospectiva" value="2020-07-15" />
+    </insert>
+    <insert tableName="retrospectiva">
+      <column name="estado_retrospectiva_id" valueComputed="(select id from eti.estado_retrospectiva where nombre='Fin evaluación')" />
+      <column name="fecha_retrospectiva" value="2020-07-20" />
+    </insert>
+    <insert tableName="retrospectiva">
+      <column name="estado_retrospectiva_id" valueComputed="(select id from eti.estado_retrospectiva where nombre='Pendiente')" />
+      <column name="fecha_retrospectiva" value="2020-07-25" />
+    </insert>
+  </changeSet>
+
   <changeSet author="master" id="20200601000000-memoria">
     <insert tableName="memoria">
       <column name="num_referencia" value="ref-134" />
@@ -476,11 +531,12 @@
       <column name="titulo" value="Memoria1" />
       <column name="usuario_ref" value="user-8984" />
       <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria1')" />
+      <column name="estado_actual_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='En secretaría')" />
       <column name="fecha_envio_secretaria" value="2020-07-09" />
       <column name="requiere_retrospectiva" value="true" />
-      <column name="fecha_retrospectiva" value="2021-07-09" />
+      <column name="retrospectiva_id" valueComputed="(select id from eti.retrospectiva where id=1)" />
       <column name="version" value="1" />
-      <column name="estado_actual_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='En secretaría')" />
+      <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
       <column name="num_referencia" value="ref-234" />
@@ -489,11 +545,12 @@
       <column name="titulo" value="Memoria2" />
       <column name="usuario_ref" value="user-9984" />
       <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria1')" />
+      <column name="estado_actual_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='Completada')" />
       <column name="fecha_envio_secretaria" value="2020-06-09" />
       <column name="requiere_retrospectiva" value="false" />
-      <column name="fecha_retrospectiva" value="null" />
+      <column name="retrospectiva_id" valueComputed="(select id from eti.retrospectiva where id=2)" />
       <column name="version" value="5" />
-      <column name="estado_actual_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='Completada')" />
+      <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
       <column name="num_referencia" value="ref-934" />
@@ -502,11 +559,12 @@
       <column name="titulo" value="Memoria3" />
       <column name="usuario_ref" value="user-852" />
       <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria2')" />
+      <column name="estado_actual_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='Fin evaluación')" />
       <column name="fecha_envio_secretaria" value="2020-06-09" />
       <column name="requiere_retrospectiva" value="true" />
-      <column name="fecha_retrospectiva" value="2020-06-20" />
+      <column name="retrospectiva_id" valueComputed="(select id from eti.retrospectiva where id=3)" />
       <column name="version" value="2" />
-      <column name="estado_actual_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='Fin evaluación')" />
+      <column name="activo" value="true" />
     </insert>
   </changeSet>
 
@@ -1393,61 +1451,6 @@
       <column name="id" value="3" />
       <column name="nombre" value="Manipulación de animales" />
       <column name="activo" value="true" />
-    </insert>
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-estado_retrospectiva">
-    <insert tableName="estado_retrospectiva">
-      <column name="id" value="1" />
-      <column name="nombre" value="Pendiente" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="estado_retrospectiva">
-      <column name="id" value="2" />
-      <column name="nombre" value="Completada" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="estado_retrospectiva">
-      <column name="id" value="3" />
-      <column name="nombre" value="En secretaría" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="estado_retrospectiva">
-      <column name="id" value="4" />
-      <column name="nombre" value="En evaluación" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="estado_retrospectiva">
-      <column name="id" value="5" />
-      <column name="nombre" value="Fin evaluación" />
-      <column name="activo" value="true" />
-    </insert>
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-retrospectiva">
-    <insert tableName="retrospectiva">
-      <column name="estado_retrospectiva_id" valueComputed="(select id from eti.estado_retrospectiva where nombre='Pendiente')" />
-      <column name="fecha_retrospectiva" value="2020-07-01" />
-    </insert>
-    <insert tableName="retrospectiva">
-      <column name="estado_retrospectiva_id" valueComputed="(select id from eti.estado_retrospectiva where nombre='Completada')" />
-      <column name="fecha_retrospectiva" value="2020-07-05" />
-    </insert>
-    <insert tableName="retrospectiva">
-      <column name="estado_retrospectiva_id" valueComputed="(select id from eti.estado_retrospectiva where nombre='En secretaría')" />
-      <column name="fecha_retrospectiva" value="2020-07-10" />
-    </insert>
-    <insert tableName="retrospectiva">
-      <column name="estado_retrospectiva_id" valueComputed="(select id from eti.estado_retrospectiva where nombre='En evaluación')" />
-      <column name="fecha_retrospectiva" value="2020-07-15" />
-    </insert>
-    <insert tableName="retrospectiva">
-      <column name="estado_retrospectiva_id" valueComputed="(select id from eti.estado_retrospectiva where nombre='Fin evaluación')" />
-      <column name="fecha_retrospectiva" value="2020-07-20" />
-    </insert>
-    <insert tableName="retrospectiva">
-      <column name="estado_retrospectiva_id" valueComputed="(select id from eti.estado_retrospectiva where nombre='Pendiente')" />
-      <column name="fecha_retrospectiva" value="2020-07-25" />
     </insert>
   </changeSet>
 

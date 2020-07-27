@@ -9,8 +9,10 @@ import java.time.LocalDate;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
@@ -256,8 +258,9 @@ public class MemoriaServiceTest {
 
     return new Memoria(id, numReferencia, generarMockPeticionEvaluacion(id, titulo + " PeticionEvaluacion" + id),
         generarMockComite(id, "comite" + id, true), titulo, "user-00" + id,
-        generarMockTipoMemoria(1L, "TipoMemoria1", true), LocalDate.now(), Boolean.TRUE, LocalDate.now(), version,
-        generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE));
+        generarMockTipoMemoria(1L, "TipoMemoria1", true),
+        generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.TRUE,
+        generarMockRetrospectiva(1L), version, Boolean.TRUE);
   }
 
   /**
@@ -329,6 +332,40 @@ public class MemoriaServiceTest {
   private TipoEstadoMemoria generarMockTipoEstadoMemoria(Long id, String nombre, Boolean activo) {
     return new TipoEstadoMemoria(id, nombre, activo);
 
+  }
+
+  /**
+   * Genera un objeto {@link Retrospectiva}
+   * 
+   * @param id
+   * @return Retrospectiva
+   */
+  private Retrospectiva generarMockRetrospectiva(Long id) {
+
+    final Retrospectiva data = new Retrospectiva();
+    data.setId(id);
+    data.setEstadoRetrospectiva(generarMockDataEstadoRetrospectiva((id % 2 == 0) ? 2L : 1L));
+    data.setFechaRetrospectiva(LocalDate.of(2020, 7, id.intValue()));
+
+    return data;
+  }
+
+  /**
+   * Genera un objeto {@link EstadoRetrospectiva}
+   * 
+   * @param id
+   * @return EstadoRetrospectiva
+   */
+  private EstadoRetrospectiva generarMockDataEstadoRetrospectiva(Long id) {
+
+    String txt = (id % 2 == 0) ? String.valueOf(id) : "0" + String.valueOf(id);
+
+    final EstadoRetrospectiva data = new EstadoRetrospectiva();
+    data.setId(id);
+    data.setNombre("NombreEstadoRetrospectiva" + txt);
+    data.setActivo(Boolean.TRUE);
+
+    return data;
   }
 
 }

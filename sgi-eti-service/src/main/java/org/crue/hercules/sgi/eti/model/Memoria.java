@@ -76,6 +76,12 @@ public class Memoria extends BaseEntity {
   @NotNull
   private TipoMemoria tipoMemoria;
 
+  /** Estado Memoria Actual */
+  @OneToOne
+  @JoinColumn(name = "estado_actual_id", nullable = false)
+  @NotNull
+  private TipoEstadoMemoria estadoActual;
+
   /** Fecha envio secretaria. */
   @Column(name = "fecha_envio_secretaria")
   private LocalDate fechaEnvioSecretaria;
@@ -85,19 +91,19 @@ public class Memoria extends BaseEntity {
   @NotNull
   private Boolean requiereRetrospectiva;
 
-  /** Fecha retrospectiva. */
-  @Column(name = "fecha_retrospectiva")
-  private LocalDate fechaRetrospectiva;
+  /** Retrospectiva. */
+  @OneToOne
+  @JoinColumn(name = "retrospectiva_id", nullable = false)
+  @NotNull
+  private Retrospectiva retrospectiva;
 
   /** Version */
   @Column(name = "version", nullable = false)
   @NotNull
   private Integer version;
 
-  /** Estado Memoria Actual */
-  @OneToOne
-  @JoinColumn(name = "estado_actual_id", nullable = false)
-  @NotNull
-  private TipoEstadoMemoria estadoActual;
+  /** Activo */
+  @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)
+  private Boolean activo;
 
 }
