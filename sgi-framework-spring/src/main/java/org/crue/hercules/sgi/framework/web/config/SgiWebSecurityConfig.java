@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.framework.web.config;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -111,6 +112,12 @@ public class SgiWebSecurityConfig extends WebSecurityConfigurerAdapter {
       public Collection<GrantedAuthority> convert(final Jwt jwt) {
         log.debug("convert(final Jwt jwt) - start");
         final Map<String, Object> realmAccess = (Map<String, Object>) jwt.getClaims().get("realm_access");
+        if (realmAccess == null) {
+          Collection<GrantedAuthority> returnValue = new ArrayList<>();
+          log.warn("No realm_acces found in token");
+          log.debug("convert(final Jwt jwt) - end");
+          return returnValue;
+        }
         Collection<GrantedAuthority> returnValue = ((List<String>) realmAccess.get("roles")).stream()
             .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
         log.debug("convert(final Jwt jwt) - end");
