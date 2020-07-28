@@ -10,10 +10,13 @@ import org.crue.hercules.sgi.framework.data.sort.SortOperation;
 
 import org.springframework.core.convert.converter.Converter;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * A converter converts a source object of type {@code String} to a target of
  * type {@code List<SortCriteria>}.
  */
+@Slf4j
 public class SortCriteriaConverter implements Converter<String, List<SortCriteria>> {
   private static String wordRegex = "[A-Za-z0-9_ñÑ]*";
   private static String operatorRegex = "(\\+|-)";
@@ -33,6 +36,7 @@ public class SortCriteriaConverter implements Converter<String, List<SortCriteri
    */
   @Override
   public List<SortCriteria> convert(String source) {
+    log.debug("convert(String source) - start");
     List<SortCriteria> sortCriterias = new ArrayList<>();
     if (source != null) {
       Matcher matcher = sortPattern.matcher(source.replace(' ', '+') + ",");
@@ -43,6 +47,7 @@ public class SortCriteriaConverter implements Converter<String, List<SortCriteri
         sortCriterias.add(sortCriteria);
       }
     }
+    log.debug("convert(String source) - end");
     return sortCriterias;
   }
 

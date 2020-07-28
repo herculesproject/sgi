@@ -18,10 +18,12 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.CUSTOM, property = "error", visible = true)
 @JsonTypeIdResolver(LowerCaseClassNameResolver.class)
+@Slf4j
 public class Error {
 
   private HttpStatus status;
@@ -32,19 +34,25 @@ public class Error {
 
   public Error(HttpStatus status) {
     this(status, null);
+    log.debug("Error(HttpStatus status) - start");
+    log.debug("Error(HttpStatus status) - end");
   }
 
   public Error(HttpStatus status, Throwable ex) {
     this(status, "Unexpected error", ex);
+    log.debug("Error(HttpStatus status, Throwable ex) - start");
+    log.debug("Error(HttpStatus status, Throwable ex) - end");
   }
 
   public Error(HttpStatus status, String message, Throwable ex) {
+    log.debug("Error(HttpStatus status, String message, Throwable ex) - start");
     timestamp = ZonedDateTime.now();
     this.status = status;
     this.message = message;
     if (ex != null) {
       this.debugMessage = ExceptionUtils.getStackTrace(ex);
     }
+    log.debug("Error(HttpStatus status, String message, Throwable ex) - end");
   }
 
   /**
@@ -53,11 +61,13 @@ public class Error {
    * @param validationError the {@link ValidationError}
    */
   private void addValidationError(ValidationError validationError) {
+    log.debug("addValidationError(ValidationError validationError) - start");
     if (validationErrors == null) {
       validationErrors = new ArrayList<>();
     }
 
     validationErrors.add(validationError);
+    log.debug("addValidationError(ValidationError validationError) - end");
   }
 
   /**
@@ -79,7 +89,9 @@ public class Error {
    * @param message the error message
    */
   private void addValidationError(String object, String message) {
+    log.debug("addValidationError(String object, String message) - start");
     addValidationError(new ValidationError(object, message));
+    log.debug("addValidationError(String object, String message) - end");
   }
 
   /**
@@ -88,8 +100,10 @@ public class Error {
    * @param fieldError the FieldError
    */
   private void addValidationError(FieldError fieldError) {
+    log.debug("addValidationError(FieldError fieldError) - start");
     this.addValidationError(fieldError.getObjectName(), fieldError.getField(), fieldError.getRejectedValue(),
         fieldError.getDefaultMessage());
+    log.debug("addValidationError(FieldError fieldError) - end");
   }
 
   /**
@@ -98,7 +112,9 @@ public class Error {
    * @param fieldErrors the FieldErrors
    */
   public void addValidationErrors(List<FieldError> fieldErrors) {
+    log.debug("addValidationErrors(List<FieldError> fieldErrors) - start");
     fieldErrors.forEach(this::addValidationError);
+    log.debug("addValidationErrors(List<FieldError> fieldErrors) - end");
   }
 
   /**
@@ -107,7 +123,9 @@ public class Error {
    * @param objectError the ObjectError
    */
   private void addValidationError(ObjectError objectError) {
+    log.debug("addValidationError(ObjectError objectError) - start");
     this.addValidationError(objectError.getObjectName(), objectError.getDefaultMessage());
+    log.debug("addValidationError(ObjectError objectError) - end");
   }
 
   /**
@@ -116,7 +134,9 @@ public class Error {
    * @param globalErrors the ObjectErrors
    */
   public void addValidationError(List<ObjectError> globalErrors) {
+    log.debug("addValidationError(List<ObjectError> globalErrors) - start");
     globalErrors.forEach(this::addValidationError);
+    log.debug("addValidationError(List<ObjectError> globalErrors) - end");
   }
 
   /**
@@ -126,8 +146,10 @@ public class Error {
    * @param cv the ConstraintViolation
    */
   private void addValidationError(ConstraintViolation<?> cv) {
+    log.debug("addValidationError(ConstraintViolation<?> cv) - start");
     this.addValidationError(cv.getRootBeanClass().getSimpleName(),
         ((PathImpl) cv.getPropertyPath()).getLeafNode().asString(), cv.getInvalidValue(), cv.getMessage());
+    log.debug("addValidationError(ConstraintViolation<?> cv) - end");
   }
 
   /**
@@ -137,7 +159,9 @@ public class Error {
    * @param constraintViolations the ConstraintViolations
    */
   public void addValidationErrors(Set<ConstraintViolation<?>> constraintViolations) {
+    log.debug("addValidationErrors(Set<ConstraintViolation<?>> constraintViolations) - start");
     constraintViolations.forEach(this::addValidationError);
+    log.debug("addValidationErrors(Set<ConstraintViolation<?>> constraintViolations) - end");
   }
 
 }

@@ -16,8 +16,10 @@ import org.crue.hercules.sgi.framework.exception.IllegalSpecificationArgumentExc
 import org.crue.hercules.sgi.framework.exception.UnsupportedSpecificationOperationException;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @AllArgsConstructor
+@Slf4j
 public class QuerySpecification<T> extends StringDynamicSpecification<T> {
   private static final long serialVersionUID = 1L;
 
@@ -34,9 +36,13 @@ public class QuerySpecification<T> extends StringDynamicSpecification<T> {
    */
   @Override
   public Predicate toPredicate(Root<T> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
+    log.debug("toPredicate(Root<T> root, CriteriaQuery<?> cq, CriteriaBuilder cb) - start");
     if (query == null || query.isEmpty()) {
+      log.info("Query is empty");
+      log.debug("toPredicate(Root<T> root, CriteriaQuery<?> cq, CriteriaBuilder cb) - end");
       return null;
     }
+    log.debug("toPredicate(Root<T> root, CriteriaQuery<?> cq, CriteriaBuilder cb) - end");
     return cb.and(getPredicates(cb, root, query).toArray(new Predicate[] {}));
   }
 
@@ -58,6 +64,7 @@ public class QuerySpecification<T> extends StringDynamicSpecification<T> {
    */
   private List<Predicate> getPredicates(CriteriaBuilder cb, Root<T> root, List<QueryCriteria> criterias)
       throws IllegalSpecificationArgumentException, UnsupportedSpecificationOperationException {
+    log.debug("getPredicates(CriteriaBuilder cb, Root<T> root, List<QueryCriteria> criterias) - start");
     List<Predicate> predicates = new ArrayList<>();
     for (QueryCriteria criteria : criterias) {
       Path<?> path = getPath(root, criteria.getKey());
@@ -67,6 +74,7 @@ public class QuerySpecification<T> extends StringDynamicSpecification<T> {
         predicates.add(predicate);
       }
     }
+    log.debug("getPredicates(CriteriaBuilder cb, Root<T> root, List<QueryCriteria> criterias) - end");
     return predicates;
   }
 
@@ -85,24 +93,44 @@ public class QuerySpecification<T> extends StringDynamicSpecification<T> {
    */
   private Predicate getPredicate(CriteriaBuilder cb, Expression<?> field, Object value, QueryOperation op)
       throws UnsupportedSpecificationOperationException {
+    log.debug("getPredicate(CriteriaBuilder cb, Expression<?> field, Object value, QueryOperation op) - start");
+    Predicate predicate = null;
     switch (op) {
       case EQUALS:
-        return buildEqual(cb, field, value);
+        predicate = buildEqual(cb, field, value);
+        log.debug("getPredicate(CriteriaBuilder cb, Expression<?> field, Object value, QueryOperation op) - end");
+        return predicate;
       case NOT_EQUALS:
-        return buildNotEqual(cb, field, value);
+        predicate = buildNotEqual(cb, field, value);
+        log.debug("getPredicate(CriteriaBuilder cb, Expression<?> field, Object value, QueryOperation op) - end");
+        return predicate;
       case LOWER_OR_EQUAL:
-        return buildLessThanOrEqual(cb, field, value);
+        predicate = buildLessThanOrEqual(cb, field, value);
+        log.debug("getPredicate(CriteriaBuilder cb, Expression<?> field, Object value, QueryOperation op) - end");
+        return predicate;
       case GREATER_OR_EQUAL:
-        return buildGreaterThanOrEqual(cb, field, value);
+        predicate = buildGreaterThanOrEqual(cb, field, value);
+        log.debug("getPredicate(CriteriaBuilder cb, Expression<?> field, Object value, QueryOperation op) - end");
+        return predicate;
       case LIKE:
-        return buildContains(cb, field, value);
+        predicate = buildContains(cb, field, value);
+        log.debug("getPredicate(CriteriaBuilder cb, Expression<?> field, Object value, QueryOperation op) - end");
+        return predicate;
       case NOT_LIKE:
-        return buildNotContains(cb, field, value);
+        predicate = buildNotContains(cb, field, value);
+        log.debug("getPredicate(CriteriaBuilder cb, Expression<?> field, Object value, QueryOperation op) - end");
+        return predicate;
       case LOWER:
-        return buildLessThan(cb, field, value);
+        predicate = buildLessThan(cb, field, value);
+        log.debug("getPredicate(CriteriaBuilder cb, Expression<?> field, Object value, QueryOperation op) - end");
+        return predicate;
       case GREATER:
-        return buildGreaterThan(cb, field, value);
+        predicate = buildGreaterThan(cb, field, value);
+        log.debug("getPredicate(CriteriaBuilder cb, Expression<?> field, Object value, QueryOperation op) - end");
+        return predicate;
       default:
+        log.warn("Unknown query operation");
+        log.debug("getPredicate(CriteriaBuilder cb, Expression<?> field, Object value, QueryOperation op) - end");
         return null;
     }
   }

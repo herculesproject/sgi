@@ -30,7 +30,10 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class SgiWebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired
   private ObjectMapper mapper;
@@ -40,6 +43,7 @@ public class SgiWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
+    log.debug("configure(HttpSecurity http) - start");
     // @formatter:off
     http
         // CSRF protection by cookie
@@ -76,42 +80,66 @@ public class SgiWebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
       .and();
     // @formatter:on
+    log.debug("configure(HttpSecurity http) - end");
   }
 
   protected OAuth2UserService<OidcUserRequest, OidcUser> keycloakOidcUserService() {
-    return new KeycloakOidcUserService(jwtDecoder, jwtAuthenticationConverter());
+    log.debug("keycloakOidcUserService() - start");
+    OAuth2UserService<OidcUserRequest, OidcUser> returnValue = new KeycloakOidcUserService(jwtDecoder,
+        jwtAuthenticationConverter());
+    log.debug("keycloakOidcUserService() - start");
+    return returnValue;
   }
 
   protected JwtAuthenticationConverter jwtAuthenticationConverter() {
+    log.debug("jwtAuthenticationConverter() - start");
     JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
     // Convert realm_access.roles claims to granted authorities, for use in access
     // decisions
     jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter());
+    log.debug("jwtAuthenticationConverter() - end");
     return jwtAuthenticationConverter;
   }
 
   protected Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter() {
-    return new Converter<Jwt, Collection<GrantedAuthority>>() {
+    log.debug("jwtGrantedAuthoritiesConverter() - start");
+    Converter<Jwt, Collection<GrantedAuthority>> returnValue = new Converter<Jwt, Collection<GrantedAuthority>>() {
+      private final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Converter.class);
+
       @Override
       @SuppressWarnings("unchecked")
       public Collection<GrantedAuthority> convert(final Jwt jwt) {
+        log.debug("convert(final Jwt jwt) - start");
         final Map<String, Object> realmAccess = (Map<String, Object>) jwt.getClaims().get("realm_access");
-        return ((List<String>) realmAccess.get("roles")).stream().map(SimpleGrantedAuthority::new)
-            .collect(Collectors.toList());
+        Collection<GrantedAuthority> returnValue = ((List<String>) realmAccess.get("roles")).stream()
+            .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        log.debug("convert(final Jwt jwt) - end");
+        return returnValue;
       }
     };
+    log.debug("jwtGrantedAuthoritiesConverter() - end");
+    return returnValue;
   }
 
   protected AccessDeniedHandler accessDeniedHandler() {
-    return new SgiAccessDeniedHandler(mapper);
+    log.debug("accessDeniedHandler() - start");
+    AccessDeniedHandler returnValue = new SgiAccessDeniedHandler(mapper);
+    log.debug("accessDeniedHandler() - end");
+    return returnValue;
   }
 
   protected AuthenticationEntryPoint authenticationEntryPoint() {
-    return new SgiAuthenticationEntryPoint(mapper);
+    log.debug("authenticationEntryPoint() - start");
+    AuthenticationEntryPoint returnValue = new SgiAuthenticationEntryPoint(mapper);
+    log.debug("authenticationEntryPoint() - end");
+    return returnValue;
   }
 
   protected KeycloakLogoutHandler keycloakLogoutHandler() {
-    return new KeycloakLogoutHandler(new RestTemplate());
+    log.debug("keycloakLogoutHandler() - start");
+    KeycloakLogoutHandler returnValue = new KeycloakLogoutHandler(new RestTemplate());
+    log.debug("keycloakLogoutHandler() - end");
+    return returnValue;
   }
 
 }

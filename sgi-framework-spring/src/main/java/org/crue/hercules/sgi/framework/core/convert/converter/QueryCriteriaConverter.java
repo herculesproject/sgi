@@ -10,10 +10,13 @@ import org.crue.hercules.sgi.framework.data.search.QueryOperation;
 
 import org.springframework.core.convert.converter.Converter;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * A converter converts a source object of type {@code String} to a target of
  * type {@code List<QueryCriteria>}.
  */
+@Slf4j
 public class QueryCriteriaConverter implements Converter<String, List<QueryCriteria>> {
   private static String wordRegex = "[A-Za-z0-9_ñÑ\\.]*";
   private static String valueRegex = "[A-Za-z0-9_áéíóúäëïöüÁÉÍÓÚÄËÏÖÜñÑ\\-\\.%\\s:]+";
@@ -34,6 +37,7 @@ public class QueryCriteriaConverter implements Converter<String, List<QueryCrite
    */
   @Override
   public List<QueryCriteria> convert(String source) {
+    log.debug("convert(String source) - start");
     List<QueryCriteria> searchCriterias = new ArrayList<>();
     if (source != null) {
       Matcher matcher = searchPattern.matcher(source + ",");
@@ -45,6 +49,7 @@ public class QueryCriteriaConverter implements Converter<String, List<QueryCrite
         searchCriterias.add(searchCriteria);
       }
     }
+    log.debug("convert(String source) - end");
     return searchCriterias;
   }
 

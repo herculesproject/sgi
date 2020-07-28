@@ -19,21 +19,24 @@ import lombok.extern.slf4j.Slf4j;
  * Necessary because Spring Security 5 (currently) doesn't support
  * end-session-endpoints.
  */
-@Slf4j
 @RequiredArgsConstructor
+@Slf4j
 public class KeycloakLogoutHandler extends SecurityContextLogoutHandler {
 
   private final RestTemplate restTemplate;
 
   @Override
   public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+    log.debug(
+        "logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) - start");
     super.logout(request, response, authentication);
 
     propagateLogoutToKeycloak((OidcUser) authentication.getPrincipal());
+    log.debug("logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) - end");
   }
 
   private void propagateLogoutToKeycloak(OidcUser user) {
-
+    log.debug("propagateLogoutToKeycloak(OidcUser user) - start");
     String endSessionEndpoint = user.getIssuer() + "/protocol/openid-connect/logout";
 
     UriComponentsBuilder builder = UriComponentsBuilder //
@@ -46,5 +49,6 @@ public class KeycloakLogoutHandler extends SecurityContextLogoutHandler {
     } else {
       log.info("Could not propagate logout to Keycloak");
     }
+    log.debug("propagateLogoutToKeycloak(OidcUser user) - end");
   }
 }

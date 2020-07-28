@@ -26,18 +26,23 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.multipart.support.MultipartResolutionDelegate;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Resolves method parameters into argument values in the context of a given
  * request.
  *
  * @see HandlerMethodReturnValueHandler
  */
+@Slf4j
 public class RequestPageableArgumentResolver implements HandlerMethodArgumentResolver {
 
   private SortCriteriaConverter converter;
 
   public RequestPageableArgumentResolver(SortCriteriaConverter converter) {
+    log.debug("RequestPageableArgumentResolver(SortCriteriaConverter converter) - start");
     this.converter = converter;
+    log.debug("RequestPageableArgumentResolver(SortCriteriaConverter converter) - end");
   }
 
   /**
@@ -50,8 +55,11 @@ public class RequestPageableArgumentResolver implements HandlerMethodArgumentRes
    */
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
-    return (parameter.hasParameterAnnotation(RequestPageable.class)
+    log.debug("supportsParameter(MethodParameter parameter) - start");
+    boolean returnValue = (parameter.hasParameterAnnotation(RequestPageable.class)
         && Pageable.class.isAssignableFrom(parameter.getNestedParameterType()));
+    log.debug("supportsParameter(MethodParameter parameter) - end");
+    return returnValue;
   }
 
   /**
@@ -73,6 +81,8 @@ public class RequestPageableArgumentResolver implements HandlerMethodArgumentRes
   @Override
   public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
       NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    log.debug(
+        "resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) - start");
     MethodParameter nestedParameter = parameter.nestedIfOptional();
     RequestPageable requestPageable = parameter.getParameterAnnotation(RequestPageable.class);
     String xPage = webRequest.getHeader(requestPageable.pageHeader());
@@ -90,14 +100,20 @@ public class RequestPageableArgumentResolver implements HandlerMethodArgumentRes
     }
 
     if (xPageSize == null) {
-      return new UnpagedPageable(sort);
+      Object returnValue = new UnpagedPageable(sort);
+      log.debug(
+          "resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) - start");
+      return returnValue;
     }
     if (xPage == null) {
       xPage = "0";
     }
 
     // Use provided page size and short info
-    return PageRequest.of(Integer.parseInt(xPage), Integer.parseInt(xPageSize), sort);
+    Object returnValue = PageRequest.of(Integer.parseInt(xPage), Integer.parseInt(xPageSize), sort);
+    log.debug(
+        "resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) - start");
+    return returnValue;
   }
 
   /**
@@ -109,10 +125,11 @@ public class RequestPageableArgumentResolver implements HandlerMethodArgumentRes
    */
   protected Object resolveName(String name, MethodParameter parameter, NativeWebRequest request) throws Exception {
     HttpServletRequest servletRequest = request.getNativeRequest(HttpServletRequest.class);
-
+    log.debug("resolveName(String name, MethodParameter parameter, NativeWebRequest request) - start");
     if (servletRequest != null) {
       Object mpArg = MultipartResolutionDelegate.resolveMultipartArgument(name, parameter, servletRequest);
       if (mpArg != MultipartResolutionDelegate.UNRESOLVABLE) {
+        log.debug("resolveName(String name, MethodParameter parameter, NativeWebRequest request) - end");
         return mpArg;
       }
     }
@@ -131,6 +148,7 @@ public class RequestPageableArgumentResolver implements HandlerMethodArgumentRes
         arg = (paramValues.length == 1 ? paramValues[0] : paramValues);
       }
     }
+    log.debug("resolveName(String name, MethodParameter parameter, NativeWebRequest request) - end");
     return arg;
   }
 
@@ -139,7 +157,8 @@ public class RequestPageableArgumentResolver implements HandlerMethodArgumentRes
    * @return List<Sort>
    */
   private List<Sort> generateSortList(List<SortCriteria> criteria) {
-    return criteria.stream().map((criterion) -> {
+    log.debug("generateSortList(List<SortCriteria> criteria) - start");
+    List<Sort> returnValue = criteria.stream().map((criterion) -> {
       switch (criterion.getOperation()) {
         case ASC:
           return Sort.by(Order.asc(criterion.getKey()));
@@ -149,6 +168,8 @@ public class RequestPageableArgumentResolver implements HandlerMethodArgumentRes
           return null;
       }
     }).filter((sort) -> sort != null).collect(Collectors.toList());
+    log.debug("generateSortList(List<SortCriteria> criteria) - end");
+    return returnValue;
   }
 
   /**
@@ -156,70 +177,91 @@ public class RequestPageableArgumentResolver implements HandlerMethodArgumentRes
    * @return Sort
    */
   private Sort andSort(List<Sort> criteria) {
-
+    log.debug("andSort(List<Sort> criteria) - start");
     Iterator<Sort> itr = criteria.iterator();
     if (itr.hasNext()) {
       Sort sort = (itr.next());
       while (itr.hasNext()) {
         sort = sort.and(itr.next());
       }
+      log.debug("andSort(List<Sort> criteria) - end");
       return sort;
     }
+    log.debug("andSort(List<Sort> criteria) - end");
     return null;
   }
 
   public class UnpagedPageable implements Pageable {
+    private final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UnpagedPageable.class);
+
     private Sort sort;
 
     public UnpagedPageable(Sort sort) {
+      log.debug("UnpagedPageable(Sort sort) - start");
       this.sort = sort;
+      log.debug("UnpagedPageable(Sort sort) - end");
     }
 
     @Override
     public boolean isPaged() {
+      log.debug("isPaged() - start");
+      log.debug("isPaged() - end");
       return false;
     }
 
     @Override
     public Pageable previousOrFirst() {
+      log.debug("previousOrFirst() - start");
+      log.debug("previousOrFirst() - end");
       return this;
     }
 
     @Override
     public Pageable next() {
+      log.debug("next() - start");
+      log.debug("next() - end");
       return this;
     }
 
     @Override
     public boolean hasPrevious() {
+      log.debug("hasPrevious() - start");
+      log.debug("hasPrevious() - end");
       return false;
     }
 
     @Override
     public Sort getSort() {
+      log.debug("getSort() - start");
+      log.debug("getSort() - end");
       return sort;
     }
 
     @Override
     @JsonIgnore
     public int getPageSize() {
+      log.debug("getPageSize() - start");
       throw new UnsupportedOperationException();
     }
 
     @Override
     @JsonIgnore
     public int getPageNumber() {
+      log.debug("getPageNumber() - start");
       throw new UnsupportedOperationException();
     }
 
     @Override
     @JsonIgnore
     public long getOffset() {
+      log.debug("getOffset() - start");
       throw new UnsupportedOperationException();
     }
 
     @Override
     public Pageable first() {
+      log.debug("first() - start");
+      log.debug("first() - end");
       return this;
     }
 

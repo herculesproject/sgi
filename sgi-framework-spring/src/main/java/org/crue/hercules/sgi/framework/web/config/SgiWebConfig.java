@@ -26,12 +26,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Defines callback methods to customize the Java-based configuration for Spring
  * MVC enabled via {@code @EnableWebMvc}.
  */
 @Component
 // If you add @EnableWebMvc Spring Boot's autoconfiguration is disabled
+@Slf4j
 public class SgiWebConfig implements WebMvcConfigurer {
   private static QueryCriteriaConverter queryOperationConverter = new QueryCriteriaConverter();
   private static SortCriteriaConverter sortOperationConverter = new SortCriteriaConverter();
@@ -51,12 +54,14 @@ public class SgiWebConfig implements WebMvcConfigurer {
    */
   @Override
   public void addCorsMappings(CorsRegistry registry) {
+    log.debug("addCorsMappings(CorsRegistry registry) - start");
     registry.addMapping("/**").allowedMethods("GET", "POST", "PUT", "DELETE").exposedHeaders(
         PageMappingJackson2HttpMessageConverter.DEFAULT_PAGE_HEADER,
-        PageMappingJackson2HttpMessageConverter.DEFAIÑT_PAGE_SIZE_HEADER,
+        PageMappingJackson2HttpMessageConverter.DEFAULT_PAGE_SIZE_HEADER,
         PageMappingJackson2HttpMessageConverter.DEFAULT_PAGE_COUNT_HEADER,
         PageMappingJackson2HttpMessageConverter.DEFAULT_PAGE_TOTAL_COUNT_HEADER,
         PageMappingJackson2HttpMessageConverter.DEFAULT_TOTAL_COUNT_HEADER);
+    log.debug("addCorsMappings(CorsRegistry registry) - end");
   }
 
   /**
@@ -73,6 +78,7 @@ public class SgiWebConfig implements WebMvcConfigurer {
    */
   @Override
   public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+    log.debug("configureMessageConverters(List<HttpMessageConverter<?>> converters) - start");
     for (HttpMessageConverter<?> httpMessageConverter : converters) {
       if (httpMessageConverter instanceof MappingJackson2HttpMessageConverter) {
         // Override all MappingJackson2HttpMessageConverter with custom
@@ -85,6 +91,7 @@ public class SgiWebConfig implements WebMvcConfigurer {
         converters.set(converters.indexOf(converter), newConverter);
       }
     }
+    log.debug("configureMessageConverters(List<HttpMessageConverter<?>> converters) - end");
   }
 
   /**
@@ -95,8 +102,10 @@ public class SgiWebConfig implements WebMvcConfigurer {
    */
   @Override
   public void addFormatters(FormatterRegistry registry) {
+    log.debug("addFormatters(FormatterRegistry registry) - start");
     registry.addConverter(queryOperationConverter);
     registry.addConverter(sortOperationConverter);
+    log.debug("addFormatters(FormatterRegistry registry) - end");
   }
 
   /**
@@ -110,7 +119,9 @@ public class SgiWebConfig implements WebMvcConfigurer {
    */
   @Override
   public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+    log.debug("addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) - start");
     resolvers.add(requestPageableArgumentResolver);
+    log.debug("addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) - end");
   }
 
   /**
@@ -120,16 +131,25 @@ public class SgiWebConfig implements WebMvcConfigurer {
    */
   @Bean
   public SgiErrorController sgiErrorController() {
-    return new SgiErrorController();
+    log.debug("sgiErrorController() - start");
+    SgiErrorController returnValue = new SgiErrorController();
+    log.debug("sgiErrorController() - end");
+    return returnValue;
   }
 
   @Bean
   public ResponseEntityExceptionHandler sgiResponseEntityExceptionHandler() {
-    return new SgiResponseEntityExceptionHandler();
+    log.debug("sgiResponseEntityExceptionHandler() - start");
+    ResponseEntityExceptionHandler returnValue = new SgiResponseEntityExceptionHandler();
+    log.debug("sgiResponseEntityExceptionHandler() - end");
+    return returnValue;
   }
 
   @Bean
   public PageMappingJackson2HttpMessageConverter pageMappingJackson2HttpMessageConverter(ObjectMapper objectMapper) {
-    return new PageMappingJackson2HttpMessageConverter(objectMapper);
+    log.debug("pageMappingJackson2HttpMessageConverter(ObjectMapper objectMapper) - start");
+    PageMappingJackson2HttpMessageConverter returnValue = new PageMappingJackson2HttpMessageConverter(objectMapper);
+    log.debug("pageMappingJackson2HttpMessageConverter(ObjectMapper objectMapper) - end");
+    return returnValue;
   }
 }

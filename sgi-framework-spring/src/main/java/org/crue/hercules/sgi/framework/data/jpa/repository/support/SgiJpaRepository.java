@@ -20,7 +20,7 @@ import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
-
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Default implementation of the
@@ -28,6 +28,7 @@ import org.springframework.util.Assert;
  * will offer you a more sophisticated interface than the plain
  * {@link EntityManager} .
  */
+@Slf4j
 public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
 
   private EscapeCharacter escapeCharacter = EscapeCharacter.DEFAULT;
@@ -41,17 +42,21 @@ public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
    */
   public SgiJpaRepository(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) {
     super(entityInformation, entityManager);
+    log.debug("SgiJpaRepository(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) - start");
+    log.debug("SgiJpaRepository(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) - end");
   }
 
   /**
-   * Creates a new {@link SgiJpaRepository} to manage objects of the given
-   * domain type.
+   * Creates a new {@link SgiJpaRepository} to manage objects of the given domain
+   * type.
    *
    * @param domainClass must not be {@literal null}.
    * @param em          must not be {@literal null}.
    */
   public SgiJpaRepository(Class<T> domainClass, EntityManager em) {
     super(domainClass, em);
+    log.debug("SgiJpaRepository(Class<T> domainClass, EntityManager em) - start");
+    log.debug("SgiJpaRepository(Class<T> domainClass, EntityManager em) - end");
   }
 
   /**
@@ -61,8 +66,10 @@ public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
    */
   @Override
   public void setEscapeCharacter(EscapeCharacter escapeCharacter) {
+    log.debug("setEscapeCharacter(EscapeCharacter escapeCharacter) - start");
     this.escapeCharacter = escapeCharacter;
     super.setEscapeCharacter(escapeCharacter);
+    log.debug("setEscapeCharacter(EscapeCharacter escapeCharacter) - end");
   }
 
   /**
@@ -74,12 +81,17 @@ public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
    */
   @Override
   public Page<T> findAll(Pageable pageable) {
-
+    log.debug("findAll(Pageable pageable) - start");
     if (isUnpagedAndUnsorted(pageable)) {
-      return new PageImpl<T>(findAll());
+      log.info("Not paged or sorted");
+      Page<T> returnValue = new PageImpl<T>(findAll());
+      log.debug("findAll(Pageable pageable) - end");
+      return returnValue;
     }
 
-    return findAll((Specification<T>) null, pageable);
+    Page<T> returnValue = findAll((Specification<T>) null, pageable);
+    log.debug("findAll(Pageable pageable) - end");
+    return returnValue;
   }
 
   /**
@@ -91,10 +103,12 @@ public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
    */
   @Override
   public Page<T> findAll(@Nullable Specification<T> spec, Pageable pageable) {
-
+    log.debug("findAll(@Nullable Specification<T> spec, Pageable pageable) - start");
     TypedQuery<T> query = getQuery(spec, pageable);
-    return isUnpagedAndUnsorted(pageable) ? new PageImpl<T>(query.getResultList())
+    Page<T> returnValue = isUnpagedAndUnsorted(pageable) ? new PageImpl<T>(query.getResultList())
         : readPage(query, getDomainClass(), pageable, spec);
+    log.debug("findAll(@Nullable Specification<T> spec, Pageable pageable) - end");
+    return returnValue;
   }
 
   /**
@@ -107,13 +121,15 @@ public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
    */
   @Override
   public <S extends T> Page<S> findAll(Example<S> example, Pageable pageable) {
-
+    log.debug("findAll(Example<S> example, Pageable pageable) - start");
     ExampleSpecification<S> spec = new ExampleSpecification<>(example, escapeCharacter);
     Class<S> probeType = example.getProbeType();
     TypedQuery<S> query = getQuery(new ExampleSpecification<>(example, escapeCharacter), probeType, pageable);
 
-    return isUnpagedAndUnsorted(pageable) ? new PageImpl<>(query.getResultList())
+    Page<S> returnValue = isUnpagedAndUnsorted(pageable) ? new PageImpl<>(query.getResultList())
         : readPage(query, probeType, pageable, spec);
+    log.debug("findAll(Example<S> example, Pageable pageable) - end");
+    return returnValue;
   }
 
   /**
@@ -124,9 +140,11 @@ public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
    * @return TypedQuery
    */
   protected TypedQuery<T> getQuery(@Nullable Specification<T> spec, Pageable pageable) {
-
+    log.debug("getQuery(@Nullable Specification<T> spec, Pageable pageable) - start");
     Sort sort = pageable.getSort();
-    return getQuery(spec, getDomainClass(), sort);
+    TypedQuery<T> returnValue = getQuery(spec, getDomainClass(), sort);
+    log.debug("getQuery(@Nullable Specification<T> spec, Pageable pageable) - end");
+    return returnValue;
   }
 
   /**
@@ -139,9 +157,11 @@ public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
    */
   protected <S extends T> TypedQuery<S> getQuery(@Nullable Specification<S> spec, Class<S> domainClass,
       Pageable pageable) {
-
+    log.debug("getQuery(@Nullable Specification<S> spec, Class<S> domainClass, Pageable pageable) - start");
     Sort sort = pageable.getSort();
-    return getQuery(spec, domainClass, sort);
+    TypedQuery<S> returnValue = getQuery(spec, domainClass, sort);
+    log.debug("getQuery(@Nullable Specification<S> spec, Class<S> domainClass, Pageable pageable) - end");
+    return returnValue;
   }
 
   /**
@@ -149,7 +169,10 @@ public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
    * @return boolean
    */
   private static boolean isUnpagedAndUnsorted(Pageable pageable) {
-    return pageable.isUnpaged() && !pageable.getSort().isSorted();
+    log.debug("isUnpagedAndUnsorted(Pageable pageable) - start");
+    boolean returnValue = pageable.isUnpaged() && !pageable.getSort().isSorted();
+    log.debug("isUnpagedAndUnsorted(Pageable pageable) - end");
+    return returnValue;
   }
 
   /**
@@ -174,12 +197,13 @@ public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
      * @param escapeCharacter
      */
     ExampleSpecification(Example<T> example, EscapeCharacter escapeCharacter) {
-
+      log.debug("ExampleSpecification(Example<T> example, EscapeCharacter escapeCharacter) - start");
       Assert.notNull(example, "Example must not be null!");
       Assert.notNull(escapeCharacter, "EscapeCharacter must not be null!");
 
       this.example = example;
       this.escapeCharacter = escapeCharacter;
+      log.debug("ExampleSpecification(Example<T> example, EscapeCharacter escapeCharacter) - end");
     }
 
     /*
@@ -191,7 +215,10 @@ public class SgiJpaRepository<T, ID> extends SimpleJpaRepository<T, ID> {
      */
     @Override
     public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-      return QueryByExamplePredicateBuilder.getPredicate(root, cb, example, escapeCharacter);
+      log.debug("toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb) - start");
+      Predicate returnValue = QueryByExamplePredicateBuilder.getPredicate(root, cb, example, escapeCharacter);
+      log.debug("toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb) - end");
+      return returnValue;
     }
   }
 }

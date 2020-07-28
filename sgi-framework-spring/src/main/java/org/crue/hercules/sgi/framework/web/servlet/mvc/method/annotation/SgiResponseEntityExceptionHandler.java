@@ -72,38 +72,61 @@ public abstract class SgiResponseEntityExceptionHandler
       UnsupportedSpecificationOperationException.class })
   @Nullable
   public final ResponseEntity<Object> handleCustomExceptions(Exception ex, WebRequest request) throws Exception {
+    log.debug("handleCustomExceptions(Exception ex, WebRequest request) - start");
     HttpHeaders headers = new HttpHeaders();
 
     if (ex instanceof ConstraintViolationException) {
       HttpStatus status = HttpStatus.BAD_REQUEST;
-      return handleConstraintViolation((ConstraintViolationException) ex, headers, status, request);
+      ResponseEntity<Object> returnValue = handleConstraintViolation((ConstraintViolationException) ex, headers, status,
+          request);
+      log.debug("handleCustomExceptions(Exception ex, WebRequest request) - end");
+      return returnValue;
     } else if (ex instanceof EntityNotFoundException) {
       HttpStatus status = HttpStatus.NOT_FOUND;
-      return handleEntityNotFound((EntityNotFoundException) ex, headers, status, request);
+      ResponseEntity<Object> returnValue = handleEntityNotFound((EntityNotFoundException) ex, headers, status, request);
+      log.debug("handleCustomExceptions(Exception ex, WebRequest request) - end");
+      return returnValue;
     } else if (ex instanceof DataIntegrityViolationException) {
       HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-      return handleDataIntegrityViolation((DataIntegrityViolationException) ex, headers, status, request);
+      ResponseEntity<Object> returnValue = handleDataIntegrityViolation((DataIntegrityViolationException) ex, headers,
+          status, request);
+      log.debug("handleCustomExceptions(Exception ex, WebRequest request) - end");
+      return returnValue;
     } else if (ex instanceof MethodArgumentTypeMismatchException) {
       HttpStatus status = HttpStatus.BAD_REQUEST;
-      return handleMethodArgumentTypeMismatch((MethodArgumentTypeMismatchException) ex, headers, status, request);
+      ResponseEntity<Object> returnValue = handleMethodArgumentTypeMismatch((MethodArgumentTypeMismatchException) ex,
+          headers, status, request);
+      log.debug("handleCustomExceptions(Exception ex, WebRequest request) - end");
+      return returnValue;
     } else if (ex instanceof IllegalArgumentException) {
       HttpStatus status = HttpStatus.BAD_REQUEST;
-      return handleIllegalArgument((IllegalArgumentException) ex, headers, status, request);
+      ResponseEntity<Object> returnValue = handleIllegalArgument((IllegalArgumentException) ex, headers, status,
+          request);
+      log.debug("handleCustomExceptions(Exception ex, WebRequest request) - end");
+      return returnValue;
     } else if (ex instanceof NotFoundException) {
       HttpStatus status = HttpStatus.NOT_FOUND;
-      return handleNotFound((NotFoundException) ex, headers, status, request);
+      ResponseEntity<Object> returnValue = handleNotFound((NotFoundException) ex, headers, status, request);
+      log.debug("handleCustomExceptions(Exception ex, WebRequest request) - end");
+      return returnValue;
     } else if (ex instanceof IllegalSpecificationArgumentException) {
       HttpStatus status = HttpStatus.BAD_REQUEST;
-      return handleIllegalSpecificationArgument((IllegalSpecificationArgumentException) ex, headers, status, request);
+      ResponseEntity<Object> returnValue = handleIllegalSpecificationArgument(
+          (IllegalSpecificationArgumentException) ex, headers, status, request);
+      log.debug("handleCustomExceptions(Exception ex, WebRequest request) - end");
+      return returnValue;
     } else if (ex instanceof UnsupportedSpecificationOperationException) {
       HttpStatus status = HttpStatus.BAD_REQUEST;
-      return handleUnsupportedSpecificationOperation((UnsupportedSpecificationOperationException) ex, headers, status,
-          request);
+      ResponseEntity<Object> returnValue = handleUnsupportedSpecificationOperation(
+          (UnsupportedSpecificationOperationException) ex, headers, status, request);
+      log.debug("handleCustomExceptions(Exception ex, WebRequest request) - end");
+      return returnValue;
     } else {
       // Unknown exception, typically a wrapper with a common MVC exception as cause
       // (since @ExceptionHandler type declarations also match first-level causes):
       // We only deal with top-level MVC exceptions here, so let's rethrow the given
       // exception for further processing through the HandlerExceptionResolver chain.
+      log.error("Unknown exception", ex);
       throw ex;
     }
   }
@@ -119,10 +142,15 @@ public abstract class SgiResponseEntityExceptionHandler
   @Override
   protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
       HttpStatus status, WebRequest request) {
+    log.debug(
+        "handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     if (body == null) {
       body = new Error(status, ex.getMessage(), ex);
     }
-    return super.handleExceptionInternal(ex, body, headers, status, request);
+    ResponseEntity<Object> returnValue = super.handleExceptionInternal(ex, body, headers, status, request);
+    log.debug(
+        "handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) - end");
+    return returnValue;
   }
 
   /**
@@ -135,8 +163,13 @@ public abstract class SgiResponseEntityExceptionHandler
   @Override
   protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex,
       HttpHeaders headers, HttpStatus status, WebRequest request) {
+    log.debug(
+        "handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     Error error = new Error(HttpStatus.BAD_REQUEST, ex.getParameterName() + " parameter is missing", ex);
-    return handleExceptionInternal(ex, error, headers, error.getStatus(), request);
+    ResponseEntity<Object> returnValue = handleExceptionInternal(ex, error, headers, error.getStatus(), request);
+    log.debug(
+        "handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - end");
+    return returnValue;
   }
 
   /**
@@ -149,12 +182,17 @@ public abstract class SgiResponseEntityExceptionHandler
   @Override
   protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex,
       HttpHeaders headers, HttpStatus status, WebRequest request) {
+    log.debug(
+        "handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     StringBuilder builder = new StringBuilder();
     builder.append(ex.getContentType());
     builder.append(" media type is not supported. Supported media types are ");
     ex.getSupportedMediaTypes().forEach(t -> builder.append(t).append(", "));
     Error error = new Error(HttpStatus.UNSUPPORTED_MEDIA_TYPE, builder.substring(0, builder.length() - 2), ex);
-    return handleExceptionInternal(ex, error, headers, error.getStatus(), request);
+    ResponseEntity<Object> returnValue = handleExceptionInternal(ex, error, headers, error.getStatus(), request);
+    log.debug(
+        "handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - end");
+    return returnValue;
   }
 
   /**
@@ -167,10 +205,15 @@ public abstract class SgiResponseEntityExceptionHandler
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
       HttpStatus status, WebRequest request) {
+    log.debug(
+        "handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     Error error = new Error(HttpStatus.BAD_REQUEST, "Validation error", ex);
     error.addValidationErrors(ex.getBindingResult().getFieldErrors());
     error.addValidationError(ex.getBindingResult().getGlobalErrors());
-    return handleExceptionInternal(ex, error, headers, error.getStatus(), request);
+    ResponseEntity<Object> returnValue = handleExceptionInternal(ex, error, headers, error.getStatus(), request);
+    log.debug(
+        "handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - end");
+    return returnValue;
   }
 
   /**
@@ -183,10 +226,15 @@ public abstract class SgiResponseEntityExceptionHandler
   @Override
   protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers,
       HttpStatus status, WebRequest request) {
+    log.debug(
+        "handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     ServletWebRequest servletWebRequest = (ServletWebRequest) request;
     log.info("{} to {}", servletWebRequest.getHttpMethod(), servletWebRequest.getRequest().getServletPath());
     Error error = new Error(HttpStatus.BAD_REQUEST, "Malformed JSON request", ex);
-    return handleExceptionInternal(ex, error, headers, error.getStatus(), request);
+    ResponseEntity<Object> returnValue = handleExceptionInternal(ex, error, headers, error.getStatus(), request);
+    log.debug(
+        "handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - end");
+    return returnValue;
   }
 
   /**
@@ -199,8 +247,13 @@ public abstract class SgiResponseEntityExceptionHandler
   @Override
   protected ResponseEntity<Object> handleHttpMessageNotWritable(HttpMessageNotWritableException ex, HttpHeaders headers,
       HttpStatus status, WebRequest request) {
+    log.debug(
+        "handleHttpMessageNotWritable(HttpMessageNotWritableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     Error error = new Error(HttpStatus.INTERNAL_SERVER_ERROR, "Error writing JSON output", ex);
-    return handleExceptionInternal(ex, error, headers, error.getStatus(), request);
+    ResponseEntity<Object> returnValue = handleExceptionInternal(ex, error, headers, error.getStatus(), request);
+    log.debug(
+        "handleHttpMessageNotWritable(HttpMessageNotWritableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - end");
+    return returnValue;
   }
 
   /**
@@ -213,9 +266,14 @@ public abstract class SgiResponseEntityExceptionHandler
   @Override
   protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,
       HttpStatus status, WebRequest request) {
+    log.debug(
+        "handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     Error error = new Error(HttpStatus.BAD_REQUEST,
         String.format("Could not find the %s method for URL %s", ex.getHttpMethod(), ex.getRequestURL()), ex);
-    return handleExceptionInternal(ex, error, headers, error.getStatus(), request);
+    ResponseEntity<Object> returnValue = handleExceptionInternal(ex, error, headers, error.getStatus(), request);
+    log.debug(
+        "handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - end");
+    return returnValue;
   }
 
   /**
@@ -227,9 +285,14 @@ public abstract class SgiResponseEntityExceptionHandler
    */
   protected ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex, HttpHeaders headers,
       HttpStatus status, WebRequest request) {
+    log.debug(
+        "handleConstraintViolation(ConstraintViolationException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     Error error = new Error(status, "Validation error", ex);
     error.addValidationErrors(ex.getConstraintViolations());
-    return handleExceptionInternal(ex, error, headers, status, request);
+    ResponseEntity<Object> returnValue = handleExceptionInternal(ex, error, headers, status, request);
+    log.debug(
+        "handleConstraintViolation(ConstraintViolationException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - end");
+    return returnValue;
   }
 
   /**
@@ -241,7 +304,12 @@ public abstract class SgiResponseEntityExceptionHandler
    */
   protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex, HttpHeaders headers,
       HttpStatus status, WebRequest request) {
-    return handleExceptionInternal(ex, null, headers, status, request);
+    log.debug(
+        "handleEntityNotFound(EntityNotFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
+    ResponseEntity<Object> returnValue = handleExceptionInternal(ex, null, headers, status, request);
+    log.debug(
+        "handleEntityNotFound(EntityNotFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - end");
+    return returnValue;
   }
 
   /**
@@ -253,12 +321,20 @@ public abstract class SgiResponseEntityExceptionHandler
    */
   protected ResponseEntity<Object> handleDataIntegrityViolation(DataIntegrityViolationException ex, HttpHeaders headers,
       HttpStatus status, WebRequest request) {
+    log.debug(
+        "handleDataIntegrityViolation(DataIntegrityViolationException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     if (ex.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
       Error error = new Error(HttpStatus.CONFLICT, "Database error", ex.getCause());
-      return handleExceptionInternal(ex, error, headers, status, request);
+      ResponseEntity<Object> returnValue = handleExceptionInternal(ex, error, headers, status, request);
+      log.debug(
+          "handleDataIntegrityViolation(DataIntegrityViolationException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - end");
+      return returnValue;
     }
     Error error = new Error(status, "Database error", ex);
-    return handleExceptionInternal(ex, error, headers, status, request);
+    ResponseEntity<Object> returnValue = handleExceptionInternal(ex, error, headers, status, request);
+    log.debug(
+        "handleDataIntegrityViolation(DataIntegrityViolationException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - end");
+    return returnValue;
   }
 
   /**
@@ -270,11 +346,16 @@ public abstract class SgiResponseEntityExceptionHandler
    */
   protected ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex,
       HttpHeaders headers, HttpStatus status, WebRequest request) {
+    log.debug(
+        "handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     Error error = new Error(status,
         String.format("The parameter '%s' of value '%s' could not be converted to type '%s'", ex.getName(),
             ex.getValue(), ex.getRequiredType().getSimpleName()),
         ex);
-    return handleExceptionInternal(ex, error, headers, status, request);
+    ResponseEntity<Object> returnValue = handleExceptionInternal(ex, error, headers, status, request);
+    log.debug(
+        "handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - end");
+    return returnValue;
   }
 
   /**
@@ -286,8 +367,13 @@ public abstract class SgiResponseEntityExceptionHandler
    */
   protected final ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException ex, HttpHeaders headers,
       HttpStatus status, WebRequest request) {
+    log.debug(
+        "handleIllegalArgument(IllegalArgumentException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     Error error = new Error(HttpStatus.BAD_REQUEST, "Malformed request", ex);
-    return handleExceptionInternal(ex, error, headers, status, request);
+    ResponseEntity<Object> returnValue = handleExceptionInternal(ex, error, headers, status, request);
+    log.debug(
+        "handleIllegalArgument(IllegalArgumentException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - end");
+    return returnValue;
   }
 
   /**
@@ -299,8 +385,12 @@ public abstract class SgiResponseEntityExceptionHandler
    */
   protected ResponseEntity<Object> handleNotFound(NotFoundException ex, HttpHeaders headers, HttpStatus status,
       WebRequest request) {
+    log.debug(
+        "handleNotFound(NotFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     Error error = new Error(status, "Data not found", ex);
-    return handleExceptionInternal(ex, error, headers, status, request);
+    ResponseEntity<Object> returnValue = handleExceptionInternal(ex, error, headers, status, request);
+    log.debug("handleNotFound(NotFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - end");
+    return returnValue;
   }
 
   /**
@@ -312,8 +402,13 @@ public abstract class SgiResponseEntityExceptionHandler
    */
   protected ResponseEntity<Object> handleIllegalSpecificationArgument(IllegalSpecificationArgumentException ex,
       HttpHeaders headers, HttpStatus status, WebRequest request) {
+    log.debug(
+        "handleIllegalSpecificationArgument(IllegalSpecificationArgumentException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     Error error = new Error(status, "Malformed query request", ex);
-    return handleExceptionInternal(ex, error, headers, status, request);
+    ResponseEntity<Object> returnValue = handleExceptionInternal(ex, error, headers, status, request);
+    log.debug(
+        "handleIllegalSpecificationArgument(IllegalSpecificationArgumentException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - end");
+    return returnValue;
   }
 
   /**
@@ -325,8 +420,13 @@ public abstract class SgiResponseEntityExceptionHandler
    */
   protected ResponseEntity<Object> handleUnsupportedSpecificationOperation(
       UnsupportedSpecificationOperationException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    log.debug(
+        "handleUnsupportedSpecificationOperation(UnsupportedSpecificationOperationException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - start");
     Error error = new Error(status, "Unsupported query request", ex);
-    return handleExceptionInternal(ex, error, headers, status, request);
+    ResponseEntity<Object> returnValue = handleExceptionInternal(ex, error, headers, status, request);
+    log.debug(
+        "handleUnsupportedSpecificationOperation(UnsupportedSpecificationOperationException ex, HttpHeaders headers, HttpStatus status, WebRequest request) - end");
+    return returnValue;
   }
 
 }

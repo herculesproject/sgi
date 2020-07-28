@@ -25,17 +25,24 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.http.MediaType;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class Oauth2WireMockInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
   @Override
   public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+    log.debug("initialize(ConfigurableApplicationContext configurableApplicationContext) - start");
     try {
       // Generate an RSA key pair, which will be used for signing and verification of
       // the JWT, wrapped in a JWK
       final RSAKey rsaJWK = new RSAKeyGenerator(2048).keyID("someId").keyUse(KeyUse.SIGNATURE).generate();
       TokenBuilder tokenBuilder = new TokenBuilder() {
+        private final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TokenBuilder.class);
+
         @Override
         public String buildToken(String username, String... roles) throws Exception {
+          log.debug("buildToken(String username, String... roles) - start");
           JWSSigner signer = new RSASSASigner(rsaJWK);
           JWTClaimsSet claimsSet = new JWTClaimsSet.Builder().subject(username).jwtID(UUID.randomUUID().toString())
               .audience("someAudience").issuer("someIssuer").expirationTime(new Date(new Date().getTime() + 60 * 1000))
@@ -44,7 +51,9 @@ public class Oauth2WireMockInitializer implements ApplicationContextInitializer<
           SignedJWT signedJWT = new SignedJWT(
               new JWSHeader.Builder(JWSAlgorithm.RS256).keyID(rsaJWK.getKeyID()).build(), claimsSet);
           signedJWT.sign(signer);
-          return signedJWT.serialize();
+          String returnValue = signedJWT.serialize();
+          log.debug("buildToken(String username, String... roles) - end");
+          return returnValue;
         }
       };
       configurableApplicationContext.getBeanFactory().registerSingleton("tokenBuilder", tokenBuilder);
@@ -69,7 +78,9 @@ public class Oauth2WireMockInitializer implements ApplicationContextInitializer<
       TestPropertyValues.of("spring.security.oauth2.resourceserver.jwt.jwk-set-uri:http://localhost:"
           + wireMockServer.port() + "/auth/realms/DEMO/protocol/openid-connect/certs")
           .applyTo(configurableApplicationContext);
+      log.debug("initialize(ConfigurableApplicationContext configurableApplicationContext) - end");
     } catch (JOSEException e) {
+      log.error("Error intializing WireMock", e);
       throw new RuntimeException(e);
     }
   }

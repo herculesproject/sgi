@@ -13,6 +13,8 @@ import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Implementation of
  * {@link org.springframework.http.converter.HttpMessageConverter} that can read
@@ -36,9 +38,10 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
  * <p>
  * Compatible with Jackson 2.9 and higher, as of Spring 5.0.
  */
+@Slf4j
 public class PageMappingJackson2HttpMessageConverter extends MappingJackson2HttpMessageConverter {
   public static String DEFAULT_PAGE_HEADER = "X-Page";
-  public static String DEFAIÑT_PAGE_SIZE_HEADER = "X-Page-Size";
+  public static String DEFAULT_PAGE_SIZE_HEADER = "X-Page-Size";
   public static String DEFAULT_PAGE_COUNT_HEADER = "X-Page-Count";
   public static String DEFAULT_PAGE_TOTAL_COUNT_HEADER = "X-Page-Total-Count";
   public static String DEFAULT_TOTAL_COUNT_HEADER = "X-Total-Count";
@@ -59,6 +62,8 @@ public class PageMappingJackson2HttpMessageConverter extends MappingJackson2Http
    */
   public PageMappingJackson2HttpMessageConverter() {
     this(Jackson2ObjectMapperBuilder.json().build());
+    log.debug("PageMappingJackson2HttpMessageConverter() - start");
+    log.debug("PageMappingJackson2HttpMessageConverter() - end");
   }
 
   /**
@@ -72,6 +77,8 @@ public class PageMappingJackson2HttpMessageConverter extends MappingJackson2Http
    */
   public PageMappingJackson2HttpMessageConverter(ObjectMapper objectMapper) {
     super(objectMapper);
+    log.debug("PageMappingJackson2HttpMessageConverter(ObjectMapper objectMapper) - start");
+    log.debug("PageMappingJackson2HttpMessageConverter(ObjectMapper objectMapper) - end");
   }
 
   /**
@@ -88,8 +95,10 @@ public class PageMappingJackson2HttpMessageConverter extends MappingJackson2Http
    */
   @Override
   protected void addDefaultHeaders(HttpHeaders headers, Object t, MediaType contentType) throws IOException {
+    log.debug("addDefaultHeaders(HttpHeaders headers, Object t, MediaType contentType) - start");
     super.addDefaultHeaders(headers, t, contentType);
     if (t instanceof Page) {
+      log.info("Adding pagination headers");
       Page<?> page = (Page<?>) t;
       // Page index
       headers.add(getPageHeader(), String.valueOf(page.getNumber()));
@@ -102,6 +111,7 @@ public class PageMappingJackson2HttpMessageConverter extends MappingJackson2Http
       // Total amount of elements
       headers.add(getTotalCountHeader(), String.valueOf(page.getTotalElements()));
     }
+    log.debug("addDefaultHeaders(HttpHeaders headers, Object t, MediaType contentType) - end");
   }
 
   /**
@@ -116,12 +126,15 @@ public class PageMappingJackson2HttpMessageConverter extends MappingJackson2Http
   @Override
   protected void writeInternal(Object object, Type type, HttpOutputMessage outputMessage)
       throws IOException, HttpMessageNotWritableException {
+    log.debug("writeInternal(Object object, Type type, HttpOutputMessage outputMessage) - start");
     if (object instanceof Page) {
       // Extract page content
+      log.info("Extracting page content");
       Page<?> page = (Page<?>) object;
       object = page.getContent();
     }
     super.writeInternal(object, type, outputMessage);
+    log.debug("writeInternal(Object object, Type type, HttpOutputMessage outputMessage) - end");
   }
 
   /**
@@ -130,9 +143,13 @@ public class PageMappingJackson2HttpMessageConverter extends MappingJackson2Http
    * @return String the header name used for page number
    */
   public String getPageHeader() {
+    log.debug("getPageHeader() - start");
     if (pageHeader != null) {
+      log.info("Customized page header found");
+      log.debug("getPageHeader() - end");
       return pageHeader;
     }
+    log.debug("getPageHeader() - end");
     return DEFAULT_PAGE_HEADER;
   }
 
@@ -142,10 +159,14 @@ public class PageMappingJackson2HttpMessageConverter extends MappingJackson2Http
    * @return String the header name used for page size
    */
   public String getPageSizeHeader() {
+    log.debug("getPageSizeHeader() - start");
     if (pageSizeHeader != null) {
+      log.info("Customized page size header found");
+      log.debug("getPageSizeHeader() - end");
       return pageSizeHeader;
     }
-    return DEFAIÑT_PAGE_SIZE_HEADER;
+    log.debug("getPageSizeHeader() - end");
+    return DEFAULT_PAGE_SIZE_HEADER;
   }
 
   /**
@@ -154,9 +175,13 @@ public class PageMappingJackson2HttpMessageConverter extends MappingJackson2Http
    * @return String the header name used for page count
    */
   public String getPageCountHeader() {
+    log.debug("getPageCountHeader() - start");
     if (pageCountHeader != null) {
+      log.info("Customized page count header found");
+      log.debug("getPageCountHeader() - end");
       return pageCountHeader;
     }
+    log.debug("getPageCountHeader() - end");
     return DEFAULT_PAGE_COUNT_HEADER;
   }
 
@@ -166,9 +191,13 @@ public class PageMappingJackson2HttpMessageConverter extends MappingJackson2Http
    * @return String the header name used for total page count
    */
   public String getPageTotalCountHeader() {
+    log.debug("getPageTotalCountHeader() - start");
     if (pageTotalCountHeader != null) {
+      log.info("Customized page total count header found");
+      log.debug("getPageTotalCountHeader() - end");
       return pageTotalCountHeader;
     }
+    log.debug("getPageTotalCountHeader() - end");
     return DEFAULT_PAGE_TOTAL_COUNT_HEADER;
   }
 
@@ -178,9 +207,13 @@ public class PageMappingJackson2HttpMessageConverter extends MappingJackson2Http
    * @return String the header name used for total count
    */
   public String getTotalCountHeader() {
+    log.debug("getTotalCountHeader() - start");
     if (totalCountHeader != null) {
+      log.info("Customized total count header found");
+      log.debug("getTotalCountHeader() - end");
       return totalCountHeader;
     }
+    log.debug("getTotalCountHeader() - end");
     return DEFAULT_TOTAL_COUNT_HEADER;
   }
 
@@ -190,7 +223,9 @@ public class PageMappingJackson2HttpMessageConverter extends MappingJackson2Http
    * @param pageHeader the header name used for page number
    */
   public void setPageHeader(String pageHeader) {
+    log.debug("setPageHeader(String pageHeader) - start");
     this.pageHeader = pageHeader;
+    log.debug("setPageHeader(String pageHeader) - end");
   }
 
   /**
@@ -199,7 +234,9 @@ public class PageMappingJackson2HttpMessageConverter extends MappingJackson2Http
    * @param pageSizeHeader the header name used for page size
    */
   public void setPageSizeHeader(String pageSizeHeader) {
+    log.debug("setPageSizeHeader(String pageSizeHeader) - start");
     this.pageSizeHeader = pageSizeHeader;
+    log.debug("setPageSizeHeader(String pageSizeHeader) - end");
   }
 
   /**
@@ -208,7 +245,9 @@ public class PageMappingJackson2HttpMessageConverter extends MappingJackson2Http
    * @param pageCountHeader the header name used for page count
    */
   public void setPageCountHeader(String pageCountHeader) {
+    log.debug("setPageCountHeader(String pageCountHeader) - start");
     this.pageCountHeader = pageCountHeader;
+    log.debug("setPageCountHeader(String pageCountHeader) - end");
   }
 
   /**
@@ -217,7 +256,9 @@ public class PageMappingJackson2HttpMessageConverter extends MappingJackson2Http
    * @param pageTotalCountHeader the header name used for total page count
    */
   public void setPageTotalCountHeader(String pageTotalCountHeader) {
+    log.debug("setPageTotalCountHeader(String pageTotalCountHeader) - start");
     this.pageTotalCountHeader = pageTotalCountHeader;
+    log.debug("setPageTotalCountHeader(String pageTotalCountHeader) - end");
   }
 
   /**
@@ -226,7 +267,9 @@ public class PageMappingJackson2HttpMessageConverter extends MappingJackson2Http
    * @param totalCountHeader the header name used for total count
    */
   public void setTotalCountHeader(String totalCountHeader) {
+    log.debug("setTotalCountHeader(String totalCountHeader) - start");
     this.totalCountHeader = totalCountHeader;
+    log.debug("setTotalCountHeader(String totalCountHeader) - end");
   }
 
 }

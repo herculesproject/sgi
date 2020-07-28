@@ -11,9 +11,12 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import lombok.extern.slf4j.Slf4j;
+
 @ResponseBody
 // Can't use @RestController as this is declared as a Bean in SgiWebConfig
 @RequestMapping("${server.error.path:${error.path:/error}}")
+@Slf4j
 public class SgiErrorController implements ErrorController {
 
   /**
@@ -21,6 +24,8 @@ public class SgiErrorController implements ErrorController {
    */
   @Override
   public String getErrorPath() {
+    log.debug("getErrorPath() - start");
+    log.debug("getErrorPath() - end");
     return null;
   }
 
@@ -31,6 +36,7 @@ public class SgiErrorController implements ErrorController {
    */
   @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public Error errorJson(HttpServletRequest request, HttpServletResponse response) {
+    log.debug("errorJson(HttpServletRequest request, HttpServletResponse response) - start");
     HttpStatus status = getStatus(request);
 
     Throwable ex = (Throwable) request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
@@ -38,6 +44,7 @@ public class SgiErrorController implements ErrorController {
 
     Error error = new Error(status, message, ex);
 
+    log.debug("errorJson(HttpServletRequest request, HttpServletResponse response) - end");
     return error;
   }
 
@@ -46,13 +53,18 @@ public class SgiErrorController implements ErrorController {
    * @return HttpStatus
    */
   protected HttpStatus getStatus(HttpServletRequest request) {
+    log.debug("getStatus(HttpServletRequest request) - start");
     Integer statusCode = (Integer) request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
     if (statusCode == null) {
+      log.debug("getStatus(HttpServletRequest request) - end");
       return HttpStatus.INTERNAL_SERVER_ERROR;
     }
     try {
-      return HttpStatus.valueOf(statusCode);
+      HttpStatus returnValue = HttpStatus.valueOf(statusCode);
+      log.debug("getStatus(HttpServletRequest request) - end");
+      return returnValue;
     } catch (Exception ex) {
+      log.debug("getStatus(HttpServletRequest request) - end");
       return HttpStatus.INTERNAL_SERVER_ERROR;
     }
   }

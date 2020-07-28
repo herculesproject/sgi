@@ -9,8 +9,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@Slf4j
 public class SgiSecurityConfig extends GlobalMethodSecurityConfiguration {
   protected DefaultMethodSecurityExpressionHandler defaultMethodExpressionHandler = new SgiMethodSecurityExpressionHandler();
 
@@ -28,6 +31,9 @@ public class SgiSecurityConfig extends GlobalMethodSecurityConfiguration {
    * @return the {@link MethodSecurityExpressionHandler} to use
    */
   protected MethodSecurityExpressionHandler createExpressionHandler() {
-    return defaultMethodExpressionHandler;
+    log.debug("createExpressionHandler() - start");
+    MethodSecurityExpressionHandler returnValue = defaultMethodExpressionHandler;
+    log.debug("createExpressionHandler() - end");
+    return returnValue;
   }
 }

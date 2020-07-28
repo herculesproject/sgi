@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
 import com.fasterxml.jackson.databind.jsontype.impl.TypeIdResolverBase;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Implementation of {@link TypeIdResolver}.
  * <p>
@@ -12,6 +14,7 @@ import com.fasterxml.jackson.databind.jsontype.impl.TypeIdResolverBase;
  * always created using no-arguments constructor; protected constructor is only
  * used sub-classes.
  */
+@Slf4j
 public class LowerCaseClassNameResolver extends TypeIdResolverBase {
 
   /**
@@ -23,7 +26,10 @@ public class LowerCaseClassNameResolver extends TypeIdResolverBase {
    */
   @Override
   public String idFromValue(Object value) {
-    return value.getClass().getSimpleName().toLowerCase();
+    log.debug("idFromValue(Object value) - start");
+    String returnValue = value.getClass().getSimpleName().toLowerCase();
+    log.debug("idFromValue(Object value) - end");
+    return returnValue;
   }
 
   /**
@@ -37,7 +43,10 @@ public class LowerCaseClassNameResolver extends TypeIdResolverBase {
    */
   @Override
   public String idFromValueAndType(Object value, Class<?> suggestedType) {
-    return idFromValue(value);
+    log.debug("idFromValueAndType(Object value, Class<?> suggestedType) - start");
+    String returnValue = idFromValue(value);
+    log.debug("idFromValueAndType(Object value, Class<?> suggestedType) - end");
+    return returnValue;
   }
 
   /**
@@ -48,6 +57,8 @@ public class LowerCaseClassNameResolver extends TypeIdResolverBase {
    */
   @Override
   public JsonTypeInfo.Id getMechanism() {
+    log.debug("getMechanism() - start");
+    log.debug("getMechanism() - end");
     return JsonTypeInfo.Id.CUSTOM;
   }
 }
