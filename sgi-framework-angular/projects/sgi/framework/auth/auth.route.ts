@@ -20,6 +20,7 @@ export declare type SgiAuthRouteData = {
  */
 export interface SgiAuthRoute extends Route {
   data?: SgiAuthRouteData;
+  children?: SgiAuthRoutes;
 }
 
 /**
