@@ -87,7 +87,7 @@ export class SgiAuthGuard implements CanActivate {
   }
 
   private checkAuthority(route: ActivatedRouteSnapshot): Observable<boolean> {
-    const data = route.data as SgiAuthRouteData;
+    const data = route.routeConfig.data as SgiAuthRouteData;
     if (!data) {
       // No route data
       return of(true);
