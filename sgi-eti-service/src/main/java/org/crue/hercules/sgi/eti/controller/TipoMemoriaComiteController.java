@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -54,7 +52,6 @@ public class TipoMemoriaComiteController {
    * @param paging pageable
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOMEMORIACOMITE-VER')")
   ResponseEntity<Page<TipoMemoriaComite>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
@@ -75,7 +72,6 @@ public class TipoMemoriaComiteController {
    * @return Nuevo {@link TipoMemoriaComite} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOMEMORIACOMITE-EDITAR')")
   public ResponseEntity<TipoMemoriaComite> newTipoMemoriaComite(
       @Valid @RequestBody TipoMemoriaComite nuevoTipoMemoriaComite) {
     log.debug("newTipoMemoriaComite(TipoMemoriaComite nuevoTipoMemoriaComite) - start");
@@ -92,7 +88,6 @@ public class TipoMemoriaComiteController {
    * @return {@link TipoMemoriaComite} actualizado.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOMEMORIACOMITE-EDITAR')")
   TipoMemoriaComite replaceTipoMemoriaComite(@Valid @RequestBody TipoMemoriaComite updatedTipoMemoriaComite,
       @PathVariable Long id) {
     log.debug("replaceTipoMemoriaComite(TipoMemoriaComite updatedTipoMemoriaComite, Long id) - start");
@@ -109,7 +104,6 @@ public class TipoMemoriaComiteController {
    * @return {@link TipoMemoriaComite} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOMEMORIACOMITE-VER')")
   TipoMemoriaComite one(@PathVariable Long id) {
     log.debug("TipoMemoriaComite one(Long id) - start");
     TipoMemoriaComite returnValue = service.findById(id);
@@ -123,7 +117,6 @@ public class TipoMemoriaComiteController {
    * @param id Identificador de {@link TipoMemoriaComite}.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOMEMORIACOMITE-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     service.deleteById(id);

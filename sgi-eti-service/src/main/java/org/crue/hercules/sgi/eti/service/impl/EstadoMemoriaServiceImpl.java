@@ -39,7 +39,7 @@ public class EstadoMemoriaServiceImpl implements EstadoMemoriaService {
   @Transactional
   public EstadoMemoria create(EstadoMemoria estadoMemoria) {
     log.debug("Petición a create EstadoMemoria : {} - start", estadoMemoria);
-    Assert.isNull(estadoMemoria.getId(), "EstadoMemoria id tiene que ser null para crear un nuevo estado memoria");
+    Assert.notNull(estadoMemoria.getId(), "EstadoMemoria id no puede ser null para crear un nuevo estadoMemoria");
 
     return estadoMemoriaRepository.save(estadoMemoria);
   }

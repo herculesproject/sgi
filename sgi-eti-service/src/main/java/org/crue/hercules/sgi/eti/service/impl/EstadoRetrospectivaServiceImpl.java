@@ -40,6 +40,8 @@ public class EstadoRetrospectivaServiceImpl implements EstadoRetrospectivaServic
   @Transactional
   public EstadoRetrospectiva create(EstadoRetrospectiva estadoRetrospectiva) {
     log.debug("create(EstadoRetrospectiva estadoRetrospectiva) - start");
+    Assert.notNull(estadoRetrospectiva.getId(),
+        "EstadoRetrospectiva id no puede ser null para crear un nuevo estadoRetrospectiva");
     EstadoRetrospectiva returnValue = repository.save(estadoRetrospectiva);
     log.debug("create(EstadoRetrospectiva estadoRetrospectiva) - end");
     return returnValue;

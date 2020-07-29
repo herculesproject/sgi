@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -54,7 +52,6 @@ public class FormacionEspecificaController {
    * @param paging pageable
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-FORMACIONESPECIFICA-VER')")
   ResponseEntity<Page<FormacionEspecifica>> findAll(
       @RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
@@ -77,7 +74,6 @@ public class FormacionEspecificaController {
    * @return Nueva {@link FormacionEspecifica} creada.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-FORMACIONESPECIFICA-EDITAR')")
   public ResponseEntity<FormacionEspecifica> newFormacionEspecifica(
       @Valid @RequestBody FormacionEspecifica nuevaFormacionEspecifica) {
     log.debug("newFormacionEspecifica(FormacionEspecifica nuevoFormacionEspecifica) - start");
@@ -95,7 +91,6 @@ public class FormacionEspecificaController {
    * @return {@link FormacionEspecifica} actualizada.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-FORMACIONESPECIFICA-EDITAR')")
   FormacionEspecifica replaceFormacionEspecifica(@Valid @RequestBody FormacionEspecifica updatedFormacionEspecifica,
       @PathVariable Long id) {
     log.debug("replaceFormacionEspecifica(FormacionEspecifica updatedFormacionEspecifica, Long id) - start");
@@ -112,7 +107,6 @@ public class FormacionEspecificaController {
    * @return {@link FormacionEspecifica} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-FORMACIONESPECIFICA-VER')")
   FormacionEspecifica one(@PathVariable Long id) {
     log.debug("FormacionEspecifica one(Long id) - start");
     FormacionEspecifica returnValue = service.findById(id);
@@ -126,7 +120,6 @@ public class FormacionEspecificaController {
    * @param id Identificador de {@link FormacionEspecifica}.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-FORMACIONESPECIFICA-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     FormacionEspecifica formacionEspecifica = this.one(id);

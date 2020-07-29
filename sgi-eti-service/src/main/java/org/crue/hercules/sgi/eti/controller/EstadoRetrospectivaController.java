@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,7 +57,6 @@ public class EstadoRetrospectivaController {
    * @return ResponseEntity<EstadoRetrospectiva>
    */
   @PostMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-ESTADORETROSPECTIVA-EDITAR')")
   ResponseEntity<EstadoRetrospectiva> newEstadoRetrospectiva(
       @Valid @RequestBody EstadoRetrospectiva estadoRetrospectiva) {
     log.debug("newEstadoRetrospectiva(EstadoRetrospectiva estadoRetrospectiva) - start");
@@ -83,7 +81,6 @@ public class EstadoRetrospectivaController {
    *                                              tiene id.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-ESTADORETROSPECTIVA-EDITAR')")
   EstadoRetrospectiva replaceEstadoRetrospectiva(@Valid @RequestBody EstadoRetrospectiva estadoRetrospectiva,
       @PathVariable Long id) {
     log.debug("replaceEstadoRetrospectiva(EstadoRetrospectiva estadoRetrospectiva, Long id) - start");
@@ -106,7 +103,6 @@ public class EstadoRetrospectivaController {
    */
   @DeleteMapping("/{id}")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-ESTADORETROSPECTIVA-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     EstadoRetrospectiva estadoRetrospectiva = this.one(id);
@@ -125,7 +121,6 @@ public class EstadoRetrospectivaController {
    *         filtradas.
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-ESTADORETROSPECTIVA-VER')")
   ResponseEntity<Page<EstadoRetrospectiva>> findAll(
       @RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
@@ -149,7 +144,6 @@ public class EstadoRetrospectivaController {
    * @throws IllegalArgumentException             Si no se informa id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-ESTADORETROSPECTIVA-VER')")
   EstadoRetrospectiva one(@PathVariable Long id) {
     log.debug("one(Long id) - start");
     EstadoRetrospectiva returnValue = service.findById(id);

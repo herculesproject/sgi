@@ -64,7 +64,7 @@ public class TipoEvaluacionServiceTest {
   @Test
   public void create_ReturnsTipoEvaluacion() {
     // given: Un nuevo TipoEvaluacion
-    TipoEvaluacion tipoEvaluacionNew = generarMockTipoEvaluacion(null, "TipoEvaluacion2");
+    TipoEvaluacion tipoEvaluacionNew = generarMockTipoEvaluacion(1L, "TipoEvaluacion2");
 
     TipoEvaluacion tipoEvaluacion = generarMockTipoEvaluacion(1L, "TipoEvaluacion2");
 
@@ -80,9 +80,9 @@ public class TipoEvaluacionServiceTest {
   }
 
   @Test
-  public void create_TipoEvaluacionWithId_ThrowsIllegalArgumentException() {
-    // given: Un nuevo tipo de Evaluacion que ya tiene id
-    TipoEvaluacion tipoEvaluacionNew = generarMockTipoEvaluacion(1L, "TipoEvaluacion2");
+  public void create_TipoEvaluacionWithoutId_ThrowsIllegalArgumentException() {
+    // given: Un nuevo tipo de Evaluacion sin id
+    TipoEvaluacion tipoEvaluacionNew = generarMockTipoEvaluacion(null, "TipoEvaluacion2");
     // when: Creamos el tipo de Evaluacion
     // then: Lanza una excepcion porque el tipo Evaluacion ya tiene id
     Assertions.assertThatThrownBy(() -> tipoEvaluacionService.create(tipoEvaluacionNew))

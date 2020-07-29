@@ -40,8 +40,8 @@ public class TipoConvocatoriaReunionServiceImpl implements TipoConvocatoriaReuni
   @Transactional
   public TipoConvocatoriaReunion create(TipoConvocatoriaReunion tipoConvocatoriaReunion) {
     log.debug("Petición a create TipoConvocatoriaReunion : {} - start", tipoConvocatoriaReunion);
-    Assert.isNull(tipoConvocatoriaReunion.getId(),
-        "TipoConvocatoriaReunion id tiene que ser null para crear un nuevo TipoConvocatoriaReunion");
+    Assert.notNull(tipoConvocatoriaReunion.getId(),
+        "TipoConvocatoriaReunion id no puede ser null para crear un nuevo tipoConvocatoriaReunion");
 
     return tipoConvocatoriaReunionRepository.save(tipoConvocatoriaReunion);
   }

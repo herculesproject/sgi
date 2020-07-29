@@ -100,6 +100,10 @@
     <createSequence sequenceName="retrospectiva_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-tipo_memoria_comite_seq">
+    <createSequence sequenceName="tipo_memoria_comite_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -142,7 +146,7 @@
 
   <changeSet author="master" id="20200601000000-tipo_memoria_comite">
     <createTable tableName="tipo_memoria_comite">
-      <column name="id" type="BIGINT">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_memoria_comite_seq">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_memoria_comite_pk" />
       </column>
       <column name="tipo_memoria_id" type="BIGINT" />

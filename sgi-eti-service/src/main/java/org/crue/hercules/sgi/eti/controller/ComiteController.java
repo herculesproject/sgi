@@ -23,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -56,7 +54,6 @@ public class ComiteController {
    * @return Nuevo {@link Comite} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-COMITE-EDITAR')")
   @ResponseStatus(HttpStatus.CREATED)
   public ResponseEntity<Comite> newComite(@Valid @RequestBody Comite nuevoComite) {
     log.debug("newComite(Comite nuevoComite) - start");
@@ -73,7 +70,6 @@ public class ComiteController {
    * @return {@link Comite} actualizado.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-COMITE-EDITAR')")
   Comite replaceComite(@Valid @RequestBody Comite updatedComite, @PathVariable Long id) {
     log.debug("replaceComite(Comite updatedComite, Long id) - start");
     updatedComite.setId(id);
@@ -89,7 +85,6 @@ public class ComiteController {
    * @return {@link Comite} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-COMITE-VER')")
   Comite one(@PathVariable Long id) {
     log.debug("one(Long id) - start");
     Comite returnValue = service.findById(id);
@@ -104,7 +99,6 @@ public class ComiteController {
    * @throws ComiteNotFoundException
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-COMITE-EDITAR')")
   void delete(@PathVariable Long id) throws ComiteNotFoundException {
     log.debug("deleteComite(Long id) - start");
     Comite comite = this.one(id);
@@ -120,7 +114,6 @@ public class ComiteController {
    * @param paging pageable
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-COMITE-VER')")
   ResponseEntity<Page<Comite>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllComite(List<QueryCriteria> query,Pageable paging) - start");

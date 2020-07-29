@@ -13,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,7 +58,6 @@ public class ApartadoFormularioController {
    * @return ResponseEntity<ApartadoFormulario>
    */
   @PostMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-APARTADOFORMULARIO-EDITAR')")
   ResponseEntity<ApartadoFormulario> newApartadoFormulario(@Valid @RequestBody ApartadoFormulario apartadoFormulario) {
     log.debug("newApartadoFormulario(ApartadoFormulario apartadoFormulario) - start");
     ApartadoFormulario returnValue = service.create(apartadoFormulario);
@@ -82,7 +80,6 @@ public class ApartadoFormularioController {
    *                                             tiene id.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-APARTADOFORMULARIO-EDITAR')")
   ApartadoFormulario replaceApartadoFormulario(@Valid @RequestBody ApartadoFormulario apartadoFormulario,
       @PathVariable Long id) {
     log.debug("replaceApartadoFormulario(ApartadoFormulario apartadoFormulario, Long id) - start");
@@ -105,7 +102,6 @@ public class ApartadoFormularioController {
    */
   @DeleteMapping("/{id}")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-APARTADOFORMULARIO-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     ApartadoFormulario apartadoFormulario = this.one(id);
@@ -124,7 +120,6 @@ public class ApartadoFormularioController {
    *         filtradas.
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-APARTADOFORMULARIO-VER')")
   ResponseEntity<Page<ApartadoFormulario>> findAll(
       @RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
@@ -148,7 +143,6 @@ public class ApartadoFormularioController {
    * @throws IllegalArgumentException            Si no se informa id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-APARTADOFORMULARIO-VER')")
   ApartadoFormulario one(@PathVariable Long id) {
     log.debug("one(Long id) - start");
     ApartadoFormulario returnValue = service.findById(id);

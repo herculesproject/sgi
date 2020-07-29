@@ -70,7 +70,7 @@ public class TipoMemoriaComiteServiceTest {
 
   @Test
   public void create_ReturnsTipoMemoriaComite() {
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+    Comite comite = new Comite(null, "Comite1", Boolean.TRUE);
     TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria1", Boolean.TRUE);
 
     // given: Un nuevo TipoMemoriaComite

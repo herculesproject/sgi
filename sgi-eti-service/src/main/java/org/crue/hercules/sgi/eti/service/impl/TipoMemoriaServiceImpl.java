@@ -39,7 +39,7 @@ public class TipoMemoriaServiceImpl implements TipoMemoriaService {
   @Transactional
   public TipoMemoria create(TipoMemoria tipoMemoria) {
     log.debug("Petición a create TipoMemoria : {} - start", tipoMemoria);
-    Assert.isNull(tipoMemoria.getId(), "TipoMemoria id tiene que ser null para crear un nuevo tipoMemoria");
+    Assert.notNull(tipoMemoria.getId(), "TipoMemoria id no puede ser null para crear un nuevo tipoMemoria");
 
     return tipoMemoriaRepository.save(tipoMemoria);
   }

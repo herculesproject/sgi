@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -54,7 +52,6 @@ public class EvaluacionController {
    * @param paging pageable
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVALUACION-VER')")
   ResponseEntity<Page<Evaluacion>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
@@ -75,7 +72,6 @@ public class EvaluacionController {
    * @return Nuevo {@link Evaluacion} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVALUACION-EDITAR')")
   public ResponseEntity<Evaluacion> newEvaluacion(@Valid @RequestBody Evaluacion nuevoEvaluacion) {
     log.debug("newEvaluacion(Evaluacion nuevoEvaluacion) - start");
     Evaluacion returnValue = service.create(nuevoEvaluacion);
@@ -91,7 +87,6 @@ public class EvaluacionController {
    * @return {@link Evaluacion} actualizado.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVALUACION-EDITAR')")
   Evaluacion replaceEvaluacion(@Valid @RequestBody Evaluacion updatedEvaluacion, @PathVariable Long id) {
     log.debug("replaceEvaluacion(Evaluacion updatedEvaluacion, Long id) - start");
     updatedEvaluacion.setId(id);
@@ -107,7 +102,6 @@ public class EvaluacionController {
    * @return {@link Evaluacion} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVALUACION-VER')")
   Evaluacion one(@PathVariable Long id) {
     log.debug("Evaluacion one(Long id) - start");
     Evaluacion returnValue = service.findById(id);
@@ -121,7 +115,6 @@ public class EvaluacionController {
    * @param id Identificador de {@link Evaluacion}.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVALUACION-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     Evaluacion evaluacion = this.one(id);

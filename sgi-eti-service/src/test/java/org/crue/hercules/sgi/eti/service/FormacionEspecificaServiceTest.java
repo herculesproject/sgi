@@ -64,7 +64,7 @@ public class FormacionEspecificaServiceTest {
   @Test
   public void create_ReturnsFormacionEspecifica() {
     // given: Un nuevo FormacionEspecifica
-    FormacionEspecifica formacionEspecificaNew = generarMockFormacionEspecifica(null, "FormacionEspecificaNew");
+    FormacionEspecifica formacionEspecificaNew = generarMockFormacionEspecifica(1L, "FormacionEspecificaNew");
 
     FormacionEspecifica formacionEspecifica = generarMockFormacionEspecifica(1L, "FormacionEspecificaNew");
 
@@ -80,12 +80,12 @@ public class FormacionEspecificaServiceTest {
   }
 
   @Test
-  public void create_FormacionEspecificaWithId_ThrowsIllegalArgumentException() {
-    // given: Una nueva formación específica que ya tiene id
-    FormacionEspecifica formacionEspecificaNew = generarMockFormacionEspecifica(1L, "FormacionEspecificaNew");
+  public void create_FormacionEspecificaWithoutId_ThrowsIllegalArgumentException() {
+    // given: Una nueva formación específica que no tiene id
+    FormacionEspecifica formacionEspecificaNew = generarMockFormacionEspecifica(null, "FormacionEspecificaNew");
 
     // when: Creamos la formación específica
-    // then: Lanza una excepcion porque la formación específica ya tiene id
+    // then: Lanza una excepcion porque la formación específica no tiene id
     Assertions.assertThatThrownBy(() -> formacionEspecificaService.create(formacionEspecificaNew))
         .isInstanceOf(IllegalArgumentException.class);
   }

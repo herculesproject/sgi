@@ -63,7 +63,7 @@ public class FormularioServiceTest {
   @Test
   public void create_ReturnsFormulario() {
     // given: Un nuevo Formulario
-    Formulario formularioNew = generarMockFormulario(null, "FormularioNew", "Descripcion1");
+    Formulario formularioNew = generarMockFormulario(1L, "FormularioNew", "Descripcion1");
 
     Formulario formulario = generarMockFormulario(1L, "FormularioNew", "Descripcion1");
 
@@ -80,11 +80,11 @@ public class FormularioServiceTest {
   }
 
   @Test
-  public void create_FormularioWithId_ThrowsIllegalArgumentException() {
-    // given: Un nuevo Formulario que ya tiene id
-    Formulario formularioNew = generarMockFormulario(1L, "FormularioNew", "Descripcion1");
+  public void create_FormularioWithoutId_ThrowsIllegalArgumentException() {
+    // given: Un nuevo Formulario que no tiene id
+    Formulario formularioNew = generarMockFormulario(null, "FormularioNew", "Descripcion1");
     // when: Creamos el Formulario
-    // then: Lanza una excepcion porque el Formulario ya tiene id
+    // then: Lanza una excepcion porque el Formulario no tiene id
     Assertions.assertThatThrownBy(() -> formularioService.create(formularioNew))
         .isInstanceOf(IllegalArgumentException.class);
   }

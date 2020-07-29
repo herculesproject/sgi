@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -54,7 +52,6 @@ public class EstadoMemoriaController {
    * @param paging pageable
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-ESTADOMEMORIA-VER')")
   ResponseEntity<Page<EstadoMemoria>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
@@ -75,7 +72,6 @@ public class EstadoMemoriaController {
    * @return Nuevo {@link EstadoMemoria} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-ESTADOMEMORIA-EDITAR')")
   public ResponseEntity<EstadoMemoria> newEstadoMemoria(@Valid @RequestBody EstadoMemoria nuevoEstadoMemoria) {
     log.debug("newEstadoMemoria(EstadoMemoria nuevoEstadoMemoria) - start");
     EstadoMemoria returnValue = service.create(nuevoEstadoMemoria);
@@ -91,7 +87,6 @@ public class EstadoMemoriaController {
    * @return {@link EstadoMemoria} actualizado.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-ESTADOMEMORIA-EDITAR')")
   EstadoMemoria replaceEstadoMemoria(@Valid @RequestBody EstadoMemoria updatedEstadoMemoria, @PathVariable Long id) {
     log.debug("replaceEstadoMemoria(EstadoMemoria updatedEstadoMemoria, Long id) - start");
     updatedEstadoMemoria.setId(id);
@@ -107,7 +102,6 @@ public class EstadoMemoriaController {
    * @return {@link EstadoMemoria} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-ESTADOMEMORIA-VER')")
   EstadoMemoria one(@PathVariable Long id) {
     log.debug("EstadoMemoria one(Long id) - start");
     EstadoMemoria returnValue = service.findById(id);
@@ -121,7 +115,6 @@ public class EstadoMemoriaController {
    * @param id Identificador de {@link EstadoMemoria}.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-ESTADOMEMORIA-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     service.delete(id);

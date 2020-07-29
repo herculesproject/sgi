@@ -38,9 +38,11 @@ public class TipoTareaServiceImpl implements TipoTareaService {
    */
   @Transactional
   public TipoTarea create(TipoTarea tipoTarea) {
-    log.debug("Petición a create TipoTarea : {} - start", tipoTarea);
-
-    return tipoTareaRepository.save(tipoTarea);
+    log.debug("create(create(TipoTarea tipoTarea) - start");
+    Assert.notNull(tipoTarea.getId(), "TipoTarea id no puede ser null para crear un nuevo tipoTarea");
+    TipoTarea returnValue = tipoTareaRepository.save(tipoTarea);
+    log.debug("create(create(TipoTarea tipoTarea) - end");
+    return returnValue;
   }
 
   /**

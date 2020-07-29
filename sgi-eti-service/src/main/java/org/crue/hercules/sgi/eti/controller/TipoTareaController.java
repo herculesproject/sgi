@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,7 +53,6 @@ public class TipoTareaController {
    * @param paging pageable
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOTAREA-VER')")
   ResponseEntity<Page<TipoTarea>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
@@ -75,7 +73,6 @@ public class TipoTareaController {
    * @return Nuevo {@link TipoTarea} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOTAREA-EDITAR')")
   ResponseEntity<TipoTarea> newTipoTarea(@Valid @RequestBody TipoTarea nuevoTipoTarea) {
     log.debug("newTipoTarea(TipoTarea nuevoTipoTarea) - start");
     TipoTarea returnValue = service.create(nuevoTipoTarea);
@@ -91,7 +88,6 @@ public class TipoTareaController {
    * @return {@link TipoTarea} actualizado.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOTAREA-EDITAR')")
   TipoTarea replaceTipoTarea(@Valid @RequestBody TipoTarea updatedTipoTarea, @PathVariable Long id) {
     log.debug("replaceTipoTarea(TipoTarea updatedTipoTarea, Long id) - start");
     updatedTipoTarea.setId(id);
@@ -107,7 +103,6 @@ public class TipoTareaController {
    * @return {@link TipoTarea} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOTAREA-VER')")
   TipoTarea one(@PathVariable Long id) {
     log.debug("TipoTarea one(Long id) - start");
     TipoTarea returnValue = service.findById(id);
@@ -121,7 +116,6 @@ public class TipoTareaController {
    * @param id Identificador de {@link TipoTarea}.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOTAREA-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     TipoTarea tipoTarea = this.one(id);

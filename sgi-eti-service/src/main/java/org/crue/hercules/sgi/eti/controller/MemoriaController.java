@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -54,7 +52,6 @@ public class MemoriaController {
    * @param paging pageable
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-MEMORIA-VER')")
   ResponseEntity<Page<Memoria>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
@@ -75,7 +72,6 @@ public class MemoriaController {
    * @return Nueva {@link Memoria} creada.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-MEMORIA-EDITAR')")
   public ResponseEntity<Memoria> newMemoria(@Valid @RequestBody Memoria nuevaMemoria) {
     log.debug("newMemoria(Memoria nuevaMemoria) - start");
     Memoria returnValue = service.create(nuevaMemoria);
@@ -91,7 +87,6 @@ public class MemoriaController {
    * @return {@link Memoria} actualizada.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-MEMORIA-EDITAR')")
   Memoria replaceMemoria(@Valid @RequestBody Memoria updatedMemoria, @PathVariable Long id) {
     log.debug("replaceMemoria(Memoria updatedMemoria, Long id) - start");
     updatedMemoria.setId(id);
@@ -107,7 +102,6 @@ public class MemoriaController {
    * @return {@link Memoria} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-MEMORIA-VER')")
   Memoria one(@PathVariable Long id) {
     log.debug("Memoria one(Long id) - start");
     Memoria returnValue = service.findById(id);
@@ -121,7 +115,6 @@ public class MemoriaController {
    * @param id Identificador de {@link Memoria}.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-MEMORIA-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     Memoria memoria = this.one(id);

@@ -72,7 +72,7 @@ public class TipoDocumentoServiceTest {
     formulario.setActivo(Boolean.TRUE);
 
     // given: Un nuevo TipoDocumento
-    TipoDocumento tipoDocumentoNew = generarMockTipoDocumento(null, "TipoDocumentoNew");
+    TipoDocumento tipoDocumentoNew = generarMockTipoDocumento(1L, "TipoDocumentoNew");
 
     TipoDocumento tipoDocumento = generarMockTipoDocumento(1L, "TipoDocumentoNew");
 
@@ -89,9 +89,9 @@ public class TipoDocumentoServiceTest {
   }
 
   @Test
-  public void create_TipoDocumentoWithId_ThrowsIllegalArgumentException() {
+  public void create_TipoDocumentoWithoutId_ThrowsIllegalArgumentException() {
     // given: Un nuevo tipo de Documento que ya tiene id
-    TipoDocumento tipoDocumentoNew = generarMockTipoDocumento(1L, "TipoDocumentoNew");
+    TipoDocumento tipoDocumentoNew = generarMockTipoDocumento(null, "TipoDocumentoNew");
 
     // when: Creamos el tipo de Documento
     // then: Lanza una excepcion porque el tipo Documento ya tiene id

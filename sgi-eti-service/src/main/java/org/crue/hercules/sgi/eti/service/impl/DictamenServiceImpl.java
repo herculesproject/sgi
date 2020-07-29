@@ -39,7 +39,7 @@ public class DictamenServiceImpl implements DictamenService {
   @Transactional
   public Dictamen create(Dictamen dictamen) {
     log.debug("Petición a create Dictamen : {} - start", dictamen);
-    Assert.isNull(dictamen.getId(), "Dictamen id tiene que ser null para crear un nuevo dictamen");
+    Assert.notNull(dictamen.getId(), "Dictamen id no puede ser null para crear un nuevo dictamen");
 
     return dictamenRepository.save(dictamen);
   }

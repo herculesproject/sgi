@@ -64,7 +64,7 @@ public class TipoConvocatoriaReunionServiceTest {
   @Test
   public void create_ReturnsTipoConvocatoriaReunion() {
     // given: Un nuevo TipoConvocatoriaReunion
-    TipoConvocatoriaReunion tipoConvocatoriaReunionNew = generarMockTipoConvocatoriaReunion(null,
+    TipoConvocatoriaReunion tipoConvocatoriaReunionNew = generarMockTipoConvocatoriaReunion(1L,
         "TipoConvocatoriaReunionNew");
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = generarMockTipoConvocatoriaReunion(1L,
@@ -84,12 +84,12 @@ public class TipoConvocatoriaReunionServiceTest {
   }
 
   @Test
-  public void create_TipoConvocatoriaReunionWithId_ThrowsIllegalArgumentException() {
-    // given: Un nuevo tipo de convocatoria de reunión que ya tiene id
-    TipoConvocatoriaReunion tipoConvocatoriaReunionNew = generarMockTipoConvocatoriaReunion(1L,
+  public void create_TipoConvocatoriaReunionWithoutId_ThrowsIllegalArgumentException() {
+    // given: Un nuevo tipo de convocatoria de reunión que no tiene id
+    TipoConvocatoriaReunion tipoConvocatoriaReunionNew = generarMockTipoConvocatoriaReunion(null,
         "TipoConvocatoriaReunionNew");
     // when: Creamos el tipo de convocatoria de reunión
-    // then: Lanza una excepcion porque el TipoConvocatoriaReunion ya tiene id
+    // then: Lanza una excepcion porque el TipoConvocatoriaReunion no tiene id
     Assertions.assertThatThrownBy(() -> tipoConvocatoriaReunionService.create(tipoConvocatoriaReunionNew))
         .isInstanceOf(IllegalArgumentException.class);
   }

@@ -8,12 +8,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.config.SecurityConfig;
 import org.crue.hercules.sgi.eti.exceptions.RespuestaFormularioNotFoundException;
 import org.crue.hercules.sgi.eti.model.ComponenteFormulario;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.FormularioMemoria;
-import org.crue.hercules.sgi.eti.model.RespuestaFormulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.RespuestaFormulario;
 import org.crue.hercules.sgi.eti.service.RespuestaFormularioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
@@ -25,10 +26,13 @@ import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -36,23 +40,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.ReflectionUtils;
 
-import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
-import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.test.context.ActiveProfiles;
-
 /**
  * RespuestaFormularioControllerTest
  */
 @WebMvcTest(RespuestaFormularioController.class)
-@ActiveProfiles("SECURITY_MOCK")
+// Since WebMvcTest is only sliced controller layer for the testing, it would
+// not take the security configurations.
+@Import(SecurityConfig.class)
 public class RespuestaFormularioControllerTest {
 
   @Autowired
@@ -67,48 +61,15 @@ public class RespuestaFormularioControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String RESPUESTA_FORMULARIO_CONTROLLER_BASE_PATH = "/respuestaformularios";
 
-  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
-  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
-                     // application’s primary configuration, a nested @TestConfiguration class is
-                     // used in addition to your application’s primary configuration.
-  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
-
-    @Autowired
-    private AuthenticationEntryPoint authenticationEntryPoint;
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-      http.csrf().disable() //
-          .authorizeRequests().antMatchers("/error").permitAll() //
-          .antMatchers("/**").authenticated() //
-          .anyRequest().denyAll() //
-          .and() //
-          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
-          .authenticationEntryPoint(authenticationEntryPoint) //
-          .and() //
-          .httpBasic();
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
-      return new SgiAccessDeniedHandler(mapper);
-    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
-      return new SgiAuthenticationEntryPoint(mapper);
-    }
-  }
-
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-RESPUESTAFORMULARIO-VER" })
   public void getRespuestaFormulario_WithId_ReturnsRespuestaFormulario() throws Exception {
     BDDMockito.given(respuestaFormularioService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockRespuestaFormulario(1L)));
 
-    mockMvc.perform(MockMvcRequestBuilders.get(RESPUESTA_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(RESPUESTA_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("valor").value("Valor1"));
@@ -122,7 +83,9 @@ public class RespuestaFormularioControllerTest {
         .will((InvocationOnMock invocation) -> {
           throw new RespuestaFormularioNotFoundException(invocation.getArgument(0));
         });
-    mockMvc.perform(MockMvcRequestBuilders.get(RESPUESTA_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(RESPUESTA_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -140,7 +103,8 @@ public class RespuestaFormularioControllerTest {
     // when: Creamos un RespuestaFormulario
     mockMvc
         .perform(MockMvcRequestBuilders.post(RESPUESTA_FORMULARIO_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevoRespuestaFormularioJson))
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoRespuestaFormularioJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo RespuestaFormulario y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
@@ -159,7 +123,8 @@ public class RespuestaFormularioControllerTest {
     // when: Creamos un RespuestaFormulario
     mockMvc
         .perform(MockMvcRequestBuilders.post(RESPUESTA_FORMULARIO_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevoRespuestaFormularioJson))
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoRespuestaFormularioJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -180,7 +145,8 @@ public class RespuestaFormularioControllerTest {
 
     mockMvc
         .perform(MockMvcRequestBuilders.put(RESPUESTA_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .contentType(MediaType.APPLICATION_JSON).content(replaceRespuestaFormularioJson))
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(replaceRespuestaFormularioJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica el RespuestaFormulario y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
@@ -200,7 +166,8 @@ public class RespuestaFormularioControllerTest {
         });
     mockMvc
         .perform(MockMvcRequestBuilders.put(RESPUESTA_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .contentType(MediaType.APPLICATION_JSON).content(replaceRespuestaFormularioJson))
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(replaceRespuestaFormularioJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
   }
@@ -213,7 +180,7 @@ public class RespuestaFormularioControllerTest {
 
     mockMvc
         .perform(MockMvcRequestBuilders.delete(RESPUESTA_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .contentType(MediaType.APPLICATION_JSON))
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
@@ -231,8 +198,8 @@ public class RespuestaFormularioControllerTest {
 
     // when: find unlimited
     mockMvc
-        .perform(
-            MockMvcRequestBuilders.get(RESPUESTA_FORMULARIO_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.get(RESPUESTA_FORMULARIO_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred RespuestaFormulario
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -265,8 +232,9 @@ public class RespuestaFormularioControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(RESPUESTA_FORMULARIO_CONTROLLER_BASE_PATH).header("X-Page", "3")
-            .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.get(RESPUESTA_FORMULARIO_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
+            .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked RespuestaFormularios are returned with the right page
         // information
@@ -369,8 +337,8 @@ public class RespuestaFormularioControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(RESPUESTA_FORMULARIO_CONTROLLER_BASE_PATH).param("q", query)
-            .accept(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.get(RESPUESTA_FORMULARIO_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).param("q", query).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred RespuestaFormulario
         .andExpect(MockMvcResultMatchers.status().isOk())

@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.integration;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
@@ -18,76 +19,46 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
-import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.test.context.ActiveProfiles;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Test de integracion de TipoEvaluacion.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("SECURITY_MOCK")
+@ContextConfiguration(initializers = { Oauth2WireMockInitializer.class })
 public class TipoEvaluacionIT {
 
   @Autowired
   private TestRestTemplate restTemplate;
 
+  @Autowired
+  private TokenBuilder tokenBuilder;
+
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String TIPO_EVALUACION_CONTROLLER_BASE_PATH = "/tipoEvaluaciones";
 
-  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
-  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
-                     // application’s primary configuration, a nested @TestConfiguration class is
-                     // used in addition to your application’s primary configuration.
-  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
+  private HttpEntity<TipoEvaluacion> buildRequest(HttpHeaders headers, TipoEvaluacion entity) throws Exception {
+    headers = (headers != null ? headers : new HttpHeaders());
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Authorization", String.format("bearer %s",
+        tokenBuilder.buildToken("user", "ETI-TIPOEVALUACION-EDITAR", "ETI-TIPOEVALUACION-VER")));
 
-    @Autowired
-    private AuthenticationEntryPoint authenticationEntryPoint;
+    HttpEntity<TipoEvaluacion> request = new HttpEntity<>(entity, headers);
+    return request;
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-      PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-      auth.inMemoryAuthentication().passwordEncoder(encoder).withUser("user").password(encoder.encode("secret"))
-          .authorities("ETI-TIPOEVALUACION-EDITAR", "ETI-TIPOEVALUACION-VER");
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-      http.cors().and().csrf().disable().authorizeRequests().antMatchers("/error").permitAll().antMatchers("/**")
-          .authenticated().anyRequest().denyAll().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler)
-          .authenticationEntryPoint(authenticationEntryPoint).and().httpBasic();
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
-      return new SgiAccessDeniedHandler(mapper);
-    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
-      return new SgiAuthenticationEntryPoint(mapper);
-    }
   }
 
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getTipoEvaluacion_WithId_ReturnsTipoEvaluacion() throws Exception {
-    final ResponseEntity<TipoEvaluacion> response = restTemplate.withBasicAuth("user", "secret")
-        .getForEntity(TIPO_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, TipoEvaluacion.class, 1L);
+    final ResponseEntity<TipoEvaluacion> response = restTemplate.exchange(
+        TIPO_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
+        TipoEvaluacion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -103,11 +74,15 @@ public class TipoEvaluacionIT {
   public void addTipoEvaluacion_ReturnsTipoEvaluacion() throws Exception {
 
     TipoEvaluacion nuevoTipoEvaluacion = new TipoEvaluacion();
+    nuevoTipoEvaluacion.setId(1L);
     nuevoTipoEvaluacion.setNombre("TipoEvaluacion1");
     nuevoTipoEvaluacion.setActivo(Boolean.TRUE);
 
-    restTemplate.withBasicAuth("user", "secret").postForEntity(TIPO_EVALUACION_CONTROLLER_BASE_PATH,
-        nuevoTipoEvaluacion, TipoEvaluacion.class);
+    final ResponseEntity<TipoEvaluacion> response = restTemplate.exchange(TIPO_EVALUACION_CONTROLLER_BASE_PATH,
+        HttpMethod.POST, buildRequest(null, nuevoTipoEvaluacion), TipoEvaluacion.class);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    Assertions.assertThat(response.getBody().getId()).isNotNull();
   }
 
   @Sql
@@ -117,8 +92,9 @@ public class TipoEvaluacionIT {
 
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<TipoEvaluacion> response = restTemplate.withBasicAuth("user", "secret").exchange(
-        TIPO_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, TipoEvaluacion.class, id);
+    final ResponseEntity<TipoEvaluacion> response = restTemplate.exchange(
+        TIPO_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null),
+        TipoEvaluacion.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -129,10 +105,10 @@ public class TipoEvaluacionIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeTipoEvaluacion_DoNotGetTipoEvaluacion() throws Exception {
-    restTemplate.withBasicAuth("user", "secret").delete(TIPO_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<TipoEvaluacion> response = restTemplate.withBasicAuth("user", "secret")
-        .getForEntity(TIPO_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, TipoEvaluacion.class, 1L);
+    final ResponseEntity<TipoEvaluacion> response = restTemplate.exchange(
+        TIPO_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null),
+        TipoEvaluacion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -145,13 +121,9 @@ public class TipoEvaluacionIT {
 
     TipoEvaluacion replaceTipoEvaluacion = generarMockTipoEvaluacion(1L, "TipoEvaluacion1");
 
-    final HttpEntity<TipoEvaluacion> requestEntity = new HttpEntity<TipoEvaluacion>(replaceTipoEvaluacion,
-        new HttpHeaders());
-
-    final ResponseEntity<TipoEvaluacion> response = restTemplate.withBasicAuth("user", "secret").exchange(
-
-        TIPO_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity, TipoEvaluacion.class,
-        1L);
+    final ResponseEntity<TipoEvaluacion> response = restTemplate.exchange(
+        TIPO_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT,
+        buildRequest(null, replaceTipoEvaluacion), TipoEvaluacion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -171,10 +143,8 @@ public class TipoEvaluacionIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    URI uri = UriComponentsBuilder.fromUriString(TIPO_EVALUACION_CONTROLLER_BASE_PATH).build(false).toUri();
-
-    final ResponseEntity<List<TipoEvaluacion>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoEvaluacion>>() {
+    final ResponseEntity<List<TipoEvaluacion>> response = restTemplate.exchange(TIPO_EVALUACION_CONTROLLER_BASE_PATH,
+        HttpMethod.GET, buildRequest(headers, null), new ParameterizedTypeReference<List<TipoEvaluacion>>() {
         });
 
     // then: Respuesta OK, TipoEvaluaciones retorna la información de la página
@@ -204,8 +174,8 @@ public class TipoEvaluacionIT {
         .build(false).toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<TipoEvaluacion>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, null, new ParameterizedTypeReference<List<TipoEvaluacion>>() {
+    final ResponseEntity<List<TipoEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null), new ParameterizedTypeReference<List<TipoEvaluacion>>() {
         });
 
     // then: Respuesta OK, TipoEvaluaciones retorna la información de la página
@@ -228,8 +198,8 @@ public class TipoEvaluacionIT {
         .build(false).toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<TipoEvaluacion>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, null, new ParameterizedTypeReference<List<TipoEvaluacion>>() {
+    final ResponseEntity<List<TipoEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null), new ParameterizedTypeReference<List<TipoEvaluacion>>() {
         });
 
     // then: Respuesta OK, TipoEvaluaciones retorna la información de la página
@@ -260,8 +230,8 @@ public class TipoEvaluacionIT {
     URI uri = UriComponentsBuilder.fromUriString(TIPO_EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
-    final ResponseEntity<List<TipoEvaluacion>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoEvaluacion>>() {
+    final ResponseEntity<List<TipoEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<TipoEvaluacion>>() {
         });
 
     // then: Respuesta OK, TipoEvaluaciones retorna la información de la página

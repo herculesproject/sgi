@@ -1,10 +1,13 @@
 package org.crue.hercules.sgi.eti.integration;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,80 +17,46 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
-import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.test.context.ActiveProfiles;
 
 /**
  * Test de integracion de TipoMemoria.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("SECURITY_MOCK")
+@ContextConfiguration(initializers = { Oauth2WireMockInitializer.class })
 public class TipoMemoriaIT {
 
   @Autowired
   private TestRestTemplate restTemplate;
 
+  @Autowired
+  private TokenBuilder tokenBuilder;
+
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String TIPO_MEMORIA_CONTROLLER_BASE_PATH = "/tipomemorias";
 
-  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
-  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
-                     // application’s primary configuration, a nested @TestConfiguration class is
-                     // used in addition to your application’s primary configuration.
-  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
+  private HttpEntity<TipoMemoria> buildRequest(HttpHeaders headers, TipoMemoria entity) throws Exception {
+    headers = (headers != null ? headers : new HttpHeaders());
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-TIPOMEMORIA-EDITAR", "ETI-TIPOMEMORIA-VER")));
 
-    @Autowired
-    private AuthenticationEntryPoint authenticationEntryPoint;
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-      PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-      auth.inMemoryAuthentication().passwordEncoder(encoder).withUser("user").password(encoder.encode("secret"))
-          .authorities("ETI-TIPOMEMORIA-EDITAR", "ETI-TIPOMEMORIA-VER");
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-      http.cors().and().csrf().disable().authorizeRequests().antMatchers("/error").permitAll().antMatchers("/**")
-          .authenticated().anyRequest().denyAll().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler)
-          .authenticationEntryPoint(authenticationEntryPoint).and().httpBasic();
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
-      return new SgiAccessDeniedHandler(mapper);
-    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
-      return new SgiAuthenticationEntryPoint(mapper);
-    }
+    HttpEntity<TipoMemoria> request = new HttpEntity<>(entity, headers);
+    return request;
   }
 
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getTipoMemoria_WithId_ReturnsTipoMemoria() throws Exception {
-    final ResponseEntity<TipoMemoria> response = restTemplate.withBasicAuth("user", "secret")
-        .getForEntity(TIPO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, TipoMemoria.class, 1L);
+    final ResponseEntity<TipoMemoria> response = restTemplate.exchange(
+        TIPO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
+        TipoMemoria.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -102,12 +71,13 @@ public class TipoMemoriaIT {
   @Test
   public void addTipoMemoria_ReturnsTipoMemoria() throws Exception {
 
-    TipoMemoria nuevoTipoMemoria = new TipoMemoria();
-    nuevoTipoMemoria.setNombre("TipoMemoria1");
-    nuevoTipoMemoria.setActivo(Boolean.TRUE);
+    TipoMemoria nuevoTipoMemoria = new TipoMemoria(1L, "TipoMemoria1", Boolean.TRUE);
 
-    restTemplate.withBasicAuth("user", "secret").postForEntity(TIPO_MEMORIA_CONTROLLER_BASE_PATH, nuevoTipoMemoria,
-        TipoMemoria.class);
+    final ResponseEntity<TipoMemoria> response = restTemplate.exchange(TIPO_MEMORIA_CONTROLLER_BASE_PATH,
+        HttpMethod.POST, buildRequest(null, nuevoTipoMemoria), TipoMemoria.class);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    Assertions.assertThat(response.getBody()).isEqualTo(nuevoTipoMemoria);
   }
 
   @Sql
@@ -117,8 +87,9 @@ public class TipoMemoriaIT {
 
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<TipoMemoria> response = restTemplate.withBasicAuth("user", "secret").exchange(
-        TIPO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, TipoMemoria.class, id);
+    final ResponseEntity<TipoMemoria> response = restTemplate.exchange(
+        TIPO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null),
+        TipoMemoria.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -129,10 +100,11 @@ public class TipoMemoriaIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeTipoMemoria_DoNotGetTipoMemoria() throws Exception {
-    restTemplate.withBasicAuth("user", "secret").delete(TIPO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
+    restTemplate.delete(TIPO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<TipoMemoria> response = restTemplate.withBasicAuth("user", "secret")
-        .getForEntity(TIPO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, TipoMemoria.class, 1L);
+    final ResponseEntity<TipoMemoria> response = restTemplate.exchange(
+        TIPO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
+        TipoMemoria.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -145,11 +117,9 @@ public class TipoMemoriaIT {
 
     TipoMemoria replaceTipoMemoria = generarMockTipoMemoria(1L, "TipoMemoria1");
 
-    final HttpEntity<TipoMemoria> requestEntity = new HttpEntity<TipoMemoria>(replaceTipoMemoria, new HttpHeaders());
-
-    final ResponseEntity<TipoMemoria> response = restTemplate.withBasicAuth("user", "secret").exchange(
-
-        TIPO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity, TipoMemoria.class, 1L);
+    final ResponseEntity<TipoMemoria> response = restTemplate.exchange(
+        TIPO_MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, buildRequest(null, replaceTipoMemoria),
+        TipoMemoria.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -171,8 +141,8 @@ public class TipoMemoriaIT {
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_MEMORIA_CONTROLLER_BASE_PATH).build(false).toUri();
 
-    final ResponseEntity<List<TipoMemoria>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoMemoria>>() {
+    final ResponseEntity<List<TipoMemoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<TipoMemoria>>() {
         });
 
     // then: Respuesta OK, TipoMemorias retorna la información de la página
@@ -202,8 +172,8 @@ public class TipoMemoriaIT {
         .toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<TipoMemoria>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, null, new ParameterizedTypeReference<List<TipoMemoria>>() {
+    final ResponseEntity<List<TipoMemoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null), new ParameterizedTypeReference<List<TipoMemoria>>() {
         });
 
     // then: Respuesta OK, TipoMemorias retorna la información de la página
@@ -226,8 +196,8 @@ public class TipoMemoriaIT {
         .toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<TipoMemoria>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, null, new ParameterizedTypeReference<List<TipoMemoria>>() {
+    final ResponseEntity<List<TipoMemoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null), new ParameterizedTypeReference<List<TipoMemoria>>() {
         });
 
     // then: Respuesta OK, TipoMemorias retorna la información de la página
@@ -258,8 +228,8 @@ public class TipoMemoriaIT {
     URI uri = UriComponentsBuilder.fromUriString(TIPO_MEMORIA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
-    final ResponseEntity<List<TipoMemoria>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoMemoria>>() {
+    final ResponseEntity<List<TipoMemoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<TipoMemoria>>() {
         });
 
     // then: Respuesta OK, TipoMemorias retorna la información de la página

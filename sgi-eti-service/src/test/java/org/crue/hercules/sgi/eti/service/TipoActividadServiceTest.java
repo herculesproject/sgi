@@ -64,7 +64,7 @@ public class TipoActividadServiceTest {
   @Test
   public void create_ReturnsTipoActividad() {
     // given: Un nuevo TipoActividad
-    TipoActividad tipoActividadNew = generarMockTipoActividad(null, "TipoActividadNew");
+    TipoActividad tipoActividadNew = generarMockTipoActividad(1L, "TipoActividadNew");
 
     TipoActividad tipoActividad = generarMockTipoActividad(1L, "TipoActividadNew");
 
@@ -80,9 +80,9 @@ public class TipoActividadServiceTest {
   }
 
   @Test
-  public void create_TipoActividadWithId_ThrowsIllegalArgumentException() {
+  public void create_TipoActividadWithoutId_ThrowsIllegalArgumentException() {
     // given: Un nuevo tipo de actividad que ya tiene id
-    TipoActividad tipoActividadNew = generarMockTipoActividad(1L, "TipoActividadNew");
+    TipoActividad tipoActividadNew = generarMockTipoActividad(null, "TipoActividadNew");
     // when: Creamos el tipo de actividad
     // then: Lanza una excepcion porque el tipo actividad ya tiene id
     Assertions.assertThatThrownBy(() -> tipoActividadService.create(tipoActividadNew))

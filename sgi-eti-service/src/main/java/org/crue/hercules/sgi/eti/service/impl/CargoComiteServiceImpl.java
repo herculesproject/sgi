@@ -39,7 +39,7 @@ public class CargoComiteServiceImpl implements CargoComiteService {
   @Transactional
   public CargoComite create(CargoComite cargoComite) {
     log.debug("Petición a create CargoComite : {} - start", cargoComite);
-    Assert.isNull(cargoComite.getId(), "CargoComite id tiene que ser null para crear un nuevo cargoComite");
+    Assert.notNull(cargoComite.getId(), "CargoComite id no puede ser null para crear un nuevo cargoComite");
 
     return cargoComiteRepository.save(cargoComite);
   }

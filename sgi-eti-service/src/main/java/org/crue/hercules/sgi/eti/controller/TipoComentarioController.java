@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,7 +53,6 @@ public class TipoComentarioController {
    * @param paging pageable
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOCOMENTARIO-VER')")
   ResponseEntity<Page<TipoComentario>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
@@ -75,7 +73,6 @@ public class TipoComentarioController {
    * @return Nuevo {@link TipoComentario} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOCOMENTARIO-EDITAR')")
   ResponseEntity<TipoComentario> newTipoComentario(@Valid @RequestBody TipoComentario nuevoTipoComentario) {
     log.debug("newTipoComentario(TipoComentario nuevoTipoComentario) - start");
     TipoComentario returnValue = service.create(nuevoTipoComentario);
@@ -91,7 +88,6 @@ public class TipoComentarioController {
    * @return {@link TipoComentario} actualizado.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOCOMENTARIO-EDITAR')")
   TipoComentario replaceTipoComentario(@Valid @RequestBody TipoComentario updatedTipoComentario,
       @PathVariable Long id) {
     log.debug("replaceTipoComentario(TipoComentario updatedTipoComentario, Long id) - start");
@@ -108,7 +104,6 @@ public class TipoComentarioController {
    * @return {@link TipoComentario} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOCOMENTARIO-VER')")
   TipoComentario one(@PathVariable Long id) {
     log.debug("TipoComentario one(Long id) - start");
     TipoComentario returnValue = service.findById(id);
@@ -122,7 +117,6 @@ public class TipoComentarioController {
    * @param id Identificador de {@link TipoComentario}.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOCOMENTARIO-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     TipoComentario tipoComentario = this.one(id);

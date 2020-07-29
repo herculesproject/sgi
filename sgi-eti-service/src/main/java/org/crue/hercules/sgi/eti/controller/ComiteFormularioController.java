@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,7 +53,6 @@ public class ComiteFormularioController {
    * @param paging pageable
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-COMITEFORMULARIO-VER')")
   ResponseEntity<Page<ComiteFormulario>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
@@ -75,7 +73,6 @@ public class ComiteFormularioController {
    * @return Nuevo {@link ComiteFormulario} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-COMITEFORMULARIO-EDITAR')")
   ResponseEntity<ComiteFormulario> newComiteFormulario(@Valid @RequestBody ComiteFormulario nuevoComiteFormulario) {
     log.debug("newComiteFormulario(ComiteFormulario nuevoComiteFormulario) - start");
     ComiteFormulario returnValue = service.create(nuevoComiteFormulario);
@@ -91,7 +88,6 @@ public class ComiteFormularioController {
    * @return {@link ComiteFormulario} actualizado.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-COMITEFORMULARIO-EDITAR')")
   ComiteFormulario replaceComiteFormulario(@Valid @RequestBody ComiteFormulario updatedComiteFormulario,
       @PathVariable Long id) {
     log.debug("replaceComiteFormulario(ComiteFormulario updatedComiteFormulario, Long id) - start");
@@ -108,7 +104,6 @@ public class ComiteFormularioController {
    * @return {@link ComiteFormulario} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-COMITEFORMULARIO-VER')")
   ComiteFormulario one(@PathVariable Long id) {
     log.debug("ComiteFormulario one(Long id) - start");
     ComiteFormulario returnValue = service.findById(id);
@@ -122,7 +117,6 @@ public class ComiteFormularioController {
    * @param id Identificador de {@link ComiteFormulario}.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-COMITEFORMULARIO-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     service.deleteById(id);

@@ -2,14 +2,27 @@ package org.crue.hercules.sgi.eti.integration;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.Dictamen;
+import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.EvaluadorEvaluacion;
+import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.Retrospectiva;
+import org.crue.hercules.sgi.eti.model.TipoActividad;
+import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
+import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,76 +36,47 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
-import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.test.context.ActiveProfiles;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Test de integracion de EvaluadorEvaluacion.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("SECURITY_MOCK")
+@ContextConfiguration(initializers = { Oauth2WireMockInitializer.class })
 public class EvaluadorEvaluacionIT {
 
   @Autowired
   private TestRestTemplate restTemplate;
 
+  @Autowired
+  private TokenBuilder tokenBuilder;
+
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH = "/evaluadorevaluaciones";
 
-  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
-  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
-                     // application’s primary configuration, a nested @TestConfiguration class is
-                     // used in addition to your application’s primary configuration.
-  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
+  private HttpEntity<EvaluadorEvaluacion> buildRequest(HttpHeaders headers, EvaluadorEvaluacion entity)
+      throws Exception {
+    headers = (headers != null ? headers : new HttpHeaders());
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Authorization", String.format("bearer %s",
+        tokenBuilder.buildToken("user", "ETI-EVALUADOREVALUACION-EDITAR", "ETI-EVALUADOREVALUACION-VER")));
 
-    @Autowired
-    private AuthenticationEntryPoint authenticationEntryPoint;
+    HttpEntity<EvaluadorEvaluacion> request = new HttpEntity<>(entity, headers);
+    return request;
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-      PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-      auth.inMemoryAuthentication().passwordEncoder(encoder).withUser("user").password(encoder.encode("secret"))
-          .authorities("ETI-EVALUADOREVALUACION-EDITAR", "ETI-EVALUADOREVALUACION-VER");
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-      http.cors().and().csrf().disable().authorizeRequests().antMatchers("/error").permitAll().antMatchers("/**")
-          .authenticated().anyRequest().denyAll().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler)
-          .authenticationEntryPoint(authenticationEntryPoint).and().httpBasic();
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
-      return new SgiAccessDeniedHandler(mapper);
-    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
-      return new SgiAuthenticationEntryPoint(mapper);
-    }
   }
 
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getEvaluadorEvaluacion_WithId_ReturnsEvaluadorEvaluacion() throws Exception {
-    final ResponseEntity<EvaluadorEvaluacion> response = restTemplate.withBasicAuth("user", "secret")
-        .getForEntity(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, EvaluadorEvaluacion.class, 1L);
+    final ResponseEntity<EvaluadorEvaluacion> response = restTemplate.exchange(
+        EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
+        EvaluadorEvaluacion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -109,8 +93,12 @@ public class EvaluadorEvaluacionIT {
 
     EvaluadorEvaluacion nuevoEvaluadorEvaluacion = generarMockEvaluadorEvaluacion(null);
 
-    restTemplate.postForEntity(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH, nuevoEvaluadorEvaluacion,
+    final ResponseEntity<EvaluadorEvaluacion> response = restTemplate.exchange(
+        EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH, HttpMethod.POST, buildRequest(null, nuevoEvaluadorEvaluacion),
         EvaluadorEvaluacion.class);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
   }
 
   @Sql
@@ -120,8 +108,8 @@ public class EvaluadorEvaluacionIT {
 
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<EvaluadorEvaluacion> response = restTemplate.withBasicAuth("user", "secret").exchange(
-        EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null,
+    final ResponseEntity<EvaluadorEvaluacion> response = restTemplate.exchange(
+        EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null),
         EvaluadorEvaluacion.class, id);
 
     // then: 200
@@ -133,10 +121,10 @@ public class EvaluadorEvaluacionIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeEvaluadorEvaluacion_DoNotGetEvaluadorEvaluacion() throws Exception {
-    restTemplate.delete(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<EvaluadorEvaluacion> response = restTemplate.withBasicAuth("user", "secret")
-        .getForEntity(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, EvaluadorEvaluacion.class, 1L);
+    final ResponseEntity<EvaluadorEvaluacion> response = restTemplate.exchange(
+        EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null),
+        EvaluadorEvaluacion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -149,13 +137,9 @@ public class EvaluadorEvaluacionIT {
 
     EvaluadorEvaluacion replaceEvaluadorEvaluacion = generarMockEvaluadorEvaluacion(1L);
 
-    final HttpEntity<EvaluadorEvaluacion> requestEntity = new HttpEntity<EvaluadorEvaluacion>(
-        replaceEvaluadorEvaluacion, new HttpHeaders());
-
-    final ResponseEntity<EvaluadorEvaluacion> response = restTemplate.withBasicAuth("user", "secret").exchange(
-
-        EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
-        EvaluadorEvaluacion.class, 1L);
+    final ResponseEntity<EvaluadorEvaluacion> response = restTemplate.exchange(
+        EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT,
+        buildRequest(null, replaceEvaluadorEvaluacion), EvaluadorEvaluacion.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -175,10 +159,9 @@ public class EvaluadorEvaluacionIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    URI uri = UriComponentsBuilder.fromUriString(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH).build(false).toUri();
-
-    final ResponseEntity<List<EvaluadorEvaluacion>> response = restTemplate.withBasicAuth("user", "secret").exchange(
-        uri, HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<EvaluadorEvaluacion>>() {
+    final ResponseEntity<List<EvaluadorEvaluacion>> response = restTemplate.exchange(
+        EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH, HttpMethod.GET, buildRequest(headers, null),
+        new ParameterizedTypeReference<List<EvaluadorEvaluacion>>() {
         });
 
     // then: Respuesta OK, EvaluadorEvaluaciones retorna la información de la página
@@ -208,8 +191,8 @@ public class EvaluadorEvaluacionIT {
         .build(false).toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<EvaluadorEvaluacion>> response = restTemplate.withBasicAuth("user", "secret")
-        .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<List<EvaluadorEvaluacion>>() {
+    final ResponseEntity<List<EvaluadorEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null), new ParameterizedTypeReference<List<EvaluadorEvaluacion>>() {
         });
 
     // then: Respuesta OK, EvaluadorEvaluaciones retorna la información de la página
@@ -231,8 +214,8 @@ public class EvaluadorEvaluacionIT {
         .build(false).toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<EvaluadorEvaluacion>> response = restTemplate.withBasicAuth("user", "secret")
-        .exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<List<EvaluadorEvaluacion>>() {
+    final ResponseEntity<List<EvaluadorEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null), new ParameterizedTypeReference<List<EvaluadorEvaluacion>>() {
         });
 
     // then: Respuesta OK, EvaluadorEvaluaciones retorna la información de la página
@@ -263,8 +246,8 @@ public class EvaluadorEvaluacionIT {
     URI uri = UriComponentsBuilder.fromUriString(EVALUADOR_EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
-    final ResponseEntity<List<EvaluadorEvaluacion>> response = restTemplate.withBasicAuth("user", "secret").exchange(
-        uri, HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<EvaluadorEvaluacion>>() {
+    final ResponseEntity<List<EvaluadorEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<EvaluadorEvaluacion>>() {
         });
 
     // then: Respuesta OK, EvaluadorEvaluaciones retorna la información de la página
@@ -279,6 +262,95 @@ public class EvaluadorEvaluacionIT {
 
     // Contiene id='1'
     Assertions.assertThat(EvaluadorEvaluaciones.get(0).getId()).isEqualTo(5);
+  }
+
+  /**
+   * Función que devuelve un objeto Evaluacion
+   * 
+   * @param id     id del Evaluacion
+   * @param sufijo el sufijo para título y nombre
+   * @return el objeto Evaluacion
+   */
+
+  public Evaluacion generarMockEvaluacion(Long id, String sufijo) {
+
+    String sufijoStr = (sufijo == null ? id.toString() : sufijo);
+
+    TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
+    tipoEvaluacion.setId(1L);
+    tipoEvaluacion.setNombre("TipoEvaluacion1");
+    tipoEvaluacion.setActivo(Boolean.TRUE);
+
+    Dictamen dictamen = new Dictamen();
+    dictamen.setId(1L);
+    dictamen.setNombre("Dictamen" + sufijoStr);
+    dictamen.setTipoEvaluacion(tipoEvaluacion);
+    dictamen.setActivo(Boolean.TRUE);
+
+    TipoActividad tipoActividad = new TipoActividad();
+    tipoActividad.setId(1L);
+    tipoActividad.setNombre("TipoActividad1");
+    tipoActividad.setActivo(Boolean.TRUE);
+
+    PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
+    peticionEvaluacion.setId(1L);
+    peticionEvaluacion.setCodigo("Codigo1");
+    peticionEvaluacion.setDisMetodologico("DiseñoMetodologico1");
+    peticionEvaluacion.setExterno(Boolean.FALSE);
+    peticionEvaluacion.setFechaFin(LocalDate.now());
+    peticionEvaluacion.setFechaInicio(LocalDate.now());
+    peticionEvaluacion.setFuenteFinanciacion("Fuente financiación");
+    peticionEvaluacion.setObjetivos("Objetivos1");
+    peticionEvaluacion.setOtroValorSocial("Otro valor social1");
+    peticionEvaluacion.setResumen("Resumen");
+    peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
+    peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
+    peticionEvaluacion.setTipoActividad(tipoActividad);
+    peticionEvaluacion.setTitulo("PeticionEvaluacion1");
+    peticionEvaluacion.setUsuarioRef("user-001");
+    peticionEvaluacion.setValorSocial(3);
+    peticionEvaluacion.setActivo(Boolean.TRUE);
+
+    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+
+    TipoMemoria tipoMemoria = new TipoMemoria();
+    tipoMemoria.setId(1L);
+    tipoMemoria.setNombre("TipoMemoria1");
+    tipoMemoria.setActivo(Boolean.TRUE);
+
+    Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
+        tipoMemoria, new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.FALSE,
+        new Retrospectiva(1L, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), LocalDate.now()), 3,
+        Boolean.TRUE);
+
+    TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
+
+    ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
+    convocatoriaReunion.setId(1L);
+    convocatoriaReunion.setComite(comite);
+    convocatoriaReunion.setFechaEvaluacion(LocalDateTime.now());
+    convocatoriaReunion.setFechaLimite(LocalDate.now());
+    convocatoriaReunion.setLugar("Lugar");
+    convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
+    convocatoriaReunion.setCodigo("CR-" + sufijoStr);
+    convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
+    convocatoriaReunion.setHoraInicio(7);
+    convocatoriaReunion.setMinutoInicio(30);
+    convocatoriaReunion.setFechaEnvio(LocalDate.now());
+    convocatoriaReunion.setActivo(Boolean.TRUE);
+
+    Evaluacion evaluacion = new Evaluacion();
+    evaluacion.setId(id);
+    evaluacion.setDictamen(dictamen);
+    evaluacion.setEsRevMinima(Boolean.TRUE);
+    evaluacion.setFechaDictamen(LocalDate.now());
+    evaluacion.setMemoria(memoria);
+    evaluacion.setConvocatoriaReunion(convocatoriaReunion);
+    evaluacion.setVersion(2);
+    evaluacion.setTipoEvaluacion(tipoEvaluacion);
+    evaluacion.setActivo(Boolean.TRUE);
+
+    return evaluacion;
   }
 
   /**
@@ -306,8 +378,7 @@ public class EvaluadorEvaluacionIT {
     evaluador.setUsuarioRef("user-001");
     evaluador.setActivo(Boolean.TRUE);
 
-    Evaluacion evaluacion = new Evaluacion();
-    evaluacion.setId(id);
+    Evaluacion evaluacion = generarMockEvaluacion(1L, "1");
 
     EvaluadorEvaluacion evaluadorEvaluacion = new EvaluadorEvaluacion(id, evaluador, evaluacion);
 

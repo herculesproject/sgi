@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.config.SecurityConfig;
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.service.ComiteService;
@@ -21,10 +22,13 @@ import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -32,23 +36,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.ReflectionUtils;
 
-import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
-import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.test.context.ActiveProfiles;
-
 /**
  * ComiteControllerTest
  */
 @WebMvcTest(ComiteController.class)
-@ActiveProfiles("SECURITY_MOCK")
+// Since WebMvcTest is only sliced controller layer for the testing, it would
+// not take the security configurations.
+@Import(SecurityConfig.class)
 public class ComiteControllerTest {
 
   @Autowired
@@ -62,41 +56,6 @@ public class ComiteControllerTest {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String COMITE_CONTROLLER_BASE_PATH = "/comites";
-
-  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
-  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
-                     // application’s primary configuration, a nested @TestConfiguration class is
-                     // used in addition to your application’s primary configuration.
-  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
-
-    @Autowired
-    private AuthenticationEntryPoint authenticationEntryPoint;
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-      http.csrf().disable() //
-          .authorizeRequests().antMatchers("/error").permitAll() //
-          .antMatchers("/**").authenticated() //
-          .anyRequest().denyAll() //
-          .and() //
-          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
-          .authenticationEntryPoint(authenticationEntryPoint) //
-          .and() //
-          .httpBasic();
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
-      return new SgiAccessDeniedHandler(mapper);
-    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
-      return new SgiAuthenticationEntryPoint(mapper);
-    }
-  }
 
   /* Retorna una lista Comite y comprueba los datos */
   @Test
@@ -112,7 +71,9 @@ public class ComiteControllerTest {
         .given(comiteService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(comiteLista));
 
-    mockMvc.perform(MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON))
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)))
 
@@ -134,8 +95,10 @@ public class ComiteControllerTest {
         .given(comiteService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(comiteResponseList));
 
-    mockMvc.perform(MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH)).andDo(MockMvcResultHandlers.print())
-        .andExpect(MockMvcResultMatchers.status().isNoContent());
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   /* Retorna un Comite por id y comprueba los datos */
@@ -146,7 +109,9 @@ public class ComiteControllerTest {
     BDDMockito.given(comiteService.findById(ArgumentMatchers.anyLong()))
         .willReturn((new Comite(1L, "Comite1", Boolean.TRUE)));
 
-    mockMvc.perform(MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("comite").value("Comite1"));
@@ -159,7 +124,9 @@ public class ComiteControllerTest {
     BDDMockito.given(comiteService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new ComiteNotFoundException(invocation.getArgument(0));
     });
-    mockMvc.perform(MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -180,8 +147,9 @@ public class ComiteControllerTest {
     // when: Creamos un Comite
 
     mockMvc
-        .perform(MockMvcRequestBuilders.post(COMITE_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
-            .content(nuevoComiteJson))
+        .perform(
+            MockMvcRequestBuilders.post(COMITE_CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
+                .contentType(MediaType.APPLICATION_JSON).content(nuevoComiteJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo Comite y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
@@ -198,8 +166,9 @@ public class ComiteControllerTest {
 
     // when: Creamos un Comite
     mockMvc
-        .perform(MockMvcRequestBuilders.post(COMITE_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
-            .content(nuevoComiteJson))
+        .perform(
+            MockMvcRequestBuilders.post(COMITE_CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
+                .contentType(MediaType.APPLICATION_JSON).content(nuevoComiteJson))
         .andDo(MockMvcResultHandlers.print())
 
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -221,7 +190,8 @@ public class ComiteControllerTest {
 
     mockMvc
         .perform(MockMvcRequestBuilders.put(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .contentType(MediaType.APPLICATION_JSON).content(replaceComiteJson))
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(replaceComiteJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica el Comite y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
@@ -244,7 +214,8 @@ public class ComiteControllerTest {
     });
     mockMvc
         .perform(MockMvcRequestBuilders.put(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .contentType(MediaType.APPLICATION_JSON).content(replaceComiteJson))
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(replaceComiteJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
   }
@@ -257,7 +228,9 @@ public class ComiteControllerTest {
     BDDMockito.given(comiteService.findById(ArgumentMatchers.anyLong()))
         .willReturn(new Comite(1L, "Comite1", Boolean.TRUE));
 
-    mockMvc.perform(MockMvcRequestBuilders.delete(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
+    mockMvc
+        .perform(MockMvcRequestBuilders.delete(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
@@ -290,8 +263,9 @@ public class ComiteControllerTest {
 
     // when: Obtiene page=3 con pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH).header("X-Page", "3")
-            .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
+        .perform(
+            MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
+                .header("X-Page", "3").header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: El Comite retorn la información de la página correcta en el
         // header
@@ -397,8 +371,8 @@ public class ComiteControllerTest {
 
     // when: Encuenta la búsqueda de la query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH).param("q", query)
-            .accept(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).param("q", query).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Obtiene la página
         .andExpect(MockMvcResultMatchers.status().isOk())

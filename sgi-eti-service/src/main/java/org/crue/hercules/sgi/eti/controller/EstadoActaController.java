@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -54,7 +52,6 @@ public class EstadoActaController {
    * @param paging pageable
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-ESTADOACTA-VER')")
   ResponseEntity<Page<EstadoActa>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
@@ -75,7 +72,6 @@ public class EstadoActaController {
    * @return Nuevo {@link EstadoActa} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-ESTADOACTA-EDITAR')")
   public ResponseEntity<EstadoActa> newEstadoActa(@Valid @RequestBody EstadoActa nuevoEstadoActa) {
     log.debug("newEstadoActa(EstadoActa nuevoEstadoActa) - start");
     EstadoActa returnValue = service.create(nuevoEstadoActa);
@@ -91,7 +87,6 @@ public class EstadoActaController {
    * @return {@link EstadoActa} actualizado.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-ESTADOACTA-EDITAR')")
   EstadoActa replaceEstadoActa(@Valid @RequestBody EstadoActa updatedEstadoActa, @PathVariable Long id) {
     log.debug("replaceEstadoActa(EstadoActa updatedEstadoActa, Long id) - start");
     updatedEstadoActa.setId(id);
@@ -107,7 +102,6 @@ public class EstadoActaController {
    * @return {@link EstadoActa} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-ESTADOACTA-VER')")
   EstadoActa one(@PathVariable Long id) {
     log.debug("EstadoActa one(Long id) - start");
     EstadoActa returnValue = service.findById(id);
@@ -121,7 +115,6 @@ public class EstadoActaController {
    * @param id Identificador de {@link EstadoActa}.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-ESTADOACTA-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     service.delete(id);

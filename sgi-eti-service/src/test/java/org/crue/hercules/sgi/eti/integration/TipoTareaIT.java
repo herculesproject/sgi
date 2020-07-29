@@ -1,33 +1,25 @@
 package org.crue.hercules.sgi.eti.integration;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.TipoTarea;
-import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
-import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -35,57 +27,36 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de TipoTarea.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("SECURITY_MOCK")
+@ContextConfiguration(initializers = { Oauth2WireMockInitializer.class })
 public class TipoTareaIT {
-
-  private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String TIPO_TAREA_CONTROLLER_BASE_PATH = "/tipostarea";
 
   @Autowired
   private TestRestTemplate restTemplate;
 
-  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
-  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
-                     // application’s primary configuration, a nested @TestConfiguration class is
-                     // used in addition to your application’s primary configuration.
-  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
+  @Autowired
+  private TokenBuilder tokenBuilder;
 
-    @Autowired
-    private AuthenticationEntryPoint authenticationEntryPoint;
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String TIPO_TAREA_CONTROLLER_BASE_PATH = "/tipostarea";
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-      PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-      auth.inMemoryAuthentication().passwordEncoder(encoder).withUser("user").password(encoder.encode("secret"))
-          .authorities("ETI-TIPOTAREA-EDITAR", "ETI-TIPOTAREA-VER");
-    }
+  private HttpEntity<TipoTarea> buildRequest(HttpHeaders headers, TipoTarea entity) throws Exception {
+    headers = (headers != null ? headers : new HttpHeaders());
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-TIPOTAREA-EDITAR", "ETI-TIPOTAREA-VER")));
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-      http.cors().and().csrf().disable().authorizeRequests().antMatchers("/error").permitAll().antMatchers("/**")
-          .authenticated().anyRequest().denyAll().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler)
-          .authenticationEntryPoint(authenticationEntryPoint).and().httpBasic();
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
-      return new SgiAccessDeniedHandler(mapper);
-    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
-      return new SgiAuthenticationEntryPoint(mapper);
-    }
+    HttpEntity<TipoTarea> request = new HttpEntity<>(entity, headers);
+    return request;
   }
 
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getTipoTarea_WithId_ReturnsTipoTarea() throws Exception {
-    final ResponseEntity<TipoTarea> response = restTemplate.withBasicAuth("user", "secret")
-        .getForEntity(TIPO_TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, TipoTarea.class, 1L);
+    final ResponseEntity<TipoTarea> response = restTemplate.exchange(
+        TIPO_TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null), TipoTarea.class,
+        1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -100,19 +71,13 @@ public class TipoTareaIT {
   @Test
   public void addTipoTarea_ReturnsTipoTarea() throws Exception {
 
-    TipoTarea nuevoTipoTarea = new TipoTarea();
-    nuevoTipoTarea.setId(1L);
-    nuevoTipoTarea.setNombre("TipoTarea1");
-    nuevoTipoTarea.setActivo(Boolean.TRUE);
+    TipoTarea nuevoTipoTarea = new TipoTarea(1L, "TipoTarea1", Boolean.TRUE);
 
-    final ResponseEntity<TipoTarea> response = restTemplate.withBasicAuth("user", "secret")
-        .postForEntity(TIPO_TAREA_CONTROLLER_BASE_PATH, nuevoTipoTarea, TipoTarea.class);
+    final ResponseEntity<TipoTarea> response = restTemplate.exchange(TIPO_TAREA_CONTROLLER_BASE_PATH, HttpMethod.POST,
+        buildRequest(null, nuevoTipoTarea), TipoTarea.class);
 
-    final TipoTarea tipoTarea = response.getBody();
-
-    Assertions.assertThat(tipoTarea.getId()).as("id").isEqualTo(1L);
-    Assertions.assertThat(tipoTarea.getNombre()).as("nombre").isEqualTo(nuevoTipoTarea.getNombre());
-    Assertions.assertThat(tipoTarea.getActivo()).as("activo").isEqualTo(nuevoTipoTarea.getActivo());
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    Assertions.assertThat(response.getBody()).isEqualTo(nuevoTipoTarea);
   }
 
   @Sql
@@ -121,8 +86,9 @@ public class TipoTareaIT {
   public void removeTipoTarea_Success() throws Exception {
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<TipoTarea> response = restTemplate.withBasicAuth("user", "secret")
-        .exchange(TIPO_TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, TipoTarea.class, id);
+    final ResponseEntity<TipoTarea> response = restTemplate.exchange(
+        TIPO_TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null),
+        TipoTarea.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -132,10 +98,12 @@ public class TipoTareaIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeTipoTarea_DoNotGetTipoTarea() throws Exception {
-    restTemplate.withBasicAuth("user", "secret").delete(TIPO_TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 10L);
+    restTemplate.exchange(TIPO_TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE,
+        buildRequest(null, null), TipoTarea.class, 10L);
 
-    final ResponseEntity<TipoTarea> response = restTemplate.withBasicAuth("user", "secret")
-        .getForEntity(TIPO_TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, TipoTarea.class, 10L);
+    final ResponseEntity<TipoTarea> response = restTemplate.exchange(
+        TIPO_TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null), TipoTarea.class,
+        10L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
@@ -147,10 +115,9 @@ public class TipoTareaIT {
 
     TipoTarea replaceTipoTarea = generarMockTipoTarea(1L, "TipoTarea1");
 
-    final HttpEntity<TipoTarea> requestEntity = new HttpEntity<TipoTarea>(replaceTipoTarea, new HttpHeaders());
-
-    final ResponseEntity<TipoTarea> response = restTemplate.withBasicAuth("user", "secret").exchange(
-        TIPO_TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity, TipoTarea.class, 1L);
+    final ResponseEntity<TipoTarea> response = restTemplate.exchange(
+        TIPO_TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, buildRequest(null, replaceTipoTarea),
+        TipoTarea.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -172,8 +139,8 @@ public class TipoTareaIT {
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_TAREA_CONTROLLER_BASE_PATH).build(false).toUri();
 
-    final ResponseEntity<List<TipoTarea>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoTarea>>() {
+    final ResponseEntity<List<TipoTarea>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<TipoTarea>>() {
         });
 
     // then: Respuesta OK, retorna la información de la página correcta en el header
@@ -201,8 +168,8 @@ public class TipoTareaIT {
         .toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<TipoTarea>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, null, new ParameterizedTypeReference<List<TipoTarea>>() {
+    final ResponseEntity<List<TipoTarea>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null), new ParameterizedTypeReference<List<TipoTarea>>() {
         });
 
     // then: Respuesta OK, retorna la información de la página correcta en el header
@@ -224,8 +191,8 @@ public class TipoTareaIT {
         .toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<TipoTarea>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, null, new ParameterizedTypeReference<List<TipoTarea>>() {
+    final ResponseEntity<List<TipoTarea>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null), new ParameterizedTypeReference<List<TipoTarea>>() {
         });
 
     // then: Respuesta OK, retorna la información de la página correcta en el header
@@ -254,8 +221,8 @@ public class TipoTareaIT {
     URI uri = UriComponentsBuilder.fromUriString(TIPO_TAREA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
-    final ResponseEntity<List<TipoTarea>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<TipoTarea>>() {
+    final ResponseEntity<List<TipoTarea>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<TipoTarea>>() {
         });
 
     // then: Respuesta OK, retorna la información de la página correcta en el header

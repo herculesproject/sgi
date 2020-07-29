@@ -64,7 +64,7 @@ public class CargoComiteServiceTest {
   @Test
   public void create_ReturnsCargoComite() {
     // given: Un nuevo CargoComite
-    CargoComite cargoComiteNew = generarMockCargoComite(null, "CargoComiteNew");
+    CargoComite cargoComiteNew = generarMockCargoComite(1L, "CargoComiteNew");
 
     CargoComite cargoComite = generarMockCargoComite(1L, "CargoComiteNew");
 
@@ -80,11 +80,11 @@ public class CargoComiteServiceTest {
   }
 
   @Test
-  public void create_CargoComiteWithId_ThrowsIllegalArgumentException() {
-    // given: Un nuevo cargo comité que ya tiene id
-    CargoComite cargoComiteNew = generarMockCargoComite(1L, "CargoComiteNew");
+  public void create_CargoComiteWithoutId_ThrowsIllegalArgumentException() {
+    // given: Un nuevo cargo comité que no tiene id
+    CargoComite cargoComiteNew = generarMockCargoComite(null, "CargoComiteNew");
     // when: Creamos el cargo comité
-    // then: Lanza una excepcion porque el cargo comité ya tiene id
+    // then: Lanza una excepcion porque el cargo comité no tiene id
     Assertions.assertThatThrownBy(() -> cargoComiteService.create(cargoComiteNew))
         .isInstanceOf(IllegalArgumentException.class);
   }

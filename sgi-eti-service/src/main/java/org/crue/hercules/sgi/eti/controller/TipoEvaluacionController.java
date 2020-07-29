@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -54,7 +52,6 @@ public class TipoEvaluacionController {
    * @param paging pageable
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOEVALUACION-VER')")
   ResponseEntity<Page<TipoEvaluacion>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
@@ -75,7 +72,6 @@ public class TipoEvaluacionController {
    * @return Nuevo {@link TipoEvaluacion} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOEVALUACION-EDITAR')")
   public ResponseEntity<TipoEvaluacion> newTipoEvaluacion(@Valid @RequestBody TipoEvaluacion nuevoTipoEvaluacion) {
     log.debug("newTipoEvaluacion(TipoEvaluacion nuevoTipoEvaluacion) - start");
     TipoEvaluacion returnValue = service.create(nuevoTipoEvaluacion);
@@ -91,7 +87,6 @@ public class TipoEvaluacionController {
    * @return {@link TipoEvaluacion} actualizado.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOEVALUACION-EDITAR')")
   TipoEvaluacion replaceTipoEvaluacion(@Valid @RequestBody TipoEvaluacion updatedTipoEvaluacion,
       @PathVariable Long id) {
     log.debug("replaceTipoEvaluacion(TipoEvaluacion updatedTipoEvaluacion, Long id) - start");
@@ -108,7 +103,6 @@ public class TipoEvaluacionController {
    * @return {@link TipoEvaluacion} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOEVALUACION-VER')")
   TipoEvaluacion one(@PathVariable Long id) {
     log.debug("TipoEvaluacion one(Long id) - start");
     TipoEvaluacion returnValue = service.findById(id);
@@ -122,7 +116,6 @@ public class TipoEvaluacionController {
    * @param id Identificador de {@link TipoEvaluacion}.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOEVALUACION-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     TipoEvaluacion tipoEvaluacion = this.one(id);

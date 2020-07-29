@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -54,7 +52,6 @@ public class ConfiguracionController {
    * @param paging pageable
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-CONFIGURACION-VER')")
   ResponseEntity<Page<Configuracion>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
@@ -75,7 +72,6 @@ public class ConfiguracionController {
    * @return Nuevo {@link Configuracion} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-CONFIGURACION-EDITAR')")
   public ResponseEntity<Configuracion> newConfiguracion(@Valid @RequestBody Configuracion nuevaConfiguracion) {
     log.debug("newConfiguracion(Configuracion nuevaConfiguracion) - start");
     Configuracion returnValue = service.create(nuevaConfiguracion);
@@ -91,7 +87,6 @@ public class ConfiguracionController {
    * @return {@link Configuracion} actualizado.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-CONFIGURACION-EDITAR')")
   Configuracion replaceConfiguracion(@Valid @RequestBody Configuracion updatedConfiguracion, @PathVariable Long id) {
     log.debug("replaceConfiguracion(Configuracion updatedConfiguracion, Long id) - start");
     updatedConfiguracion.setId(id);
@@ -107,7 +102,6 @@ public class ConfiguracionController {
    * @return {@link Configuracion} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-CONFIGURACION-VER')")
   Configuracion one(@PathVariable Long id) {
     log.debug("Configuracion one(Long id) - start");
     Configuracion returnValue = service.findById(id);
@@ -121,7 +115,6 @@ public class ConfiguracionController {
    * @param id Identificador de {@link Configuracion}.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-CONFIGURACION-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     service.delete(id);

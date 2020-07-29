@@ -64,7 +64,7 @@ public class TipoComentarioServiceTest {
   @Test
   public void create_ReturnsTipoComentario() {
     // given: Un nuevo TipoComentario
-    TipoComentario tipoComentarioNew = generarMockTipoComentario(null, "TipoComentarioNew");
+    TipoComentario tipoComentarioNew = generarMockTipoComentario(1L, "TipoComentarioNew");
 
     TipoComentario tipoComentario = generarMockTipoComentario(1L, "TipoComentarioNew");
 
@@ -80,9 +80,9 @@ public class TipoComentarioServiceTest {
   }
 
   @Test
-  public void create_TipoComentarioWithId_ThrowsIllegalArgumentException() {
+  public void create_TipoComentarioWithoutId_ThrowsIllegalArgumentException() {
     // given: Un nuevo tipo de comentario que ya tiene id
-    TipoComentario tipoComentarioNew = generarMockTipoComentario(1L, "TipoComentarioNew");
+    TipoComentario tipoComentarioNew = generarMockTipoComentario(null, "TipoComentarioNew");
     // when: Creamos el tipo de comentario
     // then: Lanza una excepcion porque el TipoComentario ya tiene id
     Assertions.assertThatThrownBy(() -> tipoComentarioService.create(tipoComentarioNew))

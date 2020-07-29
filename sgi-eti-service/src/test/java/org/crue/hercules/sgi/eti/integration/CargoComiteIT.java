@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.integration;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
@@ -18,76 +19,46 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
-import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.test.context.ActiveProfiles;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Test de integracion de CargoComite.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("SECURITY_MOCK")
+@ContextConfiguration(initializers = { Oauth2WireMockInitializer.class })
 public class CargoComiteIT {
 
   @Autowired
   private TestRestTemplate restTemplate;
 
+  @Autowired
+  private TokenBuilder tokenBuilder;
+
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CARGO_COMITE_CONTROLLER_BASE_PATH = "/cargocomites";
 
-  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
-  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
-                     // application’s primary configuration, a nested @TestConfiguration class is
-                     // used in addition to your application’s primary configuration.
-  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
+  private HttpEntity<CargoComite> buildRequest(HttpHeaders headers, CargoComite entity) throws Exception {
+    headers = (headers != null ? headers : new HttpHeaders());
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CARGOCOMITE-EDITAR", "ETI-CARGOCOMITE-VER")));
 
-    @Autowired
-    private AuthenticationEntryPoint authenticationEntryPoint;
+    HttpEntity<CargoComite> request = new HttpEntity<>(entity, headers);
+    return request;
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-      PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-      auth.inMemoryAuthentication().passwordEncoder(encoder).withUser("user").password(encoder.encode("secret"))
-          .authorities("ETI-CARGOCOMITE-EDITAR", "ETI-CARGOCOMITE-VER");
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-      http.cors().and().csrf().disable().authorizeRequests().antMatchers("/error").permitAll().antMatchers("/**")
-          .authenticated().anyRequest().denyAll().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler)
-          .authenticationEntryPoint(authenticationEntryPoint).and().httpBasic();
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
-      return new SgiAccessDeniedHandler(mapper);
-    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
-      return new SgiAuthenticationEntryPoint(mapper);
-    }
   }
 
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getCargoComite_WithId_ReturnsCargoComite() throws Exception {
-    final ResponseEntity<CargoComite> response = restTemplate.withBasicAuth("user", "secret")
-        .getForEntity(CARGO_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, CargoComite.class, 1L);
+    final ResponseEntity<CargoComite> response = restTemplate.exchange(
+        CARGO_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
+        CargoComite.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -103,11 +74,15 @@ public class CargoComiteIT {
   public void addCargoComite_ReturnsCargoComite() throws Exception {
 
     CargoComite nuevoCargoComite = new CargoComite();
-    nuevoCargoComite.setNombre("CargoComite1");
+    nuevoCargoComite.setId(1L);
+    nuevoCargoComite.setNombre("PRESIDENTE");
     nuevoCargoComite.setActivo(Boolean.TRUE);
 
-    restTemplate.withBasicAuth("user", "secret").postForEntity(CARGO_COMITE_CONTROLLER_BASE_PATH, nuevoCargoComite,
-        CargoComite.class);
+    final ResponseEntity<CargoComite> response = restTemplate.exchange(CARGO_COMITE_CONTROLLER_BASE_PATH,
+        HttpMethod.POST, buildRequest(null, nuevoCargoComite), CargoComite.class);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    Assertions.assertThat(response.getBody().getId()).isNotNull();
   }
 
   @Sql
@@ -117,8 +92,9 @@ public class CargoComiteIT {
 
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<CargoComite> response = restTemplate.withBasicAuth("user", "secret").exchange(
-        CARGO_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, CargoComite.class, id);
+    final ResponseEntity<CargoComite> response = restTemplate.exchange(
+        CARGO_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null),
+        CargoComite.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -129,10 +105,10 @@ public class CargoComiteIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeCargoComite_DoNotGetCargoComite() throws Exception {
-    restTemplate.delete(CARGO_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<CargoComite> response = restTemplate.withBasicAuth("user", "secret")
-        .getForEntity(CARGO_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, CargoComite.class, 1L);
+    final ResponseEntity<CargoComite> response = restTemplate.exchange(
+        CARGO_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null),
+        CargoComite.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -145,11 +121,9 @@ public class CargoComiteIT {
 
     CargoComite replaceCargoComite = generarMockCargoComite(1L, "CargoComite1");
 
-    final HttpEntity<CargoComite> requestEntity = new HttpEntity<CargoComite>(replaceCargoComite, new HttpHeaders());
-
-    final ResponseEntity<CargoComite> response = restTemplate.withBasicAuth("user", "secret").exchange(
-
-        CARGO_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity, CargoComite.class, 1L);
+    final ResponseEntity<CargoComite> response = restTemplate.exchange(
+        CARGO_COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, buildRequest(null, replaceCargoComite),
+        CargoComite.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -169,10 +143,8 @@ public class CargoComiteIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "1");
 
-    URI uri = UriComponentsBuilder.fromUriString(CARGO_COMITE_CONTROLLER_BASE_PATH).build(false).toUri();
-
-    final ResponseEntity<List<CargoComite>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<CargoComite>>() {
+    final ResponseEntity<List<CargoComite>> response = restTemplate.exchange(CARGO_COMITE_CONTROLLER_BASE_PATH,
+        HttpMethod.GET, buildRequest(headers, null), new ParameterizedTypeReference<List<CargoComite>>() {
         });
 
     // then: Respuesta OK, CargoComites retorna la información de la página
@@ -200,8 +172,8 @@ public class CargoComiteIT {
         .toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<CargoComite>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, null, new ParameterizedTypeReference<List<CargoComite>>() {
+    final ResponseEntity<List<CargoComite>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null), new ParameterizedTypeReference<List<CargoComite>>() {
         });
 
     // then: Respuesta OK, CargoComites retorna la información de la página
@@ -224,8 +196,8 @@ public class CargoComiteIT {
         .toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<CargoComite>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, null, new ParameterizedTypeReference<List<CargoComite>>() {
+    final ResponseEntity<List<CargoComite>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null), new ParameterizedTypeReference<List<CargoComite>>() {
         });
 
     // then: Respuesta OK, CargoComites retorna la información de la página
@@ -255,8 +227,8 @@ public class CargoComiteIT {
     URI uri = UriComponentsBuilder.fromUriString(CARGO_COMITE_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
-    final ResponseEntity<List<CargoComite>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<CargoComite>>() {
+    final ResponseEntity<List<CargoComite>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<CargoComite>>() {
         });
 
     // then: Respuesta OK, CargoComites retorna la información de la página

@@ -39,8 +39,8 @@ public class TipoEstadoMemoriaServiceImpl implements TipoEstadoMemoriaService {
   @Transactional
   public TipoEstadoMemoria create(TipoEstadoMemoria tipoEstadoMemoria) {
     log.debug("Petición a create TipoEstadoMemoria : {} - start", tipoEstadoMemoria);
-    Assert.isNull(tipoEstadoMemoria.getId(),
-        "TipoEstadoMemoria id tiene que ser null para crear un nuevo tipoEstadoMemoria");
+    Assert.notNull(tipoEstadoMemoria.getId(),
+        "TipoEstadoMemoria id no puede ser null para crear un nuevo tipoEstadoMemoria");
 
     return tipoEstadoMemoriaRepository.save(tipoEstadoMemoria);
   }

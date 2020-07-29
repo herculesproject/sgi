@@ -10,12 +10,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.config.SecurityConfig;
 import org.crue.hercules.sgi.eti.exceptions.EstadoRetrospectivaNotFoundException;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.service.EstadoRetrospectivaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
-import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
-import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -24,20 +23,15 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -49,6 +43,9 @@ import org.springframework.util.ReflectionUtils;
  * EstadoRetrospectivaControllerTest
  */
 @WebMvcTest(EstadoRetrospectivaController.class)
+// Since WebMvcTest is only sliced controller layer for the testing, it would
+// not take the security configurations.
+@Import(SecurityConfig.class)
 public class EstadoRetrospectivaControllerTest {
 
   @Autowired
@@ -62,41 +59,6 @@ public class EstadoRetrospectivaControllerTest {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH = "/estadoretrospectivas";
-
-  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
-  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
-                     // application’s primary configuration, a nested @TestConfiguration class is
-                     // used in addition to your application’s primary configuration.
-  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
-
-    @Autowired
-    private AuthenticationEntryPoint authenticationEntryPoint;
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-      http.csrf().disable() //
-          .authorizeRequests().antMatchers("/error").permitAll() //
-          .antMatchers("/**").authenticated() //
-          .anyRequest().denyAll() //
-          .and() //
-          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
-          .authenticationEntryPoint(authenticationEntryPoint) //
-          .and() //
-          .httpBasic();
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
-      return new SgiAccessDeniedHandler(mapper);
-    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
-      return new SgiAuthenticationEntryPoint(mapper);
-    }
-  }
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-ESTADORETROSPECTIVA-EDITAR" })
@@ -112,8 +74,8 @@ public class EstadoRetrospectivaControllerTest {
 
     // when: Se crea la entidad
     mockMvc
-        .perform(MockMvcRequestBuilders.post(url).contentType(MediaType.APPLICATION_JSON)
-            .content(nuevoEstadoRetrospectivaJson))
+        .perform(MockMvcRequestBuilders.post(url).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON).content(nuevoEstadoRetrospectivaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: La entidad se crea correctamente
         .andExpect(MockMvcResultMatchers.status().isCreated())
@@ -136,8 +98,8 @@ public class EstadoRetrospectivaControllerTest {
     // when: Se crea la entidad
     // then: Se produce error porque ya tiene Id
     mockMvc
-        .perform(MockMvcRequestBuilders.post(url).contentType(MediaType.APPLICATION_JSON)
-            .content(nuevoEstadoRetrospectivaJson))
+        .perform(MockMvcRequestBuilders.post(url).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON).content(nuevoEstadoRetrospectivaJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isBadRequest());
   }
 
@@ -156,8 +118,8 @@ public class EstadoRetrospectivaControllerTest {
 
     // when: Se actualiza la entidad
     mockMvc
-        .perform(MockMvcRequestBuilders.put(url, response.getId()).contentType(MediaType.APPLICATION_JSON)
-            .content(replaceEstadoRetrospectivaJson))
+        .perform(MockMvcRequestBuilders.put(url, response.getId()).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON).content(replaceEstadoRetrospectivaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Los datos se actualizan correctamente
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -184,8 +146,8 @@ public class EstadoRetrospectivaControllerTest {
 
     // when: Se actualiza la entidad
     mockMvc
-        .perform(MockMvcRequestBuilders.put(url, response.getId()).contentType(MediaType.APPLICATION_JSON)
-            .content(replaceEstadoRetrospectivaJson))
+        .perform(MockMvcRequestBuilders.put(url, response.getId()).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON).content(replaceEstadoRetrospectivaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Se produce error porque no encuentra la entidad a actualizar
         .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -204,7 +166,9 @@ public class EstadoRetrospectivaControllerTest {
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willReturn(response);
 
     // when: Se elimina la entidad
-    mockMvc.perform(MockMvcRequestBuilders.delete(url, response.getId()).contentType(MediaType.APPLICATION_JSON))
+    mockMvc
+        .perform(MockMvcRequestBuilders.delete(url, response.getId()).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: La entidad se elimina correctamente
         .andExpect(MockMvcResultMatchers.status().isNoContent());
@@ -226,8 +190,8 @@ public class EstadoRetrospectivaControllerTest {
 
     // when: Se elimina la entidad
     mockMvc
-        .perform(
-            MockMvcRequestBuilders.delete(url, EstadoRetrospectiva.getId()).contentType(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.delete(url, EstadoRetrospectiva.getId())
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Se produce error porque no encuentra la entidad a eliminar
         .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -246,7 +210,9 @@ public class EstadoRetrospectivaControllerTest {
     BDDMockito.given(service.findById(response.getId())).willReturn(response);
 
     // when: Se busca la entidad por ese Id
-    mockMvc.perform(MockMvcRequestBuilders.get(url, response.getId()).contentType(MediaType.APPLICATION_JSON))
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(url, response.getId()).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Se recupera la entidad con el Id
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -271,7 +237,9 @@ public class EstadoRetrospectivaControllerTest {
     });
 
     // when: Se busca entidad con ese id
-    mockMvc.perform(MockMvcRequestBuilders.get(url, response.getId()).contentType(MediaType.APPLICATION_JSON))
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(url, response.getId()).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Se produce error porque no encuentra la entidad con ese Id
         .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -292,7 +260,9 @@ public class EstadoRetrospectivaControllerTest {
         .willReturn(new PageImpl<>(response));
 
     // when: Se buscan todos los datos
-    MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(url).contentType(MediaType.APPLICATION_JSON))
+    MvcResult result = mockMvc
+        .perform(MockMvcRequestBuilders.get(url).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Se recuperan todos los datos
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -314,7 +284,8 @@ public class EstadoRetrospectivaControllerTest {
     BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(Collections.emptyList()));
     // when: Se buscan todos los datos
-    mockMvc.perform(MockMvcRequestBuilders.get(url)).andDo(MockMvcResultHandlers.print())
+    mockMvc.perform(MockMvcRequestBuilders.get(url).with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print())
         // then: Se recupera lista vacía);
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
@@ -340,8 +311,9 @@ public class EstadoRetrospectivaControllerTest {
 
     // when: Se buscan todos los datos paginados
     MvcResult result = mockMvc
-        .perform(MockMvcRequestBuilders.get(url).header("X-Page", pageable.getPageNumber())
-            .header("X-Page-Size", pageable.getPageSize()).accept(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.get(url).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .header("X-Page", pageable.getPageNumber()).header("X-Page-Size", pageable.getPageSize())
+            .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Se recuperan los datos correctamente según la paginación solicitada
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -372,8 +344,9 @@ public class EstadoRetrospectivaControllerTest {
 
     // when: Se buscan todos los datos paginados
     mockMvc
-        .perform(MockMvcRequestBuilders.get(url).header("X-Page", pageable.getPageNumber())
-            .header("X-Page-Size", pageable.getPageSize()).accept(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.get(url).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .header("X-Page", pageable.getPageNumber()).header("X-Page-Size", pageable.getPageSize())
+            .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Se recupera lista de datos paginados vacía
         .andExpect(MockMvcResultMatchers.status().isNoContent());
@@ -465,7 +438,8 @@ public class EstadoRetrospectivaControllerTest {
 
     // when: Se buscan los datos con el filtro indicado
     MvcResult result = mockMvc
-        .perform(MockMvcRequestBuilders.get(url).param("q", query).accept(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.get(url).with(SecurityMockMvcRequestPostProcessors.csrf()).param("q", query)
+            .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Se recuperan los datos filtrados
         .andExpect(MockMvcResultMatchers.status().isOk())

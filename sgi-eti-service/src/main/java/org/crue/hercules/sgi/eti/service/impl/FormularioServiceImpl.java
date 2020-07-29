@@ -39,7 +39,7 @@ public class FormularioServiceImpl implements FormularioService {
   @Transactional
   public Formulario create(Formulario formulario) {
     log.debug("Petición a create Formulario : {} - start", formulario);
-    Assert.isNull(formulario.getId(), "Formulario id tiene que ser null para crear un nuevo Formulario");
+    Assert.notNull(formulario.getId(), "Formulario id no puede ser null para crear un nuevo formulario");
 
     return formularioRepository.save(formulario);
   }

@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -54,7 +52,6 @@ public class TipoEstadoActaController {
    * @param paging pageable
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOESTADOACTA-VER')")
   ResponseEntity<Page<TipoEstadoActa>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
@@ -75,7 +72,6 @@ public class TipoEstadoActaController {
    * @return Nuevo {@link TipoEstadoActa} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOESTADOACTA-EDITAR')")
   public ResponseEntity<TipoEstadoActa> newTipoEstadoActa(@Valid @RequestBody TipoEstadoActa nuevoTipoEstadoActa) {
     log.debug("newTipoEstadoActa(TipoEstadoActa nuevoTipoEstadoActa) - start");
     TipoEstadoActa returnValue = service.create(nuevoTipoEstadoActa);
@@ -91,7 +87,6 @@ public class TipoEstadoActaController {
    * @return {@link TipoEstadoActa} actualizado.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOESTADOACTA-EDITAR')")
   TipoEstadoActa replaceTipoEstadoActa(@Valid @RequestBody TipoEstadoActa updatedTipoEstadoActa,
       @PathVariable Long id) {
     log.debug("replaceTipoEstadoActa(TipoEstadoActa updatedTipoEstadoActa, Long id) - start");
@@ -108,7 +103,6 @@ public class TipoEstadoActaController {
    * @return {@link TipoEstadoActa} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOESTADOACTA-VER')")
   TipoEstadoActa one(@PathVariable Long id) {
     log.debug("TipoEstadoActa one(Long id) - start");
     TipoEstadoActa returnValue = service.findById(id);
@@ -122,7 +116,6 @@ public class TipoEstadoActaController {
    * @param id Identificador de {@link TipoEstadoActa}.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-TIPOESTADOACTA-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     TipoEstadoActa tipoEstadoActa = this.one(id);

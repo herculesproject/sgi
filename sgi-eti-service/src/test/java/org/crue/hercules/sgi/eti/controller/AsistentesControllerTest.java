@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.config.SecurityConfig;
 import org.crue.hercules.sgi.eti.exceptions.AsistentesNotFoundException;
 import org.crue.hercules.sgi.eti.model.Asistentes;
 import org.crue.hercules.sgi.eti.model.CargoComite;
@@ -28,10 +29,13 @@ import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -39,23 +43,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.ReflectionUtils;
 
-import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
-import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.test.context.ActiveProfiles;
-
 /**
  * AsistentesControllerTest
  */
 @WebMvcTest(AsistentesController.class)
-@ActiveProfiles("SECURITY_MOCK")
+// Since WebMvcTest is only sliced controller layer for the testing, it would
+// not take the security configurations.
+@Import(SecurityConfig.class)
 public class AsistentesControllerTest {
 
   @Autowired
@@ -69,41 +63,6 @@ public class AsistentesControllerTest {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String ASISTENTE_CONTROLLER_BASE_PATH = "/asistentes";
-
-  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
-  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
-                     // application’s primary configuration, a nested @TestConfiguration class is
-                     // used in addition to your application’s primary configuration.
-  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
-
-    @Autowired
-    private AuthenticationEntryPoint authenticationEntryPoint;
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-      http.csrf().disable() //
-          .authorizeRequests().antMatchers("/error").permitAll() //
-          .antMatchers("/**").authenticated() //
-          .anyRequest().denyAll() //
-          .and() //
-          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
-          .authenticationEntryPoint(authenticationEntryPoint) //
-          .and() //
-          .httpBasic();
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
-      return new SgiAccessDeniedHandler(mapper);
-    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
-      return new SgiAuthenticationEntryPoint(mapper);
-    }
-  }
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-ASISTENTES-VER" })
@@ -127,7 +86,9 @@ public class AsistentesControllerTest {
     BDDMockito.given(asistenteService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new AsistentesNotFoundException(invocation.getArgument(0));
     });
-    mockMvc.perform(MockMvcRequestBuilders.get(ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -143,7 +104,8 @@ public class AsistentesControllerTest {
 
     // when: Creamos Asistentes
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ASISTENTE_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+        .perform(MockMvcRequestBuilders.post(ASISTENTE_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevoAsistentesJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea los nuevos Asistentes y los devuelve
@@ -162,7 +124,8 @@ public class AsistentesControllerTest {
 
     // when: Creamos Asistentes
     mockMvc
-        .perform(MockMvcRequestBuilders.post(ASISTENTE_CONTROLLER_BASE_PATH).contentType(MediaType.APPLICATION_JSON)
+        .perform(MockMvcRequestBuilders.post(ASISTENTE_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevoAsistentesJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
@@ -182,7 +145,8 @@ public class AsistentesControllerTest {
 
     mockMvc
         .perform(MockMvcRequestBuilders.put(ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .contentType(MediaType.APPLICATION_JSON).content(replaceAsistentesJson))
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(replaceAsistentesJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica Asistentes y los devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
@@ -202,7 +166,8 @@ public class AsistentesControllerTest {
         });
     mockMvc
         .perform(MockMvcRequestBuilders.put(ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .contentType(MediaType.APPLICATION_JSON).content(replaceAsistentesJson))
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(replaceAsistentesJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
   }
@@ -215,7 +180,7 @@ public class AsistentesControllerTest {
 
     mockMvc
         .perform(MockMvcRequestBuilders.delete(ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .contentType(MediaType.APPLICATION_JSON))
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
@@ -233,7 +198,9 @@ public class AsistentesControllerTest {
         .willReturn(new PageImpl<>(asistentes));
 
     // when: find unlimited
-    mockMvc.perform(MockMvcRequestBuilders.get(ASISTENTE_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(ASISTENTE_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred Asistentes
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -267,8 +234,9 @@ public class AsistentesControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(ASISTENTE_CONTROLLER_BASE_PATH).header("X-Page", "3")
-            .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
+        .perform(
+            MockMvcRequestBuilders.get(ASISTENTE_CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
+                .header("X-Page", "3").header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked Asistentess are returned with the right page information
         // in headers
@@ -372,8 +340,8 @@ public class AsistentesControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(ASISTENTE_CONTROLLER_BASE_PATH).param("q", query)
-            .accept(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.get(ASISTENTE_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).param("q", query).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred Asistentes
         .andExpect(MockMvcResultMatchers.status().isOk())

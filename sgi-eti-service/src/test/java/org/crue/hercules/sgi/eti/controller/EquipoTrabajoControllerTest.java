@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.config.SecurityConfig;
 import org.crue.hercules.sgi.eti.exceptions.EquipoTrabajoNotFoundException;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
@@ -24,10 +25,13 @@ import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -35,24 +39,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.ReflectionUtils;
 
-import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
-import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.test.context.ActiveProfiles;
-
 /**
  * EquipoTrabajoControllerTest
  */
 @WebMvcTest(EquipoTrabajoController.class)
-@ActiveProfiles("SECURITY_MOCK")
-
+// Since WebMvcTest is only sliced controller layer for the testing, it would
+// not take the security configurations.
+@Import(SecurityConfig.class)
 public class EquipoTrabajoControllerTest {
 
   @Autowired
@@ -67,48 +60,15 @@ public class EquipoTrabajoControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String EQUIPO_TRABAJO_CONTROLLER_BASE_PATH = "/equipotrabajos";
 
-  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
-  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
-                     // application’s primary configuration, a nested @TestConfiguration class is
-                     // used in addition to your application’s primary configuration.
-  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
-
-    @Autowired
-    private AuthenticationEntryPoint authenticationEntryPoint;
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-      http.csrf().disable() //
-          .authorizeRequests().antMatchers("/error").permitAll() //
-          .antMatchers("/**").authenticated() //
-          .anyRequest().denyAll() //
-          .and() //
-          .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
-          .authenticationEntryPoint(authenticationEntryPoint) //
-          .and() //
-          .httpBasic();
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
-      return new SgiAccessDeniedHandler(mapper);
-    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
-      return new SgiAuthenticationEntryPoint(mapper);
-    }
-  }
-
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-EQUIPOTRABAJO-VER" })
   public void getEquipoTrabajo_WithId_ReturnsEquipoTrabajo() throws Exception {
     BDDMockito.given(equipoTrabajoService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockEquipoTrabajo(1L, generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1"))));
 
-    mockMvc.perform(MockMvcRequestBuilders.get(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("usuarioRef").value("user-001"))
@@ -122,7 +82,9 @@ public class EquipoTrabajoControllerTest {
     BDDMockito.given(equipoTrabajoService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new EquipoTrabajoNotFoundException(invocation.getArgument(0));
     });
-    mockMvc.perform(MockMvcRequestBuilders.get(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L))
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
@@ -140,7 +102,8 @@ public class EquipoTrabajoControllerTest {
     // when: Creamos un EquipoTrabajo
     mockMvc
         .perform(MockMvcRequestBuilders.post(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevoEquipoTrabajoJson))
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoEquipoTrabajoJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo EquipoTrabajo y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
@@ -160,7 +123,8 @@ public class EquipoTrabajoControllerTest {
     // when: Creamos un equipo de trabajo
     mockMvc
         .perform(MockMvcRequestBuilders.post(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH)
-            .contentType(MediaType.APPLICATION_JSON).content(nuevoEquipoTrabajoJson))
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoEquipoTrabajoJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -180,7 +144,8 @@ public class EquipoTrabajoControllerTest {
 
     mockMvc
         .perform(MockMvcRequestBuilders.put(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .contentType(MediaType.APPLICATION_JSON).content(replaceEquipoTrabajoJson))
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(replaceEquipoTrabajoJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica el EquipoTrabajo y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
@@ -201,7 +166,8 @@ public class EquipoTrabajoControllerTest {
         });
     mockMvc
         .perform(MockMvcRequestBuilders.put(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .contentType(MediaType.APPLICATION_JSON).content(replaceEquipoTrabajoJson))
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(replaceEquipoTrabajoJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
   }
@@ -214,7 +180,7 @@ public class EquipoTrabajoControllerTest {
 
     mockMvc
         .perform(MockMvcRequestBuilders.delete(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .contentType(MediaType.APPLICATION_JSON))
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
@@ -234,7 +200,9 @@ public class EquipoTrabajoControllerTest {
         .willReturn(new PageImpl<>(equipoTrabajos));
 
     // when: find unlimited
-    mockMvc.perform(MockMvcRequestBuilders.get(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH).accept(MediaType.APPLICATION_JSON))
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred EquipoTrabajo
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -270,8 +238,9 @@ public class EquipoTrabajoControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH).header("X-Page", "3")
-            .header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.get(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
+            .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked EquipoTrabajos are returned with the right page information
         // in headers
@@ -378,8 +347,8 @@ public class EquipoTrabajoControllerTest {
 
     // when: find with search query
     mockMvc
-        .perform(MockMvcRequestBuilders.get(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH).param("q", query)
-            .accept(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.get(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).param("q", query).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred EquipoTrabajo
         .andExpect(MockMvcResultMatchers.status().isOk())

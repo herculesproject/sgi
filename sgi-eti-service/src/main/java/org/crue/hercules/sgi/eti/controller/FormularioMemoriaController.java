@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -54,7 +52,6 @@ public class FormularioMemoriaController {
    * @param paging pageable
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-FORMULARIOMEMORIA-VER')")
   ResponseEntity<Page<FormularioMemoria>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
@@ -75,7 +72,6 @@ public class FormularioMemoriaController {
    * @return Nuevo {@link FormularioMemoria} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-FORMULARIOMEMORIA-EDITAR')")
   public ResponseEntity<FormularioMemoria> newFormularioMemoria(
       @Valid @RequestBody FormularioMemoria nuevoFormularioMemoria) {
     log.debug("newFormularioMemoria(FormularioMemoria nuevoFormularioMemoria) - start");
@@ -92,7 +88,6 @@ public class FormularioMemoriaController {
    * @return {@link FormularioMemoria} actualizado.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-FORMULARIOMEMORIA-EDITAR')")
   FormularioMemoria replaceFormularioMemoria(@Valid @RequestBody FormularioMemoria updatedFormularioMemoria,
       @PathVariable Long id) {
     log.debug("replaceFormularioMemoria(FormularioMemoria updatedFormularioMemoria, Long id) - start");
@@ -109,7 +104,6 @@ public class FormularioMemoriaController {
    * @return {@link FormularioMemoria} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-FORMULARIOMEMORIA-VER')")
   FormularioMemoria one(@PathVariable Long id) {
     log.debug("FormularioMemoria one(Long id) - start");
     FormularioMemoria returnValue = service.findById(id);
@@ -123,7 +117,6 @@ public class FormularioMemoriaController {
    * @param id Identificador de {@link FormularioMemoria}.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-FORMULARIOMEMORIA-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     FormularioMemoria formularioMemoria = this.one(id);

@@ -39,7 +39,7 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
   @Transactional
   public TipoDocumento create(TipoDocumento tipoDocumento) {
     log.debug("Petición a create TipoDocumento : {} - start", tipoDocumento);
-    Assert.isNull(tipoDocumento.getId(), "TipoDocumento id tiene que ser null para crear un nuevo tipoDocumento");
+    Assert.notNull(tipoDocumento.getId(), "TipoDocumento id no puede ser null para crear un nuevo tipoDocumento");
 
     return tipoDocumentoRepository.save(tipoDocumento);
   }

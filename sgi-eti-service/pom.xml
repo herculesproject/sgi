@@ -77,7 +77,7 @@
     </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-jpamodelgen</artifactId>
+      <artifactId>hibernate-jpamodelgen</artifactId>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -104,23 +104,31 @@
       <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.keycloak</groupId>
-      <artifactId>keycloak-spring-security-adapter</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
     </dependency>
-     <dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-oauth2-client</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-test</artifactId>
       <scope>test</scope>
     </dependency>
-
+    <dependency>
+      <groupId>com.github.tomakehurst</groupId>
+      <artifactId>wiremock-jre8</artifactId>
+      <version>${wiremock.version}</version>
+      <scope>test</scope>
+    </dependency>
 
   </dependencies>
 
   <properties>
     <java.version>1.8</java.version>
     <sgi-framework.version>0.0.1-SNAPSHOT</sgi-framework.version>
-    <!-- Keycloak Version (must match deployed version) -->
-    <org.keycloak.version>10.0.1</org.keycloak.version>
+    <wiremock.version>2.27.1</wiremock.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -166,21 +174,14 @@
   </properties>
 
   <dependencyManagement>
-      <dependencies>
-        <dependency>
-          <groupId>org.keycloak.bom</groupId>
-          <artifactId>keycloak-adapter-bom</artifactId>
-          <version>${org.keycloak.version}</version>
-          <type>pom</type>
-          <scope>import</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.hibernate</groupId>
-          <artifactId>hibernate-jpamodelgen</artifactId>
-          <version>${org.hibernate-jpamodelgen.version}</version>
-        </dependency>
-      </dependencies>
-    </dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-jpamodelgen</artifactId>
+        <version>${org.hibernate-jpamodelgen.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
 
   <profiles>

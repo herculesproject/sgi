@@ -43,7 +43,6 @@ public class EstadoRetrospectivaServiceTest {
 
     // given: Nueva entidad sin Id
     EstadoRetrospectiva response = getMockData(1L);
-    response.setId(null);
 
     BDDMockito.given(repository.save(response)).willReturn(response);
 

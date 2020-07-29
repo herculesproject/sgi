@@ -39,7 +39,7 @@ public class TipoActividadServiceImpl implements TipoActividadService {
   @Transactional
   public TipoActividad create(TipoActividad tipoActividad) {
     log.debug("Petición a create TipoActividad : {} - start", tipoActividad);
-    Assert.isNull(tipoActividad.getId(), "TipoActividad id tiene que ser null para crear un nuevo tipoActividad");
+    Assert.notNull(tipoActividad.getId(), "TipoActividad id no puede ser null para crear un nuevo tipoActividad");
 
     return tipoActividadRepository.save(tipoActividad);
   }

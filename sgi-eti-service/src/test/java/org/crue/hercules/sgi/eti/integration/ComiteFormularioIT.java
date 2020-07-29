@@ -1,37 +1,27 @@
 package org.crue.hercules.sgi.eti.integration;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Formulario;
-import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
-import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
 import org.crue.hercules.sgi.eti.model.ComiteFormulario;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -39,7 +29,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de ComiteFormulario.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("SECURITY_MOCK")
+@ContextConfiguration(initializers = { Oauth2WireMockInitializer.class })
 
 public class ComiteFormularioIT {
 
@@ -49,40 +39,18 @@ public class ComiteFormularioIT {
   @Autowired
   private TestRestTemplate restTemplate;
 
-  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
-  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
-                     // application’s primary configuration, a nested @TestConfiguration class is
-                     // used in addition to your application’s primary configuration.
-  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
+  @Autowired
+  private TokenBuilder tokenBuilder;
 
-    @Autowired
-    private AuthenticationEntryPoint authenticationEntryPoint;
+  private HttpEntity<ComiteFormulario> buildRequest(HttpHeaders headers, ComiteFormulario entity) throws Exception {
+    headers = (headers != null ? headers : new HttpHeaders());
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Authorization", String.format("bearer %s",
+        tokenBuilder.buildToken("user", "ETI-COMITEFORMULARIO-EDITAR", "ETI-COMITEFORMULARIO-VER")));
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-      PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-      auth.inMemoryAuthentication().passwordEncoder(encoder).withUser("user").password(encoder.encode("secret"))
-          .authorities("ETI-COMITEFORMULARIO-EDITAR", "ETI-COMITEFORMULARIO-VER");
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-      http.cors().and().csrf().disable().authorizeRequests().antMatchers("/error").permitAll().antMatchers("/**")
-          .authenticated().anyRequest().denyAll().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler)
-          .authenticationEntryPoint(authenticationEntryPoint).and().httpBasic();
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
-      return new SgiAccessDeniedHandler(mapper);
-    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
-      return new SgiAuthenticationEntryPoint(mapper);
-    }
+    HttpEntity<ComiteFormulario> request = new HttpEntity<>(entity, headers);
+    return request;
   }
 
   @Sql
@@ -93,8 +61,9 @@ public class ComiteFormularioIT {
     Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
     Formulario formulario = new Formulario(1L, "M10", "Descripcion", Boolean.TRUE);
 
-    final ResponseEntity<ComiteFormulario> response = restTemplate.withBasicAuth("user", "secret")
-        .getForEntity(COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, ComiteFormulario.class, 1L);
+    final ResponseEntity<ComiteFormulario> response = restTemplate.exchange(
+        COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
+        ComiteFormulario.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -117,8 +86,11 @@ public class ComiteFormularioIT {
     nuevoComiteFormulario.setComite(comite);
     nuevoComiteFormulario.setFormulario(formulario);
 
-    restTemplate.withBasicAuth("user", "secret").postForEntity(COMITE_FORMULARIO_CONTROLLER_BASE_PATH,
-        nuevoComiteFormulario, ComiteFormulario.class);
+    final ResponseEntity<ComiteFormulario> response = restTemplate.exchange(COMITE_FORMULARIO_CONTROLLER_BASE_PATH,
+        HttpMethod.POST, buildRequest(null, nuevoComiteFormulario), ComiteFormulario.class);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
   }
 
   @Sql
@@ -128,9 +100,9 @@ public class ComiteFormularioIT {
 
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<ComiteFormulario> response = restTemplate.withBasicAuth("user", "secret").exchange(
-        COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, ComiteFormulario.class,
-        id);
+    final ResponseEntity<ComiteFormulario> response = restTemplate.exchange(
+        COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null),
+        ComiteFormulario.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -141,10 +113,12 @@ public class ComiteFormularioIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeComiteFormulario_DoNotGetComiteFormulario() throws Exception {
-    restTemplate.withBasicAuth("user", "secret").delete(COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
+    restTemplate.exchange(COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE,
+        buildRequest(null, null), ComiteFormulario.class, 1L);
 
-    final ResponseEntity<ComiteFormulario> response = restTemplate.withBasicAuth("user", "secret")
-        .getForEntity(COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, ComiteFormulario.class, 1L);
+    final ResponseEntity<ComiteFormulario> response = restTemplate.exchange(
+        COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
+        ComiteFormulario.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -160,12 +134,9 @@ public class ComiteFormularioIT {
 
     ComiteFormulario replaceComiteFormulario = generarMockComiteFormulario(1L, comite, formulario);
 
-    final HttpEntity<ComiteFormulario> requestEntity = new HttpEntity<ComiteFormulario>(replaceComiteFormulario,
-        new HttpHeaders());
-
-    final ResponseEntity<ComiteFormulario> response = restTemplate.withBasicAuth("user", "secret").exchange(
-        COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity,
-        ComiteFormulario.class, 1L);
+    final ResponseEntity<ComiteFormulario> response = restTemplate.exchange(
+        COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT,
+        buildRequest(null, replaceComiteFormulario), ComiteFormulario.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -187,8 +158,8 @@ public class ComiteFormularioIT {
 
     URI uri = UriComponentsBuilder.fromUriString(COMITE_FORMULARIO_CONTROLLER_BASE_PATH).build(false).toUri();
 
-    final ResponseEntity<List<ComiteFormulario>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<ComiteFormulario>>() {
+    final ResponseEntity<List<ComiteFormulario>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ComiteFormulario>>() {
         });
 
     // then: Respuesta OK, ComiteFormularios retorna la información de la página
@@ -218,8 +189,8 @@ public class ComiteFormularioIT {
         .build(false).toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<ComiteFormulario>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, null, new ParameterizedTypeReference<List<ComiteFormulario>>() {
+    final ResponseEntity<List<ComiteFormulario>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null), new ParameterizedTypeReference<List<ComiteFormulario>>() {
         });
 
     // then: Respuesta OK, ComiteFormularios retorna la información de la página
@@ -241,8 +212,8 @@ public class ComiteFormularioIT {
         .build(false).toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<ComiteFormulario>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, null, new ParameterizedTypeReference<List<ComiteFormulario>>() {
+    final ResponseEntity<List<ComiteFormulario>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null), new ParameterizedTypeReference<List<ComiteFormulario>>() {
         });
 
     // then: Respuesta OK, TipoMemorias retorna la información de la página
@@ -274,8 +245,8 @@ public class ComiteFormularioIT {
     URI uri = UriComponentsBuilder.fromUriString(COMITE_FORMULARIO_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
-    final ResponseEntity<List<ComiteFormulario>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<ComiteFormulario>>() {
+    final ResponseEntity<List<ComiteFormulario>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ComiteFormulario>>() {
         });
 
     // then: Respuesta OK, ComiteFormularios retorna la información de la página

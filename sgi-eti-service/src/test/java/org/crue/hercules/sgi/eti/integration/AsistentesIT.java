@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.integration;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
@@ -20,76 +21,45 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
-import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.test.context.ActiveProfiles;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Test de integracion de Asistentes.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("SECURITY_MOCK")
+@ContextConfiguration(initializers = { Oauth2WireMockInitializer.class })
 public class AsistentesIT {
 
   @Autowired
   private TestRestTemplate restTemplate;
 
+  @Autowired
+  private TokenBuilder tokenBuilder;
+
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String ASISTENTE_CONTROLLER_BASE_PATH = "/asistentes";
 
-  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
-  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
-                     // application’s primary configuration, a nested @TestConfiguration class is
-                     // used in addition to your application’s primary configuration.
-  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
+  private HttpEntity<Asistentes> buildRequest(HttpHeaders headers, Asistentes entity) throws Exception {
+    headers = (headers != null ? headers : new HttpHeaders());
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ASISTENTES-EDITAR", "ETI-ASISTENTES-VER")));
 
-    @Autowired
-    private AuthenticationEntryPoint authenticationEntryPoint;
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-      PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-      auth.inMemoryAuthentication().passwordEncoder(encoder).withUser("user").password(encoder.encode("secret"))
-          .authorities("ETI-ASISTENTES-EDITAR", "ETI-ASISTENTES-VER");
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-      http.cors().and().csrf().disable().authorizeRequests().antMatchers("/error").permitAll().antMatchers("/**")
-          .authenticated().anyRequest().denyAll().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler)
-          .authenticationEntryPoint(authenticationEntryPoint).and().httpBasic();
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
-      return new SgiAccessDeniedHandler(mapper);
-    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
-      return new SgiAuthenticationEntryPoint(mapper);
-    }
+    HttpEntity<Asistentes> request = new HttpEntity<>(entity, headers);
+    return request;
   }
 
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getAsistentes_WithId_ReturnsAsistentes() throws Exception {
-    final ResponseEntity<Asistentes> response = restTemplate.withBasicAuth("user", "secret")
-        .getForEntity(ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, Asistentes.class, 1L);
+    final ResponseEntity<Asistentes> response = restTemplate.exchange(
+        ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null), Asistentes.class,
+        1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -115,7 +85,7 @@ public class AsistentesIT {
     nuevoAsistente.setEvaluador(new Evaluador());
     nuevoAsistente.getEvaluador().setId(1L);
 
-    restTemplate.withBasicAuth("user", "secret").postForEntity(ASISTENTE_CONTROLLER_BASE_PATH, nuevoAsistente,
+    restTemplate.exchange(ASISTENTE_CONTROLLER_BASE_PATH, HttpMethod.POST, buildRequest(null, nuevoAsistente),
         Asistentes.class);
   }
 
@@ -126,8 +96,9 @@ public class AsistentesIT {
 
     // when: Delete con id existente
     long id = 1L;
-    final ResponseEntity<Asistentes> response = restTemplate.withBasicAuth("user", "secret")
-        .exchange(ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, null, Asistentes.class, id);
+    final ResponseEntity<Asistentes> response = restTemplate.exchange(
+        ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null),
+        Asistentes.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -138,10 +109,10 @@ public class AsistentesIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeAsistentes_DoNotGetAsistentes() throws Exception {
-    restTemplate.withBasicAuth("user", "secret").delete(ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L);
 
-    final ResponseEntity<Asistentes> response = restTemplate.withBasicAuth("user", "secret")
-        .getForEntity(ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, Asistentes.class, 1L);
+    final ResponseEntity<Asistentes> response = restTemplate.exchange(
+        ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null),
+        Asistentes.class, 2L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
@@ -160,11 +131,9 @@ public class AsistentesIT {
     replaceAsistente.setEvaluador(new Evaluador());
     replaceAsistente.getEvaluador().setId(1L);
 
-    final HttpEntity<Asistentes> requestEntity = new HttpEntity<Asistentes>(replaceAsistente, new HttpHeaders());
-
-    final ResponseEntity<Asistentes> response = restTemplate.withBasicAuth("user", "secret").exchange(
-
-        ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, requestEntity, Asistentes.class, 1L);
+    final ResponseEntity<Asistentes> response = restTemplate.exchange(
+        ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, buildRequest(null, replaceAsistente),
+        Asistentes.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -187,10 +156,8 @@ public class AsistentesIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "3");
 
-    URI uri = UriComponentsBuilder.fromUriString(ASISTENTE_CONTROLLER_BASE_PATH).build(false).toUri();
-
-    final ResponseEntity<List<Asistentes>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<Asistentes>>() {
+    final ResponseEntity<List<Asistentes>> response = restTemplate.exchange(ASISTENTE_CONTROLLER_BASE_PATH,
+        HttpMethod.GET, buildRequest(headers, null), new ParameterizedTypeReference<List<Asistentes>>() {
         });
 
     // then: Respuesta OK, Asistentes retorna la información de la página
@@ -221,8 +188,8 @@ public class AsistentesIT {
         .toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<Asistentes>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, null, new ParameterizedTypeReference<List<Asistentes>>() {
+    final ResponseEntity<List<Asistentes>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null), new ParameterizedTypeReference<List<Asistentes>>() {
         });
 
     // then: Respuesta OK, Asistentes retorna la información de la página
@@ -245,8 +212,8 @@ public class AsistentesIT {
         .toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<Asistentes>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, null, new ParameterizedTypeReference<List<Asistentes>>() {
+    final ResponseEntity<List<Asistentes>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null), new ParameterizedTypeReference<List<Asistentes>>() {
         });
 
     // then: Respuesta OK, Asistentes retorna la información de la página
@@ -277,8 +244,8 @@ public class AsistentesIT {
     URI uri = UriComponentsBuilder.fromUriString(ASISTENTE_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
-    final ResponseEntity<List<Asistentes>> response = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<Asistentes>>() {
+    final ResponseEntity<List<Asistentes>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Asistentes>>() {
         });
 
     // then: Respuesta OK, Asistentes retorna la información de la página

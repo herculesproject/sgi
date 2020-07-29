@@ -63,7 +63,7 @@ public class DictamenServiceTest {
   @Test
   public void create_ReturnsDictamen() {
     // given: Un nuevo dictamen
-    Dictamen dictamenNew = generarMockDictamen(null, "DictamenNew");
+    Dictamen dictamenNew = generarMockDictamen(1L, "DictamenNew");
 
     Dictamen dictamen = generarMockDictamen(1L, "DictamenNew");
 
@@ -79,9 +79,9 @@ public class DictamenServiceTest {
   }
 
   @Test
-  public void create_DictamenWithId_ThrowsIllegalArgumentException() {
+  public void create_DictamenWithoutId_ThrowsIllegalArgumentException() {
     // given: Un nuevo dictamen que ya tiene id
-    Dictamen dictamenNew = generarMockDictamen(1L, "DictamenNew");
+    Dictamen dictamenNew = generarMockDictamen(null, "DictamenNew");
     // when: Creamos el dictamen
     // then: Lanza una excepcion porque el dictamen ya tiene id
     Assertions.assertThatThrownBy(() -> dictamenService.create(dictamenNew))

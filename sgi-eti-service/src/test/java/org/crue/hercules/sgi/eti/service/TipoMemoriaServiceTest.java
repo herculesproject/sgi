@@ -64,7 +64,7 @@ public class TipoMemoriaServiceTest {
   @Test
   public void create_ReturnsTipoMemoria() {
     // given: Un nuevo TipoMemoria
-    TipoMemoria tipoMemoriaNew = generarMockTipoMemoria(null, "TipoMemoriaNew");
+    TipoMemoria tipoMemoriaNew = generarMockTipoMemoria(1L, "TipoMemoriaNew");
 
     TipoMemoria tipoMemoria = generarMockTipoMemoria(1L, "TipoMemoriaNew");
 
@@ -80,9 +80,9 @@ public class TipoMemoriaServiceTest {
   }
 
   @Test
-  public void create_TipoMemoriaWithId_ThrowsIllegalArgumentException() {
+  public void create_TipoMemoriaWithoutId_ThrowsIllegalArgumentException() {
     // given: Un nuevo tipo de Memoria que ya tiene id
-    TipoMemoria tipoMemoriaNew = generarMockTipoMemoria(1L, "TipoMemoriaNew");
+    TipoMemoria tipoMemoriaNew = generarMockTipoMemoria(null, "TipoMemoriaNew");
     // when: Creamos el tipo de Memoria
     // then: Lanza una excepcion porque el tipo Memoria ya tiene id
     Assertions.assertThatThrownBy(() -> tipoMemoriaService.create(tipoMemoriaNew))

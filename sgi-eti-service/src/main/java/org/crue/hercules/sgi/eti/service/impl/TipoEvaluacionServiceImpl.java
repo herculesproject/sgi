@@ -39,7 +39,7 @@ public class TipoEvaluacionServiceImpl implements TipoEvaluacionService {
   @Transactional
   public TipoEvaluacion create(TipoEvaluacion tipoEvaluacion) {
     log.debug("Petición a create TipoEvaluacion : {} - start", tipoEvaluacion);
-    Assert.isNull(tipoEvaluacion.getId(), "TipoEvaluacion id tiene que ser null para crear un nuevo tipoEvaluacion");
+    Assert.notNull(tipoEvaluacion.getId(), "TipoEvaluacion id no puede ser null para crear un nuevo tipoEvaluacion");
 
     return tipoEvaluacionRepository.save(tipoEvaluacion);
   }

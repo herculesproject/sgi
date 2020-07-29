@@ -39,8 +39,8 @@ public class FormacionEspecificaServiceImpl implements FormacionEspecificaServic
   @Transactional
   public FormacionEspecifica create(FormacionEspecifica formacionEspecifica) {
     log.debug("Petición a create FormacionEspecifica : {} - start", formacionEspecifica);
-    Assert.isNull(formacionEspecifica.getId(),
-        "FormacionEspecifica id tiene que ser null para crear una nueva formacionEspecifica");
+    Assert.notNull(formacionEspecifica.getId(),
+        "FormacionEspecifica id no puede ser null para crear un nuevo formacionEspecifica");
 
     return formacionEspecificaRepository.save(formacionEspecifica);
   }

@@ -64,7 +64,7 @@ public class TipoEstadoActaServiceTest {
   @Test
   public void create_ReturnsTipoEstadoActa() {
     // given: Un nuevo TipoEstadoActa
-    TipoEstadoActa tipoEstadoActaNew = generarMockTipoEstadoActa(null, "TipoEstadoActaNew");
+    TipoEstadoActa tipoEstadoActaNew = generarMockTipoEstadoActa(1L, "TipoEstadoActaNew");
 
     TipoEstadoActa tipoEstadoActa = generarMockTipoEstadoActa(1L, "TipoEstadoActaNew");
 
@@ -80,9 +80,9 @@ public class TipoEstadoActaServiceTest {
   }
 
   @Test
-  public void create_TipoEstadoActaWithId_ThrowsIllegalArgumentException() {
+  public void create_TipoEstadoActaWithoutId_ThrowsIllegalArgumentException() {
     // given: Un nuevo tipoEstadoActa que ya tiene id
-    TipoEstadoActa tipoEstadoActaNew = generarMockTipoEstadoActa(1L, "TipoEstadoActaNew");
+    TipoEstadoActa tipoEstadoActaNew = generarMockTipoEstadoActa(null, "TipoEstadoActaNew");
     // when: Creamos el tipoEstadoActa
     // then: Lanza una excepcion porque el tipoEstadoActa ya tiene id
     Assertions.assertThatThrownBy(() -> tipoEstadoActaService.create(tipoEstadoActaNew))

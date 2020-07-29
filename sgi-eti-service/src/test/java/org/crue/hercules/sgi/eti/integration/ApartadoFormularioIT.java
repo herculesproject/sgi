@@ -1,39 +1,29 @@
 package org.crue.hercules.sgi.eti.integration;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.ApartadoFormulario;
 import org.crue.hercules.sgi.eti.model.BloqueFormulario;
 import org.crue.hercules.sgi.eti.model.ComponenteFormulario;
 import org.crue.hercules.sgi.eti.model.Formulario;
-import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
-import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -41,50 +31,27 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de ApartadoFormulario.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("SECURITY_MOCK")
-
+@ContextConfiguration(initializers = { Oauth2WireMockInitializer.class })
 public class ApartadoFormularioIT {
 
   @Autowired
   private TestRestTemplate restTemplate;
 
+  @Autowired
+  private TokenBuilder tokenBuilder;
+
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String APARTADO_FORMULARIO_CONTROLLER_BASE_PATH = "/apartadoformularios";
 
-  @Profile("SECURITY_MOCK") // If we use the SECURITY_MOCK profile, we use this bean!
-  @TestConfiguration // Unlike a nested @Configuration class, which would be used instead of your
-                     // application’s primary configuration, a nested @TestConfiguration class is
-                     // used in addition to your application’s primary configuration.
-  static class TestSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
+  private HttpEntity<ApartadoFormulario> buildRequest(HttpHeaders headers, ApartadoFormulario entity) throws Exception {
+    headers = (headers != null ? headers : new HttpHeaders());
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Authorization", String.format("bearer %s",
+        tokenBuilder.buildToken("user", "ETI-APARTADOFORMULARIO-EDITAR", "ETI-APARTADOFORMULARIO-VER")));
 
-    @Autowired
-    private AuthenticationEntryPoint authenticationEntryPoint;
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-      PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-      auth.inMemoryAuthentication().passwordEncoder(encoder).withUser("user").password(encoder.encode("secret"))
-          .authorities("ETI-APARTADOFORMULARIO-EDITAR", "ETI-APARTADOFORMULARIO-VER");
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-      http.cors().and().csrf().disable().authorizeRequests().antMatchers("/error").permitAll().antMatchers("/**")
-          .authenticated().anyRequest().denyAll().and().exceptionHandling().accessDeniedHandler(accessDeniedHandler)
-          .authenticationEntryPoint(authenticationEntryPoint).and().httpBasic();
-    }
-
-    @Bean
-    public AccessDeniedHandler accessDeniedHandler(ObjectMapper mapper) {
-      return new SgiAccessDeniedHandler(mapper);
-    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint(ObjectMapper mapper) {
-      return new SgiAuthenticationEntryPoint(mapper);
-    }
+    HttpEntity<ApartadoFormulario> request = new HttpEntity<>(entity, headers);
+    return request;
   }
 
   @Sql
@@ -96,11 +63,9 @@ public class ApartadoFormularioIT {
     final ApartadoFormulario newApartadoFormulario = getMockData(2L, 1L, 1L, null);
     newApartadoFormulario.setId(null);
 
-    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
-
     // when: Se crea la entidad
-    final ResponseEntity<ApartadoFormulario> response = restTemplate.withBasicAuth("user", "secret").postForEntity(url,
-        newApartadoFormulario, ApartadoFormulario.class);
+    final ResponseEntity<ApartadoFormulario> response = restTemplate.exchange(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH,
+        HttpMethod.POST, buildRequest(null, newApartadoFormulario), ApartadoFormulario.class);
 
     // then: La entidad se crea correctamente
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -119,15 +84,10 @@ public class ApartadoFormularioIT {
     final ApartadoFormulario updatedApartadoFormulario = getMockData(3L, 1L, 1L, 1L);
     updatedApartadoFormulario.setId(2L);
 
-    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
-        .toString();
-
-    HttpEntity<ApartadoFormulario> request = new HttpEntity<>(updatedApartadoFormulario);
-
     // when: Se actualiza la entidad
-    final ResponseEntity<ApartadoFormulario> response = restTemplate.withBasicAuth("user", "secret").exchange(url,
-        HttpMethod.PUT, request, ApartadoFormulario.class, updatedApartadoFormulario.getId());
+    final ResponseEntity<ApartadoFormulario> response = restTemplate.exchange(
+        APARTADO_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT,
+        buildRequest(null, updatedApartadoFormulario), ApartadoFormulario.class, updatedApartadoFormulario.getId());
 
     // then: Los datos se actualizan correctamente
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -142,23 +102,23 @@ public class ApartadoFormularioIT {
     // given: Entidad existente con la propiedad activo a true
     Long id = 1L;
 
-    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
-        .toString();
-
-    ResponseEntity<ApartadoFormulario> response = restTemplate.withBasicAuth("user", "secret").getForEntity(url,
+    ResponseEntity<ApartadoFormulario> response = restTemplate.exchange(
+        APARTADO_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
         ApartadoFormulario.class, id);
+
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     Assertions.assertThat(response.getBody().getActivo()).isEqualTo(Boolean.TRUE);
 
     // when: Se elimina la entidad
-    response = restTemplate.withBasicAuth("user", "secret").exchange(url, HttpMethod.DELETE, null,
-        ApartadoFormulario.class, id);
+    response = restTemplate.exchange(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE,
+        buildRequest(null, null), ApartadoFormulario.class, id);
 
     // then: La entidad pasa a tener propiedad activo a false
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-    response = restTemplate.withBasicAuth("user", "secret").getForEntity(url, ApartadoFormulario.class, id);
+    response = restTemplate.exchange(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET,
+        buildRequest(null, null), ApartadoFormulario.class, id);
+
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     Assertions.assertThat(response.getBody().getActivo()).isEqualTo(Boolean.FALSE);
   }
@@ -171,12 +131,9 @@ public class ApartadoFormularioIT {
     // given: Entidad con un determinado Id
     final ApartadoFormulario apartadoFormulario = getMockData(1L, 1L, 1L, null);
 
-    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
-        .toString();
-
     // when: Se busca la entidad por ese Id
-    ResponseEntity<ApartadoFormulario> response = restTemplate.withBasicAuth("user", "secret").getForEntity(url,
+    final ResponseEntity<ApartadoFormulario> response = restTemplate.exchange(
+        APARTADO_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
         ApartadoFormulario.class, apartadoFormulario.getId());
 
     // then: Se recupera la entidad con el Id
@@ -190,12 +147,10 @@ public class ApartadoFormularioIT {
 
     // given: No existe entidad con el id indicado
     Long id = 1L;
-    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_ID)//
-        .toString();
 
     // when: Se busca la entidad por ese Id
-    ResponseEntity<ApartadoFormulario> response = restTemplate.withBasicAuth("user", "secret").getForEntity(url,
+    final ResponseEntity<ApartadoFormulario> response = restTemplate.exchange(
+        APARTADO_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
         ApartadoFormulario.class, id);
 
     // then: Se produce error porque no encuentra la entidad con ese Id
@@ -208,20 +163,19 @@ public class ApartadoFormularioIT {
   public void findAll_Unlimited_ReturnsFullApartadoFormularioList() throws Exception {
 
     // given: Datos existentes
-    List<ApartadoFormulario> response = new LinkedList<>();
-    response.add(getMockData(1L, 1L, 1L, null));
-    response.add(getMockData(2L, 1L, 1L, 1L));
-
-    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
+    List<ApartadoFormulario> result = new LinkedList<>();
+    result.add(getMockData(1L, 1L, 1L, null));
+    result.add(getMockData(2L, 1L, 1L, 1L));
 
     // when: Se buscan todos los datos
-    final ResponseEntity<List<ApartadoFormulario>> result = restTemplate.withBasicAuth("user", "secret").exchange(url,
-        HttpMethod.GET, null, new ParameterizedTypeReference<List<ApartadoFormulario>>() {
+    final ResponseEntity<List<ApartadoFormulario>> response = restTemplate.exchange(
+        APARTADO_FORMULARIO_CONTROLLER_BASE_PATH, HttpMethod.GET, buildRequest(null, null),
+        new ParameterizedTypeReference<List<ApartadoFormulario>>() {
         });
 
     // then: Se recuperan todos los datos
-    Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(result.getBody()).isEqualTo(response);
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).isEqualTo(result);
   }
 
   @Sql
@@ -230,30 +184,29 @@ public class ApartadoFormularioIT {
   public void findAll_WithPaging_ReturnsApartadoFormularioSubList() throws Exception {
 
     // given: Datos existentes
-    List<ApartadoFormulario> response = new LinkedList<>();
-    response.add(getMockData(5L, 2L, 2L, 4L));
+    List<ApartadoFormulario> result = new LinkedList<>();
+    result.add(getMockData(5L, 2L, 2L, 4L));
 
     // página 2 con 2 elementos por página
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "2");
     headers.add("X-Page-Size", "2");
 
-    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).toString();
-
     // when: Se buscan los datos paginados
-    final ResponseEntity<List<ApartadoFormulario>> result = restTemplate.withBasicAuth("user", "secret").exchange(url,
-        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<ApartadoFormulario>>() {
+    final ResponseEntity<List<ApartadoFormulario>> response = restTemplate.exchange(
+        APARTADO_FORMULARIO_CONTROLLER_BASE_PATH, HttpMethod.GET, buildRequest(headers, null),
+        new ParameterizedTypeReference<List<ApartadoFormulario>>() {
         });
 
     // then: Se recuperan los datos correctamente según la paginación solicitada
-    Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(result.getBody().size()).isEqualTo(1);
-    Assertions.assertThat(result.getBody()).isEqualTo(response);
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page")).isEqualTo("2");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Total-Count")).isEqualTo("1");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Count")).isEqualTo("3");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Total-Count")).isEqualTo("5");
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody().size()).isEqualTo(1);
+    Assertions.assertThat(response.getBody()).isEqualTo(result);
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("2");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Total-Count")).isEqualTo("1");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Count")).isEqualTo("3");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("5");
   }
 
   @Sql
@@ -262,29 +215,29 @@ public class ApartadoFormularioIT {
   public void findAll_WithSearchQuery_ReturnsFilteredApartadoFormularioList() throws Exception {
 
     // given: Datos existentes
-    List<ApartadoFormulario> response = new LinkedList<>();
-    response.add(getMockData(3L, 1L, 1L, 1L));
+    List<ApartadoFormulario> result = new LinkedList<>();
+    result.add(getMockData(3L, 1L, 1L, 1L));
 
     // search by codigo like, id equals
     Long id = 3L;
-    String query = "nombre~ApartadoFormulario0%,id:" + id;
+    String query = "nombre~ApartadoFormulario0,id:" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).queryParam("q", query)
         .build(false).toUri();
 
     // when: Se buscan los datos con el filtro indicado
-    final ResponseEntity<List<ApartadoFormulario>> result = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, null, new ParameterizedTypeReference<List<ApartadoFormulario>>() {
+    final ResponseEntity<List<ApartadoFormulario>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null), new ParameterizedTypeReference<List<ApartadoFormulario>>() {
         });
 
     // then: Se recuperan los datos filtrados
-    Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(result.getBody()).isEqualTo(response);
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page")).isEqualTo("0");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Size")).isEqualTo("1");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Total-Count")).isEqualTo("1");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Count")).isEqualTo("1");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Total-Count")).isEqualTo("1");
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).isEqualTo(result);
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("0");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("1");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Total-Count")).isEqualTo("1");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Count")).isEqualTo("1");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("1");
 
   }
 
@@ -302,19 +255,19 @@ public class ApartadoFormularioIT {
         .build(false).toUri();
 
     // when: Se buscan los datos con la ordenación indicada
-    final ResponseEntity<List<ApartadoFormulario>> result = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, null, new ParameterizedTypeReference<List<ApartadoFormulario>>() {
+    final ResponseEntity<List<ApartadoFormulario>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(null, null), new ParameterizedTypeReference<List<ApartadoFormulario>>() {
         });
 
     // then: Se recuperan los datos filtrados, ordenados y paginados
-    Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(result.getBody().get(0).getId()).isEqualTo(5L);
-    Assertions.assertThat(result.getBody().get(4).getId()).isEqualTo(1L);
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page")).isEqualTo("0");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Total-Count")).isEqualTo("5");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Count")).isEqualTo("1");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Total-Count")).isEqualTo("5");
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody().get(0).getId()).isEqualTo(5L);
+    Assertions.assertThat(response.getBody().get(4).getId()).isEqualTo(1L);
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("0");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Total-Count")).isEqualTo("5");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Count")).isEqualTo("1");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("5");
   }
 
   @Sql
@@ -323,8 +276,8 @@ public class ApartadoFormularioIT {
   public void findAll_WithPagingSortingAndFiltering_ReturnsApartadoFormularioSubList() throws Exception {
 
     // given: Datos existentes
-    List<ApartadoFormulario> response = new LinkedList<>();
-    response.add(getMockData(1L, 1L, 1L, null));
+    List<ApartadoFormulario> result = new LinkedList<>();
+    result.add(getMockData(1L, 1L, 1L, null));
 
     // página 1 con 2 elementos por página
     HttpHeaders headers = new HttpHeaders();
@@ -335,25 +288,25 @@ public class ApartadoFormularioIT {
     String sort = "id-";
 
     // search
-    String query = "nombre~ApartadoFormulario0%";
+    String query = "nombre~ApartadoFormulario0";
 
     URI uri = UriComponentsBuilder.fromUriString(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", query).build(false).toUri();
 
     // when: Se buscan los datos paginados con el filtro y orden indicados
-    final ResponseEntity<List<ApartadoFormulario>> result = restTemplate.withBasicAuth("user", "secret").exchange(uri,
-        HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<List<ApartadoFormulario>>() {
+    final ResponseEntity<List<ApartadoFormulario>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ApartadoFormulario>>() {
         });
 
     // then: Se recuperan los datos filtrados, ordenados y paginados
-    Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(result.getBody().size()).isEqualTo(1);
-    Assertions.assertThat(result.getBody()).isEqualTo(response);
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page")).isEqualTo("1");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Total-Count")).isEqualTo("1");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Count")).isEqualTo("2");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Total-Count")).isEqualTo("3");
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody().size()).isEqualTo(1);
+    Assertions.assertThat(response.getBody()).isEqualTo(result);
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Total-Count")).isEqualTo("1");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Count")).isEqualTo("2");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("3");
   }
 
   /**

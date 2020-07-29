@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -54,7 +52,6 @@ public class InformeFormularioController {
    * @param paging pageable
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-INFORMEFORMULARIO-VER')")
   ResponseEntity<Page<InformeFormulario>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
@@ -75,7 +72,6 @@ public class InformeFormularioController {
    * @return Nuevo {@link InformeFormulario} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-INFORMEFORMULARIO-EDITAR')")
   public ResponseEntity<InformeFormulario> newInformeFormulario(
       @Valid @RequestBody InformeFormulario nuevoInformeFormulario) {
     log.debug("newInformeFormulario(InformeFormulario nuevoInformeFormulario) - start");
@@ -92,7 +88,6 @@ public class InformeFormularioController {
    * @return {@link InformeFormulario} actualizado.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-INFORMEFORMULARIO-EDITAR')")
   InformeFormulario replaceInformeFormulario(@Valid @RequestBody InformeFormulario updatedInformeFormulario,
       @PathVariable Long id) {
     log.debug("replaceInformeFormulario(InformeFormulario updatedInformeFormulario, Long id) - start");
@@ -109,7 +104,6 @@ public class InformeFormularioController {
    * @return {@link InformeFormulario} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-INFORMEFORMULARIO-VER')")
   InformeFormulario one(@PathVariable Long id) {
     log.debug("InformeFormulario one(Long id) - start");
     InformeFormulario returnValue = service.findById(id);
@@ -123,7 +117,6 @@ public class InformeFormularioController {
    * @param id Identificador de {@link InformeFormulario}.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-INFORMEFORMULARIO-EDITAR')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     service.delete(id);

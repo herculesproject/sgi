@@ -60,7 +60,7 @@ public class TipoTareaServiceTest {
   @Test
   public void create_ReturnsTipoTarea() {
     // given: Un nuevo TipoTarea
-    TipoTarea tipoTareaNew = generarMockTipoTarea(null, "TipoTareaNew");
+    TipoTarea tipoTareaNew = generarMockTipoTarea(1L, "TipoTareaNew");
 
     TipoTarea tipoTarea = generarMockTipoTarea(1L, "TipoTareaNew");
 

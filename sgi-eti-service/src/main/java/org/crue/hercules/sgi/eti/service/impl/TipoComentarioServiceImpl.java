@@ -39,7 +39,7 @@ public class TipoComentarioServiceImpl implements TipoComentarioService {
   @Transactional
   public TipoComentario create(TipoComentario tipoComentario) {
     log.debug("Petición a create TipoComentario : {} - start", tipoComentario);
-    Assert.isNull(tipoComentario.getId(), "TipoComentario id tiene que ser null para crear un nuevo tipoComentario");
+    Assert.notNull(tipoComentario.getId(), "TipoComentario id no puede ser null para crear un nuevo tipoComentario");
 
     return tipoComentarioRepository.save(tipoComentario);
   }

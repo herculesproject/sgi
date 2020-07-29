@@ -64,7 +64,7 @@ public class TipoEstadoMemoriaServiceTest {
   @Test
   public void create_ReturnsTipoEstadoMemoria() {
     // given: Un nuevo TipoEstadoMemoria
-    TipoEstadoMemoria tipoEstadoMemoriaNew = generarMockTipoEstadoMemoria(null, "TipoEstadoMemoriaNew");
+    TipoEstadoMemoria tipoEstadoMemoriaNew = generarMockTipoEstadoMemoria(1L, "TipoEstadoMemoriaNew");
 
     TipoEstadoMemoria tipoEstadoMemoria = generarMockTipoEstadoMemoria(1L, "TipoEstadoMemoriaNew");
 
@@ -80,11 +80,11 @@ public class TipoEstadoMemoriaServiceTest {
   }
 
   @Test
-  public void create_TipoEstadoMemoriaWithId_ThrowsIllegalArgumentException() {
-    // given: Un nuevo tipo estado de Memoria que ya tiene id
-    TipoEstadoMemoria tipoEstadoMemoriaNew = generarMockTipoEstadoMemoria(1L, "TipoEstadoMemoriaNew");
+  public void create_TipoEstadoMemoriaWithNoId_ThrowsIllegalArgumentException() {
+    // given: Un nuevo tipo estado de Memoria que no tiene id
+    TipoEstadoMemoria tipoEstadoMemoriaNew = generarMockTipoEstadoMemoria(null, "TipoEstadoMemoriaNew");
     // when: Creamos el tipo estado de Memoria
-    // then: Lanza una excepcion porque el tipo estado Memoria ya tiene id
+    // then: Lanza una excepcion porque el tipo estado Memoria no tiene id
     Assertions.assertThatThrownBy(() -> tipoEstadoMemoriaService.create(tipoEstadoMemoriaNew))
         .isInstanceOf(IllegalArgumentException.class);
   }

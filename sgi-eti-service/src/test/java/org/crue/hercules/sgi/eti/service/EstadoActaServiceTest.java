@@ -63,7 +63,7 @@ public class EstadoActaServiceTest {
   @Test
   public void create_ReturnsEstadoActa() {
     // given: Un nuevo EstadoActa
-    EstadoActa estadoActaNew = generarMockEstadoActa(null);
+    EstadoActa estadoActaNew = generarMockEstadoActa(1L);
 
     EstadoActa estadoActa = generarMockEstadoActa(1L);
 
@@ -79,11 +79,11 @@ public class EstadoActaServiceTest {
   }
 
   @Test
-  public void create_EstadoActaWithId_ThrowsIllegalArgumentException() {
-    // given: Un nuevo estado acta que ya tiene id
-    EstadoActa estadoActaNew = generarMockEstadoActa(1L);
+  public void create_EstadoActaWithoutId_ThrowsIllegalArgumentException() {
+    // given: Un nuevo estado acta que no tiene id
+    EstadoActa estadoActaNew = generarMockEstadoActa(null);
     // when: Creamos el estado acta
-    // then: Lanza una excepcion porque el estado acta ya tiene id
+    // then: Lanza una excepcion porque el estado acta no tiene id
     Assertions.assertThatThrownBy(() -> estadoActaService.create(estadoActaNew))
         .isInstanceOf(IllegalArgumentException.class);
   }

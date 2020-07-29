@@ -39,7 +39,7 @@ public class TipoEstadoActaServiceImpl implements TipoEstadoActaService {
   @Transactional
   public TipoEstadoActa create(TipoEstadoActa tipoEstadoActa) {
     log.debug("Petición a create TipoEstadoActa : {} - start", tipoEstadoActa);
-    Assert.isNull(tipoEstadoActa.getId(), "TipoEstadoActa id tiene que ser null para crear un nuevo TipoEstadoActa");
+    Assert.notNull(tipoEstadoActa.getId(), "TipoEstadoActa id no puede ser null para crear un nuevo TipoEstadoActa");
 
     return tipoEstadoActaRepository.save(tipoEstadoActa);
   }

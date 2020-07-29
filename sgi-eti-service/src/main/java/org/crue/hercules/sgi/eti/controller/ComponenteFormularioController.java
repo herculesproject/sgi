@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,7 +57,6 @@ public class ComponenteFormularioController {
    * @return ResponseEntity<ComponenteFormulario>
    */
   @PostMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-COMPONENTEFORMULARIO-EDITAR')")
   ResponseEntity<ComponenteFormulario> newComponenteFormulario(
       @Valid @RequestBody ComponenteFormulario componenteFormulario) {
     log.debug("newComponenteFormulario(ComponenteFormulario componenteFormulario) - start");
@@ -83,7 +81,6 @@ public class ComponenteFormularioController {
    *                                               tiene id.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-COMPONENTEFORMULARIO-EDITAR')")
   ComponenteFormulario replaceComponenteFormulario(@Valid @RequestBody ComponenteFormulario componenteFormulario,
       @PathVariable Long id) {
     log.debug("replaceComponenteFormulario(ComponenteFormulario componenteFormulario, Long id) - start");
@@ -105,7 +102,6 @@ public class ComponenteFormularioController {
    *                                               tiene id.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-COMPONENTEFORMULARIO-EDITAR')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
@@ -123,7 +119,6 @@ public class ComponenteFormularioController {
    *         filtradas.
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-COMPONENTEFORMULARIO-VER')")
   ResponseEntity<Page<ComponenteFormulario>> findAll(
       @RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
@@ -147,7 +142,6 @@ public class ComponenteFormularioController {
    * @throws IllegalArgumentException              Si no se informa id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-COMPONENTEFORMULARIO-VER')")
   ComponenteFormulario one(@PathVariable Long id) {
     log.debug("one(Long id) - start");
     ComponenteFormulario returnValue = service.findById(id);

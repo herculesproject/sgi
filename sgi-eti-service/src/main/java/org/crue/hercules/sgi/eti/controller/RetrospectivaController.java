@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,7 +57,6 @@ public class RetrospectivaController {
    * @return ResponseEntity<Retrospectiva>
    */
   @PostMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-RETROSPECTIVA-EDITAR')")
   ResponseEntity<Retrospectiva> newRetrospectiva(@Valid @RequestBody Retrospectiva retrospectiva) {
     log.debug("newRetrospectiva(Retrospectiva retrospectiva) - start");
     Retrospectiva returnValue = service.create(retrospectiva);
@@ -78,7 +76,6 @@ public class RetrospectivaController {
    *                                        tiene id.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-RETROSPECTIVA-EDITAR')")
   Retrospectiva replaceRetrospectiva(@Valid @RequestBody Retrospectiva retrospectiva, @PathVariable Long id) {
     log.debug("replaceRetrospectiva(Retrospectiva retrospectiva, Long id) - start");
     retrospectiva.setId(id);
@@ -97,7 +94,6 @@ public class RetrospectivaController {
    *                                        tiene id.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-RETROSPECTIVA-EDITAR')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
@@ -114,7 +110,6 @@ public class RetrospectivaController {
    * @return el listado de entidades {@link Retrospectiva} paginadas y filtradas.
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-RETROSPECTIVA-VER')")
   ResponseEntity<Page<Retrospectiva>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query, Pageable paging - start");
@@ -136,7 +131,6 @@ public class RetrospectivaController {
    * @throws IllegalArgumentException       Si no se informa id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-RETROSPECTIVA-VER')")
   Retrospectiva one(@PathVariable Long id) {
     log.debug("one(Long id) - start");
     Retrospectiva returnValue = service.findById(id);
