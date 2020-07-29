@@ -280,7 +280,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-C", "ETI-CNV-V" })
   public void findAll_Unlimited_ReturnsFullConvocatoriaReunionList() throws Exception {
 
     // given: Datos existentes
@@ -309,7 +309,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-C", "ETI-CNV-V" })
   public void findAll_Unlimited_Returns204() throws Exception {
 
     // given: No hay datos
@@ -325,7 +325,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-C", "ETI-CNV-V" })
   public void findAll_WithPaging_ReturnsConvocatoriaReunionSubList() throws Exception {
 
     // given: Datos existentes
@@ -363,7 +363,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-C", "ETI-CNV-V" })
   public void findAll_WithPaging_Returns204() throws Exception {
 
     // given: Datos existentes
@@ -387,7 +387,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-C", "ETI-CNV-V" })
   public void findAll_WithSearchQuery_ReturnsFilteredConvocatoriaReunionList() throws Exception {
 
     // given: Datos existentes

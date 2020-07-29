@@ -183,7 +183,7 @@ public class TipoConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-TIPOCONVOCATORIAREUNION-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-V" })
   public void findAll_Unlimited_ReturnsFullTipoConvocatoriaReunionList() throws Exception {
     // given: One hundred TipoConvocatoriaReunion
     List<TipoConvocatoriaReunion> tipoConvocatoriaReuniones = new ArrayList<>();
@@ -206,7 +206,7 @@ public class TipoConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-TIPOCONVOCATORIAREUNION-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-V" })
   public void findAll_WithPaging_ReturnsTipoConvocatoriaReunionSubList() throws Exception {
     // given: One hundred TipoConvocatoriaReunion
     List<TipoConvocatoriaReunion> tipoConvocatoriaReuniones = new ArrayList<>();
@@ -261,7 +261,7 @@ public class TipoConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-TIPOCONVOCATORIAREUNION-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-V" })
   public void findAll_WithSearchQuery_ReturnsFilteredTipoConvocatoriaReunionList() throws Exception {
     // given: One hundred TipoConvocatoriaReunion and a search query
     List<TipoConvocatoriaReunion> tipoConvocatoriaReuniones = new ArrayList<>();

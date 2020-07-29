@@ -45,8 +45,9 @@ public class TipoConvocatoriaReunionIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "ETI-TIPOCONVOCATORIAREUNION-EDITAR", "ETI-TIPOCONVOCATORIAREUNION-VER")));
+    if (!headers.containsKey("Authorization")) {
+      headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user")));
+    }
 
     HttpEntity<TipoConvocatoriaReunion> request = new HttpEntity<>(entity, headers);
     return request;
@@ -145,6 +146,8 @@ public class TipoConvocatoriaReunionIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "1");
+    // Authorization
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-V")));
 
     final ResponseEntity<List<TipoConvocatoriaReunion>> response = restTemplate.exchange(
         TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH, HttpMethod.GET, buildRequest(headers, null),
@@ -173,12 +176,16 @@ public class TipoConvocatoriaReunionIT {
     Long id = 3L;
     String query = "nombre~Seguimiento%,id:" + id;
 
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-V")));
+
     URI uri = UriComponentsBuilder.fromUriString(TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).queryParam("q", query)
         .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<TipoConvocatoriaReunion>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(null, null), new ParameterizedTypeReference<List<TipoConvocatoriaReunion>>() {
+        buildRequest(headers, null), new ParameterizedTypeReference<List<TipoConvocatoriaReunion>>() {
         });
 
     // then: Respuesta OK, TipoConvocatoriaReunions retorna la información de la
@@ -198,12 +205,16 @@ public class TipoConvocatoriaReunionIT {
     // when: Ordenación por nombre desc
     String query = "nombre-";
 
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-V")));
+
     URI uri = UriComponentsBuilder.fromUriString(TIPO_CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).queryParam("s", query)
         .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<TipoConvocatoriaReunion>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(null, null), new ParameterizedTypeReference<List<TipoConvocatoriaReunion>>() {
+        buildRequest(headers, null), new ParameterizedTypeReference<List<TipoConvocatoriaReunion>>() {
         });
 
     // then: Respuesta OK, TipoConvocatoriaReunions retorna la información de la
@@ -226,6 +237,8 @@ public class TipoConvocatoriaReunionIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
+    // Authorization
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-V")));
     // when: Ordena por nombre desc
     String sort = "nombre-";
     // when: Filtra por nombre like

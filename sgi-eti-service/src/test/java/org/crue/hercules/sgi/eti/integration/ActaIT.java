@@ -45,8 +45,9 @@ public class ActaIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACTA-EDITAR", "ETI-ACTA-VER")));
+    if (!headers.containsKey("Authorization")) {
+      headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user")));
+    }
 
     HttpEntity<Acta> request = new HttpEntity<>(entity, headers);
     return request;
@@ -56,8 +57,12 @@ public class ActaIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getActa_WithId_ReturnsActa() throws Exception {
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V")));
+
     final ResponseEntity<Acta> response = restTemplate.exchange(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.GET, buildRequest(null, null), Acta.class, 1L);
+        HttpMethod.GET, buildRequest(headers, null), Acta.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -83,8 +88,12 @@ public class ActaIT {
 
     Acta nuevoActa = generarMockActa(null, 123);
 
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C")));
+
     final ResponseEntity<Acta> response = restTemplate.exchange(ACTA_CONTROLLER_BASE_PATH, HttpMethod.POST,
-        buildRequest(null, nuevoActa), Acta.class);
+        buildRequest(headers, nuevoActa), Acta.class);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
@@ -107,11 +116,14 @@ public class ActaIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeActa_Success() throws Exception {
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-B")));
 
     // when: Delete con id existente
     long id = 1L;
     final ResponseEntity<Acta> response = restTemplate.exchange(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.DELETE, buildRequest(null, null), Acta.class, id);
+        HttpMethod.DELETE, buildRequest(headers, null), Acta.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -121,8 +133,12 @@ public class ActaIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeActa_DoNotGetActa() throws Exception {
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-B")));
+
     final ResponseEntity<Acta> response = restTemplate.exchange(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.DELETE, buildRequest(null, null), Acta.class, 1L);
+        HttpMethod.DELETE, buildRequest(headers, null), Acta.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
@@ -134,8 +150,12 @@ public class ActaIT {
 
     Acta replaceActa = generarMockActa(1L, 456);
 
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-E")));
+
     final ResponseEntity<Acta> response = restTemplate.exchange(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.PUT, buildRequest(null, replaceActa), Acta.class, 1L);
+        HttpMethod.PUT, buildRequest(headers, replaceActa), Acta.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -162,6 +182,8 @@ public class ActaIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
+    // Authorization
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V")));
 
     final ResponseEntity<List<Acta>> response = restTemplate.exchange(ACTA_CONTROLLER_BASE_PATH, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<Acta>>() {
@@ -189,10 +211,14 @@ public class ActaIT {
     Long id = 5L;
     String query = "id:" + id;
 
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V")));
+
     URI uri = UriComponentsBuilder.fromUriString(ACTA_CONTROLLER_BASE_PATH).queryParam("q", query).build(false).toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<Acta>> response = restTemplate.exchange(uri, HttpMethod.GET, buildRequest(null, null),
+    final ResponseEntity<List<Acta>> response = restTemplate.exchange(uri, HttpMethod.GET, buildRequest(headers, null),
         new ParameterizedTypeReference<List<Acta>>() {
         });
 
@@ -210,10 +236,14 @@ public class ActaIT {
     // when: Ordenación por id desc
     String sort = "id-";
 
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V")));
+
     URI uri = UriComponentsBuilder.fromUriString(ACTA_CONTROLLER_BASE_PATH).queryParam("s", sort).build(false).toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<Acta>> response = restTemplate.exchange(uri, HttpMethod.GET, buildRequest(null, null),
+    final ResponseEntity<List<Acta>> response = restTemplate.exchange(uri, HttpMethod.GET, buildRequest(headers, null),
         new ParameterizedTypeReference<List<Acta>>() {
         });
 
@@ -235,6 +265,9 @@ public class ActaIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
+    // Authorization
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V")));
+
     // when: Ordena por id desc
     String sort = "id-";
     // when: Filtra por id menor

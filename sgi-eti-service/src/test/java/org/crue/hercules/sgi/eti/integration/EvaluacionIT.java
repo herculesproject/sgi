@@ -58,8 +58,9 @@ public class EvaluacionIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVALUACION-EDITAR", "ETI-EVALUACION-VER")));
+    if (!headers.containsKey("Authorization")) {
+      headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user")));
+    }
 
     HttpEntity<Evaluacion> request = new HttpEntity<>(entity, headers);
     return request;
@@ -158,6 +159,8 @@ public class EvaluacionIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
+    // Authorization
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V")));
 
     final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(EVALUACION_CONTROLLER_BASE_PATH,
         HttpMethod.GET, buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
@@ -195,12 +198,16 @@ public class EvaluacionIT {
     Long id = 5L;
     String query = "esRevMinima:true,id:" + id;
 
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V")));
+
     URI uri = UriComponentsBuilder.fromUriString(EVALUACION_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
         .toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(null, null), new ParameterizedTypeReference<List<Evaluacion>>() {
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
         });
 
     // then: Respuesta OK, Evaluaciones retorna la información de la página
@@ -221,12 +228,16 @@ public class EvaluacionIT {
     // when: Ordenación por id desc
     String query = "id-";
 
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V")));
+
     URI uri = UriComponentsBuilder.fromUriString(EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", query).build(false)
         .toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(null, null), new ParameterizedTypeReference<List<Evaluacion>>() {
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
         });
 
     // then: Respuesta OK, Evaluaciones retorna la información de la página
@@ -252,6 +263,8 @@ public class EvaluacionIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
+    // Authorization
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V")));
     // when: Ordena por id desc
     String sort = "id-";
     // when: Filtra por version equals

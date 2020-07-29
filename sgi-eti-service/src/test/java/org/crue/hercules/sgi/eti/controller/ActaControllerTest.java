@@ -60,7 +60,7 @@ public class ActaControllerTest {
   private static final String ACTA_CONTROLLER_BASE_PATH = "/actas";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ACTA-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
   public void getActa_WithId_ReturnsActa() throws Exception {
     BDDMockito.given(actaService.findById(ArgumentMatchers.anyLong())).willReturn((generarMockActa(1L, 123)));
 
@@ -82,7 +82,7 @@ public class ActaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ACTA-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
   public void getActa_NotFound_Returns404() throws Exception {
     BDDMockito.given(actaService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new ActaNotFoundException(invocation.getArgument(0));
@@ -94,7 +94,7 @@ public class ActaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ACTA-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-C" })
   public void newActa_ReturnsActa() throws Exception {
     // given: Un acta nuevo
     String nuevoActaJson = "{\"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": \"Resumen123\", \"numero\": 123, \"estadoActual\": {\"id\": 1}, \"inactiva\": true, \"activo\": true}";
@@ -124,7 +124,7 @@ public class ActaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ACTA-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-C" })
   public void newActa_Error_Returns400() throws Exception {
     // given: Un acta nuevo que produce un error al crearse
     String nuevoActaJson = "{\"id\": 1, \"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": \"Resumen123\", \"numero\": 123, \"estadoActual\": {\"id\": 1}, \"inactiva\": true, \"activo\": true}";
@@ -142,7 +142,7 @@ public class ActaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ACTA-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-E" })
   public void replaceActa_ReturnsActa() throws Exception {
     // given: Un acta a modificar
     String replaceActaJson = "{\"id\": 1, \"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": \"Resumen123\", \"numero\": 123, \"estadoActual\": {\"id\": 1}, \"inactiva\": true, \"activo\": true}";
@@ -170,7 +170,7 @@ public class ActaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ACTA-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-E" })
   public void replaceActa_NotFound() throws Exception {
     // given: Un acta a modificar
     String replaceActaJson = "{\"id\": 1, \"convocatoriaReunion\": {\"id\": 100}, \"horaInicio\": 10, \"minutoInicio\": 15, \"horaFin\": 12, \"minutoFin\": 0, \"resumen\": \"Resumen123\", \"numero\": 123, \"estadoActual\": {\"id\": 1}, \"inactiva\": true, \"activo\": true}";
@@ -186,7 +186,7 @@ public class ActaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ACTA-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-B" })
   public void removeActa_ReturnsOk() throws Exception {
     BDDMockito.given(actaService.findById(ArgumentMatchers.anyLong())).willReturn(generarMockActa(1L, 123));
 
@@ -197,7 +197,7 @@ public class ActaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ACTA-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
   public void findAll_Unlimited_ReturnsFullActaList() throws Exception {
     // given: One hundred actas
     List<Acta> actas = new ArrayList<>();
@@ -219,7 +219,7 @@ public class ActaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ACTA-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
   public void findAll_WithPaging_ReturnsActaSubList() throws Exception {
     // given: One hundred actas
     List<Acta> actas = new ArrayList<>();
@@ -269,7 +269,7 @@ public class ActaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ACTA-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
   public void findAll_WithSearchQuery_ReturnsFilteredActaList() throws Exception {
     // given: One hundred actas and a search query
     List<Acta> actas = new ArrayList<>();

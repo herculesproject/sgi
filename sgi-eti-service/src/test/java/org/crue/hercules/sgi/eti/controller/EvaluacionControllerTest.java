@@ -209,7 +209,7 @@ public class EvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVALUACION-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
   public void findAll_Unlimited_ReturnsFullEvaluacionList() throws Exception {
     // given: One hundred Evaluacion
     List<Evaluacion> evaluaciones = new ArrayList<>();
@@ -232,7 +232,7 @@ public class EvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVALUACION-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
   public void findAll_WithPaging_ReturnsEvaluacionSubList() throws Exception {
     // given: One hundred Evaluacion
     List<Evaluacion> evaluaciones = new ArrayList<>();
@@ -288,7 +288,7 @@ public class EvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVALUACION-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
   public void findAll_WithSearchQuery_ReturnsFilteredEvaluacionList() throws Exception {
     // given: One hundred Evaluacion and a search query
     List<Evaluacion> evaluaciones = new ArrayList<>();

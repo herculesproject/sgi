@@ -44,7 +44,7 @@
     "realm": [
       {
         "id": "8cac886f-5f68-4257-ad92-efdb16ad8675",
-        "name": "ETI-ACTA-DESCARGARACTA-TODO",
+        "name": "ETI-ACT-DES",
         "composite": false,
         "clientRole": false,
         "containerId": "sgi",
@@ -52,7 +52,7 @@
       },
       {
         "id": "c41f4d83-e6da-41fe-9196-bb9d0e176e8f",
-        "name": "ETI-CONVOCATORIA-ENVIAR-TODO",
+        "name": "ETI-CNV-ENV",
         "composite": false,
         "clientRole": false,
         "containerId": "sgi",
@@ -78,7 +78,7 @@
       },
       {
         "id": "00702c39-0d5a-49fa-a10c-dff1bf467e76",
-        "name": "ETI-ACTA-FINALIZARACTA-TODO",
+        "name": "ETI-ACT-FIN",
         "composite": false,
         "clientRole": false,
         "containerId": "sgi",
@@ -86,7 +86,7 @@
       },
       {
         "id": "a82d9ec2-ef04-4d66-8576-7b588b432d55",
-        "name": "ETI-ACTA-EDITAR-TODO",
+        "name": "ETI-ACT-E",
         "composite": false,
         "clientRole": false,
         "containerId": "sgi",
@@ -94,7 +94,7 @@
       },
       {
         "id": "700c1e3b-319f-4958-99ab-4a24a7a51b26",
-        "name": "ETI-ACTA-CREAR-TODO",
+        "name": "ETI-ACT-C",
         "composite": false,
         "clientRole": false,
         "containerId": "sgi",
@@ -102,7 +102,7 @@
       },
       {
         "id": "3938c853-a75b-4e18-9d07-bcfdc6576f9c",
-        "name": "ETI-ACTA-VER-TODO",
+        "name": "ETI-ACT-V",
         "composite": false,
         "clientRole": false,
         "containerId": "sgi",
@@ -110,7 +110,7 @@
       },
       {
         "id": "be506226-a755-4afd-a2a9-e4fafca0eccd",
-        "name": "ETI-CONVOCATORIA-CREAR-TODO",
+        "name": "ETI-CNV-C",
         "composite": false,
         "clientRole": false,
         "containerId": "sgi",
@@ -118,7 +118,7 @@
       },
       {
         "id": "8a503c19-e7a2-4910-9b8a-7e3f4548356c",
-        "name": "ETI-ACTA-BORRAR-TODO",
+        "name": "ETI-ACT-B",
         "composite": false,
         "clientRole": false,
         "containerId": "sgi",
@@ -126,7 +126,7 @@
       },
       {
         "id": "bb5f8a03-fa2a-4628-adb9-a0a4f5659295",
-        "name": "ETI-CONVOCATORIA-VER-TODO",
+        "name": "ETI-CNV-V",
         "composite": false,
         "clientRole": false,
         "containerId": "sgi",
@@ -134,7 +134,7 @@
       },
       {
         "id": "ed84745a-c2cf-452d-839e-1df089e71fc2",
-        "name": "ETI-CONVOCATORIA-EDITAR-TODO",
+        "name": "ETI-CNV-E",
         "composite": false,
         "clientRole": false,
         "containerId": "sgi",
@@ -142,7 +142,7 @@
       },
       {
         "id": "dbce975c-eca6-4da0-b372-23512818762e",
-        "name": "ETI-CONVOCATORIA-BORRAR-TODO",
+        "name": "ETI-CNV-B",
         "composite": false,
         "clientRole": false,
         "containerId": "sgi",
@@ -576,17 +576,17 @@
       "disableableCredentialTypes": [],
       "requiredActions": [],
       "realmRoles": [
-        "ETI-ACTA-DESCARGARACTA-TODO",
-        "ETI-CONVOCATORIA-ENVIAR-TODO",
-        "ETI-ACTA-FINALIZARACTA-TODO",
-        "ETI-ACTA-EDITAR-TODO",
-        "ETI-ACTA-CREAR-TODO",
-        "ETI-ACTA-VER-TODO",
-        "ETI-CONVOCATORIA-CREAR-TODO",
-        "ETI-ACTA-BORRAR-TODO",
-        "ETI-CONVOCATORIA-VER-TODO",
-        "ETI-CONVOCATORIA-EDITAR-TODO",
-        "ETI-CONVOCATORIA-BORRAR-TODO"
+        "ETI-ACT-DES",
+        "ETI-CNV-ENV",
+        "ETI-ACT-FIN",
+        "ETI-ACT-E",
+        "ETI-ACT-C",
+        "ETI-ACT-V",
+        "ETI-CNV-C",
+        "ETI-ACT-B",
+        "ETI-CNV-V",
+        "ETI-CNV-E",
+        "ETI-CNV-B"
       ],
       "clientRoles": {
         "account": [

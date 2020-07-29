@@ -43,8 +43,9 @@ public class TipoEstadoActaIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "ETI-TIPOESTADOACTA-EDITAR", "ETI-TIPOESTADOACTA-VER")));
+    if (!headers.containsKey("Authorization")) {
+      headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user")));
+    }
 
     HttpEntity<TipoEstadoActa> request = new HttpEntity<>(entity, headers);
     return request;
@@ -139,6 +140,8 @@ public class TipoEstadoActaIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "1");
+    // Authorization
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V")));
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH).build(false).toUri();
 
@@ -167,12 +170,16 @@ public class TipoEstadoActaIT {
     Long id = 1L;
     String query = "nombre~En%,id:" + id;
 
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V")));
+
     URI uri = UriComponentsBuilder.fromUriString(TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH).queryParam("q", query)
         .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<TipoEstadoActa>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(null, null), new ParameterizedTypeReference<List<TipoEstadoActa>>() {
+        buildRequest(headers, null), new ParameterizedTypeReference<List<TipoEstadoActa>>() {
         });
 
     // then: Respuesta OK, TipoEstadoActas retorna la información de la página
@@ -191,12 +198,16 @@ public class TipoEstadoActaIT {
     // when: Ordenación por nombre desc
     String query = "nombre-";
 
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V")));
+
     URI uri = UriComponentsBuilder.fromUriString(TIPO_ESTADO_ACTA_CONTROLLER_BASE_PATH).queryParam("s", query)
         .build(false).toUri();
 
     // when: Búsqueda por query
     final ResponseEntity<List<TipoEstadoActa>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(null, null), new ParameterizedTypeReference<List<TipoEstadoActa>>() {
+        buildRequest(headers, null), new ParameterizedTypeReference<List<TipoEstadoActa>>() {
         });
 
     // then: Respuesta OK, TipoEstadoActas retorna la información de la página
@@ -219,6 +230,8 @@ public class TipoEstadoActaIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
+    // Authorization
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V")));
     // when: Ordena por nombre desc
     String sort = "nombre-";
     // when: Filtra por nombre like

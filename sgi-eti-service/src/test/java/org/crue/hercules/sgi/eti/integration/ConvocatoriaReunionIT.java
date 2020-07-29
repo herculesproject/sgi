@@ -50,8 +50,9 @@ public class ConvocatoriaReunionIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "ETI-CONVOCATORIAREUNION-EDITAR", "ETI-CONVOCATORIAREUNION-VER")));
+    if (!headers.containsKey("Authorization")) {
+      headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user")));
+    }
 
     HttpEntity<ConvocatoriaReunion> request = new HttpEntity<>(entity, headers);
     return request;
@@ -169,9 +170,13 @@ public class ConvocatoriaReunionIT {
     response.add(getMockData(1L, 1L, 1L));
     response.add(getMockData(2L, 1L, 2L));
 
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-CNV-V")));
+
     // when: Se buscan todos los datos
     final ResponseEntity<List<ConvocatoriaReunion>> result = restTemplate.exchange(
-        CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH, HttpMethod.GET, buildRequest(null, null),
+        CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH, HttpMethod.GET, buildRequest(headers, null),
         new ParameterizedTypeReference<List<ConvocatoriaReunion>>() {
         });
 
@@ -193,6 +198,8 @@ public class ConvocatoriaReunionIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "2");
     headers.add("X-Page-Size", "2");
+    // Authorization
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-CNV-V")));
 
     // when: Se buscan los datos paginados
     final ResponseEntity<List<ConvocatoriaReunion>> result = restTemplate.exchange(
@@ -220,6 +227,10 @@ public class ConvocatoriaReunionIT {
     List<ConvocatoriaReunion> response = new LinkedList<>();
     response.add(getMockData(3L, 2L, 1L));
 
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-CNV-V")));
+
     // search by codigo like, id equals
     Long id = 3L;
     String query = "codigo~CR-0%,id:" + id;
@@ -229,7 +240,7 @@ public class ConvocatoriaReunionIT {
 
     // when: Se buscan los datos con el filtro indicado
     final ResponseEntity<List<ConvocatoriaReunion>> result = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(null, null), new ParameterizedTypeReference<List<ConvocatoriaReunion>>() {
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ConvocatoriaReunion>>() {
         });
 
     // then: Se recuperan los datos filtrados
@@ -248,7 +259,9 @@ public class ConvocatoriaReunionIT {
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedConvocatoriaReunionList() throws Exception {
 
-    // given: Datos existentes
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-CNV-V")));
 
     // sort by id desc
     String sort = "id-";
@@ -258,7 +271,7 @@ public class ConvocatoriaReunionIT {
 
     // when: Se buscan los datos con la ordenación indicada
     final ResponseEntity<List<ConvocatoriaReunion>> result = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(null, null), new ParameterizedTypeReference<List<ConvocatoriaReunion>>() {
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ConvocatoriaReunion>>() {
         });
 
     // then: Se recuperan los datos filtrados, ordenados y paginados
@@ -285,6 +298,9 @@ public class ConvocatoriaReunionIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "2");
+
+    // Authorization
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-CNV-V")));
 
     // sort
     String sort = "id-";

@@ -44,8 +44,9 @@ public class ComiteIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-COMITE-EDITAR", "ETI-COMITE-VER")));
+    if (!headers.containsKey("Authorization")) {
+      headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user")));
+    }
 
     HttpEntity<Comite> request = new HttpEntity<>(entity, headers);
     return request;
@@ -141,6 +142,8 @@ public class ComiteIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
+    // Authorization
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V", "ETI-CNV-V")));
 
     final ResponseEntity<List<Comite>> response = restTemplate.exchange(COMITE_CONTROLLER_BASE_PATH, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<Comite>>() {
@@ -169,12 +172,16 @@ public class ComiteIT {
     Long id = 5L;
     String query = "comite~Comite%,id:" + id;
 
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V", "ETI-CNV-V")));
+
     URI uri = UriComponentsBuilder.fromUriString(COMITE_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
         .toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<Comite>> response = restTemplate.exchange(uri, HttpMethod.GET, buildRequest(null, null),
-        new ParameterizedTypeReference<List<Comite>>() {
+    final ResponseEntity<List<Comite>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Comite>>() {
         });
 
     // then: Respuesta OK, ComiteS retorna la información de la página
@@ -193,12 +200,16 @@ public class ComiteIT {
     // when: Ordenación por comite desc
     String query = "comite-";
 
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V", "ETI-CNV-V")));
+
     URI uri = UriComponentsBuilder.fromUriString(COMITE_CONTROLLER_BASE_PATH).queryParam("s", query).build(false)
         .toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<Comite>> response = restTemplate.exchange(uri, HttpMethod.GET, buildRequest(null, null),
-        new ParameterizedTypeReference<List<Comite>>() {
+    final ResponseEntity<List<Comite>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Comite>>() {
         });
 
     // then: Respuesta OK, Comites retorna la información de la página
@@ -221,6 +232,8 @@ public class ComiteIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
+    // Authorization
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V", "ETI-CNV-V")));
     // when: Ordena por comite desc
     String sort = "comite-";
     // when: Filtra por comite like e id equals

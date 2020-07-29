@@ -177,7 +177,7 @@ public class TipoEstadoActaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-TIPOESTADOACTA-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
   public void findAll_Unlimited_ReturnsFullTipoEstadoActaList() throws Exception {
     // given: One hundred TipoEstadoActa
     List<TipoEstadoActa> tipoEstadoActas = new ArrayList<>();
@@ -200,7 +200,7 @@ public class TipoEstadoActaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-TIPOESTADOACTA-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
   public void findAll_WithPaging_ReturnsTipoEstadoActaSubList() throws Exception {
     // given: One hundred TipoEstadoActa
     List<TipoEstadoActa> tipoEstadoActas = new ArrayList<>();
@@ -252,7 +252,7 @@ public class TipoEstadoActaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-TIPOESTADOACTA-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
   public void findAll_WithSearchQuery_ReturnsFilteredTipoEstadoActaList() throws Exception {
     // given: One hundred TipoEstadoActa and a search query
     List<TipoEstadoActa> tipoEstadoActas = new ArrayList<>();
