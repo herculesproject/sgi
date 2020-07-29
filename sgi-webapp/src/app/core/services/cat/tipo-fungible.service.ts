@@ -3,17 +3,20 @@ import { Injectable } from '@angular/core';
 import { TipoFungible } from '@core/models/cat/tipo-fungible';
 import { environment } from '@env';
 import { NGXLogger } from 'ngx-logger';
-
-import { BaseRestService } from '../base-rest.service';
+import { SgiRestService } from '@sgi/framework/http';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TipoFungibleService extends BaseRestService<TipoFungible> {
-
-  public static TIPOFUNGIBLE_MAPPING = '/tipofungibles';
+export class TipoFungibleService extends SgiRestService<TipoFungible> {
+  private static readonly MAPPING = '/tipofungibles';
 
   constructor(logger: NGXLogger, protected http: HttpClient) {
-    super(TipoFungibleService.name, logger, `${environment.apiUrl}` + TipoFungibleService.TIPOFUNGIBLE_MAPPING, http);
+    super(
+      TipoFungibleService.name,
+      logger,
+      `${environment.serviceServers.cat}${TipoFungibleService.MAPPING}`,
+      http
+    );
   }
 }

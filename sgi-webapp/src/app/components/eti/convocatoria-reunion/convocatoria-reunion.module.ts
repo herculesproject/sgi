@@ -7,6 +7,7 @@ import { ComponentsModule } from '../../components.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { ConvocatoriaReunionRoutingModule } from './convocatoria-reunion-routing.module';
+import { SgiAuthModule } from '@sgi/framework/auth';
 
 
 
@@ -20,6 +21,7 @@ import { ConvocatoriaReunionRoutingModule } from './convocatoria-reunion-routing
     MaterialDesignModule,
     ComponentsModule,
     PerfectScrollbarModule,
+    SgiAuthModule
   ]
 })
 export class ConvocatoriaReunionModule { }

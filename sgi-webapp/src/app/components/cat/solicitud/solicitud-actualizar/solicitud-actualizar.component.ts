@@ -8,7 +8,7 @@ import { SolicitudService } from '@core/services/cat/solicitud.service';
 import { FormGroupUtil } from '@core/services/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TraductorService } from '@core/services/traductor.service';
-import { FilterType, FindOptions } from '@core/services/types';
+import { SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
 import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
 import { of, Subscription } from 'rxjs';
@@ -81,11 +81,11 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
       'getSolicitud()',
       'start'
     );
-    const findOptions: FindOptions = {
+    const findOptions: SgiRestFindOptions = {
       filters: [
         {
           field: 'usuarioRef',
-          type: FilterType.EQUALS,
+          type: SgiRestFilterType.EQUALS,
           value: usuarioRef,
         }
       ]

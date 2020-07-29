@@ -6,7 +6,7 @@ import { ServicioService } from '@core/services/cat/servicio.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TraductorService } from '@core/services/traductor.service';
-import { Direction, Filter, FilterType } from '@core/services/types';
+import { SgiRestSortDirection, SgiRestFilter, SgiRestFilterType } from '@sgi/framework/http';
 import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of, Subscription } from 'rxjs';
@@ -24,7 +24,7 @@ export class AgrupacionServicioListadoComponent implements AfterViewInit, OnDest
   displayedColumns: string[];
   elementosPagina: number[];
   totalElementos: number;
-  filter: Filter;
+  filter: SgiRestFilter;
 
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -48,7 +48,7 @@ export class AgrupacionServicioListadoComponent implements AfterViewInit, OnDest
     this.totalElementos = 0;
     this.filter = {
       field: undefined,
-      type: FilterType.NONE,
+      type: SgiRestFilterType.NONE,
       value: '',
     };
 
@@ -89,7 +89,7 @@ export class AgrupacionServicioListadoComponent implements AfterViewInit, OnDest
           size: this.paginator.pageSize
         },
         sort: {
-          direction: Direction.fromSortDirection(this.sort.direction),
+          direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
           field: this.sort.active
         },
         filters: this.buildFilters()
@@ -136,7 +136,7 @@ export class AgrupacionServicioListadoComponent implements AfterViewInit, OnDest
     this.logger.debug(AgrupacionServicioListadoComponent.name, 'onClearFilters()', 'start');
     this.filter = {
       field: undefined,
-      type: FilterType.NONE,
+      type: SgiRestFilterType.NONE,
       value: '',
     };
     this.loadTable(true);
@@ -179,11 +179,11 @@ export class AgrupacionServicioListadoComponent implements AfterViewInit, OnDest
       'borrarSeleccionado(servicioId: number, $event: Event) - end');
   }
 
-  private buildFilters(): Filter[] {
+  private buildFilters(): SgiRestFilter[] {
     this.logger.debug(AgrupacionServicioListadoComponent.name, 'buildFilters()', 'start');
     if (
       this.filter.field &&
-      this.filter.type !== FilterType.NONE &&
+      this.filter.type !== SgiRestFilterType.NONE &&
       this.filter.value
     ) {
       this.logger.debug(AgrupacionServicioListadoComponent.name, 'buildFilters()', 'end');

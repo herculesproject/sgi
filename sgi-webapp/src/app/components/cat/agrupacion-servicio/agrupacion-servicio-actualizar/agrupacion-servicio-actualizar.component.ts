@@ -10,7 +10,7 @@ import { SupervisionService } from '@core/services/cat/supervision.service';
 import { FormGroupUtil } from '@core/services/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TraductorService } from '@core/services/traductor.service';
-import { Filter, FilterType } from '@core/services/types';
+import { SgiRestFilter, SgiRestFilterType } from '@sgi/framework/http';
 import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription, zip } from 'rxjs';
@@ -49,7 +49,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
   actualizarServicioSubscription: Subscription;
   activatedRouteSubscription: Subscription;
 
-  filter: Filter;
+  filter: SgiRestFilter;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -112,7 +112,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
 
           this.filter = {
             field: 'servicio.id',
-            type: FilterType.EQUALS,
+            type: SgiRestFilterType.EQUALS,
             value: servicio.id.toString(),
           };
           return this.supervisionService.findAll({

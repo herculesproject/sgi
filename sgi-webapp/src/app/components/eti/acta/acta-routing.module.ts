@@ -1,18 +1,26 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { UrlUtils } from '@core/utils/url-utils';
-
 import { ActaCrearComponent } from './acta-crear/acta-crear.component';
 import { ActaListadoComponent } from './acta-listado/acta-listado.component';
+import { SgiAuthRoutes, SgiAuthGuard } from '@sgi/framework/auth';
 
-const routes: Routes = [
+const routes: SgiAuthRoutes = [
   {
     path: UrlUtils.root.valueOf(),
     component: ActaListadoComponent,
+    canActivate: [SgiAuthGuard],
+    data: {
+      hasAuthorityForAnyUO: 'ETI-ACT-V'
+    }
   },
   {
     path: UrlUtils.crear.valueOf(),
     component: ActaCrearComponent,
+    canActivate: [SgiAuthGuard],
+    data: {
+      hasAuthorityForAnyUO: 'ETI-ACT-C'
+    }
   }
 ];
 

@@ -4,8 +4,6 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { NGXLogger } from 'ngx-logger';
 
-import { throwIfAlreadyLoaded } from './guards/module-import.guard';
-import { AuthGuard } from './guards/auth.guard';
 import { GlobalErrorHandler } from './services/global-error.handler';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -27,12 +25,7 @@ import { TranslateModule } from '@ngx-translate/core';
     {
       provide: ErrorHandler,
       useClass: GlobalErrorHandler,
-    },
-    AuthGuard,
+    }
   ],
 })
-export class CoreModule {
-  constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
-    throwIfAlreadyLoaded(parentModule, 'CoreModule');
-  }
-}
+export class CoreModule { }

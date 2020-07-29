@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
 import { UrlUtils } from '@core/utils/url-utils';
 import { DateUtils } from '@core/utils/date-utils';
-import { Filter, FilterType, Direction } from '@core/services/types';
+import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { Observable, of, Subscription, merge } from 'rxjs';
@@ -35,11 +35,11 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
   displayedColumns: string[];
   elementosPagina: number[];
   totalElementos: number;
-  filter: Filter[];
+  filter: SgiRestFilter[];
 
   filterActivo = {
     field: 'activo',
-    type: FilterType.EQUALS,
+    type: SgiRestFilterType.EQUALS,
     value: 'true'
   };
 
@@ -258,7 +258,7 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
           size: this.paginator.pageSize
         },
         sort: {
-          direction: Direction.fromSortDirection(this.sort.direction),
+          direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
           field: this.sort.active
         },
         filters: this.buildFilters()
@@ -355,7 +355,7 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
   enviar(convocatoriaReunionId: number, $event: Event): void {
   }
 
-  private buildFilters(): Filter[] {
+  private buildFilters(): SgiRestFilter[] {
     this.logger.debug(ConvocatoriaReunionListadoComponent.name, 'buildFilters()', 'start');
     this.filter = [];
     this.filter.push(this.filterActivo);
@@ -364,7 +364,7 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
     if (comite) {
       const filterComite = {
         field: 'comite.id',
-        type: FilterType.EQUALS,
+        type: SgiRestFilterType.EQUALS,
         value: comite.id,
       };
 
@@ -375,7 +375,7 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
     if (tipoConvocatoriaReunion) {
       const filterTipoConvocatoriaReunion = {
         field: 'tipoConvocatoriaReunion.id',
-        type: FilterType.EQUALS,
+        type: SgiRestFilterType.EQUALS,
         value: tipoConvocatoriaReunion.id,
       };
 
@@ -387,7 +387,7 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
       const fechaFilter = DateUtils.getFechaInicioDia(fechaEvaluacionDesde);
       const filterFechaEvaluacionDesde = {
         field: 'fechaEvaluacion',
-        type: FilterType.GREATHER_OR_EQUAL,
+        type: SgiRestFilterType.GREATHER_OR_EQUAL,
         value: DateUtils.formatFechaAsISODateTime(fechaFilter),
       };
 
@@ -399,7 +399,7 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
       const fechaFilter = DateUtils.getFechaFinDia(fechaEvaluacionHasta);
       const filterFechaEvaluacionHasta = {
         field: 'fechaEvaluacion',
-        type: FilterType.LOWER_OR_EQUAL,
+        type: SgiRestFilterType.LOWER_OR_EQUAL,
         value: DateUtils.formatFechaAsISODateTime(fechaFilter),
       };
 

@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from '@core/guards/auth.guard';
+import { RouterModule } from '@angular/router';
 import { UrlUtils } from '@core/utils/url-utils';
-
 import { EtiRootComponent } from './eti-root/eti-root.component';
+import { SgiAuthGuard, SgiAuthRoutes } from '@sgi/framework/auth';
 
-const routes: Routes = [
+const routes: SgiAuthRoutes = [
   {
-    path: '', component: EtiRootComponent, children: [
+    path: '',
+    component: EtiRootComponent,
+    children: [
       {
         path: UrlUtils.eti.datos.valueOf(),
         component: null,
@@ -30,7 +31,10 @@ const routes: Routes = [
           import('./convocatoria-reunion/convocatoria-reunion.module').then(
             (m) => m.ConvocatoriaReunionModule
           ),
-        canActivate: [AuthGuard],
+        canActivate: [SgiAuthGuard],
+        data: {
+          hasAnyAuthorityForAnyUO: ['ETI-CNV-V', 'ETI-CNV-C', 'ETI-CNV-E', 'ETI-CNV-B', 'ETI-CNV-ENV']
+        }
       },
       {
         path: UrlUtils.eti.proyectos.valueOf(),
@@ -58,7 +62,10 @@ const routes: Routes = [
           import('./acta/acta.module').then(
             (m) => m.ActaModule
           ),
-        canActivate: [AuthGuard],
+        canActivate: [SgiAuthGuard],
+        data: {
+          hasAnyAuthorityForAnyUO: ['ETI-ACT-V', 'ETI-ACT-C', 'ETI-ACT-E', 'ETI-ACT-B', 'ETI-ACT-DES', 'ETI-ACT-FIN']
+        }
       },
       {
         path: UrlUtils.eti.evaluacionEtica.valueOf(),
@@ -66,7 +73,7 @@ const routes: Routes = [
           import('./evaluacion-etica/evaluacion-etica.module').then(
             (m) => m.EvaluacionEticaModule
           ),
-        canActivate: [AuthGuard],
+        canActivate: [SgiAuthGuard],
       },
       {
         path: UrlUtils.eti.solicitudesSAI.valueOf(),

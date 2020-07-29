@@ -6,7 +6,8 @@
         <span>{{'menu.principal.eti.datos' | translate}}</span>
       </a>
     </mat-list-item>
-    <mat-list-item [routerLink]="UrlUtils.eti.actas" [routerLinkActive]="['is-active']">
+    <mat-list-item *sgiHasAuthorityForAnyUO="'ETI-ACT-V'" [routerLink]="UrlUtils.eti.actas"
+      [routerLinkActive]="['is-active']">
       <a mat-list-item>
         <mat-icon> list_alt</mat-icon>
         <span>{{'menu.principal.eti.acta' | translate}}</span>
@@ -24,7 +25,8 @@
         <span>{{'menu.principal.eti.ofertaTecnologica' | translate}}</span>
       </a>
     </mat-list-item>
-    <mat-list-item [routerLink]="UrlUtils.eti.solicitudesConvocatoria" [routerLinkActive]="['is-active']">
+    <mat-list-item *sgiHasAuthorityForAnyUO="'ETI-CNV-V'" [routerLink]="UrlUtils.eti.solicitudesConvocatoria"
+      [routerLinkActive]="['is-active']">
       <a mat-list-item>
         <mat-icon>equalizer</mat-icon>
         <span>{{'menu.principal.eti.solicitudesConvocatoria' | translate}}</span>

@@ -1,0 +1,24 @@
+{
+  "/auth": {
+    "target": "http://hercules-sgi-auth:8080",
+    "secure": false,
+    "logLevel": "debug",
+    "headers": {}
+  },
+  "/api/cat": {
+    "target": "http://hercules-sgi-cat:8080",
+    "pathRewrite": {
+      "^/api/cat": ""
+    },
+    "secure": false,
+    "logLevel": "debug"
+  },
+  "/api/eti": {
+    "target": "http://hercules-sgi-eti:8080",
+    "pathRewrite": {
+      "^/api/eti": ""
+    },
+    "secure": false,
+    "logLevel": "debug"
+  }
+}

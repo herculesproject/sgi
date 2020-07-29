@@ -17,7 +17,7 @@ import { HoraValidador } from '@core/validators/hora-validator';
 import { MinutoValidador } from '@core/validators/minuto-validator';
 import { NullIdValidador } from '@core/validators/null-id-validador';
 
-import { ListResult } from '@core/services/types'
+import { SgiRestListResult } from '@sgi/framework/http'
 
 import { ActaService } from '@core/services/eti/acta.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -66,7 +66,7 @@ export class ActaCrearDatosGeneralesComponent extends AbstractTabComponent<Acta>
     this.acta = new Acta();
     this.subscripciones.push(
       this.convocatoriaReunionService.findAll().subscribe(
-        (res: ListResult<ConvocatoriaReunion>) => {
+        (res: SgiRestListResult<ConvocatoriaReunion>) => {
           this.convocatoriasReunion = res.items;
           this.logger.debug(ActaCrearDatosGeneralesComponent.name, 'ngOnInit()', 'end');
         },

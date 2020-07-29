@@ -5,7 +5,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { Observable, of, merge, Subscription, zip } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 
-import { Filter, FilterType, Direction } from '@core/services/types';
+import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
 import { tap, map, catchError, startWith, switchMap } from 'rxjs/operators';
 
 import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
@@ -44,11 +44,11 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
   displayedColumns: string[];
   elementosPagina: number[];
   totalElementos: number;
-  filter: Filter[];
+  filter: SgiRestFilter[];
 
   filterActivo = {
     field: 'activo',
-    type: FilterType.EQUALS,
+    type: SgiRestFilterType.EQUALS,
     value: 'true'
   };
 
@@ -85,7 +85,7 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
 
     this.filter = [{
       field: undefined,
-      type: FilterType.NONE,
+      type: SgiRestFilterType.NONE,
       value: '',
     }];
 
@@ -155,7 +155,7 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
           size: this.paginator.pageSize
         },
         sort: {
-          direction: Direction.fromSortDirection(this.sort.direction),
+          direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
           field: this.sort.active
         },
         filters: this.buildFilters()
@@ -177,18 +177,18 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
           actas.forEach(acta => {
             const actaListado: ActaListado = new ActaListado(acta);
 
-            let filter: Filter[] = [];
-            const filterConvocatoriaReunion: Filter = {
+            let filter: SgiRestFilter[] = [];
+            const filterConvocatoriaReunion: SgiRestFilter = {
               field: 'convocatoriaReunion.id',
-              type: FilterType.EQUALS,
+              type: SgiRestFilterType.EQUALS,
               value: acta.convocatoriaReunion.id.toString(),
             };
 
             filter.push(filterConvocatoriaReunion);
 
-            let filterTipoEstado: Filter = {
+            let filterTipoEstado: SgiRestFilter = {
               field: 'memoria.estadoActual.id',
-              type: FilterType.EQUALS,
+              type: SgiRestFilterType.EQUALS,
               value: '1',
             };
 
@@ -203,7 +203,7 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
                   size: null
                 },
                 sort: {
-                  direction: Direction.fromSortDirection(this.sort.direction),
+                  direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
                   field: this.sort.active
                 },
                 filters: filter
@@ -218,7 +218,7 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
 
                   filterTipoEstado = {
                     field: 'memoria.estadoActual.id',
-                    type: FilterType.EQUALS,
+                    type: SgiRestFilterType.EQUALS,
                     value: '1',
                   };
 
@@ -232,7 +232,7 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
                         size: null
                       },
                       sort: {
-                        direction: Direction.fromSortDirection(this.sort.direction),
+                        direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
                         field: this.sort.active
                       },
                       filters: filter
@@ -270,15 +270,15 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
 
-  private buildFilters(): Filter[] {
+  private buildFilters(): SgiRestFilter[] {
     this.logger.debug(ActaListadoComponent.name, 'buildFilters()', 'start');
 
     this.filter = [];
     if (this.buscadorFormGroup.controls.comite.value) {
       this.logger.debug(ActaListadoComponent.name, 'buildFilters()', 'comite');
-      const filterComite: Filter = {
+      const filterComite: SgiRestFilter = {
         field: 'convocatoriaReunion.comite.id',
-        type: FilterType.EQUALS,
+        type: SgiRestFilterType.EQUALS,
         value: this.buscadorFormGroup.controls.comite.value.id,
       };
 
@@ -288,9 +288,9 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
     if (this.buscadorFormGroup.controls.fechaEvaluacionInicio.value) {
       this.logger.debug(ActaListadoComponent.name, 'buildFilters()', 'fechaEvaluacionInicio');
       const fechaFilter = DateUtils.getFechaInicioDia(this.buscadorFormGroup.controls.fechaEvaluacionInicio.value);
-      const filterFechaEvaluacionInicio: Filter = {
+      const filterFechaEvaluacionInicio: SgiRestFilter = {
         field: 'convocatoriaReunion.fechaEvaluacion',
-        type: FilterType.GREATHER_OR_EQUAL,
+        type: SgiRestFilterType.GREATHER_OR_EQUAL,
         value: DateUtils.formatFechaAsISODateTime(fechaFilter),
       };
 
@@ -301,9 +301,9 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
     if (this.buscadorFormGroup.controls.fechaEvaluacionFin.value) {
       this.logger.debug(ActaListadoComponent.name, 'buildFilters()', 'fechaEvaluacionFin');
       const fechaFilter = DateUtils.getFechaFinDia(this.buscadorFormGroup.controls.fechaEvaluacionFin.value);
-      const filterFechaEvaluacionFin: Filter = {
+      const filterFechaEvaluacionFin: SgiRestFilter = {
         field: 'convocatoriaReunion.fechaEvaluacion',
-        type: FilterType.LOWER_OR_EQUAL,
+        type: SgiRestFilterType.LOWER_OR_EQUAL,
         value: DateUtils.formatFechaAsISODateTime(fechaFilter),
       };
 
@@ -313,9 +313,9 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
 
     if (this.buscadorFormGroup.controls.numeroActa.value) {
       this.logger.debug(ActaListadoComponent.name, 'buildFilters()', 'numeroActa');
-      const filterNumeroActa: Filter = {
+      const filterNumeroActa: SgiRestFilter = {
         field: 'numero',
-        type: FilterType.EQUALS,
+        type: SgiRestFilterType.EQUALS,
         value: this.buscadorFormGroup.controls.numeroActa.value,
       };
 
@@ -325,9 +325,9 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
 
     if (this.buscadorFormGroup.controls.tipoEstadoActa.value) {
       this.logger.debug(ActaListadoComponent.name, 'buildFilters()', 'tipoEstadoActa');
-      const filterTipoEstadoActa: Filter = {
+      const filterTipoEstadoActa: SgiRestFilter = {
         field: 'estadoActual.id',
-        type: FilterType.EQUALS,
+        type: SgiRestFilterType.EQUALS,
         value: this.buscadorFormGroup.controls.tipoEstadoActa.value.id,
       };
 

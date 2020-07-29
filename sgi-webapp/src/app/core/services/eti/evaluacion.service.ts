@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BaseRestService } from '../base-rest.service';
+import { SgiRestService } from '@sgi/framework/http';
 import { Evaluacion } from '@core/models/eti/evaluacion';
-import { UrlUtils } from '@core/utils/url-utils';
 import { environment } from '@env';
 import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
@@ -9,9 +8,15 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-export class EvaluacionService extends BaseRestService<Evaluacion>{
+export class EvaluacionService extends SgiRestService<Evaluacion>{
+  private static readonly MAPPING = '/evaluaciones';
 
   constructor(logger: NGXLogger, protected http: HttpClient) {
-    super(EvaluacionService.name, logger, `${environment.apiUrl}/${UrlUtils.eti.evaluacion}`, http);
+    super(
+      EvaluacionService.name,
+      logger,
+      `${environment.serviceServers.eti}${EvaluacionService.MAPPING}`,
+      http
+    );
   }
 }

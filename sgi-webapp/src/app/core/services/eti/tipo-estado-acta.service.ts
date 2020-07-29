@@ -1,17 +1,22 @@
 import { Injectable } from '@angular/core';
 import { TipoEstadoActa } from '@core/models/eti/tipo-estado-acta';
-import { BaseRestService } from '../base-rest.service';
+import { SgiRestService } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@env';
-import { UrlUtils } from '@core/utils/url-utils';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TipoEstadoActaService extends BaseRestService<TipoEstadoActa> {
+export class TipoEstadoActaService extends SgiRestService<TipoEstadoActa> {
+  private static readonly MAPPING = '/tipoestadoactas';
 
   constructor(logger: NGXLogger, protected http: HttpClient) {
-    super(TipoEstadoActaService.name, logger, `${environment.apiUrl}/${UrlUtils.eti.tipoEstadoActa}`, http);
+    super(
+      TipoEstadoActaService.name,
+      logger,
+      `${environment.serviceServers.eti}${TipoEstadoActaService.MAPPING}`,
+      http
+    );
   }
 }

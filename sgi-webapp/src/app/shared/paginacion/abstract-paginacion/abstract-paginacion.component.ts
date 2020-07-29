@@ -1,8 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { BaseRestService } from '@core/services/base-rest.service';
-import { Direction, Filter, FilterType, ListResult } from '@core/services/types';
+import { SgiRestService, SgiRestSortDirection, SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
 import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
 import { merge, of, Observable } from 'rxjs';
@@ -18,14 +17,14 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, AfterVie
   columnas: string[];
   elementosPagina: number[];
   totalElementos: number;
-  filter: Filter;
+  filter: SgiRestFilter;
 
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   protected constructor(
     protected readonly logger: NGXLogger,
-    protected readonly service: BaseRestService<T>,
+    protected readonly service: SgiRestService<T>,
   ) {
     this.elementosPagina = [5, 10, 25, 100];
   }
@@ -35,7 +34,7 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, AfterVie
     this.totalElementos = 0;
     this.filter = {
       field: undefined,
-      type: FilterType.NONE,
+      type: SgiRestFilterType.NONE,
       value: '',
     };
     this.inicializarColumnas();
@@ -63,9 +62,9 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, AfterVie
     this.logger.debug(AbstractPaginacionComponent.name, 'ngAfterViewInit()', 'end');
   }
 
-  protected buildFilters(): Filter[] {
+  protected buildFilters(): SgiRestFilter[] {
     this.logger.debug(AbstractPaginacionComponent.name, 'buildFilters()', 'start');
-    if (this.filter.field && this.filter.type !== FilterType.NONE && this.filter.value) {
+    if (this.filter.field && this.filter.type !== SgiRestFilterType.NONE && this.filter.value) {
       this.logger.debug(AbstractPaginacionComponent.name, 'buildFilters()', 'end');
       return [this.filter];
     }
@@ -89,7 +88,7 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, AfterVie
     this.logger.debug(AbstractPaginacionComponent.name, 'onClearFilters()', 'start');
     this.filter = {
       field: undefined,
-      type: FilterType.NONE,
+      type: SgiRestFilterType.NONE,
       value: '',
     };
     this.loadTable(true);
@@ -110,13 +109,13 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, AfterVie
         size: this.paginator.pageSize,
       },
       sort: {
-        direction: Direction.fromSortDirection(this.sort.direction),
+        direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
         field: this.sort.active,
       },
       filters: this.buildFilters(),
     })
       .pipe(
-        map((response: ListResult<T>) => {
+        map((response: SgiRestListResult<T>) => {
           // Map respose total
           this.totalElementos = response.total;
           // Reset pagination to first page

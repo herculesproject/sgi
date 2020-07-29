@@ -2,12 +2,12 @@
   <nav class="breadcrumb">
     <ol class="breadcrumb__list r-list">
       <li class="breadcrumb__group" *ngFor="let url of urls; let i = index">
-        <a [href]="url.url" class="breadcrumb__point r-link"
-           *ngIf="url.nombre === ''">{{'breadcrumb.inicio' | translate}}</a>
-        <a [href]="url.url" class="breadcrumb__point r-link"
-           *ngIf="url.nombre !== '' && i !== urls.length - 1">{{'breadcrumb.' + url.nombre | translate}}</a>
+        <a [routerLink]="url.url" class="breadcrumb__point r-link"
+          *ngIf="url.nombre === ''">{{'breadcrumb.inicio' | translate}}</a>
+        <a [routerLink]="url.url" class="breadcrumb__point r-link"
+          *ngIf="url.nombre !== '' && i !== urls.length - 1">{{'breadcrumb.' + url.nombre | translate}}</a>
         <span class="breadcrumb__point" aria-current="page"
-              *ngIf="url.nombre !== '' && i === urls.length - 1">{{'breadcrumb.' + url.nombre | translate}}</span>
+          *ngIf="url.nombre !== '' && i === urls.length - 1">{{'breadcrumb.' + url.nombre | translate}}</span>
         <span class="breadcrumb__divider" aria-hidden="true" *ngIf="i !== urls.length - 1">›</span>
       </li>
     </ol>

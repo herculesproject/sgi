@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from '@core/guards/auth.guard';
+import { RouterModule } from '@angular/router';
 import { UrlUtils } from '@core/utils/url-utils';
 
 import { CatRootComponent } from './cat-root/cat-root.component';
+import { SgiAuthGuard, SgiAuthRoutes } from '@sgi/framework/auth';
 
-const routes: Routes = [
+const routes: SgiAuthRoutes = [
   {
     path: '', component: CatRootComponent, children: [
       {
@@ -14,7 +14,7 @@ const routes: Routes = [
           import('./agrupacion-servicio/agrupacion-servicio.module').then(
             (m) => m.AgrupacionServicioModule
           ),
-        canActivate: [AuthGuard],
+        canActivate: [SgiAuthGuard],
       },
       {
         path: UrlUtils.cat.horario.valueOf(),
@@ -30,7 +30,7 @@ const routes: Routes = [
           import('./solicitud/solicitud.module').then(
             (m) => m.SolicitudModule
           ),
-        canActivate: [AuthGuard],
+        canActivate: [SgiAuthGuard],
       },
       {
         path: UrlUtils.cat.tipoFungible.valueOf(),
@@ -38,7 +38,7 @@ const routes: Routes = [
           import('./tipo-fungible/tipo-fungible.module').then(
             (m) => m.TipoFungibleModule
           ),
-        canActivate: [AuthGuard],
+        canActivate: [SgiAuthGuard],
       },
       {
         path: UrlUtils.cat.tipoReservables.valueOf(),
@@ -46,7 +46,7 @@ const routes: Routes = [
           import('./tipo-reservable/tipo-reservable.module').then(
             (m) => m.TipoReservableModule
           ),
-        canActivate: [AuthGuard],
+        canActivate: [SgiAuthGuard],
       },
       {
         path: UrlUtils.cat.unidadMedidas.valueOf(),
@@ -54,7 +54,7 @@ const routes: Routes = [
           import('./unidad-medida/unidad-medida.module').then(
             (m) => m.UnidadMedidaModule
           ),
-        canActivate: [AuthGuard],
+        canActivate: [SgiAuthGuard],
       },
       { path: '**', component: null },
     ]

@@ -14,6 +14,7 @@ import { ActaCrearMemoriasComponent } from './acta-crear/acta-crear-memorias/act
 import { ActaCrearComponent } from './acta-crear/acta-crear.component';
 import { ActaRoutingModule } from './acta-routing.module';
 import { ActaListadoComponent } from './acta-listado/acta-listado.component';
+import { SgiAuthModule } from '@sgi/framework/auth';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { ActaListadoComponent } from './acta-listado/acta-listado.component';
     MaterialDesignModule,
     ComponentsModule,
     PerfectScrollbarModule,
+    SgiAuthModule
   ]
 })
 export class ActaModule { }

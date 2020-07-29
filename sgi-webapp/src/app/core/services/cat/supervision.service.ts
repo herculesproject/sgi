@@ -3,19 +3,21 @@ import { Injectable } from '@angular/core';
 import { Supervision } from '@core/models/cat/supervision';
 import { environment } from '@env';
 import { NGXLogger } from 'ngx-logger';
-
-import { BaseRestService } from '../base-rest.service';
-
+import { SgiRestService } from '@sgi/framework/http';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SupervisionService extends BaseRestService<Supervision>{
-  public static SUPERVISION_MAPPING = '/supervisiones';
+export class SupervisionService extends SgiRestService<Supervision>{
+  private static readonly MAPPING = '/supervisiones';
 
   constructor(logger: NGXLogger, protected http: HttpClient) {
-    super(SupervisionService.name, logger,
-      `${environment.apiUrl}` + SupervisionService.SUPERVISION_MAPPING, http);
+    super(
+      SupervisionService.name,
+      logger,
+      `${environment.serviceServers.cat}${SupervisionService.MAPPING}`,
+      http
+    );
   }
 
 }

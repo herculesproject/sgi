@@ -2,14 +2,31 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-import { NgxLoggerLevel } from 'ngx-logger';
+import { NgxLoggerLevel, LoggerConfig } from 'ngx-logger';
+import { SgiAuthMode, SgiAuthConfig } from '@sgi/framework/auth';
 
 export const environment = {
   production: false,
-  logLevel: NgxLoggerLevel.DEBUG,
-  serverLogLevel: NgxLoggerLevel.OFF,
-  serverLoggingUrl: `http://localhost:8080/logs`,
-  apiUrl: 'http://localhost:8080',
+  serviceServers: {
+    cat: '/api/cat',
+    eti: '/api/eti'
+  },
+  loggerConfig: {
+    enableSourceMaps: true, // <-- THIS IS REQUIRED, to make "line-numbers" work in SourceMap Object defition (without evalSourceMap)
+    level: NgxLoggerLevel.DEBUG
+  } as LoggerConfig,
+  authConfig: {
+    mode: SgiAuthMode.Keycloak,
+    ssoRealm: 'sgi',
+    ssoClientId: 'front',
+    ssoUrl: '/auth',
+    // InMemory  auth config
+    inMemoryConfig: {
+      userRefId: '',
+      authorities: [],
+      isInvestigador: false
+    }
+  } as SgiAuthConfig
 };
 
 /*

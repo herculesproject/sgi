@@ -7,7 +7,7 @@ import { TipoReservableService } from '@core/services/cat/tipo-reservable.servic
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TraductorService } from '@core/services/traductor.service';
-import { Direction, Filter, FilterType } from '@core/services/types';
+import { SgiRestSortDirection, SgiRestFilter, SgiRestFilterType } from '@sgi/framework/http';
 import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of, Subscription } from 'rxjs';
@@ -28,7 +28,7 @@ export class TipoReservableListadoComponent implements AfterViewInit, OnDestroy 
 
   tiposReservable$: Observable<TipoReservable[]> = of();
   totalElementos: number;
-  filter: Filter;
+  filter: SgiRestFilter;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
@@ -49,7 +49,7 @@ export class TipoReservableListadoComponent implements AfterViewInit, OnDestroy 
     this.totalElementos = 0;
     this.filter = {
       field: undefined,
-      type: FilterType.NONE,
+      type: SgiRestFilterType.NONE,
       value: '',
     };
     this.logger.debug(TipoReservableListadoComponent.name, 'ngOnInit()', 'end');
@@ -88,7 +88,7 @@ export class TipoReservableListadoComponent implements AfterViewInit, OnDestroy 
           size: this.paginator.pageSize,
         },
         sort: {
-          direction: Direction.fromSortDirection(this.sort.direction),
+          direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
           field: this.sort.active,
         },
         filters: this.buildFilters(),
@@ -118,11 +118,11 @@ export class TipoReservableListadoComponent implements AfterViewInit, OnDestroy 
       );
   }
 
-  private buildFilters(): Filter[] {
+  private buildFilters(): SgiRestFilter[] {
     this.logger.debug(TipoReservableListadoComponent.name, 'buildFilters()', 'start');
     if (
       this.filter.field &&
-      this.filter.type !== FilterType.NONE &&
+      this.filter.type !== SgiRestFilterType.NONE &&
       this.filter.value
     ) {
       this.logger.debug(TipoReservableListadoComponent.name, 'buildFilters()', 'end');
@@ -149,7 +149,7 @@ export class TipoReservableListadoComponent implements AfterViewInit, OnDestroy 
     this.logger.debug(TipoReservableListadoComponent.name, 'onClearFilters()', 'start');
     this.filter = {
       field: undefined,
-      type: FilterType.NONE,
+      type: SgiRestFilterType.NONE,
       value: '',
     };
     this.loadTable(true);
