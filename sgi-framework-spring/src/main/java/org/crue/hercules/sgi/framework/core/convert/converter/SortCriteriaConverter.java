@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class SortCriteriaConverter implements Converter<String, List<SortCriteria>> {
-  private static String wordRegex = "[A-Za-z0-9_ñÑ]*";
+  private static String wordRegex = "[A-Za-z0-9_ñÑ\\.]*";
   private static String operatorRegex = "(\\+|-)";
   private static String fullRegex = "(" + wordRegex + ")" + operatorRegex + ",";
   private static final Pattern sortPattern = Pattern.compile(fullRegex);
