@@ -4,14 +4,17 @@ import { TestBed } from '@angular/core/testing';
 import { Router, ActivatedRouteSnapshot } from '@angular/router';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { of, Observable, throwError } from 'rxjs';
-import { SgiAuthRouteData } from './auth.route';
+import { SgiAuthRouteData, SgiAuthRoute } from './auth.route';
 import { SgiAuthService } from './auth.service';
 
 describe('CanAuthenticationGuard', () => {
   let guard: SgiAuthGuard;
   let authService: jasmine.SpyObj<SgiAuthService>;
   let routeMock: ActivatedRouteSnapshot = {
-    pathFromRoot: []
+    pathFromRoot: [],
+    routeConfig: {
+
+    } as SgiAuthRoute
   } as ActivatedRouteSnapshot;
   let routeStateMock: any = { snapshot: {}, url: '/cookies' };
 
@@ -32,7 +35,10 @@ describe('CanAuthenticationGuard', () => {
     // Clean route
     routeMock = {
       // This attribute is mandatory
-      pathFromRoot: []
+      pathFromRoot: [],
+      routeConfig: {
+
+      } as SgiAuthRoute
     } as ActivatedRouteSnapshot;
   });
 
@@ -94,7 +100,7 @@ describe('CanAuthenticationGuard', () => {
     authService.getAuthorities.and.returnValue(['ONE', 'TWO', 'THREE']);
 
     // Route data
-    routeMock.data = {
+    routeMock.routeConfig.data = {
       hasAuthority: 'FOUR',
     } as SgiAuthRouteData;
 
@@ -114,7 +120,7 @@ describe('CanAuthenticationGuard', () => {
     authService.getAuthorities.and.returnValue(['ONE', 'TWO', 'THREE']);
 
     // Route data
-    routeMock.data = {
+    routeMock.routeConfig.data = {
       hasAuthority: 'TWO'
     } as SgiAuthRouteData;
 
@@ -134,7 +140,7 @@ describe('CanAuthenticationGuard', () => {
     authService.getAuthorities.and.returnValue(['ONE', 'TWO', 'THREE']);
 
     // Route data
-    routeMock.data = {
+    routeMock.routeConfig.data = {
       hasAnyAuthority: ['FOUR', 'FIVE']
     } as SgiAuthRouteData;
 
@@ -154,7 +160,7 @@ describe('CanAuthenticationGuard', () => {
     authService.getAuthorities.and.returnValue(['ONE', 'TWO', 'THREE']);
 
     // Route data
-    routeMock.data = {
+    routeMock.routeConfig.data = {
       hasAnyAuthority: ['FOUR', 'THREE']
     } as SgiAuthRouteData;
 
@@ -174,7 +180,7 @@ describe('CanAuthenticationGuard', () => {
     authService.getAuthorities.and.returnValue(['ONE', 'TWO', 'THREE', 'ONE_UO', 'FOUR_UO']);
 
     // Route data
-    routeMock.data = {
+    routeMock.routeConfig.data = {
       hasAuthorityForAnyUO: 'FIVE'
     } as SgiAuthRouteData;
 
@@ -194,7 +200,7 @@ describe('CanAuthenticationGuard', () => {
     authService.getAuthorities.and.returnValue(['ONE', 'TWO', 'THREE', 'ONE_UO', 'FOUR_UO']);
 
     // Route data
-    routeMock.data = {
+    routeMock.routeConfig.data = {
       hasAuthorityForAnyUO: 'FOUR'
     } as SgiAuthRouteData;
 
@@ -214,7 +220,7 @@ describe('CanAuthenticationGuard', () => {
     authService.getAuthorities.and.returnValue(['ONE', 'TWO', 'THREE', 'ONE_UO', 'FOUR_UO', 'ONE_UO2']);
 
     // Route data
-    routeMock.data = {
+    routeMock.routeConfig.data = {
       hasAnyAuthorityForAnyUO: ['SIX', 'FIVE']
     } as SgiAuthRouteData;
 
@@ -234,7 +240,7 @@ describe('CanAuthenticationGuard', () => {
     authService.getAuthorities.and.returnValue(['ONE', 'TWO', 'THREE', 'ONE_UO', 'FOUR_UO', 'ONE_UO2']);
 
     // Route data
-    routeMock.data = {
+    routeMock.routeConfig.data = {
       hasAnyAuthorityForAnyUO: ['FIVE', 'FOUR']
     } as SgiAuthRouteData;
 
@@ -254,7 +260,7 @@ describe('CanAuthenticationGuard', () => {
     authService.getAuthorities.and.returnValue(['ONE', 'TWO', 'THREE', 'ONE_UO', 'FOUR_UO', 'ONE_UO2']);
 
     // Route data
-    routeMock.data = {
+    routeMock.routeConfig.data = {
       hasAuthority: 'ONE',
       hasAnyAuthorityForAnyUO: ['TWO', 'THREE']
     } as SgiAuthRouteData;
