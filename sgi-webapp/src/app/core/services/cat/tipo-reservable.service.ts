@@ -8,7 +8,7 @@ import { SgiRestService } from '@sgi/framework/http';
 @Injectable({
   providedIn: 'root'
 })
-export class TipoReservableService extends SgiRestService<TipoReservable> {
+export class TipoReservableService extends SgiRestService<number, TipoReservable> {
   private static readonly MAPPING = '/tiporeservables';
 
   constructor(logger: NGXLogger, protected http: HttpClient) {

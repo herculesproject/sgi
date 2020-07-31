@@ -24,7 +24,7 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, AfterVie
 
   protected constructor(
     protected readonly logger: NGXLogger,
-    protected readonly service: SgiRestService<T>,
+    protected readonly service: SgiRestService<number | string, T>,
   ) {
     this.elementosPagina = [5, 10, 25, 100];
   }

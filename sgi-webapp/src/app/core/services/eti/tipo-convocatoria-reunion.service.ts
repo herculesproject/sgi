@@ -8,7 +8,7 @@ import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reun
 @Injectable({
   providedIn: 'root',
 })
-export class TipoConvocatoriaReunionService extends SgiRestService<TipoConvocatoriaReunion> {
+export class TipoConvocatoriaReunionService extends SgiRestService<number, TipoConvocatoriaReunion> {
   private static readonly MAPPING = '/tipoconvocatoriareuniones';
 
   constructor(logger: NGXLogger, protected http: HttpClient) {

@@ -8,7 +8,7 @@ import { Comite } from '@core/models/eti/comite';
 @Injectable({
   providedIn: 'root',
 })
-export class ComiteService extends SgiRestService<Comite> {
+export class ComiteService extends SgiRestService<number, Comite> {
   private static readonly MAPPING = '/comites';
 
   constructor(logger: NGXLogger, protected http: HttpClient) {

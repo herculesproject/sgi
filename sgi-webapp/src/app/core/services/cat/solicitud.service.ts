@@ -8,7 +8,7 @@ import { SgiRestService } from '@sgi/framework/http';
 @Injectable({
   providedIn: 'root',
 })
-export class SolicitudService extends SgiRestService<Registro> {
+export class SolicitudService extends SgiRestService<number, Registro> {
   private static readonly MAPPING = '/registros';
   public registro: Registro;
   constructor(logger: NGXLogger, protected http: HttpClient) {

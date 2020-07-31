@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-export class MemoriaService extends SgiRestService<Memoria>{
+export class MemoriaService extends SgiRestService<number, Memoria>{
   private static readonly MAPPING = '/memorias';
 
   constructor(logger: NGXLogger, protected http: HttpClient) {

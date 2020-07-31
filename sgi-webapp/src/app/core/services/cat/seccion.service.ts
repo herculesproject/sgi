@@ -10,7 +10,7 @@ import { environment } from '@env';
 @Injectable({
   providedIn: 'root',
 })
-export class SeccionService extends SgiRestService<Seccion> {
+export class SeccionService extends SgiRestService<number, Seccion> {
   private static readonly MAPPING = '/secciones';
 
   constructor(logger: NGXLogger, protected http: HttpClient) {

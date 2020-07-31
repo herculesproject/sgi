@@ -8,7 +8,7 @@ import { SgiRestService } from '@sgi/framework/http';
 @Injectable({
   providedIn: 'root',
 })
-export class UnidadMedidaService extends SgiRestService<UnidadMedida> {
+export class UnidadMedidaService extends SgiRestService<number, UnidadMedida> {
   private static readonly MAPPING = '/unidadmedidas';
 
   constructor(logger: NGXLogger, protected http: HttpClient) {
