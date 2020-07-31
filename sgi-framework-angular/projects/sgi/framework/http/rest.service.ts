@@ -9,8 +9,11 @@ import { SgiRestFindOptions, SgiRestPageRequest, SgiRestSort, SgiRestSortDirecti
  * Base service to consume REST endpoints.
  *
  * Contains the common operations.
+ * 
+ * @template K type of ID
+ * @template T type of return element
  */
-export abstract class SgiRestService<T> {
+export abstract class SgiRestService<K extends number | string, T> {
   /** The HttpClient to use in request */
   protected readonly http: HttpClient;
   /** The REST Endpoint URL common for all service operations */
@@ -62,7 +65,7 @@ export abstract class SgiRestService<T> {
    * @param id The ID of the element
    * @param element The element to update
    */
-  public update(id: number, element: T): Observable<T> {
+  public update(id: K, element: T): Observable<T> {
     this.logger.debug(this.serviceName, `update(${id}, ${JSON.stringify(element)})`, '-', 'START');
     return this.http.put<T>(`${this.endpointUrl}/${id}`, element).pipe(
       // TODO: Explore the use a global HttpInterceptor with or without a custom error
@@ -84,7 +87,7 @@ export abstract class SgiRestService<T> {
    *
    * @param id The ID of the element
    */
-  public deleteById(id: number) {
+  public deleteById(id: K) {
     this.logger.debug(this.serviceName, `deleteById(${id})`, '-', 'START');
     return this.http.delete<T>(`${this.endpointUrl}/${id}`).pipe(
       // TODO: Explore the use a global HttpInterceptor with or without a custom error
@@ -125,7 +128,7 @@ export abstract class SgiRestService<T> {
    * @param id The ID of the element
    */
   // TODO: Manage 404 (NotFound) and return an empty element?
-  public findById(id: number): Observable<T> {
+  public findById(id: K): Observable<T> {
     this.logger.debug(this.serviceName, `findById(${id})`, '-', 'START');
     return this.http.get<T>(`${this.endpointUrl}/${id}`).pipe(
       // TODO: Explore the use a global HttpInterceptor with or without a custom error

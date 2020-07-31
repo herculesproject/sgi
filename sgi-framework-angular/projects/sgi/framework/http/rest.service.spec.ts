@@ -15,7 +15,7 @@ interface DummyData {
   age: number;
 }
 
-class FakeService extends SgiRestService<DummyData> {
+class FakeService extends SgiRestService<number, DummyData> {
   constructor(logger: NGXLogger, http: HttpClient) {
     super(FakeService.name, logger, fakeEndpoint, http);
   }
