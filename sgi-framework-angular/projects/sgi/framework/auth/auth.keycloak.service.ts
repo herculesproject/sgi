@@ -12,6 +12,7 @@ import { SgiAuthConfig } from './auth.config';
 interface IKeycloakToken extends Keycloak.KeycloakTokenParsed {
   preferred_username: string;
   investigador: boolean;
+  user_ref_id: string;
 }
 
 /**
@@ -134,7 +135,7 @@ export class AuthKeycloakService extends SgiAuthService {
     return {
       isInvestigador: token.investigador,
       isAuthenticated: this.keycloak.authenticated,
-      userRefId: token.preferred_username,
+      userRefId: token.user_ref_id,
       authorities: token.realm_access?.roles ? token.realm_access.roles : []
     };
   }
