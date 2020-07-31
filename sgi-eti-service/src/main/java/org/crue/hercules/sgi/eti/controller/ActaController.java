@@ -3,8 +3,10 @@ package org.crue.hercules.sgi.eti.controller;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.groups.Default;
 
 import org.crue.hercules.sgi.eti.model.Acta;
+import org.crue.hercules.sgi.eti.model.BaseEntity.Update;
 import org.crue.hercules.sgi.eti.service.ActaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -92,7 +95,7 @@ public class ActaController {
    */
   @PutMapping("/{id}")
   @PreAuthorize("hasAuthorityForAnyUO('ETI-ACT-E')")
-  Acta replaceActa(@Valid @RequestBody Acta updatedActa, @PathVariable Long id) {
+  Acta replaceActa(@Validated({ Update.class, Default.class }) @RequestBody Acta updatedActa, @PathVariable Long id) {
     log.debug("replaceActa(Acta updatedActa, Long id) - start");
     updatedActa.setId(id);
     Acta returnValue = service.update(updatedActa);

@@ -7,6 +7,7 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.EstadoActa;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
@@ -40,6 +41,7 @@ public class ActaIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String ACTA_CONTROLLER_BASE_PATH = "/actas";
+  private static final String ESTADOACTA_CONTROLLER_BASE_PATH = "/estadoactas";
 
   private HttpEntity<Acta> buildRequest(HttpHeaders headers, Acta entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -110,6 +112,31 @@ public class ActaIT {
     Assertions.assertThat(acta.getEstadoActual().getId()).as("estadoActual.id").isEqualTo(1L);
     Assertions.assertThat(acta.getInactiva()).as("inactiva").isEqualTo(true);
     Assertions.assertThat(acta.getActivo()).as("activo").isEqualTo(true);
+
+    // When: se ha creado un nuevo acta
+    // Then: deberá existir un EstadoActa inicial para ese acta creado
+
+    // Acta creado
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V")));
+    final ResponseEntity<Acta> fullDataActa = restTemplate.exchange(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.GET, buildRequest(headers, null), Acta.class, 1L);
+
+    String query = "acta.id:" + acta.getId();
+    URI uri = UriComponentsBuilder.fromUriString(ESTADOACTA_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
+        .toUri();
+
+    // when: Búsqueda EstadoEstado con el Acta creado
+    final ResponseEntity<List<EstadoActa>> responseEstadoActa = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<EstadoActa>>() {
+        });
+
+    // then: Respuesta OK, retorna el EstadoActa inicial del Acta creado
+    Assertions.assertThat(responseEstadoActa.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(responseEstadoActa.getBody().size()).as("size").isEqualTo(1);
+    Assertions.assertThat(responseEstadoActa.getBody().get(0).getTipoEstadoActa()).as("tipoEstado")
+        .isEqualTo(fullDataActa.getBody().getEstadoActual());
+    Assertions.assertThat(responseEstadoActa.getBody().get(0).getActa()).as("acta").isEqualTo(fullDataActa.getBody());
+
   }
 
   @Sql

@@ -1,132 +1,78 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
-  <changeSet author="master" id="20200601000000-comite">
-    <insert tableName="comite">
-      <column name="comite" value="Comite1" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="comite">
-      <column name="comite" value="Comite2" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="comite">
-      <column name="comite" value="Comite3" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="comite">
-      <column name="comite" value="Comite4" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="comite">
-      <column name="comite" value="Comite5" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="comite">
-      <column name="comite" value="Comite6" />
-      <column name="activo" value="true" />
-    </insert>
-  </changeSet>
 
-  <changeSet author="master" id="20200601000000-dictamen">
-    <insert tableName="dictamen">
+  <!-- ########################################################## -->
+  <!-- ENUMERATION -->
+  <!-- ########################################################## -->
+
+  <changeSet author="master" id="20200601000000-tipo_tarea">
+    <insert tableName="tipo_tarea">
       <column name="id" value="1" />
-      <column name="nombre" value="Favorable" />
+      <column name="nombre" value="Diseño de proyecto y procedimientos" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="dictamen">
+    <insert tableName="tipo_tarea">
       <column name="id" value="2" />
-      <column name="nombre" value="Favorable pendiente de revisión mínima" />
+      <column name="nombre" value="Eutanasia" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="dictamen">
+    <insert tableName="tipo_tarea">
       <column name="id" value="3" />
-      <column name="nombre" value="Pendiente de correcciones" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="dictamen">
-      <column name="id" value="4" />
-      <column name="nombre" value="No procede evaluar" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="dictamen">
-      <column name="id" value="5" />
-      <column name="nombre" value="Solicitud de modificaciones" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="dictamen">
-      <column name="id" value="6" />
-      <column name="nombre" value="Solicitud de aclaraciones" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="dictamen">
-      <column name="id" value="7" />
-      <column name="nombre" value="Desfavorable" />
+      <column name="nombre" value="Manipulación de animales" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-tipo_actividad">
-    <insert tableName="tipo_actividad">
+  <changeSet author="master" id="20200601000000-tipo_evaluacion">
+    <insert tableName="tipo_evaluacion">
       <column name="id" value="1" />
-      <column name="nombre" value="Proyecto de investigación" />
+      <column name="nombre" value="Retrospectiva" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="tipo_actividad">
+    <insert tableName="tipo_evaluacion">
       <column name="id" value="2" />
-      <column name="nombre" value="Práctica docente" />
+      <column name="nombre" value="Memoria" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="tipo_actividad">
+    <insert tableName="tipo_evaluacion">
       <column name="id" value="3" />
-      <column name="nombre" value="Tesis doctoral" />
+      <column name="nombre" value="Seguimiento anual" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="tipo_actividad">
+    <insert tableName="tipo_evaluacion">
       <column name="id" value="4" />
-      <column name="nombre" value="Trabajo Fin de Máster" />
+      <column name="nombre" value="Seguimiento final" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="tipo_actividad">
-      <column name="id" value="5" />
-      <column name="nombre" value="Trabajo Fin de Grado" />
-      <column name="activo" value="true" />
-    </insert>
-
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-tipo_memoria">
-    <insert tableName="tipo_memoria">
+  <changeSet author="master" id="20200601000000-estado_retrospectiva">
+    <insert tableName="estado_retrospectiva">
       <column name="id" value="1" />
-      <column name="nombre" value="TipoMemoria1" />
+      <column name="nombre" value="Pendiente" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="tipo_memoria">
+    <insert tableName="estado_retrospectiva">
       <column name="id" value="2" />
-      <column name="nombre" value="TipoMemoria2" />
+      <column name="nombre" value="Completada" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="tipo_memoria">
+    <insert tableName="estado_retrospectiva">
       <column name="id" value="3" />
-      <column name="nombre" value="TipoMemoria3" />
+      <column name="nombre" value="En secretaría" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="tipo_memoria">
+    <insert tableName="estado_retrospectiva">
       <column name="id" value="4" />
-      <column name="nombre" value="TipoMemoria4" />
+      <column name="nombre" value="En evaluación" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="tipo_memoria">
+    <insert tableName="estado_retrospectiva">
       <column name="id" value="5" />
-      <column name="nombre" value="TipoMemoria5" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_memoria">
-      <column name="id" value="6" />
-      <column name="nombre" value="TipoMemoria6" />
+      <column name="nombre" value="Fin evaluación" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>
-
 
   <changeSet author="master" id="20200601000000-formacion_especifica">
     <insert tableName="formacion_especifica">
@@ -171,6 +117,61 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-dictamen">
+    <insert tableName="dictamen">
+      <column name="id" value="1" />
+      <column name="nombre" value="Favorable" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="dictamen">
+      <column name="id" value="2" />
+      <column name="nombre" value="Favorable pendiente de revisión mínima" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="dictamen">
+      <column name="id" value="3" />
+      <column name="nombre" value="Pendiente de correcciones" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="dictamen">
+      <column name="id" value="4" />
+      <column name="nombre" value="No procede evaluar" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="dictamen">
+      <column name="id" value="5" />
+      <column name="nombre" value="Solicitud de modificaciones" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="dictamen">
+      <column name="id" value="6" />
+      <column name="nombre" value="Solicitud de aclaraciones" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="dictamen">
+      <column name="id" value="7" />
+      <column name="nombre" value="Desfavorable" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-tipo_convocatoria_reunion">
+    <insert tableName="tipo_convocatoria_reunion">
+      <column name="id" value="1" />
+      <column name="nombre" value="Ordinaria" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_convocatoria_reunion">
+      <column name="id" value="2" />
+      <column name="nombre" value="Extraordinaria" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_convocatoria_reunion">
+      <column name="id" value="3" />
+      <column name="nombre" value="Seguimiento" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
 
   <changeSet author="master" id="20200601000000-cargo_comite">
     <insert tableName="cargo_comite">
@@ -181,6 +182,289 @@
     <insert tableName="cargo_comite">
       <column name="id" value="2" />
       <column name="nombre" value="VOCAL" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-tipo_estado_acta">
+    <insert tableName="tipo_estado_acta">
+      <column name="id" value="1" />
+      <column name="nombre" value="En elaboración" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_acta">
+      <column name="id" value="2" />
+      <column name="nombre" value="Finalizada" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-tipo_comentario">
+    <insert tableName="tipo_comentario">
+      <column name="id" value="1" />
+      <column name="nombre" value="GESTOR" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_comentario">
+      <column name="id" value="2" />
+      <column name="nombre" value="EVALUADOR" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-formulario">
+    <insert tableName="formulario">
+      <column name="id" value="1" />
+      <column name="nombre" value="M10" />
+      <column name="descripcion" value="Descripcion1" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="formulario">
+      <column name="id" value="2" />
+      <column name="nombre" value="M20" />
+      <column name="descripcion" value="Descripcion2" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="formulario">
+      <column name="id" value="3" />
+      <column name="nombre" value="M30" />
+      <column name="descripcion" value="Descripcion3" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="formulario">
+      <column name="id" value="4" />
+      <column name="nombre" value="Seguimiento Anual" />
+      <column name="descripcion" value="Descripcion4" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="formulario">
+      <column name="id" value="5" />
+      <column name="nombre" value="Seguimiento Final" />
+      <column name="descripcion" value="Descripcion5" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="formulario">
+      <column name="id" value="6" />
+      <column name="nombre" value="Retrospectiva" />
+      <column name="descripcion" value="Descripcion6" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-tipo_documento">
+    <insert tableName="tipo_documento">
+      <column name="id" value="1" />
+      <column name="nombre" value="Seguimiento Anual" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" value="2" />
+      <column name="nombre" value="Seguimiento Final" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M20')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" value="3" />
+      <column name="nombre" value="Retrospectiva" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" value="4" />
+      <column name="nombre" value="Documento de consentimiento" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" value="5" />
+      <column name="nombre" value="Documento de cesión de datos" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M20')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" value="6" />
+      <column name="nombre" value="Documento de autorización" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" value="7" />
+      <column name="nombre" value="Documento de aceptación de colaboración" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" value="8" />
+      <column name="nombre" value="Informe de la Comisión de Garantías" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" value="9" />
+      <column name="nombre" value="Acuerdo de transferencia de muestras" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" value="10" />
+      <column name="nombre" value="Documento de registro de tratamiento de datos" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" value="11" />
+      <column name="nombre" value="Documentación adicional" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" value="12" />
+      <column name="nombre" value="Aclaraciones al comité" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" value="13" />
+      <column name="nombre" value="Acreditaciones" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" value="14" />
+      <column name="nombre" value="Informe veterinario" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-tipo_memoria">
+    <insert tableName="tipo_memoria">
+      <column name="id" value="1" />
+      <column name="nombre" value="Nueva" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_memoria">
+      <column name="id" value="2" />
+      <column name="nombre" value="Modificación" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_memoria">
+      <column name="id" value="3" />
+      <column name="nombre" value="Ratificación" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-tipo_estado_memoria">
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" value="1" />
+      <column name="nombre" value="En elaboración" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" value="2" />
+      <column name="nombre" value="Completada" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" value="3" />
+      <column name="nombre" value="En secretaría" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" value="4" />
+      <column name="nombre" value="En secretaría revisión mínima" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" value="5" />
+      <column name="nombre" value="En evaluación" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" value="6" />
+      <column name="nombre" value="Favorable Pendiente de Modificaciones Mínimas" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" value="7" />
+      <column name="nombre" value="Pendiente de correcciones" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" value="8" />
+      <column name="nombre" value="No procede evaluar" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" value="9" />
+      <column name="nombre" value="Fin evaluación" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" value="10" />
+      <column name="nombre" value="Archivado" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
+  <!-- ########################################################## -->
+  <!-- FIN ENUMERATION -->
+  <!-- ########################################################## -->
+
+
+  <changeSet author="master" id="20200601000000-comite">
+    <insert tableName="comite">
+      <column name="comite" value="Comite1" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="comite">
+      <column name="comite" value="Comite2" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="comite">
+      <column name="comite" value="Comite3" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="comite">
+      <column name="comite" value="Comite4" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="comite">
+      <column name="comite" value="Comite5" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="comite">
+      <column name="comite" value="Comite6" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-tipo_actividad">
+    <insert tableName="tipo_actividad">
+      <column name="id" value="1" />
+      <column name="nombre" value="Proyecto de investigación" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_actividad">
+      <column name="id" value="2" />
+      <column name="nombre" value="Práctica docente" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_actividad">
+      <column name="id" value="3" />
+      <column name="nombre" value="Tesis doctoral" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_actividad">
+      <column name="id" value="4" />
+      <column name="nombre" value="Trabajo Fin de Máster" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_actividad">
+      <column name="id" value="5" />
+      <column name="nombre" value="Trabajo Fin de Grado" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>
@@ -323,109 +607,30 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-tipo_estado_memoria">
-    <insert tableName="tipo_estado_memoria">
-      <column name="id" value="1" />
-      <column name="nombre" value="En elaboración" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_estado_memoria">
-      <column name="id" value="2" />
-      <column name="nombre" value="Completada" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_estado_memoria">
-      <column name="id" value="3" />
-      <column name="nombre" value="En secretaría" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_estado_memoria">
-      <column name="id" value="4" />
-      <column name="nombre" value="En secretaría revisión mínima" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_estado_memoria">
-      <column name="id" value="5" />
-      <column name="nombre" value="En evaluación" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_estado_memoria">
-      <column name="id" value="6" />
-      <column name="nombre" value="Favorable Pendiente de Modificaciones Mínimas" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_estado_memoria">
-      <column name="id" value="7" />
-      <column name="nombre" value="Pendiente de correcciones" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_estado_memoria">
-      <column name="id" value="8" />
-      <column name="nombre" value="No procede evaluar" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_estado_memoria">
-      <column name="id" value="9" />
-      <column name="nombre" value="Fin evaluación" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_estado_memoria">
-      <column name="id" value="10" />
-      <column name="nombre" value="Archivado" />
-      <column name="activo" value="true" />
-    </insert>
-  </changeSet>
-
   <changeSet author="master" id="20200601000000-tipo_memoria_comite">
     <insert tableName="tipo_memoria_comite">
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite1')" />
-      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria1')" />
+      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Nueva')" />
     </insert>
     <insert tableName="tipo_memoria_comite">
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite2')" />
-      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria2')" />
+      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Modificación')" />
     </insert>
     <insert tableName="tipo_memoria_comite">
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite3')" />
-      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria3')" />
+      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Ratificación')" />
     </insert>
     <insert tableName="tipo_memoria_comite">
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite4')" />
-      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria4')" />
+      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Nueva')" />
     </insert>
     <insert tableName="tipo_memoria_comite">
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite5')" />
-      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria5')" />
+      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Modificación')" />
     </insert>
     <insert tableName="tipo_memoria_comite">
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite6')" />
-      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria6')" />
-    </insert>
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-tipo_estado_acta">
-    <insert tableName="tipo_estado_acta">
-      <column name="id" value="1" />
-      <column name="nombre" value="En elaboración" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_estado_acta">
-      <column name="id" value="2" />
-      <column name="nombre" value="Finalizada" />
-      <column name="activo" value="true" />
-    </insert>
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-tipo_comentario">
-    <insert tableName="tipo_comentario">
-      <column name="id" value="1" />
-      <column name="nombre" value="GESTOR" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_comentario">
-      <column name="id" value="2" />
-      <column name="nombre" value="EVALUADOR" />
-      <column name="activo" value="true" />
+      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Ratificación')" />
     </insert>
   </changeSet>
 
@@ -459,34 +664,6 @@
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria3')" />
       <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='Fin evaluación')" />
       <column name="fecha_estado" value="2020-06-21 10:20:45" />
-    </insert>
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-estado_retrospectiva">
-    <insert tableName="estado_retrospectiva">
-      <column name="id" value="1" />
-      <column name="nombre" value="Pendiente" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="estado_retrospectiva">
-      <column name="id" value="2" />
-      <column name="nombre" value="Completada" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="estado_retrospectiva">
-      <column name="id" value="3" />
-      <column name="nombre" value="En secretaría" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="estado_retrospectiva">
-      <column name="id" value="4" />
-      <column name="nombre" value="En evaluación" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="estado_retrospectiva">
-      <column name="id" value="5" />
-      <column name="nombre" value="Fin evaluación" />
-      <column name="activo" value="true" />
     </insert>
   </changeSet>
 
@@ -524,7 +701,7 @@
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite1')" />
       <column name="titulo" value="Memoria1" />
       <column name="usuario_ref" value="user-8984" />
-      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria1')" />
+      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Nueva')" />
       <column name="estado_actual_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='En secretaría')" />
       <column name="fecha_envio_secretaria" value="2020-07-09" />
       <column name="requiere_retrospectiva" value="true" />
@@ -538,7 +715,7 @@
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite1')" />
       <column name="titulo" value="Memoria2" />
       <column name="usuario_ref" value="user-9984" />
-      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria1')" />
+      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Modificación')" />
       <column name="estado_actual_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='Completada')" />
       <column name="fecha_envio_secretaria" value="2020-06-09" />
       <column name="requiere_retrospectiva" value="false" />
@@ -552,7 +729,7 @@
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite1')" />
       <column name="titulo" value="Memoria3" />
       <column name="usuario_ref" value="user-852" />
-      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='TipoMemoria2')" />
+      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Ratificación')" />
       <column name="estado_actual_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='Fin evaluación')" />
       <column name="fecha_envio_secretaria" value="2020-06-09" />
       <column name="requiere_retrospectiva" value="true" />
@@ -625,7 +802,7 @@
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
       <column name="tarea" value="Tarea1" />
       <column name="formacion" value="Formacion1" />
-      <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where nombre='FormacionEspecifica1')" />
+      <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where id=1)" />
       <column name="organismo" value="Organismo1" />
       <column name="anio" value="2020" />
       <column name="tipo_tarea_id" valueComputed="(select id from eti.tipo_tarea where nombre='Eutanasia')" />
@@ -635,7 +812,7 @@
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
       <column name="tarea" value="Tarea2" />
       <column name="formacion" value="Formacion2" />
-      <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where nombre='FormacionEspecifica2')" />
+      <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where id=2)" />
       <column name="organismo" value="Organismo2" />
       <column name="anio" value="2020" />
       <column name="tipo_tarea_id" valueComputed="(select id from eti.tipo_tarea where nombre='Eutanasia')" />
@@ -645,7 +822,7 @@
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
       <column name="tarea" value="Tarea3" />
       <column name="formacion" value="Formacion3" />
-      <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where nombre='FormacionEspecifica3')" />
+      <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where id=3)" />
       <column name="organismo" value="Organismo3" />
       <column name="anio" value="2020" />
       <column name="tipo_tarea_id" valueComputed="(select id from eti.tipo_tarea where nombre='Manipulación de animales')" />
@@ -655,7 +832,7 @@
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
       <column name="tarea" value="Tarea4" />
       <column name="formacion" value="Formacion4" />
-      <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where nombre='FormacionEspecifica4')" />
+      <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where id=4)" />
       <column name="organismo" value="Organismo4" />
       <column name="anio" value="2021" />
       <column name="tipo_tarea_id" valueComputed="(select id from eti.tipo_tarea where nombre='Eutanasia')" />
@@ -665,7 +842,7 @@
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
       <column name="tarea" value="Tarea5" />
       <column name="formacion" value="Formacion5" />
-      <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where nombre='FormacionEspecifica5')" />
+      <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where id=5)" />
       <column name="organismo" value="Organismo5" />
       <column name="anio" value="2021" />
       <column name="tipo_tarea_id" valueComputed="(select id from eti.tipo_tarea where nombre='Diseño de proyecto y procedimientos')" />
@@ -675,97 +852,10 @@
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
       <column name="tarea" value="Tarea6" />
       <column name="formacion" value="Formacion6" />
-      <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where nombre='FormacionEspecifica6')" />
+      <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where id=6)" />
       <column name="organismo" value="Organismo6" />
       <column name="anio" value="2021" />
       <column name="tipo_tarea_id" valueComputed="(select id from eti.tipo_tarea where nombre='Manipulación de animales')" />
-    </insert>
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-tipo_documento">
-    <insert tableName="tipo_documento">
-      <column name="id" value="1" />
-      <column name="nombre" value="Seguimiento Anual" />
-      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_documento">
-      <column name="id" value="2" />
-      <column name="nombre" value="Seguimiento Final" />
-      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M20')" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_documento">
-      <column name="id" value="3" />
-      <column name="nombre" value="Retrospectiva" />
-      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_documento">
-      <column name="id" value="4" />
-      <column name="nombre" value="Documento de consentimiento" />
-      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_documento">
-      <column name="id" value="5" />
-      <column name="nombre" value="Documento de cesión de datos" />
-      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M20')" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_documento">
-      <column name="id" value="6" />
-      <column name="nombre" value="Documento de autorización" />
-      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_documento">
-      <column name="id" value="7" />
-      <column name="nombre" value="Documento de aceptación de colaboración" />
-      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_documento">
-      <column name="id" value="8" />
-      <column name="nombre" value="Informe de la Comisión de Garantías" />
-      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_documento">
-      <column name="id" value="9" />
-      <column name="nombre" value="Acuerdo de transferencia de muestras" />
-      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_documento">
-      <column name="id" value="10" />
-      <column name="nombre" value="Documento de registro de tratamiento de datos" />
-      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_documento">
-      <column name="id" value="11" />
-      <column name="nombre" value="Documentación adicional" />
-      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_documento">
-      <column name="id" value="12" />
-      <column name="nombre" value="Aclaraciones al comité" />
-      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_documento">
-      <column name="id" value="13" />
-      <column name="nombre" value="Acreditaciones" />
-      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_documento">
-      <column name="id" value="14" />
-      <column name="nombre" value="Informe veterinario" />
-      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
-      <column name="activo" value="true" />
     </insert>
   </changeSet>
 
@@ -805,24 +895,6 @@
       <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where nombre='Documento de autorización')" />
       <column name="documento_ref" value="DocumentoRef6" />
       <column name="aportado" value="true" />
-    </insert>
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-tipo_convocatoria_reunion">
-    <insert tableName="tipo_convocatoria_reunion">
-      <column name="id" value="1" />
-      <column name="nombre" value="Ordinaria" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_convocatoria_reunion">
-      <column name="id" value="2" />
-      <column name="nombre" value="Extraordinaria" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_convocatoria_reunion">
-      <column name="id" value="3" />
-      <column name="nombre" value="Seguimiento" />
-      <column name="activo" value="true" />
     </insert>
   </changeSet>
 
@@ -906,44 +978,6 @@
       <column name="activo" value="true" />
     </insert>
   </changeSet>
-  <changeSet author="master" id="20200601000000-formulario">
-    <insert tableName="formulario">
-      <column name="id" value="1" />
-      <column name="nombre" value="M10" />
-      <column name="descripcion" value="Descripcion1" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="formulario">
-      <column name="id" value="2" />
-      <column name="nombre" value="M20" />
-      <column name="descripcion" value="Descripcion2" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="formulario">
-      <column name="id" value="3" />
-      <column name="nombre" value="M30" />
-      <column name="descripcion" value="Descripcion3" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="formulario">
-      <column name="id" value="4" />
-      <column name="nombre" value="Seguimiento Anual" />
-      <column name="descripcion" value="Descripcion4" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="formulario">
-      <column name="id" value="5" />
-      <column name="nombre" value="Seguimiento Final" />
-      <column name="descripcion" value="Descripcion5" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="formulario">
-      <column name="id" value="6" />
-      <column name="nombre" value="Retrospectiva" />
-      <column name="descripcion" value="Descripcion6" />
-      <column name="activo" value="true" />
-    </insert>
-  </changeSet>
 
   <changeSet author="master" id="20200601000000-acta">
     <insert tableName="acta">
@@ -986,19 +1020,16 @@
 
   <changeSet author="master" id="20200601000000-estado-acta">
     <insert tableName="estado_acta">
-      <column name="id" value="1" />
       <column name="acta_id" valueComputed="(select id from eti.acta where id='1')" />
       <column name="tipo_estado_acta_id" valueComputed="(select id from eti.tipo_estado_acta where nombre='En elaboración')" />
       <column name="fecha_estado" value="2020-07-14 19:30:00" />
     </insert>
     <insert tableName="estado_acta">
-      <column name="id" value="2" />
       <column name="acta_id" valueComputed="(select id from eti.acta where id='2')" />
       <column name="tipo_estado_acta_id" valueComputed="(select id from eti.tipo_estado_acta where nombre='Finalizada')" />
       <column name="fecha_estado" value="2020-07-14 19:31:00" />
     </insert>
     <insert tableName="estado_acta">
-      <column name="id" value="3" />
       <column name="acta_id" valueComputed="(select id from eti.acta where id='3')" />
       <column name="tipo_estado_acta_id" valueComputed="(select id from eti.tipo_estado_acta where nombre='Finalizada')" />
       <column name="fecha_estado" value="2020-07-14 19:33:00" />
@@ -1404,47 +1435,6 @@
       <column name="formulario_memoria_id" valueComputed="(select id from eti.formulario_memoria where id=6)" />
       <column name="componente_formulario_id" valueComputed="(select id from eti.componente_formulario where id=6)" />
       <column name="valor" value="Valor6" />
-    </insert>
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-tipo_evaluacion">
-    <insert tableName="tipo_evaluacion">
-      <column name="id" value="1" />
-      <column name="nombre" value="Retrospectiva" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_evaluacion">
-      <column name="id" value="2" />
-      <column name="nombre" value="Memoria" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_evaluacion">
-      <column name="id" value="3" />
-      <column name="nombre" value="Seguimiento anual" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_evaluacion">
-      <column name="id" value="4" />
-      <column name="nombre" value="Seguimiento final" />
-      <column name="activo" value="true" />
-    </insert>
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-tipo_tarea">
-    <insert tableName="tipo_tarea">
-      <column name="id" value="1" />
-      <column name="nombre" value="Diseño de proyecto y procedimientos" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_tarea">
-      <column name="id" value="2" />
-      <column name="nombre" value="Eutanasia" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_tarea">
-      <column name="id" value="3" />
-      <column name="nombre" value="Manipulación de animales" />
-      <column name="activo" value="true" />
     </insert>
   </changeSet>
 

@@ -1,11 +1,17 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.crue.hercules.sgi.eti.exceptions.ActaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.TareaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Acta;
+import org.crue.hercules.sgi.eti.model.EstadoActa;
+import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 import org.crue.hercules.sgi.eti.repository.ActaRepository;
+import org.crue.hercules.sgi.eti.repository.EstadoActaRepository;
+import org.crue.hercules.sgi.eti.repository.TipoEstadoActaRepository;
 import org.crue.hercules.sgi.eti.service.ActaService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -25,14 +31,23 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class ActaServiceImpl implements ActaService {
-  private final ActaRepository actaRepository;
 
-  public ActaServiceImpl(ActaRepository actaRepository) {
+  private final ActaRepository actaRepository;
+  private final EstadoActaRepository estadoActaRepository;
+  TipoEstadoActaRepository tipoEstadoActaRepository;
+
+  public ActaServiceImpl(ActaRepository actaRepository, EstadoActaRepository estadoActaRepository,
+      TipoEstadoActaRepository tipoEstadoActaRepository) {
     this.actaRepository = actaRepository;
+    this.estadoActaRepository = estadoActaRepository;
+    this.tipoEstadoActaRepository = tipoEstadoActaRepository;
   }
 
   /**
    * Guarda la entidad {@link Acta}.
+   * 
+   * Se insertará de forma automática un registro para el estado inicial del tipo
+   * "En elaboración" para el acta
    *
    * @param acta la entidad {@link Acta} a guardar.
    * @return la entidad {@link Acta} persistida.
@@ -40,9 +55,20 @@ public class ActaServiceImpl implements ActaService {
   @Transactional
   public Acta create(Acta acta) {
     log.debug("Acta create (Acta acta) - start");
+
     Assert.isNull(acta.getId(), "Acta id tiene que ser null para crear un nuevo acta");
 
-    return actaRepository.save(acta);
+    Optional<TipoEstadoActa> tipoEstadoActa = tipoEstadoActaRepository.findById(1L);
+    Assert.isTrue(tipoEstadoActa.isPresent(), "No se puede establecer el TipoEstadoActa inicial (1: 'En elaboración')");
+
+    acta.setEstadoActual(tipoEstadoActa.get());
+    Acta returnValue = actaRepository.save(acta);
+
+    EstadoActa estadoActa = estadoActaRepository
+        .save(new EstadoActa(null, returnValue, tipoEstadoActa.get(), LocalDateTime.now()));
+    Assert.notNull(estadoActa, "No se ha podido crear el EstadoActa inicial");
+
+    return returnValue;
   }
 
   /**

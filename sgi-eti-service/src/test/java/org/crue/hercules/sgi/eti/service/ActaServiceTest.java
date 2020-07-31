@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.eti.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -8,8 +9,11 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.ActaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.EstadoActa;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 import org.crue.hercules.sgi.eti.repository.ActaRepository;
+import org.crue.hercules.sgi.eti.repository.EstadoActaRepository;
+import org.crue.hercules.sgi.eti.repository.TipoEstadoActaRepository;
 import org.crue.hercules.sgi.eti.service.impl.ActaServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,12 +38,16 @@ public class ActaServiceTest {
 
   @Mock
   private ActaRepository actaRepository;
+  @Mock
+  private EstadoActaRepository estadoActaRepository;
+  @Mock
+  private TipoEstadoActaRepository tipoEstadoActaRepository;
 
   private ActaService actaService;
 
   @BeforeEach
   public void setUp() throws Exception {
-    actaService = new ActaServiceImpl(actaRepository);
+    actaService = new ActaServiceImpl(actaRepository, estadoActaRepository, tipoEstadoActaRepository);
   }
 
   @Test
@@ -76,6 +84,9 @@ public class ActaServiceTest {
     Acta acta = generarMockActa(1L, 123);
 
     BDDMockito.given(actaRepository.save(actaNew)).willReturn(acta);
+    BDDMockito.given(tipoEstadoActaRepository.findById(1L)).willReturn(Optional.of(acta.getEstadoActual()));
+    BDDMockito.given(estadoActaRepository.save(ArgumentMatchers.any(EstadoActa.class)))
+        .willReturn(new EstadoActa(1L, acta, acta.getEstadoActual(), LocalDateTime.now()));
 
     // when: Creamos el acta
     Acta actaCreado = actaService.create(actaNew);

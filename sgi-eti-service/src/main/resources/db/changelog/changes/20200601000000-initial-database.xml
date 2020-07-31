@@ -4,6 +4,7 @@
   <!-- ########################################################## -->
   <!-- SEQUENCE -->
   <!-- ########################################################## -->
+
   <changeSet author="master" id="20200601000000-comite_seq">
     <createSequence sequenceName="comite_seq" />
   </changeSet>
@@ -702,6 +703,7 @@
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
   <!-- ########################################################## -->
+
   <changeSet author="master" id="20200601000000-tipo_memoria_comite_comite_FK">
     <addForeignKeyConstraint baseColumnNames="comite_id" baseTableName="tipo_memoria_comite" constraintName="tipo_memoria_comite_comite_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="comite" validate="true" />
   </changeSet>

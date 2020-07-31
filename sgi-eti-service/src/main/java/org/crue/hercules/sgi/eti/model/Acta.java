@@ -82,7 +82,7 @@ public class Acta extends BaseEntity {
   /** Tipo Estado Acta */
   @OneToOne
   @JoinColumn(name = "estado_actual_id", nullable = false)
-  @NotNull
+  @NotNull(groups = { Update.class })
   private TipoEstadoActa estadoActual;
 
   /** Inactiva */
