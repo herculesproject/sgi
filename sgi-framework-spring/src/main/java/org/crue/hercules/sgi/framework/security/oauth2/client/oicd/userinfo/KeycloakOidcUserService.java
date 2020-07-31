@@ -17,6 +17,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtException;
+import org.springframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +48,14 @@ public class KeycloakOidcUserService extends OidcUserService {
     mappedAuthorities.addAll(convert(jwt).getAuthorities());
 
     // 3) Create a copy of oidcUser but use the mappedAuthorities instead
-    oidcUser = new DefaultOidcUser(mappedAuthorities, oidcUser.getIdToken(), oidcUser.getUserInfo());
+    String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint()
+        .getUserNameAttributeName();
+    if (StringUtils.hasText(userNameAttributeName)) {
+      oidcUser = new DefaultOidcUser(mappedAuthorities, oidcUser.getIdToken(), oidcUser.getUserInfo(),
+          userNameAttributeName);
+    } else {
+      oidcUser = new DefaultOidcUser(mappedAuthorities, oidcUser.getIdToken(), oidcUser.getUserInfo());
+    }
 
     log.debug("loadUser(OidcUserRequest userRequest) - end");
     return oidcUser;
