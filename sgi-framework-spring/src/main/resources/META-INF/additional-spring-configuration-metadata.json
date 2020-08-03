@@ -1,0 +1,23 @@
+{
+  "properties": [
+    {
+      "name": "spring.security.oauth2.enable-login",
+      "type": "java.lang.Boolean"
+    }
+  ],
+  "hints": [
+    {
+      "name": "spring.security.oauth2.enable-login",
+      "values": [
+        {
+          "value": "true",
+          "description": "Enables OAuth2 login page if JWT is not pressent."
+        },
+        {
+          "value": "false",
+          "description": "Do not enable OAuth2 login page despite JWT presence."
+        }
+      ]
+    }
+  ]
+}

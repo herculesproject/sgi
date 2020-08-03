@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
 import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
 import org.crue.hercules.sgi.framework.security.web.authentication.logout.KeycloakLogoutHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -36,6 +37,10 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class SgiWebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+  @Value("${spring.security.oauth2.enable-login:false}")
+  private boolean loginEnabled;
+
   @Autowired
   private ObjectMapper mapper;
 
@@ -64,23 +69,34 @@ public class SgiWebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/error").permitAll()
         .antMatchers("/**").authenticated()
       .and()
-        // Propagate logouts via /logout to Keycloak
-        .logout()
-        .addLogoutHandler(keycloakLogoutHandler())
-      .and()
-        // This is the point where OAuth2 login of Spring 5 gets enabled
-        .oauth2Login()
-          .userInfoEndpoint()
-          .oidcUserService(keycloakOidcUserService())
-        .and()
-      .and()
         // Validate tokens through configured OpenID Provider
         .oauth2ResourceServer()
           .jwt()
           .jwtAuthenticationConverter(jwtAuthenticationConverter())
         .and()
       .and();
+
     // @formatter:on
+    if (loginEnabled) {
+      // @formatter:off
+      http
+          // This is the point where OAuth2 login of Spring 5 gets enabled
+          .oauth2Login()
+            .userInfoEndpoint()
+            .oidcUserService(keycloakOidcUserService())
+          .and()
+        .and()
+          // Propagate logouts via /logout to Keycloak
+          .logout()
+          .addLogoutHandler(keycloakLogoutHandler());
+      // @formatter:on
+    } else {
+      // @formatter:off
+      http
+          // Translate exceptions to JSON
+          .exceptionHandling()
+          .authenticationEntryPoint(authenticationEntryPoint());
+    }
     log.debug("configure(HttpSecurity http) - end");
   }
 
