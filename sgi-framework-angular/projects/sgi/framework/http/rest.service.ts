@@ -1,6 +1,6 @@
 import { Observable, of, throwError } from 'rxjs';
-import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
-import { switchMap, catchError, map } from 'rxjs/operators';
+import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { switchMap, catchError, map, tap } from 'rxjs/operators';
 import { NGXLogger } from 'ngx-logger';
 import { SgiRestFindOptions, SgiRestPageRequest, SgiRestSort, SgiRestSortDirection, SgiRestFilter, SgiRestListResult, SgiRestFilterType } from './types';
 
@@ -19,7 +19,7 @@ export abstract class SgiRestService<K extends number | string, T> {
   /** The REST Endpoint URL common for all service operations */
   protected readonly endpointUrl: string;
   /** The logger */
-  private readonly logger: NGXLogger;
+  protected readonly logger: NGXLogger;
   /** The Service Name to log */
   private readonly serviceName: string;
 
@@ -152,32 +152,35 @@ export abstract class SgiRestService<K extends number | string, T> {
    */
   public findAll(options?: SgiRestFindOptions): Observable<SgiRestListResult<T>> {
     this.logger.debug(this.serviceName, `findAll(${options ? JSON.stringify(options) : ''})`, '-', 'START');
-    return this.http.get<T[]>(this.endpointUrl, {
-      headers: this.getRequestHeaders(options?.page),
-      params: this.getSearchParam(options?.sort, options?.filters),
-      observe: 'response'
-    }).pipe(
-      // TODO: Explore the use a global HttpInterceptor with or without a custom error
-      catchError((error: HttpErrorResponse) => {
-        // Log the error
-        this.logger.error(this.serviceName, `findAll(${options ? JSON.stringify(options) : ''}):`, error);
-        // Pass the error to subscribers. Anyway they would decide what to do with the error.
-        return throwError(error);
-      }),
-      switchMap(r => {
+    return this.find(this.endpointUrl, options).pipe(
+      tap(() => {
         this.logger.debug(this.serviceName, `findAll(${options ? JSON.stringify(options) : ''})`, '-', 'END');
-        return of({
-          page: {
-            index: Number(r.headers.get('X-Page')),
-            size: Number(r.headers.get('X-Page-Size')),
-            count: Number(r.headers.get('X-Page-Count')),
-            total: Number(r.headers.get('X-Page-Total-Count')),
-          },
-          total: Number(r.headers.get('X-Total-Count')),
-          items: r.body
-        });
       })
     );
+  }
+
+  /**
+   * Find a list of elements on a endpoint. Optionally, the elements can be requested combining pagination, sorting and filtering
+   *
+   * @param endpointUrl The url of the endpoint
+   * @param options The options to apply
+   */
+  protected find(endpointUrl: string, options?: SgiRestFindOptions): Observable<SgiRestListResult<T>> {
+    this.logger.debug(this.serviceName, `find(${endpointUrl}, ${options ? JSON.stringify(options) : ''})`, '-', 'START');
+    return this.http.get<T[]>(endpointUrl, this.buildHttpClientOptions(options))
+      .pipe(
+        // TODO: Explore the use a global HttpInterceptor with or without a custom error
+        catchError((error: HttpErrorResponse) => {
+          // Log the error
+          this.logger.error(this.serviceName, `find(${endpointUrl}, ${options ? JSON.stringify(options) : ''}):`, error);
+          // Pass the error to subscribers. Anyway they would decide what to do with the error.
+          return throwError(error);
+        }),
+        switchMap(r => {
+          this.logger.debug(this.serviceName, `find(${endpointUrl}, ${options ? JSON.stringify(options) : ''})`, '-', 'END');
+          return this.toSgiRestListResult(r);
+        })
+      );
   }
 
   private getCommonHeaders(): HttpHeaders {
@@ -221,4 +224,42 @@ export abstract class SgiRestService<K extends number | string, T> {
     return param;
   }
 
+  /**
+   * Builds options for a HttpClient to make a find by request
+   *
+   * @param options SgiRestOptions to apply
+   */
+  private buildHttpClientOptions(options?: SgiRestFindOptions): {
+    headers?: HttpHeaders | {
+      [header: string]: string | string[];
+    };
+    observe: 'response';
+    params?: HttpParams | {
+      [param: string]: string | string[];
+    };
+  } {
+    return {
+      headers: this.getRequestHeaders(options?.page),
+      params: this.getSearchParam(options?.sort, options?.filters),
+      observe: 'response'
+    };
+  }
+
+  /**
+   * Convert a findAll http response to a list result
+   *
+   * @param response The response to convert
+   */
+  private toSgiRestListResult(response: HttpResponse<T[]>): Observable<SgiRestListResult<T>> {
+    return of({
+      page: {
+        index: Number(response.headers.get('X-Page')),
+        size: Number(response.headers.get('X-Page-Size')),
+        count: Number(response.headers.get('X-Page-Count')),
+        total: Number(response.headers.get('X-Page-Total-Count')),
+      },
+      total: Number(response.headers.get('X-Total-Count')),
+      items: response.body
+    });
+  }
 }
