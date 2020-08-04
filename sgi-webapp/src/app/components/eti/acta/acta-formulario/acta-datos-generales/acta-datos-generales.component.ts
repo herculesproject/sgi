@@ -1,37 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 
+import { AbstractTabComponent } from '@shared/formularios-tabs/abstract-tab/abstract-tab.component';
+
 import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
 
-import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { FormGroupUtil } from '@core/services/form-group-util';
 
-;
-import { AbstractTabComponent } from '@shared/formularios-tabs/abstract-tab/abstract-tab.component';
 
 import { HoraValidador } from '@core/validators/hora-validator';
 import { MinutoValidador } from '@core/validators/minuto-validator';
 import { NullIdValidador } from '@core/validators/null-id-validador';
 
-import { SgiRestListResult } from '@sgi/framework/http'
 
 import { ActaService } from '@core/services/eti/acta.service';
+import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TraductorService } from '@core/services/traductor.service';
 
 import { Acta } from '@core/models/eti/acta';
 import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
+import { SgiRestListResult } from '@sgi/framework/http/types';
+
 
 @Component({
-  selector: 'app-acta-crear-datos-generales',
-  templateUrl: './acta-crear-datos-generales.component.html',
-  styleUrls: ['./acta-crear-datos-generales.component.scss']
+  selector: 'app-acta-datos-generales',
+  templateUrl: './acta-datos-generales.component.html',
+  styleUrls: ['./acta-datos-generales.component.scss']
 })
-export class ActaCrearDatosGeneralesComponent extends AbstractTabComponent<Acta> implements OnInit {
+export class ActaDatosGeneralesComponent extends AbstractTabComponent<Acta> implements OnInit {
   FormGroupUtil = FormGroupUtil;
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
@@ -39,12 +40,15 @@ export class ActaCrearDatosGeneralesComponent extends AbstractTabComponent<Acta>
   convocatoriasReunion: ConvocatoriaReunion[];
   acta: Acta;
 
+  @Output()
+  selectConvocatoria: EventEmitter<number> = new EventEmitter();
+
   constructor(
     protected readonly logger: NGXLogger,
     private readonly actaService: ActaService,
     private readonly convocatoriaReunionService: ConvocatoriaReunionService,
     private readonly traductor: TraductorService,
-    private readonly snackBarService: SnackBarService
+    private readonly snackBarService: SnackBarService,
   ) {
     super(logger);
     this.fxFlexProperties = new FxFlexProperties();
@@ -61,27 +65,27 @@ export class ActaCrearDatosGeneralesComponent extends AbstractTabComponent<Acta>
 
   ngOnInit() {
     super.ngOnInit();
-    this.logger.debug(ActaCrearDatosGeneralesComponent.name, 'ngOnInit()', 'start');
+    this.logger.debug(ActaDatosGeneralesComponent.name, 'ngOnInit()', 'start');
     this.convocatoriasReunion = [];
     this.acta = new Acta();
     this.subscripciones.push(
       this.convocatoriaReunionService.findAll().subscribe(
         (res: SgiRestListResult<ConvocatoriaReunion>) => {
           this.convocatoriasReunion = res.items;
-          this.logger.debug(ActaCrearDatosGeneralesComponent.name, 'ngOnInit()', 'end');
+          this.logger.debug(ActaDatosGeneralesComponent.name, 'ngOnInit()', 'end');
         },
         () => {
           this.snackBarService.mostrarMensajeError(
             this.traductor.getTexto('eti.acta.crear.datosGenerales.convocatoriaReunion.error')
           );
-          this.logger.debug(ActaCrearDatosGeneralesComponent.name, 'ngOnInit()', 'end');
+          this.logger.debug(ActaDatosGeneralesComponent.name, 'ngOnInit()', 'end');
         }
       )
     );
   }
 
   crearFormGroup(): FormGroup {
-    this.logger.debug(ActaCrearDatosGeneralesComponent.name, 'crearFormGroup()', 'start');
+    this.logger.debug(ActaDatosGeneralesComponent.name, 'crearFormGroup()', 'start');
     const formGroup = new FormGroup({
       convocatoriaReunion: new FormControl(this.datosFormulario.convocatoriaReunion, [new NullIdValidador().isValid()]),
       horaInicio: new FormControl(this.datosFormulario.horaInicio, [new HoraValidador().isValid()]),
@@ -90,26 +94,26 @@ export class ActaCrearDatosGeneralesComponent extends AbstractTabComponent<Acta>
       minutoFin: new FormControl(this.datosFormulario.minutoFin, [new MinutoValidador().isValid()]),
       resumen: new FormControl(this.datosFormulario.resumen, [Validators.required]),
     });
-    this.logger.debug(ActaCrearDatosGeneralesComponent.name, 'crearFormGroup()', 'end');
+    this.logger.debug(ActaDatosGeneralesComponent.name, 'crearFormGroup()', 'end');
     return formGroup;
   }
 
   crearObservable(): Observable<Acta> {
-    this.logger.debug(ActaCrearDatosGeneralesComponent.name, 'crearObservable()', 'start');
+    this.logger.debug(ActaDatosGeneralesComponent.name, 'crearObservable()', 'start');
     const observable = this.actaService.create(this.getDatosFormulario());
-    this.logger.debug(ActaCrearDatosGeneralesComponent.name, 'crearObservable()', 'end');
+    this.logger.debug(ActaDatosGeneralesComponent.name, 'crearObservable()', 'end');
     return observable;
   }
 
   getDatosIniciales(): Acta {
-    this.logger.debug(ActaCrearDatosGeneralesComponent.name, 'getDatosIniciales()', 'start');
+    this.logger.debug(ActaDatosGeneralesComponent.name, 'getDatosIniciales()', 'start');
     const datos = new Acta();
-    this.logger.debug(ActaCrearDatosGeneralesComponent.name, 'getDatosIniciales()', 'end');
+    this.logger.debug(ActaDatosGeneralesComponent.name, 'getDatosIniciales()', 'end');
     return datos;
   }
 
   getDatosFormulario(): Acta {
-    this.logger.debug(ActaCrearDatosGeneralesComponent.name, 'getDatosIntroducidos()', 'start');
+    this.logger.debug(ActaDatosGeneralesComponent.name, 'getDatosIntroducidos()', 'start');
     const acta = this.datosFormulario;
     acta.convocatoriaReunion = FormGroupUtil.getValue(this.formGroup, 'convocatoriaReunion');
     acta.horaInicio = FormGroupUtil.getValue(this.formGroup, 'horaInicio');
@@ -117,7 +121,14 @@ export class ActaCrearDatosGeneralesComponent extends AbstractTabComponent<Acta>
     acta.horaFin = FormGroupUtil.getValue(this.formGroup, 'horaFin');
     acta.minutoFin = FormGroupUtil.getValue(this.formGroup, 'minutoFin');
     acta.resumen = FormGroupUtil.getValue(this.formGroup, 'resumen');
-    this.logger.debug(ActaCrearDatosGeneralesComponent.name, 'getDatosIntroducidos()', 'end');
+
+    this.logger.debug(ActaDatosGeneralesComponent.name, 'getDatosIntroducidos()', 'end');
     return acta;
+  }
+
+  selectConvocatoriaReunion(convocatoriaReunion: ConvocatoriaReunion | string) {
+    this.logger.debug(ActaDatosGeneralesComponent.name, 'selectConvocatoriaReunion(convocatoriaReunion: ConvocatoriaReunion)', 'start');
+    this.selectConvocatoria.emit(convocatoriaReunion ? (convocatoriaReunion as ConvocatoriaReunion).id : null);
+    this.logger.debug(ActaDatosGeneralesComponent.name, 'selectConvocatoriaReunion(convocatoriaReunion: ConvocatoriaReunion)', 'end');
   }
 }

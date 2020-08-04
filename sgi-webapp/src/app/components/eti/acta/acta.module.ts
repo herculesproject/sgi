@@ -6,23 +6,21 @@ import { SharedModule } from '@shared/shared.module';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
 import { ComponentsModule } from '../../components.module';
-import { ActaCrearAsistentesComponent } from './acta-crear/acta-crear-asistentes/acta-crear-asistentes.component';
-import {
-  ActaCrearDatosGeneralesComponent,
-} from './acta-crear/acta-crear-datos-generales/acta-crear-datos-generales.component';
-import { ActaCrearMemoriasComponent } from './acta-crear/acta-crear-memorias/acta-crear-memorias.component';
 import { ActaCrearComponent } from './acta-crear/acta-crear.component';
 import { ActaRoutingModule } from './acta-routing.module';
 import { ActaListadoComponent } from './acta-listado/acta-listado.component';
 import { SgiAuthModule } from '@sgi/framework/auth';
+import { ActaDatosGeneralesComponent } from './acta-formulario/acta-datos-generales/acta-datos-generales.component';
+import { ActaAsistentesComponent } from './acta-formulario/acta-asistentes/acta-asistentes.component';
+import { ActaMemoriasComponent } from './acta-formulario/acta-memorias/acta-memorias.component';
 
 @NgModule({
   declarations: [
     ActaCrearComponent,
-    ActaCrearDatosGeneralesComponent,
-    ActaCrearMemoriasComponent,
-    ActaCrearAsistentesComponent,
-    ActaListadoComponent
+    ActaDatosGeneralesComponent,
+    ActaMemoriasComponent,
+    ActaListadoComponent,
+    ActaAsistentesComponent
   ],
   imports: [
     SharedModule,

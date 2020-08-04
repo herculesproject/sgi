@@ -20,5 +20,13 @@
     },
     "secure": false,
     "logLevel": "debug"
+  },
+  "/api/sgp": {
+    "target": "http://hercules-sgp-service:8080",
+    "pathRewrite": {
+      "^/api/sgp": "/sgp"
+    },
+    "secure": false,
+    "logLevel": "debug"
   }
 }

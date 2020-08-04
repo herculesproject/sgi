@@ -1,0 +1,49 @@
+<section>
+  <table class="mat-elevation-z8 table-acta" mat-table [dataSource]="asistentes$ | async" matSort matSortActive="id"
+    matSortDirection="asc" matSortDisableClear>
+
+    <!-- Comite Column -->
+    <ng-container matColumnDef="evaluador.numIdentificadorPersonal">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.acta.crear.asistentes.nif' | translate}} </th>
+      <td mat-cell *matCellDef="let asistente"> {{asistente.evaluador.numIdentificadorPersonal}} </td>
+    </ng-container>
+
+    <!-- Fecha evaluacion Column -->
+    <ng-container matColumnDef="evaluador.nombre">
+      <th mat-header-cell *matHeaderCellDef> {{'eti.acta.crear.asistentes.nombreApellidos' | translate}}
+      </th>
+      <td mat-cell *matCellDef="let asistente"> {{asistente.evaluador.nombre}} {{asistente.evaluador.apellido1}}
+        {{asistente.evaluador.apellido2}}</td>
+    </ng-container>
+
+    <!-- Numero acta Column -->
+    <ng-container matColumnDef="asistencia">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{'eti.acta.crear.asistentes.asistencia.titulo' | translate}}
+      </th>
+      <td mat-cell *matCellDef="let asistente">
+        {{ asistente.asistencia === true ? ('eti.acta.crear.asistentes.asistencia.si' | translate) : 'eti.acta.crear.asistentes.asistencia.no' | translate}}
+      </td>
+    </ng-container>
+
+    <!-- Convocatoria Column -->
+    <ng-container matColumnDef="motivo">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.acta.crear.asistentes.motivo' | translate}} </th>
+      <td mat-cell *matCellDef="let asistente"> {{asistente.motivo}} </td>
+    </ng-container>
+
+
+    <!-- Acciones Column -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> {{'eti.acta.crear.asistentes.acciones' | translate}} </th>
+      <td mat-cell *matCellDef="let acta;let i=index;">
+
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+
+</section>

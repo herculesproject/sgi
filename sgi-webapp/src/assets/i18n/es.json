@@ -325,7 +325,16 @@
     "acta": {
       "crear": {
         "asistentes": {
-          "cabecera": "Asistentes"
+          "acciones": "Acciones",
+          "asistencia": {
+            "no": "No",
+            "si": "Sí",
+            "titulo": "Asistencia"
+          },
+          "cabecera": "Asistentes",
+          "motivo": "Motivo no Asistencia",
+          "nif": "NIF/NIE",
+          "nombreApellidos": "Nombre y apellidos"
         },
         "correcto": "Se ha creado correctamente el acta",
         "datosGenerales": {
@@ -378,7 +387,11 @@
         },
         "error": "Ha ocurrido un problema al guardar el acta",
         "memorias": {
-          "cabecera": "Memorias"
+          "cabecera": "Memorias",
+          "dictamen": "Dictamen",
+          "informe": "Informe",
+          "referencia": "Referencia memoria",
+          "version": "Versión"
         },
         "titulo": "Nueva acta"
       },

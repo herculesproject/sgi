@@ -1,5 +1,4 @@
-import { ConvocatoriaReunion } from './convocatoria-reunion';
-import { TipoEstadoActa } from './tipo-estado-acta';
+
 import { PeticionEvaluacion } from './peticion-evaluacion';
 import { Comite } from './comite';
 import { TipoMemoria } from './tipo-memoria';
@@ -41,18 +40,5 @@ export class Memoria {
   /** Estado Memoria Actual */
   estadoActual: TipoEstadoMemoria;
 
-  constructor() {
-    this.id = null;
-    this.numReferencia = null;
-    this.peticionEvaluacion = null;
-    this.comite = null;
-    this.titulo = null;
-    this.usuarioRef = null;
-    this.tipoMemoria = null;
-    this.fechaEnvioSecretaria = null;
-    this.requiereRetrospectiva = null;
-    this.fechaRetrospectiva = null;
-    this.version = null;
-    this.estadoActual = null;
-  }
+
 }

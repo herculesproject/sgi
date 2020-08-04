@@ -23,10 +23,12 @@ export class UrlUtils {
   static eti = {
     actas: 'actas',
     areaEspecializacion: 'areaEspecializacion',
+    asistentes: 'asistentes',
     convocatoriaReuniones: 'convocatoriareuniones',
     cvn: 'cvn',
     datos: 'datos',
     empresasBaseTecnologica: 'empresasBaseTecnologica',
+    estadoActa: 'estadoactas',
     evaluacion: 'evaluaciones',
     evaluacionEtica: 'evaluacionEtica',
     gruposInvestigacion: 'gruposInvestigacion',

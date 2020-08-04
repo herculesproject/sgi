@@ -11,11 +11,10 @@ import { GenericTabLabelComponent } from '@shared/formularios-tabs/generic-tab-l
 import { NGXLogger } from 'ngx-logger';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
-import { ActaCrearAsistentesComponent } from './acta-crear-asistentes/acta-crear-asistentes.component';
-import { ActaCrearDatosGeneralesComponent } from './acta-crear-datos-generales/acta-crear-datos-generales.component';
-import { ActaCrearMemoriasComponent } from './acta-crear-memorias/acta-crear-memorias.component';
 import { ActaCrearComponent } from './acta-crear.component';
-
+import { ActaAsistentesComponent } from '../acta-formulario/acta-asistentes/acta-asistentes.component';
+import { ActaDatosGeneralesComponent } from '../acta-formulario/acta-datos-generales/acta-datos-generales.component';
+import { ActaMemoriasComponent } from '../acta-formulario/acta-memorias/acta-memorias.component';
 describe('ActaCrearComponent', () => {
   let component: ActaCrearComponent;
   let fixture: ComponentFixture<ActaCrearComponent>;
@@ -24,9 +23,9 @@ describe('ActaCrearComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         ActaCrearComponent,
-        ActaCrearAsistentesComponent,
-        ActaCrearDatosGeneralesComponent,
-        ActaCrearMemoriasComponent,
+        ActaAsistentesComponent,
+        ActaDatosGeneralesComponent,
+        ActaMemoriasComponent,
         FooterGuardarComponent,
         GenericTabLabelComponent
       ],

@@ -8,16 +8,16 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { NGXLogger } from 'ngx-logger';
 
-import { ActaCrearDatosGeneralesComponent } from './acta-crear-datos-generales.component';
+import { ActaDatosGeneralesComponent } from './acta-datos-generales.component';
 
 
 describe('ActaCrearDatosGenerealesComponent', () => {
-  let component: ActaCrearDatosGeneralesComponent;
-  let fixture: ComponentFixture<ActaCrearDatosGeneralesComponent>;
+  let component: ActaDatosGeneralesComponent;
+  let fixture: ComponentFixture<ActaDatosGeneralesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ActaCrearDatosGeneralesComponent],
+      declarations: [ActaDatosGeneralesComponent],
       imports: [
         TestUtils.getIdiomas(),
         MaterialDesignModule,
@@ -35,7 +35,7 @@ describe('ActaCrearDatosGenerealesComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ActaCrearDatosGeneralesComponent);
+    fixture = TestBed.createComponent(ActaDatosGeneralesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

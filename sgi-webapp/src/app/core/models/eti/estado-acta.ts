@@ -12,11 +12,10 @@ export class EstadoActa {
   /** Fecha Estado */
   fechaEstado: Date;
 
-  constructor() {
-    this.id = null;
-    this.tipoEstadoActa = null;
-    this.fechaEstado = null;
-    this.acta = null;
+  constructor(acta: Acta, tipoEstadoActa: TipoEstadoActa, fechaEstado: Date) {
+    this.tipoEstadoActa = tipoEstadoActa;
+    this.fechaEstado = fechaEstado;
+    this.acta = acta;
   }
 
 }

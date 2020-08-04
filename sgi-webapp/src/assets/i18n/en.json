@@ -325,7 +325,16 @@
     "acta": {
       "crear": {
         "asistentes": {
-          "cabecera": "Assistants"
+          "acciones": "Actions",
+          "asistencia": {
+            "no": "No",
+            "si": "Yes",
+            "titulo": "Attendance"
+          },
+          "cabecera": "Asistentes",
+          "motivo": "Reason not Attending",
+          "nif": "NIF/NIE",
+          "nombreApellidos": "Name and surname"
         },
         "correcto": "The record was created correctly",
         "datosGenerales": {
@@ -378,7 +387,11 @@
         },
         "error": "A problem occurred while saving the minutes",
         "memorias": {
-          "cabecera": "Memories"
+          "cabecera": "Memories",
+          "dictamen": "Opinion",
+          "informe": "Report",
+          "referencia": "Memory reference",
+          "version": "Version"
         },
         "titulo": "New record"
       },
