@@ -61,9 +61,13 @@ public class ConvocatoriaReunion extends BaseEntity {
   @Column(name = "orden_dia", length = 2000, nullable = false)
   private String ordenDia;
 
-  /** Código. */
-  @Column(name = "codigo", length = 50, nullable = false)
-  private String codigo;
+  /** Anio */
+  @Column(name = "anio", nullable = false)
+  private Integer anio;
+
+  /** Numero acta */
+  @Column(name = "numero_acta", nullable = false)
+  private Long numeroActa;
 
   /** Tipo Convocatoria Reunión. */
   @OneToOne

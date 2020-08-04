@@ -123,7 +123,7 @@ public class EvaluacionControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("Memoria1"))
         .andExpect(MockMvcResultMatchers.jsonPath("dictamen.nombre").value("Dictamen1"))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoEvaluacion.nombre").value("TipoEvaluacion1"))
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaReunion.codigo").value("CR-1"));
+        .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaReunion.id").value("1"));
   }
 
   @Test
@@ -171,7 +171,7 @@ public class EvaluacionControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("Memoria Replace"))
         .andExpect(MockMvcResultMatchers.jsonPath("dictamen.nombre").value("Dictamen Replace"))
         .andExpect(MockMvcResultMatchers.jsonPath("tipoEvaluacion.nombre").value("TipoEvaluacion1"))
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaReunion.codigo").value("CR- Replace"));
+        .andExpect(MockMvcResultMatchers.jsonPath("convocatoriaReunion.id").value("1"));
 
   }
 
@@ -282,8 +282,7 @@ public class EvaluacionControllerTest {
       Evaluacion evaluacion = actual.get(i);
       Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
       Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen" + String.format("%03d", j));
-      Assertions.assertThat(evaluacion.getConvocatoriaReunion().getCodigo())
-          .isEqualTo("CR-" + String.format("%03d", j));
+      Assertions.assertThat(evaluacion.getConvocatoriaReunion().getId()).isEqualTo(1L);
     }
   }
 
@@ -437,7 +436,8 @@ public class EvaluacionControllerTest {
     convocatoriaReunion.setFechaLimite(LocalDate.now());
     convocatoriaReunion.setLugar("Lugar");
     convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
-    convocatoriaReunion.setCodigo("CR-" + sufijoStr);
+    convocatoriaReunion.setAnio(2020);
+    convocatoriaReunion.setNumeroActa(100L);
     convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
     convocatoriaReunion.setHoraInicio(7);
     convocatoriaReunion.setMinutoInicio(30);

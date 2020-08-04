@@ -81,7 +81,7 @@ public class EstadoActaIT {
   @Test
   public void addEstadoActa_ReturnsEstadoActa() throws Exception {
 
-    EstadoActa nuevoEstadoActa = generarMockEstadoActa(1L);
+    EstadoActa nuevoEstadoActa = generarMockEstadoActa(null);
 
     final ResponseEntity<EstadoActa> response = restTemplate.exchange(ESTADO_ACTA_CONTROLLER_BASE_PATH, HttpMethod.POST,
         buildRequest(null, nuevoEstadoActa), EstadoActa.class);
@@ -91,7 +91,7 @@ public class EstadoActaIT {
 
     final EstadoActa estadoActa = response.getBody();
 
-    Assertions.assertThat(estadoActa.getId()).as("id").isEqualTo(1L);
+    Assertions.assertThat(estadoActa.getId()).as("id").isNotNull();
     Assertions.assertThat(estadoActa.getActa()).as("acta").isNotNull();
     Assertions.assertThat(estadoActa.getActa().getId()).as("acta.id").isEqualTo(100L);
     Assertions.assertThat(estadoActa.getTipoEstadoActa()).as("tipoEstadoActa").isNotNull();

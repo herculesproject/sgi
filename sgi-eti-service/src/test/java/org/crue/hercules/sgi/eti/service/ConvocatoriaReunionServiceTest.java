@@ -281,7 +281,8 @@ public class ConvocatoriaReunionServiceTest {
     data.setFechaLimite(LocalDate.of(2020, 8, id.intValue()));
     data.setLugar("Lugar " + txt);
     data.setOrdenDia("Orden del día convocatoria reunión " + txt);
-    data.setCodigo("CR-" + txt);
+    data.setAnio(2020);
+    data.setNumeroActa(100L);
     data.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
     data.setHoraInicio(7 + id.intValue());
     data.setMinutoInicio(30);

@@ -40,7 +40,7 @@ public class EstadoActaServiceImpl implements EstadoActaService {
   @Transactional
   public EstadoActa create(EstadoActa estadoActa) {
     log.debug("Petición a create EstadoActa : {} - start", estadoActa);
-    Assert.notNull(estadoActa.getId(), "EstadoActa id no puede ser null para crear un nuevo estadoActa");
+    Assert.isNull(estadoActa.getId(), "EstadoActa id tiene que ser null para crear un nuevo estadoActa");
 
     return estadoActaRepository.save(estadoActa);
   }

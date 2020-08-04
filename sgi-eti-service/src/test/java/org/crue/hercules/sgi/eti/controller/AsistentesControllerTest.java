@@ -418,7 +418,8 @@ public class AsistentesControllerTest {
     data.setFechaLimite(LocalDate.of(2020, 8, 20));
     data.setLugar("Lugar " + String.format("%03d", id));
     data.setOrdenDia("Orden del día convocatoria reunión " + String.format("%03d", id));
-    data.setCodigo("CR-" + String.format("%03d", id));
+    data.setAnio(2020);
+    data.setNumeroActa(100L);
     data.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
     data.setHoraInicio(7);
     data.setMinutoInicio(30);

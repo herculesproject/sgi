@@ -233,7 +233,7 @@ public class ConvocatoriaReunionIT {
 
     // search by codigo like, id equals
     Long id = 3L;
-    String query = "codigo~CR-0%,id:" + id;
+    String query = "numeroActa<4,id:" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).queryParam("q", query)
         .build(false).toUri();
@@ -306,7 +306,7 @@ public class ConvocatoriaReunionIT {
     String sort = "id-";
 
     // search
-    String query = "codigo~CR-0%";
+    String query = "numeroActa<4";
 
     URI uri = UriComponentsBuilder.fromUriString(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", query).build(false).toUri();
@@ -318,13 +318,13 @@ public class ConvocatoriaReunionIT {
 
     // then: Se recuperan los datos filtrados, ordenados y paginados
     Assertions.assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(result.getBody().size()).isEqualTo(1);
+    Assertions.assertThat(result.getBody().size()).as("size").isEqualTo(1);
     Assertions.assertThat(result.getBody()).isEqualTo(response);
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page")).isEqualTo("1");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Total-Count")).isEqualTo("1");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Count")).isEqualTo("2");
-    Assertions.assertThat(result.getHeaders().getFirst("X-Total-Count")).isEqualTo("3");
+    Assertions.assertThat(result.getHeaders().getFirst("X-Page")).as("X-Page").isEqualTo("1");
+    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("2");
+    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Total-Count")).as("X-Page-Total-Count").isEqualTo("1");
+    Assertions.assertThat(result.getHeaders().getFirst("X-Page-Count")).as("X-Page-Count").isEqualTo("2");
+    Assertions.assertThat(result.getHeaders().getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
   }
 
   /**
@@ -351,7 +351,8 @@ public class ConvocatoriaReunionIT {
     data.setFechaLimite(LocalDate.of(2020, 8, id.intValue()));
     data.setLugar("Lugar " + txt);
     data.setOrdenDia("Orden del día convocatoria reunión " + txt);
-    data.setCodigo("CR-" + txt);
+    data.setAnio(2020);
+    data.setNumeroActa(id);
     data.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
     data.setHoraInicio(7 + id.intValue());
     data.setMinutoInicio(30);

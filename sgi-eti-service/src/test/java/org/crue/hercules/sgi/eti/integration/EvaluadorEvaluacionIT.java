@@ -332,7 +332,8 @@ public class EvaluadorEvaluacionIT {
     convocatoriaReunion.setFechaLimite(LocalDate.now());
     convocatoriaReunion.setLugar("Lugar");
     convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
-    convocatoriaReunion.setCodigo("CR-" + sufijoStr);
+    convocatoriaReunion.setAnio(2020);
+    convocatoriaReunion.setNumeroActa(100L);
     convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
     convocatoriaReunion.setHoraInicio(7);
     convocatoriaReunion.setMinutoInicio(30);

@@ -82,7 +82,7 @@ public class EvaluacionIT {
     Assertions.assertThat(evaluacion.getId()).isEqualTo(1L);
     Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria1");
     Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen1");
-    Assertions.assertThat(evaluacion.getConvocatoriaReunion().getCodigo()).isEqualTo("CR-1");
+    Assertions.assertThat(evaluacion.getConvocatoriaReunion().getId()).isEqualTo(1L);
     Assertions.assertThat(evaluacion.getTipoEvaluacion().getNombre()).isEqualTo("TipoEvaluacion1");
   }
 
@@ -147,7 +147,7 @@ public class EvaluacionIT {
     Assertions.assertThat(evaluacion.getId()).isNotNull();
     Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria1");
     Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen1");
-    Assertions.assertThat(evaluacion.getConvocatoriaReunion().getCodigo()).isEqualTo("CR-1");
+    Assertions.assertThat(evaluacion.getConvocatoriaReunion().getId()).isEqualTo(1L);
     Assertions.assertThat(evaluacion.getTipoEvaluacion().getNombre()).isEqualTo("TipoEvaluacion1");
   }
 
@@ -180,13 +180,13 @@ public class EvaluacionIT {
     // Contiene de convocatoriaReunion.codigo='CR-6' a 'CR-8'
     Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria6");
     Assertions.assertThat(evaluaciones.get(0).getDictamen().getNombre()).isEqualTo("Dictamen6");
-    Assertions.assertThat(evaluaciones.get(0).getConvocatoriaReunion().getCodigo()).isEqualTo("CR-6");
+    Assertions.assertThat(evaluaciones.get(0).getConvocatoriaReunion().getId()).isEqualTo(6L);
     Assertions.assertThat(evaluaciones.get(1).getMemoria().getTitulo()).isEqualTo("Memoria7");
     Assertions.assertThat(evaluaciones.get(1).getDictamen().getNombre()).isEqualTo("Dictamen7");
-    Assertions.assertThat(evaluaciones.get(1).getConvocatoriaReunion().getCodigo()).isEqualTo("CR-7");
+    Assertions.assertThat(evaluaciones.get(1).getConvocatoriaReunion().getId()).isEqualTo(7L);
     Assertions.assertThat(evaluaciones.get(2).getMemoria().getTitulo()).isEqualTo("Memoria8");
     Assertions.assertThat(evaluaciones.get(2).getDictamen().getNombre()).isEqualTo("Dictamen8");
-    Assertions.assertThat(evaluaciones.get(2).getConvocatoriaReunion().getCodigo()).isEqualTo("CR-8");
+    Assertions.assertThat(evaluaciones.get(2).getConvocatoriaReunion().getId()).isEqualTo(8L);
 
   }
 
@@ -218,7 +218,7 @@ public class EvaluacionIT {
     Assertions.assertThat(evaluaciones.get(0).getId()).isEqualTo(id);
     Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).startsWith("Memoria");
     Assertions.assertThat(evaluaciones.get(0).getDictamen().getNombre()).startsWith("Dictamen");
-    Assertions.assertThat(evaluaciones.get(0).getConvocatoriaReunion().getCodigo()).startsWith("CR-");
+    Assertions.assertThat(evaluaciones.get(0).getConvocatoriaReunion().getId()).isEqualTo(5L);
   }
 
   @Sql
@@ -250,8 +250,7 @@ public class EvaluacionIT {
       Assertions.assertThat(evaluacion.getId()).isEqualTo(8 - i);
       Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%03d", 8 - i));
       Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen" + String.format("%03d", 8 - i));
-      Assertions.assertThat(evaluacion.getConvocatoriaReunion().getCodigo())
-          .isEqualTo("CR-" + String.format("%03d", 8 - i));
+      Assertions.assertThat(evaluacion.getConvocatoriaReunion().getId()).isEqualTo(8 - i);
     }
   }
 
@@ -300,14 +299,6 @@ public class EvaluacionIT {
         .isEqualTo("Dictamen" + String.format("%03d", 2));
     Assertions.assertThat(evaluaciones.get(2).getDictamen().getNombre())
         .isEqualTo("Dictamen" + String.format("%03d", 1));
-
-    Assertions.assertThat(evaluaciones.get(0).getConvocatoriaReunion().getCodigo())
-        .isEqualTo("CR-" + String.format("%03d", 3));
-    Assertions.assertThat(evaluaciones.get(1).getConvocatoriaReunion().getCodigo())
-        .isEqualTo("CR-" + String.format("%03d", 2));
-    Assertions.assertThat(evaluaciones.get(2).getConvocatoriaReunion().getCodigo())
-        .isEqualTo("CR-" + String.format("%03d", 1));
-
   }
 
   /**
@@ -378,7 +369,8 @@ public class EvaluacionIT {
     convocatoriaReunion.setFechaLimite(LocalDate.now());
     convocatoriaReunion.setLugar("Lugar");
     convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
-    convocatoriaReunion.setCodigo("CR-" + sufijoStr);
+    convocatoriaReunion.setAnio(2020);
+    convocatoriaReunion.setNumeroActa(100L);
     convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
     convocatoriaReunion.setHoraInicio(7);
     convocatoriaReunion.setMinutoInicio(30);

@@ -13,4 +13,12 @@ import org.springframework.stereotype.Repository;
 public interface ConvocatoriaReunionRepository
     extends JpaRepository<ConvocatoriaReunion, Long>, JpaSpecificationExecutor<ConvocatoriaReunion> {
 
+  /**
+   * Recupera la ultima convocatoria del comite
+   * 
+   * @param idComite Identificador del comite
+   * @return la convocatoria con el numero de acta más alto
+   */
+  ConvocatoriaReunion findFirstByComiteIdOrderByNumeroActaDesc(Long idComite);
+
 }

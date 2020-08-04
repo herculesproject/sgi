@@ -94,8 +94,6 @@ public class EvaluadorEvaluacionServiceTest {
     Assertions.assertThat(evaluadorEvaluacionCreado.getEvaluador().getResumen()).isEqualTo("Evaluador");
     Assertions.assertThat(evaluadorEvaluacionCreado.getEvaluacion().getMemoria().getTitulo()).isEqualTo("Memoria1");
     Assertions.assertThat(evaluadorEvaluacionCreado.getEvaluacion().getDictamen().getNombre()).isEqualTo("Dictamen1");
-    Assertions.assertThat(evaluadorEvaluacionCreado.getEvaluacion().getConvocatoriaReunion().getCodigo())
-        .isEqualTo("CR-1");
   }
 
   @Test
@@ -115,7 +113,6 @@ public class EvaluadorEvaluacionServiceTest {
     evaluadorEvaluacionServicioActualizado.getEvaluador().setResumen("Evaluador actualizado");
     evaluadorEvaluacionServicioActualizado.getEvaluacion().getMemoria().setTitulo("Memoria actualizada");
     evaluadorEvaluacionServicioActualizado.getEvaluacion().getDictamen().setNombre("Dictamen actualizado");
-    evaluadorEvaluacionServicioActualizado.getEvaluacion().getConvocatoriaReunion().setCodigo("CR actualizado");
 
     EvaluadorEvaluacion evaluadorEvaluacion = generarMockEvaluadorEvaluacion(1L);
 
@@ -134,8 +131,6 @@ public class EvaluadorEvaluacionServiceTest {
         .isEqualTo("Memoria actualizada");
     Assertions.assertThat(evaluadorEvaluacionActualizado.getEvaluacion().getDictamen().getNombre())
         .isEqualTo("Dictamen actualizado");
-    Assertions.assertThat(evaluadorEvaluacionActualizado.getEvaluacion().getConvocatoriaReunion().getCodigo())
-        .isEqualTo("CR actualizado");
 
   }
 
@@ -331,7 +326,8 @@ public class EvaluadorEvaluacionServiceTest {
     convocatoriaReunion.setFechaLimite(LocalDate.now());
     convocatoriaReunion.setLugar("Lugar");
     convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
-    convocatoriaReunion.setCodigo("CR-" + id);
+    convocatoriaReunion.setAnio(2020);
+    convocatoriaReunion.setNumeroActa(100L);
     convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
     convocatoriaReunion.setHoraInicio(7);
     convocatoriaReunion.setMinutoInicio(30);

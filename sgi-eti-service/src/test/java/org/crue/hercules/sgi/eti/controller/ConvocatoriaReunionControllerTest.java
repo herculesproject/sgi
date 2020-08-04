@@ -89,7 +89,8 @@ public class ConvocatoriaReunionControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("lugar").value(response.getLugar()))
         .andExpect(MockMvcResultMatchers.jsonPath("ordenDia").value(response.getOrdenDia()))
-        .andExpect(MockMvcResultMatchers.jsonPath("codigo").value(response.getCodigo()))
+        .andExpect(MockMvcResultMatchers.jsonPath("anio").value(response.getAnio()))
+        .andExpect(MockMvcResultMatchers.jsonPath("numeroActa").value(response.getNumeroActa()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("tipoConvocatoriaReunion").value(response.getTipoConvocatoriaReunion()))
         .andExpect(MockMvcResultMatchers.jsonPath("horaInicio").value(response.getHoraInicio()))
@@ -143,7 +144,8 @@ public class ConvocatoriaReunionControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("lugar").value(response.getLugar()))
         .andExpect(MockMvcResultMatchers.jsonPath("ordenDia").value(response.getOrdenDia()))
-        .andExpect(MockMvcResultMatchers.jsonPath("codigo").value(response.getCodigo()))
+        .andExpect(MockMvcResultMatchers.jsonPath("anio").value(response.getAnio()))
+        .andExpect(MockMvcResultMatchers.jsonPath("numeroActa").value(response.getNumeroActa()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("tipoConvocatoriaReunion").value(response.getTipoConvocatoriaReunion()))
         .andExpect(MockMvcResultMatchers.jsonPath("horaInicio").value(response.getHoraInicio()))
@@ -246,7 +248,8 @@ public class ConvocatoriaReunionControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
         .andExpect(MockMvcResultMatchers.jsonPath("lugar").value(response.getLugar()))
         .andExpect(MockMvcResultMatchers.jsonPath("ordenDia").value(response.getOrdenDia()))
-        .andExpect(MockMvcResultMatchers.jsonPath("codigo").value(response.getCodigo()))
+        .andExpect(MockMvcResultMatchers.jsonPath("anio").value(response.getAnio()))
+        .andExpect(MockMvcResultMatchers.jsonPath("numeroActa").value(response.getNumeroActa()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("tipoConvocatoriaReunion").value(response.getTipoConvocatoriaReunion()))
         .andExpect(MockMvcResultMatchers.jsonPath("horaInicio").value(response.getHoraInicio()))
@@ -401,7 +404,7 @@ public class ConvocatoriaReunionControllerTest {
     final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
 
     // search
-    String query = "codigo~CR-0%,id:3";
+    String query = "numeroActa<4%,id:3";
 
     BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer(new Answer<Page<ConvocatoriaReunion>>() {
@@ -508,7 +511,8 @@ public class ConvocatoriaReunionControllerTest {
     data.setFechaLimite(LocalDate.of(2020, 8, id.intValue()));
     data.setLugar("Lugar " + txt);
     data.setOrdenDia("Orden del día convocatoria reunión " + txt);
-    data.setCodigo("CR-" + txt);
+    data.setAnio(2020);
+    data.setNumeroActa(id);
     data.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
     data.setHoraInicio(7 + id.intValue());
     data.setMinutoInicio(30);

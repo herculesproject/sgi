@@ -446,7 +446,10 @@
       <column name="orden_dia" type="VARCHAR(2000)">
         <constraints nullable="false" />
       </column>
-      <column name="codigo" type="VARCHAR(50)">
+      <column name="anio" type="INT">
+        <constraints nullable="false" />
+      </column>
+      <column name="numero_acta" type="BIGINT">
         <constraints nullable="false" />
       </column>
       <column name="tipo_convocatoria_reunion_id" type="BIGINT">

@@ -1,6 +1,8 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
+
 import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.repository.ConvocatoriaReunionRepository;
@@ -44,6 +46,15 @@ public class ConvocatoriaReunionServiceImpl implements ConvocatoriaReunionServic
     log.debug("create(ConvocatoriaReunion convocatoriaReunion) - start");
     Assert.isNull(convocatoriaReunion.getId(),
         "ConvocatoriaReunion id debe ser null para crear una nueva ConvocatoriaReunion");
+
+    ConvocatoriaReunion ultimaConvocatoriaReunionComite = repository
+        .findFirstByComiteIdOrderByNumeroActaDesc(convocatoriaReunion.getComite().getId());
+    Long numeroActa = ultimaConvocatoriaReunionComite != null ? ultimaConvocatoriaReunionComite.getNumeroActa() + 1
+        : 1L;
+
+    convocatoriaReunion.setNumeroActa(numeroActa);
+    convocatoriaReunion.setAnio(LocalDate.now().getYear());
+
     ConvocatoriaReunion returnValue = repository.save(convocatoriaReunion);
     log.debug("create(ConvocatoriaReunion convocatoriaReunion) - end");
     return returnValue;
@@ -76,7 +87,8 @@ public class ConvocatoriaReunionServiceImpl implements ConvocatoriaReunionServic
       convocatoriaReunion.setFechaLimite(convocatoriaReunionActualizar.getFechaLimite());
       convocatoriaReunion.setLugar(convocatoriaReunionActualizar.getLugar());
       convocatoriaReunion.setOrdenDia(convocatoriaReunionActualizar.getOrdenDia());
-      convocatoriaReunion.setCodigo(convocatoriaReunionActualizar.getCodigo());
+      convocatoriaReunion.setAnio(convocatoriaReunionActualizar.getAnio());
+      convocatoriaReunion.setNumeroActa(convocatoriaReunionActualizar.getNumeroActa());
       convocatoriaReunion.setTipoConvocatoriaReunion(convocatoriaReunionActualizar.getTipoConvocatoriaReunion());
       convocatoriaReunion.setHoraInicio(convocatoriaReunionActualizar.getHoraInicio());
       convocatoriaReunion.setMinutoInicio(convocatoriaReunionActualizar.getMinutoInicio());

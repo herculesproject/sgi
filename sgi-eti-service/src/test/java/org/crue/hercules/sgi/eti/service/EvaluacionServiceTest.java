@@ -64,7 +64,7 @@ public class EvaluacionServiceTest {
 
     Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria1");
     Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen1");
-    Assertions.assertThat(evaluacion.getConvocatoriaReunion().getCodigo()).isEqualTo("CR-1");
+    Assertions.assertThat(evaluacion.getConvocatoriaReunion().getId()).isEqualTo(1L);
     Assertions.assertThat(evaluacion.getTipoEvaluacion().getNombre()).isEqualTo("TipoEvaluacion1");
   }
 
@@ -92,7 +92,7 @@ public class EvaluacionServiceTest {
     Assertions.assertThat(evaluacionCreado.getId()).isEqualTo(1L);
     Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria New");
     Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen New");
-    Assertions.assertThat(evaluacion.getConvocatoriaReunion().getCodigo()).isEqualTo("CR- New");
+    Assertions.assertThat(evaluacion.getConvocatoriaReunion().getId()).isEqualTo(1L);
   }
 
   @Test
@@ -122,7 +122,7 @@ public class EvaluacionServiceTest {
     Assertions.assertThat(evaluacionActualizado.getId()).isEqualTo(1L);
     Assertions.assertThat(evaluacionActualizado.getMemoria().getTitulo()).isEqualTo("Memoria actualizado");
     Assertions.assertThat(evaluacionActualizado.getDictamen().getNombre()).isEqualTo("Dictamen actualizado");
-    Assertions.assertThat(evaluacionActualizado.getConvocatoriaReunion().getCodigo()).isEqualTo("CR- actualizado");
+    Assertions.assertThat(evaluacionActualizado.getConvocatoriaReunion().getId()).isEqualTo(1L);
 
   }
 
@@ -243,8 +243,7 @@ public class EvaluacionServiceTest {
       Evaluacion evaluacion = page.getContent().get(i);
       Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
       Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen" + String.format("%03d", j));
-      Assertions.assertThat(evaluacion.getConvocatoriaReunion().getCodigo())
-          .isEqualTo("CR-" + String.format("%03d", j));
+      Assertions.assertThat(evaluacion.getConvocatoriaReunion().getId()).isEqualTo(1L);
     }
   }
 
@@ -310,7 +309,8 @@ public class EvaluacionServiceTest {
     convocatoriaReunion.setFechaLimite(LocalDate.now());
     convocatoriaReunion.setLugar("Lugar");
     convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
-    convocatoriaReunion.setCodigo("CR-" + sufijoStr);
+    convocatoriaReunion.setAnio(2020);
+    convocatoriaReunion.setNumeroActa(100L);
     convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
     convocatoriaReunion.setHoraInicio(7);
     convocatoriaReunion.setMinutoInicio(30);

@@ -116,6 +116,20 @@
       <column name="activo" value="true" />
     </insert>
   </changeSet>
+  <changeSet author="master" id="20200601000000-comite">
+    <insert tableName="comite">
+      <column name="comite" value="CEISH" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="comite">
+      <column name="comite" value="CEEA" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="comite">
+      <column name="comite" value="CEIAB" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
 
   <changeSet author="master" id="20200601000000-dictamen">
     <insert tableName="dictamen">
@@ -413,34 +427,6 @@
   <!-- FIN ENUMERATION -->
   <!-- ########################################################## -->
 
-
-  <changeSet author="master" id="20200601000000-comite">
-    <insert tableName="comite">
-      <column name="comite" value="Comite1" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="comite">
-      <column name="comite" value="Comite2" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="comite">
-      <column name="comite" value="Comite3" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="comite">
-      <column name="comite" value="Comite4" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="comite">
-      <column name="comite" value="Comite5" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="comite">
-      <column name="comite" value="Comite6" />
-      <column name="activo" value="true" />
-    </insert>
-  </changeSet>
-
   <changeSet author="master" id="20200601000000-tipo_actividad">
     <insert tableName="tipo_actividad">
       <column name="id" value="1" />
@@ -609,27 +595,27 @@
 
   <changeSet author="master" id="20200601000000-tipo_memoria_comite">
     <insert tableName="tipo_memoria_comite">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite1')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Nueva')" />
     </insert>
     <insert tableName="tipo_memoria_comite">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite2')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Modificación')" />
     </insert>
     <insert tableName="tipo_memoria_comite">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite3')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
       <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Ratificación')" />
     </insert>
     <insert tableName="tipo_memoria_comite">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite4')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
       <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Nueva')" />
     </insert>
     <insert tableName="tipo_memoria_comite">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite5')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEIAB')" />
       <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Modificación')" />
     </insert>
     <insert tableName="tipo_memoria_comite">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite6')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEIAB')" />
       <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Ratificación')" />
     </insert>
   </changeSet>
@@ -698,7 +684,7 @@
     <insert tableName="memoria">
       <column name="num_referencia" value="ref-134" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion4')" />
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite1')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria1" />
       <column name="usuario_ref" value="user-8984" />
       <column name="tipo_memoria_id" value="1" />
@@ -712,7 +698,7 @@
     <insert tableName="memoria">
       <column name="num_referencia" value="ref-234" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion3')" />
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite1')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria2" />
       <column name="usuario_ref" value="user-9984" />
       <column name="tipo_memoria_id" value="2" />
@@ -726,7 +712,7 @@
     <insert tableName="memoria">
       <column name="num_referencia" value="ref-934" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite1')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria3" />
       <column name="usuario_ref" value="user-852" />
       <column name="tipo_memoria_id" value="3" />
@@ -740,7 +726,7 @@
     <insert tableName="memoria">
       <column name="num_referencia" value="ref-934" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite2')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria4" />
       <column name="usuario_ref" value="user-852" />
       <column name="tipo_memoria_id" value="3" />
@@ -754,7 +740,7 @@
     <insert tableName="memoria">
       <column name="num_referencia" value="ref-934" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite2')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria5" />
       <column name="usuario_ref" value="user-852" />
       <column name="tipo_memoria_id" value="3" />
@@ -768,7 +754,7 @@
     <insert tableName="memoria">
       <column name="num_referencia" value="ref-934" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite2')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria6" />
       <column name="usuario_ref" value="user-852" />
       <column name="tipo_memoria_id" value="2" />
@@ -782,7 +768,7 @@
     <insert tableName="memoria">
       <column name="num_referencia" value="ref-934" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite2')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria7" />
       <column name="usuario_ref" value="user-852" />
       <column name="tipo_memoria_id" value="2" />
@@ -796,7 +782,7 @@
     <insert tableName="memoria">
       <column name="num_referencia" value="ref-934" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite2')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria8" />
       <column name="usuario_ref" value="user-852" />
       <column name="tipo_memoria_id" value="3" />
@@ -810,7 +796,7 @@
     <insert tableName="memoria">
       <column name="num_referencia" value="ref-934" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite2')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria9" />
       <column name="usuario_ref" value="user-852" />
       <column name="tipo_memoria_id" value="1" />
@@ -824,7 +810,7 @@
     <insert tableName="memoria">
       <column name="num_referencia" value="ref-934" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite2')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria10" />
       <column name="usuario_ref" value="user-852" />
       <column name="tipo_memoria_id" value="1" />
@@ -839,7 +825,7 @@
 
   <changeSet author="master" id="20200601000000-evaluador">
     <insert tableName="evaluador">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite1')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='PRESIDENTE')" />
       <column name="fecha_alta" value="2020-07-09" />
       <column name="fecha_baja" value="2021-07-09" />
@@ -848,7 +834,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="evaluador">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite2')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='VOCAL')" />
       <column name="fecha_alta" value="2020-07-09" />
       <column name="fecha_baja" value="2021-07-09" />
@@ -857,7 +843,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="evaluador">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite3')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
       <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='VOCAL')" />
       <column name="fecha_alta" value="2020-07-09" />
       <column name="fecha_baja" value="2021-07-09" />
@@ -866,7 +852,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="evaluador">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite4')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
       <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='PRESIDENTE')" />
       <column name="fecha_alta" value="2020-07-09" />
       <column name="fecha_baja" value="2021-07-09" />
@@ -875,7 +861,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="evaluador">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite5')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEIAB')" />
       <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='VOCAL')" />
       <column name="fecha_alta" value="2020-07-09" />
       <column name="fecha_baja" value="2021-07-09" />
@@ -884,7 +870,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="evaluador">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite6')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEIAB')" />
       <column name="cargo_comite_id" valueComputed="(select id from eti.cargo_comite where nombre='VOCAL')" />
       <column name="fecha_alta" value="2020-07-09" />
       <column name="fecha_baja" value="2021-07-09" />
@@ -998,12 +984,13 @@
 
   <changeSet author="master" id="20200601000000-convocatoria_reunion">
     <insert tableName="convocatoria_reunion">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite1')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="fecha_evaluacion" value="2020-07-01" />
       <column name="fecha_limite" value="2020-08-01" />
       <column name="lugar" value="Lugar 1" />
       <column name="orden_dia" value="Orden del día convocatoria reunión 1" />
-      <column name="codigo" value="CR-1" />
+      <column name="anio" value="2020" />
+      <column name="numero_acta" value="1" />
       <column name="tipo_convocatoria_reunion_id" valueComputed="(select id from eti.tipo_convocatoria_reunion where nombre='Ordinaria')" />
       <column name="hora_inicio" value="8" />
       <column name="minuto_inicio" value="30" />
@@ -1011,12 +998,13 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="convocatoria_reunion">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite1')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="fecha_evaluacion" value="2020-07-02" />
       <column name="fecha_limite" value="2020-08-02" />
       <column name="lugar" value="Lugar 2" />
       <column name="orden_dia" value="Orden del día convocatoria reunión 2" />
-      <column name="codigo" value="CR-2" />
+      <column name="anio" value="2020" />
+      <column name="numero_acta" value="2" />
       <column name="tipo_convocatoria_reunion_id" valueComputed="(select id from eti.tipo_convocatoria_reunion where nombre='Extraordinaria')" />
       <column name="hora_inicio" value="16" />
       <column name="minuto_inicio" value="00" />
@@ -1024,12 +1012,13 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="convocatoria_reunion">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite2')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="fecha_evaluacion" value="2020-07-03" />
       <column name="fecha_limite" value="2020-08-03" />
       <column name="lugar" value="Lugar 3" />
       <column name="orden_dia" value="Orden del día convocatoria reunión 3" />
-      <column name="codigo" value="CR-3" />
+      <column name="anio" value="2020" />
+      <column name="numero_acta" value="3" />
       <column name="tipo_convocatoria_reunion_id" valueComputed="(select id from eti.tipo_convocatoria_reunion where nombre='Ordinaria')" />
       <column name="hora_inicio" value="10" />
       <column name="minuto_inicio" value="30" />
@@ -1037,12 +1026,13 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="convocatoria_reunion">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite2')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="fecha_evaluacion" value="2020-07-04" />
       <column name="fecha_limite" value="2020-08-04" />
       <column name="lugar" value="Lugar 4" />
       <column name="orden_dia" value="Orden del día convocatoria reunión 4" />
-      <column name="codigo" value="CR-4" />
+      <column name="anio" value="2020" />
+      <column name="numero_acta" value="4" />
       <column name="tipo_convocatoria_reunion_id" valueComputed="(select id from eti.tipo_convocatoria_reunion where nombre='Seguimiento')" />
       <column name="hora_inicio" value="17" />
       <column name="minuto_inicio" value="00" />
@@ -1050,12 +1040,13 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="convocatoria_reunion">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite3')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="fecha_evaluacion" value="2020-07-05" />
       <column name="fecha_limite" value="2020-08-05" />
       <column name="lugar" value="Lugar 5" />
       <column name="orden_dia" value="Orden del día convocatoria reunión 5" />
-      <column name="codigo" value="CR-5" />
+      <column name="anio" value="2020" />
+      <column name="numero_acta" value="5" />
       <column name="tipo_convocatoria_reunion_id" valueComputed="(select id from eti.tipo_convocatoria_reunion where nombre='Extraordinaria')" />
       <column name="hora_inicio" value="11" />
       <column name="minuto_inicio" value="30" />
@@ -1063,12 +1054,13 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="convocatoria_reunion">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite3')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="fecha_evaluacion" value="2020-07-06" />
       <column name="fecha_limite" value="2020-08-06" />
       <column name="lugar" value="Lugar 6" />
       <column name="orden_dia" value="Orden del día convocatoria reunión 6" />
-      <column name="codigo" value="CR-6" />
+      <column name="anio" value="2020" />
+      <column name="numero_acta" value="6" />
       <column name="tipo_convocatoria_reunion_id" valueComputed="(select id from eti.tipo_convocatoria_reunion where nombre='Seguimiento')" />
       <column name="hora_inicio" value="18" />
       <column name="minuto_inicio" value="00" />
@@ -1079,7 +1071,7 @@
 
   <changeSet author="master" id="20200601000000-acta">
     <insert tableName="acta">
-      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-1')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=1)" />
       <column name="hora_inicio" value="10" />
       <column name="minuto_inicio" value="15" />
       <column name="hora_fin" value="12" />
@@ -1091,7 +1083,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="acta">
-      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-2')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=2)" />
       <column name="hora_inicio" value="18" />
       <column name="minuto_inicio" value="0" />
       <column name="hora_fin" value="19" />
@@ -1103,7 +1095,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="acta">
-      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-3')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=3)" />
       <column name="hora_inicio" value="11" />
       <column name="minuto_inicio" value="30" />
       <column name="hora_fin" value="12" />
@@ -1176,30 +1168,35 @@
   <changeSet author="master" id="20200601000000-asistentes">
     <insert tableName="asistentes">
       <column name="evaluador_id" valueComputed="(select id from eti.evaluador where usuario_ref='user-005')" />
-      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-6')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=6)" />
       <column name="asistencia" value="true" />
       <column name="motivo" value="Motivo 1" />
     </insert>
     <insert tableName="asistentes">
       <column name="evaluador_id" valueComputed="(select id from eti.evaluador where usuario_ref='user-004')" />
-      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-3')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=3)" />
       <column name="asistencia" value="false" />
       <column name="motivo" value="Motivo 2" />
     </insert>
     <insert tableName="asistentes">
       <column name="evaluador_id" valueComputed="(select id from eti.evaluador where usuario_ref='user-005')" />
-      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-4')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=4)" />
       <column name="asistencia" value="true" />
       <column name="motivo" value="Motivo 3" />
     </insert>
-
+    <insert tableName="asistentes">
+      <column name="evaluador_id" valueComputed="(select id from eti.evaluador where usuario_ref='user-004')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=2)" />
+      <column name="asistencia" value="true" />
+      <column name="motivo" value="Motivo 4" />
+    </insert>
   </changeSet>
 
   <changeSet author="master" id="20200601000000-evaluacion">
     <insert tableName="evaluacion">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria1')" />
       <column name="dictamen_id" value="1" />
-      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-1')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=1)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Retrospectiva')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
@@ -1208,7 +1205,7 @@
     <insert tableName="evaluacion">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria2')" />
       <column name="dictamen_id" value="1" />
-      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-2')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=2)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
@@ -1217,7 +1214,7 @@
     <insert tableName="evaluacion">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria3')" />
       <column name="dictamen_id" value="3" />
-      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-3')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=3)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Seguimiento anual')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
@@ -1226,7 +1223,7 @@
     <insert tableName="evaluacion">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria4')" />
       <column name="dictamen_id" value="4" />
-      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-4')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=4)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Seguimiento final')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="false" />
@@ -1235,7 +1232,7 @@
     <insert tableName="evaluacion">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria5')" />
       <column name="dictamen_id" value="4" />
-      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-5')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=5)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Retrospectiva')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
@@ -1244,7 +1241,7 @@
     <insert tableName="evaluacion">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria6')" />
       <column name="dictamen_id" value="5" />
-      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-6')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=6)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
@@ -1253,7 +1250,7 @@
     <insert tableName="evaluacion">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria7')" />
       <column name="dictamen_id" value="1" />
-      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-6')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=6)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
@@ -1262,7 +1259,7 @@
     <insert tableName="evaluacion">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria8')" />
       <column name="dictamen_id" value="2" />
-      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-4')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=6)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
@@ -1271,7 +1268,7 @@
     <insert tableName="evaluacion">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria9')" />
       <column name="dictamen_id" value="3" />
-      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-2')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=6)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
@@ -1280,7 +1277,7 @@
     <insert tableName="evaluacion">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria10')" />
       <column name="dictamen_id" value="1" />
-      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where codigo='CR-2')" />
+      <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=6)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
@@ -1356,27 +1353,27 @@
 
   <changeSet author="master" id="20200601000000-comite_formulario">
     <insert tableName="comite_formulario">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite1')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
     </insert>
     <insert tableName="comite_formulario">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite2')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M20')" />
     </insert>
     <insert tableName="comite_formulario">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite3')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
     </insert>
     <insert tableName="comite_formulario">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite4')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='Seguimiento Anual')" />
     </insert>
     <insert tableName="comite_formulario">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite5')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='Seguimiento Final')" />
     </insert>
     <insert tableName="comite_formulario">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='Comite6')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='Retrospectiva')" />
     </insert>
   </changeSet>
