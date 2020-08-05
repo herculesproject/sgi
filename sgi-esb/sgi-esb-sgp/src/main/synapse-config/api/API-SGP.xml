@@ -147,47 +147,7 @@
             <property expression="get-property('uri.var.usuarioRef')" name="usuarioRef" scope="default" type="STRING"/>
             <!--Business Logic Goes Here-->
             <payloadFactory media-type="json">
-                <format>{
-    "usuario": {
-        "usuarioRef": "user-001",
-        "nombre": "nombre-001",
-        "primerApellido": "primerApellido-001",
-        "segundoApellido": "segundoApellido-001",
-        "email": "email-001@email.es"
-    },
-    "tipoIdentificador": null,
-    "numIdentificadorPersonal": "00000001A",
-    "domicilio": {
-        "tipoVia": {
-            "telefono": null,
-            "tipoTelefono": null
-        },
-        "nombreVia": "via-001",
-        "numero": "001",
-        "poblacion": "poblacion-001",
-        "codigoPostal": "00001",
-        "provincia": "provincia-001",
-        "pais": "pais-001"
-    },
-    "fechaNacimiento": "2000-01-01",
-    "nacionalidad": null,
-    "sexo": "H",
-    "datosEmail": {
-        "email": "email@email.es",
-        "tipoEmail": "tipo-001"
-    },
-    "datosTelefono": {
-        "telefono": "987654321",
-        "tipoTelefono": "tipo-001"
-    },
-    "vinculacion": "vinculacion-001",
-    "profesional": {
-        "profesionalRef": "1",
-        "categoriaProfesional": "categoriaProfesional-001",
-        "cuerpoProfesional": "cuerpoProfesional-001",
-        "subcuerpoProfesional": "subcuerpoProfesional-001"
-    }
-}</format>
+                <format>{"usuarioRef":"user-001","nombre":"nombre-001","primerApellido":"primerApellido-001","segundoApellido":"segundoApellido-001","email":"email-001@email.es","tipoIdentificador":{"tipoIdentificadorRef":"1","codigo":"DNI","descripcion":"DNI"},"numIdentificadorPersonal":"00000001A","domicilio":{"tipoVia":{"tipoViaRef":"1","codigo":"calle","descripcion":"calle"},"nombreVia":"via-001","numero":"001","poblacion":"poblacion-001","codigoPostal":"00001","provincia":"provincia-001","pais":"pais-001"},"fechaNacimiento":"2000-01-01","nacionalidad":null,"sexo":"H","datosEmail":{"email":"email@email.es","tipoEmail":"tipo-001"},"datosTelefono":{"telefono":"987654321","tipoTelefono":"tipo-001"},"vinculacion":"vinculacion-001","profesional":{"personaRef":null,"categoriaProfesional":"categoriaProfesional-001","cuerpoProfesional":"cuerpoProfesional-001","subcuerpoProfesional":"subcuerpoProfesional-001"}}</format>
                 <args/>
             </payloadFactory>
             <send>
@@ -201,47 +161,7 @@
             <switch source="get-property('ERROR_CODE')">
                 <case regex="101503|101504">
                     <payloadFactory media-type="json">
-                        <format>{
-    "usuario": {
-        "usuarioRef": "user-001",
-        "nombre": "nombre-001",
-        "primerApellido": "primerApellido-001",
-        "segundoApellido": "segundoApellido-001",
-        "email": "email-001@email.es"
-    },
-    "tipoIdentificador": null,
-    "numIdentificadorPersonal": "00000001A",
-    "domicilio": {
-        "tipoVia": {
-            "telefono": null,
-            "tipoTelefono": null
-        },
-        "nombreVia": "via-001",
-        "numero": "001",
-        "poblacion": "poblacion-001",
-        "codigoPostal": "00001",
-        "provincia": "provincia-001",
-        "pais": "pais-001"
-    },
-    "fechaNacimiento": "2000-01-01",
-    "nacionalidad": null,
-    "sexo": "H",
-    "datosEmail": {
-        "email": "email@email.es",
-        "tipoEmail": "tipo-001"
-    },
-    "datosTelefono": {
-        "telefono": "987654321",
-        "tipoTelefono": "tipo-001"
-    },
-    "vinculacion": "vinculacion-001",
-    "profesional": {
-        "profesionalRef": "1",
-        "categoriaProfesional": "categoriaProfesional-001",
-        "cuerpoProfesional": "cuerpoProfesional-001",
-        "subcuerpoProfesional": "subcuerpoProfesional-001"
-    }
-}</format>
+                        <format>{"usuarioRef":"user-001","nombre":"nombre-001","primerApellido":"primerApellido-001","segundoApellido":"segundoApellido-001","email":"email-001@email.es","tipoIdentificador":{"tipoIdentificadorRef":"1","codigo":"DNI","descripcion":"DNI"},"numIdentificadorPersonal":"00000001A","domicilio":{"tipoVia":{"tipoViaRef":"1","codigo":"calle","descripcion":"calle"},"nombreVia":"via-001","numero":"001","poblacion":"poblacion-001","codigoPostal":"00001","provincia":"provincia-001","pais":"pais-001"},"fechaNacimiento":"2000-01-01","nacionalidad":null,"sexo":"H","datosEmail":{"email":"email@email.es","tipoEmail":"tipo-001"},"datosTelefono":{"telefono":"987654321","tipoTelefono":"tipo-001"},"vinculacion":"vinculacion-001","profesional":{"personaRef":null,"categoriaProfesional":"categoriaProfesional-001","cuerpoProfesional":"cuerpoProfesional-001","subcuerpoProfesional":"subcuerpoProfesional-001"}}</format>
                         <args/>
                     </payloadFactory>
                 </case>
