@@ -21,7 +21,7 @@ class FakeService extends SgiRestService<number, DummyData> {
   }
 }
 
-describe('BaseRestService', () => {
+describe('SgiRestService', () => {
 
   // existing entities
   const dummyEntityList: DummyData[] = [
@@ -78,9 +78,9 @@ describe('BaseRestService', () => {
     // given: an existing Entity
     const existingEntity = dummyEntityList[0];
     // when: entity udpated and update method called
-    const updatedEntity = Object.create(existingEntity);
+    const updatedEntity = Object.assign({}, existingEntity);
     updatedEntity.name = 'Erik';
-    service.update(existingEntity.id, existingEntity).subscribe((res) => {
+    service.update(existingEntity.id, updatedEntity).subscribe((res) => {
       // then: the entity is updated with the given values
       expect(res).toEqual(updatedEntity);
     });

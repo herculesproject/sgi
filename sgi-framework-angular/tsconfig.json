@@ -22,6 +22,9 @@
       "@sgi/framework/auth": [
         "dist/sgi/framework/auth"
       ],
+      "@sgi/framework/core": [
+        "dist/sgi/framework/core"
+      ],
       "@sgi/framework/http": [
         "dist/sgi/framework/http"
       ]
