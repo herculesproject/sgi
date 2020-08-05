@@ -17,16 +17,16 @@
     ],
     "paths": {
       "@sgi/framework": [
-        "dist/sgi/framework"
+        "project/sgi/framework"
       ],
       "@sgi/framework/auth": [
-        "dist/sgi/framework/auth"
+        "project/sgi/framework/auth"
       ],
       "@sgi/framework/core": [
-        "dist/sgi/framework/core"
+        "project/sgi/framework/core"
       ],
       "@sgi/framework/http": [
-        "dist/sgi/framework/http"
+        "project/sgi/framework/http"
       ]
     }
   },
