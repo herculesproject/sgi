@@ -410,6 +410,76 @@
       }
     },
     "convocatoriaReunion": {
+      "crear": {
+        "correcto": "Se ha creado correctamente la convocatoria",
+        "error": "Ha ocurrido un problema al guardar la convocatoria",
+        "titulo": "Nueva convocatoria"
+      },
+      "formulario": {
+        "datosGenerales": {
+          "cabecera": "Datos Generales",
+          "comite": {
+            "error": {
+              "cargar": "No se han podido cargar los comites",
+              "vacio": "Seleccione un comite"
+            },
+            "titulo": "Comité"
+          },
+          "convocantes": {
+            "error": {
+              "cargar": "No se han podido cargar los convocantes"
+            },
+            "titulo": "Convocantes"
+          },
+          "fechaEvaluacion": {
+            "error": {
+              "vacio": "Introduzca la fecha de evaluación"
+            },
+            "titulo": "Fecha evaluación"
+          },
+          "fechaLimite": {
+            "error": {
+              "vacio": "Introduzca la fecha límite"
+            },
+            "titulo": "Fecha límite"
+          },
+          "horaInicio": {
+            "error": {
+              "NaN": "La hora inicio no es número",
+              "noValido": "No es válido la hora inicio",
+              "vacio": "Introduzca la hora inicio"
+            },
+            "titulo": "Hora Inicio"
+          },
+          "lugar": {
+            "error": {
+              "required": "Introduzca un lugar"
+            },
+            "titulo": "Lugar"
+          },
+          "minutoInicio": {
+            "error": {
+              "NaN": "El minuto inicio no es número",
+              "noValido": "No es válido el minuto inicio",
+              "vacio": "Introduzca el minuto inicio"
+            },
+            "titulo": "Minuto Inicio"
+          },
+          "ordenDia": {
+            "error": {
+              "required": "Introduzca un orden del día"
+            },
+            "titulo": "Orden del día"
+          },
+          "tipoConvocatoriaReunion": {
+            "error": {
+              "cargar": "No se han podido cargar las convocatorias",
+              "vacio": "Seleccione una convocatoria"
+            },
+            "titulo": "Convocatoria"
+          }
+        }
+      },
       "listado": {
         "acciones": "Acciones",
         "aceptar": "Aceptar",
@@ -504,6 +574,10 @@
       "acta": {
         "crear": "New record",
         "guardar": "Save record"
+      },
+      "convocatoriaReunion": {
+        "crear": "Nueva convocatoria",
+        "guardar": "Guardar convocatoria"
       },
       "evaluacionEtica": {
         "crear": "New evaluation request",

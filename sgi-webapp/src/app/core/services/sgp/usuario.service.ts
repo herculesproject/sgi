@@ -12,7 +12,7 @@ import { catchError, map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class UsuarioService extends SgiRestService<number, Usuario>{
+export class UsuarioService extends SgiRestService<string, Usuario>{
   private static readonly MAPPING = '/usuarios';
 
   constructor(logger: NGXLogger, protected http: HttpClient) {
@@ -21,29 +21,6 @@ export class UsuarioService extends SgiRestService<number, Usuario>{
       logger,
       `${environment.serviceServers.sgp}${UsuarioService.MAPPING}`,
       http
-    );
-  }
-
-  /**
-   * Find an element by their ID
-   *
-   * @param id The ID of the element
-   */
-  // TODO: Manage 404 (NotFound) and return an empty element?
-  public findByRef(id: string): Observable<Usuario> {
-
-    return this.http.get<Usuario>(`${this.endpointUrl}/${id}`).pipe(
-      // TODO: Explore the use a global HttpInterceptor with or without a
-      // custom error
-      catchError((error: HttpErrorResponse) => {
-        // Log the error
-        // Pass the error to subscribers. Anyway they would decide what to do
-        // with the error.
-        return throwError(error);
-      }),
-      map((response) => {
-        return response;
-      })
     );
   }
 

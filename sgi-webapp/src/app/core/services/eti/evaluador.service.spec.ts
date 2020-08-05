@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { UsuarioService } from '../sgp/usuario.service';
+import { EvaluadorService } from './evaluador.service';
 import { HttpClientModule } from '@angular/common/http';
 import { NGXLogger } from 'ngx-logger';
 import TestUtils from '@core/utils/test-utils';
 
-describe('UsuarioService', () => {
-  let service: UsuarioService;
+describe('EvaluadorService', () => {
+  let service: EvaluadorService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -17,7 +17,7 @@ describe('UsuarioService', () => {
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
       ],
     });
-    service = TestBed.inject(UsuarioService);
+    service = TestBed.inject(EvaluadorService);
   });
 
   it('should be created', () => {

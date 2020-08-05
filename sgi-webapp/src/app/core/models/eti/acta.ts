@@ -37,7 +37,7 @@ export class Acta {
 
   constructor() {
     this.id = null;
-    this.convocatoriaReunion = new ConvocatoriaReunion();
+    this.convocatoriaReunion = null;
     this.horaInicio = 0;
     this.minutoInicio = 0;
     this.horaFin = 0;

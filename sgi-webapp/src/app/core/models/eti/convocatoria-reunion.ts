@@ -1,5 +1,6 @@
 import { Comite } from './comite';
 import { TipoConvocatoriaReunion } from './tipo-convocatoria-reunion';
+import { Asistente } from './asistente';
 
 export class ConvocatoriaReunion {
 
@@ -21,26 +22,36 @@ export class ConvocatoriaReunion {
   lugar: string;
   /** Orden día */
   ordenDia: string;
-  /** Código   */
-  codigo: string;
+  /** Año */
+  anio: number;
+  /** Numero acta */
+  numeroActa: number;
   /** Fecha Envío */
   fechaEnvio: Date;
   /** Activo */
   activo: boolean;
+  /** Convocantes */
+  convocantes: Asistente[];
 
-  constructor() {
-    this.id = null;
-    this.comite = null;
-    this.tipoConvocatoriaReunion = null;
-    this.fechaEvaluacion = null;
-    this.horaInicio = null;
-    this.minutoInicio = null;
-    this.fechaLimite = null;
-    this.lugar = null;
-    this.ordenDia = null;
-    this.codigo = null;
-    this.fechaEnvio = null;
-    this.activo = true;
+  constructor(convocatoriaReunion?: ConvocatoriaReunion) {
+    this.id = convocatoriaReunion?.id;
+    this.comite = convocatoriaReunion?.comite;
+    this.tipoConvocatoriaReunion = convocatoriaReunion?.tipoConvocatoriaReunion;
+    this.fechaEvaluacion = convocatoriaReunion?.fechaEvaluacion;
+    this.horaInicio = 15;
+    this.minutoInicio = convocatoriaReunion?.minutoInicio;
+    this.fechaLimite = convocatoriaReunion?.fechaLimite;
+    this.lugar = convocatoriaReunion?.lugar;
+    this.ordenDia = convocatoriaReunion?.ordenDia;
+    this.anio = convocatoriaReunion?.anio;
+    this.numeroActa = convocatoriaReunion?.numeroActa;
+    this.fechaEnvio = convocatoriaReunion?.fechaEnvio;
+    this.activo = convocatoriaReunion?.activo;
+    this.convocantes = convocatoriaReunion?.convocantes;
+  }
+
+  get codigo(): string {
+    return `ACTA${this.numeroActa}/${this.anio}/${this.comite.comite}`;
   }
 
 }
