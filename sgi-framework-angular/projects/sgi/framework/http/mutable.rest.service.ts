@@ -161,7 +161,7 @@ export abstract class SgiMutableRestService<K extends number | string, S, T> {
    */
   public findAll(options?: SgiRestFindOptions): Observable<SgiRestListResult<T>> {
     this.logger.debug(this.serviceName, `findAll(${options ? JSON.stringify(options) : ''})`, '-', 'START');
-    return this.find<S, T>(this.endpointUrl, this.converter, options).pipe(
+    return this.find<S, T>(this.endpointUrl, options, this.converter).pipe(
       tap(() => {
         this.logger.debug(this.serviceName, `findAll(${options ? JSON.stringify(options) : ''})`, '-', 'END');
       })
@@ -173,8 +173,10 @@ export abstract class SgiMutableRestService<K extends number | string, S, T> {
    *
    * @param endpointUrl The url of the endpoint
    * @param options The options to apply
+   * @param converter The converter to use
    */
-  protected find<U, V>(endpointUrl: string, converter: SgiConverter<U, V>, options?: SgiRestFindOptions): Observable<SgiRestListResult<V>> {
+  protected find<U, V>(endpointUrl: string, options?: SgiRestFindOptions, converter?: SgiConverter<U, V>):
+    Observable<SgiRestListResult<V>> {
     this.logger.debug(this.serviceName, `find(${endpointUrl}, ${options ? JSON.stringify(options) : ''})`, '-', 'START');
     return this.http.get<U[]>(endpointUrl, this.buildHttpClientOptions(options))
       .pipe(
@@ -258,8 +260,9 @@ export abstract class SgiMutableRestService<K extends number | string, S, T> {
    * Convert a findAll http response to a list result
    *
    * @param response The response to convert
+   * @param converter The converter to use
    */
-  private toSgiRestListResult<U, V>(response: HttpResponse<U[]>, converter: SgiConverter<U, V>): Observable<SgiRestListResult<V>> {
+  private toSgiRestListResult<U, V>(response: HttpResponse<U[]>, converter?: SgiConverter<U, V>): Observable<SgiRestListResult<V>> {
     return of({
       page: {
         index: Number(response.headers.get('X-Page')),
@@ -268,7 +271,7 @@ export abstract class SgiMutableRestService<K extends number | string, S, T> {
         total: Number(response.headers.get('X-Page-Total-Count')),
       },
       total: Number(response.headers.get('X-Total-Count')),
-      items: converter.toTargetArray(response.body)
+      items: converter ? converter.toTargetArray(response.body) : response.body as unknown as V[]
     });
   }
 }
