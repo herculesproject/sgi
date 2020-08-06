@@ -161,7 +161,7 @@ export abstract class SgiMutableRestService<K extends number | string, S, T> {
    */
   public findAll(options?: SgiRestFindOptions): Observable<SgiRestListResult<T>> {
     this.logger.debug(this.serviceName, `findAll(${options ? JSON.stringify(options) : ''})`, '-', 'START');
-    return this.find(this.endpointUrl, options).pipe(
+    return this.find<S, T>(this.endpointUrl, this.converter, options).pipe(
       tap(() => {
         this.logger.debug(this.serviceName, `findAll(${options ? JSON.stringify(options) : ''})`, '-', 'END');
       })
@@ -174,9 +174,9 @@ export abstract class SgiMutableRestService<K extends number | string, S, T> {
    * @param endpointUrl The url of the endpoint
    * @param options The options to apply
    */
-  protected find(endpointUrl: string, options?: SgiRestFindOptions): Observable<SgiRestListResult<T>> {
+  protected find<U, V>(endpointUrl: string, converter: SgiConverter<U, V>, options?: SgiRestFindOptions): Observable<SgiRestListResult<V>> {
     this.logger.debug(this.serviceName, `find(${endpointUrl}, ${options ? JSON.stringify(options) : ''})`, '-', 'START');
-    return this.http.get<S[]>(endpointUrl, this.buildHttpClientOptions(options))
+    return this.http.get<U[]>(endpointUrl, this.buildHttpClientOptions(options))
       .pipe(
         // TODO: Explore the use a global HttpInterceptor with or without a custom error
         catchError((error: HttpErrorResponse) => {
@@ -187,7 +187,7 @@ export abstract class SgiMutableRestService<K extends number | string, S, T> {
         }),
         switchMap(r => {
           this.logger.debug(this.serviceName, `find(${endpointUrl}, ${options ? JSON.stringify(options) : ''})`, '-', 'END');
-          return this.toSgiRestListResult(r);
+          return this.toSgiRestListResult<U, V>(r, converter);
         })
       );
   }
@@ -259,7 +259,7 @@ export abstract class SgiMutableRestService<K extends number | string, S, T> {
    *
    * @param response The response to convert
    */
-  private toSgiRestListResult(response: HttpResponse<S[]>): Observable<SgiRestListResult<T>> {
+  private toSgiRestListResult<U, V>(response: HttpResponse<U[]>, converter: SgiConverter<U, V>): Observable<SgiRestListResult<V>> {
     return of({
       page: {
         index: Number(response.headers.get('X-Page')),
@@ -268,7 +268,7 @@ export abstract class SgiMutableRestService<K extends number | string, S, T> {
         total: Number(response.headers.get('X-Page-Total-Count')),
       },
       total: Number(response.headers.get('X-Total-Count')),
-      items: this.converter.toTargetArray(response.body)
+      items: converter.toTargetArray(response.body)
     });
   }
 }
