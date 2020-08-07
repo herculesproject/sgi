@@ -1,5 +1,5 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { BrowserModule } from '@angular/platform-browser';
@@ -19,6 +19,11 @@ import { ComponentsModule } from './components/components.module';
 import { SelectorModuloComponent } from '@shared/componentes-layout/selector-modulo/selector-modulo.component';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { SgiAuthModule, SGI_AUTH_CONFIG, SgiAuthMode } from '@sgi/framework/auth';
+
+import es from '@angular/common/locales/es';
+import { registerLocaleData } from '@angular/common';
+
+registerLocaleData(es);
 
 @NgModule({
   declarations: [
@@ -59,7 +64,11 @@ import { SgiAuthModule, SGI_AUTH_CONFIG, SgiAuthMode } from '@sgi/framework/auth
     {
       provide: SgiAuthMode,
       useValue: environment.authConfig.mode
-    }
+    },
+    {
+      provide: LOCALE_ID,
+      useValue: 'es-*'
+    },
   ],
   entryComponents: [
     SelectorModuloComponent

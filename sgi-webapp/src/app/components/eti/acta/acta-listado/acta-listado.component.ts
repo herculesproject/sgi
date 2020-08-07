@@ -92,7 +92,7 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(22%-10px)';
+    this.fxFlexProperties.gtMd = '0 1 calc(17%-10px)';
     this.fxFlexProperties.order = '2';
 
     this.fxLayoutProperties = new FxLayoutProperties();

@@ -77,9 +77,9 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
     this.logger.debug(ConvocatoriaReunionListadoComponent.name, 'constructor()', 'start');
 
     this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(33%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(22%-10px)';
+    this.fxFlexProperties.sm = '0 1 calc(25%-10px)';
+    this.fxFlexProperties.md = '0 1 calc(25%-10px)';
+    this.fxFlexProperties.gtMd = '0 1 calc(15%-10px)';
     this.fxFlexProperties.order = '2';
 
     this.fxLayoutProperties = new FxLayoutProperties();

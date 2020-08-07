@@ -74,6 +74,9 @@ const routes: SgiAuthRoutes = [
             (m) => m.EvaluacionEticaModule
           ),
         canActivate: [SgiAuthGuard],
+        data: {
+          hasAnyAuthorityForAnyUO: ['ETI-EVC-VR', 'ETI-EVC-C', 'ETI-EVC-E', 'ETI-EVC-B', 'ETI-EVC-ENV']
+        }
       },
       {
         path: UrlUtils.eti.solicitudesSAI.valueOf(),

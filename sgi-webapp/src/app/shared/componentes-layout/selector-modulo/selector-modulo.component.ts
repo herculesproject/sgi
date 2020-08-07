@@ -3,6 +3,12 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
+import { TraductorService } from '@core/services/traductor.service';
+
+export interface Modulo {
+  url: string;
+  nombre: string;
+}
 
 @Component({
   selector: 'app-selector-modulo',
@@ -10,18 +16,22 @@ import { NGXLogger } from 'ngx-logger';
   styleUrls: ['./selector-modulo.component.scss']
 })
 export class SelectorModuloComponent implements OnInit {
-  modulos: string[];
+  modulos: Modulo[];
 
   constructor(
     private logger: NGXLogger,
     public dialogRef: MatDialogRef<SelectorModuloComponent>,
-    private router: Router
+    private router: Router,
+    private readonly traductor: TraductorService,
   ) {
-    this.modulos = [
-      UrlUtils.cat.root,
-      UrlUtils.ebt.root,
-      UrlUtils.pii.root,
-      UrlUtils.eti.root
+    this.modulos = [{
+      url: UrlUtils.cat.root,
+      nombre: this.traductor.getTexto('selector-modulo.catalogo')
+    },
+    {
+      url: UrlUtils.eti.root,
+      nombre: this.traductor.getTexto('selector-modulo.etica')
+    }
     ];
   }
 

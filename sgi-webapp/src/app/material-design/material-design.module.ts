@@ -29,7 +29,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { SgiAuthModule } from '@sgi/framework/auth';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 @NgModule({
   declarations: [],
@@ -41,7 +41,7 @@ import { SgiAuthModule } from '@sgi/framework/auth';
     MatAutocompleteModule, MatTableModule, MatDialogModule, MatTabsModule,
     MatTooltipModule, MatSelectModule, MatPaginatorModule, MatChipsModule,
     MatButtonToggleModule, MatSlideToggleModule, MatBadgeModule, MatCheckboxModule,
-    MatExpansionModule, MatSortModule, MatGridListModule
+    MatExpansionModule, MatSortModule, MatGridListModule, MatMomentDateModule,
   ],
   exports: [
     CommonModule,
@@ -51,7 +51,7 @@ import { SgiAuthModule } from '@sgi/framework/auth';
     MatAutocompleteModule, MatTableModule, MatDialogModule, MatTabsModule,
     MatTooltipModule, MatSelectModule, MatPaginatorModule, MatChipsModule,
     MatButtonToggleModule, MatSlideToggleModule, MatBadgeModule, MatCheckboxModule,
-    MatExpansionModule, MatSortModule, MatGridListModule
+    MatExpansionModule, MatSortModule, MatGridListModule, MatMomentDateModule,
   ]
 })
 export class MaterialDesignModule {

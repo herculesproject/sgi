@@ -1,17 +1,23 @@
 @import 'variables.scss';
 
-
 .acta-listado {
+  .col{
+    &:first-child{
+      padding-left: 0px;
+    }
+    padding-left: 15px;
+    padding-right: 15px;
+  }
   .filter-button {
     padding-top: 15px;
+    padding-bottom: 15px;
     button {
       margin-right: 15px;
       margin-top: 15px;
-      height: 100px;
     }
   }
 
-  .table-acta-reunion {
+  .table-acta {
     width: 100%;
     .mat-row:nth-child(even){
       background-color: map-get($palette-accent, 300);
@@ -22,6 +28,7 @@
   }
 
   .separation-button {
-    padding-top: 15px;
+    padding-top: 30px;
+    padding-bottom: 10px;
   }
 }

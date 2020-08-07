@@ -1,12 +1,12 @@
-import {Component, ViewChild} from '@angular/core';
-import {SnackBarService} from '@core/services/snack-bar.service';
-import {TraductorService} from '@core/services/traductor.service';
-import {AbstractFormularioComponent} from '@shared/formularios-tabs/abstract-formulario/abstract-formulario.component';
-import {NGXLogger} from 'ngx-logger';
+import { Component, ViewChild } from '@angular/core';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { TraductorService } from '@core/services/traductor.service';
+import { AbstractFormularioComponent } from '@shared/formularios-tabs/abstract-formulario/abstract-formulario.component';
+import { NGXLogger } from 'ngx-logger';
 
-import {EvaluacionEticaAsignacionTareasComponent,} from './evaluacion-etica-asignacion-tareas/evaluacion-etica-asignacion-tareas.component';
-import {EvaluacionEticaDatosGeneralesComponent,} from './evaluacion-etica-datos-generales/evaluacion-etica-datos-generales.component';
-import {EvaluacionEticaEquipoInvestigadorComponent,} from './evaluacion-etica-equipo-investigador/evaluacion-etica-equipo-investigador.component';
+import { EvaluacionEticaAsignacionTareasComponent, } from './evaluacion-etica-asignacion-tareas/evaluacion-etica-asignacion-tareas.component';
+import { EvaluacionEticaDatosGeneralesComponent, } from './evaluacion-etica-datos-generales/evaluacion-etica-datos-generales.component';
+import { EvaluacionEticaEquipoInvestigadorComponent, } from './evaluacion-etica-equipo-investigador/evaluacion-etica-equipo-investigador.component';
 
 @Component({
   selector: 'app-evaluacion-fisica-crear',
@@ -24,7 +24,7 @@ export class EvaluacionEticaCrearComponent extends AbstractFormularioComponent {
     protected readonly snackBarService: SnackBarService
   ) {
     super(logger, traductor, snackBarService);
-    this.textoCrear = this.traductor.getTexto('footer.evaluacionEtica.guardar');
+    this.textoCrear = this.traductor.getTexto('footer.eti.evaluacionEtica.guardar');
   }
 
   protected inicializarTabs() {

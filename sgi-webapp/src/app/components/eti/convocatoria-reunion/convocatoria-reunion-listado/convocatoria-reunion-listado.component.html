@@ -7,8 +7,8 @@
     fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
     <!-- Comité -->
-    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-      [fxFlexOrder]="fxFlexProperties.order">
+    <div class="col" [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
+      [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field class="input-form" appearance="fill">
         <mat-label>{{'eti.convocatoriaReunion.buscador.comite.titulo' | translate}}</mat-label>
         <input type="text" [placeholder]="'eti.convocatoriaReunion.buscador.comite.titulo' | translate"
@@ -22,8 +22,8 @@
     </div>
 
     <!-- Fecha evaluación (desde - hasta)-->
-    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-      [fxFlexOrder]="fxFlexProperties.order">
+    <div class="col" [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
+      [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field appearance="fill">
         <mat-label>{{'eti.convocatoriaReunion.buscador.fechaEvaluacionDesde.titulo' | translate}}</mat-label>
         <input matInput formControlName="fechaEvaluacionDesde" [matDatepicker]="pickerFechaEvaluacionDesde"
@@ -33,8 +33,8 @@
       </mat-form-field>
     </div>
 
-    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-      [fxFlexOrder]="fxFlexProperties.order">
+    <div class="col" [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
+      [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field appearance="fill">
         <mat-label>{{'eti.convocatoriaReunion.buscador.fechaEvaluacionHasta.titulo' | translate}}</mat-label>
         <input matInput formControlName="fechaEvaluacionHasta" [matDatepicker]="pickerFechaEvaluacionHasta"
@@ -45,8 +45,8 @@
     </div>
 
     <!-- Convocatoria -->
-    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-      [fxFlexOrder]="fxFlexProperties.order">
+    <div class="col" [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
+      [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field class="input-form" appearance="fill">
         <mat-label>{{'eti.convocatoriaReunion.buscador.tipoConvocatoriaReunion.titulo' | translate}}</mat-label>
         <input type="text" [placeholder]="'eti.convocatoriaReunion.buscador.tipoConvocatoriaReunion.titulo' | translate"
@@ -79,7 +79,6 @@
       <mat-icon>add_box</mat-icon> {{'eti.convocatoriaReunion.listado.nuevaConvocatoriaReunion' | translate}}
     </button>
   </div>
-
 
   <!-- Listado de convocatorias reunión -->
   <table class="mat-elevation-z8 table-convocatoria-reunion" mat-table matSort

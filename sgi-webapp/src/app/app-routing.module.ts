@@ -41,7 +41,7 @@ const routes: SgiAuthRoutes = [
       ),
     canActivate: [SgiAuthGuard],
   },
-  { path: '', redirectTo: UrlUtils.cat.root.valueOf(), pathMatch: 'full' },
+  { path: '', redirectTo: UrlUtils.eti.root.valueOf(), pathMatch: 'full' },
   { path: '**', component: RootComponent },
 ];
 

@@ -1,11 +1,11 @@
 <mat-nav-list>
   <div class="opciones-menu">
-    <mat-list-item [routerLink]="UrlUtils.eti.datos" [routerLinkActive]="['is-active']">
+    <!-- <mat-list-item [routerLink]="UrlUtils.eti.datos" [routerLinkActive]="['is-active']">
       <a mat-list-item>
         <mat-icon>fullscreen</mat-icon>
         <span>{{'menu.principal.eti.datos' | translate}}</span>
       </a>
-    </mat-list-item>
+    </mat-list-item> -->
     <mat-list-item *sgiHasAuthorityForAnyUO="'ETI-ACT-V'" [routerLink]="UrlUtils.eti.actas"
       [routerLinkActive]="['is-active']">
       <a mat-list-item>
@@ -13,18 +13,18 @@
         <span>{{'menu.principal.eti.acta' | translate}}</span>
       </a>
     </mat-list-item>
-    <mat-list-item [routerLink]="UrlUtils.eti.produccionCientifica" [routerLinkActive]="['is-active']">
+    <!--  <mat-list-item [routerLink]="UrlUtils.eti.produccionCientifica" [routerLinkActive]="['is-active']">
       <a mat-list-item>
         <mat-icon>device_hub</mat-icon>
         <span>{{'menu.principal.eti.produccionCientifica' | translate}}</span>
       </a>
-    </mat-list-item>
-    <mat-list-item [routerLink]="UrlUtils.eti.ofertaTecnologica" [routerLinkActive]="['is-active']">
+    </mat-list-item> -->
+    <!--  <mat-list-item [routerLink]="UrlUtils.eti.ofertaTecnologica" [routerLinkActive]="['is-active']">
       <a mat-list-item>
         <mat-icon>calendar_today</mat-icon>
         <span>{{'menu.principal.eti.ofertaTecnologica' | translate}}</span>
       </a>
-    </mat-list-item>
+    </mat-list-item> -->
     <mat-list-item *sgiHasAuthorityForAnyUO="'ETI-CNV-V'" [routerLink]="UrlUtils.eti.solicitudesConvocatoria"
       [routerLinkActive]="['is-active']">
       <a mat-list-item>
@@ -32,7 +32,7 @@
         <span>{{'menu.principal.eti.solicitudesConvocatoria' | translate}}</span>
       </a>
     </mat-list-item>
-    <mat-list-item [routerLink]="UrlUtils.eti.proyectos" [routerLinkActive]="['is-active']">
+    <!-- <mat-list-item [routerLink]="UrlUtils.eti.proyectos" [routerLinkActive]="['is-active']">
       <a mat-list-item>
         <mat-icon>fullscreen</mat-icon>
         <span>{{'menu.principal.eti.proyectos' | translate}}</span>
@@ -55,25 +55,26 @@
         <mat-icon>list</mat-icon>
         <span>{{'menu.principal.eti.gruposInvestigacion' | translate}}</span>
       </a>
-    </mat-list-item>
-    <mat-list-item [routerLink]="UrlUtils.eti.areaEspecializacion" [routerLinkActive]="['is-active']">
+    </mat-list-item> -->
+    <!-- <mat-list-item [routerLink]="UrlUtils.eti.areaEspecializacion" [routerLinkActive]="['is-active']">
       <a mat-list-item>
         <mat-icon>list</mat-icon>
         <span>{{'menu.principal.eti.areaEspecializacion' | translate}}</span>
       </a>
-    </mat-list-item>
-    <mat-list-item [routerLink]="UrlUtils.eti.evaluacionEtica" [routerLinkActive]="['is-active']">
+    </mat-list-item> -->
+    <mat-list-item *sgiHasAuthorityForAnyUO="'ETI-EVC-VR'" [routerLink]="UrlUtils.eti.evaluacionEtica"
+      [routerLinkActive]="['is-active']">
       <a mat-list-item>
         <mat-icon>list</mat-icon>
         <span>{{'menu.principal.eti.evaluacionEtica' | translate}}</span>
       </a>
     </mat-list-item>
-    <mat-list-item [routerLink]="UrlUtils.eti.solicitudesSAI" [routerLinkActive]="['is-active']">
+    <!--  <mat-list-item [routerLink]="UrlUtils.eti.solicitudesSAI" [routerLinkActive]="['is-active']">
       <a mat-list-item>
         <mat-icon>list</mat-icon>
         <span>{{'menu.principal.eti.solicitudesSAI' | translate}}</span>
       </a>
-    </mat-list-item>
+    </mat-list-item>-->
   </div>
 </mat-nav-list>
 <!-- FIN Menu principal -->

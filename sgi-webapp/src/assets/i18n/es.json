@@ -43,6 +43,10 @@
       "pii": "Módulo: Propiedad industrial e intelectual"
     }
   },
+  "selector-modulo": {
+    "catalogo": "Catálogo",
+    "etica": "Ética"
+  },
   "cat": {
     "convocatoria": {
       "menu": {

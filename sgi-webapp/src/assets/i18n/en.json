@@ -35,6 +35,10 @@
     "tipoReservables": "Bookable",
     "unidadMedida": "Measurement units"
   },
+  "selector-modulo": {
+    "catalogo": "Catalogue",
+    "etica": "Ethics"
+  },
   "cabecera": {
     "modulo": {
       "cat": "Module: Catalog of scientific-technical offer",

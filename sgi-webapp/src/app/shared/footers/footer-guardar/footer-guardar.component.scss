@@ -1,7 +1,5 @@
-footer {
-  .btn-add {
-    background-color: black;
-    color: white;
-    font-weight: bold;
-  }
+@import 'variables.scss';
+
+.separation{
+  padding-top: 15px;
 }

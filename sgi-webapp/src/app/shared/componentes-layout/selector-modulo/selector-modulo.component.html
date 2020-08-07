@@ -6,7 +6,7 @@
   </h1>
 </header>
 <main>
-  <button *ngFor="let modulo of modulos" (click)="abrirModulo(modulo)">{{modulo}}</button>
+  <button *ngFor="let modulo of modulos" (click)="abrirModulo(modulo.url)">{{modulo.nombre}}</button>
 </main>
 <section id="modals-buttons" class="float-right" mat-dialog-actions>
   <button (click)="cerrarModal()" class="btn btn-outline-danger input-modal" type="button">Cancelar</button>
