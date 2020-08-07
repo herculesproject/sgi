@@ -61,6 +61,21 @@ public class AsistentesServiceImpl implements AsistentesService {
   }
 
   /**
+   * Obtener todas las entidades paginadas {@link Asistentes} activas para una
+   * determinada {@link ConvocatoriaReunion}.
+   *
+   * @param id       Id de {@link ConvocatoriaReunion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Asistentes} paginadas.
+   */
+  public Page<Asistentes> findAllByConvocatoriaReunionId(Long id, Pageable pageable) {
+    log.debug("findAllByConvocatoriaReunionId(Long id, Pageable pageable) - start");
+    Page<Asistentes> returnValue = asistentesRepository.findAllByConvocatoriaReunionId(id, pageable);
+    log.debug("findAllByConvocatoriaReunionId(Long id, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
    * Obtiene una entidad {@link Asistentes} por id.
    *
    * @param id el id de la entidad {@link Asistentes}.

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -53,7 +54,7 @@ public class EvaluacionController {
    * @param paging pageable
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-ACT-V')")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-V')")
   ResponseEntity<Page<Evaluacion>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
@@ -68,12 +69,36 @@ public class EvaluacionController {
   }
 
   /**
+   * Obtener todas las entidades paginadas {@link Evaluacion} activas para una
+   * determinada {@link ConvocatoriaReunion}.
+   *
+   * @param id       Id de {@link ConvocatoriaReunion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+  @GetMapping("/convocatoriareunion/{id}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-C', 'ETI-ACT-E')")
+  ResponseEntity<Page<Evaluacion>> findAllActivasByConvocatoriaReunionId(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("findAllActivasByConvocatoriaReunionId(Long id, Pageable pageable) - start");
+    Page<Evaluacion> page = service.findAllActivasByConvocatoriaReunionId(id, pageable);
+
+    if (page.isEmpty()) {
+      log.debug("findAllActivasByConvocatoriaReunionId(Long id, Pageable pageable) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAllActivasByConvocatoriaReunionId(Long id, Pageable pageable) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
    * Crea nuevo {@link Evaluacion}.
    * 
    * @param nuevoEvaluacion {@link Evaluacion}. que se quiere crear.
    * @return Nuevo {@link Evaluacion} creado.
    */
   @PostMapping
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-C')")
   public ResponseEntity<Evaluacion> newEvaluacion(@Valid @RequestBody Evaluacion nuevoEvaluacion) {
     log.debug("newEvaluacion(Evaluacion nuevoEvaluacion) - start");
     Evaluacion returnValue = service.create(nuevoEvaluacion);
@@ -89,6 +114,7 @@ public class EvaluacionController {
    * @return {@link Evaluacion} actualizado.
    */
   @PutMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-E')")
   Evaluacion replaceEvaluacion(@Valid @RequestBody Evaluacion updatedEvaluacion, @PathVariable Long id) {
     log.debug("replaceEvaluacion(Evaluacion updatedEvaluacion, Long id) - start");
     updatedEvaluacion.setId(id);
@@ -104,6 +130,7 @@ public class EvaluacionController {
    * @return {@link Evaluacion} correspondiente al id.
    */
   @GetMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-V')")
   Evaluacion one(@PathVariable Long id) {
     log.debug("Evaluacion one(Long id) - start");
     Evaluacion returnValue = service.findById(id);
@@ -117,6 +144,7 @@ public class EvaluacionController {
    * @param id Identificador de {@link Evaluacion}.
    */
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-B')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     Evaluacion evaluacion = this.one(id);

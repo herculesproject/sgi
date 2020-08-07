@@ -39,6 +39,16 @@ public interface EvaluacionService {
   Page<Evaluacion> findAll(List<QueryCriteria> query, Pageable pageable);
 
   /**
+   * Obtener todas las entidades paginadas {@link Evaluacion} activas para una
+   * determinada {@link ConvocatoriaReunion}.
+   *
+   * @param id       Id de {@link ConvocatoriaReunion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+  Page<Evaluacion> findAllActivasByConvocatoriaReunionId(Long id, Pageable pageable);
+
+  /**
    * Obtiene {@link Evaluacion} por id.
    *
    * @param id el id de la entidad {@link Evaluacion}.

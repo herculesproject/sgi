@@ -39,6 +39,16 @@ public interface AsistentesService {
   Page<Asistentes> findAll(List<QueryCriteria> query, Pageable pageable);
 
   /**
+   * Obtener todas las entidades paginadas {@link Asistentes} activas para una
+   * determinada {@link ConvocatoriaReunion}.
+   *
+   * @param id       Id de {@link ConvocatoriaReunion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Asistentes} paginadas.
+   */
+  Page<Asistentes> findAllByConvocatoriaReunionId(Long id, Pageable pageable);
+
+  /**
    * Obtiene {@link Asistentes} por id.
    *
    * @param id el id de la entidad {@link Asistentes}.

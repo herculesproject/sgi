@@ -3,6 +3,8 @@ package org.crue.hercules.sgi.eti.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -240,6 +242,93 @@ public class AsistentesServiceTest {
       Asistentes asistente = page.getContent().get(i);
       Assertions.assertThat(asistente.getMotivo()).isEqualTo("Motivo" + String.format("%03d", j));
     }
+  }
+
+  @Test
+  public void findAllByConvocatoriaReunionId_Unlimited_ReturnsFullAsistentesList() {
+
+    // given: Datos existentes con convocatoriaReunionId = 1
+    Long convocatoriaReunionId = 1L;
+    List<Asistentes> response = new LinkedList<Asistentes>();
+    response.add(generarMockAsistentes(1L, "Motivo1", Boolean.TRUE));
+    response.add(generarMockAsistentes(2L, "Motivo2", Boolean.TRUE));
+
+    BDDMockito.given(asistentesRepository.findAllByConvocatoriaReunionId(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(response));
+
+    // when: Se buscan todos las datos
+    Page<Asistentes> result = asistentesService.findAllByConvocatoriaReunionId(convocatoriaReunionId,
+        Pageable.unpaged());
+
+    // then: Se recuperan todos los datos
+    Assertions.assertThat(result.getContent()).isEqualTo(response);
+    Assertions.assertThat(result.getNumber()).isEqualTo(0);
+    Assertions.assertThat(result.getSize()).isEqualTo(response.size());
+    Assertions.assertThat(result.getTotalElements()).isEqualTo(response.size());
+  }
+
+  @Test
+  public void findAllByConvocatoriaReunionId_Unlimited_ReturnEmptyPage() {
+
+    // given: No hay datos con convocatoriaReunionId = 1
+    Long convocatoriaReunionId = 1L;
+    BDDMockito.given(asistentesRepository.findAllByConvocatoriaReunionId(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(Collections.emptyList()));
+
+    // when: Se buscan todos las datos
+    Page<Asistentes> result = asistentesService.findAllByConvocatoriaReunionId(convocatoriaReunionId,
+        Pageable.unpaged());
+
+    // then: Se recupera lista vacía
+    Assertions.assertThat(result.isEmpty());
+  }
+
+  @Test
+  public void findAllByConvocatoriaReunionId_WithPaging_ReturnsPage() {
+
+    // given: Datos existentes con convocatoriaReunionId = 1
+    Long convocatoriaReunionId = 1L;
+    List<Asistentes> response = new LinkedList<Asistentes>();
+    response.add(generarMockAsistentes(1L, "Motivo1", Boolean.TRUE));
+    response.add(generarMockAsistentes(2L, "Motivo2", Boolean.TRUE));
+    response.add(generarMockAsistentes(3L, "Motivo3", Boolean.TRUE));
+
+    // página 1 con 2 elementos por página
+    Pageable pageable = PageRequest.of(1, 2);
+    Page<Asistentes> pageResponse = new PageImpl<>(response.subList(2, 3), pageable, response.size());
+
+    BDDMockito.given(asistentesRepository.findAllByConvocatoriaReunionId(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(pageResponse);
+
+    // when: Se buscan los datos paginados
+    Page<Asistentes> result = asistentesService.findAllByConvocatoriaReunionId(convocatoriaReunionId, pageable);
+
+    // then: Se recuperan los datos correctamente según la paginación solicitada
+    Assertions.assertThat(result).isEqualTo(pageResponse);
+    Assertions.assertThat(result.getContent()).isEqualTo(response.subList(2, 3));
+    Assertions.assertThat(result.getNumber()).isEqualTo(pageable.getPageNumber());
+    Assertions.assertThat(result.getSize()).isEqualTo(pageable.getPageSize());
+    Assertions.assertThat(result.getTotalElements()).isEqualTo(response.size());
+  }
+
+  @Test
+  public void findAllByConvocatoriaReunionId_WithPaging_ReturnEmptyPage() {
+
+    // given: No hay datos con convocatoriaReunionId = 1
+    Long convocatoriaReunionId = 1L;
+
+    List<Asistentes> response = new LinkedList<Asistentes>();
+    Pageable pageable = PageRequest.of(1, 2);
+    Page<Asistentes> pageResponse = new PageImpl<>(response, pageable, response.size());
+
+    BDDMockito.given(asistentesRepository.findAllByConvocatoriaReunionId(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(pageResponse);
+
+    // when: Se buscan los datos paginados
+    Page<Asistentes> result = asistentesService.findAllByConvocatoriaReunionId(convocatoriaReunionId, pageable);
+
+    // then: Se recupera lista de datos paginados vacía
+    Assertions.assertThat(result).isEmpty();
   }
 
   /**

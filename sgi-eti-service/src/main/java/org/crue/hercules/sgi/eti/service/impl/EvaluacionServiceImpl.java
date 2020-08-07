@@ -61,6 +61,21 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   }
 
   /**
+   * Obtener todas las entidades paginadas {@link Evaluacion} activas para una
+   * determinada {@link ConvocatoriaReunion}.
+   *
+   * @param id       Id de {@link ConvocatoriaReunion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+  public Page<Evaluacion> findAllActivasByConvocatoriaReunionId(Long id, Pageable pageable) {
+    log.debug("findAllActivasByConvocatoriaReunionId(Long id, Pageable pageable) - start");
+    Page<Evaluacion> returnValue = evaluacionRepository.findAllByActivoTrueAndConvocatoriaReunionId(id, pageable);
+    log.debug("findAllActivasByConvocatoriaReunionId(Long id, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
    * Obtiene una entidad {@link Evaluacion} por id.
    *
    * @param id el id de la entidad {@link Evaluacion}.
