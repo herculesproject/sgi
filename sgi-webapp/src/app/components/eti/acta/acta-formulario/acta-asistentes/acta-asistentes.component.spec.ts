@@ -7,11 +7,12 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FlexModule } from '@angular/flex-layout';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 
 describe('ActaAsistentesComponent', () => {
   let component: ActaAsistentesComponent;
   let fixture: ComponentFixture<ActaAsistentesComponent>;
+  const formBuilder: FormBuilder = new FormBuilder();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -28,6 +29,7 @@ describe('ActaAsistentesComponent', () => {
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+        { provide: FormBuilder, useValue: formBuilder }
       ],
 
     })
@@ -37,6 +39,11 @@ describe('ActaAsistentesComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ActaAsistentesComponent);
     component = fixture.componentInstance;
+
+    // pass in the form dynamically
+    component.formGroup = formBuilder.group({
+
+    });
     fixture.detectChanges();
   });
 

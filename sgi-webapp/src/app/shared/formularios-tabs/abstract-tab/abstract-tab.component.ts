@@ -28,9 +28,6 @@ export abstract class AbstractTabComponent<T> implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.logger.debug(AbstractTabComponent.name, 'ngOnInit()', 'start');
-    this.datosIniciales = this.getDatosIniciales();
-    this.datosFormulario = this.getDatosIniciales();
-    this.formGroup = this.crearFormGroup();
     this.primeraComprobacion = true;
     this.subscripciones = [];
     this.warning = false;
@@ -41,7 +38,7 @@ export abstract class AbstractTabComponent<T> implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.logger.debug(AbstractTabComponent.name, 'ngOnDestroy()', 'start');
-    this.subscripciones.forEach(x => x.unsubscribe());
+    this.subscripciones?.forEach(x => x.unsubscribe());
     this.logger.debug(AbstractTabComponent.name, 'ngOnDestroy()', 'end');
   }
 
@@ -94,12 +91,6 @@ export abstract class AbstractTabComponent<T> implements OnInit, OnDestroy {
     return result;
   }
 
-  /**
-   * Ejecuta la llamada al servidor
-   */
-  mandarPeticion(): Observable<T> {
-    return this.crearObservable();
-  }
 
   /**
    * Muestra que ha ocurrido un error al cargar los datos al servidor
@@ -120,11 +111,6 @@ export abstract class AbstractTabComponent<T> implements OnInit, OnDestroy {
     this.datosFormulario = res;
   }
 
-  /**
-   * Crea la petición de la tab que se ejecutará cuando se guarde la
-   * información en el servidor
-   */
-  abstract crearObservable(): Observable<T>;
 
 
   /**
@@ -132,12 +118,6 @@ export abstract class AbstractTabComponent<T> implements OnInit, OnDestroy {
    */
   abstract crearFormGroup(): FormGroup;
 
-  /**
-   * Carga los datos por defecto para la pestaña
-   *
-   * @param valor Parámetro para crear los datos si es necesario
-   */
-  abstract getDatosIniciales(valor?: any): T;
 
   /**
    * Carga los datos del formulario a la entidad correspodiente

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TraductorService } from '@core/services/traductor.service';
 import { AbstractFormularioComponent } from '@shared/formularios-tabs/abstract-formulario/abstract-formulario.component';
@@ -13,10 +13,11 @@ import { EvaluacionEticaEquipoInvestigadorComponent, } from './evaluacion-etica-
   templateUrl: './evaluacion-etica-crear.component.html',
   styleUrls: ['./evaluacion-etica-crear.component.scss']
 })
-export class EvaluacionEticaCrearComponent extends AbstractFormularioComponent {
-  @ViewChild('datosGeneralesComponent') datosGeneralesComponent: EvaluacionEticaDatosGeneralesComponent;
-  @ViewChild('equipoInvestigadorComponent') equipoInvestigadorComponent: EvaluacionEticaEquipoInvestigadorComponent;
-  @ViewChild('asignacionTareasComponent') asignacionTareasComponent: EvaluacionEticaAsignacionTareasComponent;
+
+export class EvaluacionEticaCrearComponent extends AbstractFormularioComponent implements OnInit {
+  @ViewChild('datosGeneralesComponent', { static: true }) datosGeneralesComponent: EvaluacionEticaDatosGeneralesComponent;
+  @ViewChild('equipoInvestigadorComponent', { static: true }) equipoInvestigadorComponent: EvaluacionEticaEquipoInvestigadorComponent;
+  @ViewChild('asignacionTareasComponent', { static: true }) asignacionTareasComponent: EvaluacionEticaAsignacionTareasComponent;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -27,6 +28,12 @@ export class EvaluacionEticaCrearComponent extends AbstractFormularioComponent {
     this.textoCrear = this.traductor.getTexto('footer.eti.evaluacionEtica.guardar');
   }
 
+  ngOnInit() {
+    this.datosGeneralesComponent.crearFormGroup();
+    this.equipoInvestigadorComponent.crearFormGroup();
+    this.asignacionTareasComponent.crearFormGroup();
+  }
+
   protected inicializarTabs() {
     this.tabs.set(0, this.datosGeneralesComponent);
     this.tabs.set(1, this.equipoInvestigadorComponent);
@@ -35,32 +42,7 @@ export class EvaluacionEticaCrearComponent extends AbstractFormularioComponent {
 
   enviarDatos(): void {
     this.logger.debug(EvaluacionEticaCrearComponent.name, 'guardarDatos()', 'start');
-    this.subscripciones.push(this.tabs.get(0).mandarPeticion().subscribe((res1) => {
-      // this.tabs.get(0).actualizarDatos(res1);
-      this.tabs.get(0).warning = false;
-      this.subscripciones.push(this.tabs.get(1).mandarPeticion().subscribe((res2) => {
-        // this.tabs.get(1).actualizarDatos(res2);
-        this.tabs.get(1).warning = false;
-        this.subscripciones.push(this.tabs.get(2).mandarPeticion().subscribe((res3) => {
-          // this.tabs.get(2).actualizarDatos(res3);
-          this.tabs.get(2).warning = false;
-          this.snackBarService.mostrarMensajeSuccess('Se añadieron todos los registros correctamente');
-          this.logger.debug(EvaluacionEticaCrearComponent.name, 'guardarDatos()', 'end');
-        }, () => {
-          this.tabs.get(2).mostrarError();
-          this.funError(2);
-          this.logger.error(EvaluacionEticaCrearComponent.name, 'guardarDatos()', 'end');
-        }));
-      }, () => {
-        this.tabs.get(1).mostrarError();
-        this.funError(1);
-        this.logger.error(EvaluacionEticaCrearComponent.name, 'guardarDatos()', 'end');
-      }));
-    }, () => {
-      this.tabs.get(0).mostrarError();
-      this.funError(0);
-      this.logger.error(EvaluacionEticaCrearComponent.name, 'guardarDatos()', 'end');
-    }));
+
   }
 
   private funError(indexTab: number) {

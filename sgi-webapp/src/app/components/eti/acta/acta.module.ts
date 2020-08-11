@@ -13,6 +13,7 @@ import { SgiAuthModule } from '@sgi/framework/auth';
 import { ActaDatosGeneralesComponent } from './acta-formulario/acta-datos-generales/acta-datos-generales.component';
 import { ActaAsistentesComponent } from './acta-formulario/acta-asistentes/acta-asistentes.component';
 import { ActaMemoriasComponent } from './acta-formulario/acta-memorias/acta-memorias.component';
+import { ActaEditarComponent } from './acta-editar/acta-editar.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { ActaMemoriasComponent } from './acta-formulario/acta-memorias/acta-memo
     ActaDatosGeneralesComponent,
     ActaMemoriasComponent,
     ActaListadoComponent,
-    ActaAsistentesComponent
+    ActaAsistentesComponent,
+    ActaEditarComponent
   ],
   imports: [
     SharedModule,

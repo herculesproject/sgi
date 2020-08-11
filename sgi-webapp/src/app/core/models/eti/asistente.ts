@@ -1,7 +1,7 @@
 import { ConvocatoriaReunion } from './convocatoria-reunion';
 import { Evaluador } from './evaluador';
 
-export interface Asistente {
+export interface IAsistente {
   /** Id */
   id: number;
 

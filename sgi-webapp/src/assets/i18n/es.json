@@ -387,9 +387,9 @@
               "required": "Introduzca un resumen"
             },
             "titulo": "Resumen"
-          }
+          },
+          "error": "Ha ocurrido un problema al guardar el acta"
         },
-        "error": "Ha ocurrido un problema al guardar el acta",
         "memorias": {
           "cabecera": "Memorias",
           "dictamen": "Dictamen",
@@ -399,6 +399,20 @@
         },
         "titulo": "Nueva acta"
       },
+      "editar": {
+        "asistentes": {
+          "cabecera": "Asistentes"
+        },
+        "correcto": "Acta actualizada correctamente",
+        "datosGenerales": {
+          "cabecera": "Datos Generales"
+        },
+        "error": "Ha ocurrido un problema al editar el acta",
+        "memorias": {
+          "cabecera": "Memorias"
+        },
+        "titulo": "Editar acta"
+      },
       "listado": {
         "acciones": "Acciones",
         "comite": "Comité",
@@ -407,6 +421,7 @@
         "error": "No se ha podido cargar el listado de actas",
         "estado": "Estado",
         "fechaEvaluacion": "Fecha Evaluación",
+        "nuevaActa": "Añadir nueva acta",
         "numeroActa": "Nº Acta",
         "numeroIniciales": "Nº Iniciales",
         "numeroRevisiones": "Nº Revisiones",

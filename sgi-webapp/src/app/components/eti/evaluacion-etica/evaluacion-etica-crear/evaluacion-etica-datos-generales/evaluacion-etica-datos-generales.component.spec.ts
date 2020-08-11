@@ -1,17 +1,18 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {EvaluacionEticaDatosGeneralesComponent} from './evaluacion-etica-datos-generales.component';
-import {NGXLogger} from 'ngx-logger';
+import { EvaluacionEticaDatosGeneralesComponent } from './evaluacion-etica-datos-generales.component';
+import { NGXLogger } from 'ngx-logger';
 import TestUtils from '@core/utils/test-utils';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {FlexModule} from '@angular/flex-layout';
-import {MaterialDesignModule} from '@material/material-design.module';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {ReactiveFormsModule} from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FlexModule } from '@angular/flex-layout';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 
 describe('EvaluacionEticaDatosGeneralesComponent', () => {
   let component: EvaluacionEticaDatosGeneralesComponent;
   let fixture: ComponentFixture<EvaluacionEticaDatosGeneralesComponent>;
+  const formBuilder: FormBuilder = new FormBuilder();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -27,7 +28,8 @@ describe('EvaluacionEticaDatosGeneralesComponent', () => {
         ReactiveFormsModule
       ],
       providers: [
-        {provide: NGXLogger, useValue: TestUtils.getLoggerSpy()},
+        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+        { provide: FormBuilder, useValue: formBuilder }
       ],
     })
       .compileComponents();
@@ -36,6 +38,17 @@ describe('EvaluacionEticaDatosGeneralesComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EvaluacionEticaDatosGeneralesComponent);
     component = fixture.componentInstance;
+
+    // pass in the form dynamically
+    component.formGroup = formBuilder.group({
+      titulo: null,
+      tipoActividad: null,
+      tipoFinanciacion: null,
+      fechaInicio: null,
+      fechaFin: null,
+      resumen: null,
+      valorSocial: null
+    });
     fixture.detectChanges();
   });
 

@@ -5,7 +5,6 @@ import { FormGroupUtil } from '@core/services/form-group-util';
 import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
 import { NGXLogger } from 'ngx-logger';
-import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { TraductorService } from '@core/services/traductor.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { Observable, of, zip } from 'rxjs';
@@ -22,9 +21,7 @@ import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { switchMap, map, startWith } from 'rxjs/operators';
 import { UsuarioService } from '@core/services/sgp/usuario.service';
 import { Usuario } from '@core/models/sgp/usuario';
-import { AsistenteService } from '@core/services/eti/asistente.service';
 import { SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
-import { Asistente } from '@core/models/eti/asistente';
 
 @Component({
   selector: 'app-convocatoria-reunion-datos-generales',
@@ -51,9 +48,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
 
   constructor(
     protected readonly logger: NGXLogger,
-    private readonly asistenteService: AsistenteService,
     private readonly comiteService: ComiteService,
-    private readonly convocatoriaReunionService: ConvocatoriaReunionService,
     private readonly evaluadorService: EvaluadorService,
     private readonly tipoConvocatoriaReunionService: TipoConvocatoriaReunionService,
     private readonly traductor: TraductorService,
@@ -300,47 +295,6 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
     return formGroup;
   }
 
-  crearObservable(): Observable<ConvocatoriaReunion> {
-    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'crearObservable()', 'start');
-    let nuevaConvocatoriaReunion: ConvocatoriaReunion;
-    const observable = this.convocatoriaReunionService.create(this.getDatosFormulario()).pipe(
-      switchMap((convocatoriaReunion: ConvocatoriaReunion) => {
-        nuevaConvocatoriaReunion = convocatoriaReunion;
-        const convocantes = this.getDatosConvocantesFormulario();
-
-        const asistenteCreateSubscriptions: Observable<Asistente>[] = [];
-        convocantes.forEach((convocante: Evaluador) => {
-          const asistente: Asistente = {
-            id: null,
-            convocatoriaReunion: nuevaConvocatoriaReunion,
-            asistencia: true,
-            evaluador: convocante,
-            motivo: null
-          };
-          asistenteCreateSubscriptions.push(this.asistenteService.create(asistente));
-        });
-
-        if (asistenteCreateSubscriptions.length === 0) {
-          return of([]);
-        } else {
-          return zip(...asistenteCreateSubscriptions);
-        }
-      }),
-      map((convocantes: Asistente[]) => {
-        nuevaConvocatoriaReunion.convocantes = convocantes;
-        return nuevaConvocatoriaReunion;
-      })
-    );
-    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'crearObservable()', 'end');
-    return observable;
-  }
-
-  getDatosIniciales(): ConvocatoriaReunion {
-    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'getDatosIniciales()', 'start');
-    const datos = new ConvocatoriaReunion();
-    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'getDatosIniciales()', 'end');
-    return datos;
-  }
 
   getDatosFormulario(): ConvocatoriaReunion {
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'getDatosFormulario()', 'start');

@@ -10,10 +10,8 @@ import { NGXLogger } from 'ngx-logger';
 import { ActaDatosGeneralesComponent } from '../acta-formulario/acta-datos-generales/acta-datos-generales.component';
 import { ActaAsistentesComponent } from '../acta-formulario/acta-asistentes/acta-asistentes.component';
 import { ActaMemoriasComponent } from '../acta-formulario/acta-memorias/acta-memorias.component';
-import { EstadoActa } from '@core/models/eti/estado-acta';
-import { TipoEstadoActa } from '@core/models/eti/tipo-estado-acta';
-import { EstadoActaService } from '@core/services/eti/estado-acta.service';
-import { switchMap } from 'rxjs/operators';
+
+import { ActaService } from '@core/services/eti/acta.service';
 
 @Component({
   selector: 'app-acta-crear',
@@ -21,9 +19,9 @@ import { switchMap } from 'rxjs/operators';
   styleUrls: ['./acta-crear.component.scss']
 })
 export class ActaCrearComponent extends AbstractFormularioComponent implements OnInit {
-  @ViewChild('datosGenerales') datosGenerales: ActaDatosGeneralesComponent;
-  @ViewChild('memorias') memorias: ActaMemoriasComponent;
-  @ViewChild('asistentes') asistentes: ActaAsistentesComponent;
+  @ViewChild('datosGenerales', { static: true }) datosGenerales: ActaDatosGeneralesComponent;
+  @ViewChild('memorias', { static: true }) memorias: ActaMemoriasComponent;
+  @ViewChild('asistentes', { static: true }) asistentes: ActaAsistentesComponent;
 
   idConvocatoria: number;
 
@@ -32,7 +30,7 @@ export class ActaCrearComponent extends AbstractFormularioComponent implements O
     protected readonly traductor: TraductorService,
     protected readonly snackBarService: SnackBarService,
     private readonly router: Router,
-    private readonly estadoActaService: EstadoActaService
+    private readonly actaService: ActaService
   ) {
     super(logger, traductor, snackBarService);
     this.textoCrear = this.traductor.getTexto('footer.eti.acta.guardar');
@@ -42,6 +40,17 @@ export class ActaCrearComponent extends AbstractFormularioComponent implements O
     this.logger.debug(ActaCrearComponent.name, 'ngOnInit()', 'start');
 
     super.ngOnInit();
+    this.datosGenerales.datosIniciales = new Acta();
+    this.datosGenerales.datosFormulario = { ...this.datosGenerales.datosIniciales };
+    this.datosGenerales.formGroup = this.datosGenerales.crearFormGroup();
+
+    this.memorias.datosIniciales = new Acta();
+    this.memorias.datosFormulario = { ...this.memorias.datosIniciales };
+    this.memorias.formGroup = this.memorias.crearFormGroup();
+
+    this.asistentes.datosIniciales = new Acta();
+    this.asistentes.datosFormulario = { ...this.asistentes.datosIniciales };
+    this.asistentes.formGroup = this.asistentes.crearFormGroup();
 
     this.logger.debug(ActaCrearComponent.name, 'ngOnInit()', 'end');
   }
@@ -66,9 +75,9 @@ export class ActaCrearComponent extends AbstractFormularioComponent implements O
 
   protected enviarDatos() {
     this.logger.debug(ActaCrearComponent.name, 'enviarDatos()', 'start');
-    // Se hace el unsuscriber en el padre con este listado
     this.subscripciones.push(
-      this.tabs.get(0).mandarPeticion()
+      // Se crean los datos generales del acta.
+      this.actaService.create(this.datosGenerales.getDatosFormulario())
         .subscribe((acta: Acta) => {
           // Actualizamos los datos por si falla alguna de las restantes pestañas
           this.tabs.get(0).actualizarDatos(acta);

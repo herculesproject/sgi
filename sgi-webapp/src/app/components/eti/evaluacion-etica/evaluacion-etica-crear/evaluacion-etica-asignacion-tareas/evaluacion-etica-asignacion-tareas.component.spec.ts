@@ -1,7 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FlexModule } from '@angular/flex-layout';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
@@ -12,6 +12,7 @@ import { EvaluacionEticaAsignacionTareasComponent } from './evaluacion-etica-asi
 describe('EvaluacionEticaEquipoAsignacionTareasComponent', () => {
   let component: EvaluacionEticaAsignacionTareasComponent;
   let fixture: ComponentFixture<EvaluacionEticaAsignacionTareasComponent>;
+  const formBuilder: FormBuilder = new FormBuilder();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -26,6 +27,7 @@ describe('EvaluacionEticaEquipoAsignacionTareasComponent', () => {
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+        { provide: FormBuilder, useValue: formBuilder }
       ],
     })
       .compileComponents();
@@ -34,6 +36,12 @@ describe('EvaluacionEticaEquipoAsignacionTareasComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EvaluacionEticaAsignacionTareasComponent);
     component = fixture.componentInstance;
+
+    // pass in the form dynamically
+    component.formGroup = formBuilder.group({
+      titulo: null
+    });
+
     fixture.detectChanges();
   });
 

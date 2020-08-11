@@ -1,6 +1,6 @@
 import { Comite } from './comite';
 import { TipoConvocatoriaReunion } from './tipo-convocatoria-reunion';
-import { Asistente } from './asistente';
+import { IAsistente } from './asistente';
 
 export class ConvocatoriaReunion {
 
@@ -31,7 +31,9 @@ export class ConvocatoriaReunion {
   /** Activo */
   activo: boolean;
   /** Convocantes */
-  convocantes: Asistente[];
+  convocantes: IAsistente[];
+  /** Código */
+  codigo: string;
 
   constructor(convocatoriaReunion?: ConvocatoriaReunion) {
     this.id = convocatoriaReunion?.id;
@@ -50,8 +52,6 @@ export class ConvocatoriaReunion {
     this.convocantes = convocatoriaReunion?.convocantes;
   }
 
-  get codigo(): string {
-    return `ACTA${this.numeroActa}/${this.anio}/${this.comite.comite}`;
-  }
+
 
 }

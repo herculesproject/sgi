@@ -335,7 +335,7 @@
             "si": "Yes",
             "titulo": "Attendance"
           },
-          "cabecera": "Asistentes",
+          "cabecera": "Participants",
           "motivo": "Reason not Attending",
           "nif": "NIF/NIE",
           "nombreApellidos": "Name and surname"
@@ -387,9 +387,9 @@
               "required": "Enter the summary"
             },
             "titulo": "Summary"
-          }
+          },
+          "error": "A problem occurred while saving the minutes"
         },
-        "error": "A problem occurred while saving the minutes",
         "memorias": {
           "cabecera": "Memories",
           "dictamen": "Opinion",
@@ -399,6 +399,20 @@
         },
         "titulo": "New record"
       },
+      "editar": {
+        "correcto": "The record was edited correctly",
+        "asistentes": {
+          "cabecera": "Participants"
+        },
+        "datosGenerales": {
+          "cabecera": "General Data"
+        },
+        "error": "A problem occurred while editing the minutes",
+        "memorias": {
+          "cabecera": "Memories"
+        },
+        "titulo": "Editar acta"
+      },
       "listado": {
         "comite": "Committee",
         "convocatoria": "Call",
@@ -406,6 +420,7 @@
         "error": "The list of minutes could not be loaded",
         "estado": "State",
         "fechaEvaluacion": "Evaluation Date",
+        "nuevaActa": "Add new minute",
         "numeroActa": "Nº Minutes",
         "numeroIniciales": "Nº Initials",
         "numeroRevisiones": "Nº Revisions",

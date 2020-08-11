@@ -67,8 +67,6 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
 
   buscadorFormGroup: FormGroup;
 
-  textoCrear: string;
-
   constructor(
     private readonly logger: NGXLogger,
     private readonly actasService: ActaService,
@@ -78,8 +76,8 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
     private readonly tipoEstadoActaService: TipoEstadoActaService,
     private readonly evaluacionService: EvaluacionService
   ) {
-    this.displayedColumns = ['comite', 'fechaEvaluacion', 'numeroActa', 'convocatoria',
-      'numeroIniciales', 'numeroRevisiones', 'numeroTotal', 'estado', 'acciones'];
+    this.displayedColumns = ['comite', 'fechaEvaluacion', 'numero', 'convocatoria',
+      'numeroIniciales', 'numeroRevisiones', 'numeroTotal', 'estadoActual.nombre', 'acciones'];
     this.elementosPagina = [5, 10, 25, 100];
     this.totalElementos = 0;
 
@@ -100,7 +98,6 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
 
-    this.textoCrear = this.traductor.getTexto('footer.eti.acta.crear');
 
   }
 
@@ -202,10 +199,6 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
                   index: 0,
                   size: null
                 },
-                sort: {
-                  direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
-                  field: this.sort.active
-                },
                 filters: filter
               }).pipe(
                 switchMap((responseIniciales) => {
@@ -231,10 +224,7 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
                         index: 0,
                         size: null
                       },
-                      sort: {
-                        direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
-                        field: this.sort.active
-                      },
+
                       filters: filter
                     }).pipe(
                       map((responseRevision) => {

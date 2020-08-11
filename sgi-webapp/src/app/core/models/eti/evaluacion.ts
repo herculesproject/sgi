@@ -3,7 +3,7 @@ import { ConvocatoriaReunion } from './convocatoria-reunion';
 import { TipoEvaluacion } from './tipo-evaluacion';
 import { Dictamen } from './dictamen';
 
-export class Evaluacion {
+export interface IEvaluacion {
 
   /** ID */
   id: number;

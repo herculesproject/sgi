@@ -1,9 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+
 import { UrlUtils } from '@core/utils/url-utils';
-import { ActaCrearComponent } from './acta-crear/acta-crear.component';
-import { ActaListadoComponent } from './acta-listado/acta-listado.component';
+
 import { SgiAuthRoutes, SgiAuthGuard } from '@sgi/framework/auth';
+
+import { ActaCrearComponent } from './acta-crear/acta-crear.component';
+import { ActaEditarComponent } from './acta-editar/acta-editar.component';
+import { ActaListadoComponent } from './acta-listado/acta-listado.component';
+
 
 const routes: SgiAuthRoutes = [
   {
@@ -20,6 +25,14 @@ const routes: SgiAuthRoutes = [
     canActivate: [SgiAuthGuard],
     data: {
       hasAuthorityForAnyUO: 'ETI-ACT-C'
+    }
+  },
+  {
+    path: UrlUtils.actualizar.valueOf() + ':id',
+    component: ActaEditarComponent,
+    canActivate: [SgiAuthGuard],
+    data: {
+      hasAuthorityForAnyUO: 'ETI-ACT-E'
     }
   }
 ];

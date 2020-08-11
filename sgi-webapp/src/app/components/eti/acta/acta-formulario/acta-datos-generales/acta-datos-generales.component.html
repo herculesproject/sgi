@@ -6,12 +6,15 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field appearance="fill">
         <mat-label>{{'eti.acta.crear.datosGenerales.convocatoriaReunion.titulo' | translate}}</mat-label>
-        <mat-select matNativeControl required formControlName="convocatoriaReunion"
-          (selectionChange)="selectConvocatoriaReunion($event.value)">
-          <mat-option *ngFor="let convocatoria of convocatoriasReunion" [value]="convocatoria">
+
+        <input type="text" placeholder="{{'eti.acta.crear.datosGenerales.convocatoriaReunion.titulo' | translate}}"
+          arial-label="Number" matInput formControlName="convocatoriaReunion" [matAutocomplete]="auto" required>
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="getConvocatoria"
+          (optionSelected)="selectConvocatoriaReunion($event.option.value)">
+          <mat-option *ngFor="let convocatoria of convocatoriasReunion | async" [value]="convocatoria">
             {{convocatoria.codigo}}
           </mat-option>
-        </mat-select>
+        </mat-autocomplete>
         <mat-error
           *ngIf="FormGroupUtil.checkError(formGroup, 'convocatoriaReunion') && formGroup.get('convocatoriaReunion').errors.vacio">
           {{'eti.acta.crear.datosGenerales.convocatoriaReunion.error.vacio' | translate}}

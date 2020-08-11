@@ -1,10 +1,10 @@
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {AbstractTabComponent} from '@shared/formularios-tabs/abstract-tab/abstract-tab.component';
-import {Subscription} from 'rxjs';
-import {NGXLogger} from 'ngx-logger';
-import {MatTabChangeEvent} from '@angular/material/tabs';
-import {TraductorService} from '@core/services/traductor.service';
-import {SnackBarService} from '@core/services/snack-bar.service';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AbstractTabComponent } from '@shared/formularios-tabs/abstract-tab/abstract-tab.component';
+import { Subscription } from 'rxjs';
+import { NGXLogger } from 'ngx-logger';
+import { MatTabChangeEvent } from '@angular/material/tabs';
+import { TraductorService } from '@core/services/traductor.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
 
 @Component({
   selector: 'app-abstract-formulario',

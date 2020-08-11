@@ -79,6 +79,12 @@
     </button>
   </div>
 
+  <!-- Botón añadir acta -->
+  <div class="separation-button">
+    <button *sgiHasAuthorityForAnyUO="'ETI-ACT-C'" [routerLink]="UrlUtils.crear" mat-button>
+      <mat-icon>add_box</mat-icon> {{'eti.acta.listado.nuevaActa' | translate}}
+    </button>
+  </div>
 
   <table class="mat-elevation-z8 table-acta" mat-table [dataSource]="actas$ | async" matSort matSortActive="id"
     matSortDirection="asc" matSortDisableClear>
@@ -96,7 +102,7 @@
     </ng-container>
 
     <!-- Numero acta Column -->
-    <ng-container matColumnDef="numeroActa">
+    <ng-container matColumnDef="numero">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.acta.listado.numeroActa' | translate}} </th>
       <td mat-cell *matCellDef="let acta"> {{acta.numero}} </td>
     </ng-container>
@@ -109,24 +115,24 @@
 
     <!-- Numero de iniciales Column -->
     <ng-container matColumnDef="numeroIniciales">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.acta.listado.numeroIniciales' | translate}} </th>
+      <th mat-header-cell *matHeaderCellDef> {{'eti.acta.listado.numeroIniciales' | translate}} </th>
       <td mat-cell *matCellDef="let acta"> {{acta.numeroMemoriasIniciales}} </td>
     </ng-container>
 
     <!-- Numero de revisiones Column -->
     <ng-container matColumnDef="numeroRevisiones">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.acta.listado.numeroRevisiones' | translate}} </th>
+      <th mat-header-cell *matHeaderCellDef> {{'eti.acta.listado.numeroRevisiones' | translate}} </th>
       <td mat-cell *matCellDef="let acta"> {{acta.numeroMemoriasRevisiones}} </td>
     </ng-container>
 
     <!-- Numero total Column -->
     <ng-container matColumnDef="numeroTotal">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.acta.listado.numeroTotal' | translate}} </th>
+      <th mat-header-cell *matHeaderCellDef> {{'eti.acta.listado.numeroTotal' | translate}} </th>
       <td mat-cell *matCellDef="let acta"> {{acta.numeroMemoriasTotales}} </td>
     </ng-container>
 
     <!-- Estado Column -->
-    <ng-container matColumnDef="estado">
+    <ng-container matColumnDef="estadoActual.nombre">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.acta.listado.estado' | translate}} </th>
       <td mat-cell *matCellDef="let acta"> {{acta.estadoActual.nombre}}</td>
     </ng-container>
@@ -151,8 +157,6 @@
 
   <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
   </mat-paginator>
-
-  <app-footer-crear *sgiHasAuthorityForAnyUO="'ETI-ACT-C'" [texto]="textoCrear"></app-footer-crear>
 
 </section>
 <!-- FIN actas listado-->

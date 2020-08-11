@@ -1,17 +1,21 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Acta } from '@core/models/eti/acta';
-import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
-import { FormGroupUtil } from '@core/services/form-group-util';
-import { AbstractTabComponent } from '@shared/formularios-tabs/abstract-tab/abstract-tab.component';
+import { MatSort } from '@angular/material/sort';
+
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, zip } from 'rxjs';
-import { Asistente } from '@core/models/eti/asistente';
 import { switchMap, map } from 'rxjs/operators';
+
+import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
+
+import { AbstractTabComponent } from '@shared/formularios-tabs/abstract-tab/abstract-tab.component';
+
+import { IAsistente } from '@core/models/eti/asistente';
+
+import { FormGroupUtil } from '@core/services/form-group-util';
+
 import { AsistenteService } from '@core/services/eti/asistente.service';
-import { MatSort } from '@angular/material/sort';
-import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
 import { UsuarioInfoService } from '@core/services/sgp/usuario-info.service';
 
 @Component({
@@ -30,10 +34,7 @@ export class ActaAsistentesComponent extends AbstractTabComponent<any> implement
 
   displayedColumns: string[];
 
-
-  filter: SgiRestFilter[];
-
-  asistentes$: Observable<Asistente[]> = of();
+  asistentes$: Observable<IAsistente[]> = of();
 
 
   constructor(
@@ -45,37 +46,21 @@ export class ActaAsistentesComponent extends AbstractTabComponent<any> implement
 
     this.displayedColumns = ['evaluador.numIdentificadorPersonal', 'evaluador.nombre', 'asistencia', 'motivo', 'acciones'];
 
-
-    this.filter = [{
-      field: undefined,
-      type: SgiRestFilterType.NONE,
-      value: '',
-    }];
   }
 
 
   @Input()
   set idConvocatoria(idConvocatoria: number) {
-    this.filter = [];
+
     if (idConvocatoria) {
-      const filterConvocatoria: SgiRestFilter = {
-        field: 'convocatoriaReunion.id',
-        type: SgiRestFilterType.EQUALS,
-        value: idConvocatoria.toString()
-      };
-      this.filter.push(filterConvocatoria);
-      this.asistentes$ = this.asistenteService.findAll({
-        sort: {
-          direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
-          field: this.sort.active
-        }, filters: this.filter
-      }).pipe(
+
+      this.asistentes$ = this.asistenteService.findAllByConvocatoriaReunionId(idConvocatoria).pipe(
 
         switchMap((response) => {
 
           if (response.items) {
 
-            const listObservables: Observable<Asistente>[] = [];
+            const listObservables: Observable<IAsistente>[] = [];
 
             response.items.forEach((asistente) => {
               const asistente$ = this.usuarioInfoService.findById(asistente.evaluador.usuarioRef).pipe(
@@ -120,19 +105,6 @@ export class ActaAsistentesComponent extends AbstractTabComponent<any> implement
     return formGroup;
   }
 
-  crearObservable(): Observable<any> {
-    this.logger.debug(ActaAsistentesComponent.name, 'crearObservable()', 'start');
-    const observable = of({});
-    this.logger.debug(ActaAsistentesComponent.name, 'crearObservable()', 'end');
-    return observable;
-  }
-
-  getDatosIniciales(): Acta {
-    this.logger.debug(ActaAsistentesComponent.name, 'crearObservable()', 'start');
-    const datos = new Acta();
-    this.logger.debug(ActaAsistentesComponent.name, 'crearObservable()', 'end');
-    return datos;
-  }
 
   getDatosFormulario(): {} {
     return this.formGroup.value;

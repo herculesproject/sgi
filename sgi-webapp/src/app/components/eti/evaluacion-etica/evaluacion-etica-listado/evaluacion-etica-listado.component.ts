@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {NGXLogger} from 'ngx-logger';
-import {TraductorService} from '@core/services/traductor.service';
+import { Component, OnInit } from '@angular/core';
+import { NGXLogger } from 'ngx-logger';
+import { TraductorService } from '@core/services/traductor.service';
 
 @Component({
   selector: 'app-evaluacion-etica-listado',
