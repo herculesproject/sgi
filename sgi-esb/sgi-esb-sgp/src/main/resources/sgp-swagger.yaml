@@ -8,7 +8,7 @@ basePath: /sgp
 schemes:
   - http
 paths:
-  /usuarios:
+  /personas/fisica:
     get:
       produces:
         - application/json
@@ -39,7 +39,164 @@ paths:
           in: query
           name: q
           type: string
-          x-example: 'usuarioRef!~p00,primerApellido:perez'
+          x-example: 'personaRef!~p00,sexo:M'
+        - description: >-
+            Criterios de ordenación de la busqueda. <hr/> Nombre del campo por
+            el que se ordena seguido de +/- para ordenar ascendente o
+            descendentemente.
+          in: query
+          name: s
+          type: string
+          x-example: personaRef-
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Page:
+              description: Nº de página
+              type: integer
+            X-Page-Count:
+              description: Nº de páginas
+              type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              type: integer
+          schema:
+            items:
+              $ref: '#/definitions/PersonaFisica'
+            type: array
+        '204':
+          description: No hay personas físicas para los criterios de busqueda utilizados.
+        '400':
+          description: Invalid params
+      tags:
+        - personas/fisica
+      description: >-
+        Devuelve la lista paginada con las personas físicas que cumplen los
+        filtros.
+      operationId: findAllPersonasFisica
+      summary: Busca las personas físicas
+  /personas/fisica/hasanypersonaref:
+    get:
+      produces:
+        - application/json
+      parameters:
+        - collectionFormat: multi
+          description: Referencias de las personas
+          in: query
+          items:
+            type: string
+          name: personaRefs
+          required: true
+          type: array
+          x-example: 'p-001,p-002'
+        - description: Nº de pagina
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page
+          type: integer
+          x-example: 2
+        - description: Nº de elementos por página
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page-Size
+          type: integer
+          x-example: 10
+        - description: >-
+            Criterios de busqueda. <hr> Lista de criterios de busqueda separada
+            por comas, donde un criterio de busqueda es el nombre de uno de los
+            campos de la entidad buscada seguido de la operación y el valor con
+            el que se hace la comparación. Las operaciones soportadas son: <ul>
+            <li><b>:</b> equals</li> <li><b>!:</b> not equals</li> <li><b>~</b>
+            like</li> <li><b>!~</b> not like</li> <li><b>></b> greather</li>
+            <li><b>>:</b> greather or equal</li> <li><b><</b> lower</li>
+            <li><b><:</b> lower or equal</li></ul>
+          in: query
+          name: q
+          type: string
+          x-example: 'personaRef!~p00,sexo:M'
+        - description: >-
+            Criterios de ordenación de la busqueda. <hr/> Nombre del campo por
+            el que se ordena seguido de +/- para ordenar ascendente o
+            descendentemente.
+          in: query
+          name: s
+          type: string
+          x-example: personaRef-
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Page:
+              description: Nº de página
+              type: integer
+            X-Page-Count:
+              description: Nº de páginas
+              type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              type: integer
+          schema:
+            items:
+              $ref: '#/definitions/PersonaFisica'
+            type: array
+        '204':
+          description: No hay personas físicas para los criterios de busqueda utilizados.
+        '400':
+          description: Invalid params
+      tags:
+        - personas/fisica
+      description: >-
+        Devuelve la lista paginada con las personas físicas que cumplen los
+        filtros.
+      operationId: findAllPersonasFisicaByPersonaRefs
+      summary: Busca las personas físicas correspondientes a la lista de personarefs
+  /personas/fisica/persona:
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Nº de pagina
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page
+          type: integer
+          x-example: 2
+        - description: Nº de elementos por página
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page-Size
+          type: integer
+          x-example: 10
+        - description: >-
+            Criterios de busqueda. <hr> Lista de criterios de busqueda separada
+            por comas, donde un criterio de busqueda es el nombre de uno de los
+            campos de la entidad buscada seguido de la operación y el valor con
+            el que se hace la comparación. Las operaciones soportadas son: <ul>
+            <li><b>:</b> equals</li> <li><b>!:</b> not equals</li> <li><b>~</b>
+            like</li> <li><b>!~</b> not like</li> <li><b>></b> greather</li>
+            <li><b>>:</b> greather or equal</li> <li><b><</b> lower</li>
+            <li><b><:</b> lower or equal</li></ul>
+          in: query
+          name: q
+          type: string
+          x-example: 'personaRef!~p00,primerApellido:perez'
         - description: >-
             Criterios de ordenación de la busqueda. <hr/> Nombre del campo por
             el que se ordena seguido de +/- para ordenar ascendente o
@@ -69,84 +226,704 @@ paths:
               type: integer
           schema:
             items:
-              $ref: '#/definitions/Usuario'
+              $ref: '#/definitions/Persona'
             type: array
         '204':
-          description: No hay usuarios para los criterios de busqueda utilizados.
+          description: No hay personas para los criterios de busqueda utilizados.
         '400':
           description: Invalid params
       tags:
-        - usuario
+        - personas/fisica
       description: >-
-        Devuelve la lista paginada con los datos básicos de los usuarios que
+        Devuelve la lista paginada con los datos básicos de las personas que
         cumplen los filtros.
-      operationId: findAllUsuarios
-      summary: Busca usuarios
-  '/usuarios/{usuarioRef}':
+      operationId: findAllPersonasFisicaPersona
+      summary: Busca la informacion basica de la persona física
+  /personas/fisica/persona/hasanypersonaref:
     get:
       produces:
         - application/json
       parameters:
-        - description: Referencia del usuario
+        - collectionFormat: multi
+          description: Referencias de las personas
+          in: query
+          items:
+            type: string
+          name: personaRefs
+          required: true
+          type: array
+          x-example: 'p-001,p-002'
+        - description: Nº de pagina
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page
+          type: integer
+          x-example: 2
+        - description: Nº de elementos por página
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page-Size
+          type: integer
+          x-example: 10
+        - description: >-
+            Criterios de busqueda. <hr> Lista de criterios de busqueda separada
+            por comas, donde un criterio de busqueda es el nombre de uno de los
+            campos de la entidad buscada seguido de la operación y el valor con
+            el que se hace la comparación. Las operaciones soportadas son: <ul>
+            <li><b>:</b> equals</li> <li><b>!:</b> not equals</li> <li><b>~</b>
+            like</li> <li><b>!~</b> not like</li> <li><b>></b> greather</li>
+            <li><b>>:</b> greather or equal</li> <li><b><</b> lower</li>
+            <li><b><:</b> lower or equal</li></ul>
+          in: query
+          name: q
+          type: string
+          x-example: 'personaRef!~p00,primerApellido:perez'
+        - description: >-
+            Criterios de ordenación de la busqueda. <hr/> Nombre del campo por
+            el que se ordena seguido de +/- para ordenar ascendente o
+            descendentemente.
+          in: query
+          name: s
+          type: string
+          x-example: nombre-
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Page:
+              description: Nº de página
+              type: integer
+            X-Page-Count:
+              description: Nº de páginas
+              type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              type: integer
+          schema:
+            items:
+              $ref: '#/definitions/Persona'
+            type: array
+        '204':
+          description: No hay personas para los criterios de busqueda utilizados.
+        '400':
+          description: Invalid params
+      tags:
+        - personas/fisica
+      description: >-
+        Devuelve la lista paginada con los datos básicos de las personas que
+        cumplen los filtros.
+      operationId: findAllPersonasFisicaPersonaByPersonaRefs
+      summary: Busca la informacion basica de la persona física
+  '/personas/fisica/persona/{personaRef}':
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Referencia de la persona
           in: path
-          name: usuarioRef
+          name: personaRef
           required: true
           type: string
       responses:
         '200':
           description: successful operation
           schema:
-            $ref: '#/definitions/Usuario'
+            $ref: '#/definitions/Persona'
         '400':
-          description: usuarioRef no valido
+          description: perosnaRef no valido
         '404':
-          description: usuario no encontrado
+          description: persona no encontrada
       tags:
-        - usuario
-      description: Devuelve el usuario correspondiente a usuarioRef
-      operationId: findUsuarioByUsuarioRef
-      summary: Busca un usuario por su usuarioRef
-  '/usuariosinfo/{usuarioRef}':
+        - personas/fisica
+      description: >-
+        Devuelve los datos basicos de la persona física correspondiente a
+        personaRef
+      operationId: findPersonaFisicaPersonaByPersonaRef
+      summary: Busca los datos basicos de una persona física por su personaRef
+  '/personas/fisica/{personaRef}':
     get:
       produces:
         - application/json
       parameters:
-        - description: Referencia del usuario
+        - description: Referencia de la persona
           in: path
-          name: usuarioRef
+          name: personaRef
           required: true
           type: string
       responses:
         '200':
           description: successful operation
           schema:
-            $ref: '#/definitions/UsuarioInfo'
+            $ref: '#/definitions/PersonaFisica'
         '400':
-          description: usuarioRef no valido
+          description: perosnaRef no valido
         '404':
-          description: usuario no encontrado
+          description: persona no encontrada
       tags:
-        - usuarioInfo
-      description: Devuelve el usuario correspondiente a usuarioRef
-      operationId: findUsuarioInfoByUsuarioRef
-      summary: Busca un usuario por su usuarioRef
+        - personas/fisica
+      description: Devuelve la persona física correspondiente a personaRef
+      operationId: findPersonaFisicaByPersonaRef
+      summary: Busca una persona física por su personaRef
+  '/personas/fisica/{personaRef}/domicilio':
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Referencia de la persona
+          in: path
+          name: personaRef
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Domicilio'
+        '400':
+          description: perosnaRef no valido
+        '404':
+          description: persona no encontrada
+      tags:
+        - personas/fisica
+      description: Devuelve el domicilio  de la persona física correspondiente a personaRef
+      operationId: findDomicilioPersonaFisicaByPersonaRef
+      summary: Busca el domicilio de una persona física
+  '/personas/fisica/{personaRef}/emails':
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Referencia de la persona
+          in: path
+          name: personaRef
+          required: true
+          type: string
+        - description: Nº de pagina
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page
+          type: integer
+          x-example: 2
+        - description: Nº de elementos por página
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page-Size
+          type: integer
+          x-example: 10
+        - description: >-
+            Criterios de busqueda. <hr> Lista de criterios de busqueda separada
+            por comas, donde un criterio de busqueda es el nombre de uno de los
+            campos de la entidad buscada seguido de la operación y el valor con
+            el que se hace la comparación. Las operaciones soportadas son: <ul>
+            <li><b>:</b> equals</li> <li><b>!:</b> not equals</li> <li><b>~</b>
+            like</li> <li><b>!~</b> not like</li> <li><b>></b> greather</li>
+            <li><b>>:</b> greather or equal</li> <li><b><</b> lower</li>
+            <li><b><:</b> lower or equal</li></ul>
+          in: query
+          name: q
+          type: string
+          x-example: tipoEmail!~t00
+        - description: >-
+            Criterios de ordenación de la busqueda. <hr/> Nombre del campo por
+            el que se ordena seguido de +/- para ordenar ascendente o
+            descendentemente.
+          in: query
+          name: s
+          type: string
+          x-example: tipoEmail-
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Page:
+              description: Nº de página
+              type: integer
+            X-Page-Count:
+              description: Nº de páginas
+              type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              type: integer
+          schema:
+            items:
+              $ref: '#/definitions/Email'
+            type: array
+        '400':
+          description: perosnaRef no valido
+        '404':
+          description: persona no encontrada
+      tags:
+        - personas/fisica
+      description: >-
+        Devuelve la lista de emails de la persona física correspondiente a
+        personaRef
+      operationId: findEmailsPersonaFisicaByPersonaRef
+      summary: Busca los emails de una persona física
+  '/personas/fisica/{personaRef}/telefonos':
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Referencia de la persona
+          in: path
+          name: personaRef
+          required: true
+          type: string
+        - description: Nº de pagina
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page
+          type: integer
+          x-example: 2
+        - description: Nº de elementos por página
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page-Size
+          type: integer
+          x-example: 10
+        - description: >-
+            Criterios de busqueda. <hr> Lista de criterios de busqueda separada
+            por comas, donde un criterio de busqueda es el nombre de uno de los
+            campos de la entidad buscada seguido de la operación y el valor con
+            el que se hace la comparación. Las operaciones soportadas son: <ul>
+            <li><b>:</b> equals</li> <li><b>!:</b> not equals</li> <li><b>~</b>
+            like</li> <li><b>!~</b> not like</li> <li><b>></b> greather</li>
+            <li><b>>:</b> greather or equal</li> <li><b><</b> lower</li>
+            <li><b><:</b> lower or equal</li></ul>
+          in: query
+          name: q
+          type: string
+          x-example: tipoTelefono!~t00
+        - description: >-
+            Criterios de ordenación de la busqueda. <hr/> Nombre del campo por
+            el que se ordena seguido de +/- para ordenar ascendente o
+            descendentemente.
+          in: query
+          name: s
+          type: string
+          x-example: tipoTelefono-
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Page:
+              description: Nº de página
+              type: integer
+            X-Page-Count:
+              description: Nº de páginas
+              type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              type: integer
+          schema:
+            items:
+              $ref: '#/definitions/Telefono'
+            type: array
+        '400':
+          description: perosnaRef no valido
+        '404':
+          description: persona no encontrada
+      tags:
+        - personas/fisica
+      description: >-
+        Devuelve la lista de telefonos de la persona física correspondiente a
+        personaRef
+      operationId: findTelefonosPersonaFisicaByPersonaRef
+      summary: Busca los telefonos de una persona física
+  /personas/juridica:
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Nº de pagina
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page
+          type: integer
+          x-example: 2
+        - description: Nº de elementos por página
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page-Size
+          type: integer
+          x-example: 10
+        - description: >-
+            Criterios de busqueda. <hr> Lista de criterios de busqueda separada
+            por comas, donde un criterio de busqueda es el nombre de uno de los
+            campos de la entidad buscada seguido de la operación y el valor con
+            el que se hace la comparación. Las operaciones soportadas son: <ul>
+            <li><b>:</b> equals</li> <li><b>!:</b> not equals</li> <li><b>~</b>
+            like</li> <li><b>!~</b> not like</li> <li><b>></b> greather</li>
+            <li><b>>:</b> greather or equal</li> <li><b><</b> lower</li>
+            <li><b><:</b> lower or equal</li></ul>
+          in: query
+          name: q
+          type: string
+          x-example: 'personaRef!~p00,razonSocial:aaa'
+        - description: >-
+            Criterios de ordenación de la busqueda. <hr/> Nombre del campo por
+            el que se ordena seguido de +/- para ordenar ascendente o
+            descendentemente.
+          in: query
+          name: s
+          type: string
+          x-example: personaRef-
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Page:
+              description: Nº de página
+              type: integer
+            X-Page-Count:
+              description: Nº de páginas
+              type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              type: integer
+          schema:
+            items:
+              $ref: '#/definitions/PersonaJuridica'
+            type: array
+        '204':
+          description: No hay personas jurídicas para los criterios de busqueda utilizados.
+        '400':
+          description: Invalid params
+      tags:
+        - personas/juridica
+      description: >-
+        Devuelve la lista paginada con las personas jurídicas que cumplen los
+        filtros.
+      operationId: findAllPersonasJuridica
+      summary: Busca las personas jurídicas
+  /personas/juridica/hasanypersonaref:
+    get:
+      produces:
+        - application/json
+      parameters:
+        - collectionFormat: multi
+          description: Referencias de las personas
+          in: query
+          items:
+            type: string
+          name: personaRefs
+          required: true
+          type: array
+          x-example: 'p-001,p-002'
+        - description: Nº de pagina
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page
+          type: integer
+          x-example: 2
+        - description: Nº de elementos por página
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page-Size
+          type: integer
+          x-example: 10
+        - description: >-
+            Criterios de busqueda. <hr> Lista de criterios de busqueda separada
+            por comas, donde un criterio de busqueda es el nombre de uno de los
+            campos de la entidad buscada seguido de la operación y el valor con
+            el que se hace la comparación. Las operaciones soportadas son: <ul>
+            <li><b>:</b> equals</li> <li><b>!:</b> not equals</li> <li><b>~</b>
+            like</li> <li><b>!~</b> not like</li> <li><b>></b> greather</li>
+            <li><b>>:</b> greather or equal</li> <li><b><</b> lower</li>
+            <li><b><:</b> lower or equal</li></ul>
+          in: query
+          name: q
+          type: string
+          x-example: 'personaRef!~p00,razonSocial:aaa'
+        - description: >-
+            Criterios de ordenación de la busqueda. <hr/> Nombre del campo por
+            el que se ordena seguido de +/- para ordenar ascendente o
+            descendentemente.
+          in: query
+          name: s
+          type: string
+          x-example: personaRef-
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Page:
+              description: Nº de página
+              type: integer
+            X-Page-Count:
+              description: Nº de páginas
+              type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              type: integer
+          schema:
+            items:
+              $ref: '#/definitions/PersonaJuridica'
+            type: array
+        '204':
+          description: No hay personas jurídicas para los criterios de busqueda utilizados.
+        '400':
+          description: Invalid params
+      tags:
+        - personas/juridica
+      description: >-
+        Devuelve la lista paginada con las personas jurídicas que cumplen los
+        filtros.
+      operationId: findAllPersonasJuridicaByPersonaRefs
+      summary: Busca las personas jurídicas correspondientes a la lista de personarefs
+  '/personas/juridica/{personaRef}':
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Referencia de la persona
+          in: path
+          name: personaRef
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/PersonaJuridica'
+        '400':
+          description: perosnaRef no valido
+        '404':
+          description: persona jurídica no encontrada
+      tags:
+        - personas/juridica
+      description: Devuelve la persona jurídica correspondiente a personaRef
+      operationId: findPersonaJuridicaByPersonaRef
+      summary: Busca una persona jurídica por su personaRef
+  '/personas/juridica/{personaRef}/domicilio':
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Referencia de la persona
+          in: path
+          name: personaRef
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Domicilio'
+        '400':
+          description: perosnaRef no valido
+        '404':
+          description: persona no encontrada
+      tags:
+        - personas/juridica
+      description: >-
+        Devuelve el domicilio  de la persona jurídica correspondiente a
+        personaRef
+      operationId: findDomicilioPersonaJuridicaByPersonaRef
+      summary: Busca el domicilio de una persona jurídica
+  '/personas/juridica/{personaRef}/emails':
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Referencia de la persona
+          in: path
+          name: personaRef
+          required: true
+          type: string
+        - description: Nº de pagina
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page
+          type: integer
+          x-example: 2
+        - description: Nº de elementos por página
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page-Size
+          type: integer
+          x-example: 10
+        - description: >-
+            Criterios de busqueda. <hr> Lista de criterios de busqueda separada
+            por comas, donde un criterio de busqueda es el nombre de uno de los
+            campos de la entidad buscada seguido de la operación y el valor con
+            el que se hace la comparación. Las operaciones soportadas son: <ul>
+            <li><b>:</b> equals</li> <li><b>!:</b> not equals</li> <li><b>~</b>
+            like</li> <li><b>!~</b> not like</li> <li><b>></b> greather</li>
+            <li><b>>:</b> greather or equal</li> <li><b><</b> lower</li>
+            <li><b><:</b> lower or equal</li></ul>
+          in: query
+          name: q
+          type: string
+          x-example: tipoEmail!~t00
+        - description: >-
+            Criterios de ordenación de la busqueda. <hr/> Nombre del campo por
+            el que se ordena seguido de +/- para ordenar ascendente o
+            descendentemente.
+          in: query
+          name: s
+          type: string
+          x-example: tipoEmail-
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Page:
+              description: Nº de página
+              type: integer
+            X-Page-Count:
+              description: Nº de páginas
+              type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              type: integer
+          schema:
+            items:
+              $ref: '#/definitions/Email'
+            type: array
+        '400':
+          description: perosnaRef no valido
+        '404':
+          description: persona no encontrada
+      tags:
+        - personas/juridica
+      description: >-
+        Devuelve la lista de emails de la persona jurídica correspondiente a
+        personaRef
+      operationId: findEmailsPersonaJuridicaByPersonaRef
+      summary: Busca los emails de una persona jurídica
+  '/personas/juridica/{personaRef}/telefonos':
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Referencia de la persona
+          in: path
+          name: personaRef
+          required: true
+          type: string
+        - description: Nº de pagina
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page
+          type: integer
+          x-example: 2
+        - description: Nº de elementos por página
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page-Size
+          type: integer
+          x-example: 10
+        - description: >-
+            Criterios de busqueda. <hr> Lista de criterios de busqueda separada
+            por comas, donde un criterio de busqueda es el nombre de uno de los
+            campos de la entidad buscada seguido de la operación y el valor con
+            el que se hace la comparación. Las operaciones soportadas son: <ul>
+            <li><b>:</b> equals</li> <li><b>!:</b> not equals</li> <li><b>~</b>
+            like</li> <li><b>!~</b> not like</li> <li><b>></b> greather</li>
+            <li><b>>:</b> greather or equal</li> <li><b><</b> lower</li>
+            <li><b><:</b> lower or equal</li></ul>
+          in: query
+          name: q
+          type: string
+          x-example: tipoTelefono!~t00
+        - description: >-
+            Criterios de ordenación de la busqueda. <hr/> Nombre del campo por
+            el que se ordena seguido de +/- para ordenar ascendente o
+            descendentemente.
+          in: query
+          name: s
+          type: string
+          x-example: tipoTelefono-
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Page:
+              description: Nº de página
+              type: integer
+            X-Page-Count:
+              description: Nº de páginas
+              type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              type: integer
+          schema:
+            items:
+              $ref: '#/definitions/Telefono'
+            type: array
+        '400':
+          description: perosnaRef no valido
+        '404':
+          description: persona no encontrada
+      tags:
+        - personas/juridica
+      description: >-
+        Devuelve la lista de telefonos de la persona jurídica correspondiente a
+        personaRef
+      operationId: findTelefonosPersonaJuridicaByPersonaRef
+      summary: Busca los telefonos de una persona jurídica
 definitions:
-  DatosEmail:
-    properties:
-      email:
-        type: string
-      tipoEmail:
-        type: string
-    type: object
-  DatosTelefono:
-    properties:
-      telefono:
-        type: string
-      tipoTelefono:
-        type: string
-    type: object
   Domicilio:
     properties:
+      ampliacionDomicilio:
+        type: string
       codigoPostal:
         type: string
       nombreVia:
@@ -155,12 +932,68 @@ definitions:
         type: string
       pais:
         type: string
+      personaRef:
+        type: string
       poblacion:
         type: string
       provincia:
         type: string
       tipoVia:
-        $ref: '#/definitions/TipoVia'
+        type: string
+    type: object
+  Email:
+    properties:
+      email:
+        type: string
+      tipoEmail:
+        type: string
+    type: object
+  Persona:
+    properties:
+      identificadorLetra:
+        type: string
+      identificadorNumero:
+        type: string
+      nombre:
+        type: string
+      personaRef:
+        type: string
+      primerApellido:
+        type: string
+      segundoApellido:
+        type: string
+    type: object
+  PersonaFisica:
+    properties:
+      fechaNacimiento:
+        type: string
+      nacionalidad:
+        type: string
+      personaRef:
+        type: string
+      profesional:
+        $ref: '#/definitions/Profesional'
+      sexo:
+        type: string
+      tipoPersona:
+        $ref: '#/definitions/TipoPersonaFisica'
+      vinculacion:
+        type: string
+    type: object
+  PersonaJuridica:
+    properties:
+      identificadorLetra:
+        type: string
+      identificadorNumero:
+        type: string
+      personaContacto:
+        type: string
+      personaRef:
+        type: string
+      razonSocial:
+        type: string
+      tipoPersona:
+        $ref: '#/definitions/TipoPersonaJuridica'
     type: object
   Profesional:
     properties:
@@ -168,79 +1001,50 @@ definitions:
         type: string
       cuerpoProfesional:
         type: string
-      profesionalRef:
+      personaRef:
         type: string
       subcuerpoProfesional:
         type: string
     type: object
-  TipoIdentificadorPersonal:
-    properties:
-      codigo:
-        type: string
-      descripcion:
-        type: string
-      tipoIdentificadorRef:
-        type: string
-    type: object
-  TipoVia:
+  Telefono:
     properties:
       telefono:
         type: string
       tipoTelefono:
         type: string
     type: object
-  Usuario:
-    properties:
-      email:
-        type: string
-      nombre:
-        type: string
-      primerApellido:
-        type: string
-      segundoApellido:
-        type: string
-      usuarioRef:
-        type: string
-    required:
-      - nombre
-      - primerApellido
-    type: object
-  UsuarioInfo:
-    properties:
-      datosEmail:
-        $ref: '#/definitions/DatosEmail'
-      datosTelefono:
-        $ref: '#/definitions/DatosTelefono'
-      domicilio:
-        $ref: '#/definitions/Domicilio'
-      fechaNacimiento:
-        type: string
-      nacionalidad:
-        type: string
-      numIdentificadorPersonal:
-        type: string
-      profesional:
-        $ref: '#/definitions/Profesional'
-      sexo:
-        type: string
-      tipoIdentificador:
-        $ref: '#/definitions/TipoIdentificadorPersonal'
-      usuario:
-        $ref: '#/definitions/Usuario'
-      vinculacion:
-        type: string
-    type: object
+  TipoPersonaFisica:
+    enum:
+      - EXTRANJEROS_NO_RESIDENTES
+      - PERSONAS_FISICAS_NIF_ESPANIOLES
+      - PERSONAS_FISICAS_MENORES
+      - PERSONAS_FISICAS_ESPANIOLES_NO_RESIDENTES
+      - EXTRANJEROS_RESIDENTES
+      - PERSONAS_FISICAS_EXTRANJEROS_FORMATO_LIBRE
+      - PERSONA_FISICA_EXTRANJ_CON_NIU_IDENTIFICADOR_UMU
+      - ORGANOS DE LA ADMIN_DEL_ESTADO_Y_CCAA
+      - ORGANISMOS_PUBLICOS_Q_Y_CORP_LOCALES_P
+    type: string
+  TipoPersonaJuridica:
+    enum:
+      - PERSONAS_JURIDICAS_ESPANIOLAS
+      - PERSONAS_JURIDICAS_EXTRANJERAS
+      - PERSONAS_JURIDICAS_EXTRANJERAS_NO_RESIDENTES
+      - ORGANOS_DE_LA_ADMIN_DEL_ESTADO_Y_CCAA
+      - ORGANISMOS_PUBLICOS_Q_Y_CORP_LOCALES_P
+      - PERSONAS_JURIDICAS_EXTRANJEROS_FORMATO_LIBRE
+    type: string
 tags:
   - externalDocs:
       description: Find out more
       url: 'https://confluence.treelogic.com/display/HERCULES/SGI+-+ESB+-+SGP'
-    description: Operaciones con datos básicos de usuario
-    name: usuario
+    description: Operaciones con personas físicas
+    name: personas/fisica
   - externalDocs:
       description: Find out more
       url: 'https://confluence.treelogic.com/display/HERCULES/SGI+-+ESB+-+SGP'
-    description: Operaciones con datos completos de usuario
-    name: usuarioInfo
+    description: Operaciones con personas jurídicas
+    name: personas/juridica
 externalDocs:
   description: Find out more about SGP
   url: 'https://confluence.treelogic.com/display/HERCULES/SGI+-+ESB+-+SGP'
