@@ -18,6 +18,7 @@
     "ebt": "Technology-based companies",
     "empresasBaseTecnologica": "Technology-based companies",
     "eti": "Ethics",
+    "evaluaciones": "Evaluations",
     "evaluacionEtica": "Ethics evaluations",
     "gruposInvestigacion": "Investigation groups",
     "horario": "Work hours",
@@ -335,7 +336,7 @@
             "si": "Yes",
             "titulo": "Attendance"
           },
-          "cabecera": "Participants",
+          "cabecera": "Attendance",
           "motivo": "Reason not Attending",
           "nif": "NIF/NIE",
           "nombreApellidos": "Name and surname"
@@ -500,38 +501,56 @@
         }
       },
       "listado": {
-        "acciones": "Acciones",
-        "aceptar": "Aceptar",
-        "borrar": "Borrar",
-        "cancelar": "Cancelar",
-        "codigo": "Código",
-        "comite": "Comité",
-        "tipoConvocatoriaReunion": "Convocatoria",
-        "editar": "Editar",
-        "eliminar": "¿Desea eliminar la convocatoria?",
-        "eliminarConfirmado": "Convocatoria eliminada correctamente",
-        "enviar": "Enviar",
-        "error": "No se ha podido cargar el listado de convocatorias",
-        "fechaEnvio": "Fecha envío",
-        "fechaEvaluacion": "Fecha evaluación",
-        "hora": "Hora",
-        "lugar": "Lugar",
-        "nuevaConvocatoriaReunion": "Añadir nueva convocatoria",
-        "titulo": "Convocatorias"
+        "acciones": "Actions",
+        "aceptar": "Accept",
+        "borrar": "Delete",
+        "cancelar": "Cancel",
+        "codigo": "Code",
+        "comite": "Committee",
+        "tipoConvocatoriaReunion": "Call",
+        "editar": "Edit",
+        "eliminar": "Do you want to delete the call?",
+        "eliminarConfirmado": "Call successfully deleted",
+        "enviar": "Send",
+        "error": "The list of calls could not be loaded",
+        "fechaEnvio": "Ship date",
+        "fechaEvaluacion": "Evaluation date",
+        "hora": "Hour",
+        "lugar": "Place",
+        "nuevaConvocatoriaReunion": "Add new convocation",
+        "titulo": "Calls"
       },
       "buscador": {
         "comite": {
-          "titulo": "Comité"
+          "titulo": "Committee"
         },
         "fechaEvaluacionDesde": {
-          "titulo": "Fecha evaluación desde"
+          "titulo": "Evaluation date from"
         },
         "fechaEvaluacionHasta": {
-          "titulo": "Fecha evaluación hasta"
+          "titulo": "Evaluation date until"
         },
         "tipoConvocatoriaReunion": {
-          "titulo": "Convocatoria"
+          "titulo": "Call"
         }
+      }
+    },
+    "evaluacion": {
+      "listado": {
+        "comite": "Committee",
+        "error": "Error when listing the evaluations",
+        "fechaEvaluacion": "Evaluation Date",
+        "buscador": {
+          "comite": "Committee",
+          "tipoConvocatoria": "Type of call",
+          "fechaEvaluacionFin": "Evaluation date until",
+          "fechaEvaluacionInicio": "Date of evaluation since",
+          "memoriaNumReferencia": "Memory reference"
+        },
+        "solicitante": "Applicant",
+        "titulo": "List of evaluations",
+        "referenciaMemoria": "Memory reference",
+        "version": "Version"
       }
     },
     "evaluacion-etica": {
@@ -598,6 +617,10 @@
         "crear": "Nueva convocatoria",
         "guardar": "Guardar convocatoria"
       },
+      "evaluacion": {
+        "crear": "New evaluation",
+        "guardar": "Save request"
+      },
       "evaluacionEtica": {
         "crear": "New evaluation request",
         "guardar": "Save request"
@@ -624,6 +647,7 @@
         "cvn": "My CVN",
         "datos": "My data",
         "empresasBaseTecnologica": "Technology-based companies",
+        "evaluaciones": "Evaluations",
         "evaluacionEtica": "Ethics evaluations",
         "gruposInvestigacion": "Investigation groups",
         "ofertaTecnologica": "Technological offer",
@@ -645,6 +669,7 @@
     }
   },
   "paginator": {
+    "firstPageLabel": "First page",
     "itemsPerPageLabel": "Items per page:",
     "lastPageLabel": "Last page",
     "nextPageLabel": "Next page",

@@ -13,12 +13,19 @@
         <span>{{'menu.principal.eti.acta' | translate}}</span>
       </a>
     </mat-list-item>
-    <!--  <mat-list-item [routerLink]="UrlUtils.eti.produccionCientifica" [routerLinkActive]="['is-active']">
+    <mat-list-item *sgiHasAuthorityForAnyUO="'ETI-EVC-V'" [routerLink]="UrlUtils.eti.evaluacion"
+      [routerLinkActive]="['is-active']">
+      <a mat-list-item>
+        <mat-icon> list_alt</mat-icon>
+        <span>{{'menu.principal.eti.evaluaciones' | translate}}</span>
+      </a>
+    </mat-list-item>
+    <mat-list-item [routerLink]="UrlUtils.eti.produccionCientifica" [routerLinkActive]="['is-active']">
       <a mat-list-item>
         <mat-icon>device_hub</mat-icon>
         <span>{{'menu.principal.eti.produccionCientifica' | translate}}</span>
       </a>
-    </mat-list-item> -->
+    </mat-list-item>
     <!--  <mat-list-item [routerLink]="UrlUtils.eti.ofertaTecnologica" [routerLinkActive]="['is-active']">
       <a mat-list-item>
         <mat-icon>calendar_today</mat-icon>

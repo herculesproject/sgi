@@ -9,16 +9,15 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { NGXLogger } from 'ngx-logger';
 
-import { ActaListadoComponent } from './acta-listado.component';
+import { EvaluacionListadoComponent } from './evaluacion-listado.component';
 
-describe('ActaListadoComponent', () => {
-  let component: ActaListadoComponent;
-  let fixture: ComponentFixture<ActaListadoComponent>;
+describe('EvaluacionListadoComponent', () => {
+  let component: EvaluacionListadoComponent;
+  let fixture: ComponentFixture<EvaluacionListadoComponent>;
 
   beforeEach(async(() => {
-
-
     TestBed.configureTestingModule({
+      declarations: [EvaluacionListadoComponent],
       imports: [
         RouterTestingModule,
         MaterialDesignModule,
@@ -33,13 +32,12 @@ describe('ActaListadoComponent', () => {
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() }
       ],
-      declarations: [ActaListadoComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ActaListadoComponent);
+    fixture = TestBed.createComponent(EvaluacionListadoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

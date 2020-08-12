@@ -4,9 +4,10 @@ import { UnidadMedidaService } from '@core/services/cat/unidad-medida.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TraductorService } from '@core/services/traductor.service';
+import { SgiRestFilter } from '@sgi/framework/http';
 import { AbstractPaginacionComponent } from '@shared/paginacion/abstract-paginacion/abstract-paginacion.component';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -16,7 +17,6 @@ import { map } from 'rxjs/operators';
 })
 export class UnidadMedidaListadoComponent extends AbstractPaginacionComponent<UnidadMedida> implements OnDestroy {
   unidadesMedida$: Observable<UnidadMedida[]>;
-  borrarUnidadService: Subscription;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -65,7 +65,7 @@ export class UnidadMedidaListadoComponent extends AbstractPaginacionComponent<Un
     );
     this.dialogService.getAccionConfirmada().subscribe((aceptado: boolean) => {
       if (aceptado) {
-        this.borrarUnidadService = this.unidadMedidaService
+        this.subscripciones.push(this.unidadMedidaService
           .deleteById(unidadMedidaId)
           .pipe(
             map(() => {
@@ -74,22 +74,16 @@ export class UnidadMedidaListadoComponent extends AbstractPaginacionComponent<Un
           )
           .subscribe(() => {
             this.snackBarService.mostrarMensajeSuccess(
-              this.traductor.getTexto(
-                'unidad-medida.listado.eliminarConfirmado'
-              )
+              this.traductor.getTexto('unidad-medida.listado.eliminarConfirmado')
             );
-            this.logger.debug(
-              UnidadMedidaListadoComponent.name,
-              'borrarSeleccionado(unidadMedidaId: number) - end'
-            );
-          });
+            this.logger.debug(UnidadMedidaListadoComponent.name, 'borrarSeleccionado(unidadMedidaId: number) - end');
+          })
+        );
       }
     });
   }
 
-  ngOnDestroy(): void {
-    this.logger.debug(UnidadMedidaListadoComponent.name, 'ngOnDestroy() - start');
-    this.borrarUnidadService?.unsubscribe();
-    this.logger.debug(UnidadMedidaListadoComponent.name, 'ngOnDestroy() - end');
+  protected crearFiltros(): SgiRestFilter[] {
+    return [];
   }
 }

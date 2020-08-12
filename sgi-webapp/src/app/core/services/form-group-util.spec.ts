@@ -96,16 +96,16 @@ describe('Pruebas de FormGroupUtil', () => {
   });
 
   it('Comprueba el método validFormGroup', () => {
-    expect(FormGroupUtil.validFormGroup(formGroup)).toBeFalse();
+    expect(FormGroupUtil.valid(formGroup)).toBeFalse();
     FormGroupUtil.setValue(formGroup, emailKey, emailKey);
-    expect(FormGroupUtil.validFormGroup(formGroup)).toBeFalse();
+    expect(FormGroupUtil.valid(formGroup)).toBeFalse();
     FormGroupUtil.setValue(formGroup, contraseniaKey, emailKey);
-    expect(FormGroupUtil.validFormGroup(formGroup)).toBeFalse();
+    expect(FormGroupUtil.valid(formGroup)).toBeFalse();
     FormGroupUtil.setValue(formGroup, emailKey, email);
   });
 
   it('Comprueba el método validFormGroup con un formGroup inválido', () => {
-    expect(FormGroupUtil.validFormGroup(null)).toBeFalse();
+    expect(FormGroupUtil.valid(null)).toBeFalse();
   });
 
   it('Comprueba el método changeValidator con una clave que existe', () => {

@@ -113,7 +113,7 @@ export class TipoFungibleCrearComponent implements OnInit, OnDestroy {
    */
   enviarForm(): void {
     this.logger.debug(TipoFungibleCrearComponent.name, 'enviarForm()', 'start');
-    if (FormGroupUtil.validFormGroup(this.formGroup)) {
+    if (FormGroupUtil.valid(this.formGroup)) {
       this.enviarApi();
     } else {
       this.snackBarService.mostrarMensajeError(

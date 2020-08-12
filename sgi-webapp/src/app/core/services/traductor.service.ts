@@ -35,17 +35,9 @@ export class TraductorService {
    * @param idioma Idioma seleccionado
    */
   cambiarLenguaje(idioma: string): void {
-    this.logger.debug(
-      TraductorService.name,
-      'cambiarLenguaje(idioma: string)',
-      'start'
-    );
+    this.logger.debug(TraductorService.name, `cambiarLenguaje(${idioma})`, 'start');
     this.translateService.use(idioma);
-    this.logger.debug(
-      TraductorService.name,
-      'cambiarLenguaje(idioma: string)',
-      'end'
-    );
+    this.logger.debug(TraductorService.name, `cambiarLenguaje(${idioma})`, 'end');
   }
 
   /**
@@ -55,17 +47,9 @@ export class TraductorService {
    * @param identificador Identificador del contenido
    */
   getTexto(identificador: string): string {
-    this.logger.debug(
-      TraductorService.name,
-      'getTexto(identificador: string)',
-      'start'
-    );
+    this.logger.debug(TraductorService.name, `getTexto(${identificador})`, 'start');
     const palabra = this.translateService.instant(identificador);
-    this.logger.debug(
-      TraductorService.name,
-      'getTexto(identificador: string)',
-      'start'
-    );
+    this.logger.debug(TraductorService.name, `getTexto(${identificador})`, 'end');
     return palabra;
   }
 }

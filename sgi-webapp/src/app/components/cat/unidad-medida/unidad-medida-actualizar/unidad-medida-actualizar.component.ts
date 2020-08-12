@@ -146,7 +146,7 @@ export class UnidadMedidaActualizarComponent implements OnInit, OnDestroy {
       'enviarForm()',
       'start'
     );
-    if (FormGroupUtil.validFormGroup(this.formGroup)) {
+    if (FormGroupUtil.valid(this.formGroup)) {
       this.enviarApi();
     } else {
       this.snackBarService.mostrarMensajeError(

@@ -1,11 +1,5 @@
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn
-} from '@angular/forms';
-import {Subscription} from 'rxjs';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 /**
  * Clase para manejar los formGroups de los formularios
@@ -18,7 +12,7 @@ export class FormGroupUtil {
    *
    * @param formGroup FormGroup a comprobar
    */
-  static validFormGroup(formGroup: FormGroup): boolean {
+  static valid(formGroup: FormGroup): boolean {
     if (formGroup) {
       let result = true;
       const list: string[] = Object.keys(formGroup.controls);
@@ -199,5 +193,15 @@ export class FormGroupUtil {
       return result;
     }
     return null;
+  }
+
+  static clean(formGroup: FormGroup): void {
+    if (formGroup) {
+      const list: string[] = Object.keys(formGroup.controls);
+      list.forEach((key: string) => {
+        const abstractControl: AbstractControl = formGroup.get(key);
+        this.setValue(formGroup, key, '');
+      });
+    }
   }
 }

@@ -77,7 +77,7 @@ export class UnidadMedidaCrearComponent implements OnInit, OnDestroy {
    */
   enviarForm(): void {
     this.logger.debug(UnidadMedidaCrearComponent.name, 'enviarForm()', 'start');
-    if (FormGroupUtil.validFormGroup(this.formGroup)) {
+    if (FormGroupUtil.valid(this.formGroup)) {
       this.enviarApi();
     } else {
       this.snackBarService.mostrarMensajeError(

@@ -146,7 +146,7 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
       'sendForm()',
       'start'
     );
-    if (FormGroupUtil.validFormGroup(this.formGroup)) {
+    if (FormGroupUtil.valid(this.formGroup)) {
       this.enviarApi();
     } else {
       this.snackBarService.mostrarMensajeError(

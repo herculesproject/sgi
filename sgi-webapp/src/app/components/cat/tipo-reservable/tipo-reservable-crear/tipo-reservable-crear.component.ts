@@ -244,7 +244,7 @@ export class TipoReservableCrearComponent implements OnInit, OnDestroy {
       'sendForm()',
       'start'
     );
-    if (FormGroupUtil.validFormGroup(this.formGroup)) {
+    if (FormGroupUtil.valid(this.formGroup)) {
       this.sendApi();
     } else {
       this.snackBarService.mostrarMensajeError(

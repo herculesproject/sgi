@@ -41,12 +41,12 @@ export abstract class AbstractFormularioComponent implements OnInit, OnDestroy, 
 
   ngAfterViewInit(): void {
     this.inicializarTabs();
-    this.tabs.forEach(() => this.errorTabs.push(undefined));
+    this.tabs?.forEach(() => this.errorTabs.push(undefined));
   }
 
   ngOnDestroy(): void {
     this.logger.debug(AbstractFormularioComponent.name, 'ngOnDestroy()', 'start');
-    this.subscripciones.forEach(x => x.unsubscribe());
+    this.subscripciones?.forEach(x => x.unsubscribe());
     this.logger.debug(AbstractFormularioComponent.name, 'ngOnDestroy()', 'end');
   }
 

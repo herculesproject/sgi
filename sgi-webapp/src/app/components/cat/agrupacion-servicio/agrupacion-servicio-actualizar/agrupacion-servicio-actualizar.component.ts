@@ -150,7 +150,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
     this.logger.debug(AgrupacionServicioActualizarComponent.name,
       'enviarForm()',
       'start');
-    if (FormGroupUtil.validFormGroup(this.formGroup)) {
+    if (FormGroupUtil.valid(this.formGroup)) {
       this.actualizarServicio();
     } else {
       this.snackBarService.mostrarMensajeError(

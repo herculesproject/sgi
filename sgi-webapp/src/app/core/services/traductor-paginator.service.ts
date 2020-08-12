@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {MatPaginatorIntl} from '@angular/material/paginator';
-import {TraductorService} from '@core/services/traductor.service';
+import { Injectable } from '@angular/core';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { TraductorService } from '@core/services/traductor.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,9 +23,12 @@ export class TraductorPaginatorService extends MatPaginatorIntl {
     this.lastPageLabel = this.traductor.getTexto(
       'paginator.lastPageLabel'
     );
+    this.firstPageLabel = this.traductor.getTexto(
+      'paginator.firstPageLabel'
+    );
   }
 
-  getRangeLabel = function(page: number, pageSize: number, length: number) {
+  getRangeLabel = function (page: number, pageSize: number, length: number) {
     this.changeWords();
     if (length === 0 || pageSize === 0) {
       return `0 ${this.traductor.getTexto('paginator.of')} ${length}`;

@@ -1,12 +1,13 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { TipoFungible } from '@core/models/cat/tipo-fungible';
 import { TipoFungibleService } from '@core/services/cat/tipo-fungible.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TraductorService } from '@core/services/traductor.service';
+import { SgiRestFilter } from '@sgi/framework/http';
 import { AbstractPaginacionComponent } from '@shared/paginacion/abstract-paginacion/abstract-paginacion.component';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -14,11 +15,9 @@ import { map } from 'rxjs/operators';
   templateUrl: './tipo-fungible-listado.component.html',
   styleUrls: ['./tipo-fungible-listado.component.scss'],
 })
-export class TipoFungibleListadoComponent extends AbstractPaginacionComponent<TipoFungible> implements OnDestroy {
+export class TipoFungibleListadoComponent extends AbstractPaginacionComponent<TipoFungible> {
+
   tiposFungible$: Observable<TipoFungible[]>;
-  dialogServiceSubscription: Subscription;
-  tipoFungibleServiceDeleteSubscription: Subscription;
-  tipoFungibleServiceSubscription: Subscription;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -68,12 +67,10 @@ export class TipoFungibleListadoComponent extends AbstractPaginacionComponent<Ti
       this.traductor.getTexto('cat.tipo-fungible.listado.cancelar')
     );
 
-    this.dialogServiceSubscription = this.dialogService
-      .getAccionConfirmada()
-      .subscribe((aceptado: boolean) => {
+    this.subscripciones.push(this.dialogService.getAccionConfirmada().subscribe(
+      (aceptado: boolean) => {
         if (aceptado) {
-          this.tipoFungibleServiceDeleteSubscription = this.tipoFungibleService
-            .deleteById(tipoFungibleId)
+          this.subscripciones.push(this.tipoFungibleService.deleteById(tipoFungibleId)
             .pipe(
               map(() => {
                 return this.loadTable();
@@ -83,10 +80,12 @@ export class TipoFungibleListadoComponent extends AbstractPaginacionComponent<Ti
               this.snackBarService.mostrarMensajeSuccess(
                 this.traductor.getTexto('tipo-fungible.listado.eliminarConfirmado')
               );
-            });
+            })
+          );
         }
         aceptado = false;
-      });
+      })
+    );
 
     this.logger.debug(
       TipoFungibleListadoComponent.name,
@@ -94,11 +93,7 @@ export class TipoFungibleListadoComponent extends AbstractPaginacionComponent<Ti
     );
   }
 
-  ngOnDestroy(): void {
-    this.logger.debug(TipoFungibleListadoComponent.name, 'ngOnDestroy() - start');
-    this.tipoFungibleServiceSubscription?.unsubscribe();
-    this.dialogServiceSubscription?.unsubscribe();
-    this.tipoFungibleServiceDeleteSubscription?.unsubscribe();
-    this.logger.debug(TipoFungibleListadoComponent.name, 'ngOnDestroy() - end');
+  protected crearFiltros(): SgiRestFilter[] {
+    return [];
   }
 }

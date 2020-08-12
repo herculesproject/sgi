@@ -91,7 +91,7 @@ export class AgrupacionServicioCrearComponent implements OnInit, OnDestroy {
     this.logger.debug(AgrupacionServicioCrearComponent.name,
       'enviarForm()',
       'start');
-    if (FormGroupUtil.validFormGroup(this.formGroup)) {
+    if (FormGroupUtil.valid(this.formGroup)) {
       this.crearServicio();
     } else {
       this.snackBarService.mostrarMensajeError(

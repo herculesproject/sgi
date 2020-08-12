@@ -1,10 +1,18 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { SgiRestService, SgiRestSortDirection, SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { FormGroupUtil } from '@core/services/form-group-util';
 import { UrlUtils } from '@core/utils/url-utils';
+import {
+  SgiRestFilter,
+  SgiRestFilterType,
+  SgiRestListResult,
+  SgiRestService,
+  SgiRestSortDirection,
+} from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { merge, of, Observable } from 'rxjs';
+import { merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 @Component({
@@ -12,12 +20,14 @@ import { catchError, map, tap } from 'rxjs/operators';
   templateUrl: './abstract-paginacion.component.html',
   styleUrls: ['./abstract-paginacion.component.scss']
 })
-export abstract class AbstractPaginacionComponent<T> implements OnInit, AfterViewInit {
+export abstract class AbstractPaginacionComponent<T> implements OnInit, OnDestroy, AfterViewInit {
   UrlUtils = UrlUtils;
   columnas: string[];
   elementosPagina: number[];
   totalElementos: number;
-  filter: SgiRestFilter;
+  filter: SgiRestFilter[];
+  subscripciones: Subscription[];
+  formGroup: FormGroup;
 
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -32,13 +42,16 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, AfterVie
   ngOnInit(): void {
     this.logger.debug(AbstractPaginacionComponent.name, 'ngOnInit()', 'start');
     this.totalElementos = 0;
-    this.filter = {
-      field: undefined,
-      type: SgiRestFilterType.NONE,
-      value: '',
-    };
+    this.subscripciones = [];
+    this.filter = [];
     this.inicializarColumnas();
     this.logger.debug(AbstractPaginacionComponent.name, 'ngOnInit()', 'end');
+  }
+
+  ngOnDestroy(): void {
+    this.logger.debug(AbstractPaginacionComponent.name, 'ngOnDestroy()', 'start');
+    this.subscripciones.forEach(x => x.unsubscribe());
+    this.logger.debug(AbstractPaginacionComponent.name, 'ngOnDestroy()', 'end');
   }
 
   ngAfterViewInit(): void {
@@ -62,21 +75,12 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, AfterVie
     this.logger.debug(AbstractPaginacionComponent.name, 'ngAfterViewInit()', 'end');
   }
 
-  protected buildFilters(): SgiRestFilter[] {
-    this.logger.debug(AbstractPaginacionComponent.name, 'buildFilters()', 'start');
-    if (this.filter.field && this.filter.type !== SgiRestFilterType.NONE && this.filter.value) {
-      this.logger.debug(AbstractPaginacionComponent.name, 'buildFilters()', 'end');
-      return [this.filter];
-    }
-    this.logger.debug(AbstractPaginacionComponent.name, 'buildFilters()', 'end');
-    return [];
-  }
-
   /**
    * Load table data
    */
   onSearch() {
     this.logger.debug(AbstractPaginacionComponent.name, 'onSearch()', 'start');
+    this.filter = this.crearFiltros();
     this.loadTable(true);
     this.logger.debug(AbstractPaginacionComponent.name, 'onSearch()', 'end');
   }
@@ -86,11 +90,12 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, AfterVie
    */
   onClearFilters() {
     this.logger.debug(AbstractPaginacionComponent.name, 'onClearFilters()', 'start');
-    this.filter = {
+    FormGroupUtil.clean(this.formGroup);
+    this.filter = [{
       field: undefined,
       type: SgiRestFilterType.NONE,
       value: '',
-    };
+    }];
     this.loadTable(true);
     this.logger.debug(AbstractPaginacionComponent.name, 'onClearFilters()', 'end');
   }
@@ -112,7 +117,7 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, AfterVie
         direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
         field: this.sort.active,
       },
-      filters: this.buildFilters(),
+      filters: this.filter,
     })
       .pipe(
         map((response: SgiRestListResult<T>) => {
@@ -131,10 +136,25 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, AfterVie
           this.paginator.firstPage();
           this.totalElementos = 0;
           this.mostrarMensajeErrorLoadTable();
-          this.logger.debug(AbstractPaginacionComponent.name, 'getObservableLoadTable()', 'end');
+          this.logger.error(AbstractPaginacionComponent.name, 'getObservableLoadTable()', 'error');
           return of([]);
         })
       );
+  }
+
+  protected agregarFiltro(filtros: SgiRestFilter[], nombre: string, tipo: SgiRestFilterType, valor: any) {
+    this.logger.debug(AbstractPaginacionComponent.name,
+      `agregarFiltro(${filtros}, ${nombre}, ${tipo} , ${valor})`, 'start');
+    if (valor) {
+      const filtro: SgiRestFilter = {
+        field: nombre,
+        type: tipo,
+        value: valor,
+      };
+      filtros.push(filtro);
+    }
+    this.logger.debug(AbstractPaginacionComponent.name,
+      `agregarFiltro(${filtros}, ${nombre}, ${tipo} , ${valor})`, 'end');
   }
 
   /**
@@ -153,4 +173,9 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, AfterVie
    * Muestra un mensaje de error si se produce un error al cargar los datos de la tabla
    */
   protected abstract mostrarMensajeErrorLoadTable(): void;
+
+  /**
+   * Crea los filtros para el listado
+   */
+  protected abstract crearFiltros(formGroup?: FormGroup): SgiRestFilter[];
 }

@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { UrlUtils } from '@core/utils/url-utils';
-import { EtiRootComponent } from './eti-root/eti-root.component';
 import { SgiAuthGuard, SgiAuthRoutes } from '@sgi/framework/auth';
+
+import { EtiRootComponent } from './eti-root/eti-root.component';
 
 const routes: SgiAuthRoutes = [
   {
@@ -34,6 +35,20 @@ const routes: SgiAuthRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           hasAnyAuthorityForAnyUO: ['ETI-CNV-V', 'ETI-CNV-C', 'ETI-CNV-E', 'ETI-CNV-B', 'ETI-CNV-ENV']
+        }
+      },
+      {
+        path: UrlUtils.eti.evaluacion.valueOf(),
+        loadChildren: () =>
+          import('./evaluacion/evaluacion.module').then(
+            (m) => m.EvaluacionModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          hasAnyAuthorityForAnyUO: [
+            'ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-C', 'ETI-EVC-E', 'ETI-EVC-B',
+            'ETI-EVC-EVAL', 'ETI-EVC-EVALR'
+          ]
         }
       },
       {

@@ -1,22 +1,16 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
-
-import { NGXLogger } from 'ngx-logger';
-import { Observable, of, zip } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
-
+import { IAsistente } from '@core/models/eti/asistente';
 import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
-
-import { AbstractTabComponent } from '@shared/formularios-tabs/abstract-tab/abstract-tab.component';
-
-import { IAsistente } from '@core/models/eti/asistente';
-
-import { FormGroupUtil } from '@core/services/form-group-util';
-
 import { AsistenteService } from '@core/services/eti/asistente.service';
-import { UsuarioInfoService } from '@core/services/sgp/usuario-info.service';
+import { FormGroupUtil } from '@core/services/form-group-util';
+import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { AbstractTabComponent } from '@shared/formularios-tabs/abstract-tab/abstract-tab.component';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, of, zip } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-acta-asistentes',
@@ -40,11 +34,11 @@ export class ActaAsistentesComponent extends AbstractTabComponent<any> implement
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly asistenteService: AsistenteService,
-    protected readonly usuarioInfoService: UsuarioInfoService
+    protected readonly personaFisicaService: PersonaFisicaService
   ) {
     super(logger);
 
-    this.displayedColumns = ['evaluador.numIdentificadorPersonal', 'evaluador.nombre', 'asistencia', 'motivo', 'acciones'];
+    this.displayedColumns = ['evaluador.identificadorNumero', 'evaluador.nombre', 'asistencia', 'motivo', 'acciones'];
 
   }
 
@@ -63,14 +57,12 @@ export class ActaAsistentesComponent extends AbstractTabComponent<any> implement
             const listObservables: Observable<IAsistente>[] = [];
 
             response.items.forEach((asistente) => {
-              const asistente$ = this.usuarioInfoService.findById(asistente.evaluador.usuarioRef).pipe(
+              const asistente$ = this.personaFisicaService.findById(asistente.evaluador.personaRef).pipe(
                 map((usuarioInfo) => {
-                  asistente.evaluador.numIdentificadorPersonal = usuarioInfo.numIdentificadorPersonal;
+                  asistente.evaluador.identificadorNumero = usuarioInfo.identificadorNumero;
                   asistente.evaluador.nombre = usuarioInfo.nombre;
                   asistente.evaluador.primerApellido = usuarioInfo.primerApellido;
                   asistente.evaluador.segundoApellido = usuarioInfo.segundoApellido;
-
-
                   return asistente;
                 })
               );

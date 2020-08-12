@@ -19,8 +19,8 @@ import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocat
 import { Evaluador } from '@core/models/eti/evaluador';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { switchMap, map, startWith } from 'rxjs/operators';
-import { UsuarioService } from '@core/services/sgp/usuario.service';
-import { Usuario } from '@core/models/sgp/usuario';
+import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { Persona } from '@core/models/sgp/persona';
 import { SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
 
 @Component({
@@ -53,7 +53,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
     private readonly tipoConvocatoriaReunionService: TipoConvocatoriaReunionService,
     private readonly traductor: TraductorService,
     private readonly snackBarService: SnackBarService,
-    private readonly usuarioService: UsuarioService
+    private readonly usuarioService: PersonaFisicaService
   ) {
     super(logger);
     this.fxFlexProperties = new FxFlexProperties();
@@ -181,8 +181,8 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
                 const convocantesInfoUsuario$: Observable<Evaluador>[] = [];
 
                 convocantes.forEach(convocante => {
-                  const convocanteInfoUsuario$ = this.usuarioService.findById(convocante.usuarioRef).pipe(
-                    map((usuario: Usuario) => {
+                  const convocanteInfoUsuario$ = this.usuarioService.findById(convocante.personaRef).pipe(
+                    map((usuario: Persona) => {
                       convocante.nombre = usuario.nombre;
                       convocante.primerApellido = usuario.primerApellido;
                       convocante.segundoApellido = usuario.segundoApellido;

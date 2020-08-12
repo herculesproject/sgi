@@ -11,7 +11,7 @@ import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties
 
 import { AbstractTabComponent } from '@shared/formularios-tabs/abstract-tab/abstract-tab.component';
 
-import { IEvaluacion } from '@core/models/eti/evaluacion';
+import { Evaluacion } from '@core/models/eti/evaluacion';
 import { MemoriaListado } from '@core/models/eti/memoria-listado';
 
 import { FormGroupUtil } from '@core/services/form-group-util';
@@ -55,7 +55,7 @@ export class ActaMemoriasComponent extends AbstractTabComponent<any>  {
         switchMap((response) => {
           if (response.items) {
 
-            const evaluacionesSinDuplicados = response.items.reduce((evaluacionObject, evaluacion: IEvaluacion) =>
+            const evaluacionesSinDuplicados = response.items.reduce((evaluacionObject, evaluacion: Evaluacion) =>
               ({ ...evaluacionObject, [evaluacion.id]: evaluacion }), {});
 
             const memorias: MemoriaListado[] =

@@ -18,6 +18,7 @@
     "ebt": "Empresas de base tecnológica",
     "empresasBaseTecnologica": "Empresas de base tecnológica",
     "eti": "Ética",
+    "evaluaciones": "Evaluaciones",
     "evaluacionEtica": "Evaluaciones de ética",
     "gruposInvestigacion": "Grupos de investigación",
     "horario": "Horarios",
@@ -535,6 +536,27 @@
         }
       }
     },
+    "evaluacion": {
+      "listado": {
+        "comite": "Comite",
+        "error": "Error al listas las evaluaciones",
+        "buscador": {
+          "comite": "Comite",
+          "tipoConvocatoria": {
+            "error": "Error al cargar los tipos de convocatoria",
+            "titulo": "Tipo de Convocatoria"
+          },
+          "fechaEvaluacionFin": "Fecha de evaluación hasta",
+          "fechaEvaluacionInicio": "Fecha de evaluación desde",
+          "memoriaNumReferencia": "Referencia memoria"
+        },
+        "fechaEvaluacion": "Fecha Evaluación",
+        "solicitante": "Solicitante",
+        "titulo": "Listado de evaluaciones",
+        "referenciaMemoria": "Referencia memoria",
+        "version": "Versión"
+      }
+    },
     "evaluacion-etica": {
       "crear": {
         "asignacion-tareas": "Asignación de tareas",
@@ -599,6 +621,10 @@
         "crear": "Nueva convocatoria",
         "guardar": "Guardar convocatoria"
       },
+      "evaluacion": {
+        "crear": "Nueva evaluación",
+        "guardar": "Guardar evaluación"
+      },
       "evaluacionEtica": {
         "crear": "Nueva solicitud de evaluación",
         "guardar": "Guardar solicitud"
@@ -626,6 +652,7 @@
         "datos": "Mis datos",
         "empresasBaseTecnologica": "Empresas de base tecnológica",
         "evaluacionEtica": "Evaluaciones de ética",
+        "evaluaciones": "Evaluaciones",
         "gruposInvestigacion": "Grupos de investigación",
         "ofertaTecnologica": "Oferta tecnológica",
         "produccionCientifica": "Producción científica",
@@ -646,6 +673,7 @@
     }
   },
   "paginator": {
+    "firstPageLabel": "Primera página",
     "itemsPerPageLabel": "Elementos por página:",
     "lastPageLabel": "Ultima página",
     "nextPageLabel": "Página siguiente",

@@ -1,9 +1,8 @@
-
-import { Comite } from './comite';
+import { Persona } from '../sgp/persona';
 import { CargoComite } from './cargo-comite';
-import { UsuarioInfo } from '../sgp/usuario-info';
+import { Comite } from './comite';
 
-export interface Evaluador extends UsuarioInfo {
+export interface Evaluador extends Persona {
 
   /** Id */
   id: number;

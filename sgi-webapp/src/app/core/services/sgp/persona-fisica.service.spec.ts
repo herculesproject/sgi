@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { UsuarioInfoService } from './usuario-info.service';
+
+import { PersonaFisicaService } from './persona-fisica.service';
 import { HttpClientModule } from '@angular/common/http';
 import { NGXLogger } from 'ngx-logger';
 import TestUtils from '@core/utils/test-utils';
 
-
-describe('UsuarioInfoService', () => {
-  let service: UsuarioInfoService;
+describe('PersonaFisicaService', () => {
+  let service: PersonaFisicaService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -17,7 +17,7 @@ describe('UsuarioInfoService', () => {
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
       ],
     });
-    service = TestBed.inject(UsuarioInfoService);
+    service = TestBed.inject(PersonaFisicaService);
   });
 
   it('should be created', () => {

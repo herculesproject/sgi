@@ -10,10 +10,12 @@ export class DateUtils {
    * @return una nueva fecha correspondiente al inicio del dia
    */
   static getFechaInicioDia(fecha: Date): Date {
-    const fechaInicioDia = new Date(fecha);
-    fechaInicioDia.setHours(0, 0, 0, 0);
-
-    return fechaInicioDia;
+    if (fecha) {
+      const fechaInicioDia = new Date(fecha);
+      fechaInicioDia.setHours(0, 0, 0, 0);
+      return fechaInicioDia;
+    }
+    return null;
   }
 
   /**
@@ -23,10 +25,12 @@ export class DateUtils {
    * @return una nueva fecha correspondiente al fin del dia
    */
   static getFechaFinDia(fecha: Date): Date {
-    const fechaFinDia = new Date(fecha);
-    fechaFinDia.setHours(23, 59, 59, 999);
-
-    return fechaFinDia;
+    if (fecha) {
+      const fechaFinDia = new Date(fecha);
+      fechaFinDia.setHours(23, 59, 59, 999);
+      return fechaFinDia;
+    }
+    return null;
   }
 
   /**

@@ -1,12 +1,12 @@
-import { TestBed } from '@angular/core/testing';
-
-import { UsuarioService } from '../sgp/usuario.service';
 import { HttpClientModule } from '@angular/common/http';
-import { NGXLogger } from 'ngx-logger';
+import { TestBed } from '@angular/core/testing';
 import TestUtils from '@core/utils/test-utils';
+import { NGXLogger } from 'ngx-logger';
 
-describe('UsuarioService', () => {
-  let service: UsuarioService;
+import { TipoEstadoMemoriaService } from './tipo-estado-memoria.service';
+
+describe('TipoEstadoMemoriaService', () => {
+  let service: TipoEstadoMemoriaService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -17,7 +17,7 @@ describe('UsuarioService', () => {
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
       ],
     });
-    service = TestBed.inject(UsuarioService);
+    service = TestBed.inject(TipoEstadoMemoriaService);
   });
 
   it('should be created', () => {
