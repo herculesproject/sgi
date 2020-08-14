@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, LOCALE_ID, Inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { NGXLogger } from 'ngx-logger';
 
@@ -21,10 +21,11 @@ export class TraductorService {
    */
   constructor(
     private logger: NGXLogger,
-    public translateService: TranslateService
+    private translateService: TranslateService,
+    @Inject(LOCALE_ID) localeId: string
   ) {
     this.logger.debug(TraductorService.name, 'constructor', 'start');
-    this.translateService.setDefaultLang('es');
+    this.translateService.use(localeId);
     this.logger.debug(TraductorService.name, 'constructor', 'end');
   }
 

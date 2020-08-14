@@ -1,29 +1,29 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule, LOCALE_ID } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CoreModule } from '@core/core.module';
 import { environment } from '@env';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TraductorPaginatorService } from '@core/services/traductor-paginator.service';
-import { SharedModule } from '@shared/shared.module';
 import { LoggerModule } from 'ngx-logger';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ComponentsModule } from './components/components.module';
-import { SelectorModuloComponent } from '@shared/componentes-layout/selector-modulo/selector-modulo.component';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { SgiAuthModule, SGI_AUTH_CONFIG, SgiAuthMode } from '@sgi/framework/auth';
 
-import es from '@angular/common/locales/es';
+import { BlockModule } from './block/block.module';
+import { SelectorModuloComponent } from './block/selector-modulo/selector-modulo.component';
+import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
+import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+import { CoreModule } from '@angular/flex-layout';
 
-registerLocaleData(es);
+// Load supported locales
+registerLocaleData(localeEs);
 
 @NgModule({
   declarations: [
@@ -35,8 +35,7 @@ registerLocaleData(es);
     BrowserAnimationsModule,
     CoreModule,
     LoggerModule.forRoot(environment.loggerConfig),
-    SharedModule,
-    MaterialDesignModule.forRoot(),
+    MaterialDesignModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -44,12 +43,11 @@ registerLocaleData(es);
           return new TranslateHttpLoader(http);
         },
         deps: [HttpClient]
-      }
+      },
+      defaultLanguage: 'es',
     }),
-    ReactiveFormsModule,
-    ComponentsModule,
+    BlockModule,
     HttpClientModule,
-    PerfectScrollbarModule,
     SgiAuthModule.forRoot()
   ],
   providers: [
@@ -67,16 +65,21 @@ registerLocaleData(es);
     },
     {
       provide: LOCALE_ID,
-      useValue: 'es-*'
+      useValue: 'es'
     },
+    {
+      provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+      useValue: { useUtc: true }
+    },
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+    }
   ],
   entryComponents: [
     SelectorModuloComponent
   ],
-  exports: [
-    AppComponent
-  ],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule { }

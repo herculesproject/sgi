@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -15,7 +14,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -30,35 +28,42 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatRadioModule } from '@angular/material/radio';
 
 @NgModule({
-  declarations: [],
-  imports: [
-    CommonModule,
-    MatSidenavModule, MatIconModule, MatToolbarModule, MatButtonModule,
-    MatListModule, MatCardModule, MatProgressBarModule, MatInputModule,
-    MatSnackBarModule, MatProgressSpinnerModule, MatDatepickerModule, MatNativeDateModule,
-    MatAutocompleteModule, MatTableModule, MatDialogModule, MatTabsModule,
-    MatTooltipModule, MatSelectModule, MatPaginatorModule, MatChipsModule,
-    MatButtonToggleModule, MatSlideToggleModule, MatBadgeModule, MatCheckboxModule,
-    MatExpansionModule, MatSortModule, MatGridListModule, MatMomentDateModule,
-  ],
   exports: [
-    CommonModule,
-    MatSidenavModule, MatIconModule, MatToolbarModule, MatButtonModule,
-    MatListModule, MatCardModule, MatProgressBarModule, MatInputModule,
-    MatSnackBarModule, MatMenuModule, MatProgressSpinnerModule, MatDatepickerModule, MatNativeDateModule,
-    MatAutocompleteModule, MatTableModule, MatDialogModule, MatTabsModule,
-    MatTooltipModule, MatSelectModule, MatPaginatorModule, MatChipsModule,
-    MatButtonToggleModule, MatSlideToggleModule, MatBadgeModule, MatCheckboxModule,
-    MatExpansionModule, MatSortModule, MatGridListModule, MatMomentDateModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatListModule,
+    MatCardModule,
+    MatProgressBarModule,
+    MatInputModule,
+    MatSnackBarModule,
+    MatMenuModule,
+    MatProgressSpinnerModule,
+    MatDatepickerModule,
+    MatAutocompleteModule,
+    MatTableModule,
+    MatDialogModule,
+    MatTabsModule,
+    MatTooltipModule,
+    MatSelectModule,
+    MatPaginatorModule,
+    MatChipsModule,
+    MatButtonToggleModule,
+    MatSlideToggleModule,
+    MatBadgeModule,
+    MatCheckboxModule,
+    MatExpansionModule,
+    MatSortModule,
+    MatGridListModule,
+    MatMomentDateModule,
+    MatRadioModule,
+    FlexLayoutModule
   ]
 })
-export class MaterialDesignModule {
-  static forRoot() {
-    return {
-      ngModule: MaterialDesignModule,
-      providers: [{ provide: MAT_DATE_LOCALE, useValue: 'es-ES' }]
-    };
-  }
-}
+export class MaterialDesignModule { }
+

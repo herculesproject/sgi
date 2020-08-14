@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { NGXLogger } from 'ngx-logger';
-import { DialogComponent } from '@shared/dialog/dialog.component';
+import { DialogComponent } from '../../block/dialog/dialog.component';
 import { map } from 'rxjs/operators';
 
 @Injectable({

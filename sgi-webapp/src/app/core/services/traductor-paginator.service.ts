@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatPaginatorIntl } from '@angular/material/paginator';
-import { TraductorService } from '@core/services/traductor.service';
+import { TraductorService } from './traductor.service';
 
 @Injectable({
   providedIn: 'root',

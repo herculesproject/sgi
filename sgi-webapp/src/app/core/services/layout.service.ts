@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { MatSidenav } from '@angular/material/sidenav';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 

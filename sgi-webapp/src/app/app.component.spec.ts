@@ -4,8 +4,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { HeaderComponent } from '@shared/componentes-layout/header/header.component';
-import { NavbarComponent } from '@shared/componentes-layout/navbar/navbar.component';
+import { HeaderComponent } from '@block/header/header.component';
+import { NavbarComponent } from '@block/navbar/navbar.component';
 import { NGXLogger } from 'ngx-logger';
 
 import { AppComponent } from './app.component';
@@ -16,7 +16,7 @@ describe('AppComponent', () => {
       imports: [
         RouterTestingModule,
         HttpClientTestingModule,
-        MaterialDesignModule.forRoot(),
+        MaterialDesignModule,
         BrowserAnimationsModule,
         TestUtils.getIdiomas()
       ],
