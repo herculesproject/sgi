@@ -5,7 +5,6 @@ import { NGXLogger } from 'ngx-logger';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { EvaluacionEticaDatosGeneralesComponent } from './evaluacion-etica-datos-generales/evaluacion-etica-datos-generales.component';
 import { EvaluacionEticaEquipoInvestigadorComponent } from './evaluacion-etica-equipo-investigador/evaluacion-etica-equipo-investigador.component';
 import { EvaluacionEticaAsignacionTareasComponent } from './evaluacion-etica-asignacion-tareas/evaluacion-etica-asignacion-tareas.component';
@@ -33,7 +32,6 @@ describe('EvaluacionEticaCrearComponent', () => {
         TestUtils.getIdiomas(),
         MaterialDesignModule,
         BrowserAnimationsModule,
-        PerfectScrollbarModule,
         HttpClientTestingModule,
         FlexModule,
         ReactiveFormsModule

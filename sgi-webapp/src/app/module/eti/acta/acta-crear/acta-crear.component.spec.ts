@@ -9,7 +9,6 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { FooterGuardarComponent } from '@shared/footers/footer-guardar/footer-guardar.component';
 import { GenericTabLabelComponent } from '@shared/generic-tab-label/generic-tab-label.component';
 import { NGXLogger } from 'ngx-logger';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
 import { ActaCrearComponent } from './acta-crear.component';
 import { ActaAsistentesComponent } from '../acta-formulario/acta-asistentes/acta-asistentes.component';
@@ -33,7 +32,6 @@ describe('ActaCrearComponent', () => {
         TestUtils.getIdiomas(),
         MaterialDesignModule,
         BrowserAnimationsModule,
-        PerfectScrollbarModule,
         HttpClientTestingModule,
         FlexModule,
         ReactiveFormsModule,

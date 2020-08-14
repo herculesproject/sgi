@@ -7,7 +7,6 @@ import { TraductorService } from '../services/traductor.service';
 import { SnackBarService } from '../services/snack-bar.service';
 
 export abstract class AbstractFormularioComponent implements OnInit, OnDestroy, AfterViewInit {
-  configPerfectScrollBar: {};
   tabOrigen: number;
   errorTabs: string[];
   textoCrear: string;
@@ -19,11 +18,7 @@ export abstract class AbstractFormularioComponent implements OnInit, OnDestroy, 
     protected logger: NGXLogger,
     protected readonly traductor: TraductorService,
     protected readonly snackBarService: SnackBarService
-  ) {
-    this.configPerfectScrollBar = {
-      useBothWheelAxes: true
-    };
-  }
+  ) { }
 
   ngOnInit(): void {
     this.logger.debug(AbstractFormularioComponent.name, 'ngOnInit()', 'start');

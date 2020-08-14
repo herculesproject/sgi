@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '@shared/shared.module';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
 import { ActaCrearComponent } from './acta-crear/acta-crear.component';
 import { ActaRoutingModule } from './acta-routing.module';
@@ -30,7 +29,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ActaRoutingModule,
     TranslateModule,
     MaterialDesignModule,
-    PerfectScrollbarModule,
     SgiAuthModule,
     FormsModule,
     ReactiveFormsModule

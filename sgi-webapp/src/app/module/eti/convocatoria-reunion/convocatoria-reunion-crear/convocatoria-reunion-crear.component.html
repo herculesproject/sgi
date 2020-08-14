@@ -7,10 +7,8 @@
           textoLabel="eti.convocatoriaReunion.formulario.datosGenerales.cabecera">
         </app-generic-tab-label>
       </ng-template>
-      <perfect-scrollbar [config]="configPerfectScrollBar">
-        <app-convocatoria-reunion-datos-generales #datosGenerales (eventEmitter)="setErroresTab(0, $event)">
-        </app-convocatoria-reunion-datos-generales>
-      </perfect-scrollbar>
+      <app-convocatoria-reunion-datos-generales #datosGenerales (eventEmitter)="setErroresTab(0, $event)">
+      </app-convocatoria-reunion-datos-generales>
     </mat-tab>
 
   </mat-tab-group>
