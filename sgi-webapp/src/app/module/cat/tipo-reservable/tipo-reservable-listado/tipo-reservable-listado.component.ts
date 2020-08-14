@@ -6,7 +6,6 @@ import { TipoReservable } from '@core/models/cat/tipo-reservable';
 import { TipoReservableService } from '@core/services/cat/tipo-reservable.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { TraductorService } from '@core/services/traductor.service';
 import { SgiRestSortDirection, SgiRestFilter, SgiRestFilterType } from '@sgi/framework/http';
 import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
@@ -40,7 +39,6 @@ export class TipoReservableListadoComponent implements AfterViewInit, OnDestroy 
   constructor(
     private readonly logger: NGXLogger,
     private readonly tipoReservableService: TipoReservableService,
-    private readonly traductor: TraductorService,
     private readonly dialogService: DialogService,
     private readonly snackBarService: SnackBarService) {
     this.logger.debug(TipoReservableListadoComponent.name, 'ngOnInit()', 'start');
@@ -109,9 +107,7 @@ export class TipoReservableListadoComponent implements AfterViewInit, OnDestroy 
           // On error reset pagination values
           this.paginator.firstPage();
           this.totalElementos = 0;
-          this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('cat.tipo-reservable.listado.error')
-          );
+          this.snackBarService.showError('cat.tipo-reservable.listado.error');
           this.logger.debug(TipoReservableListadoComponent.name, 'loadTable()', 'end');
           return of([]);
         })
@@ -166,14 +162,10 @@ export class TipoReservableListadoComponent implements AfterViewInit, OnDestroy 
     this.logger.debug(TipoReservableListadoComponent.name,
       'borrarSeleccionado(tipoReservableId: number) - start');
 
-    this.dialogService.dialogGenerico(
-      this.traductor.getTexto('cat.tipo-reservable.listado.eliminar'),
-      this.traductor.getTexto('cat.tipo-reservable.listado.aceptar'),
-      this.traductor.getTexto('cat.tipo-reservable.listado.cancelar')
-    );
-
-    this.dialogServiceSubscriptionGetSubscription = this.dialogService.getAccionConfirmada().subscribe(
-      (aceptado: boolean) => {
+    this.dialogServiceSubscriptionGetSubscription = this.dialogService.showConfirmation(
+      'cat.tipo-reservable.listado.eliminar'
+    ).subscribe(
+      (aceptado) => {
         if (aceptado) {
           this.tipoReservableServiceDeleteSubscription = this.tipoReservableService
             .deleteById(tipoReservableId)
@@ -182,11 +174,7 @@ export class TipoReservableListadoComponent implements AfterViewInit, OnDestroy 
                 return this.loadTable();
               })
             ).subscribe(() => {
-              this.snackBarService
-                .mostrarMensajeSuccess(
-                  this.traductor.getTexto(
-                    'tipo-reservable.listado.eliminarConfirmado')
-                );
+              this.snackBarService.showSuccess('tipo-reservable.listado.eliminarConfirmado');
             });
         }
         aceptado = false;

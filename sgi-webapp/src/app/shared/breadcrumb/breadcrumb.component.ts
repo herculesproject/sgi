@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 import { NavigationEnd, Router } from '@angular/router';
-import { TraductorService } from '@core/services/traductor.service';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { UrlElement } from '@core/models/shared/breadcrumb';
@@ -19,7 +18,6 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
   constructor(
     private readonly logger: NGXLogger,
     private readonly router: Router,
-    private readonly traductor: TraductorService,
     private breadcrumbService: BreadcrumbService
   ) {
     this.crearSubscripcionUrl();

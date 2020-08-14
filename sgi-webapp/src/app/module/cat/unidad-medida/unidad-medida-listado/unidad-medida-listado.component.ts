@@ -3,7 +3,6 @@ import { UnidadMedida } from '@core/models/cat/unidad-medida';
 import { UnidadMedidaService } from '@core/services/cat/unidad-medida.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { TraductorService } from '@core/services/traductor.service';
 import { AbstractPaginacionComponent } from '@core/component/abstract-paginacion.component';
 import { SgiRestFilter } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
@@ -21,7 +20,6 @@ export class UnidadMedidaListadoComponent extends AbstractPaginacionComponent<Un
   constructor(
     protected readonly logger: NGXLogger,
     private readonly unidadMedidaService: UnidadMedidaService,
-    private readonly traductor: TraductorService,
     private readonly dialogService: DialogService,
     private readonly snackBarService: SnackBarService
   ) {
@@ -43,9 +41,7 @@ export class UnidadMedidaListadoComponent extends AbstractPaginacionComponent<Un
 
   protected mostrarMensajeErrorLoadTable(): void {
     this.logger.debug(UnidadMedidaListadoComponent.name, 'mostrarMensajeErrorLoadTable()', 'start');
-    this.snackBarService.mostrarMensajeError(
-      this.traductor.getTexto('cat.unidad-medida.listado.error')
-    );
+    this.snackBarService.showError('cat.unidad-medida.listado.error');
     this.logger.debug(UnidadMedidaListadoComponent.name, 'mostrarMensajeErrorLoadTable()', 'end');
   }
 
@@ -58,12 +54,9 @@ export class UnidadMedidaListadoComponent extends AbstractPaginacionComponent<Un
       UnidadMedidaListadoComponent.name,
       'borrarSeleccionado(unidadMedidaId: number) - start'
     );
-    this.dialogService.dialogGenerico(
-      this.traductor.getTexto('cat.unidad-medida.listado.eliminar'),
-      this.traductor.getTexto('cat.unidad-medida.listado.aceptar'),
-      this.traductor.getTexto('cat.unidad-medida.listado.cancelar')
-    );
-    this.dialogService.getAccionConfirmada().subscribe((aceptado: boolean) => {
+    this.dialogService.showConfirmation(
+      'cat.unidad-medida.listado.eliminar'
+    ).subscribe((aceptado: boolean) => {
       if (aceptado) {
         this.subscripciones.push(this.unidadMedidaService
           .deleteById(unidadMedidaId)
@@ -73,9 +66,7 @@ export class UnidadMedidaListadoComponent extends AbstractPaginacionComponent<Un
             })
           )
           .subscribe(() => {
-            this.snackBarService.mostrarMensajeSuccess(
-              this.traductor.getTexto('unidad-medida.listado.eliminarConfirmado')
-            );
+            this.snackBarService.showSuccess('unidad-medida.listado.eliminarConfirmado');
             this.logger.debug(UnidadMedidaListadoComponent.name, 'borrarSeleccionado(unidadMedidaId: number) - end');
           })
         );

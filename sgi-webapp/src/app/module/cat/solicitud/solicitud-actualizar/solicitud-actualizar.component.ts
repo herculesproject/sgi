@@ -1,13 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Registro } from '@core/models/cat/registro';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SolicitudService } from '@core/services/cat/solicitud.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { TraductorService } from '@core/services/traductor.service';
 import { SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
 import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
@@ -34,10 +33,8 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly logger: NGXLogger,
-    private activatedRoute: ActivatedRoute,
     private readonly router: Router,
     private readonly solicitudService: SolicitudService,
-    private readonly traductor: TraductorService,
     private snackBarService: SnackBarService
   ) {
     this.fxFlexProperties = new FxFlexProperties();
@@ -120,9 +117,7 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
       catchError(() => {
         // On error reset pagination values
         // Añadimos esta comprobación para que no nos eche al crear uno nuevo
-        this.snackBarService.mostrarMensajeSuccess(
-          this.traductor.getTexto('cat.solicitud.actualizar.no-encontrado')
-        );
+        this.snackBarService.showSuccess('cat.solicitud.actualizar.no-encontrado');
         this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.solicitud}`).then();
 
         this.logger.debug(
@@ -149,9 +144,7 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
     if (FormGroupUtil.valid(this.formGroup)) {
       this.enviarApi();
     } else {
-      this.snackBarService.mostrarMensajeError(
-        this.traductor.getTexto('form-group.error')
-      );
+      this.snackBarService.showError('form-group.error');
     }
     this.logger.debug(
       SolicitudActualizarComponent.name,
@@ -174,9 +167,7 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
 
     // Si no tiene id, mensaje de no encontrado
     if (this.registro.id === null) {
-      this.snackBarService.mostrarMensajeError(
-        this.traductor.getTexto('cat.solicitud.actualizar.no-encontrado')
-      );
+      this.snackBarService.showError('cat.solicitud.actualizar.no-encontrado');
     }
     // Si tiene id, lo actualizamos
     else {
@@ -203,9 +194,7 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
       .update(this.registro.id, this.registro)
       .subscribe(
         () => {
-          this.snackBarService.mostrarMensajeSuccess(
-            this.traductor.getTexto('cat.solicitud.actualizar.normativa.correcto')
-          );
+          this.snackBarService.showSuccess('cat.solicitud.actualizar.normativa.correcto');
           this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.solicitud}`).then();
           this.desactivarAceptar = false;
           this.logger.debug(
@@ -215,9 +204,7 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
           );
         },
         () => {
-          this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('cat.solicitud.actualizar.normativa.error')
-          );
+          this.snackBarService.showError('cat.solicitud.actualizar.normativa.error');
           this.desactivarAceptar = false;
           this.logger.debug(
             SolicitudActualizarComponent.name,

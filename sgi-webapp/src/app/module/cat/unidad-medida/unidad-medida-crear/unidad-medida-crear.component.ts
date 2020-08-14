@@ -5,7 +5,6 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { UnidadMedida } from '@core/models/cat/unidad-medida';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { TraductorService } from '@core/services/traductor.service';
 import { UnidadMedidaService } from '@core/services/cat/unidad-medida.service';
 import { UrlUtils } from '@core/utils/url-utils';
 import { FormGroupUtil } from '@core/utils/form-group-util';
@@ -32,7 +31,6 @@ export class UnidadMedidaCrearComponent implements OnInit, OnDestroy {
     private readonly logger: NGXLogger,
     private readonly router: Router,
     private readonly unidadMedidaService: UnidadMedidaService,
-    private readonly traductor: TraductorService,
     private readonly snackBarService: SnackBarService
   ) {
     this.fxFlexProperties = new FxFlexProperties();
@@ -80,9 +78,7 @@ export class UnidadMedidaCrearComponent implements OnInit, OnDestroy {
     if (FormGroupUtil.valid(this.formGroup)) {
       this.enviarApi();
     } else {
-      this.snackBarService.mostrarMensajeError(
-        this.traductor.getTexto('form-group.error')
-      );
+      this.snackBarService.showError('form-group.error');
     }
     this.logger.debug(UnidadMedidaCrearComponent.name, 'enviarForm()', 'end');
   }
@@ -97,9 +93,7 @@ export class UnidadMedidaCrearComponent implements OnInit, OnDestroy {
       .create(this.getDatosForm())
       .subscribe(
         () => {
-          this.snackBarService.mostrarMensajeSuccess(
-            this.traductor.getTexto('cat.unidad-medida.crear.correcto')
-          );
+          this.snackBarService.showSuccess('cat.unidad-medida.crear.correcto');
           this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.unidadMedidas}`).then();
           this.logger.debug(
             UnidadMedidaCrearComponent.name,
@@ -108,9 +102,7 @@ export class UnidadMedidaCrearComponent implements OnInit, OnDestroy {
           );
         },
         () => {
-          this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('cat.unidad-medida.crear.error')
-          );
+          this.snackBarService.showError('cat.unidad-medida.crear.error');
           this.desactivarAceptar = false;
           this.logger.debug(
             UnidadMedidaCrearComponent.name,

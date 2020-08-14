@@ -17,7 +17,6 @@ import { TipoEstadoActa } from '@core/models/eti/tipo-estado-acta';
 
 import { ComiteService } from '@core/services/eti/comite.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { TraductorService } from '@core/services/traductor.service';
 import { TipoEstadoActaService } from '@core/services/eti/tipo-estado-acta.service';
 
 
@@ -67,13 +66,12 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
 
   buscadorFormGroup: FormGroup;
 
-  textoCrear: string;
+  textoCrear = 'footer.eti.acta.crear';
 
   constructor(
     private readonly logger: NGXLogger,
     private readonly actasService: ActaService,
     private readonly snackBarService: SnackBarService,
-    private readonly traductor: TraductorService,
     private readonly comiteService: ComiteService,
     private readonly tipoEstadoActaService: TipoEstadoActaService,
     private readonly evaluacionService: EvaluacionService
@@ -99,8 +97,6 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-
-    this.textoCrear = this.traductor.getTexto('footer.eti.acta.crear');
   }
 
   ngOnInit(): void {
@@ -252,9 +248,7 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
           // On error reset pagination values
           this.paginator.firstPage();
           this.totalElementos = 0;
-          this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('eti.acta.listado.error')
-          );
+          this.snackBarService.showError('eti.acta.listado.error');
           this.logger.debug(ActaListadoComponent.name, 'loadTable()', 'end');
           return of([]);
         })

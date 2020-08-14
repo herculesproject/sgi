@@ -2,6 +2,12 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NGXLogger } from 'ngx-logger';
 
+export interface DialogData {
+  message: string;
+  params: {};
+  ok: string;
+  cancel: string;
+}
 @Component({
   templateUrl: './dialog.component.html',
   styleUrls: ['./dialog.component.scss']
@@ -9,24 +15,21 @@ import { NGXLogger } from 'ngx-logger';
 export class DialogComponent {
 
   message: string;
-  cancelButtonText = '';
-  continuarButtonText = '';
+  params: {};
+  cancelButtonText: string;
+  continuarButtonText: string;
 
   constructor(
     protected logger: NGXLogger,
-    @Inject(MAT_DIALOG_DATA) private data: any,
+    @Inject(MAT_DIALOG_DATA) data: DialogData,
     private dialogRef: MatDialogRef<DialogComponent>
   ) {
     this.logger.debug(DialogComponent.name, 'constructor(protected logger: NGXLogger, private dialogRef: MatDialogRef<DialogComponent>');
     if (data) {
-      this.message = data.message || this.message;
-      if (data.cancel) {
-        this.cancelButtonText = data.cancel || this.cancelButtonText;
-      }
-      if (data.ok) {
-        this.continuarButtonText = data.ok || this.continuarButtonText;
-      }
-
+      this.message = data.message || '';
+      this.params = data.params || {};
+      this.cancelButtonText = data.cancel || '';
+      this.continuarButtonText = data.ok || '';
     }
     this.logger.debug(DialogComponent.name, 'constructor(protected logger: NGXLogger, private dialogRef: MatDialogRef<DialogComponent>');
   }

@@ -5,9 +5,7 @@ import { Registro } from '@core/models/cat/registro';
 import { Servicio } from '@core/models/cat/servicio';
 import { ServicioService } from '@core/services/cat/servicio.service';
 import { SolicitudService } from '@core/services/cat/solicitud.service';
-import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { TraductorService } from '@core/services/traductor.service';
 import { SgiRestSortDirection, SgiRestFilter, SgiRestFilterType } from '@sgi/framework/http';
 import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
@@ -38,8 +36,6 @@ export class SolicitudListadoComponent implements AfterViewInit, OnDestroy, OnCh
     private readonly logger: NGXLogger,
     private readonly solicitudService: SolicitudService,
     private readonly servicioService: ServicioService,
-    private readonly traductor: TraductorService,
-    private dialogService: DialogService,
     private snackBarService: SnackBarService
   ) {
     this.logger.debug(SolicitudListadoComponent.name, 'ngOnInit()', 'start');
@@ -107,9 +103,7 @@ export class SolicitudListadoComponent implements AfterViewInit, OnDestroy, OnCh
           // On error reset pagination values
           this.paginator.firstPage();
           this.totalElementos = 0;
-          this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('cat.solicitud.listado.error')
-          );
+          this.snackBarService.showError('cat.solicitud.listado.error');
           this.logger.debug(SolicitudListadoComponent.name, 'loadTable()', 'end');
           return of([]);
         })
@@ -186,9 +180,7 @@ export class SolicitudListadoComponent implements AfterViewInit, OnDestroy, OnCh
       .update(this.registro.id, this.registro)
       .subscribe(
         () => {
-          this.snackBarService.mostrarMensajeSuccess(
-            this.traductor.getTexto('cat.solicitud.alta.correcto')
-          );
+          this.snackBarService.showSuccess('cat.solicitud.alta.correcto');
           this.logger.debug(
             SolicitudListadoComponent.name,
             'actualizarSolicitud()',
@@ -196,9 +188,7 @@ export class SolicitudListadoComponent implements AfterViewInit, OnDestroy, OnCh
           );
         },
         () => {
-          this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('cat.solicitud.alta.error')
-          );
+          this.snackBarService.showError('cat.solicitud.alta.error');
           this.logger.debug(
             SolicitudListadoComponent.name,
             'actualizarSolicitud()',

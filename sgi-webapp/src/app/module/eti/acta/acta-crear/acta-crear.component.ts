@@ -2,7 +2,6 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Acta } from '@core/models/eti/acta';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { TraductorService } from '@core/services/traductor.service';
 import { UrlUtils } from '@core/utils/url-utils';
 import { AbstractFormularioComponent } from '@core/component/abstract-formulario.component';
 import { NGXLogger } from 'ngx-logger';
@@ -23,17 +22,17 @@ export class ActaCrearComponent extends AbstractFormularioComponent implements O
   @ViewChild('memorias', { static: true }) memorias: ActaMemoriasComponent;
   @ViewChild('asistentes', { static: true }) asistentes: ActaAsistentesComponent;
 
+  textoCrear = 'footer.eti.acta.guardar';
+
   idConvocatoria: number;
 
   constructor(
     protected readonly logger: NGXLogger,
-    protected readonly traductor: TraductorService,
     protected readonly snackBarService: SnackBarService,
     private readonly router: Router,
     private readonly actaService: ActaService
   ) {
-    super(logger, traductor, snackBarService);
-    this.textoCrear = this.traductor.getTexto('footer.eti.acta.guardar');
+    super(logger, snackBarService);
   }
 
   ngOnInit() {
@@ -83,8 +82,7 @@ export class ActaCrearComponent extends AbstractFormularioComponent implements O
           this.tabs.get(0).actualizarDatos(acta);
           this.tabs.get(0).warning = false;
 
-          this.snackBarService.mostrarMensajeSuccess(
-            this.traductor.getTexto('eti.acta.crear.correcto'));
+          this.snackBarService.showSuccess('eti.acta.crear.correcto');
           this.router.navigateByUrl(`${UrlUtils.eti.root}/${UrlUtils.eti.actas}`).then();
           this.logger.debug(ActaCrearComponent.name, 'enviarDatos()', 'end');
 
@@ -92,8 +90,7 @@ export class ActaCrearComponent extends AbstractFormularioComponent implements O
           () => {
             // Si falla mostramos el error en la pestaña
             this.tabs.get(0).mostrarError();
-            this.snackBarService.mostrarMensajeSuccess(
-              this.traductor.getTexto('eti.acta.crear.error'));
+            this.snackBarService.showError('eti.acta.crear.error');
             this.logger.error(ActaCrearComponent.name, 'enviarDatos()', 'end');
           }
         )

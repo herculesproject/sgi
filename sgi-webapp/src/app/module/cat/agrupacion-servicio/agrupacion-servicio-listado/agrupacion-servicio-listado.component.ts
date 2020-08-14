@@ -5,7 +5,7 @@ import { Servicio } from '@core/models/cat/servicio';
 import { ServicioService } from '@core/services/cat/servicio.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { TraductorService } from '@core/services/traductor.service';
+
 import { SgiRestSortDirection, SgiRestFilter, SgiRestFilterType } from '@sgi/framework/http';
 import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
@@ -37,7 +37,6 @@ export class AgrupacionServicioListadoComponent implements AfterViewInit, OnDest
   constructor(
     private readonly logger: NGXLogger,
     private readonly servicioService: ServicioService,
-    private readonly traductor: TraductorService,
     private readonly dialogService: DialogService,
     private readonly snackBarService: SnackBarService
   ) {
@@ -110,9 +109,7 @@ export class AgrupacionServicioListadoComponent implements AfterViewInit, OnDest
           // On error reset pagination values
           this.paginator.firstPage();
           this.totalElementos = 0;
-          this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('cat.servicio.listado.error')
-          );
+          this.snackBarService.showError('cat.servicio.listado.error');
           this.logger.debug(AgrupacionServicioListadoComponent.name, 'loadTable()', 'end');
           return of([]);
         })
@@ -155,24 +152,20 @@ export class AgrupacionServicioListadoComponent implements AfterViewInit, OnDest
     $event.stopPropagation();
     $event.preventDefault();
 
-    this.dialogService.dialogGenerico(this.traductor.getTexto('cat.servicio.listado.eliminar'),
-      this.traductor.getTexto('cat.servicio.listado.aceptar'), this.traductor.getTexto('cat.servicio.listado.cancelar'));
-
-    this.dialogSubscription = this.dialogService.getAccionConfirmada().subscribe(
-      (aceptado: boolean) => {
+    this.dialogSubscription = this.dialogService.showConfirmation(
+      'cat.servicio.listado.eliminar'
+    ).subscribe(
+      (aceptado) => {
         if (aceptado) {
           this.servicioDeleteSubscription = this.servicioService
             .deleteById(servicioId).pipe(
               map(() => {
                 return this.loadTable();
               })
-            ).subscribe(() => {
-              this.snackBarService
-                .mostrarMensajeSuccess(
-                  this.traductor.getTexto('cat.servicio.listado.eliminarConfirmado'));
-            });
+            ).subscribe(
+              () => this.snackBarService.showSuccess('cat.servicio.listado.eliminarConfirmado')
+            );
         }
-        aceptado = false;
       });
 
     this.logger.debug(AgrupacionServicioListadoComponent.name,

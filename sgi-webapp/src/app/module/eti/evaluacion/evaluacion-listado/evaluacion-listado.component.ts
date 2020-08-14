@@ -11,7 +11,6 @@ import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocatoria-reunion.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { TraductorService } from '@core/services/traductor.service';
 import { DateUtils } from '@core/utils/date-utils';
 import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
 import { AbstractPaginacionComponent } from '@core/component/abstract-paginacion.component';
@@ -48,7 +47,6 @@ export class EvaluacionListadoComponent extends AbstractPaginacionComponent<Eval
     private readonly personaFisicaService: PersonaFisicaService,
     private readonly comiteService: ComiteService,
     private readonly tipoConvocatoriaReunionService: TipoConvocatoriaReunionService,
-    private readonly traductor: TraductorService,
     private readonly snackBarService: SnackBarService
   ) {
     super(logger, evaluacionService);
@@ -102,9 +100,7 @@ export class EvaluacionListadoComponent extends AbstractPaginacionComponent<Eval
           }
         },
         () => {
-          this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('eti.evaluacion.listado.error')
-          );
+          this.snackBarService.showError('eti.evaluacion.listado.error');
         })
     );
     this.logger.debug(EvaluacionListadoComponent.name, `loadTable(${reset})`, 'end');
@@ -132,9 +128,7 @@ export class EvaluacionListadoComponent extends AbstractPaginacionComponent<Eval
 
   protected mostrarMensajeErrorLoadTable(): void {
     this.logger.debug(EvaluacionListadoComponent.name, 'mostrarMensajeErrorLoadTable()', 'start');
-    this.snackBarService.mostrarMensajeError(
-      this.traductor.getTexto('eti.evaluacion.listado.error')
-    );
+    this.snackBarService.showError('eti.evaluacion.listado.error');
     this.logger.debug(EvaluacionListadoComponent.name, 'mostrarMensajeErrorLoadTable()', 'end');
   }
 
@@ -173,9 +167,7 @@ export class EvaluacionListadoComponent extends AbstractPaginacionComponent<Eval
           this.tiposConvocatoriaReunion = res.items;
         },
         () => {
-          this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('eti.evaluacion.listado.buscador.tipoConvocatoria.error')
-          );
+          this.snackBarService.showError('eti.evaluacion.listado.buscador.tipoConvocatoria.error');
         }
       )
     );

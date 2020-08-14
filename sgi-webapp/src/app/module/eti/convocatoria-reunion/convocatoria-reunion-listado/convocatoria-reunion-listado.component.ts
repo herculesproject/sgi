@@ -7,7 +7,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { Observable, of, Subscription, merge } from 'rxjs';
 import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { NGXLogger } from 'ngx-logger';
-import { TraductorService } from '@core/services/traductor.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
@@ -48,7 +47,7 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  textoCrear: string;
+  textoCrear: 'eti.convocatoriaReunion.listado.nuevaConvocatoriaReunion';
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -68,7 +67,6 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
   constructor(
     private readonly logger: NGXLogger,
     private readonly convocatoriaReunionService: ConvocatoriaReunionService,
-    private readonly traductor: TraductorService,
     private readonly dialogService: DialogService,
     private readonly snackBarService: SnackBarService,
     private readonly comiteService: ComiteService,
@@ -92,9 +90,6 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
     this.elementosPagina = [5, 10, 25, 100];
     this.totalElementos = 0;
     this.filter = [];
-
-
-    this.textoCrear = this.traductor.getTexto('eti.convocatoriaReunion.listado.nuevaConvocatoriaReunion');
 
     this.logger.debug(ConvocatoriaReunionListadoComponent.name, 'constructor()', 'end');
   }
@@ -283,9 +278,7 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
           // On error reset pagination values
           this.paginator.firstPage();
           this.totalElementos = 0;
-          this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('eti.convocatoriaReunion.listado.error')
-          );
+          this.snackBarService.showError('eti.convocatoriaReunion.listado.error');
           this.logger.debug(ConvocatoriaReunionListadoComponent.name, 'loadTable()', 'end');
           return of([]);
         })
@@ -325,13 +318,10 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
     $event.stopPropagation();
     $event.preventDefault();
 
-    this.dialogService.dialogGenerico(
-      this.traductor.getTexto('eti.convocatoriaReunion.listado.eliminar'),
-      this.traductor.getTexto('eti.convocatoriaReunion.listado.aceptar'),
-      this.traductor.getTexto('eti.convocatoriaReunion.listado.cancelar'));
-
-    this.dialogSubscription = this.dialogService.getAccionConfirmada().subscribe(
-      (aceptado: boolean) => {
+    this.dialogSubscription = this.dialogService.showConfirmation(
+      'eti.convocatoriaReunion.listado.eliminar'
+    ).subscribe(
+      (aceptado) => {
         if (aceptado) {
           this.convocatoriaReunionDeleteSubscription = this.convocatoriaReunionService
             .deleteById(convocatoriaReunionId).pipe(
@@ -339,9 +329,7 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
                 return this.loadTable();
               })
             ).subscribe(() => {
-              this.snackBarService
-                .mostrarMensajeSuccess(
-                  this.traductor.getTexto('eti.convocatoriaReunion.listado.eliminarConfirmado'));
+              this.snackBarService.showSuccess('eti.convocatoriaReunion.listado.eliminarConfirmado');
             });
         }
         aceptado = false;

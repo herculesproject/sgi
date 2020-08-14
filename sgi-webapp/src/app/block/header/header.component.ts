@@ -1,10 +1,9 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {LayoutService} from '@core/services/layout.service';
-import {NGXLogger} from 'ngx-logger';
-import {Subscription} from 'rxjs';
-import {NavigationEnd, Router} from '@angular/router';
-import {filter} from 'rxjs/operators';
-import {TraductorService} from '@core/services/traductor.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { LayoutService } from '@core/services/layout.service';
+import { NGXLogger } from 'ngx-logger';
+import { Subscription } from 'rxjs';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -23,7 +22,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private readonly logger: NGXLogger,
     private readonly sidenav: LayoutService,
     private readonly router: Router,
-    private readonly traductor: TraductorService,
   ) {
     this.anchoPantalla = window.innerWidth;
     this.crearSubscripcionUrl();
@@ -63,7 +61,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     ).subscribe((event: NavigationEnd) => {
       const identificador = event.url.split('/')[1];
       if (identificador && identificador !== '') {
-        this.nombreModulo = this.traductor.getTexto('cabecera.modulo.' + identificador);
+        this.nombreModulo = 'cabecera.modulo.' + identificador;
       }
     });
     this.logger.debug(HeaderComponent.name, 'crearSubscripcionUrl()', 'end');

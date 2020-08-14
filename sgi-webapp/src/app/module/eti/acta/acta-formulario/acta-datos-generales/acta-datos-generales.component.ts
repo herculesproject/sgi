@@ -20,7 +20,6 @@ import { NullIdValidador } from '@core/validators/null-id-validador';
 import { ActaService } from '@core/services/eti/acta.service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { TraductorService } from '@core/services/traductor.service';
 
 import { Acta } from '@core/models/eti/acta';
 import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
@@ -40,7 +39,6 @@ export class ActaDatosGeneralesComponent extends AbstractTabComponent<Acta> impl
     protected readonly logger: NGXLogger,
     private readonly actaService: ActaService,
     private readonly convocatoriaReunionService: ConvocatoriaReunionService,
-    private readonly traductor: TraductorService,
     private readonly snackBarService: SnackBarService,
   ) {
     super(logger);
@@ -103,9 +101,7 @@ export class ActaDatosGeneralesComponent extends AbstractTabComponent<Acta> impl
           this.logger.debug(ActaDatosGeneralesComponent.name, 'ngOnInit()', 'end');
         },
         () => {
-          this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('eti.acta.crear.datosGenerales.convocatoriaReunion.error')
-          );
+          this.snackBarService.showError('eti.acta.crear.datosGenerales.convocatoriaReunion.error');
           this.logger.debug(ActaDatosGeneralesComponent.name, 'ngOnInit()', 'end');
         }
       )

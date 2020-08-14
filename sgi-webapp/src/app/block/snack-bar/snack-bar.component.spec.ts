@@ -25,7 +25,8 @@ describe('SnackBarComponent', () => {
         BrowserAnimationsModule,
         RouterTestingModule,
         MaterialDesignModule,
-        HttpClientTestingModule
+        HttpClientTestingModule,
+        TestUtils.getIdiomas()
       ],
       providers: [
         { provide: NGXLogger, useValue: loggerSpy },

@@ -8,7 +8,6 @@ import { Usuario } from '@core/models/cat/usuario';
 import { Subject, ReplaySubject } from 'rxjs';
 import { Supervision } from '@core/models/cat/supervision';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { TraductorService } from '@core/services/traductor.service';
 
 @Component({
   selector: 'app-agrupacion-servicio-gestor',
@@ -32,8 +31,7 @@ export class AgrupacionServicioGestorComponent implements OnInit {
 
   constructor(
     private readonly logger: NGXLogger,
-    private snackBarService: SnackBarService,
-    private readonly traductor: TraductorService) {
+    private snackBarService: SnackBarService) {
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
@@ -128,9 +126,7 @@ export class AgrupacionServicioGestorComponent implements OnInit {
     const gestorAsociado = this.gestores.filter(gestor => gestor.usuarioRef === gestorSeleccionado.usuarioRef);
 
     if (gestorAsociado.length > 0) {
-      this.snackBarService.mostrarMensajeError(
-        this.traductor.getTexto('cat.servicio.gestor.existe')
-      );
+      this.snackBarService.showError('cat.servicio.gestor.existe');
     } else {
       this.gestores.push(gestorSeleccionado);
       this.gestoresAniadidos.push(gestorSeleccionado);

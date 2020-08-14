@@ -3,7 +3,8 @@
     "buscar": "Search",
     "cancelar": "Cancel",
     "guardar": "Save",
-    "limpiar": "Clean"
+    "limpiar": "Clean",
+    "aceptar": "Accept"
   },
   "breadcrumb": {
     "actas": "Minutes",

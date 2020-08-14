@@ -6,9 +6,6 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 describe('AgrupacionServicioDatosGeneralesComponent', () => {
   let component: AgrupacionServicioDatosGeneralesComponent;
@@ -26,15 +23,7 @@ describe('AgrupacionServicioDatosGeneralesComponent', () => {
         MaterialDesignModule,
         HttpClientTestingModule,
         BrowserAnimationsModule,
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: (http: HttpClient) => {
-              return new TranslateHttpLoader(http);
-            },
-            deps: [HttpClient]
-          }
-        }),
+        TestUtils.getIdiomas()
       ],
       providers: [
         { provide: NGXLogger, useValue: loggerSpy }

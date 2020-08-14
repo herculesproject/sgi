@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
-import { TraductorService } from '@core/services/traductor.service';
 
 @Component({
   selector: 'app-evaluacion-etica-listado',
@@ -8,14 +7,11 @@ import { TraductorService } from '@core/services/traductor.service';
   styleUrls: ['./evaluacion-etica-listado.component.scss']
 })
 export class EvaluacionEticaListadoComponent implements OnInit {
-  textoCrear: string;
+  textoCrear = 'footer.eti.evaluacionEtica.crear';
 
   constructor(
     private readonly logger: NGXLogger,
-    private readonly traductor: TraductorService,
-  ) {
-    this.textoCrear = this.traductor.getTexto('footer.eti.evaluacionEtica.crear');
-  }
+  ) { }
 
   ngOnInit(): void {
     this.logger.debug(EvaluacionEticaListadoComponent.name, 'ngOnInit()', 'start');

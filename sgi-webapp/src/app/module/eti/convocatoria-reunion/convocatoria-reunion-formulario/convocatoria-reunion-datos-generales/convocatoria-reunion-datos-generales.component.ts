@@ -5,7 +5,6 @@ import { FormGroupUtil } from '@core/utils/form-group-util';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { NGXLogger } from 'ngx-logger';
-import { TraductorService } from '@core/services/traductor.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { Observable, of, zip } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -52,7 +51,6 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
     private readonly comiteService: ComiteService,
     private readonly evaluadorService: EvaluadorService,
     private readonly tipoConvocatoriaReunionService: TipoConvocatoriaReunionService,
-    private readonly traductor: TraductorService,
     private readonly snackBarService: SnackBarService,
     private readonly usuarioService: PersonaFisicaService
   ) {
@@ -111,9 +109,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
             );
         },
         () => {
-          this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('eti.convocatoriaReunion.formulario.datosGenerales.comite.error.cargar')
-          );
+          this.snackBarService.showError('eti.convocatoriaReunion.formulario.datosGenerales.comite.error.cargar');
         }
       );
 
@@ -145,9 +141,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
             );
         },
         () => {
-          this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('eti.convocatoriaReunion.formulario.datosGenerales.tipoConvocatoriaReunion.error.cargar')
-          );
+          this.snackBarService.showError('eti.convocatoriaReunion.formulario.datosGenerales.tipoConvocatoriaReunion.error.cargar');
         });
 
     this.subscripciones.push(tipoConvocatoriaSelectReunionSubscription);
@@ -209,9 +203,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
           this.formGroup.controls.convocantes.setValue(this.convocantes);
         },
         () => {
-          this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('eti.convocatoriaReunion.formulario.datosGenerales.convocantes.error.cargar')
-          );
+          this.snackBarService.showError('eti.convocatoriaReunion.formulario.datosGenerales.convocantes.error.cargar');
         }
       );
 

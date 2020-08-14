@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractFormularioComponent } from '@core/component/abstract-formulario.component';
 import { NGXLogger } from 'ngx-logger';
-import { TraductorService } from '@core/services/traductor.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { ActaDatosGeneralesComponent } from '../acta-formulario/acta-datos-generales/acta-datos-generales.component';
 import { ActaMemoriasComponent } from '../acta-formulario/acta-memorias/acta-memorias.component';
@@ -25,20 +24,19 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
   @ViewChild('memorias', { static: true }) memorias: ActaMemoriasComponent;
   @ViewChild('asistentes', { static: true }) asistentes: ActaAsistentesComponent;
 
+  textoCrear = 'footer.eti.acta.actualizar';
+
   idConvocatoria: number;
 
   private idActa: number;
 
   constructor(protected readonly logger: NGXLogger,
-    protected readonly traductor: TraductorService,
     protected readonly snackBarService: SnackBarService,
     private readonly router: Router,
     private activatedRoute: ActivatedRoute,
-    private actaService: ActaService,) {
+    private actaService: ActaService) {
 
-    super(logger, traductor, snackBarService);
-
-    this.textoCrear = this.traductor.getTexto('footer.eti.acta.actualizar');
+    super(logger, snackBarService);
   }
 
   ngOnInit(): void {
@@ -83,9 +81,7 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
         }
       },
       () => {
-        this.snackBarService.mostrarMensajeSuccess(
-          this.traductor.getTexto('eti.acta.editar.no-encontrado')
-        );
+        this.snackBarService.showError('eti.acta.editar.no-encontrado');
         this.router.navigateByUrl(UrlUtils.eti.actas).then();
       }));
     this.logger.debug(ActaEditarComponent.name, 'getActa()', 'end');
@@ -113,8 +109,7 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
           this.tabs.get(0).actualizarDatos(acta);
           this.tabs.get(0).warning = false;
 
-          this.snackBarService.mostrarMensajeSuccess(
-            this.traductor.getTexto('eti.acta.editar.correcto'));
+          this.snackBarService.showSuccess('eti.acta.editar.correcto');
           this.router.navigateByUrl(`${UrlUtils.eti.root}/${UrlUtils.eti.actas}`).then();
           this.logger.debug(ActaEditarComponent.name, 'enviarDatos()', 'end');
 
@@ -122,8 +117,7 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
           () => {
             // Si falla mostramos el error en la pestaña
             this.tabs.get(0).mostrarError();
-            this.snackBarService.mostrarMensajeSuccess(
-              this.traductor.getTexto('eti.acta.editar.error'));
+            this.snackBarService.showError('eti.acta.editar.error');
             this.logger.error(ActaEditarComponent.name, 'enviarDatos()', 'end');
           }
         )

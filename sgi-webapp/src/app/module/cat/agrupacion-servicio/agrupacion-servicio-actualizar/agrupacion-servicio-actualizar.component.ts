@@ -9,7 +9,6 @@ import { ServicioService } from '@core/services/cat/servicio.service';
 import { SupervisionService } from '@core/services/cat/supervision.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { TraductorService } from '@core/services/traductor.service';
 import { SgiRestFilter, SgiRestFilterType } from '@sgi/framework/http';
 import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
@@ -53,7 +52,6 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
 
   constructor(
     private readonly logger: NGXLogger,
-    private readonly traductor: TraductorService,
     private snackBarService: SnackBarService,
     private servicioService: ServicioService,
     private supervisionService: SupervisionService,
@@ -119,9 +117,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
             filters: [this.filter]
           });
         } else {
-          this.snackBarService.mostrarMensajeSuccess(
-            this.traductor.getTexto('cat.servicio.actualizar.no-encontrado')
-          );
+          this.snackBarService.showSuccess('cat.servicio.actualizar.no-encontrado');
           this.router.navigateByUrl(UrlUtils.cat.agrupacionServicios).then();
           return of(null);
         }
@@ -133,9 +129,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
         }
       },
       () => {
-        this.snackBarService.mostrarMensajeSuccess(
-          this.traductor.getTexto('cat.servicio.actualizar.no-encontrado')
-        );
+        this.snackBarService.showError('cat.servicio.actualizar.no-encontrado');
         this.router.navigateByUrl(UrlUtils.cat.agrupacionServicios).then();
       });
     this.logger.debug(AgrupacionServicioActualizarComponent.name, 'getServicio()', 'end');
@@ -153,9 +147,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
     if (FormGroupUtil.valid(this.formGroup)) {
       this.actualizarServicio();
     } else {
-      this.snackBarService.mostrarMensajeError(
-        this.traductor.getTexto('form-group.error')
-      );
+      this.snackBarService.showError('form-group.error');
     }
     this.logger.debug(AgrupacionServicioActualizarComponent.name,
       'enviarForm()',
@@ -196,9 +188,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
         })
       ).subscribe(
         () => {
-          this.snackBarService.mostrarMensajeSuccess(
-            this.traductor.getTexto('cat.servicio.actualizar.correcto')
-          );
+          this.snackBarService.showSuccess('cat.servicio.actualizar.correcto');
           this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.agrupacionServicios}`).then();
           this.logger.debug(
             AgrupacionServicioActualizarComponent.name,
@@ -207,9 +197,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
           );
         },
         () => {
-          this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('cat.servicio.actualizar.error')
-          );
+          this.snackBarService.showError('cat.servicio.actualizar.error');
           this.desactivarAceptar = false;
           this.logger.debug(
             AgrupacionServicioActualizarComponent.name,

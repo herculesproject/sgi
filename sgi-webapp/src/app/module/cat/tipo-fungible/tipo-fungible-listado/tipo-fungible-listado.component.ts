@@ -3,7 +3,6 @@ import { TipoFungible } from '@core/models/cat/tipo-fungible';
 import { TipoFungibleService } from '@core/services/cat/tipo-fungible.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { TraductorService } from '@core/services/traductor.service';
 import { AbstractPaginacionComponent } from '@core/component/abstract-paginacion.component';
 import { SgiRestFilter } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
@@ -22,7 +21,6 @@ export class TipoFungibleListadoComponent extends AbstractPaginacionComponent<Ti
   constructor(
     protected readonly logger: NGXLogger,
     private readonly tipoFungibleService: TipoFungibleService,
-    private readonly traductor: TraductorService,
     private readonly dialogService: DialogService,
     private readonly snackBarService: SnackBarService
   ) {
@@ -46,9 +44,7 @@ export class TipoFungibleListadoComponent extends AbstractPaginacionComponent<Ti
 
   protected mostrarMensajeErrorLoadTable(): void {
     this.logger.debug(TipoFungibleListadoComponent.name, 'mostrarMensajeErrorLoadTable()', 'start');
-    this.snackBarService.mostrarMensajeError(
-      this.traductor.getTexto('cat.tipo-fungible.listado.error')
-    );
+    this.snackBarService.showError('cat.tipo-fungible.listado.error');
     this.logger.debug(TipoFungibleListadoComponent.name, 'mostrarMensajeErrorLoadTable()', 'end');
   }
 
@@ -61,14 +57,11 @@ export class TipoFungibleListadoComponent extends AbstractPaginacionComponent<Ti
       TipoFungibleListadoComponent.name,
       'borrarSeleccionado(tipoFungibleId: number) - start'
     );
-    this.dialogService.dialogGenerico(
-      this.traductor.getTexto('cat.tipo-fungible.listado.eliminar'),
-      this.traductor.getTexto('cat.tipo-fungible.listado.aceptar'),
-      this.traductor.getTexto('cat.tipo-fungible.listado.cancelar')
-    );
 
-    this.subscripciones.push(this.dialogService.getAccionConfirmada().subscribe(
-      (aceptado: boolean) => {
+    this.subscripciones.push(this.dialogService.showConfirmation(
+      'cat.tipo-fungible.listado.eliminar'
+    ).subscribe(
+      (aceptado) => {
         if (aceptado) {
           this.subscripciones.push(this.tipoFungibleService.deleteById(tipoFungibleId)
             .pipe(
@@ -77,9 +70,7 @@ export class TipoFungibleListadoComponent extends AbstractPaginacionComponent<Ti
               })
             )
             .subscribe(() => {
-              this.snackBarService.mostrarMensajeSuccess(
-                this.traductor.getTexto('tipo-fungible.listado.eliminarConfirmado')
-              );
+              this.snackBarService.showSuccess('tipo-fungible.listado.eliminarConfirmado');
             })
           );
         }

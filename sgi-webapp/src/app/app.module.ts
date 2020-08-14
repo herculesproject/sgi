@@ -7,7 +7,7 @@ import { environment } from '@env';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { TraductorPaginatorService } from '@core/services/traductor-paginator.service';
+import { AppMatPaginatorIntl } from '@material/app-mat-paginator-intl';
 import { LoggerModule } from 'ngx-logger';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -44,7 +44,7 @@ registerLocaleData(localeEs);
         },
         deps: [HttpClient]
       },
-      defaultLanguage: 'es',
+      defaultLanguage: 'es'
     }),
     BlockModule,
     HttpClientModule,
@@ -53,7 +53,7 @@ registerLocaleData(localeEs);
   providers: [
     {
       provide: MatPaginatorIntl,
-      useClass: TraductorPaginatorService
+      useClass: AppMatPaginatorIntl,
     },
     {
       provide: SGI_AUTH_CONFIG,

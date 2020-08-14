@@ -6,9 +6,6 @@ import TestUtils from '@core/utils/test-utils';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpClient } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('TipoReservableListadoComponent', () => {
@@ -25,15 +22,7 @@ describe('TipoReservableListadoComponent', () => {
         MaterialDesignModule,
         HttpClientTestingModule,
         BrowserAnimationsModule,
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: (http: HttpClient) => {
-              return new TranslateHttpLoader(http);
-            },
-            deps: [HttpClient]
-          }
-        }),
+        TestUtils.getIdiomas()
       ],
       providers: [
         { provide: NGXLogger, useValue: loggerSpy }

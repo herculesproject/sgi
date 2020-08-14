@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { TraductorService } from '@core/services/traductor.service';
 import { NGXLogger } from 'ngx-logger';
 
 @Component({
@@ -11,7 +10,6 @@ export class EbtRootComponent implements OnInit {
 
   constructor(
     private readonly logger: NGXLogger,
-    private readonly traductor: TraductorService
   ) {
   }
 

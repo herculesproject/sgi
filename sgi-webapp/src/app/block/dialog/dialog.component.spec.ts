@@ -38,6 +38,7 @@ describe('DialogComponent', () => {
         RouterTestingModule,
         MaterialDesignModule,
         HttpClientTestingModule,
+        TestUtils.getIdiomas(),
         MatDialogModule,
       ],
       providers: [

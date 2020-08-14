@@ -10,7 +10,6 @@ import { ServicioService } from '@core/services/cat/servicio.service';
 import { SupervisionService } from '@core/services/cat/supervision.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { TraductorService } from '@core/services/traductor.service';
 import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription, zip } from 'rxjs';
@@ -50,7 +49,6 @@ export class AgrupacionServicioCrearComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly logger: NGXLogger,
-    private readonly traductor: TraductorService,
     private snackBarService: SnackBarService,
     private servicioService: ServicioService,
     private supervisionService: SupervisionService,
@@ -94,9 +92,7 @@ export class AgrupacionServicioCrearComponent implements OnInit, OnDestroy {
     if (FormGroupUtil.valid(this.formGroup)) {
       this.crearServicio();
     } else {
-      this.snackBarService.mostrarMensajeError(
-        this.traductor.getTexto('form-group.error')
-      );
+      this.snackBarService.showError('form-group.error');
     }
     this.logger.debug(AgrupacionServicioCrearComponent.name,
       'enviarForm()',
@@ -141,9 +137,7 @@ export class AgrupacionServicioCrearComponent implements OnInit, OnDestroy {
       })
     ).subscribe(
       () => {
-        this.snackBarService.mostrarMensajeSuccess(
-          this.traductor.getTexto('cat.servicio.crear.correcto')
-        );
+        this.snackBarService.showSuccess('cat.servicio.crear.correcto');
         this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.agrupacionServicios}`).then();
         this.logger.debug(
           AgrupacionServicioCrearComponent.name,
@@ -152,9 +146,7 @@ export class AgrupacionServicioCrearComponent implements OnInit, OnDestroy {
         );
       },
       () => {
-        this.snackBarService.mostrarMensajeError(
-          this.traductor.getTexto('cat.servicio.crear.error')
-        );
+        this.snackBarService.showError('cat.servicio.crear.error');
         this.desactivarAceptar = false;
         this.logger.debug(
           AgrupacionServicioCrearComponent.name,

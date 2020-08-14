@@ -1,6 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { TraductorService } from '@core/services/traductor.service';
 import { AbstractFormularioComponent } from '@core/component/abstract-formulario.component';
 import { NGXLogger } from 'ngx-logger';
 
@@ -19,13 +18,13 @@ export class EvaluacionEticaCrearComponent extends AbstractFormularioComponent i
   @ViewChild('equipoInvestigadorComponent', { static: true }) equipoInvestigadorComponent: EvaluacionEticaEquipoInvestigadorComponent;
   @ViewChild('asignacionTareasComponent', { static: true }) asignacionTareasComponent: EvaluacionEticaAsignacionTareasComponent;
 
+  textoCrear = 'footer.eti.evaluacionEtica.guardar';
+
   constructor(
     protected readonly logger: NGXLogger,
-    protected readonly traductor: TraductorService,
     protected readonly snackBarService: SnackBarService
   ) {
-    super(logger, traductor, snackBarService);
-    this.textoCrear = this.traductor.getTexto('footer.eti.evaluacionEtica.guardar');
+    super(logger, snackBarService);
   }
 
   ngOnInit() {
@@ -47,7 +46,7 @@ export class EvaluacionEticaCrearComponent extends AbstractFormularioComponent i
 
   private funError(indexTab: number) {
     this.logger.debug(EvaluacionEticaCrearComponent.name, 'funError(indexTab: number)', 'start');
-    this.snackBarService.mostrarMensajeSuccess('Error en Tab ' + indexTab);
+    this.snackBarService.showError('Error en Tab ' + indexTab);
     this.logger.debug(EvaluacionEticaCrearComponent.name, 'funError(indexTab: number)', 'end');
   }
 }

@@ -1,6 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {NGXLogger} from 'ngx-logger';
-import {TraductorService} from '@core/services/traductor.service';
+import { Component, OnInit } from '@angular/core';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-cat-root',
@@ -9,8 +8,7 @@ import {TraductorService} from '@core/services/traductor.service';
 })
 export class CatRootComponent implements OnInit {
   constructor(
-    private readonly logger: NGXLogger,
-    private readonly traductor: TraductorService
+    private readonly logger: NGXLogger
   ) {
   }
 

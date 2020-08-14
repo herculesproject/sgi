@@ -10,7 +10,6 @@ import { ServicioService } from '@core/services/cat/servicio.service';
 import { TipoReservableService } from '@core/services/cat/tipo-reservable.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { TraductorService } from '@core/services/traductor.service';
 import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
@@ -48,7 +47,6 @@ export class TipoReservableCrearComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly tipoReservableService: TipoReservableService,
     private readonly servicioService: ServicioService,
-    public readonly traductor: TraductorService,
     private snackBarService: SnackBarService
   ) {
     this.fxFlexProperties = new FxFlexProperties();
@@ -179,9 +177,7 @@ export class TipoReservableCrearComponent implements OnInit, OnDestroy {
         () => {
           // Añadimos esta comprobación para que no nos eche al crear uno nuevo
           if (id) {
-            this.snackBarService.mostrarMensajeSuccess(
-              this.traductor.getTexto('cat.tipo-reservable.actualizar.no-encontrado')
-            );
+            this.snackBarService.showSuccess('cat.tipo-reservable.actualizar.no-encontrado');
             this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.tipoReservables}`).then();
           }
           this.logger.debug(
@@ -247,8 +243,7 @@ export class TipoReservableCrearComponent implements OnInit, OnDestroy {
     if (FormGroupUtil.valid(this.formGroup)) {
       this.sendApi();
     } else {
-      this.snackBarService.mostrarMensajeError(
-        this.traductor.getTexto('form-group.error'));
+      this.snackBarService.showError('form-group.error');
     }
     this.logger.debug(
       TipoReservableCrearComponent.name,
@@ -288,9 +283,7 @@ export class TipoReservableCrearComponent implements OnInit, OnDestroy {
     );
     this.tipoReservableServiceCreateSubscription = this.tipoReservableService.create(this.tipoReservable).subscribe(
       () => {
-        this.snackBarService.mostrarMensajeSuccess(
-          this.traductor.getTexto('cat.tipo-reservable.crear.correcto')
-        );
+        this.snackBarService.showSuccess('cat.tipo-reservable.crear.correcto');
         this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.tipoReservables}`).then();
         this.logger.debug(
           TipoReservableCrearComponent.name,
@@ -299,9 +292,7 @@ export class TipoReservableCrearComponent implements OnInit, OnDestroy {
         );
       },
       () => {
-        this.snackBarService.mostrarMensajeError(
-          this.traductor.getTexto('cat.tipo-reservable.crear.error')
-        );
+        this.snackBarService.showError('cat.tipo-reservable.crear.error');
         this.desactivarAceptar = false;
         this.logger.debug(
           TipoReservableCrearComponent.name,

@@ -3,20 +3,17 @@ import { AbstractTabComponent } from './abstract-tab.component';
 import { Subscription } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import { TraductorService } from '../services/traductor.service';
 import { SnackBarService } from '../services/snack-bar.service';
 
 export abstract class AbstractFormularioComponent implements OnInit, OnDestroy, AfterViewInit {
   tabOrigen: number;
   errorTabs: string[];
-  textoCrear: string;
 
   tabs: Map<number, AbstractTabComponent<any>>;
   subscripciones: Subscription[];
 
   protected constructor(
     protected logger: NGXLogger,
-    protected readonly traductor: TraductorService,
     protected readonly snackBarService: SnackBarService
   ) { }
 
@@ -73,9 +70,7 @@ export abstract class AbstractFormularioComponent implements OnInit, OnDestroy, 
     if (this.comprobarFormGroup()) {
       this.enviarDatos();
     } else {
-      this.snackBarService.mostrarMensajeError(
-        this.traductor.getTexto('form-group.error')
-      );
+      this.snackBarService.showError('form-group.error')
     }
   }
 
