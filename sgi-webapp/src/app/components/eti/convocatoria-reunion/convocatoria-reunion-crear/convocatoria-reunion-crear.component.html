@@ -1,19 +1,20 @@
-<h1>{{'eti.convocatoriaReunion.crear.titulo' | translate}}</h1>
-<mat-tab-group headerPosition="above" (selectedTabChange)="cambioTab($event)">
-  <!-- Datos generales -->
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <app-generic-tab-label [abstractTab]="datosGenerales" [errors]="errorTabs[0]"
-        textoLabel="eti.convocatoriaReunion.formulario.datosGenerales.cabecera">
-      </app-generic-tab-label>
-    </ng-template>
-    <perfect-scrollbar [config]="configPerfectScrollBar">
-      <app-convocatoria-reunion-datos-generales #datosGenerales (eventEmitter)="setErroresTab(0, $event)">
-      </app-convocatoria-reunion-datos-generales>
-    </perfect-scrollbar>
-  </mat-tab>
+<section class="convocatoria-reunion">
+  <mat-tab-group headerPosition="above" (selectedTabChange)="cambioTab($event)">
+    <!-- Datos generales -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <app-generic-tab-label [abstractTab]="datosGenerales" [errors]="errorTabs[0]"
+          textoLabel="eti.convocatoriaReunion.formulario.datosGenerales.cabecera">
+        </app-generic-tab-label>
+      </ng-template>
+      <perfect-scrollbar [config]="configPerfectScrollBar">
+        <app-convocatoria-reunion-datos-generales #datosGenerales (eventEmitter)="setErroresTab(0, $event)">
+        </app-convocatoria-reunion-datos-generales>
+      </perfect-scrollbar>
+    </mat-tab>
 
-</mat-tab-group>
+  </mat-tab-group>
 
-<!-- Footer -->
-<app-footer-guardar [texto]="textoCrear" (emitter)="guardarDatos()"></app-footer-guardar>
+  <!-- Footer -->
+  <app-footer-guardar [texto]="textoCrear" (emitter)="guardarDatos()"></app-footer-guardar>
+</section>

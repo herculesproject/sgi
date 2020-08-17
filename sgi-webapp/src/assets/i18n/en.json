@@ -421,6 +421,8 @@
         "error": "The list of minutes could not be loaded",
         "estado": "State",
         "fechaEvaluacion": "Evaluation Date",
+        "fechaEvaluacion.inicio": "Evaluation date start",
+        "fechaEvaluacion.fin": "Evaluation date end",
         "nuevaActa": "Add new minute",
         "numeroActa": "Nº Minutes",
         "numeroIniciales": "Nº Initials",
@@ -610,20 +612,24 @@
   "footer": {
     "eti": {
       "acta": {
-        "crear": "New record",
-        "guardar": "Save record"
+        "crear": "New",
+        "guardar": "Save",
+        "actualizar": "Update"
       },
       "convocatoriaReunion": {
-        "crear": "Nueva convocatoria",
-        "guardar": "Guardar convocatoria"
+        "crear": "New",
+        "guardar": "Save",
+        "actualizar": "Update"
       },
       "evaluacion": {
-        "crear": "New evaluation",
-        "guardar": "Save request"
+        "crear": "New",
+        "guardar": "Save",
+        "actualizar": "Update"
       },
       "evaluacionEtica": {
-        "crear": "New evaluation request",
-        "guardar": "Save request"
+        "crear": "New",
+        "guardar": "Save",
+        "actualizar": "Update"
       }
     }
   },
@@ -678,5 +684,9 @@
   },
   "snackBar": {
     "error": "An error has occurred"
+  },
+  "seleccionar-modulo": {
+    "titulo": "Select a module",
+    "cancelar": "Cancel"
   }
 }

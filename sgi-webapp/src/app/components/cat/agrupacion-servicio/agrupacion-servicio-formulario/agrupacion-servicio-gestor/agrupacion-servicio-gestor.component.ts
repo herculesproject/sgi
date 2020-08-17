@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { NGXLogger } from 'ngx-logger';
 
 import { Usuario } from '@core/models/cat/usuario';

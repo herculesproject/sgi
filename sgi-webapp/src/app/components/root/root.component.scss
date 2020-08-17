@@ -1,14 +1,15 @@
-@import 'variables.scss';
+@import "variables.scss";
 
 /* SIDENAV */
-.sidenav{
+.sidenav {
   height: calc(100% - 74px);
-  .open{
-    width: 230px;
+  .menu-principal {
+    padding-top: 0px;
+    box-shadow: inset 0px 14px 12px -12px map-get($palette-accent, 100);
   }
   // Layout
-  .layout-components{
-    padding: 15px 30px 15px 30px;
+  .layout-components {
+    padding: 15px 20px 15px 20px;
   }
 }
 /* FIN SIDENAV */

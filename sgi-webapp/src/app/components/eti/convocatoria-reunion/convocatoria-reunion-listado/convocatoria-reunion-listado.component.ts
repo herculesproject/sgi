@@ -13,8 +13,8 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { tap, map, catchError, startWith } from 'rxjs/operators';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { FormGroupUtil } from '@core/services/form-group-util';
 import { Comite } from '@core/models/eti/comite';
 import { ComiteService } from '@core/services/eti/comite.service';
@@ -48,6 +48,7 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
+  textoCrear: string;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -91,6 +92,9 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
     this.elementosPagina = [5, 10, 25, 100];
     this.totalElementos = 0;
     this.filter = [];
+
+
+    this.textoCrear = this.traductor.getTexto('eti.convocatoriaReunion.listado.nuevaConvocatoriaReunion');
 
     this.logger.debug(ConvocatoriaReunionListadoComponent.name, 'constructor()', 'end');
   }

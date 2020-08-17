@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {MatSnackBar, MatSnackBarConfig} from '@angular/material/snack-bar';
-import {SnackBarComponent} from '@shared/snack-bar/snack-bar.component';
-import {NGXLogger} from 'ngx-logger';
+import { Injectable } from '@angular/core';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { SnackBarComponent } from '@shared/snack-bar/snack-bar.component';
+import { NGXLogger } from 'ngx-logger';
 
-import {TraductorService} from './traductor.service';
+import { TraductorService } from './traductor.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +22,7 @@ export class SnackBarService {
       'start'
     );
     this.snackBarConfig = new MatSnackBarConfig();
-    this.snackBarConfig.duration = 2000;
+    this.snackBarConfig.duration = 4000;
     this.snackBarConfig.verticalPosition = 'top';
 
     this.logger.debug(

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 
 @Injectable({
@@ -10,6 +10,9 @@ export class LayoutService {
 
   // Toogle para abrir o cerrar acordeones
   private isMenuAbierto$ = new BehaviorSubject<boolean>(null);
+
+  // Menu abierto
+  private sidenavActivo$ = new Subject<number>();
 
   constructor(private logger: NGXLogger) { }
 
@@ -33,5 +36,26 @@ export class LayoutService {
     this.logger.debug(LayoutService.name, 'getToogleSidenav()', 'start');
     return this.isMenuAbierto$;
   }
+
+  /**
+   * Marca la tab del panel lateral correspondiente al indice como seleccionado y emite el cambio de tab seleccionada.
+   *
+   * @param indice indice del tab seleccionado.
+   */
+  seleccionarSidenavAbierto(indice: number): void {
+    this.logger.debug(LayoutService.name, 'seleccionarTab(indice: number)', 'start');
+    this.sidenavActivo$.next(indice);
+    this.logger.debug(LayoutService.name, 'seleccionarTab(indice: number)', 'end');
+  }
+
+  /**
+   * Devuelve el observable que notifica de los cambios de tab seleccionda en el panel lateral.
+   */
+  getSeleccionarSidenavAbierto(): Observable<number> {
+    this.logger.debug(LayoutService.name, 'getTabPanelLateralSeleccionada()', 'start');
+    this.logger.debug(LayoutService.name, 'getTabPanelLateralSeleccionada()', 'end');
+    return this.sidenavActivo$;
+  }
+
 
 }

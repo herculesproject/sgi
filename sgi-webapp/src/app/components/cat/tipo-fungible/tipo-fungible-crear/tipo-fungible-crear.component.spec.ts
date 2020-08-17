@@ -13,11 +13,11 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import {
-    MenuSecundarioComponent
-} from '@shared/componentes-layout/menu-secundario/menu-secundario.component';
+  NavbarComponent
+} from '@shared/componentes-layout/navbar/navbar.component';
 
 import {
-    TipoFungibleListadoComponent
+  TipoFungibleListadoComponent
 } from '../tipo-fungible-listado/tipo-fungible-listado.component';
 import { TipoFungibleCrearComponent } from './tipo-fungible-crear.component';
 
@@ -29,7 +29,7 @@ describe('TipoFungibleCrearComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         TipoFungibleCrearComponent,
-        MenuSecundarioComponent,
+        NavbarComponent,
         TipoFungibleListadoComponent,
       ],
       providers: [

@@ -30,6 +30,7 @@
     "@ngx-translate/core": "^12.1.2",
     "@ngx-translate/http-loader": "^4.0.0",
     "@sgi/framework": "0.0.1",
+    "fontsource-poppins": "^3.0.3",
     "keycloak-js": "11.0.0",
     "material-icons": "^0.3.1",
     "moment": "^2.27.0",

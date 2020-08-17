@@ -1,14 +1,14 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {HeaderComponent} from './header.component';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MaterialDesignModule} from '@material/material-design.module';
-import {NGXLogger} from 'ngx-logger';
+import { HeaderComponent } from './header.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { NGXLogger } from 'ngx-logger';
 import TestUtils from '@core/utils/test-utils';
-import {RouterTestingModule} from '@angular/router/testing';
-import {HttpClientModule} from '@angular/common/http';
-import {MenuSecundarioComponent} from '../menu-secundario/menu-secundario.component';
-import {ReactiveFormsModule} from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientModule } from '@angular/common/http';
+import { NavbarComponent } from '../navbar/navbar.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -24,8 +24,8 @@ describe('HeaderComponent', () => {
         TestUtils.getIdiomas(),
         ReactiveFormsModule
       ],
-      providers: [{provide: NGXLogger, useValue: TestUtils.getLoggerSpy()}],
-      declarations: [HeaderComponent, MenuSecundarioComponent],
+      providers: [{ provide: NGXLogger, useValue: TestUtils.getLoggerSpy() }],
+      declarations: [HeaderComponent, NavbarComponent],
     }).compileComponents();
   }));
 

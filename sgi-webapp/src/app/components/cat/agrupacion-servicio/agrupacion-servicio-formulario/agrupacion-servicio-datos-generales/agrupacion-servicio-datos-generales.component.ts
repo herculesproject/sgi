@@ -8,7 +8,7 @@ import { startWith, map } from 'rxjs/operators';
 
 import { SeccionService } from '@core/services/cat/seccion.service';
 
-import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 
 import { Seccion } from '@core/models/cat/seccion';
 import { Servicio } from '@core/models/cat/servicio';

@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { AbstractTabComponent } from '@shared/formularios-tabs/abstract-tab/abstract-tab.component';
 import { FormGroupUtil } from '@core/services/form-group-util';
-import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { NGXLogger } from 'ngx-logger';
 import { TraductorService } from '@core/services/traductor.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -31,6 +31,7 @@ import { SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
 export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabComponent<ConvocatoriaReunion> implements OnInit {
   FormGroupUtil = FormGroupUtil;
   fxFlexProperties: FxFlexProperties;
+  fxFlexPropertiesInline: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
   comites: Comite[];
@@ -59,8 +60,14 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(17%-10px)';
+    this.fxFlexProperties.gtMd = '0 1 calc(32.7%-10px)';
     this.fxFlexProperties.order = '2';
+
+    this.fxFlexPropertiesInline = new FxFlexProperties();
+    this.fxFlexPropertiesInline.sm = '0 1 calc(100%-10px)';
+    this.fxFlexPropertiesInline.md = '0 1 calc(100%-10px)';
+    this.fxFlexPropertiesInline.gtMd = '0 1 calc(100%-10px)';
+    this.fxFlexPropertiesInline.order = '3';
 
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.gap = '20px';

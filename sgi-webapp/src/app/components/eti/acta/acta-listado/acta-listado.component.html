@@ -1,16 +1,14 @@
 <!-- Actas listado -->
 <section class="acta-listado">
-  <h2>{{'eti.acta.listado.titulo' | translate}}</h2>
 
   <!-- Buscador de actas -->
 
-  <form [formGroup]="buscadorFormGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
-    fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+  <form class="formulario" [formGroup]="buscadorFormGroup" [fxLayout.xs]="fxLayoutProperties.xs"
+    [fxLayout]="fxLayoutProperties.layout" fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
     <!-- Comité -->
-    <div class="col" [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
-      [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field class="input-form" appearance="fill">
+    <div class="col">
+      <mat-form-field class="input-form">
         <mat-label>{{'eti.convocatoriaReunion.buscador.comite.titulo' | translate}}</mat-label>
         <input type="text" [placeholder]="'eti.convocatoriaReunion.buscador.comite.titulo' | translate"
           arial-label="Number" matInput formControlName="comite" [matAutocomplete]="autocompleteComite">
@@ -22,20 +20,21 @@
       </mat-form-field>
     </div>
 
-
-    <!-- Fechas evaluacion-->
-    <div class="col" [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
-      [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field appearance="fill" color="primary">
-        <mat-label>{{'eti.acta.listado.fechaEvaluacion'| translate}}</mat-label>
+    <!-- Fechas inicio evaluacion-->
+    <div class="col">
+      <mat-form-field color="primary">
+        <mat-label>{{'eti.acta.listado.fechaEvaluacion.inicio'| translate}}</mat-label>
         <input matInput [matDatepicker]="pickerFechaEvaluacionInicio" formControlName="fechaEvaluacionInicio"
           appDatepickerFormat>
         <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaEvaluacionInicio"></mat-datepicker-toggle>
         <mat-datepicker #pickerFechaEvaluacionInicio></mat-datepicker>
       </mat-form-field>
+    </div>
 
-      <mat-form-field appearance="fill" color="primary">
-        <mat-label>{{'eti.acta.listado.fechaEvaluacion'| translate}}</mat-label>
+    <!-- Fechas fin evaluacion-->
+    <div class="col">
+      <mat-form-field color="primary">
+        <mat-label>{{'eti.acta.listado.fechaEvaluacion.fin'| translate}}</mat-label>
         <input matInput [matDatepicker]="pickerFechaEvaluacionFin" formControlName="fechaEvaluacionFin"
           appDatepickerFormat>
         <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaEvaluacionFin"></mat-datepicker-toggle>
@@ -44,9 +43,8 @@
     </div>
 
     <!-- Num acta-->
-    <div class="col" [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
-      [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field appearance="fill">
+    <div class="col">
+      <mat-form-field>
         <mat-label>{{'eti.acta.listado.numeroActa' | translate}}</mat-label>
         <input matInput type="number" placeholder="{{'eti.acta.listado.numeroActa' | translate}}"
           formControlName="numeroActa" min="0">
@@ -54,9 +52,8 @@
     </div>
 
     <!-- Tipo estado -->
-    <div class="col" [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
-      [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field class="input-form" appearance="fill">
+    <div class="col">
+      <mat-form-field class="input-form">
         <mat-label>{{'eti.acta.listado.estado' | translate}}</mat-label>
         <input type="text" placeholder="{{'eti.acta.listado.estado' | translate}}" arial-label="Number" matInput
           formControlName="tipoEstadoActa" [matAutocomplete]="autoCompleteTipoEstado">
@@ -68,23 +65,17 @@
       </mat-form-field>
     </div>
 
+    <div class="buttons-final">
+      <div class="col filter-button">
+        <button color="primary" aria-label="Center Align" md-button mat-raised-button (click)="onSearch()">
+          <mat-icon>search</mat-icon> {{'botones.buscar'| translate}}
+        </button>
+        <button color="warn" class="md-primary" aria-label="Center Align" md-button (click)="onClearFilters()"
+          mat-button>{{'botones.limpiar'| translate}}
+        </button>
+      </div>
+    </div>
   </form>
-
-  <div class="filter-button">
-    <button fxFlex="20%" aria-label="Center Align" md-button mat-raised-button (click)="onSearch()">
-      {{'botones.buscar'| translate}}
-    </button>
-    <button fxFlex="20%" class="md-primary" aria-label="Center Align" md-button (click)="onClearFilters()"
-      mat-raised-button>{{'botones.limpiar'| translate}}
-    </button>
-  </div>
-
-  <!-- Botón añadir acta -->
-  <div class="separation-button">
-    <button *sgiHasAuthorityForAnyUO="'ETI-ACT-C'" [routerLink]="UrlUtils.crear" mat-button>
-      <mat-icon>add_box</mat-icon> {{'eti.acta.listado.nuevaActa' | translate}}
-    </button>
-  </div>
 
   <table class="mat-elevation-z8 table-acta" mat-table [dataSource]="actas$ | async" matSort matSortActive="id"
     matSortDirection="asc" matSortDisableClear>
@@ -145,7 +136,7 @@
         <ng-container *sgiHasAuthorityForAnyUO="'ETI-ACT-E'">
           <button *ngIf="acta.estadoActual.id === 1" mat-button [routerLink]="UrlUtils.actualizar + acta.id"
             matTooltip="{{'eti.acta.listado.editar' | translate}}">
-            <mat-icon>edit</mat-icon>
+            <mat-icon color="primary">border_color</mat-icon>
           </button>
         </ng-container>
       </td>
@@ -157,6 +148,9 @@
 
   <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
   </mat-paginator>
+
+  <app-footer-crear *sgiHasAuthorityForAnyUO="'ETI-ACT-C'" [texto]="textoCrear"></app-footer-crear>
+
 
 </section>
 <!-- FIN actas listado-->

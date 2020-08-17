@@ -9,6 +9,7 @@
         </button>
       </div>
       <div class="logos" fxLayoutAlign.xs="flex-end">
+        <h1 style="display:none;">Hércules - Crue-TIC</h1>
         <div class="hercules">
           <a href="#">
             <img src="assets/img/hercules-logo-min.png" alt="">
@@ -16,49 +17,48 @@
         </div>
         <div class="universidad">
           <a href="#">
-            <img src="http://placehold.it/150x50?text=Logo" alt="">
+            <img src="assets/img/universidades/universidad_murcia.png" alt="">
           </a>
         </div>
       </div>
     </div>
     <!-- FIN Columna menu movil (xs-sm) y logos-->
 
-    <!-- menu-secundario movil (xs-sm) -->
+    <!-- navbar movil (xs-sm) -->
     <div fxHide fxShow.xs fxLayoutAlign="flex-end" fxFlex.xs="0 1 calc(35%-10px)" fxFlex.sm="0 1 calc(50%-10px)"
       fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(33%-10px)" class="icons-options devices">
-      <button mat-icon-button [matMenuTriggerFor]="menu"
-        aria-label="Example icon-button with a menu">
+      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu class="mat-menu" #menu="matMenu">
-        <app-menu-secundario class="icons-responsive"></app-menu-secundario>
+        <app-navbar class="icons-responsive"></app-navbar>
       </mat-menu>
     </div>
-    <!-- FIN menu-secundario (xs-sm) -->
+    <!-- FIN navbar (xs-sm) -->
 
-    <!-- menu-secundario pantallas grandes -->
+    <!-- navbar pantallas grandes -->
     <div fxHide fxShow.sm fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)"
       fxFlex.gt-md="0 1 calc(33%-10px)">
       <div fxLayoutAlign="flex-end" class="icons-options desktop">
-        <app-menu-secundario class="inline"></app-menu-secundario>
+        <app-navbar class="inline"></app-navbar>
       </div>
     </div>
-    <!-- FIN menu-secundario pantallas grandes -->
+    <!-- FIN navbar pantallas grandes -->
 
     <!-- Modulos app -->
-    <div fxLayoutAlign.sm="center center" fxLayoutAlign.xs="center center" fxFlex.xs="0 1 calc(100%-10px)"
+    <!-- <div fxLayoutAlign.sm="center center" fxLayoutAlign.xs="center center" fxFlex.xs="0 1 calc(100%-10px)"
       fxFlex.sm="0 1 calc(100%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(33%-10px)">
       <div class="select-modulo" id="seleccionarModulo">
         {{nombreModulo}}
       </div>
-    </div>
+    </div>-->
     <!-- FIN Modulos app-->
 
     <!-- Menu secundario pantallas grandes (md,lg,xl) -->
     <div fxHide fxShow.md fxShow.lg fxShow.xl fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)"
-      fxFlex.gt-md="0 1 calc(33%-10px)">
+      fxFlex.gt-md="0 1 calc(67%-10px)">
       <div fxLayoutAlign="flex-end" class="icons-options desktop">
-        <app-menu-secundario class="inline"></app-menu-secundario>
+        <app-navbar class="inline"></app-navbar>
       </div>
     </div>
     <!-- FIN Menu secundario pantallas grandes (md,lg,xl) -->

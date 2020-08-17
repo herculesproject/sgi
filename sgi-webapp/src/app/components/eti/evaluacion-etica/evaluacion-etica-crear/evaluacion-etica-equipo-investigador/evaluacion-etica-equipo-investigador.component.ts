@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UnidadMedida } from '@core/models/cat/unidad-medida';
-import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { UnidadMedidaService } from '@core/services/cat/unidad-medida.service';
 import { FormGroupUtil } from '@core/services/form-group-util';
 import { AbstractTabComponent } from '@shared/formularios-tabs/abstract-tab/abstract-tab.component';

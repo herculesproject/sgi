@@ -1,11 +1,11 @@
-@import 'variables.scss';
+@import "variables.scss";
 
 $padding: 15px;
 
 /* HEADER */
-.header{
-  padding: 0;
-  border-bottom: solid 1px rgba(0, 0, 0, 0.12);
+.header {
+  border-bottom: 1px solid map-get($palette-primary, 50);
+  padding: 3px 0px 3px 0px;
 
   .menu {
     width: 40px;
@@ -17,38 +17,35 @@ $padding: 15px;
     .hercules {
       width: 65px;
       float: left;
-      padding-left: $padding;
-      img{
-        width: 50px;
+      padding: 10px 0px 0px 15px;
+      img {
+        width: 44px;
       }
     }
-    .universidad{
+    .universidad {
       width: 100px;
       float: left;
-      padding-top: 12px;
-      img{
-       width: 100px;
+      padding: 5px 0px 0px 0px;
+      img {
+        width: 200px;
       }
     }
   }
-  .icons-options{
-  .inline{
+  .icons-options {
+    .inline {
       display: flex;
     }
-    &.desktop{
-      padding-top: 10px;
-    }
   }
-  #seleccionarModulo{
+  #seleccionarModulo {
     margin-top: 15px;
     padding-left: $padding;
     padding-right: $padding;
     width: 100%;
-    mat-form-field{
-     width: 100%;
+    mat-form-field {
+      width: 100%;
     }
   }
-  .mat-menu{
+  .mat-menu {
     padding: $padding;
   }
 }

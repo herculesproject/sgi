@@ -8,8 +8,8 @@ import { NGXLogger } from 'ngx-logger';
 import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
 import { tap, map, catchError, startWith, switchMap } from 'rxjs/operators';
 
-import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 
 import { Acta } from '@core/models/eti/acta';
 import { Comite } from '@core/models/eti/comite';
@@ -67,6 +67,8 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
 
   buscadorFormGroup: FormGroup;
 
+  textoCrear: string;
+
   constructor(
     private readonly logger: NGXLogger,
     private readonly actasService: ActaService,
@@ -98,7 +100,7 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
 
-
+    this.textoCrear = this.traductor.getTexto('footer.eti.acta.crear');
   }
 
   ngOnInit(): void {
@@ -251,7 +253,7 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
           this.paginator.firstPage();
           this.totalElementos = 0;
           this.snackBarService.mostrarMensajeError(
-            this.traductor.getTexto('acta.listado.error')
+            this.traductor.getTexto('eti.acta.listado.error')
           );
           this.logger.debug(ActaListadoComponent.name, 'loadTable()', 'end');
           return of([]);

@@ -1,7 +1,14 @@
-.warning-icon {
-  color: #F7CD31;
-}
+@import "variables.scss";
 
-.danger-icon {
-  color: #E35138;
+.generic-tab {
+  .icons {
+    padding-left: 10px;
+  }
+  .warning-icon {
+    color: #f7cd31;
+  }
+
+  .danger-icon {
+    color: #e35138;
+  }
 }

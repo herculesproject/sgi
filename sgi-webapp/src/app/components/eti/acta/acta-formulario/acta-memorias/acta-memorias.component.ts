@@ -6,15 +6,14 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
-
+import { Acta } from '@core/models/eti/acta';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { FormGroupUtil } from '@core/services/form-group-util';
 import { AbstractTabComponent } from '@shared/formularios-tabs/abstract-tab/abstract-tab.component';
 
 import { Evaluacion } from '@core/models/eti/evaluacion';
 import { MemoriaListado } from '@core/models/eti/memoria-listado';
-
-import { FormGroupUtil } from '@core/services/form-group-util';
 
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 

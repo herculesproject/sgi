@@ -1,15 +1,12 @@
 <!-- Convocatoria reunion listado -->
 <section class="convocatoria-reunion-listado">
-  <h2>{{'eti.convocatoriaReunion.listado.titulo' | translate}}</h2>
-
   <!-- Buscador de convocatorias reunión -->
-  <form [formGroup]="buscadorFormGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
-    fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+  <form class="formulario" [formGroup]="buscadorFormGroup" [fxLayout.xs]="fxLayoutProperties.xs"
+    [fxLayout]="fxLayoutProperties.layout" fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
     <!-- Comité -->
-    <div class="col" [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
-      [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field class="input-form" appearance="fill">
+    <div class="col">
+      <mat-form-field class="input-form">
         <mat-label>{{'eti.convocatoriaReunion.buscador.comite.titulo' | translate}}</mat-label>
         <input type="text" [placeholder]="'eti.convocatoriaReunion.buscador.comite.titulo' | translate"
           arial-label="Number" matInput formControlName="comite" [matAutocomplete]="autocompleteComite">
@@ -22,32 +19,31 @@
     </div>
 
     <!-- Fecha evaluación (desde - hasta)-->
-    <div class="col" [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
-      [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field appearance="fill">
+    <div class="col">
+      <mat-form-field>
         <mat-label>{{'eti.convocatoriaReunion.buscador.fechaEvaluacionDesde.titulo' | translate}}</mat-label>
         <input matInput formControlName="fechaEvaluacionDesde" [matDatepicker]="pickerFechaEvaluacionDesde"
-          [placeholder]="'eti.convocatoriaReunion.buscador.fechaEvaluacionDesde.titulo' | translate">
+          [placeholder]="'eti.convocatoriaReunion.buscador.fechaEvaluacionDesde.titulo' | translate"
+          appDatepickerFormat>
         <mat-datepicker-toggle matSuffix [for]="pickerFechaEvaluacionDesde"></mat-datepicker-toggle>
         <mat-datepicker #pickerFechaEvaluacionDesde></mat-datepicker>
       </mat-form-field>
     </div>
 
-    <div class="col" [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
-      [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field appearance="fill">
+    <div class="col">
+      <mat-form-field>
         <mat-label>{{'eti.convocatoriaReunion.buscador.fechaEvaluacionHasta.titulo' | translate}}</mat-label>
         <input matInput formControlName="fechaEvaluacionHasta" [matDatepicker]="pickerFechaEvaluacionHasta"
-          placeholder="{{'eti.convocatoriaReunion.buscador.fechaEvaluacionHasta.titulo' | translate}}">
+          placeholder="{{'eti.convocatoriaReunion.buscador.fechaEvaluacionHasta.titulo' | translate}}"
+          appDatepickerFormat>
         <mat-datepicker-toggle matSuffix [for]="pickerFechaEvaluacionHasta"></mat-datepicker-toggle>
         <mat-datepicker #pickerFechaEvaluacionHasta></mat-datepicker>
       </mat-form-field>
     </div>
 
     <!-- Convocatoria -->
-    <div class="col" [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
-      [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field class="input-form" appearance="fill">
+    <div class="col">
+      <mat-form-field class="input-form">
         <mat-label>{{'eti.convocatoriaReunion.buscador.tipoConvocatoriaReunion.titulo' | translate}}</mat-label>
         <input type="text" [placeholder]="'eti.convocatoriaReunion.buscador.tipoConvocatoriaReunion.titulo' | translate"
           arial-label="Number" matInput formControlName="tipoConvocatoriaReunion"
@@ -62,23 +58,18 @@
       </mat-form-field>
     </div>
 
+    <div class="buttons-final">
+      <div class="col filter-button">
+        <button color="primary" aria-label="Center Align" md-button mat-raised-button (click)="onSearch()">
+          <mat-icon>search</mat-icon> {{'botones.buscar'| translate}}
+        </button>
+        <button color="warn" class="md-primary" aria-label="Center Align" md-button (click)="onClearFilters()"
+          mat-button>{{'botones.limpiar'| translate}}
+        </button>
+      </div>
+    </div>
+
   </form>
-
-  <div class="filter-button">
-    <button fxFlex="20%" aria-label="Center Align" md-button mat-raised-button (click)="onSearch()">
-      {{'botones.buscar'| translate}}
-    </button>
-    <button fxFlex="20%" class="md-primary" aria-label="Center Align" md-button (click)="onClearFilters()"
-      mat-raised-button>{{'botones.limpiar'| translate}}
-    </button>
-  </div>
-
-  <!-- Botón añadir convocatoria reunión -->
-  <div class="separation-button">
-    <button *sgiHasAuthorityForAnyUO="'ETI-CNV-C'" [routerLink]="UrlUtils.crear" mat-button>
-      <mat-icon>add_box</mat-icon> {{'eti.convocatoriaReunion.listado.nuevaConvocatoriaReunion' | translate}}
-    </button>
-  </div>
 
   <!-- Listado de convocatorias reunión -->
   <table class="mat-elevation-z8 table-convocatoria-reunion" mat-table matSort
@@ -144,15 +135,15 @@
         <button mat-button *sgiHasAuthorityForAnyUO="'ETI-CNV-E'"
           [routerLink]="UrlUtils.actualizar + convocatoriaReunion.id"
           matTooltip="{{'eti.convocatoriaReunion.listado.editar' | translate}}">
-          <mat-icon>edit</mat-icon>
+          <mat-icon color="primary">border_color</mat-icon>
         </button>
-        <button mat-button *sgiHasAuthorityForAnyUO="'ETI-CNV-B'"
+        <button color="warn" mat-button *sgiHasAuthorityForAnyUO="'ETI-CNV-B'"
           matTooltip="{{'eti.convocatoriaReunion.listado.borrar' | translate}}"
           (click)="borrar(convocatoriaReunion.id, $event)">
-          <mat-icon>close</mat-icon>
+          <mat-icon>highlight_off</mat-icon>
         </button>
         <ng-container *sgiHasAuthorityForAnyUO="'ETI-CNV-ENV'">
-          <button *ngIf="!convocatoriaReunion.fechaEnvio" mat-button
+          <button color="accent" *ngIf="!convocatoriaReunion.fechaEnvio" mat-button
             matTooltip="{{'eti.convocatoriaReunion.listado.enviar' | translate}}"
             (click)="enviar(convocatoriaReunion.id, $event)">
             <mat-icon>send</mat-icon>
@@ -166,5 +157,9 @@
   </table>
   <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
   </mat-paginator>
+
+
+  <app-footer-crear *sgiHasAuthorityForAnyUO="'ETI-CNV-C'" [texto]="textoCrear"></app-footer-crear>
+
 </section>
 <!-- FIN Convocatoria reunion listado-->

@@ -38,6 +38,7 @@ export class UrlUtils {
     propiedadIntelectual: 'propiedadIntelectual',
     proyectos: 'proyectos',
     root: 'eti',
+    inicio: 'eti/inicio',
     solicitudesConvocatoria: 'solicitudesConvocatoria',
     solicitudesSAI: 'solicitudesSAI',
     tipoEstadoActa: 'tipoestadoactas'

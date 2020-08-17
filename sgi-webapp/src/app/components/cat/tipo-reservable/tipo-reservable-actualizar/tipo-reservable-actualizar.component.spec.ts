@@ -10,7 +10,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { MenuSecundarioComponent } from '@shared/componentes-layout/menu-secundario/menu-secundario.component';
+import { NavbarComponent } from '@shared/componentes-layout/navbar/navbar.component';
 import { NGXLogger } from 'ngx-logger';
 import i18n from 'src/assets/i18n/es.json';
 
@@ -26,7 +26,7 @@ describe('TipoReservableActualizarComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         TipoReservableActualizarComponent,
-        MenuSecundarioComponent,
+        NavbarComponent,
         TipoReservableListadoComponent,
       ],
       providers: [

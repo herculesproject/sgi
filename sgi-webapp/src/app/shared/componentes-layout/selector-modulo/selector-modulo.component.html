@@ -1,13 +1,8 @@
-<header class="modal-header-material">
-  <h1 mat-dialog-title>Seleccione un módulo
-    <button type="button" class="close" aria-label="Close" (click)="cerrarModal()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </h1>
-</header>
-<main>
-  <button *ngFor="let modulo of modulos" (click)="abrirModulo(modulo.url)">{{modulo.nombre}}</button>
-</main>
-<section id="modals-buttons" class="float-right" mat-dialog-actions>
-  <button (click)="cerrarModal()" class="btn btn-outline-danger input-modal" type="button">Cancelar</button>
-</section>
+<h3 mat-dialog-title>{{'seleccionar-modulo.titulo'| translate}}</h3>
+<mat-dialog-content class="mat-typography">
+  <button mat-button *ngFor="let modulo of modulos" (click)="abrirModulo(modulo.url)">{{modulo.nombre}}</button>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button color="warn" (click)="cerrarModal()" mat-button
+    cdkFocusInitial>{{'seleccionar-modulo.cancelar'| translate}}</button>
+</mat-dialog-actions>

@@ -8,7 +8,7 @@ import { SelectorModuloComponent } from '@shared/componentes-layout/selector-mod
 
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { HeaderComponent } from './componentes-layout/header/header.component';
-import { MenuSecundarioComponent } from './componentes-layout/menu-secundario/menu-secundario.component';
+import { NavbarComponent } from './componentes-layout/navbar/navbar.component';
 import { DialogComponent } from './dialog/dialog.component';
 import { SnackBarComponent } from './snack-bar/snack-bar.component';
 import { FooterCrearComponent } from './footers/footer-crear/footer-crear.component';
@@ -17,11 +17,12 @@ import { GenericTabLabelComponent } from './formularios-tabs/generic-tab-label/g
 import { MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { APP_DATE_FORMATS } from '@core/utils/material-design/date-format/format-datepicker';
+import { DatepickerFormatDirective } from './directivas/datepicker-format/datepicker-format.directive';
 
 @NgModule({
   declarations: [
     HeaderComponent,
-    MenuSecundarioComponent,
+    NavbarComponent,
     DialogComponent,
     SnackBarComponent,
     SelectorModuloComponent,
@@ -29,6 +30,7 @@ import { APP_DATE_FORMATS } from '@core/utils/material-design/date-format/format
     FooterCrearComponent,
     FooterGuardarComponent,
     GenericTabLabelComponent,
+    DatepickerFormatDirective,
   ],
   imports: [
     RouterModule,
@@ -44,7 +46,7 @@ import { APP_DATE_FORMATS } from '@core/utils/material-design/date-format/format
     FormsModule,
     ReactiveFormsModule,
     HeaderComponent,
-    MenuSecundarioComponent,
+    NavbarComponent,
     BreadcrumbComponent,
     FooterCrearComponent,
     FooterGuardarComponent,

@@ -1,10 +1,9 @@
-<section>
-  <h2>{{'eti.acta.crear.datosGenerales.cabecera' | translate}}</h2>
+<section class="acta-datos-generales">
   <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
     [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field appearance="fill">
+      <mat-form-field>
         <mat-label>{{'eti.acta.crear.datosGenerales.convocatoriaReunion.titulo' | translate}}</mat-label>
 
         <input type="text" placeholder="{{'eti.acta.crear.datosGenerales.convocatoriaReunion.titulo' | translate}}"
@@ -23,7 +22,7 @@
     </div>
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field appearance="fill">
+      <mat-form-field>
         <mat-label>{{'eti.acta.crear.datosGenerales.horaInicio.titulo' | translate}}</mat-label>
         <input matInput formControlName="horaInicio" id="horaInicio" type="number"
           placeholder="{{'eti.acta.crear.datosGenerales.horaInicio.titulo' | translate}}" required>
@@ -42,7 +41,7 @@
     </div>
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field appearance="fill">
+      <mat-form-field>
         <mat-label>{{'eti.acta.crear.datosGenerales.minutoInicio.titulo' | translate}}</mat-label>
         <input matInput formControlName="minutoInicio" id="minutoInicio" type="number"
           placeholder="{{'eti.acta.crear.datosGenerales.minutoInicio.titulo' | translate}}" required>
@@ -62,7 +61,7 @@
     </div>
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field appearance="fill">
+      <mat-form-field>
         <mat-label>{{'eti.acta.crear.datosGenerales.horaFin.titulo' | translate}}</mat-label>
         <input matInput formControlName="horaFin" id="horaFin" type="number"
           placeholder="{{'eti.acta.crear.datosGenerales.horaFin.titulo' | translate}}" required>
@@ -79,7 +78,7 @@
     </div>
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field appearance="fill">
+      <mat-form-field>
         <mat-label>{{'eti.acta.crear.datosGenerales.minutoFin.titulo' | translate}}</mat-label>
         <input matInput formControlName="minutoFin" id="minutoFin" type="number"
           placeholder="{{'eti.acta.crear.datosGenerales.minutoFin.titulo' | translate}}" required>
@@ -95,9 +94,9 @@
         </mat-error>
       </mat-form-field>
     </div>
-    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-      [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field appearance="fill">
+    <div [fxFlex.sm]="fxFlexPropertiesInline.sm" [fxFlex.md]="fxFlexPropertiesInline.md"
+      [fxFlex.gt-md]="fxFlexPropertiesInline.gtMd" [fxFlexOrder]="fxFlexPropertiesInline.order">
+      <mat-form-field>
         <mat-label>{{'eti.acta.crear.datosGenerales.resumen.titulo' | translate}}</mat-label>
         <textarea matInput formControlName="resumen" id="resumen"
           placeholder="{{'eti.acta.crear.datosGenerales.resumen.titulo' | translate}}" required></textarea>

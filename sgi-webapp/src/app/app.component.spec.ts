@@ -1,14 +1,14 @@
-import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {async, TestBed} from '@angular/core/testing';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {RouterTestingModule} from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { async, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
-import {MaterialDesignModule} from '@material/material-design.module';
-import {HeaderComponent} from '@shared/componentes-layout/header/header.component';
-import {MenuSecundarioComponent} from '@shared/componentes-layout/menu-secundario/menu-secundario.component';
-import {NGXLogger} from 'ngx-logger';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { HeaderComponent } from '@shared/componentes-layout/header/header.component';
+import { NavbarComponent } from '@shared/componentes-layout/navbar/navbar.component';
+import { NGXLogger } from 'ngx-logger';
 
-import {AppComponent} from './app.component';
+import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -21,12 +21,12 @@ describe('AppComponent', () => {
         TestUtils.getIdiomas()
       ],
       providers: [
-        {provide: NGXLogger, useValue: TestUtils.getLoggerSpy()}
+        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() }
       ],
       declarations: [
         AppComponent,
         HeaderComponent,
-        MenuSecundarioComponent
+        NavbarComponent
       ]
     }).compileComponents();
   }));

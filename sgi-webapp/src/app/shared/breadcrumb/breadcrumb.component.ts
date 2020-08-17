@@ -1,14 +1,11 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {NGXLogger} from 'ngx-logger';
-import {NavigationEnd, Router} from '@angular/router';
-import {TraductorService} from '@core/services/traductor.service';
-import {Subscription} from 'rxjs';
-import {filter} from 'rxjs/operators';
-
-interface UrlElement {
-  nombre: string;
-  url: string;
-}
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NGXLogger } from 'ngx-logger';
+import { NavigationEnd, Router } from '@angular/router';
+import { TraductorService } from '@core/services/traductor.service';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { UrlElement } from '@core/models/shared/breadcrumb';
+import { BreadcrumbService } from '@core/services/breadcrumb.service';
 
 @Component({
   selector: 'app-breadcrumb',
@@ -22,7 +19,8 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
   constructor(
     private readonly logger: NGXLogger,
     private readonly router: Router,
-    private readonly traductor: TraductorService
+    private readonly traductor: TraductorService,
+    private breadcrumbService: BreadcrumbService
   ) {
     this.crearSubscripcionUrl();
   }
@@ -55,7 +53,7 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
         if (url === '' || isNaN(Number(url))) {
           this.urls.push({
             nombre: url,
-            url: this.crearUrl(url, urls)
+            url: this.breadcrumbService.crearUrl(url, urls)
           });
         }
       });
@@ -63,22 +61,14 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
     this.logger.debug(BreadcrumbComponent.name, 'crearSubscripcionUrl()', 'end');
   }
 
-  /**
-   * Crea dinamicamente la url del elemento del breadcrumb
-   *
-   * @param destino Página de la aplicación
-   * @param urlParams Parámetros de la url
-   */
-  private crearUrl(destino: string, urlParams: string[]): string {
-    this.logger.debug(BreadcrumbComponent.name, 'crearUrl(destino: string, urls: string[])', 'start');
-    let resultado = '';
-    for (const aux of urlParams) {
-      resultado += aux + '/';
-      if (aux === destino) {
-        break;
-      }
-    }
-    this.logger.debug(BreadcrumbComponent.name, 'crearUrl(destino: string, urls: string[])', 'end');
-    return resultado;
+  getUltimaPosicion(): number {
+    return this.urls ? this.urls.length - 1 : 0;
   }
+  getUltimaPosicionNombre(): string {
+    if (this.urls && this.urls.length > 0) {
+      return this.urls[this.getUltimaPosicion()].nombre;
+    }
+    return '';
+  }
+
 }

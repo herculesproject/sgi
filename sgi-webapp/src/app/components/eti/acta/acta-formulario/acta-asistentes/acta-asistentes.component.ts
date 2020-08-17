@@ -1,16 +1,16 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { MatSort } from '@angular/material/sort';
-import { IAsistente } from '@core/models/eti/asistente';
-import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
-import { AsistenteService } from '@core/services/eti/asistente.service';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { FormGroupUtil } from '@core/services/form-group-util';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { AbstractTabComponent } from '@shared/formularios-tabs/abstract-tab/abstract-tab.component';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, zip } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { IAsistente } from '@core/models/eti/asistente';
+import { MatSort } from '@angular/material/sort';
+import { AsistenteService } from '@core/services/eti/asistente.service';
 
 @Component({
   selector: 'app-acta-asistentes',

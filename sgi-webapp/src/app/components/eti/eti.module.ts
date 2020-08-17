@@ -8,9 +8,10 @@ import { EtiRootComponent } from './eti-root/eti-root.component';
 import { EtiMenuPrincipalComponent } from './eti-menu-principal/eti-menu-principal.component';
 import { ComponentsModule } from '../components.module';
 import { SgiAuthModule } from '@sgi/framework/auth';
+import { InicioComponent } from './inicio/inicio.component';
 
 @NgModule({
-  declarations: [EtiRootComponent, EtiMenuPrincipalComponent],
+  declarations: [EtiRootComponent, EtiMenuPrincipalComponent, InicioComponent],
   imports: [
     SharedModule,
     CommonModule,

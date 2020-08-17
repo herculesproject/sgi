@@ -422,6 +422,8 @@
         "error": "No se ha podido cargar el listado de actas",
         "estado": "Estado",
         "fechaEvaluacion": "Fecha Evaluación",
+        "fechaEvaluacion.inicio": "Fecha evaluación inicio",
+        "fechaEvaluacion.fin": "Fecha evaluación fin",
         "nuevaActa": "Añadir nueva acta",
         "numeroActa": "Nº Acta",
         "numeroIniciales": "Nº Iniciales",
@@ -614,20 +616,24 @@
   "footer": {
     "eti": {
       "acta": {
-        "crear": "Nueva acta",
-        "guardar": "Guardar acta"
+        "crear": "Nueva",
+        "guardar": "Guardar",
+        "actualizar": "Actualizar"
       },
       "convocatoriaReunion": {
         "crear": "Nueva convocatoria",
-        "guardar": "Guardar convocatoria"
+        "guardar": "Guardar convocatoria",
+        "actualizar": "Actualizar"
       },
       "evaluacion": {
         "crear": "Nueva evaluación",
-        "guardar": "Guardar evaluación"
+        "guardar": "Guardar evaluación",
+        "actualizar": "Actualizar"
       },
       "evaluacionEtica": {
         "crear": "Nueva solicitud de evaluación",
-        "guardar": "Guardar solicitud"
+        "guardar": "Guardar solicitud",
+        "actualizar": "Actualizar"
       }
     }
   },
@@ -682,5 +688,9 @@
   },
   "snackBar": {
     "error": "Se ha producido un error"
+  },
+  "seleccionar-modulo": {
+    "titulo": "Seleccione un módulo",
+    "cancelar": "Cancelar"
   }
 }

@@ -1,48 +1,56 @@
 <!-- Menu principal -->
-<mat-nav-list>
-  <div class="opciones-menu">
-    <mat-list-item [routerLink]="UrlUtils.cat.producto" [routerLinkActive]="['is-active']">
-      <a mat-list-item>
-        <mat-icon>fullscreen</mat-icon>
-        <span>{{'menu.principal.cat.productos' | translate}}</span>
-      </a>
-    </mat-list-item>
-    <mat-list-item [routerLink]="UrlUtils.cat.solicitud" [routerLinkActive]="['is-active']">
-      <a mat-list-item>
-        <mat-icon> list_alt</mat-icon>
-        <span>{{'menu.principal.cat.solicitudes' | translate}}</span>
-      </a>
-    </mat-list-item>
-    <mat-list-item [routerLink]="UrlUtils.cat.agrupacionServicios" [routerLinkActive]="['is-active']">
-      <a mat-list-item>
-        <mat-icon>device_hub</mat-icon>
-        <span>{{'menu.principal.cat.agrupaciones-servicios' | translate}}</span>
-      </a>
-    </mat-list-item>
-    <mat-list-item [routerLink]="UrlUtils.cat.horario" [routerLinkActive]="['is-active']">
-      <a mat-list-item>
-        <mat-icon>calendar_today</mat-icon>
-        <span>{{'menu.principal.cat.horarios' | translate}}</span>
-      </a>
-    </mat-list-item>
-    <mat-list-item [routerLink]="UrlUtils.cat.unidadMedidas" [routerLinkActive]="['is-active']">
-      <a mat-list-item>
-        <mat-icon>equalizer</mat-icon>
-        <span>{{'menu.principal.cat.unidades-medida' | translate}}</span>
-      </a>
-    </mat-list-item>
-    <mat-list-item [routerLink]="UrlUtils.cat.tipoReservables" [routerLinkActive]="['is-active']">
-      <a mat-list-item>
-        <mat-icon>fullscreen</mat-icon>
-        <span>{{'menu.principal.cat.tipos-reservables' | translate}}</span>
-      </a>
-    </mat-list-item>
-    <mat-list-item [routerLink]="UrlUtils.cat.tipoFungible" [routerLinkActive]="['is-active']">
-      <a mat-list-item>
-        <mat-icon>fullscreen</mat-icon>
-        <span>{{'menu.principal.cat.tipos-fungibles' | translate}}</span>
-      </a>
-    </mat-list-item>
-  </div>
-</mat-nav-list>
+<div class="opciones-menu">
+
+  <a class="item" mat-list-item [routerLink]="UrlUtils.cat.producto" [routerLinkActive]="['is-active']">
+    <mat-icon color="primary" mat-list-icon>fullscreen</mat-icon>
+    <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.cat.productos' | translate}}</p>
+  </a>
+
+  <a class="item" mat-list-item [routerLink]="UrlUtils.cat.solicitud" [routerLinkActive]="['is-active']">
+    <mat-icon color="primary" mat-list-icon>list_alt</mat-icon>
+    <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.cat.solicitudes' | translate}}</p>
+  </a>
+
+  <a class="item" mat-list-item [routerLink]="UrlUtils.cat.agrupacionServicios" [routerLinkActive]="['is-active']">
+    <mat-icon color="primary" mat-list-icon>device_hub</mat-icon>
+    <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.cat.agrupaciones-servicios' | translate}}</p>
+  </a>
+
+  <a class="item" mat-list-item [routerLink]="UrlUtils.cat.horario" [routerLinkActive]="['is-active']">
+    <mat-icon color="primary" mat-list-icon>calendar_today</mat-icon>
+    <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.cat.horarios' | translate}}</p>
+  </a>
+
+  <a class="item" mat-list-item [routerLink]="UrlUtils.cat.unidadMedidas" [routerLinkActive]="['is-active']">
+    <mat-icon color="primary" mat-list-icon>equalizer</mat-icon>
+    <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.cat.unidades-medida' | translate}}</p>
+  </a>
+
+  <a class="item" mat-list-item [routerLink]="UrlUtils.cat.tipoReservables" [routerLinkActive]="['is-active']">
+    <mat-icon color="primary" mat-list-icon>fullscreen</mat-icon>
+    <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.cat.tipos-reservables' | translate}}</p>
+  </a>
+
+  <a class="item" mat-list-item [routerLink]="UrlUtils.cat.tipoFungible" [routerLinkActive]="['is-active']">
+    <mat-icon color="primary" mat-list-icon>fullscreen</mat-icon>
+    <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.cat.tipos-fungibles' | translate}}</p>
+  </a>
+
+  <mat-accordion #accordion="matAccordion" class="acordeon">
+    <mat-expansion-panel #expPanel class="panel" [expanded]="panelDesplegado">
+      <mat-expansion-panel-header class="header item" (click)="activarAcordeon($event)">
+        <mat-panel-title class="titulo">
+          <mat-icon color="primary" mat-list-icon>list_alt</mat-icon>
+          <span *ngIf="mostrarNombreMenu">Solicitudes de convocatoria</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="opciones" *ngIf="mostrarNombreMenu">
+        <a mat-list-item routerLink>Solicitudes <mat-icon>add_circle_outline</mat-icon></a>
+        <a mat-list-item routerLink>Memorias</a>
+      </div>
+    </mat-expansion-panel>
+
+  </mat-accordion>
+
+</div>
 <!-- FIN Menu principal -->

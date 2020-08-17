@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
@@ -22,7 +22,7 @@ export class SelectorModuloComponent implements OnInit {
     private logger: NGXLogger,
     public dialogRef: MatDialogRef<SelectorModuloComponent>,
     private router: Router,
-    private readonly traductor: TraductorService,
+    private readonly traductor: TraductorService
   ) {
     this.modulos = [{
       url: UrlUtils.cat.root,
@@ -37,6 +37,7 @@ export class SelectorModuloComponent implements OnInit {
 
   ngOnInit(): void {
     this.logger.debug(SelectorModuloComponent.name, 'ngOnInit()', 'start');
+    // this.dialogRef.updateSize('420px', '360px');
     this.logger.debug(SelectorModuloComponent.name, 'ngOnInit()', 'end');
   }
 

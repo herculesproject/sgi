@@ -6,8 +6,8 @@ import { Observable } from 'rxjs';
 
 import { AbstractTabComponent } from '@shared/formularios-tabs/abstract-tab/abstract-tab.component';
 
-import { FxFlexProperties } from '@core/models/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/flexLayout/fx-layout-properties';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 
 import { FormGroupUtil } from '@core/services/form-group-util';
 
@@ -47,8 +47,14 @@ export class ActaDatosGeneralesComponent extends AbstractTabComponent<Acta> impl
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
-    this.fxFlexProperties.gtMd = '0 1 calc(22%-10px)';
+    this.fxFlexProperties.gtMd = '0 1 calc(32%-10px)';
     this.fxFlexProperties.order = '2';
+
+    this.fxFlexPropertiesInline = new FxFlexProperties();
+    this.fxFlexPropertiesInline.sm = '0 1 calc(100%-10px)';
+    this.fxFlexPropertiesInline.md = '0 1 calc(100%-10px)';
+    this.fxFlexPropertiesInline.gtMd = '0 1 calc(100%-10px)';
+    this.fxFlexPropertiesInline.order = '3';
 
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.gap = '20px';
@@ -61,6 +67,7 @@ export class ActaDatosGeneralesComponent extends AbstractTabComponent<Acta> impl
   FormGroupUtil = FormGroupUtil;
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
+  fxFlexPropertiesInline: FxFlexProperties;
 
   convocatoriasReunionFitlered: ConvocatoriaReunion[];
   convocatoriasReunion: Observable<ConvocatoriaReunion[]>;
@@ -69,6 +76,7 @@ export class ActaDatosGeneralesComponent extends AbstractTabComponent<Acta> impl
 
   @Output()
   selectConvocatoria: EventEmitter<number> = new EventEmitter();
+
 
   /**
    * Compara dos convocatorias reunión por su código.

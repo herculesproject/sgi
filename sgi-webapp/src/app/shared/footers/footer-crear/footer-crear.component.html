@@ -1,5 +1,8 @@
-<footer class="separation">
-  <button class="md-primary" aria-label="Center Align" md-button [routerLink]="UrlUtils.crear" mat-raised-button>
-    {{texto | uppercase}}
-  </button>
+<footer class="separation footer">
+  <div class="boton">
+    <button color="success" class="btn-secondary" aria-label="Center Align" md-button [routerLink]="UrlUtils.crear"
+      mat-raised-button>
+      <mat-icon>add_circle_outline</mat-icon> {{texto | uppercase}}
+    </button>
+  </div>
 </footer>

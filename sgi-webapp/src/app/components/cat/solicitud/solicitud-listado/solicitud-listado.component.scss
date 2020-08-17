@@ -1,16 +1,6 @@
-@import 'src/styles/variables';
+@import "src/styles/variables";
 
 .solicitud-listado {
-  .table-solicitud{
-    width: 100%;
-    .mat-row:nth-child(even){
-      background-color: map-get($palette-accent, 300);
-    }
-    .mat-row:nth-child(odd){
-      background-color: map-get($palette-accent, 100);
-    }
-  }
-
   .separation-button {
     padding-top: 15px;
   }

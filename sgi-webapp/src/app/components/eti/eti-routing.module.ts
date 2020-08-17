@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { UrlUtils } from '@core/utils/url-utils';
 import { SgiAuthGuard, SgiAuthRoutes } from '@sgi/framework/auth';
+import { InicioComponent } from './inicio/inicio.component';
 
 import { EtiRootComponent } from './eti-root/eti-root.component';
 
@@ -10,6 +11,11 @@ const routes: SgiAuthRoutes = [
     path: '',
     component: EtiRootComponent,
     children: [
+      {
+        path: '',
+        component: InicioComponent,
+        pathMatch: 'full'
+      },
       {
         path: UrlUtils.eti.datos.valueOf(),
         component: null,

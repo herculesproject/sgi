@@ -1,87 +1,45 @@
-<mat-nav-list>
-  <div class="opciones-menu">
-    <!-- <mat-list-item [routerLink]="UrlUtils.eti.datos" [routerLinkActive]="['is-active']">
-      <a mat-list-item>
-        <mat-icon>fullscreen</mat-icon>
-        <span>{{'menu.principal.eti.datos' | translate}}</span>
-      </a>
-    </mat-list-item> -->
-    <mat-list-item *sgiHasAuthorityForAnyUO="'ETI-ACT-V'" [routerLink]="UrlUtils.eti.actas"
-      [routerLinkActive]="['is-active']">
-      <a mat-list-item>
-        <mat-icon> list_alt</mat-icon>
-        <span>{{'menu.principal.eti.acta' | translate}}</span>
-      </a>
-    </mat-list-item>
-    <mat-list-item *sgiHasAuthorityForAnyUO="'ETI-EVC-V'" [routerLink]="UrlUtils.eti.evaluacion"
-      [routerLinkActive]="['is-active']">
-      <a mat-list-item>
-        <mat-icon> list_alt</mat-icon>
-        <span>{{'menu.principal.eti.evaluaciones' | translate}}</span>
-      </a>
-    </mat-list-item>
-    <mat-list-item [routerLink]="UrlUtils.eti.produccionCientifica" [routerLinkActive]="['is-active']">
-      <a mat-list-item>
-        <mat-icon>device_hub</mat-icon>
-        <span>{{'menu.principal.eti.produccionCientifica' | translate}}</span>
-      </a>
-    </mat-list-item>
-    <!--  <mat-list-item [routerLink]="UrlUtils.eti.ofertaTecnologica" [routerLinkActive]="['is-active']">
-      <a mat-list-item>
-        <mat-icon>calendar_today</mat-icon>
-        <span>{{'menu.principal.eti.ofertaTecnologica' | translate}}</span>
-      </a>
-    </mat-list-item> -->
-    <mat-list-item *sgiHasAuthorityForAnyUO="'ETI-CNV-V'" [routerLink]="UrlUtils.eti.solicitudesConvocatoria"
-      [routerLinkActive]="['is-active']">
-      <a mat-list-item>
-        <mat-icon>equalizer</mat-icon>
-        <span>{{'menu.principal.eti.solicitudesConvocatoria' | translate}}</span>
-      </a>
-    </mat-list-item>
-    <!-- <mat-list-item [routerLink]="UrlUtils.eti.proyectos" [routerLinkActive]="['is-active']">
-      <a mat-list-item>
-        <mat-icon>fullscreen</mat-icon>
-        <span>{{'menu.principal.eti.proyectos' | translate}}</span>
-      </a>
-    </mat-list-item>
-    <mat-list-item [routerLink]="UrlUtils.eti.propiedadIntelectual" [routerLinkActive]="['is-active']">
-      <a mat-list-item>
-        <mat-icon>fullscreen</mat-icon>
-        <span>{{'menu.principal.eti.propiedadIntelectual' | translate}}</span>
-      </a>
-    </mat-list-item>
-    <mat-list-item [routerLink]="UrlUtils.eti.empresasBaseTecnologica" [routerLinkActive]="['is-active']">
-      <a mat-list-item>
-        <mat-icon>list</mat-icon>
-        <span>{{'menu.principal.eti.empresasBaseTecnologica' | translate}}</span>
-      </a>
-    </mat-list-item>
-    <mat-list-item [routerLink]="UrlUtils.eti.gruposInvestigacion" [routerLinkActive]="['is-active']">
-      <a mat-list-item>
-        <mat-icon>list</mat-icon>
-        <span>{{'menu.principal.eti.gruposInvestigacion' | translate}}</span>
-      </a>
-    </mat-list-item> -->
-    <!-- <mat-list-item [routerLink]="UrlUtils.eti.areaEspecializacion" [routerLinkActive]="['is-active']">
-      <a mat-list-item>
-        <mat-icon>list</mat-icon>
-        <span>{{'menu.principal.eti.areaEspecializacion' | translate}}</span>
-      </a>
-    </mat-list-item> -->
-    <mat-list-item *sgiHasAuthorityForAnyUO="'ETI-EVC-VR'" [routerLink]="UrlUtils.eti.evaluacionEtica"
-      [routerLinkActive]="['is-active']">
-      <a mat-list-item>
-        <mat-icon>list</mat-icon>
-        <span>{{'menu.principal.eti.evaluacionEtica' | translate}}</span>
-      </a>
-    </mat-list-item>
-    <!--  <mat-list-item [routerLink]="UrlUtils.eti.solicitudesSAI" [routerLinkActive]="['is-active']">
-      <a mat-list-item>
-        <mat-icon>list</mat-icon>
-        <span>{{'menu.principal.eti.solicitudesSAI' | translate}}</span>
-      </a>
-    </mat-list-item>-->
-  </div>
-</mat-nav-list>
+<div class="opciones-menu">
+
+  <a class="item" mat-list-item *sgiHasAuthorityForAnyUO="'ETI-ACT-V'" [routerLink]="UrlUtils.eti.actas"
+    [routerLinkActive]="['is-active']">
+    <mat-icon color="primary" mat-list-icon>list_alt</mat-icon>
+    <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.eti.acta' | translate}}</p>
+  </a>
+
+  <a class="item" mat-list-item *sgiHasAuthorityForAnyUO="'ETI-EVC-V'" [routerLink]="UrlUtils.eti.evaluacion"
+    [routerLinkActive]="['is-active']">
+    <mat-icon color="primary" mat-list-icon>list_alt</mat-icon>
+    <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.eti.evaluaciones' | translate}}</p>
+  </a>
+
+  <a class="item" mat-list-item *sgiHasAuthorityForAnyUO="'ETI-CNV-V'"
+    [routerLink]="UrlUtils.eti.solicitudesConvocatoria" [routerLinkActive]="['is-active']">
+    <mat-icon color="primary" mat-list-icon>equalizer</mat-icon>
+    <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.eti.solicitudesConvocatoria' | translate}}</p>
+  </a>
+
+  <!-- <a class="item" mat-list-item *sgiHasAuthorityForAnyUO="'ETI-EVC-VR'" [routerLink]="UrlUtils.eti.evaluacionEtica"
+    [routerLinkActive]="['is-active']">
+    <mat-icon color="primary" mat-list-icon>list</mat-icon>
+    <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.eti.evaluacionEtica' | translate}}</p>
+  </a>
+-->
+
+  <mat-accordion #accordion="matAccordion" class="acordeon">
+    <mat-expansion-panel #expPanel class="panel" [expanded]="panelDesplegado">
+      <mat-expansion-panel-header class="header item" (click)="activarAcordeon($event)">
+        <mat-panel-title class="titulo">
+          <mat-icon color="primary" mat-list-icon>list_alt</mat-icon>
+          <span *ngIf="mostrarNombreMenu">Solicitudes de convocatoria</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="opciones" *ngIf="mostrarNombreMenu">
+        <a mat-list-item>Solicitudes <mat-icon>add_circle_outline</mat-icon></a>
+        <a mat-list-item>Memorias</a>
+      </div>
+    </mat-expansion-panel>
+
+  </mat-accordion>
+
+</div>
 <!-- FIN Menu principal -->

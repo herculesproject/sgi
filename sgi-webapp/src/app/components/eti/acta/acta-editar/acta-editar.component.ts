@@ -34,11 +34,11 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
     protected readonly snackBarService: SnackBarService,
     private readonly router: Router,
     private activatedRoute: ActivatedRoute,
-    private actaService: ActaService, ) {
+    private actaService: ActaService,) {
 
     super(logger, traductor, snackBarService);
 
-    this.textoCrear = this.traductor.getTexto('footer.eti.acta.guardar');
+    this.textoCrear = this.traductor.getTexto('footer.eti.acta.actualizar');
   }
 
   ngOnInit(): void {
