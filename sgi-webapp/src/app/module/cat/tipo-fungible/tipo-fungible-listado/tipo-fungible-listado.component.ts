@@ -8,6 +8,7 @@ import { SgiRestFilter } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ROUTE_NAMES } from '@core/route.names';
 
 @Component({
   selector: 'app-tipo-fungible-listado',
@@ -15,6 +16,7 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./tipo-fungible-listado.component.scss'],
 })
 export class TipoFungibleListadoComponent extends AbstractPaginacionComponent<TipoFungible> {
+  ROUTE_NAMES = ROUTE_NAMES;
 
   tiposFungible$: Observable<TipoFungible[]>;
 

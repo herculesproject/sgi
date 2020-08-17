@@ -7,10 +7,10 @@ import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 
 import { SgiRestSortDirection, SgiRestFilter, SgiRestFilterType } from '@sgi/framework/http';
-import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import { ROUTE_NAMES } from '@core/route.names';
 
 @Component({
   selector: 'app-agrupacion-servicio-listado',
@@ -18,8 +18,7 @@ import { catchError, map, tap } from 'rxjs/operators';
   styleUrls: ['./agrupacion-servicio-listado.component.scss']
 })
 export class AgrupacionServicioListadoComponent implements AfterViewInit, OnDestroy {
-
-  UrlUtils = UrlUtils;
+  ROUTE_NAMES = ROUTE_NAMES;
 
   displayedColumns: string[];
   elementosPagina: number[];

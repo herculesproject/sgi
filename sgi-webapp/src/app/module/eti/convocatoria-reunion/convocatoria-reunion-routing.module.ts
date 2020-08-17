@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { UrlUtils } from '@core/utils/url-utils';
+import { RouterModule } from '@angular/router';
 import { ConvocatoriaReunionListadoComponent } from './convocatoria-reunion-listado/convocatoria-reunion-listado.component';
 import { ConvocatoriaReunionCrearComponent } from './convocatoria-reunion-crear/convocatoria-reunion-crear.component';
 import { SgiAuthRoutes, SgiAuthGuard } from '@sgi/framework/auth';
+import { ROUTE_NAMES } from '@core/route.names';
 
 
 const routes: SgiAuthRoutes = [
   {
-    path: UrlUtils.root.valueOf(),
+    path: '',
     component: ConvocatoriaReunionListadoComponent,
     canActivate: [SgiAuthGuard],
     data: {
@@ -16,7 +16,7 @@ const routes: SgiAuthRoutes = [
     }
   },
   {
-    path: UrlUtils.crear.valueOf(),
+    path: ROUTE_NAMES.NEW,
     component: ConvocatoriaReunionCrearComponent,
     canActivate: [SgiAuthGuard],
     data: {

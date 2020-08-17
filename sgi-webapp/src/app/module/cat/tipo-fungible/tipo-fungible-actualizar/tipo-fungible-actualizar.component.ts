@@ -11,7 +11,6 @@ import { ServicioService } from '@core/services/cat/servicio.service';
 import { TipoFungibleService } from '@core/services/cat/tipo-fungible.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -35,8 +34,6 @@ export class TipoFungibleActualizarComponent implements OnInit, OnDestroy {
   servicioServiceAllSubscription: Subscription;
   tipoFungibleServiceUpdateSubscritpion: Subscription;
 
-  UrlUtils = UrlUtils;
-
   serviciosSubscription: Subscription;
   servicioListado: Servicio[];
   filteredServicios$: Observable<Servicio[]> = of();
@@ -49,7 +46,7 @@ export class TipoFungibleActualizarComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly logger: NGXLogger,
-    private readonly activatedRoute: ActivatedRoute,
+    private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly tipoFungibleService: TipoFungibleService,
     private readonly servicioService: ServicioService,
@@ -104,7 +101,7 @@ export class TipoFungibleActualizarComponent implements OnInit, OnDestroy {
       'start'
     );
     this.tipoFungible = new TipoFungible();
-    const id = this.activatedRoute.snapshot.params.id;
+    const id = this.route.snapshot.params.id;
     if (id && !isNaN(id)) {
       this.tipoFungibleServiceOneSubscritpion = this.tipoFungibleService
         .findById(Number(id))
@@ -129,7 +126,7 @@ export class TipoFungibleActualizarComponent implements OnInit, OnDestroy {
           },
           () => {
             this.snackBarService.showSuccess('cat.tipo-fungible.actualizar.no-encontrado');
-            this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.tipoFungible}`).then();
+            this.router.navigate(['../../'], { relativeTo: this.route });
             this.logger.debug(
               TipoFungibleActualizarComponent.name,
               'getTipoFungible()',
@@ -219,7 +216,7 @@ export class TipoFungibleActualizarComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this.snackBarService.showSuccess('cat.tipo-fungible.actualizar.correcto');
-          this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.tipoFungible}`).then();
+          this.router.navigate(['../../'], { relativeTo: this.route });
           this.logger.debug(TipoFungibleActualizarComponent.name, 'enviarApi()', 'end');
         },
         () => {

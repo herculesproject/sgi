@@ -7,10 +7,10 @@ import { TipoReservableService } from '@core/services/cat/tipo-reservable.servic
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiRestSortDirection, SgiRestFilter, SgiRestFilterType } from '@sgi/framework/http';
-import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import { ROUTE_NAMES } from '@core/route.names';
 
 
 @Component({
@@ -19,8 +19,8 @@ import { catchError, map, tap } from 'rxjs/operators';
   styleUrls: ['./tipo-reservable-listado.component.scss']
 })
 export class TipoReservableListadoComponent implements AfterViewInit, OnDestroy {
+  ROUTE_NAMES = ROUTE_NAMES;
 
-  UrlUtils = UrlUtils;
   columnas: string[];
   elementosPagina: number[];
   dataSource: MatTableDataSource<TipoReservable>;

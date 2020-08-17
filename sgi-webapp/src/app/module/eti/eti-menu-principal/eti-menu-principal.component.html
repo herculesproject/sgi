@@ -1,24 +1,24 @@
 <div class="opciones-menu">
 
-  <a class="item" mat-list-item *sgiHasAuthorityForAnyUO="'ETI-ACT-V'" [routerLink]="UrlUtils.eti.actas"
+  <a class="item" mat-list-item *sgiHasAuthorityForAnyUO="'ETI-ACT-V'" [routerLink]="[ETI_ROUTE_NAMES.ACTA]"
     [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>list_alt</mat-icon>
     <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.eti.acta' | translate}}</p>
   </a>
 
-  <a class="item" mat-list-item *sgiHasAuthorityForAnyUO="'ETI-EVC-V'" [routerLink]="UrlUtils.eti.evaluacion"
+  <a class="item" mat-list-item *sgiHasAuthorityForAnyUO="'ETI-EVC-V'" [routerLink]="[ETI_ROUTE_NAMES.EVALUACION]"
     [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>list_alt</mat-icon>
     <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.eti.evaluaciones' | translate}}</p>
   </a>
 
   <a class="item" mat-list-item *sgiHasAuthorityForAnyUO="'ETI-CNV-V'"
-    [routerLink]="UrlUtils.eti.solicitudesConvocatoria" [routerLinkActive]="['is-active']">
+    [routerLink]="[ETI_ROUTE_NAMES.SOLICITUD_CONVOCATORIA]" [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>equalizer</mat-icon>
     <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.eti.solicitudesConvocatoria' | translate}}</p>
   </a>
 
-  <!-- <a class="item" mat-list-item *sgiHasAuthorityForAnyUO="'ETI-EVC-VR'" [routerLink]="UrlUtils.eti.evaluacionEtica"
+  <!-- <a class="item" mat-list-item *sgiHasAuthorityForAnyUO="'ETI-EVC-VR'" [routerLink]="[ETI_ROUTE_NAMES.EVALUACION_ETICA]"
     [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>list</mat-icon>
     <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.eti.evaluacionEtica' | translate}}</p>

@@ -3,7 +3,6 @@ import { FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { FormGroupUtil } from '@core/utils/form-group-util';
-import { UrlUtils } from '@core/utils/url-utils';
 import {
   SgiRestFilter,
   SgiRestFilterType,
@@ -16,7 +15,6 @@ import { merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 export abstract class AbstractPaginacionComponent<T> implements OnInit, OnDestroy, AfterViewInit {
-  UrlUtils = UrlUtils;
   columnas: string[];
   elementosPagina: number[];
   totalElementos: number;

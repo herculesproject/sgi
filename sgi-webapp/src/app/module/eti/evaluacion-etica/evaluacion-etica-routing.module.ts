@@ -1,16 +1,16 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {UrlUtils} from '@core/utils/url-utils';
-import {EvaluacionEticaListadoComponent} from './evaluacion-etica-listado/evaluacion-etica-listado.component';
-import {EvaluacionEticaCrearComponent} from './evaluacion-etica-crear/evaluacion-etica-crear.component';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { EvaluacionEticaListadoComponent } from './evaluacion-etica-listado/evaluacion-etica-listado.component';
+import { EvaluacionEticaCrearComponent } from './evaluacion-etica-crear/evaluacion-etica-crear.component';
+import { ROUTE_NAMES } from '@core/route.names';
 
 const routes: Routes = [
   {
-    path: UrlUtils.root.valueOf(),
+    path: '',
     component: EvaluacionEticaListadoComponent,
   },
   {
-    path: UrlUtils.crear.valueOf(),
+    path: ROUTE_NAMES.NEW,
     component: EvaluacionEticaCrearComponent,
   }
 ];

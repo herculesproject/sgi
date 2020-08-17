@@ -1,37 +1,37 @@
 <!-- Menu principal -->
 <div class="opciones-menu">
 
-  <a class="item" mat-list-item [routerLink]="UrlUtils.cat.producto" [routerLinkActive]="['is-active']">
+  <a class="item" mat-list-item [routerLink]="[CAT_ROUTE_NAMES.PRODUCTO]" [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>fullscreen</mat-icon>
     <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.cat.productos' | translate}}</p>
   </a>
 
-  <a class="item" mat-list-item [routerLink]="UrlUtils.cat.solicitud" [routerLinkActive]="['is-active']">
+  <a class="item" mat-list-item [routerLink]="[CAT_ROUTE_NAMES.SOLICITUD]" [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>list_alt</mat-icon>
     <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.cat.solicitudes' | translate}}</p>
   </a>
 
-  <a class="item" mat-list-item [routerLink]="UrlUtils.cat.agrupacionServicios" [routerLinkActive]="['is-active']">
+  <a class="item" mat-list-item [routerLink]="[CAT_ROUTE_NAMES.AGRUPACION_SERVICIO]" [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>device_hub</mat-icon>
     <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.cat.agrupaciones-servicios' | translate}}</p>
   </a>
 
-  <a class="item" mat-list-item [routerLink]="UrlUtils.cat.horario" [routerLinkActive]="['is-active']">
+  <a class="item" mat-list-item [routerLink]="[CAT_ROUTE_NAMES.HORARIO]" [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>calendar_today</mat-icon>
     <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.cat.horarios' | translate}}</p>
   </a>
 
-  <a class="item" mat-list-item [routerLink]="UrlUtils.cat.unidadMedidas" [routerLinkActive]="['is-active']">
+  <a class="item" mat-list-item [routerLink]="[CAT_ROUTE_NAMES.UNIDAD_MEDIDA]" [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>equalizer</mat-icon>
     <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.cat.unidades-medida' | translate}}</p>
   </a>
 
-  <a class="item" mat-list-item [routerLink]="UrlUtils.cat.tipoReservables" [routerLinkActive]="['is-active']">
+  <a class="item" mat-list-item [routerLink]="[CAT_ROUTE_NAMES.TIPO_RESERVABLE]" [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>fullscreen</mat-icon>
     <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.cat.tipos-reservables' | translate}}</p>
   </a>
 
-  <a class="item" mat-list-item [routerLink]="UrlUtils.cat.tipoFungible" [routerLinkActive]="['is-active']">
+  <a class="item" mat-list-item [routerLink]="[CAT_ROUTE_NAMES.TIPO_FUNGIBLE]" [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>fullscreen</mat-icon>
     <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.cat.tipos-fungibles' | translate}}</p>
   </a>

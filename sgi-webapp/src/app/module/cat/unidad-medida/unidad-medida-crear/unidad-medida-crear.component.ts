@@ -1,12 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { UnidadMedida } from '@core/models/cat/unidad-medida';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { UnidadMedidaService } from '@core/services/cat/unidad-medida.service';
-import { UrlUtils } from '@core/utils/url-utils';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
@@ -25,11 +24,11 @@ export class UnidadMedidaCrearComponent implements OnInit, OnDestroy {
   fxLayoutProperties: FxLayoutProperties;
 
   unidadMedidaServiceCreateSubscription: Subscription;
-  UrlUtils = UrlUtils;
 
   constructor(
     private readonly logger: NGXLogger,
     private readonly router: Router,
+    private readonly route: ActivatedRoute,
     private readonly unidadMedidaService: UnidadMedidaService,
     private readonly snackBarService: SnackBarService
   ) {
@@ -94,7 +93,7 @@ export class UnidadMedidaCrearComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this.snackBarService.showSuccess('cat.unidad-medida.crear.correcto');
-          this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.unidadMedidas}`).then();
+          this.router.navigate(['../'], { relativeTo: this.route });
           this.logger.debug(
             UnidadMedidaCrearComponent.name,
             'enviarApi()',

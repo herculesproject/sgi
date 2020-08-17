@@ -17,6 +17,7 @@ import { AbstractPaginacionComponent } from '@core/component/abstract-paginacion
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { ROUTE_NAMES } from '@core/route.names';
 
 class EvaluacionListado extends Evaluacion {
   persona: Persona;
@@ -28,6 +29,8 @@ class EvaluacionListado extends Evaluacion {
   styleUrls: ['./evaluacion-listado.component.scss']
 })
 export class EvaluacionListadoComponent extends AbstractPaginacionComponent<Evaluacion> implements OnInit {
+  ROUTE_NAMES = ROUTE_NAMES;
+
   evaluaciones: EvaluacionListado[];
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;

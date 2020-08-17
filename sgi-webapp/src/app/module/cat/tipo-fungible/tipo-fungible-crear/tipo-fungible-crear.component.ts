@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Servicio } from '@core/models/cat/servicio';
 import { TipoFungible } from '@core/models/cat/tipo-fungible';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -9,7 +9,6 @@ import { ServicioService } from '@core/services/cat/servicio.service';
 import { TipoFungibleService } from '@core/services/cat/tipo-fungible.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -34,11 +33,10 @@ export class TipoFungibleCrearComponent implements OnInit, OnDestroy {
   servicioServiceAllSubscription: Subscription;
   tipoFungibleServiceCreateSubscription: Subscription;
 
-  UrlUtils = UrlUtils;
-
   constructor(
     private readonly logger: NGXLogger,
     private readonly router: Router,
+    private readonly route: ActivatedRoute,
     private readonly tipoFungibleService: TipoFungibleService,
     private readonly servicioService: ServicioService,
     private snackBarService: SnackBarService
@@ -130,7 +128,7 @@ export class TipoFungibleCrearComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this.snackBarService.showSuccess('cat.tipo-fungible.crear.correcto');
-          this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.tipoFungible}`).then();
+          this.router.navigate(['../'], { relativeTo: this.route });
           this.logger.debug(
             TipoFungibleCrearComponent.name,
             'enviarApi()',

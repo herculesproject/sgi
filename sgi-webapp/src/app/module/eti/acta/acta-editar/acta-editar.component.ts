@@ -10,7 +10,6 @@ import { switchMap } from 'rxjs/operators';
 import { ActaService } from '@core/services/eti/acta.service';
 import { of } from 'rxjs';
 import { Acta } from '@core/models/eti/acta';
-import { UrlUtils } from '@core/utils/url-utils';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
 @Component({
@@ -33,7 +32,7 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
   constructor(protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     private readonly router: Router,
-    private activatedRoute: ActivatedRoute,
+    private route: ActivatedRoute,
     private actaService: ActaService) {
 
     super(logger, snackBarService);
@@ -56,7 +55,7 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
   getActa(): void {
     this.logger.debug(ActaEditarComponent.name, 'getActa()', 'start');
     // Obtiene los parámetros de la url
-    this.subscripciones.push(this.activatedRoute.params.pipe(
+    this.subscripciones.push(this.route.params.pipe(
       switchMap((params: Params) => {
         if (params.id) {
           const id = Number(params.id);
@@ -82,7 +81,7 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
       },
       () => {
         this.snackBarService.showError('eti.acta.editar.no-encontrado');
-        this.router.navigateByUrl(UrlUtils.eti.actas).then();
+        this.router.navigate(['../../'], { relativeTo: this.route });
       }));
     this.logger.debug(ActaEditarComponent.name, 'getActa()', 'end');
   }
@@ -110,7 +109,7 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
           this.tabs.get(0).warning = false;
 
           this.snackBarService.showSuccess('eti.acta.editar.correcto');
-          this.router.navigateByUrl(`${UrlUtils.eti.root}/${UrlUtils.eti.actas}`).then();
+          this.router.navigate(['../../'], { relativeTo: this.route });
           this.logger.debug(ActaEditarComponent.name, 'enviarDatos()', 'end');
 
         },

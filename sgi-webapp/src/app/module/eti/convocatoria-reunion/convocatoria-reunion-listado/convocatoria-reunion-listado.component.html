@@ -133,7 +133,7 @@
       <th mat-header-cell *matHeaderCellDef> {{'eti.convocatoriaReunion.listado.acciones' | translate}} </th>
       <td mat-cell *matCellDef="let convocatoriaReunion;let i=index;">
         <button mat-button *sgiHasAuthorityForAnyUO="'ETI-CNV-E'"
-          [routerLink]="UrlUtils.actualizar + convocatoriaReunion.id"
+          [routerLink]="[ROUTE_NAMES.EDIT, convocatoriaReunion.id]"
           matTooltip="{{'eti.convocatoriaReunion.listado.editar' | translate}}">
           <mat-icon color="primary">border_color</mat-icon>
         </button>
@@ -159,7 +159,8 @@
   </mat-paginator>
 
 
-  <app-footer-crear *sgiHasAuthorityForAnyUO="'ETI-CNV-C'" [texto]="textoCrear"></app-footer-crear>
+  <app-footer-crear *sgiHasAuthorityForAnyUO="'ETI-CNV-C'" [texto]="textoCrear" [route]="ROUTE_NAMES.NEW">
+  </app-footer-crear>
 
 </section>
 <!-- FIN Convocatoria reunion listado-->

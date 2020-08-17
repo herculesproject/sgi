@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
+import { ROUTE_NAMES } from '@core/route.names';
 
 @Component({
   selector: 'app-evaluacion-etica-listado',
@@ -7,6 +8,7 @@ import { NGXLogger } from 'ngx-logger';
   styleUrls: ['./evaluacion-etica-listado.component.scss']
 })
 export class EvaluacionEticaListadoComponent implements OnInit {
+  ROUTE_NAMES = ROUTE_NAMES;
   textoCrear = 'footer.eti.evaluacionEtica.crear';
 
   constructor(

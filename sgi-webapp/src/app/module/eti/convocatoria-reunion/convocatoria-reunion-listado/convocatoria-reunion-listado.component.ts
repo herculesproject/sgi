@@ -1,5 +1,4 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
-import { UrlUtils } from '@core/utils/url-utils';
 import { DateUtils } from '@core/utils/date-utils';
 import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
 import { MatSort } from '@angular/material/sort';
@@ -19,6 +18,7 @@ import { Comite } from '@core/models/eti/comite';
 import { ComiteService } from '@core/services/eti/comite.service';
 import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocatoria-reunion.service';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
+import { ROUTE_NAMES } from '@core/route.names';
 
 @Component({
   selector: 'app-convocatoria-reunion-listado',
@@ -26,8 +26,7 @@ import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reun
   styleUrls: ['./convocatoria-reunion-listado.component.scss']
 })
 export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewInit, OnDestroy {
-
-  UrlUtils = UrlUtils;
+  ROUTE_NAMES = ROUTE_NAMES;
 
   FormGroupUtil = FormGroupUtil;
 
@@ -47,7 +46,7 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  textoCrear: 'eti.convocatoriaReunion.listado.nuevaConvocatoriaReunion';
+  textoCrear = 'eti.convocatoriaReunion.listado.nuevaConvocatoriaReunion';
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;

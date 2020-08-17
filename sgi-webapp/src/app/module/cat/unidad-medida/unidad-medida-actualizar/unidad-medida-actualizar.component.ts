@@ -6,7 +6,6 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { UnidadMedida } from '@core/models/cat/unidad-medida';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { UnidadMedidaService } from '@core/services/cat/unidad-medida.service';
-import { UrlUtils } from '@core/utils/url-utils';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
@@ -19,7 +18,6 @@ import { Subscription } from 'rxjs';
 export class UnidadMedidaActualizarComponent implements OnInit, OnDestroy {
   formGroup: FormGroup;
   FormGroupUtil = FormGroupUtil;
-  UrlUtils = UrlUtils;
   unidadMedida: UnidadMedida;
 
   desactivarAceptar: boolean;
@@ -31,7 +29,7 @@ export class UnidadMedidaActualizarComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly logger: NGXLogger,
-    private readonly activatedRoute: ActivatedRoute,
+    private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly unidadMedidaService: UnidadMedidaService,
     private readonly snackBarService: SnackBarService
@@ -95,7 +93,7 @@ export class UnidadMedidaActualizarComponent implements OnInit, OnDestroy {
       'start'
     );
     this.unidadMedida = new UnidadMedida();
-    const id = this.activatedRoute.snapshot.params.id;
+    const id = this.route.snapshot.params.id;
     if (id && !isNaN(id)) {
       this.unidadMedidaServiceGetSubscription = this.unidadMedidaService
         .findById(Number(id))
@@ -120,7 +118,7 @@ export class UnidadMedidaActualizarComponent implements OnInit, OnDestroy {
           },
           () => {
             this.snackBarService.showSuccess('cat.unidad-medida.actualizar.no-encontrado');
-            this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.unidadMedidas}`).then();
+            this.router.navigate(['../../'], { relativeTo: this.route });
             this.logger.debug(
               UnidadMedidaActualizarComponent.name,
               'getUnidadMedida()',
@@ -170,7 +168,7 @@ export class UnidadMedidaActualizarComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this.snackBarService.showSuccess('cat.unidad-medida.actualizar.correcto');
-          this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.unidadMedidas}`).then();
+          this.router.navigate(['../../'], { relativeTo: this.route });
           this.logger.debug(
             UnidadMedidaActualizarComponent.name,
             'enviarApi()',

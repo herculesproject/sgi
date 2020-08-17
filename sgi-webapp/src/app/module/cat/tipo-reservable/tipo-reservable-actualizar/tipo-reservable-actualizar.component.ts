@@ -10,10 +10,10 @@ import { ServicioService } from '@core/services/cat/servicio.service';
 import { TipoReservableService } from '@core/services/cat/tipo-reservable.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
+import { ROUTE_NAMES } from '@core/route.names';
 
 @Component({
   selector: 'app-tipo-reservable-actualizar',
@@ -21,6 +21,7 @@ import { map, startWith, switchMap } from 'rxjs/operators';
   styleUrls: ['./tipo-reservable-actualizar.component.scss']
 })
 export class TipoReservableActualizarComponent implements OnInit, OnDestroy {
+  ROUTE_NAMES = ROUTE_NAMES;
 
   formGroup: FormGroup;
   FormGroupUtil = FormGroupUtil;
@@ -39,11 +40,9 @@ export class TipoReservableActualizarComponent implements OnInit, OnDestroy {
   tipoReservableServiceCreateSubscription: Subscription;
   tipoReservableServiceUpdateSubscription: Subscription;
 
-  UrlUtils = UrlUtils;
-
   constructor(
     private readonly logger: NGXLogger,
-    private activatedRoute: ActivatedRoute,
+    private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly tipoReservableService: TipoReservableService,
     private readonly servicioService: ServicioService,
@@ -117,7 +116,7 @@ export class TipoReservableActualizarComponent implements OnInit, OnDestroy {
 
     let id: number;
     // Obtiene el id
-    this.activatedRoute.params
+    this.route.params
       .pipe(
         switchMap((params: Params) => {
           id = Number(params.id);
@@ -183,7 +182,7 @@ export class TipoReservableActualizarComponent implements OnInit, OnDestroy {
           // Añadimos esta comprobación para que no nos eche al crear uno nuevo
           if (id) {
             this.snackBarService.showSuccess('cat.tipo-reservable.actualizar.no-encontrado');
-            this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.tipoReservables}`).then();
+            this.router.navigate(['../../'], { relativeTo: this.route });
           }
           this.logger.debug(
             TipoReservableActualizarComponent.name,
@@ -293,7 +292,7 @@ export class TipoReservableActualizarComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this.snackBarService.showSuccess('cat.tipo-reservable.actualizar.correcto');
-          this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.tipoReservables}`).then();
+          this.router.navigate(['../../'], { relativeTo: this.route });
           this.logger.debug(
             TipoReservableActualizarComponent.name,
             'actualizarTipoReservable()',

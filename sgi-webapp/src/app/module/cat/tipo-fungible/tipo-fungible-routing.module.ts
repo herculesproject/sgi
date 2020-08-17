@@ -1,22 +1,22 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { UrlUtils } from '@core/utils/url-utils';
 
 import { TipoFungibleActualizarComponent } from './tipo-fungible-actualizar/tipo-fungible-actualizar.component';
 import { TipoFungibleCrearComponent } from './tipo-fungible-crear/tipo-fungible-crear.component';
 import { TipoFungibleListadoComponent } from './tipo-fungible-listado/tipo-fungible-listado.component';
+import { ROUTE_NAMES } from '@core/route.names';
 
 const routes: Routes = [
   {
-    path: UrlUtils.root.valueOf(),
+    path: '',
     component: TipoFungibleListadoComponent,
   },
   {
-    path: UrlUtils.crear.valueOf(),
+    path: ROUTE_NAMES.NEW,
     component: TipoFungibleCrearComponent,
   },
   {
-    path: UrlUtils.actualizar.valueOf() + ':id',
+    path: `${ROUTE_NAMES.EDIT}/:id`,
     component: TipoFungibleActualizarComponent,
   },
 ];

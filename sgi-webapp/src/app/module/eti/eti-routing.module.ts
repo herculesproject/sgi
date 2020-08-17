@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { UrlUtils } from '@core/utils/url-utils';
 import { SgiAuthGuard, SgiAuthRoutes } from '@sgi/framework/auth';
 import { InicioComponent } from './inicio/inicio.component';
+import { ETI_ROUTE_NAMES } from './eti-route-names';
 
 import { EtiRootComponent } from './eti-root/eti-root.component';
 
@@ -17,23 +17,23 @@ const routes: SgiAuthRoutes = [
         pathMatch: 'full'
       },
       {
-        path: UrlUtils.eti.datos.valueOf(),
+        path: ETI_ROUTE_NAMES.DATOS,
         component: null,
       },
       {
-        path: UrlUtils.eti.cvn.valueOf(),
+        path: ETI_ROUTE_NAMES.CVN,
         component: null,
       },
       {
-        path: UrlUtils.eti.produccionCientifica.valueOf(),
+        path: ETI_ROUTE_NAMES.PRODUCCION_CIENTIFICA,
         component: null,
       },
       {
-        path: UrlUtils.eti.ofertaTecnologica.valueOf(),
+        path: ETI_ROUTE_NAMES.OFERTA_TECNOLOGICA,
         component: null,
       },
       {
-        path: UrlUtils.eti.solicitudesConvocatoria.valueOf(),
+        path: ETI_ROUTE_NAMES.SOLICITUD_CONVOCATORIA,
         loadChildren: () =>
           import('./convocatoria-reunion/convocatoria-reunion.module').then(
             (m) => m.ConvocatoriaReunionModule
@@ -44,7 +44,7 @@ const routes: SgiAuthRoutes = [
         }
       },
       {
-        path: UrlUtils.eti.evaluacion.valueOf(),
+        path: ETI_ROUTE_NAMES.EVALUACION,
         loadChildren: () =>
           import('./evaluacion/evaluacion.module').then(
             (m) => m.EvaluacionModule
@@ -58,27 +58,27 @@ const routes: SgiAuthRoutes = [
         }
       },
       {
-        path: UrlUtils.eti.proyectos.valueOf(),
+        path: ETI_ROUTE_NAMES.PROYECTO,
         component: null,
       },
       {
-        path: UrlUtils.eti.propiedadIntelectual.valueOf(),
+        path: ETI_ROUTE_NAMES.PROPIEDAD_INTELECTUAL,
         component: null,
       },
       {
-        path: UrlUtils.eti.empresasBaseTecnologica.valueOf(),
+        path: ETI_ROUTE_NAMES.EMPRESA_BASE_TECNOLOGICA,
         component: null,
       },
       {
-        path: UrlUtils.eti.gruposInvestigacion.valueOf(),
+        path: ETI_ROUTE_NAMES.GRUPO_INVESTIGACION,
         component: null,
       },
       {
-        path: UrlUtils.eti.areaEspecializacion.valueOf(),
+        path: ETI_ROUTE_NAMES.AREA_ESPECIALIZACION,
         component: null,
       },
       {
-        path: UrlUtils.eti.actas.valueOf(),
+        path: ETI_ROUTE_NAMES.ACTA,
         loadChildren: () =>
           import('./acta/acta.module').then(
             (m) => m.ActaModule
@@ -89,7 +89,7 @@ const routes: SgiAuthRoutes = [
         }
       },
       {
-        path: UrlUtils.eti.evaluacionEtica.valueOf(),
+        path: ETI_ROUTE_NAMES.EVALUACION_ETICA,
         loadChildren: () =>
           import('./evaluacion-etica/evaluacion-etica.module').then(
             (m) => m.EvaluacionEticaModule
@@ -100,7 +100,7 @@ const routes: SgiAuthRoutes = [
         }
       },
       {
-        path: UrlUtils.eti.solicitudesSAI.valueOf(),
+        path: ETI_ROUTE_NAMES.SOLICITUD_SAI,
         component: null,
       },
       { path: '**', component: null },

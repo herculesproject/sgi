@@ -1,16 +1,20 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { UrlUtils } from '@core/utils/url-utils';
 
 import { SgiAuthGuard, SgiAuthRoutes } from '@sgi/framework/auth';
 import { RootComponent } from '@shared/root/root.component';
+import { APP_ROUTE_NAMES } from './app-route-names';
 
 /**
  * Definimos las urls de la aplicación
  */
 const routes: SgiAuthRoutes = [
   {
-    path: UrlUtils.cat.root.valueOf(),
+    path: '',
+    component: RootComponent
+  },
+  {
+    path: APP_ROUTE_NAMES.CAT,
     loadChildren: () =>
       import('./module/cat/cat.module').then(
         (m) => m.CatModule
@@ -18,7 +22,7 @@ const routes: SgiAuthRoutes = [
     canActivate: [SgiAuthGuard],
   },
   {
-    path: UrlUtils.ebt.root.valueOf(),
+    path: APP_ROUTE_NAMES.EBT,
     loadChildren: () =>
       import('./module/ebt/ebt.module').then(
         (m) => m.EbtModule
@@ -26,7 +30,7 @@ const routes: SgiAuthRoutes = [
     canActivate: [SgiAuthGuard],
   },
   {
-    path: UrlUtils.pii.root.valueOf(),
+    path: APP_ROUTE_NAMES.PII,
     loadChildren: () =>
       import('./module/pii/pii.module').then(
         (m) => m.PiiModule
@@ -34,15 +38,17 @@ const routes: SgiAuthRoutes = [
     canActivate: [SgiAuthGuard],
   },
   {
-    path: UrlUtils.eti.root.valueOf(),
+    path: APP_ROUTE_NAMES.ETI,
     loadChildren: () =>
       import('./module/eti/eti.module').then(
         (m) => m.EtiModule
       ),
     canActivate: [SgiAuthGuard],
   },
-  { path: '', redirectTo: UrlUtils.eti.root.valueOf(), pathMatch: 'full' },
-  { path: '**', component: RootComponent },
+  {
+    path: '**',
+    component: RootComponent
+  },
 ];
 
 /**

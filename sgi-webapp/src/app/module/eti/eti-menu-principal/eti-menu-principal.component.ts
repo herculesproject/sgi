@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
 import { LayoutService } from '@core/services/layout.service';
 import { MatAccordion } from '@angular/material/expansion';
+import { ETI_ROUTE_NAMES } from '../eti-route-names';
 
 @Component({
   selector: 'app-eti-menu-principal',
@@ -10,10 +10,9 @@ import { MatAccordion } from '@angular/material/expansion';
   styleUrls: ['./eti-menu-principal.component.scss']
 })
 export class EtiMenuPrincipalComponent implements OnInit {
-
+  ETI_ROUTE_NAMES = ETI_ROUTE_NAMES;
   @ViewChild('accordion', { static: true }) Accordion: MatAccordion;
 
-  UrlUtils = UrlUtils;
   element: HTMLElement;
 
   mostrarNombreMenu: boolean = true;

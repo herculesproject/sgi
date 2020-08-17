@@ -10,7 +10,6 @@ import { SupervisionService } from '@core/services/cat/supervision.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiRestFilter, SgiRestFilterType } from '@sgi/framework/http';
-import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription, zip } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -43,8 +42,6 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
 
   desactivarAceptar: boolean;
 
-  UrlUtils = UrlUtils;
-
   actualizarServicioSubscription: Subscription;
   activatedRouteSubscription: Subscription;
 
@@ -56,7 +53,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
     private servicioService: ServicioService,
     private supervisionService: SupervisionService,
     private readonly router: Router,
-    private activatedRoute: ActivatedRoute,
+    private readonly route: ActivatedRoute,
     private formBuilder: FormBuilder
   ) {
     this.fxFlexProperties = new FxFlexProperties();
@@ -93,7 +90,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
   getServicio(): void {
     this.logger.debug(AgrupacionServicioActualizarComponent.name, 'getServicio()', 'start');
     // Obtiene los parámetros de la url
-    this.activatedRouteSubscription = this.activatedRoute.params.pipe(
+    this.activatedRouteSubscription = this.route.params.pipe(
       switchMap((params: Params) => {
         if (params.id) {
           const id = Number(params.id);
@@ -118,7 +115,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
           });
         } else {
           this.snackBarService.showSuccess('cat.servicio.actualizar.no-encontrado');
-          this.router.navigateByUrl(UrlUtils.cat.agrupacionServicios).then();
+          this.router.navigate(['../../'], { relativeTo: this.route });
           return of(null);
         }
       })
@@ -130,7 +127,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
       },
       () => {
         this.snackBarService.showError('cat.servicio.actualizar.no-encontrado');
-        this.router.navigateByUrl(UrlUtils.cat.agrupacionServicios).then();
+        this.router.navigate(['../../'], { relativeTo: this.route });
       });
     this.logger.debug(AgrupacionServicioActualizarComponent.name, 'getServicio()', 'end');
   }
@@ -189,7 +186,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
       ).subscribe(
         () => {
           this.snackBarService.showSuccess('cat.servicio.actualizar.correcto');
-          this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.agrupacionServicios}`).then();
+          this.router.navigate(['../../'], { relativeTo: this.route });
           this.logger.debug(
             AgrupacionServicioActualizarComponent.name,
             'actualizarServicio()',

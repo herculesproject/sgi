@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { SolicitudActualizarComponent } from './solicitud-actualizar/solicitud-actualizar.component';
-import { UrlUtils } from '@core/utils/url-utils';
 
 const routes: Routes = [
   {
-    path: UrlUtils.root.valueOf(),
+    path: '',
     component: SolicitudActualizarComponent,
   },
 ];

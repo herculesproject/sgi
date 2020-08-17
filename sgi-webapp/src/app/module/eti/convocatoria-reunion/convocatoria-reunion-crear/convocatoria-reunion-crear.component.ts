@@ -1,9 +1,8 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { ConvocatoriaReunionDatosGeneralesComponent } from '../convocatoria-reunion-formulario/convocatoria-reunion-datos-generales/convocatoria-reunion-datos-generales.component';
-import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AbstractFormularioComponent } from '@core/component/abstract-formulario.component';
 import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
@@ -28,6 +27,7 @@ export class ConvocatoriaReunionCrearComponent extends AbstractFormularioCompone
     protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     private readonly router: Router,
+    private readonly route: ActivatedRoute,
     private readonly convocatoriaReunionService: ConvocatoriaReunionService,
     private readonly asistenteService: AsistenteService
   ) {
@@ -86,7 +86,7 @@ export class ConvocatoriaReunionCrearComponent extends AbstractFormularioCompone
           this.tabs.get(0).warning = false;
 
           this.snackBarService.showSuccess('eti.convocatoriaReunion.crear.correcto');
-          this.router.navigateByUrl(`${UrlUtils.eti.root}/${UrlUtils.eti.solicitudesConvocatoria}`).then();
+          this.router.navigate(['../'], { relativeTo: this.route });
           this.logger.debug(ConvocatoriaReunionCrearComponent.name, 'enviarDatos()', 'end');
         },
         () => {

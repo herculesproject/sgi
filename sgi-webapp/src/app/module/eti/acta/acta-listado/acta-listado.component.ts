@@ -21,11 +21,11 @@ import { TipoEstadoActaService } from '@core/services/eti/tipo-estado-acta.servi
 
 
 import { DateUtils } from '@core/utils/date-utils';
-import { UrlUtils } from '@core/utils/url-utils';
 
 import { ActaListado } from '@core/models/eti/acta-listado';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { ActaService } from '@core/services/eti/acta.service';
+import { ROUTE_NAMES } from '@core/route.names';
 
 
 @Component({
@@ -34,8 +34,7 @@ import { ActaService } from '@core/services/eti/acta.service';
   styleUrls: ['./acta-listado.component.scss']
 })
 export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
-
-  UrlUtils = UrlUtils;
+  ROUTE_NAMES = ROUTE_NAMES;
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;

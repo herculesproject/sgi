@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Gestor } from '@core/models/cat/gestor';
 import { Servicio } from '@core/models/cat/servicio';
 import { Supervision } from '@core/models/cat/supervision';
@@ -10,7 +10,6 @@ import { ServicioService } from '@core/services/cat/servicio.service';
 import { SupervisionService } from '@core/services/cat/supervision.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription, zip } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -44,7 +43,6 @@ export class AgrupacionServicioCrearComponent implements OnInit, OnDestroy {
   desactivarAceptar: boolean;
 
   crearServicioSubscription: Subscription;
-  UrlUtils = UrlUtils;
 
 
   constructor(
@@ -53,6 +51,7 @@ export class AgrupacionServicioCrearComponent implements OnInit, OnDestroy {
     private servicioService: ServicioService,
     private supervisionService: SupervisionService,
     private readonly router: Router,
+    private readonly route: ActivatedRoute,
     private formBuilder: FormBuilder,
 
   ) {
@@ -138,7 +137,7 @@ export class AgrupacionServicioCrearComponent implements OnInit, OnDestroy {
     ).subscribe(
       () => {
         this.snackBarService.showSuccess('cat.servicio.crear.correcto');
-        this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.agrupacionServicios}`).then();
+        this.router.navigate(['../'], { relativeTo: this.route });
         this.logger.debug(
           AgrupacionServicioCrearComponent.name,
           'crearServicio()',

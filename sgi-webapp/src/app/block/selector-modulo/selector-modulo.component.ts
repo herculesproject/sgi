@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
+import { APP_ROUTE_NAMES } from 'src/app/app-route-names';
 
 export interface Modulo {
   url: string;
@@ -22,11 +22,11 @@ export class SelectorModuloComponent implements OnInit {
     private router: Router
   ) {
     this.modulos = [{
-      url: UrlUtils.cat.root,
+      url: APP_ROUTE_NAMES.CAT,
       nombre: 'selector-modulo.catalogo'
     },
     {
-      url: UrlUtils.eti.root,
+      url: APP_ROUTE_NAMES.ETI,
       nombre: 'selector-modulo.etica'
     }
     ];

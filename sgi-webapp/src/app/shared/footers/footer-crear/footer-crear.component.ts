@@ -1,6 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {NGXLogger} from 'ngx-logger';
-import {UrlUtils} from '@core/utils/url-utils';
+import { Component, Input, OnInit } from '@angular/core';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-footer-crear',
@@ -8,7 +7,7 @@ import {UrlUtils} from '@core/utils/url-utils';
   styleUrls: ['./footer-crear.component.scss']
 })
 export class FooterCrearComponent implements OnInit {
-  UrlUtils = UrlUtils;
+  @Input() route: string | any[];
   @Input() texto: string;
 
   constructor(

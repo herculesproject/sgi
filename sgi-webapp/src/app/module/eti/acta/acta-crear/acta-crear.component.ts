@@ -1,8 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Acta } from '@core/models/eti/acta';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { UrlUtils } from '@core/utils/url-utils';
 import { AbstractFormularioComponent } from '@core/component/abstract-formulario.component';
 import { NGXLogger } from 'ngx-logger';
 
@@ -30,6 +29,7 @@ export class ActaCrearComponent extends AbstractFormularioComponent implements O
     protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     private readonly router: Router,
+    private readonly route: ActivatedRoute,
     private readonly actaService: ActaService
   ) {
     super(logger, snackBarService);
@@ -83,7 +83,7 @@ export class ActaCrearComponent extends AbstractFormularioComponent implements O
           this.tabs.get(0).warning = false;
 
           this.snackBarService.showSuccess('eti.acta.crear.correcto');
-          this.router.navigateByUrl(`${UrlUtils.eti.root}/${UrlUtils.eti.actas}`).then();
+          this.router.navigate(['../'], { relativeTo: this.route });
           this.logger.debug(ActaCrearComponent.name, 'enviarDatos()', 'end');
 
         },

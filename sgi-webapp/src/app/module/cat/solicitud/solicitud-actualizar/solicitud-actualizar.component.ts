@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Registro } from '@core/models/cat/registro';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -8,7 +8,6 @@ import { SolicitudService } from '@core/services/cat/solicitud.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
-import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
 import { of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -34,6 +33,7 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
   constructor(
     private readonly logger: NGXLogger,
     private readonly router: Router,
+    private readonly route: ActivatedRoute,
     private readonly solicitudService: SolicitudService,
     private snackBarService: SnackBarService
   ) {
@@ -118,7 +118,7 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
         // On error reset pagination values
         // Añadimos esta comprobación para que no nos eche al crear uno nuevo
         this.snackBarService.showSuccess('cat.solicitud.actualizar.no-encontrado');
-        this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.solicitud}`).then();
+        this.router.navigate(['../'], { relativeTo: this.route });
 
         this.logger.debug(
           SolicitudActualizarComponent.name,
@@ -195,7 +195,7 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this.snackBarService.showSuccess('cat.solicitud.actualizar.normativa.correcto');
-          this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.solicitud}`).then();
+          this.router.navigate(['../'], { relativeTo: this.route });
           this.desactivarAceptar = false;
           this.logger.debug(
             SolicitudActualizarComponent.name,

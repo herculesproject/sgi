@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
-import { UrlUtils } from '@core/utils/url-utils';
+import { CAT_ROUTE_NAMES } from '../cat-route-names';
 import { LayoutService } from '@core/services/layout.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { LayoutService } from '@core/services/layout.service';
   styleUrls: ['./cat-menu-principal.component.scss'],
 })
 export class CatMenuPrincipalComponent implements OnInit {
-  UrlUtils = UrlUtils;
+  CAT_ROUTE_NAMES = CAT_ROUTE_NAMES;
 
   element: HTMLElement;
 

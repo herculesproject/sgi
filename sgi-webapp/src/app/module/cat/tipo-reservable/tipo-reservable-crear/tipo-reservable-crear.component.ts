@@ -10,7 +10,6 @@ import { ServicioService } from '@core/services/cat/servicio.service';
 import { TipoReservableService } from '@core/services/cat/tipo-reservable.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
@@ -39,11 +38,9 @@ export class TipoReservableCrearComponent implements OnInit, OnDestroy {
   tipoReservableServiceCreateSubscription: Subscription;
   tipoReservableServiceUpdateSubscription: Subscription;
 
-  UrlUtils = UrlUtils;
-
   constructor(
     private readonly logger: NGXLogger,
-    private activatedRoute: ActivatedRoute,
+    private route: ActivatedRoute,
     private readonly router: Router,
     private readonly tipoReservableService: TipoReservableService,
     private readonly servicioService: ServicioService,
@@ -118,7 +115,7 @@ export class TipoReservableCrearComponent implements OnInit, OnDestroy {
 
     let id: number;
     // Obtiene el id
-    this.activatedRoute.params
+    this.route.params
       .pipe(
         switchMap((params: Params) => {
           id = Number(params.id);
@@ -178,7 +175,7 @@ export class TipoReservableCrearComponent implements OnInit, OnDestroy {
           // Añadimos esta comprobación para que no nos eche al crear uno nuevo
           if (id) {
             this.snackBarService.showSuccess('cat.tipo-reservable.actualizar.no-encontrado');
-            this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.tipoReservables}`).then();
+            this.router.navigate(['../'], { relativeTo: this.route });
           }
           this.logger.debug(
             TipoReservableCrearComponent.name,
@@ -284,7 +281,7 @@ export class TipoReservableCrearComponent implements OnInit, OnDestroy {
     this.tipoReservableServiceCreateSubscription = this.tipoReservableService.create(this.tipoReservable).subscribe(
       () => {
         this.snackBarService.showSuccess('cat.tipo-reservable.crear.correcto');
-        this.router.navigateByUrl(`${UrlUtils.cat.root}/${UrlUtils.cat.tipoReservables}`).then();
+        this.router.navigate(['../'], { relativeTo: this.route });
         this.logger.debug(
           TipoReservableCrearComponent.name,
           'crearTipoReservable()',

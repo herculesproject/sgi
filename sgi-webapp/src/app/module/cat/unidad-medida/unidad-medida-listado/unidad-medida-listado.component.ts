@@ -8,6 +8,7 @@ import { SgiRestFilter } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ROUTE_NAMES } from '@core/route.names';
 
 @Component({
   selector: 'app-unidad-medida-listado',
@@ -15,6 +16,8 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./unidad-medida-listado.component.scss'],
 })
 export class UnidadMedidaListadoComponent extends AbstractPaginacionComponent<UnidadMedida> implements OnDestroy {
+  ROUTE_NAMES = ROUTE_NAMES;
+
   unidadesMedida$: Observable<UnidadMedida[]>;
 
   constructor(

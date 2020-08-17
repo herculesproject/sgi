@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { UrlUtils } from '@core/utils/url-utils';
 
 import { CatRootComponent } from './cat-root/cat-root.component';
 import { SgiAuthGuard, SgiAuthRoutes } from '@sgi/framework/auth';
+import { CAT_ROUTE_NAMES } from './cat-route-names';
 
 const routes: SgiAuthRoutes = [
   {
     path: '', component: CatRootComponent, children: [
       {
-        path: UrlUtils.cat.agrupacionServicios.valueOf(),
+        path: CAT_ROUTE_NAMES.AGRUPACION_SERVICIO,
         loadChildren: () =>
           import('./agrupacion-servicio/agrupacion-servicio.module').then(
             (m) => m.AgrupacionServicioModule
@@ -17,15 +17,15 @@ const routes: SgiAuthRoutes = [
         canActivate: [SgiAuthGuard],
       },
       {
-        path: UrlUtils.cat.horario.valueOf(),
+        path: CAT_ROUTE_NAMES.HORARIO,
         component: null,
       },
       {
-        path: UrlUtils.cat.producto.valueOf(),
+        path: CAT_ROUTE_NAMES.PRODUCTO,
         component: null,
       },
       {
-        path: UrlUtils.cat.solicitud.valueOf(),
+        path: CAT_ROUTE_NAMES.SOLICITUD,
         loadChildren: () =>
           import('./solicitud/solicitud.module').then(
             (m) => m.SolicitudModule
@@ -33,7 +33,7 @@ const routes: SgiAuthRoutes = [
         canActivate: [SgiAuthGuard],
       },
       {
-        path: UrlUtils.cat.tipoFungible.valueOf(),
+        path: CAT_ROUTE_NAMES.TIPO_FUNGIBLE,
         loadChildren: () =>
           import('./tipo-fungible/tipo-fungible.module').then(
             (m) => m.TipoFungibleModule
@@ -41,7 +41,7 @@ const routes: SgiAuthRoutes = [
         canActivate: [SgiAuthGuard],
       },
       {
-        path: UrlUtils.cat.tipoReservables.valueOf(),
+        path: CAT_ROUTE_NAMES.TIPO_RESERVABLE,
         loadChildren: () =>
           import('./tipo-reservable/tipo-reservable.module').then(
             (m) => m.TipoReservableModule
@@ -49,7 +49,7 @@ const routes: SgiAuthRoutes = [
         canActivate: [SgiAuthGuard],
       },
       {
-        path: UrlUtils.cat.unidadMedidas.valueOf(),
+        path: CAT_ROUTE_NAMES.UNIDAD_MEDIDA,
         loadChildren: () =>
           import('./unidad-medida/unidad-medida.module').then(
             (m) => m.UnidadMedidaModule

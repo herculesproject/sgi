@@ -5,13 +5,15 @@
     matSortActive="id" matSortDirection="asc" matSortDisableClear>
     <!-- Abreviatura Column -->
     <ng-container matColumnDef="abreviatura">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'cat.unidad-medida.listado.abreviatura' | translate}} </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'cat.unidad-medida.listado.abreviatura' | translate}}
+      </th>
       <td mat-cell *matCellDef="let unidadMedida"> {{unidadMedida.abreviatura}} </td>
     </ng-container>
 
     <!-- Descripcion Column -->
     <ng-container matColumnDef="descripcion">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'cat.unidad-medida.listado.descripcion' | translate}} </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'cat.unidad-medida.listado.descripcion' | translate}}
+      </th>
       <td mat-cell *matCellDef="let unidadMedida"> {{unidadMedida.descripcion}} </td>
     </ng-container>
 
@@ -19,7 +21,7 @@
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> {{'cat.unidad-medida.listado.acciones' | translate}} </th>
       <td mat-cell *matCellDef="let unidadMedida;let i=index;">
-        <button mat-button [routerLink]="UrlUtils.actualizar + unidadMedida.id"
+        <button mat-button [routerLink]="[ROUTE_NAMES.EDIT, unidadMedida.id]"
           matTooltip="{{'cat.unidad-medida.listado.editar' | translate}}">
           <mat-icon>edit</mat-icon>
         </button>
@@ -36,7 +38,7 @@
   <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
   </mat-paginator>
   <div class="separation-button">
-    <button [routerLink]="UrlUtils.crear" mat-button>
+    <button [routerLink]="[ROUTE_NAMES.NEW]" mat-button>
       <mat-icon>add_box</mat-icon> {{'cat.unidad-medida.listado.nueva-unidad' | translate}}
     </button>
   </div>

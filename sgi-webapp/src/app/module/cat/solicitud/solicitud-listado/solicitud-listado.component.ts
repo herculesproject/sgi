@@ -7,7 +7,6 @@ import { ServicioService } from '@core/services/cat/servicio.service';
 import { SolicitudService } from '@core/services/cat/solicitud.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiRestSortDirection, SgiRestFilter, SgiRestFilterType } from '@sgi/framework/http';
-import { UrlUtils } from '@core/utils/url-utils';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -19,7 +18,6 @@ import { catchError, map, tap } from 'rxjs/operators';
   styleUrls: ['./solicitud-listado.component.scss']
 })
 export class SolicitudListadoComponent implements AfterViewInit, OnDestroy, OnChanges {
-  UrlUtils = UrlUtils;
   columnas: string[];
   elementosPagina: number[];
 
