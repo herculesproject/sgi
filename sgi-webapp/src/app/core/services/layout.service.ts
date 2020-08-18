@@ -1,60 +1,76 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
+import { Router, RouterEvent, NavigationEnd } from '@angular/router';
+
+export interface BreadcrumbData {
+  title: string;
+  segments: {
+    title: string;
+    path: string;
+  }[];
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class LayoutService {
 
-  // Toogle para abrir o cerrar acordeones
-  private isMenuAbierto$ = new BehaviorSubject<boolean>(null);
+  activeModule$ = new BehaviorSubject<string>(undefined);
+  menuOpened$ = new BehaviorSubject<boolean>(true);
+  menuAutoclose$ = new BehaviorSubject<boolean>(false);
+  breadcrumData$ = new BehaviorSubject<BreadcrumbData>(undefined);
 
-  // Menu abierto
-  private sidenavActivo$ = new Subject<number>();
-
-  constructor(private logger: NGXLogger) { }
-
-  /**
-   * Modifica el estado del indicador de panel desplegado y emite el cambio.
-   *
-   * @param value identificador del toggle
-   */
-  setToogleSidenav(value: boolean): void {
-    this.logger.debug(LayoutService.name, 'setToogleSidenav(value: boolean)', 'start');
-    this.isMenuAbierto$.next(value);
-    this.logger.debug(LayoutService.name, 'setToogleSidenav(value: boolean)', 'start');
+  constructor(protected logger: NGXLogger, private router: Router) {
+    this.logger.debug(LayoutService.name, 'constructor(protected logger: NGXLogger)', 'start');
+    this.router.events.subscribe((event: RouterEvent) => this.processEvent(event));
+    this.logger.debug(LayoutService.name, 'constructor(protected logger: NGXLogger)', 'end');
   }
 
-  /**
-   * Recupera el valor del indicador del toogle menu.
-   * @return indicador del toogle menu.
-   */
-  getToogleSidenav(): Observable<boolean> {
-    this.logger.debug(LayoutService.name, 'getToogleSidenav()', 'start');
-    this.logger.debug(LayoutService.name, 'getToogleSidenav()', 'start');
-    return this.isMenuAbierto$;
+  private processEvent(event: RouterEvent): void {
+    if (event instanceof NavigationEnd) {
+      const segments = event.url.match(/(?:[^\/]+)/g);
+      const data: BreadcrumbData = {
+        title: '',
+        segments: []
+      };
+      const stack: string[] = [];
+      for (let i = 0; i < segments.length; i++) {
+        const segment = segments[i];
+        stack.push(segment);
+        if (isNaN(Number(segment))) {
+          data.segments.push({
+            title: i > 0 ? segment : 'inicio',
+            path: '/' + stack.join('/')
+          });
+        }
+      }
+      data.title = data.segments[data.segments.length - 1].title;
+      if (stack.length > 0) {
+        this.activeModule$.next(stack[0]);
+      }
+      this.breadcrumData$.next(data);
+      if (data.segments.length > 2) {
+        this.menuAutoclose$.next(true);
+        this.closeMenu();
+      }
+      else {
+        this.menuAutoclose$.next(false);
+        this.openMenu();
+      }
+    }
   }
 
-  /**
-   * Marca la tab del panel lateral correspondiente al indice como seleccionado y emite el cambio de tab seleccionada.
-   *
-   * @param indice indice del tab seleccionado.
-   */
-  seleccionarSidenavAbierto(indice: number): void {
-    this.logger.debug(LayoutService.name, 'seleccionarTab(indice: number)', 'start');
-    this.sidenavActivo$.next(indice);
-    this.logger.debug(LayoutService.name, 'seleccionarTab(indice: number)', 'end');
+  openMenu(): void {
+    this.menuOpened$.next(true);
   }
 
-  /**
-   * Devuelve el observable que notifica de los cambios de tab seleccionda en el panel lateral.
-   */
-  getSeleccionarSidenavAbierto(): Observable<number> {
-    this.logger.debug(LayoutService.name, 'getTabPanelLateralSeleccionada()', 'start');
-    this.logger.debug(LayoutService.name, 'getTabPanelLateralSeleccionada()', 'end');
-    return this.sidenavActivo$;
+  closeMenu(): void {
+    this.menuOpened$.next(false);
   }
 
+  toggleMenu(): void {
+    this.menuOpened$.next(!this.menuOpened$.value);
+  }
 
 }

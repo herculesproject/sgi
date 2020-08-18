@@ -2,13 +2,10 @@
 <section class="migas">
   <nav class="breadcrumb">
     <ol class="breadcrumb__list r-list">
-      <li class="breadcrumb__group" *ngFor="let url of urls; let i = index">
-        <a class="breadcrumb__point r-link" *ngIf="url?.nombre === ''">{{'breadcrumb.inicio' | translate}}</a>
-        <a [routerLink]="url?.url" class="breadcrumb__point r-link"
-          *ngIf="url?.nombre !== '' && i !== getUltimaPosicion()">{{'breadcrumb.' + url.nombre | translate}}</a>
-        <span class="breadcrumb__point" aria-current="page"
-          *ngIf="url?.nombre !== '' && i === getUltimaPosicion()">{{'breadcrumb.' + url.nombre | translate}}</span>
-        <span class="breadcrumb__divider" aria-hidden="true" *ngIf="i !== getUltimaPosicion()">
+      <li class="breadcrumb__group" *ngFor="let segment of data?.segments; let i = index">
+        <a [routerLink]="segment?.path" class="breadcrumb__point r-link"
+          *ngIf="i < data.segments.length">{{'breadcrumb.' + segment.title | translate}}</a>
+        <span class="breadcrumb__divider" aria-hidden="true" *ngIf="i < data.segments.length - 1">
           <img class="chevron" src="assets/icons/chevron_right.svg" alt="" />
         </span>
       </li>
@@ -16,7 +13,7 @@
   </nav>
   <div class="title">
     <h2>
-      {{'breadcrumb.' + getUltimaPosicionNombre() | translate}}
+      {{'breadcrumb.' + data?.title | translate}}
     </h2>
   </div>
 </section>

@@ -29,7 +29,6 @@ class EvaluacionListado extends Evaluacion {
   styleUrls: ['./evaluacion-listado.component.scss']
 })
 export class EvaluacionListadoComponent extends AbstractPaginacionComponent<Evaluacion> implements OnInit {
-  ROUTE_NAMES = ROUTE_NAMES;
 
   evaluaciones: EvaluacionListado[];
   fxFlexProperties: FxFlexProperties;

@@ -126,7 +126,7 @@ export class TipoFungibleActualizarComponent implements OnInit, OnDestroy {
           },
           () => {
             this.snackBarService.showSuccess('cat.tipo-fungible.actualizar.no-encontrado');
-            this.router.navigate(['../../'], { relativeTo: this.route });
+            this.router.navigate(['../'], { relativeTo: this.route });
             this.logger.debug(
               TipoFungibleActualizarComponent.name,
               'getTipoFungible()',
@@ -216,7 +216,7 @@ export class TipoFungibleActualizarComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this.snackBarService.showSuccess('cat.tipo-fungible.actualizar.correcto');
-          this.router.navigate(['../../'], { relativeTo: this.route });
+          this.router.navigate(['../'], { relativeTo: this.route });
           this.logger.debug(TipoFungibleActualizarComponent.name, 'enviarApi()', 'end');
         },
         () => {

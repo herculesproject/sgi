@@ -9,7 +9,6 @@ import { FooterGuardarComponent } from './footers/footer-guardar/footer-guardar.
 import { GenericTabLabelComponent } from './generic-tab-label/generic-tab-label.component';
 import { RootComponent } from './root/root.component';
 import { CommonModule } from '@angular/common';
-import { DatepickerFormatDirective } from './directivas/datepicker-format/datepicker-format.directive';
 
 @NgModule({
   declarations: [
@@ -17,7 +16,6 @@ import { DatepickerFormatDirective } from './directivas/datepicker-format/datepi
     FooterCrearComponent,
     FooterGuardarComponent,
     GenericTabLabelComponent,
-    DatepickerFormatDirective,
     RootComponent
   ],
   imports: [

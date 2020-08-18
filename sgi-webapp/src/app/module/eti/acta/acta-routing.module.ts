@@ -20,6 +20,7 @@ const routes: SgiAuthRoutes = [
   },
   {
     path: ROUTE_NAMES.NEW,
+    pathMatch: 'full',
     component: ActaCrearComponent,
     canActivate: [SgiAuthGuard],
     data: {
@@ -27,7 +28,7 @@ const routes: SgiAuthRoutes = [
     }
   },
   {
-    path: `${ROUTE_NAMES.EDIT}/:id`,
+    path: `:id`,
     component: ActaEditarComponent,
     canActivate: [SgiAuthGuard],
     data: {

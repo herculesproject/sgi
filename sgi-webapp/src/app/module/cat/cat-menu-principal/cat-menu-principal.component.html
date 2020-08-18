@@ -1,56 +1,31 @@
 <!-- Menu principal -->
 <div class="opciones-menu">
 
-  <a class="item" mat-list-item [routerLink]="[CAT_ROUTE_NAMES.PRODUCTO]" [routerLinkActive]="['is-active']">
-    <mat-icon color="primary" mat-list-icon>fullscreen</mat-icon>
-    <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.cat.productos' | translate}}</p>
-  </a>
-
   <a class="item" mat-list-item [routerLink]="[CAT_ROUTE_NAMES.SOLICITUD]" [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>list_alt</mat-icon>
-    <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.cat.solicitudes' | translate}}</p>
+    <p matLine *ngIf="opened">{{'menu.principal.cat.solicitudes' | translate}}</p>
   </a>
 
-  <a class="item" mat-list-item [routerLink]="[CAT_ROUTE_NAMES.AGRUPACION_SERVICIO]" [routerLinkActive]="['is-active']">
+  <a class="item" mat-list-item [routerLink]="[CAT_ROUTE_NAMES.AGRUPACIONES_SERVICIO]"
+    [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>device_hub</mat-icon>
-    <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.cat.agrupaciones-servicios' | translate}}</p>
+    <p matLine *ngIf="opened">{{'menu.principal.cat.agrupaciones-servicios' | translate}}</p>
   </a>
 
-  <a class="item" mat-list-item [routerLink]="[CAT_ROUTE_NAMES.HORARIO]" [routerLinkActive]="['is-active']">
-    <mat-icon color="primary" mat-list-icon>calendar_today</mat-icon>
-    <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.cat.horarios' | translate}}</p>
-  </a>
-
-  <a class="item" mat-list-item [routerLink]="[CAT_ROUTE_NAMES.UNIDAD_MEDIDA]" [routerLinkActive]="['is-active']">
+  <a class="item" mat-list-item [routerLink]="[CAT_ROUTE_NAMES.UNIDADES_MEDIDA]" [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>equalizer</mat-icon>
-    <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.cat.unidades-medida' | translate}}</p>
+    <p matLine *ngIf="opened">{{'menu.principal.cat.unidades-medida' | translate}}</p>
   </a>
 
-  <a class="item" mat-list-item [routerLink]="[CAT_ROUTE_NAMES.TIPO_RESERVABLE]" [routerLinkActive]="['is-active']">
+  <a class="item" mat-list-item [routerLink]="[CAT_ROUTE_NAMES.TIPOS_RESERVABLE]" [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>fullscreen</mat-icon>
-    <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.cat.tipos-reservables' | translate}}</p>
+    <p matLine *ngIf="opened">{{'menu.principal.cat.tipos-reservables' | translate}}</p>
   </a>
 
-  <a class="item" mat-list-item [routerLink]="[CAT_ROUTE_NAMES.TIPO_FUNGIBLE]" [routerLinkActive]="['is-active']">
+  <a class="item" mat-list-item [routerLink]="[CAT_ROUTE_NAMES.TIPOS_FUNGIBLE]" [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>fullscreen</mat-icon>
-    <p matLine *ngIf="mostrarNombreMenu">{{'menu.principal.cat.tipos-fungibles' | translate}}</p>
+    <p matLine *ngIf="opened">{{'menu.principal.cat.tipos-fungibles' | translate}}</p>
   </a>
-
-  <mat-accordion #accordion="matAccordion" class="acordeon">
-    <mat-expansion-panel #expPanel class="panel" [expanded]="panelDesplegado">
-      <mat-expansion-panel-header class="header item" (click)="activarAcordeon($event)">
-        <mat-panel-title class="titulo">
-          <mat-icon color="primary" mat-list-icon>list_alt</mat-icon>
-          <span *ngIf="mostrarNombreMenu">Solicitudes de convocatoria</span>
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <div class="opciones" *ngIf="mostrarNombreMenu">
-        <a mat-list-item routerLink>Solicitudes <mat-icon>add_circle_outline</mat-icon></a>
-        <a mat-list-item routerLink>Memorias</a>
-      </div>
-    </mat-expansion-panel>
-
-  </mat-accordion>
 
 </div>
 <!-- FIN Menu principal -->

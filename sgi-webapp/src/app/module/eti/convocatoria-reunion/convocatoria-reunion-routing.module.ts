@@ -17,6 +17,7 @@ const routes: SgiAuthRoutes = [
   },
   {
     path: ROUTE_NAMES.NEW,
+    pathMatch: 'full',
     component: ConvocatoriaReunionCrearComponent,
     canActivate: [SgiAuthGuard],
     data: {

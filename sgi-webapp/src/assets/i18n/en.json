@@ -7,35 +7,20 @@
     "aceptar": "Accept"
   },
   "breadcrumb": {
-    "acta": "Minutes",
+    "actas": "Minutes",
     "edit": "Update",
-    "agrupacion-servicio": "Service groupings",
-    "area-especializacion": "Areas of expertise",
+    "agrupaciones-servicio": "Service groupings",
     "cat": "Catalog of scientific-technical offer",
-    "convocatoria": "Calls",
+    "convocatorias": "Calls",
     "new": "Add",
-    "cvn": "My CVN",
-    "datos": "My data",
-    "ebt": "Technology-based companies",
-    "empresa-base-tecnologica": "Technology-based companies",
     "eti": "Ethics",
-    "evaluacion": "Evaluations",
-    "evaluacion-etica": "Ethics evaluations",
-    "grupo-investigacion": "Investigation groups",
-    "horario": "Work hours",
-    "inicio": "Home",
-    "oferta-tecnologica": "Technological offer",
-    "pii": "Industrial and intellectual property",
-    "produccion-cientifica": "Scientific production",
-    "producto": "Products",
-    "propiedad-intelectual": "Intellectual property",
-    "proyecto": "Projects",
-    "solicitud": "Requests",
-    "solicitud-convocatoria": "Call requests",
+    "evaluaciones": "Evaluations",
+    "solicitudes": "Requests",
+    "solicitudes-convocatoria": "Call requests",
     "solicitud-sai": "SAI requests",
-    "tipo-fungible": "Fungible types",
-    "tipo-reservable": "Bookable",
-    "unidad-medida": "Measurement units"
+    "tipos-fungible": "Fungible types",
+    "tipos-reservable": "Bookable",
+    "unidades-medida": "Measurement units"
   },
   "selector-modulo": {
     "catalogo": "Catalogue",
@@ -44,9 +29,7 @@
   "cabecera": {
     "modulo": {
       "cat": "Module: Catalog of scientific-technical offer",
-      "ebt": "Module: Technology-based companies",
-      "eti": "Module: Ethics",
-      "pii": "Module: Industrial and intellectual property"
+      "eti": "Module: Ethics"
     }
   },
   "cat": {

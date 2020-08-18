@@ -13,10 +13,11 @@ const routes: Routes = [
   },
   {
     path: ROUTE_NAMES.NEW,
+    pathMatch: 'full',
     component: UnidadMedidaCrearComponent,
   },
   {
-    path: `${ROUTE_NAMES.EDIT}/:id`,
+    path: ':id',
     component: UnidadMedidaActualizarComponent,
   },
 ];

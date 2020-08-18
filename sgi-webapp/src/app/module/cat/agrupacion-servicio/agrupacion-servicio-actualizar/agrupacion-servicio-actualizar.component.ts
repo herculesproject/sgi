@@ -115,7 +115,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
           });
         } else {
           this.snackBarService.showSuccess('cat.servicio.actualizar.no-encontrado');
-          this.router.navigate(['../../'], { relativeTo: this.route });
+          this.router.navigate(['../'], { relativeTo: this.route });
           return of(null);
         }
       })
@@ -127,7 +127,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
       },
       () => {
         this.snackBarService.showError('cat.servicio.actualizar.no-encontrado');
-        this.router.navigate(['../../'], { relativeTo: this.route });
+        this.router.navigate(['../'], { relativeTo: this.route });
       });
     this.logger.debug(AgrupacionServicioActualizarComponent.name, 'getServicio()', 'end');
   }
@@ -186,7 +186,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
       ).subscribe(
         () => {
           this.snackBarService.showSuccess('cat.servicio.actualizar.correcto');
-          this.router.navigate(['../../'], { relativeTo: this.route });
+          this.router.navigate(['../'], { relativeTo: this.route });
           this.logger.debug(
             AgrupacionServicioActualizarComponent.name,
             'actualizarServicio()',

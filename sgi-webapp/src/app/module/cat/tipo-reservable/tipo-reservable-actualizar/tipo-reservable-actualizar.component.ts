@@ -13,7 +13,6 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
-import { ROUTE_NAMES } from '@core/route.names';
 
 @Component({
   selector: 'app-tipo-reservable-actualizar',
@@ -21,7 +20,6 @@ import { ROUTE_NAMES } from '@core/route.names';
   styleUrls: ['./tipo-reservable-actualizar.component.scss']
 })
 export class TipoReservableActualizarComponent implements OnInit, OnDestroy {
-  ROUTE_NAMES = ROUTE_NAMES;
 
   formGroup: FormGroup;
   FormGroupUtil = FormGroupUtil;
@@ -182,7 +180,7 @@ export class TipoReservableActualizarComponent implements OnInit, OnDestroy {
           // Añadimos esta comprobación para que no nos eche al crear uno nuevo
           if (id) {
             this.snackBarService.showSuccess('cat.tipo-reservable.actualizar.no-encontrado');
-            this.router.navigate(['../../'], { relativeTo: this.route });
+            this.router.navigate(['../'], { relativeTo: this.route });
           }
           this.logger.debug(
             TipoReservableActualizarComponent.name,
@@ -292,7 +290,7 @@ export class TipoReservableActualizarComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this.snackBarService.showSuccess('cat.tipo-reservable.actualizar.correcto');
-          this.router.navigate(['../../'], { relativeTo: this.route });
+          this.router.navigate(['../'], { relativeTo: this.route });
           this.logger.debug(
             TipoReservableActualizarComponent.name,
             'actualizarTipoReservable()',

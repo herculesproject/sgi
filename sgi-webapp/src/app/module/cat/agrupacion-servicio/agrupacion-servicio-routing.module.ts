@@ -12,13 +12,13 @@ const routes: Routes = [
   },
   {
     path: ROUTE_NAMES.NEW,
+    pathMatch: 'full',
     component: AgrupacionServicioCrearComponent,
   },
   {
-    path: `${ROUTE_NAMES.EDIT}/:id`,
+    path: ':id',
     component: AgrupacionServicioActualizarComponent,
   }
-
 ];
 
 @NgModule({

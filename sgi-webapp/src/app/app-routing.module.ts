@@ -22,22 +22,6 @@ const routes: SgiAuthRoutes = [
     canActivate: [SgiAuthGuard],
   },
   {
-    path: APP_ROUTE_NAMES.EBT,
-    loadChildren: () =>
-      import('./module/ebt/ebt.module').then(
-        (m) => m.EbtModule
-      ),
-    canActivate: [SgiAuthGuard],
-  },
-  {
-    path: APP_ROUTE_NAMES.PII,
-    loadChildren: () =>
-      import('./module/pii/pii.module').then(
-        (m) => m.PiiModule
-      ),
-    canActivate: [SgiAuthGuard],
-  },
-  {
     path: APP_ROUTE_NAMES.ETI,
     loadChildren: () =>
       import('./module/eti/eti.module').then(

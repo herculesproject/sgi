@@ -1,51 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { NGXLogger } from 'ngx-logger';
+import { Component, OnDestroy } from '@angular/core';
 import { CAT_ROUTE_NAMES } from '../cat-route-names';
 import { LayoutService } from '@core/services/layout.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cat-menu-principal',
   templateUrl: './cat-menu-principal.component.html',
   styleUrls: ['./cat-menu-principal.component.scss'],
 })
-export class CatMenuPrincipalComponent implements OnInit {
+export class CatMenuPrincipalComponent implements OnDestroy {
   CAT_ROUTE_NAMES = CAT_ROUTE_NAMES;
 
-  element: HTMLElement;
+  opened: boolean;
 
-  mostrarNombreMenu: boolean = true;
-  panelDesplegado: boolean;
+  private subcription: Subscription;
 
-  constructor(private logger: NGXLogger, private layoutService: LayoutService) {
+  constructor(private layout: LayoutService) {
+    this.subcription = this.layout.menuOpened$.subscribe((val) => this.opened = val);
   }
 
-  ngOnInit(): void {
-    this.logger.debug(CatMenuPrincipalComponent.name, 'ngOnInit()', 'start');
-
-    this.layoutService.getSeleccionarSidenavAbierto().subscribe(
-      (indiceTabSeleccionado: number) => {
-        this.panelDesplegado = true;
-        if (indiceTabSeleccionado === 1) {
-          this.mostrarNombreMenu = true;
-          this.panelDesplegado = false;
-        } else {
-          this.mostrarNombreMenu = false;
-          this.panelDesplegado = false;
-        }
-      });
-
-    this.logger.debug(CatMenuPrincipalComponent.name, 'ngOnInit()', 'end');
+  ngOnDestroy(): void {
+    this.subcription.unsubscribe();
   }
-
-  /**
-   * Activamos el acordeon del elemento para poder hacerle
-   * un stopProgation para que el servicio al encoger menu lo cierre
-   * @param $event
-   */
-  activarAcordeon($event) {
-    this.panelDesplegado = !this.panelDesplegado;
-    $event.stopPropagation();
-  }
-
-
 }

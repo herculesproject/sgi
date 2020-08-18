@@ -81,7 +81,7 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
       },
       () => {
         this.snackBarService.showError('eti.acta.editar.no-encontrado');
-        this.router.navigate(['../../'], { relativeTo: this.route });
+        this.router.navigate(['../'], { relativeTo: this.route });
       }));
     this.logger.debug(ActaEditarComponent.name, 'getActa()', 'end');
   }
@@ -109,7 +109,7 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
           this.tabs.get(0).warning = false;
 
           this.snackBarService.showSuccess('eti.acta.editar.correcto');
-          this.router.navigate(['../../'], { relativeTo: this.route });
+          this.router.navigate(['../'], { relativeTo: this.route });
           this.logger.debug(ActaEditarComponent.name, 'enviarDatos()', 'end');
 
         },

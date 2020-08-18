@@ -4,6 +4,7 @@ import { LayoutService } from './layout.service';
 import { NGXLogger } from 'ngx-logger';
 import TestUtils from '@core/utils/test-utils';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('LayoutService', () => {
   let service: LayoutService;
@@ -16,7 +17,7 @@ describe('LayoutService', () => {
     );
 
     TestBed.configureTestingModule({
-      imports: [HttpClientModule],
+      imports: [HttpClientModule, RouterTestingModule],
       providers: [{ provide: NGXLogger, useValue: loggerSpy }],
     });
     service = TestBed.inject(LayoutService);

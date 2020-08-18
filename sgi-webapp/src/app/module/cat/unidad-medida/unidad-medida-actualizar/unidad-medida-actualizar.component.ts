@@ -118,7 +118,7 @@ export class UnidadMedidaActualizarComponent implements OnInit, OnDestroy {
           },
           () => {
             this.snackBarService.showSuccess('cat.unidad-medida.actualizar.no-encontrado');
-            this.router.navigate(['../../'], { relativeTo: this.route });
+            this.router.navigate(['../'], { relativeTo: this.route });
             this.logger.debug(
               UnidadMedidaActualizarComponent.name,
               'getUnidadMedida()',
@@ -168,7 +168,7 @@ export class UnidadMedidaActualizarComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           this.snackBarService.showSuccess('cat.unidad-medida.actualizar.correcto');
-          this.router.navigate(['../../'], { relativeTo: this.route });
+          this.router.navigate(['../'], { relativeTo: this.route });
           this.logger.debug(
             UnidadMedidaActualizarComponent.name,
             'enviarApi()',

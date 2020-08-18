@@ -29,7 +29,7 @@
         </mat-label>
         <input matInput formControlName="fechaEvaluacion" [matDatepicker]="pickerFechaEvaluacion"
           [placeholder]="'eti.convocatoriaReunion.formulario.datosGenerales.fechaEvaluacion.titulo' | translate"
-          required appDatepickerFormat>
+          required>
         <mat-datepicker-toggle matSuffix [for]="pickerFechaEvaluacion"></mat-datepicker-toggle>
         <mat-datepicker #pickerFechaEvaluacion></mat-datepicker>
         <mat-error
@@ -46,8 +46,7 @@
         <mat-label>{{'eti.convocatoriaReunion.formulario.datosGenerales.fechaLimite.titulo' | translate}}
         </mat-label>
         <input matInput formControlName="fechaLimite" [matDatepicker]="pickerFechaLimite"
-          [placeholder]="'eti.convocatoriaReunion.formulario.datosGenerales.fechaLimite.titulo' | translate" required
-          appDatepickerFormat>
+          [placeholder]="'eti.convocatoriaReunion.formulario.datosGenerales.fechaLimite.titulo' | translate" required>
         <mat-datepicker-toggle matSuffix [for]="pickerFechaLimite"></mat-datepicker-toggle>
         <mat-datepicker #pickerFechaLimite></mat-datepicker>
         <mat-error

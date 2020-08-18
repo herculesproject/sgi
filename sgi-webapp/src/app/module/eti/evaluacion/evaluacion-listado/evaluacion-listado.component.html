@@ -22,8 +22,7 @@
     <div class="col">
       <mat-form-field color="primary">
         <mat-label>{{'eti.evaluacion.listado.buscador.fechaEvaluacionInicio'| translate}}</mat-label>
-        <input matInput [matDatepicker]="pickerFechaEvaluacionInicio" formControlName="fechaEvaluacionInicio"
-          appDatepickerFormat>
+        <input matInput [matDatepicker]="pickerFechaEvaluacionInicio" formControlName="fechaEvaluacionInicio">
         <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaEvaluacionInicio"></mat-datepicker-toggle>
         <mat-datepicker #pickerFechaEvaluacionInicio></mat-datepicker>
       </mat-form-field>
@@ -33,8 +32,7 @@
     <div class="col">
       <mat-form-field color="primary">
         <mat-label>{{'eti.evaluacion.listado.buscador.fechaEvaluacionFin'| translate}}</mat-label>
-        <input matInput [matDatepicker]="pickerFechaEvaluacionFin" formControlName="fechaEvaluacionFin"
-          appDatepickerFormat>
+        <input matInput [matDatepicker]="pickerFechaEvaluacionFin" formControlName="fechaEvaluacionFin">
         <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaEvaluacionFin"></mat-datepicker-toggle>
         <mat-datepicker #pickerFechaEvaluacionFin></mat-datepicker>
       </mat-form-field>
@@ -123,7 +121,7 @@
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> {{'cat.unidad-medida.listado.acciones' | translate}} </th>
       <td mat-cell *matCellDef="let unidadMedida;let i=index;">
-        <button mat-button [routerLink]="[ROUTE_NAMES.EDIT, unidadMedida.id]"
+        <button mat-button [routerLink]="[unidadMedida.id]"
           matTooltip="{{'cat.unidad-medida.listado.editar' | translate}}">
           <mat-icon color="primary">border_color</mat-icon>
         </button>

@@ -9,20 +9,12 @@ const routes: SgiAuthRoutes = [
   {
     path: '', component: CatRootComponent, children: [
       {
-        path: CAT_ROUTE_NAMES.AGRUPACION_SERVICIO,
+        path: CAT_ROUTE_NAMES.AGRUPACIONES_SERVICIO,
         loadChildren: () =>
           import('./agrupacion-servicio/agrupacion-servicio.module').then(
             (m) => m.AgrupacionServicioModule
           ),
         canActivate: [SgiAuthGuard],
-      },
-      {
-        path: CAT_ROUTE_NAMES.HORARIO,
-        component: null,
-      },
-      {
-        path: CAT_ROUTE_NAMES.PRODUCTO,
-        component: null,
       },
       {
         path: CAT_ROUTE_NAMES.SOLICITUD,
@@ -33,7 +25,7 @@ const routes: SgiAuthRoutes = [
         canActivate: [SgiAuthGuard],
       },
       {
-        path: CAT_ROUTE_NAMES.TIPO_FUNGIBLE,
+        path: CAT_ROUTE_NAMES.TIPOS_FUNGIBLE,
         loadChildren: () =>
           import('./tipo-fungible/tipo-fungible.module').then(
             (m) => m.TipoFungibleModule
@@ -41,7 +33,7 @@ const routes: SgiAuthRoutes = [
         canActivate: [SgiAuthGuard],
       },
       {
-        path: CAT_ROUTE_NAMES.TIPO_RESERVABLE,
+        path: CAT_ROUTE_NAMES.TIPOS_RESERVABLE,
         loadChildren: () =>
           import('./tipo-reservable/tipo-reservable.module').then(
             (m) => m.TipoReservableModule
@@ -49,7 +41,7 @@ const routes: SgiAuthRoutes = [
         canActivate: [SgiAuthGuard],
       },
       {
-        path: CAT_ROUTE_NAMES.UNIDAD_MEDIDA,
+        path: CAT_ROUTE_NAMES.UNIDADES_MEDIDA,
         loadChildren: () =>
           import('./unidad-medida/unidad-medida.module').then(
             (m) => m.UnidadMedidaModule

@@ -7,42 +7,26 @@
     "aceptar": "Aceptar"
   },
   "breadcrumb": {
-    "acta": "Actas",
+    "actas": "Actas",
     "edit": "Editar",
-    "agrupacion-servicio": "Agrupaciones de servicios",
-    "area-especializacion": "Áreas de especialización",
+    "agrupaciones-servicio": "Agrupaciones de servicios",
     "cat": "Catálogo de oferta científico-técnica",
-    "convocatoria": "Convocatorias",
+    "convocatorias": "Convocatorias",
     "new": "Crear",
-    "cvn": "Mi CVN",
-    "datos": "Mis datos",
-    "ebt": "Empresas de base tecnológica",
-    "empresa-base-tecnologica": "Empresas de base tecnológica",
     "eti": "Ética",
-    "evaluacion": "Evaluaciones",
-    "evaluacion-etica": "Evaluaciones de ética",
-    "grupo-investigacion": "Grupos de investigación",
-    "horario": "Horarios",
+    "evaluaciones": "Evaluaciones",
+    "grupos-investigacion": "Grupos de investigación",
     "inicio": "Inicio",
-    "oferta-tecnologica": "Oferta tecnológica",
-    "pii": "Propiedad industrial e intelectual",
-    "produccion-cientifica": "Producción científica",
-    "producto": "Productos",
-    "propiedad-intelectual": "Propiedad intelectúal",
-    "proyecto": "Proyectos",
-    "solicitud": "Solicitud",
-    "solicitud-convocatoria": "Solicitudes de convocatoria",
-    "solicitud-sai": "Solicitudes de SAI",
-    "tipo-fungible": "Tipos de fungible",
-    "tipo-reservable": "Tipos de reservable",
-    "unidad-medida": "Unidad de medida"
+    "solicitudes": "Solicitud",
+    "solicitudes-convocatoria": "Solicitudes de convocatoria",
+    "tipos-fungible": "Tipos de fungible",
+    "tipos-reservable": "Tipos de reservable",
+    "unidades-medida": "Unidad de medida"
   },
   "cabecera": {
     "modulo": {
       "cat": "Módulo: Catálogo de oferta científico-técnica",
-      "ebt": "Módulo: Empresas de base tecnológica",
-      "eti": "Módulo: Ética",
-      "pii": "Módulo: Propiedad industrial e intelectual"
+      "eti": "Módulo: Ética"
     }
   },
   "selector-modulo": {
@@ -558,59 +542,6 @@
         "titulo": "Listado de evaluaciones",
         "referenciaMemoria": "Referencia memoria",
         "version": "Versión"
-      }
-    },
-    "evaluacion-etica": {
-      "crear": {
-        "asignacion-tareas": "Asignación de tareas",
-        "datos-generales": {
-          "cabecera": "Datos Generales",
-          "fechaFin": {
-            "error": {
-              "requerido": "Introduzca la fecha de fin"
-            },
-            "titulo": "Fecha de fin"
-          },
-          "fechaInicio": {
-            "error": {
-              "requerido": "Introduzca la fecha de inicio"
-            },
-            "titulo": "Fecha de inicio"
-          },
-          "resumen": {
-            "error": {
-              "requerido": "Introduzca el resumen"
-            },
-            "titulo": "Resumen"
-          },
-          "tipoActividad": {
-            "error": {
-              "requerido": "Introduzca el tipo de actividad"
-            },
-            "titulo": "Tipo de actividad"
-          },
-          "tipoFinanciacion": {
-            "error": {
-              "requerido": "Introduzca el tipo de financiación"
-            },
-            "titulo": "Tipo de financiación"
-          },
-          "titulo": {
-            "error": {
-              "requerido": "Introduzca el titulo"
-            },
-            "titulo": "Título"
-          },
-          "valorSocial": {
-            "error": {
-              "requerido": "Introduzca el valor social"
-            },
-            "titulo": "Valor social"
-          }
-        },
-        "equipo-investigador": "Equipo investigador",
-        "memorias": "Memorias",
-        "titulo": "Nueva solicitud de evaluación"
       }
     }
   },
