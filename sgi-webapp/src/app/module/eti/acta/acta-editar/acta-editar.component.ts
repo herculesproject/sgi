@@ -13,7 +13,7 @@ import { Acta } from '@core/models/eti/acta';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
 @Component({
-  selector: 'app-acta-editar',
+  selector: 'sgi-acta-editar',
   templateUrl: './acta-editar.component.html',
   styleUrls: ['./acta-editar.component.scss']
 })

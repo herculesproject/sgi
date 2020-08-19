@@ -15,7 +15,7 @@ import { Observable, Subscription } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-tipo-reservable-crear',
+  selector: 'sgi-tipo-reservable-crear',
   templateUrl: './tipo-reservable-crear.component.html',
   styleUrls: ['./tipo-reservable-crear.component.scss']
 })

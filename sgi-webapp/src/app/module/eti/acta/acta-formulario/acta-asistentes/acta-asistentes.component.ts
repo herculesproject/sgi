@@ -13,7 +13,7 @@ import { MatSort } from '@angular/material/sort';
 import { AsistenteService } from '@core/services/eti/asistente.service';
 
 @Component({
-  selector: 'app-acta-asistentes',
+  selector: 'sgi-acta-asistentes',
   templateUrl: './acta-asistentes.component.html',
   styleUrls: ['./acta-asistentes.component.scss']
 })

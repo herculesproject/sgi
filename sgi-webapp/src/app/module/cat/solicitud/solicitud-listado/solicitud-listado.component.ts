@@ -13,7 +13,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 
 
 @Component({
-  selector: 'app-solicitud-listado',
+  selector: 'sgi-solicitud-listado',
   templateUrl: './solicitud-listado.component.html',
   styleUrls: ['./solicitud-listado.component.scss']
 })

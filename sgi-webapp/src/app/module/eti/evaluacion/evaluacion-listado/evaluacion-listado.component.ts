@@ -24,7 +24,7 @@ class EvaluacionListado extends Evaluacion {
 }
 
 @Component({
-  selector: 'app-evaluacion-listado',
+  selector: 'sgi-evaluacion-listado',
   templateUrl: './evaluacion-listado.component.html',
   styleUrls: ['./evaluacion-listado.component.scss']
 })

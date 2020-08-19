@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { LayoutService, BreadcrumbData } from '@core/services/layout.service';
 
 @Component({
-  selector: 'app-breadcrumb',
+  selector: 'sgi-breadcrumb',
   templateUrl: './breadcrumb.component.html',
   styleUrls: ['./breadcrumb.component.scss']
 })

@@ -23,7 +23,7 @@ import { Persona } from '@core/models/sgp/persona';
 import { SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
 
 @Component({
-  selector: 'app-convocatoria-reunion-datos-generales',
+  selector: 'sgi-convocatoria-reunion-datos-generales',
   templateUrl: './convocatoria-reunion-datos-generales.component.html',
   styleUrls: ['./convocatoria-reunion-datos-generales.component.scss']
 })

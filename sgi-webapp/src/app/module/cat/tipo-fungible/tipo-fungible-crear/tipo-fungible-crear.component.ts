@@ -14,7 +14,7 @@ import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-tipo-fungible-crear',
+  selector: 'sgi-tipo-fungible-crear',
   templateUrl: './tipo-fungible-crear.component.html',
   styleUrls: ['./tipo-fungible-crear.component.scss'],
 })

@@ -13,7 +13,7 @@ import { Evaluador } from '@core/models/eti/evaluador';
 import { AsistenteService } from '@core/services/eti/asistente.service';
 
 @Component({
-  selector: 'app-convocatoria-reunion-crear',
+  selector: 'sgi-convocatoria-reunion-crear',
   templateUrl: './convocatoria-reunion-crear.component.html',
   styleUrls: ['./convocatoria-reunion-crear.component.scss']
 })

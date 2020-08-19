@@ -23,7 +23,7 @@ import {
 
 
 @Component({
-  selector: 'app-agrupacion-servicio-actualizar',
+  selector: 'sgi-agrupacion-servicio-actualizar',
   templateUrl: './agrupacion-servicio-actualizar.component.html',
   styleUrls: ['./agrupacion-servicio-actualizar.component.scss']
 })

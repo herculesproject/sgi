@@ -29,7 +29,7 @@ import { ROUTE_NAMES } from '@core/route.names';
 
 
 @Component({
-  selector: 'app-acta-listado',
+  selector: 'sgi-acta-listado',
   templateUrl: './acta-listado.component.html',
   styleUrls: ['./acta-listado.component.scss']
 })

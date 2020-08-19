@@ -19,7 +19,7 @@ import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 
 
 @Component({
-  selector: 'app-acta-memorias',
+  selector: 'sgi-acta-memorias',
   templateUrl: './acta-memorias.component.html',
   styleUrls: ['./acta-memorias.component.scss']
 })

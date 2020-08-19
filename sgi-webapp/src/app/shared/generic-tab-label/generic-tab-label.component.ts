@@ -3,7 +3,7 @@ import { AbstractTabComponent } from '@core/component/abstract-tab.component';
 import { NGXLogger } from 'ngx-logger';
 
 @Component({
-  selector: 'app-generic-tab-label',
+  selector: 'sgi-generic-tab-label',
   templateUrl: './generic-tab-label.component.html',
   styleUrls: ['./generic-tab-label.component.scss']
 })

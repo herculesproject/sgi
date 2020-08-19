@@ -11,7 +11,7 @@ import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-unidad-medida-crear',
+  selector: 'sgi-unidad-medida-crear',
   templateUrl: './unidad-medida-crear.component.html',
   styleUrls: ['./unidad-medida-crear.component.scss'],
 })

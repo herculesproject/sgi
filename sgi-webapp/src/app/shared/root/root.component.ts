@@ -7,7 +7,7 @@ const OPEN_WITH_EM = 16;
 const CLOSE_WITH_EM = 5;
 
 @Component({
-  selector: 'app-root',
+  selector: 'sgi-root',
   templateUrl: './root.component.html',
   styleUrls: ['./root.component.scss'],
   animations: [

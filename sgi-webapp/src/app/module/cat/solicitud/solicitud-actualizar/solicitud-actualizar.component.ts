@@ -13,7 +13,7 @@ import { of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-solicitud-actualizar',
+  selector: 'sgi-solicitud-actualizar',
   templateUrl: './solicitud-actualizar.component.html',
   styleUrls: ['./solicitud-actualizar.component.scss'],
 })

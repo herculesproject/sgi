@@ -11,7 +11,7 @@ import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-unidad-medida-actualizar',
+  selector: 'sgi-unidad-medida-actualizar',
   templateUrl: './unidad-medida-actualizar.component.html',
   styleUrls: ['./unidad-medida-actualizar.component.scss'],
 })

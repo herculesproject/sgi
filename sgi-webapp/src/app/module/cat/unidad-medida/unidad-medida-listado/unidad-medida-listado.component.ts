@@ -11,7 +11,7 @@ import { map } from 'rxjs/operators';
 import { ROUTE_NAMES } from '@core/route.names';
 
 @Component({
-  selector: 'app-unidad-medida-listado',
+  selector: 'sgi-unidad-medida-listado',
   templateUrl: './unidad-medida-listado.component.html',
   styleUrls: ['./unidad-medida-listado.component.scss'],
 })

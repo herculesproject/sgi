@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 
 @Component({
-  selector: 'app-footer-crear',
+  selector: 'sgi-footer-crear',
   templateUrl: './footer-crear.component.html',
   styleUrls: ['./footer-crear.component.scss']
 })

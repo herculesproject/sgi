@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 
 @Component({
-  selector: 'app-inicio',
+  selector: 'sgi-inicio',
   templateUrl: './inicio.component.html',
   styleUrls: ['./inicio.component.scss']
 })

@@ -13,7 +13,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { ROUTE_NAMES } from '@core/route.names';
 
 @Component({
-  selector: 'app-agrupacion-servicio-listado',
+  selector: 'sgi-agrupacion-servicio-listado',
   templateUrl: './agrupacion-servicio-listado.component.html',
   styleUrls: ['./agrupacion-servicio-listado.component.scss']
 })

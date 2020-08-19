@@ -3,16 +3,16 @@
     <!-- Datos generales -->
     <mat-tab>
       <ng-template mat-tab-label>
-        <app-generic-tab-label [abstractTab]="datosGenerales" [errors]="errorTabs[0]"
+        <sgi-generic-tab-label [abstractTab]="datosGenerales" [errors]="errorTabs[0]"
           textoLabel="eti.convocatoriaReunion.formulario.datosGenerales.cabecera">
-        </app-generic-tab-label>
+        </sgi-generic-tab-label>
       </ng-template>
-      <app-convocatoria-reunion-datos-generales #datosGenerales (eventEmitter)="setErroresTab(0, $event)">
-      </app-convocatoria-reunion-datos-generales>
+      <sgi-convocatoria-reunion-datos-generales #datosGenerales (eventEmitter)="setErroresTab(0, $event)">
+      </sgi-convocatoria-reunion-datos-generales>
     </mat-tab>
 
   </mat-tab-group>
 
   <!-- Footer -->
-  <app-footer-guardar [texto]="textoCrear" (emitter)="guardarDatos()"></app-footer-guardar>
+  <sgi-footer-guardar [texto]="textoCrear" (emitter)="guardarDatos()"></sgi-footer-guardar>
 </section>

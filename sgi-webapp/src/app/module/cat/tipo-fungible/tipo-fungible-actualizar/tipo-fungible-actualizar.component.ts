@@ -16,7 +16,7 @@ import { Observable, of, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-tipo-fungible-actualizar',
+  selector: 'sgi-tipo-fungible-actualizar',
   templateUrl: './tipo-fungible-actualizar.component.html',
   styleUrls: ['./tipo-fungible-actualizar.component.scss'],
 })

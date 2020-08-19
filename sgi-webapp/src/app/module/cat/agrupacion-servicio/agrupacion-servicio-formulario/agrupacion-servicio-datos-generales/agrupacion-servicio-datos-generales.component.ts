@@ -16,7 +16,7 @@ import { FormGroupUtil } from '@core/utils/form-group-util';
 
 
 @Component({
-  selector: 'app-agrupacion-servicio-datos-generales',
+  selector: 'sgi-agrupacion-servicio-datos-generales',
   templateUrl: './agrupacion-servicio-datos-generales.component.html',
   styleUrls: ['./agrupacion-servicio-datos-generales.component.scss']
 })

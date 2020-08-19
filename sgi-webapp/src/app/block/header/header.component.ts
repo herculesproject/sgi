@@ -4,7 +4,7 @@ import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-header',
+  selector: 'sgi-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })

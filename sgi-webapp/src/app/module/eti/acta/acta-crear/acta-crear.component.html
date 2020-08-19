@@ -3,38 +3,38 @@
     <!-- Datos generales -->
     <mat-tab>
       <ng-template mat-tab-label>
-        <app-generic-tab-label [abstractTab]="datosGenerales" [errors]="errorTabs[0]"
+        <sgi-generic-tab-label [abstractTab]="datosGenerales" [errors]="errorTabs[0]"
           textoLabel="eti.acta.crear.datosGenerales.cabecera">
-        </app-generic-tab-label>
+        </sgi-generic-tab-label>
       </ng-template>
-      <app-acta-datos-generales #datosGenerales (eventEmitter)="setErroresTab(0, $event)" (selectConvocatoria)="
+      <sgi-acta-datos-generales #datosGenerales (eventEmitter)="setErroresTab(0, $event)" (selectConvocatoria)="
         setConvocatoria($event)">
-      </app-acta-datos-generales>
+      </sgi-acta-datos-generales>
     </mat-tab>
 
     <!-- Memorias -->
     <mat-tab>
       <ng-template mat-tab-label>
-        <app-generic-tab-label [abstractTab]="memorias" [errors]="errorTabs[1]"
+        <sgi-generic-tab-label [abstractTab]="memorias" [errors]="errorTabs[1]"
           textoLabel="eti.acta.crear.memorias.cabecera">
-        </app-generic-tab-label>
+        </sgi-generic-tab-label>
       </ng-template>
-      <app-acta-memorias #memorias (eventEmitter)="setErroresTab(1, $event)" [idConvocatoria]="idConvocatoria">
-      </app-acta-memorias>
+      <sgi-acta-memorias #memorias (eventEmitter)="setErroresTab(1, $event)" [idConvocatoria]="idConvocatoria">
+      </sgi-acta-memorias>
     </mat-tab>
 
     <!-- Asistentes -->
     <mat-tab>
       <ng-template mat-tab-label>
-        <app-generic-tab-label [abstractTab]="asistentes" [errors]="errorTabs[2]"
+        <sgi-generic-tab-label [abstractTab]="asistentes" [errors]="errorTabs[2]"
           textoLabel="eti.acta.crear.asistentes.cabecera">
-        </app-generic-tab-label>
+        </sgi-generic-tab-label>
       </ng-template>
-      <app-acta-asistentes #asistentes (eventEmitter)="setErroresTab(2, $event)" [idConvocatoria]="idConvocatoria">
-      </app-acta-asistentes>
+      <sgi-acta-asistentes #asistentes (eventEmitter)="setErroresTab(2, $event)" [idConvocatoria]="idConvocatoria">
+      </sgi-acta-asistentes>
     </mat-tab>
   </mat-tab-group>
 
   <!-- Footer -->
-  <app-footer-guardar [texto]="textoCrear" (emitter)="guardarDatos()"></app-footer-guardar>
+  <sgi-footer-guardar [texto]="textoCrear" (emitter)="guardarDatos()"></sgi-footer-guardar>
 </section>

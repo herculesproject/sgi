@@ -24,7 +24,7 @@ import {
 
 
 @Component({
-  selector: 'app-agrupacion-servicio-crear',
+  selector: 'sgi-agrupacion-servicio-crear',
   templateUrl: './agrupacion-servicio-crear.component.html',
   styleUrls: ['./agrupacion-servicio-crear.component.scss']
 })

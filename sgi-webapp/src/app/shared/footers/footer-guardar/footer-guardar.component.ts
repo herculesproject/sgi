@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {NGXLogger} from 'ngx-logger';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
-  selector: 'app-footer-guardar',
+  selector: 'sgi-footer-guardar',
   templateUrl: './footer-guardar.component.html',
   styleUrls: ['./footer-guardar.component.scss']
 })

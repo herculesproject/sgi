@@ -15,7 +15,7 @@ import { Observable, Subscription } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-tipo-reservable-actualizar',
+  selector: 'sgi-tipo-reservable-actualizar',
   templateUrl: './tipo-reservable-actualizar.component.html',
   styleUrls: ['./tipo-reservable-actualizar.component.scss']
 })

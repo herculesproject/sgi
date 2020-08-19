@@ -4,7 +4,7 @@ import { ETI_ROUTE_NAMES } from '../eti-route-names';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-eti-menu-principal',
+  selector: 'sgi-eti-menu-principal',
   templateUrl: './eti-menu-principal.component.html',
   styleUrls: ['./eti-menu-principal.component.scss']
 })

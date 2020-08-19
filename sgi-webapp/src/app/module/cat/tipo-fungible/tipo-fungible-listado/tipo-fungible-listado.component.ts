@@ -11,7 +11,7 @@ import { map } from 'rxjs/operators';
 import { ROUTE_NAMES } from '@core/route.names';
 
 @Component({
-  selector: 'app-tipo-fungible-listado',
+  selector: 'sgi-tipo-fungible-listado',
   templateUrl: './tipo-fungible-listado.component.html',
   styleUrls: ['./tipo-fungible-listado.component.scss'],
 })

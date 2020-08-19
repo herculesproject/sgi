@@ -14,7 +14,7 @@ import { ROUTE_NAMES } from '@core/route.names';
 
 
 @Component({
-  selector: 'app-tipo-reservable-listado',
+  selector: 'sgi-tipo-reservable-listado',
   templateUrl: './tipo-reservable-listado.component.html',
   styleUrls: ['./tipo-reservable-listado.component.scss']
 })

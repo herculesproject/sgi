@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 
 @Component({
-  selector: 'app-cat-root',
+  selector: 'sgi-cat-root',
   templateUrl: './cat-root.component.html',
   styleUrls: ['./cat-root.component.scss']
 })

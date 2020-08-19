@@ -4,7 +4,7 @@ import { LayoutService } from '@core/services/layout.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-cat-menu-principal',
+  selector: 'sgi-cat-menu-principal',
   templateUrl: './cat-menu-principal.component.html',
   styleUrls: ['./cat-menu-principal.component.scss'],
 })

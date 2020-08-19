@@ -10,7 +10,7 @@ import { Supervision } from '@core/models/cat/supervision';
 import { SnackBarService } from '@core/services/snack-bar.service';
 
 @Component({
-  selector: 'app-agrupacion-servicio-gestor',
+  selector: 'sgi-agrupacion-servicio-gestor',
   templateUrl: './agrupacion-servicio-gestor.component.html',
   styleUrls: ['./agrupacion-servicio-gestor.component.scss']
 })

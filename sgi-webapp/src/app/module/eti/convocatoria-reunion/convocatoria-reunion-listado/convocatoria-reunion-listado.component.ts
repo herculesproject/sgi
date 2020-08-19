@@ -21,7 +21,7 @@ import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reun
 import { ROUTE_NAMES } from '@core/route.names';
 
 @Component({
-  selector: 'app-convocatoria-reunion-listado',
+  selector: 'sgi-convocatoria-reunion-listado',
   templateUrl: './convocatoria-reunion-listado.component.html',
   styleUrls: ['./convocatoria-reunion-listado.component.scss']
 })

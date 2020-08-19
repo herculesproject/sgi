@@ -29,7 +29,7 @@ import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
 
 @Component({
-  selector: 'app-acta-datos-generales',
+  selector: 'sgi-acta-datos-generales',
   templateUrl: './acta-datos-generales.component.html',
   styleUrls: ['./acta-datos-generales.component.scss']
 })

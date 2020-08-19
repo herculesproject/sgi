@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {NGXLogger} from 'ngx-logger';
+import { Component, OnInit } from '@angular/core';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
-  selector: 'app-eti-root',
+  selector: 'sgi-eti-root',
   templateUrl: './eti-root.component.html',
   styleUrls: ['./eti-root.component.scss']
 })

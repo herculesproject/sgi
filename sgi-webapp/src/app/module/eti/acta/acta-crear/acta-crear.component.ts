@@ -12,7 +12,7 @@ import { ActaMemoriasComponent } from '../acta-formulario/acta-memorias/acta-mem
 import { ActaService } from '@core/services/eti/acta.service';
 
 @Component({
-  selector: 'app-acta-crear',
+  selector: 'sgi-acta-crear',
   templateUrl: './acta-crear.component.html',
   styleUrls: ['./acta-crear.component.scss']
 })
