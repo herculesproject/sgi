@@ -15,6 +15,7 @@ export interface BreadcrumbData {
   providedIn: 'root'
 })
 export class LayoutService {
+  private readonly REGEX = /(?:[^\/]+)/g;
 
   activeModule$ = new BehaviorSubject<string>(undefined);
   menuOpened$ = new BehaviorSubject<boolean>(true);
@@ -29,7 +30,7 @@ export class LayoutService {
 
   private processEvent(event: RouterEvent): void {
     if (event instanceof NavigationEnd) {
-      const segments = event.url.match(/(?:[^\/]+)/g);
+      const segments = this.REGEX.test(event.url) ? event.url.match(this.REGEX) : [];
       const data: BreadcrumbData = {
         title: '',
         segments: []
@@ -45,7 +46,9 @@ export class LayoutService {
           });
         }
       }
-      data.title = data.segments[data.segments.length - 1].title;
+      if (data.segments.length > 0) {
+        data.title = data.segments[data.segments.length - 1].title;
+      }
       if (stack.length > 0) {
         this.activeModule$.next(stack[0]);
       }
