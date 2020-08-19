@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 import { SgiAuthConfig } from './auth.config';
+import { HttpRequest } from '@angular/common/http';
 
 export interface IAuthService {
   /**
@@ -74,6 +75,8 @@ export abstract class SgiAuthService implements IAuthService {
 
   readonly authStatus$ = new BehaviorSubject<IAuthStatus>(defaultAuthStatus);
 
+  protected protectedResources: RegExp[] = [];
+
   constructor(protected logger: NGXLogger) { }
 
   abstract init(authConfig: SgiAuthConfig): Observable<boolean>;
@@ -82,4 +85,8 @@ export abstract class SgiAuthService implements IAuthService {
   abstract login(redirectUri?: string): Observable<void>;
   abstract logout(redirectUri?: string): Observable<void>;
   abstract getAuthorities(): string[];
+
+  public isProtectedRequest(request: HttpRequest<any>): boolean {
+    return this.protectedResources.findIndex((regex) => regex.test(request.url)) !== -1;
+  }
 }

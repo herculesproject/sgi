@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, from, of } from 'rxjs';
+import { Observable, from, of, throwError } from 'rxjs';
 import * as Keycloak_ from 'keycloak-js';
 export const Keycloak = Keycloak_;
 import { NGXLogger } from 'ngx-logger';
@@ -34,6 +34,7 @@ export class AuthKeycloakService extends SgiAuthService {
       url: authConfig.ssoUrl
     });
     this.bindEvents();
+    this.protectedResources = authConfig.protectedResources;
     let initOptions: Keycloak.KeycloakInitOptions;
     initOptions = {
       enableLogging: true
@@ -151,7 +152,14 @@ export class AuthKeycloakService extends SgiAuthService {
 
   public getToken(): Observable<string> {
     this.logger.debug(`getToken() - START`);
-    if (this.keycloak.isTokenExpired(5)) {
+    let expired: boolean;
+    try {
+      expired = this.keycloak.isTokenExpired(5);
+    }
+    catch (e) {
+      return throwError(e);
+    }
+    if (expired) {
       this.logger.debug('token expired -> refreshing');
       return this.refreshToken().pipe(
         map(() => this.keycloak.token),

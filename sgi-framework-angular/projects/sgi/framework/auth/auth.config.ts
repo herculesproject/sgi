@@ -10,4 +10,5 @@ export interface SgiAuthConfig {
   ssoClientId: string;
   ssoUrl: string;
   inMemoryConfig: IAuthStatus;
+  protectedResources: RegExp[];
 }

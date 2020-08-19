@@ -21,34 +21,33 @@ import { NGXLogger } from 'ngx-logger';
  */
 @Injectable()
 export class SgiAuthHttpInterceptor implements HttpInterceptor {
+
   constructor(private authService: SgiAuthService, private router: Router, private logger: NGXLogger) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    this.logger.debug(`intercept(${req.method} to ${req.url}) - START`);
-    return this.authService.getToken().pipe(
-      catchError((error) => {
-        this.logger.error(JSON.stringify(error));
-        // We check if the user has session. If no session, then redirect to login
-        if (!this.authService.isAuthenticated()) {
-          this.logger.error('User is not authenticated');
-          this.authService.login();
-          return EMPTY;
-        }
-        else {
-          return next.handle(req);
-        }
-      }),
-      switchMap((token) => {
-        const authRequest = req.clone({ setHeaders: { authorization: `Bearer ${token}` } });
-        // TODO: Handle 401 error and redirect to login? 
-        // NO, if the user is truly authenticated, a 401 could meaning any other issue such bad or tampered token
-        return next.handle(authRequest);
-      }),
-      tap((re) => {
-        if (re.type === HttpEventType.Response) {
-          this.logger.debug(`intercept(${req.method} to ${req.url}): - END`);
-        }
-      })
-    );
+    this.logger.debug(`${SgiAuthHttpInterceptor.name} Intercept ${req.method} to ${req.url}`);
+    if (this.authService.isProtectedRequest(req)) {
+      this.logger.debug(`${SgiAuthHttpInterceptor.name}: Protected resource, injecting token`);
+      return this.authService.getToken().pipe(
+        catchError((error) => {
+          this.logger.warn(`${SgiAuthHttpInterceptor.name}: ${JSON.stringify(error)}`);
+          return undefined as string;
+        }),
+        switchMap((token) => {
+          if (token) {
+            const authRequest = req.clone({ setHeaders: { authorization: `Bearer ${token}` } });
+            this.logger.debug(`${SgiAuthHttpInterceptor.name}: Token injected`);
+            return next.handle(authRequest);
+          }
+          else {
+            return next.handle(req);
+          }
+        })
+      );
+    }
+    else {
+      this.logger.debug(`${SgiAuthHttpInterceptor.name}: Ignoring request, isn't a protected resource`);
+      return next.handle(req);
+    }
   }
 }
