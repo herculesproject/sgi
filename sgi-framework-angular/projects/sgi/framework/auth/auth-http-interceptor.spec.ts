@@ -5,7 +5,7 @@ import { LoggerTestingModule } from 'ngx-logger/testing';
 import { HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SgiAuthService } from './auth.service';
 import { RouterTestingModule } from '@angular/router/testing';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 
 const fakeEndpoint = 'http://localhost:8080/fake';
 
@@ -15,7 +15,7 @@ describe(`AuthHttpInterceptor`, () => {
   let authServiceMock: jasmine.SpyObj<SgiAuthService>;
 
   beforeEach(async(() => {
-    const authServiceSpy = jasmine.createSpyObj('AuthService', ['getToken', 'login', 'isAuthenticated']);
+    const authServiceSpy = jasmine.createSpyObj('AuthService', ['getToken', 'isAuthenticated', 'isProtectedRequest']);
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, LoggerTestingModule, RouterTestingModule],
       providers: [
@@ -41,10 +41,11 @@ describe(`AuthHttpInterceptor`, () => {
     httpMock.verify();
   });
 
-  it('should add an Authorization header with right value', () => {
+  it('should add an Authorization header for protected resource with right value', () => {
     // AuthService responses
     authServiceMock.isAuthenticated.and.returnValue(true);
     authServiceMock.getToken.and.returnValue(of('TOKEN'));
+    authServiceMock.isProtectedRequest.and.returnValue(true);
 
     httpClient.get(fakeEndpoint).subscribe(response => {
       expect(response).toBeTruthy();
@@ -56,26 +57,34 @@ describe(`AuthHttpInterceptor`, () => {
     expect(req.request.headers.has('Authorization')).toEqual(true);
     expect(req.request.headers.get('Authorization')).toBe('Bearer TOKEN');
 
+    // check for protected request should be called 1 time
+    expect(authServiceMock.isProtectedRequest).toHaveBeenCalledTimes(1);
+
     // “fire” the request with the mocked result
     req.flush({});
   });
 
-  it('should redirect to login', () => {
+  it('should NOT add an Authorization header for a no protected resource', () => {
     // AuthService responses
-    authServiceMock.isAuthenticated.and.returnValue(false);
-    authServiceMock.getToken.and.returnValue(throwError('UNAUTHENTICATED'));
-    authServiceMock.login.and.returnValue(of());
+    authServiceMock.isAuthenticated.and.returnValue(true);
+    authServiceMock.getToken.and.returnValue(of('TOKEN'));
+    authServiceMock.isProtectedRequest.and.returnValue(false);
 
     httpClient.get(fakeEndpoint).subscribe(response => {
-      // This shouldn't happend because no call will be made
-      expect(0).toEqual(1);
+      expect(response).toBeTruthy();
     });
 
-    // No request will be made
-    httpMock.expectNone(`${fakeEndpoint}`, 'GET to API');
+    // then: the right backend API is called
+    const req = httpMock.expectOne(`${fakeEndpoint}`, 'GET to API');
 
-    // Login must be called 1 time
-    expect(authServiceMock.login).toHaveBeenCalledTimes(1);
+    // header should not be added
+    expect(req.request.headers.has('Authorization')).toEqual(false);
+
+    // check for protected request should be called 1 time
+    expect(authServiceMock.isProtectedRequest).toHaveBeenCalledTimes(1);
+
+    // “fire” the request with the mocked result
+    req.flush({});
   });
 
 });
