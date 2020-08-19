@@ -22,6 +22,10 @@ export const environment = {
       userRefId: '',
       authorities: [],
       isInvestigador: false
-    }
+    },
+    protectedResources: [
+      /\/api\/cat.*/i,
+      /\/api\/eti.*/i
+    ]
   } as SgiAuthConfig
 };
