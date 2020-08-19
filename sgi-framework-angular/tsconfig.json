@@ -17,16 +17,16 @@
     ],
     "paths": {
       "@sgi/framework": [
-        "project/sgi/framework"
+        "projects/sgi/framework/public-api.ts"
       ],
       "@sgi/framework/auth": [
-        "project/sgi/framework/auth"
+        "projects/sgi/framework/auth/public-api.ts"
       ],
       "@sgi/framework/core": [
-        "project/sgi/framework/core"
+        "projects/sgi/framework/core/public-api.ts"
       ],
       "@sgi/framework/http": [
-        "project/sgi/framework/http"
+        "projects/sgi/framework/http/public-api.ts"
       ]
     }
   },
