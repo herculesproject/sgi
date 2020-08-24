@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { ConvocatoriaReunionDatosGeneralesComponent } from '../convocatoria-reunion-formulario/convocatoria-reunion-datos-generales/convocatoria-reunion-datos-generales.component';
 import { NGXLogger } from 'ngx-logger';
@@ -12,6 +13,10 @@ import { IAsistente } from '@core/models/eti/asistente';
 import { Evaluador } from '@core/models/eti/evaluador';
 import { AsistenteService } from '@core/services/eti/asistente.service';
 
+const MSG_BUTTON_SAVE = marker('footer.eti.convocatoriaReunion.guardar');
+const MSG_SUCCESS = marker('eti.convocatoriaReunion.crear.correcto');
+const MSG_ERROR = marker('eti.convocatoriaReunion.crear.error');
+
 @Component({
   selector: 'sgi-convocatoria-reunion-crear',
   templateUrl: './convocatoria-reunion-crear.component.html',
@@ -21,7 +26,7 @@ export class ConvocatoriaReunionCrearComponent extends AbstractFormularioCompone
 
   @ViewChild('datosGenerales', { static: true }) datosGenerales: ConvocatoriaReunionDatosGeneralesComponent;
 
-  textoCrear = 'footer.eti.convocatoriaReunion.guardar';
+  textoCrear = MSG_BUTTON_SAVE;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -85,14 +90,14 @@ export class ConvocatoriaReunionCrearComponent extends AbstractFormularioCompone
           this.tabs.get(0).actualizarDatos(convocatoriaReunion);
           this.tabs.get(0).warning = false;
 
-          this.snackBarService.showSuccess('eti.convocatoriaReunion.crear.correcto');
+          this.snackBarService.showSuccess(MSG_SUCCESS);
           this.router.navigate(['../'], { relativeTo: this.route });
           this.logger.debug(ConvocatoriaReunionCrearComponent.name, 'enviarDatos()', 'end');
         },
         () => {
           // Si falla mostramos el error en la pestañña
           this.tabs.get(0).mostrarError();
-          this.snackBarService.showError('eti.convocatoriaReunion.crear.error');
+          this.snackBarService.showError(MSG_ERROR);
           this.logger.error(ConvocatoriaReunionCrearComponent.name, 'enviarDatos()', 'end');
         }
       )

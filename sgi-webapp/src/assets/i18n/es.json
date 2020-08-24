@@ -1,628 +1,287 @@
 {
-  "botones": {
-    "buscar": "Buscar",
-    "cancelar": "Cancelar",
-    "guardar": "Guardar",
-    "limpiar": "Limpiar",
-    "aceptar": "Aceptar"
-  },
-  "breadcrumb": {
-    "actas": "Actas",
-    "edit": "Editar",
-    "agrupaciones-servicio": "Agrupaciones de servicios",
-    "cat": "Catálogo de oferta científico-técnica",
-    "convocatorias": "Convocatorias",
-    "new": "Crear",
-    "eti": "Ética",
-    "evaluaciones": "Evaluaciones",
-    "grupos-investigacion": "Grupos de investigación",
-    "inicio": "Inicio",
-    "solicitudes": "Solicitud",
-    "solicitudes-convocatoria": "Solicitudes de convocatoria",
-    "tipos-fungible": "Tipos de fungible",
-    "tipos-reservable": "Tipos de reservable",
-    "unidades-medida": "Unidad de medida"
-  },
-  "cabecera": {
-    "modulo": {
-      "cat": "Módulo: Catálogo de oferta científico-técnica",
-      "eti": "Módulo: Ética"
-    }
-  },
-  "selector-modulo": {
-    "catalogo": "Catálogo",
-    "etica": "Ética"
-  },
-  "cat": {
-    "convocatoria": {
-      "menu": {
-        "areas-tematicas": "Áreas temáticas",
-        "conceptos-economicos": "Conceptos económicos",
-        "configuracion-solicitudes": "Configuración solicitudes",
-        "datos-generales": "Datos generales",
-        "documentos": "Documentos",
-        "elegibilidad": "Elegibilidad",
-        "enlaces": "Enlaces",
-        "organismos-convocantes": "Organismos convocantes",
-        "organismos-financiadores": "Organismos financiadores",
-        "palabras-clave": "Palabras clave",
-        "periodos": "Periodos justificación",
-        "plazos": "Plazos y fases",
-        "requisitos-equipo": "Requisitos equipo",
-        "requisitos-ip": "Requisitos IP",
-        "seguimiento-cientifico": "Seguimiento científico"
-      }
-    },
-    "servicio": {
-      "abreviatura": {
-        "error": {
-          "maximo": "La abreviatura supera la longitud máxima",
-          "minimo": "La abreviatura no supera la longitud mínima",
-          "requerido": "Introduzca la abreviatura"
-        },
-        "titulo": "Abreviatura"
-      },
-      "actualizar": {
-        "correcto": "Servicio actualizado correctamente",
-        "error": "Error al actualizar el servicio",
-        "no-encontrado": "Error al cargar los datos del servicio",
-        "titulo": "Actualización de servicio"
-      },
-      "contacto": {
-        "error": {
-          "maximo": "El email de contacto supera la longitud máxima",
-          "minimo": "El email de contacto no supera la longitud mínima",
-          "requerido": "Introduzca el email de contacto"
-        },
-        "titulo": "Email de contacto"
-      },
-      "crear": {
-        "correcto": "Servicio creado correctamente",
-        "error": "Error al crear el servicio"
-      },
-      "datos-generales": "Datos generales",
-      "gestor": {
-        "aniadir": "Añadir gestor",
-        "gestor": "Gestor",
-        "listado": {
-          "apellidos": "Apellidos",
-          "dni": "Nº documento",
-          "nombre": "Nombre"
-        },
-        "titulo": {
-          "section": "Gestores del servicio",
-          "tab": "Gestores"
-        }
-      },
-      "listado": {
-        "abreviatura": "ABREVIATURA",
-        "acciones": "ACCIONES",
-        "aceptar": "Aceptar",
-        "borrar": "Borrar",
-        "busqueda": "Búsqueda rápida",
-        "busqueda-placeholder": "Texto",
-        "cancelar": "Cancelar",
-        "contacto": "CONTACTO",
-        "editar": "Editar",
-        "eliminar": "¿Desea eliminar el servicio?",
-        "eliminarConfirmado": "Servicio eliminado correctamente",
-        "error": "No se ha podido cargar el listado de servicios",
-        "nombre": "NOMBRE",
-        "nuevo-servicio": "AÑADIR NUEVO SERVICIO",
-        "seccion": "SECCIÓN",
-        "titulo": "Servicios"
-      },
-      "nombre": {
-        "error": {
-          "maximo": "El nombre supera la longitud máxima",
-          "minimo": "El nombre no supera la longitud mínima",
-          "requerido": "Introduzca el nombre"
-        },
-        "titulo": "Nombre"
-      },
-      "seccion": "Sección"
-    },
-    "solicitud": {
-      "actualizar": {
-        "correcto": "Servicio actualizado correctamente",
-        "error": "Error al actualizar el servicio",
-        "no-encontrado": "Error al cargar los datos del servicio",
-        "normativa": {
-          "aceptar": "Acepto la normativa del Catálogo",
-          "correcto": "La normativa se ha actualizado correctamente",
-          "enlace": "Acceda a la normativa de Catálogo"
-        },
-        "titulo": "Servicios alta"
-      },
-      "alta": {
-        "correcto": "Servicio dado de alta correctamente",
-        "error": "Error al dar el servicio de alta",
-        "no-encontrado": "Error al cargar los datos del servicio",
-        "titulo": "Servicios alta"
-      },
-      "listado": {
-        "acciones": "ACCIONES",
-        "aceptar": "Aceptar",
-        "busqueda": "Búsqueda rápida",
-        "busqueda-placeholder": "Texto",
-        "cancelar": "Cancelar",
-        "contacto": "CONTACTO",
-        "editar": "Editar",
-        "error": "No se ha podido cargar el listado de los servicios",
-        "seleccionarServicio": "Seleccione el servicio en el que darse de alta",
-        "servicio": "SERVICIO",
-        "titulo": "Solicitud"
-      }
-    },
-    "tipo-fungible": {
-      "actualizar": {
-        "correcto": "Tipo fungible actualizado correctamente",
-        "error": "Error al actualizar el tipo fungible",
-        "no-encontrado": "Error al cargar los datos del tipo fungible",
-        "titulo": "Actualización de tipo fungible"
-      },
-      "crear": {
-        "correcto": "Tipo fungible agregado correctamente",
-        "error": "Error al crear el tipo fungible",
-        "nombre": {
-          "error": {
-            "maximo": "El nombre supera la longitud máxima",
-            "minimo": "El nombre no supera la longitud mínima",
-            "requerido": "Introduzca el nombre"
-          },
-          "titulo": "Nombre"
-        },
-        "servicio": {
-          "error": {
-            "requerido": "Introduzca el servicio"
-          },
-          "titulo": "Servicio"
-        },
-        "titulo": "Creación de tipo fungible"
-      },
-      "listado": {
-        "acciones": "ACCIONES",
-        "aceptar": "Aceptar",
-        "borrar": "Borrar",
-        "busqueda": "Búsqueda rápida",
-        "busqueda-placeholder": "Texto",
-        "cancelar": "Cancelar",
-        "editar": "Editar",
-        "eliminar": "¿Desea eliminar el tipo de fungible?",
-        "eliminarConfirmado": "Tipo fungible eliminado correctamente",
-        "error": "No se ha podido cargar el listado de los tipos fungibles",
-        "nombre": "NOMBRE",
-        "nuevo-tipo": "NUEVO TIPO FUNGIBLE",
-        "servicio": "SERVICIO",
-        "titulo": "Listado tipo de fungible"
-      }
-    },
-    "tipo-reservable": {
-      "actualizar": {
-        "correcto": "Tipo reservable actualizado correctamente",
-        "error": "Error al actualizar el tipo reservable",
-        "no-encontrado": "Error al cargar los datos del tipo reservable",
-        "titulo": "Actualización de tipo reservable"
-      },
-      "crear": {
-        "correcto": "Tipo reservable agregado correctamente",
-        "descripcion": {
-          "error": {
-            "maximo": "La descripción supera la longitud máxima",
-            "minimo": "La descripción no supera la longitud mínima",
-            "requerido": "Introduzca la descripción"
-          },
-          "titulo": "Descripción"
-        },
-        "diasAnteMax": {
-          "titulo": "Días de antelación máximo"
-        },
-        "diasVistaMaxCalen": {
-          "titulo": "Vista máxima del calendario (días)"
-        },
-        "duracionMin": {
-          "titulo": "Duración mínima (minutos)"
-        },
-        "error": "Error al crear el tipo reservable",
-        "estado": {
-          "titulo": "Estado"
-        },
-        "horasAnteAnular": {
-          "titulo": "Horas antelación anular usuario"
-        },
-        "horasAnteMin": {
-          "titulo": "Horas de antelación mínima"
-        },
-        "reservaMulti": {
-          "titulo": "Reserva múltiple"
-        },
-        "servicio": {
-          "error": {
-            "requerido": "Introduzca el servicio"
-          },
-          "titulo": "Servicio"
-        },
-        "titulo": "Creación de tipo reservable"
-      },
-      "listado": {
-        "acciones": "ACCIONES",
-        "aceptar": "Aceptar",
-        "borrar": "Borrar",
-        "busqueda": "Búsqueda rápida",
-        "busqueda-placeholder": "Texto",
-        "cancelar": "Cancelar",
-        "descripcion": "DESCRIPCIÓN",
-        "dias": "DÍAS",
-        "diasAnteMax": "D.ANTEL.",
-        "duracionMin": "DUR.MÍN.",
-        "editar": "Editar",
-        "eliminar": "¿Desea eliminar el tipo de reservable?",
-        "eliminarConfirmado": "Tipo de reservable eliminado correctamente",
-        "error": "No se ha podido cargar el listado de los tipos de reservable",
-        "estado": "ESTADO",
-        "horasAnteAnular": "H.ANUL.",
-        "nuevo-tipo": "NUEVO TIPO DE RESERVABLE",
-        "servicio": "SERVICIO",
-        "titulo": "Listado tipo de reservable"
-      }
-    },
-    "unidad-medida": {
-      "actualizar": {
-        "correcto": "Unidad de medida actualizada correctamente",
-        "error": "Error al actualizar la unidad de medida",
-        "no-encontrado": "Error al cargar los datos de la unidad de medida",
-        "titulo": "Actualización de unidad de medida"
-      },
-      "crear": {
-        "abreviatura": {
-          "error": {
-            "maximo": "La abreviatura supera la longitud máxima",
-            "minimo": "La abreviatura no supera la longitud mínima",
-            "requerido": "Introduzca la abreviatura"
-          },
-          "titulo": "Abreviatura"
-        },
-        "correcto": "Unidad de medida agregada correctamente",
-        "descripcion": {
-          "error": {
-            "maximo": "La descripción supera la longitud máxima",
-            "requerido": "Introduzca la descripción"
-          },
-          "titulo": "Descripción"
-        },
-        "error": "Error al crear la unidad de medida",
-        "titulo": "Creación de unidad de medida"
-      },
-      "listado": {
-        "abreviatura": "ABREVIATURA",
-        "acciones": "ACCIONES",
-        "aceptar": "Aceptar",
-        "borrar": "Borrar",
-        "busqueda": "Búsqueda rápida",
-        "busqueda-placeholder": "Texto",
-        "cancelar": "Cancelar",
-        "descripcion": "DESCRIPCIÓN",
-        "editar": "Editar",
-        "eliminar": "¿Desea eliminar el producto?",
-        "eliminarConfirmado": "Unidad de medida eliminada correctamente",
-        "error": "No se ha podido cargar el listado de unidades de medida",
-        "nueva-unidad": "NUEVA UNIDAD DE MEDIDA",
-        "titulo": "Listado unidad de medida"
-      }
-    }
-  },
-  "eti": {
-    "acta": {
-      "crear": {
-        "asistentes": {
-          "acciones": "Acciones",
-          "asistencia": {
-            "no": "No",
-            "si": "Sí",
-            "titulo": "Asistencia"
-          },
-          "cabecera": "Asistentes",
-          "motivo": "Motivo no Asistencia",
-          "nif": "NIF/NIE",
-          "nombreApellidos": "Nombre y apellidos"
-        },
-        "correcto": "Se ha creado correctamente el acta",
-        "datosGenerales": {
-          "cabecera": "Datos Generales",
-          "convocatoriaReunion": {
-            "error": {
-              "cargar": "No se han podido cargar las reuniones de evaluación",
-              "vacio": "Seleccione una reunión de evaluación"
-            },
-            "titulo": "Reunión de evaluación"
-          },
-          "horaFin": {
-            "error": {
-              "NaN": "La hora fin no es número",
-              "noValido": "No es válido la hora fin",
-              "vacio": "Introduzca la hora fin"
-            },
-            "titulo": "Hora Fin"
-          },
-          "horaInicio": {
-            "error": {
-              "NaN": "La hora inicio no es número",
-              "noValido": "No es válido la hora inicio",
-              "vacio": "Introduzca la hora inicio"
-            },
-            "titulo": "Hora Inicio"
-          },
-          "minutoFin": {
-            "error": {
-              "NaN": "El minuto fin no es número",
-              "noValido": "No es válido el minuto fin",
-              "vacio": "Introduzca el minuto fin"
-            },
-            "titulo": "Minuto Fin"
-          },
-          "minutoInicio": {
-            "error": {
-              "NaN": "El minuto inicio no es número",
-              "noValido": "No es válido el minuto inicio",
-              "vacio": "Introduzca el minuto inicio"
-            },
-            "titulo": "Minuto Inicio"
-          },
-          "resumen": {
-            "error": {
-              "required": "Introduzca un resumen"
-            },
-            "titulo": "Resumen"
-          },
-          "error": "Ha ocurrido un problema al guardar el acta"
-        },
-        "memorias": {
-          "cabecera": "Memorias",
-          "dictamen": "Dictamen",
-          "informe": "Informe",
-          "referencia": "Referencia memoria",
-          "version": "Versión"
-        },
-        "titulo": "Nueva acta"
-      },
-      "editar": {
-        "asistentes": {
-          "cabecera": "Asistentes"
-        },
-        "correcto": "Acta actualizada correctamente",
-        "datosGenerales": {
-          "cabecera": "Datos Generales"
-        },
-        "error": "Ha ocurrido un problema al editar el acta",
-        "memorias": {
-          "cabecera": "Memorias"
-        },
-        "titulo": "Editar acta"
-      },
-      "listado": {
-        "acciones": "Acciones",
-        "comite": "Comité",
-        "convocatoria": "Convocatoria",
-        "editar": "Editar",
-        "error": "No se ha podido cargar el listado de actas",
-        "estado": "Estado",
-        "fechaEvaluacion": "Fecha Evaluación",
-        "fechaEvaluacion.inicio": "Fecha evaluación inicio",
-        "fechaEvaluacion.fin": "Fecha evaluación fin",
-        "nuevaActa": "Añadir nueva acta",
-        "numeroActa": "Nº Acta",
-        "numeroIniciales": "Nº Iniciales",
-        "numeroRevisiones": "Nº Revisiones",
-        "numeroTotal": "Nº Total",
-        "titulo": "Actas"
-      }
-    },
-    "convocatoriaReunion": {
-      "crear": {
-        "correcto": "Se ha creado correctamente la convocatoria",
-        "error": "Ha ocurrido un problema al guardar la convocatoria",
-        "titulo": "Nueva convocatoria"
-      },
-      "formulario": {
-        "datosGenerales": {
-          "cabecera": "Datos Generales",
-          "comite": {
-            "error": {
-              "cargar": "No se han podido cargar los comites",
-              "vacio": "Seleccione un comite"
-            },
-            "titulo": "Comité"
-          },
-          "convocantes": {
-            "error": {
-              "cargar": "No se han podido cargar los convocantes"
-            },
-            "titulo": "Convocantes"
-          },
-          "fechaEvaluacion": {
-            "error": {
-              "vacio": "Introduzca la fecha de evaluación"
-            },
-            "titulo": "Fecha evaluación"
-          },
-          "fechaLimite": {
-            "error": {
-              "vacio": "Introduzca la fecha límite"
-            },
-            "titulo": "Fecha límite"
-          },
-          "horaInicio": {
-            "error": {
-              "NaN": "La hora inicio no es número",
-              "noValido": "No es válido la hora inicio",
-              "vacio": "Introduzca la hora inicio"
-            },
-            "titulo": "Hora Inicio"
-          },
-          "lugar": {
-            "error": {
-              "required": "Introduzca un lugar"
-            },
-            "titulo": "Lugar"
-          },
-          "minutoInicio": {
-            "error": {
-              "NaN": "El minuto inicio no es número",
-              "noValido": "No es válido el minuto inicio",
-              "vacio": "Introduzca el minuto inicio"
-            },
-            "titulo": "Minuto Inicio"
-          },
-          "ordenDia": {
-            "error": {
-              "required": "Introduzca un orden del día"
-            },
-            "titulo": "Orden del día"
-          },
-          "tipoConvocatoriaReunion": {
-            "error": {
-              "cargar": "No se han podido cargar las convocatorias",
-              "vacio": "Seleccione una convocatoria"
-            },
-            "titulo": "Convocatoria"
-          }
-        }
-      },
-      "listado": {
-        "acciones": "Acciones",
-        "aceptar": "Aceptar",
-        "borrar": "Borrar",
-        "cancelar": "Cancelar",
-        "codigo": "Código",
-        "comite": "Comité",
-        "tipoConvocatoriaReunion": "Convocatoria",
-        "editar": "Editar",
-        "eliminar": "¿Desea eliminar la convocatoria?",
-        "eliminarConfirmado": "Convocatoria eliminada correctamente",
-        "enviar": "Enviar",
-        "error": "No se ha podido cargar el listado de convocatorias",
-        "fechaEnvio": "Fecha envío",
-        "fechaEvaluacion": "Fecha evaluación",
-        "hora": "Hora",
-        "lugar": "Lugar",
-        "nuevaConvocatoriaReunion": "Añadir nueva convocatoria",
-        "titulo": "Convocatorias"
-      },
-      "buscador": {
-        "comite": {
-          "titulo": "Comité"
-        },
-        "fechaEvaluacionDesde": {
-          "titulo": "Fecha evaluación desde"
-        },
-        "fechaEvaluacionHasta": {
-          "titulo": "Fecha evaluación hasta"
-        },
-        "tipoConvocatoriaReunion": {
-          "titulo": "Convocatoria"
-        }
-      }
-    },
-    "evaluacion": {
-      "listado": {
-        "comite": "Comite",
-        "error": "Error al listas las evaluaciones",
-        "buscador": {
-          "comite": "Comite",
-          "tipoConvocatoria": {
-            "error": "Error al cargar los tipos de convocatoria",
-            "titulo": "Tipo de Convocatoria"
-          },
-          "fechaEvaluacionFin": "Fecha de evaluación hasta",
-          "fechaEvaluacionInicio": "Fecha de evaluación desde",
-          "memoriaNumReferencia": "Referencia memoria"
-        },
-        "fechaEvaluacion": "Fecha Evaluación",
-        "solicitante": "Solicitante",
-        "titulo": "Listado de evaluaciones",
-        "referenciaMemoria": "Referencia memoria",
-        "version": "Versión"
-      }
-    }
-  },
-  "footer": {
-    "eti": {
-      "acta": {
-        "crear": "Nueva",
-        "guardar": "Guardar",
-        "actualizar": "Actualizar"
-      },
-      "convocatoriaReunion": {
-        "crear": "Nueva convocatoria",
-        "guardar": "Guardar convocatoria",
-        "actualizar": "Actualizar"
-      },
-      "evaluacion": {
-        "crear": "Nueva evaluación",
-        "guardar": "Guardar evaluación",
-        "actualizar": "Actualizar"
-      },
-      "evaluacionEtica": {
-        "crear": "Nueva solicitud de evaluación",
-        "guardar": "Guardar solicitud",
-        "actualizar": "Actualizar"
-      }
-    }
-  },
-  "form-group": {
-    "error": "Se han encontrado errores en el formulario. Por favor revíselo"
-  },
-  "menu": {
-    "principal": {
-      "cat": {
-        "agrupaciones-servicios": "Agrupaciones de servicios",
-        "horarios": "Horarios",
-        "productos": "Productos",
-        "solicitudes": "Solicitudes",
-        "tipos-fungibles": "Tipos de fungible",
-        "tipos-reservables": "Tipos de reservable",
-        "unidades-medida": "Unidades de medida"
-      },
-      "eti": {
-        "acta": "Actas",
-        "areaEspecializacion": "Áreas de especialización",
-        "cvn": "Mi CVN",
-        "datos": "Mis datos",
-        "empresasBaseTecnologica": "Empresas de base tecnológica",
-        "evaluacionEtica": "Evaluaciones de ética",
-        "evaluaciones": "Evaluaciones",
-        "gruposInvestigacion": "Grupos de investigación",
-        "ofertaTecnologica": "Oferta tecnológica",
-        "produccionCientifica": "Producción científica",
-        "propiedadIntelectual": "Propiedad intelectúal",
-        "proyectos": "Proyectos",
-        "solicitudesConvocatoria": "Solicitudes de convocatoria",
-        "solicitudesSAI": "Solicitudes de SAI"
-      }
-    },
-    "secundario": {
-      "ajustes": "Ajustes",
-      "crear": "crear",
-      "cuenta": "Cuenta",
-      "graficas": "Gráficas",
-      "listados": "Listados",
-      "notificaciones": "Notificaciones",
-      "selector-modulo": "Selector de módulo"
-    }
-  },
-  "paginator": {
-    "firstPageLabel": "Primera página",
-    "itemsPerPageLabel": "Elementos por página:",
-    "lastPageLabel": "Ultima página",
-    "nextPageLabel": "Página siguiente",
-    "of": "de",
-    "previousPageLabel": "Página anterior"
-  },
-  "snackBar": {
-    "error": "Se ha producido un error"
-  },
-  "seleccionar-modulo": {
-    "titulo": "Seleccione un módulo",
-    "cancelar": "Cancelar"
-  }
+  "botones.aceptar": "botones.aceptar",
+  "botones.buscar": "Buscar",
+  "botones.cancelar": "Cancelar",
+  "botones.guardar": "Guardar",
+  "botones.limpiar": "Limpiar",
+  "cabecera.modulo.cat": "Módulo: Catálogo de oferta científico-técnica",
+  "cabecera.modulo.eti": "Módulo: Ética",
+  "cat.root.title": "Inicio",
+  "cat.servicio.abreviatura.error.maximo": "La abreviatura supera la longitud máxima",
+  "cat.servicio.abreviatura.titulo": "Abreviatura",
+  "cat.servicio.actualizar.correcto": "Servicio actualizado correctamente",
+  "cat.servicio.actualizar.error": "Error al actualizar el servicio",
+  "cat.servicio.actualizar.no-encontrado": "Error al cargar los datos del servicio",
+  "cat.servicio.actualizar.titulo": "Actualización de servicio",
+  "cat.servicio.contacto.error.maximo": "El email de contacto supera la longitud máxima",
+  "cat.servicio.contacto.titulo": "Email de contacto",
+  "cat.servicio.crear.correcto": "Servicio creado correctamente",
+  "cat.servicio.crear.error": "Error al crear el servicio",
+  "cat.servicio.crear.titulo": "Creación de servicio",
+  "cat.servicio.datos-generales": "Datos generales",
+  "cat.servicio.gestor.aniadir": "Añadir gestor",
+  "cat.servicio.gestor.existe": "El gestor ya se encuentra añadido",
+  "cat.servicio.gestor.gestor": "Gestor",
+  "cat.servicio.gestor.listado.apellidos": "Apellidos",
+  "cat.servicio.gestor.listado.dni": "Nº documento",
+  "cat.servicio.gestor.listado.nombre": "Nombre",
+  "cat.servicio.gestor.titulo.tab": "Gestores",
+  "cat.servicio.listado.abreviatura": "ABREVIATURA",
+  "cat.servicio.listado.acciones": "ACCIONES",
+  "cat.servicio.listado.borrar": "Borrar",
+  "cat.servicio.listado.contacto": "CONTACTO",
+  "cat.servicio.listado.editar": "Editar",
+  "cat.servicio.listado.eliminar": "¿Desea eliminar el servicio?",
+  "cat.servicio.listado.eliminarConfirmado": "Servicio eliminado correctamente",
+  "cat.servicio.listado.error": "No se ha podido cargar el listado de servicios",
+  "cat.servicio.listado.nombre": "NOMBRE",
+  "cat.servicio.listado.nuevo-servicio": "AÑADIR NUEVO SERVICIO",
+  "cat.servicio.listado.seccion": "SECCIÓN",
+  "cat.servicio.listado.titulo": "Servicios",
+  "cat.servicio.nombre.error.maximo": "El nombre supera la longitud máxima",
+  "cat.servicio.nombre.titulo": "Nombre",
+  "cat.servicio.seccion": "Sección",
+  "cat.solicitud.actualizar.no-encontrado": "Error al cargar los datos del servicio",
+  "cat.solicitud.actualizar.normativa.aceptar": "Acepto la normativa del Catálogo",
+  "cat.solicitud.actualizar.normativa.correcto": "La normativa se ha actualizado correctamente",
+  "cat.solicitud.actualizar.normativa.enlace": "Acceda a la normativa de Catálogo",
+  "cat.solicitud.actualizar.normativa.error": "Error al actualizar la normativa",
+  "cat.solicitud.actualizar.titulo": "Servicios alta",
+  "cat.solicitud.alta.correcto": "Servicio dado de alta correctamente",
+  "cat.solicitud.alta.error": "Error al dar el servicio de alta",
+  "cat.solicitud.listado.acciones": "ACCIONES",
+  "cat.solicitud.listado.contacto": "CONTACTO",
+  "cat.solicitud.listado.error": "No se ha podido cargar el listado de los servicios",
+  "cat.solicitud.listado.seleccionarServicio": "Seleccione el servicio en el que darse de alta",
+  "cat.solicitud.listado.servicio": "SERVICIO",
+  "cat.solicitud.listado.titulo": "Solicitud",
+  "cat.tipo-fungible.actualizar.correcto": "Tipo fungible actualizado correctamente",
+  "cat.tipo-fungible.actualizar.error": "Error al actualizar el tipo fungible",
+  "cat.tipo-fungible.actualizar.no-encontrado": "Error al cargar los datos del tipo fungible",
+  "cat.tipo-fungible.actualizar.titulo": "Actualización de tipo fungible",
+  "cat.tipo-fungible.crear.correcto": "Tipo fungible agregado correctamente",
+  "cat.tipo-fungible.crear.error": "Error al crear el tipo fungible",
+  "cat.tipo-fungible.crear.nombre.error.maximo": "El nombre supera la longitud máxima",
+  "cat.tipo-fungible.crear.nombre.error.requerido": "Introduzca el nombre",
+  "cat.tipo-fungible.crear.nombre.titulo": "Nombre",
+  "cat.tipo-fungible.crear.servicio.error.requerido": "Introduzca el servicio",
+  "cat.tipo-fungible.crear.servicio.titulo": "Servicio",
+  "cat.tipo-fungible.crear.titulo": "Creación de tipo fungible",
+  "cat.tipo-fungible.listado.acciones": "ACCIONES",
+  "cat.tipo-fungible.listado.borrar": "Borrar",
+  "cat.tipo-fungible.listado.editar": "Editar",
+  "cat.tipo-fungible.listado.eliminar": "¿Desea eliminar el tipo de fungible?",
+  "cat.tipo-fungible.listado.eliminarConfirmado": "Tipo fungible eliminado correctamente",
+  "cat.tipo-fungible.listado.error": "No se ha podido cargar el listado de los tipos fungibles",
+  "cat.tipo-fungible.listado.nombre": "NOMBRE",
+  "cat.tipo-fungible.listado.nuevo-tipo": "NUEVO TIPO FUNGIBLE",
+  "cat.tipo-fungible.listado.servicio": "SERVICIO",
+  "cat.tipo-fungible.listado.titulo": "Listado tipo de fungible",
+  "cat.tipo-reservable.actualizar.correcto": "Tipo reservable actualizado correctamente",
+  "cat.tipo-reservable.actualizar.error": "Error al actualizar el tipo reservable",
+  "cat.tipo-reservable.actualizar.no-encontrado": "Error al cargar los datos del tipo reservable",
+  "cat.tipo-reservable.actualizar.titulo": "Actualización de tipo reservable",
+  "cat.tipo-reservable.crear.correcto": "Tipo reservable agregado correctamente",
+  "cat.tipo-reservable.crear.descripcion.error.maximo": "La descripción supera la longitud máxima",
+  "cat.tipo-reservable.crear.descripcion.error.requerido": "Introduzca la descripción",
+  "cat.tipo-reservable.crear.descripcion.titulo": "Descripción",
+  "cat.tipo-reservable.crear.diasAnteMax.titulo": "Días de antelación máximo",
+  "cat.tipo-reservable.crear.diasVistaMaxCalen.titulo": "Vista máxima del calendario (días)",
+  "cat.tipo-reservable.crear.duracionMin.titulo": "Duración mínima (minutos)",
+  "cat.tipo-reservable.crear.error": "Error al crear el tipo reservable",
+  "cat.tipo-reservable.crear.estado.titulo": "Estado",
+  "cat.tipo-reservable.crear.horasAnteAnular.titulo": "Horas antelación anular usuario",
+  "cat.tipo-reservable.crear.horasAnteMin.titulo": "Horas de antelación mínima",
+  "cat.tipo-reservable.crear.reservaMulti.titulo": "Reserva múltiple",
+  "cat.tipo-reservable.crear.servicio.error.requerido": "Introduzca el servicio",
+  "cat.tipo-reservable.crear.servicio.titulo": "Servicio",
+  "cat.tipo-reservable.crear.titulo": "Creación de tipo reservable",
+  "cat.tipo-reservable.listado.acciones": "ACCIONES",
+  "cat.tipo-reservable.listado.borrar": "Borrar",
+  "cat.tipo-reservable.listado.descripcion": "DESCRIPCIÓN",
+  "cat.tipo-reservable.listado.dias": "DÍAS",
+  "cat.tipo-reservable.listado.diasAnteMax": "D.ANTEL.",
+  "cat.tipo-reservable.listado.duracionMin": "DUR.MÍN.",
+  "cat.tipo-reservable.listado.eliminar": "¿Desea eliminar el tipo de reservable?",
+  "cat.tipo-reservable.listado.eliminarConfirmado": "Tipo de reservable eliminado correctamente",
+  "cat.tipo-reservable.listado.error": "No se ha podido cargar el listado de los tipos de reservable",
+  "cat.tipo-reservable.listado.estado": "ESTADO",
+  "cat.tipo-reservable.listado.horasAnteAnular": "H.ANUL.",
+  "cat.tipo-reservable.listado.nuevo-tipo": "NUEVO TIPO DE RESERVABLE",
+  "cat.tipo-reservable.listado.servicio": "SERVICIO",
+  "cat.tipo-reservable.listado.titulo": "Listado tipo de reservable",
+  "cat.unidad-medida.actualizar.correcto": "Unidad de medida actualizada correctamente",
+  "cat.unidad-medida.actualizar.error": "Error al actualizar la unidad de medida",
+  "cat.unidad-medida.actualizar.no-encontrado": "Error al cargar los datos de la unidad de medida",
+  "cat.unidad-medida.actualizar.titulo": "Actualización de unidad de medida",
+  "cat.unidad-medida.crear.abreviatura.error.maximo": "La abreviatura supera la longitud máxima",
+  "cat.unidad-medida.crear.abreviatura.error.minimo": "La abreviatura no supera la longitud mínima",
+  "cat.unidad-medida.crear.abreviatura.error.requerido": "Introduzca la abreviatura",
+  "cat.unidad-medida.crear.abreviatura.titulo": "Abreviatura",
+  "cat.unidad-medida.crear.correcto": "Unidad de medida agregada correctamente",
+  "cat.unidad-medida.crear.descripcion.error.maximo": "La descripción supera la longitud máxima",
+  "cat.unidad-medida.crear.descripcion.error.requerido": "Introduzca la descripción",
+  "cat.unidad-medida.crear.descripcion.titulo": "Descripción",
+  "cat.unidad-medida.crear.error": "Error al crear la unidad de medida",
+  "cat.unidad-medida.crear.titulo": "Creación de unidad de medida",
+  "cat.unidad-medida.listado.abreviatura": "ABREVIATURA",
+  "cat.unidad-medida.listado.acciones": "ACCIONES",
+  "cat.unidad-medida.listado.borrar": "Borrar",
+  "cat.unidad-medida.listado.descripcion": "DESCRIPCIÓN",
+  "cat.unidad-medida.listado.editar": "Editar",
+  "cat.unidad-medida.listado.eliminar": "¿Desea eliminar el producto?",
+  "cat.unidad-medida.listado.eliminarConfirmado": "Unidad de medida eliminada correctamente",
+  "cat.unidad-medida.listado.error": "No se ha podido cargar el listado de unidades de medida",
+  "cat.unidad-medida.listado.nueva-unidad": "NUEVA UNIDAD DE MEDIDA",
+  "cat.unidad-medida.listado.titulo": "Listado unidad de medida",
+  "eti.acta.crear.asistentes.acciones": "Acciones",
+  "eti.acta.crear.asistentes.asistencia.no": "No",
+  "eti.acta.crear.asistentes.asistencia.si": "Sí",
+  "eti.acta.crear.asistentes.asistencia.titulo": "Asistencia",
+  "eti.acta.crear.asistentes.cabecera": "Asistentes",
+  "eti.acta.crear.asistentes.motivo": "Motivo no Asistencia",
+  "eti.acta.crear.asistentes.nif": "NIF/NIE",
+  "eti.acta.crear.asistentes.nombreApellidos": "Nombre y apellidos",
+  "eti.acta.crear.correcto": "Se ha creado correctamente el acta",
+  "eti.acta.crear.datosGenerales.cabecera": "Datos Generales",
+  "eti.acta.crear.datosGenerales.convocatoriaReunion.error.cargar": "No se han podido cargar las reuniones de evaluación",
+  "eti.acta.crear.datosGenerales.convocatoriaReunion.error.vacio": "Seleccione una reunión de evaluación",
+  "eti.acta.crear.datosGenerales.convocatoriaReunion.titulo": "Reunión de evaluación",
+  "eti.acta.crear.datosGenerales.horaFin.error.NaN": "La hora fin no es número",
+  "eti.acta.crear.datosGenerales.horaFin.error.noValido": "No es válido la hora fin",
+  "eti.acta.crear.datosGenerales.horaFin.error.vacio": "Introduzca la hora fin",
+  "eti.acta.crear.datosGenerales.horaFin.titulo": "Hora Fin",
+  "eti.acta.crear.datosGenerales.horaInicio.error.NaN": "La hora inicio no es número",
+  "eti.acta.crear.datosGenerales.horaInicio.error.noValido": "No es válido la hora inicio",
+  "eti.acta.crear.datosGenerales.horaInicio.error.vacio": "Introduzca la hora inicio",
+  "eti.acta.crear.datosGenerales.horaInicio.titulo": "Hora Inicio",
+  "eti.acta.crear.datosGenerales.minutoFin.error.NaN": "El minuto fin no es número",
+  "eti.acta.crear.datosGenerales.minutoFin.error.noValido": "No es válido el minuto fin",
+  "eti.acta.crear.datosGenerales.minutoFin.error.vacio": "Introduzca el minuto fin",
+  "eti.acta.crear.datosGenerales.minutoFin.titulo": "Minuto Fin",
+  "eti.acta.crear.datosGenerales.minutoInicio.error.NaN": "El minuto inicio no es número",
+  "eti.acta.crear.datosGenerales.minutoInicio.error.noValido": "No es válido el minuto inicio",
+  "eti.acta.crear.datosGenerales.minutoInicio.error.vacio": "Introduzca el minuto inicio",
+  "eti.acta.crear.datosGenerales.minutoInicio.titulo": "Minuto Inicio",
+  "eti.acta.crear.datosGenerales.resumen.error.required": "Introduzca un resumen",
+  "eti.acta.crear.datosGenerales.resumen.titulo": "Resumen",
+  "eti.acta.crear.error": "Ha ocurrido un problema al guardar el acta",
+  "eti.acta.crear.memorias.cabecera": "Memorias",
+  "eti.acta.crear.memorias.dictamen": "Dictamen",
+  "eti.acta.crear.memorias.informe": "Informe",
+  "eti.acta.crear.memorias.referencia": "Referencia memoria",
+  "eti.acta.crear.memorias.version": "Versión",
+  "eti.acta.crear.titulo": "Nueva acta",
+  "eti.acta.editar.asistentes.cabecera": "Asistentes",
+  "eti.acta.editar.correcto": "Acta actualizada correctamente",
+  "eti.acta.editar.datosGenerales.cabecera": "Datos Generales",
+  "eti.acta.editar.error": "Ha ocurrido un problema al editar el acta",
+  "eti.acta.editar.memorias.cabecera": "Memorias",
+  "eti.acta.editar.no-encontrado": "Error al cargar los datos del acta",
+  "eti.acta.editar.titulo": "Editar acta",
+  "eti.acta.listado.acciones": "Acciones",
+  "eti.acta.listado.comite": "Comité",
+  "eti.acta.listado.convocatoria": "Convocatoria",
+  "eti.acta.listado.editar": "Editar",
+  "eti.acta.listado.error": "No se ha podido cargar el listado de actas",
+  "eti.acta.listado.estado": "Estado",
+  "eti.acta.listado.fechaEvaluacion": "Fecha Evaluación",
+  "eti.acta.listado.fechaEvaluacion.fin": "eti.acta.listado.fechaEvaluacion.fin",
+  "eti.acta.listado.fechaEvaluacion.inicio": "eti.acta.listado.fechaEvaluacion.inicio",
+  "eti.acta.listado.numeroActa": "Nº Acta",
+  "eti.acta.listado.numeroIniciales": "Nº Iniciales",
+  "eti.acta.listado.numeroRevisiones": "Nº Revisiones",
+  "eti.acta.listado.numeroTotal": "Nº Total",
+  "eti.acta.listado.titulo": "Actas",
+  "eti.convocatoriaReunion.buscador.comite.titulo": "Comité",
+  "eti.convocatoriaReunion.buscador.fechaEvaluacionDesde.titulo": "Fecha evaluación desde",
+  "eti.convocatoriaReunion.buscador.fechaEvaluacionHasta.titulo": "Fecha evaluación hasta",
+  "eti.convocatoriaReunion.buscador.tipoConvocatoriaReunion.titulo": "Convocatoria",
+  "eti.convocatoriaReunion.crear.correcto": "Se ha creado correctamente la convocatoria",
+  "eti.convocatoriaReunion.crear.error": "Ha ocurrido un problema al guardar la convocatoria",
+  "eti.convocatoriaReunion.crear.titulo": "Nueva convocatoria",
+  "eti.convocatoriaReunion.formulario.datosGenerales.cabecera": "Datos Generales",
+  "eti.convocatoriaReunion.formulario.datosGenerales.comite.error.cargar": "No se han podido cargar los comites",
+  "eti.convocatoriaReunion.formulario.datosGenerales.comite.error.vacio": "Seleccione un comite",
+  "eti.convocatoriaReunion.formulario.datosGenerales.comite.titulo": "Comité",
+  "eti.convocatoriaReunion.formulario.datosGenerales.convocantes.error.cargar": "No se han podido cargar los convocantes",
+  "eti.convocatoriaReunion.formulario.datosGenerales.convocantes.titulo": "Convocantes",
+  "eti.convocatoriaReunion.formulario.datosGenerales.fechaEvaluacion.error.vacio": "Introduzca la fecha de evaluación",
+  "eti.convocatoriaReunion.formulario.datosGenerales.fechaEvaluacion.titulo": "Fecha evaluación",
+  "eti.convocatoriaReunion.formulario.datosGenerales.fechaLimite.error.vacio": "Introduzca la fecha límite",
+  "eti.convocatoriaReunion.formulario.datosGenerales.fechaLimite.titulo": "Fecha límite",
+  "eti.convocatoriaReunion.formulario.datosGenerales.horaInicio.error.NaN": "La hora inicio no es número",
+  "eti.convocatoriaReunion.formulario.datosGenerales.horaInicio.error.noValido": "No es válido la hora inicio",
+  "eti.convocatoriaReunion.formulario.datosGenerales.horaInicio.error.vacio": "Introduzca la hora inicio",
+  "eti.convocatoriaReunion.formulario.datosGenerales.horaInicio.titulo": "Hora Inicio",
+  "eti.convocatoriaReunion.formulario.datosGenerales.lugar.error.required": "Introduzca un lugar",
+  "eti.convocatoriaReunion.formulario.datosGenerales.lugar.titulo": "Lugar",
+  "eti.convocatoriaReunion.formulario.datosGenerales.minutoInicio.error.NaN": "El minuto inicio no es número",
+  "eti.convocatoriaReunion.formulario.datosGenerales.minutoInicio.error.noValido": "No es válido el minuto inicio",
+  "eti.convocatoriaReunion.formulario.datosGenerales.minutoInicio.error.vacio": "Introduzca el minuto inicio",
+  "eti.convocatoriaReunion.formulario.datosGenerales.minutoInicio.titulo": "Minuto Inicio",
+  "eti.convocatoriaReunion.formulario.datosGenerales.ordenDia.error.required": "Introduzca un orden del día",
+  "eti.convocatoriaReunion.formulario.datosGenerales.ordenDia.titulo": "Orden del día",
+  "eti.convocatoriaReunion.formulario.datosGenerales.tipoConvocatoriaReunion.error.cargar": "No se han podido cargar las convocatorias",
+  "eti.convocatoriaReunion.formulario.datosGenerales.tipoConvocatoriaReunion.error.vacio": "Seleccione una convocatoria",
+  "eti.convocatoriaReunion.formulario.datosGenerales.tipoConvocatoriaReunion.titulo": "Convocatoria",
+  "eti.convocatoriaReunion.listado.acciones": "Acciones",
+  "eti.convocatoriaReunion.listado.borrar": "Borrar",
+  "eti.convocatoriaReunion.listado.codigo": "Código",
+  "eti.convocatoriaReunion.listado.comite": "Comité",
+  "eti.convocatoriaReunion.listado.editar": "Editar",
+  "eti.convocatoriaReunion.listado.eliminar": "¿Desea eliminar la convocatoria?",
+  "eti.convocatoriaReunion.listado.eliminarConfirmado": "Convocatoria eliminada correctamente",
+  "eti.convocatoriaReunion.listado.enviar": "Enviar",
+  "eti.convocatoriaReunion.listado.error": "No se ha podido cargar el listado de convocatorias",
+  "eti.convocatoriaReunion.listado.fechaEnvio": "Fecha envío",
+  "eti.convocatoriaReunion.listado.fechaEvaluacion": "Fecha evaluación",
+  "eti.convocatoriaReunion.listado.hora": "Hora",
+  "eti.convocatoriaReunion.listado.lugar": "Lugar",
+  "eti.convocatoriaReunion.listado.nuevaConvocatoriaReunion": "Añadir nueva convocatoria",
+  "eti.convocatoriaReunion.listado.tipoConvocatoriaReunion": "Convocatoria",
+  "eti.convocatoriaReunion.listado.titulo": "Convocatorias",
+  "eti.evaluacion.listado.buscador.comite": "Comite",
+  "eti.evaluacion.listado.buscador.fechaEvaluacionFin": "Fecha de evaluación hasta",
+  "eti.evaluacion.listado.buscador.fechaEvaluacionInicio": "Fecha de evaluación desde",
+  "eti.evaluacion.listado.buscador.memoriaNumReferencia": "Referencia memoria",
+  "eti.evaluacion.listado.buscador.tipoConvocatoria.error": "Error al cargar los tipos de convocatoria",
+  "eti.evaluacion.listado.buscador.tipoConvocatoria.titulo": "Tipo de Convocatoria",
+  "eti.evaluacion.listado.comite": "Comite",
+  "eti.evaluacion.listado.error": "Error al listas las evaluaciones",
+  "eti.evaluacion.listado.fechaEvaluacion": "Fecha Evaluación",
+  "eti.evaluacion.listado.referenciaMemoria": "Referencia memoria",
+  "eti.evaluacion.listado.solicitante": "Solicitante",
+  "eti.evaluacion.listado.titulo": "Listado de evaluaciones",
+  "eti.evaluacion.listado.version": "Versión",
+  "eti.root.title": "Inicio",
+  "footer.eti.acta.actualizar": "Actualizar",
+  "footer.eti.acta.crear": "Nueva",
+  "footer.eti.acta.guardar": "Guardar",
+  "footer.eti.convocatoriaReunion.guardar": "Guardar convocatoria",
+  "form-group.error": "Se han encontrado errores en el formulario. Por favor revíselo",
+  "menu.principal.cat.agrupaciones-servicios": "Agrupaciones de servicios",
+  "menu.principal.cat.solicitudes": "Solicitudes",
+  "menu.principal.cat.tipos-fungibles": "Tipos de fungible",
+  "menu.principal.cat.tipos-reservables": "Tipos de reservable",
+  "menu.principal.cat.unidades-medida": "Unidades de medida",
+  "menu.principal.eti.acta": "Actas",
+  "menu.principal.eti.evaluaciones": "Evaluaciones",
+  "menu.principal.eti.solicitudesConvocatoria": "Solicitudes de convocatoria",
+  "menu.secundario.ajustes": "Ajustes",
+  "menu.secundario.cuenta": "Cuenta",
+  "menu.secundario.graficas": "Gráficas",
+  "menu.secundario.listados": "Listados",
+  "menu.secundario.notificaciones": "Notificaciones",
+  "menu.secundario.selector-modulo": "Selector de módulo",
+  "paginator.firstPageLabel": "Primera página",
+  "paginator.itemsPerPageLabel": "Elementos por página:",
+  "paginator.lastPageLabel": "Ultima página",
+  "paginator.nextPageLabel": "Página siguiente",
+  "paginator.of": "de",
+  "paginator.previousPageLabel": "Página anterior",
+  "seleccionar-modulo.cancelar": "Cancelar",
+  "seleccionar-modulo.titulo": "Seleccione un módulo",
+  "selector-modulo.catalogo": "Catálogo",
+  "selector-modulo.etica": "Ética"
 }

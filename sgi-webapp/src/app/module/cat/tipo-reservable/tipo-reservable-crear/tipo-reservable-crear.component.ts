@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -13,6 +14,11 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
+
+const MSG_ERROR = marker('cat.tipo-reservable.crear.error');
+const MSG_ERROR_FORM = marker('form-group.error');
+const MSG_SUCCESS = marker('cat.tipo-reservable.crear.correcto');
+const MSG_ERROR_NOT_FOUND = marker('cat.tipo-reservable.actualizar.no-encontrado');
 
 @Component({
   selector: 'sgi-tipo-reservable-crear',
@@ -174,7 +180,7 @@ export class TipoReservableCrearComponent implements OnInit, OnDestroy {
         () => {
           // Añadimos esta comprobación para que no nos eche al crear uno nuevo
           if (id) {
-            this.snackBarService.showSuccess('cat.tipo-reservable.actualizar.no-encontrado');
+            this.snackBarService.showSuccess(MSG_ERROR_NOT_FOUND);
             this.router.navigate(['../'], { relativeTo: this.route });
           }
           this.logger.debug(
@@ -240,7 +246,7 @@ export class TipoReservableCrearComponent implements OnInit, OnDestroy {
     if (FormGroupUtil.valid(this.formGroup)) {
       this.sendApi();
     } else {
-      this.snackBarService.showError('form-group.error');
+      this.snackBarService.showError(MSG_ERROR_FORM);
     }
     this.logger.debug(
       TipoReservableCrearComponent.name,
@@ -280,7 +286,7 @@ export class TipoReservableCrearComponent implements OnInit, OnDestroy {
     );
     this.tipoReservableServiceCreateSubscription = this.tipoReservableService.create(this.tipoReservable).subscribe(
       () => {
-        this.snackBarService.showSuccess('cat.tipo-reservable.crear.correcto');
+        this.snackBarService.showSuccess(MSG_SUCCESS);
         this.router.navigate(['../'], { relativeTo: this.route });
         this.logger.debug(
           TipoReservableCrearComponent.name,
@@ -289,7 +295,7 @@ export class TipoReservableCrearComponent implements OnInit, OnDestroy {
         );
       },
       () => {
-        this.snackBarService.showError('cat.tipo-reservable.crear.error');
+        this.snackBarService.showError(MSG_ERROR);
         this.desactivarAceptar = false;
         this.logger.debug(
           TipoReservableCrearComponent.name,

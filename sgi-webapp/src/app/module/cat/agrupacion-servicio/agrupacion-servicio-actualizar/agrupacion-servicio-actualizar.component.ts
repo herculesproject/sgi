@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -21,6 +22,10 @@ import {
   AgrupacionServicioGestorComponent,
 } from '../agrupacion-servicio-formulario/agrupacion-servicio-gestor/agrupacion-servicio-gestor.component';
 
+const MSG_ERROR_NOT_FOUND = marker('cat.servicio.actualizar.no-encontrado');
+const MSG_ERROR_FORM = marker('form-group.error');
+const MSG_SUCCESS = marker('cat.servicio.actualizar.correcto');
+const MSG_ERROR = marker('cat.servicio.actualizar.error');
 
 @Component({
   selector: 'sgi-agrupacion-servicio-actualizar',
@@ -114,7 +119,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
             filters: [this.filter]
           });
         } else {
-          this.snackBarService.showSuccess('cat.servicio.actualizar.no-encontrado');
+          this.snackBarService.showError(MSG_ERROR_NOT_FOUND);
           this.router.navigate(['../'], { relativeTo: this.route });
           return of(null);
         }
@@ -126,7 +131,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
         }
       },
       () => {
-        this.snackBarService.showError('cat.servicio.actualizar.no-encontrado');
+        this.snackBarService.showError(MSG_ERROR_NOT_FOUND);
         this.router.navigate(['../'], { relativeTo: this.route });
       });
     this.logger.debug(AgrupacionServicioActualizarComponent.name, 'getServicio()', 'end');
@@ -144,7 +149,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
     if (FormGroupUtil.valid(this.formGroup)) {
       this.actualizarServicio();
     } else {
-      this.snackBarService.showError('form-group.error');
+      this.snackBarService.showError(MSG_ERROR_FORM);
     }
     this.logger.debug(AgrupacionServicioActualizarComponent.name,
       'enviarForm()',
@@ -185,7 +190,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
         })
       ).subscribe(
         () => {
-          this.snackBarService.showSuccess('cat.servicio.actualizar.correcto');
+          this.snackBarService.showSuccess(MSG_SUCCESS);
           this.router.navigate(['../'], { relativeTo: this.route });
           this.logger.debug(
             AgrupacionServicioActualizarComponent.name,
@@ -194,7 +199,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
           );
         },
         () => {
-          this.snackBarService.showError('cat.servicio.actualizar.error');
+          this.snackBarService.showError(MSG_ERROR);
           this.desactivarAceptar = false;
           this.logger.debug(
             AgrupacionServicioActualizarComponent.name,

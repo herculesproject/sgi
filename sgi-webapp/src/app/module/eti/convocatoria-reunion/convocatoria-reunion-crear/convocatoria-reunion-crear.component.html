@@ -4,7 +4,7 @@
     <mat-tab>
       <ng-template mat-tab-label>
         <sgi-generic-tab-label [abstractTab]="datosGenerales" [errors]="errorTabs[0]"
-          textoLabel="eti.convocatoriaReunion.formulario.datosGenerales.cabecera">
+          [textoLabel]="'eti.convocatoriaReunion.formulario.datosGenerales.cabecera' | translate">
         </sgi-generic-tab-label>
       </ng-template>
       <sgi-convocatoria-reunion-datos-generales #datosGenerales (eventEmitter)="setErroresTab(0, $event)">

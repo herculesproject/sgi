@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -21,7 +22,9 @@ import {
   AgrupacionServicioGestorComponent,
 } from '../agrupacion-servicio-formulario/agrupacion-servicio-gestor/agrupacion-servicio-gestor.component';
 
-
+const MSG_ERROR_FORM = marker('form-group.error');
+const MSG_SUCCESS = marker('cat.servicio.crear.correcto');
+const MSG_ERROR = marker('cat.servicio.crear.error');
 
 @Component({
   selector: 'sgi-agrupacion-servicio-crear',
@@ -91,7 +94,7 @@ export class AgrupacionServicioCrearComponent implements OnInit, OnDestroy {
     if (FormGroupUtil.valid(this.formGroup)) {
       this.crearServicio();
     } else {
-      this.snackBarService.showError('form-group.error');
+      this.snackBarService.showError(MSG_ERROR_FORM);
     }
     this.logger.debug(AgrupacionServicioCrearComponent.name,
       'enviarForm()',
@@ -136,7 +139,7 @@ export class AgrupacionServicioCrearComponent implements OnInit, OnDestroy {
       })
     ).subscribe(
       () => {
-        this.snackBarService.showSuccess('cat.servicio.crear.correcto');
+        this.snackBarService.showSuccess(MSG_SUCCESS);
         this.router.navigate(['../'], { relativeTo: this.route });
         this.logger.debug(
           AgrupacionServicioCrearComponent.name,
@@ -145,7 +148,7 @@ export class AgrupacionServicioCrearComponent implements OnInit, OnDestroy {
         );
       },
       () => {
-        this.snackBarService.showError('cat.servicio.crear.error');
+        this.snackBarService.showError(MSG_ERROR);
         this.desactivarAceptar = false;
         this.logger.debug(
           AgrupacionServicioCrearComponent.name,

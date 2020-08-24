@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,6 +10,11 @@ import { UnidadMedidaService } from '@core/services/cat/unidad-medida.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
+
+const MSG_ERROR_NOT_FOUND = marker('cat.unidad-medida.actualizar.no-encontrado');
+const MSG_ERROR_FORM = marker('form-group.error');
+const MSG_SUCCESS = marker('cat.unidad-medida.actualizar.correcto');
+const MSG_ERROR = marker('cat.unidad-medida.actualizar.error');
 
 @Component({
   selector: 'sgi-unidad-medida-actualizar',
@@ -117,7 +123,7 @@ export class UnidadMedidaActualizarComponent implements OnInit, OnDestroy {
             );
           },
           () => {
-            this.snackBarService.showSuccess('cat.unidad-medida.actualizar.no-encontrado');
+            this.snackBarService.showError(MSG_ERROR_NOT_FOUND);
             this.router.navigate(['../'], { relativeTo: this.route });
             this.logger.debug(
               UnidadMedidaActualizarComponent.name,
@@ -143,7 +149,7 @@ export class UnidadMedidaActualizarComponent implements OnInit, OnDestroy {
     if (FormGroupUtil.valid(this.formGroup)) {
       this.enviarApi();
     } else {
-      this.snackBarService.showError('form-group.error');
+      this.snackBarService.showError(MSG_ERROR_FORM);
     }
     this.logger.debug(
       UnidadMedidaActualizarComponent.name,
@@ -167,7 +173,7 @@ export class UnidadMedidaActualizarComponent implements OnInit, OnDestroy {
       .update(this.unidadMedida.id, this.unidadMedida)
       .subscribe(
         () => {
-          this.snackBarService.showSuccess('cat.unidad-medida.actualizar.correcto');
+          this.snackBarService.showSuccess(MSG_SUCCESS);
           this.router.navigate(['../'], { relativeTo: this.route });
           this.logger.debug(
             UnidadMedidaActualizarComponent.name,
@@ -176,7 +182,7 @@ export class UnidadMedidaActualizarComponent implements OnInit, OnDestroy {
           );
         },
         () => {
-          this.snackBarService.showError('cat.unidad-medida.actualizar.error');
+          this.snackBarService.showError(MSG_ERROR);
           this.desactivarAceptar = false;
           this.logger.debug(
             UnidadMedidaActualizarComponent.name,

@@ -9,9 +9,9 @@ import { LayoutService, BreadcrumbData } from '@core/services/layout.service';
   styleUrls: ['./breadcrumb.component.scss']
 })
 export class BreadcrumbComponent implements OnInit, OnDestroy {
-  private subscription: Subscription;
-  data: BreadcrumbData;
-
+  private subscriptions: Subscription[] = [];
+  data: BreadcrumbData[];
+  title: string;
   constructor(
     private readonly logger: NGXLogger,
     private layoutService: LayoutService
@@ -19,13 +19,14 @@ export class BreadcrumbComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.logger.debug(BreadcrumbComponent.name, 'ngOnInit()', 'start');
-    this.subscription = this.layoutService.breadcrumData$.subscribe((data) => this.data = data);
+    this.subscriptions.push(this.layoutService.breadcrumData$.subscribe((data) => this.data = data));
+    this.subscriptions.push(this.layoutService.title$.subscribe((title) => this.title = title));
     this.logger.debug(BreadcrumbComponent.name, 'ngOnInit()', 'end');
   }
 
   ngOnDestroy(): void {
     this.logger.debug(BreadcrumbComponent.name, 'ngOnDestroy()', 'start');
-    this.subscription?.unsubscribe();
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
     this.logger.debug(BreadcrumbComponent.name, 'ngOnDestroy()', 'end');
   }
 

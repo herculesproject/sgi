@@ -1,19 +1,18 @@
 <!-- BREADCRUMB -->
 <section class="migas">
-  <nav class="breadcrumb" *ngIf="data?.segments">
+  <nav class="breadcrumb" *ngIf="data">
     <ol class="breadcrumb__list r-list">
-      <li class="breadcrumb__group" *ngFor="let segment of data.segments; let i = index">
-        <a [routerLink]="segment.path" class="breadcrumb__point r-link"
-          *ngIf="i < data.segments.length">{{'breadcrumb.' + segment.title | translate}}</a>
-        <span class="breadcrumb__divider" aria-hidden="true" *ngIf="i < data.segments.length - 1">
+      <li class="breadcrumb__group" *ngFor="let segment of data let i = index">
+        <a [routerLink]="segment.path" class="breadcrumb__point r-link">{{segment.title | translate}}</a>
+        <span class="breadcrumb__divider" aria-hidden="true" *ngIf="i < data.length - 1">
           <img class="chevron" src="assets/icons/chevron_right.svg" alt="" />
         </span>
       </li>
     </ol>
   </nav>
-  <div class="title" *ngIf="data?.title">
+  <div class="title" *ngIf="title">
     <h2>
-      {{'breadcrumb.' + data.title | translate}}
+      {{title | translate}}
     </h2>
   </div>
 </section>

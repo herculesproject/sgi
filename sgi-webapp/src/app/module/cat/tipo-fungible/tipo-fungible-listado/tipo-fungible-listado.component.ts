@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component } from '@angular/core';
 import { TipoFungible } from '@core/models/cat/tipo-fungible';
 import { TipoFungibleService } from '@core/services/cat/tipo-fungible.service';
@@ -9,6 +10,10 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ROUTE_NAMES } from '@core/route.names';
+
+const MSG_SUCCESS_DELETE = marker('cat.tipo-fungible.listado.eliminarConfirmado');
+const MSG_CONFIRM_DELETE = marker('cat.tipo-fungible.listado.eliminar');
+const MSG_ERROR = marker('cat.tipo-fungible.listado.error');
 
 @Component({
   selector: 'sgi-tipo-fungible-listado',
@@ -46,7 +51,7 @@ export class TipoFungibleListadoComponent extends AbstractPaginacionComponent<Ti
 
   protected mostrarMensajeErrorLoadTable(): void {
     this.logger.debug(TipoFungibleListadoComponent.name, 'mostrarMensajeErrorLoadTable()', 'start');
-    this.snackBarService.showError('cat.tipo-fungible.listado.error');
+    this.snackBarService.showError(MSG_ERROR);
     this.logger.debug(TipoFungibleListadoComponent.name, 'mostrarMensajeErrorLoadTable()', 'end');
   }
 
@@ -61,7 +66,7 @@ export class TipoFungibleListadoComponent extends AbstractPaginacionComponent<Ti
     );
 
     this.subscripciones.push(this.dialogService.showConfirmation(
-      'cat.tipo-fungible.listado.eliminar'
+      MSG_CONFIRM_DELETE
     ).subscribe(
       (aceptado) => {
         if (aceptado) {
@@ -72,7 +77,7 @@ export class TipoFungibleListadoComponent extends AbstractPaginacionComponent<Ti
               })
             )
             .subscribe(() => {
-              this.snackBarService.showSuccess('tipo-fungible.listado.eliminarConfirmado');
+              this.snackBarService.showSuccess(MSG_SUCCESS_DELETE);
             })
           );
         }

@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -12,6 +13,9 @@ import { merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { ROUTE_NAMES } from '@core/route.names';
 
+const MSG_SUCCESS_DELETE = marker('cat.tipo-reservable.listado.eliminarConfirmado');
+const MSG_CONFIRM_DELETE = marker('cat.tipo-reservable.listado.eliminar');
+const MSG_ERROR = marker('cat.tipo-reservable.listado.error');
 
 @Component({
   selector: 'sgi-tipo-reservable-listado',
@@ -107,7 +111,7 @@ export class TipoReservableListadoComponent implements AfterViewInit, OnDestroy 
           // On error reset pagination values
           this.paginator.firstPage();
           this.totalElementos = 0;
-          this.snackBarService.showError('cat.tipo-reservable.listado.error');
+          this.snackBarService.showError(MSG_ERROR);
           this.logger.debug(TipoReservableListadoComponent.name, 'loadTable()', 'end');
           return of([]);
         })
@@ -163,7 +167,7 @@ export class TipoReservableListadoComponent implements AfterViewInit, OnDestroy 
       'borrarSeleccionado(tipoReservableId: number) - start');
 
     this.dialogServiceSubscriptionGetSubscription = this.dialogService.showConfirmation(
-      'cat.tipo-reservable.listado.eliminar'
+      MSG_CONFIRM_DELETE
     ).subscribe(
       (aceptado) => {
         if (aceptado) {
@@ -174,7 +178,7 @@ export class TipoReservableListadoComponent implements AfterViewInit, OnDestroy 
                 return this.loadTable();
               })
             ).subscribe(() => {
-              this.snackBarService.showSuccess('tipo-reservable.listado.eliminarConfirmado');
+              this.snackBarService.showSuccess(MSG_SUCCESS_DELETE);
             });
         }
         aceptado = false;

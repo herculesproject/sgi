@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractFormularioComponent } from '@core/component/abstract-formulario.component';
 import { NGXLogger } from 'ngx-logger';
@@ -10,7 +11,11 @@ import { switchMap } from 'rxjs/operators';
 import { ActaService } from '@core/services/eti/acta.service';
 import { of } from 'rxjs';
 import { Acta } from '@core/models/eti/acta';
-import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+
+const MSG_BUTTON_EDIT = marker('footer.eti.acta.actualizar');
+const MSG_SUCCESS = marker('eti.acta.editar.correcto');
+const MSG_ERROR = marker('eti.acta.editar.error');
+const MSG_NOT_FOUND = marker('eti.acta.editar.no-encontrado');
 
 @Component({
   selector: 'sgi-acta-editar',
@@ -23,7 +28,7 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
   @ViewChild('memorias', { static: true }) memorias: ActaMemoriasComponent;
   @ViewChild('asistentes', { static: true }) asistentes: ActaAsistentesComponent;
 
-  textoCrear = 'footer.eti.acta.actualizar';
+  textoCrear = MSG_BUTTON_EDIT;
 
   idConvocatoria: number;
 
@@ -80,7 +85,7 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
         }
       },
       () => {
-        this.snackBarService.showError('eti.acta.editar.no-encontrado');
+        this.snackBarService.showError(MSG_NOT_FOUND);
         this.router.navigate(['../'], { relativeTo: this.route });
       }));
     this.logger.debug(ActaEditarComponent.name, 'getActa()', 'end');
@@ -108,7 +113,7 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
           this.tabs.get(0).actualizarDatos(acta);
           this.tabs.get(0).warning = false;
 
-          this.snackBarService.showSuccess('eti.acta.editar.correcto');
+          this.snackBarService.showSuccess(MSG_SUCCESS);
           this.router.navigate(['../'], { relativeTo: this.route });
           this.logger.debug(ActaEditarComponent.name, 'enviarDatos()', 'end');
 
@@ -116,7 +121,7 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
           () => {
             // Si falla mostramos el error en la pestaña
             this.tabs.get(0).mostrarError();
-            this.snackBarService.showError('eti.acta.editar.error');
+            this.snackBarService.showError(MSG_ERROR);
             this.logger.error(ActaEditarComponent.name, 'enviarDatos()', 'end');
           }
         )

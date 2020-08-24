@@ -46,17 +46,17 @@
     <!-- FIN navbar pantallas grandes -->
 
     <!-- Modulos app -->
-    <!-- <div fxLayoutAlign.sm="center center" fxLayoutAlign.xs="center center" fxFlex.xs="0 1 calc(100%-10px)"
+    <div fxLayoutAlign.sm="center center" fxLayoutAlign.xs="center center" fxFlex.xs="0 1 calc(100%-10px)"
       fxFlex.sm="0 1 calc(100%-10px)" fxFlex.md="0 1 calc(33%-10px)" fxFlex.gt-md="0 1 calc(33%-10px)">
       <div class="select-modulo" id="seleccionarModulo">
-        {{nombreModulo | translate}}
+        {{module?.title | translate}}
       </div>
-    </div>-->
+    </div>
     <!-- FIN Modulos sgi-->
 
     <!-- Menu secundario pantallas grandes (md,lg,xl) -->
     <div fxHide fxShow.md fxShow.lg fxShow.xl fxFlex.sm="0 1 calc(50%-10px)" fxFlex.md="0 1 calc(33%-10px)"
-      fxFlex.gt-md="0 1 calc(67%-10px)">
+      fxFlex.gt-md="0 1 calc(33%-10px)">
       <div fxLayoutAlign="flex-end" class="icons-options desktop">
         <sgi-navbar class="inline"></sgi-navbar>
       </div>

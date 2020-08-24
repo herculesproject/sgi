@@ -1,5 +1,5 @@
 <section class="generic-tab">
-  <span>{{ textoLabel | translate }}</span>
+  <span>{{ textoLabel }}</span>
   <mat-icon *ngIf="abstractTab?.warning" aria-hidden="false" class="icons warning-icon">warning</mat-icon>
   <mat-icon *ngIf="abstractTab?.error" aria-hidden="false" class=" icons danger-icon">error</mat-icon>
   <span class="icons" [matBadge]="errors" matBadgeOverlap="false"></span>

@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Comite } from '@core/models/eti/comite';
@@ -17,7 +18,9 @@ import { AbstractPaginacionComponent } from '@core/component/abstract-paginacion
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { ROUTE_NAMES } from '@core/route.names';
+
+const MSG_ERROR = marker('eti.evaluacion.listado.error');
+const MSG_ERROR_LOAD_TIPOS_CONVOCATORIA = marker('eti.evaluacion.listado.buscador.tipoConvocatoria.error');
 
 class EvaluacionListado extends Evaluacion {
   persona: Persona;
@@ -102,7 +105,7 @@ export class EvaluacionListadoComponent extends AbstractPaginacionComponent<Eval
           }
         },
         () => {
-          this.snackBarService.showError('eti.evaluacion.listado.error');
+          this.snackBarService.showError(MSG_ERROR);
         })
     );
     this.logger.debug(EvaluacionListadoComponent.name, `loadTable(${reset})`, 'end');
@@ -130,7 +133,7 @@ export class EvaluacionListadoComponent extends AbstractPaginacionComponent<Eval
 
   protected mostrarMensajeErrorLoadTable(): void {
     this.logger.debug(EvaluacionListadoComponent.name, 'mostrarMensajeErrorLoadTable()', 'start');
-    this.snackBarService.showError('eti.evaluacion.listado.error');
+    this.snackBarService.showError(MSG_ERROR);
     this.logger.debug(EvaluacionListadoComponent.name, 'mostrarMensajeErrorLoadTable()', 'end');
   }
 
@@ -169,7 +172,7 @@ export class EvaluacionListadoComponent extends AbstractPaginacionComponent<Eval
           this.tiposConvocatoriaReunion = res.items;
         },
         () => {
-          this.snackBarService.showError('eti.evaluacion.listado.buscador.tipoConvocatoria.error');
+          this.snackBarService.showError(MSG_ERROR_LOAD_TIPOS_CONVOCATORIA);
         }
       )
     );

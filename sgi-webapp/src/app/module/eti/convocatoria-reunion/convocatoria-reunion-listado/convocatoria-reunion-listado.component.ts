@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
 import { DateUtils } from '@core/utils/date-utils';
 import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
@@ -19,6 +20,11 @@ import { ComiteService } from '@core/services/eti/comite.service';
 import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocatoria-reunion.service';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
 import { ROUTE_NAMES } from '@core/route.names';
+
+const MSG_BUTTON_NEW = marker('eti.convocatoriaReunion.listado.nuevaConvocatoriaReunion');
+const MSG_ERROR = marker('eti.convocatoriaReunion.listado.error');
+const MSG_CONFIRMATION_DELETE = marker('eti.convocatoriaReunion.listado.eliminar');
+const MSG_SUCCESS_DELETE = marker('eti.convocatoriaReunion.listado.eliminarConfirmado');
 
 @Component({
   selector: 'sgi-convocatoria-reunion-listado',
@@ -46,7 +52,7 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  textoCrear = 'eti.convocatoriaReunion.listado.nuevaConvocatoriaReunion';
+  textoCrear = MSG_BUTTON_NEW;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -277,7 +283,7 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
           // On error reset pagination values
           this.paginator.firstPage();
           this.totalElementos = 0;
-          this.snackBarService.showError('eti.convocatoriaReunion.listado.error');
+          this.snackBarService.showError(MSG_ERROR);
           this.logger.debug(ConvocatoriaReunionListadoComponent.name, 'loadTable()', 'end');
           return of([]);
         })
@@ -318,7 +324,7 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
     $event.preventDefault();
 
     this.dialogSubscription = this.dialogService.showConfirmation(
-      'eti.convocatoriaReunion.listado.eliminar'
+      MSG_CONFIRMATION_DELETE
     ).subscribe(
       (aceptado) => {
         if (aceptado) {
@@ -328,7 +334,7 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
                 return this.loadTable();
               })
             ).subscribe(() => {
-              this.snackBarService.showSuccess('eti.convocatoriaReunion.listado.eliminarConfirmado');
+              this.snackBarService.showSuccess(MSG_SUCCESS_DELETE);
             });
         }
         aceptado = false;

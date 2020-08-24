@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, OnInit } from '@angular/core';
 import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { AbstractTabComponent } from '@core/component/abstract-tab.component';
@@ -21,6 +22,10 @@ import { switchMap, map, startWith } from 'rxjs/operators';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { Persona } from '@core/models/sgp/persona';
 import { SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+
+const MSG_ERROR_LOAD_COMITES = marker('eti.convocatoriaReunion.formulario.datosGenerales.comite.error.cargar');
+const MSG_ERROR_LOAD_TIPOS_CONVOCATORIA = marker('eti.convocatoriaReunion.formulario.datosGenerales.tipoConvocatoriaReunion.error.cargar');
+const MSG_ERROR_LOAD_CONVOCANTES = marker('eti.convocatoriaReunion.formulario.datosGenerales.convocantes.error.cargar');
 
 @Component({
   selector: 'sgi-convocatoria-reunion-datos-generales',
@@ -109,7 +114,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
             );
         },
         () => {
-          this.snackBarService.showError('eti.convocatoriaReunion.formulario.datosGenerales.comite.error.cargar');
+          this.snackBarService.showError(MSG_ERROR_LOAD_COMITES);
         }
       );
 
@@ -141,7 +146,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
             );
         },
         () => {
-          this.snackBarService.showError('eti.convocatoriaReunion.formulario.datosGenerales.tipoConvocatoriaReunion.error.cargar');
+          this.snackBarService.showError(MSG_ERROR_LOAD_TIPOS_CONVOCATORIA);
         });
 
     this.subscripciones.push(tipoConvocatoriaSelectReunionSubscription);
@@ -203,7 +208,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
           this.formGroup.controls.convocantes.setValue(this.convocantes);
         },
         () => {
-          this.snackBarService.showError('eti.convocatoriaReunion.formulario.datosGenerales.convocantes.error.cargar');
+          this.snackBarService.showError(MSG_ERROR_LOAD_CONVOCANTES);
         }
       );
 

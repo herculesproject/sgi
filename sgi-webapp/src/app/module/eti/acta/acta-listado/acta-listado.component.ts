@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -27,6 +28,8 @@ import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { ActaService } from '@core/services/eti/acta.service';
 import { ROUTE_NAMES } from '@core/route.names';
 
+const MSG_BUTTON_NEW = marker('footer.eti.acta.crear');
+const MSG_ERROR = marker('eti.acta.listado.error');
 
 @Component({
   selector: 'sgi-acta-listado',
@@ -65,7 +68,7 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
 
   buscadorFormGroup: FormGroup;
 
-  textoCrear = 'footer.eti.acta.crear';
+  textoCrear = MSG_BUTTON_NEW;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -247,7 +250,7 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
           // On error reset pagination values
           this.paginator.firstPage();
           this.totalElementos = 0;
-          this.snackBarService.showError('eti.acta.listado.error');
+          this.snackBarService.showError(MSG_ERROR);
           this.logger.debug(ActaListadoComponent.name, 'loadTable()', 'end');
           return of([]);
         })

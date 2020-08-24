@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
@@ -27,6 +28,7 @@ import { SgiRestListResult } from '@sgi/framework/http/types';
 import { startWith, map } from 'rxjs/operators';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
+const MSG_ERROR_INIT = marker('eti.acta.crear.datosGenerales.convocatoriaReunion.error.cargar');
 
 @Component({
   selector: 'sgi-acta-datos-generales',
@@ -101,7 +103,7 @@ export class ActaDatosGeneralesComponent extends AbstractTabComponent<Acta> impl
           this.logger.debug(ActaDatosGeneralesComponent.name, 'ngOnInit()', 'end');
         },
         () => {
-          this.snackBarService.showError('eti.acta.crear.datosGenerales.convocatoriaReunion.error');
+          this.snackBarService.showError(MSG_ERROR_INIT);
           this.logger.debug(ActaDatosGeneralesComponent.name, 'ngOnInit()', 'end');
         }
       )

@@ -1,9 +1,13 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { NGXLogger } from 'ngx-logger';
 import { DialogComponent, DialogData } from '../../block/dialog/dialog.component';
 import { map } from 'rxjs/operators';
+
+const MSG_BUTTON_OK = marker('botones.aceptar');
+const MSG_BUTTON_CANCEL = marker('botones.cancelar');
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +22,8 @@ export class DialogService {
   showConfirmation(
     message: string,
     params: {} = {},
-    ok: string = 'botones.acepter',
-    cancel: string = 'botones.cancelar'
+    ok: string = MSG_BUTTON_OK,
+    cancel: string = MSG_BUTTON_CANCEL
   ): Observable<boolean> {
     const dialogRef = this.dialog.open(DialogComponent, {
       ...this.dialog,

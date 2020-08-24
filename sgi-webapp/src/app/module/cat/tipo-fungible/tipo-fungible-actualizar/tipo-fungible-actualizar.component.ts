@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
@@ -14,6 +15,11 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+
+const MSG_ERROR_NOT_FOUND = marker('cat.tipo-fungible.actualizar.no-encontrado');
+const MSG_ERROR_FORM = marker('form-group.error');
+const MSG_SUCCESS = marker('cat.tipo-fungible.actualizar.correcto');
+const MSG_ERROR = marker('cat.tipo-fungible.actualizar.error');
 
 @Component({
   selector: 'sgi-tipo-fungible-actualizar',
@@ -125,7 +131,7 @@ export class TipoFungibleActualizarComponent implements OnInit, OnDestroy {
             );
           },
           () => {
-            this.snackBarService.showSuccess('cat.tipo-fungible.actualizar.no-encontrado');
+            this.snackBarService.showSuccess(MSG_ERROR_NOT_FOUND);
             this.router.navigate(['../'], { relativeTo: this.route });
             this.logger.debug(
               TipoFungibleActualizarComponent.name,
@@ -191,7 +197,7 @@ export class TipoFungibleActualizarComponent implements OnInit, OnDestroy {
     if (FormGroupUtil.valid(this.formGroup)) {
       this.enviarApi();
     } else {
-      this.snackBarService.showError('form-group.error');
+      this.snackBarService.showError(MSG_ERROR_FORM);
     }
     this.logger.debug(
       TipoFungibleActualizarComponent.name,
@@ -215,12 +221,12 @@ export class TipoFungibleActualizarComponent implements OnInit, OnDestroy {
       .update(this.tipoFungible.id, this.tipoFungible)
       .subscribe(
         () => {
-          this.snackBarService.showSuccess('cat.tipo-fungible.actualizar.correcto');
+          this.snackBarService.showSuccess(MSG_SUCCESS);
           this.router.navigate(['../'], { relativeTo: this.route });
           this.logger.debug(TipoFungibleActualizarComponent.name, 'enviarApi()', 'end');
         },
         () => {
-          this.snackBarService.showError('cat.tipo-fungible.actualizar.error');
+          this.snackBarService.showError(MSG_ERROR);
           this.desactivarAceptar = false;
           this.logger.debug(
             TipoFungibleActualizarComponent.name,

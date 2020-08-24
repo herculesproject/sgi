@@ -1,9 +1,12 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AfterViewInit, OnDestroy, OnInit } from '@angular/core';
 import { AbstractTabComponent } from './abstract-tab.component';
 import { Subscription } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { SnackBarService } from '../services/snack-bar.service';
+
+const MSG_ERROR_FORM = marker('form-group.error');
 
 export abstract class AbstractFormularioComponent implements OnInit, OnDestroy, AfterViewInit {
   tabOrigen: number;
@@ -70,7 +73,7 @@ export abstract class AbstractFormularioComponent implements OnInit, OnDestroy, 
     if (this.comprobarFormGroup()) {
       this.enviarDatos();
     } else {
-      this.snackBarService.showError('form-group.error')
+      this.snackBarService.showError(MSG_ERROR_FORM);
     }
   }
 

@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, OnDestroy } from '@angular/core';
 import { UnidadMedida } from '@core/models/cat/unidad-medida';
 import { UnidadMedidaService } from '@core/services/cat/unidad-medida.service';
@@ -9,6 +10,10 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ROUTE_NAMES } from '@core/route.names';
+
+const MSG_SUCCESS_DELETE = marker('cat.unidad-medida.listado.eliminarConfirmado');
+const MSG_CONFIRM_DELETE = marker('cat.unidad-medida.listado.eliminar');
+const MSG_ERROR = marker('cat.unidad-medida.listado.error');
 
 @Component({
   selector: 'sgi-unidad-medida-listado',
@@ -44,7 +49,7 @@ export class UnidadMedidaListadoComponent extends AbstractPaginacionComponent<Un
 
   protected mostrarMensajeErrorLoadTable(): void {
     this.logger.debug(UnidadMedidaListadoComponent.name, 'mostrarMensajeErrorLoadTable()', 'start');
-    this.snackBarService.showError('cat.unidad-medida.listado.error');
+    this.snackBarService.showError(MSG_ERROR);
     this.logger.debug(UnidadMedidaListadoComponent.name, 'mostrarMensajeErrorLoadTable()', 'end');
   }
 
@@ -58,7 +63,7 @@ export class UnidadMedidaListadoComponent extends AbstractPaginacionComponent<Un
       'borrarSeleccionado(unidadMedidaId: number) - start'
     );
     this.dialogService.showConfirmation(
-      'cat.unidad-medida.listado.eliminar'
+      MSG_CONFIRM_DELETE
     ).subscribe((aceptado: boolean) => {
       if (aceptado) {
         this.subscripciones.push(this.unidadMedidaService
@@ -69,7 +74,7 @@ export class UnidadMedidaListadoComponent extends AbstractPaginacionComponent<Un
             })
           )
           .subscribe(() => {
-            this.snackBarService.showSuccess('unidad-medida.listado.eliminarConfirmado');
+            this.snackBarService.showSuccess(MSG_SUCCESS_DELETE);
             this.logger.debug(UnidadMedidaListadoComponent.name, 'borrarSeleccionado(unidadMedidaId: number) - end');
           })
         );

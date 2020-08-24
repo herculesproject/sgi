@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -11,6 +12,11 @@ import { SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+
+const MSG_ERROR_NOT_FOUND = marker('cat.solicitud.actualizar.no-encontrado');
+const MSG_ERROR_FORM = marker('form-group.error');
+const MSG_SUCCESS = marker('cat.solicitud.actualizar.normativa.correcto');
+const MSG_ERROR = marker('cat.solicitud.actualizar.normativa.error');
 
 @Component({
   selector: 'sgi-solicitud-actualizar',
@@ -117,7 +123,7 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
       catchError(() => {
         // On error reset pagination values
         // Añadimos esta comprobación para que no nos eche al crear uno nuevo
-        this.snackBarService.showSuccess('cat.solicitud.actualizar.no-encontrado');
+        this.snackBarService.showSuccess(MSG_ERROR_NOT_FOUND);
         this.router.navigate(['../'], { relativeTo: this.route });
 
         this.logger.debug(
@@ -144,7 +150,7 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
     if (FormGroupUtil.valid(this.formGroup)) {
       this.enviarApi();
     } else {
-      this.snackBarService.showError('form-group.error');
+      this.snackBarService.showError(MSG_ERROR_FORM);
     }
     this.logger.debug(
       SolicitudActualizarComponent.name,
@@ -167,7 +173,7 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
 
     // Si no tiene id, mensaje de no encontrado
     if (this.registro.id === null) {
-      this.snackBarService.showError('cat.solicitud.actualizar.no-encontrado');
+      this.snackBarService.showError(MSG_ERROR_NOT_FOUND);
     }
     // Si tiene id, lo actualizamos
     else {
@@ -194,7 +200,7 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
       .update(this.registro.id, this.registro)
       .subscribe(
         () => {
-          this.snackBarService.showSuccess('cat.solicitud.actualizar.normativa.correcto');
+          this.snackBarService.showSuccess(MSG_SUCCESS);
           this.router.navigate(['../'], { relativeTo: this.route });
           this.desactivarAceptar = false;
           this.logger.debug(
@@ -204,7 +210,7 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
           );
         },
         () => {
-          this.snackBarService.showError('cat.solicitud.actualizar.normativa.error');
+          this.snackBarService.showError(MSG_ERROR);
           this.desactivarAceptar = false;
           this.logger.debug(
             SolicitudActualizarComponent.name,

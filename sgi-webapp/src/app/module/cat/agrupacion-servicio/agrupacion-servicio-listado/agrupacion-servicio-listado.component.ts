@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -11,6 +12,10 @@ import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { ROUTE_NAMES } from '@core/route.names';
+
+const MSG_SUCCESS_DELETE = marker('cat.servicio.listado.eliminarConfirmado');
+const MSG_CONFIRM_DELETE = marker('cat.servicio.listado.eliminar');
+const MSG_ERROR = marker('cat.servicio.listado.error');
 
 @Component({
   selector: 'sgi-agrupacion-servicio-listado',
@@ -108,7 +113,7 @@ export class AgrupacionServicioListadoComponent implements AfterViewInit, OnDest
           // On error reset pagination values
           this.paginator.firstPage();
           this.totalElementos = 0;
-          this.snackBarService.showError('cat.servicio.listado.error');
+          this.snackBarService.showError(MSG_ERROR);
           this.logger.debug(AgrupacionServicioListadoComponent.name, 'loadTable()', 'end');
           return of([]);
         })
@@ -152,7 +157,7 @@ export class AgrupacionServicioListadoComponent implements AfterViewInit, OnDest
     $event.preventDefault();
 
     this.dialogSubscription = this.dialogService.showConfirmation(
-      'cat.servicio.listado.eliminar'
+      MSG_CONFIRM_DELETE
     ).subscribe(
       (aceptado) => {
         if (aceptado) {
@@ -162,7 +167,7 @@ export class AgrupacionServicioListadoComponent implements AfterViewInit, OnDest
                 return this.loadTable();
               })
             ).subscribe(
-              () => this.snackBarService.showSuccess('cat.servicio.listado.eliminarConfirmado')
+              () => this.snackBarService.showSuccess(MSG_SUCCESS_DELETE)
             );
         }
       });

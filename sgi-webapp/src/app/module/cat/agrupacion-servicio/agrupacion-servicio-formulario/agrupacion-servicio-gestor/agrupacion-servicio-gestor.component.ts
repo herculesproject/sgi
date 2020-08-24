@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -8,6 +9,8 @@ import { Usuario } from '@core/models/cat/usuario';
 import { Subject, ReplaySubject } from 'rxjs';
 import { Supervision } from '@core/models/cat/supervision';
 import { SnackBarService } from '@core/services/snack-bar.service';
+
+const MSG_ERROR_GESTOR_EXISTE = marker('cat.servicio.gestor.existe');
 
 @Component({
   selector: 'sgi-agrupacion-servicio-gestor',
@@ -126,7 +129,7 @@ export class AgrupacionServicioGestorComponent implements OnInit {
     const gestorAsociado = this.gestores.filter(gestor => gestor.usuarioRef === gestorSeleccionado.usuarioRef);
 
     if (gestorAsociado.length > 0) {
-      this.snackBarService.showError('cat.servicio.gestor.existe');
+      this.snackBarService.showError(MSG_ERROR_GESTOR_EXISTE);
     } else {
       this.gestores.push(gestorSeleccionado);
       this.gestoresAniadidos.push(gestorSeleccionado);

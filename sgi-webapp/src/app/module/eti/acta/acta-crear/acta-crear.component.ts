@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Acta } from '@core/models/eti/acta';
@@ -11,6 +12,10 @@ import { ActaMemoriasComponent } from '../acta-formulario/acta-memorias/acta-mem
 
 import { ActaService } from '@core/services/eti/acta.service';
 
+const MSG_BUTTON_SAVE = marker('footer.eti.acta.guardar');
+const MSG_SUCCESS = marker('eti.acta.crear.correcto');
+const MSG_ERROR = marker('eti.acta.crear.error');
+
 @Component({
   selector: 'sgi-acta-crear',
   templateUrl: './acta-crear.component.html',
@@ -21,7 +26,7 @@ export class ActaCrearComponent extends AbstractFormularioComponent implements O
   @ViewChild('memorias', { static: true }) memorias: ActaMemoriasComponent;
   @ViewChild('asistentes', { static: true }) asistentes: ActaAsistentesComponent;
 
-  textoCrear = 'footer.eti.acta.guardar';
+  textoCrear = MSG_BUTTON_SAVE;
 
   idConvocatoria: number;
 
@@ -82,7 +87,7 @@ export class ActaCrearComponent extends AbstractFormularioComponent implements O
           this.tabs.get(0).actualizarDatos(acta);
           this.tabs.get(0).warning = false;
 
-          this.snackBarService.showSuccess('eti.acta.crear.correcto');
+          this.snackBarService.showSuccess(MSG_SUCCESS);
           this.router.navigate(['../'], { relativeTo: this.route });
           this.logger.debug(ActaCrearComponent.name, 'enviarDatos()', 'end');
 
@@ -90,7 +95,7 @@ export class ActaCrearComponent extends AbstractFormularioComponent implements O
           () => {
             // Si falla mostramos el error en la pestaña
             this.tabs.get(0).mostrarError();
-            this.snackBarService.showError('eti.acta.crear.error');
+            this.snackBarService.showError(MSG_ERROR);
             this.logger.error(ActaCrearComponent.name, 'enviarDatos()', 'end');
           }
         )

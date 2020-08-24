@@ -1,3 +1,4 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AfterViewInit, Component, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -11,6 +12,9 @@ import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
+const MSG_SUCCESS_ALTA = marker('cat.solicitud.alta.correcto');
+const MSG_ERROR_ALTA = marker('cat.solicitud.alta.error');
+const MSG_ERROR = marker('cat.solicitud.listado.error');
 
 @Component({
   selector: 'sgi-solicitud-listado',
@@ -101,7 +105,7 @@ export class SolicitudListadoComponent implements AfterViewInit, OnDestroy, OnCh
           // On error reset pagination values
           this.paginator.firstPage();
           this.totalElementos = 0;
-          this.snackBarService.showError('cat.solicitud.listado.error');
+          this.snackBarService.showError(MSG_ERROR);
           this.logger.debug(SolicitudListadoComponent.name, 'loadTable()', 'end');
           return of([]);
         })
@@ -178,7 +182,7 @@ export class SolicitudListadoComponent implements AfterViewInit, OnDestroy, OnCh
       .update(this.registro.id, this.registro)
       .subscribe(
         () => {
-          this.snackBarService.showSuccess('cat.solicitud.alta.correcto');
+          this.snackBarService.showSuccess(MSG_SUCCESS_ALTA);
           this.logger.debug(
             SolicitudListadoComponent.name,
             'actualizarSolicitud()',
@@ -186,7 +190,7 @@ export class SolicitudListadoComponent implements AfterViewInit, OnDestroy, OnCh
           );
         },
         () => {
-          this.snackBarService.showError('cat.solicitud.alta.error');
+          this.snackBarService.showError(MSG_ERROR_ALTA);
           this.logger.debug(
             SolicitudListadoComponent.name,
             'actualizarSolicitud()',

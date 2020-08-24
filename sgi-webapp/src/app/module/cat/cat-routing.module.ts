@@ -1,13 +1,27 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { CatRootComponent } from './cat-root/cat-root.component';
-import { SgiAuthGuard, SgiAuthRoutes } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@sgi/framework/auth';
 import { CAT_ROUTE_NAMES } from './cat-route-names';
+import { SgiRoutes } from '@core/route';
 
-const routes: SgiAuthRoutes = [
+const MSG_ROOT_TITLE = marker('cat.root.title');
+const MSG_AGRUPACIONES_SERVICIO_TITLE = marker('menu.principal.cat.agrupaciones-servicios');
+const MSG_SOLICITUD_TITLE = marker('menu.principal.cat.solicitudes');
+const MSG_TIPOS_FUNGIBLE_TITLE = marker('menu.principal.cat.tipos-fungibles');
+const MSG_TIPOS_RESERVABLE_TITLE = marker('menu.principal.cat.tipos-reservables');
+const MSG_UNIDADES_MEDIDA_TITLE = marker('menu.principal.cat.unidades-medida');
+
+const routes: SgiRoutes = [
   {
-    path: '', component: CatRootComponent, children: [
+    path: '',
+    component: CatRootComponent,
+    data: {
+      title: MSG_ROOT_TITLE
+    },
+    children: [
       {
         path: CAT_ROUTE_NAMES.AGRUPACIONES_SERVICIO,
         loadChildren: () =>
@@ -15,6 +29,9 @@ const routes: SgiAuthRoutes = [
             (m) => m.AgrupacionServicioModule
           ),
         canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_AGRUPACIONES_SERVICIO_TITLE
+        }
       },
       {
         path: CAT_ROUTE_NAMES.SOLICITUD,
@@ -23,6 +40,9 @@ const routes: SgiAuthRoutes = [
             (m) => m.SolicitudModule
           ),
         canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_SOLICITUD_TITLE
+        }
       },
       {
         path: CAT_ROUTE_NAMES.TIPOS_FUNGIBLE,
@@ -31,6 +51,9 @@ const routes: SgiAuthRoutes = [
             (m) => m.TipoFungibleModule
           ),
         canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_TIPOS_FUNGIBLE_TITLE
+        }
       },
       {
         path: CAT_ROUTE_NAMES.TIPOS_RESERVABLE,
@@ -39,6 +62,9 @@ const routes: SgiAuthRoutes = [
             (m) => m.TipoReservableModule
           ),
         canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_TIPOS_RESERVABLE_TITLE
+        }
       },
       {
         path: CAT_ROUTE_NAMES.UNIDADES_MEDIDA,
@@ -47,6 +73,9 @@ const routes: SgiAuthRoutes = [
             (m) => m.UnidadMedidaModule
           ),
         canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_UNIDADES_MEDIDA_TITLE
+        }
       },
       { path: '**', component: null },
     ]

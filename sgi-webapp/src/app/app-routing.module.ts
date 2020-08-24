@@ -1,14 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { SgiAuthGuard, SgiAuthRoutes } from '@sgi/framework/auth';
+import { SgiAuthGuard } from '@sgi/framework/auth';
 import { RootComponent } from '@shared/root/root.component';
 import { APP_ROUTE_NAMES } from './app-route-names';
+import { SgiRoutes } from '@core/route';
 
 /**
  * Definimos las urls de la aplicación
  */
-const routes: SgiAuthRoutes = [
+const routes: SgiRoutes = [
   {
     path: '',
     component: RootComponent
@@ -19,7 +20,7 @@ const routes: SgiAuthRoutes = [
       import('./module/cat/cat.module').then(
         (m) => m.CatModule
       ),
-    canActivate: [SgiAuthGuard],
+    canActivate: [SgiAuthGuard]
   },
   {
     path: APP_ROUTE_NAMES.ETI,
@@ -27,7 +28,7 @@ const routes: SgiAuthRoutes = [
       import('./module/eti/eti.module').then(
         (m) => m.EtiModule
       ),
-    canActivate: [SgiAuthGuard],
+    canActivate: [SgiAuthGuard]
   },
   {
     path: '**',

@@ -1,8 +1,12 @@
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, OnInit } from '@angular/core';
-import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 import { APP_ROUTE_NAMES } from 'src/app/app-route-names';
+
+const MSG_MODULO_CAT = marker('selector-modulo.catalogo');
+const MSG_MODULO_ETI = marker('selector-modulo.etica');
 
 export interface Modulo {
   url: string;
@@ -23,11 +27,11 @@ export class SelectorModuloComponent implements OnInit {
   ) {
     this.modulos = [{
       url: APP_ROUTE_NAMES.CAT,
-      nombre: 'selector-modulo.catalogo'
+      nombre: MSG_MODULO_CAT
     },
     {
       url: APP_ROUTE_NAMES.ETI,
-      nombre: 'selector-modulo.etica'
+      nombre: MSG_MODULO_ETI
     }
     ];
   }
