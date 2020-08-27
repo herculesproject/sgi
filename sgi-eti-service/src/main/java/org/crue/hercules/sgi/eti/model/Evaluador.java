@@ -67,7 +67,7 @@ public class Evaluador extends BaseEntity {
 
   /** Referencia usuario */
   @Column(name = "usuario_ref", length = 250, nullable = false)
-  private String usuarioRef;
+  private String personaRef;
 
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)

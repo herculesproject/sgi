@@ -3,31 +3,47 @@ package org.crue.hercules.sgi.eti.integration;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.model.Asistentes;
+import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.Dictamen;
+import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
+import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.Retrospectiva;
+import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.eti.model.TipoMemoria;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
-import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Test de integracion de ConvocatoriaReunion.
@@ -327,6 +343,158 @@ public class ConvocatoriaReunionIT {
     Assertions.assertThat(result.getHeaders().getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
   }
 
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAsistentes_Unlimited_ReturnsFullAsistentesList() throws Exception {
+
+    // given: Datos existentes
+    Long convocatoriaReunionId = 1L;
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
+        .append("/asistentes").toString();
+
+    List<Asistentes> result = new LinkedList<>();
+    result.add(generarMockAsistentes(1L, 1L, convocatoriaReunionId));
+    result.add(generarMockAsistentes(2L, 1L, convocatoriaReunionId));
+    result.add(generarMockAsistentes(3L, 1L, convocatoriaReunionId));
+
+    // when: Se buscan todos los datos
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-ACT-E")));
+
+    final ResponseEntity<List<Asistentes>> response = restTemplate.exchange(url, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Asistentes>>() {
+        }, convocatoriaReunionId);
+
+    // then: Se recuperan todos los datos
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).isEqualTo(result);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAsistentes_WithPaging_ReturnsAsistentesSubList() throws Exception {
+
+    Long convocatoriaReunionId = 1L;
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
+        .append("/asistentes").toString();
+
+    List<Asistentes> result = new LinkedList<>();
+    result.add(generarMockAsistentes(1L, 1L, convocatoriaReunionId));
+    result.add(generarMockAsistentes(2L, 1L, convocatoriaReunionId));
+    result.add(generarMockAsistentes(3L, 1L, convocatoriaReunionId));
+
+    // página 1 con 2 elementos por página
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-ACT-E")));
+    headers.add("X-Page", "1");
+    headers.add("X-Page-Size", "2");
+
+    Pageable pageable = PageRequest.of(1, 2);
+    Page<Asistentes> pageResult = new PageImpl<>(result.subList(2, 3), pageable, result.size());
+
+    // when: Se buscan los datos paginados
+    final ResponseEntity<List<Asistentes>> response = restTemplate.exchange(url, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Asistentes>>() {
+        }, convocatoriaReunionId);
+
+    // then: Se recuperan los datos correctamente según la paginación solicitada
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page"))
+        .isEqualTo(String.valueOf(pageResult.getPageable().getPageNumber()));
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size"))
+        .isEqualTo(String.valueOf(pageResult.getPageable().getPageSize()));
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Total-Count"))
+        .isEqualTo(String.valueOf(pageResult.getNumberOfElements()));
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Count"))
+        .isEqualTo(String.valueOf(pageResult.getTotalPages()));
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count"))
+        .isEqualTo(String.valueOf(pageResult.getTotalElements()));
+    Assertions.assertThat(response.getBody().size()).isEqualTo(pageResult.getContent().size());
+    Assertions.assertThat(response.getBody()).isEqualTo(pageResult.getContent());
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findEvaluacionesActivas_Unlimited_ReturnsFullEvaluacionList() throws Exception {
+
+    // given: Datos existentes
+    Long convocatoriaReunionId = 1L;
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
+        .append("/evaluaciones-activas").toString();
+
+    List<Evaluacion> result = new ArrayList<>();
+    result.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1)));
+    result.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3)));
+    result.add(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5)));
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-ACT-E")));
+
+    // when: Se buscan todos los datos
+    final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(url, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
+        }, convocatoriaReunionId);
+
+    // then: Se recuperan todos los datos
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).isEqualTo(result);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findEvaluacionesActivas_WithPaging_ReturnsEvaluacionSubList() throws Exception {
+
+    Long convocatoriaReunionId = 1L;
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
+        .append("/evaluaciones-activas").toString();
+
+    List<Evaluacion> result = new LinkedList<>();
+    result.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1)));
+    result.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3)));
+    result.add(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5)));
+
+    // página 1 con 2 elementos por página
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-ACT-E")));
+    headers.add("X-Page", "1");
+    headers.add("X-Page-Size", "2");
+
+    Pageable pageable = PageRequest.of(1, 2);
+    Page<Evaluacion> pageResult = new PageImpl<>(result.subList(2, 3), pageable, result.size());
+
+    // when: Se buscan los datos paginados
+    final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(url, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
+        }, convocatoriaReunionId);
+
+    // then: Se recuperan los datos correctamente según la paginación solicitada
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page"))
+        .isEqualTo(String.valueOf(pageResult.getPageable().getPageNumber()));
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size"))
+        .isEqualTo(String.valueOf(pageResult.getPageable().getPageSize()));
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Total-Count"))
+        .isEqualTo(String.valueOf(pageResult.getNumberOfElements()));
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Count"))
+        .isEqualTo(String.valueOf(pageResult.getTotalPages()));
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count"))
+        .isEqualTo(String.valueOf(pageResult.getTotalElements()));
+    Assertions.assertThat(response.getBody().size()).isEqualTo(pageResult.getContent().size());
+    Assertions.assertThat(response.getBody()).isEqualTo(pageResult.getContent());
+
+  }
+
   /**
    * Genera un objeto {@link ConvocatoriaReunion}
    * 
@@ -360,5 +528,120 @@ public class ConvocatoriaReunionIT {
     data.setActivo(Boolean.TRUE);
 
     return data;
+  }
+
+  /**
+   * Función que devuelve un objeto Asistentes
+   * 
+   * @param id         id del asistentes
+   * @param motivo     motivo
+   * @param asistencia asistencia
+   * @return el objeto Asistentes
+   */
+
+  private Asistentes generarMockAsistentes(Long id, Long evaluadorId, Long convocatoriaReunionId) {
+
+    Asistentes asistentes = new Asistentes();
+    asistentes.setId(id);
+    asistentes.setEvaluador(generarMockEvaluador(evaluadorId));
+    asistentes.setConvocatoriaReunion(getMockData(convocatoriaReunionId, convocatoriaReunionId, 1L));
+    asistentes.setMotivo("Motivo" + id);
+    asistentes.setAsistencia(Boolean.TRUE);
+
+    return asistentes;
+  }
+
+  /**
+   * Función que devuelve un objeto Evaluador
+   * 
+   * @param id      id del Evaluador
+   * @param resumen el resumen de Evaluador
+   * @return el objeto Evaluador
+   */
+
+  private Evaluador generarMockEvaluador(Long id) {
+    CargoComite cargoComite = new CargoComite();
+    cargoComite.setId(1L);
+    cargoComite.setNombre("CargoComite1");
+    cargoComite.setActivo(Boolean.TRUE);
+
+    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+
+    Evaluador evaluador = new Evaluador();
+    evaluador.setId(id);
+    evaluador.setCargoComite(cargoComite);
+    evaluador.setComite(comite);
+    evaluador.setFechaAlta(LocalDate.of(2020, 7, 1));
+    evaluador.setFechaBaja(LocalDate.of(2021, 7, 1));
+    evaluador.setResumen("Evaluador1");
+    evaluador.setPersonaRef("user-001");
+    evaluador.setActivo(Boolean.TRUE);
+
+    return evaluador;
+  }
+
+  /**
+   * Función que devuelve un objeto Evaluacion
+   * 
+   * @param id     id del Evaluacion
+   * @param sufijo el sufijo para título y nombre
+   * @return el objeto Evaluacion
+   */
+
+  public Evaluacion generarMockEvaluacion(Long id, String sufijo) {
+
+    Dictamen dictamen = new Dictamen();
+    dictamen.setId(1L);
+    dictamen.setNombre("Dictamen1");
+    dictamen.setActivo(Boolean.TRUE);
+
+    TipoActividad tipoActividad = new TipoActividad();
+    tipoActividad.setId(1L);
+    tipoActividad.setNombre("TipoActividad1");
+    tipoActividad.setActivo(Boolean.TRUE);
+
+    PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
+    peticionEvaluacion.setId(1L);
+    peticionEvaluacion.setCodigo("Codigo1");
+    peticionEvaluacion.setDisMetodologico("DiseñoMetodologico1");
+    peticionEvaluacion.setExterno(Boolean.FALSE);
+    peticionEvaluacion.setFechaFin(LocalDate.of(2020, 8, 1));
+    peticionEvaluacion.setFechaInicio(LocalDate.of(2020, 8, 1));
+    peticionEvaluacion.setFuenteFinanciacion("Fuente financiación");
+    peticionEvaluacion.setObjetivos("Objetivos1");
+    peticionEvaluacion.setOtroValorSocial("Otro valor social1");
+    peticionEvaluacion.setResumen("Resumen");
+    peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
+    peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
+    peticionEvaluacion.setTipoActividad(tipoActividad);
+    peticionEvaluacion.setTitulo("PeticionEvaluacion1");
+    peticionEvaluacion.setUsuarioRef("user-001");
+    peticionEvaluacion.setValorSocial(3);
+    peticionEvaluacion.setActivo(Boolean.TRUE);
+
+    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+
+    TipoMemoria tipoMemoria = new TipoMemoria();
+    tipoMemoria.setId(1L);
+    tipoMemoria.setNombre("TipoMemoria1");
+    tipoMemoria.setActivo(Boolean.TRUE);
+
+    Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria001", "user-001", tipoMemoria,
+        new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.of(2020, 8, 1), Boolean.FALSE,
+        new Retrospectiva(1L, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), LocalDate.of(2020, 8, 1)), 3,
+        Boolean.TRUE);
+
+    Evaluacion evaluacion = new Evaluacion();
+    evaluacion.setId(id);
+    evaluacion.setDictamen(dictamen);
+    evaluacion.setEsRevMinima(Boolean.TRUE);
+    evaluacion.setFechaDictamen(LocalDate.of(2020, 8, 1));
+    evaluacion.setMemoria(memoria);
+    evaluacion.setConvocatoriaReunion(getMockData(1L, 1L, 1L));
+    evaluacion.setTipoEvaluacion(null);
+    evaluacion.setVersion(2);
+    evaluacion.setActivo(Boolean.TRUE);
+
+    return evaluacion;
   }
 }

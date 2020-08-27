@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,10 +15,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.config.SecurityConfig;
 import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
+import org.crue.hercules.sgi.eti.model.Asistentes;
+import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.Dictamen;
+import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
+import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.Retrospectiva;
+import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
+import org.crue.hercules.sgi.eti.model.TipoMemoria;
+import org.crue.hercules.sgi.eti.service.AsistentesService;
 import org.crue.hercules.sgi.eti.service.ConvocatoriaReunionService;
+import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -57,6 +73,12 @@ public class ConvocatoriaReunionControllerTest {
 
   @Autowired
   private ObjectMapper mapper;
+
+  @MockBean
+  private AsistentesService asistentesService;
+
+  @MockBean
+  private EvaluacionService evaluacionService;
 
   @MockBean
   private ConvocatoriaReunionService service;
@@ -487,6 +509,250 @@ public class ConvocatoriaReunionControllerTest {
         })).isEqualTo(response.subList(2, 3));
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-C", "ETI-ACT-E" })
+  public void findAsistentes_Unlimited_ReturnsFullAsistentesList() throws Exception {
+
+    // given: Datos existentes con convocatoriaReunionId = 1
+    Long convocatoriaReunionId = 1L;
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID).append("/asistentes")//
+        .toString();
+
+    List<Asistentes> response = new ArrayList<>();
+    response.add(generarMockAsistentes(1L, "Motivo1", Boolean.TRUE));
+    response.add(generarMockAsistentes(2L, "Motivo2", Boolean.TRUE));
+
+    BDDMockito.given(
+        asistentesService.findAllByConvocatoriaReunionId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(response));
+
+    // when: Se buscan todos los datos
+    MvcResult result = mockMvc
+        .perform(MockMvcRequestBuilders.get(url, convocatoriaReunionId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recuperan todos los datos
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2))).andReturn();
+
+    Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
+        new TypeReference<List<Asistentes>>() {
+        })).isEqualTo(response);
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-C", "ETI-ACT-E" })
+  public void findAsistentes_Unlimited_Returns204() throws Exception {
+
+    // given: Sin datos con convocatoriaReunionId = 1
+    Long convocatoriaReunionId = 1L;
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID).append("/asistentes")//
+        .toString();
+
+    BDDMockito.given(
+        asistentesService.findAllByConvocatoriaReunionId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(Collections.emptyList()));
+
+    // when: Se buscan todos los datos
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(url, convocatoriaReunionId).with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recupera lista vacía);
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-C", "ETI-ACT-E" })
+  public void findAsistentes_WithPaging_ReturnsAsistentesSubList() throws Exception {
+
+    // given: Datos existentes con convocatoriaReunionId = 1
+    Long convocatoriaReunionId = 1L;
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID).append("/asistentes")//
+        .toString();
+
+    List<Asistentes> response = new ArrayList<>();
+    response.add(generarMockAsistentes(1L, "Motivo1", Boolean.TRUE));
+    response.add(generarMockAsistentes(2L, "Motivo2", Boolean.TRUE));
+    response.add(generarMockAsistentes(3L, "Motivo3", Boolean.TRUE));
+
+    // página 1 con 2 elementos por página
+    Pageable pageable = PageRequest.of(1, 2);
+    Page<Asistentes> pageResponse = new PageImpl<>(response.subList(2, 3), pageable, response.size());
+
+    BDDMockito.given(
+        asistentesService.findAllByConvocatoriaReunionId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(pageResponse);
+
+    // when: Se buscan todos los datos paginados
+    MvcResult result = mockMvc
+        .perform(MockMvcRequestBuilders.get(url, convocatoriaReunionId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", pageable.getPageNumber())
+            .header("X-Page-Size", pageable.getPageSize()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recuperan los datos correctamente según la paginación solicitada
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", String.valueOf(pageable.getPageNumber())))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", String.valueOf(pageable.getPageSize())))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", String.valueOf(response.size())))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1))).andReturn();
+
+    Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
+        new TypeReference<List<Asistentes>>() {
+        })).isEqualTo(response.subList(2, 3));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-C", "ETI-ACT-E" })
+  public void findAsistentes_WithPaging_Returns204() throws Exception {
+
+    // given: Sin datos con convocatoriaReunionId = 1
+    Long convocatoriaReunionId = 1L;
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID).append("/asistentes")//
+        .toString();
+    List<Asistentes> response = new ArrayList<Asistentes>();
+    Pageable pageable = PageRequest.of(1, 2);
+    Page<Asistentes> pageResponse = new PageImpl<>(response, pageable, response.size());
+
+    BDDMockito.given(
+        asistentesService.findAllByConvocatoriaReunionId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(pageResponse);
+
+    // when: Se buscan todos los datos paginados
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(url, convocatoriaReunionId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", pageable.getPageNumber())
+            .header("X-Page-Size", pageable.getPageSize()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recupera lista de datos paginados vacía
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-C", "ETI-ACT-E" })
+  public void findEvaluacionesActivas_Unlimited_ReturnsFullEvaluacionList() throws Exception {
+    // given: Datos existentes con convocatoriaReunionId = 1
+    Long convocatoriaReunionId = 1L;
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
+        .append("/evaluaciones-activas").toString();
+
+    List<Evaluacion> response = new ArrayList<>();
+    response.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1)));
+    response.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3)));
+
+    BDDMockito.given(evaluacionService.findAllActivasByConvocatoriaReunionId(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(response));
+
+    // when: Se buscan todos los datos
+    MvcResult result = mockMvc
+        .perform(MockMvcRequestBuilders.get(url, convocatoriaReunionId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recuperan todos los datos
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2))).andReturn();
+
+    Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
+        new TypeReference<List<Evaluacion>>() {
+        })).isEqualTo(response);
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-V", "ETI-ACT-C", "ETI-ACT-E" })
+  public void findEvaluacionesActivas_Unlimited_Returns204() throws Exception {
+
+    // given: Sin datos con convocatoriaReunionId = 1
+    Long convocatoriaReunionId = 1L;
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
+        .append("/evaluaciones-activas").toString();
+
+    BDDMockito.given(evaluacionService.findAllActivasByConvocatoriaReunionId(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(Collections.emptyList()));
+
+    // when: Se buscan todos los datos
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(url, convocatoriaReunionId).with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recupera lista vacía);
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-C", "ETI-ACT-E" })
+  public void findEvaluacionesActivas_WithPaging_ReturnsEvaluacionSubList() throws Exception {
+
+    // given: Datos existentes con convocatoriaReunionId = 1
+    Long convocatoriaReunionId = 1L;
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
+        .append("/evaluaciones-activas").toString();
+
+    List<Evaluacion> response = new ArrayList<>();
+    response.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1)));
+    response.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3)));
+    response.add(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5)));
+
+    // página 1 con 2 elementos por página
+    Pageable pageable = PageRequest.of(1, 2);
+    Page<Evaluacion> pageResponse = new PageImpl<>(response.subList(2, 3), pageable, response.size());
+
+    BDDMockito.given(evaluacionService.findAllActivasByConvocatoriaReunionId(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(pageResponse);
+
+    // when: Se buscan todos los datos paginados
+    MvcResult result = mockMvc
+        .perform(MockMvcRequestBuilders.get(url, convocatoriaReunionId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", pageable.getPageNumber())
+            .header("X-Page-Size", pageable.getPageSize()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recuperan los datos correctamente según la paginación solicitada
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", String.valueOf(pageable.getPageNumber())))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", String.valueOf(pageable.getPageSize())))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", String.valueOf(response.size())))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1))).andReturn();
+
+    Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
+        new TypeReference<List<Evaluacion>>() {
+        })).isEqualTo(response.subList(2, 3));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-C", "ETI-ACT-E" })
+  public void findEvaluacionesActivas_WithPaging_Returns204() throws Exception {
+
+    // given: Sin datos con convocatoriaReunionId = 1
+    Long convocatoriaReunionId = 1L;
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
+        .append("/evaluaciones-activas").toString();
+
+    List<Evaluacion> response = new ArrayList<Evaluacion>();
+    Pageable pageable = PageRequest.of(1, 2);
+    Page<Evaluacion> pageResponse = new PageImpl<>(response, pageable, response.size());
+
+    BDDMockito.given(evaluacionService.findAllActivasByConvocatoriaReunionId(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(pageResponse);
+
+    // when: Se buscan todos los datos paginados
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(url, convocatoriaReunionId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", pageable.getPageNumber())
+            .header("X-Page-Size", pageable.getPageSize()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recupera lista de datos paginados vacía
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
   /**
    * Genera un objeto {@link ConvocatoriaReunion}
    * 
@@ -520,5 +786,127 @@ public class ConvocatoriaReunionControllerTest {
     data.setActivo(Boolean.TRUE);
 
     return data;
+  }
+
+  /**
+   * Función que devuelve un objeto Asistentes
+   * 
+   * @param id         id del asistentes
+   * @param motivo     motivo
+   * @param asistencia asistencia
+   * @return el objeto Asistentes
+   */
+
+  private Asistentes generarMockAsistentes(Long id, String motivo, Boolean asistencia) {
+
+    Asistentes asistentes = new Asistentes();
+    asistentes.setId(id);
+    asistentes.setEvaluador(generarMockEvaluador(id, "Resumen " + motivo));
+    asistentes.setConvocatoriaReunion(getMockData(id, id, 1L));
+    asistentes.setMotivo(motivo);
+    asistentes.setAsistencia(asistencia);
+
+    return asistentes;
+  }
+
+  /**
+   * Función que devuelve un objeto Evaluador
+   * 
+   * @param id      id del Evaluador
+   * @param resumen el resumen de Evaluador
+   * @return el objeto Evaluador
+   */
+
+  private Evaluador generarMockEvaluador(Long id, String resumen) {
+    CargoComite cargoComite = new CargoComite();
+    cargoComite.setId(1L);
+    cargoComite.setNombre("CargoComite1");
+    cargoComite.setActivo(Boolean.TRUE);
+
+    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+
+    Evaluador evaluador = new Evaluador();
+    evaluador.setId(id);
+    evaluador.setCargoComite(cargoComite);
+    evaluador.setComite(comite);
+    evaluador.setFechaAlta(LocalDate.now());
+    evaluador.setFechaBaja(LocalDate.now());
+    evaluador.setResumen(resumen);
+    evaluador.setPersonaRef("user-" + String.format("%03d", id));
+    evaluador.setActivo(Boolean.TRUE);
+
+    return evaluador;
+  }
+
+  /**
+   * Función que devuelve un objeto Evaluacion
+   * 
+   * @param id     id del Evaluacion
+   * @param sufijo el sufijo para título y nombre
+   * @return el objeto Evaluacion
+   */
+
+  public Evaluacion generarMockEvaluacion(Long id, String sufijo) {
+
+    String sufijoStr = (sufijo == null ? id.toString() : sufijo);
+
+    Dictamen dictamen = new Dictamen();
+    dictamen.setId(id);
+    dictamen.setNombre("Dictamen" + sufijoStr);
+    dictamen.setActivo(Boolean.TRUE);
+
+    TipoActividad tipoActividad = new TipoActividad();
+    tipoActividad.setId(1L);
+    tipoActividad.setNombre("TipoActividad1");
+    tipoActividad.setActivo(Boolean.TRUE);
+
+    PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
+    peticionEvaluacion.setId(id);
+    peticionEvaluacion.setCodigo("Codigo1");
+    peticionEvaluacion.setDisMetodologico("DiseñoMetodologico1");
+    peticionEvaluacion.setExterno(Boolean.FALSE);
+    peticionEvaluacion.setFechaFin(LocalDate.now());
+    peticionEvaluacion.setFechaInicio(LocalDate.now());
+    peticionEvaluacion.setFuenteFinanciacion("Fuente financiación");
+    peticionEvaluacion.setObjetivos("Objetivos1");
+    peticionEvaluacion.setOtroValorSocial("Otro valor social1");
+    peticionEvaluacion.setResumen("Resumen");
+    peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
+    peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
+    peticionEvaluacion.setTipoActividad(tipoActividad);
+    peticionEvaluacion.setTitulo("PeticionEvaluacion1");
+    peticionEvaluacion.setUsuarioRef("user-001");
+    peticionEvaluacion.setValorSocial(3);
+    peticionEvaluacion.setActivo(Boolean.TRUE);
+
+    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+
+    TipoMemoria tipoMemoria = new TipoMemoria();
+    tipoMemoria.setId(1L);
+    tipoMemoria.setNombre("TipoMemoria1");
+    tipoMemoria.setActivo(Boolean.TRUE);
+
+    Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
+        tipoMemoria, new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.FALSE,
+        new Retrospectiva(id, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), LocalDate.now()), 3,
+        Boolean.TRUE);
+
+    TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
+    tipoEvaluacion.setId(1L);
+    tipoEvaluacion.setNombre("TipoEvaluacion1");
+    tipoEvaluacion.setActivo(Boolean.TRUE);
+
+    Evaluacion evaluacion = new Evaluacion();
+    evaluacion.setId(id);
+    evaluacion.setDictamen(dictamen);
+    evaluacion.setEsRevMinima(Boolean.TRUE);
+    evaluacion.setFechaDictamen(LocalDate.now());
+    evaluacion.setMemoria(memoria);
+    evaluacion.setConvocatoriaReunion(getMockData(id, 1L, 1L));
+    evaluacion.setTipoEvaluacion(tipoEvaluacion);
+    evaluacion.setVersion(2);
+    evaluacion.setActivo(Boolean.TRUE);
+
+    return evaluacion;
   }
 }

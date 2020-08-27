@@ -375,7 +375,7 @@ public class AsistentesServiceTest {
     evaluador.setFechaAlta(LocalDate.now());
     evaluador.setFechaBaja(LocalDate.now());
     evaluador.setResumen(resumen);
-    evaluador.setUsuarioRef("user-" + String.format("%03d", id));
+    evaluador.setPersonaRef("user-" + String.format("%03d", id));
     evaluador.setActivo(Boolean.TRUE);
 
     return evaluador;

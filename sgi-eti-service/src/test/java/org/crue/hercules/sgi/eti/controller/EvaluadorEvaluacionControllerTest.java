@@ -391,7 +391,7 @@ public class EvaluadorEvaluacionControllerTest {
     evaluador.setFechaAlta(LocalDate.now());
     evaluador.setFechaBaja(LocalDate.now());
     evaluador.setResumen("Evaluador");
-    evaluador.setUsuarioRef("user-001");
+    evaluador.setPersonaRef("user-001");
     evaluador.setActivo(Boolean.TRUE);
 
     Dictamen dictamen = new Dictamen();

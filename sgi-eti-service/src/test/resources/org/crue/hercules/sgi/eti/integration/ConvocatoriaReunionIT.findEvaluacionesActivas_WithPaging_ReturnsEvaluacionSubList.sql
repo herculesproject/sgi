@@ -1,11 +1,14 @@
--- COMITÉ
-INSERT INTO eti.comite (id, comite, activo) VALUES (1, 'Comite1', true);
+-- TIPO MEMORIA 
+INSERT INTO eti.tipo_memoria (id, nombre, activo) VALUES (1, 'TipoMemoria1', true);
 
 -- TIPO ACTIVIDAD 
 INSERT INTO eti.tipo_actividad (id, nombre, activo) VALUES (1, 'TipoActividad1', true);
 
--- TIPO MEMORIA 
-INSERT INTO eti.tipo_memoria (id, nombre, activo) VALUES (1, 'TipoMemoria1', true);
+-- COMITE
+INSERT INTO eti.comite (id, comite, activo) VALUES (1, 'Comite1', true);
+INSERT INTO eti.comite (id, comite, activo) VALUES (2, 'Comite2', true);
+INSERT INTO eti.comite (id, comite, activo) VALUES (3, 'Comite3', true);
+
 
 --PETICION EVALUACION
 INSERT INTO eti.peticion_evaluacion (id, titulo, codigo, solicitud_convocatoria_ref, tipo_actividad_id, fuente_financiacion, fecha_inicio, fecha_fin, resumen, valor_social, otro_valor_social, objetivos, dis_metodologico, externo, tiene_fondos_propios, usuario_ref, activo)
@@ -32,7 +35,8 @@ INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, 
 INSERT INTO eti.tipo_evaluacion (id, nombre, activo) VALUES (1, 'TipoEvaluacion1', true);
 
 -- DICTAMEN
-INSERT INTO eti.dictamen (id, nombre, tipo_evaluacion_id, activo) VALUES (1, 'Dictamen1', 1, true);
+INSERT INTO eti.dictamen (id, nombre, tipo_evaluacion_id, activo) VALUES (1, 'Dictamen1', null, true);
+
 
 -- TIPO CONVOCATORIA REUNION 
 INSERT INTO eti.tipo_convocatoria_reunion (id, nombre, activo) VALUES (1, 'Ordinaria', true);
@@ -42,14 +46,18 @@ INSERT INTO eti.tipo_convocatoria_reunion (id, nombre, activo) VALUES (3, 'Segui
 -- CONVOCATORIA REUNION
 INSERT INTO ETI.CONVOCATORIA_REUNION
 (ID, COMITE_ID, FECHA_EVALUACION, FECHA_LIMITE, LUGAR, ORDEN_DIA, ANIO, NUMERO_ACTA, TIPO_CONVOCATORIA_REUNION_ID, HORA_INICIO, MINUTO_INICIO, FECHA_ENVIO, ACTIVO)
-VALUES(1, 1, '2020-08-01 10:10:10.000', '2020-08-01', 'Lugar', 'Orden del día convocatoria reunión', 2020, 100, 1, 7, 30, '2020-08-01', true);
+VALUES(1, 1, '2020-07-01 00:00:00.000', '2020-08-01', 'Lugar 01', 'Orden del día convocatoria reunión 01', 2020, 1, 1, 8, 30, '2020-07-13', true);
 INSERT INTO ETI.CONVOCATORIA_REUNION
 (ID, COMITE_ID, FECHA_EVALUACION, FECHA_LIMITE, LUGAR, ORDEN_DIA, ANIO, NUMERO_ACTA, TIPO_CONVOCATORIA_REUNION_ID, HORA_INICIO, MINUTO_INICIO, FECHA_ENVIO, ACTIVO)
-VALUES(2, 1, '2020-08-01 10:10:10.000', '2020-08-01', 'Lugar', 'Orden del día convocatoria reunión', 2020, 100, 1, 7, 30, '2020-08-01', true);
+VALUES(2, 1, '2020-07-02 00:00:00.000', '2020-08-02', 'Lugar 02', 'Orden del día convocatoria reunión 2', 2020, 2, 2, 9, 30, '2020-07-13', true);
+INSERT INTO ETI.CONVOCATORIA_REUNION
+(ID, COMITE_ID, FECHA_EVALUACION, FECHA_LIMITE, LUGAR, ORDEN_DIA, ANIO, NUMERO_ACTA, TIPO_CONVOCATORIA_REUNION_ID, HORA_INICIO, MINUTO_INICIO, FECHA_ENVIO, ACTIVO)
+VALUES(3, 2, '2020-07-03 00:00:00.000', '2020-08-03', 'Lugar 03', 'Orden del día convocatoria reunión 3', 2020, 1, 1, 10, 30, '2020-07-13', true);
+
 
 -- EVALUACION
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, fecha_dictamen, version, activo) VALUES(1, 1, 1, 1, 1, true, '2020-08-01', 2, true);
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, fecha_dictamen, version, activo) VALUES(2, 1, 1, 2, 1, true, '2020-08-01', 2, true);
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, fecha_dictamen, version, activo) VALUES(3, 1, 1, 1, 1, true, '2020-08-01', 2, true);
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, fecha_dictamen, version, activo) VALUES(4, 1, 1, 2, 1, true, '2020-08-01', 2, true);
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, fecha_dictamen, version, activo) VALUES(5, 1, 1, 1, 1, true, '2020-08-01', 2, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, fecha_dictamen, version, activo) VALUES(1, 1, 1, 1, null, true, '2020-08-01', 2, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, fecha_dictamen, version, activo) VALUES(2, 1, 1, 2, null, true, '2020-08-01', 2, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, fecha_dictamen, version, activo) VALUES(3, 1, 1, 1, null, true, '2020-08-01', 2, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, fecha_dictamen, version, activo) VALUES(4, 1, 1, 2, null, true, '2020-08-01', 2, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, fecha_dictamen, version, activo) VALUES(5, 1, 1, 1, null, true, '2020-08-01', 2, true);

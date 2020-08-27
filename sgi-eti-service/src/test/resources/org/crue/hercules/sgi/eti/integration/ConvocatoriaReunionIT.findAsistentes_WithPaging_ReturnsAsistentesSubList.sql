@@ -7,7 +7,7 @@ INSERT INTO eti.tipo_convocatoria_reunion (id, nombre, activo) VALUES (1, 'Ordin
 -- CONVOCATORIA REUNION
 INSERT INTO ETI.CONVOCATORIA_REUNION
 (ID, COMITE_ID, FECHA_EVALUACION, FECHA_LIMITE, LUGAR, ORDEN_DIA, ANIO, NUMERO_ACTA, TIPO_CONVOCATORIA_REUNION_ID, HORA_INICIO, MINUTO_INICIO, FECHA_ENVIO, ACTIVO)
-VALUES(1, 1, '2020-07-01 10:10:10', '2020-08-01', 'Lugar 01', 'Orden del día convocatoria reunión 01', 2020, 1, 1, 8, 30, '2020-07-13', true);
+VALUES(1, 1, '2020-07-01 00:00:00', '2020-08-01', 'Lugar 01', 'Orden del día convocatoria reunión 01', 2020, 1, 1, 8, 30, '2020-07-13', true);
 
 -- CARGO COMITE
 INSERT INTO eti.cargo_comite (id, nombre, activo) VALUES (1, 'CargoComite1', true);

@@ -69,29 +69,6 @@ public class AsistentesController {
   }
 
   /**
-   * Obtener todas las entidades paginadas {@link Asistentes} activas para una
-   * determinada {@link ConvocatoriaReunion}.
-   *
-   * @param id       Id de {@link ConvocatoriaReunion}.
-   * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link Asistentes} paginadas.
-   */
-  @GetMapping("/convocatoriareunion/{id}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-C', 'ETI-ACT-E')")
-  ResponseEntity<Page<Asistentes>> findAllByConvocatoriaReunionId(@PathVariable Long id,
-      @RequestPageable(sort = "s") Pageable pageable) {
-    log.debug("findAllByConvocatoriaReunionId(Long id, Pageable pageable) - start");
-    Page<Asistentes> page = service.findAllByConvocatoriaReunionId(id, pageable);
-
-    if (page.isEmpty()) {
-      log.debug("findAllByConvocatoriaReunionId(Long id, Pageable pageable) - end");
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-    log.debug("findAllByConvocatoriaReunionId(Long id, Pageable pageable) - end");
-    return new ResponseEntity<>(page, HttpStatus.OK);
-  }
-
-  /**
    * Crea nuevo {@link Asistentes}.
    * 
    * @param nuevoAsistentes {@link Asistentes}. que se quiere crear.

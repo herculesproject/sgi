@@ -253,7 +253,7 @@ public class EvaluadorServiceTest {
     evaluador.setFechaAlta(LocalDate.now());
     evaluador.setFechaBaja(LocalDate.now());
     evaluador.setResumen(resumen);
-    evaluador.setUsuarioRef("user-00" + id);
+    evaluador.setPersonaRef("user-00" + id);
     evaluador.setActivo(Boolean.TRUE);
 
     return evaluador;

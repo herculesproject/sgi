@@ -125,7 +125,7 @@ public class EvaluadorServiceImpl implements EvaluadorService {
       evaluador.setFechaAlta(evaluadorActualizar.getFechaAlta());
       evaluador.setFechaBaja(evaluadorActualizar.getFechaBaja());
       evaluador.setResumen(evaluadorActualizar.getResumen());
-      evaluador.setUsuarioRef(evaluadorActualizar.getUsuarioRef());
+      evaluador.setPersonaRef(evaluadorActualizar.getPersonaRef());
       evaluador.setActivo(evaluadorActualizar.getActivo());
 
       Evaluador returnValue = evaluadorRepository.save(evaluador);

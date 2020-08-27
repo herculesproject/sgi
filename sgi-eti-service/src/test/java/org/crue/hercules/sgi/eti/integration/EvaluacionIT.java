@@ -3,9 +3,7 @@ package org.crue.hercules.sgi.eti.integration;
 import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
@@ -22,27 +20,22 @@ import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
-import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Test de integracion de Evaluacion.
@@ -58,7 +51,6 @@ public class EvaluacionIT {
   private TokenBuilder tokenBuilder;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String PATH_PARAMETER_BY_CONVOCATORIA_REUNION = "/convocatoriareunion";
   private static final String EVALUACION_CONTROLLER_BASE_PATH = "/evaluaciones";
 
   private HttpEntity<Evaluacion> buildRequest(HttpHeaders headers, Evaluacion entity) throws Exception {
@@ -321,81 +313,6 @@ public class EvaluacionIT {
         .isEqualTo("Dictamen" + String.format("%03d", 2));
     Assertions.assertThat(evaluaciones.get(2).getDictamen().getNombre())
         .isEqualTo("Dictamen" + String.format("%03d", 1));
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  public void findAllActivasByConvocatoriaReunionId_Unlimited_ReturnsFullEvaluacionList() throws Exception {
-
-    // given: Datos existentes
-    Long convocatoriaReunionId = 1L;
-    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_BY_CONVOCATORIA_REUNION)//
-        .append(PATH_PARAMETER_ID).toString();
-
-    List<Evaluacion> result = new ArrayList<>();
-    result.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), convocatoriaReunionId));
-    result.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3), convocatoriaReunionId));
-    result.add(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5), convocatoriaReunionId));
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-ACT-E")));
-
-    // when: Se buscan todos los datos
-    final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(url, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
-        }, convocatoriaReunionId);
-
-    // then: Se recuperan todos los datos
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(response.getBody()).isEqualTo(result);
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  public void findAllActivasByConvocatoriaReunionId_WithPaging_ReturnsEvaluacionSubList() throws Exception {
-
-    Long convocatoriaReunionId = 1L;
-    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_BY_CONVOCATORIA_REUNION)//
-        .append(PATH_PARAMETER_ID).toString();
-
-    List<Evaluacion> result = new LinkedList<>();
-    result.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), convocatoriaReunionId));
-    result.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3), convocatoriaReunionId));
-    result.add(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5), convocatoriaReunionId));
-
-    // página 1 con 2 elementos por página
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-ACT-E")));
-    headers.add("X-Page", "1");
-    headers.add("X-Page-Size", "2");
-
-    Pageable pageable = PageRequest.of(1, 2);
-    Page<Evaluacion> pageResult = new PageImpl<>(result.subList(2, 3), pageable, result.size());
-
-    // when: Se buscan los datos paginados
-    final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(url, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
-        }, convocatoriaReunionId);
-
-    // then: Se recuperan los datos correctamente según la paginación solicitada
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page"))
-        .isEqualTo(String.valueOf(pageResult.getPageable().getPageNumber()));
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size"))
-        .isEqualTo(String.valueOf(pageResult.getPageable().getPageSize()));
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Total-Count"))
-        .isEqualTo(String.valueOf(pageResult.getNumberOfElements()));
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Count"))
-        .isEqualTo(String.valueOf(pageResult.getTotalPages()));
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count"))
-        .isEqualTo(String.valueOf(pageResult.getTotalElements()));
-    Assertions.assertThat(response.getBody().size()).isEqualTo(pageResult.getContent().size());
-    Assertions.assertThat(response.getBody()).isEqualTo(pageResult.getContent());
-
   }
 
   /**

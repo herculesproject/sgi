@@ -1,11 +1,9 @@
 package org.crue.hercules.sgi.eti.controller;
 
 import java.lang.reflect.Field;
-import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -41,7 +39,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -72,7 +69,6 @@ public class EvaluacionControllerTest {
   private EvaluacionService evaluacionService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String PATH_PARAMETER_BY_CONVOCATORIA_REUNION = "/convocatoriareunion";
   private static final String EVALUACION_CONTROLLER_BASE_PATH = "/evaluaciones";
 
   @Test
@@ -376,126 +372,6 @@ public class EvaluacionControllerTest {
         // then: Get a page one hundred Evaluacion
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ACT-C", "ETI-ACT-E" })
-  public void findAllActivasByConvocatoriaReunionId_Unlimited_ReturnsFullEvaluacionList() throws Exception {
-    // given: Datos existentes con convocatoriaReunionId = 1
-    Long convocatoriaReunionId = 1L;
-    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_BY_CONVOCATORIA_REUNION)//
-        .append(PATH_PARAMETER_ID).toString();
-
-    List<Evaluacion> response = new ArrayList<>();
-    response.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1)));
-    response.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3)));
-
-    BDDMockito.given(evaluacionService.findAllActivasByConvocatoriaReunionId(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(response));
-
-    // when: Se buscan todos los datos
-    MvcResult result = mockMvc
-        .perform(MockMvcRequestBuilders.get(url, convocatoriaReunionId)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        // then: Se recuperan todos los datos
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2))).andReturn();
-
-    Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
-        new TypeReference<List<Evaluacion>>() {
-        })).isEqualTo(response);
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-V", "ETI-ACT-C", "ETI-ACT-E" })
-  public void findAllActivasByConvocatoriaReunionId_Unlimited_Returns204() throws Exception {
-
-    // given: Sin datos con convocatoriaReunionId = 1
-    Long convocatoriaReunionId = 1L;
-    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_BY_CONVOCATORIA_REUNION)//
-        .append(PATH_PARAMETER_ID).toString();
-
-    BDDMockito.given(evaluacionService.findAllActivasByConvocatoriaReunionId(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(Collections.emptyList()));
-
-    // when: Se buscan todos los datos
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.get(url, convocatoriaReunionId).with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
-        // then: Se recupera lista vacía);
-        .andExpect(MockMvcResultMatchers.status().isNoContent());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ACT-C", "ETI-ACT-E" })
-  public void findAllActivasByConvocatoriaReunionId_WithPaging_ReturnsEvaluacionSubList() throws Exception {
-
-    // given: Datos existentes con convocatoriaReunionId = 1
-    Long convocatoriaReunionId = 1L;
-    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_BY_CONVOCATORIA_REUNION)//
-        .append(PATH_PARAMETER_ID).toString();
-
-    List<Evaluacion> response = new ArrayList<>();
-    response.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1)));
-    response.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3)));
-    response.add(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5)));
-
-    // página 1 con 2 elementos por página
-    Pageable pageable = PageRequest.of(1, 2);
-    Page<Evaluacion> pageResponse = new PageImpl<>(response.subList(2, 3), pageable, response.size());
-
-    BDDMockito.given(evaluacionService.findAllActivasByConvocatoriaReunionId(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.<Pageable>any())).willReturn(pageResponse);
-
-    // when: Se buscan todos los datos paginados
-    MvcResult result = mockMvc
-        .perform(MockMvcRequestBuilders.get(url, convocatoriaReunionId)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", pageable.getPageNumber())
-            .header("X-Page-Size", pageable.getPageSize()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        // then: Se recuperan los datos correctamente según la paginación solicitada
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page", String.valueOf(pageable.getPageNumber())))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", String.valueOf(pageable.getPageSize())))
-        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", String.valueOf(response.size())))
-        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1))).andReturn();
-
-    Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
-        new TypeReference<List<Evaluacion>>() {
-        })).isEqualTo(response.subList(2, 3));
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ACT-C", "ETI-ACT-E" })
-  public void findAllActivasByConvocatoriaReunionId_WithPaging_Returns204() throws Exception {
-
-    // given: Sin datos con convocatoriaReunionId = 1
-    Long convocatoriaReunionId = 1L;
-    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH)//
-        .append(PATH_PARAMETER_BY_CONVOCATORIA_REUNION)//
-        .append(PATH_PARAMETER_ID).toString();
-
-    List<Evaluacion> response = new ArrayList<Evaluacion>();
-    Pageable pageable = PageRequest.of(1, 2);
-    Page<Evaluacion> pageResponse = new PageImpl<>(response, pageable, response.size());
-
-    BDDMockito.given(evaluacionService.findAllActivasByConvocatoriaReunionId(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.<Pageable>any())).willReturn(pageResponse);
-
-    // when: Se buscan todos los datos paginados
-    mockMvc
-        .perform(MockMvcRequestBuilders.get(url, convocatoriaReunionId)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", pageable.getPageNumber())
-            .header("X-Page-Size", pageable.getPageSize()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        // then: Se recupera lista de datos paginados vacía
-        .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   /**

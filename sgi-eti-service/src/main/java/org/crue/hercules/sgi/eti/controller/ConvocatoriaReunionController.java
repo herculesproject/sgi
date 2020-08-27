@@ -4,8 +4,12 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.eti.model.Asistentes;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.service.AsistentesService;
 import org.crue.hercules.sgi.eti.service.ConvocatoriaReunionService;
+import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -33,17 +37,28 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ConvocatoriaReunionController {
 
+  /** Asistentes service */
+  private AsistentesService asistenteService;
+
+  /** Evaluacion service */
+  private EvaluacionService evaluacionService;
+
   /** ConvocatoriaReunion service */
   private ConvocatoriaReunionService service;
 
   /**
    * Instancia un nuevo ConvocatoriaReunionController.
    * 
-   * @param service ConvocatoriaReunionService.
+   * @param asistenteService  {@link AsistentesService}
+   * @param evaluacionService {@link EvaluacionService}
+   * @param service           {@link ConvocatoriaReunionService}.
    */
-  public ConvocatoriaReunionController(ConvocatoriaReunionService service) {
+  public ConvocatoriaReunionController(AsistentesService asistenteService, EvaluacionService evaluacionService,
+      ConvocatoriaReunionService service) {
     log.debug("ConvocatoriaReunionController(ConvocatoriaReunionService service) - start");
     this.service = service;
+    this.asistenteService = asistenteService;
+    this.evaluacionService = evaluacionService;
     log.debug("ConvocatoriaReunionController(ConvocatoriaReunionService service) - end");
   }
 
@@ -145,6 +160,52 @@ public class ConvocatoriaReunionController {
     ConvocatoriaReunion returnValue = service.findById(id);
     log.debug("one(Long id) - end");
     return returnValue;
+  }
+
+  /**
+   * Obtener todas las entidades paginadas {@link Asistentes} activas para una
+   * determinada {@link ConvocatoriaReunion}.
+   *
+   * @param id       Id de {@link ConvocatoriaReunion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Asistentes} paginadas.
+   */
+  @GetMapping("/{id}/asistentes")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-C', 'ETI-ACT-E')")
+  ResponseEntity<Page<Asistentes>> findAsistentes(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("findAsistentes(Long id, Pageable pageable) - start");
+    Page<Asistentes> page = asistenteService.findAllByConvocatoriaReunionId(id, pageable);
+
+    if (page.isEmpty()) {
+      log.debug("findAsistentes(Long id, Pageable pageable) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAsistentes(Long id, Pageable pageable) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Obtener todas las entidades paginadas {@link Evaluacion} activas para una
+   * determinada {@link ConvocatoriaReunion}.
+   *
+   * @param id       Id de {@link ConvocatoriaReunion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+  @GetMapping("/{id}/evaluaciones-activas")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-C', 'ETI-ACT-E')")
+  ResponseEntity<Page<Evaluacion>> findEvaluacionesActivas(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("findEvaluacionesActivas(Long id, Pageable pageable) - start");
+    Page<Evaluacion> page = evaluacionService.findAllActivasByConvocatoriaReunionId(id, pageable);
+
+    if (page.isEmpty()) {
+      log.debug("findEvaluacionesActivas(Long id, Pageable pageable) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findEvaluacionesActivas(Long id, Pageable pageable) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
 }
