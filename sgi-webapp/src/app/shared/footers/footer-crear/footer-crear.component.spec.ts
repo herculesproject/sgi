@@ -1,9 +1,10 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {FooterCrearComponent} from './footer-crear.component';
-import {NGXLogger} from 'ngx-logger';
+import { FooterCrearComponent } from './footer-crear.component';
+import { NGXLogger } from 'ngx-logger';
 import TestUtils from '@core/utils/test-utils';
-import {RouterTestingModule} from '@angular/router/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MaterialDesignModule } from '@material/material-design.module';
 
 describe('FooterCrearComponent', () => {
   let component: FooterCrearComponent;
@@ -14,10 +15,11 @@ describe('FooterCrearComponent', () => {
       declarations: [FooterCrearComponent],
       imports: [
         RouterTestingModule,
-        TestUtils.getIdiomas()
+        TestUtils.getIdiomas(),
+        MaterialDesignModule
       ],
       providers: [
-        {provide: NGXLogger, useValue: TestUtils.getLoggerSpy()},
+        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
       ]
     })
       .compileComponents();

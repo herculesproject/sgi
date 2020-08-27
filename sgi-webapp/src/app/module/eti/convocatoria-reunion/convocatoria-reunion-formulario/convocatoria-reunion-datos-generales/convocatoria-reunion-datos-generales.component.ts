@@ -1,27 +1,28 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Comite } from '@core/models/eti/comite';
 import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
-import { AbstractTabComponent } from '@core/component/abstract-tab.component';
-import { FormGroupUtil } from '@core/utils/form-group-util';
+import { Evaluador } from '@core/models/eti/evaluador';
+import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
+import { Persona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { NGXLogger } from 'ngx-logger';
+import { ComiteService } from '@core/services/eti/comite.service';
+import { EvaluadorService } from '@core/services/eti/evaluador.service';
+import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocatoria-reunion.service';
+import { FormGroupUtil } from '@core/utils/form-group-util';
+import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { Observable, of, zip } from 'rxjs';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { NullIdValidador } from '@core/validators/null-id-validador';
 import { HoraValidador } from '@core/validators/hora-validator';
 import { MinutoValidador } from '@core/validators/minuto-validator';
-import { Comite } from '@core/models/eti/comite';
-import { ComiteService } from '@core/services/eti/comite.service';
-import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
-import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocatoria-reunion.service';
-import { Evaluador } from '@core/models/eti/evaluador';
-import { EvaluadorService } from '@core/services/eti/evaluador.service';
-import { switchMap, map, startWith } from 'rxjs/operators';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
-import { Persona } from '@core/models/sgp/persona';
+import { NullIdValidador } from '@core/validators/null-id-validador';
 import { SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { AbstractTabComponent } from '@core/component/abstract-tab.component';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, of, zip } from 'rxjs';
+import { map, startWith, switchMap } from 'rxjs/operators';
+
 
 const MSG_ERROR_LOAD_COMITES = marker('eti.convocatoriaReunion.formulario.datosGenerales.comite.error.cargar');
 const MSG_ERROR_LOAD_TIPOS_CONVOCATORIA = marker('eti.convocatoriaReunion.formulario.datosGenerales.tipoConvocatoriaReunion.error.cargar');
@@ -118,7 +119,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
         }
       );
 
-    this.subscripciones.push(comitesSelectSubscription);
+    this.suscripciones.push(comitesSelectSubscription);
 
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
       'getComites()',
@@ -149,7 +150,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
           this.snackBarService.showError(MSG_ERROR_LOAD_TIPOS_CONVOCATORIA);
         });
 
-    this.subscripciones.push(tipoConvocatoriaSelectReunionSubscription);
+    this.suscripciones.push(tipoConvocatoriaSelectReunionSubscription);
 
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
       'getTiposConvocatoriaReunion()',
@@ -213,7 +214,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
       );
 
 
-    this.subscripciones.push(convocantesSelectSubscription);
+    this.suscripciones.push(convocantesSelectSubscription);
 
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
       'getConvocantesComite()',
@@ -282,7 +283,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
     return tipoConvocatoriaReunion?.nombre;
   }
 
-  crearFormGroup(): FormGroup {
+  createFormGroup(): FormGroup {
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'crearFormGroup()', 'start');
     const formGroup = new FormGroup({
       comite: new FormControl(null, [new NullIdValidador().isValid()]),

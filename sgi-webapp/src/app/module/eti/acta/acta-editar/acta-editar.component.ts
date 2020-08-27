@@ -1,16 +1,17 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AbstractFormularioComponent } from '@core/component/abstract-formulario.component';
-import { NGXLogger } from 'ngx-logger';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import { ActaDatosGeneralesComponent } from '../acta-formulario/acta-datos-generales/acta-datos-generales.component';
 import { ActaMemoriasComponent } from '../acta-formulario/acta-memorias/acta-memorias.component';
 import { ActaAsistentesComponent } from '../acta-formulario/acta-asistentes/acta-asistentes.component';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
+import { NGXLogger } from 'ngx-logger';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { ActaService } from '@core/services/eti/acta.service';
+import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Acta } from '@core/models/eti/acta';
+
 
 const MSG_BUTTON_EDIT = marker('footer.eti.acta.actualizar');
 const MSG_SUCCESS = marker('eti.acta.editar.correcto');
@@ -20,10 +21,10 @@ const MSG_NOT_FOUND = marker('eti.acta.editar.no-encontrado');
 @Component({
   selector: 'sgi-acta-editar',
   templateUrl: './acta-editar.component.html',
-  styleUrls: ['./acta-editar.component.scss']
+  styleUrls: ['./acta-editar.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ActaEditarComponent extends AbstractFormularioComponent implements OnInit {
-
   @ViewChild('datosGenerales', { static: true }) datosGenerales: ActaDatosGeneralesComponent;
   @ViewChild('memorias', { static: true }) memorias: ActaMemoriasComponent;
   @ViewChild('asistentes', { static: true }) asistentes: ActaAsistentesComponent;
@@ -34,7 +35,8 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
 
   private idActa: number;
 
-  constructor(protected readonly logger: NGXLogger,
+  constructor(
+    protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     private readonly router: Router,
     private route: ActivatedRoute,
@@ -45,13 +47,7 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
 
   ngOnInit(): void {
     super.ngOnInit();
-
-    this.datosGenerales.formGroup = this.datosGenerales.crearFormGroup();
-    this.memorias.formGroup = this.memorias.crearFormGroup();
-    this.asistentes.formGroup = this.asistentes.crearFormGroup();
-
     this.getActa();
-
   }
 
   /**
@@ -60,7 +56,7 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
   getActa(): void {
     this.logger.debug(ActaEditarComponent.name, 'getActa()', 'start');
     // Obtiene los parámetros de la url
-    this.subscripciones.push(this.route.params.pipe(
+    this.suscripciones.push(this.route.params.pipe(
       switchMap((params: Params) => {
         if (params.id) {
           const id = Number(params.id);
@@ -72,14 +68,9 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
     ).subscribe(
       (acta: Acta) => {
         if (acta) {
-
           this.datosGenerales.datosIniciales = acta;
           this.datosGenerales.datosFormulario = { ...this.datosGenerales.datosIniciales };
           this.datosGenerales.setDatosFormulario(acta);
-          this.memorias.datosIniciales = acta;
-          this.memorias.datosFormulario = { ...this.memorias.datosIniciales };
-          this.asistentes.datosIniciales = acta;
-          this.asistentes.datosFormulario = { ...this.asistentes.datosIniciales };
           this.idActa = acta.id;
 
         }
@@ -92,7 +83,7 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
   }
 
 
-  protected inicializarTabs(): void {
+  protected initTabs(): void {
     this.logger.debug(ActaEditarComponent.name, 'inicializarTabs()', 'start');
 
     this.tabs.set(0, this.datosGenerales);
@@ -103,14 +94,14 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
   }
 
 
-  protected enviarDatos() {
+  protected sendData() {
     this.logger.debug(ActaEditarComponent.name, 'enviarDatos()', 'start');
-    this.subscripciones.push(
+    this.suscripciones.push(
       // Se actualizan los datos generales del acta.
       this.actaService.update(this.idActa, this.datosGenerales.getDatosFormulario())
         .subscribe((acta: Acta) => {
           // Actualizamos los datos por si falla alguna de las restantes pestañas
-          this.tabs.get(0).actualizarDatos(acta);
+          this.tabs.get(0).updateDatos(acta);
           this.tabs.get(0).warning = false;
 
           this.snackBarService.showSuccess(MSG_SUCCESS);
@@ -120,7 +111,7 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
         },
           () => {
             // Si falla mostramos el error en la pestaña
-            this.tabs.get(0).mostrarError();
+            this.tabs.get(0).showError();
             this.snackBarService.showError(MSG_ERROR);
             this.logger.error(ActaEditarComponent.name, 'enviarDatos()', 'end');
           }
@@ -131,5 +122,4 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
   public setConvocatoria(idConvocatoria: number) {
     this.idConvocatoria = idConvocatoria;
   }
-
 }

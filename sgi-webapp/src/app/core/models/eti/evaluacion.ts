@@ -4,7 +4,7 @@ import { Dictamen } from './dictamen';
 import { Memoria } from './memoria';
 import { TipoEvaluacion } from './tipo-evaluacion';
 
-export class Evaluacion {
+export class IEvaluacion {
   /** ID */
   id: number;
 
@@ -34,17 +34,4 @@ export class Evaluacion {
 
   /** Activo */
   activo: boolean;
-
-  constructor(evaluacion?: Evaluacion) {
-    this.id = evaluacion?.id;
-    this.memoria = evaluacion?.memoria;
-    this.comite = evaluacion?.comite;
-    this.convocatoriaReunion = evaluacion?.convocatoriaReunion;
-    this.tipoEvaluacion = evaluacion?.tipoEvaluacion;
-    this.version = evaluacion?.version;
-    this.dictamen = evaluacion?.dictamen;
-    this.fechaDictamen = evaluacion?.fechaDictamen;
-    this.esRevMinima = evaluacion?.esRevMinima;
-    this.activo = evaluacion?.activo;
-  }
 }

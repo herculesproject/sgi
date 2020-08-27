@@ -32,7 +32,6 @@ export class LayoutService {
   }
 
   private processEvent(event: RouterEvent): void {
-    console.log(event);
     if (event instanceof GuardsCheckEnd) {
       const guardsCheckEnd: GuardsCheckEnd = event;
       if (guardsCheckEnd.shouldActivate) {

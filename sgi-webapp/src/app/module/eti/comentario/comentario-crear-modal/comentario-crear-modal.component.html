@@ -1,0 +1,72 @@
+<header class="modal-header-material">
+  <h1 mat-dialog-title>{{'eti.comentario.crear.titulo' | translate}}
+    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </h1>
+</header>
+<main>
+  <form [formGroup]="formGroup">
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+      <mat-form-field appearance="fill" fxFill>
+        <mat-label>{{'eti.comentario.crear.bloque.titulo' | translate}}</mat-label>
+        <input matInput formControlName="bloqueFormulario" type="text" id="bloqueFormulario"
+          placeholder="{{'eti.comentario.crear.bloque.titulo' | translate}}" required
+          [matAutocomplete]="autocompleteBloque" (ngModelChange)="loadApartados()">
+        <mat-autocomplete #autocompleteBloque="matAutocomplete" [displayWith]="getNombreBloqueFormulario">
+          <mat-option *ngFor="let bloque of bloquesFormulario" [value]="bloque">
+            {{bloque.nombre}}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="formGroup.controls.bloqueFormulario.errors?.required">
+          {{'eti.comentario.crear.bloque.error.requerido' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+      <mat-form-field appearance="fill" fxFill *ngIf="apartadosFormulario?.length > 0">
+        <mat-label>{{'eti.comentario.crear.apartado.titulo' | translate}}</mat-label>
+        <input matInput formControlName="apartadoFormulario" type="text" id="apartadoFormulario"
+          placeholder="{{'eti.comentario.crear.apartado.titulo' | translate}}" required
+          [matAutocomplete]="autocompleteApartado" (ngModelChange)="loadHijos()">
+        <mat-autocomplete #autocompleteApartado="matAutocomplete" [displayWith]="getNombreApartadoFormulario">
+          <mat-option *ngFor="let apartadoFormulario of apartadosFormulario" [value]="apartadoFormulario">
+            {{apartadoFormulario.nombre}}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="formGroup.controls.apartadoFormulario.errors?.required">
+          {{'eti.comentario.crear.apartado.error.requerido' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign"
+      *ngIf="subapartados?.length > 0">
+      <mat-form-field appearance="fill" fxFill>
+        <mat-label>{{'eti.comentario.crear.subapartado.titulo' | translate}}</mat-label>
+        <input matInput formControlName="subapartado" type="text" id="subapartado"
+          placeholder="{{'eti.comentario.crear.subapartado.titulo' | translate}}"
+          [matAutocomplete]="autocompleteSubApartado">
+        <mat-autocomplete #autocompleteSubApartado="matAutocomplete" [displayWith]="getNombreApartadoFormulario">
+          <mat-option *ngFor="let subapartado of subapartados" [value]="subapartado">
+            {{subapartado.nombre}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+    <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+      <mat-form-field appearance="fill" fxFill>
+        <mat-label>{{'eti.comentario.crear.comentario.titulo' | translate}}</mat-label>
+        <textarea matInput formControlName="comentario" type="text" id="comentario"
+          placeholder="{{'eti.comentario.crear.comentario.titulo' | translate}}" required>
+        </textarea>
+        <mat-error *ngIf="formGroup.controls.comentario.errors?.required">
+          {{'eti.comentario.crear.comentario.error.requerido' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</main>
+<section id="modals-buttons" class="float-right" mat-dialog-actions>
+  <button (click)="closeModal()" class="btn btn-outline-danger input-modal" type="button">Cancelar</button>
+  <button (click)="saveComentario()" class="btn btn-outline-success input-modal" type="submit">Guardar</button>
+</section>

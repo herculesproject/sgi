@@ -63,7 +63,7 @@ describe('TipoReservableActualizarComponent', () => {
     expect(botones.length).toBe(2);
     fixture.whenStable().then(() => {
       const titulo = fixture.debugElement.query(By.css('h2')).nativeElement;
-      expect(titulo.innerHTML).toBe(i18n.cat['tipo-reservable'].actualizar.titulo);
+      expect(titulo.innerHTML).toBe(i18n['cat.tipo-reservable.actualizar.titulo']);
     });
   });
 });

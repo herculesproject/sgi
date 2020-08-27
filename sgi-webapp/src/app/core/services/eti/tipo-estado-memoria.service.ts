@@ -5,8 +5,6 @@ import { environment } from '@env';
 import { SgiRestService } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 
-import { TipoEstadoActaService } from './tipo-estado-acta.service';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -15,7 +13,7 @@ export class TipoEstadoMemoriaService extends SgiRestService<number, TipoEstadoM
 
   constructor(logger: NGXLogger, protected http: HttpClient) {
     super(
-      TipoEstadoActaService.name,
+      TipoEstadoMemoriaService.name,
       logger,
       `${environment.serviceServers.eti}${TipoEstadoMemoriaService.MAPPING}`,
       http

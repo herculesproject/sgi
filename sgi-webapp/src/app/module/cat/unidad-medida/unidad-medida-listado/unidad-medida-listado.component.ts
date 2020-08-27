@@ -1,15 +1,15 @@
+import { Component } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { Component, OnDestroy } from '@angular/core';
+import { AbstractPaginacionComponent } from '@core/component/abstract-paginacion.component';
 import { UnidadMedida } from '@core/models/cat/unidad-medida';
+import { ROUTE_NAMES } from '@core/route.names';
 import { UnidadMedidaService } from '@core/services/cat/unidad-medida.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { AbstractPaginacionComponent } from '@core/component/abstract-paginacion.component';
-import { SgiRestFilter } from '@sgi/framework/http';
+import { SgiRestFilter, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ROUTE_NAMES } from '@core/route.names';
 
 const MSG_SUCCESS_DELETE = marker('cat.unidad-medida.listado.eliminarConfirmado');
 const MSG_CONFIRM_DELETE = marker('cat.unidad-medida.listado.eliminar');
@@ -20,7 +20,7 @@ const MSG_ERROR = marker('cat.unidad-medida.listado.error');
   templateUrl: './unidad-medida-listado.component.html',
   styleUrls: ['./unidad-medida-listado.component.scss'],
 })
-export class UnidadMedidaListadoComponent extends AbstractPaginacionComponent<UnidadMedida> implements OnDestroy {
+export class UnidadMedidaListadoComponent extends AbstractPaginacionComponent<UnidadMedida> {
   ROUTE_NAMES = ROUTE_NAMES;
 
   unidadesMedida$: Observable<UnidadMedida[]>;
@@ -29,16 +29,16 @@ export class UnidadMedidaListadoComponent extends AbstractPaginacionComponent<Un
     protected readonly logger: NGXLogger,
     private readonly unidadMedidaService: UnidadMedidaService,
     private readonly dialogService: DialogService,
-    private readonly snackBarService: SnackBarService
+    protected readonly snackBarService: SnackBarService
   ) {
-    super(logger, unidadMedidaService);
+    super(logger, snackBarService, MSG_ERROR);
     this.unidadesMedida$ = of();
   }
 
-  protected inicializarColumnas() {
-    this.logger.debug(UnidadMedidaListadoComponent.name, 'inicializarColumnas()', 'start');
+  protected initColumnas() {
+    this.logger.debug(UnidadMedidaListadoComponent.name, 'initColumnas()', 'start');
     this.columnas = ['abreviatura', 'descripcion', 'acciones'];
-    this.logger.debug(UnidadMedidaListadoComponent.name, 'inicializarColumnas()', 'end');
+    this.logger.debug(UnidadMedidaListadoComponent.name, 'initColumnas()', 'end');
   }
 
   protected loadTable(reset?: boolean) {
@@ -47,10 +47,11 @@ export class UnidadMedidaListadoComponent extends AbstractPaginacionComponent<Un
     this.logger.debug(UnidadMedidaListadoComponent.name, 'loadTable()', 'end');
   }
 
-  protected mostrarMensajeErrorLoadTable(): void {
-    this.logger.debug(UnidadMedidaListadoComponent.name, 'mostrarMensajeErrorLoadTable()', 'start');
-    this.snackBarService.showError(MSG_ERROR);
-    this.logger.debug(UnidadMedidaListadoComponent.name, 'mostrarMensajeErrorLoadTable()', 'end');
+  protected createObservable(): Observable<SgiRestListResult<UnidadMedida>> {
+    this.logger.debug(UnidadMedidaListadoComponent.name, 'createObservable()', 'start');
+    const observable$ = this.unidadMedidaService.findAll(this.getFindOptions());
+    this.logger.debug(UnidadMedidaListadoComponent.name, 'createObservable()', 'start');
+    return observable$;
   }
 
   /**
@@ -66,7 +67,7 @@ export class UnidadMedidaListadoComponent extends AbstractPaginacionComponent<Un
       MSG_CONFIRM_DELETE
     ).subscribe((aceptado: boolean) => {
       if (aceptado) {
-        this.subscripciones.push(this.unidadMedidaService
+        this.suscripciones.push(this.unidadMedidaService
           .deleteById(unidadMedidaId)
           .pipe(
             map(() => {
@@ -82,7 +83,7 @@ export class UnidadMedidaListadoComponent extends AbstractPaginacionComponent<Un
     });
   }
 
-  protected crearFiltros(): SgiRestFilter[] {
+  protected createFiltros(): SgiRestFilter[] {
     return [];
   }
 }

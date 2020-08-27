@@ -1,32 +1,25 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-
-import { NGXLogger } from 'ngx-logger';
-import { Observable } from 'rxjs';
-
-import { AbstractTabComponent } from '@core/component/abstract-tab.component';
-
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { Acta } from '@core/models/eti/acta';
+import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-
+import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
-
-
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { HoraValidador } from '@core/validators/hora-validator';
 import { MinutoValidador } from '@core/validators/minuto-validator';
 import { NullIdValidador } from '@core/validators/null-id-validador';
-
-
-import { ActaService } from '@core/services/eti/acta.service';
-import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
-import { SnackBarService } from '@core/services/snack-bar.service';
-
-import { Acta } from '@core/models/eti/acta';
-import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { SgiRestListResult } from '@sgi/framework/http/types';
-import { startWith, map } from 'rxjs/operators';
-import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { AbstractTabComponent } from '@core/component/abstract-tab.component';
+import { NGXLogger } from 'ngx-logger';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+
+
+
 
 const MSG_ERROR_INIT = marker('eti.acta.crear.datosGenerales.convocatoriaReunion.error.cargar');
 
@@ -36,10 +29,22 @@ const MSG_ERROR_INIT = marker('eti.acta.crear.datosGenerales.convocatoriaReunion
   styleUrls: ['./acta-datos-generales.component.scss']
 })
 export class ActaDatosGeneralesComponent extends AbstractTabComponent<Acta> implements OnInit {
+  @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
 
+  FormGroupUtil = FormGroupUtil;
+  fxFlexProperties: FxFlexProperties;
+  fxLayoutProperties: FxLayoutProperties;
+  fxFlexPropertiesInline: FxFlexProperties;
+
+  convocatoriasReunionFitlered: ConvocatoriaReunion[];
+  convocatoriasReunion: Observable<ConvocatoriaReunion[]>;
+
+  acta: Acta;
+
+  @Output()
+  selectConvocatoria: EventEmitter<number> = new EventEmitter();
   constructor(
     protected readonly logger: NGXLogger,
-    private readonly actaService: ActaService,
     private readonly convocatoriaReunionService: ConvocatoriaReunionService,
     private readonly snackBarService: SnackBarService,
   ) {
@@ -62,22 +67,6 @@ export class ActaDatosGeneralesComponent extends AbstractTabComponent<Acta> impl
     this.fxLayoutProperties.xs = 'column';
   }
 
-  @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
-
-  FormGroupUtil = FormGroupUtil;
-  fxFlexProperties: FxFlexProperties;
-  fxLayoutProperties: FxLayoutProperties;
-  fxFlexPropertiesInline: FxFlexProperties;
-
-  convocatoriasReunionFitlered: ConvocatoriaReunion[];
-  convocatoriasReunion: Observable<ConvocatoriaReunion[]>;
-
-  acta: Acta;
-
-  @Output()
-  selectConvocatoria: EventEmitter<number> = new EventEmitter();
-
-
   /**
    * Compara dos convocatorias reunión por su código.
    *
@@ -91,7 +80,7 @@ export class ActaDatosGeneralesComponent extends AbstractTabComponent<Acta> impl
     super.ngOnInit();
     this.logger.debug(ActaDatosGeneralesComponent.name, 'ngOnInit()', 'start');
     this.acta = new Acta();
-    this.subscripciones.push(
+    this.suscripciones.push(
       this.convocatoriaReunionService.findAll().subscribe(
         (res: SgiRestListResult<ConvocatoriaReunion>) => {
           this.convocatoriasReunionFitlered = res.items;
@@ -121,7 +110,7 @@ export class ActaDatosGeneralesComponent extends AbstractTabComponent<Acta> impl
     return this.convocatoriasReunionFitlered.filter(convocatoriaReunion => convocatoriaReunion.codigo.toLowerCase().includes(filterValue));
   }
 
-  crearFormGroup(): FormGroup {
+  createFormGroup(): FormGroup {
     this.logger.debug(ActaDatosGeneralesComponent.name, 'crearFormGroup()', 'start');
     const formGroup = new FormGroup({
       convocatoriaReunion: new FormControl('', [new NullIdValidador().isValid()]),

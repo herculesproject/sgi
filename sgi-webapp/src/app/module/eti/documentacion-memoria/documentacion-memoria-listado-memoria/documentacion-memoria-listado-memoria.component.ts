@@ -1,0 +1,64 @@
+import { Component, Input } from '@angular/core';
+import { AbstractPaginacionComponent } from '@core/component/abstract-paginacion.component';
+import { DocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
+import { MemoriaService } from '@core/services/eti/memoria.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { SgiRestFilter, SgiRestListResult } from '@sgi/framework/http';
+import { NGXLogger } from 'ngx-logger';
+import { Observable } from 'rxjs';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+
+const MSG_ERROR = marker('eti.documentacion-memoria.listado.error');
+
+@Component({
+  selector: 'sgi-documentacion-memoria-listado-memoria',
+  templateUrl: './documentacion-memoria-listado-memoria.component.html',
+  styleUrls: ['./documentacion-memoria-listado-memoria.component.scss']
+})
+export class DocumentacionMemoriaListadoMemoriaComponent extends AbstractPaginacionComponent<DocumentacionMemoria>  {
+  documentacionMemoria$: Observable<DocumentacionMemoria[]>;
+  @Input() memoriaId: number;
+
+  constructor(
+    protected readonly logger: NGXLogger,
+    private readonly memoriaService: MemoriaService,
+    protected readonly snackBarService: SnackBarService
+  ) {
+    super(logger, snackBarService, MSG_ERROR);
+  }
+
+  protected createObservable(): Observable<SgiRestListResult<DocumentacionMemoria>> {
+    this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, 'createObservable()', 'start');
+    const observable$ = this.memoriaService.getDocumentaciones(this.memoriaId, this.getFindOptions());
+    this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, 'createObservable()', 'end');
+    return observable$;
+  }
+
+  protected getObservableLoadTable(reset?: boolean): Observable<DocumentacionMemoria[]> {
+    this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, `getObservableLoadTable(${reset})`, 'start');
+    if (this.memoriaId) {
+      this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, `getObservableLoadTable(${reset})`, 'end');
+      return super.getObservableLoadTable(reset);
+    }
+    this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, `getObservableLoadTable(${reset})`, 'end');
+    return null;
+  }
+
+  protected initColumnas(): void {
+    this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, 'initColumnas()', 'start');
+    this.columnas = ['documentoRef', 'acciones'];
+    this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, 'initColumnas()', 'end');
+  }
+
+  protected loadTable(reset?: boolean): void {
+    this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, 'loadTable()', 'start');
+    this.documentacionMemoria$ = this.getObservableLoadTable(reset);
+    this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, 'loadTable()', 'end');
+  }
+
+  protected createFiltros(): SgiRestFilter[] {
+    this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, 'createFiltros()', 'start');
+    this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, 'createFiltros()', 'end');
+    return [];
+  }
+}

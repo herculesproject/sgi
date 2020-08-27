@@ -1,15 +1,15 @@
-import { Injectable } from '@angular/core';
-import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '@env';
-import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
-import { SgiMutableRestService } from '@sgi/framework/http';
-import { Comite } from '@core/models/eti/comite';
-import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
-import { SgiBaseConverter } from '@sgi/framework/core/';
+import { Injectable } from '@angular/core';
 import { IAsistente } from '@core/models/eti/asistente';
+import { Comite } from '@core/models/eti/comite';
+import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
+import { IEvaluacion } from '@core/models/eti/evaluacion';
+import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
+import { environment } from '@env';
+import { SgiBaseConverter } from '@sgi/framework/core/';
+import { SgiMutableRestService } from '@sgi/framework/http';
+import { NGXLogger } from 'ngx-logger';
 import { tap } from 'rxjs/operators';
-import { Evaluacion } from '@core/models/eti/evaluacion';
 
 
 interface IConvocatoriaReunion {
@@ -116,7 +116,7 @@ export class ConvocatoriaReunionService extends SgiMutableRestService<number, IC
    */
   findEvaluacionesActivas(idConvocatoria: number) {
     this.logger.debug(ConvocatoriaReunionService.name, `findEvaluacionesActivas(${idConvocatoria})`, '-', 'START');
-    return this.find<Evaluacion, Evaluacion>(`${this.endpointUrl}/${idConvocatoria}/evaluaciones-activas`, null).pipe(
+    return this.find<IEvaluacion, IEvaluacion>(`${this.endpointUrl}/${idConvocatoria}/evaluaciones-activas`, null).pipe(
       tap(() => this.logger.debug(ConvocatoriaReunionService.name, `findEvaluacionesActivas(${idConvocatoria})`, '-', 'END'))
     );
   }

@@ -1,16 +1,16 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Acta } from '@core/models/eti/acta';
+import { ActaService } from '@core/services/eti/acta.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { AbstractFormularioComponent } from '@core/component/abstract-formulario.component';
 import { NGXLogger } from 'ngx-logger';
 
-import { ActaDatosGeneralesComponent } from '../acta-formulario/acta-datos-generales/acta-datos-generales.component';
 import { ActaAsistentesComponent } from '../acta-formulario/acta-asistentes/acta-asistentes.component';
+import { ActaDatosGeneralesComponent } from '../acta-formulario/acta-datos-generales/acta-datos-generales.component';
 import { ActaMemoriasComponent } from '../acta-formulario/acta-memorias/acta-memorias.component';
 
-import { ActaService } from '@core/services/eti/acta.service';
 
 const MSG_BUTTON_SAVE = marker('footer.eti.acta.guardar');
 const MSG_SUCCESS = marker('eti.acta.crear.correcto');
@@ -19,7 +19,8 @@ const MSG_ERROR = marker('eti.acta.crear.error');
 @Component({
   selector: 'sgi-acta-crear',
   templateUrl: './acta-crear.component.html',
-  styleUrls: ['./acta-crear.component.scss']
+  styleUrls: ['./acta-crear.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ActaCrearComponent extends AbstractFormularioComponent implements OnInit {
   @ViewChild('datosGenerales', { static: true }) datosGenerales: ActaDatosGeneralesComponent;
@@ -46,16 +47,6 @@ export class ActaCrearComponent extends AbstractFormularioComponent implements O
     super.ngOnInit();
     this.datosGenerales.datosIniciales = new Acta();
     this.datosGenerales.datosFormulario = { ...this.datosGenerales.datosIniciales };
-    this.datosGenerales.formGroup = this.datosGenerales.crearFormGroup();
-
-    this.memorias.datosIniciales = new Acta();
-    this.memorias.datosFormulario = { ...this.memorias.datosIniciales };
-    this.memorias.formGroup = this.memorias.crearFormGroup();
-
-    this.asistentes.datosIniciales = new Acta();
-    this.asistentes.datosFormulario = { ...this.asistentes.datosIniciales };
-    this.asistentes.formGroup = this.asistentes.crearFormGroup();
-
     this.logger.debug(ActaCrearComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -67,7 +58,7 @@ export class ActaCrearComponent extends AbstractFormularioComponent implements O
     this.idConvocatoria = idConvocatoria;
   }
 
-  protected inicializarTabs(): void {
+  protected initTabs(): void {
     this.logger.debug(ActaCrearComponent.name, 'inicializarTabs()', 'start');
 
     this.tabs.set(0, this.datosGenerales);
@@ -77,14 +68,14 @@ export class ActaCrearComponent extends AbstractFormularioComponent implements O
     this.logger.debug(ActaCrearComponent.name, 'inicializarTabs()', 'end');
   }
 
-  protected enviarDatos() {
+  protected sendData() {
     this.logger.debug(ActaCrearComponent.name, 'enviarDatos()', 'start');
-    this.subscripciones.push(
+    this.suscripciones.push(
       // Se crean los datos generales del acta.
       this.actaService.create(this.datosGenerales.getDatosFormulario())
         .subscribe((acta: Acta) => {
           // Actualizamos los datos por si falla alguna de las restantes pestañas
-          this.tabs.get(0).actualizarDatos(acta);
+          this.tabs.get(0).updateDatos(acta);
           this.tabs.get(0).warning = false;
 
           this.snackBarService.showSuccess(MSG_SUCCESS);
@@ -94,7 +85,7 @@ export class ActaCrearComponent extends AbstractFormularioComponent implements O
         },
           () => {
             // Si falla mostramos el error en la pestaña
-            this.tabs.get(0).mostrarError();
+            this.tabs.get(0).showError();
             this.snackBarService.showError(MSG_ERROR);
             this.logger.error(ActaCrearComponent.name, 'enviarDatos()', 'end');
           }

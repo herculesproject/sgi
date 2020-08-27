@@ -18,7 +18,7 @@ import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reun
   templateUrl: './acta-asistentes.component.html',
   styleUrls: ['./acta-asistentes.component.scss']
 })
-export class ActaAsistentesComponent extends AbstractTabComponent<any> implements OnInit {
+export class ActaAsistentesComponent extends AbstractTabComponent<IAsistente> implements OnInit {
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -38,9 +38,7 @@ export class ActaAsistentesComponent extends AbstractTabComponent<any> implement
     protected readonly personaFisicaService: PersonaFisicaService
   ) {
     super(logger);
-
     this.displayedColumns = ['evaluador.identificadorNumero', 'evaluador.nombre', 'asistencia', 'motivo', 'acciones'];
-
   }
 
 
@@ -82,24 +80,18 @@ export class ActaAsistentesComponent extends AbstractTabComponent<any> implement
   ngOnInit() {
     this.logger.debug(ActaAsistentesComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
-
-
-
     this.logger.debug(ActaAsistentesComponent.name, 'ngOnInit()', 'end');
-
   }
 
-  crearFormGroup(): FormGroup {
-    this.logger.debug(ActaAsistentesComponent.name, 'crearFormGroup()', 'start');
-    const formGroup = new FormGroup({
-
-    });
-    this.logger.debug(ActaAsistentesComponent.name, 'crearFormGroup()', 'end');
-    return formGroup;
+  createFormGroup(): FormGroup {
+    this.logger.debug(ActaAsistentesComponent.name, `createFormGroup()`, 'start');
+    this.logger.debug(ActaAsistentesComponent.name, `createFormGroup()`, 'start');
+    return null;
   }
 
-
-  getDatosFormulario(): {} {
-    return this.formGroup.value;
+  getDatosFormulario(): IAsistente {
+    this.logger.debug(ActaAsistentesComponent.name, `getDatosFormulario()`, 'start');
+    this.logger.debug(ActaAsistentesComponent.name, `getDatosFormulario()`, 'end');
+    return null;
   }
 }

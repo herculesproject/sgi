@@ -365,8 +365,6 @@ export class TipoReservableActualizarComponent implements OnInit, OnDestroy {
 
     this.tipoReservable.activo = true;
 
-    console.log('TipoReservable: ' + JSON.stringify(this.tipoReservable));
-
     this.logger.debug(
       TipoReservableActualizarComponent.name,
       'createData()',

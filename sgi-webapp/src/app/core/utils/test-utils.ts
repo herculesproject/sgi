@@ -68,7 +68,6 @@ export default class TestUtils {
    */
   static getIdiomas(): TranslateTestingModule {
     return TranslateTestingModule.withTranslations({
-      en: require('src/assets/i18n/en.json'),
       es: require('src/assets/i18n/es.json'),
     }).withDefaultLanguage('es');
   }

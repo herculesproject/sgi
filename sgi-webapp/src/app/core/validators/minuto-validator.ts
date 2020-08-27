@@ -8,18 +8,15 @@ export class MinutoValidador {
     return (control: AbstractControl): { [key: string]: boolean } | null => {
       const value = control.value;
       if (value === undefined || value === null) {
-        console.log(value);
         return { vacio: true };
       }
       const numValue = Number(value);
       if (isNaN(numValue)) {
-        console.log(numValue);
         return { NaN: true };
       }
       if (numValue >= 0 && numValue <= 59) {
         return null;
       }
-      console.log(124);
       return { noValido: true };
     };
   }

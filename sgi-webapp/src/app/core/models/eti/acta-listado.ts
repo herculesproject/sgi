@@ -1,7 +1,6 @@
+import { Acta } from './acta';
 import { ConvocatoriaReunion } from './convocatoria-reunion';
 import { TipoEstadoActa } from './tipo-estado-acta';
-import { Comite } from './comite';
-import { Acta } from './acta';
 
 export class ActaListado {
   /** Id */

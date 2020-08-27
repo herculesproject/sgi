@@ -121,7 +121,6 @@ export class UnidadMedidaCrearComponent implements OnInit, OnDestroy {
    * Método para actualizar la entidad con los datos de un formGroup
    */
   private getDatosForm(): UnidadMedida {
-    // TODO Cambiar a this.formGroup.value as UnidadMedida
     this.logger.debug(UnidadMedidaCrearComponent.name, 'getDatosForm()', 'start');
     const unidadMedida = new UnidadMedida();
     unidadMedida.abreviatura = FormGroupUtil.getValue(

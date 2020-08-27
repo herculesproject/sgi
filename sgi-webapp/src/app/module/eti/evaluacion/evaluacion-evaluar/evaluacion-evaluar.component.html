@@ -1,0 +1,34 @@
+<mat-tab-group headerPosition="above" (selectedTabChange)="cambioTab($event)">
+  <!-- Comentarios -->
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <sgi-generic-tab-label [abstractTab]="comentarios" [errors]="errorTabs[0]"
+        [textoLabel]="'eti.evaluacion.evaluar.comentarios.cabecera' | translate">
+      </sgi-generic-tab-label>
+    </ng-template>
+    <sgi-evaluacion-comentarios #comentarios></sgi-evaluacion-comentarios>
+  </mat-tab>
+
+  <!-- Memoria -->
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <sgi-generic-tab-label [abstractTab]="datosMemoria" [errors]="errorTabs[1]"
+        [textoLabel]="'eti.evaluacion.evaluar.datosMemoria.cabecera' | translate">
+      </sgi-generic-tab-label>
+    </ng-template>
+    <sgi-evaluacion-datos-memoria #datosMemoria></sgi-evaluacion-datos-memoria>
+  </mat-tab>
+
+  <!-- Documentación -->
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <sgi-generic-tab-label [abstractTab]="documentacion" [errors]="errorTabs[2]"
+        [textoLabel]="'eti.evaluacion.evaluar.documentacion.cabecera' | translate">
+      </sgi-generic-tab-label>
+    </ng-template>
+    <sgi-evaluacion-documentacion #documentacion></sgi-evaluacion-documentacion>
+  </mat-tab>
+
+</mat-tab-group>
+<!-- Footer -->
+<sgi-footer-guardar [texto]="textoCrear" (emitter)="saveData()"></sgi-footer-guardar>

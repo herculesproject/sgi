@@ -1,24 +1,97 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { SgiRestService } from '@sgi/framework/http';
-import { Evaluacion } from '@core/models/eti/evaluacion';
+import { Comentario } from '@core/models/eti/comentario';
+import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { environment } from '@env';
+import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class EvaluacionService extends SgiRestService<number, Evaluacion>{
+export class EvaluacionService extends SgiRestService<number, IEvaluacion>{
   private static readonly MAPPING = '/evaluaciones';
 
   constructor(logger: NGXLogger, protected http: HttpClient) {
-    super(
-      EvaluacionService.name,
-      logger,
-      `${environment.serviceServers.eti}${EvaluacionService.MAPPING}`,
-      http
+    super(EvaluacionService.name, logger, `${environment.serviceServers.eti}${EvaluacionService.MAPPING}`, http);
+  }
+
+  /**
+   * Devuelve todos las evaluaciones por convocatoria id.
+   *
+   * @param convocatoriaId id convocatoria.
+   */
+  findAllByConvocatoriaReunionId(convocatoriaId: number): Observable<SgiRestListResult<IEvaluacion>> {
+    this.logger.debug(EvaluacionService.name, `findAllByConvocatoriaReunionId(${convocatoriaId})`, '-', 'start');
+    return this.find<IEvaluacion, IEvaluacion>(`${this.endpointUrl}/convocatoriareuniones/${convocatoriaId}`, null).pipe(
+      tap(() => this.logger.debug(EvaluacionService.name, `findAllByConvocatoriaReunionId(${convocatoriaId})`, '-', 'end'))
     );
   }
 
+  /**
+   * Devuelve los comentarios de una evalución
+   *
+   * @param id Id de la evaluación
+   * @param options Opciones de paginación
+   */
+  getComentarios(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<Comentario>> {
+    this.logger.debug(EvaluacionService.name, `findByEvaluacionId(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    return this.find<Comentario, Comentario>(`${this.endpointUrl}/${id}/comentarios`, options).pipe(
+      tap(() => this.logger.debug(EvaluacionService.name, `findByEvaluacionId(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+    );
+  }
+
+  /**
+   * Obtiene el número total de comentarios que tiene una evaluación
+   *
+   * @param id Id de la evaluación
+   */
+  countComentarios(id: number): Observable<number> {
+    this.logger.debug(EvaluacionService.name, `countByEvaluacionId(${id})`, '-', 'start');
+    return this.http.get<number>(`${this.endpointUrl}/${id}/comentarios/count`).pipe(
+      tap(() => this.logger.debug(EvaluacionService.name, `countByEvaluacionId(${id})`, '-', 'end'))
+    );
+  }
+
+  /**
+   * Añade un listado de comentarios a una evaluación
+   *
+   * @param id Id de la evaluación
+   * @param comentarios Comentarios a crear
+   */
+  createComentarios(id: number, comentarios: Comentario[]): Observable<Comentario[]> {
+    this.logger.debug(EvaluacionService.name, `createComentarios(${id}, ${comentarios})`, '-', 'start');
+    return this.http.post<Comentario[]>(`${this.endpointUrl}/${id}/comentarios`, comentarios).pipe(
+      tap(() => this.logger.debug(EvaluacionService.name, `createComentarios(${id}, ${comentarios})`, '-', 'end'))
+    );
+  }
+
+  /**
+   * Actualiza un listado de comentarios de una evaluación
+   *
+   * @param id Id de la evaluación
+   * @param comentarios Comentarios a actualizar
+   */
+  updateComentarios(id: number, comentarios: Comentario[]): Observable<Comentario[]> {
+    this.logger.debug(EvaluacionService.name, `updateComentarios(${id}, ${comentarios})`, '-', 'start');
+    return this.http.put<Comentario[]>(`${this.endpointUrl}/${id}/comentarios`, comentarios).pipe(
+      tap(() => this.logger.debug(EvaluacionService.name, `updateComentarios(${id}, ${comentarios})`, '-', 'end'))
+    );
+  }
+
+  /**
+   * Elimina un listado de comentarios de una evaluación
+   *
+   * @param id Id de la evaluación
+   * @param ids Listado de ids de los comentarios
+   */
+  deleteComentarios(id: number, ids: number[]): Observable<void> {
+    this.logger.debug(EvaluacionService.name, `deleteComentarios(${id}, ${ids})`, '-', 'start');
+    const params = new HttpParams().set('ids', ids.toString());
+    return this.http.delete<void>(`${this.endpointUrl}/${id}/comentarios`, { params }).pipe(
+      tap(() => this.logger.debug(EvaluacionService.name, `deleteComentarios(${id}, ${ids})`, '-', 'end'))
+    );
+  }
 }

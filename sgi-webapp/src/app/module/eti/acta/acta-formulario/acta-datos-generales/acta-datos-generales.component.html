@@ -5,7 +5,6 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field>
         <mat-label>{{'eti.acta.crear.datosGenerales.convocatoriaReunion.titulo' | translate}}</mat-label>
-
         <input type="text" placeholder="{{'eti.acta.crear.datosGenerales.convocatoriaReunion.titulo' | translate}}"
           arial-label="Number" matInput formControlName="convocatoriaReunion" [matAutocomplete]="auto" required>
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="getConvocatoria"
@@ -27,7 +26,7 @@
         <input matInput formControlName="horaInicio" id="horaInicio" type="number"
           placeholder="{{'eti.acta.crear.datosGenerales.horaInicio.titulo' | translate}}" required>
         <mat-error
-          *ngIf="FormGroupUtil.checkError(formGroup, 'horaInicio') && formGroup.get('horaInicio').errors.vacio">
+          *ngIf="FormGroupUtil.checkError(formGroup, 'horaInicio') && (formGroup.get('horaInicio').errors.vacio || formGroup.get('horaInicio').errors.required)">
           {{'eti.acta.crear.datosGenerales.horaInicio.error.vacio' | translate}}
         </mat-error>
         <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'horaInicio') && formGroup.get('horaInicio').errors.NaN">
@@ -46,7 +45,7 @@
         <input matInput formControlName="minutoInicio" id="minutoInicio" type="number"
           placeholder="{{'eti.acta.crear.datosGenerales.minutoInicio.titulo' | translate}}" required>
         <mat-error
-          *ngIf="FormGroupUtil.checkError(formGroup, 'minutoInicio') && formGroup.get('minutoInicio').errors.vacio">
+          *ngIf="FormGroupUtil.checkError(formGroup, 'minutoInicio') && (formGroup.get('minutoInicio').errors.vacio || formGroup.get('minutoInicio').errors.required)">
           {{'eti.acta.crear.datosGenerales.minutoInicio.error.vacio' | translate}}
         </mat-error>
         <mat-error
@@ -65,7 +64,8 @@
         <mat-label>{{'eti.acta.crear.datosGenerales.horaFin.titulo' | translate}}</mat-label>
         <input matInput formControlName="horaFin" id="horaFin" type="number"
           placeholder="{{'eti.acta.crear.datosGenerales.horaFin.titulo' | translate}}" required>
-        <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'horaFin') && formGroup.get('horaFin').errors.vacio">
+        <mat-error
+          *ngIf="FormGroupUtil.checkError(formGroup, 'horaFin') && (formGroup.get('horaFin').errors.vacio || formGroup.get('horaFin').errors.required)">
           {{'eti.acta.crear.datosGenerales.horaFin.error.vacio' | translate}}
         </mat-error>
         <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'horaFin') && formGroup.get('horaFin').errors.NaN">
@@ -82,7 +82,8 @@
         <mat-label>{{'eti.acta.crear.datosGenerales.minutoFin.titulo' | translate}}</mat-label>
         <input matInput formControlName="minutoFin" id="minutoFin" type="number"
           placeholder="{{'eti.acta.crear.datosGenerales.minutoFin.titulo' | translate}}" required>
-        <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'minutoFin') && formGroup.get('minutoFin').errors.vacio">
+        <mat-error
+          *ngIf="FormGroupUtil.checkError(formGroup, 'minutoFin') && (formGroup.get('minutoFin').errors.vacio || formGroup.get('minutoFin').errors.required)">
           {{'eti.acta.crear.datosGenerales.minutoFin.error.vacio' | translate}}
         </mat-error>
         <mat-error *ngIf="FormGroupUtil.checkError(formGroup, 'minutoFin') && formGroup.get('minutoFin').errors.NaN">

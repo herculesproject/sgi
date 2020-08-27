@@ -10,6 +10,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NGXLogger } from 'ngx-logger';
 import { ConvocatoriaReunionDatosGeneralesComponent } from '../convocatoria-reunion-formulario/convocatoria-reunion-datos-generales/convocatoria-reunion-datos-generales.component';
+import { SharedModule } from '@shared/shared.module';
 
 describe('ConvocatoriaReunionCrearComponent', () => {
   let component: ConvocatoriaReunionCrearComponent;
@@ -28,7 +29,8 @@ describe('ConvocatoriaReunionCrearComponent', () => {
         HttpClientTestingModule,
         FlexModule,
         ReactiveFormsModule,
-        RouterTestingModule.withRoutes([])
+        RouterTestingModule.withRoutes([]),
+        SharedModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
