@@ -21,14 +21,4 @@ export class EvaluacionService extends SgiRestService<number, Evaluacion>{
     );
   }
 
-  /**
-   * Devuelve todos las evaluaciones por convocatoria id.
-   * @param idConvocatoria id convocatoria.
-   */
-  findAllByConvocatoriaReunionId(idConvocatoria: number) {
-    this.logger.debug(EvaluacionService.name, `findAllByConvocatoriaReunionId(${idConvocatoria})`, '-', 'START');
-    return this.find<Evaluacion, Evaluacion>(`${this.endpointUrl}/convocatoriareunion/${idConvocatoria}`, null).pipe(
-      tap(() => this.logger.debug(EvaluacionService.name, `findAllByConvocatoriaReunionId(${idConvocatoria})`, '-', 'END'))
-    );
-  }
 }

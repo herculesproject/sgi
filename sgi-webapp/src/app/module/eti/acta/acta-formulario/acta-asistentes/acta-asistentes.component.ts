@@ -11,6 +11,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { IAsistente } from '@core/models/eti/asistente';
 import { MatSort } from '@angular/material/sort';
 import { AsistenteService } from '@core/services/eti/asistente.service';
+import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 
 @Component({
   selector: 'sgi-acta-asistentes',
@@ -33,7 +34,7 @@ export class ActaAsistentesComponent extends AbstractTabComponent<any> implement
 
   constructor(
     protected readonly logger: NGXLogger,
-    protected readonly asistenteService: AsistenteService,
+    protected readonly convocatoriaReunionService: ConvocatoriaReunionService,
     protected readonly personaFisicaService: PersonaFisicaService
   ) {
     super(logger);
@@ -48,7 +49,7 @@ export class ActaAsistentesComponent extends AbstractTabComponent<any> implement
 
     if (idConvocatoria) {
 
-      this.asistentes$ = this.asistenteService.findAllByConvocatoriaReunionId(idConvocatoria).pipe(
+      this.asistentes$ = this.convocatoriaReunionService.findAsistentes(idConvocatoria).pipe(
 
         switchMap((response) => {
 
@@ -57,7 +58,7 @@ export class ActaAsistentesComponent extends AbstractTabComponent<any> implement
             const listObservables: Observable<IAsistente>[] = [];
 
             response.items.forEach((asistente) => {
-              const asistente$ = this.personaFisicaService.findById(asistente.evaluador.personaRef).pipe(
+              const asistente$ = this.personaFisicaService.getInformacionBasica(asistente.evaluador.personaRef).pipe(
                 map((usuarioInfo) => {
                   asistente.evaluador.identificadorNumero = usuarioInfo.identificadorNumero;
                   asistente.evaluador.nombre = usuarioInfo.nombre;

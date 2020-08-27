@@ -7,6 +7,9 @@ import { SgiMutableRestService } from '@sgi/framework/http';
 import { Comite } from '@core/models/eti/comite';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
 import { SgiBaseConverter } from '@sgi/framework/core/';
+import { IAsistente } from '@core/models/eti/asistente';
+import { tap } from 'rxjs/operators';
+import { Evaluacion } from '@core/models/eti/evaluacion';
 
 
 interface IConvocatoriaReunion {
@@ -93,6 +96,28 @@ export class ConvocatoriaReunionService extends SgiMutableRestService<number, IC
       logger,
       `${environment.serviceServers.eti}${ConvocatoriaReunionService.MAPPING}`,
       http, ConvocatoriaReunionService.CONVERTER
+    );
+  }
+
+  /**
+   * Devuelve todos los asitentes por convocatoria id.
+   * @param idConvocatoria id convocatoria.
+   */
+  findAsistentes(idConvocatoria: number) {
+    this.logger.debug(ConvocatoriaReunionService.name, `findAsistentes(${idConvocatoria})`, '-', 'START');
+    return this.find<IAsistente, IAsistente>(`${this.endpointUrl}/${idConvocatoria}/asistentes`, null).pipe(
+      tap(() => this.logger.debug(ConvocatoriaReunionService.name, `findAsistentes(${idConvocatoria})`, '-', 'END'))
+    );
+  }
+
+  /**
+   * Devuelve todos las evaluaciones por convocatoria id.
+   * @param idConvocatoria id convocatoria.
+   */
+  findEvaluacionesActivas(idConvocatoria: number) {
+    this.logger.debug(ConvocatoriaReunionService.name, `findEvaluacionesActivas(${idConvocatoria})`, '-', 'START');
+    return this.find<Evaluacion, Evaluacion>(`${this.endpointUrl}/${idConvocatoria}/evaluaciones-activas`, null).pipe(
+      tap(() => this.logger.debug(ConvocatoriaReunionService.name, `findEvaluacionesActivas(${idConvocatoria})`, '-', 'END'))
     );
   }
 

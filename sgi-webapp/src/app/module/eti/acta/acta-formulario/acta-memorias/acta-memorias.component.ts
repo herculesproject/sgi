@@ -15,7 +15,7 @@ import { AbstractTabComponent } from '@core/component/abstract-tab.component';
 import { Evaluacion } from '@core/models/eti/evaluacion';
 import { MemoriaListado } from '@core/models/eti/memoria-listado';
 
-import { EvaluacionService } from '@core/services/eti/evaluacion.service';
+import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 
 
 @Component({
@@ -37,7 +37,7 @@ export class ActaMemoriasComponent extends AbstractTabComponent<any>  {
 
   constructor(
     protected readonly logger: NGXLogger,
-    protected readonly evaluacionService: EvaluacionService
+    protected readonly convocatoriaReunionService: ConvocatoriaReunionService
   ) {
     super(logger);
 
@@ -50,7 +50,7 @@ export class ActaMemoriasComponent extends AbstractTabComponent<any>  {
   set idConvocatoria(idConvocatoria: number) {
     if (idConvocatoria) {
 
-      this.memorias$ = this.evaluacionService.findAllByConvocatoriaReunionId(idConvocatoria).pipe(
+      this.memorias$ = this.convocatoriaReunionService.findEvaluacionesActivas(idConvocatoria).pipe(
         switchMap((response) => {
           if (response.items) {
 

@@ -17,15 +17,6 @@ export class AsistenteService extends SgiRestService<number, IAsistente>{
     super(AsistenteService.name, logger, `${environment.serviceServers.eti}` + AsistenteService.MAPPING, http);
   }
 
-  /**
-   * Devuelve todos los asitentes por convocatoria id.
-   * @param idConvocatoria id convocatoria.
-   */
-  findAllByConvocatoriaReunionId(idConvocatoria: number) {
-    this.logger.debug(AsistenteService.name, `findAllByConvocatoriaReunionId(${idConvocatoria})`, '-', 'START');
-    return this.find<IAsistente, IAsistente>(`${this.endpointUrl}/convocatoriareunion/${idConvocatoria}`, null).pipe(
-      tap(() => this.logger.debug(AsistenteService.name, `findAllByConvocatoriaReunionId(${idConvocatoria})`, '-', 'END'))
-    );
-  }
+
 
 }
