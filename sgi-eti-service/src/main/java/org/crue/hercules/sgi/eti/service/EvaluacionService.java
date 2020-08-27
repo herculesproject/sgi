@@ -1,10 +1,13 @@
 package org.crue.hercules.sgi.eti.service;
 
 import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 
 import java.util.List;
 
+import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,6 +50,18 @@ public interface EvaluacionService {
    * @return la lista de entidades {@link Evaluacion} paginadas.
    */
   Page<Evaluacion> findAllActivasByConvocatoriaReunionId(Long id, Pageable pageable);
+
+  /**
+   * Obtener todas las entidades paginadas {@link Evaluacion} para una determinada
+   * {@link Memoria} anteriores al id de evaluación recibido.
+   *
+   * @param idMemoria    Id de {@link Memoria}.
+   * @param idEvaluacion Id de {@link Evaluacion}.
+   * @param pageable     la información de la paginación.
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+  Page<EvaluacionWithNumComentario> findEvaluacionesAnterioresByMemoria(Long idMemoria, Long idEvaluacion,
+      Pageable pageable);
 
   /**
    * Obtiene {@link Evaluacion} por id.

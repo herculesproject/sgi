@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.controller;
 
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,6 +63,7 @@ public class ApartadoFormularioControllerTest {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String APARTADO_FORMULARIO_CONTROLLER_BASE_PATH = "/apartadoformularios";
+  private static final String PATH_PARAMETER_HIJOS = "/hijos";
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-APARTADOFORMULARIO-EDITAR" })
@@ -465,6 +467,62 @@ public class ApartadoFormularioControllerTest {
     Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
         new TypeReference<List<ApartadoFormulario>>() {
         })).isEqualTo(response.subList(2, 3));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  public void getHijosEmptyList() throws Exception {
+    // given: Existe el apartado pero no tiene hijos
+    Long id = 3L;
+    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append(PATH_PARAMETER_HIJOS).toString();
+
+    BDDMockito
+        .given(service.findByApartadoFormularioPadreId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(Collections.emptyList()));
+
+    // when: Se buscan todos los datos
+    mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recupera lista vacía
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  public void getHijosValid() throws Exception {
+    // given: Datos existentes con apartado
+    Long id = 3L;
+    final String url = new StringBuilder(APARTADO_FORMULARIO_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append(PATH_PARAMETER_HIJOS).toString();
+
+    List<ApartadoFormulario> apartados = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      ApartadoFormulario apartadoFormulario = getMockData(Long.valueOf(i), Long.valueOf(i), Long.valueOf(i),
+          Long.valueOf(i));
+      apartados.add(apartadoFormulario);
+    }
+
+    BDDMockito
+        .given(service.findByApartadoFormularioPadreId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ApartadoFormulario>>() {
+          @Override
+          public Page<ApartadoFormulario> answer(InvocationOnMock invocation) throws Throwable {
+            List<ApartadoFormulario> content = new ArrayList<>();
+            for (ApartadoFormulario apartados : apartados) {
+              content.add(apartados);
+            }
+            return new PageImpl<>(content);
+          }
+        });
+    // when: Se buscan todos los apartados hijos de ese apartador
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recuperan todos los apartados hijos relacionados
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
   }
 
   /**

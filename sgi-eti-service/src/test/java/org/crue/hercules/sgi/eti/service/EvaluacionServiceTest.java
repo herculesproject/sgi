@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
@@ -334,6 +335,70 @@ public class EvaluacionServiceTest {
 
     // then: Se recupera lista de datos paginados vacía
     Assertions.assertThat(result).isEmpty();
+  }
+
+  @Test
+  public void findEvaluacionesAnterioresByMemoriaMemoriaIdNull() {
+    // given: EL id de la memoria sea null
+    Long memoriaId = null;
+    Long evaluacionId = 1L;
+    try {
+      // when: se listar sus evaluaciones
+      evaluacionService.findEvaluacionesAnterioresByMemoria(memoriaId, evaluacionId, Pageable.unpaged());
+      Assertions.fail("El id de la memoria no puede ser nulo para mostrar sus evaluaciones");
+      // then: se debe lanzar una excepción
+    } catch (IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage())
+          .isEqualTo("El id de la memoria no puede ser nulo para mostrar sus evaluaciones");
+    }
+  }
+
+  @Test
+  public void findEvaluacionesAnterioresByMemoriaEvaluacionIdNull() {
+    // given: EL id de la evaluación sea null
+    Long memoriaId = 1L;
+    Long evaluacionId = null;
+    try {
+      // when: se listar sus evaluaciones
+      evaluacionService.findEvaluacionesAnterioresByMemoria(memoriaId, evaluacionId, Pageable.unpaged());
+      Assertions.fail("El id de la evaluación no puede ser nulo para recuperar las evaluaciones anteriores");
+      // then: se debe lanzar una excepción
+    } catch (IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage())
+          .isEqualTo("El id de la evaluación no puede ser nulo para recuperar las evaluaciones anteriores");
+    }
+  }
+
+  @Test
+  public void findEvaluacionesAnterioresByMemoriaIdValid() {
+    // given: EL id de la memoria es valido
+    Long evaluacionId = 12L;
+    Long memoriaId = 1L;
+    List<EvaluacionWithNumComentario> response = new LinkedList<EvaluacionWithNumComentario>();
+    response.add(new EvaluacionWithNumComentario(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1)),
+        Long.valueOf(1)));
+    response.add(new EvaluacionWithNumComentario(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3)),
+        Long.valueOf(3)));
+    response.add(new EvaluacionWithNumComentario(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5)),
+        Long.valueOf(5)));
+
+    // página 1 con 2 elementos por página
+    Pageable pageable = PageRequest.of(1, 2);
+    Page<EvaluacionWithNumComentario> pageResponse = new PageImpl<>(response.subList(2, 3), pageable, response.size());
+
+    BDDMockito.given(evaluacionRepository.findEvaluacionesAnterioresByMemoria(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any())).willReturn(pageResponse);
+
+    // when: Se buscan los datos paginados
+    Page<EvaluacionWithNumComentario> result = evaluacionService.findEvaluacionesAnterioresByMemoria(memoriaId,
+        evaluacionId, pageable);
+
+    // then: Se recuperan los datos correctamente según la paginación solicitada
+    Assertions.assertThat(result).isEqualTo(pageResponse);
+    Assertions.assertThat(result.getContent()).isEqualTo(response.subList(2, 3));
+    Assertions.assertThat(result.getNumber()).isEqualTo(pageable.getPageNumber());
+    Assertions.assertThat(result.getSize()).isEqualTo(pageable.getPageSize());
+    Assertions.assertThat(result.getTotalElements()).isEqualTo(response.size());
   }
 
   /**

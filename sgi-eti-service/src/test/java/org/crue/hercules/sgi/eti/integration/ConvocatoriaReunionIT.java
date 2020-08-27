@@ -9,21 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.eti.model.Asistentes;
-import org.crue.hercules.sgi.eti.model.CargoComite;
-import org.crue.hercules.sgi.eti.model.Comite;
-import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
-import org.crue.hercules.sgi.eti.model.Dictamen;
-import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
-import org.crue.hercules.sgi.eti.model.Evaluacion;
-import org.crue.hercules.sgi.eti.model.Evaluador;
-import org.crue.hercules.sgi.eti.model.Memoria;
-import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
-import org.crue.hercules.sgi.eti.model.Retrospectiva;
-import org.crue.hercules.sgi.eti.model.TipoActividad;
-import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
-import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
-import org.crue.hercules.sgi.eti.model.TipoMemoria;
+import org.crue.hercules.sgi.eti.model.*;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
 import org.junit.jupiter.api.Test;
@@ -60,6 +46,7 @@ public class ConvocatoriaReunionIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH = "/convocatoriareuniones";
+  private static final String PATH_PARAMETER_BY_EVALUACIONES = "/evaluaciones";
 
   private HttpEntity<ConvocatoriaReunion> buildRequest(HttpHeaders headers, ConvocatoriaReunion entity)
       throws Exception {
@@ -495,9 +482,83 @@ public class ConvocatoriaReunionIT {
 
   }
 
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void getEvaluaciones_Unlimited_ReturnsFullEvaluacionList() throws Exception {
+
+    // given: Datos existentes
+    Long convocatoriaReunionId = 1L;
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)//
+        .toString();
+
+    List<Evaluacion> result = new ArrayList<>();
+    result.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), convocatoriaReunionId));
+    result.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3), convocatoriaReunionId));
+    result.add(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5), convocatoriaReunionId));
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V")));
+
+    // when: Se buscan todos los datos
+    ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(url, HttpMethod.GET, buildRequest(headers, null),
+        new ParameterizedTypeReference<List<Evaluacion>>() {
+        }, convocatoriaReunionId);
+
+    // then: Se recuperan todos los datos
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).isEqualTo(result);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void getEvaluaciones_WithPaging_ReturnsEvaluacionSubList() throws Exception {
+
+    Long convocatoriaReunionId = 1L;
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)//
+        .toString();
+
+    List<Evaluacion> result = new LinkedList<>();
+    result.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), convocatoriaReunionId));
+    result.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3), convocatoriaReunionId));
+    result.add(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5), convocatoriaReunionId));
+
+    // página 1 con 2 elementos por página
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V")));
+    headers.add("X-Page", "1");
+    headers.add("X-Page-Size", "2");
+
+    Pageable pageable = PageRequest.of(1, 2);
+    Page<Evaluacion> pageResult = new PageImpl<>(result.subList(2, 3), pageable, result.size());
+
+    // when: Se buscan los datos paginados
+    final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(url, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
+        }, convocatoriaReunionId);
+
+    // then: Se recuperan los datos correctamente según la paginación solicitada
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page"))
+        .isEqualTo(String.valueOf(pageResult.getPageable().getPageNumber()));
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size"))
+        .isEqualTo(String.valueOf(pageResult.getPageable().getPageSize()));
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Total-Count"))
+        .isEqualTo(String.valueOf(pageResult.getNumberOfElements()));
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Count"))
+        .isEqualTo(String.valueOf(pageResult.getTotalPages()));
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count"))
+        .isEqualTo(String.valueOf(pageResult.getTotalElements()));
+    Assertions.assertThat(response.getBody().size()).isEqualTo(pageResult.getContent().size());
+    Assertions.assertThat(response.getBody()).isEqualTo(pageResult.getContent());
+  }
+
   /**
    * Genera un objeto {@link ConvocatoriaReunion}
-   * 
+   *
    * @param id
    * @param comiteId
    * @param tipoId
@@ -532,10 +593,10 @@ public class ConvocatoriaReunionIT {
 
   /**
    * Función que devuelve un objeto Asistentes
-   * 
+   *
    * @param id         id del asistentes
-   * @param motivo     motivo
-   * @param asistencia asistencia
+   * @param evaluadorId     id del evaluador
+   * @param convocatoriaReunionId id de la convocatoria
    * @return el objeto Asistentes
    */
 
@@ -553,9 +614,8 @@ public class ConvocatoriaReunionIT {
 
   /**
    * Función que devuelve un objeto Evaluador
-   * 
+   *
    * @param id      id del Evaluador
-   * @param resumen el resumen de Evaluador
    * @return el objeto Evaluador
    */
 
@@ -582,7 +642,7 @@ public class ConvocatoriaReunionIT {
 
   /**
    * Función que devuelve un objeto Evaluacion
-   * 
+   *
    * @param id     id del Evaluacion
    * @param sufijo el sufijo para título y nombre
    * @return el objeto Evaluacion
@@ -644,4 +704,94 @@ public class ConvocatoriaReunionIT {
 
     return evaluacion;
   }
+
+  /**
+   * Función que devuelve un objeto Evaluacion
+   *
+   * @param id                    id del Evaluacion
+   * @param sufijo                el sufijo para título y nombre
+   * @param convocatoriaReunionId el sufijo para título y nombre
+   * @return el objeto Evaluacion
+   */
+
+  public Evaluacion generarMockEvaluacion(Long id, String sufijo, Long convocatoriaReunionId) {
+
+    TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
+    tipoEvaluacion.setId(1L);
+    tipoEvaluacion.setNombre("TipoEvaluacion1");
+    tipoEvaluacion.setActivo(Boolean.TRUE);
+
+    Dictamen dictamen = new Dictamen();
+    dictamen.setId(1L);
+    dictamen.setNombre("Dictamen1");
+    dictamen.setTipoEvaluacion(tipoEvaluacion);
+    dictamen.setActivo(Boolean.TRUE);
+
+    TipoActividad tipoActividad = new TipoActividad();
+    tipoActividad.setId(1L);
+    tipoActividad.setNombre("TipoActividad1");
+    tipoActividad.setActivo(Boolean.TRUE);
+
+    PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
+    peticionEvaluacion.setId(1L);
+    peticionEvaluacion.setCodigo("Codigo1");
+    peticionEvaluacion.setDisMetodologico("DiseñoMetodologico1");
+    peticionEvaluacion.setExterno(Boolean.FALSE);
+    peticionEvaluacion.setFechaFin(LocalDate.of(2020, 8, 1));
+    peticionEvaluacion.setFechaInicio(LocalDate.of(2020, 8, 1));
+    peticionEvaluacion.setFuenteFinanciacion("Fuente financiación");
+    peticionEvaluacion.setObjetivos("Objetivos1");
+    peticionEvaluacion.setOtroValorSocial("Otro valor social1");
+    peticionEvaluacion.setResumen("Resumen");
+    peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
+    peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
+    peticionEvaluacion.setTipoActividad(tipoActividad);
+    peticionEvaluacion.setTitulo("PeticionEvaluacion1");
+    peticionEvaluacion.setUsuarioRef("user-001");
+    peticionEvaluacion.setValorSocial(3);
+    peticionEvaluacion.setActivo(Boolean.TRUE);
+
+    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+
+    TipoMemoria tipoMemoria = new TipoMemoria();
+    tipoMemoria.setId(1L);
+    tipoMemoria.setNombre("TipoMemoria1");
+    tipoMemoria.setActivo(Boolean.TRUE);
+
+    Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria001", "user-001", tipoMemoria,
+        new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.of(2020, 8, 1), Boolean.FALSE,
+        new Retrospectiva(1L, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), LocalDate.of(2020, 8, 1)), 3,
+        Boolean.TRUE);
+
+    TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
+
+    ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
+    convocatoriaReunion.setId(convocatoriaReunionId);
+    convocatoriaReunion.setComite(comite);
+    convocatoriaReunion.setFechaEvaluacion(LocalDateTime.of(2020, 8, 1, 10, 10, 10));
+    convocatoriaReunion.setFechaLimite(LocalDate.of(2020, 8, 1));
+    convocatoriaReunion.setLugar("Lugar");
+    convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
+    convocatoriaReunion.setAnio(2020);
+    convocatoriaReunion.setNumeroActa(100L);
+    convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
+    convocatoriaReunion.setHoraInicio(7);
+    convocatoriaReunion.setMinutoInicio(30);
+    convocatoriaReunion.setFechaEnvio(LocalDate.of(2020, 8, 1));
+    convocatoriaReunion.setActivo(Boolean.TRUE);
+
+    Evaluacion evaluacion = new Evaluacion();
+    evaluacion.setId(id);
+    evaluacion.setDictamen(dictamen);
+    evaluacion.setEsRevMinima(Boolean.TRUE);
+    evaluacion.setFechaDictamen(LocalDate.of(2020, 8, 1));
+    evaluacion.setMemoria(memoria);
+    evaluacion.setConvocatoriaReunion(convocatoriaReunion);
+    evaluacion.setVersion(2);
+    evaluacion.setTipoEvaluacion(tipoEvaluacion);
+    evaluacion.setActivo(Boolean.TRUE);
+
+    return evaluacion;
+  }
+
 }

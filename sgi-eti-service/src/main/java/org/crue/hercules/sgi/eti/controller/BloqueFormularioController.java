@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.eti.model.ApartadoFormulario;
 import org.crue.hercules.sgi.eti.model.BloqueFormulario;
+import org.crue.hercules.sgi.eti.service.ApartadoFormularioService;
 import org.crue.hercules.sgi.eti.service.BloqueFormularioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,15 +37,23 @@ public class BloqueFormularioController {
   /** BloqueFormulario service */
   private final BloqueFormularioService service;
 
+  /** ApartadoFormulario service */
+  private ApartadoFormularioService apartadoFormularioService;
+
   /**
    * Instancia un nuevo BloqueFormularioController.
    * 
-   * @param service BloqueFormularioService
+   * @param service                   BloqueFormularioService
+   * @param apartadoFormularioService ApartadoFormularioService
    */
-  public BloqueFormularioController(BloqueFormularioService service) {
-    log.debug("BloqueFormularioController(BloqueFormularioService service) - start");
+  public BloqueFormularioController(BloqueFormularioService service,
+      ApartadoFormularioService apartadoFormularioService) {
+    log.debug(
+        "BloqueFormularioController(BloqueFormularioService service, ApartadoFormularioService apartadoFormularioService) - start");
     this.service = service;
-    log.debug("BloqueFormularioController(BloqueFormularioService service) - end");
+    this.apartadoFormularioService = apartadoFormularioService;
+    log.debug(
+        "BloqueFormularioController(BloqueFormularioService service, ApartadoFormularioService apartadoFormularioService) - end");
   }
 
   /**
@@ -123,6 +134,28 @@ public class BloqueFormularioController {
     bloqueFormulario.setActivo(Boolean.FALSE);
     service.update(bloqueFormulario);
     log.debug("delete(Long id) - end");
+  }
+
+  /**
+   * Obtiene las entidades {@link ApartadoFormulario} por el id de su
+   * {@link BloqueFormulario}.
+   * 
+   * @param id     El id de la entidad {@link BloqueFormulario}.
+   * @param paging pageable
+   * @return el listado de entidades {@link ApartadoFormulario} paginadas y
+   *         filtradas.
+   */
+  @GetMapping("/{id}/apartados")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR')")
+  ResponseEntity<Page<ApartadoFormulario>> getApartados(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("getApartados(Long id, Pageable paging - start");
+    Page<ApartadoFormulario> page = apartadoFormularioService.findByBloqueFormularioId(id, paging);
+    log.debug("getApartados(Long id, Pageable paging - end");
+    if (page.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
 }

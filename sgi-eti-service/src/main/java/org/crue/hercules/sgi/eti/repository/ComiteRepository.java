@@ -14,6 +14,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ComiteRepository extends JpaRepository<Comite, Long>, JpaSpecificationExecutor<Comite> {
 
-  Page<Comite> findByComiteContaining(String nombre, Pageable paging);
+  /**
+   * Obtiene una lista paginada {@link Comite} a partir de su nombre.
+   *
+   * @param comite el nombre de la entidad {@link Comite}.
+   * @param paging pageable
+   * @return el listado paginado {@link Comite}.
+   */
+  Page<Comite> findByComiteContaining(String comite, Pageable paging);
 
 }

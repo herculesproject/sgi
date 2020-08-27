@@ -4,7 +4,12 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
+import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
+import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
+import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -12,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,15 +40,28 @@ public class MemoriaController {
   /** Memoria service */
   private final MemoriaService service;
 
+  /** Evaluacion service */
+  private final EvaluacionService evaluacionService;
+
+  /** DocumentacionMemoria service */
+  private final DocumentacionMemoriaService documentacionMemoriaService;
+
   /**
    * Instancia un nuevo MemoriaController.
    * 
-   * @param service MemoriaService
+   * @param service                     MemoriaService
+   * @param evaluacionService           EvaluacionService
+   * @param documentacionMemoriaService documentacionMemoriaService
    */
-  public MemoriaController(MemoriaService service) {
-    log.debug("MemoriaController(MemoriaService service) - start");
+  public MemoriaController(MemoriaService service, EvaluacionService evaluacionService,
+      DocumentacionMemoriaService documentacionMemoriaService) {
+    log.debug(
+        "MemoriaController(MemoriaService service, EvaluacionService evaluacionService, DocumentacionMemoriaService documentacionMemoriaService) - start");
     this.service = service;
-    log.debug("MemoriaController(MemoriaService service) - end");
+    this.evaluacionService = evaluacionService;
+    this.documentacionMemoriaService = documentacionMemoriaService;
+    log.debug(
+        "MemoriaController(MemoriaService service, EvaluacionService evaluacionService, DocumentacionMemoriaService documentacionMemoriaService) - end");
   }
 
   /**
@@ -123,4 +142,50 @@ public class MemoriaController {
     log.debug("delete(Long id) - end");
   }
 
+  /**
+   * Obtener todas las entidades paginadas {@link Evaluacion} activas para una
+   * determinada {@link Memoria} anterior al id de evaluación recibido.
+   *
+   * @param id       Id de {@link Memoria}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+  @GetMapping("/{id}/evaluaciones-anteriores/{idEvaluacion}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR')")
+  ResponseEntity<Page<EvaluacionWithNumComentario>> getEvaluaciones(@PathVariable Long id,
+      @PathVariable Long idEvaluacion, @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("getEvaluaciones(Long id, Pageable pageable) - start");
+    Page<EvaluacionWithNumComentario> page = evaluacionService.findEvaluacionesAnterioresByMemoria(id, idEvaluacion,
+        pageable);
+
+    if (page.isEmpty()) {
+      log.debug("getEvaluaciones(Long id, Pageable pageable) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("getEvaluaciones(Long id, Pageable pageable) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Obtener todas las entidades paginadas {@link Evaluacion} activas para una
+   * determinada {@link ConvocatoriaReunion}.
+   *
+   * @param id       Id de {@link ConvocatoriaReunion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+  @GetMapping("/{id}/documentaciones")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR')")
+  ResponseEntity<Page<DocumentacionMemoria>> getDocumentaciones(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("getDocumentaciones(Long id, Pageable pageable) - start");
+    Page<DocumentacionMemoria> page = documentacionMemoriaService.findByMemoriaId(id, pageable);
+
+    if (page.isEmpty()) {
+      log.debug("getDocumentaciones(Long id, Pageable pageable) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("getDocumentaciones(Long id, Pageable pageable) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
 }

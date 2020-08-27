@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.service;
 
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
+import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 
 import java.util.List;
@@ -62,4 +63,13 @@ public interface DocumentacionMemoriaService {
    */
   void deleteAll();
 
+  /**
+   * Obtener todas las entidades paginadas {@link DocumentacionMemoria} para una
+   * determinada {@link Memoria}.
+   *
+   * @param id       Id de {@link Memoria}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
+   */
+  Page<DocumentacionMemoria> findByMemoriaId(Long id, Pageable pageable);
 }

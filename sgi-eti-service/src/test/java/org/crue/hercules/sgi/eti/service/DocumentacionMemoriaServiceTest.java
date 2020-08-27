@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.service;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -267,6 +268,52 @@ public class DocumentacionMemoriaServiceTest {
     }
   }
 
+  @Test
+  public void findAllByMemoriaIdNull() {
+    // given: EL id de la memoria sea null
+    Long memoriaId = null;
+    try {
+      // when: se listar sus evaluaciones
+      documentacionMemoriaService.findByMemoriaId(memoriaId, Pageable.unpaged());
+      Assertions.fail("El id de la memoria no puede ser nulo para mostrar su documentacion");
+      // then: se debe lanzar una excepción
+    } catch (IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage())
+          .isEqualTo("El id de la memoria no puede ser nulo para mostrar su documentacion");
+    }
+  }
+
+  @Test
+  public void findAllByMemoriaIdValid() {
+    // given: EL id de la memoria es valido
+    Long memoriaId = 12L;
+    Memoria memoria = generarMockMemoria(memoriaId, "Titulo");
+    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
+    List<DocumentacionMemoria> response = new LinkedList<DocumentacionMemoria>();
+    response.add(generarMockDocumentacionMemoria(Long.valueOf(1), memoria, tipoDocumento));
+    response.add(generarMockDocumentacionMemoria(Long.valueOf(3), memoria, tipoDocumento));
+    response.add(generarMockDocumentacionMemoria(Long.valueOf(5), memoria, tipoDocumento));
+
+    // página 1 con 2 elementos por página
+    Pageable pageable = PageRequest.of(1, 2);
+    Page<DocumentacionMemoria> pageResponse = new PageImpl<>(response.subList(2, 3), pageable, response.size());
+
+    BDDMockito
+        .given(
+            documentacionMemoriaService.findByMemoriaId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(pageResponse);
+
+    // when: Se buscan los datos paginados
+    Page<DocumentacionMemoria> result = documentacionMemoriaService.findByMemoriaId(memoriaId, pageable);
+
+    // then: Se recuperan los datos correctamente según la paginación solicitada
+    Assertions.assertThat(result).isEqualTo(pageResponse);
+    Assertions.assertThat(result.getContent()).isEqualTo(response.subList(2, 3));
+    Assertions.assertThat(result.getNumber()).isEqualTo(pageable.getPageNumber());
+    Assertions.assertThat(result.getSize()).isEqualTo(pageable.getPageSize());
+    Assertions.assertThat(result.getTotalElements()).isEqualTo(response.size());
+  }
+
   /**
    * Función que devuelve un objeto DocumentacionMemoria
    * 
@@ -319,4 +366,5 @@ public class DocumentacionMemoriaServiceTest {
 
     return tipoDocumento;
   }
+
 }

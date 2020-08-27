@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -150,4 +151,25 @@ public class ApartadoFormularioController {
     return returnValue;
   }
 
+  /**
+   * Obtiene las entidades {@link ApartadoFormulario} por el id de su padre
+   * {@link ApartadoFormulario}.
+   * 
+   * @param id     El id de la entidad {@link ApartadoFormulario}.
+   * @param paging pageable
+   * @return el listado de entidades {@link ApartadoFormulario} paginadas y
+   *         filtradas.
+   */
+  @GetMapping("/{id}/hijos")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR')")
+  ResponseEntity<Page<ApartadoFormulario>> getHijos(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("getHijos(Long id, Pageable paging - start");
+    Page<ApartadoFormulario> page = service.findByApartadoFormularioPadreId(id, paging);
+    log.debug("getHijos(Long id, Pageable paging - end");
+    if (page.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
 }

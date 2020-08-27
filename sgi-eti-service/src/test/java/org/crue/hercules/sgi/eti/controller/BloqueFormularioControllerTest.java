@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.controller;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -10,8 +11,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.config.SecurityConfig;
 import org.crue.hercules.sgi.eti.exceptions.BloqueFormularioNotFoundException;
+import org.crue.hercules.sgi.eti.model.ApartadoFormulario;
 import org.crue.hercules.sgi.eti.model.BloqueFormulario;
+import org.crue.hercules.sgi.eti.model.ComponenteFormulario;
 import org.crue.hercules.sgi.eti.model.Formulario;
+import org.crue.hercules.sgi.eti.service.ApartadoFormularioService;
 import org.crue.hercules.sgi.eti.service.BloqueFormularioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
@@ -55,8 +59,12 @@ public class BloqueFormularioControllerTest {
   @MockBean
   private BloqueFormularioService bloqueFormularioService;
 
+  @MockBean
+  private ApartadoFormularioService apartadoFormularioService;
+
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String BLOQUE_FORMULARIO_CONTROLLER_BASE_PATH = "/bloqueformularios";
+  private static final String PATH_PARAMETER_APARTADOS = "/apartados";
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-BLOQUEFORMULARIO-VER" })
@@ -346,6 +354,60 @@ public class BloqueFormularioControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  public void getApartadosEmptyList() throws Exception {
+    // given: Existe la memoria pero no tiene documentacion
+    Long id = 3L;
+    final String url = new StringBuilder(BLOQUE_FORMULARIO_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append(PATH_PARAMETER_APARTADOS).toString();
+
+    BDDMockito.given(apartadoFormularioService.findByBloqueFormularioId(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(Collections.emptyList()));
+
+    // when: Se buscan todos los datos
+    mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recupera lista vacía
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  public void getApartadosValid() throws Exception {
+    // given: Datos existentes con memoria
+    Long id = 3L;
+    final String url = new StringBuilder(BLOQUE_FORMULARIO_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append(PATH_PARAMETER_APARTADOS).toString();
+
+    List<ApartadoFormulario> apartados = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      ApartadoFormulario apartadoFormulario = getMockApartadoFormulario(Long.valueOf(i), Long.valueOf(i),
+          Long.valueOf(i), Long.valueOf(i));
+      apartados.add(apartadoFormulario);
+    }
+
+    BDDMockito.given(apartadoFormularioService.findByBloqueFormularioId(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<ApartadoFormulario>>() {
+          @Override
+          public Page<ApartadoFormulario> answer(InvocationOnMock invocation) throws Throwable {
+            List<ApartadoFormulario> content = new ArrayList<>();
+            for (ApartadoFormulario apartados : apartados) {
+              content.add(apartados);
+            }
+            return new PageImpl<>(content);
+          }
+        });
+    // when: Se buscan todos los documentos de esa memoria
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recuperan todos los documentos relacionados
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
+  }
+
   /**
    * Función que devuelve un objeto BloqueFormulario
    * 
@@ -370,6 +432,42 @@ public class BloqueFormularioControllerTest {
     bloqueFormulario.setActivo(Boolean.TRUE);
 
     return bloqueFormulario;
+  }
+
+  /**
+   * Genera un objeto {@link ApartadoFormulario}
+   * 
+   * @param id
+   * @param bloqueFormularioId
+   * @param componenteFormularioId
+   * @param apartadoFormularioPadreId
+   * @return ApartadoFormulario
+   */
+  private ApartadoFormulario getMockApartadoFormulario(Long id, Long bloqueFormularioId, Long componenteFormularioId,
+      Long apartadoFormularioPadreId) {
+
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion1", Boolean.TRUE);
+    BloqueFormulario bloqueFormulario = new BloqueFormulario(bloqueFormularioId, formulario,
+        "Bloque Formulario " + bloqueFormularioId, bloqueFormularioId.intValue(), Boolean.TRUE);
+    ComponenteFormulario componenteFormulario = new ComponenteFormulario(componenteFormularioId,
+        "EsquemaComponenteFormulario" + componenteFormularioId);
+
+    ApartadoFormulario apartadoFormularioPadre = (apartadoFormularioPadreId != null)
+        ? getMockApartadoFormulario(apartadoFormularioPadreId, bloqueFormularioId, componenteFormularioId, null)
+        : null;
+
+    String txt = (id % 2 == 0) ? String.valueOf(id) : "0" + String.valueOf(id);
+
+    final ApartadoFormulario data = new ApartadoFormulario();
+    data.setId(id);
+    data.setBloqueFormulario(bloqueFormulario);
+    data.setNombre("ApartadoFormulario" + txt);
+    data.setApartadoFormularioPadre(apartadoFormularioPadre);
+    data.setOrden(id.intValue());
+    data.setComponenteFormulario(componenteFormulario);
+    data.setActivo(Boolean.TRUE);
+
+    return data;
   }
 
 }

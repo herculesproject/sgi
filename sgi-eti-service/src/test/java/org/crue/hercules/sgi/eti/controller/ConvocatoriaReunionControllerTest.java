@@ -81,10 +81,12 @@ public class ConvocatoriaReunionControllerTest {
   private EvaluacionService evaluacionService;
 
   @MockBean
-  private ConvocatoriaReunionService service;
+  private ConvocatoriaReunionService convocatoriaReunionService;
+
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH = "/convocatoriareuniones";
+  private static final String PATH_PARAMETER_BY_EVALUACIONES = "/evaluaciones";
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-EDITAR" })
@@ -96,7 +98,8 @@ public class ConvocatoriaReunionControllerTest {
     ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
     String nuevoConvocatoriaReunionJson = mapper.writeValueAsString(response);
 
-    BDDMockito.given(service.create(ArgumentMatchers.<ConvocatoriaReunion>any())).willReturn(response);
+    BDDMockito.given(convocatoriaReunionService.create(ArgumentMatchers.<ConvocatoriaReunion>any()))
+        .willReturn(response);
 
     // when: Se crea la entidad
     mockMvc
@@ -129,7 +132,7 @@ public class ConvocatoriaReunionControllerTest {
     final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
     String nuevoConvocatoriaReunionJson = mapper.writeValueAsString(getMockData(1L, 1L, 1L));
 
-    BDDMockito.given(service.create(ArgumentMatchers.<ConvocatoriaReunion>any()))
+    BDDMockito.given(convocatoriaReunionService.create(ArgumentMatchers.<ConvocatoriaReunion>any()))
         .willThrow(new IllegalArgumentException());
 
     // when: Se crea la entidad
@@ -151,7 +154,8 @@ public class ConvocatoriaReunionControllerTest {
         .toString();
     String replaceConvocatoriaReunionJson = mapper.writeValueAsString(response);
 
-    BDDMockito.given(service.update(ArgumentMatchers.<ConvocatoriaReunion>any())).willReturn(response);
+    BDDMockito.given(convocatoriaReunionService.update(ArgumentMatchers.<ConvocatoriaReunion>any()))
+        .willReturn(response);
 
     // when: Se actualiza la entidad
     mockMvc
@@ -187,7 +191,7 @@ public class ConvocatoriaReunionControllerTest {
         .toString();
     String replaceConvocatoriaReunionJson = mapper.writeValueAsString(response);
 
-    BDDMockito.given(service.update(ArgumentMatchers.<ConvocatoriaReunion>any()))
+    BDDMockito.given(convocatoriaReunionService.update(ArgumentMatchers.<ConvocatoriaReunion>any()))
         .will((InvocationOnMock invocation) -> {
           throw new ConvocatoriaReunionNotFoundException(((ConvocatoriaReunion) invocation.getArgument(0)).getId());
         });
@@ -211,7 +215,7 @@ public class ConvocatoriaReunionControllerTest {
         .append(PATH_PARAMETER_ID)//
         .toString();
 
-    BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willReturn(response);
+    BDDMockito.given(convocatoriaReunionService.findById(ArgumentMatchers.anyLong())).willReturn(response);
 
     // when: Se elimina la entidad
     mockMvc
@@ -232,9 +236,10 @@ public class ConvocatoriaReunionControllerTest {
         .append(PATH_PARAMETER_ID)//
         .toString();
 
-    BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
-      throw new ConvocatoriaReunionNotFoundException(invocation.getArgument(0));
-    });
+    BDDMockito.given(convocatoriaReunionService.findById(ArgumentMatchers.anyLong()))
+        .will((InvocationOnMock invocation) -> {
+          throw new ConvocatoriaReunionNotFoundException(invocation.getArgument(0));
+        });
 
     // when: Se elimina la entidad
     mockMvc
@@ -255,7 +260,7 @@ public class ConvocatoriaReunionControllerTest {
         .append(PATH_PARAMETER_ID)//
         .toString();
 
-    BDDMockito.given(service.findById(response.getId())).willReturn(response);
+    BDDMockito.given(convocatoriaReunionService.findById(response.getId())).willReturn(response);
 
     // when: Se busca la entidad por ese Id
     mockMvc
@@ -291,9 +296,10 @@ public class ConvocatoriaReunionControllerTest {
         .append(PATH_PARAMETER_ID)//
         .toString();
 
-    BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
-      throw new ConvocatoriaReunionNotFoundException(invocation.getArgument(0));
-    });
+    BDDMockito.given(convocatoriaReunionService.findById(ArgumentMatchers.anyLong()))
+        .will((InvocationOnMock invocation) -> {
+          throw new ConvocatoriaReunionNotFoundException(invocation.getArgument(0));
+        });
 
     // when: Se busca entidad con ese id
     mockMvc
@@ -315,8 +321,8 @@ public class ConvocatoriaReunionControllerTest {
     response.add(getMockData(1L, 1L, 1L));
     response.add(getMockData(2L, 1L, 2L));
 
-    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(response));
+    BDDMockito.given(convocatoriaReunionService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(response));
 
     // when: Se buscan todos los datos
     MvcResult result = mockMvc
@@ -340,8 +346,8 @@ public class ConvocatoriaReunionControllerTest {
     // given: No hay datos
     final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH).toString();
 
-    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(Collections.emptyList()));
+    BDDMockito.given(convocatoriaReunionService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(Collections.emptyList()));
     // when: Se buscan todos los datos
     mockMvc.perform(MockMvcRequestBuilders.get(url).with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(MockMvcResultHandlers.print())
@@ -365,8 +371,8 @@ public class ConvocatoriaReunionControllerTest {
     Pageable pageable = PageRequest.of(1, 2);
     Page<ConvocatoriaReunion> pageResponse = new PageImpl<>(response.subList(2, 3), pageable, response.size());
 
-    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(pageResponse);
+    BDDMockito.given(convocatoriaReunionService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(pageResponse);
 
     // when: Se buscan todos los datos paginados
     MvcResult result = mockMvc
@@ -398,8 +404,8 @@ public class ConvocatoriaReunionControllerTest {
     Pageable pageable = PageRequest.of(1, 2);
     Page<ConvocatoriaReunion> pageResponse = new PageImpl<>(response, pageable, response.size());
 
-    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(pageResponse);
+    BDDMockito.given(convocatoriaReunionService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(pageResponse);
 
     // when: Se buscan todos los datos paginados
     mockMvc
@@ -428,8 +434,8 @@ public class ConvocatoriaReunionControllerTest {
     // search
     String query = "numeroActa<4%,id:3";
 
-    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<ConvocatoriaReunion>>() {
+    BDDMockito.given(convocatoriaReunionService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<ConvocatoriaReunion>>() {
           @Override
           public Page<ConvocatoriaReunion> answer(InvocationOnMock invocation) throws Throwable {
             List<QueryCriteria> queryCriterias = invocation.<List<QueryCriteria>>getArgument(0);
@@ -751,6 +757,123 @@ public class ConvocatoriaReunionControllerTest {
         .andDo(MockMvcResultHandlers.print())
         // then: Se recupera lista de datos paginados vacía
         .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-V", "ETI-ACT-C", "ETI-ACT-E" })
+  public void getEvaluaciones_WithPaging_ReturnsEvaluacionSubList() throws Exception {
+    // given: Datos existentes con convocatoriaReunionId = 1
+    Long convocatoriaReunionId = 1L;
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)//
+        .toString();
+
+    List<Evaluacion> response = new ArrayList<>();
+    response.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1)));
+    response.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3)));
+    response.add(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5)));
+
+    // página 1 con 2 elementos por página
+    Pageable pageable = PageRequest.of(1, 2);
+    Page<Evaluacion> pageResponse = new PageImpl<>(response.subList(2, 3), pageable, response.size());
+
+    BDDMockito.given(evaluacionService.findAllActivasByConvocatoriaReunionId(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(pageResponse);
+
+    // when: Se buscan todos los datos paginados
+    MvcResult result = mockMvc
+        .perform(MockMvcRequestBuilders.get(url, convocatoriaReunionId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", pageable.getPageNumber())
+            .header("X-Page-Size", pageable.getPageSize()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recuperan los datos correctamente según la paginación solicitada
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", String.valueOf(pageable.getPageNumber())))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", String.valueOf(pageable.getPageSize())))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", String.valueOf(response.size())))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1))).andReturn();
+
+    Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
+        new TypeReference<List<Evaluacion>>() {
+        })).isEqualTo(response.subList(2, 3));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-V", "ETI-ACT-C", "ETI-ACT-E" })
+  public void getEvaluaciones_WithPaging_Returns204() throws Exception {
+    // given: Sin datos con convocatoriaReunionId = 1
+    Long convocatoriaReunionId = 1L;
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)//
+        .toString();
+
+    List<Evaluacion> response = new ArrayList<Evaluacion>();
+    Pageable pageable = PageRequest.of(1, 2);
+    Page<Evaluacion> pageResponse = new PageImpl<>(response, pageable, response.size());
+
+    BDDMockito.given(evaluacionService.findAllActivasByConvocatoriaReunionId(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(pageResponse);
+
+    // when: Se buscan todos los datos paginados
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(url, convocatoriaReunionId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", pageable.getPageNumber())
+            .header("X-Page-Size", pageable.getPageSize()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recupera lista de datos paginados vacía
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-V", "ETI-ACT-C", "ETI-ACT-E" })
+  public void getEvaluaciones_Unlimited_Returns204() throws Exception {
+    // given: Sin datos con convocatoriaReunionId = 1
+    Long convocatoriaReunionId = 1L;
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)//
+        .toString();
+
+    BDDMockito.given(evaluacionService.findAllActivasByConvocatoriaReunionId(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(Collections.emptyList()));
+
+    // when: Se buscan todos los datos
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(url, convocatoriaReunionId).with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recupera lista vacía);
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-V", "ETI-ACT-C", "ETI-ACT-E" })
+  public void getEvaluaciones_Unlimited_ReturnsFullEvaluacionList() throws Exception {
+    // given: Datos existentes con convocatoriaReunionId = 1
+    Long convocatoriaReunionId = 1L;
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID).append(PATH_PARAMETER_BY_EVALUACIONES)//
+        .toString();
+
+    List<Evaluacion> response = new ArrayList<>();
+    response.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1)));
+    response.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3)));
+
+    BDDMockito.given(evaluacionService.findAllActivasByConvocatoriaReunionId(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(response));
+
+    // when: Se buscan todos los datos
+    MvcResult result = mockMvc
+        .perform(MockMvcRequestBuilders.get(url, convocatoriaReunionId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recuperan todos los datos
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2))).andReturn();
+
+    Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
+        new TypeReference<List<Evaluacion>>() {
+        })).isEqualTo(response);
   }
 
   /**

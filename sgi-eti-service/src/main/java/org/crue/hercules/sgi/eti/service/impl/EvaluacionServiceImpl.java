@@ -2,8 +2,11 @@ package org.crue.hercules.sgi.eti.service.impl;
 
 import java.util.List;
 
+import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
@@ -76,11 +79,32 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   }
 
   /**
+   * Obtener todas las entidades paginadas {@link Evaluacion} para una determinada
+   * {@link Memoria}.
+   *
+   * @param idMemoria    Id de {@link Memoria}.
+   * @param idEvaluacion Id de {@link Evaluacion}
+   * @param pageable     la información de la paginación.
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+  @Override
+  public Page<EvaluacionWithNumComentario> findEvaluacionesAnterioresByMemoria(Long idMemoria, Long idEvaluacion,
+      Pageable pageable) {
+    log.debug("findEvaluacionesAnterioresByMemoria(Long id, Pageable pageable) - start");
+    Assert.notNull(idMemoria, "El id de la memoria no puede ser nulo para mostrar sus evaluaciones");
+    Assert.notNull(idEvaluacion, "El id de la evaluación no puede ser nulo para recuperar las evaluaciones anteriores");
+    Page<EvaluacionWithNumComentario> returnValue = evaluacionRepository.findEvaluacionesAnterioresByMemoria(idMemoria,
+        idEvaluacion, pageable);
+    log.debug("findEvaluacionesAnterioresByMemoria(Long id, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
    * Obtiene una entidad {@link Evaluacion} por id.
    *
    * @param id el id de la entidad {@link Evaluacion}.
    * @return la entidad {@link Evaluacion}.
-   * @throws EvaluacionNotFoundException Si no existe ningún {@link Evaluacion}
+   * @throws EvaluacionNotFoundException Si no existe ningún {@link Evaluacion} *
    *                                     con ese id.
    */
   public Evaluacion findById(final Long id) throws EvaluacionNotFoundException {
@@ -150,5 +174,4 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       return returnValue;
     }).orElseThrow(() -> new EvaluacionNotFoundException(evaluacionActualizar.getId()));
   }
-
 }

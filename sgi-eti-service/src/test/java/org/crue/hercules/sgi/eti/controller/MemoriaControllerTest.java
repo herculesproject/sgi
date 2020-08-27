@@ -2,7 +2,9 @@ package org.crue.hercules.sgi.eti.controller;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -10,15 +12,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.config.SecurityConfig;
+import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.Dictamen;
+import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
+import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
+import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
+import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
+import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
@@ -62,8 +74,15 @@ public class MemoriaControllerTest {
   @MockBean
   private MemoriaService memoriaService;
 
+  @MockBean
+  private EvaluacionService evaluacionService;
+
+  @MockBean
+  private DocumentacionMemoriaService documentacionMemoriaService;
+
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String MEMORIA_CONTROLLER_BASE_PATH = "/memorias";
+  private static final String PATH_PARAMETER_BY_DOCUMENTACION = "/documentaciones";
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-MEMORIA-VER" })
@@ -77,7 +96,6 @@ public class MemoriaControllerTest {
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("Memoria1"));
-    ;
   }
 
   @Test
@@ -351,6 +369,131 @@ public class MemoriaControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  public void getEvaluacionesEmptyList() throws Exception {
+    // given: Existe la memoria pero no tiene evaluaciones
+    Long idMemoria = 3L;
+    Long idEvaluacion = 1L;
+    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append("/evaluaciones-anteriores").append("/{idEvaluacion}").toString();
+
+    BDDMockito
+        .given(evaluacionService.findEvaluacionesAnterioresByMemoria(ArgumentMatchers.anyLong(),
+            ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(Collections.emptyList()));
+
+    // when: Se buscan todos los datos
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(url, idMemoria, idEvaluacion).with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recupera lista vacía
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  public void getEvaluacionesValid() throws Exception {
+    // given: Datos existentes con evaluacion
+    Long idMemoria = 3L;
+    Long idEvaluacion = 1L;
+
+    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append("/evaluaciones-anteriores").append("/{idEvaluacion}").toString();
+
+    List<EvaluacionWithNumComentario> evaluaciones = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      EvaluacionWithNumComentario evaluacionComentario = new EvaluacionWithNumComentario(
+          generarMockEvaluacion(Long.valueOf(i), "" + i), Long.valueOf(i));
+      evaluaciones.add(evaluacionComentario);
+    }
+
+    BDDMockito
+        .given(evaluacionService.findEvaluacionesAnterioresByMemoria(ArgumentMatchers.anyLong(),
+            ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<EvaluacionWithNumComentario>>() {
+          @Override
+          public Page<EvaluacionWithNumComentario> answer(InvocationOnMock invocation) throws Throwable {
+            List<EvaluacionWithNumComentario> content = new ArrayList<>();
+            for (EvaluacionWithNumComentario evaluacion : evaluaciones) {
+              content.add(evaluacion);
+            }
+            Page<EvaluacionWithNumComentario> page = new PageImpl<>(content);
+            return page;
+          }
+        });
+    // when: Se buscan todos las evaluaciones de esa memoria
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(url, idMemoria, idEvaluacion)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recuperan todos las evaluaciones relacionadas
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  public void getDocumentacionesEmptyList() throws Exception {
+    // given: Existe la memoria pero no tiene documentacion
+    Long id = 3L;
+    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append(PATH_PARAMETER_BY_DOCUMENTACION).toString();
+
+    BDDMockito
+        .given(
+            documentacionMemoriaService.findByMemoriaId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(Collections.emptyList()));
+
+    // when: Se buscan todos los datos
+    mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recupera lista vacía
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  public void getDocumentacionesValid() throws Exception {
+    // given: Datos existentes con memoria
+    Long id = 3L;
+    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append(PATH_PARAMETER_BY_DOCUMENTACION).toString();
+
+    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
+    List<DocumentacionMemoria> documentacionMemorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      Memoria memoria = generarMockMemoria(Long.valueOf(i), "numRef-55" + String.valueOf(i),
+          "Memoria" + String.format("%03d", i), i);
+      DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(Long.valueOf(i), memoria,
+          tipoDocumento);
+      documentacionMemorias.add(documentacionMemoria);
+    }
+
+    BDDMockito
+        .given(
+            documentacionMemoriaService.findByMemoriaId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<DocumentacionMemoria>>() {
+          @Override
+          public Page<DocumentacionMemoria> answer(InvocationOnMock invocation) throws Throwable {
+            List<DocumentacionMemoria> content = new ArrayList<>();
+            for (DocumentacionMemoria documentacion : documentacionMemorias) {
+              content.add(documentacion);
+            }
+            return new PageImpl<>(content);
+          }
+        });
+    // when: Se buscan todos los documentos de esa memoria
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recuperan todos los documentos relacionados
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
+  }
+
   /**
    * Función que devuelve un objeto Memoria.
    * 
@@ -473,5 +616,131 @@ public class MemoriaControllerTest {
     data.setActivo(Boolean.TRUE);
 
     return data;
+  }
+
+  /**
+   * Función que devuelve un objeto Evaluacion
+   * 
+   * @param id     id del Evaluacion
+   * @param sufijo el sufijo para título y nombre
+   * @return el objeto Evaluacion
+   */
+
+  public Evaluacion generarMockEvaluacion(Long id, String sufijo) {
+
+    String sufijoStr = (sufijo == null ? id.toString() : sufijo);
+
+    Dictamen dictamen = new Dictamen();
+    dictamen.setId(id);
+    dictamen.setNombre("Dictamen" + sufijoStr);
+    dictamen.setActivo(Boolean.TRUE);
+
+    TipoActividad tipoActividad = new TipoActividad();
+    tipoActividad.setId(1L);
+    tipoActividad.setNombre("TipoActividad1");
+    tipoActividad.setActivo(Boolean.TRUE);
+
+    PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
+    peticionEvaluacion.setId(id);
+    peticionEvaluacion.setCodigo("Codigo1");
+    peticionEvaluacion.setDisMetodologico("DiseñoMetodologico1");
+    peticionEvaluacion.setExterno(Boolean.FALSE);
+    peticionEvaluacion.setFechaFin(LocalDate.now());
+    peticionEvaluacion.setFechaInicio(LocalDate.now());
+    peticionEvaluacion.setFuenteFinanciacion("Fuente financiación");
+    peticionEvaluacion.setObjetivos("Objetivos1");
+    peticionEvaluacion.setOtroValorSocial("Otro valor social1");
+    peticionEvaluacion.setResumen("Resumen");
+    peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
+    peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
+    peticionEvaluacion.setTipoActividad(tipoActividad);
+    peticionEvaluacion.setTitulo("PeticionEvaluacion1");
+    peticionEvaluacion.setUsuarioRef("user-001");
+    peticionEvaluacion.setValorSocial(3);
+    peticionEvaluacion.setActivo(Boolean.TRUE);
+
+    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+
+    TipoMemoria tipoMemoria = new TipoMemoria();
+    tipoMemoria.setId(1L);
+    tipoMemoria.setNombre("TipoMemoria1");
+    tipoMemoria.setActivo(Boolean.TRUE);
+
+    Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
+        tipoMemoria, new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.FALSE,
+        new Retrospectiva(id, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), LocalDate.now()), 3,
+        Boolean.TRUE);
+
+    TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
+
+    ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
+    convocatoriaReunion.setId(1L);
+    convocatoriaReunion.setComite(comite);
+    convocatoriaReunion.setFechaEvaluacion(LocalDateTime.now());
+    convocatoriaReunion.setFechaLimite(LocalDate.now());
+    convocatoriaReunion.setLugar("Lugar");
+    convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
+    convocatoriaReunion.setAnio(2020);
+    convocatoriaReunion.setNumeroActa(100L);
+    convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
+    convocatoriaReunion.setHoraInicio(7);
+    convocatoriaReunion.setMinutoInicio(30);
+    convocatoriaReunion.setFechaEnvio(LocalDate.now());
+    convocatoriaReunion.setActivo(Boolean.TRUE);
+
+    TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
+    tipoEvaluacion.setId(1L);
+    tipoEvaluacion.setNombre("TipoEvaluacion1");
+    tipoEvaluacion.setActivo(Boolean.TRUE);
+
+    Evaluacion evaluacion = new Evaluacion();
+    evaluacion.setId(id);
+    evaluacion.setDictamen(dictamen);
+    evaluacion.setEsRevMinima(Boolean.TRUE);
+    evaluacion.setFechaDictamen(LocalDate.now());
+    evaluacion.setMemoria(memoria);
+    evaluacion.setConvocatoriaReunion(convocatoriaReunion);
+    evaluacion.setTipoEvaluacion(tipoEvaluacion);
+    evaluacion.setVersion(2);
+    evaluacion.setActivo(Boolean.TRUE);
+
+    return evaluacion;
+  }
+
+  /**
+   * Función que devuelve un objeto DocumentacionMemoria
+   * 
+   * @param id            id de DocumentacionMemoria
+   * @param memoria       la Memoria de DocumentacionMemoria
+   * @param tipoDocumento el TipoDocumento de DocumentacionMemoria
+   * @return el objeto DocumentacionMemoria
+   */
+
+  public DocumentacionMemoria generarMockDocumentacionMemoria(Long id, Memoria memoria, TipoDocumento tipoDocumento) {
+
+    DocumentacionMemoria documentacionMemoria = new DocumentacionMemoria();
+    documentacionMemoria.setId(id);
+    documentacionMemoria.setMemoria(memoria);
+    documentacionMemoria.setTipoDocumento(tipoDocumento);
+    documentacionMemoria.setDocumentoRef("doc-00" + id);
+    documentacionMemoria.setAportado(Boolean.TRUE);
+
+    return documentacionMemoria;
+  }
+
+  /**
+   * Función que devuelve un objeto TipoDocumento
+   * 
+   * @param id id del TipoDocumento
+   * @return el objeto TipoDocumento
+   */
+
+  public TipoDocumento generarMockTipoDocumento(Long id) {
+
+    TipoDocumento tipoDocumento = new TipoDocumento();
+    tipoDocumento.setId(id);
+    tipoDocumento.setNombre("TipoDocumento" + id);
+
+    return tipoDocumento;
   }
 }

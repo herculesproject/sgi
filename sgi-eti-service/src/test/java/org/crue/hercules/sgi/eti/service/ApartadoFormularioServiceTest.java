@@ -260,6 +260,78 @@ public class ApartadoFormularioServiceTest {
     Assertions.assertThat(result).isEmpty();
   }
 
+  @Test
+  public void findByBloqueFormularioIdValidId() {
+    // given: Entidad con un determinado Id
+    List<ApartadoFormulario> response = new LinkedList<ApartadoFormulario>();
+    ApartadoFormulario apartadoFormulario = getMockData(1L, 1L, 1L, null);
+    BloqueFormulario bloqueFormulario = apartadoFormulario.getBloqueFormulario();
+    response.add(apartadoFormulario);
+
+    Page<ApartadoFormulario> pageResponse = new PageImpl<>(response.subList(0, 1), Pageable.unpaged(), response.size());
+    BDDMockito.given(repository.findByBloqueFormularioId(bloqueFormulario.getId(), Pageable.unpaged()))
+        .willReturn(pageResponse);
+
+    // when: Se busca la entidad por ese Id
+    Page<ApartadoFormulario> result = service.findByBloqueFormularioId(bloqueFormulario.getId(), Pageable.unpaged());
+
+    // then: Se recuperan los datos correctamente según la paginación solicitada
+    Assertions.assertThat(result).isEqualTo(pageResponse);
+    Assertions.assertThat(result.getContent()).isEqualTo(response.subList(0, 1));
+    Assertions.assertThat(result.getTotalElements()).isEqualTo(response.size());
+  }
+
+  @Test
+  public void findByBloqueFormularioIdNullId() {
+    // given: EL id del bloque sea null
+    Long id = null;
+    try {
+      // when: se quiera listar sus apartados
+      service.findByBloqueFormularioId(id, Pageable.unpaged());
+      Assertions.fail("El id no puede ser nulo");
+      // then: se debe lanzar una excepción
+    } catch (IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage())
+          .isEqualTo("Id no puede ser null para buscar una apartadoFormulario por el Id de su bloqueFormulario");
+    }
+  }
+
+  @Test
+  public void findByApartadoFormularioPadreIdValid() {
+    // given: Entidad con un determinado Id
+    Long id = 123L;
+    List<ApartadoFormulario> response = new LinkedList<ApartadoFormulario>();
+    ApartadoFormulario apartadoFormulario = getMockData(1L, 1L, 1L, null);
+    response.add(apartadoFormulario);
+
+    Page<ApartadoFormulario> pageResponse = new PageImpl<>(response.subList(0, 1), Pageable.unpaged(), response.size());
+    BDDMockito.given(repository.findByApartadoFormularioPadreId(id, Pageable.unpaged())).willReturn(pageResponse);
+
+    // when: Se busca la entidad por ese Id
+    Page<ApartadoFormulario> result = service.findByApartadoFormularioPadreId(id, Pageable.unpaged());
+
+    // then: Se recuperan los datos correctamente según la paginación solicitada
+    Assertions.assertThat(result).isEqualTo(pageResponse);
+    Assertions.assertThat(result.getContent()).isEqualTo(response.subList(0, 1));
+    Assertions.assertThat(result.getTotalElements()).isEqualTo(response.size());
+  }
+
+  @Test
+  public void findByApartadoFormularioPadreIdNull() {
+    // given: EL id del apartadoFormularioPadre sea null
+    Long id = null;
+    try {
+      // when: se quiera listar sus apartados hijos
+      service.findByApartadoFormularioPadreId(id, Pageable.unpaged());
+      Assertions
+          .fail("Id no puede ser null para buscar una apartadoFormulario por el Id de su apartadoFormularioPadre");
+      // then: se debe lanzar una excepción
+    } catch (IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage())
+          .isEqualTo("Id no puede ser null para buscar una apartadoFormulario por el Id de su apartadoFormularioPadre");
+    }
+  }
+
   /**
    * Genera un objeto {@link ApartadoFormulario}
    * 

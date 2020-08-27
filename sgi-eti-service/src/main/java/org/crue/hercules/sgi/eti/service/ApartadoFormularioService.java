@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.crue.hercules.sgi.eti.exceptions.ApartadoFormularioNotFoundException;
 import org.crue.hercules.sgi.eti.model.ApartadoFormulario;
+import org.crue.hercules.sgi.eti.model.BloqueFormulario;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -79,4 +80,25 @@ public interface ApartadoFormularioService {
    */
   ApartadoFormulario findById(Long id) throws ApartadoFormularioNotFoundException, IllegalArgumentException;
 
+  /**
+   * Obtiene las entidades {@link ApartadoFormulario} filtradas y paginadas según
+   * por el id de su {@link BloqueFormulario}.
+   *
+   * @param id       id del {@link BloqueFormulario}.
+   * @param pageable pageable
+   * @return el listado de entidades {@link ApartadoFormulario} paginadas y
+   *         filtradas.
+   */
+  Page<ApartadoFormulario> findByBloqueFormularioId(Long id, Pageable pageable);
+
+  /**
+   * Obtiene las entidades {@link ApartadoFormulario} filtradas y paginadas según
+   * por el id de su padre {@link ApartadoFormulario}.
+   *
+   * @param id       id del {@link ApartadoFormulario}.
+   * @param pageable pageable
+   * @return el listado de entidades {@link ApartadoFormulario} paginadas y
+   *         filtradas.
+   */
+  Page<ApartadoFormulario> findByApartadoFormularioPadreId(Long id, Pageable pageable);
 }

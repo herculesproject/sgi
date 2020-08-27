@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.eti.service.impl;
 import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.ApartadoFormularioNotFoundException;
 import org.crue.hercules.sgi.eti.model.ApartadoFormulario;
+import org.crue.hercules.sgi.eti.model.BloqueFormulario;
 import org.crue.hercules.sgi.eti.repository.ApartadoFormularioRepository;
 import org.crue.hercules.sgi.eti.service.ApartadoFormularioService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
@@ -154,6 +155,43 @@ public class ApartadoFormularioServiceImpl implements ApartadoFormularioService 
     final ApartadoFormulario apartadoFormulario = repository.findById(id)
         .orElseThrow(() -> new ApartadoFormularioNotFoundException(id));
     log.debug("findById(final Long id) - end");
+    return apartadoFormulario;
+  }
+
+  /**
+   * Obtiene las entidades {@link ApartadoFormulario} filtradas y paginadas según
+   * por el id de su {@link BloqueFormulario}.
+   *
+   * @param id       id del {@link BloqueFormulario}.
+   * @param pageable pageable
+   * @return el listado de entidades {@link ApartadoFormulario} paginadas y
+   *         filtradas.
+   */
+  @Override
+  public Page<ApartadoFormulario> findByBloqueFormularioId(Long id, Pageable pageable) {
+    log.debug("findByBloqueFormularioId(Long id, Pageable pageable) - start");
+    Assert.notNull(id, "Id no puede ser null para buscar una apartadoFormulario por el Id de su bloqueFormulario");
+    final Page<ApartadoFormulario> apartadoFormulario = repository.findByBloqueFormularioId(id, pageable);
+    log.debug("findByBloqueFormularioId(Long id, Pageable pageable) - end");
+    return apartadoFormulario;
+  }
+
+  /**
+   * Obtiene las entidades {@link ApartadoFormulario} filtradas y paginadas según
+   * por el id de su padre {@link ApartadoFormulario}.
+   *
+   * @param id       id del {@link ApartadoFormulario}.
+   * @param pageable pageable
+   * @return el listado de entidades {@link ApartadoFormulario} paginadas y
+   *         filtradas.
+   */
+  @Override
+  public Page<ApartadoFormulario> findByApartadoFormularioPadreId(Long id, Pageable pageable) {
+    log.debug("findByApartadoFormularioPadre(Long id, Pageable pageable) - start");
+    Assert.notNull(id,
+        "Id no puede ser null para buscar una apartadoFormulario por el Id de su apartadoFormularioPadre");
+    final Page<ApartadoFormulario> apartadoFormulario = repository.findByApartadoFormularioPadreId(id, pageable);
+    log.debug("findByBloqueFormularioId(Long id, Pageable pageable) - end");
     return apartadoFormulario;
   }
 

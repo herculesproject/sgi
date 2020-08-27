@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.service.ComentarioService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -35,15 +38,20 @@ public class EvaluacionController {
   /** Evaluacion service */
   private final EvaluacionService service;
 
+  /** Comentario service */
+  private final ComentarioService comentarioService;
+
   /**
    * Instancia un nuevo EvaluacionController.
    * 
-   * @param service EvaluacionService
+   * @param service           EvaluacionService
+   * @param comentarioService ComentarioService
    */
-  public EvaluacionController(EvaluacionService service) {
-    log.debug("EvaluacionController(EvaluacionService service) - start");
+  public EvaluacionController(EvaluacionService service, ComentarioService comentarioService) {
+    log.debug("EvaluacionController(EvaluacionService service, ComentarioService comentarioService) - start");
     this.service = service;
-    log.debug("EvaluacionController(EvaluacionService service) - end");
+    this.comentarioService = comentarioService;
+    log.debug("EvaluacionController(EvaluacionService service, ComentarioService comentarioService) - end");
   }
 
   /**
@@ -127,6 +135,91 @@ public class EvaluacionController {
     evaluacion.setActivo(Boolean.FALSE);
     service.update(evaluacion);
     log.debug("delete(Long id) - end");
+  }
+
+  /**
+   * Obtener todas las entidades paginadas {@link Comentario} activas para una
+   * determinada {@link Evaluacion}.
+   *
+   * @param id       Id de {@link Evaluacion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Comentario} paginadas.
+   */
+  @GetMapping("/{id}/comentarios")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR')")
+  ResponseEntity<Page<Comentario>> getComentarios(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("getComentarios(Long id, Pageable pageable) - start");
+    Page<Comentario> page = comentarioService.findByEvaluacionId(id, pageable);
+    log.debug("getComentarios(Long id, Pageable pageable) - end");
+    if (page.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Obtiene el número total de {@link Comentario} para un determinado
+   * {@link Evaluacion}.
+   * 
+   * @param id Id de {@link Evaluacion}.
+   * @return número de entidades {@link Comentario}
+   */
+  @GetMapping("/{id}/comentarios/count")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR')")
+  ResponseEntity<Integer> countComentarios(@PathVariable Long id) {
+    log.debug("countByEvaluacionId(Long id, Pageable pageable) - start");
+    int count = comentarioService.countByEvaluacionId(id);
+    log.debug("countByEvaluacionId(Long id, Pageable pageable) - end");
+    return new ResponseEntity<>(count, HttpStatus.OK);
+  }
+
+  /**
+   * Crea un nuevo listado de {@link Comentario}.
+   * 
+   * @param id          Id de {@link Evaluacion}.
+   * @param comentarios {@link Comentario} que se quieren crear.
+   * @return Nuevo listado {@link Comentario} creado.
+   */
+  @PostMapping("/{id}/comentarios")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR')")
+  ResponseEntity<List<Comentario>> createComentarios(@PathVariable Long id,
+      @Valid @RequestBody List<Comentario> comentarios) {
+    log.debug("createComentarios(List<Comentario> comentarios) - start");
+    List<Comentario> returnValues = comentarioService.createAll(id, comentarios);
+    log.debug("createComentarios(List<Comentario> comentarios) - end");
+    return new ResponseEntity<>(returnValues, HttpStatus.CREATED);
+  }
+
+  /**
+   * Actualiza un listado de {@link Comentario}.
+   * 
+   * @param id          Id de {@link Evaluacion}.
+   * @param comentarios {@link Comentario} a actualizar.
+   * @return Listado de {@link Comentario} actualizado.
+   */
+  @PutMapping("/{id}/comentarios")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR')")
+  ResponseEntity<List<Comentario>> updateComentarios(@PathVariable Long id,
+      @Valid @RequestBody List<Comentario> comentarios) {
+    log.debug("updateComentarios(List<Comentario> comentarios) - start");
+    List<Comentario> returnValues = comentarioService.updateAll(id, comentarios);
+    log.debug("updateComentarios(List<Comentario> comentarios) - end");
+    return new ResponseEntity<>(returnValues, HttpStatus.CREATED);
+  }
+
+  /**
+   * Elimina un listado de {@link Comentario} de una evaluación.
+   * 
+   * @param id  Id de {@link Evaluacion}.
+   * @param ids Listado de identificadores de {@link Comentario}.
+   */
+  @DeleteMapping("/{id}/comentarios")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR')")
+  void deleteComentarios(@PathVariable Long id, @RequestParam(value = "ids") List<Long> ids) {
+    log.debug("updateComentarios(List<Comentario> comentarios) - start");
+    comentarioService.deleteAll(id, ids);
+    log.debug("updateComentarios(List<Comentario> comentarios) - end");
   }
 
 }

@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.crue.hercules.sgi.eti.exceptions.DocumentacionMemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
+import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.repository.DocumentacionMemoriaRepository;
 import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
@@ -24,10 +26,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaService {
-  private final DocumentacionMemoriaRepository DocumentacionMemoriaRepository;
+  private final DocumentacionMemoriaRepository documentacionMemoriaRepository;
 
   public DocumentacionMemoriaServiceImpl(DocumentacionMemoriaRepository DocumentacionMemoriaRepository) {
-    this.DocumentacionMemoriaRepository = DocumentacionMemoriaRepository;
+    this.documentacionMemoriaRepository = DocumentacionMemoriaRepository;
   }
 
   /**
@@ -43,7 +45,7 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
     Assert.isNull(DocumentacionMemoria.getId(),
         "DocumentacionMemoria id tiene que ser null para crear un nuevo DocumentacionMemoria");
 
-    return DocumentacionMemoriaRepository.save(DocumentacionMemoria);
+    return documentacionMemoriaRepository.save(DocumentacionMemoria);
   }
 
   /**
@@ -59,7 +61,7 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
     log.debug("findAllDocumentacionMemoria(List<QueryCriteria> query,Pageable paging) - start");
     Specification<DocumentacionMemoria> spec = new QuerySpecification<DocumentacionMemoria>(query);
 
-    Page<DocumentacionMemoria> returnValue = DocumentacionMemoriaRepository.findAll(spec, paging);
+    Page<DocumentacionMemoria> returnValue = documentacionMemoriaRepository.findAll(spec, paging);
     log.debug("findAllDocumentacionMemoria(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
   }
@@ -75,7 +77,7 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
    */
   public DocumentacionMemoria findById(final Long id) throws DocumentacionMemoriaNotFoundException {
     log.debug("Petición a get DocumentacionMemoria : {}  - start", id);
-    final DocumentacionMemoria DocumentacionMemoria = DocumentacionMemoriaRepository.findById(id)
+    final DocumentacionMemoria DocumentacionMemoria = documentacionMemoriaRepository.findById(id)
         .orElseThrow(() -> new DocumentacionMemoriaNotFoundException(id));
     log.debug("Petición a get DocumentacionMemoria : {}  - end", id);
     return DocumentacionMemoria;
@@ -91,10 +93,10 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
   public void delete(Long id) throws DocumentacionMemoriaNotFoundException {
     log.debug("Petición a delete DocumentacionMemoria : {}  - start", id);
     Assert.notNull(id, "El id de DocumentacionMemoria no puede ser null.");
-    if (!DocumentacionMemoriaRepository.existsById(id)) {
+    if (!documentacionMemoriaRepository.existsById(id)) {
       throw new DocumentacionMemoriaNotFoundException(id);
     }
-    DocumentacionMemoriaRepository.deleteById(id);
+    documentacionMemoriaRepository.deleteById(id);
     log.debug("Petición a delete DocumentacionMemoria : {}  - end", id);
   }
 
@@ -104,7 +106,7 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
   @Transactional
   public void deleteAll() {
     log.debug("Petición a deleteAll de DocumentacionMemoria: {} - start");
-    DocumentacionMemoriaRepository.deleteAll();
+    documentacionMemoriaRepository.deleteAll();
     log.debug("Petición a deleteAll de DocumentacionMemoria: {} - end");
 
   }
@@ -130,16 +132,32 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
     Assert.notNull(documentacionMemoriaActualizar.getId(),
         "DocumentacionMemoria id no puede ser null para actualizar una documentacion memoria");
 
-    return DocumentacionMemoriaRepository.findById(documentacionMemoriaActualizar.getId()).map(documentacionMemoria -> {
+    return documentacionMemoriaRepository.findById(documentacionMemoriaActualizar.getId()).map(documentacionMemoria -> {
       documentacionMemoria.setDocumentoRef(documentacionMemoriaActualizar.getDocumentoRef());
       documentacionMemoria.setMemoria(documentacionMemoriaActualizar.getMemoria());
       documentacionMemoria.setTipoDocumento(documentacionMemoriaActualizar.getTipoDocumento());
       documentacionMemoria.setAportado(documentacionMemoriaActualizar.getAportado());
 
-      DocumentacionMemoria returnValue = DocumentacionMemoriaRepository.save(documentacionMemoria);
+      DocumentacionMemoria returnValue = documentacionMemoriaRepository.save(documentacionMemoria);
       log.debug("update(DocumentacionMemoria DocumentacionMemoriaActualizar) - end");
       return returnValue;
     }).orElseThrow(() -> new DocumentacionMemoriaNotFoundException(documentacionMemoriaActualizar.getId()));
   }
 
+  /**
+   * Obtener todas las entidades paginadas {@link Evaluacion} para una determinada
+   * {@link Memoria}.
+   *
+   * @param id       Id de {@link Memoria}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+  @Override
+  public Page<DocumentacionMemoria> findByMemoriaId(Long id, Pageable pageable) {
+    log.debug("findByMemoriaId(Long id, Pageable pageable) - start");
+    Assert.isTrue(id != null, "El id de la memoria no puede ser nulo para mostrar su documentacion");
+    Page<DocumentacionMemoria> returnValue = documentacionMemoriaRepository.findByMemoriaId(id, pageable);
+    log.debug("findByMemoriaId(Long id, Pageable pageable) - end");
+    return returnValue;
+  }
 }
