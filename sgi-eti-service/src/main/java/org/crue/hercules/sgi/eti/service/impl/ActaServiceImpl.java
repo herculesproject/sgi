@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 import org.crue.hercules.sgi.eti.repository.ActaRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoActaRepository;
 import org.crue.hercules.sgi.eti.repository.TipoEstadoActaRepository;
+import org.crue.hercules.sgi.eti.repository.specification.ActaSpecifications;
 import org.crue.hercules.sgi.eti.service.ActaService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -80,9 +81,12 @@ public class ActaServiceImpl implements ActaService {
    */
   public Page<Acta> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
-    Specification<Acta> spec = new QuerySpecification<Acta>(query);
+    Specification<Acta> specByQuery = new QuerySpecification<Acta>(query);
+    Specification<Acta> specActivos = ActaSpecifications.activos();
 
-    Page<Acta> returnValue = actaRepository.findAll(spec, paging);
+    Specification<Acta> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<Acta> returnValue = actaRepository.findAll(specs, paging);
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
     return returnValue;
   }

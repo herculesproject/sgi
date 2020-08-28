@@ -5,6 +5,7 @@ import org.crue.hercules.sgi.eti.exceptions.ApartadoFormularioNotFoundException;
 import org.crue.hercules.sgi.eti.model.ApartadoFormulario;
 import org.crue.hercules.sgi.eti.model.BloqueFormulario;
 import org.crue.hercules.sgi.eti.repository.ApartadoFormularioRepository;
+import org.crue.hercules.sgi.eti.repository.specification.ApartadoFormularioSpecifications;
 import org.crue.hercules.sgi.eti.service.ApartadoFormularioService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -130,8 +131,11 @@ public class ApartadoFormularioServiceImpl implements ApartadoFormularioService 
   public Page<ApartadoFormulario> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
 
-    Specification<ApartadoFormulario> spec = new QuerySpecification<ApartadoFormulario>(query);
-    Page<ApartadoFormulario> returnValue = repository.findAll(spec, paging);
+    Specification<ApartadoFormulario> specByQuery = new QuerySpecification<ApartadoFormulario>(query);
+    Specification<ApartadoFormulario> specActivos = ApartadoFormularioSpecifications.activos();
+
+    Specification<ApartadoFormulario> specs = Specification.where(specActivos).and(specByQuery);
+    Page<ApartadoFormulario> returnValue = repository.findAll(specs, paging);
 
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
 

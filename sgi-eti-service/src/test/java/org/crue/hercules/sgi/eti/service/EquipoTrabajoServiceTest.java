@@ -51,7 +51,7 @@ public class EquipoTrabajoServiceTest {
     EquipoTrabajo equipoTrabajo = equipoTrabajoService.findById(1L);
 
     Assertions.assertThat(equipoTrabajo.getId()).isEqualTo(1L);
-    Assertions.assertThat(equipoTrabajo.getUsuarioRef()).isEqualTo("user-001");
+    Assertions.assertThat(equipoTrabajo.getPersonaRef()).isEqualTo("user-001");
     Assertions.assertThat(equipoTrabajo.getPeticionEvaluacion().getTitulo()).isEqualTo("PeticionEvaluacion1");
 
   }
@@ -81,7 +81,7 @@ public class EquipoTrabajoServiceTest {
     // then: El EquipoTrabajo se crea correctamente
     Assertions.assertThat(equipoTrabajoCreado).isNotNull();
     Assertions.assertThat(equipoTrabajoCreado.getId()).isEqualTo(1L);
-    Assertions.assertThat(equipoTrabajo.getUsuarioRef()).isEqualTo("user-001");
+    Assertions.assertThat(equipoTrabajo.getPersonaRef()).isEqualTo("user-001");
     Assertions.assertThat(equipoTrabajo.getPeticionEvaluacion().getTitulo()).isEqualTo("PeticionEvaluacion1");
   }
 
@@ -113,7 +113,7 @@ public class EquipoTrabajoServiceTest {
 
     // then: El EquipoTrabajo se actualiza correctamente.
     Assertions.assertThat(equipoTrabajoActualizado.getId()).isEqualTo(1L);
-    Assertions.assertThat(equipoTrabajoActualizado.getUsuarioRef()).isEqualTo("user-001");
+    Assertions.assertThat(equipoTrabajoActualizado.getPersonaRef()).isEqualTo("user-001");
     Assertions.assertThat(equipoTrabajoActualizado.getPeticionEvaluacion().getTitulo())
         .isEqualTo("PeticionEvaluacion1 actualizada");
 
@@ -272,7 +272,7 @@ public class EquipoTrabajoServiceTest {
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo(titulo);
-    peticionEvaluacion.setUsuarioRef("user-00" + id);
+    peticionEvaluacion.setPersonaRef("user-00" + id);
     peticionEvaluacion.setValorSocial(3);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
@@ -292,7 +292,7 @@ public class EquipoTrabajoServiceTest {
     EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
     equipoTrabajo.setId(id);
     equipoTrabajo.setPeticionEvaluacion(peticionEvaluacion);
-    equipoTrabajo.setUsuarioRef("user-00" + id);
+    equipoTrabajo.setPersonaRef("user-00" + id);
 
     return equipoTrabajo;
   }

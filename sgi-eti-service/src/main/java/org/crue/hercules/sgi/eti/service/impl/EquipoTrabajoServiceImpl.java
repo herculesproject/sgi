@@ -125,7 +125,7 @@ public class EquipoTrabajoServiceImpl implements EquipoTrabajoService {
 
     return equipoTrabajoRepository.findById(equipoTrabajoActualizar.getId()).map(equipoTrabajo -> {
       equipoTrabajo.setPeticionEvaluacion(equipoTrabajoActualizar.getPeticionEvaluacion());
-      equipoTrabajo.setUsuarioRef(equipoTrabajoActualizar.getUsuarioRef());
+      equipoTrabajo.setPersonaRef(equipoTrabajoActualizar.getPersonaRef());
 
       EquipoTrabajo returnValue = equipoTrabajoRepository.save(equipoTrabajo);
       log.debug("update(EquipoTrabajo equipoTrabajoActualizar) - end");

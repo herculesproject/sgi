@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.TipoEstadoMemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.repository.TipoEstadoMemoriaRepository;
+import org.crue.hercules.sgi.eti.repository.specification.TipoEstadoMemoriaSpecifications;
 import org.crue.hercules.sgi.eti.service.TipoEstadoMemoriaService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -55,9 +56,12 @@ public class TipoEstadoMemoriaServiceImpl implements TipoEstadoMemoriaService {
    */
   public Page<TipoEstadoMemoria> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAllTipoEstadoMemoria(List<QueryCriteria> query,Pageable paging) - start");
-    Specification<TipoEstadoMemoria> spec = new QuerySpecification<TipoEstadoMemoria>(query);
+    Specification<TipoEstadoMemoria> specByQuery = new QuerySpecification<TipoEstadoMemoria>(query);
+    Specification<TipoEstadoMemoria> specActivos = TipoEstadoMemoriaSpecifications.activos();
 
-    Page<TipoEstadoMemoria> returnValue = tipoEstadoMemoriaRepository.findAll(spec, paging);
+    Specification<TipoEstadoMemoria> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<TipoEstadoMemoria> returnValue = tipoEstadoMemoriaRepository.findAll(specs, paging);
     log.debug("findAllTipoEstadoMemoria(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
   }

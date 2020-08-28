@@ -4,6 +4,7 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.EstadoRetrospectivaNotFoundException;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.repository.EstadoRetrospectivaRepository;
+import org.crue.hercules.sgi.eti.repository.specification.EstadoRetrospectivaSpecifications;
 import org.crue.hercules.sgi.eti.service.EstadoRetrospectivaService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -124,9 +125,12 @@ public class EstadoRetrospectivaServiceImpl implements EstadoRetrospectivaServic
   @Override
   public Page<EstadoRetrospectiva> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
+    Specification<EstadoRetrospectiva> specByQuery = new QuerySpecification<EstadoRetrospectiva>(query);
+    Specification<EstadoRetrospectiva> specActivos = EstadoRetrospectivaSpecifications.activos();
 
-    Specification<EstadoRetrospectiva> spec = new QuerySpecification<EstadoRetrospectiva>(query);
-    Page<EstadoRetrospectiva> returnValue = repository.findAll(spec, paging);
+    Specification<EstadoRetrospectiva> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<EstadoRetrospectiva> returnValue = repository.findAll(specs, paging);
 
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
 

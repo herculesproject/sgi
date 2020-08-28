@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
+import org.crue.hercules.sgi.eti.repository.specification.MemoriaSpecifications;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -53,9 +54,12 @@ public class MemoriaServiceImpl implements MemoriaService {
    */
   public Page<Memoria> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
-    Specification<Memoria> spec = new QuerySpecification<Memoria>(query);
+    Specification<Memoria> specByQuery = new QuerySpecification<Memoria>(query);
+    Specification<Memoria> specActivos = MemoriaSpecifications.activos();
 
-    Page<Memoria> returnValue = memoriaRepository.findAll(spec, paging);
+    Specification<Memoria> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<Memoria> returnValue = memoriaRepository.findAll(specs, paging);
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
   }
@@ -124,7 +128,7 @@ public class MemoriaServiceImpl implements MemoriaService {
       memoria.setPeticionEvaluacion(memoriaActualizar.getPeticionEvaluacion());
       memoria.setComite((memoriaActualizar.getComite()));
       memoria.setTitulo(memoriaActualizar.getTitulo());
-      memoria.setUsuarioRef(memoriaActualizar.getUsuarioRef());
+      memoria.setPersonaRef(memoriaActualizar.getPersonaRef());
       memoria.setTipoMemoria(memoriaActualizar.getTipoMemoria());
       memoria.setEstadoActual(memoriaActualizar.getEstadoActual());
       memoria.setFechaEnvioSecretaria(memoriaActualizar.getFechaEnvioSecretaria());

@@ -6,6 +6,7 @@ import org.crue.hercules.sgi.eti.exceptions.FormularioMemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.TareaNotFoundException;
 import org.crue.hercules.sgi.eti.model.FormularioMemoria;
 import org.crue.hercules.sgi.eti.repository.FormularioMemoriaRepository;
+import org.crue.hercules.sgi.eti.repository.specification.FormularioMemoriaSpecifications;
 import org.crue.hercules.sgi.eti.service.FormularioMemoriaService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -56,9 +57,12 @@ public class FormularioMemoriaServiceImpl implements FormularioMemoriaService {
    */
   public Page<FormularioMemoria> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
-    Specification<FormularioMemoria> spec = new QuerySpecification<FormularioMemoria>(query);
+    Specification<FormularioMemoria> specByQuery = new QuerySpecification<FormularioMemoria>(query);
+    Specification<FormularioMemoria> specActivos = FormularioMemoriaSpecifications.activos();
 
-    Page<FormularioMemoria> returnValue = formularioMemoriaRepository.findAll(spec, paging);
+    Specification<FormularioMemoria> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<FormularioMemoria> returnValue = formularioMemoriaRepository.findAll(specs, paging);
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
     return returnValue;
   }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.CargoComiteNotFoundException;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.repository.CargoComiteRepository;
+import org.crue.hercules.sgi.eti.repository.specification.CargoComiteSpecifications;
 import org.crue.hercules.sgi.eti.service.CargoComiteService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -53,9 +54,13 @@ public class CargoComiteServiceImpl implements CargoComiteService {
    */
   public Page<CargoComite> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAllCargoComite(List<QueryCriteria> query,Pageable paging) - start");
-    Specification<CargoComite> spec = new QuerySpecification<CargoComite>(query);
+    Specification<CargoComite> specByQuery = new QuerySpecification<CargoComite>(query);
+    Specification<CargoComite> specActivos = CargoComiteSpecifications.activos();
 
-    Page<CargoComite> returnValue = cargoComiteRepository.findAll(spec, paging);
+    Specification<CargoComite> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<CargoComite> returnValue = cargoComiteRepository.findAll(specs, paging);
+
     log.debug("findAllCargoComite(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
   }

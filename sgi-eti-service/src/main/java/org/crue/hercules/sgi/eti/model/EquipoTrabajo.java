@@ -41,8 +41,8 @@ public class EquipoTrabajo extends BaseEntity {
   private Long id;
 
   /** Referencia usuario */
-  @Column(name = "usuario_ref", length = 250, nullable = false)
-  private String usuarioRef;
+  @Column(name = "persona_ref", length = 250, nullable = false)
+  private String personaRef;
 
   /** Peticion Evaluación */
   @ManyToOne

@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.TipoTareaNotFoundException;
 import org.crue.hercules.sgi.eti.model.TipoTarea;
 import org.crue.hercules.sgi.eti.repository.TipoTareaRepository;
+import org.crue.hercules.sgi.eti.repository.specification.TipoTareaSpecifications;
 import org.crue.hercules.sgi.eti.service.TipoTareaService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -54,9 +55,12 @@ public class TipoTareaServiceImpl implements TipoTareaService {
    */
   public Page<TipoTarea> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAllTipoTarea(List<QueryCriteria> query, Pageable paging) - start");
-    Specification<TipoTarea> spec = new QuerySpecification<TipoTarea>(query);
+    Specification<TipoTarea> specByQuery = new QuerySpecification<TipoTarea>(query);
+    Specification<TipoTarea> specActivos = TipoTareaSpecifications.activos();
 
-    Page<TipoTarea> returnValue = tipoTareaRepository.findAll(spec, paging);
+    Specification<TipoTarea> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<TipoTarea> returnValue = tipoTareaRepository.findAll(specs, paging);
     log.debug("findAllTipoTarea(List<QueryCriteria> query, Pageable paging) - end");
     return returnValue;
   }

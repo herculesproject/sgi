@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.BloqueFormularioNotFoundException;
 import org.crue.hercules.sgi.eti.model.BloqueFormulario;
 import org.crue.hercules.sgi.eti.repository.BloqueFormularioRepository;
+import org.crue.hercules.sgi.eti.repository.specification.BloqueFormularioSpecifications;
 import org.crue.hercules.sgi.eti.service.BloqueFormularioService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -55,9 +56,12 @@ public class BloqueFormularioServiceImpl implements BloqueFormularioService {
    */
   public Page<BloqueFormulario> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
-    Specification<BloqueFormulario> spec = new QuerySpecification<BloqueFormulario>(query);
+    Specification<BloqueFormulario> specByQuery = new QuerySpecification<BloqueFormulario>(query);
+    Specification<BloqueFormulario> specActivos = BloqueFormularioSpecifications.activos();
 
-    Page<BloqueFormulario> returnValue = bloqueFormularioRepository.findAll(spec, paging);
+    Specification<BloqueFormulario> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<BloqueFormulario> returnValue = bloqueFormularioRepository.findAll(specs, paging);
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
   }

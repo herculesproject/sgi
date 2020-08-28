@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.TipoConvocatoriaReunionNotFoundException;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.repository.TipoConvocatoriaReunionRepository;
+import org.crue.hercules.sgi.eti.repository.specification.TipoConvocatoriaReunionSpecifications;
 import org.crue.hercules.sgi.eti.service.TipoConvocatoriaReunionService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -57,9 +58,12 @@ public class TipoConvocatoriaReunionServiceImpl implements TipoConvocatoriaReuni
    */
   public Page<TipoConvocatoriaReunion> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAllTipoConvocatoriaReunion(List<QueryCriteria> query,Pageable paging) - start");
-    Specification<TipoConvocatoriaReunion> spec = new QuerySpecification<TipoConvocatoriaReunion>(query);
+    Specification<TipoConvocatoriaReunion> specByQuery = new QuerySpecification<TipoConvocatoriaReunion>(query);
+    Specification<TipoConvocatoriaReunion> specActivos = TipoConvocatoriaReunionSpecifications.activos();
 
-    Page<TipoConvocatoriaReunion> returnValue = tipoConvocatoriaReunionRepository.findAll(spec, paging);
+    Specification<TipoConvocatoriaReunion> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<TipoConvocatoriaReunion> returnValue = tipoConvocatoriaReunionRepository.findAll(specs, paging);
     log.debug("findAllTipoConvocatoriaReunion(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
   }

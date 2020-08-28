@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.TipoEstadoActaNotFoundException;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 import org.crue.hercules.sgi.eti.repository.TipoEstadoActaRepository;
+import org.crue.hercules.sgi.eti.repository.specification.TipoEstadoActaSpecifications;
 import org.crue.hercules.sgi.eti.service.TipoEstadoActaService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -53,9 +54,12 @@ public class TipoEstadoActaServiceImpl implements TipoEstadoActaService {
    */
   public Page<TipoEstadoActa> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAllTipoEstadoActa(List<QueryCriteria> query,Pageable paging) - start");
-    Specification<TipoEstadoActa> spec = new QuerySpecification<TipoEstadoActa>(query);
+    Specification<TipoEstadoActa> specByQuery = new QuerySpecification<TipoEstadoActa>(query);
+    Specification<TipoEstadoActa> specActivos = TipoEstadoActaSpecifications.activos();
 
-    Page<TipoEstadoActa> returnValue = tipoEstadoActaRepository.findAll(spec, paging);
+    Specification<TipoEstadoActa> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<TipoEstadoActa> returnValue = tipoEstadoActaRepository.findAll(specs, paging);
     log.debug("findAllTipoEstadoActa(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
   }

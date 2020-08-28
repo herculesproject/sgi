@@ -190,7 +190,7 @@
       <column name="tiene_fondos_propios" type="BOOLEAN" defaultValueBoolean="false">
         <constraints nullable="false" />
       </column>
-      <column name="usuario_ref" type="VARCHAR(250)" />
+      <column name="persona_ref" type="VARCHAR(250)" />
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>
@@ -241,7 +241,7 @@
         <constraints nullable="false" primaryKey="true" primaryKeyName="equipo_trabajo_pk" />
       </column>
       <column name="peticion_evaluacion_id" type="BIGINT" />
-      <column name="usuario_ref" type="VARCHAR(250)" />
+      <column name="persona_ref" type="VARCHAR(250)" />
     </createTable>
   </changeSet>
 
@@ -306,7 +306,7 @@
       <column name="peticion_evaluacion_id" type="BIGINT" />
       <column name="comite_id" type="BIGINT" />
       <column name="titulo" type="VARCHAR(250)" />
-      <column name="usuario_ref" type="VARCHAR(250)" />
+      <column name="persona_ref" type="VARCHAR(250)" />
       <column name="tipo_memoria_id" type="BIGINT" />
       <column name="estado_actual_id" type="BIGINT" />
       <column name="fecha_envio_secretaria" type="DATE" />
@@ -331,7 +331,7 @@
       <column name="fecha_alta" type="DATE" />
       <column name="fecha_baja" type="DATE" />
       <column name="resumen" type="VARCHAR(2000)" />
-      <column name="usuario_ref" type="VARCHAR(250)" />
+      <column name="persona_ref" type="VARCHAR(250)" />
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>

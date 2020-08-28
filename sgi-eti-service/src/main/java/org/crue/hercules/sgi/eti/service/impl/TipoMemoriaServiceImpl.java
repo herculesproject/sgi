@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.TipoMemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.repository.TipoMemoriaRepository;
+import org.crue.hercules.sgi.eti.repository.specification.TipoMemoriaSpecifications;
 import org.crue.hercules.sgi.eti.service.TipoMemoriaService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -53,9 +54,12 @@ public class TipoMemoriaServiceImpl implements TipoMemoriaService {
    */
   public Page<TipoMemoria> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAllTipoMemoria(List<QueryCriteria> query,Pageable paging) - start");
-    Specification<TipoMemoria> spec = new QuerySpecification<TipoMemoria>(query);
+    Specification<TipoMemoria> specByQuery = new QuerySpecification<TipoMemoria>(query);
+    Specification<TipoMemoria> specActivos = TipoMemoriaSpecifications.activos();
 
-    Page<TipoMemoria> returnValue = tipoMemoriaRepository.findAll(spec, paging);
+    Specification<TipoMemoria> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<TipoMemoria> returnValue = tipoMemoriaRepository.findAll(specs, paging);
     log.debug("findAllTipoMemoria(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
   }

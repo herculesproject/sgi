@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.TipoComentarioNotFoundException;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.crue.hercules.sgi.eti.repository.TipoComentarioRepository;
+import org.crue.hercules.sgi.eti.repository.specification.TipoComentarioSpecifications;
 import org.crue.hercules.sgi.eti.service.TipoComentarioService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -53,9 +54,12 @@ public class TipoComentarioServiceImpl implements TipoComentarioService {
    */
   public Page<TipoComentario> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAllTipoComentario(List<QueryCriteria> query,Pageable paging) - start");
-    Specification<TipoComentario> spec = new QuerySpecification<TipoComentario>(query);
+    Specification<TipoComentario> specByQuery = new QuerySpecification<TipoComentario>(query);
+    Specification<TipoComentario> specActivos = TipoComentarioSpecifications.activos();
 
-    Page<TipoComentario> returnValue = tipoComentarioRepository.findAll(spec, paging);
+    Specification<TipoComentario> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<TipoComentario> returnValue = tipoComentarioRepository.findAll(specs, paging);
     log.debug("findAllTipoComentario(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
   }

@@ -307,7 +307,7 @@ public class EvaluadorEvaluacionIT {
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo("PeticionEvaluacion1");
-    peticionEvaluacion.setUsuarioRef("user-001");
+    peticionEvaluacion.setPersonaRef("user-001");
     peticionEvaluacion.setValorSocial(3);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 

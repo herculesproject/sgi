@@ -594,8 +594,8 @@ public class ConvocatoriaReunionIT {
   /**
    * Función que devuelve un objeto Asistentes
    *
-   * @param id         id del asistentes
-   * @param evaluadorId     id del evaluador
+   * @param id                    id del asistentes
+   * @param evaluadorId           id del evaluador
    * @param convocatoriaReunionId id de la convocatoria
    * @return el objeto Asistentes
    */
@@ -615,7 +615,7 @@ public class ConvocatoriaReunionIT {
   /**
    * Función que devuelve un objeto Evaluador
    *
-   * @param id      id del Evaluador
+   * @param id id del Evaluador
    * @return el objeto Evaluador
    */
 
@@ -675,7 +675,7 @@ public class ConvocatoriaReunionIT {
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo("PeticionEvaluacion1");
-    peticionEvaluacion.setUsuarioRef("user-001");
+    peticionEvaluacion.setPersonaRef("user-001");
     peticionEvaluacion.setValorSocial(3);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
@@ -747,7 +747,7 @@ public class ConvocatoriaReunionIT {
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo("PeticionEvaluacion1");
-    peticionEvaluacion.setUsuarioRef("user-001");
+    peticionEvaluacion.setPersonaRef("user-001");
     peticionEvaluacion.setValorSocial(3);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 

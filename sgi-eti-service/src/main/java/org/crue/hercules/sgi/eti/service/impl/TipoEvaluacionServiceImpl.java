@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.TipoEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.repository.TipoEvaluacionRepository;
+import org.crue.hercules.sgi.eti.repository.specification.TipoEvaluacionSpecifications;
 import org.crue.hercules.sgi.eti.service.TipoEvaluacionService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -53,9 +54,12 @@ public class TipoEvaluacionServiceImpl implements TipoEvaluacionService {
    */
   public Page<TipoEvaluacion> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAllTipoEvaluacion(List<QueryCriteria> query,Pageable paging) - start");
-    Specification<TipoEvaluacion> spec = new QuerySpecification<TipoEvaluacion>(query);
+    Specification<TipoEvaluacion> specByQuery = new QuerySpecification<TipoEvaluacion>(query);
+    Specification<TipoEvaluacion> specActivos = TipoEvaluacionSpecifications.activos();
 
-    Page<TipoEvaluacion> returnValue = tipoEvaluacionRepository.findAll(spec, paging);
+    Specification<TipoEvaluacion> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<TipoEvaluacion> returnValue = tipoEvaluacionRepository.findAll(specs, paging);
     log.debug("findAllTipoEvaluacion(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
   }

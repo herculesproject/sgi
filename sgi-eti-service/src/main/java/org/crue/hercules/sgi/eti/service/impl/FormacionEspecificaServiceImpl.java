@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.FormacionEspecificaNotFoundException;
 import org.crue.hercules.sgi.eti.model.FormacionEspecifica;
 import org.crue.hercules.sgi.eti.repository.FormacionEspecificaRepository;
+import org.crue.hercules.sgi.eti.repository.specification.FormacionEspecificaSpecifications;
 import org.crue.hercules.sgi.eti.service.FormacionEspecificaService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -55,9 +56,12 @@ public class FormacionEspecificaServiceImpl implements FormacionEspecificaServic
    */
   public Page<FormacionEspecifica> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAllFormacionEspecifica(List<QueryCriteria> query,Pageable paging) - start");
-    Specification<FormacionEspecifica> spec = new QuerySpecification<FormacionEspecifica>(query);
+    Specification<FormacionEspecifica> specByQuery = new QuerySpecification<FormacionEspecifica>(query);
+    Specification<FormacionEspecifica> specActivos = FormacionEspecificaSpecifications.activos();
 
-    Page<FormacionEspecifica> returnValue = formacionEspecificaRepository.findAll(spec, paging);
+    Specification<FormacionEspecifica> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<FormacionEspecifica> returnValue = formacionEspecificaRepository.findAll(specs, paging);
     log.debug("findAllFormacionEspecifica(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
   }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.FormularioNotFoundException;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.repository.FormularioRepository;
+import org.crue.hercules.sgi.eti.repository.specification.FormularioSpecifications;
 import org.crue.hercules.sgi.eti.service.FormularioService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -53,9 +54,12 @@ public class FormularioServiceImpl implements FormularioService {
    */
   public Page<Formulario> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAllFormulario(List<QueryCriteria> query,Pageable paging) - start");
-    Specification<Formulario> spec = new QuerySpecification<Formulario>(query);
+    Specification<Formulario> specByQuery = new QuerySpecification<Formulario>(query);
+    Specification<Formulario> specActivos = FormularioSpecifications.activos();
 
-    Page<Formulario> returnValue = formularioRepository.findAll(spec, paging);
+    Specification<Formulario> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<Formulario> returnValue = formularioRepository.findAll(specs, paging);
     log.debug("findAllFormulario(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
   }

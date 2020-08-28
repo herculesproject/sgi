@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
+import org.crue.hercules.sgi.eti.repository.specification.EvaluacionSpecifications;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -56,9 +57,12 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    */
   public Page<Evaluacion> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
-    Specification<Evaluacion> spec = new QuerySpecification<Evaluacion>(query);
+    Specification<Evaluacion> specByQuery = new QuerySpecification<Evaluacion>(query);
+    Specification<Evaluacion> specActivos = EvaluacionSpecifications.activos();
 
-    Page<Evaluacion> returnValue = evaluacionRepository.findAll(spec, paging);
+    Specification<Evaluacion> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<Evaluacion> returnValue = evaluacionRepository.findAll(specs, paging);
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
   }

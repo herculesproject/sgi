@@ -83,7 +83,6 @@ public class ConvocatoriaReunionControllerTest {
   @MockBean
   private ConvocatoriaReunionService convocatoriaReunionService;
 
-
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH = "/convocatoriareuniones";
   private static final String PATH_PARAMETER_BY_EVALUACIONES = "/evaluaciones";
@@ -998,7 +997,7 @@ public class ConvocatoriaReunionControllerTest {
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo("PeticionEvaluacion1");
-    peticionEvaluacion.setUsuarioRef("user-001");
+    peticionEvaluacion.setPersonaRef("user-001");
     peticionEvaluacion.setValorSocial(3);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 

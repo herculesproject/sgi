@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.TipoActividadNotFoundException;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.repository.TipoActividadRepository;
+import org.crue.hercules.sgi.eti.repository.specification.TipoActividadSpecifications;
 import org.crue.hercules.sgi.eti.service.TipoActividadService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -53,9 +54,12 @@ public class TipoActividadServiceImpl implements TipoActividadService {
    */
   public Page<TipoActividad> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAllTipoActividad(List<QueryCriteria> query,Pageable paging) - start");
-    Specification<TipoActividad> spec = new QuerySpecification<TipoActividad>(query);
+    Specification<TipoActividad> specByQuery = new QuerySpecification<TipoActividad>(query);
+    Specification<TipoActividad> specActivos = TipoActividadSpecifications.activos();
 
-    Page<TipoActividad> returnValue = tipoActividadRepository.findAll(spec, paging);
+    Specification<TipoActividad> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<TipoActividad> returnValue = tipoActividadRepository.findAll(specs, paging);
     log.debug("findAllTipoActividad(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
   }

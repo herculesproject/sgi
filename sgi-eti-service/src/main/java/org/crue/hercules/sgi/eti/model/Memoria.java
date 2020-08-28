@@ -66,9 +66,9 @@ public class Memoria extends BaseEntity {
   private String titulo;
 
   /** Referencia usuario */
-  @Column(name = "usuario_ref", length = 250, nullable = false)
+  @Column(name = "persona_ref", length = 250, nullable = false)
   @NotNull
-  private String usuarioRef;
+  private String personaRef;
 
   /** Tipo Memoria */
   @ManyToOne

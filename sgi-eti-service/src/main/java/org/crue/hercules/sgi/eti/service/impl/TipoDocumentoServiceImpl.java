@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.TipoDocumentoNotFoundException;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.crue.hercules.sgi.eti.repository.TipoDocumentoRepository;
+import org.crue.hercules.sgi.eti.repository.specification.TipoDocumentoSpecifications;
 import org.crue.hercules.sgi.eti.service.TipoDocumentoService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -53,9 +54,12 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
    */
   public Page<TipoDocumento> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAllTipoDocumento(List<QueryCriteria> query,Pageable paging) - start");
-    Specification<TipoDocumento> spec = new QuerySpecification<TipoDocumento>(query);
+    Specification<TipoDocumento> specByQuery = new QuerySpecification<TipoDocumento>(query);
+    Specification<TipoDocumento> specActivos = TipoDocumentoSpecifications.activos();
 
-    Page<TipoDocumento> returnValue = tipoDocumentoRepository.findAll(spec, paging);
+    Specification<TipoDocumento> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<TipoDocumento> returnValue = tipoDocumentoRepository.findAll(specs, paging);
     log.debug("findAllTipoDocumento(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
   }

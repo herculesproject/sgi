@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.DictamenNotFoundException;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.repository.DictamenRepository;
+import org.crue.hercules.sgi.eti.repository.specification.DictamenSpecifications;
 import org.crue.hercules.sgi.eti.service.DictamenService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -53,9 +54,12 @@ public class DictamenServiceImpl implements DictamenService {
    */
   public Page<Dictamen> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAllDictamen(List<QueryCriteria> query, Pageable paging) - start");
-    Specification<Dictamen> spec = new QuerySpecification<Dictamen>(query);
+    Specification<Dictamen> specByQuery = new QuerySpecification<Dictamen>(query);
+    Specification<Dictamen> specActivos = DictamenSpecifications.activos();
 
-    Page<Dictamen> returnValue = dictamenRepository.findAll(spec, paging);
+    Specification<Dictamen> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<Dictamen> returnValue = dictamenRepository.findAll(specs, paging);
     log.debug("findAllDictamen(List<QueryCriteria> query, Pageable paging) - end");
     return returnValue;
   }

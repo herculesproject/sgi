@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.repository.ComiteRepository;
+import org.crue.hercules.sgi.eti.repository.specification.ComiteSpecifications;
 import org.crue.hercules.sgi.eti.service.ComiteService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -54,9 +55,12 @@ public class ComiteServiceImpl implements ComiteService {
    */
   public Page<Comite> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAllComite(List<QueryCriteria> query,Pageable paging) - start");
-    Specification<Comite> spec = new QuerySpecification<>(query);
+    Specification<Comite> specByQuery = new QuerySpecification<Comite>(query);
+    Specification<Comite> specActivos = ComiteSpecifications.activos();
 
-    Page<Comite> returnValue = comiteRepository.findAll(spec, paging);
+    Specification<Comite> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<Comite> returnValue = comiteRepository.findAll(specs, paging);
     log.debug("findAllComite(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
   }

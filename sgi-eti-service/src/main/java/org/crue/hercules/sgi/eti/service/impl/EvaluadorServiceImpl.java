@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.EvaluadorNotFoundException;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.repository.EvaluadorRepository;
+import org.crue.hercules.sgi.eti.repository.specification.EvaluadorSpecifications;
 import org.crue.hercules.sgi.eti.service.EvaluadorService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -53,9 +54,12 @@ public class EvaluadorServiceImpl implements EvaluadorService {
    */
   public Page<Evaluador> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
-    Specification<Evaluador> spec = new QuerySpecification<Evaluador>(query);
+    Specification<Evaluador> specByQuery = new QuerySpecification<Evaluador>(query);
+    Specification<Evaluador> specActivos = EvaluadorSpecifications.activos();
 
-    Page<Evaluador> returnValue = evaluadorRepository.findAll(spec, paging);
+    Specification<Evaluador> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<Evaluador> returnValue = evaluadorRepository.findAll(specs, paging);
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
   }

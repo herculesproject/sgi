@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.repository.PeticionEvaluacionRepository;
+import org.crue.hercules.sgi.eti.repository.specification.PeticionEvaluacionSpecifications;
 import org.crue.hercules.sgi.eti.service.PeticionEvaluacionService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -55,9 +56,12 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
    */
   public Page<PeticionEvaluacion> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAllPeticionEvaluacion(List<QueryCriteria> query,Pageable paging) - start");
-    Specification<PeticionEvaluacion> spec = new QuerySpecification<PeticionEvaluacion>(query);
+    Specification<PeticionEvaluacion> specByQuery = new QuerySpecification<PeticionEvaluacion>(query);
+    Specification<PeticionEvaluacion> specActivos = PeticionEvaluacionSpecifications.activos();
 
-    Page<PeticionEvaluacion> returnValue = peticionEvaluacionRepository.findAll(spec, paging);
+    Specification<PeticionEvaluacion> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<PeticionEvaluacion> returnValue = peticionEvaluacionRepository.findAll(specs, paging);
     log.debug("findAllPeticionEvaluacion(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
   }
@@ -141,7 +145,7 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
       peticionEvaluacion.setTieneFondosPropios(peticionEvaluacionActualizar.getTieneFondosPropios());
       peticionEvaluacion.setTipoActividad(peticionEvaluacionActualizar.getTipoActividad());
       peticionEvaluacion.setTitulo(peticionEvaluacionActualizar.getTitulo());
-      peticionEvaluacion.setUsuarioRef(peticionEvaluacionActualizar.getUsuarioRef());
+      peticionEvaluacion.setPersonaRef(peticionEvaluacionActualizar.getPersonaRef());
       peticionEvaluacion.setValorSocial(peticionEvaluacionActualizar.getValorSocial());
       peticionEvaluacion.setActivo(peticionEvaluacionActualizar.getActivo());
 

@@ -71,7 +71,7 @@ public class EquipoTrabajoControllerTest {
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("usuarioRef").value("user-001"))
+        .andExpect(MockMvcResultMatchers.jsonPath("personaRef").value("user-001"))
         .andExpect(MockMvcResultMatchers.jsonPath("peticionEvaluacion.titulo").value("PeticionEvaluacion1"));
     ;
   }
@@ -92,7 +92,7 @@ public class EquipoTrabajoControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-EQUIPOTRABAJO-EDITAR" })
   public void newEquipoTrabajo_ReturnsEquipoTrabajo() throws Exception {
     // given: Un equipo de trabajo nuevo
-    String nuevoEquipoTrabajoJson = "{\"usuarioRef\": \"user-001\", \"peticionEvaluacion\": {\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}}";
+    String nuevoEquipoTrabajoJson = "{\"personaRef\": \"user-001\", \"peticionEvaluacion\": {\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}}";
 
     EquipoTrabajo equipoTrabajo = generarMockEquipoTrabajo(1L,
         generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1"));
@@ -107,7 +107,7 @@ public class EquipoTrabajoControllerTest {
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo EquipoTrabajo y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("usuarioRef").value("user-001"))
+        .andExpect(MockMvcResultMatchers.jsonPath("personaRef").value("user-001"))
         .andExpect(MockMvcResultMatchers.jsonPath("peticionEvaluacion.titulo").value("PeticionEvaluacion1"));
   }
 
@@ -115,7 +115,7 @@ public class EquipoTrabajoControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-EQUIPOTRABAJO-EDITAR" })
   public void newEquipoTrabajo_Error_Returns400() throws Exception {
     // given: Un equipo de trabajo nuevo que produce un error al crearse
-    String nuevoEquipoTrabajoJson = "{\"usuarioRef\": \"user-001\", \"peticionEvaluacion\": {\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}}";
+    String nuevoEquipoTrabajoJson = "{\"personaRef\": \"user-001\", \"peticionEvaluacion\": {\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}}";
 
     BDDMockito.given(equipoTrabajoService.create(ArgumentMatchers.<EquipoTrabajo>any()))
         .willThrow(new IllegalArgumentException());
@@ -135,7 +135,7 @@ public class EquipoTrabajoControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-EQUIPOTRABAJO-EDITAR" })
   public void replaceEquipoTrabajo_ReturnsEquipoTrabajo() throws Exception {
     // given: Un EquipoTrabajo a modificar
-    String replaceEquipoTrabajoJson = "{\"id\": 1, \"usuarioRef\": \"user-001\", \"peticionEvaluacion\": {\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}}";
+    String replaceEquipoTrabajoJson = "{\"id\": 1, \"personaRef\": \"user-001\", \"peticionEvaluacion\": {\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}}";
 
     EquipoTrabajo equipoTrabajo = generarMockEquipoTrabajo(1L,
         generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1"));
@@ -149,7 +149,7 @@ public class EquipoTrabajoControllerTest {
         .andDo(MockMvcResultHandlers.print())
         // then: Modifica el EquipoTrabajo y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("usuarioRef").value("user-001"))
+        .andExpect(MockMvcResultMatchers.jsonPath("personaRef").value("user-001"))
         .andExpect(MockMvcResultMatchers.jsonPath("peticionEvaluacion.titulo").value("PeticionEvaluacion1"));
 
   }
@@ -158,7 +158,7 @@ public class EquipoTrabajoControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-EQUIPOTRABAJO-EDITAR" })
   public void replaceEquipoTrabajo_NotFound() throws Exception {
     // given: Un EquipoTrabajo a modificar
-    String replaceEquipoTrabajoJson = "{\"id\": 1, \"usuarioRef\": \"user-001\", \"peticionEvaluacion\": {\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}}";
+    String replaceEquipoTrabajoJson = "{\"id\": 1, \"personaRef\": \"user-001\", \"peticionEvaluacion\": {\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}}";
 
     BDDMockito.given(equipoTrabajoService.update(ArgumentMatchers.<EquipoTrabajo>any()))
         .will((InvocationOnMock invocation) -> {
@@ -384,7 +384,7 @@ public class EquipoTrabajoControllerTest {
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo(titulo);
-    peticionEvaluacion.setUsuarioRef("user-00" + id);
+    peticionEvaluacion.setPersonaRef("user-00" + id);
     peticionEvaluacion.setValorSocial(3);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
@@ -404,7 +404,7 @@ public class EquipoTrabajoControllerTest {
     EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
     equipoTrabajo.setId(id);
     equipoTrabajo.setPeticionEvaluacion(peticionEvaluacion);
-    equipoTrabajo.setUsuarioRef("user-00" + id);
+    equipoTrabajo.setPersonaRef("user-00" + id);
 
     return equipoTrabajo;
   }

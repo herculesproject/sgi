@@ -69,7 +69,7 @@ public class EquipoTrabajoIT {
 
     Assertions.assertThat(equipoTrabajo.getId()).isEqualTo(1L);
     Assertions.assertThat(equipoTrabajo.getPeticionEvaluacion().getTitulo()).isEqualTo("PeticionEvaluacion1");
-    Assertions.assertThat(equipoTrabajo.getUsuarioRef()).isEqualTo("user-1");
+    Assertions.assertThat(equipoTrabajo.getPersonaRef()).isEqualTo("user-1");
   }
 
   @Sql
@@ -89,7 +89,7 @@ public class EquipoTrabajoIT {
 
     Assertions.assertThat(equipoTrabajo.getId()).isEqualTo(1L);
     Assertions.assertThat(equipoTrabajo.getPeticionEvaluacion().getTitulo()).isEqualTo("PeticionEvaluacion1");
-    Assertions.assertThat(equipoTrabajo.getUsuarioRef()).isEqualTo("user-001");
+    Assertions.assertThat(equipoTrabajo.getPersonaRef()).isEqualTo("user-001");
   }
 
   @Sql
@@ -140,7 +140,7 @@ public class EquipoTrabajoIT {
     Assertions.assertThat(equipoTrabajo.getId()).isNotNull();
     Assertions.assertThat(equipoTrabajo.getPeticionEvaluacion().getTitulo())
         .isEqualTo(replaceEquipoTrabajo.getPeticionEvaluacion().getTitulo());
-    Assertions.assertThat(equipoTrabajo.getUsuarioRef()).isEqualTo(replaceEquipoTrabajo.getUsuarioRef());
+    Assertions.assertThat(equipoTrabajo.getPersonaRef()).isEqualTo(replaceEquipoTrabajo.getPersonaRef());
   }
 
   @Sql
@@ -200,8 +200,8 @@ public class EquipoTrabajoIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithSortQuery_ReturnsOrderedEquipoTrabajoList() throws Exception {
-    // when: Ordenación por usuarioRef desc
-    String query = "usuarioRef-";
+    // when: Ordenación por personaRef desc
+    String query = "personaRef-";
 
     URI uri = UriComponentsBuilder.fromUriString(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH).queryParam("s", query)
         .build(false).toUri();
@@ -221,7 +221,7 @@ public class EquipoTrabajoIT {
       Assertions.assertThat(equipoTrabajo.getId()).isEqualTo(8 - i);
       Assertions.assertThat(equipoTrabajo.getPeticionEvaluacion().getTitulo())
           .isEqualTo("PeticionEvaluacion" + String.format("%03d", 8 - i));
-      Assertions.assertThat(equipoTrabajo.getUsuarioRef()).isEqualTo("user-" + String.format("%03d", 8 - i));
+      Assertions.assertThat(equipoTrabajo.getPersonaRef()).isEqualTo("user-" + String.format("%03d", 8 - i));
     }
   }
 
@@ -233,10 +233,10 @@ public class EquipoTrabajoIT {
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-    // when: Ordena por usuarioRef desc
-    String sort = "usuarioRef-";
-    // when: Filtra por usuarioRef like
-    String filter = "usuarioRef~%00%";
+    // when: Ordena por personaRef desc
+    String sort = "personaRef-";
+    // when: Filtra por personaRef like
+    String filter = "personaRef~%00%";
 
     URI uri = UriComponentsBuilder.fromUriString(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -255,10 +255,10 @@ public class EquipoTrabajoIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("3");
 
-    // Contiene usuarioRef='user-001', 'user-002', 'user-003'
-    Assertions.assertThat(equipoTrabajos.get(0).getUsuarioRef()).isEqualTo("user-" + String.format("%03d", 3));
-    Assertions.assertThat(equipoTrabajos.get(1).getUsuarioRef()).isEqualTo("user-" + String.format("%03d", 2));
-    Assertions.assertThat(equipoTrabajos.get(2).getUsuarioRef()).isEqualTo("user-" + String.format("%03d", 1));
+    // Contiene personaRef='user-001', 'user-002', 'user-003'
+    Assertions.assertThat(equipoTrabajos.get(0).getPersonaRef()).isEqualTo("user-" + String.format("%03d", 3));
+    Assertions.assertThat(equipoTrabajos.get(1).getPersonaRef()).isEqualTo("user-" + String.format("%03d", 2));
+    Assertions.assertThat(equipoTrabajos.get(2).getPersonaRef()).isEqualTo("user-" + String.format("%03d", 1));
 
   }
 
@@ -291,7 +291,7 @@ public class EquipoTrabajoIT {
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo(titulo);
-    peticionEvaluacion.setUsuarioRef("user-00" + id);
+    peticionEvaluacion.setPersonaRef("user-00" + id);
     peticionEvaluacion.setValorSocial(3);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
@@ -311,7 +311,7 @@ public class EquipoTrabajoIT {
     EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
     equipoTrabajo.setId(id);
     equipoTrabajo.setPeticionEvaluacion(peticionEvaluacion);
-    equipoTrabajo.setUsuarioRef("user-00" + (id == null ? 1 : id));
+    equipoTrabajo.setPersonaRef("user-00" + (id == null ? 1 : id));
 
     return equipoTrabajo;
   }

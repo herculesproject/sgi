@@ -99,8 +99,8 @@ public class PeticionEvaluacion extends BaseEntity {
   private Boolean tieneFondosPropios;
 
   /** Referencia usuario */
-  @Column(name = "usuario_ref", length = 250, nullable = false)
-  private String usuarioRef;
+  @Column(name = "persona_ref", length = 250, nullable = false)
+  private String personaRef;
 
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)

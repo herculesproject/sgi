@@ -262,7 +262,7 @@ public class PeticionEvaluacionServiceTest {
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo(titulo);
-    peticionEvaluacion.setUsuarioRef("user-00" + id);
+    peticionEvaluacion.setPersonaRef("user-00" + id);
     peticionEvaluacion.setValorSocial(3);
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
