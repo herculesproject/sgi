@@ -5,14 +5,14 @@ export class Supervision {
   /** ID */
   id: number;
 
-  /** Usuario ref. */
-  usuarioRef: string;
+  /** Persona ref. */
+  personaRef: string;
 
   /** Servicio. */
   servicio: Servicio;
 
-  constructor(usuarioRef: string, servicio: Servicio) {
-    this.usuarioRef = usuarioRef;
+  constructor(personaRef: string, servicio: Servicio) {
+    this.personaRef = personaRef;
     this.servicio = servicio;
   }
 

@@ -1,9 +1,9 @@
-export class Usuario {
+export class Persona {
 
   /** ID */
   id: number;
-  /** usuarioRef */
-  usuarioRef: string;
+  /** personaRef */
+  personaRef: string;
   /** nombre */
   nombre: string;
   /** apellidos */
@@ -14,10 +14,10 @@ export class Usuario {
   dniLetra: string;
 
   constructor(
-    id: number, usuarioRef: string,
+    id: number, personaRef: string,
     nombre: string, apellidos: string, dni: string, dniLetra: string) {
     this.id = id;
-    this.usuarioRef = usuarioRef;
+    this.personaRef = personaRef;
     this.nombre = nombre;
     this.apellidos = apellidos;
     this.dni = dni;

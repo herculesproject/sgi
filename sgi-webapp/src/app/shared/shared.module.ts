@@ -9,6 +9,9 @@ import { FooterGuardarComponent } from './footers/footer-guardar/footer-guardar.
 import { GenericTabLabelComponent } from './generic-tab-label/generic-tab-label.component';
 import { RootComponent } from './root/root.component';
 import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BuscarPersonaComponent } from './buscar-persona/buscar-persona.component';
+import { BuscarPersonaDialogoComponent } from './buscar-persona/dialogo/buscar-persona-dialogo.component';
 
 @NgModule({
   declarations: [
@@ -16,20 +19,26 @@ import { CommonModule } from '@angular/common';
     FooterCrearComponent,
     FooterGuardarComponent,
     GenericTabLabelComponent,
-    RootComponent
+    RootComponent,
+    BuscarPersonaComponent,
+    BuscarPersonaDialogoComponent
   ],
   imports: [
     CommonModule,
     RouterModule,
     MaterialDesignModule,
     TranslateModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   exports: [
     BreadcrumbComponent,
     FooterCrearComponent,
     FooterGuardarComponent,
     GenericTabLabelComponent,
-    RootComponent
+    RootComponent,
+    BuscarPersonaComponent,
+    BuscarPersonaDialogoComponent
   ]
 })
 export class SharedModule {

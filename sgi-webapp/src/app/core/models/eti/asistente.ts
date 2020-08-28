@@ -1,12 +1,12 @@
 import { ConvocatoriaReunion } from './convocatoria-reunion';
-import { Evaluador } from './evaluador';
+import { IEvaluador } from './evaluador';
 
 export interface IAsistente {
   /** Id */
   id: number;
 
   /** Evaluador. */
-  evaluador: Evaluador;
+  evaluador: IEvaluador;
 
   /** Convocatoria de la reunión */
   convocatoriaReunion: ConvocatoriaReunion;

@@ -19,8 +19,8 @@ export class Memoria {
   /** Título */
   titulo: string;
 
-  /** Referencia usuario */
-  usuarioRef: string;
+  /** Referencia persona */
+  personaRef: string;
 
   /** Tipo Memoria */
   tipoMemoria: TipoMemoria;

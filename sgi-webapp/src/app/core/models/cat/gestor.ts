@@ -1,7 +1,7 @@
 export class Gestor {
 
-  /** Usuario ref. */
-  usuarioRef: string;
+  /** Persona ref. */
+  personaRef: string;
 
   /** Nombre. */
   nombre: string;
@@ -15,8 +15,8 @@ export class Gestor {
   /** Letra dni. */
   dniLetra: string;
 
-  constructor(usuarioRef: string, nombre: string, apellidos: string, dni: string, dniLetra: string) {
-    this.usuarioRef = usuarioRef;
+  constructor(personaRef: string, nombre: string, apellidos: string, dni: string, dniLetra: string) {
+    this.personaRef = personaRef;
     this.nombre = nombre;
     this.apellidos = apellidos;
     this.dni = dni;

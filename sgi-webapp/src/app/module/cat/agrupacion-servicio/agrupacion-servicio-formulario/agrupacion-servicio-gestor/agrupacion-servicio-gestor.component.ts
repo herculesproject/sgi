@@ -5,7 +5,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { NGXLogger } from 'ngx-logger';
 
-import { Usuario } from '@core/models/cat/usuario';
+import { Persona } from '@core/models/cat/usuario';
 import { Subject, ReplaySubject } from 'rxjs';
 import { Supervision } from '@core/models/cat/supervision';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -24,13 +24,13 @@ export class AgrupacionServicioGestorComponent implements OnInit {
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  usuarios: Usuario[] = [];
+  usuarios: Persona[] = [];
 
   displayedColumns: string[] = [];
-  gestores$: Subject<Usuario[]>;
-  gestores: Usuario[] = [];
+  gestores$: Subject<Persona[]>;
+  gestores: Persona[] = [];
 
-  gestoresAniadidos: Usuario[] = [];
+  gestoresAniadidos: Persona[] = [];
 
   constructor(
     private readonly logger: NGXLogger,
@@ -85,7 +85,7 @@ export class AgrupacionServicioGestorComponent implements OnInit {
   setDatosForm(supervisiones: Supervision[]) {
     this.logger.debug(AgrupacionServicioGestorComponent.name, 'setDatosForm()', 'start');
 
-    this.gestores = this.usuarios.filter(usuario => supervisiones.some(supervisor => supervisor.usuarioRef === usuario.usuarioRef));
+    this.gestores = this.usuarios.filter(usuario => supervisiones.some(supervisor => supervisor.personaRef === usuario.personaRef));
 
     this.gestores$.next(this.gestores);
 
@@ -99,19 +99,19 @@ export class AgrupacionServicioGestorComponent implements OnInit {
   getUsuarios(): void {
     this.logger.debug(AgrupacionServicioGestorComponent.name, 'getUsuarios()', 'start');
 
-    let usuario = new Usuario(1, 'user-254', 'usuario1', 'apellidos usuario1', '78945589', 'L');
+    let usuario = new Persona(1, 'user-254', 'usuario1', 'apellidos usuario1', '78945589', 'L');
     this.usuarios.push(usuario);
 
-    usuario = new Usuario(2, 'user-454', 'usuario2', 'apellidos usuario2', '98125589', 'P');
+    usuario = new Persona(2, 'user-454', 'usuario2', 'apellidos usuario2', '98125589', 'P');
     this.usuarios.push(usuario);
 
-    usuario = new Usuario(3, 'user-10', 'usuario10', 'apellidos usuario10', '56778941', 'N');
+    usuario = new Persona(3, 'user-10', 'usuario10', 'apellidos usuario10', '56778941', 'N');
     this.usuarios.push(usuario);
 
-    usuario = new Usuario(4, 'user-20', 'usuario20', 'apellidos usuario20', '95667841', 'W');
+    usuario = new Persona(4, 'user-20', 'usuario20', 'apellidos usuario20', '95667841', 'W');
     this.usuarios.push(usuario);
 
-    usuario = new Usuario(5, 'user-22', 'usuario22', 'apellidos usuario22', '85667841', 'Q');
+    usuario = new Persona(5, 'user-22', 'usuario22', 'apellidos usuario22', '85667841', 'Q');
     this.usuarios.push(usuario);
 
     this.logger.debug(AgrupacionServicioGestorComponent.name, 'getUsuarios()', 'end');
@@ -126,7 +126,7 @@ export class AgrupacionServicioGestorComponent implements OnInit {
 
     const gestorSeleccionado = this.gestorFormGroup.controls.gestor.value;
 
-    const gestorAsociado = this.gestores.filter(gestor => gestor.usuarioRef === gestorSeleccionado.usuarioRef);
+    const gestorAsociado = this.gestores.filter(gestor => gestor.personaRef === gestorSeleccionado.personaRef);
 
     if (gestorAsociado.length > 0) {
       this.snackBarService.showError(MSG_ERROR_GESTOR_EXISTE);

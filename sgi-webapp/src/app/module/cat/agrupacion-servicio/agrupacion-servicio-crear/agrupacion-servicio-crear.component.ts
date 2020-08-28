@@ -123,7 +123,7 @@ export class AgrupacionServicioCrearComponent implements OnInit, OnDestroy {
 
         const listObservablesCrearSupervision: Observable<Supervision>[] =
           this.gestorForm.gestores.map(gestor => {
-            const supervision = new Supervision(gestor.usuarioRef, servicioCreado);
+            const supervision = new Supervision(gestor.personaRef, servicioCreado);
             return this.supervisionService.create(supervision);
 
           });

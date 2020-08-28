@@ -12,6 +12,7 @@ const MSG_ROOT_TITLE = marker('eti.root.title');
 const MSG_SOLICITUDES_CONVOCATORIA_TITLE = marker('menu.principal.eti.solicitudesConvocatoria');
 const MSG_EVALUACIONES_TITLE = marker('menu.principal.eti.evaluaciones');
 const MSG_ACTAS_TITLE = marker('menu.principal.eti.acta');
+const MSG_EVALUADORES_TITLE = marker('menu.principal.eti.evaluador');
 
 const routes: SgiRoutes = [
   {
@@ -68,7 +69,19 @@ const routes: SgiRoutes = [
           hasAnyAuthorityForAnyUO: ['ETI-ACT-V', 'ETI-ACT-C', 'ETI-ACT-E', 'ETI-ACT-B', 'ETI-ACT-DES', 'ETI-ACT-FIN']
         }
       },
-      { path: '**', component: null },
+      {
+        path: ETI_ROUTE_NAMES.EVALUADORES,
+        loadChildren: () =>
+          import('./evaluador/evaluador.module').then(
+            (m) => m.EvaluadorModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_EVALUADORES_TITLE,
+          hasAnyAuthorityForAnyUO: ['ETI-EVR-V', 'ETI-EVR-C', 'ETI-EVR-E', 'ETI-EVR-B']
+        }
+      },
+      { path: '**', component: null }
     ]
   }
 ];

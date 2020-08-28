@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Comite } from '@core/models/eti/comite';
 import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
-import { Evaluador } from '@core/models/eti/evaluador';
+import { IEvaluador } from '@core/models/eti/evaluador';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
 import { Persona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -40,17 +40,11 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
   fxLayoutProperties: FxLayoutProperties;
 
   comites: Comite[];
-  convocantes: Evaluador[];
+  convocantes: IEvaluador[];
   tiposConvocatoriaReunion: TipoConvocatoriaReunion[];
 
   filteredComites: Observable<Comite[]>;
   filteredTiposConvocatoriaReunion: Observable<TipoConvocatoriaReunion[]>;
-
-  filterActivo = {
-    field: 'activo',
-    type: SgiRestFilterType.EQUALS,
-    value: 'true'
-  };
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -58,7 +52,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
     private readonly evaluadorService: EvaluadorService,
     private readonly tipoConvocatoriaReunionService: TipoConvocatoriaReunionService,
     private readonly snackBarService: SnackBarService,
-    private readonly usuarioService: PersonaFisicaService
+    private readonly personaFisicaService: PersonaFisicaService
   ) {
     super(logger);
     this.fxFlexProperties = new FxFlexProperties();
@@ -103,7 +97,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
       'start');
 
     const comitesSelectSubscription = this.comiteService
-      .findAll({ filters: [this.filterActivo] })
+      .findAll()
       .subscribe(
         (response: SgiRestListResult<Comite>) => {
           this.comites = response.items;
@@ -135,7 +129,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
       'start');
 
     const tipoConvocatoriaSelectReunionSubscription = this.tipoConvocatoriaReunionService
-      .findAll({ filters: [this.filterActivo] })
+      .findAll()
       .subscribe(
         (response: SgiRestListResult<TipoConvocatoriaReunion>) => {
           this.tiposConvocatoriaReunion = response.items;
@@ -182,17 +176,17 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
           return this.evaluadorService
             .findAll({ filters: [filterComite] })
             .pipe(
-              switchMap((response: SgiRestListResult<Evaluador>) => {
+              switchMap((response: SgiRestListResult<IEvaluador>) => {
                 const convocantes = response.items;
 
-                const convocantesInfoUsuario$: Observable<Evaluador>[] = [];
+                const convocantesInfoUsuario$: Observable<IEvaluador>[] = [];
 
                 convocantes.forEach(convocante => {
-                  const convocanteInfoUsuario$ = this.usuarioService.findById(convocante.personaRef).pipe(
-                    map((usuario: Persona) => {
-                      convocante.nombre = usuario.nombre;
-                      convocante.primerApellido = usuario.primerApellido;
-                      convocante.segundoApellido = usuario.segundoApellido;
+                  const convocanteInfoUsuario$ = this.personaFisicaService.findById(convocante.personaRef).pipe(
+                    map((persona: Persona) => {
+                      convocante.nombre = persona.nombre;
+                      convocante.primerApellido = persona.primerApellido;
+                      convocante.segundoApellido = persona.segundoApellido;
                       return convocante;
                     }));
 
@@ -204,7 +198,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
             );
         })
       ).subscribe(
-        (convocantes: Evaluador[]) => {
+        (convocantes: IEvaluador[]) => {
           this.convocantes = convocantes;
           this.formGroup.controls.convocantes.setValue(this.convocantes);
         },
@@ -323,7 +317,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
    *
    * @return lista de convocantes
    */
-  getDatosConvocantesFormulario(): Evaluador[] {
+  getDatosConvocantesFormulario(): IEvaluador[] {
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'getDatosConvocantesFormulario()', 'end');
     const convocantes = FormGroupUtil.getValue(this.formGroup, 'convocantes');
 

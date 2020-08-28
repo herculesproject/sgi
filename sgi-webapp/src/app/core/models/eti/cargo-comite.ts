@@ -8,4 +8,9 @@ export class CargoComite {
   /** Activo */
   activo: boolean;
 
+  constructor() {
+    this.id = null;
+    this.nombre = '';
+    this.activo = true;
+  }
 }

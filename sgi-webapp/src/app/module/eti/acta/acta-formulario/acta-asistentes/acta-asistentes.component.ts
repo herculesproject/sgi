@@ -10,7 +10,6 @@ import { Observable, of, zip } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { IAsistente } from '@core/models/eti/asistente';
 import { MatSort } from '@angular/material/sort';
-import { AsistenteService } from '@core/services/eti/asistente.service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 
 @Component({
@@ -19,6 +18,7 @@ import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reun
   styleUrls: ['./acta-asistentes.component.scss']
 })
 export class ActaAsistentesComponent extends AbstractTabComponent<IAsistente> implements OnInit {
+
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 

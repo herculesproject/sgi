@@ -101,7 +101,7 @@ export class EvaluacionDatosMemoriaComponent extends AbstractTabComponent<Memori
    */
   private loadSolicitante(): void {
     this.logger.debug(EvaluacionDatosMemoriaComponent.name, `loadSolicitante()`, 'start');
-    const usuarioRef = this.memoria?.usuarioRef;
+    const usuarioRef = this.memoria?.personaRef;
     if (usuarioRef) {
       this.suscripciones.push(
         this.personaFisicaService.getInformacionBasica(usuarioRef).subscribe(

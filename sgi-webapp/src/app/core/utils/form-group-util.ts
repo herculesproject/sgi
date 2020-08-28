@@ -50,7 +50,7 @@ export class FormGroupUtil {
 
   /**
    * Comprueba si un dato de un formGroup es inválido y
-   * ha sido modificado por el usuario.
+   * ha sido modificado por el persona.
    *
    * @param formGroup FormGroup a comprobar
    * @param key Identificador del dato

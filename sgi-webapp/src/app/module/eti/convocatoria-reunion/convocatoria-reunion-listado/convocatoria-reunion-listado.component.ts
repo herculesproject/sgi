@@ -41,12 +41,6 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
   totalElementos: number;
   filter: SgiRestFilter[];
 
-  filterActivo = {
-    field: 'activo',
-    type: SgiRestFilterType.EQUALS,
-    value: 'true'
-  };
-
   buscadorFormGroup: FormGroup;
 
   fxFlexProperties: FxFlexProperties;
@@ -149,7 +143,7 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
       'getComites()',
       'start');
 
-    this.comitesSubscription = this.comiteService.findAll({ filters: [this.filterActivo] }).subscribe(
+    this.comitesSubscription = this.comiteService.findAll().subscribe(
       (response) => {
         this.comiteListado = response.items;
 
@@ -173,7 +167,7 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
       'getTiposConvocatoriaReunion()',
       'start');
 
-    this.tiposConvocatoriaReunionSubscription = this.tipoConvocatoriaReunionService.findAll({ filters: [this.filterActivo] }).subscribe(
+    this.tiposConvocatoriaReunionSubscription = this.tipoConvocatoriaReunionService.findAll().subscribe(
       (response) => {
         this.tipoConvocatoriaReunionListado = response.items;
 
@@ -355,7 +349,6 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
   private buildFilters(): SgiRestFilter[] {
     this.logger.debug(ConvocatoriaReunionListadoComponent.name, 'buildFilters()', 'start');
     this.filter = [];
-    this.filter.push(this.filterActivo);
 
     const comite = FormGroupUtil.getValue(this.buscadorFormGroup, 'comite');
     if (comite) {

@@ -2,7 +2,7 @@ import { Persona } from '../sgp/persona';
 import { CargoComite } from './cargo-comite';
 import { Comite } from './comite';
 
-export interface Evaluador extends Persona {
+export interface IEvaluador extends Persona {
 
   /** Id */
   id: number;
@@ -10,17 +10,20 @@ export interface Evaluador extends Persona {
   /** Comité */
   comite: Comite;
 
-  /** Cargo Comité */
+  /** Cargo comité */
   cargoComite: CargoComite;
-
-  /** Fecha Alta   */
-  fechaAlta: Date;
-
-  /** Fecha Baja */
-  fechaBaja: Date;
 
   /** Resumen */
   resumen: string;
+
+  /** Fecha Alta. */
+  fechaAlta: Date;
+
+  /** Fecha Baja. */
+  fechaBaja: Date;
+
+  /** Referencia persona */
+  personaRef: string;
 
   /** Activo */
   activo: boolean;

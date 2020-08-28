@@ -4,8 +4,8 @@ export class Registro {
 
   /** ID */
   id: number;
-  /** usuarioRef */
-  usuarioRef: string;
+  /** personaRef */
+  personaRef: string;
   /** servicio */
   servicio: Servicio;
   /** Acepta normativa */
@@ -15,7 +15,7 @@ export class Registro {
     this.id = null;
     this.servicio = null;
     this.aceptaCondiciones = false;
-    this.usuarioRef = 'user-1090';
+    this.personaRef = 'user-1090';
   }
 
 }

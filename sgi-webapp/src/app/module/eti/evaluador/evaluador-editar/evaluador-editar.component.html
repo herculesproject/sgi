@@ -1,0 +1,23 @@
+<section class="evaluador-editar">
+
+  <mat-tab-group headerPosition="above" (selectedTabChange)="cambioTab($event)">
+    <!-- Datos generales -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <sgi-generic-tab-label [abstractTab]="datosGenerales" [errors]="errorTabs[0]"
+          [textoLabel]="'eti.evaluador.datosGenerales.cabecera' | translate">
+        </sgi-generic-tab-label>
+
+      </ng-template>
+
+      <sgi-evaluador-datos-generales #datosGenerales (eventEmitter)="setErroresTab(0, $event)" (selectComite)="
+                      setComite($event)" (selectCargoComite)="
+                      setCargoComite($event)">
+      </sgi-evaluador-datos-generales>
+    </mat-tab>
+
+  </mat-tab-group>
+
+  <!-- Footer -->
+  <sgi-footer-guardar [texto]="textoActualizar" (emitter)="saveData()"></sgi-footer-guardar>
+</section>

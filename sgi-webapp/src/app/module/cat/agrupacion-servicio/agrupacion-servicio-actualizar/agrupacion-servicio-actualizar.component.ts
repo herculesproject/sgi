@@ -176,7 +176,7 @@ export class AgrupacionServicioActualizarComponent implements OnInit, OnDestroy 
           let listObservables: Observable<any>[] = [];
           const listObservablesCrearSupervision: Observable<Supervision>[] =
             this.gestorForm.gestoresAniadidos.map(gestor => {
-              const supervision = new Supervision(gestor.usuarioRef, this.servicio);
+              const supervision = new Supervision(gestor.personaRef, this.servicio);
               return this.supervisionService.create(supervision);
             });
           listObservables = listObservables.concat(listObservablesCrearSupervision);

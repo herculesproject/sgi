@@ -39,12 +39,6 @@ export class EvaluacionListadoComponent extends AbstractPaginacionComponent<IEva
   comitesFiltrados: Observable<Comite[]>;
   tiposConvocatoriaReunion: TipoConvocatoriaReunion[];
 
-  private filterActivo = {
-    field: 'activo',
-    type: SgiRestFilterType.EQUALS,
-    value: 'true'
-  };
-
   constructor(
     protected readonly logger: NGXLogger,
     private readonly evaluacionService: EvaluacionService,
@@ -120,10 +114,10 @@ export class EvaluacionListadoComponent extends AbstractPaginacionComponent<IEva
     this.logger.debug(EvaluacionListadoComponent.name,
       `buscarSolicitantes(evaluaciones: ${JSON.stringify(this.evaluaciones)})`, 'start');
     this.evaluaciones.map((evaluacion: EvaluacionListado) => {
-      const usuarioRef = evaluacion.memoria?.peticionEvaluacion?.usuarioRef;
-      if (usuarioRef) {
+      const personaRef = evaluacion.memoria?.peticionEvaluacion?.personaRef;
+      if (personaRef) {
         this.suscripciones.push(
-          this.personaFisicaService.getInformacionBasica(usuarioRef).subscribe(
+          this.personaFisicaService.getInformacionBasica(personaRef).subscribe(
             (persona: Persona) => evaluacion.persona = persona
           )
         );
@@ -139,9 +133,7 @@ export class EvaluacionListadoComponent extends AbstractPaginacionComponent<IEva
   private loadComites(): void {
     this.logger.debug(EvaluacionListadoComponent.name, 'getComites()', 'start');
     this.suscripciones.push(
-      this.comiteService.findAll(
-        { filters: [this.filterActivo] }
-      ).subscribe(
+      this.comiteService.findAll().subscribe(
         (res: SgiRestListResult<Comite>) => {
           if (res) {
             this.comiteListado = res.items;

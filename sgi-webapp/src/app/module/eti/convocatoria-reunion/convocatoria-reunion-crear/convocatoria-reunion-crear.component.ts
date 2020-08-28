@@ -5,7 +5,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IAsistente } from '@core/models/eti/asistente';
 import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
-import { Evaluador } from '@core/models/eti/evaluador';
+import { IEvaluador } from '@core/models/eti/evaluador';
 import { AsistenteService } from '@core/services/eti/asistente.service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { AbstractFormularioComponent } from '@core/component/abstract-formulario.component';
@@ -27,6 +27,7 @@ import {
   encapsulation: ViewEncapsulation.None
 })
 export class ConvocatoriaReunionCrearComponent extends AbstractFormularioComponent implements OnInit {
+
 
   @ViewChild('datosGenerales', { static: true }) datosGenerales: ConvocatoriaReunionDatosGeneralesComponent;
 
@@ -66,7 +67,7 @@ export class ConvocatoriaReunionCrearComponent extends AbstractFormularioCompone
           const convocantes = this.datosGenerales.getDatosConvocantesFormulario();
 
           const asistenteCreateSubscriptions: Observable<IAsistente>[] = [];
-          convocantes.forEach((convocante: Evaluador) => {
+          convocantes.forEach((convocante: IEvaluador) => {
             const asistente: IAsistente = {
               id: null,
               convocatoriaReunion: nuevaConvocatoriaReunion,

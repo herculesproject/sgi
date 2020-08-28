@@ -47,12 +47,6 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
   totalElementos: number;
   filter: SgiRestFilter[];
 
-  filterActivo = {
-    field: 'activo',
-    type: SgiRestFilterType.EQUALS,
-    value: 'true'
-  };
-
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
@@ -323,7 +317,6 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
 
     }
 
-    this.filter.push(this.filterActivo);
     this.logger.debug(ActaListadoComponent.name, 'buildFilters()', 'end');
     return this.filter;
   }
@@ -358,7 +351,7 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
       'getComites()',
       'start');
 
-    this.comitesSubscription = this.comiteService.findAll({ filters: [this.filterActivo] }).subscribe(
+    this.comitesSubscription = this.comiteService.findAll().subscribe(
       (response) => {
         this.comiteListado = response.items;
 
@@ -382,7 +375,7 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
       'getTipoEstadoActa()',
       'start');
 
-    this.tipoEstadoActaSubscription = this.tipoEstadoActaService.findAll({ filters: [this.filterActivo] }).subscribe(
+    this.tipoEstadoActaSubscription = this.tipoEstadoActaService.findAll().subscribe(
       (response) => {
         this.tipoEstadoActaListado = response.items;
 

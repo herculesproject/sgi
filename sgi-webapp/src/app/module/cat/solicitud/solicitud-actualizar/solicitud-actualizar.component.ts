@@ -27,7 +27,7 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
   formGroup: FormGroup;
   FormGroupUtil = FormGroupUtil;
   registro: Registro;
-  usuarioRef = 'user-1090';
+  personaRef = 'user-1090';
 
   desactivarAceptar: boolean;
   fxFlexProperties: FxFlexProperties;
@@ -63,7 +63,7 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
     );
     this.desactivarAceptar = false;
     this.registro = new Registro();
-    this.getSolicitud(this.usuarioRef);
+    this.getSolicitud(this.personaRef);
     this.formGroup = new FormGroup({
       aceptaCondiciones: new FormControl(this.registro.aceptaCondiciones),
       servicio: new FormControl(this.registro.servicio),
@@ -78,7 +78,7 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
   /**
    * Obtiene los datos del registro a actualizar si existe
    */
-  getSolicitud(usuarioRef: string): void {
+  getSolicitud(personaRef: string): void {
     this.logger.debug(
       SolicitudActualizarComponent.name,
       'getSolicitud()',
@@ -87,9 +87,9 @@ export class SolicitudActualizarComponent implements OnInit, OnDestroy {
     const findOptions: SgiRestFindOptions = {
       filters: [
         {
-          field: 'usuarioRef',
+          field: 'personaRef',
           type: SgiRestFilterType.EQUALS,
-          value: usuarioRef,
+          value: personaRef,
         }
       ]
     };

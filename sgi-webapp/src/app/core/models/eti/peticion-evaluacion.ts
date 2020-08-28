@@ -47,8 +47,8 @@ export class PeticionEvaluacion {
   /** Tiene fondos propios */
   tieneFondosPropios: boolean;
 
-  /** Referencia usuario */
-  usuarioRef: string;
+  /** Referencia persona */
+  personaRef: string;
 
   /** Activo */
   activo: boolean;
@@ -69,7 +69,7 @@ export class PeticionEvaluacion {
     this.disMetodologico = null;
     this.externo = null;
     this.tieneFondosPropios = null;
-    this.usuarioRef = null;
+    this.personaRef = null;
     this.activo = true;
   }
 

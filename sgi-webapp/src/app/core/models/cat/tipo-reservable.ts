@@ -19,7 +19,7 @@ export class TipoReservable {
   diasVistaMaxCalen: number;
   /** Hora antelación mínima. */
   horasAnteMin: number;
-  /** Horas antelación anular usuario. */
+  /** Horas antelación anular persona. */
   horasAnteAnular: number;
   /** Estado */
   estado: EstadoTipoReservableEnum;
