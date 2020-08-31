@@ -11,9 +11,10 @@ import { GenericTabLabelComponent } from '@shared/generic-tab-label/generic-tab-
 import { NGXLogger } from 'ngx-logger';
 
 import { ActaCrearComponent } from './acta-crear.component';
-import { ActaAsistentesComponent } from '../acta-formulario/acta-asistentes/acta-asistentes.component';
+import { ActaAsistentesListadoComponent } from '../acta-formulario/acta-asistentes/acta-asistentes-listado/acta-asistentes-listado.component';
 import { ActaDatosGeneralesComponent } from '../acta-formulario/acta-datos-generales/acta-datos-generales.component';
 import { ActaMemoriasComponent } from '../acta-formulario/acta-memorias/acta-memorias.component';
+
 describe('ActaCrearComponent', () => {
   let component: ActaCrearComponent;
   let fixture: ComponentFixture<ActaCrearComponent>;
@@ -22,7 +23,7 @@ describe('ActaCrearComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         ActaCrearComponent,
-        ActaAsistentesComponent,
+        ActaAsistentesListadoComponent,
         ActaDatosGeneralesComponent,
         ActaMemoriasComponent,
         FooterGuardarComponent,

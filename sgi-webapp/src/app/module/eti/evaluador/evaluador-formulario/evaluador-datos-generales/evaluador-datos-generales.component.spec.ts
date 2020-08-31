@@ -9,6 +9,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { NGXLogger } from 'ngx-logger';
 
 import { EvaluadorDatosGeneralesComponent } from './evaluador-datos-generales.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 
 describe('EvaluadorCrearDatosGenerealesComponent', () => {
@@ -19,6 +20,7 @@ describe('EvaluadorCrearDatosGenerealesComponent', () => {
     TestBed.configureTestingModule({
       declarations: [EvaluadorDatosGeneralesComponent],
       imports: [
+        RouterTestingModule,
         TestUtils.getIdiomas(),
         MaterialDesignModule,
         BrowserAnimationsModule,

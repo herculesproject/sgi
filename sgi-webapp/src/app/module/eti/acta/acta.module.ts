@@ -8,11 +8,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ActaCrearComponent } from './acta-crear/acta-crear.component';
 import { ActaEditarComponent } from './acta-editar/acta-editar.component';
-import { ActaAsistentesComponent } from './acta-formulario/acta-asistentes/acta-asistentes.component';
-import { ActaDatosGeneralesComponent } from './acta-formulario/acta-datos-generales/acta-datos-generales.component';
-import { ActaMemoriasComponent } from './acta-formulario/acta-memorias/acta-memorias.component';
-import { ActaListadoComponent } from './acta-listado/acta-listado.component';
 import { ActaRoutingModule } from './acta-routing.module';
+import { ActaListadoComponent } from './acta-listado/acta-listado.component';
+import { ActaDatosGeneralesComponent } from './acta-formulario/acta-datos-generales/acta-datos-generales.component';
+import { ActaAsistentesListadoComponent } from './acta-formulario/acta-asistentes/acta-asistentes-listado/acta-asistentes-listado.component';
+import { ActaMemoriasComponent } from './acta-formulario/acta-memorias/acta-memorias.component';
+import { ActaAsistentesEditarModalComponent } from './acta-formulario/acta-asistentes/acta-asistentes-editar-modal/acta-asistentes-editar-modal.component';
 
 @NgModule({
   declarations: [
@@ -20,8 +21,9 @@ import { ActaRoutingModule } from './acta-routing.module';
     ActaDatosGeneralesComponent,
     ActaMemoriasComponent,
     ActaListadoComponent,
-    ActaAsistentesComponent,
-    ActaEditarComponent
+    ActaAsistentesListadoComponent,
+    ActaEditarComponent,
+    ActaAsistentesEditarModalComponent
   ],
   imports: [
     SharedModule,

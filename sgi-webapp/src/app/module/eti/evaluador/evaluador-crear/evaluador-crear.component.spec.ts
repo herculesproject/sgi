@@ -7,9 +7,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { FooterGuardarComponent } from '@shared/footers/footer-guardar/footer-guardar.component';
-import { GenericTabLabelComponent } from '@shared/formularios-tabs/generic-tab-label/generic-tab-label.component';
+import { GenericTabLabelComponent } from '@shared/generic-tab-label/generic-tab-label.component';
 import { NGXLogger } from 'ngx-logger';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 
 import { EvaluadorCrearComponent } from './evaluador-crear.component';
 import { EvaluadorDatosGeneralesComponent } from '../evaluador-formulario/evaluador-datos-generales/evaluador-datos-generales.component';
@@ -29,7 +28,6 @@ describe('EvaluadorCrearComponent', () => {
         TestUtils.getIdiomas(),
         MaterialDesignModule,
         BrowserAnimationsModule,
-        PerfectScrollbarModule,
         HttpClientTestingModule,
         FlexModule,
         ReactiveFormsModule,

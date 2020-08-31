@@ -7,8 +7,9 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { AbstractFormularioComponent } from '@core/component/abstract-formulario.component';
 import { NGXLogger } from 'ngx-logger';
 
-import { ActaAsistentesComponent } from '../acta-formulario/acta-asistentes/acta-asistentes.component';
+
 import { ActaDatosGeneralesComponent } from '../acta-formulario/acta-datos-generales/acta-datos-generales.component';
+import { ActaAsistentesListadoComponent } from '../acta-formulario/acta-asistentes/acta-asistentes-listado/acta-asistentes-listado.component';
 import { ActaMemoriasComponent } from '../acta-formulario/acta-memorias/acta-memorias.component';
 
 
@@ -25,7 +26,7 @@ const MSG_ERROR = marker('eti.acta.crear.error');
 export class ActaCrearComponent extends AbstractFormularioComponent implements OnInit {
   @ViewChild('datosGenerales', { static: true }) datosGenerales: ActaDatosGeneralesComponent;
   @ViewChild('memorias', { static: true }) memorias: ActaMemoriasComponent;
-  @ViewChild('asistentes', { static: true }) asistentes: ActaAsistentesComponent;
+  @ViewChild('asistentes', { static: true }) asistentes: ActaAsistentesListadoComponent;
 
   textoCrear = MSG_BUTTON_SAVE;
 

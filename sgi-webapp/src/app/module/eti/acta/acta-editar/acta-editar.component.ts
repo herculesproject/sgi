@@ -3,10 +3,10 @@ import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AbstractFormularioComponent } from '@core/component/abstract-formulario.component';
 import { ActaDatosGeneralesComponent } from '../acta-formulario/acta-datos-generales/acta-datos-generales.component';
 import { ActaMemoriasComponent } from '../acta-formulario/acta-memorias/acta-memorias.component';
-import { ActaAsistentesComponent } from '../acta-formulario/acta-asistentes/acta-asistentes.component';
 import { NGXLogger } from 'ngx-logger';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { ActaAsistentesListadoComponent } from '../acta-formulario/acta-asistentes/acta-asistentes-listado/acta-asistentes-listado.component';
 import { ActaService } from '@core/services/eti/acta.service';
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -27,7 +27,7 @@ const MSG_NOT_FOUND = marker('eti.acta.editar.no-encontrado');
 export class ActaEditarComponent extends AbstractFormularioComponent implements OnInit {
   @ViewChild('datosGenerales', { static: true }) datosGenerales: ActaDatosGeneralesComponent;
   @ViewChild('memorias', { static: true }) memorias: ActaMemoriasComponent;
-  @ViewChild('asistentes', { static: true }) asistentes: ActaAsistentesComponent;
+  @ViewChild('asistentes', { static: true }) asistentes: ActaAsistentesListadoComponent;
 
   textoCrear = MSG_BUTTON_EDIT;
 

@@ -3,11 +3,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EvaluadorEditarComponent } from './evaluador-editar.component';
 import { EvaluadorDatosGeneralesComponent } from '../evaluador-formulario/evaluador-datos-generales/evaluador-datos-generales.component';
 import { FooterGuardarComponent } from '@shared/footers/footer-guardar/footer-guardar.component';
-import { GenericTabLabelComponent } from '@shared/formularios-tabs/generic-tab-label/generic-tab-label.component';
+import { GenericTabLabelComponent } from '@shared/generic-tab-label/generic-tab-label.component';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FlexModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -30,7 +29,6 @@ describe('EvaluadorEditarComponent', () => {
         TestUtils.getIdiomas(),
         MaterialDesignModule,
         BrowserAnimationsModule,
-        PerfectScrollbarModule,
         HttpClientTestingModule,
         FlexModule,
         ReactiveFormsModule,

@@ -12,7 +12,7 @@ import {
 } from '@angular/material/dialog';
 import { NGXLogger } from 'ngx-logger';
 import TestUtils from '@core/utils/test-utils';
-import { HeaderComponent } from '@shared/componentes-layout/header/header.component';
+import { HeaderComponent } from '@block/header/header.component';
 
 describe('BuscarPersonaDialogoComponent', () => {
   let component: BuscarPersonaDialogoComponent;
@@ -39,6 +39,7 @@ describe('BuscarPersonaDialogoComponent', () => {
         MaterialDesignModule,
         HttpClientTestingModule,
         MatDialogModule,
+        TestUtils.getIdiomas(),
       ],
       providers: [
         {

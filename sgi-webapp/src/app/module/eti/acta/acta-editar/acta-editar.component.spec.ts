@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ActaEditarComponent } from './acta-editar.component';
-import { ActaAsistentesComponent } from '../acta-formulario/acta-asistentes/acta-asistentes.component';
+import { ActaAsistentesListadoComponent } from '../acta-formulario/acta-asistentes/acta-asistentes-listado/acta-asistentes-listado.component';
 import { ActaDatosGeneralesComponent } from '../acta-formulario/acta-datos-generales/acta-datos-generales.component';
 import { ActaMemoriasComponent } from '../acta-formulario/acta-memorias/acta-memorias.component';
 import { FooterGuardarComponent } from '@shared/footers/footer-guardar/footer-guardar.component';
@@ -23,7 +23,7 @@ describe('ActaEditarComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         ActaEditarComponent,
-        ActaAsistentesComponent,
+        ActaAsistentesListadoComponent,
         ActaDatosGeneralesComponent,
         ActaMemoriasComponent,
         FooterGuardarComponent,
