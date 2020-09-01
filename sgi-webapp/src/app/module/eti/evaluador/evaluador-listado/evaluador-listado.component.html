@@ -76,14 +76,14 @@
 
     <!-- Nombre y apellidos persona -->
     <ng-container matColumnDef="nombre">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.evaluador.listado.nombreApellidos' | translate}}
+      <th mat-header-cell *matHeaderCellDef> {{'eti.evaluador.listado.nombreApellidos' | translate}}
       </th>
       <td mat-cell *matCellDef="let evaluador">
         {{evaluador.nombre}} {{evaluador.primerApellido}} {{evaluador.segundoApellido}} </td>
     </ng-container>
 
     <ng-container matColumnDef="identificadorNumero">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      <th mat-header-cell *matHeaderCellDef>
         {{'eti.evaluador.listado.numeroDocumento' | translate}}
       </th>
       <td mat-cell *matCellDef="let evaluador"> {{evaluador.identificadorNumero}}{{evaluador.identificadorLetra}}</td>
