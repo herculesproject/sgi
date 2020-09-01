@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <api context="/sgp" name="API-SGP" version="1.0.0" version-type="context" xmlns="http://ws.apache.org/ns/synapse">
-    <resource methods="GET" url-mapping="/personas/fisica">
+    <resource methods="POST GET" url-mapping="/personas/fisica">
         <inSequence>
             <!--This is generated API skeleton.-->
             <!--Business Logic Goes Here-->
@@ -170,9 +170,10 @@
             <respond/>
         </faultSequence>
     </resource>
-    <resource methods="GET" url-mapping="/personas/fisica/hasanypersonaref">
+    <resource methods="GET" uri-template="/personas/fisica/bypersonarefs/{personaRefs}">
         <inSequence>
             <!--This is generated API skeleton.-->
+            <property expression="get-property('uri.var.personaRefs')" name="personaRefs" scope="default" type="STRING"/>
             <!--Business Logic Goes Here-->
             <payloadFactory media-type="json">
                 <format>[
@@ -450,9 +451,10 @@
             <respond/>
         </faultSequence>
     </resource>
-    <resource methods="GET" url-mapping="/personas/fisica/persona/hasanypersonaref">
+    <resource methods="GET" uri-template="/personas/fisica/persona/bypersonarefs/{personaRefs}">
         <inSequence>
             <!--This is generated API skeleton.-->
+            <property expression="get-property('uri.var.personaRefs')" name="personaRefs" scope="default" type="STRING"/>
             <!--Business Logic Goes Here-->
             <payloadFactory media-type="json">
                 <format>[
@@ -603,7 +605,7 @@
             <respond/>
         </faultSequence>
     </resource>
-    <resource methods="GET" uri-template="/personas/fisica/{personaRef}">
+    <resource methods="PUT GET" uri-template="/personas/fisica/{personaRef}">
         <inSequence>
             <!--This is generated API skeleton.-->
             <property expression="get-property('uri.var.personaRef')" name="personaRef" scope="default" type="STRING"/>
@@ -801,7 +803,7 @@
             <respond/>
         </faultSequence>
     </resource>
-    <resource methods="GET" url-mapping="/personas/juridica">
+    <resource methods="POST GET" url-mapping="/personas/juridica">
         <inSequence>
             <!--This is generated API skeleton.-->
             <!--Business Logic Goes Here-->
@@ -911,9 +913,10 @@
             <respond/>
         </faultSequence>
     </resource>
-    <resource methods="GET" url-mapping="/personas/juridica/hasanypersonaref">
+    <resource methods="GET" uri-template="/personas/juridica/bypersonarefs/{personaRefs}">
         <inSequence>
             <!--This is generated API skeleton.-->
+            <property expression="get-property('uri.var.personaRefs')" name="personaRefs" scope="default" type="STRING"/>
             <!--Business Logic Goes Here-->
             <payloadFactory media-type="json">
                 <format>[
@@ -1021,7 +1024,7 @@
             <respond/>
         </faultSequence>
     </resource>
-    <resource methods="GET" uri-template="/personas/juridica/{personaRef}">
+    <resource methods="PUT GET" uri-template="/personas/juridica/{personaRef}">
         <inSequence>
             <!--This is generated API skeleton.-->
             <property expression="get-property('uri.var.personaRef')" name="personaRef" scope="default" type="STRING"/>

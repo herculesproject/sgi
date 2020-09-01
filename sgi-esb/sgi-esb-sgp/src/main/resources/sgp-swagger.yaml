@@ -82,20 +82,41 @@ paths:
         filtros.
       operationId: findAllPersonasFisica
       summary: Busca las personas físicas
-  /personas/fisica/hasanypersonaref:
+    post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: Datos de la nueva persona física
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/PersonaFisica'
+      responses:
+        '201':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/PersonaFisica'
+        '400':
+          description: PersonaRef tiene que ser null para crear una nueva persona física
+      tags:
+        - personas/fisica
+      description: Devuelve la persona física creada
+      operationId: newPersonaFisica
+      summary: Crea una persona física
+  '/personas/fisica/bypersonarefs/{personaRefs}':
     get:
       produces:
         - application/json
       parameters:
-        - collectionFormat: multi
-          description: Referencias de las personas
-          in: query
-          items:
-            type: string
+        - description: Referencias de las personas separadas por "|"
+          in: path
           name: personaRefs
           required: true
-          type: array
-          x-example: 'p-001,p-002'
+          type: string
+          x-example: p-001|p-002
         - description: Nº de pagina
           format: int32
           in: header
@@ -239,20 +260,17 @@ paths:
         cumplen los filtros.
       operationId: findAllPersonasFisicaPersona
       summary: Busca la informacion basica de la persona física
-  /personas/fisica/persona/hasanypersonaref:
+  '/personas/fisica/persona/bypersonarefs/{personaRefs}':
     get:
       produces:
         - application/json
       parameters:
-        - collectionFormat: multi
-          description: Referencias de las personas
-          in: query
-          items:
-            type: string
+        - description: Referencias de las personas separadas por "|"
+          in: path
           name: personaRefs
           required: true
-          type: array
-          x-example: 'p-001,p-002'
+          type: string
+          x-example: p-001|p-002
         - description: Nº de pagina
           format: int32
           in: header
@@ -372,6 +390,35 @@ paths:
       description: Devuelve la persona física correspondiente a personaRef
       operationId: findPersonaFisicaByPersonaRef
       summary: Busca una persona física por su personaRef
+    put:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: Referencia de la persona
+          in: path
+          name: personaRef
+          required: true
+          type: string
+        - description: Datos de la persona física actualizada
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/PersonaFisica'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/PersonaFisica'
+        '400':
+          description: PersonaRef no puede ser null para actualizar una persona física
+      tags:
+        - personas/fisica
+      description: Devuelve la persona física actualizada
+      operationId: updatePersonaFisica
+      summary: Actualiza la persona física con el personaRef
   '/personas/fisica/{personaRef}/domicilio':
     get:
       produces:
@@ -628,20 +675,41 @@ paths:
         filtros.
       operationId: findAllPersonasJuridica
       summary: Busca las personas jurídicas
-  /personas/juridica/hasanypersonaref:
+    post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: Datos de la nueva jurídica física
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/PersonaJuridica'
+      responses:
+        '201':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/PersonaJuridica'
+        '400':
+          description: PersonaRef tiene que ser null para crear una nueva persona jurídica
+      tags:
+        - personas/juridica
+      description: Devuelve la persona jurídica creada
+      operationId: newPersonaJuridica
+      summary: Crea una persona jurídica
+  '/personas/juridica/bypersonarefs/{personaRefs}':
     get:
       produces:
         - application/json
       parameters:
-        - collectionFormat: multi
-          description: Referencias de las personas
-          in: query
-          items:
-            type: string
+        - description: Referencias de las personas separadas por "|"
+          in: path
           name: personaRefs
           required: true
-          type: array
-          x-example: 'p-001,p-002'
+          type: string
+          x-example: p-001|p-002
         - description: Nº de pagina
           format: int32
           in: header
@@ -735,6 +803,35 @@ paths:
       description: Devuelve la persona jurídica correspondiente a personaRef
       operationId: findPersonaJuridicaByPersonaRef
       summary: Busca una persona jurídica por su personaRef
+    put:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: Referencia de la persona
+          in: path
+          name: personaRef
+          required: true
+          type: string
+        - description: Datos de la persona jurídica actualizada
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/PersonaJuridica'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/PersonaJuridica'
+        '400':
+          description: PersonaRef no puede ser null para actualizar una persona jurídica
+      tags:
+        - personas/juridica
+      description: Devuelve la persona jurídica actualizada
+      operationId: updatePersonaJuridica
+      summary: Actualiza la persona jurídica con el personaRef
   '/personas/juridica/{personaRef}/domicilio':
     get:
       produces:
