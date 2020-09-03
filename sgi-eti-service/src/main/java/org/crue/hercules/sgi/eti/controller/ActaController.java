@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 
+import org.crue.hercules.sgi.eti.dto.ActaWithNumEvaluaciones;
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.BaseEntity.Update;
 import org.crue.hercules.sgi.eti.service.ActaService;
@@ -42,7 +43,7 @@ public class ActaController {
   /**
    * Instancia un nuevo ActaController.
    * 
-   * @param service ActaService
+   * @param service {@link ActaService}
    */
   public ActaController(ActaService service) {
     log.debug("ActaController(ActaService service) - start");
@@ -51,23 +52,25 @@ public class ActaController {
   }
 
   /**
-   * Devuelve una lista paginada y filtrada {@link Acta}.
+   * Devuelve una lista paginada y filtrada {@link ActaWithNumEvaluaciones}.
    * 
    * @param query  filtro de {@link QueryCriteria}.
    * @param paging pageable
+   * @return la lista de {@link ActaWithNumEvaluaciones} paginadas y/o filtradas.
    */
   @GetMapping()
   @PreAuthorize("hasAuthorityForAnyUO('ETI-ACT-V')")
-  ResponseEntity<Page<Acta>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  ResponseEntity<Page<ActaWithNumEvaluaciones>> findAllActaWithNumEvaluaciones(
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
-    Page<Acta> page = service.findAll(query, paging);
+    log.debug("findAllActaWithNumEvaluaciones(List<QueryCriteria> query, Pageable paging) - start");
+    Page<ActaWithNumEvaluaciones> page = service.findAllActaWithNumEvaluaciones(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllActaWithNumEvaluaciones(List<QueryCriteria> query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllActaWithNumEvaluaciones(List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -133,4 +136,16 @@ public class ActaController {
     log.debug("delete(Long id) - end");
   }
 
+  /**
+   * 
+   */
+  @PutMapping("/{id}/finalizar")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-ACT-FIN')")
+  void finishActa(@PathVariable Long id) {
+
+    log.debug("finalizarActa(Long id) - start");
+    service.finishActa(id);
+    log.debug("finalizarActa(Long id) - end");
+
+  }
 }

@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.controller;
 
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,9 +10,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.config.SecurityConfig;
+import org.crue.hercules.sgi.eti.dto.ActaWithNumEvaluaciones;
 import org.crue.hercules.sgi.eti.exceptions.ActaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Acta;
+import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 import org.crue.hercules.sgi.eti.service.ActaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -198,15 +202,15 @@ public class ActaControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
-  public void findAll_Unlimited_ReturnsFullActaList() throws Exception {
+  public void findAll_Unlimited_ReturnsFullActaWithNumEvaluacionesList() throws Exception {
     // given: One hundred actas
-    List<Acta> actas = new ArrayList<>();
+    List<ActaWithNumEvaluaciones> actas = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      actas.add(generarMockActa(Long.valueOf(i), i));
+      actas.add(generarMockActaWithNumEvaluaciones(Long.valueOf(i), i));
     }
 
-    BDDMockito.given(actaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(actas));
+    BDDMockito.given(actaService.findAllActaWithNumEvaluaciones(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(actas));
 
     // when: find unlimited
     mockMvc
@@ -220,24 +224,24 @@ public class ActaControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
-  public void findAll_WithPaging_ReturnsActaSubList() throws Exception {
+  public void findAll_WithPaging_ReturnsActaWithNumEvaluacionesSubList() throws Exception {
     // given: One hundred actas
-    List<Acta> actas = new ArrayList<>();
+    List<ActaWithNumEvaluaciones> actas = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      actas.add(generarMockActa(Long.valueOf(i), i));
+      actas.add(generarMockActaWithNumEvaluaciones(Long.valueOf(i), i));
     }
 
-    BDDMockito.given(actaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<Acta>>() {
+    BDDMockito.given(actaService.findAllActaWithNumEvaluaciones(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<ActaWithNumEvaluaciones>>() {
           @Override
-          public Page<Acta> answer(InvocationOnMock invocation) throws Throwable {
+          public Page<ActaWithNumEvaluaciones> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(1, Pageable.class);
             int size = pageable.getPageSize();
             int index = pageable.getPageNumber();
             int fromIndex = size * index;
             int toIndex = fromIndex + size;
-            List<Acta> content = actas.subList(fromIndex, toIndex);
-            Page<Acta> page = new PageImpl<>(content, pageable, actas.size());
+            List<ActaWithNumEvaluaciones> content = actas.subList(fromIndex, toIndex);
+            Page<ActaWithNumEvaluaciones> page = new PageImpl<>(content, pageable, actas.size());
             return page;
           }
         });
@@ -257,38 +261,38 @@ public class ActaControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10))).andReturn();
 
     // this uses a TypeReference to inform Jackson about the Lists's generic type
-    List<Acta> actual = mapper.readValue(requestResult.getResponse().getContentAsString(),
-        new TypeReference<List<Acta>>() {
+    List<ActaWithNumEvaluaciones> actual = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<ActaWithNumEvaluaciones>>() {
         });
 
     // containing id='31' to '40'
     for (int i = 0, j = 31; i < 10; i++, j++) {
-      Acta acta = actual.get(i);
+      ActaWithNumEvaluaciones acta = actual.get(i);
       Assertions.assertThat(acta.getId()).isEqualTo(j);
     }
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
-  public void findAll_WithSearchQuery_ReturnsFilteredActaList() throws Exception {
+  public void findAll_WithSearchQuery_ReturnsFilteredActaWithNumEvaluacionesList() throws Exception {
     // given: One hundred actas and a search query
-    List<Acta> actas = new ArrayList<>();
+    List<ActaWithNumEvaluaciones> actas = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      actas.add(generarMockActa(Long.valueOf(i), 123));
+      actas.add(generarMockActaWithNumEvaluaciones(Long.valueOf(i), 123));
     }
     String query = "id:5";
 
-    BDDMockito.given(actaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<Acta>>() {
+    BDDMockito.given(actaService.findAllActaWithNumEvaluaciones(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<ActaWithNumEvaluaciones>>() {
           @Override
-          public Page<Acta> answer(InvocationOnMock invocation) throws Throwable {
+          public Page<ActaWithNumEvaluaciones> answer(InvocationOnMock invocation) throws Throwable {
             List<QueryCriteria> queryCriterias = invocation.<List<QueryCriteria>>getArgument(0);
 
-            List<Acta> content = new ArrayList<>();
-            for (Acta acta : actas) {
+            List<ActaWithNumEvaluaciones> content = new ArrayList<>();
+            for (ActaWithNumEvaluaciones acta : actas) {
               boolean add = true;
               for (QueryCriteria queryCriteria : queryCriterias) {
-                Field field = ReflectionUtils.findField(Acta.class, queryCriteria.getKey());
+                Field field = ReflectionUtils.findField(ActaWithNumEvaluaciones.class, queryCriteria.getKey());
                 field.setAccessible(true);
                 String fieldValue = ReflectionUtils.getField(field, acta).toString();
                 switch (queryCriteria.getOperation()) {
@@ -340,7 +344,7 @@ public class ActaControllerTest {
                 content.add(acta);
               }
             }
-            Page<Acta> page = new PageImpl<>(content);
+            Page<ActaWithNumEvaluaciones> page = new PageImpl<>(content);
             return page;
           }
         });
@@ -355,6 +359,15 @@ public class ActaControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-FIN" })
+  public void finishActa_ReturnsOk() throws Exception {
+    mockMvc
+        .perform(MockMvcRequestBuilders.put(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/finalizar", 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+  }
+
   /**
    * Función que devuelve un objeto Acta
    * 
@@ -363,11 +376,18 @@ public class ActaControllerTest {
    * @return el objeto Acta
    */
   public Acta generarMockActa(Long id, Integer numero) {
+    Comite comite = new Comite();
+    comite.setId(1L);
+    comite.setComite("CEEA");
+    TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(100L);
+    convocatoriaReunion.setComite(comite);
+    convocatoriaReunion.setFechaEvaluacion(LocalDateTime.of(2020, 8, 01, 12, 12, 12));
+    convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
 
     TipoEstadoActa tipoEstadoActa = new TipoEstadoActa();
-    tipoEstadoActa.setId(id);
+    tipoEstadoActa.setId(1L);
     tipoEstadoActa.setNombre("En elaboración");
     tipoEstadoActa.setActivo(Boolean.TRUE);
 
@@ -385,6 +405,29 @@ public class ActaControllerTest {
     acta.setActivo(true);
 
     return acta;
+  }
+
+  /**
+   * Función que devuelve un objeto ActaWithNumEvaluaciones
+   * 
+   * @param acta   id del acta
+   * @param numero numero del acta
+   * @return el objeto Acta
+   */
+  public ActaWithNumEvaluaciones generarMockActaWithNumEvaluaciones(Long id, Integer numero) {
+    Acta acta = generarMockActa(id, numero);
+
+    ActaWithNumEvaluaciones returnValue = new ActaWithNumEvaluaciones();
+    returnValue.setId(acta.getId());
+    returnValue.setComite(acta.getConvocatoriaReunion().getComite().getComite());
+    returnValue.setFechaEvaluacion(acta.getConvocatoriaReunion().getFechaEvaluacion());
+    returnValue.setNumeroActa(acta.getNumero());
+    returnValue.setConvocatoria(acta.getConvocatoriaReunion().getTipoConvocatoriaReunion().getNombre());
+    returnValue.setNumEvaluaciones(1);
+    returnValue.setNumRevisiones(2);
+    returnValue.setNumTotal(returnValue.getNumEvaluaciones() + returnValue.getNumRevisiones());
+    returnValue.setEstadoActa(acta.getEstadoActual());
+    return returnValue;
   }
 
 }

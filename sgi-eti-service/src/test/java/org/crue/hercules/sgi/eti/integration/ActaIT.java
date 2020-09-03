@@ -1,13 +1,17 @@
 package org.crue.hercules.sgi.eti.integration;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.dto.ActaWithNumEvaluaciones;
 import org.crue.hercules.sgi.eti.model.Acta;
+import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.EstadoActa;
+import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
@@ -204,21 +208,21 @@ public class ActaIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithPaging_ReturnsActaSubList() throws Exception {
-    // when: Obtiene la page=3 con pagesize=5
+  public void findAll_WithPaging_ReturnsActaWithNumEvaluacionesSubList() throws Exception {
+    // when: Obtiene la page=1 con pagesize=5
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
     // Authorization
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-V")));
 
-    final ResponseEntity<List<Acta>> response = restTemplate.exchange(ACTA_CONTROLLER_BASE_PATH, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<Acta>>() {
+    final ResponseEntity<List<ActaWithNumEvaluaciones>> response = restTemplate.exchange(ACTA_CONTROLLER_BASE_PATH,
+        HttpMethod.GET, buildRequest(headers, null), new ParameterizedTypeReference<List<ActaWithNumEvaluaciones>>() {
         });
 
     // then: Respuesta OK, retorna la información de la página correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<Acta> actas = response.getBody();
+    final List<ActaWithNumEvaluaciones> actas = response.getBody();
     Assertions.assertThat(actas.size()).as("size").isEqualTo(3);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).as("x-page").isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).as("x-page-size").isEqualTo("5");
@@ -233,7 +237,7 @@ public class ActaIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithSearchQuery_ReturnsFilteredActaList() throws Exception {
+  public void findAll_WithSearchQuery_ReturnsFilteredActaWithNumEvaluacionesList() throws Exception {
     // when: Búsqueda por acta id equals
     Long id = 5L;
     String query = "id:" + id;
@@ -245,13 +249,13 @@ public class ActaIT {
     URI uri = UriComponentsBuilder.fromUriString(ACTA_CONTROLLER_BASE_PATH).queryParam("q", query).build(false).toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<Acta>> response = restTemplate.exchange(uri, HttpMethod.GET, buildRequest(headers, null),
-        new ParameterizedTypeReference<List<Acta>>() {
+    final ResponseEntity<List<ActaWithNumEvaluaciones>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ActaWithNumEvaluaciones>>() {
         });
 
     // then: Respuesta OK, retorna la información de la página correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<Acta> actas = response.getBody();
+    final List<ActaWithNumEvaluaciones> actas = response.getBody();
     Assertions.assertThat(actas.size()).as("size").isEqualTo(1);
     Assertions.assertThat(actas.get(0).getId()).as("id").isEqualTo(id);
   }
@@ -259,7 +263,7 @@ public class ActaIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithSortQuery_ReturnsOrderedActaList() throws Exception {
+  public void findAll_WithSortQuery_ReturnsOrderedActaWithNumEvaluacionesList() throws Exception {
     // when: Ordenación por id desc
     String sort = "id-";
 
@@ -270,16 +274,16 @@ public class ActaIT {
     URI uri = UriComponentsBuilder.fromUriString(ACTA_CONTROLLER_BASE_PATH).queryParam("s", sort).build(false).toUri();
 
     // when: Búsqueda por query
-    final ResponseEntity<List<Acta>> response = restTemplate.exchange(uri, HttpMethod.GET, buildRequest(headers, null),
-        new ParameterizedTypeReference<List<Acta>>() {
+    final ResponseEntity<List<ActaWithNumEvaluaciones>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ActaWithNumEvaluaciones>>() {
         });
 
     // then: Respuesta OK, retorna la información de la página correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<Acta> actas = response.getBody();
+    final List<ActaWithNumEvaluaciones> actas = response.getBody();
     Assertions.assertThat(actas.size()).as("size").isEqualTo(8);
     for (int i = 0; i < 8; i++) {
-      Acta acta = actas.get(i);
+      ActaWithNumEvaluaciones acta = actas.get(i);
       Assertions.assertThat(acta.getId()).as((8 - i) + ".id").isEqualTo(8 - i);
     }
   }
@@ -287,8 +291,8 @@ public class ActaIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_WithPagingSortingAndFiltering_ReturnsActaSubList() throws Exception {
-    // when: Obtiene page=3 con pagesize=3
+  public void findAll_WithPagingSortingAndFiltering_ReturnsActaWithNumEvaluacionesSubList() throws Exception {
+    // when: Obtiene page=0 con pagesize=3
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
@@ -303,13 +307,13 @@ public class ActaIT {
     URI uri = UriComponentsBuilder.fromUriString(ACTA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
-    final ResponseEntity<List<Acta>> response = restTemplate.exchange(uri, HttpMethod.GET, buildRequest(headers, null),
-        new ParameterizedTypeReference<List<Acta>>() {
+    final ResponseEntity<List<ActaWithNumEvaluaciones>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ActaWithNumEvaluaciones>>() {
         });
 
     // then: Respuesta OK, retorna la información de la página correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<Acta> actas = response.getBody();
+    final List<ActaWithNumEvaluaciones> actas = response.getBody();
     Assertions.assertThat(actas.size()).as("size").isEqualTo(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("x-page").isEqualTo("0");
@@ -322,6 +326,39 @@ public class ActaIT {
     Assertions.assertThat(actas.get(2).getId()).as("2.id").isEqualTo(1);
   }
 
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void finishActa_Success() throws Exception {
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-FIN")));
+
+    // when: Finalizar acta con id existente
+    long id = 1L;
+    final ResponseEntity<Acta> response = restTemplate.exchange(
+        ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/finalizar", HttpMethod.PUT, buildRequest(headers, null),
+        Acta.class, id);
+
+    // then: 200
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void finishActa_DoNotGetActa() throws Exception {
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-FIN")));
+
+    final ResponseEntity<Acta> response = restTemplate.exchange(
+        ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/finalizar", HttpMethod.PUT, buildRequest(headers, null),
+        Acta.class, 1L);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+  }
+
   /**
    * Función que devuelve un objeto Acta
    * 
@@ -330,8 +367,15 @@ public class ActaIT {
    * @return el objeto Acta
    */
   public Acta generarMockActa(Long id, Integer numero) {
+    Comite comite = new Comite();
+    comite.setId(1L);
+    comite.setComite("CEEA");
+    TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(100L);
+    convocatoriaReunion.setComite(comite);
+    convocatoriaReunion.setFechaEvaluacion(LocalDateTime.of(2020, 8, 01, 12, 12, 12));
+    convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
 
     TipoEstadoActa tipoEstadoActa = new TipoEstadoActa();
     tipoEstadoActa.setId(1L);
@@ -352,6 +396,29 @@ public class ActaIT {
     acta.setActivo(true);
 
     return acta;
+  }
+
+  /**
+   * Función que devuelve un objeto ActaWithNumEvaluaciones
+   * 
+   * @param acta   id del acta
+   * @param numero numero del acta
+   * @return el objeto Acta
+   */
+  public ActaWithNumEvaluaciones generarMockActaWithNumEvaluaciones(Long id, Integer numero) {
+    Acta acta = generarMockActa(id, numero);
+
+    ActaWithNumEvaluaciones returnValue = new ActaWithNumEvaluaciones();
+    returnValue.setId(acta.getId());
+    returnValue.setComite(acta.getConvocatoriaReunion().getComite().getComite());
+    returnValue.setFechaEvaluacion(acta.getConvocatoriaReunion().getFechaEvaluacion());
+    returnValue.setNumeroActa(acta.getNumero());
+    returnValue.setConvocatoria(acta.getConvocatoriaReunion().getTipoConvocatoriaReunion().getNombre());
+    returnValue.setNumEvaluaciones(1);
+    returnValue.setNumRevisiones(2);
+    returnValue.setNumTotal(returnValue.getNumEvaluaciones() + returnValue.getNumRevisiones());
+    returnValue.setEstadoActa(acta.getEstadoActual());
+    return returnValue;
   }
 
 }

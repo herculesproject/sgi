@@ -421,6 +421,61 @@
       <column name="nombre" value="Archivado" />
       <column name="activo" value="true" />
     </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" value="11" />
+      <column name="nombre" value="Completada seguimiento anual" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" value="12" />
+      <column name="nombre" value="En secretaría seguimiento anual" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" value="13" />
+      <column name="nombre" value="En evaluación seguimiento anual" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" value="14" />
+      <column name="nombre" value="Fin evaluación seguimiento anual" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" value="15" />
+      <column name="nombre" value="Solicitud modificación" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" value="16" />
+      <column name="nombre" value="Completada seguimiento final" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" value="17" />
+      <column name="nombre" value="En secretaría seguimiento final" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" value="18" />
+      <column name="nombre" value="En secretaría seguimiento final aclaraciones" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" value="19" />
+      <column name="nombre" value="En evaluación seguimiento final" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" value="20" />
+      <column name="nombre" value="Fin evaluación seguimiento final" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_estado_memoria">
+      <column name="id" value="21" />
+      <column name="nombre" value="En aclaración seguimiento final" />
+      <column name="activo" value="true" />
+    </insert>
   </changeSet>
 
   <!-- ########################################################## -->
@@ -710,7 +765,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-934" />
+      <column name="num_referencia" value="ref-334" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria3" />
@@ -821,62 +876,7 @@
       <column name="version" value="2" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="memoria">
-      <column name="num_referencia" value="ref-666" />
-      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion1')" />
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
-      <column name="titulo" value="Memoria11" />
-      <column name="persona_ref" value="user-852" />
-      <column name="tipo_memoria_id" value="1" />
-      <column name="estado_actual_id" value="1" />
-      <column name="fecha_envio_secretaria" value="2020-06-09" />
-      <column name="requiere_retrospectiva" value="true" />
-      <column name="retrospectiva_id" value="4" />
-      <column name="version" value="11" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="memoria">
-      <column name="num_referencia" value="ref-667" />
-      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
-      <column name="titulo" value="Memoria12" />
-      <column name="persona_ref" value="user-852" />
-      <column name="tipo_memoria_id" value="2" />
-      <column name="estado_actual_id" value="2" />
-      <column name="fecha_envio_secretaria" value="2020-06-09" />
-      <column name="requiere_retrospectiva" value="true" />
-      <column name="retrospectiva_id" value="4" />
-      <column name="version" value="12" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="memoria">
-      <column name="num_referencia" value="ref-668" />
-      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion3')" />
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
-      <column name="titulo" value="Memoria13" />
-      <column name="persona_ref" value="user-852" />
-      <column name="tipo_memoria_id" value="2" />
-      <column name="estado_actual_id" value="4" />
-      <column name="fecha_envio_secretaria" value="2020-06-09" />
-      <column name="requiere_retrospectiva" value="true" />
-      <column name="retrospectiva_id" value="4" />
-      <column name="version" value="14" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="memoria">
-      <column name="num_referencia" value="ref-669" />
-      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
-      <column name="titulo" value="Memoria14" />
-      <column name="persona_ref" value="user-852" />
-      <column name="tipo_memoria_id" value="2" />
-      <column name="estado_actual_id" value="5" />
-      <column name="fecha_envio_secretaria" value="2020-06-09" />
-      <column name="requiere_retrospectiva" value="true" />
-      <column name="retrospectiva_id" value="4" />
-      <column name="version" value="3" />
-      <column name="activo" value="true" />
-    </insert>
+
   </changeSet>
 
   <changeSet author="master" id="20200601000000-evaluador">
@@ -1251,10 +1251,9 @@
   <changeSet author="master" id="20200601000000-evaluacion">
     <insert tableName="evaluacion">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria1')" />
-      <column name="dictamen_id" value="1" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=1)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Retrospectiva')" />
-      <column name="fecha_dictamen" value="2020-07-09" />
+      <column name="version" value="1" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="1" />
       <column name="activo" value="true" />
@@ -1265,16 +1264,19 @@
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=2)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
       <column name="fecha_dictamen" value="2020-07-09" />
+      <column name="version" value="1" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="2" />
       <column name="activo" value="false" />
     </insert>
+
     <insert tableName="evaluacion">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria3')" />
       <column name="dictamen_id" value="3" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=3)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Seguimiento anual')" />
       <column name="fecha_dictamen" value="2020-07-09" />
+      <column name="version" value="1" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="3" />
       <column name="activo" value="true" />
@@ -1285,6 +1287,7 @@
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=4)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Seguimiento final')" />
       <column name="fecha_dictamen" value="2020-07-09" />
+      <column name="version" value="2" />
       <column name="es_rev_minima" value="false" />
       <column name="version" value="4" />
       <column name="activo" value="true" />
@@ -1295,6 +1298,7 @@
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=5)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Retrospectiva')" />
       <column name="fecha_dictamen" value="2020-07-09" />
+      <column name="version" value="2" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="5" />
       <column name="activo" value="true" />
@@ -1305,6 +1309,7 @@
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=6)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
       <column name="fecha_dictamen" value="2020-07-09" />
+      <column name="version" value="1" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="6" />
       <column name="activo" value="true" />
@@ -1315,6 +1320,7 @@
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=6)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
       <column name="fecha_dictamen" value="2020-07-09" />
+      <column name="version" value="2" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="7" />
       <column name="activo" value="true" />
@@ -1325,6 +1331,7 @@
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=6)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
       <column name="fecha_dictamen" value="2020-07-09" />
+      <column name="version" value="3" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="8" />
       <column name="activo" value="true" />
@@ -1335,6 +1342,7 @@
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=6)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
       <column name="fecha_dictamen" value="2020-07-09" />
+      <column name="version" value="1" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="9" />
       <column name="activo" value="true" />
@@ -1345,6 +1353,7 @@
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=6)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
       <column name="fecha_dictamen" value="2020-07-09" />
+      <column name="version" value="2" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="10" />
       <column name="activo" value="true" />

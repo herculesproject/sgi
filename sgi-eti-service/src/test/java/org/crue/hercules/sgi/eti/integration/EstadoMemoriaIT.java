@@ -84,7 +84,7 @@ public class EstadoMemoriaIT {
   @Test
   public void addEstadoMemoria_ReturnsEstadoMemoria() throws Exception {
 
-    EstadoMemoria nuevoEstadoMemoria = generarMockEstadoMemoria(1L, 1L);
+    EstadoMemoria nuevoEstadoMemoria = generarMockEstadoMemoria(null, 1L);
 
     final ResponseEntity<EstadoMemoria> response = restTemplate.exchange(ESTADO_MEMORIA_CONTROLLER_BASE_PATH,
         HttpMethod.POST, buildRequest(null, nuevoEstadoMemoria), EstadoMemoria.class);

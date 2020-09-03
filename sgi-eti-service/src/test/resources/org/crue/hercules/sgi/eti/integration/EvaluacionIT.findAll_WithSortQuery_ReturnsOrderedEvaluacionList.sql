@@ -87,11 +87,11 @@ VALUES(8, 1, '2020-07-05 00:00:00.000', '2020-08-05', 'Lugar 5', 'Orden del día
 INSERT INTO eti.tipo_evaluacion (id, nombre, activo) VALUES (1, 'TipoEvaluacion1', true);
 
 -- EVALUACION
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, activo) VALUES(1, 1, 1, 1, 1, true, true);
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, activo) VALUES(2, 2, 2, 2, 1, true, true);
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, activo) VALUES(3, 3, 3, 3, 1, true, true);
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, activo) VALUES(4, 4, 4, 4, 1, true, true);
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, activo) VALUES(5, 5, 5, 5, 1, true, true);
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, activo) VALUES(6, 6, 6, 6, 1, true, true);
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, activo) VALUES(7, 7, 7, 7, 1, true, true);
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, activo) VALUES(8, 8, 8, 8, 1, true, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, version, es_rev_minima, activo) VALUES(1, 1, 1, 1, 1, 1, true, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, version, es_rev_minima, activo) VALUES(2, 2, 2, 2, 1, 1, true, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, version, es_rev_minima, activo) VALUES(3, 3, 3, 3, 1, 1, true, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, version, es_rev_minima, activo) VALUES(4, 4, 4, 4, 1, 1, true, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, version, es_rev_minima, activo) VALUES(5, 5, 5, 5, 1, 1, true, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, version, es_rev_minima, activo) VALUES(6, 6, 6, 6, 1, 1, true, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, version, es_rev_minima, activo) VALUES(7, 7, 7, 7, 1, 1, true, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, version, es_rev_minima, activo) VALUES(8, 8, 8, 8, 1, 1, true, true);

@@ -2,25 +2,36 @@ package org.crue.hercules.sgi.eti.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.dto.ActaWithNumEvaluaciones;
 import org.crue.hercules.sgi.eti.exceptions.ActaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Acta;
+import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.EstadoActa;
+import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 import org.crue.hercules.sgi.eti.repository.ActaRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoActaRepository;
+import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
+import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
+import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
+import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.repository.TipoEstadoActaRepository;
+import org.crue.hercules.sgi.eti.repository.custom.CustomActaRepository;
 import org.crue.hercules.sgi.eti.service.impl.ActaServiceImpl;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
@@ -28,7 +39,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 
 /**
  * ActaServiceTest
@@ -39,15 +49,26 @@ public class ActaServiceTest {
   @Mock
   private ActaRepository actaRepository;
   @Mock
+  private CustomActaRepository customActaRepository;
+  @Mock
   private EstadoActaRepository estadoActaRepository;
   @Mock
+  private EstadoMemoriaRepository estadoMemoriaRepository;
+  @Mock
+  private EvaluacionRepository evaluacionRepository;
+  @Mock
+  private MemoriaRepository memoriaRepository;
+  @Mock
   private TipoEstadoActaRepository tipoEstadoActaRepository;
+  @Mock
+  private RetrospectivaRepository retrospectivaRepository;
 
   private ActaService actaService;
 
   @BeforeEach
   public void setUp() throws Exception {
-    actaService = new ActaServiceImpl(actaRepository, estadoActaRepository, tipoEstadoActaRepository);
+    actaService = new ActaServiceImpl(actaRepository, estadoActaRepository, tipoEstadoActaRepository,
+        evaluacionRepository, retrospectivaRepository, estadoMemoriaRepository, memoriaRepository);
   }
 
   @Test
@@ -194,54 +215,53 @@ public class ActaServiceTest {
   }
 
   @Test
-  public void findAll_Unlimited_ReturnsFullActaList() {
+  public void findAll_Unlimited_ReturnsFullActaWithNumEvaluacionesList() {
     // given: One hundred actas
-    List<Acta> actas = new ArrayList<>();
+    List<ActaWithNumEvaluaciones> actas = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      actas.add(generarMockActa(Long.valueOf(i), i));
+      actas.add(generarMockActaWithNumEvaluaciones(Long.valueOf(i), i));
     }
 
-    BDDMockito
-        .given(actaRepository.findAll(ArgumentMatchers.<Specification<Acta>>any(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(actas));
+    BDDMockito.given(actaRepository.findAllActaWithNumEvaluaciones(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(actas));
 
     // when: find unlimited
-    Page<Acta> page = actaService.findAll(null, Pageable.unpaged());
+    Page<ActaWithNumEvaluaciones> page = actaService.findAllActaWithNumEvaluaciones(null, Pageable.unpaged());
 
     // then: Get a page with one hundred actas
     Assertions.assertThat(page.getContent().size()).isEqualTo(100);
     Assertions.assertThat(page.getNumber()).isEqualTo(0);
     Assertions.assertThat(page.getSize()).isEqualTo(100);
     Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+    Assertions.assertThat(page.getContent()).isEqualTo(actas);
   }
 
   @Test
   public void findAll_WithPaging_ReturnsPage() {
     // given: One hundred actas
-    List<Acta> actas = new ArrayList<>();
+    List<ActaWithNumEvaluaciones> actas = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      actas.add(generarMockActa(Long.valueOf(i), i));
+      actas.add(generarMockActaWithNumEvaluaciones(Long.valueOf(i), i));
     }
 
-    BDDMockito
-        .given(actaRepository.findAll(ArgumentMatchers.<Specification<Acta>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<Acta>>() {
+    BDDMockito.given(actaRepository.findAllActaWithNumEvaluaciones(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<ActaWithNumEvaluaciones>>() {
           @Override
-          public Page<Acta> answer(InvocationOnMock invocation) throws Throwable {
+          public Page<ActaWithNumEvaluaciones> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(1, Pageable.class);
             int size = pageable.getPageSize();
             int index = pageable.getPageNumber();
             int fromIndex = size * index;
             int toIndex = fromIndex + size;
-            List<Acta> content = actas.subList(fromIndex, toIndex);
-            Page<Acta> page = new PageImpl<>(content, pageable, actas.size());
+            List<ActaWithNumEvaluaciones> content = actas.subList(fromIndex, toIndex);
+            Page<ActaWithNumEvaluaciones> page = new PageImpl<>(content, pageable, actas.size());
             return page;
           }
         });
 
     // when: Get page=3 with pagesize=10
     Pageable paging = PageRequest.of(3, 10);
-    Page<Acta> page = actaService.findAll(null, paging);
+    Page<ActaWithNumEvaluaciones> page = actaService.findAllActaWithNumEvaluaciones(null, paging);
 
     // then: A Page with ten actas are returned containing id='31' to '40'
     Assertions.assertThat(page.getContent().size()).isEqualTo(10);
@@ -249,9 +269,51 @@ public class ActaServiceTest {
     Assertions.assertThat(page.getSize()).isEqualTo(10);
     Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
     for (int i = 0, j = 31; i < 10; i++, j++) {
-      Acta acta = page.getContent().get(i);
+      ActaWithNumEvaluaciones acta = page.getContent().get(i);
       Assertions.assertThat(acta.getId()).isEqualTo(j);
     }
+  }
+
+  @Test
+  public void finishActa_ThrowsActaNotFoundException() {
+
+    BDDMockito.given(actaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
+
+    Assertions.assertThatThrownBy(
+        // when: Delete un id no existente
+        () -> actaService.finishActa(1L))
+        // then: Lanza ActaNotFoundException
+        .isInstanceOf(ActaNotFoundException.class);
+
+  }
+
+  @Test
+  public void finishActa_Success() {
+
+    Acta acta = generarMockActa(1L, 123);
+
+    BDDMockito.given(actaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(acta));
+
+    BDDMockito
+        .given(evaluacionRepository.findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId(
+            ArgumentMatchers.anyLong(), ArgumentMatchers.anyBoolean(), ArgumentMatchers.anyLong()))
+        .willReturn(Collections.emptyList());
+
+    TipoEstadoActa tipoEstadoActa = new TipoEstadoActa(9L, "Finalizada", Boolean.TRUE);
+
+    EstadoActa estadoActa = new EstadoActa(1L, acta, tipoEstadoActa, LocalDateTime.of(2020, 8, 01, 12, 12, 12));
+
+    BDDMockito.given(estadoActaRepository.save(ArgumentMatchers.any(EstadoActa.class))).willReturn(estadoActa);
+
+    acta.setEstadoActual(tipoEstadoActa);
+
+    // when: Actualizamos el acta
+    BDDMockito.given(actaRepository.save(ArgumentMatchers.<Acta>any())).willReturn(acta);
+
+    actaService.finishActa(1L);
+
+    Mockito.verify(actaRepository, Mockito.times(1)).save(ArgumentMatchers.<Acta>any());
+
   }
 
   /**
@@ -262,8 +324,15 @@ public class ActaServiceTest {
    * @return el objeto Acta
    */
   public Acta generarMockActa(Long id, Integer numero) {
+    Comite comite = new Comite();
+    comite.setId(1L);
+    comite.setComite("CEEA");
+    TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(100L);
+    convocatoriaReunion.setComite(comite);
+    convocatoriaReunion.setFechaEvaluacion(LocalDateTime.of(2020, 8, 01, 12, 12, 12));
+    convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
 
     TipoEstadoActa tipoEstadoActa = new TipoEstadoActa();
     tipoEstadoActa.setId(1L);
@@ -284,6 +353,29 @@ public class ActaServiceTest {
     acta.setActivo(true);
 
     return acta;
+  }
+
+  /**
+   * Función que devuelve un objeto ActaWithNumEvaluaciones
+   * 
+   * @param acta   id del acta
+   * @param numero numero del acta
+   * @return el objeto Acta
+   */
+  public ActaWithNumEvaluaciones generarMockActaWithNumEvaluaciones(Long id, Integer numero) {
+    Acta acta = generarMockActa(id, numero);
+
+    ActaWithNumEvaluaciones returnValue = new ActaWithNumEvaluaciones();
+    returnValue.setId(acta.getId());
+    returnValue.setComite(acta.getConvocatoriaReunion().getComite().getComite());
+    returnValue.setFechaEvaluacion(acta.getConvocatoriaReunion().getFechaEvaluacion());
+    returnValue.setNumeroActa(acta.getNumero());
+    returnValue.setConvocatoria(acta.getConvocatoriaReunion().getTipoConvocatoriaReunion().getNombre());
+    returnValue.setNumEvaluaciones(1);
+    returnValue.setNumRevisiones(2);
+    returnValue.setNumTotal(returnValue.getNumEvaluaciones() + returnValue.getNumRevisiones());
+    returnValue.setEstadoActa(acta.getEstadoActual());
+    return returnValue;
   }
 
 }

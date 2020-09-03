@@ -4,21 +4,28 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.crue.hercules.sgi.eti.dto.ActaWithNumEvaluaciones;
 import org.crue.hercules.sgi.eti.exceptions.ActaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.TareaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.EstadoActa;
+import org.crue.hercules.sgi.eti.model.EstadoMemoria;
+import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
+import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
+import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.repository.ActaRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoActaRepository;
+import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
+import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
+import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
+import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.repository.TipoEstadoActaRepository;
-import org.crue.hercules.sgi.eti.repository.specification.ActaSpecifications;
 import org.crue.hercules.sgi.eti.service.ActaService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -33,15 +40,50 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class ActaServiceImpl implements ActaService {
 
+  /** Acta Repository. */
   private final ActaRepository actaRepository;
-  private final EstadoActaRepository estadoActaRepository;
-  TipoEstadoActaRepository tipoEstadoActaRepository;
 
+  /** Estado Acta Repository. */
+  private final EstadoActaRepository estadoActaRepository;
+
+  /** Estado Memoria Repository. */
+  private final EstadoMemoriaRepository estadoMemoriaRepository;
+
+  /** Evaluacion Repository. */
+  private final EvaluacionRepository evaluacionRepository;
+
+  /** Memoria Repository. */
+  private final MemoriaRepository memoriaRepository;
+
+  /** Tipo Estado Acta Repository. */
+  private final TipoEstadoActaRepository tipoEstadoActaRepository;
+
+  /** Retrospectiva repository. */
+  private final RetrospectivaRepository retrospectivaRepository;
+
+  /**
+   * Instancia un nuevo ActaServiceImpl.
+   * 
+   * @param actaRepository           { @link ActaRepository}
+   * @param estadoActaRepository     { @link EstadoActaRepository}
+   * @param tipoEstadoActaRepository { @link TipoEstadoActaRepository}
+   * @param evaluacionRepository     {@link EvaluacionRepository}
+   * @param retrospectivaRepository  {@link RetrospectivaRepository}
+   * @param estadoMemoriaRepository  {@link EstadoMemoriaRepository}
+   * @param memoriaRepository        {@link MemoriaRepository}
+   * 
+   */
   public ActaServiceImpl(ActaRepository actaRepository, EstadoActaRepository estadoActaRepository,
-      TipoEstadoActaRepository tipoEstadoActaRepository) {
+      TipoEstadoActaRepository tipoEstadoActaRepository, EvaluacionRepository evaluacionRepository,
+      RetrospectivaRepository retrospectivaRepository, EstadoMemoriaRepository estadoMemoriaRepository,
+      MemoriaRepository memoriaRepository) {
     this.actaRepository = actaRepository;
     this.estadoActaRepository = estadoActaRepository;
     this.tipoEstadoActaRepository = tipoEstadoActaRepository;
+    this.evaluacionRepository = evaluacionRepository;
+    this.retrospectivaRepository = retrospectivaRepository;
+    this.estadoMemoriaRepository = estadoMemoriaRepository;
+    this.memoriaRepository = memoriaRepository;
   }
 
   /**
@@ -73,21 +115,17 @@ public class ActaServiceImpl implements ActaService {
   }
 
   /**
-   * Obtiene todas las entidades {@link Acta} paginadas y filtadas.
+   * Devuelve una lista paginada y filtrada {@link ActaWithNumEvaluaciones}.
    *
    * @param paging la información de paginación.
    * @param query  información del filtro.
-   * @return el listado de entidades {@link Acta} paginadas y filtradas.
+   * @return el listado de {@link ActaWithNumEvaluaciones} paginadas y filtradas.
    */
-  public Page<Acta> findAll(List<QueryCriteria> query, Pageable paging) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
-    Specification<Acta> specByQuery = new QuerySpecification<Acta>(query);
-    Specification<Acta> specActivos = ActaSpecifications.activos();
+  public Page<ActaWithNumEvaluaciones> findAllActaWithNumEvaluaciones(List<QueryCriteria> query, Pageable paging) {
+    log.debug("findAllActaWithNumEvaluaciones(List<QueryCriteria> query, Pageable paging) - start");
 
-    Specification<Acta> specs = Specification.where(specActivos).and(specByQuery);
-
-    Page<Acta> returnValue = actaRepository.findAll(specs, paging);
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    Page<ActaWithNumEvaluaciones> returnValue = actaRepository.findAllActaWithNumEvaluaciones(query, paging);
+    log.debug("findAllActaWithNumEvaluaciones(List<QueryCriteria> query, Pageable paging) - end");
     return returnValue;
   }
 
@@ -153,6 +191,124 @@ public class ActaServiceImpl implements ActaService {
       log.debug("update(Acta actaActualizar) - end");
       return returnValue;
     }).orElseThrow(() -> new ActaNotFoundException(actaActualizar.getId()));
+  }
+
+  /**
+   * Finaliza el {@link Acta} con el id recibido como parámetro (actualización de
+   * su estado a finalizado).
+   * 
+   * Se actualiza el estado de sus evaluaciones:
+   * 
+   * - En caso de ser de tipo memoria se actualiza el estado de la memoria
+   * dependiendo del dictamen asociado a la evaluación.
+   * 
+   * - En caso de ser una retrospectiva se actualiza siempre a estado "Fin
+   * evaluación".
+   * 
+   * @param id identificador del {@link Acta} a finalizar.
+   */
+  @Override
+  @Transactional
+  public void finishActa(Long id) {
+
+    log.debug("finishActa(Long id) - start");
+
+    Assert.notNull(id, "El id de acta recibido no puede ser null.");
+
+    Acta acta = actaRepository.findById(id).orElseThrow(() -> new ActaNotFoundException(id));
+
+    List<Evaluacion> listEvaluacionesMemoria = evaluacionRepository
+        .findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId(2L, Boolean.FALSE,
+            acta.getConvocatoriaReunion().getId());
+
+    listEvaluacionesMemoria.forEach(evaluacion -> {
+
+      switch (evaluacion.getDictamen().getId().intValue()) {
+        case 1: {
+          // Dictamen "Favorable"-
+          // Se actualiza memoria a estado 9: "Fin evaluación"
+          updateEstadoMemoria(evaluacion.getMemoria(), 9L);
+          break;
+        }
+        case 2: {
+          // Dictamen "Favorable pendiente de revisión mínima"-
+          // Se actualiza memoria a estado 6: "Favorable Pendiente de Modificaciones
+          // Mínimas"
+          updateEstadoMemoria(evaluacion.getMemoria(), 6L);
+          break;
+        }
+        case 3: {
+          // Dictamen "Pendiente de correcciones"
+          // Se actualiza memoria a estado 7: "Pendiente de correcciones"
+          updateEstadoMemoria(evaluacion.getMemoria(), 7L);
+          break;
+        }
+        case 4: {
+          // Dictamen "No procede evaluar"
+          // Seactualiza memoria a estado 8: "No procede evaluar"
+          updateEstadoMemoria(evaluacion.getMemoria(), 8L);
+
+          break;
+        }
+      }
+
+    });
+
+    List<Evaluacion> listEvaluacionesRetrospectiva = evaluacionRepository
+        .findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId(1L, Boolean.FALSE,
+            acta.getConvocatoriaReunion().getId());
+
+    listEvaluacionesRetrospectiva.forEach(evaluacion -> {
+
+      // Se actualiza el estado de la retrospectiva a 5: "Fin evaluación"
+
+      EstadoRetrospectiva estadoRetrospectiva = new EstadoRetrospectiva();
+      estadoRetrospectiva.setId(5L);
+
+      evaluacion.getMemoria().getRetrospectiva().setEstadoRetrospectiva(estadoRetrospectiva);
+
+      retrospectivaRepository.save(evaluacion.getMemoria().getRetrospectiva());
+
+    });
+
+    // Se crea el nuevo estado acta 2:"Finalizado"
+    TipoEstadoActa tipoEstadoActa = new TipoEstadoActa();
+    tipoEstadoActa.setId(2L);
+
+    EstadoActa estadoActa = new EstadoActa(null, acta, tipoEstadoActa, LocalDateTime.now());
+    estadoActaRepository.save(estadoActa);
+
+    // Actualización del estado actual de acta
+    acta.setEstadoActual(tipoEstadoActa);
+    actaRepository.save(acta);
+
+    log.debug("finishActa(Long id) - end");
+  }
+
+  /**
+   * Se crea el nuevo estado para la memoria recibida y se actualiza el estado
+   * actual de esta.
+   * 
+   * @param memoria             {@link Memoria} a actualizar estado.
+   * @param idTipoEstadoMemoria identificador del estado nuevo de la memoria.
+   */
+  private void updateEstadoMemoria(Memoria memoria, long idTipoEstadoMemoria) {
+    log.debug("updateEstadoMemoria(Memoria memoria, Long idEstadoMemoria) - start");
+
+    // se crea el nuevo estado para la memoria
+    TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
+    tipoEstadoMemoria.setId(idTipoEstadoMemoria);
+    EstadoMemoria estadoMemoria = new EstadoMemoria(null, memoria, tipoEstadoMemoria, LocalDateTime.now());
+
+    estadoMemoriaRepository.save(estadoMemoria);
+
+    // Se actualiza la memoria con el nuevo tipo estado memoria
+
+    memoria.setEstadoActual(tipoEstadoMemoria);
+    memoriaRepository.save(memoria);
+
+    log.debug("updateEstadoMemoria(Memoria memoria, Long idEstadoMemoria) - end");
+
   }
 
 }

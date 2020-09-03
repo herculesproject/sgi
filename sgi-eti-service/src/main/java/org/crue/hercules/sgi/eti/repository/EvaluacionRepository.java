@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eti.repository;
 
+import java.util.List;
+
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.repository.custom.CustomEvaluacionRepository;
@@ -25,5 +27,16 @@ public interface EvaluacionRepository
    * @return la lista de entidades {@link Evaluacion} paginadas.
    */
   Page<Evaluacion> findAllByActivoTrueAndConvocatoriaReunionId(Long id, Pageable pageable);
+
+  /**
+   * Recupera aquellas evaluaciones activas que sean o no revisión mínima según el
+   * parámetro recibido.
+   * 
+   * @param esRevMinima      indicador de revisión mínima.
+   * @param idTipoEvaluacion identificador del tipo de evaluación a recuperar.
+   * @return listado de evaluaciones.
+   */
+  List<Evaluacion> findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId(Long idTipoEvaluacion,
+      Boolean esRevMinima, Long idConvocatoriaReunion);
 
 }

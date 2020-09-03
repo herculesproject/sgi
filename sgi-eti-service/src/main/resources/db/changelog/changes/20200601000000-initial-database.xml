@@ -553,7 +553,9 @@
       <column name="tipo_evaluacion_id" type="BIGINT" />
       <column name="convocatoria_reunion_id" type="BIGINT" />
       <column name="fecha_dictamen" type="DATE" />
-      <column name="version" type="INT" />
+      <column name="version" type="INT">
+        <constraints nullable="false" />
+      </column>
       <column name="es_rev_minima" type="BOOLEAN" defaultValueBoolean="false">
         <constraints nullable="false" />
       </column>

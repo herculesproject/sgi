@@ -49,8 +49,8 @@ INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, 
 INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, persona_ref, tipo_memoria_id, estado_actual_id, fecha_envio_secretaria, requiere_retrospectiva, retrospectiva_id, version, activo)
  VALUES (8, 'ref-777', 1, 2, 'Memoria8', 'userref-5555', 1, 1, null, false, 1, 1, true);
 
-INSERT INTO eti.estado_memoria (id, memoria_id, tipo_estado_memoria_id, fecha_estado)
- VALUES (1, 1, 1, '2020-06-05 15:00:05');
+--INSERT INTO eti.estado_memoria (id, memoria_id, tipo_estado_memoria_id, fecha_estado)
+-- VALUES (1, 1, 1, '2020-06-05 15:00:05');
 INSERT INTO eti.estado_memoria (id, memoria_id, tipo_estado_memoria_id, fecha_estado)
  VALUES (2, 2, 2, '2020-06-05 15:00:05');
 INSERT INTO eti.estado_memoria (id, memoria_id, tipo_estado_memoria_id, fecha_estado)

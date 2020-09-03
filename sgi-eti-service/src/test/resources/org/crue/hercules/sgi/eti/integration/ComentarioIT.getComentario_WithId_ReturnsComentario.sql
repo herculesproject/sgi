@@ -70,7 +70,7 @@ VALUES(2, 1, '2020-07-01 00:00:00.000', '2020-08-01', 'Lugar 2', 'Orden del día
 INSERT INTO eti.tipo_evaluacion (id, nombre, activo) VALUES (1, 'TipoEvaluacion1', true);
 
 -- EVALUACION
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, activo) VALUES(200, 1, 1, 1, 1, true, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, version, es_rev_minima, activo) VALUES(200, 1, 1, 1, 1, 1, true, true);
 
 -- TIPO COMENTARIO
 INSERT INTO eti.tipo_comentario (id, nombre, activo) VALUES (300, 'GESTOR', true);
