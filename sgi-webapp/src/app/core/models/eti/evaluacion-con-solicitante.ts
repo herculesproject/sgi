@@ -1,38 +1,22 @@
+import { IEvaluacion } from './evaluacion';
+import { Persona } from '../sgp/persona';
+import { Memoria } from './memoria';
 import { Comite } from './comite';
 import { ConvocatoriaReunion } from './convocatoria-reunion';
-import { Dictamen } from './dictamen';
-import { Memoria } from './memoria';
 import { TipoEvaluacion } from './tipo-evaluacion';
-import { Persona } from '../sgp/persona';
+import { Dictamen } from './dictamen';
 
-export interface IEvaluacion {
-  /** ID */
+export class EvaluacionConSolicitante implements IEvaluacion {
   id: number;
-
-  /** Memoria */
   memoria: Memoria;
-
-  /** Comite */
   comite: Comite;
-
-  /** Convocatoria reunión */
   convocatoriaReunion: ConvocatoriaReunion;
-
-  /** Tipo evaluación */
   tipoEvaluacion: TipoEvaluacion;
-
-  /** Version */
   version: number;
-
-  /** Dictamen */
   dictamen: Dictamen;
-
-  /** Fecha Inicio. */
   fechaDictamen: Date;
-
-  /** Es revisión mínima */
   esRevMinima: boolean;
-
-  /** Activo */
   activo: boolean;
+  persona: Persona;
+
 }

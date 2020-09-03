@@ -2,7 +2,6 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Comite } from '@core/models/eti/comite';
-import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
 import { Persona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -18,21 +17,19 @@ import { AbstractPaginacionComponent } from '@core/component/abstract-paginacion
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { EvaluacionConSolicitante } from '@core/models/eti/evaluacion-con-solicitante';
 
 const MSG_ERROR = marker('eti.evaluacion.listado.error');
 const MSG_ERROR_LOAD_TIPOS_CONVOCATORIA = marker('eti.evaluacion.listado.buscador.tipoConvocatoria.error');
-
-class EvaluacionListado extends IEvaluacion {
-  persona: Persona;
-}
 
 @Component({
   selector: 'sgi-evaluacion-listado',
   templateUrl: './evaluacion-listado.component.html',
   styleUrls: ['./evaluacion-listado.component.scss']
 })
-export class EvaluacionListadoComponent extends AbstractPaginacionComponent<IEvaluacion> implements OnInit {
-  evaluaciones: EvaluacionListado[];
+export class EvaluacionListadoComponent extends AbstractPaginacionComponent<EvaluacionConSolicitante> implements OnInit {
+
+  evaluaciones: EvaluacionConSolicitante[];
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
   comiteListado: Comite[];
@@ -76,8 +73,8 @@ export class EvaluacionListadoComponent extends AbstractPaginacionComponent<IEva
     this.logger.debug(EvaluacionListadoComponent.name, 'ngOnInit()', 'end');
   }
 
-  protected createObservable(): Observable<SgiRestListResult<IEvaluacion>> {
-    return this.evaluacionService.findAll(this.getFindOptions());
+  protected createObservable(): Observable<SgiRestListResult<EvaluacionConSolicitante>> {
+    return this.evaluacionService.findAllConSolicitante(this.getFindOptions());
   }
 
   protected initColumnas() {
@@ -92,7 +89,7 @@ export class EvaluacionListadoComponent extends AbstractPaginacionComponent<IEva
     const evaluaciones$ = this.getObservableLoadTable(reset);
     this.suscripciones.push(
       evaluaciones$.subscribe(
-        (evaluaciones: EvaluacionListado[]) => {
+        (evaluaciones: EvaluacionConSolicitante[]) => {
           if (evaluaciones) {
             this.evaluaciones = evaluaciones;
             this.loadSolicitantes();
@@ -113,12 +110,14 @@ export class EvaluacionListadoComponent extends AbstractPaginacionComponent<IEva
   private loadSolicitantes(): void {
     this.logger.debug(EvaluacionListadoComponent.name,
       `buscarSolicitantes(evaluaciones: ${JSON.stringify(this.evaluaciones)})`, 'start');
-    this.evaluaciones.map((evaluacion: EvaluacionListado) => {
+    this.evaluaciones.map((evaluacion: EvaluacionConSolicitante) => {
       const personaRef = evaluacion.memoria?.peticionEvaluacion?.personaRef;
       if (personaRef) {
         this.suscripciones.push(
           this.personaFisicaService.getInformacionBasica(personaRef).subscribe(
-            (persona: Persona) => evaluacion.persona = persona
+            (persona: Persona) => {
+              evaluacion.persona = persona;
+            }
           )
         );
       }
@@ -213,7 +212,6 @@ export class EvaluacionListadoComponent extends AbstractPaginacionComponent<IEva
     const fin = DateUtils.getFechaInicioDia(this.formGroup.controls.fechaEvaluacionFin.value);
     this.addFiltro(filtros, 'convocatoriaReunion.fechaEvaluacion', SgiRestFilterType.LOWER_OR_EQUAL,
       DateUtils.formatFechaAsISODateTime(fin));
-    const a = new IEvaluacion();
     this.addFiltro(filtros, 'memoria.numReferencia', SgiRestFilterType.EQUALS,
       this.formGroup.controls.memoriaNumReferencia.value);
     this.addFiltro(filtros, 'convocatoriaReunion.tipoConvocatoriaReunion.id', SgiRestFilterType.EQUALS,

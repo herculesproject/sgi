@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>{{'eti.buscarUsuario.titulo' | translate}}</h1>
-<div mat-dialog-content>
+<div class="dialog-modal" mat-dialog-content>
   <mat-form-field>
     <mat-label>{{'eti.buscarUsuario.datosUsuario.nombre' | translate}}</mat-label>
     <input matInput [(ngModel)]="data.nombre">
@@ -20,8 +20,10 @@
     <mat-label>{{'eti.buscarUsuario.datosUsuario.letraIdentificadorPersonal' | translate}}</mat-label>
     <input matInput [(ngModel)]="data.identificadorLetra">
   </mat-form-field>
-  <button mat-button (click)="buscarPersona(true)">{{'eti.buscarUsuario.boton.buscar' | translate}}</button>
-
+  <div class="separacion">
+    <button color="primary" md-button mat-raised-button
+      (click)="buscarPersona(true)">{{'eti.buscarUsuario.boton.buscar' | translate}}</button>
+  </div>
   <table class="mat-elevation-z8 table-usuarios" mat-table [dataSource]="personas$ | async" matSort matSortActive="id"
     matSortDirection="asc" matSortDisableClear>
 
@@ -64,5 +66,6 @@
   </mat-paginator>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">{{'eti.buscarUsuario.boton.cancelar' | translate}}</button>
+  <button color="warn" md-button mat-button
+    (click)="onNoClick()">{{'eti.buscarUsuario.boton.cancelar' | translate}}</button>
 </div>

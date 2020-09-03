@@ -11,6 +11,7 @@ import { EtiRootComponent } from './eti-root/eti-root.component';
 const MSG_ROOT_TITLE = marker('eti.root.title');
 const MSG_SOLICITUDES_CONVOCATORIA_TITLE = marker('menu.principal.eti.solicitudesConvocatoria');
 const MSG_EVALUACIONES_TITLE = marker('menu.principal.eti.evaluaciones');
+const MSG_GESTION_EVALUACIONES_TITLE = marker('menu.principal.eti.gestionEvaluaciones');
 const MSG_ACTAS_TITLE = marker('menu.principal.eti.acta');
 const MSG_EVALUADORES_TITLE = marker('menu.principal.eti.evaluador');
 
@@ -54,6 +55,20 @@ const routes: SgiRoutes = [
           hasAnyAuthorityForAnyUO: [
             'ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-C', 'ETI-EVC-E', 'ETI-EVC-B',
             'ETI-EVC-EVAL', 'ETI-EVC-EVALR'
+          ]
+        }
+      },
+      {
+        path: ETI_ROUTE_NAMES.GESTION_EVALUACIONES,
+        loadChildren: () =>
+          import('./gestion-evaluacion/gestion-evaluacion.module').then(
+            (m) => m.GestionEvaluacionModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_GESTION_EVALUACIONES_TITLE,
+          hasAnyAuthorityForAnyUO: [
+            'ETI-EVC-V', 'ETI-EVC-EVAL'
           ]
         }
       },

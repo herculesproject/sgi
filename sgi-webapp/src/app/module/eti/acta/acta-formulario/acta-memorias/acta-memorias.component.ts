@@ -1,18 +1,20 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
-import { IEvaluacion } from '@core/models/eti/evaluacion';
-import { MemoriaListado } from '@core/models/eti/memoria-listado';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { EvaluacionService } from '@core/services/eti/evaluacion.service';
-import { FormGroupUtil } from '@core/utils/form-group-util';
-import { AbstractTabComponent } from '@core/component/abstract-tab.component';
+
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { FormGroupUtil } from '@core/utils/form-group-util';
+import { AbstractTabComponent } from '@core/component/abstract-tab.component';
+
 import { Memoria } from '@core/models/eti/memoria';
 
+import { IEvaluacion } from '@core/models/eti/evaluacion';
+import { MemoriaListado } from '@core/models/eti/memoria-listado';
 
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 
@@ -39,7 +41,6 @@ export class ActaMemoriasComponent extends AbstractTabComponent<Memoria>  {
     super(logger);
 
     this.displayedColumns = ['referencia', 'version', 'dictamen.nombre', 'informe'];
-
 
   }
 

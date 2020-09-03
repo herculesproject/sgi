@@ -1,5 +1,11 @@
 @import "variables.scss";
 
-tr{
-  cursor:pointer;
+.dialog-modal {
+  .separacion {
+    padding: 10px 0px 20px 0px;
+  }
+
+  tr {
+    cursor: pointer;
+  }
 }

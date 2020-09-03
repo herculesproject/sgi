@@ -4,5 +4,6 @@
     <input type="text" [placeholder]="textoInput | translate" arial-label="Number" matInput [(ngModel)]="datosUsuario"
       disabled>
   </mat-form-field>
-  <button mat-raised-button (click)="formularioBuscarUsuario()">{{textoButton | translate}}</button>
+  <button color="primary" md-button mat-raised-button
+    (click)="formularioBuscarUsuario()">{{textoButton | translate}}</button>
 </div>
