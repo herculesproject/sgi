@@ -10,7 +10,7 @@ import { ActaAsistentesListadoComponent } from '../acta-formulario/acta-asistent
 import { ActaService } from '@core/services/eti/acta.service';
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { Acta } from '@core/models/eti/acta';
+import { IActa } from '@core/models/eti/acta';
 
 
 const MSG_BUTTON_EDIT = marker('footer.eti.acta.actualizar');
@@ -66,7 +66,7 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
 
       })
     ).subscribe(
-      (acta: Acta) => {
+      (acta: IActa) => {
         if (acta) {
           this.datosGenerales.datosIniciales = acta;
           this.datosGenerales.datosFormulario = { ...this.datosGenerales.datosIniciales };
@@ -99,7 +99,7 @@ export class ActaEditarComponent extends AbstractFormularioComponent implements 
     this.suscripciones.push(
       // Se actualizan los datos generales del acta.
       this.actaService.update(this.idActa, this.datosGenerales.getDatosFormulario())
-        .subscribe((acta: Acta) => {
+        .subscribe((acta: IActa) => {
           // Actualizamos los datos por si falla alguna de las restantes pestañas
           this.tabs.get(0).updateDatos(acta);
           this.tabs.get(0).warning = false;

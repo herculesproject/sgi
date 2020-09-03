@@ -12,7 +12,6 @@ import { tap, map, catchError, startWith, switchMap } from 'rxjs/operators';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 
-import { Acta } from '@core/models/eti/acta';
 import { Comite } from '@core/models/eti/comite';
 import { TipoEstadoActa } from '@core/models/eti/tipo-estado-acta';
 
@@ -23,13 +22,15 @@ import { TipoEstadoActaService } from '@core/services/eti/tipo-estado-acta.servi
 
 import { DateUtils } from '@core/utils/date-utils';
 
-import { ActaListado } from '@core/models/eti/acta-listado';
-import { EvaluacionService } from '@core/services/eti/evaluacion.service';
+import { IActaEvaluaciones } from '@core/models/eti/acta-evaluaciones';
 import { ActaService } from '@core/services/eti/acta.service';
 import { ROUTE_NAMES } from '@core/route.names';
+import { Router, ActivatedRoute } from '@angular/router';
 
 const MSG_BUTTON_NEW = marker('footer.eti.acta.crear');
 const MSG_ERROR = marker('eti.acta.listado.error');
+const MSG_FINALIZAR_ERROR = marker('eti.acta.listado.finalizar.error');
+const MSG_FINALIZAR_SUCCESS = marker('eti.acta.listado.finalizar.correcto');
 
 @Component({
   selector: 'sgi-acta-listado',
@@ -50,7 +51,7 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
-  actas$: Observable<ActaListado[]> = of();
+  actas$: Observable<IActaEvaluaciones[]> = of();
 
   comiteListado: Comite[];
   comitesSubscription: Subscription;
@@ -59,6 +60,8 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
   tipoEstadoActaListado: TipoEstadoActa[];
   tipoEstadoActaSubscription: Subscription;
   filteredTipoEstadoActa: Observable<TipoEstadoActa[]>;
+
+  finalizarSubscription: Subscription;
 
   buscadorFormGroup: FormGroup;
 
@@ -70,7 +73,8 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
     private readonly snackBarService: SnackBarService,
     private readonly comiteService: ComiteService,
     private readonly tipoEstadoActaService: TipoEstadoActaService,
-    private readonly evaluacionService: EvaluacionService
+    private readonly router: Router,
+    private route: ActivatedRoute,
   ) {
     this.displayedColumns = ['comite', 'fechaEvaluacion', 'numero', 'convocatoria',
       'numeroIniciales', 'numeroRevisiones', 'numeroTotal', 'estadoActual.nombre', 'acciones'];
@@ -140,7 +144,7 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
     this.logger.debug(ActaListadoComponent.name, 'loadTable()', 'start');
     // Do the request with paginator/sort/filter values
     this.actas$ = this.actasService
-      .findAll({
+      .findActivasWithEvaluaciones({
         page: {
           index: reset ? 0 : this.paginator.pageIndex,
           size: this.paginator.pageSize
@@ -162,83 +166,6 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
           this.logger.debug(ActaListadoComponent.name, 'loadTable()', 'end');
           // Return the values
           return response.items;
-        }),
-        switchMap((actas: Acta[]) => {
-          const actasListado$: Observable<any>[] = [];
-          actas.forEach(acta => {
-            const actaListado: ActaListado = new ActaListado(acta);
-
-            let filter: SgiRestFilter[] = [];
-            const filterConvocatoriaReunion: SgiRestFilter = {
-              field: 'convocatoriaReunion.id',
-              type: SgiRestFilterType.EQUALS,
-              value: acta.convocatoriaReunion.id.toString(),
-            };
-
-            filter.push(filterConvocatoriaReunion);
-
-            let filterTipoEstado: SgiRestFilter = {
-              field: 'memoria.estadoActual.id',
-              type: SgiRestFilterType.EQUALS,
-              value: '1',
-            };
-
-            filter.push(filterTipoEstado);
-
-            actaListado.numeroMemoriasTotales = 0;
-
-            const memorias$ = this.evaluacionService
-              .findAll({
-                page: {
-                  index: 0,
-                  size: null
-                },
-                filters: filter
-              }).pipe(
-                switchMap((responseIniciales) => {
-                  actaListado.numeroMemoriasIniciales = responseIniciales.total;
-                  actaListado.numeroMemoriasTotales = actaListado.numeroMemoriasTotales + actaListado.numeroMemoriasIniciales;
-
-                  filter = [];
-
-                  filter.push(filterConvocatoriaReunion);
-
-                  filterTipoEstado = {
-                    field: 'memoria.estadoActual.id',
-                    type: SgiRestFilterType.EQUALS,
-                    value: '1',
-                  };
-
-                  filter.push(filterTipoEstado);
-
-
-                  const actaListado$ = this.evaluacionService
-                    .findAll({
-                      page: {
-                        index: 0,
-                        size: null
-                      },
-
-                      filters: filter
-                    }).pipe(
-                      map((responseRevision) => {
-
-                        actaListado.numeroMemoriasRevisiones = responseRevision.total;
-                        actaListado.numeroMemoriasTotales = actaListado.numeroMemoriasTotales + actaListado.numeroMemoriasRevisiones;
-                        return actaListado;
-                      })
-                    );
-
-                  return actaListado$;
-
-                })
-              );
-
-
-            actasListado$.push(memorias$);
-          });
-
-          return zip(...actasListado$);
         }),
         catchError(() => {
           // On error reset pagination values
@@ -452,11 +379,42 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
 
+
+  /**
+   * Finaliza el acta con el id recibido.
+   * @param actaId id del acta a finalizar.
+   */
+  finishActa(actaId: number) {
+    this.logger.debug(ActaListadoComponent.name,
+      'finishActa()',
+      'start');
+    this.finalizarSubscription = this.actasService.finishActa(actaId).subscribe((acta) => {
+      this.snackBarService.showSuccess(MSG_FINALIZAR_SUCCESS);
+      this.loadTable(false);
+    },
+      catchError(() => {
+        // On error reset pagination values
+        this.paginator.firstPage();
+        this.totalElementos = 0;
+        this.snackBarService.showError(MSG_FINALIZAR_ERROR);
+        this.logger.debug(ActaListadoComponent.name, 'loadTable()', 'end');
+        return of([]);
+      }));
+
+
+    this.logger.debug(ActaListadoComponent.name,
+      'finishActa()',
+      'end');
+
+  }
+
+
   ngOnDestroy(): void {
     this.logger.debug(ActaListadoComponent.name,
       'ngOnDestroy()',
       'start');
     this.comitesSubscription?.unsubscribe();
+    this.finalizarSubscription?.unsubscribe();
 
     this.logger.debug(ActaListadoComponent.name,
       'ngOnDestroy()',

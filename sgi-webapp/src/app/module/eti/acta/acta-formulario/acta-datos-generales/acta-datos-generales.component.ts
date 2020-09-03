@@ -2,7 +2,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { Acta } from '@core/models/eti/acta';
+import { IActa } from '@core/models/eti/acta';
 import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -16,10 +16,7 @@ import { SgiRestListResult } from '@sgi/framework/http/types';
 import { AbstractTabComponent } from '@core/component/abstract-tab.component';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-
-
-
+import { startWith, map } from 'rxjs/operators';
 
 const MSG_ERROR_INIT = marker('eti.acta.crear.datosGenerales.convocatoriaReunion.error.cargar');
 
@@ -28,7 +25,7 @@ const MSG_ERROR_INIT = marker('eti.acta.crear.datosGenerales.convocatoriaReunion
   templateUrl: './acta-datos-generales.component.html',
   styleUrls: ['./acta-datos-generales.component.scss']
 })
-export class ActaDatosGeneralesComponent extends AbstractTabComponent<Acta> implements OnInit {
+export class ActaDatosGeneralesComponent extends AbstractTabComponent<IActa> implements OnInit {
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
 
   FormGroupUtil = FormGroupUtil;
@@ -39,7 +36,7 @@ export class ActaDatosGeneralesComponent extends AbstractTabComponent<Acta> impl
   convocatoriasReunionFitlered: ConvocatoriaReunion[];
   convocatoriasReunion: Observable<ConvocatoriaReunion[]>;
 
-  acta: Acta;
+  acta: IActa;
 
   @Output()
   selectConvocatoria: EventEmitter<number> = new EventEmitter();
@@ -79,7 +76,7 @@ export class ActaDatosGeneralesComponent extends AbstractTabComponent<Acta> impl
   ngOnInit() {
     super.ngOnInit();
     this.logger.debug(ActaDatosGeneralesComponent.name, 'ngOnInit()', 'start');
-    this.acta = new Acta();
+    this.acta = null;
     this.suscripciones.push(
       this.convocatoriaReunionService.findAll().subscribe(
         (res: SgiRestListResult<ConvocatoriaReunion>) => {
@@ -127,9 +124,9 @@ export class ActaDatosGeneralesComponent extends AbstractTabComponent<Acta> impl
 
   /**
    * Recupera los datos del formulario.
-   * @returns Acta
+   * @returns IActa
    */
-  getDatosFormulario(): Acta {
+  getDatosFormulario(): IActa {
     this.logger.debug(ActaDatosGeneralesComponent.name, 'getDatosFormulario()', 'start');
     const acta = this.datosFormulario;
     acta.convocatoriaReunion = FormGroupUtil.getValue(this.formGroup, 'convocatoriaReunion');
@@ -158,9 +155,9 @@ export class ActaDatosGeneralesComponent extends AbstractTabComponent<Acta> impl
 
   /**
    * Setea los datos en el formulario.
-   * @params Acta
+   * @params IActa
    */
-  setDatosFormulario(acta: Acta) {
+  setDatosFormulario(acta: IActa) {
     this.logger.debug(ActaDatosGeneralesComponent.name, 'setDatosFormulario()', 'start');
 
     const convocatoriaReunion: ConvocatoriaReunion = acta.convocatoriaReunion;

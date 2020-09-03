@@ -1,7 +1,7 @@
 import { ConvocatoriaReunion } from './convocatoria-reunion';
 import { TipoEstadoActa } from './tipo-estado-acta';
 
-export class Acta {
+export interface IActa {
   /** Id */
   id: number;
 
@@ -35,17 +35,4 @@ export class Acta {
   /** Estado Actual */
   estadoActual: TipoEstadoActa;
 
-  constructor() {
-    this.id = null;
-    this.convocatoriaReunion = null;
-    this.horaInicio = 0;
-    this.minutoInicio = 0;
-    this.horaFin = 0;
-    this.minutoFin = 0;
-    this.resumen = '';
-    this.numero = 0;
-    this.inactiva = false;
-    this.activo = true;
-    this.estadoActual = new TipoEstadoActa();
-  }
 }
