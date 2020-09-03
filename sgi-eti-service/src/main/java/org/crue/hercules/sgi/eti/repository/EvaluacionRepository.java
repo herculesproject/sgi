@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.eti.repository;
 
-import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.repository.custom.CustomEvaluacionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

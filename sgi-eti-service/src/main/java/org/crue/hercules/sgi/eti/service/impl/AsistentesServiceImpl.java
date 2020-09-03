@@ -3,8 +3,8 @@ package org.crue.hercules.sgi.eti.service.impl;
 import java.util.List;
 
 import org.crue.hercules.sgi.eti.exceptions.AsistentesNotFoundException;
-import org.crue.hercules.sgi.eti.model.Asistentes;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.Asistentes;
 import org.crue.hercules.sgi.eti.repository.AsistentesRepository;
 import org.crue.hercules.sgi.eti.service.AsistentesService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;

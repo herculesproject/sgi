@@ -52,6 +52,7 @@ public class EvaluacionIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String EVALUACION_CONTROLLER_BASE_PATH = "/evaluaciones";
+  private static final String EVALUACION_LIST_PATH = "/evaluables";
 
   private HttpEntity<Evaluacion> buildRequest(HttpHeaders headers, Evaluacion entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -63,13 +64,14 @@ public class EvaluacionIT {
 
     HttpEntity<Evaluacion> request = new HttpEntity<>(entity, headers);
     return request;
+
   }
 
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getEvaluacion_WithId_ReturnsEvaluacion() throws Exception {
-
+    // Authorization
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V")));
 
@@ -84,7 +86,6 @@ public class EvaluacionIT {
     Assertions.assertThat(evaluacion.getId()).isEqualTo(1L);
     Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria1");
     Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen1");
-    Assertions.assertThat(evaluacion.getConvocatoriaReunion().getId()).isEqualTo(1L);
     Assertions.assertThat(evaluacion.getTipoEvaluacion().getNombre()).isEqualTo("TipoEvaluacion1");
   }
 
@@ -93,8 +94,9 @@ public class EvaluacionIT {
   @Test
   public void addEvaluacion_ReturnsEvaluacion() throws Exception {
 
-    Evaluacion nuevoEvaluacion = generarMockEvaluacion(null, "1", 1L);
+    Evaluacion nuevoEvaluacion = generarMockEvaluacion(null, "1");
 
+    // Authorization
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-C")));
 
@@ -110,12 +112,12 @@ public class EvaluacionIT {
   @Test
   public void removeEvaluacion_Success() throws Exception {
 
-    // when: Delete con id existente
-    long id = 1L;
-
+    // Authorization
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-B")));
 
+    // when: Delete con id existente
+    long id = 1L;
     final ResponseEntity<Evaluacion> response = restTemplate.exchange(
         EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(headers, null),
         Evaluacion.class, id);
@@ -130,6 +132,7 @@ public class EvaluacionIT {
   @Test
   public void removeEvaluacion_DoNotGetEvaluacion() throws Exception {
 
+    // Authorization
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-B")));
 
@@ -146,8 +149,9 @@ public class EvaluacionIT {
   @Test
   public void replaceEvaluacion_ReturnsEvaluacion() throws Exception {
 
-    Evaluacion replaceEvaluacion = generarMockEvaluacion(1L, null, 1L);
+    Evaluacion replaceEvaluacion = generarMockEvaluacion(1L, null);
 
+    // Authorization
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-E")));
 
@@ -160,9 +164,8 @@ public class EvaluacionIT {
     final Evaluacion evaluacion = response.getBody();
 
     Assertions.assertThat(evaluacion.getId()).isNotNull();
-    Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria001");
+    Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria1");
     Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen1");
-    Assertions.assertThat(evaluacion.getConvocatoriaReunion().getId()).isEqualTo(1L);
     Assertions.assertThat(evaluacion.getTipoEvaluacion().getNombre()).isEqualTo("TipoEvaluacion1");
   }
 
@@ -171,11 +174,11 @@ public class EvaluacionIT {
   @Test
   public void findAll_WithPaging_ReturnsEvaluacionSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
-
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V")));
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
+    // Authorization
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V")));
 
     final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(EVALUACION_CONTROLLER_BASE_PATH,
         HttpMethod.GET, buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
@@ -195,13 +198,10 @@ public class EvaluacionIT {
     // Contiene de convocatoriaReunion.codigo='CR-6' a 'CR-8'
     Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria6");
     Assertions.assertThat(evaluaciones.get(0).getDictamen().getNombre()).isEqualTo("Dictamen6");
-    Assertions.assertThat(evaluaciones.get(0).getConvocatoriaReunion().getId()).isEqualTo(6L);
     Assertions.assertThat(evaluaciones.get(1).getMemoria().getTitulo()).isEqualTo("Memoria7");
     Assertions.assertThat(evaluaciones.get(1).getDictamen().getNombre()).isEqualTo("Dictamen7");
-    Assertions.assertThat(evaluaciones.get(1).getConvocatoriaReunion().getId()).isEqualTo(7L);
     Assertions.assertThat(evaluaciones.get(2).getMemoria().getTitulo()).isEqualTo("Memoria8");
     Assertions.assertThat(evaluaciones.get(2).getDictamen().getNombre()).isEqualTo("Dictamen8");
-    Assertions.assertThat(evaluaciones.get(2).getConvocatoriaReunion().getId()).isEqualTo(8L);
 
   }
 
@@ -213,13 +213,14 @@ public class EvaluacionIT {
     Long id = 5L;
     String query = "esRevMinima:true,id:" + id;
 
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V")));
+
     URI uri = UriComponentsBuilder.fromUriString(EVALUACION_CONTROLLER_BASE_PATH).queryParam("q", query).build(false)
         .toUri();
 
     // when: Búsqueda por query
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V")));
-
     final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
         });
@@ -232,7 +233,6 @@ public class EvaluacionIT {
     Assertions.assertThat(evaluaciones.get(0).getId()).isEqualTo(id);
     Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).startsWith("Memoria");
     Assertions.assertThat(evaluaciones.get(0).getDictamen().getNombre()).startsWith("Dictamen");
-    Assertions.assertThat(evaluaciones.get(0).getConvocatoriaReunion().getId()).isEqualTo(5L);
   }
 
   @Sql
@@ -242,13 +242,14 @@ public class EvaluacionIT {
     // when: Ordenación por id desc
     String query = "id-";
 
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V")));
+
     URI uri = UriComponentsBuilder.fromUriString(EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", query).build(false)
         .toUri();
 
     // when: Búsqueda por query
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V")));
-
     final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
         });
@@ -263,7 +264,6 @@ public class EvaluacionIT {
       Assertions.assertThat(evaluacion.getId()).isEqualTo(8 - i);
       Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%03d", 8 - i));
       Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen" + String.format("%03d", 8 - i));
-      Assertions.assertThat(evaluacion.getConvocatoriaReunion().getId()).isEqualTo(8 - i);
     }
   }
 
@@ -272,12 +272,11 @@ public class EvaluacionIT {
   @Test
   public void findAll_WithPagingSortingAndFiltering_ReturnsEvaluacionSubList() throws Exception {
     // when: Obtiene page=3 con pagesize=10
-
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
-
+    // Authorization
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V")));
     // when: Ordena por id desc
     String sort = "id-";
     // when: Filtra por version equals
@@ -313,18 +312,169 @@ public class EvaluacionIT {
         .isEqualTo("Dictamen" + String.format("%03d", 2));
     Assertions.assertThat(evaluaciones.get(2).getDictamen().getNombre())
         .isEqualTo("Dictamen" + String.format("%03d", 1));
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllByMemoriaAndRetrospectivaEnEvaluacion_WithPaging_ReturnsEvaluacionSubList() throws Exception {
+    // when: Obtiene la page=3 con pagesize=10
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "1");
+    headers.add("X-Page-Size", "5");
+    // Authorization
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V")));
+
+    final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(
+        EVALUACION_CONTROLLER_BASE_PATH + EVALUACION_LIST_PATH, HttpMethod.GET, buildRequest(headers, null),
+        new ParameterizedTypeReference<List<Evaluacion>>() {
+        });
+
+    // then: Respuesta OK, Evaluaciones retorna la información de la página
+    // correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Evaluacion> evaluaciones = response.getBody();
+    Assertions.assertThat(evaluaciones.size()).isEqualTo(3);
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
+
+    // Contiene de memoria.titulo='Memoria6' a 'Memoria8'
+    // Contiene de dictamen.nombre='Dictamen6' a 'Dictamen8'
+    // Contiene de convocatoriaReunion.codigo='CR-6' a 'CR-8'
+    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria6");
+    Assertions.assertThat(evaluaciones.get(0).getDictamen().getNombre()).isEqualTo("Dictamen6");
+    Assertions.assertThat(evaluaciones.get(1).getMemoria().getTitulo()).isEqualTo("Memoria7");
+    Assertions.assertThat(evaluaciones.get(1).getDictamen().getNombre()).isEqualTo("Dictamen7");
+    Assertions.assertThat(evaluaciones.get(2).getMemoria().getTitulo()).isEqualTo("Memoria8");
+    Assertions.assertThat(evaluaciones.get(2).getDictamen().getNombre()).isEqualTo("Dictamen8");
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllByMemoriaAndRetrospectivaEnEvaluacion_WithSearchQuery_ReturnsFilteredEvaluacionList()
+      throws Exception {
+    // when: Búsqueda por esRevMinima equals e id equals
+    Long id = 5L;
+    String query = "esRevMinima:true,id:" + id;
+
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V")));
+
+    URI uri = UriComponentsBuilder.fromUriString(EVALUACION_CONTROLLER_BASE_PATH + EVALUACION_LIST_PATH)
+        .queryParam("q", query).build(false).toUri();
+
+    // when: Búsqueda por query
+    final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
+        });
+
+    // then: Respuesta OK, Evaluaciones retorna la información de la página
+    // correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Evaluacion> evaluaciones = response.getBody();
+    Assertions.assertThat(evaluaciones.size()).isEqualTo(1);
+    Assertions.assertThat(evaluaciones.get(0).getId()).isEqualTo(id);
+    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).startsWith("Memoria");
+    Assertions.assertThat(evaluaciones.get(0).getDictamen().getNombre()).startsWith("Dictamen");
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllByMemoriaAndRetrospectivaEnEvaluacion_WithSortQuery_ReturnsOrderedEvaluacionList()
+      throws Exception {
+    // when: Ordenación por id desc
+    String query = "id-";
+
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V")));
+
+    URI uri = UriComponentsBuilder.fromUriString(EVALUACION_CONTROLLER_BASE_PATH + EVALUACION_LIST_PATH)
+        .queryParam("s", query).build(false).toUri();
+
+    // when: Búsqueda por query
+    final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
+        });
+
+    // then: Respuesta OK, Evaluaciones retorna la información de la página
+    // correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Evaluacion> evaluaciones = response.getBody();
+    Assertions.assertThat(evaluaciones.size()).isEqualTo(8);
+    for (int i = 0; i < 8; i++) {
+      Evaluacion evaluacion = evaluaciones.get(i);
+      Assertions.assertThat(evaluacion.getId()).isEqualTo(8 - i);
+      Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%03d", 8 - i));
+      Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen" + String.format("%03d", 8 - i));
+    }
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllByMemoriaAndRetrospectivaEnEvaluacion_WithPagingSortingAndFiltering_ReturnsEvaluacionSubList()
+      throws Exception {
+    // when: Obtiene page=3 con pagesize=10
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    // Authorization
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V")));
+    // when: Ordena por id desc
+    String sort = "id-";
+    // when: Filtra por version equals
+    String filter = "version:1";
+
+    URI uri = UriComponentsBuilder.fromUriString(EVALUACION_CONTROLLER_BASE_PATH + EVALUACION_LIST_PATH)
+        .queryParam("s", sort).queryParam("q", filter).build(false).toUri();
+
+    final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
+        });
+
+    // then: Respuesta OK, Evaluaciones retorna la información de la página
+    // correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Evaluacion> evaluaciones = response.getBody();
+    Assertions.assertThat(evaluaciones.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("3");
+
+    // Contiene memoria.titulo='Memoria001', 'Memoria002','Memoria003'
+    // Contiene dictamen.nombre='Dictamen001', 'Dictamen002','Dictamen003'
+    // Contiene convocatoriaReunion.codigo='CR-001', 'CR-002','CR-003'
+    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%03d", 3));
+    Assertions.assertThat(evaluaciones.get(1).getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%03d", 2));
+    Assertions.assertThat(evaluaciones.get(2).getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%03d", 1));
+
+    Assertions.assertThat(evaluaciones.get(0).getDictamen().getNombre())
+        .isEqualTo("Dictamen" + String.format("%03d", 3));
+    Assertions.assertThat(evaluaciones.get(1).getDictamen().getNombre())
+        .isEqualTo("Dictamen" + String.format("%03d", 2));
+    Assertions.assertThat(evaluaciones.get(2).getDictamen().getNombre())
+        .isEqualTo("Dictamen" + String.format("%03d", 1));
   }
 
   /**
    * Función que devuelve un objeto Evaluacion
    * 
-   * @param id                    id del Evaluacion
-   * @param sufijo                el sufijo para título y nombre
-   * @param convocatoriaReunionId el sufijo para título y nombre
+   * @param id     id del Evaluacion
+   * @param sufijo el sufijo para título y nombre
    * @return el objeto Evaluacion
    */
 
-  public Evaluacion generarMockEvaluacion(Long id, String sufijo, Long convocatoriaReunionId) {
+  public Evaluacion generarMockEvaluacion(Long id, String sufijo) {
+
+    String sufijoStr = (sufijo == null ? id.toString() : sufijo);
 
     TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
     tipoEvaluacion.setId(1L);
@@ -333,7 +483,7 @@ public class EvaluacionIT {
 
     Dictamen dictamen = new Dictamen();
     dictamen.setId(1L);
-    dictamen.setNombre("Dictamen1");
+    dictamen.setNombre("Dictamen" + sufijoStr);
     dictamen.setTipoEvaluacion(tipoEvaluacion);
     dictamen.setActivo(Boolean.TRUE);
 
@@ -347,8 +497,8 @@ public class EvaluacionIT {
     peticionEvaluacion.setCodigo("Codigo1");
     peticionEvaluacion.setDisMetodologico("DiseñoMetodologico1");
     peticionEvaluacion.setExterno(Boolean.FALSE);
-    peticionEvaluacion.setFechaFin(LocalDate.of(2020, 8, 1));
-    peticionEvaluacion.setFechaInicio(LocalDate.of(2020, 8, 1));
+    peticionEvaluacion.setFechaFin(LocalDate.now());
+    peticionEvaluacion.setFechaInicio(LocalDate.now());
     peticionEvaluacion.setFuenteFinanciacion("Fuente financiación");
     peticionEvaluacion.setObjetivos("Objetivos1");
     peticionEvaluacion.setOtroValorSocial("Otro valor social1");
@@ -368,33 +518,31 @@ public class EvaluacionIT {
     tipoMemoria.setNombre("TipoMemoria1");
     tipoMemoria.setActivo(Boolean.TRUE);
 
-    Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria001", "user-001", tipoMemoria,
-        new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.of(2020, 8, 1), Boolean.FALSE,
-        new Retrospectiva(1L, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), LocalDate.of(2020, 8, 1)), 3,
+    Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
+        tipoMemoria, new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.FALSE,
+        new Retrospectiva(1L, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), LocalDate.now()), 3,
         Boolean.TRUE);
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
 
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
-    convocatoriaReunion.setId(convocatoriaReunionId);
+    convocatoriaReunion.setId(1L);
     convocatoriaReunion.setComite(comite);
-    convocatoriaReunion.setFechaEvaluacion(LocalDateTime.of(2020, 8, 1, 10, 10, 10));
-    convocatoriaReunion.setFechaLimite(LocalDate.of(2020, 8, 1));
+    convocatoriaReunion.setFechaEvaluacion(LocalDateTime.now());
+    convocatoriaReunion.setFechaLimite(LocalDate.now());
     convocatoriaReunion.setLugar("Lugar");
     convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");
-    convocatoriaReunion.setAnio(2020);
-    convocatoriaReunion.setNumeroActa(100L);
     convocatoriaReunion.setTipoConvocatoriaReunion(tipoConvocatoriaReunion);
     convocatoriaReunion.setHoraInicio(7);
     convocatoriaReunion.setMinutoInicio(30);
-    convocatoriaReunion.setFechaEnvio(LocalDate.of(2020, 8, 1));
+    convocatoriaReunion.setFechaEnvio(LocalDate.now());
     convocatoriaReunion.setActivo(Boolean.TRUE);
 
     Evaluacion evaluacion = new Evaluacion();
     evaluacion.setId(id);
     evaluacion.setDictamen(dictamen);
     evaluacion.setEsRevMinima(Boolean.TRUE);
-    evaluacion.setFechaDictamen(LocalDate.of(2020, 8, 1));
+    evaluacion.setFechaDictamen(LocalDate.now());
     evaluacion.setMemoria(memoria);
     evaluacion.setConvocatoriaReunion(convocatoriaReunion);
     evaluacion.setVersion(2);

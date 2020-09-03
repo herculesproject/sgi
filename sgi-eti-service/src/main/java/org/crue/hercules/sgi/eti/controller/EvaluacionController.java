@@ -61,11 +61,57 @@ public class EvaluacionController {
    * @param paging pageable
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-EVAL')")
   ResponseEntity<Page<Evaluacion>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
     Page<Evaluacion> page = service.findAll(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Obtener todas las entidades paginadas {@link Evaluacion} activas para una
+   * determinada {@link ConvocatoriaReunion}.
+   *
+   * @param id       Id de {@link ConvocatoriaReunion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+  @GetMapping("/convocatoriareunion/{id}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-C', 'ETI-ACT-E')")
+  ResponseEntity<Page<Evaluacion>> findAllActivasByConvocatoriaReunionId(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("findAllActivasByConvocatoriaReunionId(Long id, Pageable pageable) - start");
+    Page<Evaluacion> page = service.findAllActivasByConvocatoriaReunionId(id, pageable);
+
+    if (page.isEmpty()) {
+      log.debug("findAllActivasByConvocatoriaReunionId(Long id, Pageable pageable) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAllActivasByConvocatoriaReunionId(Long id, Pageable pageable) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /*
+   * Devuelve una lista paginada y filtrada {@link Evaluacion}.
+   * 
+   * @param query filtro de {@link QueryCriteria}.
+   * 
+   * @param paging pageable
+   */
+  @GetMapping("/evaluables")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-EVAL')")
+  ResponseEntity<Page<Evaluacion>> findAllByMemoriaAndRetrospectivaEnEvaluacion(
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
+    Page<Evaluacion> page = service.findAllByMemoriaAndRetrospectivaEnEvaluacion(query, paging);
 
     if (page.isEmpty()) {
       log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
@@ -99,7 +145,7 @@ public class EvaluacionController {
    */
   @PutMapping("/{id}")
   @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-E')")
-  Evaluacion replaceEvaluacion(@Valid @RequestBody Evaluacion updatedEvaluacion, @PathVariable Long id) {
+  public Evaluacion replaceEvaluacion(@Valid @RequestBody Evaluacion updatedEvaluacion, @PathVariable Long id) {
     log.debug("replaceEvaluacion(Evaluacion updatedEvaluacion, Long id) - start");
     updatedEvaluacion.setId(id);
     Evaluacion returnValue = service.update(updatedEvaluacion);

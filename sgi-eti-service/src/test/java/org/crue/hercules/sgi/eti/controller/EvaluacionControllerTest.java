@@ -81,6 +81,7 @@ public class EvaluacionControllerTest {
   private static final String PATH_PARAMETER_BY_COMENTARIO = "/comentarios";
   private static final String PATH_PARAMETER_BY_COUNT = "/count";
   private static final String EVALUACION_CONTROLLER_BASE_PATH = "/evaluaciones";
+  private static final String EVALUACION_LIST_PATH = "/evaluables";
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-EVC-V" })
@@ -640,6 +641,88 @@ public class EvaluacionControllerTest {
         .andDo(MockMvcResultHandlers.print())
         // then: Realiza la petición se realiza correctamente
         .andExpect(MockMvcResultMatchers.status().isOk());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-V" })
+  public void findAllByMemoriaAndRetrospectivaEnEvaluacion_Unlimited_ReturnsFiltratedEvaluacionList() throws Exception {
+    // given: One hundred Evaluacion
+    List<Evaluacion> evaluaciones = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i)));
+    }
+
+    BDDMockito
+        .given(evaluacionService.findAllByMemoriaAndRetrospectivaEnEvaluacion(
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(evaluaciones));
+
+    // when: find unlimited
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(EVALUACION_CONTROLLER_BASE_PATH + EVALUACION_LIST_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Get a page one hundred Evaluacion
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-V" })
+  public void findAllByMemoriaAndRetrospectivaEnEvaluacion_WithPaging_ReturnsFiltratedEvaluacionSubList()
+      throws Exception {
+    // given: One hundred Evaluacion
+    List<Evaluacion> evaluaciones = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i)));
+    }
+
+    BDDMockito
+        .given(evaluacionService.findAllByMemoriaAndRetrospectivaEnEvaluacion(
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<Evaluacion>>() {
+          @Override
+          public Page<Evaluacion> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<Evaluacion> content = evaluaciones.subList(fromIndex, toIndex);
+            Page<Evaluacion> page = new PageImpl<>(content, pageable, evaluaciones.size());
+            return page;
+          }
+        });
+
+    // when: get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(EVALUACION_CONTROLLER_BASE_PATH + EVALUACION_LIST_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: the asked Evaluaciones are returned with the right page information
+        // in headers
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "100"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10))).andReturn();
+
+    // this uses a TypeReference to inform Jackson about the Lists's generic type
+    List<Evaluacion> actual = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<Evaluacion>>() {
+        });
+
+    // containing memoria.titulo='Memoria031' to 'Memoria040'
+    // containing dictamen.nombre='Dictamen031' to 'Dictamen040'
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      Evaluacion evaluacion = actual.get(i);
+      Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
+      Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen" + String.format("%03d", j));
+      // Assertions.assertThat(evaluacion.getConvocatoriaReunion().getCodigo()).isEqualTo("CR-"
+      // + String.format("%03d", j));
+    }
   }
 
   /**

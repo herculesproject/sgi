@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eti.repository.custom;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -19,6 +21,25 @@ import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Predicate;
+import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.Evaluacion_;
+import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.Memoria_;
+import org.crue.hercules.sgi.eti.model.Retrospectiva;
+import org.crue.hercules.sgi.eti.model.Retrospectiva_;
+import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria_;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion_;
+import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva_;
+import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.query.QueryUtils;
+
+/**
+ * Spring Data JPA repository para {@link Evaluacion}.
+ */
 @Component
 @Slf4j
 public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepository {
@@ -83,7 +104,117 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
 
     log.debug("getNumComentarios : {} - end");
     return queryNumComentarios;
+  }
 
+  /**
+   * Obtener todas las entidades {@link Evaluacion} paginadas y/o filtradas.
+   *
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Evaluacion} paginadas y/o filtradas.
+   */
+  public Page<Evaluacion> findAllByMemoriaAndRetrospectivaEnEvaluacion(List<QueryCriteria> query, Pageable pageable) {
+
+    // Crete query
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaQuery<Evaluacion> cq = cb.createQuery(Evaluacion.class);
+
+    // Define FROM clause
+    Root<Evaluacion> root = cq.from(Evaluacion.class);
+
+    List<Predicate> listPredicates = new ArrayList<Predicate>();
+
+    listPredicates.add(cb.or(
+        cb.and(cb.equal(root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id), 1L),
+            cb.in(root.get(Evaluacion_.memoria).get(Memoria_.id)).value(getIdsMemoriasRestropectivas(cb, cq, root))),
+        cb.and(cb.equal(root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id), 2L),
+            cb.in(root.get(Evaluacion_.memoria).get(Memoria_.id)).value(getIdsMemoriasEstadoActual(cb, cq, root)))));
+
+    listPredicates.add(cb.and(cb.equal(root.get(Evaluacion_.activo), Boolean.TRUE)));
+
+    // Where
+    if (query != null) {
+      Specification<Evaluacion> spec = new QuerySpecification<Evaluacion>(query);
+      listPredicates.add(spec.toPredicate(root, cq, cb));
+    }
+
+    // Filtros
+    cq.where(listPredicates.toArray(new Predicate[] {}));
+
+    // Ordenación
+    List<Order> orders = QueryUtils.toOrders(pageable.getSort(), root, cb);
+    cq.orderBy(orders);
+
+    // Paginación
+    TypedQuery<Evaluacion> typedQuery = entityManager.createQuery(cq);
+    if (pageable != null && pageable.isPaged()) {
+      typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+      typedQuery.setMaxResults(pageable.getPageSize());
+    }
+
+    List<Evaluacion> result = typedQuery.getResultList();
+    Page<Evaluacion> returnValue = new PageImpl<Evaluacion>(result, pageable, result.size());
+
+    return returnValue;
+
+  }
+
+  /**
+   * Devuelve una subconsulta con el listado de retrospectivas en estado 4 (En
+   * Evaluacion)
+   * 
+   * @return Subquery<Long> Listado de Retrospectivas en estado En Evaluacion
+   */
+
+  private Subquery<Long> getRetrospectivas(CriteriaBuilder cb, CriteriaQuery<Evaluacion> cq) {
+
+    Subquery<Long> queryRetrospectivas = cq.subquery(Long.class);
+    Root<Retrospectiva> subqRoot = queryRetrospectivas.from(Retrospectiva.class);
+    queryRetrospectivas.select(subqRoot.get(Retrospectiva_.id))
+        .where(cb.equal(subqRoot.get(Retrospectiva_.estadoRetrospectiva).get(EstadoRetrospectiva_.id), 4L));
+
+    return queryRetrospectivas;
+
+  }
+
+  /**
+   * Devuelve una subconsulta con el listado de Memorias con Retrospectivas en
+   * estado 4 (En Evaluacion) donde la versión de la memoria sea igual a la
+   * versión del listado de evaluación.
+   * 
+   * @return Subquery<Long> Listado de Memorias con Retrospectivas en estado En
+   *         Evaluacion
+   */
+  private Subquery<Long> getIdsMemoriasRestropectivas(CriteriaBuilder cb, CriteriaQuery<Evaluacion> cq,
+      Root<Evaluacion> root) {
+
+    Subquery<Long> queryMemorias = cq.subquery(Long.class);
+    Root<Memoria> subqRoot = queryMemorias.from(Memoria.class);
+    queryMemorias.select(subqRoot.get(Memoria_.id)).where(
+        cb.and(cb.in(subqRoot.get(Memoria_.retrospectiva).get(Retrospectiva_.id)).value(getRetrospectivas(cb, cq)),
+            cb.equal(root.get(Evaluacion_.version), subqRoot.get(Memoria_.version))));
+
+    return queryMemorias;
+  }
+
+  /**
+   * Devuelve una subconsulta con el listado de Memorias con estado 4 o 5 donde
+   * además la versión de la memoria sea igual a la versión del listado de
+   * evaluación.
+   * 
+   * @return Subquery<Long> Listado de Memorias con estado En Evaluacion o En
+   *         secretaría revisión mínima
+   */
+  private Subquery<Long> getIdsMemoriasEstadoActual(CriteriaBuilder cb, CriteriaQuery<Evaluacion> cq,
+      Root<Evaluacion> root) {
+
+    Subquery<Long> queryMemoriasEstadoActual = cq.subquery(Long.class);
+    Root<Memoria> subqRoot = queryMemoriasEstadoActual.from(Memoria.class);
+    queryMemoriasEstadoActual.select(subqRoot.get(Memoria_.id))
+        .where(cb.and(subqRoot.get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id).in(Arrays.asList(4L, 5L)),
+            cb.equal(root.get(Evaluacion_.version), subqRoot.get(Memoria_.version))));
+
+    return queryMemoriasEstadoActual;
   }
 
 }

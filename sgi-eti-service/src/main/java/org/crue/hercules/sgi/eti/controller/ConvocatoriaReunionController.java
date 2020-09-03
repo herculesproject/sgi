@@ -38,200 +38,200 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class ConvocatoriaReunionController {
 
-    /**
-     * Asistentes service
-     */
-    private AsistentesService asistenteService;
+  /**
+   * Asistentes service
+   */
+  private AsistentesService asistenteService;
 
-    /**
-     * Evaluacion service
-     */
-    private EvaluacionService evaluacionService;
+  /**
+   * Evaluacion service
+   */
+  private EvaluacionService evaluacionService;
 
-    /**
-     * ConvocatoriaReunion service
-     */
-    private ConvocatoriaReunionService convocatoriaReunionService;
+  /**
+   * ConvocatoriaReunion service
+   */
+  private ConvocatoriaReunionService convocatoriaReunionService;
 
-    /**
-     * Instancia un nuevo ConvocatoriaReunionController.
-     *
-     * @param asistenteService           {@link AsistentesService}
-     * @param evaluacionService          {@link EvaluacionService}
-     * @param convocatoriaReunionService {@link ConvocatoriaReunionService}.
-     */
-    public ConvocatoriaReunionController(AsistentesService asistenteService, EvaluacionService evaluacionService,
-                                         ConvocatoriaReunionService convocatoriaReunionService) {
-        log.debug("ConvocatoriaReunionController(ConvocatoriaReunionService service) - start");
-        this.convocatoriaReunionService = convocatoriaReunionService;
-        this.asistenteService = asistenteService;
-        this.evaluacionService = evaluacionService;
-        log.debug("ConvocatoriaReunionController(ConvocatoriaReunionService service) - end");
+  /**
+   * Instancia un nuevo ConvocatoriaReunionController.
+   *
+   * @param asistenteService           {@link AsistentesService}
+   * @param evaluacionService          {@link EvaluacionService}
+   * @param convocatoriaReunionService {@link ConvocatoriaReunionService}.
+   */
+  public ConvocatoriaReunionController(AsistentesService asistenteService, EvaluacionService evaluacionService,
+      ConvocatoriaReunionService convocatoriaReunionService) {
+    log.debug("ConvocatoriaReunionController(ConvocatoriaReunionService service) - start");
+    this.convocatoriaReunionService = convocatoriaReunionService;
+    this.asistenteService = asistenteService;
+    this.evaluacionService = evaluacionService;
+    log.debug("ConvocatoriaReunionController(ConvocatoriaReunionService service) - end");
+  }
+
+  /**
+   * Crea {@link ConvocatoriaReunion}.
+   *
+   * @param convocatoriaReunion La entidad {@link ConvocatoriaReunion} a crear.
+   * @return Nuevo {@link ConvocatoriaReunion} creado.
+   * @throws IllegalArgumentException Si la entidad {@link ConvocatoriaReunion}
+   *                                  tiene id.
+   */
+  @PostMapping()
+  public ResponseEntity<ConvocatoriaReunion> newConvocatoriaReunion(
+      @Valid @RequestBody ConvocatoriaReunion convocatoriaReunion) {
+    log.debug("newConvocatoriaReunion(ConvocatoriaReunion convocatoriaReunion) - start");
+    ConvocatoriaReunion returnValue = convocatoriaReunionService.create(convocatoriaReunion);
+    log.debug("newConvocatoriaReunion(ConvocatoriaReunion convocatoriaReunion) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
+  }
+
+  /**
+   * Actualiza la entidad {@link ConvocatoriaReunion}.
+   *
+   * @param convocatoriaReunion La entidad {@link ConvocatoriaReunion} a
+   *                            actualizar.
+   * @param id                  Identificador de la entidad
+   *                            {@link ConvocatoriaReunion}.
+   * @return Entidad {@link ConvocatoriaReunion} actualizada.
+   * @throws NotFoundException        Si no existe ninguna entidad
+   *                                  {@link ConvocatoriaReunion} con ese id.
+   * @throws IllegalArgumentException Si la entidad {@link ConvocatoriaReunion} no
+   *                                  tiene id.
+   */
+  @PutMapping("/{id}")
+  ConvocatoriaReunion replaceConvocatoriaReunion(@Valid @RequestBody ConvocatoriaReunion convocatoriaReunion,
+      @PathVariable Long id) {
+    log.debug("replaceConvocatoriaReunion(ConvocatoriaReunion convocatoriaReunion, Long id) - start");
+    convocatoriaReunion.setId(id);
+    ConvocatoriaReunion returnValue = convocatoriaReunionService.update(convocatoriaReunion);
+    log.debug("replaceConvocatoriaReunion(ConvocatoriaReunion convocatoriaReunion, Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Actualiza {@link ConvocatoriaReunion} con el indicador de activo a false.
+   *
+   * @param id El id de la entidad {@link ConvocatoriaReunion}.
+   * @throws NotFoundException        Si no existe ninguna entidad
+   *                                  {@link ConvocatoriaReunion} con ese id.
+   * @throws IllegalArgumentException Si la entidad {@link ConvocatoriaReunion} no
+   *                                  tiene id.
+   */
+  @DeleteMapping("/{id}")
+  @ResponseStatus(value = HttpStatus.NO_CONTENT)
+  void delete(@PathVariable Long id) {
+    log.debug("delete(Long id) - start");
+    ConvocatoriaReunion convocatoriaReunion = this.one(id);
+    convocatoriaReunion.setActivo(Boolean.FALSE);
+    convocatoriaReunionService.update(convocatoriaReunion);
+    log.debug("delete(Long id) - end");
+  }
+
+  /**
+   * Obtiene las entidades {@link ConvocatoriaReunion} filtradas y paginadas según
+   * los criterios de búsqueda.
+   *
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable
+   * @return el listado de entidades {@link ConvocatoriaReunion} paginadas y
+   *         filtradas.
+   */
+  @GetMapping()
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-C', 'ETI-CNV-V')")
+  ResponseEntity<Page<ConvocatoriaReunion>> findAll(
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAll(List<QueryCriteria> query, Pageable paging - start");
+    Page<ConvocatoriaReunion> page = convocatoriaReunionService.findAll(query, paging);
+    log.debug("findAll(List<QueryCriteria> query, Pageable paging - end");
+    if (page.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
 
-    /**
-     * Crea {@link ConvocatoriaReunion}.
-     *
-     * @param convocatoriaReunion La entidad {@link ConvocatoriaReunion} a crear.
-     * @return Nuevo {@link ConvocatoriaReunion} creado.
-     * @throws IllegalArgumentException Si la entidad {@link ConvocatoriaReunion}
-     *                                  tiene id.
-     */
-    @PostMapping()
-    public ResponseEntity<ConvocatoriaReunion> newConvocatoriaReunion(
-            @Valid @RequestBody ConvocatoriaReunion convocatoriaReunion) {
-        log.debug("newConvocatoriaReunion(ConvocatoriaReunion convocatoriaReunion) - start");
-        ConvocatoriaReunion returnValue = convocatoriaReunionService.create(convocatoriaReunion);
-        log.debug("newConvocatoriaReunion(ConvocatoriaReunion convocatoriaReunion) - end");
-        return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
+  /**
+   * Obtiene la entidad {@link ConvocatoriaReunion} por id.
+   *
+   * @param id El id de la entidad {@link ConvocatoriaReunion}.
+   * @return La entidad {@link ConvocatoriaReunion}.
+   * @throws NotFoundException        Si no existe ninguna entidad
+   *                                  {@link ConvocatoriaReunion} con ese id.
+   * @throws IllegalArgumentException Si no se informa id.
+   */
+  @GetMapping("/{id}")
+  ConvocatoriaReunion one(@PathVariable Long id) {
+    log.debug("one(Long id) - start");
+    ConvocatoriaReunion returnValue = convocatoriaReunionService.findById(id);
+    log.debug("one(Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtener todas las entidades paginadas {@link Asistentes} activas para una
+   * determinada {@link ConvocatoriaReunion}.
+   *
+   * @param id       Id de {@link ConvocatoriaReunion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Asistentes} paginadas.
+   */
+  @GetMapping("/{id}/asistentes")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-C', 'ETI-ACT-E')")
+  ResponseEntity<Page<Asistentes>> findAsistentes(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("findAsistentes(Long id, Pageable pageable) - start");
+    Page<Asistentes> page = asistenteService.findAllByConvocatoriaReunionId(id, pageable);
+
+    if (page.isEmpty()) {
+      log.debug("findAsistentes(Long id, Pageable pageable) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    log.debug("findAsistentes(Long id, Pageable pageable) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
 
-    /**
-     * Actualiza la entidad {@link ConvocatoriaReunion}.
-     *
-     * @param convocatoriaReunion La entidad {@link ConvocatoriaReunion} a
-     *                            actualizar.
-     * @param id                  Identificador de la entidad
-     *                            {@link ConvocatoriaReunion}.
-     * @return Entidad {@link ConvocatoriaReunion} actualizada.
-     * @throws NotFoundException        Si no existe ninguna entidad
-     *                                  {@link ConvocatoriaReunion} con ese id.
-     * @throws IllegalArgumentException Si la entidad {@link ConvocatoriaReunion} no
-     *                                  tiene id.
-     */
-    @PutMapping("/{id}")
-    ConvocatoriaReunion replaceConvocatoriaReunion(@Valid @RequestBody ConvocatoriaReunion convocatoriaReunion,
-                                                   @PathVariable Long id) {
-        log.debug("replaceConvocatoriaReunion(ConvocatoriaReunion convocatoriaReunion, Long id) - start");
-        convocatoriaReunion.setId(id);
-        ConvocatoriaReunion returnValue = convocatoriaReunionService.update(convocatoriaReunion);
-        log.debug("replaceConvocatoriaReunion(ConvocatoriaReunion convocatoriaReunion, Long id) - end");
-        return returnValue;
+  /**
+   * Obtener todas las entidades paginadas {@link Evaluacion} activas para una
+   * determinada {@link ConvocatoriaReunion}.
+   *
+   * @param id       Id de {@link ConvocatoriaReunion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+  @GetMapping("/{id}/evaluaciones-activas")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-C', 'ETI-ACT-E')")
+  ResponseEntity<Page<Evaluacion>> findEvaluacionesActivas(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("findEvaluacionesActivas(Long id, Pageable pageable) - start");
+    Page<Evaluacion> page = evaluacionService.findAllActivasByConvocatoriaReunionId(id, pageable);
+
+    if (page.isEmpty()) {
+      log.debug("findEvaluacionesActivas(Long id, Pageable pageable) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    log.debug("findEvaluacionesActivas(Long id, Pageable pageable) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
 
-    /**
-     * Actualiza {@link ConvocatoriaReunion} con el indicador de activo a false.
-     *
-     * @param id El id de la entidad {@link ConvocatoriaReunion}.
-     * @throws NotFoundException        Si no existe ninguna entidad
-     *                                  {@link ConvocatoriaReunion} con ese id.
-     * @throws IllegalArgumentException Si la entidad {@link ConvocatoriaReunion} no
-     *                                  tiene id.
-     */
-    @DeleteMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    void delete(@PathVariable Long id) {
-        log.debug("delete(Long id) - start");
-        ConvocatoriaReunion convocatoriaReunion = this.one(id);
-        convocatoriaReunion.setActivo(Boolean.FALSE);
-        convocatoriaReunionService.update(convocatoriaReunion);
-        log.debug("delete(Long id) - end");
+  /**
+   * Obtener todas las entidades paginadas {@link Evaluacion} activas para una
+   * determinada {@link ConvocatoriaReunion}.
+   *
+   * @param id       Id de {@link ConvocatoriaReunion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+  @GetMapping("/{id}/evaluaciones")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V')")
+  ResponseEntity<Page<Evaluacion>> getEvaluaciones(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("findEvaluaciones(Long id, Pageable pageable) - start");
+    Page<Evaluacion> page = evaluacionService.findAllActivasByConvocatoriaReunionId(id, pageable);
+    log.debug("findEvaluaciones(Long id, Pageable pageable) - end");
+    if (page.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-    /**
-     * Obtiene las entidades {@link ConvocatoriaReunion} filtradas y paginadas según
-     * los criterios de búsqueda.
-     *
-     * @param query  filtro de {@link QueryCriteria}.
-     * @param paging pageable
-     * @return el listado de entidades {@link ConvocatoriaReunion} paginadas y
-     * filtradas.
-     */
-    @GetMapping()
-    @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-C', 'ETI-CNV-V')")
-    ResponseEntity<Page<ConvocatoriaReunion>> findAll(
-            @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-            @RequestPageable(sort = "s") Pageable paging) {
-        log.debug("findAll(List<QueryCriteria> query, Pageable paging - start");
-        Page<ConvocatoriaReunion> page = convocatoriaReunionService.findAll(query, paging);
-        log.debug("findAll(List<QueryCriteria> query, Pageable paging - end");
-        if (page.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(page, HttpStatus.OK);
-    }
-
-    /**
-     * Obtiene la entidad {@link ConvocatoriaReunion} por id.
-     *
-     * @param id El id de la entidad {@link ConvocatoriaReunion}.
-     * @return La entidad {@link ConvocatoriaReunion}.
-     * @throws NotFoundException        Si no existe ninguna entidad
-     *                                  {@link ConvocatoriaReunion} con ese id.
-     * @throws IllegalArgumentException Si no se informa id.
-     */
-    @GetMapping("/{id}")
-    ConvocatoriaReunion one(@PathVariable Long id) {
-        log.debug("one(Long id) - start");
-        ConvocatoriaReunion returnValue = convocatoriaReunionService.findById(id);
-        log.debug("one(Long id) - end");
-        return returnValue;
-    }
-
-    /**
-     * Obtener todas las entidades paginadas {@link Asistentes} activas para una
-     * determinada {@link ConvocatoriaReunion}.
-     *
-     * @param id       Id de {@link ConvocatoriaReunion}.
-     * @param pageable la información de la paginación.
-     * @return la lista de entidades {@link Asistentes} paginadas.
-     */
-    @GetMapping("/{id}/asistentes")
-    @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-C', 'ETI-ACT-E')")
-    ResponseEntity<Page<Asistentes>> findAsistentes(@PathVariable Long id,
-                                                    @RequestPageable(sort = "s") Pageable pageable) {
-        log.debug("findAsistentes(Long id, Pageable pageable) - start");
-        Page<Asistentes> page = asistenteService.findAllByConvocatoriaReunionId(id, pageable);
-
-        if (page.isEmpty()) {
-            log.debug("findAsistentes(Long id, Pageable pageable) - end");
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        log.debug("findAsistentes(Long id, Pageable pageable) - end");
-        return new ResponseEntity<>(page, HttpStatus.OK);
-    }
-
-    /**
-     * Obtener todas las entidades paginadas {@link Evaluacion} activas para una
-     * determinada {@link ConvocatoriaReunion}.
-     *
-     * @param id       Id de {@link ConvocatoriaReunion}.
-     * @param pageable la información de la paginación.
-     * @return la lista de entidades {@link Evaluacion} paginadas.
-     */
-    @GetMapping("/{id}/evaluaciones-activas")
-    @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-C', 'ETI-ACT-E')")
-    ResponseEntity<Page<Evaluacion>> findEvaluacionesActivas(@PathVariable Long id,
-                                                             @RequestPageable(sort = "s") Pageable pageable) {
-        log.debug("findEvaluacionesActivas(Long id, Pageable pageable) - start");
-        Page<Evaluacion> page = evaluacionService.findAllActivasByConvocatoriaReunionId(id, pageable);
-
-        if (page.isEmpty()) {
-            log.debug("findEvaluacionesActivas(Long id, Pageable pageable) - end");
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        log.debug("findEvaluacionesActivas(Long id, Pageable pageable) - end");
-        return new ResponseEntity<>(page, HttpStatus.OK);
-    }
-
-    /**
-     * Obtener todas las entidades paginadas {@link Evaluacion} activas para una
-     * determinada {@link ConvocatoriaReunion}.
-     *
-     * @param id       Id de {@link ConvocatoriaReunion}.
-     * @param pageable la información de la paginación.
-     * @return la lista de entidades {@link Evaluacion} paginadas.
-     */
-    @GetMapping("/{id}/evaluaciones")
-    @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V')")
-    ResponseEntity<Page<Evaluacion>> getEvaluaciones(@PathVariable Long id,
-                                                     @RequestPageable(sort = "s") Pageable pageable) {
-        log.debug("findEvaluaciones(Long id, Pageable pageable) - start");
-        Page<Evaluacion> page = evaluacionService.findAllActivasByConvocatoriaReunionId(id, pageable);
-        log.debug("findEvaluaciones(Long id, Pageable pageable) - end");
-        if (page.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(page, HttpStatus.OK);
-    }
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
 }

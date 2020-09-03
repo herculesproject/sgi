@@ -26,6 +26,7 @@ import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.service.impl.EvaluacionServiceImpl;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -399,6 +400,70 @@ public class EvaluacionServiceTest {
     Assertions.assertThat(result.getNumber()).isEqualTo(pageable.getPageNumber());
     Assertions.assertThat(result.getSize()).isEqualTo(pageable.getPageSize());
     Assertions.assertThat(result.getTotalElements()).isEqualTo(response.size());
+  }
+
+  public void findAllByMemoriaAndRetrospectivaEnEvaluacion_ReturnsFiltratedEvaluacionList() {
+    // given: One hundred Evaluacion
+    List<Evaluacion> evaluaciones = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i)));
+    }
+
+    BDDMockito
+        .given(evaluacionRepository.findAllByMemoriaAndRetrospectivaEnEvaluacion(
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(evaluaciones));
+
+    // when: find unlimited
+    Page<Evaluacion> page = evaluacionService.findAllByMemoriaAndRetrospectivaEnEvaluacion(null, Pageable.unpaged());
+
+    // then: Get a page with one hundred Evaluaciones
+    Assertions.assertThat(page.getContent().size()).isEqualTo(100);
+    Assertions.assertThat(page.getNumber()).isEqualTo(0);
+    Assertions.assertThat(page.getSize()).isEqualTo(100);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+  }
+
+  @Test
+  public void findAllByMemoriaAndRetrospectivaEnEvaluacion_WithPaging_ReturnsPage() {
+    // given: One hundred Evaluaciones
+    List<Evaluacion> evaluaciones = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i)));
+    }
+
+    BDDMockito
+        .given(evaluacionRepository.findAllByMemoriaAndRetrospectivaEnEvaluacion(
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<Evaluacion>>() {
+          @Override
+          public Page<Evaluacion> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<Evaluacion> content = evaluaciones.subList(fromIndex, toIndex);
+            Page<Evaluacion> page = new PageImpl<>(content, pageable, evaluaciones.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<Evaluacion> page = evaluacionService.findAllByMemoriaAndRetrospectivaEnEvaluacion(null, paging);
+
+    // then: A Page with ten Evaluaciones are returned containing
+    // resumen='Evaluacion031' to 'Evaluacion040'
+    Assertions.assertThat(page.getContent().size()).isEqualTo(10);
+    Assertions.assertThat(page.getNumber()).isEqualTo(3);
+    Assertions.assertThat(page.getSize()).isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      Evaluacion evaluacion = page.getContent().get(i);
+      Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
+      Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen" + String.format("%03d", j));
+    }
   }
 
   /**

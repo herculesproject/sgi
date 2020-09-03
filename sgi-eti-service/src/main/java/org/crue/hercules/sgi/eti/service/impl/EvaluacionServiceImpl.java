@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
-import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.specification.EvaluacionSpecifications;
@@ -100,6 +100,23 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     Page<EvaluacionWithNumComentario> returnValue = evaluacionRepository.findEvaluacionesAnterioresByMemoria(idMemoria,
         idEvaluacion, pageable);
     log.debug("findEvaluacionesAnterioresByMemoria(Long id, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene la última versión de las memorias en estado "En evaluación" o "En
+   * secretaria revisión mínima", y evaluaciones de tipo retrospectiva asociadas a
+   * memoria con el campo estado de retrospectiva en "En evaluación".
+   *
+   * @param paging la información de paginación.
+   * @param query  información del filtro.
+   * @return el listado de entidades {@link Evaluacion} paginadas y filtradas.
+   */
+  public Page<Evaluacion> findAllByMemoriaAndRetrospectivaEnEvaluacion(List<QueryCriteria> query, Pageable paging) {
+    log.debug("findAllByMemoriaAndRetrospectivaEnEvaluacion(List<QueryCriteria> query,Pageable paging) - start");
+
+    Page<Evaluacion> returnValue = evaluacionRepository.findAllByMemoriaAndRetrospectivaEnEvaluacion(query, paging);
+    log.debug("findAllByMemoriaAndRetrospectivaEnEvaluacion(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
   }
 
