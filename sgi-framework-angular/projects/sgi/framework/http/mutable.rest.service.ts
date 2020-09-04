@@ -263,15 +263,24 @@ export abstract class SgiMutableRestService<K extends number | string, S, T> {
    * @param converter The converter to use
    */
   private toSgiRestListResult<U, V>(response: HttpResponse<U[]>, converter?: SgiConverter<U, V>): Observable<SgiRestListResult<V>> {
+    let items = response.body;
+    if (!items) {
+      items = [];
+    }
+    const xPage = response.headers.get('X-Page');
+    const xPageSize = response.headers.get('X-Page-Size');
+    const xPageCount = response.headers.get('X-Page-Count');
+    const xPageTotalCount = response.headers.get('X-Page-Total-Count');
+    const xTotalCount = response.headers.get('X-Total-Count');
     return of({
       page: {
-        index: Number(response.headers.get('X-Page')),
-        size: Number(response.headers.get('X-Page-Size')),
-        count: Number(response.headers.get('X-Page-Count')),
-        total: Number(response.headers.get('X-Page-Total-Count')),
+        index: xPage ? Number(xPage) : 0,
+        size: xPageSize ? Number(xPageSize) : 0,
+        count: xPageCount ? Number(xPageCount) : 0,
+        total: xPageTotalCount ? Number(xPageTotalCount) : 0,
       },
-      total: Number(response.headers.get('X-Total-Count')),
-      items: converter ? converter.toTargetArray(response.body) : response.body as unknown as V[]
+      total: xTotalCount ? Number(xTotalCount) : 0,
+      items: converter ? converter.toTargetArray(items) : items as unknown as V[]
     });
   }
 }
