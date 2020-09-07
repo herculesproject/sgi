@@ -175,7 +175,7 @@ public class MemoriaController {
    * @return la lista de entidades {@link Evaluacion} paginadas.
    */
   @GetMapping("/{id}/documentaciones")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-VR', 'ETI-EVC-EVALR')")
   ResponseEntity<Page<DocumentacionMemoria>> getDocumentaciones(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable pageable) {
     log.debug("getDocumentaciones(Long id, Pageable pageable) - start");

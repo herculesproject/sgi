@@ -1,8 +1,8 @@
 package org.crue.hercules.sgi.eti.repository.custom;
 
-import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
 import java.util.List;
 
+import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
@@ -39,4 +39,14 @@ public interface CustomEvaluacionRepository {
 
   Page<Evaluacion> findAllByMemoriaAndRetrospectivaEnEvaluacion(List<QueryCriteria> query, Pageable pageable);
 
+  /**
+   * Obtener todas las entidades {@link Evaluacion} paginadas asociadas a un
+   * evaluador
+   *
+   * @param personaRef Identificador del {@link Evaluacion}
+   * @param query      filtro de {@link QueryCriteria}.
+   * @param pageable   pageable
+   * @return la lista de entidades {@link Evaluacion} paginadas y/o filtradas.
+   */
+  Page<Evaluacion> findByEvaluador(String personaRef, List<QueryCriteria> query, Pageable pageable);
 }

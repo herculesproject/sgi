@@ -155,7 +155,6 @@ public class EvaluacionRepositoryTest {
     convocatoriaReunion.setActivo(Boolean.TRUE);
 
     return convocatoriaReunion;
-
   }
 
   @Test

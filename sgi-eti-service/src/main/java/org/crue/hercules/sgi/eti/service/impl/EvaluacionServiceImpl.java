@@ -6,6 +6,7 @@ import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.specification.EvaluacionSpecifications;
@@ -100,6 +101,24 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     Page<EvaluacionWithNumComentario> returnValue = evaluacionRepository.findEvaluacionesAnterioresByMemoria(idMemoria,
         idEvaluacion, pageable);
     log.debug("findEvaluacionesAnterioresByMemoria(Long id, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link Evaluacion} según su
+   * {@link Evaluador}.
+   * 
+   * @param personaRef Identificador del {@link Evaluacion}
+   * @param query      filtro de {@link QueryCriteria}.
+   * @param pageable   pageable
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+  @Override
+  public Page<Evaluacion> findByEvaluador(String personaRef, List<QueryCriteria> query, Pageable pageable) {
+    log.debug("findByEvaluador(Long id, Pageable pageable) - start");
+    Assert.notNull(personaRef, "El personaRef de la evaluación no puede ser nulo para mostrar sus evaluaciones");
+    Page<Evaluacion> returnValue = evaluacionRepository.findByEvaluador(personaRef, query, pageable);
+    log.debug("findByEvaluador(Long id, Pageable pageable) - end");
     return returnValue;
   }
 

@@ -402,6 +402,7 @@ public class EvaluacionServiceTest {
     Assertions.assertThat(result.getTotalElements()).isEqualTo(response.size());
   }
 
+  @Test
   public void findAllByMemoriaAndRetrospectivaEnEvaluacion_ReturnsFiltratedEvaluacionList() {
     // given: One hundred Evaluacion
     List<Evaluacion> evaluaciones = new ArrayList<>();
@@ -464,6 +465,44 @@ public class EvaluacionServiceTest {
       Assertions.assertThat(evaluacion.getMemoria().getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
       Assertions.assertThat(evaluacion.getDictamen().getNombre()).isEqualTo("Dictamen" + String.format("%03d", j));
     }
+  }
+
+  @Test
+  public void findByEvaluadorPersonaRef_IdNull() {
+    // given: Es personaRef es null
+    String personaRef = null;
+    try {
+      // when: se quiere listar sus evaluaciones
+      evaluacionService.findByEvaluador(personaRef, null, Pageable.unpaged());
+      Assertions.fail("El personaRef de la evaluación no puede ser nulo para mostrar sus evaluaciones");
+      // then: se debe lanzar una excepción
+    } catch (IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage())
+          .isEqualTo("El personaRef de la evaluación no puede ser nulo para mostrar sus evaluaciones");
+    }
+  }
+
+  @Test
+  public void findByEvaluadorPersonaRef_IdValid() {
+    // given: El personRef no es null
+    String personaRef = "user-001";
+    List<Evaluacion> response = new LinkedList<Evaluacion>();
+    response.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1)));
+    response.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3)));
+    response.add(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5)));
+    Page<Evaluacion> pageResponse = new PageImpl<>(response);
+    BDDMockito
+        .given(evaluacionRepository.findByEvaluador(ArgumentMatchers.anyString(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(response));
+
+    // when: se listar sus evaluaciones
+    Page<Evaluacion> result = evaluacionService.findByEvaluador(personaRef, null, Pageable.unpaged());
+
+    // then: recibe un listado
+    Assertions.assertThat(result).isEqualTo(pageResponse);
+    Assertions.assertThat(result.getContent()).isEqualTo(pageResponse.getContent());
+    Assertions.assertThat(result.getTotalElements()).isEqualTo(response.size());
   }
 
   /**

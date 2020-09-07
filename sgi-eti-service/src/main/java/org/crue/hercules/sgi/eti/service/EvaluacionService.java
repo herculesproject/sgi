@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.service;
 
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 
@@ -62,6 +63,17 @@ public interface EvaluacionService {
    */
   Page<EvaluacionWithNumComentario> findEvaluacionesAnterioresByMemoria(Long idMemoria, Long idEvaluacion,
       Pageable pageable);
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link Evaluacion} según su
+   * {@link Evaluador}.
+   * 
+   * @param personaRef Identificador del {@link Evaluacion}
+   * @param query      filtro de {@link QueryCriteria}.
+   * @param pageable   pageable
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+  Page<Evaluacion> findByEvaluador(String personaRef, List<QueryCriteria> query, Pageable pageable);
 
   /**
    * Obtener todas las entidades {@link Evaluacion} paginadas y/o filtradas.

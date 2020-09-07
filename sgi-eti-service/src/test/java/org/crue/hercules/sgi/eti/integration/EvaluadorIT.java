@@ -47,9 +47,9 @@ public class EvaluadorIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVALUADOR-EDITAR", "ETI-EVALUADOR-VER")));
-
+    if (!headers.containsKey("Authorization")) {
+      headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user")));
+    }
     HttpEntity<Evaluador> request = new HttpEntity<>(entity, headers);
     return request;
   }
@@ -251,7 +251,6 @@ public class EvaluadorIT {
     Assertions.assertThat(evaluadores.get(0).getResumen()).isEqualTo("Evaluador" + String.format("%03d", 3));
     Assertions.assertThat(evaluadores.get(1).getResumen()).isEqualTo("Evaluador" + String.format("%03d", 2));
     Assertions.assertThat(evaluadores.get(2).getResumen()).isEqualTo("Evaluador" + String.format("%03d", 1));
-
   }
 
   /**
