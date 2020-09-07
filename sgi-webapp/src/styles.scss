@@ -78,3 +78,16 @@ table {
 mat-form-field {
   width: 100%;
 }
+
+.separation-button {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  .mat-three {
+    background-color: #c8fbdf;
+    color: #5a5a5a;
+    width: 417px;
+    border-radius: 20px;
+    text-align: left;
+    min-width: 300px;
+  }
+}

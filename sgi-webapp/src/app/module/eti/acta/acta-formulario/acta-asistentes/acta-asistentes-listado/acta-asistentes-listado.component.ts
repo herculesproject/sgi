@@ -125,14 +125,14 @@ export class ActaAsistentesListadoComponent extends AbstractTabComponent<IAsiste
 
                 const listObservables: Observable<IAsistente>[] = [];
 
-                response.items.forEach((asistente) => {
-                  const asistente$ = this.personaFisicaService.getInformacionBasica(asistente.evaluador.personaRef).pipe(
+                response.items.forEach((iasistente) => {
+                  const asistente$ = this.personaFisicaService.getInformacionBasica(iasistente.evaluador.personaRef).pipe(
                     map((usuarioInfo) => {
-                      asistente.evaluador.identificadorNumero = usuarioInfo.identificadorNumero;
-                      asistente.evaluador.nombre = usuarioInfo.nombre;
-                      asistente.evaluador.primerApellido = usuarioInfo.primerApellido;
-                      asistente.evaluador.segundoApellido = usuarioInfo.segundoApellido;
-                      return asistente;
+                      iasistente.evaluador.identificadorNumero = usuarioInfo.identificadorNumero;
+                      iasistente.evaluador.nombre = usuarioInfo.nombre;
+                      iasistente.evaluador.primerApellido = usuarioInfo.primerApellido;
+                      iasistente.evaluador.segundoApellido = usuarioInfo.segundoApellido;
+                      return iasistente;
                     })
                   );
                   listObservables.push(asistente$);

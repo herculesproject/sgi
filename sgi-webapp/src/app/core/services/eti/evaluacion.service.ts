@@ -1,22 +1,22 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Comentario } from '@core/models/eti/comentario';
+import { IEvaluacionSolicitante } from '@core/models/eti/dto/evaluacion-solicitante';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { environment } from '@env';
+import { SgiBaseConverter } from '@sgi/framework/core';
 import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { EvaluacionConSolicitante } from '@core/models/eti/evaluacion-con-solicitante';
-import { SgiBaseConverter } from '@sgi/framework/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EvaluacionService extends SgiRestService<number, IEvaluacion>{
   private static readonly MAPPING = '/evaluaciones';
-  private static readonly CONVERTER_EVALUACIONES_SOLICITANTES = new class extends SgiBaseConverter<IEvaluacion, EvaluacionConSolicitante> {
-    toTarget(value: IEvaluacion): EvaluacionConSolicitante {
+  private static readonly CONVERTER_EVALUACIONES_SOLICITANTES = new class extends SgiBaseConverter<IEvaluacion, IEvaluacionSolicitante> {
+    toTarget(value: IEvaluacion): IEvaluacionSolicitante {
       return {
         id: value.id,
         memoria: value.memoria,
@@ -31,7 +31,7 @@ export class EvaluacionService extends SgiRestService<number, IEvaluacion>{
         persona: null
       };
     }
-    fromTarget(value: EvaluacionConSolicitante): IEvaluacion {
+    fromTarget(value: IEvaluacionSolicitante): IEvaluacion {
       return {
         id: value.id,
         memoria: value.memoria,
@@ -134,26 +134,13 @@ export class EvaluacionService extends SgiRestService<number, IEvaluacion>{
    * ambas en su última versión (que serán las que no estén evaluadas).
    * @param options SgiRestFindOptions.
    */
-  findAllByMemoriaAndRetrospectivaEnEvaluacion(options?: SgiRestFindOptions) {
+  findAllByMemoriaAndRetrospectivaEnEvaluacion(options?: SgiRestFindOptions): Observable<SgiRestListResult<IEvaluacionSolicitante>> {
     this.logger.debug(EvaluacionService.name, `findAllByMemoriaAndRetrospectivaEnEvaluacion
     (${options ? JSON.stringify(options) : ''})`, '-', 'START');
-    return this.find<IEvaluacion, EvaluacionConSolicitante>(`${environment.serviceServers.eti}${EvaluacionService.MAPPING}/evaluables`,
+    return this.find<IEvaluacion, IEvaluacionSolicitante>(`${environment.serviceServers.eti}${EvaluacionService.MAPPING}/evaluables`,
       options, EvaluacionService.CONVERTER_EVALUACIONES_SOLICITANTES).pipe(
         tap(() => {
           this.logger.debug(EvaluacionService.name, `findAllByMemoriaAndRetrospectivaEnEvaluacion(${options ? JSON.stringify(options) : ''})`, '-', 'END');
-        }));
-  }
-
-  /**
-   * Se recuperan las evaluaciones
-   * @param options SgiRestFindOptions.
-   */
-  findAllConSolicitante(options?: SgiRestFindOptions) {
-    this.logger.debug(EvaluacionService.name, `findAllConSolicitante(${options ? JSON.stringify(options) : ''})`, '-', 'START');
-    return this.find<IEvaluacion, EvaluacionConSolicitante>(`${environment.serviceServers.eti}${EvaluacionService.MAPPING}`,
-      options, EvaluacionService.CONVERTER_EVALUACIONES_SOLICITANTES).pipe(
-        tap(() => {
-          this.logger.debug(EvaluacionService.name, `findAllConSolicitante(${options ? JSON.stringify(options) : ''})`, '-', 'END');
         }));
   }
 }

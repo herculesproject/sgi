@@ -105,9 +105,9 @@
     <ng-container matColumnDef="solicitante">
       <th mat-header-cell *matHeaderCellDef> {{'eti.evaluacion.listado.solicitante' | translate}}
       </th>
-      <td mat-cell *matCellDef="let evaluacion">{{evaluacion.persona.nombre}}
-        {{evaluacion.persona.primerApellido}}
-        {{evaluacion.persona.segundoApellido}}</td>
+      <td mat-cell *matCellDef="let evaluacion">{{evaluacion.persona?.nombre}}
+        {{evaluacion.persona?.primerApellido}}
+        {{evaluacion.persona?.segundoApellido}}</td>
     </ng-container>
 
     <!-- Versión -->
@@ -121,7 +121,8 @@
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> {{'eti.evaluacion.listado.acciones' | translate}} </th>
       <td mat-cell *matCellDef="let evaluacion">
-        <button mat-button [routerLink]="[evaluacion.id]" matTooltip="{{'eti.evaluacion.listado.evaluar' | translate}}">
+        <button mat-button [routerLink]="[evaluacion.id]" matTooltip="{{'eti.evaluacion.listado.evaluar' | translate}}"
+          *sgiHasAuthorityForAnyUO="'ETI-EVC-EVALR'">
           <mat-icon color="primary">border_color</mat-icon>
         </button>
         <button mat-button matTooltip="{{'eti.evaluacion.listado.borrar' | translate}}">

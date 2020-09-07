@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Persona } from '@core/models/sgp/persona';
 import { environment } from '@env';
-import { SgiRestService, SgiRestFindOptions } from '@sgi/framework/http';
+import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -23,14 +23,18 @@ export class PersonaFisicaService extends SgiRestService<string, Persona>{
    * @param personaRef referencia de la persona.
    */
   getInformacionBasica(personaRef: string): Observable<Persona> {
-    return this.http.get<Persona>(`${this.endpointUrl}/persona/${personaRef}`);
+    this.logger.debug(PersonaFisicaService.name, `getInformacionBasica(${personaRef})`, '-', 'START');
+    return this.http.get<Persona>(`${this.endpointUrl}/persona/${personaRef}`).pipe(
+      tap(() => this.logger.debug(PersonaFisicaService.name,
+        this.logger.debug(PersonaFisicaService.name, `getInformacionBasica(${personaRef})`, '-', 'END')))
+    );
   }
 
   /**
    * Devuelve todas las personas con su información básica
    * @param options sgiRestFindOptions.
    */
-  findAllPersonas(options?: SgiRestFindOptions) {
+  findAllPersonas(options?: SgiRestFindOptions): Observable<SgiRestListResult<Persona>> {
     this.logger.debug(PersonaFisicaService.name,
       `findAllPersonas(filter:${options.filters},page:${options.page}),sort:${options.sort}`, '-', 'START');
     return this.find<Persona, Persona>(`${this.endpointUrl}/persona/`, options).pipe(

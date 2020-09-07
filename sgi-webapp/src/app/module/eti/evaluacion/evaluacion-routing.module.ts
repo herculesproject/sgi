@@ -1,6 +1,6 @@
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { SgiAuthGuard, SgiAuthRoutes } from '@sgi/framework/auth';
 
 import { EvaluacionEvaluarComponent } from './evaluacion-evaluar/evaluacion-evaluar.component';
@@ -16,7 +16,7 @@ const routes: SgiAuthRoutes = [
     canActivate: [SgiAuthGuard],
     data: {
       title: MSG_LISTADO_TITLE,
-      hasAnyAuthorityForAnyUO: ['ETI-EVC-V', 'ETI-EVC-VR']
+      hasAnyAuthorityForAnyUO: ['ETI-EVC-VR', 'ETI-EVC-EVALR']
     }
   },
   {

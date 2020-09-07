@@ -7,6 +7,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthService } from '@sgi/framework/auth';
+import { BuscarPersonaComponent } from '@shared/buscar-persona/buscar-persona.component';
 import { NGXLogger } from 'ngx-logger';
 
 import { GestionEvaluacionListadoComponent } from './gestion-evaluacion-listado.component';
@@ -17,7 +19,10 @@ describe('GestionEvaluacionListadoComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [GestionEvaluacionListadoComponent],
+      declarations: [
+        GestionEvaluacionListadoComponent,
+        BuscarPersonaComponent
+      ],
       imports: [
         RouterTestingModule,
         MaterialDesignModule,
@@ -30,7 +35,8 @@ describe('GestionEvaluacionListadoComponent', () => {
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-        { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() }
+        { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
+        SgiAuthService
       ],
     })
       .compileComponents();

@@ -31,7 +31,8 @@ import { EvaluacionRoutingModule } from './evaluacion-routing.module';
     EvaluacionComentariosComponent,
     EvaluacionDatosMemoriaComponent,
     EvaluacionDocumentacionComponent,
-    EvaluacionListadoAnteriorMemoriaComponent
+    EvaluacionListadoAnteriorMemoriaComponent,
+    EvaluacionListadoComponent
   ],
   imports: [
     SharedModule,

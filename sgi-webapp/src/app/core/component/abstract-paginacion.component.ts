@@ -73,7 +73,7 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, OnDestro
   /**
    * Load table data
    */
-  onSearch() {
+  onSearch(): void {
     this.logger.debug(AbstractPaginacionComponent.name, 'onSearch()', 'start');
     this.filter = this.createFiltros();
     this.loadTable(true);
@@ -83,7 +83,7 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, OnDestro
   /**
    * Clean filters an reload the table
    */
-  onClearFilters() {
+  onClearFilters(): void {
     this.logger.debug(AbstractPaginacionComponent.name, 'onClearFilters()', 'start');
     FormGroupUtil.clean(this.formGroup);
     this.filter = [{

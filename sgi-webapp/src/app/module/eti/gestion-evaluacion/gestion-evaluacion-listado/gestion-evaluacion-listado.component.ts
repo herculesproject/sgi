@@ -17,7 +17,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
-import { EvaluacionConSolicitante } from '@core/models/eti/evaluacion-con-solicitante';
+import { IEvaluacionSolicitante } from '@core/models/eti/dto/evaluacion-solicitante';
 
 const MSG_ERROR = marker('eti.evaluacion.listado.error');
 const MSG_ERROR_LOAD_TIPOS_CONVOCATORIA = marker('eti.evaluacion.listado.buscador.tipoConvocatoria.error');
@@ -42,7 +42,7 @@ export class GestionEvaluacionListadoComponent implements OnInit, OnDestroy, Aft
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
-  evaluaciones$: Observable<EvaluacionConSolicitante[]> = of();
+  evaluaciones$: Observable<IEvaluacionSolicitante[]> = of();
 
   comiteListado: Comite[];
   comitesSubscription: Subscription;
@@ -162,7 +162,7 @@ export class GestionEvaluacionListadoComponent implements OnInit, OnDestroy, Aft
 
           if (response.items) {
             // Solicitantes
-            const listObservables: Observable<EvaluacionConSolicitante>[] = [];
+            const listObservables: Observable<IEvaluacionSolicitante>[] = [];
             response.items.forEach((evaluacion) => {
               const evaluacion$ = this.personaFisicaService.getInformacionBasica(evaluacion.memoria?.peticionEvaluacion?.personaRef).pipe(
                 map((personaInfo) => {

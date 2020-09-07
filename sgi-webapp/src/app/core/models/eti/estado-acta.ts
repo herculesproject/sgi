@@ -1,21 +1,14 @@
-import { Acta } from './acta';
+import { IActa } from './acta';
 import { TipoEstadoActa } from './tipo-estado-acta';
 
-export class EstadoActa {
+export interface IEstadoActa {
 
   /** ID */
   id: number;
   /** Acta */
-  acta: Acta;
+  acta: IActa;
   /** Tipo estado acta */
   tipoEstadoActa: TipoEstadoActa;
   /** Fecha Estado */
   fechaEstado: Date;
-
-  constructor(acta: Acta, tipoEstadoActa: TipoEstadoActa, fechaEstado: Date) {
-    this.tipoEstadoActa = tipoEstadoActa;
-    this.fechaEstado = fechaEstado;
-    this.acta = acta;
-  }
-
 }

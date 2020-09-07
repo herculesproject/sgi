@@ -1,14 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { EtiRootComponent } from './eti-root.component';
-import { NGXLogger } from 'ngx-logger';
-import TestUtils from '@core/utils/test-utils';
-import { RootComponent } from '@shared/root/root.component';
-import { MaterialDesignModule } from '@material/material-design.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import TestUtils from '@core/utils/test-utils';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { BreadcrumbComponent } from '@shared/breadcrumb/breadcrumb.component';
+import { RootComponent } from '@shared/root/root.component';
+import { NGXLogger } from 'ngx-logger';
+
 import { EtiMenuPrincipalComponent } from '../eti-menu-principal/eti-menu-principal.component';
+import { EtiRootComponent } from './eti-root.component';
 
 describe('EtiRootComponent', () => {
   let component: EtiRootComponent;
@@ -26,10 +27,12 @@ describe('EtiRootComponent', () => {
         BrowserAnimationsModule,
         TestUtils.getIdiomas(),
         MaterialDesignModule,
-        RouterTestingModule.withRoutes([])
+        RouterTestingModule.withRoutes([]),
+        SgiAuthModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+        SgiAuthService
       ],
     })
       .compileComponents();

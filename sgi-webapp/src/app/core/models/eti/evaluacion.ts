@@ -3,7 +3,6 @@ import { ConvocatoriaReunion } from './convocatoria-reunion';
 import { Dictamen } from './dictamen';
 import { Memoria } from './memoria';
 import { TipoEvaluacion } from './tipo-evaluacion';
-import { Persona } from '../sgp/persona';
 
 export interface IEvaluacion {
   /** ID */
