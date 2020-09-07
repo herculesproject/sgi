@@ -31,6 +31,7 @@ const MSG_BUTTON_SAVE = marker('footer.eti.evaluador.crear');
 const TEXT_USER_TITLE = marker('eti.buscarUsuario.titulo');
 const TEXT_USER_BUTTON = marker('eti.buscarUsuario.boton.buscar');
 
+
 @Component({
   selector: 'sgi-evaluador-listado',
   templateUrl: './evaluador-listado.component.html',

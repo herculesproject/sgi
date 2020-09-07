@@ -1,10 +1,6 @@
-<section class="modal-editar-asistencia">
+<div class="modal-editar-asistentes">
   <header class="modal-header-material">
-    <h1 mat-dialog-title>{{'eti.acta.asistentes.editar.titulo' | translate}}
-      <button type="button" class="close" aria-label="Close" (click)="closeModal()">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </h1>
+    <h3 mat-dialog-title>{{'eti.acta.asistentes.editar.titulo' | translate}}</h3>
   </header>
   <main>
     <form [formGroup]="formGroup">
@@ -38,7 +34,7 @@
     </form>
   </main>
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
-    <button (click)="closeModal()" class="btn btn-outline-danger input-modal" type="button">Cancelar</button>
-    <button (click)="editComentario()" class="btn btn-outline-success input-modal" type="submit">Guardar</button>
+    <button color="accent" md-button mat-raised-button mat-dialog-close type="submit">Guardar</button>
+    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">Cancelar</button>
   </div>
-</section>
+</div>

@@ -77,8 +77,8 @@ export class EvaluadorDatosGeneralesComponent extends AbstractTabComponent<IEval
   ) {
     super(logger);
     this.fxFlexProperties = new FxFlexProperties();
-    this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
-    this.fxFlexProperties.md = '0 1 calc(33%-10px)';
+    this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
+    this.fxFlexProperties.md = '0 1 calc(50%-10px)';
     this.fxFlexProperties.gtMd = '0 1 calc(22%-10px)';
     this.fxFlexProperties.order = '2';
 

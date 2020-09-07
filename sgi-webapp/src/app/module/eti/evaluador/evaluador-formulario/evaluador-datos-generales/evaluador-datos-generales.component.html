@@ -1,14 +1,18 @@
 <!-- Evaluador datos generales -->
 <section class="evaluador-datos-generales">
-  <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
-    fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+
+  <div class="separacion">
     <sgi-buscar-persona [textoLabel]="textoUsuarioLabel" [textoInput]="textoUsuarioInput"
       [textoButton]="textoUsuarioButton" [datosUsuarioTexto]="datosUsuarioEvaluadorEditado" (usuarioSeleccionado)="
-        setUsuario($event)"></sgi-buscar-persona>
+                    setUsuario($event)"></sgi-buscar-persona>
+  </div>
+
+  <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+    [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
     <!-- Comité -->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field appearance="fill">
+      <mat-form-field>
         <mat-label>{{'eti.evaluador.datosGenerales.comite.titulo' | translate}}</mat-label>
         <input type="text" [placeholder]="'eti.evaluador.datosGenerales.comite.titulo' | translate" arial-label="Number"
           matInput formControlName="comite" [matAutocomplete]="autocompleteComite">
@@ -26,7 +30,7 @@
     <!-- Fecha de alta -->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field appearance="fill">
+      <mat-form-field>
         <mat-label>{{'eti.evaluador.datosGenerales.fechaAlta.titulo' | translate}}</mat-label>
         <input matInput formControlName="fechaAlta" type="date"
           placeholder="{{'eti.evaluador.datosGenerales.fechaAlta.titulo' | translate}}" required>
@@ -40,7 +44,7 @@
     <!-- Fecha de baja -->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field appearance="fill">
+      <mat-form-field>
         <mat-label>{{'eti.evaluador.datosGenerales.fechaBaja.titulo' | translate}}</mat-label>
         <input matInput formControlName="fechaBaja" type="date"
           placeholder="{{'eti.evaluador.datosGenerales.fechaBaja.titulo' | translate}}">
@@ -54,7 +58,7 @@
     <!-- Cargo comité -->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field appearance="fill">
+      <mat-form-field>
         <mat-label>{{'eti.evaluador.datosGenerales.cargoComite.titulo' | translate}}</mat-label>
         <input type="text" [placeholder]="'eti.evaluador.datosGenerales.cargoComite.titulo' | translate"
           arial-label="Number" matInput formControlName="cargoComite" [matAutocomplete]="autocompleteCargoComite">
@@ -73,7 +77,7 @@
     <!-- Resumen -->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field appearance="fill">
+      <mat-form-field>
         <mat-label>{{'eti.evaluador.datosGenerales.resumen.titulo' | translate}}</mat-label>
         <textarea #nombre matInput formControlName="resumen" type="textarea" id="resumen"
           placeholder="{{'eti.evaluador.datosGenerales.resumen.titulo' | translate}}" maxlength="2000"></textarea>

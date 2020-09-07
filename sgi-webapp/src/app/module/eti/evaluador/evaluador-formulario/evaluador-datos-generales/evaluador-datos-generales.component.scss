@@ -1,11 +1,15 @@
 @import "variables.scss";
 
-.evaluador-datos-generales{
+.evaluador-datos-generales {
   .footer-button {
     padding-top: 15px;
     button {
       margin-right: 15px;
     }
+  }
+  .separacion {
+    padding-top: 10px;
+    padding-bottom: 20px;
   }
 }
 
