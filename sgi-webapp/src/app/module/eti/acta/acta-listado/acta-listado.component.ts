@@ -19,13 +19,12 @@ import { ComiteService } from '@core/services/eti/comite.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TipoEstadoActaService } from '@core/services/eti/tipo-estado-acta.service';
 
-
 import { DateUtils } from '@core/utils/date-utils';
-
 import { IActaEvaluaciones } from '@core/models/eti/acta-evaluaciones';
 import { ActaService } from '@core/services/eti/acta.service';
 import { ROUTE_NAMES } from '@core/route.names';
 import { Router, ActivatedRoute } from '@angular/router';
+import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 
 const MSG_BUTTON_NEW = marker('footer.eti.acta.crear');
 const MSG_ERROR = marker('eti.acta.listado.error');
@@ -74,6 +73,7 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
     private readonly comiteService: ComiteService,
     private readonly tipoEstadoActaService: TipoEstadoActaService,
     private readonly router: Router,
+    private readonly evaluacionService: EvaluacionService,
     private route: ActivatedRoute,
   ) {
     this.displayedColumns = ['comite', 'fechaEvaluacion', 'numero', 'convocatoria',

@@ -28,4 +28,21 @@ export class EvaluadorService extends SgiRestService<number, IEvaluador> {
           `getEvaluaciones(${userRefId}, ${options ? JSON.stringify(options) : options})`, '-', 'end'))
       );
   }
+
+  /**
+   * Devuelve los seguimientos cuyo evaluador sea el usuario en sesión
+   *
+   * @param userRefId Identificador del usuario
+   * @param options Opciones de filtrado y ordenación
+   */
+  getSeguimientos(userRefId: string, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IEvaluacion>> {
+    this.logger.debug(EvaluadorService.name,
+      `getSeguimientos(${userRefId}, ${options ? JSON.stringify(options) : options})`, '-', 'start');
+    return this.find<IEvaluacion, IEvaluacion>
+      (`${this.endpointUrl}/${userRefId}/evaluaciones-seguimiento`, options).pipe(
+        tap(() => this.logger.debug(EvaluadorService.name,
+          `getSeguimientos(${userRefId}, ${options ? JSON.stringify(options) : options})`, '-', 'end'))
+      );
+  }
 }

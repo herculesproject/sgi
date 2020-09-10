@@ -1,12 +1,12 @@
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { SgiAuthGuard } from '@sgi/framework/auth';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { SgiRoutes } from '@core/route';
-import { InicioComponent } from './inicio/inicio.component';
-import { ETI_ROUTE_NAMES } from './eti-route-names';
+import { SgiAuthGuard } from '@sgi/framework/auth';
 
 import { EtiRootComponent } from './eti-root/eti-root.component';
+import { ETI_ROUTE_NAMES } from './eti-route-names';
+import { InicioComponent } from './inicio/inicio.component';
 
 const MSG_ROOT_TITLE = marker('eti.root.title');
 const MSG_SOLICITUDES_CONVOCATORIA_TITLE = marker('menu.principal.eti.solicitudesConvocatoria');
@@ -14,6 +14,7 @@ const MSG_EVALUACIONES_TITLE = marker('menu.principal.eti.evaluaciones');
 const MSG_GESTION_EVALUACIONES_TITLE = marker('menu.principal.eti.gestionEvaluaciones');
 const MSG_ACTAS_TITLE = marker('menu.principal.eti.acta');
 const MSG_EVALUADORES_TITLE = marker('menu.principal.eti.evaluador');
+const MSG_SEGUIMIENTOS_TITLE = marker('menu.principal.eti.seguimientos');
 
 const routes: SgiRoutes = [
   {
@@ -94,6 +95,18 @@ const routes: SgiRoutes = [
         data: {
           title: MSG_EVALUADORES_TITLE,
           hasAnyAuthorityForAnyUO: ['ETI-EVR-V', 'ETI-EVR-C', 'ETI-EVR-E', 'ETI-EVR-B']
+        }
+      },
+      {
+        path: ETI_ROUTE_NAMES.SEGUIMIENTOS,
+        loadChildren: () =>
+          import('./seguimiento/seguimiento.module').then(
+            (m) => m.EvaluacionModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_SEGUIMIENTOS_TITLE,
+          hasAnyAuthorityForAnyUO: ['ETI-EVC-VR', 'ETI-EVC-EVALR']
         }
       },
       { path: '**', component: null }

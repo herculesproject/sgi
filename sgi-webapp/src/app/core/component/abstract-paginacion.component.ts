@@ -31,7 +31,9 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, OnDestro
     protected readonly snackBarService: SnackBarService,
     protected readonly msgError: string
   ) {
+    this.logger.debug(AbstractPaginacionComponent.name, 'constructor()', 'start');
     this.elementosPagina = [5, 10, 25, 100];
+    this.logger.debug(AbstractPaginacionComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
@@ -128,11 +130,6 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, OnDestro
   }
 
   /**
-   * Crea la petición al servidor para cargar los datos de la tabla
-   */
-  protected abstract createObservable(): Observable<SgiRestListResult<T>>;
-
-  /**
    * Crea las opciones para el listado que devuelve el servidor.
    * Hay que añadirlo al método del servicio que llamamos
    *
@@ -156,8 +153,7 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, OnDestro
   }
 
   protected addFiltro(filtros: SgiRestFilter[], nombre: string, tipo: SgiRestFilterType, valor: any): void {
-    this.logger.debug(AbstractPaginacionComponent.name,
-      `agregarFiltro([${filtros}], ${nombre}, ${tipo} , ${valor})`, 'start');
+    this.logger.debug(AbstractPaginacionComponent.name, `agregarFiltro([${filtros}], ${nombre}, ${tipo} , ${valor})`, 'start');
     if (valor) {
       const filtro: SgiRestFilter = {
         field: nombre,
@@ -166,9 +162,22 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, OnDestro
       };
       filtros.push(filtro);
     }
-    this.logger.debug(AbstractPaginacionComponent.name,
-      `agregarFiltro([${filtros}], ${nombre}, ${tipo} , ${valor})`, 'end');
+    this.logger.debug(AbstractPaginacionComponent.name, `agregarFiltro([${filtros}], ${nombre}, ${tipo} , ${valor})`, 'end');
   }
+
+  /**
+   * Muestra un mensaje de error si se produce un error al cargar los datos de la tabla
+   */
+  protected showMensajeErrorLoadTable(): void {
+    this.logger.debug(AbstractPaginacionComponent.name, 'showMensajeErrorLoadTable()', 'start');
+    this.snackBarService.showError(this.msgError);
+    this.logger.debug(AbstractPaginacionComponent.name, 'showMensajeErrorLoadTable()', 'end');
+  }
+
+  /**
+   * Crea la petición al servidor para cargar los datos de la tabla
+   */
+  protected abstract createObservable(): Observable<SgiRestListResult<T>>;
 
   /**
    * Crea e indica el orden las columnas de la tabla
@@ -181,15 +190,6 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, OnDestro
    * @param reset Indica si reinicializa la paginación
    */
   protected abstract loadTable(reset?: boolean): void;
-
-  /**
-   * Muestra un mensaje de error si se produce un error al cargar los datos de la tabla
-   */
-  protected showMensajeErrorLoadTable(): void {
-    this.logger.debug(AbstractPaginacionComponent.name, 'showMensajeErrorLoadTable()', 'start');
-    this.snackBarService.showError(this.msgError);
-    this.logger.debug(AbstractPaginacionComponent.name, 'showMensajeErrorLoadTable()', 'end');
-  }
 
   /**
    * Crea los filtros para el listado

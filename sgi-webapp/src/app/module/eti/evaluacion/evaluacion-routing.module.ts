@@ -25,7 +25,7 @@ const routes: SgiAuthRoutes = [
     canActivate: [SgiAuthGuard],
     data: {
       title: MSG_EVALUAR_TITLE,
-      hasAnyAuthorityForAnyUO: ['ETI-EVC-EVAL', 'ETI-EVC-EVALR']
+      hasAnyAuthorityForAnyUO: ['ETI-EVC-EVALR']
     }
   }
 ];

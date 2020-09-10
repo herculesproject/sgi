@@ -3,5 +3,6 @@ export const ETI_ROUTE_NAMES = {
   ACTAS: 'actas',
   EVALUACIONES: 'evaluaciones',
   EVALUADORES: 'evaluadores',
-  GESTION_EVALUACIONES: 'gestion-evaluaciones'
+  GESTION_EVALUACIONES: 'gestion-evaluaciones',
+  SEGUIMIENTOS: 'seguimientos'
 };
