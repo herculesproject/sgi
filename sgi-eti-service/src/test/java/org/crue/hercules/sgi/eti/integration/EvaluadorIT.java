@@ -8,6 +8,7 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
@@ -41,7 +42,9 @@ public class EvaluadorIT {
   private TokenBuilder tokenBuilder;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PARAMETER_PERSONA_REF = "/{personaRef}";
   private static final String EVALUADOR_CONTROLLER_BASE_PATH = "/evaluadores";
+  private static final String PATH_PARAMETER_EVALUACIONES = "/evaluaciones";
 
   private HttpEntity<Evaluador> buildRequest(HttpHeaders headers, Evaluador entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -251,6 +254,68 @@ public class EvaluadorIT {
     Assertions.assertThat(evaluadores.get(0).getResumen()).isEqualTo("Evaluador" + String.format("%03d", 3));
     Assertions.assertThat(evaluadores.get(1).getResumen()).isEqualTo("Evaluador" + String.format("%03d", 2));
     Assertions.assertThat(evaluadores.get(2).getResumen()).isEqualTo("Evaluador" + String.format("%03d", 1));
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findByEvaluadorPersonaRef_Unlimited_ReturnsEmptyEvaluacionList() throws Exception {
+    // when: Obtiene la page=1 con pagesize=5
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "5");
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-VR", "ETI-EVC-EVALR")));
+
+    final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(
+        EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_PERSONA_REF + PATH_PARAMETER_EVALUACIONES, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
+        }, "user-001");
+
+    // then: Respuesta OK, retorna la información de la página correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findEvaluacionesEnSeguimiento_Unlimited_ReturnsEmptyEvaluacionList() throws Exception {
+    // when: Obtiene la page=1 con pagesize=5
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "5");
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-VR", "ETI-EVC-EVALR")));
+
+    final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(
+        EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_PERSONA_REF + "/evaluaciones-seguimiento", HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
+        }, "user-001");
+
+    // then: Respuesta OK, retorna la información de la página correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findEvaluacionesEnSeguimiento_Unlimited_ReturnsEvaluacionList() throws Exception {
+    // when: Obtiene la page=1 con pagesize=5
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "5");
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-VR", "ETI-EVC-EVALR")));
+
+    final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(
+        EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_PERSONA_REF + "/evaluaciones-seguimiento", HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
+        }, "user-006");
+
+    // then: Respuesta OK, retorna la información de la página correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Evaluacion> evaluaciones = response.getBody();
+    Assertions.assertThat(evaluaciones.size()).isEqualTo(1);
   }
 
   /**

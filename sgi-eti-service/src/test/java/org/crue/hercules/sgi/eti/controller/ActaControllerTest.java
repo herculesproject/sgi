@@ -410,7 +410,7 @@ public class ActaControllerTest {
   /**
    * Función que devuelve un objeto ActaWithNumEvaluaciones
    * 
-   * @param acta   id del acta
+   * @param id   id del acta
    * @param numero numero del acta
    * @return el objeto Acta
    */

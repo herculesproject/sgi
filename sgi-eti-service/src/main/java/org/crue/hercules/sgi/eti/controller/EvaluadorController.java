@@ -38,10 +38,11 @@ public class EvaluadorController {
   /** Evaluador service */
   private final EvaluadorService evaluadorService;
 
+  /** Evaluación service. */
   private final EvaluacionService evaluacionService;
 
   /**
-   * Instancia un nuevo EvaluadorController.
+   * Instancia un nuevo EvaluadorController. x
    * 
    * @param evaluadorService  EvaluadorService
    * @param evaluacionService EvaluacionService
@@ -148,6 +149,33 @@ public class EvaluadorController {
     log.debug("getEvaluaciones(String personaRef, List<QueryCriteria> query, Pageable pageable) - start");
     Page<Evaluacion> page = evaluacionService.findByEvaluador(personaRef, query, pageable);
     log.debug("getEvaluaciones(String personaRef, List<QueryCriteria> query, Pageable pageable) - end");
+    if (page.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Obtiene todas las entidades {@link Evaluacion}, en estado "En evaluación
+   * seguimiento anual" (id = 11), "En evaluación seguimiento final" (id = 12) o
+   * "En secretaría seguimiento final aclaraciones" (id = 13), paginadas asociadas
+   * a un evaluador
+   * 
+   * @param personaRef Persona Ref del {@link Evaluador}
+   * @param query      filtro de {@link QueryCriteria}.
+   * @param pageable   pageable
+   * @return la lista de entidades {@link Evaluacion} paginadas y/o filtradas.
+   */
+  @GetMapping("/{personaRef}/evaluaciones-seguimiento")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-VR', 'ETI-EVC-EVALR')")
+  ResponseEntity<Page<Evaluacion>> findEvaluacionesEnSeguimiento(@PathVariable String personaRef,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable pageable) {
+
+    log.debug("findEvaluacionesEnSeguimiento(String personaRef, List<QueryCriteria> query, Pageable pageable) - start");
+    Page<Evaluacion> page = evaluacionService.findEvaluacionesEnSeguimientosByEvaluador(personaRef, query, pageable);
+
+    log.debug("findEvaluacionesEnSeguimiento(String personaRef, List<QueryCriteria> query, Pageable pageable) - end");
     if (page.isEmpty()) {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

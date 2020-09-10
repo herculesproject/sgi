@@ -297,7 +297,8 @@ public class DocumentacionMemoriaIT {
   /**
    * Función que devuelve un objeto Memoria
    * 
-   * @param id id del Memoria
+   * @param id     id del Memoria
+   * @param titulo título de la memoria
    * @return el objeto Memoria
    */
 

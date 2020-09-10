@@ -737,20 +737,12 @@
     <addForeignKeyConstraint baseColumnNames="peticion_evaluacion_id" baseTableName="memoria" constraintName="memoria_peticion_evaluacion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="peticion_evaluacion" validate="true" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-memoria_retrospectiva_FK">
+    <addForeignKeyConstraint baseColumnNames="retrospectiva_id" baseTableName="memoria" constraintName="memoria_retrospectiva_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="retrospectiva" validate="true" />
+  </changeSet>
+
   <changeSet author="master" id="20200601000000-memoria_estado_actual_FK">
     <addForeignKeyConstraint baseColumnNames="estado_actual_id" baseTableName="memoria" constraintName="memoria_estado_actual_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_estado_memoria" validate="true" />
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-memoria_comite_FK">
-    <addForeignKeyConstraint baseColumnNames="comite_id" baseTableName="memoria" constraintName="memoria_comite_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="comite" validate="true" />
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-memoria_tipo_memoria_FK">
-    <addForeignKeyConstraint baseColumnNames="tipo_memoria_id" baseTableName="memoria" constraintName="memoria_tipo_memoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_memoria" validate="true" />
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-memoria_peticion_evaluacion_FK">
-    <addForeignKeyConstraint baseColumnNames="peticion_evaluacion_id" baseTableName="memoria" constraintName="memoria_peticion_evaluacion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="peticion_evaluacion" validate="true" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-tarea_equipo_trabajo_FK">

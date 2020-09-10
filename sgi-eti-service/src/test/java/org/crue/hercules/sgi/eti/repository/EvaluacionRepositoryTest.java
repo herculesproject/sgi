@@ -133,8 +133,8 @@ public class EvaluacionRepositoryTest {
   /**
    * Función que devuelve un objeto ConvocatoriaReunion
    * 
-   * @param comite
-   * @param tipoConvocatoriaReunion
+   * @param comite                  el objeto Comite
+   * @param tipoConvocatoriaReunion el objeto TipoConvocatoriaReunion
    * @return ConvocatoriaReunion
    */
   public ConvocatoriaReunion generarMockConvocatoriaReunion(Comite comite,
@@ -265,7 +265,7 @@ public class EvaluacionRepositoryTest {
   /**
    * Función que devuelve un objeto TipoEvaluacion
    * 
-   * @param tipoEvaluacion
+   * @param tipoEvaluacion el objeto TipoEvaluacion
    * @return Dictamen
    */
   public Dictamen generarMockDictamen(TipoEvaluacion tipoEvaluacion) {
@@ -293,7 +293,7 @@ public class EvaluacionRepositoryTest {
   /**
    * Función que devuelve un objeto PeticionEvaluacion
    * 
-   * @param tipoActividad
+   * @param tipoActividad el objeto TipoActividad
    * @return PeticionEvaluacion
    */
   public PeticionEvaluacion generarMockPeticionEvaluacion(TipoActividad tipoActividad) {
@@ -332,7 +332,7 @@ public class EvaluacionRepositoryTest {
   /**
    * Función que devuelve un objeto Retrospectiva
    * 
-   * @param estadoRetrospectiva
+   * @param estadoRetrospectiva el objeto EstadoRetrospectiva
    * @return Retrospectiva
    */
   public Retrospectiva generarMockRetrospectiva(EstadoRetrospectiva estadoRetrospectiva) {
@@ -342,11 +342,11 @@ public class EvaluacionRepositoryTest {
   /**
    * Función que devuelve un objeto Memoria
    * 
-   * @param peticionEvaluacion
-   * @param comite
-   * @param tipoMemoria
-   * @param tipoEstadoMemoria
-   * @param retrospectiva
+   * @param peticionEvaluacion el objeto PeticionEvaluacion
+   * @param comite             el objeto Comite
+   * @param tipoMemoria        el objeto TipoMemoria
+   * @param tipoEstadoMemoria  el objeto TipoEstadoMemoria
+   * @param retrospectiva      el objeto Retrospectiva
    * @return Memoria
    */
   public Memoria generarMockMemoria(PeticionEvaluacion peticionEvaluacion, Comite comite, TipoMemoria tipoMemoria,
@@ -358,10 +358,11 @@ public class EvaluacionRepositoryTest {
   /**
    * Función que devuelve un objeto Evaluacion
    * 
-   * @param dictamen
-   * @param memoria
-   * @param convocatoriaReunion
-   * @param tipoEvaluacion
+   * @param dictamen            el objeto Dictamen
+   * @param memoria             el objeto Memoria
+   * @param convocatoriaReunion el objeto ConvocatoriaReunion
+   * @param tipoEvaluacion      el objeto TipoEvaluacion
+   * @param esRevMinima         boolean que indica si es de revisión mínima
    * @return el objeto Evaluacion
    */
   public Evaluacion generarMockEvaluacion(Dictamen dictamen, Memoria memoria, ConvocatoriaReunion convocatoriaReunion,

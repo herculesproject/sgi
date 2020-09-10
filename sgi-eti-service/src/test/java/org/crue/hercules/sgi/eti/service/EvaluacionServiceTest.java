@@ -60,7 +60,8 @@ public class EvaluacionServiceTest {
 
   @Test
   public void find_WithId_ReturnsEvaluacion() {
-    BDDMockito.given(evaluacionRepository.findById(1L)).willReturn(Optional.of(generarMockEvaluacion(1L, null)));
+    BDDMockito.given(evaluacionRepository.findById(1L))
+        .willReturn(Optional.of(generarMockEvaluacion(1L, null, 1L, 1L)));
 
     Evaluacion evaluacion = evaluacionService.findById(1L);
 
@@ -82,9 +83,9 @@ public class EvaluacionServiceTest {
   @Test
   public void create_ReturnsEvaluacion() {
     // given: Una nueva Evaluacion
-    Evaluacion evaluacionNew = generarMockEvaluacion(null, " New");
+    Evaluacion evaluacionNew = generarMockEvaluacion(null, " New", 1L, 1L);
 
-    Evaluacion evaluacion = generarMockEvaluacion(1L, " New");
+    Evaluacion evaluacion = generarMockEvaluacion(1L, " New", 1L, 1L);
 
     BDDMockito.given(evaluacionRepository.save(evaluacionNew)).willReturn(evaluacion);
 
@@ -102,7 +103,7 @@ public class EvaluacionServiceTest {
   @Test
   public void create_EvaluacionWithId_ThrowsIllegalArgumentException() {
     // given: Una nueva evaluacion que ya tiene id
-    Evaluacion evaluacionNew = generarMockEvaluacion(1L, " New");
+    Evaluacion evaluacionNew = generarMockEvaluacion(1L, " New", 1L, 1L);
     // when: Creamos la evaluacion
     // then: Lanza una excepcion porque la evaluacion ya tiene id
     Assertions.assertThatThrownBy(() -> evaluacionService.create(evaluacionNew))
@@ -112,9 +113,9 @@ public class EvaluacionServiceTest {
   @Test
   public void update_ReturnsEvaluacion() {
     // given: Una nueva evaluacion con el servicio actualizado
-    Evaluacion evaluacionServicioActualizado = generarMockEvaluacion(1L, " actualizado");
+    Evaluacion evaluacionServicioActualizado = generarMockEvaluacion(1L, " actualizado", 1L, 1L);
 
-    Evaluacion evaluacion = generarMockEvaluacion(1L, null);
+    Evaluacion evaluacion = generarMockEvaluacion(1L, null, 1L, 1L);
 
     BDDMockito.given(evaluacionRepository.findById(1L)).willReturn(Optional.of(evaluacion));
     BDDMockito.given(evaluacionRepository.save(evaluacion)).willReturn(evaluacionServicioActualizado);
@@ -133,7 +134,7 @@ public class EvaluacionServiceTest {
   @Test
   public void update_ThrowsEvaluacionNotFoundException() {
     // given: Una nueva evaluacion a actualizar
-    Evaluacion evaluacion = generarMockEvaluacion(1L, null);
+    Evaluacion evaluacion = generarMockEvaluacion(1L, null, 1L, 1L);
 
     // then: Lanza una excepcion porque la evaluacion no existe
     Assertions.assertThatThrownBy(() -> evaluacionService.update(evaluacion))
@@ -145,7 +146,7 @@ public class EvaluacionServiceTest {
   public void update_WithoutId_ThrowsIllegalArgumentException() {
 
     // given: Una Evaluacion que venga sin id
-    Evaluacion evaluacion = generarMockEvaluacion(null, "1");
+    Evaluacion evaluacion = generarMockEvaluacion(null, "1", 1L, 1L);
 
     Assertions.assertThatThrownBy(
         // when: update Evaluacion
@@ -194,7 +195,7 @@ public class EvaluacionServiceTest {
     // given: One hundred Evaluacion
     List<Evaluacion> evaluaciones = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i)));
+      evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i), 1L, 1L));
     }
 
     BDDMockito.given(evaluacionRepository.findAll(ArgumentMatchers.<Specification<Evaluacion>>any(),
@@ -215,7 +216,7 @@ public class EvaluacionServiceTest {
     // given: One hundred Evaluaciones
     List<Evaluacion> evaluaciones = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i)));
+      evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i), 1L, 1L));
     }
 
     BDDMockito.given(evaluacionRepository.findAll(ArgumentMatchers.<Specification<Evaluacion>>any(),
@@ -257,8 +258,8 @@ public class EvaluacionServiceTest {
     // given: Datos existentes con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
     List<Evaluacion> response = new LinkedList<Evaluacion>();
-    response.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1)));
-    response.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3)));
+    response.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), 1L, 1L));
+    response.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3), 1L, 1L));
 
     BDDMockito.given(evaluacionRepository.findAllByActivoTrueAndConvocatoriaReunionId(ArgumentMatchers.anyLong(),
         ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(response));
@@ -296,9 +297,9 @@ public class EvaluacionServiceTest {
     // given: Datos existentes con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
     List<Evaluacion> response = new LinkedList<Evaluacion>();
-    response.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1)));
-    response.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3)));
-    response.add(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5)));
+    response.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), 1L, 1L));
+    response.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3), 1L, 1L));
+    response.add(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5), 1L, 1L));
 
     // página 1 con 2 elementos por página
     Pageable pageable = PageRequest.of(1, 2);
@@ -376,12 +377,12 @@ public class EvaluacionServiceTest {
     Long evaluacionId = 12L;
     Long memoriaId = 1L;
     List<EvaluacionWithNumComentario> response = new LinkedList<EvaluacionWithNumComentario>();
-    response.add(new EvaluacionWithNumComentario(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1)),
-        Long.valueOf(1)));
-    response.add(new EvaluacionWithNumComentario(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3)),
-        Long.valueOf(3)));
-    response.add(new EvaluacionWithNumComentario(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5)),
-        Long.valueOf(5)));
+    response.add(new EvaluacionWithNumComentario(
+        generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), 1L, 1L), Long.valueOf(1)));
+    response.add(new EvaluacionWithNumComentario(
+        generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3), 1L, 1L), Long.valueOf(3)));
+    response.add(new EvaluacionWithNumComentario(
+        generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5), 1L, 1L), Long.valueOf(5)));
 
     // página 1 con 2 elementos por página
     Pageable pageable = PageRequest.of(1, 2);
@@ -407,7 +408,7 @@ public class EvaluacionServiceTest {
     // given: One hundred Evaluacion
     List<Evaluacion> evaluaciones = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i)));
+      evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i), 1L, 1L));
     }
 
     BDDMockito
@@ -430,7 +431,7 @@ public class EvaluacionServiceTest {
     // given: One hundred Evaluaciones
     List<Evaluacion> evaluaciones = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i)));
+      evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i), 1L, 1L));
     }
 
     BDDMockito
@@ -483,13 +484,13 @@ public class EvaluacionServiceTest {
   }
 
   @Test
-  public void findByEvaluadorPersonaRef_IdValid() {
+  public void findByEvaluador_IdValid() {
     // given: El personRef no es null
     String personaRef = "user-001";
     List<Evaluacion> response = new LinkedList<Evaluacion>();
-    response.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1)));
-    response.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3)));
-    response.add(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5)));
+    response.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), 4L, 1L));
+    response.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3), 4L, 1L));
+    response.add(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5), 4L, 1L));
     Page<Evaluacion> pageResponse = new PageImpl<>(response);
     BDDMockito
         .given(evaluacionRepository.findByEvaluador(ArgumentMatchers.anyString(),
@@ -505,15 +506,57 @@ public class EvaluacionServiceTest {
     Assertions.assertThat(result.getTotalElements()).isEqualTo(response.size());
   }
 
+  @Test
+  public void findEvaluacionesEnSeguimientosByEvaluador_PersonaRefNull() {
+    // given: Es personaRef es null
+    String personaRef = null;
+    try {
+      // when: se quiere listar sus evaluaciones
+      evaluacionService.findEvaluacionesEnSeguimientosByEvaluador(personaRef, null, Pageable.unpaged());
+      Assertions.fail("El personaRef de la evaluación no puede ser nulo para mostrar sus evaluaciones en seguimiento");
+      // then: se debe lanzar una excepción
+    } catch (IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage())
+          .isEqualTo("El personaRef de la evaluación no puede ser nulo para mostrar sus evaluaciones en seguimiento");
+    }
+  }
+
+  @Test
+  public void findEvaluacionesEnSeguimientosByEvaluador_Success() {
+    // given: El personRef no es null
+    String personaRef = "user-001";
+    List<Evaluacion> response = new LinkedList<Evaluacion>();
+    response.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), 11L, 1L));
+    response.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3), 11L, 1L));
+    response.add(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5), 11L, 1L));
+    Page<Evaluacion> pageResponse = new PageImpl<>(response);
+    BDDMockito
+        .given(evaluacionRepository.findEvaluacionesEnSeguimientosByEvaluador(ArgumentMatchers.anyString(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(response));
+
+    // when: se listar sus evaluaciones
+    Page<Evaluacion> result = evaluacionService.findEvaluacionesEnSeguimientosByEvaluador(personaRef, null,
+        Pageable.unpaged());
+
+    // then: recibe un listado
+    Assertions.assertThat(result).isEqualTo(pageResponse);
+    Assertions.assertThat(result.getContent()).isEqualTo(pageResponse.getContent());
+    Assertions.assertThat(result.getTotalElements()).isEqualTo(response.size());
+  }
+
   /**
    * Función que devuelve un objeto Evaluacion
    * 
-   * @param id     id del Evaluacion
-   * @param sufijo el sufijo para título y nombre
+   * @param id                    id del Evaluacion
+   * @param sufijo                el sufijo para título y nombre
+   * @param idTipoEstadoMemoria   id del tipo de estado de la memoria
+   * @param idEstadoRetrospectiva id del estado de la retrospectiva
    * @return el objeto Evaluacion
    */
 
-  public Evaluacion generarMockEvaluacion(Long id, String sufijo) {
+  public Evaluacion generarMockEvaluacion(Long id, String sufijo, Long idTipoEstadoMemoria,
+      Long idEstadoRetrospectiva) {
 
     String sufijoStr = (sufijo == null ? id.toString() : sufijo);
 
@@ -553,10 +596,15 @@ public class EvaluacionServiceTest {
     tipoMemoria.setNombre("TipoMemoria1");
     tipoMemoria.setActivo(Boolean.TRUE);
 
+    TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
+    tipoEstadoMemoria.setId(idTipoEstadoMemoria);
+
+    EstadoRetrospectiva estadoRetrospectiva = new EstadoRetrospectiva();
+    estadoRetrospectiva.setId(idEstadoRetrospectiva);
+
     Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
-        tipoMemoria, new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.FALSE,
-        new Retrospectiva(id, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), LocalDate.now()), 3,
-        Boolean.TRUE);
+        tipoMemoria, tipoEstadoMemoria, LocalDate.now(), Boolean.FALSE,
+        new Retrospectiva(id, estadoRetrospectiva, LocalDate.now()), 3, Boolean.TRUE);
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
 

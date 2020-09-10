@@ -123,8 +123,8 @@ public class AsistentesRepositoryTest {
   /**
    * Función que devuelve un objeto Asistentes
    * 
-   * @param comite
-   * @param tipoConvocatoriaReunion
+   * @param comite                  el objeto Comité
+   * @param tipoConvocatoriaReunion el objeto TipoConvocatoriaReunion
    * @return el objeto Asistentes
    */
   public ConvocatoriaReunion generarMockConvocatoriaReunion(Comite comite,

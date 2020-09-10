@@ -363,7 +363,7 @@ public class EvaluadorControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-EVC-VR", "ETI-EVC-EVALR" })
-  public void findByEvaluadorPersonaRef_Unlimited_ReturnsFullEvaluacionList() throws Exception {
+  public void getEvaluaciones_Unlimited_ReturnsFullEvaluacionList() throws Exception {
     // given: Existen 100 evaluaciones
     List<Evaluacion> evaluaciones = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
@@ -388,7 +388,7 @@ public class EvaluadorControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-EVC-VR", "ETI-EVC-EVALR" })
-  public void findByEvaluadorPersonaRef_Unlimited_ReturnsFullEmptyList() throws Exception {
+  public void getEvaluaciones_Unlimited_ReturnsFullEmptyList() throws Exception {
     // given: No hay evaluaciones
     BDDMockito
         .given(evaluacionService.findByEvaluador(ArgumentMatchers.anyString(),
@@ -399,6 +399,51 @@ public class EvaluadorControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders
             .get(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_PERSONA_REF + PATH_PARAMETER_EVALUACIONES, "user-001")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: devuelve una página vacia
+        .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+        .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-VR", "ETI-EVC-EVALR" })
+  public void findEvaluacionesEnSeguimiento_Unlimited_ReturnsFullEvaluacionList() throws Exception {
+    // given: Existen 100 evaluaciones
+    List<Evaluacion> evaluaciones = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i)));
+    }
+
+    BDDMockito
+        .given(evaluacionService.findEvaluacionesEnSeguimientosByEvaluador(ArgumentMatchers.anyString(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(evaluaciones));
+
+    // when: las recupero sin paginación
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_PERSONA_REF + "/evaluaciones-seguimiento", "user-001")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: obtengo un listado de 100 evaluaciones
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-VR", "ETI-EVC-EVALR" })
+  public void findEvaluacionesEnSeguimiento_Unlimited_ReturnsFullEmptyList() throws Exception {
+    // given: No hay evaluaciones
+    BDDMockito
+        .given(evaluacionService.findEvaluacionesEnSeguimientosByEvaluador(ArgumentMatchers.anyString(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(new ArrayList<>()));
+
+    // when: listo todo
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_PERSONA_REF + "/evaluaciones-seguimiento", "user-001")
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: devuelve una página vacia

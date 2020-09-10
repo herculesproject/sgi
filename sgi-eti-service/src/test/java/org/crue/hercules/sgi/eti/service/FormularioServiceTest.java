@@ -232,8 +232,9 @@ public class FormularioServiceTest {
   /**
    * Función que devuelve un objeto Formulario
    * 
-   * @param id     id del Formulario
-   * @param nombre nombre del Formulario
+   * @param id          id del Formulario
+   * @param nombre      nombre del Formulario
+   * @param descripcion descripción del Formulario
    * @return el objeto Formulario
    */
 

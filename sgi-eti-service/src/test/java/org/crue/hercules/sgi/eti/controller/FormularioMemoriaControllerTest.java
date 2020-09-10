@@ -354,8 +354,7 @@ public class FormularioMemoriaControllerTest {
   /**
    * Función que devuelve un objeto FormularioMemoria
    * 
-   * @param id     id del formulario memoria
-   * @param numero numero del formulario memoria
+   * @param id id del formulario memoria
    * @return el objeto FormularioMemoria
    */
   public FormularioMemoria generarMockFormularioMemoria(Long id) {

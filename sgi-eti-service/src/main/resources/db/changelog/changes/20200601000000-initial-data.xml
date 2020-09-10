@@ -855,7 +855,7 @@
       <column name="titulo" value="Memoria9" />
       <column name="persona_ref" value="user-852" />
       <column name="tipo_memoria_id" value="1" />
-      <column name="estado_actual_id" value="2" />
+      <column name="estado_actual_id" value="13" />
       <column name="fecha_envio_secretaria" value="2020-06-09" />
       <column name="requiere_retrospectiva" value="true" />
       <column name="retrospectiva_id" value="2" />
@@ -868,8 +868,8 @@
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria10" />
       <column name="persona_ref" value="user-852" />
-      <column name="tipo_memoria_id" value="1" />
-      <column name="estado_actual_id" value="1" />
+      <column name="tipo_memoria_id" value="2" />
+      <column name="estado_actual_id" value="11" />
       <column name="fecha_envio_secretaria" value="2020-06-09" />
       <column name="requiere_retrospectiva" value="true" />
       <column name="retrospectiva_id" value="1" />

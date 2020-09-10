@@ -29,8 +29,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class EvaluacionServiceImpl implements EvaluacionService {
+  /** Evaluación repository */
   private final EvaluacionRepository evaluacionRepository;
 
+  /**
+   * Instancia un nuevo {@link EvaluacionServiceImpl}
+   * 
+   * @param evaluacionRepository {@link} EvaluacionRepository}
+   */
   public EvaluacionServiceImpl(EvaluacionRepository evaluacionRepository) {
     this.evaluacionRepository = evaluacionRepository;
   }
@@ -114,6 +120,24 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    * @return la lista de entidades {@link Evaluacion} paginadas.
    */
   @Override
+  public Page<Evaluacion> findByEvaluadorPersonaRef(String personaRef, List<QueryCriteria> query, Pageable pageable) {
+    log.debug("findByEvaluador(Long id, Pageable pageable) - start");
+    Assert.notNull(personaRef, "El userRefId de la evaluación no puede ser nulo para mostrar sus evaluaciones");
+    Page<Evaluacion> returnValue = evaluacionRepository.findByEvaluador(personaRef, query, pageable);
+    log.debug("findByEvaluador(Long id, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link Evaluacion} según su
+   * {@link Evaluador}.
+   * 
+   * @param personaRef Identificador del {@link Evaluacion}
+   * @param query      filtro de {@link QueryCriteria}.
+   * @param pageable   pageable
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+  @Override
   public Page<Evaluacion> findByEvaluador(String personaRef, List<QueryCriteria> query, Pageable pageable) {
     log.debug("findByEvaluador(Long id, Pageable pageable) - start");
     Assert.notNull(personaRef, "El personaRef de la evaluación no puede ser nulo para mostrar sus evaluaciones");
@@ -137,6 +161,31 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     Page<Evaluacion> returnValue = evaluacionRepository.findAllByMemoriaAndRetrospectivaEnEvaluacion(query, paging);
     log.debug("findAllByMemoriaAndRetrospectivaEnEvaluacion(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
+  }
+
+  /**
+   * Obtiene todas las entidades {@link Evaluacion}, en estado "En evaluación
+   * seguimiento anual" (id = 11), "En evaluación seguimiento final" (id = 12) o
+   * "En secretaría seguimiento final aclaraciones" (id = 13), paginadas asociadas
+   * a un evaluador
+   * 
+   * @param personaRef Persona ref del {@link Evaluador}
+   * @param query      filtro de {@link QueryCriteria}.
+   * @param pageable   pageable
+   * @return la lista de entidades {@link Evaluacion} paginadas y/o filtradas.
+   */
+  @Override
+  public Page<Evaluacion> findEvaluacionesEnSeguimientosByEvaluador(String personaRef, List<QueryCriteria> query,
+      Pageable pageable) {
+    log.debug(
+        "findEvaluacionesEnSeguimientosByEvaluador(String idEvaluador, List<QueryCriteria> query, Pageable pageable) - start");
+    Assert.notNull(personaRef,
+        "El personaRef de la evaluación no puede ser nulo para mostrar sus evaluaciones en seguimiento");
+    Page<Evaluacion> evaluaciones = evaluacionRepository.findEvaluacionesEnSeguimientosByEvaluador(personaRef, query,
+        pageable);
+    log.debug(
+        "findEvaluacionesEnSeguimientosByEvaluador(String personaRef, List<QueryCriteria> query, Pageable pageable) - end");
+    return evaluaciones;
   }
 
   /**

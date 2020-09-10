@@ -406,7 +406,8 @@ public class DocumentacionMemoriaControllerTest {
   /**
    * Función que devuelve un objeto Memoria
    * 
-   * @param id id del Memoria
+   * @param id     id del Memoria
+   * @param titulo título de la Memoria
    * @return el objeto Memoria
    */
 

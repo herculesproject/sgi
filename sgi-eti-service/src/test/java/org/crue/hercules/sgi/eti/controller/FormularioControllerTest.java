@@ -345,8 +345,9 @@ public class FormularioControllerTest {
   /**
    * Función que devuelve un objeto Formulario
    * 
-   * @param id     id del Formulario
-   * @param nombre la descripción del Formulario
+   * @param id          id del Formulario
+   * @param nombre      el nombre del Formulario
+   * @param descripcion la descripción del Formulario
    * @return el objeto Formulario
    */
 
