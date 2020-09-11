@@ -115,7 +115,7 @@ public class ComiteController {
    * @param paging pageable
    */
   @GetMapping()
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-V', 'ETI-CONV-V', 'ETI-EVC-VR', 'ETI-EVC-EVALR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-V', 'ETI-CONV-V', 'ETI-EVC-VR','ETI-EVC-EVALR', 'ETI-PEV-VR','ETI-PEV-V')")
   ResponseEntity<Page<Comite>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllComite(List<QueryCriteria> query,Pageable paging) - start");

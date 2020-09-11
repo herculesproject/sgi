@@ -75,7 +75,7 @@ public class PeticionEvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PETICIONEVALUACION-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-VR", "ETI-PEV-V" })
   public void getPeticionEvaluacion_NotFound_Returns404() throws Exception {
     BDDMockito.given(peticionEvaluacionService.findById(ArgumentMatchers.anyLong()))
         .will((InvocationOnMock invocation) -> {
@@ -182,7 +182,7 @@ public class PeticionEvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PETICIONEVALUACION-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-VR", "ETI-PEV-V" })
   public void findAll_Unlimited_ReturnsFullPeticionEvaluacionList() throws Exception {
     // given: One hundred PeticionEvaluacion
     List<PeticionEvaluacion> peticionEvaluaciones = new ArrayList<>();
@@ -205,7 +205,7 @@ public class PeticionEvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PETICIONEVALUACION-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-VR", "ETI-PEV-V" })
   public void findAll_WithPaging_ReturnsPeticionEvaluacionSubList() throws Exception {
     // given: One hundred PeticionEvaluacion
     List<PeticionEvaluacion> peticionEvaluaciones = new ArrayList<>();
@@ -258,7 +258,7 @@ public class PeticionEvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PETICIONEVALUACION-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-VR", "ETI-PEV-V" })
   public void findAll_WithSearchQuery_ReturnsFilteredPeticionEvaluacionList() throws Exception {
     // given: One hundred PeticionEvaluacion and a search query
     List<PeticionEvaluacion> peticionEvaluaciones = new ArrayList<>();

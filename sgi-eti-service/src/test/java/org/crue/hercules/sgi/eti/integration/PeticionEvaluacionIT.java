@@ -47,7 +47,7 @@ public class PeticionEvaluacionIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "ETI-PETICIONEVALUACION-EDITAR", "ETI-PETICIONEVALUACION-VER")));
+        tokenBuilder.buildToken("user", "ETI-PETICIONEVALUACION-EDITAR", "ETI-PEV-VR", "ETI-PEV-V")));
 
     HttpEntity<PeticionEvaluacion> request = new HttpEntity<>(entity, headers);
     return request;

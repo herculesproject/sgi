@@ -619,6 +619,24 @@
       <column name="persona_ref" value="user-006" />
       <column name="activo" value="true" />
     </insert>
+    <insert tableName="peticion_evaluacion">
+      <column name="solicitud_convocatoria_ref" value="Ref solicitud convocatoria" />
+      <column name="codigo" value="cod/002" />
+      <column name="titulo" value="PETEV005" />
+      <column name="tipo_actividad_id" valueComputed="(select id from eti.tipo_actividad where nombre='Trabajo Fin de Máster')" />
+      <column name="fuente_financiacion" value="Ff" />
+      <column name="fecha_inicio" value="2020-05-09" />
+      <column name="fecha_fin" value="2021-08-09" />
+      <column name="resumen" value="Resumen" />
+      <column name="valor_social" value="3" />
+      <column name="otro_valor_social" value="Otro valor social" />
+      <column name="objetivos" value="Objetivos" />
+      <column name="dis_metodologico" value="Diseño metodológico" />
+      <column name="externo" value="false" />
+      <column name="tiene_fondos_propios" value="false" />
+      <column name="persona_ref" value="user-005" />
+      <column name="activo" value="true" />
+    </insert>
   </changeSet>
 
   <changeSet author="master" id="20200601000000-equipo_trabajo">
@@ -836,7 +854,7 @@
     </insert>
     <insert tableName="memoria">
       <column name="num_referencia" value="ref-934" />
-      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
+      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion5')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria8" />
       <column name="persona_ref" value="user-852" />
@@ -867,9 +885,9 @@
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria10" />
-      <column name="persona_ref" value="user-852" />
-      <column name="tipo_memoria_id" value="2" />
-      <column name="estado_actual_id" value="11" />
+      <column name="persona_ref" value="user-006" />
+      <column name="tipo_memoria_id" value="1" />
+      <column name="estado_actual_id" value="1" />
       <column name="fecha_envio_secretaria" value="2020-06-09" />
       <column name="requiere_retrospectiva" value="true" />
       <column name="retrospectiva_id" value="1" />
