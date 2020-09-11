@@ -15,6 +15,7 @@ const MSG_GESTION_EVALUACIONES_TITLE = marker('menu.principal.eti.gestionEvaluac
 const MSG_ACTAS_TITLE = marker('menu.principal.eti.acta');
 const MSG_EVALUADORES_TITLE = marker('menu.principal.eti.evaluador');
 const MSG_SEGUIMIENTOS_TITLE = marker('menu.principal.eti.seguimientos');
+const MSG_PETICIONES_EVALUACION_TITLE = marker('menu.principal.eti.peticionesEvaluacion');
 
 const routes: SgiRoutes = [
   {
@@ -107,6 +108,30 @@ const routes: SgiRoutes = [
         data: {
           title: MSG_SEGUIMIENTOS_TITLE,
           hasAnyAuthorityForAnyUO: ['ETI-EVC-VR', 'ETI-EVC-EVALR']
+        }
+      },
+      {
+        path: ETI_ROUTE_NAMES.PETICIONES_EVALUACION_INV,
+        loadChildren: () =>
+          import('./peticion-evaluacion/peticion-evaluacion-inv.module').then(
+            (m) => m.PeticionEvaluacionInvModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_PETICIONES_EVALUACION_TITLE,
+          hasAnyAuthorityForAnyUO: ['ETI-PEV-VR', 'ETI-PEV-CR', 'ETI-PEV-ER', 'ETI-PEV-BR']
+        }
+      },
+      {
+        path: ETI_ROUTE_NAMES.PETICIONES_EVALUACION_GES,
+        loadChildren: () =>
+          import('./peticion-evaluacion/peticion-evaluacion-ges.module').then(
+            (m) => m.PeticionEvaluacionGesModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_PETICIONES_EVALUACION_TITLE,
+          hasAnyAuthorityForAnyUO: ['ETI-PEV-V']
         }
       },
       { path: '**', component: null }

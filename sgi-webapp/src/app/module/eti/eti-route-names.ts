@@ -4,5 +4,7 @@ export const ETI_ROUTE_NAMES = {
   EVALUACIONES: 'evaluaciones',
   EVALUADORES: 'evaluadores',
   GESTION_EVALUACIONES: 'gestion-evaluaciones',
-  SEGUIMIENTOS: 'seguimientos'
+  SEGUIMIENTOS: 'seguimientos',
+  PETICIONES_EVALUACION_INV: 'peticiones-evaluacion-inv',
+  PETICIONES_EVALUACION_GES: 'peticiones-evaluacion-ges'
 };

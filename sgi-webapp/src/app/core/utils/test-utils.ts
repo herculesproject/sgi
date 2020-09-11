@@ -2,6 +2,7 @@ import { NGXLogger } from 'ngx-logger';
 import { TranslateTestingModule } from 'ngx-translate-testing';
 
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 /**
  * A Utility Class for testing.
@@ -89,6 +90,16 @@ export default class TestUtils {
     return jasmine.createSpyObj(
       SnackBarService.name,
       TestUtils.getOwnMethodNames(SnackBarService.prototype)
+    );
+  }
+
+  /**
+   * Devuelve el mock del sgiAuthService
+   */
+  static getSgiAuthServiceSpy(): jasmine.SpyObj<SgiAuthService> {
+    return jasmine.createSpyObj(
+      SgiAuthService.name,
+      TestUtils.getOwnMethodNames(SgiAuthService.prototype)
     );
   }
 }

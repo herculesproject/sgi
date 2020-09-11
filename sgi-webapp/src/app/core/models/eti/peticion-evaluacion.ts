@@ -1,6 +1,7 @@
 import { TipoActividad } from './tipo-actividad';
+import { Persona } from '../sgp/persona';
 
-export class PeticionEvaluacion {
+export class PeticionEvaluacion extends Persona {
 
   /** ID */
   id: number;
@@ -54,6 +55,7 @@ export class PeticionEvaluacion {
   activo: boolean;
 
   constructor() {
+    super();
     this.id = null;
     this.solicitudConvocatoriaRef = null;
     this.codigo = null;
