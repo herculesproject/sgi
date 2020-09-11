@@ -761,8 +761,8 @@
       <column name="titulo" value="Memoria1" />
       <column name="persona_ref" value="user-8984" />
       <column name="tipo_memoria_id" value="1" />
-      <column name="estado_actual_id" value="4" />
-      <column name="fecha_envio_secretaria" value="2020-07-09" />
+      <column name="estado_actual_id" value="3" />
+      <column name="fecha_envio_secretaria" value="2020-08-09" />
       <column name="requiere_retrospectiva" value="true" />
       <column name="retrospectiva_id" value="4" />
       <column name="version" value="1" />
@@ -775,7 +775,7 @@
       <column name="titulo" value="Memoria2" />
       <column name="persona_ref" value="user-9984" />
       <column name="tipo_memoria_id" value="2" />
-      <column name="estado_actual_id" value="2" />
+      <column name="estado_actual_id" value="12" />
       <column name="fecha_envio_secretaria" value="2020-06-09" />
       <column name="requiere_retrospectiva" value="false" />
       <column name="retrospectiva_id" value="2" />
@@ -803,8 +803,8 @@
       <column name="titulo" value="Memoria4" />
       <column name="persona_ref" value="user-852" />
       <column name="tipo_memoria_id" value="3" />
-      <column name="estado_actual_id" value="9" />
-      <column name="fecha_envio_secretaria" value="2020-06-09" />
+      <column name="estado_actual_id" value="17" />
+      <column name="fecha_envio_secretaria" value="2020-08-09" />
       <column name="requiere_retrospectiva" value="true" />
       <column name="retrospectiva_id" value="3" />
       <column name="version" value="2" />
@@ -966,7 +966,7 @@
       <column name="tipo_tarea_id" valueComputed="(select id from eti.tipo_tarea where nombre='Eutanasia')" />
     </insert>
     <insert tableName="tarea">
-      <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where persona_ref='user-002')" />
+      <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where persona_ref='user-003')" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
       <column name="tarea" value="Tarea2" />
       <column name="formacion" value="Formacion2" />
@@ -1271,7 +1271,9 @@
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria1')" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=1)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Retrospectiva')" />
-      <column name="version" value="1" />
+      <column name="evaluador1_id" valueComputed="(select id from eti.evaluador where persona_ref='user-001')" />
+      <column name="evaluador2_id" valueComputed="(select id from eti.evaluador where persona_ref='user-002')" />
+      <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="1" />
       <column name="activo" value="true" />
@@ -1281,8 +1283,9 @@
       <column name="dictamen_id" value="1" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=2)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
+      <column name="evaluador1_id" valueComputed="(select id from eti.evaluador where persona_ref='user-003')" />
+      <column name="evaluador2_id" valueComputed="(select id from eti.evaluador where persona_ref='user-004')" />
       <column name="fecha_dictamen" value="2020-07-09" />
-      <column name="version" value="1" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="2" />
       <column name="activo" value="false" />
@@ -1293,8 +1296,9 @@
       <column name="dictamen_id" value="3" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=3)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Seguimiento anual')" />
+      <column name="evaluador1_id" valueComputed="(select id from eti.evaluador where persona_ref='user-005')" />
+      <column name="evaluador2_id" valueComputed="(select id from eti.evaluador where persona_ref='user-006')" />
       <column name="fecha_dictamen" value="2020-07-09" />
-      <column name="version" value="1" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="3" />
       <column name="activo" value="true" />
@@ -1304,8 +1308,9 @@
       <column name="dictamen_id" value="4" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=4)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Seguimiento final')" />
+      <column name="evaluador1_id" valueComputed="(select id from eti.evaluador where persona_ref='user-001')" />
+      <column name="evaluador2_id" valueComputed="(select id from eti.evaluador where persona_ref='user-003')" />
       <column name="fecha_dictamen" value="2020-07-09" />
-      <column name="version" value="2" />
       <column name="es_rev_minima" value="false" />
       <column name="version" value="4" />
       <column name="activo" value="true" />
@@ -1315,8 +1320,9 @@
       <column name="dictamen_id" value="4" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=5)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Retrospectiva')" />
+      <column name="evaluador1_id" valueComputed="(select id from eti.evaluador where persona_ref='user-002')" />
+      <column name="evaluador2_id" valueComputed="(select id from eti.evaluador where persona_ref='user-004')" />
       <column name="fecha_dictamen" value="2020-07-09" />
-      <column name="version" value="2" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="5" />
       <column name="activo" value="true" />
@@ -1326,8 +1332,9 @@
       <column name="dictamen_id" value="5" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=6)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
+      <column name="evaluador1_id" valueComputed="(select id from eti.evaluador where persona_ref='user-003')" />
+      <column name="evaluador2_id" valueComputed="(select id from eti.evaluador where persona_ref='user-005')" />
       <column name="fecha_dictamen" value="2020-07-09" />
-      <column name="version" value="1" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="6" />
       <column name="activo" value="true" />
@@ -1337,8 +1344,9 @@
       <column name="dictamen_id" value="1" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=6)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
+      <column name="evaluador1_id" valueComputed="(select id from eti.evaluador where persona_ref='user-004')" />
+      <column name="evaluador2_id" valueComputed="(select id from eti.evaluador where persona_ref='user-006')" />
       <column name="fecha_dictamen" value="2020-07-09" />
-      <column name="version" value="2" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="7" />
       <column name="activo" value="true" />
@@ -1348,8 +1356,9 @@
       <column name="dictamen_id" value="2" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=6)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
+      <column name="evaluador1_id" valueComputed="(select id from eti.evaluador where persona_ref='user-001')" />
+      <column name="evaluador2_id" valueComputed="(select id from eti.evaluador where persona_ref='user-006')" />
       <column name="fecha_dictamen" value="2020-07-09" />
-      <column name="version" value="3" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="8" />
       <column name="activo" value="true" />
@@ -1359,8 +1368,9 @@
       <column name="dictamen_id" value="3" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=6)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
+      <column name="evaluador1_id" valueComputed="(select id from eti.evaluador where persona_ref='user-002')" />
+      <column name="evaluador2_id" valueComputed="(select id from eti.evaluador where persona_ref='user-005')" />
       <column name="fecha_dictamen" value="2020-07-09" />
-      <column name="version" value="1" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="9" />
       <column name="activo" value="true" />
@@ -1370,8 +1380,9 @@
       <column name="dictamen_id" value="1" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.convocatoria_reunion where numero_acta=6)" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
+      <column name="evaluador1_id" valueComputed="(select id from eti.evaluador where persona_ref='user-003')" />
+      <column name="evaluador2_id" valueComputed="(select id from eti.evaluador where persona_ref='user-004')" />
       <column name="fecha_dictamen" value="2020-07-09" />
-      <column name="version" value="2" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="10" />
       <column name="activo" value="true" />
@@ -1381,6 +1392,9 @@
       <column name="dictamen_id" value="1" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.tipo_convocatoria_reunion where nombre='Ordinaria')" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Retrospectiva')" />
+      <column name="evaluador1_id" valueComputed="(select id from eti.evaluador where persona_ref='user-005')" />
+      <column name="evaluador2_id" valueComputed="(select id from eti.evaluador where persona_ref='user-006')" />
+      <column name="version" value="1" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="11" />
@@ -1391,6 +1405,8 @@
       <column name="dictamen_id" value="1" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.tipo_convocatoria_reunion where nombre='Ordinaria')" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Retrospectiva')" />
+      <column name="evaluador1_id" valueComputed="(select id from eti.evaluador where persona_ref='user-001')" />
+      <column name="evaluador2_id" valueComputed="(select id from eti.evaluador where persona_ref='user-002')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="12" />
@@ -1401,29 +1417,35 @@
       <column name="dictamen_id" value="1" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.tipo_convocatoria_reunion where nombre='Extraordinaria')" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
+      <column name="evaluador1_id" valueComputed="(select id from eti.evaluador where persona_ref='user-003')" />
+      <column name="evaluador2_id" valueComputed="(select id from eti.evaluador where persona_ref='user-004')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="13" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="evaluacion">
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria13')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria14')" />
       <column name="dictamen_id" value="1" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.tipo_convocatoria_reunion where nombre='Seguimiento')" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
+      <column name="evaluador1_id" valueComputed="(select id from eti.evaluador where persona_ref='user-005')" />
+      <column name="evaluador2_id" valueComputed="(select id from eti.evaluador where persona_ref='user-006')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
       <column name="version" value="14" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="evaluacion">
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria14')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria15')" />
       <column name="dictamen_id" value="1" />
       <column name="convocatoria_reunion_id" valueComputed="(select id from eti.tipo_convocatoria_reunion where nombre='Ordinaria')" />
       <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
+      <column name="evaluador1_id" valueComputed="(select id from eti.evaluador where persona_ref='user-001')" />
+      <column name="evaluador2_id" valueComputed="(select id from eti.evaluador where persona_ref='user-002')" />
       <column name="fecha_dictamen" value="2020-07-09" />
       <column name="es_rev_minima" value="true" />
-      <column name="version" value="3" />
+      <column name="version" value="15" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>
@@ -1623,33 +1645,6 @@
       <column name="clave" value="Configuracion6" />
       <column name="valor" value="Valor conf6" />
       <column name="descripcion" value="Descripcion conf6" />
-    </insert>
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-evaluador_evaluacion">
-    <insert tableName="evaluador_evaluacion">
-      <column name="evaluador_id" valueComputed="(select id from eti.evaluador where resumen='Evaluador1')" />
-      <column name="evaluacion_id" valueComputed="(select id from eti.evaluacion where id='1')" />
-    </insert>
-    <insert tableName="evaluador_evaluacion">
-      <column name="evaluador_id" valueComputed="(select id from eti.evaluador where resumen='Evaluador2')" />
-      <column name="evaluacion_id" valueComputed="(select id from eti.evaluacion where id='1')" />
-    </insert>
-    <insert tableName="evaluador_evaluacion">
-      <column name="evaluador_id" valueComputed="(select id from eti.evaluador where resumen='Evaluador3')" />
-      <column name="evaluacion_id" valueComputed="(select id from eti.evaluacion where id='1')" />
-    </insert>
-    <insert tableName="evaluador_evaluacion">
-      <column name="evaluador_id" valueComputed="(select id from eti.evaluador where resumen='Evaluador4')" />
-      <column name="evaluacion_id" valueComputed="(select id from eti.evaluacion where id='1')" />
-    </insert>
-    <insert tableName="evaluador_evaluacion">
-      <column name="evaluador_id" valueComputed="(select id from eti.evaluador where resumen='Evaluador5')" />
-      <column name="evaluacion_id" valueComputed="(select id from eti.evaluacion where id='1')" />
-    </insert>
-    <insert tableName="evaluador_evaluacion">
-      <column name="evaluador_id" valueComputed="(select id from eti.evaluador where resumen='Evaluador6')" />
-      <column name="evaluacion_id" valueComputed="(select id from eti.evaluacion where id='6')" />
     </insert>
   </changeSet>
 

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Memoria;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -81,6 +83,100 @@ public class MemoriaController {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada de {@link Memoria} asignables para una
+   * convocatoria determinada
+   * 
+   * Si la convocatoria es de tipo "Seguimiento" devuelve las memorias en estado
+   * "En secretaría seguimiento anual" y "En secretaría seguimiento final" con la
+   * fecha de envío es igual o menor a la fecha límite de la convocatoria de
+   * reunión.
+   * 
+   * Si la convocatoria es de tipo "Ordinaria" o "Extraordinaria" devuelve las
+   * memorias en estado "En secretaria" con la fecha de envío es igual o menor a
+   * la fecha límite de la convocatoria de reunión y las que tengan una
+   * retrospectiva en estado "En secretaría".
+   * 
+   * @param idConvocatoria identificador de la {@link ConvocatoriaReunion}.
+   * @param paging         pageable
+   */
+  @GetMapping("/asignables/{idConvocatoria}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-E')")
+  ResponseEntity<Page<Memoria>> findAllMemoriasAsignablesConvocatoria(@PathVariable Long idConvocatoria,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAll(Long idConvocatoria, Pageable paging) - start");
+    Page<Memoria> page = service.findAllMemoriasAsignablesConvocatoria(idConvocatoria, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada con las entidades {@link Memoria}
+   * asignables a una Convocatoria de tipo "Ordinaria" o "Extraordinaria".
+   * 
+   * Para determinar si es asignable es necesario especificar en el filtro el
+   * Comité Fecha Límite de la convocatoria.
+   * 
+   * Si la convocatoria es de tipo "Ordinaria" o "Extraordinaria" devuelve las
+   * memorias en estado "En secretaria" con la fecha de envío es igual o menor a
+   * la fecha límite de la convocatoria de reunión y las que tengan una
+   * retrospectiva en estado "En secretaría".
+   * 
+   * @param query    filtro de {@link QueryCriteria}.
+   * @param pageable pageable
+   */
+  @GetMapping("/tipo-convocatoria-ord-ext")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-C')")
+  ResponseEntity<Page<Memoria>> findAllAsignablesTipoConvocatoriaOrdExt(
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("findAllAsignablesTipoConvocatoriaOrdExt(List<QueryCriteria> query,Pageable pageable) - start");
+    Page<Memoria> page = service.findAllAsignablesTipoConvocatoriaOrdExt(query, pageable);
+
+    if (page.isEmpty()) {
+      log.debug("findAllAsignablesTipoConvocatoriaOrdExt(List<QueryCriteria> query,Pageable pageable) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAllAsignablesTipoConvocatoriaOrdExt(List<QueryCriteria> query,Pageable pageable) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada con las entidades {@link Memoria}
+   * asignables a una Convocatoria de tipo "Seguimiento".
+   * 
+   * Para determinar si es asignable es necesario especificar en el filtro el
+   * Comité y Fecha Límite de la convocatoria.
+   * 
+   * Si la convocatoria es de tipo "Seguimiento" devuelve las memorias en estado
+   * "En secretaría seguimiento anual" y "En secretaría seguimiento final" con la
+   * fecha de envío es igual o menor a la fecha límite de la convocatoria de
+   * reunión.
+   * 
+   * @param query    filtro de {@link QueryCriteria}.
+   * @param pageable pageable
+   */
+  @GetMapping("/tipo-convocatoria-seg")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-C')")
+  ResponseEntity<Page<Memoria>> findAllAsignablesTipoConvocatoriaSeguimiento(
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("findAllAsignablesTipoConvocatoriaSeguimiento(List<QueryCriteria> query,Pageable pageable) - start");
+    Page<Memoria> page = service.findAllAsignablesTipoConvocatoriaSeguimiento(query, pageable);
+
+    if (page.isEmpty()) {
+      log.debug("findAllAsignablesTipoConvocatoriaSeguimiento(List<QueryCriteria> query,Pageable pageable) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAllAsignablesTipoConvocatoriaSeguimiento(List<QueryCriteria> query,Pageable pageable) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

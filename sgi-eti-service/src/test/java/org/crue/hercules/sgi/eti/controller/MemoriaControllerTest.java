@@ -81,6 +81,9 @@ public class MemoriaControllerTest {
   private DocumentacionMemoriaService documentacionMemoriaService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PARAMETER_ASIGNABLES = "/asignables/{idConvocatoria}";
+  private static final String PATH_PARAMETER_ASIGNABLES_ORDEXT = "/tipo-convocatoria-ord-ext";
+  private static final String PATH_PARAMETER_ASIGNABLES_SEG = "/tipo-convocatoria-seg";
   private static final String MEMORIA_CONTROLLER_BASE_PATH = "/memorias";
   private static final String PATH_PARAMETER_BY_DOCUMENTACION = "/documentaciones";
 
@@ -492,6 +495,144 @@ public class MemoriaControllerTest {
         // then: Se recuperan todos los documentos relacionados
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-C", "ETI-CNV-E" })
+  public void findAllMemoriasAsignablesConvocatoria_Unlimited_ReturnsFullMemoriaList() throws Exception {
+    // given: idConvocatoria, One hundred Memoria
+    Long idConvocatoria = 1L;
+    List<Memoria> memorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      memorias.add(generarMockMemoria(Long.valueOf(i), "numRef-55" + String.valueOf(i),
+          "Memoria" + String.format("%03d", i), i));
+    }
+
+    BDDMockito.given(memoriaService.findAllMemoriasAsignablesConvocatoria(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(memorias));
+
+    // when: find unlimited asignables by convocatoria
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES, idConvocatoria)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Get a page one hundred Memoria
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-C", "ETI-CNV-E" })
+  public void findAllMemoriasAsignablesConvocatoria_WithPaging_ReturnsMemoriaSubList() throws Exception {
+    // given: idConvocatoria, One hundred Memoria
+    Long idConvocatoria = 1L;
+    List<Memoria> memorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      memorias.add(generarMockMemoria(Long.valueOf(i), "numRef-55" + String.valueOf(i),
+          "Memoria" + String.format("%03d", i), i));
+    }
+
+    BDDMockito.given(memoriaService.findAllMemoriasAsignablesConvocatoria(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<Memoria>>() {
+          @Override
+          public Page<Memoria> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<Memoria> content = memorias.subList(fromIndex, toIndex);
+            Page<Memoria> page = new PageImpl<>(content, pageable, memorias.size());
+            return page;
+          }
+        });
+
+    // when: get page=3 with pagesize=10 asignables by convocatoria
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES, idConvocatoria)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: the asked Memorias are returned with the right page information
+        // in headers
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "100"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10))).andReturn();
+
+    // this uses a TypeReference to inform Jackson about the Lists's generic type
+    List<Memoria> actual = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<Memoria>>() {
+        });
+
+    // containing titulo='Memoria031' to 'Memoria040'
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      Memoria memoria = actual.get(i);
+      Assertions.assertThat(memoria.getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-C", "ETI-CNV-E" })
+  public void findAllAsignablesTipoConvocatoriaOrdExt_Unlimited_ReturnsFullMemoriaList() throws Exception {
+
+    // given: search query with comité y fecha límite de una convocatoria de tipo
+    // ordinario o extraordinario
+    List<Memoria> memorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      memorias.add(generarMockMemoria(Long.valueOf(i), "numRef-55" + String.valueOf(i),
+          "Memoria" + String.format("%03d", i), i));
+    }
+    // String query = "comite.id:1,fechaLimite<:2020-09-10";
+
+    BDDMockito.given(memoriaService.findAllAsignablesTipoConvocatoriaOrdExt(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(memorias));
+
+    // when: find unlimited asignables para tipo convocatoria ordinaria o
+    // extraordinaria
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES_ORDEXT)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Obtiene las
+        // memorias en estado "En secretaria" con la fecha de envío es igual o menor a
+        // la fecha límite de la convocatoria de reunión y las que tengan una
+        // retrospectiva en estado "En secretaría".
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-C", "ETI-CNV-E" })
+  public void findAllAsignablesTipoConvocatoriaSeguimiento_Unlimited_ReturnsFullMemoriaList() throws Exception {
+
+    // given: search query with comité y fecha límite de una convocatoria de tipo
+    // seguimiento
+    List<Memoria> memorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      memorias.add(generarMockMemoria(Long.valueOf(i), "numRef-55" + String.valueOf(i),
+          "Memoria" + String.format("%03d", i), i));
+    }
+    // String query = "comite.id:1,fechaLimite<:2020-09-10";
+
+    BDDMockito
+        .given(memoriaService.findAllAsignablesTipoConvocatoriaSeguimiento(ArgumentMatchers.<List<QueryCriteria>>any(),
+            ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(memorias));
+
+    // when: find unlimited asignables para tipo convocatoria seguimiento
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ASIGNABLES_SEG)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Obtiene Memorias en estado
+        // "En secretaría seguimiento anual" y "En secretaría seguimiento final" con la
+        // fecha de envío es igual o menor a la fecha límite de la convocatoria de
+        // reunión.
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
   }
 
   /**

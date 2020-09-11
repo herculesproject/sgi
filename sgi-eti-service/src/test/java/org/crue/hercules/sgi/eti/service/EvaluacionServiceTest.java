@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
@@ -628,6 +629,12 @@ public class EvaluacionServiceTest {
     tipoEvaluacion.setNombre("TipoEvaluacion1");
     tipoEvaluacion.setActivo(Boolean.TRUE);
 
+    Evaluador evaluador1 = new Evaluador();
+    evaluador1.setId(1L);
+
+    Evaluador evaluador2 = new Evaluador();
+    evaluador2.setId(2L);
+
     Evaluacion evaluacion = new Evaluacion();
     evaluacion.setId(id);
     evaluacion.setDictamen(dictamen);
@@ -637,6 +644,8 @@ public class EvaluacionServiceTest {
     evaluacion.setConvocatoriaReunion(convocatoriaReunion);
     evaluacion.setVersion(2);
     evaluacion.setTipoEvaluacion(tipoEvaluacion);
+    evaluacion.setEvaluador1(evaluador1);
+    evaluacion.setEvaluador2(evaluador2);
     evaluacion.setActivo(Boolean.TRUE);
 
     return evaluacion;

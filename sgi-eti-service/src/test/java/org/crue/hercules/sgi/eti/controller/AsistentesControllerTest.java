@@ -93,7 +93,7 @@ public class AsistentesControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ASISTENTES-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-C" })
   public void newAsistentes_ReturnsAsistentes() throws Exception {
     // given: Una entidad Asistentes nueva
     String nuevoAsistentesJson = "{ \"motivo\": \"Motivo 1\", \"asistenecia\": \"true\", \"convocatoriaReunion\": {\"id\": \"1\"}, \"evaluador\": {\"id\": \"1\"}}";
@@ -114,7 +114,7 @@ public class AsistentesControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ASISTENTES-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-C" })
   public void newAsistentes_Error_Returns400() throws Exception {
     // given: Unos Asistentes nuevos que produce un error al crearse
     String nuevoAsistentesJson = "{ \"motivo\": \"Motivo1\", \"asistenecia\": \"true\", \"convocatoriaReunion\": {\"id\": \"1\"}, \"evaluador\": {\"id\": \"1\"}}";

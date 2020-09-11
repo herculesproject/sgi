@@ -1,15 +1,14 @@
 package org.crue.hercules.sgi.eti.service;
 
+import java.util.List;
+
+import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
+import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
-
-import java.util.List;
-
-import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
-import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -41,6 +40,18 @@ public interface EvaluacionService {
    * @return la lista de entidades {@link Evaluacion} paginadas y/o filtradas.
    */
   Page<Evaluacion> findAll(List<QueryCriteria> query, Pageable pageable);
+
+  /**
+   * Obtiene la lista de evaluaciones activas de una convocatoria reunion que no
+   * estan en revisión mínima.
+   * 
+   * @param idConvocatoriaReunion Id de {@link ConvocatoriaReunion}.
+   * @param query                 información del filtro.
+   * @param paging                la información de la paginación.
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+  Page<Evaluacion> findAllByConvocatoriaReunionIdAndNoEsRevMinima(Long idConvocatoriaReunion, List<QueryCriteria> query,
+      Pageable paging);
 
   /**
    * Obtener todas las entidades paginadas {@link Evaluacion} activas para una

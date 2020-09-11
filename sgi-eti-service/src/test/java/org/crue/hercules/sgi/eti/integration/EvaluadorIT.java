@@ -45,6 +45,7 @@ public class EvaluadorIT {
   private static final String PATH_PARAMETER_PERSONA_REF = "/{personaRef}";
   private static final String EVALUADOR_CONTROLLER_BASE_PATH = "/evaluadores";
   private static final String PATH_PARAMETER_EVALUACIONES = "/evaluaciones";
+  private static final String PATH_PARAMETER_SINCONFLICTOINTERES = "/comite/{idComite}/sinconflictointereses/{idMemoria}";
 
   private HttpEntity<Evaluador> buildRequest(HttpHeaders headers, Evaluador entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -61,8 +62,13 @@ public class EvaluadorIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void getEvaluador_WithId_ReturnsEvaluador() throws Exception {
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVALUADOR-EDITAR", "ETI-EVALUADOR-VER")));
+
     final ResponseEntity<Evaluador> response = restTemplate.exchange(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.GET, buildRequest(null, null), Evaluador.class, 1L);
+        HttpMethod.GET, buildRequest(headers, null), Evaluador.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -83,8 +89,12 @@ public class EvaluadorIT {
     nuevoEvaluador.setCargoComite(new CargoComite(2L, "CargoComite2", Boolean.TRUE));
     nuevoEvaluador.setActivo(Boolean.TRUE);
 
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVALUADOR-EDITAR", "ETI-EVALUADOR-VER")));
+
     final ResponseEntity<Evaluador> response = restTemplate.exchange(EVALUADOR_CONTROLLER_BASE_PATH, HttpMethod.POST,
-        buildRequest(null, nuevoEvaluador), Evaluador.class);
+        buildRequest(headers, nuevoEvaluador), Evaluador.class);
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     Assertions.assertThat(response.getBody().getId()).isNotNull();
   }
@@ -96,8 +106,13 @@ public class EvaluadorIT {
 
     // when: Delete con id existente
     long id = 1L;
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVALUADOR-EDITAR", "ETI-EVALUADOR-VER")));
+
     final ResponseEntity<Evaluador> response = restTemplate.exchange(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.DELETE, buildRequest(null, null), Evaluador.class, id);
+        HttpMethod.DELETE, buildRequest(headers, null), Evaluador.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -108,8 +123,13 @@ public class EvaluadorIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeEvaluador_DoNotGetEvaluador() throws Exception {
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVALUADOR-EDITAR", "ETI-EVALUADOR-VER")));
+
     restTemplate.exchange(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE,
-        buildRequest(null, null), Evaluador.class, 1L);
+        buildRequest(headers, null), Evaluador.class, 1L);
 
     final ResponseEntity<Evaluador> response = restTemplate.exchange(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.GET, buildRequest(null, null), Evaluador.class, 1L);
@@ -125,8 +145,12 @@ public class EvaluadorIT {
 
     Evaluador replaceEvaluador = generarMockEvaluador(1L, "Evaluador1");
 
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVALUADOR-EDITAR", "ETI-EVALUADOR-VER")));
+
     final ResponseEntity<Evaluador> response = restTemplate.exchange(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.PUT, buildRequest(null, replaceEvaluador), Evaluador.class, 1L);
+        HttpMethod.PUT, buildRequest(headers, replaceEvaluador), Evaluador.class, 1L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
@@ -143,6 +167,8 @@ public class EvaluadorIT {
   public void findAll_WithPaging_ReturnsEvaluadorSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVALUADOR-EDITAR", "ETI-EVALUADOR-VER")));
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
@@ -179,8 +205,12 @@ public class EvaluadorIT {
         .toUri();
 
     // when: Búsqueda por query
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVALUADOR-EDITAR", "ETI-EVALUADOR-VER")));
+
     final ResponseEntity<List<Evaluador>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(null, null), new ParameterizedTypeReference<List<Evaluador>>() {
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluador>>() {
         });
 
     // then: Respuesta OK, Evaluadores retorna la información de la página
@@ -203,8 +233,12 @@ public class EvaluadorIT {
         .toUri();
 
     // when: Búsqueda por query
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVALUADOR-EDITAR", "ETI-EVALUADOR-VER")));
+
     final ResponseEntity<List<Evaluador>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(null, null), new ParameterizedTypeReference<List<Evaluador>>() {
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluador>>() {
         });
 
     // then: Respuesta OK, Evaluadores retorna la información de la página
@@ -225,6 +259,8 @@ public class EvaluadorIT {
   public void findAll_WithPagingSortingAndFiltering_ReturnsEvaluadorSubList() throws Exception {
     // when: Obtiene page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVALUADOR-EDITAR", "ETI-EVALUADOR-VER")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por resumen desc
@@ -316,6 +352,71 @@ public class EvaluadorIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Evaluacion> evaluaciones = response.getBody();
     Assertions.assertThat(evaluaciones.size()).isEqualTo(1);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllByComiteSinconflictoInteresesMemoria_Unlimited_ReturnsEvaluadorSubList() throws Exception {
+
+    // given: idComite, idMemoria
+    Long idComite = 1L;
+    Long idMemoria = 100L;
+    // when: Busca los evaluadores del comite 1L que no
+    // partician en tareas de la memoria 100L
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
+
+    final ResponseEntity<List<Evaluador>> response = restTemplate.exchange(
+        EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_SINCONFLICTOINTERES, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluador>>() {
+        }, idComite, idMemoria);
+
+    // then: Respuesta OK, Evaluadores retorna la información de la página
+    // correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Evaluador> evaluadores = response.getBody();
+    Assertions.assertThat(evaluadores.size()).isEqualTo(3);
+
+    // Contiene los evaluadores con Resumen 'Evaluador003', 'Evaluador005' y
+    // 'Evaluador007'
+    Assertions.assertThat(evaluadores.get(0).getResumen()).isEqualTo("Evaluador003");
+    Assertions.assertThat(evaluadores.get(1).getResumen()).isEqualTo("Evaluador005");
+    Assertions.assertThat(evaluadores.get(2).getResumen()).isEqualTo("Evaluador007");
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllByComiteSinconflictoInteresesMemoria_WithPaging_ReturnsEvaluadorSubList() throws Exception {
+
+    // given: idComite, idMemoria
+    Long idComite = 1L;
+    Long idMemoria = 100L;
+    // when: Busca la page=1 con pagesize=2 de los evaluadores del comite 1L que
+    // no
+    // partician en tareas de la memoria 100L
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
+    headers.add("X-Page", "1");
+    headers.add("X-Page-Size", "2");
+
+    final ResponseEntity<List<Evaluador>> response = restTemplate.exchange(
+        EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_SINCONFLICTOINTERES, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluador>>() {
+        }, idComite, idMemoria);
+
+    // then: Respuesta OK, Evaluadores retorna la información de la página
+    // correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Evaluador> evaluadores = response.getBody();
+    Assertions.assertThat(evaluadores.size()).isEqualTo(1);
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("3");
+
+    // Contiene de resumen='Evaluador007'
+    Assertions.assertThat(evaluadores.get(0).getResumen()).isEqualTo("Evaluador007");
   }
 
   /**

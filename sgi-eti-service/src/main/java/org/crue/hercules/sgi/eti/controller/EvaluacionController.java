@@ -97,6 +97,35 @@ public class EvaluacionController {
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
+  /**
+   * Obtiene la lista de evaluaciones activas de una convocatoria reunion que no
+   * estan en revisión mínima.
+   *
+   * @param id     Id de {@link ConvocatoriaReunion}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging la información de la paginación.
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+  @GetMapping("/convocatoriareunionnorevminima/{idConvocatoriaReunion}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-C', 'ETI-CNV-E')")
+  ResponseEntity<Page<Evaluacion>> findAllByConvocatoriaReunionIdAndNoEsRevMinima(
+      @PathVariable Long idConvocatoriaReunion, @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllByConvocatoriaReunionIdAndNoEsRevMinima({}, {}, {}) - start", idConvocatoriaReunion, query,
+        paging);
+    Page<Evaluacion> page = service.findAllByConvocatoriaReunionIdAndNoEsRevMinima(idConvocatoriaReunion, query,
+        paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllByConvocatoriaReunionIdAndNoEsRevMinima({}, {}, {}) - end", idConvocatoriaReunion, query,
+          paging);
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllByConvocatoriaReunionIdAndNoEsRevMinima({}, {}, {}) - end", idConvocatoriaReunion, query, paging);
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
   /*
    * Devuelve una lista paginada y filtrada {@link Evaluacion}.
    * 
@@ -127,7 +156,7 @@ public class EvaluacionController {
    * @return Nuevo {@link Evaluacion} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-C')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-C','ETI-CNV-C', 'ETI-CNV-E')")
   public ResponseEntity<Evaluacion> newEvaluacion(@Valid @RequestBody Evaluacion nuevoEvaluacion) {
     log.debug("newEvaluacion(Evaluacion nuevoEvaluacion) - start");
     Evaluacion returnValue = service.create(nuevoEvaluacion);

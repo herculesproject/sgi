@@ -75,6 +75,28 @@ public class EvaluadorController {
   }
 
   /**
+   * Devuelve una lista paginada de {@link Evaluador} de un comite sin conflictos
+   * de intereses con una memoria.
+   * 
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable
+   */
+  @GetMapping("comite/{idComite}/sinconflictointereses/{idMemoria}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-C', 'ETI-CNV-E')")
+  ResponseEntity<Page<Evaluador>> findAllByComiteSinconflictoInteresesMemoria(@PathVariable Long idComite,
+      @PathVariable Long idMemoria, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria, Pageable paging) - start");
+    Page<Evaluador> page = evaluadorService.findAllByComiteSinconflictoInteresesMemoria(idComite, idMemoria, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria, Pageable paging) ) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria, Pageable paging)  - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
    * Crea nuevo {@link Evaluador}.
    * 
    * @param nuevoEvaluador {@link Evaluador}. que se quiere crear.

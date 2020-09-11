@@ -21,6 +21,7 @@ import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
@@ -113,12 +114,13 @@ public class EvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-C" })
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-C", "ETI-CNV-C", "ETI-CNV-E" })
   public void newEvaluacion_ReturnsEvaluacion() throws Exception {
     // given: Una evaluacion nueva
     String nuevoEvaluacionJson = "{\"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
         + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1 replace\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
         + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"convocatoriaReunion\": {\"id\": 1},"
+        + "\"evaluador1\": {\"id\": 1}, \"evaluador2\": {\"id\": 2},"
         + "\"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"tipoEvaluacion\": {\"id\": 1, \"nombre\": \"TipoEvaluacion1\", \"activo\": \"true\"},\"esRevMinima\": \"true\", \"activo\": \"true\",\"version\": \"1\"}";
     Evaluacion evaluacion = generarMockEvaluacion(1L, null);
 
@@ -139,7 +141,7 @@ public class EvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-C" })
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-C", "ETI-CNV-C", "ETI-CNV-E" })
   public void newEvaluacion_Error_Returns400() throws Exception {
     // given: Una evaluacion nueva que produce un error al crearse
     String nuevoEvaluacionJson = "{\"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
@@ -167,6 +169,7 @@ public class EvaluacionControllerTest {
     String replaceEvaluacionJson = "{\"id\": 1, \"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
         + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1 replace\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
         + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"convocatoriaReunion\": {\"id\": 1},"
+        + "\"evaluador1\": {\"id\": 1}, \"evaluador2\": {\"id\": 2},"
         + "\"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"tipoEvaluacion\": {\"id\": 1, \"nombre\": \"TipoEvaluacion1\", \"activo\": \"true\"}, \"esRevMinima\": \"true\", \"activo\": \"true\",\"version\": \"1\"}";
 
     Evaluacion evaluacion = generarMockEvaluacion(1L, " Replace");
@@ -194,6 +197,7 @@ public class EvaluacionControllerTest {
     String replaceEvaluacionJson = "{\"id\": 1, \"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
         + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1 replace\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"2020-06-09\","
         + "\"tipoMemoria\": {\"id\": 1, \"nombre\": \"TipoMemoria1\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}, \"convocatoriaReunion\": {\"id\": 1},"
+        + "\"evaluador1\": {\"id\": 1}, \"evaluador2\": {\"id\": 2},"
         + "\"dictamen\": {\"id\": 1, \"nombre\": \"Dictamen1\", \"activo\": \"true\"}, \"tipoEvaluacion\": {\"id\": 1, \"nombre\": \"TipoEvaluacion1\", \"activo\": \"true\"}, \"esRevMinima\": \"true\", \"activo\": \"true\",\"version\": \"1\"}";
 
     BDDMockito.given(evaluacionService.update(ArgumentMatchers.<Evaluacion>any()))
@@ -800,6 +804,12 @@ public class EvaluacionControllerTest {
     tipoEvaluacion.setNombre("TipoEvaluacion1");
     tipoEvaluacion.setActivo(Boolean.TRUE);
 
+    Evaluador evaluador1 = new Evaluador();
+    evaluador1.setId(1L);
+
+    Evaluador evaluador2 = new Evaluador();
+    evaluador2.setId(2L);
+
     Evaluacion evaluacion = new Evaluacion();
     evaluacion.setId(id);
     evaluacion.setDictamen(dictamen);
@@ -809,6 +819,8 @@ public class EvaluacionControllerTest {
     evaluacion.setConvocatoriaReunion(convocatoriaReunion);
     evaluacion.setTipoEvaluacion(tipoEvaluacion);
     evaluacion.setVersion(2);
+    evaluacion.setEvaluador1(evaluador1);
+    evaluacion.setEvaluador2(evaluador2);
     evaluacion.setActivo(Boolean.TRUE);
 
     return evaluacion;

@@ -54,7 +54,8 @@ public class ConvocatoriaReunionIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     if (!headers.containsKey("Authorization")) {
-      headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user")));
+      headers.set("Authorization",
+          String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E", "ETI-CNV-V")));
     }
 
     HttpEntity<ConvocatoriaReunion> request = new HttpEntity<>(entity, headers);
@@ -633,8 +634,8 @@ public class ConvocatoriaReunionIT {
     evaluador.setComite(comite);
     evaluador.setFechaAlta(LocalDate.of(2020, 7, 1));
     evaluador.setFechaBaja(LocalDate.of(2021, 7, 1));
-    evaluador.setResumen("Evaluador1");
-    evaluador.setPersonaRef("user-001");
+    evaluador.setResumen("Evaluador" + id);
+    evaluador.setPersonaRef("user-00" + id);
     evaluador.setActivo(Boolean.TRUE);
 
     return evaluador;
@@ -691,6 +692,11 @@ public class ConvocatoriaReunionIT {
         new Retrospectiva(1L, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), LocalDate.of(2020, 8, 1)), 3,
         Boolean.TRUE);
 
+    TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
+    tipoEvaluacion.setId(1L);
+    tipoEvaluacion.setNombre("TipoEvaluacion1");
+    tipoEvaluacion.setActivo(Boolean.TRUE);
+
     Evaluacion evaluacion = new Evaluacion();
     evaluacion.setId(id);
     evaluacion.setDictamen(dictamen);
@@ -698,7 +704,9 @@ public class ConvocatoriaReunionIT {
     evaluacion.setFechaDictamen(LocalDate.of(2020, 8, 1));
     evaluacion.setMemoria(memoria);
     evaluacion.setConvocatoriaReunion(getMockData(1L, 1L, 1L));
-    evaluacion.setTipoEvaluacion(null);
+    evaluacion.setTipoEvaluacion(tipoEvaluacion);
+    evaluacion.setEvaluador1(generarMockEvaluador(1L));
+    evaluacion.setEvaluador2(generarMockEvaluador(2L));
     evaluacion.setVersion(2);
     evaluacion.setActivo(Boolean.TRUE);
 
@@ -787,11 +795,12 @@ public class ConvocatoriaReunionIT {
     evaluacion.setFechaDictamen(LocalDate.of(2020, 8, 1));
     evaluacion.setMemoria(memoria);
     evaluacion.setConvocatoriaReunion(convocatoriaReunion);
+    evaluacion.setEvaluador1(generarMockEvaluador(1L));
+    evaluacion.setEvaluador2(generarMockEvaluador(2L));
     evaluacion.setVersion(2);
     evaluacion.setTipoEvaluacion(tipoEvaluacion);
     evaluacion.setActivo(Boolean.TRUE);
 
     return evaluacion;
   }
-
 }

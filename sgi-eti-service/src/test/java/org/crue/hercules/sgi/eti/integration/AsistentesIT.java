@@ -92,11 +92,12 @@ public class AsistentesIT {
     nuevoAsistente.getEvaluador().setId(1L);
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ASISTENTES-EDITAR", "ETI-ASISTENTES-VER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C")));
 
-    restTemplate.exchange(ASISTENTE_CONTROLLER_BASE_PATH, HttpMethod.POST, buildRequest(headers, nuevoAsistente),
-        Asistentes.class);
+    final ResponseEntity<Asistentes> response = restTemplate.exchange(ASISTENTE_CONTROLLER_BASE_PATH, HttpMethod.POST,
+        buildRequest(headers, nuevoAsistente), Asistentes.class);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
   }
 
   @Sql

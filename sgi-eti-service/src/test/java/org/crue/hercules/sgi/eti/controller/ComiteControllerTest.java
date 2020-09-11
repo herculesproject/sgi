@@ -59,7 +59,7 @@ public class ComiteControllerTest {
 
   /* Retorna una lista Comite y comprueba los datos */
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ACT-V", "ETI-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V", "ETI-CNV-V" })
   public void getComite_ReturnsComiteList() throws Exception {
 
     List<Comite> comiteLista = new ArrayList<>();
@@ -86,7 +86,7 @@ public class ComiteControllerTest {
 
   /* Retorna una lista vacía */
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ACT-V", "ETI-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V", "ETI-CNV-V" })
   public void getComite_ReturnsEmptyList() throws Exception {
 
     List<Comite> comiteResponseList = new ArrayList<Comite>();
@@ -236,7 +236,7 @@ public class ComiteControllerTest {
 
   /* Retorna lista paginada Comite */
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ACT-V", "ETI-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V", "ETI-CNV-V" })
   public void findAll_WithPaging_ReturnsComiteSubList() throws Exception {
 
     // given: Cien Comite
@@ -290,7 +290,7 @@ public class ComiteControllerTest {
 
   /* Retorna lista filtrada Comite */
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ACT-V", "ETI-CONV-V" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V", "ETI-CNV-V" })
   public void findAll_WithSearchQuery_ReturnsFilteredComiteList() throws Exception {
 
     // given: Dos Comite y una query

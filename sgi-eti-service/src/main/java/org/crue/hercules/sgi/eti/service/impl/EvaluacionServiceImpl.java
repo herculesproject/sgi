@@ -8,6 +8,7 @@ import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.specification.EvaluacionSpecifications;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
@@ -43,6 +44,11 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
   /**
    * Guarda la entidad {@link Evaluacion}.
+   * 
+   * Cuando se generan las evaluaciones al asignar memorias a una
+   * {@link ConvocatoriaReunion} hay que actualizar el estado de la
+   * {@link Memoria} o de la {@link Retrospectiva} al estado 'En evaluacion'
+   * dependiendo del tipo de evaluación.
    *
    * @param evaluacion la entidad {@link Evaluacion} a guardar.
    * @return la entidad {@link Evaluacion} persistida.
@@ -51,6 +57,19 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   public Evaluacion create(Evaluacion evaluacion) {
     log.debug("Petición a create Evaluacion : {} - start", evaluacion);
     Assert.isNull(evaluacion.getId(), "Evaluacion id tiene que ser null para crear una nueva evaluacion");
+
+    // if (evaluacion.getTipoEvaluacion().getId() == 1) {
+    // // Si es tipo 'Retrospectiva' cambiar el estado de retrospectiva a 'En
+    // // evaluación'
+    // evaluacion.getMemoria().getRetrospectiva().getEstadoRetrospectiva().setId(4L);
+    // retrospectivaRepository.save(evaluacion.getMemoria().getRetrospectiva());
+
+    // } else if (evaluacion.getTipoEvaluacion().getId() == 2) {
+    // // Si es tipo 'Memoria' cambiar el estado de la memoria a 'En
+    // // evaluación'
+    // evaluacion.getMemoria().getEstadoActual().setId(5L);
+    // memoriaRepository.save(evaluacion.getMemoria());
+    // }
 
     return evaluacionRepository.save(evaluacion);
   }
@@ -71,6 +90,37 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
     Page<Evaluacion> returnValue = evaluacionRepository.findAll(specs, paging);
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene la lista de evaluaciones activas de una convocatoria reunion que no
+   * estan en revisión mínima.
+   * 
+   * @param idConvocatoriaReunion Id de {@link ConvocatoriaReunion}.
+   * @param query                 información del filtro.
+   * @param paging                la información de la paginación.
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+  @Override
+  public Page<Evaluacion> findAllByConvocatoriaReunionIdAndNoEsRevMinima(Long idConvocatoriaReunion,
+      List<QueryCriteria> query, Pageable paging) {
+    log.debug(
+        "findAllByConvocatoriaReunionIdAndNoEsRevMinima(Long idConvocatoriaReunion, List<QueryCriteria> query, Pageable pageable) - start");
+    Specification<Evaluacion> specByQuery = new QuerySpecification<Evaluacion>(query);
+    Specification<Evaluacion> specByConvocatoriaReunion = EvaluacionSpecifications
+        .byConvocatoriaReunionId(idConvocatoriaReunion);
+    Specification<Evaluacion> specByEsRevMinima = EvaluacionSpecifications.byEsRevMinima(false);
+    Specification<Evaluacion> specActivas = EvaluacionSpecifications.activos();
+
+    Specification<Evaluacion> specs = Specification.where(specByConvocatoriaReunion).and(specByEsRevMinima)
+        .and(specActivas).and(specByQuery);
+
+    Page<Evaluacion> returnValue = evaluacionRepository.findAll(specs, paging);
+
+    log.debug(
+        "findAllByConvocatoriaReunionIdAndNoEsRevMinima(Long idConvocatoriaReunion, List<QueryCriteria> query, Pageable pageable) - end");
+
     return returnValue;
   }
 

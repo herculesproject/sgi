@@ -88,7 +88,7 @@ public class ConvocatoriaReunionControllerTest {
   private static final String PATH_PARAMETER_BY_EVALUACIONES = "/evaluaciones";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-C" })
   public void create_ReturnsConvocatoriaReunion() throws Exception {
 
     // given: Nueva entidad sin Id
@@ -124,7 +124,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-C" })
   public void create_WithId_Returns400() throws Exception {
 
     // given: Nueva entidad con Id
@@ -143,7 +143,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-E" })
   public void update_WithExistingId_ReturnsConvocatoriaReunion() throws Exception {
 
     // given: Entidad existente que se va a actualizar
@@ -180,7 +180,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-E" })
   public void update_WithNoExistingId_Returns404() throws Exception {
 
     // given: Entidad a actualizar que no existe
@@ -205,7 +205,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-E" })
   public void delete_WithExistingId_Return204() throws Exception {
 
     // given: Entidad existente
@@ -226,7 +226,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-E" })
   public void delete_WithNoExistingId_Returns404() throws Exception {
 
     // given: Id de una entidad que no existe
@@ -250,7 +250,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-V" })
   public void findById_WithExistingId_ReturnsConvocatoriaReunion() throws Exception {
 
     // given: Entidad con un determinado Id
@@ -285,7 +285,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CONVOCATORIAREUNION-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-V" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
 
     // given: No existe entidad con el id indicado

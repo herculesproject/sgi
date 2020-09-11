@@ -1,6 +1,8 @@
 package org.crue.hercules.sgi.eti.service;
 
+import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 
 import java.util.List;
@@ -39,6 +41,18 @@ public interface EvaluadorService {
   Page<Evaluador> findAll(List<QueryCriteria> query, Pageable pageable);
 
   /**
+   * Devuelve los evaluadores activos del comité indicado que no entre en
+   * conflicto de intereses con ningún miembro del equipo investigador de la
+   * memoria.
+   * 
+   * @param idComite  Identificador del {@link Comite}
+   * @param idMemoria Identificador de la {@link Memoria}
+   * @param pageable  la información de paginación.
+   * @return lista de evaluadores sin conflictos de intereses
+   */
+  Page<Evaluador> findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria, Pageable pageable);
+
+  /**
    * Obtiene {@link Evaluador} por id.
    *
    * @param id el id de la entidad {@link Evaluador}.
@@ -52,10 +66,5 @@ public interface EvaluadorService {
    * @param id el id de la entidad {@link Evaluador}.
    */
   void delete(Long id) throws EvaluadorNotFoundException;
-
-  /**
-   * Elimina todos los {@link Evaluador}.
-   */
-  void deleteAll();
 
 }

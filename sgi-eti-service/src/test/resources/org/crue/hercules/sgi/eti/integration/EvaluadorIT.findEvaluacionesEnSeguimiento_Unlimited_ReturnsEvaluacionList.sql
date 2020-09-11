@@ -56,12 +56,6 @@ INSERT INTO ETI.CARGO_COMITE
 VALUES
   (2, 'VOCAL', true);
 
--- Evaluador
-INSERT INTO ETI.EVALUADOR
-  (ID,COMITE_ID,CARGO_COMITE_ID,FECHA_ALTA,FECHA_BAJA,RESUMEN,PERSONA_REF,ACTIVO)
-VALUES
-  (6, 2, 2, '2020-07-09', '2021-07-09', 'Evaluador2', 'user-006', true);
-
 -- Dictamen
 INSERT INTO ETI.DICTAMEN
   (ID,NOMBRE,TIPO_EVALUACION_ID,ACTIVO)
@@ -86,14 +80,12 @@ INSERT INTO ETI.TIPO_EVALUACION
 VALUES
   (2, 'Memoria', true);
 
--- Evaluacion
-INSERT INTO ETI.EVALUACION
-  (ID,MEMORIA_ID,DICTAMEN_ID,TIPO_EVALUACION_ID,CONVOCATORIA_REUNION_ID,FECHA_DICTAMEN,VERSION,ES_REV_MINIMA,ACTIVO)
-VALUES
-  (1, 1, 1, 2, 1, '2020-07-09', 2, true, true);
+  -- EVALUADOR
+INSERT INTO eti.evaluador (id, resumen, comite_id, cargo_comite_id, fecha_alta, fecha_baja, persona_ref, activo)
+VALUES (1, 'Evaluador1', 2, 1, '2020-07-01', '2021-07-01', 'user-001', true);
+INSERT INTO eti.evaluador (id, resumen, comite_id, cargo_comite_id, fecha_alta, fecha_baja, persona_ref, activo)
+VALUES (2, 'Evaluador2', 2, 1, '2020-07-01', '2021-07-01', 'user-002', true);
 
--- EVALUADOR_EVALUACION
-INSERT INTO ETI.EVALUADOR_EVALUACION
-  (ID,EVALUADOR_ID,EVALUACION_ID)
-VALUES
-  (1, 6, 1);
+-- EVALUACION
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima,  evaluador1_id, evaluador2_id, fecha_dictamen, version, activo) 
+VALUES(1, 1, 1, 1, 2, true, 1, 2, '2020-08-01', 2, true);

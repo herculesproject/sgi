@@ -75,7 +75,7 @@ public class AsistentesController {
    * @return Nuevo {@link Asistentes} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-ASISTENTES-EDITAR')")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-CNV-C')")
   public ResponseEntity<Asistentes> newAsistentes(@Valid @RequestBody Asistentes nuevoAsistentes) {
     log.debug("newAsistentes(Asistentes nuevoAsistentes) - start");
     Asistentes returnValue = service.create(nuevoAsistentes);

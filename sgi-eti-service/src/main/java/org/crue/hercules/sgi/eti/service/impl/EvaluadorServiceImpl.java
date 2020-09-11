@@ -3,7 +3,9 @@ package org.crue.hercules.sgi.eti.service.impl;
 import java.util.List;
 
 import org.crue.hercules.sgi.eti.exceptions.EvaluadorNotFoundException;
+import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.repository.EvaluadorRepository;
 import org.crue.hercules.sgi.eti.repository.specification.EvaluadorSpecifications;
 import org.crue.hercules.sgi.eti.service.EvaluadorService;
@@ -38,6 +40,7 @@ public class EvaluadorServiceImpl implements EvaluadorService {
    * @return la entidad {@link Evaluador} persistida.
    */
   @Transactional
+  @Override
   public Evaluador create(Evaluador evaluador) {
     log.debug("Petición a create Evaluador : {} - start", evaluador);
     Assert.isNull(evaluador.getId(), "Evaluador id tiene que ser null para crear un nuevo evaluador");
@@ -52,6 +55,7 @@ public class EvaluadorServiceImpl implements EvaluadorService {
    * @param query  información del filtro.
    * @return el listado de entidades {@link Evaluador} paginadas y filtradas.
    */
+  @Override
   public Page<Evaluador> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
     Specification<Evaluador> specByQuery = new QuerySpecification<Evaluador>(query);
@@ -65,6 +69,25 @@ public class EvaluadorServiceImpl implements EvaluadorService {
   }
 
   /**
+   * Devuelve los evaluadores activos del comité indicado que no entre en
+   * conflicto de intereses con ningún miembro del equipo investigador de la
+   * memoria.
+   * 
+   * @param idComite  Identificador del {@link Comite}
+   * @param idMemoria Identificador de la {@link Memoria}
+   * @param pageable  la información de paginación.
+   * @return lista de evaluadores sin conflictos de intereses
+   */
+  @Override
+  public Page<Evaluador> findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria, Pageable pageable) {
+    log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria, Pageable pageable) - start");
+    Page<Evaluador> returnValue = evaluadorRepository.findAllByComiteSinconflictoInteresesMemoria(idComite, idMemoria,
+        pageable);
+    log.debug("findAllByComiteSinconflictoInteresesMemoria(Long idComite, Long idMemoria, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
    * Obtiene una entidad {@link Evaluador} por id.
    *
    * @param id el id de la entidad {@link Evaluador}.
@@ -72,6 +95,7 @@ public class EvaluadorServiceImpl implements EvaluadorService {
    * @throws EvaluadorNotFoundException Si no existe ningún {@link Evaluador} con
    *                                    ese id.
    */
+  @Override
   public Evaluador findById(final Long id) throws EvaluadorNotFoundException {
     log.debug("Petición a get Evaluador : {}  - start", id);
     final Evaluador Evaluador = evaluadorRepository.findById(id).orElseThrow(() -> new EvaluadorNotFoundException(id));
@@ -86,6 +110,7 @@ public class EvaluadorServiceImpl implements EvaluadorService {
    * @param id el id de la entidad {@link Evaluador}.
    */
   @Transactional
+  @Override
   public void delete(Long id) throws EvaluadorNotFoundException {
     log.debug("Petición a delete Evaluador : {}  - start", id);
     Assert.notNull(id, "El id de Evaluador no puede ser null.");
@@ -94,17 +119,6 @@ public class EvaluadorServiceImpl implements EvaluadorService {
     }
     evaluadorRepository.deleteById(id);
     log.debug("Petición a delete Evaluador : {}  - end", id);
-  }
-
-  /**
-   * Elimina todos los registros {@link Evaluador}.
-   */
-  @Transactional
-  public void deleteAll() {
-    log.debug("Petición a deleteAll de Evaluador: {} - start");
-    evaluadorRepository.deleteAll();
-    log.debug("Petición a deleteAll de Evaluador: {} - end");
-
   }
 
   /**
@@ -118,6 +132,7 @@ public class EvaluadorServiceImpl implements EvaluadorService {
    */
 
   @Transactional
+  @Override
   public Evaluador update(final Evaluador evaluadorActualizar) {
     log.debug("update(Evaluador evaluadorActualizar) - start");
 

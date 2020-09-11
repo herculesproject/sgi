@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.eti.service;
 
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 
@@ -39,6 +40,60 @@ public interface MemoriaService {
   Page<Memoria> findAll(List<QueryCriteria> query, Pageable pageable);
 
   /**
+   * Devuelve una lista paginada de {@link Memoria} asignables para una
+   * convocatoria determinada
+   * 
+   * Si la convocatoria es de tipo "Seguimiento" devuelve las memorias en estado
+   * "En secretaría seguimiento anual" y "En secretaría seguimiento final" con la
+   * fecha de envío es igual o menor a la fecha límite de la convocatoria de
+   * reunión.
+   * 
+   * Si la convocatoria es de tipo "Ordinaria" o "Extraordinaria" devuelve las
+   * memorias en estado "En secretaria" con la fecha de envío es igual o menor a
+   * la fecha límite de la convocatoria de reunión y las que tengan una
+   * retrospectiva en estado "En secretaría".
+   * 
+   * @param idConvocatoriaReunion Identificador del {@link ConvocatoriaReunion}
+   * @param pageable              la información de paginación.
+   * @return lista de memorias asignables a la convocatoria.
+   */
+  Page<Memoria> findAllMemoriasAsignablesConvocatoria(Long idConvocatoriaReunion, Pageable pageable);
+
+  /**
+   * Devuelve una lista paginada y filtrada con las entidades {@link Memoria}
+   * asignables a una Convocatoria de tipo "Ordinaria" o "Extraordinaria".
+   * 
+   * Para determinar si es asignable es necesario especificar en el filtro el
+   * Comité Fecha Límite de la convocatoria.
+   * 
+   * Si la convocatoria es de tipo "Ordinaria" o "Extraordinaria" devuelve las
+   * memorias en estado "En secretaria" con la fecha de envío es igual o menor a
+   * la fecha límite de la convocatoria de reunión y las que tengan una
+   * retrospectiva en estado "En secretaría".
+   * 
+   * @param query    filtro de {@link QueryCriteria}.
+   * @param pageable pageable
+   */
+  Page<Memoria> findAllAsignablesTipoConvocatoriaOrdExt(List<QueryCriteria> query, Pageable pageable);
+
+  /**
+   * Devuelve una lista paginada y filtrada con las entidades {@link Memoria}
+   * asignables a una Convocatoria de tipo "Seguimiento".
+   * 
+   * Para determinar si es asignable es necesario especificar en el filtro el
+   * Comité y Fecha Límite de la convocatoria.
+   * 
+   * Si la convocatoria es de tipo "Seguimiento" devuelve las memorias en estado
+   * "En secretaría seguimiento anual" y "En secretaría seguimiento final" con la
+   * fecha de envío es igual o menor a la fecha límite de la convocatoria de
+   * reunión.
+   * 
+   * @param query    filtro de {@link QueryCriteria}.
+   * @param pageable pageable
+   */
+  Page<Memoria> findAllAsignablesTipoConvocatoriaSeguimiento(List<QueryCriteria> query, Pageable pageable);
+
+  /**
    * Obtiene {@link Memoria} por id.
    *
    * @param id el id de la entidad {@link Memoria}.
@@ -52,10 +107,5 @@ public interface MemoriaService {
    * @param id el id de la entidad {@link Memoria}.
    */
   void delete(Long id) throws MemoriaNotFoundException;
-
-  /**
-   * Elimina todas las {@link Memoria}.
-   */
-  void deleteAll();
 
 }

@@ -83,7 +83,8 @@ public class Memoria extends BaseEntity {
   private TipoEstadoMemoria estadoActual;
 
   /** Fecha envio secretaria. */
-  @Column(name = "fecha_envio_secretaria")
+  @Column(name = "fecha_envio_secretaria", nullable = false)
+  @NotNull
   private LocalDate fechaEnvioSecretaria;
 
   /** Indicador require retrospectiva */

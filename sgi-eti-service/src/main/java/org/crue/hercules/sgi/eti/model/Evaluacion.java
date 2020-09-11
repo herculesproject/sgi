@@ -66,6 +66,18 @@ public class Evaluacion extends BaseEntity {
   @JoinColumn(name = "dictamen_id", nullable = true)
   private Dictamen dictamen;
 
+  /** Evaluador 1 */
+  @ManyToOne
+  @JoinColumn(name = "evaluador1_id", nullable = false)
+  @NotNull
+  private Evaluador evaluador1;
+
+  /** Evaluador 2 */
+  @ManyToOne
+  @JoinColumn(name = "evaluador2_id", nullable = false)
+  @NotNull
+  private Evaluador evaluador2;
+
   /** Fecha Dictamen */
   @Column(name = "fecha_dictamen")
   private LocalDate fechaDictamen;

@@ -244,6 +244,130 @@ public class MemoriaServiceTest {
     }
   }
 
+  @Test
+  public void findAllMemoriasAsignablesConvocatoria_Unlimited_ReturnsFullMemoriaList() {
+    // given: idConvocatoria, One hundred Memoria
+    Long idConvocatoria = 1L;
+    List<Memoria> memorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      memorias.add(generarMockMemoria(Long.valueOf(i), "numRef-5" + String.format("%03d", i),
+          "Memoria" + String.format("%03d", i), 1));
+    }
+
+    BDDMockito.given(memoriaRepository.findAllMemoriasAsignablesConvocatoria(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(memorias));
+
+    // when: find unlimited asignables by convocatoria
+    Page<Memoria> page = memoriaService.findAllMemoriasAsignablesConvocatoria(idConvocatoria, Pageable.unpaged());
+
+    // then: Get a page with one hundred Memorias
+    Assertions.assertThat(page.getContent().size()).isEqualTo(100);
+    Assertions.assertThat(page.getNumber()).isEqualTo(0);
+    Assertions.assertThat(page.getSize()).isEqualTo(100);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+  }
+
+  @Test
+  public void findAllMemoriasAsignablesConvocatoria_WithPaging_ReturnsPage() {
+    // given: idConvocatoria, One hundred Memoria
+    Long idConvocatoria = 1L;
+    List<Memoria> memorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      memorias.add(generarMockMemoria(Long.valueOf(i), "numRef-5" + String.format("%03d", i),
+          "Memoria" + String.format("%03d", i), 1));
+    }
+
+    BDDMockito.given(memoriaRepository.findAllMemoriasAsignablesConvocatoria(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<Memoria>>() {
+          @Override
+          public Page<Memoria> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<Memoria> content = memorias.subList(fromIndex, toIndex);
+            Page<Memoria> page = new PageImpl<>(content, pageable, memorias.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10 asignables by convocatoria
+    Pageable paging = PageRequest.of(3, 10);
+    Page<Memoria> page = memoriaService.findAllMemoriasAsignablesConvocatoria(idConvocatoria, paging);
+
+    // then: A Page with ten Memorias are returned containing
+    // titulo='Memoria031' to 'Memoria040'
+    Assertions.assertThat(page.getContent().size()).isEqualTo(10);
+    Assertions.assertThat(page.getNumber()).isEqualTo(3);
+    Assertions.assertThat(page.getSize()).isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      Memoria memoria = page.getContent().get(i);
+      Assertions.assertThat(memoria.getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
+      Assertions.assertThat(memoria.getNumReferencia()).isEqualTo("numRef-5" + String.format("%03d", j));
+    }
+  }
+
+  @Test
+  public void findAllAsignablesTipoConvocatoriaOrdExt_Unlimited_ReturnsFullMemoriaList() {
+
+    // given: search query with comité y fecha límite de una convocatoria de tipo
+    // ordinario o extraordinario
+    List<Memoria> memorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      memorias.add(generarMockMemoria(Long.valueOf(i), "numRef-5" + String.format("%03d", i),
+          "Memoria" + String.format("%03d", i), 1));
+    }
+
+    BDDMockito
+        .given(
+            memoriaRepository.findAll(ArgumentMatchers.<Specification<Memoria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(memorias));
+
+    // when: find unlimited asignables para tipo convocatoria ordinaria o
+    // extraordinaria
+    Page<Memoria> page = memoriaService.findAllAsignablesTipoConvocatoriaOrdExt(null, Pageable.unpaged());
+
+    // then: Obtiene las
+    // memorias en estado "En secretaria" con la fecha de envío es igual o menor a
+    // la fecha límite de la convocatoria de reunión y las que tengan una
+    // retrospectiva en estado "En secretaría".
+    Assertions.assertThat(page.getContent().size()).isEqualTo(100);
+    Assertions.assertThat(page.getNumber()).isEqualTo(0);
+    Assertions.assertThat(page.getSize()).isEqualTo(100);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+  }
+
+  @Test
+  public void findAllAsignablesTipoConvocatoriaSeguimiento_Unlimited_ReturnsFullMemoriaList() {
+
+    // given: search query with comité y fecha límite de una convocatoria de tipo
+    // seguimiento
+    List<Memoria> memorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      memorias.add(generarMockMemoria(Long.valueOf(i), "numRef-5" + String.format("%03d", i),
+          "Memoria" + String.format("%03d", i), 1));
+    }
+
+    BDDMockito
+        .given(
+            memoriaRepository.findAll(ArgumentMatchers.<Specification<Memoria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(memorias));
+
+    // when: find unlimited asignables para tipo convocatoria seguimiento
+    Page<Memoria> page = memoriaService.findAllAsignablesTipoConvocatoriaSeguimiento(null, Pageable.unpaged());
+
+    // then: Obtiene Memorias en estado
+    // "En secretaría seguimiento anual" y "En secretaría seguimiento final" con la
+    // fecha de envío es igual o menor a la fecha límite de la convocatoria de
+    // reunión.
+    Assertions.assertThat(page.getContent().size()).isEqualTo(100);
+    Assertions.assertThat(page.getNumber()).isEqualTo(0);
+    Assertions.assertThat(page.getSize()).isEqualTo(100);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+  }
+
   /**
    * Función que devuelve un objeto Memoria.
    * 

@@ -86,12 +86,30 @@ VALUES(8, 1, '2020-07-05 00:00:00.000', '2020-08-05', 'Lugar 5', 'Orden del día
 -- TIPO EVALUACION
 INSERT INTO eti.tipo_evaluacion (id, nombre, activo) VALUES (1, 'TipoEvaluacion1', true);
 
+-- CARGO COMITE
+INSERT INTO ETI.CARGO_COMITE (ID,NOMBRE,ACTIVO) VALUES (1, 'PRESIDENTE', true);
+INSERT INTO ETI.CARGO_COMITE (ID,NOMBRE,ACTIVO) VALUES (2, 'VOCAL', true);
+
+  -- EVALUADOR
+INSERT INTO eti.evaluador (id, resumen, comite_id, cargo_comite_id, fecha_alta, fecha_baja, persona_ref, activo)
+VALUES (1, 'Evaluador1', 1, 1, '2020-07-01', '2021-07-01', 'user-001', true);
+INSERT INTO eti.evaluador (id, resumen, comite_id, cargo_comite_id, fecha_alta, fecha_baja, persona_ref, activo)
+VALUES (2, 'Evaluador2', 1, 1, '2020-07-01', '2021-07-01', 'user-002', true);
+
 -- EVALUACION
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, version, activo) VALUES(1, 1, 1, 1, 1, true, 1, true);
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, version, activo) VALUES(2, 2, 2, 2, 1, true, 1, true);
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, version, activo) VALUES(3, 3, 3, 3, 1, true, 1, true);
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, version, activo) VALUES(4, 4, 4, 4, 1, true, 2, true);
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, version, activo) VALUES(5, 5, 5, 5, 1, true, 2, true);
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, version, activo) VALUES(6, 6, 6, 6, 1, true, 2, true);
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, version, activo) VALUES(7, 7, 7, 7, 1, true, 2, true);
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, version, activo) VALUES(8, 8, 8, 8, 1, true, 2, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima,  evaluador1_id, evaluador2_id, fecha_dictamen, version, activo) 
+VALUES(1, 1, 1, 1, 1, true, 1, 2, '2020-08-01', 1, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima,  evaluador1_id, evaluador2_id, fecha_dictamen, version, activo) 
+VALUES(2, 2, 2, 2, 1, true, 1, 2, '2020-08-01', 1, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima,  evaluador1_id, evaluador2_id, fecha_dictamen, version, activo) 
+VALUES(3, 3, 3, 3, 1, true, 1, 2, '2020-08-01', 1, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima,  evaluador1_id, evaluador2_id, fecha_dictamen, version, activo) 
+VALUES(4, 4, 4, 4, 1, true, 1, 2, '2020-08-01', 2, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima,  evaluador1_id, evaluador2_id, fecha_dictamen, version, activo) 
+VALUES(5, 5, 5, 5, 1, true, 1, 2, '2020-08-01', 2, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima,  evaluador1_id, evaluador2_id, fecha_dictamen, version, activo) 
+VALUES(6, 6, 6, 6, 1, true, 1, 2, '2020-08-01', 2, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima,  evaluador1_id, evaluador2_id, fecha_dictamen, version, activo) 
+VALUES(7, 7, 7, 7, 1, true, 1, 2, '2020-08-01', 2, true);
+INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima,  evaluador1_id, evaluador2_id, fecha_dictamen, version, activo) 
+VALUES(8, 8, 8, 8, 1, true, 1, 2, '2020-08-01', 2, true);

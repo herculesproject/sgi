@@ -7,11 +7,13 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
@@ -98,7 +100,8 @@ public class EvaluacionIT {
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-C")));
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-C", "ETI-CNV-C", "ETI-CNV-E")));
 
     final ResponseEntity<Evaluacion> response = restTemplate.exchange(EVALUACION_CONTROLLER_BASE_PATH, HttpMethod.POST,
         buildRequest(headers, nuevoEvaluacion), Evaluacion.class);
@@ -538,6 +541,31 @@ public class EvaluacionIT {
     convocatoriaReunion.setFechaEnvio(LocalDate.now());
     convocatoriaReunion.setActivo(Boolean.TRUE);
 
+    CargoComite cargoComite = new CargoComite();
+    cargoComite.setId(1L);
+    cargoComite.setNombre("CargoComite1");
+    cargoComite.setActivo(Boolean.TRUE);
+
+    Evaluador evaluador1 = new Evaluador();
+    evaluador1.setId(1L);
+    evaluador1.setResumen("Evaluador1");
+    evaluador1.setComite(comite);
+    evaluador1.setCargoComite(cargoComite);
+    evaluador1.setFechaAlta(LocalDate.of(2020, 7, 1));
+    evaluador1.setFechaBaja(LocalDate.of(2021, 7, 1));
+    evaluador1.setPersonaRef("user-001");
+    evaluador1.setActivo(Boolean.TRUE);
+
+    Evaluador evaluador2 = new Evaluador();
+    evaluador2.setId(2L);
+    evaluador2.setResumen("Evaluador2");
+    evaluador2.setComite(comite);
+    evaluador2.setCargoComite(cargoComite);
+    evaluador2.setFechaAlta(LocalDate.of(2020, 7, 1));
+    evaluador2.setFechaBaja(LocalDate.of(2021, 7, 1));
+    evaluador2.setPersonaRef("user-002");
+    evaluador2.setActivo(Boolean.TRUE);
+
     Evaluacion evaluacion = new Evaluacion();
     evaluacion.setId(id);
     evaluacion.setDictamen(dictamen);
@@ -547,6 +575,8 @@ public class EvaluacionIT {
     evaluacion.setConvocatoriaReunion(convocatoriaReunion);
     evaluacion.setVersion(2);
     evaluacion.setTipoEvaluacion(tipoEvaluacion);
+    evaluacion.setEvaluador1(evaluador1);
+    evaluacion.setEvaluador2(evaluador2);
     evaluacion.setActivo(Boolean.TRUE);
 
     return evaluacion;

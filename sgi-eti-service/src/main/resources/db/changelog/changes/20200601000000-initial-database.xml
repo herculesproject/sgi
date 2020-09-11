@@ -89,10 +89,6 @@
     <createSequence sequenceName="configuracion_seq" />
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-evaluador_evaluacion_seq">
-    <createSequence sequenceName="evaluador_evaluacion_seq" />
-  </changeSet>
-
   <changeSet author="master" id="20200601000000-respuesta_formulario_seq">
     <createSequence sequenceName="respuesta_formulario_seq" />
   </changeSet>
@@ -553,9 +549,13 @@
       <column name="tipo_evaluacion_id" type="BIGINT" />
       <column name="convocatoria_reunion_id" type="BIGINT" />
       <column name="fecha_dictamen" type="DATE" />
-      <column name="version" type="INT">
+      <column name="evaluador1_id" type="BIGINT">
         <constraints nullable="false" />
       </column>
+      <column name="evaluador2_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="version" type="INT" />
       <column name="es_rev_minima" type="BOOLEAN" defaultValueBoolean="false">
         <constraints nullable="false" />
       </column>
@@ -635,16 +635,6 @@
       <column name="clave" type="VARCHAR(250)" />
       <column name="valor" type="VARCHAR(250)" />
       <column name="descripcion" type="VARCHAR(2000)" />
-    </createTable>
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-evaluador_evaluacion">
-    <createTable tableName="evaluador_evaluacion">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="evaluador_evaluacion_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="evaluador_evaluacion_pk" />
-      </column>
-      <column name="evaluador_id" type="BIGINT" />
-      <column name="evaluacion_id" type="BIGINT" />
     </createTable>
   </changeSet>
 
@@ -839,6 +829,14 @@
     <addForeignKeyConstraint baseColumnNames="tipo_evaluacion_id" baseTableName="evaluacion" constraintName="evaluacion_tipo_evaluacion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_evaluacion" validate="true" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-evaluacion_evaluador1_FK">
+    <addForeignKeyConstraint baseColumnNames="evaluador1_id" baseTableName="evaluacion" constraintName="evaluacion_evaluador1_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="evaluador" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-evaluacion_evaluador2_FK">
+    <addForeignKeyConstraint baseColumnNames="evaluador2_id" baseTableName="evaluacion" constraintName="evaluacion_evaluador2_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="evaluador" validate="true" />
+  </changeSet>
+
   <changeSet author="master" id="20200601000000-comite_formulario_comite_FK">
     <addForeignKeyConstraint baseColumnNames="comite_id" baseTableName="comite_formulario" constraintName="comite_formulario_comite_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="comite" validate="true" />
   </changeSet>
@@ -865,14 +863,6 @@
 
   <changeSet author="master" id="20200601000000-apartado_formulario_componente_formulario_FK">
     <addForeignKeyConstraint baseColumnNames="componente_formulario_id" baseTableName="apartado_formulario" constraintName="apartado_formulario_componente_formulario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="componente_formulario" validate="true" />
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-evaluador_evaluacion_evaluador_FK">
-    <addForeignKeyConstraint baseColumnNames="evaluador_id" baseTableName="evaluador_evaluacion" constraintName="evaluador_evaluacion_evaluador_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="evaluador" validate="true" />
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-evaluador_evaluacion_evaluacion_FK">
-    <addForeignKeyConstraint baseColumnNames="evaluacion_id" baseTableName="evaluador_evaluacion" constraintName="evaluador_evaluacion_evaluacion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="evaluacion" validate="true" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-comentario_apartado_formulario_FK">

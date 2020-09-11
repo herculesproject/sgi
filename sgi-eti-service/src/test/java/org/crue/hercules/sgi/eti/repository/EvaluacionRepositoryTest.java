@@ -6,11 +6,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
@@ -45,9 +47,9 @@ public class EvaluacionRepositoryTest {
     Comite comite = entityManager.persistFlushFind(generarMockComite());
     TipoConvocatoriaReunion tipoConvocatoriaReunion = entityManager
         .persistFlushFind(generarMockTipoConvocatoriaReunion());
-    ConvocatoriaReunion convocatoriaReunion1 = entityManager
+    ConvocatoriaReunion c1 = entityManager
         .persistFlushFind(generarMockConvocatoriaReunion(comite, tipoConvocatoriaReunion));
-    ConvocatoriaReunion convocatoriaReunion2 = entityManager
+    ConvocatoriaReunion c2 = entityManager
         .persistFlushFind(generarMockConvocatoriaReunion(comite, tipoConvocatoriaReunion));
     TipoEvaluacion tipoEvaluacion = entityManager.persistFlushFind(generarMockTipoEvaluacion());
     Dictamen dictamen = entityManager.persistFlushFind(generarMockDictamen(tipoEvaluacion));
@@ -60,23 +62,28 @@ public class EvaluacionRepositoryTest {
     Memoria memoria = entityManager
         .persistAndFlush(generarMockMemoria(peticionEvaluacion, comite, tipoMemoria, tipoEstadoMemoria, retrospectiva));
 
+    CargoComite cargoComite = entityManager.persistFlushFind(generarMockCargoComite(1L));
+    Evaluador evaluador1 = entityManager.persistFlushFind(generarMockEvaluador(cargoComite, comite));
+    Evaluador evaluador2 = entityManager.persistFlushFind(generarMockEvaluador(cargoComite, comite));
+
     List<Evaluacion> response = new LinkedList<Evaluacion>();
     response.add(entityManager
-        .persist(generarMockEvaluacion(dictamen, memoria, convocatoriaReunion1, tipoEvaluacion, Boolean.TRUE)));
+        .persist(generarMockEvaluacion(dictamen, memoria, c1, tipoEvaluacion, evaluador1, evaluador2, Boolean.FALSE)));
     response.add(entityManager
-        .persist(generarMockEvaluacion(dictamen, memoria, convocatoriaReunion1, tipoEvaluacion, Boolean.TRUE)));
+        .persist(generarMockEvaluacion(dictamen, memoria, c1, tipoEvaluacion, evaluador1, evaluador2, Boolean.FALSE)));
     response.add(entityManager
-        .persist(generarMockEvaluacion(dictamen, memoria, convocatoriaReunion1, tipoEvaluacion, Boolean.TRUE)));
-    entityManager.persist(generarMockEvaluacion(dictamen, memoria, convocatoriaReunion2, tipoEvaluacion, Boolean.TRUE));
-    entityManager.persist(generarMockEvaluacion(dictamen, memoria, convocatoriaReunion2, tipoEvaluacion, Boolean.TRUE));
+        .persist(generarMockEvaluacion(dictamen, memoria, c1, tipoEvaluacion, evaluador1, evaluador2, Boolean.FALSE)));
+    entityManager
+        .persist(generarMockEvaluacion(dictamen, memoria, c2, tipoEvaluacion, evaluador1, evaluador2, Boolean.FALSE));
+    entityManager
+        .persist(generarMockEvaluacion(dictamen, memoria, c2, tipoEvaluacion, evaluador1, evaluador2, Boolean.FALSE));
 
     // página 1 con 2 elementos por página
     Pageable pageable = PageRequest.of(1, 2);
     Page<Evaluacion> pageResponse = new PageImpl<>(response.subList(2, 3), pageable, response.size());
 
     // when: Se buscan los datos paginados
-    Page<Evaluacion> result = repository.findAllByActivoTrueAndConvocatoriaReunionId(convocatoriaReunion1.getId(),
-        pageable);
+    Page<Evaluacion> result = repository.findAllByActivoTrueAndConvocatoriaReunionId(c1.getId(), pageable);
 
     // then: Se recuperan los datos correctamente según la paginación solicitada
     Assertions.assertThat(result.getNumber()).isEqualTo(pageResponse.getNumber());
@@ -93,9 +100,9 @@ public class EvaluacionRepositoryTest {
     Comite comite = entityManager.persistFlushFind(generarMockComite());
     TipoConvocatoriaReunion tipoConvocatoriaReunion = entityManager
         .persistFlushFind(generarMockTipoConvocatoriaReunion());
-    ConvocatoriaReunion convocatoriaReunion1 = entityManager
+    ConvocatoriaReunion c1 = entityManager
         .persistFlushFind(generarMockConvocatoriaReunion(comite, tipoConvocatoriaReunion));
-    ConvocatoriaReunion convocatoriaReunion2 = entityManager
+    ConvocatoriaReunion c2 = entityManager
         .persistFlushFind(generarMockConvocatoriaReunion(comite, tipoConvocatoriaReunion));
     TipoEvaluacion tipoEvaluacion = entityManager.persistFlushFind(generarMockTipoEvaluacion());
     Dictamen dictamen = entityManager.persistFlushFind(generarMockDictamen(tipoEvaluacion));
@@ -108,20 +115,28 @@ public class EvaluacionRepositoryTest {
     Memoria memoria = entityManager
         .persistAndFlush(generarMockMemoria(peticionEvaluacion, comite, tipoMemoria, tipoEstadoMemoria, retrospectiva));
 
+    CargoComite cargoComite = entityManager.persistFlushFind(generarMockCargoComite(1L));
+    Evaluador evaluador1 = entityManager.persistFlushFind(generarMockEvaluador(cargoComite, comite));
+    Evaluador evaluador2 = entityManager.persistFlushFind(generarMockEvaluador(cargoComite, comite));
+
     List<Evaluacion> response = new LinkedList<Evaluacion>();
-    entityManager.persist(generarMockEvaluacion(dictamen, memoria, convocatoriaReunion1, tipoEvaluacion, Boolean.TRUE));
-    entityManager.persist(generarMockEvaluacion(dictamen, memoria, convocatoriaReunion1, tipoEvaluacion, Boolean.TRUE));
-    entityManager.persist(generarMockEvaluacion(dictamen, memoria, convocatoriaReunion1, tipoEvaluacion, Boolean.TRUE));
-    entityManager.persist(generarMockEvaluacion(dictamen, memoria, convocatoriaReunion1, tipoEvaluacion, Boolean.TRUE));
-    entityManager.persist(generarMockEvaluacion(dictamen, memoria, convocatoriaReunion1, tipoEvaluacion, Boolean.TRUE));
+    entityManager
+        .persist(generarMockEvaluacion(dictamen, memoria, c1, tipoEvaluacion, evaluador1, evaluador2, Boolean.FALSE));
+    entityManager
+        .persist(generarMockEvaluacion(dictamen, memoria, c1, tipoEvaluacion, evaluador1, evaluador2, Boolean.FALSE));
+    entityManager
+        .persist(generarMockEvaluacion(dictamen, memoria, c1, tipoEvaluacion, evaluador1, evaluador2, Boolean.FALSE));
+    entityManager
+        .persist(generarMockEvaluacion(dictamen, memoria, c1, tipoEvaluacion, evaluador1, evaluador2, Boolean.FALSE));
+    entityManager
+        .persist(generarMockEvaluacion(dictamen, memoria, c1, tipoEvaluacion, evaluador1, evaluador2, Boolean.FALSE));
 
     // página 1 con 2 elementos por página
     Pageable pageable = PageRequest.of(1, 2);
     Page<Evaluacion> pageResponse = new PageImpl<>(response, pageable, response.size());
 
     // when: Se buscan los datos paginados
-    Page<Evaluacion> result = repository.findAllByActivoTrueAndConvocatoriaReunionId(convocatoriaReunion2.getId(),
-        pageable);
+    Page<Evaluacion> result = repository.findAllByActivoTrueAndConvocatoriaReunionId(c2.getId(), pageable);
 
     // then: Se recuperan los datos correctamente según la paginación solicitada
     Assertions.assertThat(result.getNumber()).isEqualTo(pageResponse.getNumber());
@@ -166,9 +181,9 @@ public class EvaluacionRepositoryTest {
     Comite comite = entityManager.persistFlushFind(generarMockComite());
     TipoConvocatoriaReunion tipoConvocatoriaReunion = entityManager
         .persistFlushFind(generarMockTipoConvocatoriaReunion());
-    ConvocatoriaReunion convocatoriaReunion1 = entityManager
+    ConvocatoriaReunion c1 = entityManager
         .persistFlushFind(generarMockConvocatoriaReunion(comite, tipoConvocatoriaReunion));
-    ConvocatoriaReunion convocatoriaReunion2 = entityManager
+    ConvocatoriaReunion c2 = entityManager
         .persistFlushFind(generarMockConvocatoriaReunion(comite, tipoConvocatoriaReunion));
     TipoEvaluacion tipoEvaluacion = entityManager.persistFlushFind(generarMockTipoEvaluacion());
     Dictamen dictamen = entityManager.persistFlushFind(generarMockDictamen(tipoEvaluacion));
@@ -181,21 +196,25 @@ public class EvaluacionRepositoryTest {
     Memoria memoria = entityManager
         .persistAndFlush(generarMockMemoria(peticionEvaluacion, comite, tipoMemoria, tipoEstadoMemoria, retrospectiva));
 
+    CargoComite cargoComite = entityManager.persistFlushFind(generarMockCargoComite(1L));
+    Evaluador evaluador1 = entityManager.persistFlushFind(generarMockEvaluador(cargoComite, comite));
+    Evaluador evaluador2 = entityManager.persistFlushFind(generarMockEvaluador(cargoComite, comite));
+
     List<Evaluacion> response = new LinkedList<Evaluacion>();
     response.add(entityManager
-        .persist(generarMockEvaluacion(dictamen, memoria, convocatoriaReunion1, tipoEvaluacion, Boolean.FALSE)));
+        .persist(generarMockEvaluacion(dictamen, memoria, c1, tipoEvaluacion, evaluador1, evaluador2, Boolean.FALSE)));
     response.add(entityManager
-        .persist(generarMockEvaluacion(dictamen, memoria, convocatoriaReunion1, tipoEvaluacion, Boolean.FALSE)));
+        .persist(generarMockEvaluacion(dictamen, memoria, c1, tipoEvaluacion, evaluador1, evaluador2, Boolean.FALSE)));
     response.add(entityManager
-        .persist(generarMockEvaluacion(dictamen, memoria, convocatoriaReunion1, tipoEvaluacion, Boolean.FALSE)));
+        .persist(generarMockEvaluacion(dictamen, memoria, c1, tipoEvaluacion, evaluador1, evaluador2, Boolean.FALSE)));
     entityManager
-        .persist(generarMockEvaluacion(dictamen, memoria, convocatoriaReunion2, tipoEvaluacion, Boolean.FALSE));
+        .persist(generarMockEvaluacion(dictamen, memoria, c2, tipoEvaluacion, evaluador1, evaluador2, Boolean.FALSE));
     entityManager
-        .persist(generarMockEvaluacion(dictamen, memoria, convocatoriaReunion2, tipoEvaluacion, Boolean.FALSE));
+        .persist(generarMockEvaluacion(dictamen, memoria, c2, tipoEvaluacion, evaluador1, evaluador2, Boolean.FALSE));
 
     // when: Se buscan los datos
     List<Evaluacion> result = repository.findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId(
-        tipoEvaluacion.getId(), Boolean.FALSE, convocatoriaReunion1.getId());
+        tipoEvaluacion.getId(), Boolean.FALSE, c1.getId());
 
     // then: Se recuperan los datos correctamente
     Assertions.assertThat(result.size()).isEqualTo(response.size());
@@ -212,9 +231,9 @@ public class EvaluacionRepositoryTest {
     Comite comite = entityManager.persistFlushFind(generarMockComite());
     TipoConvocatoriaReunion tipoConvocatoriaReunion = entityManager
         .persistFlushFind(generarMockTipoConvocatoriaReunion());
-    ConvocatoriaReunion convocatoriaReunion1 = entityManager
+    ConvocatoriaReunion c1 = entityManager
         .persistFlushFind(generarMockConvocatoriaReunion(comite, tipoConvocatoriaReunion));
-    ConvocatoriaReunion convocatoriaReunion2 = entityManager
+    ConvocatoriaReunion c2 = entityManager
         .persistFlushFind(generarMockConvocatoriaReunion(comite, tipoConvocatoriaReunion));
     TipoEvaluacion tipoEvaluacion = entityManager.persistFlushFind(generarMockTipoEvaluacion());
     Dictamen dictamen = entityManager.persistFlushFind(generarMockDictamen(tipoEvaluacion));
@@ -227,17 +246,24 @@ public class EvaluacionRepositoryTest {
     Memoria memoria = entityManager
         .persistAndFlush(generarMockMemoria(peticionEvaluacion, comite, tipoMemoria, tipoEstadoMemoria, retrospectiva));
 
-    entityManager.persist(generarMockEvaluacion(dictamen, memoria, convocatoriaReunion1, tipoEvaluacion, Boolean.TRUE));
-    entityManager.persist(generarMockEvaluacion(dictamen, memoria, convocatoriaReunion2, tipoEvaluacion, Boolean.TRUE));
-    entityManager.persist(generarMockEvaluacion(dictamen, memoria, convocatoriaReunion1, tipoEvaluacion, Boolean.TRUE));
+    CargoComite cargoComite = entityManager.persistFlushFind(generarMockCargoComite(1L));
+    Evaluador evaluador1 = entityManager.persistFlushFind(generarMockEvaluador(cargoComite, comite));
+    Evaluador evaluador2 = entityManager.persistFlushFind(generarMockEvaluador(cargoComite, comite));
+
     entityManager
-        .persist(generarMockEvaluacion(dictamen, memoria, convocatoriaReunion2, tipoEvaluacion, Boolean.FALSE));
+        .persist(generarMockEvaluacion(dictamen, memoria, c1, tipoEvaluacion, evaluador1, evaluador2, Boolean.TRUE));
     entityManager
-        .persist(generarMockEvaluacion(dictamen, memoria, convocatoriaReunion2, tipoEvaluacion, Boolean.FALSE));
+        .persist(generarMockEvaluacion(dictamen, memoria, c2, tipoEvaluacion, evaluador1, evaluador2, Boolean.TRUE));
+    entityManager
+        .persist(generarMockEvaluacion(dictamen, memoria, c1, tipoEvaluacion, evaluador1, evaluador2, Boolean.TRUE));
+    entityManager
+        .persist(generarMockEvaluacion(dictamen, memoria, c2, tipoEvaluacion, evaluador1, evaluador2, Boolean.FALSE));
+    entityManager
+        .persist(generarMockEvaluacion(dictamen, memoria, c2, tipoEvaluacion, evaluador1, evaluador2, Boolean.FALSE));
 
     // when: Se buscan los datos
     List<Evaluacion> result = repository.findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId(
-        tipoEvaluacion.getId(), Boolean.FALSE, convocatoriaReunion1.getId());
+        tipoEvaluacion.getId(), Boolean.FALSE, c1.getId());
 
     // then: Se comprueba que no se recupera ningún registro
     Assertions.assertThat(result.isEmpty()).isTrue();
@@ -356,17 +382,40 @@ public class EvaluacionRepositoryTest {
   }
 
   /**
+   * Función que devuelve un objeto cargocomite
+   * 
+   * @param id id del cargocomite
+   * @return un cargocomite
+   */
+  public CargoComite generarMockCargoComite(Long id) {
+    return new CargoComite(id, "CargoComite", Boolean.TRUE);
+  }
+
+  /**
+   * Función que devuelve un objeto evaluador
+   * 
+   * @param cargoComite cargoComite
+   * @param comite      comite
+   * @return un evaluador
+   */
+  public Evaluador generarMockEvaluador(CargoComite cargoComite, Comite comite) {
+    return new Evaluador(null, cargoComite, comite, LocalDate.now(), LocalDate.now(), "resumen", "persona_ref",
+        Boolean.TRUE);
+  }
+
+  /**
    * Función que devuelve un objeto Evaluacion
    * 
-   * @param dictamen            el objeto Dictamen
-   * @param memoria             el objeto Memoria
-   * @param convocatoriaReunion el objeto ConvocatoriaReunion
-   * @param tipoEvaluacion      el objeto TipoEvaluacion
-   * @param esRevMinima         boolean que indica si es de revisión mínima
+   * @param dictamen
+   * @param memoria
+   * @param convocatoriaReunion
+   * @param tipoEvaluacion
+   * @param evaluador1          evaluador 1
+   * @param evaluador2          evaluador 2
    * @return el objeto Evaluacion
    */
   public Evaluacion generarMockEvaluacion(Dictamen dictamen, Memoria memoria, ConvocatoriaReunion convocatoriaReunion,
-      TipoEvaluacion tipoEvaluacion, Boolean esRevMinima) {
+      TipoEvaluacion tipoEvaluacion, Evaluador evaluador1, Evaluador evaluador2, Boolean esRevMinima) {
 
     Evaluacion evaluacion = new Evaluacion();
     evaluacion.setDictamen(dictamen);
@@ -376,6 +425,8 @@ public class EvaluacionRepositoryTest {
     evaluacion.setConvocatoriaReunion(convocatoriaReunion);
     evaluacion.setVersion(2);
     evaluacion.setTipoEvaluacion(tipoEvaluacion);
+    evaluacion.setEvaluador1(evaluador1);
+    evaluacion.setEvaluador2(evaluador2);
     evaluacion.setActivo(Boolean.TRUE);
 
     return evaluacion;
