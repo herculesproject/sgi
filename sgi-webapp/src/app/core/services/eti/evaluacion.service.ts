@@ -28,7 +28,9 @@ export class EvaluacionService extends SgiRestService<number, IEvaluacion>{
         fechaDictamen: value.fechaDictamen,
         esRevMinima: value.esRevMinima,
         activo: value.activo,
-        persona: null
+        persona: null,
+        evaluador1: value.evaluador1,
+        evaluador2: value.evaluador2
       };
     }
     fromTarget(value: IEvaluacionSolicitante): IEvaluacion {
@@ -42,7 +44,9 @@ export class EvaluacionService extends SgiRestService<number, IEvaluacion>{
         dictamen: value.dictamen,
         fechaDictamen: value.fechaDictamen,
         esRevMinima: value.esRevMinima,
-        activo: value.activo
+        activo: value.activo,
+        evaluador1: value.evaluador1,
+        evaluador2: value.evaluador2
       };
     }
   }();
@@ -143,4 +147,20 @@ export class EvaluacionService extends SgiRestService<number, IEvaluacion>{
           this.logger.debug(EvaluacionService.name, `findAllByMemoriaAndRetrospectivaEnEvaluacion(${options ? JSON.stringify(options) : ''})`, '-', 'END');
         }));
   }
+
+  /**
+   * Devuelve todos las evaluaciones de la convocatoria que no son revisión mínima.
+   *
+   * @param idConvocatoria id convocatoria.
+   * @param options opcione de busqueda.
+   * @return las evaluaciones de la convocatoria.
+   */
+  findAllByConvocatoriaReunionIdAndNoEsRevMinima(idConvocatoria: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IEvaluacion>> {
+    this.logger.debug(EvaluacionService.name, `findAllByConvocatoriaReunionIdAndNoEsRevMinima(${idConvocatoria})`, '-', 'START');
+    return this.find<IEvaluacion, IEvaluacion>(`${this.endpointUrl}/convocatoriareunionnorevminima/${idConvocatoria}`, options).pipe(
+      tap(() => this.logger.debug(EvaluacionService.name, `findAllByConvocatoriaReunionIdAndNoEsRevMinima(${idConvocatoria})`, '-', 'END'))
+    );
+  }
+
 }

@@ -5,10 +5,10 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { NGXLogger } from 'ngx-logger';
 
-import { Persona } from '@core/models/cat/usuario';
 import { Subject, ReplaySubject } from 'rxjs';
 import { Supervision } from '@core/models/cat/supervision';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { Persona } from '@core/models/cat/usuario';
 
 const MSG_ERROR_GESTOR_EXISTE = marker('cat.servicio.gestor.existe');
 

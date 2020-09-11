@@ -6,13 +6,11 @@ import { Comite } from '@core/models/eti/comite';
 import { IEvaluacionSolicitante } from '@core/models/eti/dto/evaluacion-solicitante';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
-import { Persona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ComiteService } from '@core/services/eti/comite.service';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocatoria-reunion.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateUtils } from '@core/utils/date-utils';
 import { SgiAuthService } from '@sgi/framework/auth';
@@ -20,6 +18,8 @@ import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framew
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { Persona } from '@core/models/sgp/persona';
 
 const MSG_ERROR = marker('eti.evaluacion.listado.error');
 const MSG_ERROR_LOAD_TIPOS_CONVOCATORIA = marker('eti.evaluacion.listado.buscador.tipoConvocatoria.error');
@@ -36,6 +36,12 @@ export class EvaluacionListadoComponent extends AbstractPaginacionComponent<IEva
   comiteListado: Comite[];
   comitesFiltrados: Observable<Comite[]>;
   tiposConvocatoriaReunion: TipoConvocatoriaReunion[];
+
+  private filterActivo = {
+    field: 'activo',
+    type: SgiRestFilterType.EQUALS,
+    value: 'true'
+  };
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -135,7 +141,9 @@ export class EvaluacionListadoComponent extends AbstractPaginacionComponent<IEva
   private loadComites(): void {
     this.logger.debug(EvaluacionListadoComponent.name, 'loadComites()', 'start');
     this.suscripciones.push(
-      this.comiteService.findAll().subscribe(
+      this.comiteService.findAll(
+        { filters: [this.filterActivo] }
+      ).subscribe(
         (res: SgiRestListResult<Comite>) => {
           if (res) {
             this.comiteListado = res.items;

@@ -1,5 +1,5 @@
-import { Component, Inject, ViewChild, EventEmitter, Output, AfterViewInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, Inject, ViewChild, AfterViewInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NGXLogger } from 'ngx-logger';
 import { IPersonaDialogo } from '@core/models/eti/persona-dialogo';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';

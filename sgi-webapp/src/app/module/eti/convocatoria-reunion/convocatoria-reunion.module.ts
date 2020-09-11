@@ -9,12 +9,17 @@ import { ConvocatoriaReunionCrearComponent } from './convocatoria-reunion-crear/
 import { ConvocatoriaReunionDatosGeneralesComponent } from './convocatoria-reunion-formulario/convocatoria-reunion-datos-generales/convocatoria-reunion-datos-generales.component';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ConvocatoriaReunionListadoMemoriasComponent } from './convocatoria-reunion-formulario/convocatoria-reunion-listado-memorias/convocatoria-reunion-listado-memorias.component';
+import { ConvocatoriaReunionAsignacionMemoriasComponent } from './convocatoria-reunion-formulario/convocatoria-reunion-asignacion-memorias/convocatoria-reunion-asignacion-memorias.component';
+
 
 @NgModule({
   declarations: [
     ConvocatoriaReunionCrearComponent,
     ConvocatoriaReunionListadoComponent,
-    ConvocatoriaReunionDatosGeneralesComponent
+    ConvocatoriaReunionDatosGeneralesComponent,
+    ConvocatoriaReunionListadoMemoriasComponent,
+    ConvocatoriaReunionAsignacionMemoriasComponent
   ],
   imports: [
     SharedModule,

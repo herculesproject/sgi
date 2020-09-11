@@ -49,4 +49,49 @@ export class MemoriaService extends SgiRestService<number, Memoria>{
           `getEvaluaciones(${memoriaId}, ${evaluacionId}, ${options ? JSON.stringify(options) : options})`, '-', 'end'))
       );
   }
+
+  /**
+   * Devuelve todos las memorias asignables a la convocatoria
+   *
+   * @param idConvocatoria id convocatoria.
+   * @param options opciones de busqueda.
+   * @return las memorias asignables a la convocatoria.
+   */
+  findAllMemoriasAsignablesConvocatoria(idConvocatoria: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<Memoria>> {
+    this.logger.debug(MemoriaService.name, `findAllMemoriasAsignablesConvocatoria(${idConvocatoria})`, '-', 'START');
+    return this.find<Memoria, Memoria>(`${this.endpointUrl}/asignables/${idConvocatoria}`, options).pipe(
+      tap(() => this.logger.debug(MemoriaService.name, `findAllMemoriasAsignablesConvocatoria(${idConvocatoria})`, '-', 'END'))
+    );
+  }
+
+  /**
+   * Devuelve todos las memorias asignables para una convocatoria de tipo seguimiento
+   *
+   * @param options opciones de busqueda.
+   * @return las memorias asignables a la convocatoria de ese tipo seguimiento.
+   */
+  findAllAsignablesTipoConvocatoriaSeguimiento(options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<Memoria>> {
+    this.logger.debug(MemoriaService.name, `findAllAsignablesTipoConvocatoriaSeguimiento()`, '-', 'START');
+    return this.find<Memoria, Memoria>(`${this.endpointUrl}/tipo-convocatoria-seg`, options).pipe(
+      tap(() => this.logger.debug(MemoriaService.name, `findAllAsignablesTipoConvocatoriaSeguimiento()`, '-', 'END'))
+    );
+  }
+
+
+  /**
+   * Devuelve todos las memorias asignables para una convocatoria de tipo ordinaria / extraordinaria
+   *
+   * @param options opciones de busqueda.
+   * @return las memorias asignables a la convocatoria de tipo ordinaria / extraordinaria.
+   *
+   */
+  findAllAsignablesTipoConvocatoriaOrdExt(options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<Memoria>> {
+    this.logger.debug(MemoriaService.name, `findAllAsignablesTipoConvocatoriaOrdExt()`, '-', 'START');
+    return this.find<Memoria, Memoria>(`${this.endpointUrl}/tipo-convocatoria-ord-ext`, options).pipe(
+      tap(() => this.logger.debug(MemoriaService.name, `findAllAsignablesTipoConvocatoriaOrdExt()`, '-', 'END'))
+    );
+  }
 }

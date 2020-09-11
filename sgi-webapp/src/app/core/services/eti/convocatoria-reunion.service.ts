@@ -46,8 +46,6 @@ interface IConvocatoriaReunion {
 @Injectable({
   providedIn: 'root',
 })
-
-
 export class ConvocatoriaReunionService extends SgiMutableRestService<number, IConvocatoriaReunion, ConvocatoriaReunion> {
   private static readonly MAPPING = '/convocatoriareuniones';
   private static readonly CONVERTER = new class extends SgiBaseConverter<IConvocatoriaReunion, ConvocatoriaReunion> {

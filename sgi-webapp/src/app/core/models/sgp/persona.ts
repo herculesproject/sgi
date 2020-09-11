@@ -26,4 +26,6 @@ export class Persona {
     this.identificadorNumero = personaFisica.identificadorNumero;
     this.identificadorLetra = personaFisica.identificadorLetra;
   }
+
+
 }

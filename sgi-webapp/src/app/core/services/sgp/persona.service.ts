@@ -3,7 +3,7 @@ import { Persona } from '@core/models/sgp/persona';
 import { environment } from '@env';
 import { NGXLogger } from 'ngx-logger';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { SgiRestService } from '@sgi/framework/http';
+import { SgiRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 

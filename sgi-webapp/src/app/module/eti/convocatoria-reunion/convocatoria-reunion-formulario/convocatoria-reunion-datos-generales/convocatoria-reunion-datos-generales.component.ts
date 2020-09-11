@@ -1,18 +1,17 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Comite } from '@core/models/eti/comite';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
-import { IEvaluador } from '@core/models/eti/evaluador';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
-import { Persona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ComiteService } from '@core/services/eti/comite.service';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocatoria-reunion.service';
+import { IEvaluador } from '@core/models/eti/evaluador';
+import { Persona } from '@core/models/sgp/persona';
 import { FormGroupUtil } from '@core/utils/form-group-util';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { HoraValidador } from '@core/validators/hora-validator';
 import { MinutoValidador } from '@core/validators/minuto-validator';
@@ -20,8 +19,9 @@ import { NullIdValidador } from '@core/validators/null-id-validador';
 import { SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
 import { AbstractTabComponent } from '@core/component/abstract-tab.component';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of, zip } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
+import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 
 
 const MSG_ERROR_LOAD_COMITES = marker('eti.convocatoriaReunion.formulario.datosGenerales.comite.error.cargar');
@@ -45,6 +45,16 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
 
   filteredComites: Observable<Comite[]>;
   filteredTiposConvocatoriaReunion: Observable<TipoConvocatoriaReunion[]>;
+
+  filterActivo = {
+    field: 'activo',
+    type: SgiRestFilterType.EQUALS,
+    value: 'true'
+  };
+
+  @Output()
+  selectConvocatoria: EventEmitter<number> = new EventEmitter();
+  @Input() disableCamposDatosGenerales = false;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -84,6 +94,8 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
     this.getComites();
     this.getTiposConvocatoriaReunion();
     this.getConvocantesComite();
+
+    this.selectConvocatoriaReunion(null);
 
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'ngOnInit()', 'end');
   }
@@ -179,21 +191,23 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
               switchMap((response: SgiRestListResult<IEvaluador>) => {
                 const convocantes = response.items;
 
-                const convocantesInfoUsuario$: Observable<IEvaluador>[] = [];
+                const personaRefsConvocantes = convocantes.map((convocante: IEvaluador) => convocante.personaRef);
 
-                convocantes.forEach(convocante => {
-                  const convocanteInfoUsuario$ = this.personaFisicaService.findById(convocante.personaRef).pipe(
-                    map((persona: Persona) => {
-                      convocante.nombre = persona.nombre;
-                      convocante.primerApellido = persona.primerApellido;
-                      convocante.segundoApellido = persona.segundoApellido;
-                      return convocante;
-                    }));
+                const convocantesWithDatosPersona$ = this.personaFisicaService.findByPersonasRefs(personaRefsConvocantes).pipe(
+                  map((result: SgiRestListResult<Persona>) => {
+                    const personas = result.items;
 
-                  convocantesInfoUsuario$.push(convocanteInfoUsuario$);
-                });
+                    convocantes.forEach((convocante: IEvaluador) => {
+                      const datosPersonaConvocante = personas.find((persona: Persona) => convocante.personaRef === persona.personaRef);
+                      convocante.nombre = datosPersonaConvocante?.nombre;
+                      convocante.primerApellido = datosPersonaConvocante?.primerApellido;
+                      convocante.segundoApellido = datosPersonaConvocante?.segundoApellido;
+                    });
 
-                return zip(...convocantesInfoUsuario$);
+                    return convocantes;
+                  }));
+
+                return convocantesWithDatosPersona$;
               })
             );
         })
@@ -324,6 +338,18 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'getDatosConvocantesFormulario()', 'end');
 
     return convocantes;
+  }
+
+  /**
+   * Registra el evento de modificación de convocatoria reunión.
+   * @param convocatoriaReunion  convocatoria reunión seleccionada
+   */
+  selectConvocatoriaReunion(convocatoriaReunion: ConvocatoriaReunion | string) {
+    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
+      'selectConvocatoriaReunion(convocatoriaReunion: ConvocatoriaReunion)', 'start');
+    this.selectConvocatoria.emit(convocatoriaReunion ? (convocatoriaReunion as ConvocatoriaReunion).id : null);
+    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
+      'selectConvocatoriaReunion(convocatoriaReunion: ConvocatoriaReunion)', 'end');
   }
 
 }

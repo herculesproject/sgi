@@ -1,16 +1,29 @@
-<section class="convocatoria-reunion">
+<section class="convocatoria-reunion-crear">
   <mat-tab-group headerPosition="above" (selectedTabChange)="cambioTab($event)">
     <!-- Datos generales -->
     <mat-tab>
       <ng-template mat-tab-label>
         <sgi-generic-tab-label [abstractTab]="datosGenerales" [errors]="errorTabs[0]"
-          [textoLabel]="'eti.convocatoriaReunion.formulario.datosGenerales.cabecera' | translate">
+          [textoLabel]="'label.datos-generales' | translate">
         </sgi-generic-tab-label>
       </ng-template>
-      <sgi-convocatoria-reunion-datos-generales #datosGenerales (eventEmitter)="setErroresTab(0, $event)">
+      <sgi-convocatoria-reunion-datos-generales #datosGenerales (eventEmitter)="setErroresTab(0, $event)"
+        [disableCamposDatosGenerales]="disableCamposDatosGenerales">
       </sgi-convocatoria-reunion-datos-generales>
     </mat-tab>
 
+    <!-- Asignacion de memorias -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <sgi-generic-tab-label [abstractTab]="asignacionMemorias" [errors]="errorTabs[1]"
+          [textoLabel]="'eti.convocatoriaReunion.formulario.asignacionMemorias.cabecera' | translate">
+        </sgi-generic-tab-label>
+      </ng-template>
+      <sgi-convocatoria-reunion-listado-memorias #asignacionMemorias (eventEmitter)="setErroresTab(1, $event)"
+        [idConvocatoria]="idConvocatoria" [datosGeneralesFormData]="datosGeneralesFormData"
+        [disableAsignarMemorias]="disableAsignarMemorias">
+      </sgi-convocatoria-reunion-listado-memorias>
+    </mat-tab>
   </mat-tab-group>
 
   <!-- Footer -->

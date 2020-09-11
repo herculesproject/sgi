@@ -128,21 +128,19 @@
 
     <!-- Acciones Column -->
     <ng-container matColumnDef="acciones">
-      <th mat-header-cell *matHeaderCellDef> {{'eti.convocatoriaReunion.listado.acciones' | translate}} </th>
+      <th mat-header-cell *matHeaderCellDef> {{'label.acciones' | translate}} </th>
       <td mat-cell *matCellDef="let convocatoriaReunion;let i=index;">
         <button mat-button *sgiHasAuthorityForAnyUO="'ETI-CNV-E'" [routerLink]="[convocatoriaReunion.id]"
-          matTooltip="{{'eti.convocatoriaReunion.listado.editar' | translate}}">
+          matTooltip="{{'botones.editar' | translate}}">
           <mat-icon color="primary">border_color</mat-icon>
         </button>
         <button color="warn" mat-button *sgiHasAuthorityForAnyUO="'ETI-CNV-B'"
-          matTooltip="{{'eti.convocatoriaReunion.listado.borrar' | translate}}"
-          (click)="borrar(convocatoriaReunion.id, $event)">
+          matTooltip="{{'botones.borrar' | translate}}" (click)="borrar(convocatoriaReunion.id, $event)">
           <mat-icon>highlight_off</mat-icon>
         </button>
         <ng-container *sgiHasAuthorityForAnyUO="'ETI-CNV-ENV'">
           <button color="accent" *ngIf="!convocatoriaReunion.fechaEnvio" mat-button
-            matTooltip="{{'eti.convocatoriaReunion.listado.enviar' | translate}}"
-            (click)="enviar(convocatoriaReunion.id, $event)">
+            matTooltip="{{'botones.enviar' | translate}}" (click)="enviar(convocatoriaReunion.id, $event)">
             <mat-icon>send</mat-icon>
           </button>
         </ng-container>

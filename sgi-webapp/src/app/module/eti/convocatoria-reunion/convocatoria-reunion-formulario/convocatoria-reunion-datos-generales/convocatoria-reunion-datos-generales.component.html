@@ -1,5 +1,7 @@
 <section class="convocatoria-reunion-datos-generales">
-  <h3>{{'eti.convocatoriaReunion.formulario.datosGenerales.cabecera' | translate}}</h3>
+  <mat-card *ngIf="disableCamposDatosGenerales">
+    {{'eti.convocatoriaReunion.formulario.datosGenerales.campos.disabled' | translate}}</mat-card>
+
   <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
     [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
@@ -9,7 +11,8 @@
       <mat-form-field class="input-form">
         <mat-label>{{'eti.convocatoriaReunion.formulario.datosGenerales.comite.titulo' | translate}}</mat-label>
         <input type="text" [placeholder]="'eti.convocatoriaReunion.formulario.datosGenerales.comite.titulo' | translate"
-          arial-label="Number" matInput formControlName="comite" [matAutocomplete]="autocompleteComite" required>
+          arial-label="Number" matInput formControlName="comite" [matAutocomplete]="autocompleteComite" required
+          [readOnly]="disableCamposDatosGenerales">
         <mat-autocomplete #autocompleteComite="matAutocomplete" [displayWith]="getComite">
           <mat-option *ngFor="let comite of filteredComites | async" [value]="comite">
             {{comite.comite}}
@@ -46,6 +49,7 @@
         <mat-label>{{'eti.convocatoriaReunion.formulario.datosGenerales.fechaLimite.titulo' | translate}}
         </mat-label>
         <input matInput formControlName="fechaLimite" [matDatepicker]="pickerFechaLimite"
+          [readOnly]="disableCamposDatosGenerales" [disabled]="disableCamposDatosGenerales"
           [placeholder]="'eti.convocatoriaReunion.formulario.datosGenerales.fechaLimite.titulo' | translate" required>
         <mat-datepicker-toggle matSuffix [for]="pickerFechaLimite"></mat-datepicker-toggle>
         <mat-datepicker #pickerFechaLimite></mat-datepicker>
@@ -62,7 +66,7 @@
       <mat-form-field>
         <mat-label>{{'eti.convocatoriaReunion.formulario.datosGenerales.tipoConvocatoriaReunion.titulo' | translate}}
         </mat-label>
-        <input type="text"
+        <input type="text" [readOnly]="disableCamposDatosGenerales"
           [placeholder]="'eti.convocatoriaReunion.formulario.datosGenerales.tipoConvocatoriaReunion.titulo' | translate"
           arial-label="Number" matInput formControlName="tipoConvocatoriaReunion"
           [matAutocomplete]="autocompleteTipoConvocatoriaReunion" required>
@@ -163,7 +167,5 @@
         </mat-error>
       </mat-form-field>
     </div>
-
-
   </form>
 </section>

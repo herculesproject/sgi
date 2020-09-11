@@ -3,6 +3,7 @@ import { ConvocatoriaReunion } from './convocatoria-reunion';
 import { Dictamen } from './dictamen';
 import { Memoria } from './memoria';
 import { TipoEvaluacion } from './tipo-evaluacion';
+import { IEvaluador } from './evaluador';
 
 export interface IEvaluacion {
   /** ID */
@@ -25,6 +26,12 @@ export interface IEvaluacion {
 
   /** Dictamen */
   dictamen: Dictamen;
+
+  /** Evaluador 1 */
+  evaluador1: IEvaluador;
+
+  /** Evaluador 2 */
+  evaluador2: IEvaluador;
 
   /** Fecha Inicio. */
   fechaDictamen: Date;
