@@ -1,34 +1,23 @@
-<mat-tab-group headerPosition="above" (selectedTabChange)="cambioTab($event)">
-  <!-- Comentarios -->
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <sgi-generic-tab-label [abstractTab]="comentarios" [errors]="errorTabs[0]"
-        [textoLabel]="'eti.evaluacion.evaluar.comentarios.cabecera' | translate">
-      </sgi-generic-tab-label>
-    </ng-template>
-    <sgi-evaluacion-comentarios #comentarios></sgi-evaluacion-comentarios>
-  </mat-tab>
-
-  <!-- Memoria -->
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <sgi-generic-tab-label [abstractTab]="datosMemoria" [errors]="errorTabs[1]"
-        [textoLabel]="'eti.evaluacion.evaluar.datosMemoria.cabecera' | translate">
-      </sgi-generic-tab-label>
-    </ng-template>
-    <sgi-evaluacion-datos-memoria #datosMemoria></sgi-evaluacion-datos-memoria>
-  </mat-tab>
-
-  <!-- Documentación -->
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <sgi-generic-tab-label [abstractTab]="documentacion" [errors]="errorTabs[2]"
-        [textoLabel]="'eti.evaluacion.evaluar.documentacion.cabecera' | translate">
-      </sgi-generic-tab-label>
-    </ng-template>
-    <sgi-evaluacion-documentacion #documentacion></sgi-evaluacion-documentacion>
-  </mat-tab>
-
-</mat-tab-group>
-<!-- Footer -->
-<sgi-footer-guardar [texto]="textoCrear" (emitter)="saveData()"></sgi-footer-guardar>
+<mat-drawer-container class="mat-drawer-tabs">
+  <mat-drawer class="tabs" mode="side" opened>
+    <mat-list class="opciones-menu">
+      <sgi-action-fragment-menu-item [routerLink]="[EVALUACION_ROUTE_NAMES.MEMORIA]"
+        [title]="'eti.evaluacion.evaluar.datosMemoria.cabecera' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.MEMORIA)">
+      </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item [routerLink]="[EVALUACION_ROUTE_NAMES.DOCUMENTACION]"
+        [title]="'eti.evaluacion.evaluar.documentacion.cabecera' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.DOCUMENTACION)">
+      </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item [routerLink]="[EVALUACION_ROUTE_NAMES.COMENTARIOS]"
+        [title]="'eti.evaluacion.evaluar.comentarios.cabecera' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.COMENTARIOS)">
+      </sgi-action-fragment-menu-item>
+    </mat-list>
+  </mat-drawer>
+  <mat-drawer-content class="mat-drawer-content">
+    <router-outlet></router-outlet>
+    <sgi-footer-guardar [texto]="textoCrear" [actionService]="actionService" (emitter)="saveOrUpdate()">
+    </sgi-footer-guardar>
+  </mat-drawer-content>
+</mat-drawer-container>

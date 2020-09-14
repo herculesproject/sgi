@@ -1,23 +1,16 @@
-@import "variables.scss";
+@import "colors.scss";
 
 .separation {
+  padding: 25px;
   &.footer {
     @media only screen and (min-width: 800px) {
       position: fixed;
       bottom: 0px;
-      height: 85px;
+      height: 33px;
       width: 100%;
-      box-shadow: inset 0px 14px 12px -12px map-get($palette-accent, 100);
+      box-shadow: inset 0px 14px 12px -12px map-get($palette-grease, 100);
       margin-left: -20px;
-      background: white;
-    }
-  }
-  .boton {
-    padding: 25px 20px 20px 20px;
-    .btn-secondary {
-      width: 270px;
-      color: #f0fff3;
-      background-color: #28c76f;
+      background: map-get($custom-colors, white);
     }
   }
 }

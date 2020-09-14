@@ -1,6 +1,7 @@
-@import "variables.scss";
+@import "colors.scss";
 
 $padding: 15px;
+$config: mat-typography-config();
 
 /* HEADER */
 .header {
@@ -43,7 +44,7 @@ $padding: 15px;
     margin-left: 115px;
     padding-top: 17px;
     h2 {
-      font-size: 17px;
+      font-size: mat-font-size($config, caption);
       font-weight: bold;
       margin: 0px;
     }

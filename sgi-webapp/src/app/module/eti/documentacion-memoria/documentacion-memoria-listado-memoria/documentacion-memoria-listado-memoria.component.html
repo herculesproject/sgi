@@ -1,4 +1,4 @@
-<section class="documentacion-memoria-listado-memoria">
+<div class="documentacion-memoria-listado-memoria">
   <table mat-table class="mat-elevation-z8 table-unidad" [dataSource]="documentacionMemoria$ | async" matSort
     matSortActive="id" matSortDirection="asc" matSortDisableClear>
     <!-- documentoRef Column -->
@@ -24,4 +24,4 @@
   </table>
   <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
   </mat-paginator>
-</section>
+</div>

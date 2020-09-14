@@ -8,7 +8,6 @@ import { SgiAuthMode, SgiAuthConfig } from '@sgi/framework/auth';
 export const environment = {
   production: false,
   serviceServers: {
-    cat: '/api/cat',
     eti: '/api/eti',
     sgp: '/api/sgp'
   },
@@ -28,7 +27,6 @@ export const environment = {
       isInvestigador: false
     },
     protectedResources: [
-      /\/api\/cat.*/i,
       /\/api\/eti.*/i
     ]
   } as SgiAuthConfig

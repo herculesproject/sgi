@@ -1,25 +1,26 @@
-<section>
+<section class="acta-memoria">
+  <h2>{{'eti.acta.memorias.title' | translate}}</h2>
   <table class="mat-elevation-z8 table-acta" mat-table [dataSource]="memorias$ | async" matSort
     matSortActive="memoria.id" matSortDirection="asc" matSortDisableClear>
 
     <!-- Referencia Column -->
     <ng-container matColumnDef="referencia">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.acta.crear.memorias.referencia' | translate}} </th>
-      <td mat-cell *matCellDef="let memoria"> {{memoria.numReferencia}} </td>
+      <td mat-cell *matCellDef="let memoria"> {{memoria?.numReferencia}} </td>
     </ng-container>
 
     <!-- Version Column -->
     <ng-container matColumnDef="version">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.acta.crear.memorias.version' | translate}}
       </th>
-      <td mat-cell *matCellDef="let memoria"> {{memoria.version}} </td>
+      <td mat-cell *matCellDef="let memoria"> {{memoria?.version}} </td>
     </ng-container>
 
     <!-- Dictamen Column -->
     <ng-container matColumnDef="dictamen.nombre">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.acta.crear.memorias.dictamen' | translate}}
       </th>
-      <td mat-cell *matCellDef="let memoria"> {{memoria.dictamen.nombre}} </td>
+      <td mat-cell *matCellDef="let memoria"> {{memoria?.dictamen?.nombre}} </td>
     </ng-container>
 
     <!-- Informe Column -->

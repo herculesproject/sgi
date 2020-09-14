@@ -37,7 +37,7 @@ export class PersonaFisicaService extends SgiRestService<string, Persona>{
   findAllPersonas(options?: SgiRestFindOptions): Observable<SgiRestListResult<Persona>> {
     this.logger.debug(PersonaFisicaService.name,
       `findAllPersonas(filter:${options.filters},page:${options.page}),sort:${options.sort}`, '-', 'START');
-    return this.find<Persona, Persona>(`${this.endpointUrl}/persona/`, options).pipe(
+    return this.find<Persona, Persona>(`${this.endpointUrl}/persona`, options).pipe(
       tap(() => this.logger.debug(PersonaFisicaService.name,
         `findAllPersonas(filter:${options.filters},page:${options.page}),sort:${options.sort}`, '-', 'END'))
     );

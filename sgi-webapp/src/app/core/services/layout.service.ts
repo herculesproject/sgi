@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
-import { Router, RouterEvent, ActivatedRouteSnapshot, Route, GuardsCheckEnd, UrlSegment, RouterStateSnapshot } from '@angular/router';
+import { Router, RouterEvent, ActivatedRouteSnapshot, Route, GuardsCheckEnd, UrlSegment, NavigationStart, NavigationEnd, NavigationCancel } from '@angular/router';
 import { Module } from '@core/module';
 
 export interface BreadcrumbData {
@@ -25,6 +25,8 @@ export class LayoutService {
   breadcrumData$ = new BehaviorSubject<BreadcrumbData[]>([]);
   title$ = new BehaviorSubject<string>('');
 
+  private navigationStack: Navigation[] = [];
+
   constructor(protected logger: NGXLogger, private router: Router) {
     this.logger.debug(LayoutService.name, 'constructor(protected logger: NGXLogger)', 'start');
     this.router.events.subscribe((event: RouterEvent) => this.processEvent(event));
@@ -32,17 +34,26 @@ export class LayoutService {
   }
 
   private processEvent(event: RouterEvent): void {
+    if (event instanceof NavigationStart) {
+      this.navigationStack = [];
+    }
     if (event instanceof GuardsCheckEnd) {
       const guardsCheckEnd: GuardsCheckEnd = event;
       if (guardsCheckEnd.shouldActivate) {
-        this.parseRouterState(guardsCheckEnd.state);
+        this.navigationStack = this.getNavigation(guardsCheckEnd.state.root);
+      }
+    }
+    if (event instanceof NavigationCancel) {
+      this.navigationStack = [];
+    }
+    if (event instanceof NavigationEnd) {
+      if (this.navigationStack.length > 0) {
+        this.parseNavigationStack(this.navigationStack);
       }
     }
   }
 
-  private parseRouterState(state: RouterStateSnapshot): void {
-    // Build the navigation stack
-    const navigationStack = this.getNavigation(state.root);
+  private parseNavigationStack(navigationStack: Navigation[]): void {
 
     // Build breadcrumb data
     const breadcrumbData = this.getBreadcrumbData(navigationStack);
@@ -56,7 +67,7 @@ export class LayoutService {
     // Publis new title
     this.title$.next(this.getTitle(navigationStack));
 
-    if (breadcrumbData.length > 2) {
+    if (breadcrumbData.length > 1) {
       this.menuAutoclose$.next(true);
       this.closeMenu();
     }
@@ -70,7 +81,7 @@ export class LayoutService {
     const navigations: Navigation[] = [];
     navigations.push({
       routeConfig: route.routeConfig ? route.routeConfig : undefined,
-      segments: route.url ? route.url : undefined
+      segments: route.url ? route.url : []
     });
     route.children.forEach((child) => {
       navigations.push(...this.getNavigation(child));
@@ -84,9 +95,9 @@ export class LayoutService {
 
     // The last navigation is discarded every time
     let endPositionsToDiscard = 1;
-    // Check reverse navigation to discard nested empty end paths
+    // Check reverse navigation to discard nested empty end paths or paths without a title defined
     let p = navigationStack.length - 1;
-    while (navigationStack[p].segments.length < 1 && p >= 0) {
+    while (p > 0 && (navigationStack[p].segments.length < 1 || !navigationStack[p]?.routeConfig?.data?.title)) {
       endPositionsToDiscard++;
       p--;
     }
@@ -119,7 +130,14 @@ export class LayoutService {
     if (navigationStack.length === 0) {
       return undefined;
     }
-    return navigationStack[navigationStack.length - 1].routeConfig?.data?.title;
+    let endPositionsToDiscard = 0;
+    // Check reverse navigation to discard nested paths without a title defined
+    let p = navigationStack.length - 1;
+    while (p > 0 && (!navigationStack[p]?.routeConfig?.data?.title)) {
+      endPositionsToDiscard++;
+      p--;
+    }
+    return navigationStack[navigationStack.length - endPositionsToDiscard - 1].routeConfig?.data?.title;
   }
 
   openMenu(): void {

@@ -5,6 +5,13 @@ import { SgiAuthGuard, SgiAuthRoutes } from '@sgi/framework/auth';
 
 import { EvaluacionEvaluarComponent } from './evaluacion-evaluar/evaluacion-evaluar.component';
 import { EvaluacionListadoComponent } from './evaluacion-listado/evaluacion-listado.component';
+import { ActionGuard } from '@core/guards/master-form.guard';
+import { EVALUACION_ROUTE_NAMES } from './evaluacion-route-names';
+import { EvaluacionComentariosComponent } from './evaluacion-formulario/evaluacion-comentarios/evaluacion-comentarios.component';
+import { FragmentGuard } from '@core/guards/detail-form.guard';
+import { EvaluacionDatosMemoriaComponent } from './evaluacion-formulario/evaluacion-datos-memoria/evaluacion-datos-memoria.component';
+import { EvaluacionDocumentacionComponent } from './evaluacion-formulario/evaluacion-documentacion/evaluacion-documentacion.component';
+import { EvaluacionResolver } from './evaluacion.resolver';
 
 const MSG_LISTADO_TITLE = marker('eti.evaluacion.listado.titulo');
 const MSG_EVALUAR_TITLE = marker('eti.evaluacion.evaluar.titulo');
@@ -20,13 +27,39 @@ const routes: SgiAuthRoutes = [
     }
   },
   {
-    path: ':id',
+    path: `:id`,
     component: EvaluacionEvaluarComponent,
     canActivate: [SgiAuthGuard],
+    canDeactivate: [ActionGuard],
+    resolve: {
+      evaluacion: EvaluacionResolver
+    },
     data: {
       title: MSG_EVALUAR_TITLE,
       hasAnyAuthorityForAnyUO: ['ETI-EVC-EVALR']
-    }
+    },
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: EVALUACION_ROUTE_NAMES.MEMORIA
+      },
+      {
+        path: EVALUACION_ROUTE_NAMES.COMENTARIOS,
+        component: EvaluacionComentariosComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: EVALUACION_ROUTE_NAMES.MEMORIA,
+        component: EvaluacionDatosMemoriaComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: EVALUACION_ROUTE_NAMES.DOCUMENTACION,
+        component: EvaluacionDocumentacionComponent,
+        canDeactivate: [FragmentGuard]
+      }
+    ]
   }
 ];
 

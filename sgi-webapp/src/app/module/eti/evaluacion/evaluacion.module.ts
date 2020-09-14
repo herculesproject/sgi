@@ -23,6 +23,7 @@ import {
 } from './evaluacion-formulario/evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
 import { EvaluacionListadoComponent } from './evaluacion-listado/evaluacion-listado.component';
 import { EvaluacionRoutingModule } from './evaluacion-routing.module';
+import { EvaluacionResolver } from './evaluacion.resolver';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,9 @@ import { EvaluacionRoutingModule } from './evaluacion-routing.module';
     ReactiveFormsModule,
     ComentarioModule,
     DocumentacionMemoriaModule
+  ],
+  providers: [
+    EvaluacionResolver
   ]
 })
 export class EvaluacionModule { }

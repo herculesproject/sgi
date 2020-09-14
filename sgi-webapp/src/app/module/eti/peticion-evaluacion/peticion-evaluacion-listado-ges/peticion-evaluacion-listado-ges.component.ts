@@ -488,8 +488,8 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
    * Setea el persona seleccionado a través del componente
    * @param personaRef referencia del persona seleccionado
    */
-  public setUsuario(personaRef: string) {
-    this.personaRef = personaRef;
+  public setUsuario(solicitante: Persona) {
+    this.personaRef = solicitante?.personaRef;
   }
 
   /**

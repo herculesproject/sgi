@@ -1,13 +1,13 @@
-@import "variables.scss";
+@import "colors.scss";
 
-$breadcrumbTextColor: map-get($palette-accent, 500);
+$breadcrumbTextColor: map-get($palette-grease, 500);
 $breadcrumbTextColorActive: map-get($palette-primary, 500);
 
 .migas {
   background-color: map-get($palette-primary, 50);
   padding: 5px 20px 5px 20px;
   height: 68px;
-  box-shadow: inset 0px 14px 12px -12px map-get($palette-accent, 100);
+  box-shadow: inset 0px 14px 12px -12px map-get($palette-grease, 100);
 
   .breadcrumb {
     --uiBreadcrumbDividerColor: var(--breadcrumbDividerColor, inherit);

@@ -1,7 +1,6 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Comite } from '@core/models/eti/comite';
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -13,15 +12,14 @@ import { IEvaluador } from '@core/models/eti/evaluador';
 import { Persona } from '@core/models/sgp/persona';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { HoraValidador } from '@core/validators/hora-validator';
-import { MinutoValidador } from '@core/validators/minuto-validator';
-import { NullIdValidador } from '@core/validators/null-id-validador';
 import { SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
-import { AbstractTabComponent } from '@core/component/abstract-tab.component';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { ConvocatoriaReunionActionService } from '../../convocatoria-reunion.action.service';
+import { FormFragmentComponent } from '@core/component/fragment.component';
+import { ConvocatoriaReunionDatosGeneralesFragment } from './convocatoria-reunion-datos-generales.fragment';
 
 
 const MSG_ERROR_LOAD_COMITES = marker('eti.convocatoriaReunion.formulario.datosGenerales.comite.error.cargar');
@@ -33,28 +31,20 @@ const MSG_ERROR_LOAD_CONVOCANTES = marker('eti.convocatoriaReunion.formulario.da
   templateUrl: './convocatoria-reunion-datos-generales.component.html',
   styleUrls: ['./convocatoria-reunion-datos-generales.component.scss']
 })
-export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabComponent<ConvocatoriaReunion> implements OnInit {
-  FormGroupUtil = FormGroupUtil;
+export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComponent<ConvocatoriaReunion> implements OnInit {
+
   fxFlexProperties: FxFlexProperties;
   fxFlexPropertiesInline: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
   comites: Comite[];
-  convocantes: IEvaluador[];
   tiposConvocatoriaReunion: TipoConvocatoriaReunion[];
 
   filteredComites: Observable<Comite[]>;
   filteredTiposConvocatoriaReunion: Observable<TipoConvocatoriaReunion[]>;
 
-  filterActivo = {
-    field: 'activo',
-    type: SgiRestFilterType.EQUALS,
-    value: 'true'
-  };
-
-  @Output()
-  selectConvocatoria: EventEmitter<number> = new EventEmitter();
-  @Input() disableCamposDatosGenerales = false;
+  formFragment: ConvocatoriaReunionDatosGeneralesFragment;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -62,9 +52,12 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
     private readonly evaluadorService: EvaluadorService,
     private readonly tipoConvocatoriaReunionService: TipoConvocatoriaReunionService,
     private readonly snackBarService: SnackBarService,
-    private readonly personaFisicaService: PersonaFisicaService
+    private readonly personaFisicaService: PersonaFisicaService,
+    actionService: ConvocatoriaReunionActionService
   ) {
-    super(logger);
+    super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
+    this.formFragment = this.fragment as ConvocatoriaReunionDatosGeneralesFragment;
+
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -88,14 +81,11 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'ngOnInit()', 'start');
     this.comites = [];
     this.tiposConvocatoriaReunion = [];
-    this.convocantes = [];
 
     // Inicializa los combos
     this.getComites();
     this.getTiposConvocatoriaReunion();
     this.getConvocantesComite();
-
-    this.selectConvocatoriaReunion(null);
 
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'ngOnInit()', 'end');
   }
@@ -117,7 +107,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
           this.filteredComites = this.formGroup.controls.comite.valueChanges
             .pipe(
               startWith(''),
-              map(value => this._filterComite(value))
+              map(value => this.filterComite(value))
             );
         },
         () => {
@@ -125,7 +115,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
         }
       );
 
-    this.suscripciones.push(comitesSelectSubscription);
+    this.subscriptions.push(comitesSelectSubscription);
 
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
       'getComites()',
@@ -149,14 +139,14 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
           this.filteredTiposConvocatoriaReunion = this.formGroup.controls.tipoConvocatoriaReunion.valueChanges
             .pipe(
               startWith(''),
-              map(value => this._filterTipoConvocatoriaReunion(value))
+              map(value => this.filterTipoConvocatoriaReunion(value))
             );
         },
         () => {
           this.snackBarService.showError(MSG_ERROR_LOAD_TIPOS_CONVOCATORIA);
         });
 
-    this.suscripciones.push(tipoConvocatoriaSelectReunionSubscription);
+    this.subscriptions.push(tipoConvocatoriaSelectReunionSubscription);
 
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
       'getTiposConvocatoriaReunion()',
@@ -213,8 +203,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
         })
       ).subscribe(
         (convocantes: IEvaluador[]) => {
-          this.convocantes = convocantes;
-          this.formGroup.controls.convocantes.setValue(this.convocantes);
+          this.formFragment.convocantes = convocantes;
         },
         () => {
           this.snackBarService.showError(MSG_ERROR_LOAD_CONVOCANTES);
@@ -222,7 +211,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
       );
 
 
-    this.suscripciones.push(convocantesSelectSubscription);
+    this.subscriptions.push(convocantesSelectSubscription);
 
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
       'getConvocantesComite()',
@@ -234,7 +223,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
    * @param value value a filtrar (string o Comite.
    * @returns lista de comites filtrada.
    */
-  private _filterComite(value: string | Comite): Comite[] {
+  private filterComite(value: string | Comite): Comite[] {
     if (!value) {
       return this.comites;
     }
@@ -255,7 +244,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
    * @param value value a filtrar (string o TipoConvocatoriaReunion).
    * @returns lista de tipos de convocatoria reunion filtrada.
    */
-  private _filterTipoConvocatoriaReunion(value: string | TipoConvocatoriaReunion): TipoConvocatoriaReunion[] {
+  private filterTipoConvocatoriaReunion(value: string | TipoConvocatoriaReunion): TipoConvocatoriaReunion[] {
     if (!value) {
       return this.tiposConvocatoriaReunion;
     }
@@ -291,41 +280,6 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
     return tipoConvocatoriaReunion?.nombre;
   }
 
-  createFormGroup(): FormGroup {
-    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'crearFormGroup()', 'start');
-    const formGroup = new FormGroup({
-      comite: new FormControl(null, [new NullIdValidador().isValid()]),
-      fechaEvaluacion: new FormControl(null, [Validators.required]),
-      fechaLimite: new FormControl(null, [Validators.required]),
-      tipoConvocatoriaReunion: new FormControl(null, [new NullIdValidador().isValid()]),
-      horaInicio: new FormControl(null, [new HoraValidador().isValid()]),
-      minutoInicio: new FormControl(null, [new MinutoValidador().isValid()]),
-      lugar: new FormControl(null, [Validators.required]),
-      ordenDia: new FormControl(null, [Validators.required]),
-      convocantes: new FormControl(null),
-    });
-    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'crearFormGroup()', 'end');
-    return formGroup;
-  }
-
-
-  getDatosFormulario(): ConvocatoriaReunion {
-    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'getDatosFormulario()', 'start');
-    const convocatoriaReunion = this.datosFormulario;
-    convocatoriaReunion.comite = FormGroupUtil.getValue(this.formGroup, 'comite');
-    convocatoriaReunion.fechaEvaluacion = FormGroupUtil.getValue(this.formGroup, 'fechaEvaluacion');
-    convocatoriaReunion.fechaLimite = FormGroupUtil.getValue(this.formGroup, 'fechaLimite');
-    convocatoriaReunion.tipoConvocatoriaReunion = FormGroupUtil.getValue(this.formGroup, 'tipoConvocatoriaReunion');
-    convocatoriaReunion.horaInicio = FormGroupUtil.getValue(this.formGroup, 'horaInicio');
-    convocatoriaReunion.minutoInicio = FormGroupUtil.getValue(this.formGroup, 'minutoInicio');
-    convocatoriaReunion.lugar = FormGroupUtil.getValue(this.formGroup, 'lugar');
-    convocatoriaReunion.ordenDia = FormGroupUtil.getValue(this.formGroup, 'ordenDia');
-    convocatoriaReunion.activo = true;
-
-    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'getDatosFormulario()', 'end');
-    return convocatoriaReunion;
-  }
-
   /**
    * Recupera los convocantes seleccionados en el formulario
    *
@@ -339,17 +293,4 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends AbstractTabCompo
 
     return convocantes;
   }
-
-  /**
-   * Registra el evento de modificación de convocatoria reunión.
-   * @param convocatoriaReunion  convocatoria reunión seleccionada
-   */
-  selectConvocatoriaReunion(convocatoriaReunion: ConvocatoriaReunion | string) {
-    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
-      'selectConvocatoriaReunion(convocatoriaReunion: ConvocatoriaReunion)', 'start');
-    this.selectConvocatoria.emit(convocatoriaReunion ? (convocatoriaReunion as ConvocatoriaReunion).id : null);
-    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
-      'selectConvocatoriaReunion(convocatoriaReunion: ConvocatoriaReunion)', 'end');
-  }
-
 }

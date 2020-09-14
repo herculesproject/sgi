@@ -7,6 +7,11 @@ import { SgiAuthGuard } from '@sgi/framework/auth';
 import { ROUTE_NAMES } from '@core/route.names';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { SgiRoutes } from '@core/route';
+import { ActionGuard } from '@core/guards/master-form.guard';
+import { EVALUADOR_ROUTE_NAMES } from './evaluador-route-names';
+import { FragmentGuard } from '@core/guards/detail-form.guard';
+import { EvaluadorDatosGeneralesComponent } from './evaluador-formulario/evaluador-datos-generales/evaluador-datos-generales.component';
+import { EvaluadorResolver } from './evaluador.resolver';
 
 const MSG_LISTADO_TITLE = marker('eti.evaluador.listado.titulo');
 const MSG_NEW_TITLE = marker('eti.evaluador.crear.titulo');
@@ -24,22 +29,50 @@ const routes: SgiRoutes = [
   },
   {
     path: ROUTE_NAMES.NEW,
-    pathMatch: 'full',
     component: EvaluadorCrearComponent,
     canActivate: [SgiAuthGuard],
+    canDeactivate: [ActionGuard],
     data: {
       title: MSG_NEW_TITLE,
       hasAuthorityForAnyUO: 'ETI-EVR-C'
-    }
+    },
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: EVALUADOR_ROUTE_NAMES.DATOS_GENERALES
+      },
+      {
+        path: EVALUADOR_ROUTE_NAMES.DATOS_GENERALES,
+        component: EvaluadorDatosGeneralesComponent,
+        canDeactivate: [FragmentGuard]
+      }
+    ]
   },
   {
-    path: ':id',
+    path: `:id`,
     component: EvaluadorEditarComponent,
     canActivate: [SgiAuthGuard],
+    canDeactivate: [ActionGuard],
+    resolve: {
+      evaluador: EvaluadorResolver
+    },
     data: {
       title: MSG_EDIT_TITLE,
       hasAuthorityForAnyUO: 'ETI-EVR-E'
-    }
+    },
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: EVALUADOR_ROUTE_NAMES.DATOS_GENERALES
+      },
+      {
+        path: EVALUADOR_ROUTE_NAMES.DATOS_GENERALES,
+        component: EvaluadorDatosGeneralesComponent,
+        canDeactivate: [FragmentGuard]
+      }
+    ]
   }
 ];
 

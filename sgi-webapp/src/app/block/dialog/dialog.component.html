@@ -2,7 +2,8 @@
   {{message | translate:params}}
 </mat-dialog-content>
 <mat-dialog-actions align="center">
-  <button mat-stroked-button (click)="confirmacionClick()" mat-dialog-close
+  <button color="accent" md-button mat-raised-button mat-dialog-close
+    tabindex="-1">{{cancelButtonText | translate}}</button>
+  <button class="link-cancelar" mat-button (click)="confirmacionClick()" mat-dialog-close
     tabindex="-1">{{continuarButtonText | translate}}</button>
-  <button mat-stroked-button mat-dialog-close tabindex="-1">{{cancelButtonText | translate}}</button>
 </mat-dialog-actions>

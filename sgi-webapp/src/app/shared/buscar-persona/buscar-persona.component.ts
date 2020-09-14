@@ -22,7 +22,7 @@ export class BuscarPersonaComponent implements OnChanges {
   @Input() datosUsuarioTexto: string;
 
   @Output()
-  usuarioSeleccionado: EventEmitter<string> = new EventEmitter();
+  usuarioSeleccionado: EventEmitter<Persona> = new EventEmitter();
 
   constructor(public dialog: MatDialog, private readonly logger: NGXLogger) {
     this.usuarioDialogo = {
@@ -63,9 +63,9 @@ export class BuscarPersonaComponent implements OnChanges {
     });
   }
 
-  selectUsuario(persona: Persona | string) {
+  selectUsuario(persona: Persona) {
     this.logger.debug(BuscarPersonaComponent.name, 'selectUsuario(persona: Persona)', 'start');
-    this.usuarioSeleccionado.emit(persona ? (persona as Persona).personaRef : null);
+    this.usuarioSeleccionado.emit(persona);
     this.logger.debug(BuscarPersonaComponent.name, 'selectUsuario(persona: Persona)', 'end');
   }
 

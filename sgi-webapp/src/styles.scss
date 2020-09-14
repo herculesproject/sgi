@@ -12,36 +12,7 @@ $material-icons-font-path: "~material-icons/iconfont/";
 // Plus imports for other components in your app.
 
 // Define a custom typography config that overrides the font-family
-$custom-typography: mat-typography-config(
-  $font-family: "Poppins",
-  // Large, one-off header, usually at the top of the page (e.g. a hero header).
-    $display-4: mat-typography-level(112px, 112px, 300, $letter-spacing: -0.05em),
-  // Large, one-off header, usually at the top of the page (e.g. a hero header).
-    $display-3: mat-typography-level(56px, 56px, 400, $letter-spacing: -0.02em),
-  // Large, one-off header, usually at the top of the page (e.g. a hero header).
-    $display-2: mat-typography-level(45px, 48px, 400, $letter-spacing: -0.005em),
-  // Large, one-off header, usually at the top of the page (e.g. a hero header).
-    $display-1: mat-typography-level(34px, 40px, 400),
-  // Section heading corresponding to the <h1> tag.
-    $headline: mat-typography-level(22px, 32px, 400),
-  // Section heading corresponding to the <h2> tag.
-    $title: mat-typography-level(20px, 32px, 500),
-  // Section heading corresponding to the <h3> tag.
-    $subheading-2: mat-typography-level(18px, 28px, 400),
-  // Section heading corresponding to the <h4> tag.
-    $subheading-1: mat-typography-level(15px, 24px, 400),
-  // Bolder body text.
-    $body-2: mat-typography-level(12px, 24px, 600),
-  // Base body text.
-    $body-1: mat-typography-level(13px, 20px, 400),
-  // Smaller body and hint text.
-    $caption: mat-typography-level(12px, 20px, 500),
-  // Buttons and anchors.
-    $button: mat-typography-level(14px, 14px, 600),
-  // Line-height must be unit-less fraction of the font-size.
-    // Form input fields.
-    $input: mat-typography-level(13px, 1.125, 400),
-);
+@import "./styles/typography";
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
@@ -58,39 +29,4 @@ $custom-typography: mat-typography-config(
 
 /* You can add global styles to this file, and also import other style files */
 
-html,
-body {
-  height: 100%;
-}
-body {
-  margin: 0;
-}
-
-// todas las tablas
-table {
-  [mat-header-row] {
-    background-color: map-get($palette-primary, 50);
-  }
-  width: 100%;
-}
-
-// todos los input al 100%
-mat-form-field {
-  width: 100%;
-}
-
-.separation-button {
-  padding-top: 15px;
-  padding-bottom: 15px;
-  .mat-three {
-    background-color: #c8fbdf;
-    color: #5a5a5a;
-    width: 417px;
-    border-radius: 20px;
-    text-align: left;
-    min-width: 300px;
-  }
-}
-.mat-radio-button {
-  padding: 10px 10px 15px 0px;
-}
+@import "./styles/global";

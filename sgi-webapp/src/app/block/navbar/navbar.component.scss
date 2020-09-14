@@ -1,4 +1,4 @@
-@import "variables.scss";
+@import "colors.scss";
 
 $variable1: 28;
 
@@ -27,7 +27,7 @@ $variable1: 28;
       }
     }
     &.modulo {
-      background-color: map-get($palette-primary, 500);
+      background-color: map-get($palette-primary, 400);
       mat-icon {
         color: map-get($palette-primary, 50);
       }

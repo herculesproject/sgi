@@ -31,7 +31,7 @@ export class ConvocatoriaReunion {
   /** Activo */
   activo: boolean;
   /** Convocantes */
-  convocantes: IAsistente[];
+  convocantes: IAsistente[] = [];
   /** Código */
   codigo: string;
 
@@ -40,7 +40,7 @@ export class ConvocatoriaReunion {
     this.comite = convocatoriaReunion?.comite;
     this.tipoConvocatoriaReunion = convocatoriaReunion?.tipoConvocatoriaReunion;
     this.fechaEvaluacion = convocatoriaReunion?.fechaEvaluacion;
-    this.horaInicio = 15;
+    this.horaInicio = convocatoriaReunion?.horaInicio;
     this.minutoInicio = convocatoriaReunion?.minutoInicio;
     this.fechaLimite = convocatoriaReunion?.fechaLimite;
     this.lugar = convocatoriaReunion?.lugar;
@@ -49,7 +49,7 @@ export class ConvocatoriaReunion {
     this.numeroActa = convocatoriaReunion?.numeroActa;
     this.fechaEnvio = convocatoriaReunion?.fechaEnvio;
     this.activo = convocatoriaReunion?.activo;
-    this.convocantes = convocatoriaReunion?.convocantes;
+    this.convocantes = convocatoriaReunion?.convocantes || [];
   }
 
 

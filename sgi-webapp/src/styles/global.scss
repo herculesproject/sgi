@@ -1,0 +1,207 @@
+/**/
+/** CUERPO HTML */
+/**/
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+}
+
+/**/
+/** FIN CUERPO HTML */
+/**/
+
+/**/
+/** Layout estructura */
+/**/
+
+.layout-components {
+  section {
+    h2 {
+      font-weight: bold;
+    }
+    padding: 15px 25px 25px 25px;
+  }
+}
+
+/**/
+/** FIN Layout estructura */
+/**/
+
+/**/
+/** Tabs verticales */
+/**/
+
+.mat-drawer-tabs {
+  min-height: calc(100vh - 155px);
+  .tabs {
+    background-color: map-get($palette-primary, 50);
+    border-right-width: 0;
+    min-width: 227px;
+    .opciones-menu {
+      padding: 0px;
+      .item-tab {
+        span {
+          font-size: mat-font-size($custom-typography, body-1);
+        }
+        text-decoration-line: none;
+        .mat-list-item-content {
+          flex-direction: row;
+          justify-content: space-between;
+        }
+        &.is-active {
+          background-color: map-get($custom-colors, white);
+          span {
+            font-weight: bold;
+          }
+        }
+        .warning-icon {
+          color: map-get($custom-colors, warning);
+        }
+        .danger-icon {
+          color: map-get($custom-colors, danger);
+        }
+      }
+    }
+  }
+}
+
+/**/
+/** FIN Tabs verticales */
+/**/
+
+/**/
+/** TABLES */
+/**/
+
+table {
+  [mat-header-row] {
+    background-color: map-get($palette-primary, 50);
+  }
+  width: 100%;
+}
+
+/**/
+/** FIN TABLES */
+/**/
+
+/**/
+/** INPUT */
+/**/
+
+// todos los input al 100%
+mat-form-field {
+  width: 100%;
+}
+
+/**/
+/** FIN INPUT */
+/**/
+
+/**/
+/** MENSAJES INLINE footer */
+/**/
+
+.mensaje-inline {
+  margin-left: 30px;
+  padding: 7px 25px 7px 7px;
+  font-size: mat-font-size($custom-typography, subheading-1);
+  &.warning {
+    background-color: mat-contrast($custom-colors, warning);
+    border-radius: 16px;
+    font-weight: 600;
+    .warning-icon {
+      color: map-get($custom-colors, warning);
+      vertical-align: middle;
+    }
+  }
+  &.danger {
+    background-color: mat-contrast($custom-colors, danger);
+    border-radius: 16px;
+    font-weight: 600;
+    .danger-icon {
+      color: map-get($custom-colors, danger);
+      vertical-align: middle;
+    }
+  }
+}
+
+/**/
+/** FIN MENSAJES INLINE footer */
+/**/
+
+/**/
+/** BOTONES */
+/**/
+.mat-raised-button.mat-accent,
+.mat-raised-button.mat-primary {
+  &.fixed {
+    width: 270px;
+  }
+}
+
+// Botones disabled
+.mat-raised-button.mat-accent[disabled] {
+  color: map-get($custom-colors, white);
+  background: map-get($palette-accent, 500);
+  opacity: 0.5;
+}
+
+.mat-raised-button.mat-primary[disabled] {
+  color: map-get($custom-colors, white);
+  background: map-get($palette-primary, 500);
+  opacity: 0.5;
+}
+
+// Link cancelar en el footer. Negrita y subrayado
+.link-cancelar {
+  margin-left: 30px;
+  font-weight: bold;
+  color: map-get($custom-colors, black);
+}
+
+.separation-button {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  // Boton verde terciario
+  .mat-three {
+    background-color: map-get($custom-colors, three-buton);
+    color: map-get($palette-grease, 900);
+    font-size: mat-font-size($custom-typography, body-1);
+    border-radius: 20px;
+    text-align: left;
+    padding-right: 35px;
+    min-width: 150px;
+  }
+  // Boton primario con border y posibilidad icono
+  .mat-four {
+    background-color: map-get($palette-primary, 500);
+    color: map-get($custom-colors, white);
+    font-size: mat-font-size($custom-typography, body-1);
+    border-radius: 20px;
+    text-align: left;
+    padding-right: 35px;
+    min-width: 150px;
+    mat-icon {
+      float: right;
+      padding: 6px;
+    }
+  }
+}
+
+/**/
+/** FIN BOTONES */
+/**/
+
+/**/
+/** RADIOBUTTONS */
+/**/
+.mat-radio-button {
+  padding: 10px 10px 15px 0px;
+}
+/**/
+/** FIN RADIOBUTTONS */
+/**/

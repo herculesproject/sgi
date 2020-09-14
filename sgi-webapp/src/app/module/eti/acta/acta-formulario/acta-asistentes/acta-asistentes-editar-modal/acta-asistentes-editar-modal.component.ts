@@ -15,19 +15,16 @@ const MSG_ERROR = marker('eti.acta.asistentes.error');
 const MSG_ERROR_FORM = marker('form-group.error');
 
 @Component({
-  selector: 'sgi-acta-asistentes-editar-modal',
   templateUrl: './acta-asistentes-editar-modal.component.html',
   styleUrls: ['./acta-asistentes-editar-modal.component.scss']
 })
-export class ActaAsistentesEditarModalComponent implements OnInit, OnDestroy {
+export class ActaAsistentesEditarModalComponent implements OnInit {
 
   FormGroupUtil = FormGroupUtil;
   formGroup: FormGroup;
   fxLayoutProperties: FxLayoutProperties;
 
   ocultarMotivo: boolean;
-
-  asistenteSuscripcion: Subscription;
 
   estados =
     [
@@ -39,8 +36,7 @@ export class ActaAsistentesEditarModalComponent implements OnInit, OnDestroy {
     private readonly logger: NGXLogger,
     public readonly matDialogRef: MatDialogRef<ActaAsistentesEditarModalComponent>,
     @Inject(MAT_DIALOG_DATA) public asistente: IAsistente,
-    private readonly snackBarService: SnackBarService,
-    protected readonly asistenteService: AsistenteService,
+    private readonly snackBarService: SnackBarService
   ) {
     this.logger.debug(ActaAsistentesEditarModalComponent.name, 'constructor()', 'start');
     this.fxLayoutProperties = new FxLayoutProperties();
@@ -50,11 +46,6 @@ export class ActaAsistentesEditarModalComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.logger.debug(ActaAsistentesEditarModalComponent.name, 'ngOnInit()', 'start');
-
-    this.asistenteSuscripcion = this.asistenteService.findById(this.asistente.id).subscribe(
-      (response) => {
-        this.asistente = response;
-      });
 
     this.initFormGroup();
 
@@ -97,27 +88,6 @@ export class ActaAsistentesEditarModalComponent implements OnInit, OnDestroy {
     this.logger.debug(ActaAsistentesEditarModalComponent.name, 'editComentario()', 'start');
     if (FormGroupUtil.valid(this.formGroup)) {
       this.closeModal(this.getDatosForm());
-
-      this.asistenteService.update(this.asistente.id, this.getDatosForm())
-        .subscribe(
-          () => {
-            this.snackBarService.showSuccess(MSG_SUCCESS);
-            this.logger.debug(
-              ActaAsistentesEditarModalComponent.name,
-              'enviarApi()',
-              'end'
-            );
-          },
-          () => {
-            this.snackBarService.showError(MSG_ERROR);
-            this.logger.debug(
-              ActaAsistentesEditarModalComponent.name,
-              'enviarApi()',
-              'end'
-            );
-          }
-        );
-
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM);
     }
@@ -154,11 +124,4 @@ export class ActaAsistentesEditarModalComponent implements OnInit, OnDestroy {
     }
     this.logger.debug(ActaAsistentesEditarModalComponent.name, 'activarMotivo(value: string)', 'end');
   }
-
-  ngOnDestroy(): void {
-    this.logger.debug(ActaAsistentesEditarModalComponent.name, 'ngOnDestroy()', 'start');
-    this.asistenteSuscripcion?.unsubscribe();
-    this.logger.debug(ActaAsistentesEditarModalComponent.name, 'ngOnDestroy()', 'end');
-  }
-
 }

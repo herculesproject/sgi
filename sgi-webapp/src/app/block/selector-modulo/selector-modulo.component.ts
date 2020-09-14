@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 import { APP_ROUTE_NAMES } from 'src/app/app-route-names';
 
-const MSG_MODULO_CAT = marker('selector-modulo.catalogo');
 const MSG_MODULO_ETI = marker('selector-modulo.etica');
 
 export interface Modulo {
@@ -25,14 +24,11 @@ export class SelectorModuloComponent implements OnInit {
     public dialogRef: MatDialogRef<SelectorModuloComponent>,
     private router: Router
   ) {
-    this.modulos = [{
-      url: APP_ROUTE_NAMES.CAT,
-      nombre: MSG_MODULO_CAT
-    },
-    {
-      url: APP_ROUTE_NAMES.ETI,
-      nombre: MSG_MODULO_ETI
-    }
+    this.modulos = [
+      {
+        url: APP_ROUTE_NAMES.ETI,
+        nombre: MSG_MODULO_ETI
+      }
     ];
   }
 

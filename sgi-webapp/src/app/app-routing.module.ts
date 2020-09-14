@@ -15,14 +15,6 @@ const routes: SgiRoutes = [
     component: RootComponent
   },
   {
-    path: APP_ROUTE_NAMES.CAT,
-    loadChildren: () =>
-      import('./module/cat/cat.module').then(
-        (m) => m.CatModule
-      ),
-    canActivate: [SgiAuthGuard]
-  },
-  {
     path: APP_ROUTE_NAMES.ETI,
     loadChildren: () =>
       import('./module/eti/eti.module').then(

@@ -11,6 +11,7 @@ import { EvaluadorListadoComponent } from './evaluador-listado/evaluador-listado
 import { EvaluadorCrearComponent } from './evaluador-crear/evaluador-crear.component';
 import { EvaluadorEditarComponent } from './evaluador-editar/evaluador-editar.component';
 import { EvaluadorRoutingModule } from './evaluador-routing.module';
+import { EvaluadorResolver } from './evaluador.resolver';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,9 @@ import { EvaluadorRoutingModule } from './evaluador-routing.module';
     FormsModule,
     ReactiveFormsModule,
     SgiAuthModule
+  ],
+  providers: [
+    EvaluadorResolver
   ]
 })
 export class EvaluadorModule { }

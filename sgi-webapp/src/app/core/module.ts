@@ -8,13 +8,10 @@ export class Module {
     public readonly path: string
   ) { }
 
-  public static readonly CAT = new Module(marker('cabecera.modulo.cat'), 'cat');
   public static readonly ETI = new Module(marker('cabecera.modulo.eti'), 'eti');
 
   public static fromPath(path: string): Module {
     switch (path) {
-      case Module.CAT.path:
-        return Module.CAT;
       case Module.ETI.path:
         return Module.ETI;
       default:

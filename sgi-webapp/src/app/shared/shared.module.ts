@@ -6,22 +6,22 @@ import { TranslateModule } from '@ngx-translate/core';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { FooterCrearComponent } from './footers/footer-crear/footer-crear.component';
 import { FooterGuardarComponent } from './footers/footer-guardar/footer-guardar.component';
-import { GenericTabLabelComponent } from './generic-tab-label/generic-tab-label.component';
 import { RootComponent } from './root/root.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BuscarPersonaComponent } from './buscar-persona/buscar-persona.component';
 import { BuscarPersonaDialogoComponent } from './buscar-persona/dialogo/buscar-persona-dialogo.component';
+import { ActionFragmentMenuItemComponent } from './action-fragment-menu-item/action-fragment-menu-item.component';
 
 @NgModule({
   declarations: [
     BreadcrumbComponent,
     FooterCrearComponent,
     FooterGuardarComponent,
-    GenericTabLabelComponent,
     RootComponent,
     BuscarPersonaComponent,
-    BuscarPersonaDialogoComponent
+    BuscarPersonaDialogoComponent,
+    ActionFragmentMenuItemComponent
   ],
   imports: [
     CommonModule,
@@ -35,10 +35,10 @@ import { BuscarPersonaDialogoComponent } from './buscar-persona/dialogo/buscar-p
     BreadcrumbComponent,
     FooterCrearComponent,
     FooterGuardarComponent,
-    GenericTabLabelComponent,
     RootComponent,
     BuscarPersonaComponent,
-    BuscarPersonaDialogoComponent
+    BuscarPersonaDialogoComponent,
+    ActionFragmentMenuItemComponent
   ]
 })
 export class SharedModule {

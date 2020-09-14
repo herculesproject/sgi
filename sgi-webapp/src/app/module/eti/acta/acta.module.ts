@@ -18,6 +18,7 @@ import { ActaDatosGeneralesComponent } from './acta-formulario/acta-datos-genera
 import { ActaMemoriasComponent } from './acta-formulario/acta-memorias/acta-memorias.component';
 import { ActaListadoComponent } from './acta-listado/acta-listado.component';
 import { ActaRoutingModule } from './acta-routing.module';
+import { ActaResolver } from './acta.resolver';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,9 @@ import { ActaRoutingModule } from './acta-routing.module';
     SgiAuthModule,
     FormsModule,
     ReactiveFormsModule
+  ],
+  providers: [
+    ActaResolver
   ]
 })
 export class ActaModule { }

@@ -1,40 +1,23 @@
-<section class="acta-crear">
-  <mat-tab-group headerPosition="above" (selectedTabChange)="cambioTab($event)">
-    <!-- Datos generales -->
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <sgi-generic-tab-label [abstractTab]="datosGenerales" [errors]="errorTabs[0]"
-          [textoLabel]="'eti.acta.crear.datosGenerales.cabecera' | translate">
-        </sgi-generic-tab-label>
-      </ng-template>
-      <sgi-acta-datos-generales #datosGenerales (eventEmitter)="setErroresTab(0, $event)" (selectConvocatoria)="
-        setConvocatoria($event)">
-      </sgi-acta-datos-generales>
-    </mat-tab>
-
-    <!-- Memorias -->
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <sgi-generic-tab-label [abstractTab]="memorias" [errors]="errorTabs[1]"
-          [textoLabel]="'eti.acta.crear.memorias.cabecera' | translate">
-        </sgi-generic-tab-label>
-      </ng-template>
-      <sgi-acta-memorias #memorias (eventEmitter)="setErroresTab(1, $event)" [idConvocatoria]="idConvocatoria">
-      </sgi-acta-memorias>
-    </mat-tab>
-
-    <!-- Asistentes -->
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <sgi-generic-tab-label [abstractTab]="asistentes" [errors]="errorTabs[2]"
-          [textoLabel]="'eti.acta.crear.asistentes.cabecera' | translate">
-        </sgi-generic-tab-label>
-      </ng-template>
-      <sgi-acta-asistentes #asistentes (eventEmitter)="setErroresTab(2, $event)" [idConvocatoria]="idConvocatoria">
-      </sgi-acta-asistentes>
-    </mat-tab>
-  </mat-tab-group>
-
-  <!-- Footer -->
-  <sgi-footer-guardar [texto]="textoCrear" (emitter)="saveData()"></sgi-footer-guardar>
-</section>
+<mat-drawer-container class="mat-drawer-tabs">
+  <mat-drawer mode="side" class="tabs" opened>
+    <mat-list class="opciones-menu">
+      <sgi-action-fragment-menu-item [routerLink]="[ACTA_ROUTE_NAMES.DATOS_GENERALES]"
+        [title]="'eti.acta.datosGenerales.title' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.DATOS_GENERALES)">
+      </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item [routerLink]="[ACTA_ROUTE_NAMES.MEMORIAS]"
+        [title]="'eti.acta.memorias.title' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.MEMORIAS)">
+      </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item [routerLink]="[ACTA_ROUTE_NAMES.ASISTENTES]"
+        [title]="'eti.acta.asistentes.title' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.ASISTENTES)">
+      </sgi-action-fragment-menu-item>
+    </mat-list>
+  </mat-drawer>
+  <mat-drawer-content class="mat-drawer-content">
+    <router-outlet></router-outlet>
+    <sgi-footer-guardar [texto]="textoCrear" [actionService]="actionService" (emitter)="saveOrUpdate()">
+    </sgi-footer-guardar>
+  </mat-drawer-content>
+</mat-drawer-container>

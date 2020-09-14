@@ -1,31 +1,19 @@
-<section class="convocatoria-reunion-crear">
-  <mat-tab-group headerPosition="above" (selectedTabChange)="cambioTab($event)">
-    <!-- Datos generales -->
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <sgi-generic-tab-label [abstractTab]="datosGenerales" [errors]="errorTabs[0]"
-          [textoLabel]="'label.datos-generales' | translate">
-        </sgi-generic-tab-label>
-      </ng-template>
-      <sgi-convocatoria-reunion-datos-generales #datosGenerales (eventEmitter)="setErroresTab(0, $event)"
-        [disableCamposDatosGenerales]="disableCamposDatosGenerales">
-      </sgi-convocatoria-reunion-datos-generales>
-    </mat-tab>
-
-    <!-- Asignacion de memorias -->
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <sgi-generic-tab-label [abstractTab]="asignacionMemorias" [errors]="errorTabs[1]"
-          [textoLabel]="'eti.convocatoriaReunion.formulario.asignacionMemorias.cabecera' | translate">
-        </sgi-generic-tab-label>
-      </ng-template>
-      <sgi-convocatoria-reunion-listado-memorias #asignacionMemorias (eventEmitter)="setErroresTab(1, $event)"
-        [idConvocatoria]="idConvocatoria" [datosGeneralesFormData]="datosGeneralesFormData"
-        [disableAsignarMemorias]="disableAsignarMemorias">
-      </sgi-convocatoria-reunion-listado-memorias>
-    </mat-tab>
-  </mat-tab-group>
-
-  <!-- Footer -->
-  <sgi-footer-guardar [texto]="textoCrear" (emitter)="saveData()"></sgi-footer-guardar>
-</section>
+<mat-drawer-container class="mat-drawer-tabs">
+  <mat-drawer mode="side" class="tabs" opened>
+    <mat-list class="opciones-menu">
+      <sgi-action-fragment-menu-item [routerLink]="[CONVOCATORIA_REUNION_ROUTE_NAMES.DATOS_GENERALES]"
+        [title]="'label.datos-generales' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.DATOS_GENERALES)">
+      </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item [routerLink]="[CONVOCATORIA_REUNION_ROUTE_NAMES.ASIGNACION_MEMORIAS]"
+        [title]="'eti.convocatoriaReunion.formulario.asignacionMemorias.cabecera' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.ASIGNACION_MEMORIAS)">
+      </sgi-action-fragment-menu-item>
+    </mat-list>
+  </mat-drawer>
+  <mat-drawer-content class="mat-drawer-content">
+    <router-outlet></router-outlet>
+    <sgi-footer-guardar [texto]="textoCrear" [actionService]="actionService" (emitter)="saveOrUpdate()">
+    </sgi-footer-guardar>
+  </mat-drawer-content>
+</mat-drawer-container>

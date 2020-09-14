@@ -2,11 +2,11 @@ import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Observable, of, merge, Subscription, zip } from 'rxjs';
+import { Observable, of, merge, Subscription } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 
 import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
-import { tap, map, catchError, startWith, switchMap } from 'rxjs/operators';
+import { tap, map, catchError, startWith } from 'rxjs/operators';
 
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -408,10 +408,10 @@ export class EvaluadorListadoComponent implements AfterViewInit, OnInit, OnDestr
 
   /**
    * Setea el persona seleccionado a través del componente
-   * @param personaRef referencia del persona seleccionado
+   * @param persona persona seleccionado
    */
-  public setUsuario(personaRef: string) {
-    this.personaRef = personaRef;
+  public setUsuario(persona: Persona) {
+    this.personaRef = persona ? persona.personaRef : undefined;
   }
 
 

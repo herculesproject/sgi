@@ -1,23 +1,15 @@
-<section class="evaluador-editar">
-
-  <mat-tab-group headerPosition="above" (selectedTabChange)="cambioTab($event)">
-    <!-- Datos generales -->
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <sgi-generic-tab-label [abstractTab]="datosGenerales" [errors]="errorTabs[0]"
-          [textoLabel]="'eti.evaluador.datosGenerales.cabecera' | translate">
-        </sgi-generic-tab-label>
-
-      </ng-template>
-
-      <sgi-evaluador-datos-generales #datosGenerales (eventEmitter)="setErroresTab(0, $event)" (selectComite)="
-                      setComite($event)" (selectCargoComite)="
-                      setCargoComite($event)">
-      </sgi-evaluador-datos-generales>
-    </mat-tab>
-
-  </mat-tab-group>
-
-  <!-- Footer -->
-  <sgi-footer-guardar [texto]="textoActualizar" (emitter)="saveData()"></sgi-footer-guardar>
-</section>
+<mat-drawer-container class="mat-drawer-tabs">
+  <mat-drawer class="tabs" mode="side" opened>
+    <mat-list class="opciones-menu">
+      <sgi-action-fragment-menu-item [routerLink]="[EVALUADOR_ROUTE_NAMES.DATOS_GENERALES]"
+        [title]="'eti.evaluador.datosGenerales.title' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.DATOS_GENERALES)">
+      </sgi-action-fragment-menu-item>
+    </mat-list>
+  </mat-drawer>
+  <mat-drawer-content class="mat-drawer-content">
+    <router-outlet></router-outlet>
+    <sgi-footer-guardar [texto]="textoActualizar" [actionService]="actionService" (emitter)="saveOrUpdate()">
+    </sgi-footer-guardar>
+  </mat-drawer-content>
+</mat-drawer-container>
