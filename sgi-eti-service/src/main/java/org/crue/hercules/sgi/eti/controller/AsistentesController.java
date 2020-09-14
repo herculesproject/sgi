@@ -91,7 +91,7 @@ public class AsistentesController {
    * @return {@link Asistentes} actualizado.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-ASISTENTES-EDITAR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-C', 'ETI-ACT-E')")
   Asistentes replaceAsistentes(@Valid @RequestBody Asistentes updatedAsistentes, @PathVariable Long id) {
     log.debug("replaceAsistentes(Asistentes updatedAsistentes, Long id) - start");
     updatedAsistentes.setId(id);
