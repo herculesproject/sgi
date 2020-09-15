@@ -11,10 +11,17 @@
 
 <div class="navbar-icon">
   <div class="nav-item" matTooltip="{{'menu.secundario.cuenta' | translate}}">
-    <a class="nav-link" href="">
+    <a class="nav-link" [matMenuTriggerFor]="account">
       <mat-icon color="primary">person</mat-icon>
-      <span fxHide fxShow.xs class="posicion">{{'menu.secundario.cuenta' | translate}}</span>
     </a>
+    <mat-menu #account="matMenu">
+      <button mat-menu-item>
+        <span>{{'menu.secundario.cuenta' | translate}}</span>
+      </button>
+      <button mat-menu-item (click)="authService.logout()">
+        <span>{{'menu.secundario.cuenta.logout' | translate}}</span>
+      </button>
+    </mat-menu>
   </div>
 </div>
 
@@ -45,13 +52,15 @@
   </div>
 </div>
 
-<div class="navbar-icon modulo">
-  <div class="nav-item modulo" matTooltip="{{'menu.secundario.selector-modulo' | translate}}"
-    (click)="selectorModulo()">
-    <a class="nav-link">
-      <mat-icon color="primary">border_all</mat-icon>
-      <span fxHide fxShow.xs class="posicion">{{'menu.secundario.selector-modulo' | translate}}</span>
-    </a>
+<ng-container *ngIf="authService.authStatus$ | async as authStatus">
+  <div class="navbar-icon modulo" *ngIf="!authStatus.isInvestigador">
+    <div class="nav-item modulo" matTooltip="{{'menu.secundario.selector-modulo' | translate}}"
+      (click)="selectorModulo()">
+      <a class="nav-link">
+        <mat-icon color="primary">border_all</mat-icon>
+        <span fxHide fxShow.xs class="posicion">{{'menu.secundario.selector-modulo' | translate}}</span>
+      </a>
+    </div>
   </div>
-</div>
+</ng-container>
 <!-- FIN Menu secundario -->

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 import { SelectorModuloComponent } from '../selector-modulo/selector-modulo.component';
 import { MatDialog } from '@angular/material/dialog';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -12,7 +13,8 @@ import { MatDialog } from '@angular/material/dialog';
 export class NavbarComponent implements OnInit {
   constructor(
     private logger: NGXLogger,
-    public matDialog: MatDialog
+    public matDialog: MatDialog,
+    public authService: SgiAuthService
   ) {
   }
 
