@@ -1,6 +1,6 @@
 import { Fragment } from '@core/services/action-service';
 import { Observable, of, BehaviorSubject, from } from 'rxjs';
-import { map, mergeMap, endWith, switchMap } from 'rxjs/operators';
+import { map, mergeMap, endWith, switchMap, tap } from 'rxjs/operators';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
@@ -57,7 +57,12 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
       if (!this.selectedIdPeticionEvaluacion) {
         equiposTrabajoRecuperados$ = this.getInvestigadorActual()
           .pipe(
-            map((equipoTrabajo: IEquipoTrabajo) => [new StatusWrapper<IEquipoTrabajo>(equipoTrabajo)]),
+            map((equipoTrabajo: IEquipoTrabajo) => {
+              const wrapper = new StatusWrapper<IEquipoTrabajo>(equipoTrabajo);
+              wrapper.setCreated();
+              return [wrapper];
+            }),
+            tap(_ => this.setChanges(true))
           );
       } else {
         equiposTrabajoRecuperados$ = this.peticionEvaluacionService.findEquipoInvestigador(idPeticionEvaluacion).pipe(

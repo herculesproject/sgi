@@ -253,6 +253,10 @@ export class PeticionEvaluacionTareasCrearModalComponent implements OnInit, OnDe
    */
   getEquipoTrabajo(equipoTrabajo: IEquipoTrabajo): string {
 
+    if (typeof equipoTrabajo === 'string') {
+      return null;
+    }
+
     return equipoTrabajo?.nombre + ' ' + equipoTrabajo?.primerApellido + ' ' + equipoTrabajo?.segundoApellido;
 
   }
@@ -280,6 +284,18 @@ export class PeticionEvaluacionTareasCrearModalComponent implements OnInit, OnDe
       'getEquiposTrabajo()',
       'end');
   }
+
+  onClickEquipoTrabajo(): void {
+    this.filteredEquiposTrabajo = this.formGroup.controls.equipoTrabajo.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this.filterEquipoTrabajo(value))
+      );
+    this.logger.debug(PeticionEvaluacionTareasCrearModalComponent.name,
+      'getEquiposTrabajo()',
+      'end');
+  }
+
 
   /**
    * Devuelve los datos de persona de los equipos de trabajo

@@ -9,11 +9,11 @@
         <mat-form-field fxFill>
           <mat-label>{{'eti.peticionEvaluacion.tareas.editar.modal.persona' | translate}}</mat-label>
           <input type="text" [placeholder]="'eti.peticionEvaluacion.tareas.editar.modal.persona' | translate"
-            arial-label="Number" matInput formControlName="equipoTrabajo" [matAutocomplete]="autocompleteEquipoTrabajo">
+            arial-label="Number" matInput formControlName="equipoTrabajo" [matAutocomplete]="autocompleteEquipoTrabajo"
+            (click)="onClickEquipoTrabajo()">
           <mat-autocomplete #autocompleteEquipoTrabajo="matAutocomplete" [displayWith]="getEquipoTrabajo">
             <mat-option *ngFor="let eqt of filteredEquiposTrabajo | async" [value]="eqt">
-
-              {{!eqt? '' : eqt?.nombre}} {{!eqt? '' :eqt?.primerApellido}} {{!eqt? '' :eqt?.segundoApellido}}
+              {{eqt?.nombre}} {{eqt?.primerApellido}} {{eqt?.segundoApellido}}
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
