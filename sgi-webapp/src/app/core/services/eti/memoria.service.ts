@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { IEvaluacionWithNumComentario } from '@core/models/eti/dto/evaluacion-with-num-comentarios';
-import { Memoria } from '@core/models/eti/memoria';
+import { IMemoria } from '@core/models/eti/memoria';
 import { environment } from '@env';
 import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
@@ -12,7 +12,7 @@ import { tap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class MemoriaService extends SgiRestService<number, Memoria>{
+export class MemoriaService extends SgiRestService<number, IMemoria>{
   private static readonly MAPPING = '/memorias';
 
   constructor(logger: NGXLogger, protected http: HttpClient) {
@@ -58,9 +58,9 @@ export class MemoriaService extends SgiRestService<number, Memoria>{
    * @return las memorias asignables a la convocatoria.
    */
   findAllMemoriasAsignablesConvocatoria(idConvocatoria: number, options?: SgiRestFindOptions):
-    Observable<SgiRestListResult<Memoria>> {
+    Observable<SgiRestListResult<IMemoria>> {
     this.logger.debug(MemoriaService.name, `findAllMemoriasAsignablesConvocatoria(${idConvocatoria})`, '-', 'START');
-    return this.find<Memoria, Memoria>(`${this.endpointUrl}/asignables/${idConvocatoria}`, options).pipe(
+    return this.find<IMemoria, IMemoria>(`${this.endpointUrl}/asignables/${idConvocatoria}`, options).pipe(
       tap(() => this.logger.debug(MemoriaService.name, `findAllMemoriasAsignablesConvocatoria(${idConvocatoria})`, '-', 'END'))
     );
   }
@@ -72,9 +72,9 @@ export class MemoriaService extends SgiRestService<number, Memoria>{
    * @return las memorias asignables a la convocatoria de ese tipo seguimiento.
    */
   findAllAsignablesTipoConvocatoriaSeguimiento(options?: SgiRestFindOptions):
-    Observable<SgiRestListResult<Memoria>> {
+    Observable<SgiRestListResult<IMemoria>> {
     this.logger.debug(MemoriaService.name, `findAllAsignablesTipoConvocatoriaSeguimiento()`, '-', 'START');
-    return this.find<Memoria, Memoria>(`${this.endpointUrl}/tipo-convocatoria-seg`, options).pipe(
+    return this.find<IMemoria, IMemoria>(`${this.endpointUrl}/tipo-convocatoria-seg`, options).pipe(
       tap(() => this.logger.debug(MemoriaService.name, `findAllAsignablesTipoConvocatoriaSeguimiento()`, '-', 'END'))
     );
   }
@@ -88,9 +88,9 @@ export class MemoriaService extends SgiRestService<number, Memoria>{
    *
    */
   findAllAsignablesTipoConvocatoriaOrdExt(options?: SgiRestFindOptions):
-    Observable<SgiRestListResult<Memoria>> {
+    Observable<SgiRestListResult<IMemoria>> {
     this.logger.debug(MemoriaService.name, `findAllAsignablesTipoConvocatoriaOrdExt()`, '-', 'START');
-    return this.find<Memoria, Memoria>(`${this.endpointUrl}/tipo-convocatoria-ord-ext`, options).pipe(
+    return this.find<IMemoria, IMemoria>(`${this.endpointUrl}/tipo-convocatoria-ord-ext`, options).pipe(
       tap(() => this.logger.debug(MemoriaService.name, `findAllAsignablesTipoConvocatoriaOrdExt()`, '-', 'END'))
     );
   }

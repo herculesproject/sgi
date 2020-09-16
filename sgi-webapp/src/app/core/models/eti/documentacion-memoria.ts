@@ -1,4 +1,4 @@
-import { Memoria } from './memoria';
+import { IMemoria } from './memoria';
 import { TipoDocumento } from './tipo-documento';
 
 export class DocumentacionMemoria {
@@ -6,7 +6,7 @@ export class DocumentacionMemoria {
   id: number;
 
   /** Memoria */
-  memoria: Memoria;
+  memoria: IMemoria;
 
   /** TIpo de documento */
   tipoDocumento: TipoDocumento;

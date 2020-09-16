@@ -8,30 +8,25 @@ import { NGXLogger } from 'ngx-logger';
 import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
 import { SgiAuthService } from '@sgi/framework/auth';
 
-import { tap, map, catchError, startWith, switchMap } from 'rxjs/operators';
+import { tap, map, catchError, startWith } from 'rxjs/operators';
 
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 
 import { PeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { Comite } from '@core/models/eti/comite';
-import { Persona } from '@core/models/sgp/persona';
 import { DialogService } from '@core/services/dialog.service';
 import { ComiteService } from '@core/services/eti/comite.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 
-import { DateUtils } from '@core/utils/date-utils';
 import { ROUTE_NAMES } from '@core/route.names';
 
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { Memoria } from '@core/models/eti/memoria';
+import { IMemoria } from '@core/models/eti/memoria';
 
 
-const MSG_BUTTON_SAVE = marker('footer.eti.peticion-evaluacion.crear');
-const TEXT_USER_TITLE = marker('eti.buscarUsuario.titulo');
-const TEXT_USER_BUTTON = marker('eti.buscarUsuario.boton.buscar');
 const MSG_FOOTER = marker('eti.peticionEvaluacion.listado.nuevaPeticionEvaluacion');
 
 @Component({
@@ -57,7 +52,7 @@ export class PeticionEvaluacionListadoInvComponent implements AfterViewInit, OnI
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   peticionesEvaluacion$: Observable<PeticionEvaluacion[]> = of();
-  memorias$: Observable<Memoria[]> = of();
+  memorias$: Observable<IMemoria[]> = of();
 
   comiteListado: Comite[];
   comitesSubscription: Subscription;
@@ -167,7 +162,7 @@ export class PeticionEvaluacionListadoInvComponent implements AfterViewInit, OnI
       })
       .subscribe(
         (response) => {
-          const memorias: Memoria[] = response.items;
+          const memorias: IMemoria[] = response.items;
           if (memorias) {
             memorias.forEach((m, i) => {
               peticionesEvaluacionByComiteExists.push(m.peticionEvaluacion);
@@ -244,7 +239,7 @@ export class PeticionEvaluacionListadoInvComponent implements AfterViewInit, OnI
         })
         .subscribe(
           (response) => {
-            const memorias: Memoria[] = response.items;
+            const memorias: IMemoria[] = response.items;
             if (memorias.length > 0) {
               if (peticionesEvaluacionByComiteExists.indexOf(peticionEvaluacion) === -1) {
                 peticionesEvaluacionByComiteExists.push(peticionEvaluacion);

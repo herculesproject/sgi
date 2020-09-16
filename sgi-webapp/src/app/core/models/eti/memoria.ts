@@ -4,7 +4,7 @@ import { Comite } from './comite';
 import { TipoMemoria } from './tipo-memoria';
 import { TipoEstadoMemoria } from './tipo-estado-memoria';
 
-export class Memoria {
+export interface IMemoria {
   /** Id */
   id: number;
 

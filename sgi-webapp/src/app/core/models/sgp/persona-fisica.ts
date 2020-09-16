@@ -1,3 +1,5 @@
+import { Profesional } from './profesional';
+
 export interface IPersonaFisica {
 
   /** ID */
@@ -19,6 +21,6 @@ export interface IPersonaFisica {
   vinculacion: string;
 
   /** Profesional */
-  profesional: string;
+  profesional: Profesional;
 
 }

@@ -12,4 +12,7 @@ export interface Profesional {
   /** Subcuerpo profesional */
   subcuerpoProfesional: string;
 
+  /** Nivel academico */
+  nivelAcademico: string;
+
 }

@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Memoria } from '@core/models/eti/memoria';
+import { IMemoria } from '@core/models/eti/memoria';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription, of } from 'rxjs';
@@ -35,11 +35,11 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
   formGroup: FormGroup;
 
   evaluadores: IEvaluador[];
-  memorias: Memoria[];
+  memorias: IMemoria[];
 
   filteredEvaluadoresEvaluador1: Observable<IEvaluador[]>;
   filteredEvaluadoresEvaluador2: Observable<IEvaluador[]>;
-  filteredMemorias: Observable<Memoria[]>;
+  filteredMemorias: Observable<IMemoria[]>;
 
   subscriptions: Subscription[];
 
@@ -47,7 +47,7 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
   isTipoConvocatoriaSeguimiento: boolean;
   filterData: { idComite: number, idTipoConvocatoria: number, fechaLimite: Date };
   filterMemoriasAsignables: SgiRestFilter[];
-  memoriasAsignadas: Memoria[];
+  memoriasAsignadas: IMemoria[];
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -162,12 +162,12 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
     this.subscriptions.push(this.memoriaService
       .findAllMemoriasAsignablesConvocatoria(this.idConvocatoria)
       .subscribe(
-        (response: SgiRestListResult<Memoria>) => {
+        (response: SgiRestListResult<IMemoria>) => {
           this.memorias = response.items;
 
           // Eliminar de la lista las memorias que ya están asignadas
           this.memorias = this.memorias.filter(
-            (memoria: Memoria) => {
+            (memoria: IMemoria) => {
               return (!this.memoriasAsignadas.some(e => e.id === memoria.id));
             }
           );
@@ -199,12 +199,12 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
     this.subscriptions.push(this.memoriaService
       .findAllAsignablesTipoConvocatoriaSeguimiento({ filters: this.filterMemoriasAsignables })
       .subscribe(
-        (response: SgiRestListResult<Memoria>) => {
+        (response: SgiRestListResult<IMemoria>) => {
           this.memorias = response.items;
 
           // Eliminar de la lista las memorias que ya están asignadas
           this.memorias = this.memorias.filter(
-            (memoria: Memoria) => {
+            (memoria: IMemoria) => {
               return (!this.memoriasAsignadas.some(e => e.id === memoria.id));
             }
           );
@@ -236,12 +236,12 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
     this.subscriptions.push(this.memoriaService
       .findAllAsignablesTipoConvocatoriaOrdExt({ filters: this.filterMemoriasAsignables })
       .subscribe(
-        (response: SgiRestListResult<Memoria>) => {
+        (response: SgiRestListResult<IMemoria>) => {
           this.memorias = response.items;
 
           // Eliminar de la lista las memorias que ya están asignadas
           this.memorias = this.memorias.filter(
-            (memoria: Memoria) => {
+            (memoria: IMemoria) => {
               return (!this.memoriasAsignadas.some(e => e.id === memoria.id));
             }
           );
@@ -273,7 +273,7 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
 
     const evaluadoresMemoriaSeleccionada$ =
       this.formGroup.controls.memoria.valueChanges.pipe(
-        switchMap((memoria: Memoria | string) => {
+        switchMap((memoria: IMemoria | string) => {
           if (typeof memoria === 'string' || !memoria.id) {
             return of([]);
           }
@@ -353,7 +353,7 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
    * @param value value a filtrar (string o memoria).
    * @returns lista de memorias filtrada.
    */
-  private _filterMemoria(value: string | Memoria): Memoria[] {
+  private _filterMemoria(value: string | IMemoria): IMemoria[] {
     if (!value) {
       return this.memorias;
     }
@@ -407,7 +407,7 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
    *
    * @returns referencia y titulo memoria
    */
-  getMemoria(memoria: Memoria): string {
+  getMemoria(memoria: IMemoria): string {
     return memoria ? (memoria.numReferencia + ' - ' + memoria.titulo) : '';
   }
 

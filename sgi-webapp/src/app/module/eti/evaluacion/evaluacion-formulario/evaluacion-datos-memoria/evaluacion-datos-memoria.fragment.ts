@@ -2,12 +2,12 @@ import { FormFragment } from '@core/services/action-service';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
-import { Memoria } from '@core/models/eti/memoria';
+import { IMemoria } from '@core/models/eti/memoria';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { Persona } from '@core/models/sgp/persona';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 
-interface MemoriaWithPersona extends Memoria {
+interface MemoriaWithPersona extends IMemoria {
   solicitante: Persona;
 }
 
@@ -17,7 +17,7 @@ export class EvaluacionDatosMemoriaFragment extends FormFragment<MemoriaWithPers
 
   constructor(private fb: FormBuilder, key: number, private service: EvaluacionService, private personaFisicaService: PersonaFisicaService) {
     super(key);
-    this.memoria = new Memoria() as MemoriaWithPersona;
+    this.memoria = {} as MemoriaWithPersona;
   }
 
   protected buildFormGroup(): FormGroup {

@@ -53,9 +53,10 @@ export class PersonaFisicaService extends SgiRestService<string, Persona>{
   findByPersonasRefs(personaRefs: string[], options?: SgiRestFindOptions):
     Observable<SgiRestListResult<Persona>> {
     const refsPersonaString = personaRefs.join('|');
-    this.logger.debug(PersonaFisicaService.name, `findAllPersonasFisicaByPersonaRefs(${refsPersonaString})`, '-', 'START');
+    this.logger.debug(PersonaFisicaService.name, `findByPersonasRefs(${refsPersonaString})`, '-', 'START');
     return this.find<Persona, Persona>(`${this.endpointUrl}/persona/bypersonarefs/${refsPersonaString}`, options).pipe(
-      tap(() => this.logger.debug(PersonaFisicaService.name, `findAllPersonasFisicaByPersonaRefs(${refsPersonaString})`, '-', 'END'))
+      tap(() => this.logger.debug(PersonaFisicaService.name, `findByPersonasRefs(${refsPersonaString})`, '-', 'END'))
     );
   }
+
 }

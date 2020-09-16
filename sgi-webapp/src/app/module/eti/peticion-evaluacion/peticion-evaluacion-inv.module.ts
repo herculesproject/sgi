@@ -8,10 +8,30 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { PeticionEvaluacionListadoInvComponent } from './peticion-evaluacion-listado-inv/peticion-evaluacion-listado-inv.component';
 import { PeticionEvaluacionInvRoutingModule } from './peticion-evaluacion-inv-routing.module';
+import { PeticionEvaluacionCrearComponent } from './peticion-evaluacion-crear/peticion-evaluacion-crear.component';
+import { PeticionEvaluacionDatosGeneralesComponent } from './peticion-evaluacion-formulario/peticion-evaluacion-datos-generales/peticion-evaluacion-datos-generales.component';
+import { EquipoInvestigadorListadoComponent } from './peticion-evaluacion-formulario/equipo-investigador/equipo-investigador-listado/equipo-investigador-listado.component';
+import { EquipoInvestigadorCrearModalComponent } from './peticion-evaluacion-formulario/equipo-investigador/equipo-investigador-crear-modal/equipo-investigador-crear-modal.component';
+import { MemoriasListadoComponent } from './peticion-evaluacion-formulario/memorias-listado/memorias-listado.component';
+
+import { PeticionEvaluacionResolver } from './peticion-evaluacion.resolver';
+import { PeticionEvaluacionTareasListadoComponent } from './peticion-evaluacion-formulario/peticion-evaluacion-tareas/peticion-evaluacion-tareas-listado/peticion-evaluacion-tareas-listado.component';
+import { PeticionEvaluacionTareasEditarModalComponent } from './peticion-evaluacion-formulario/peticion-evaluacion-tareas/peticion-evaluacion-tareas-editar-modal/peticion-evaluacion-tareas-editar-modal.component';
+import { PeticionEvaluacionEditarComponent } from './peticion-evaluacion-editar/peticion-evaluacion-editar.component';
+import { PeticionEvaluacionTareasCrearModalComponent } from './peticion-evaluacion-formulario/peticion-evaluacion-tareas/peticion-evaluacion-tareas-crear-modal/peticion-evaluacion-tareas-crear-modal.component';
 
 @NgModule({
   declarations: [
-    PeticionEvaluacionListadoInvComponent
+    PeticionEvaluacionListadoInvComponent,
+    PeticionEvaluacionCrearComponent,
+    PeticionEvaluacionDatosGeneralesComponent,
+    EquipoInvestigadorListadoComponent,
+    EquipoInvestigadorCrearModalComponent,
+    MemoriasListadoComponent,
+    PeticionEvaluacionTareasListadoComponent,
+    PeticionEvaluacionTareasEditarModalComponent,
+    PeticionEvaluacionTareasCrearModalComponent,
+    PeticionEvaluacionEditarComponent
   ],
   imports: [
     SharedModule,
@@ -22,6 +42,9 @@ import { PeticionEvaluacionInvRoutingModule } from './peticion-evaluacion-inv-ro
     FormsModule,
     ReactiveFormsModule,
     SgiAuthModule
+  ],
+  providers: [
+    PeticionEvaluacionResolver
   ]
 })
 export class PeticionEvaluacionInvModule { }

@@ -70,7 +70,9 @@ export class BuscarPersonaDialogoComponent implements AfterViewInit {
       segundoApellido: '',
       identificadorLetra: '',
       identificadorNumero: '',
-      personaRef: ''
+      personaRef: '',
+      nivelAcademico: '',
+      vinculacion: ''
     };
 
   }

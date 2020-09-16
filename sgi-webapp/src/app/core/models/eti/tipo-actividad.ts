@@ -1,5 +1,5 @@
 
-export class TipoActividad {
+export interface ITipoActividad {
 
   /** ID */
   id: number;
@@ -10,10 +10,6 @@ export class TipoActividad {
   /** Activo */
   activo: boolean;
 
-  constructor() {
-    this.id = null;
-    this.nombre = null;
-    this.activo = true;
-  }
+
 
 }

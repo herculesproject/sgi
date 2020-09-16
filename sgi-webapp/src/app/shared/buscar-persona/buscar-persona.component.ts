@@ -4,6 +4,10 @@ import { NGXLogger } from 'ngx-logger';
 import { BuscarPersonaDialogoComponent } from './dialogo/buscar-persona-dialogo.component';
 import { IPersonaDialogo } from '@core/models/eti/persona-dialogo';
 import { Persona } from '@core/models/sgp/persona';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+
+const TEXT_USER_TITLE = marker('eti.buscarUsuario.titulo');
+const TEXT_USER_BUTTON = marker('eti.buscarUsuario.boton.buscar');
 
 @Component({
   selector: 'sgi-buscar-persona',
@@ -16,9 +20,9 @@ export class BuscarPersonaComponent implements OnChanges {
   usuarioDialogo: IPersonaDialogo;
   persona: Persona;
 
-  @Input() textoLabel: string;
-  @Input() textoInput: string;
-  @Input() textoButton: string;
+  @Input() textoLabel = TEXT_USER_TITLE;
+  @Input() textoInput = TEXT_USER_TITLE;
+  @Input() textoButton = TEXT_USER_BUTTON;
   @Input() datosUsuarioTexto: string;
 
   @Output()
@@ -36,7 +40,9 @@ export class BuscarPersonaComponent implements OnChanges {
       segundoApellido: '',
       identificadorLetra: '',
       identificadorNumero: '',
-      personaRef: ''
+      personaRef: '',
+      nivelAcademico: '',
+      vinculacion: ''
     };
     this.datosUsuario = this.datosUsuarioTexto;
   }

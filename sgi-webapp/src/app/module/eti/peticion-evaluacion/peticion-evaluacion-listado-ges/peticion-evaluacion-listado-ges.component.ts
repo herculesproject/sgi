@@ -27,15 +27,14 @@ import { ROUTE_NAMES } from '@core/route.names';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { Memoria } from '@core/models/eti/memoria';
+import { IMemoria } from '@core/models/eti/memoria';
 import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria.service';
 
 
-const MSG_BUTTON_SAVE = marker('footer.eti.peticion-evaluacion.crear');
+const MSG_BUTTON_SAVE = marker('footer.eti.peticionEvaluacion.crear');
 const TEXT_USER_TITLE = marker('eti.peticionEvaluacion.listado.buscador.solicitante');
 const TEXT_USER_BUTTON = marker('eti.peticionEvaluacion.listado.buscador.buscar.solicitante');
-const MSG_FOOTER = marker('eti.peticionEvaluacion.listado.nuevaPeticionEvaluacion');
 
 @Component({
   selector: 'sgi-peticion-evaluacion-listado-ges',
@@ -54,13 +53,13 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
   totalElementos: number;
   filter: SgiRestFilter[];
 
-  textoCrear = MSG_FOOTER;
+  textoCrear = MSG_BUTTON_SAVE;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   peticionesEvaluacion$: Observable<PeticionEvaluacion[]> = of();
-  memorias$: Observable<Memoria[]> = of();
+  memorias$: Observable<IMemoria[]> = of();
 
   comiteListado: Comite[];
   comitesSubscription: Subscription;
@@ -242,7 +241,7 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
         })
         .subscribe(
           (response) => {
-            const memorias: Memoria[] = response.items;
+            const memorias: IMemoria[] = response.items;
             if (memorias && memorias.length > 0) {
               if (peticionesEvaluacionByComiteExists.indexOf(peticionEvaluacion) === -1) {
                 peticionesEvaluacionByComiteExists.push(peticionEvaluacion);

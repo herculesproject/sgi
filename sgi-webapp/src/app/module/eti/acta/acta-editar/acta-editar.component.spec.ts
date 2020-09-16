@@ -5,7 +5,6 @@ import { ActaAsistentesListadoComponent } from '../acta-formulario/acta-asistent
 import { ActaDatosGeneralesComponent } from '../acta-formulario/acta-datos-generales/acta-datos-generales.component';
 import { ActaMemoriasComponent } from '../acta-formulario/acta-memorias/acta-memorias.component';
 import { FooterGuardarComponent } from '@shared/footers/footer-guardar/footer-guardar.component';
-import { GenericTabLabelComponent } from '@shared/generic-tab-label/generic-tab-label.component';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -26,8 +25,7 @@ describe('ActaEditarComponent', () => {
         ActaAsistentesListadoComponent,
         ActaDatosGeneralesComponent,
         ActaMemoriasComponent,
-        FooterGuardarComponent,
-        GenericTabLabelComponent
+        FooterGuardarComponent
       ],
       imports: [
         TestUtils.getIdiomas(),

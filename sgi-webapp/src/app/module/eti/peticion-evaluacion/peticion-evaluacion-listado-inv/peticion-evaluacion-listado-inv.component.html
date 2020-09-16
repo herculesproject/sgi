@@ -119,7 +119,10 @@
   </mat-paginator>
 
   <!-- Botón añadir peticionEvaluacion -->
-  <sgi-footer-crear *sgiHasAuthorityForAnyUO="'ETI-PEV-CR'" [texto]="textoCrear" [route]="ROUTE_NAMES.NEW">
+
+
+  <sgi-footer-crear *sgiHasAnyAuthorityForAnyUO="['ETI-PEV-CR', 'ETI-MEM-CR']" [texto]="textoCrear"
+    [route]="ROUTE_NAMES.NEW">
   </sgi-footer-crear>
 
 </section>

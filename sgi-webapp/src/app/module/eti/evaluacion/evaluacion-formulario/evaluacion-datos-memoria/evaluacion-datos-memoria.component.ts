@@ -1,5 +1,5 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { Memoria } from '@core/models/eti/memoria';
+import { IMemoria } from '@core/models/eti/memoria';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { NGXLogger } from 'ngx-logger';
@@ -16,7 +16,7 @@ import { EvaluacionEvaluarActionService } from '../../evaluacion-evaluar.action.
   templateUrl: './evaluacion-datos-memoria.component.html',
   styleUrls: ['./evaluacion-datos-memoria.component.scss']
 })
-export class EvaluacionDatosMemoriaComponent extends FormFragmentComponent<Memoria> implements AfterViewInit {
+export class EvaluacionDatosMemoriaComponent extends FormFragmentComponent<IMemoria> implements AfterViewInit {
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
   fxFlexPropertiesInline: FxFlexProperties;

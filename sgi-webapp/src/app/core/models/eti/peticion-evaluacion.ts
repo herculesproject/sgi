@@ -1,4 +1,4 @@
-import { TipoActividad } from './tipo-actividad';
+import { ITipoActividad } from './tipo-actividad';
 import { Persona } from '../sgp/persona';
 
 export class PeticionEvaluacion extends Persona {
@@ -16,10 +16,10 @@ export class PeticionEvaluacion extends Persona {
   titulo: string;
 
   /** Tipo de actividad */
-  tipoActividad: TipoActividad;
+  tipoActividad: ITipoActividad;
 
   /** Referencia fuente financiacion */
-  fuenteFinanciacionRef: string;
+  fuenteFinanciacion: string;
 
   /** Fecha Inicio. */
   fechaInicio: Date;
@@ -61,7 +61,7 @@ export class PeticionEvaluacion extends Persona {
     this.codigo = null;
     this.titulo = null;
     this.tipoActividad = null;
-    this.fuenteFinanciacionRef = null;
+    this.fuenteFinanciacion = null;
     this.fechaInicio = null;
     this.fechaFin = null;
     this.resumen = null;

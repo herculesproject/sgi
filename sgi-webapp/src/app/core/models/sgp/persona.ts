@@ -18,13 +18,19 @@ export class Persona {
   /** Identificador letra */
   identificadorLetra: string;
 
+  /** Vinculación */
+  vinculacion: string;
+
+  /** Nivel académico */
+  nivelAcademico: string;
+
   constructor(personaFisica?: Persona) {
-    this.personaRef = personaFisica.personaRef;
-    this.nombre = personaFisica.nombre;
-    this.primerApellido = personaFisica.primerApellido;
-    this.segundoApellido = personaFisica.segundoApellido;
-    this.identificadorNumero = personaFisica.identificadorNumero;
-    this.identificadorLetra = personaFisica.identificadorLetra;
+    this.personaRef = personaFisica?.personaRef;
+    this.nombre = personaFisica?.nombre;
+    this.primerApellido = personaFisica?.primerApellido;
+    this.segundoApellido = personaFisica?.segundoApellido;
+    this.identificadorNumero = personaFisica?.identificadorNumero;
+    this.identificadorLetra = personaFisica?.identificadorLetra;
   }
 
 
