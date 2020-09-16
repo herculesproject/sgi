@@ -47,7 +47,8 @@ public class AsistentesIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     if (!headers.containsKey("Authorization")) {
-      headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user")));
+      headers.set("Authorization",
+          String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-ACT-E")));
     }
 
     HttpEntity<Asistentes> request = new HttpEntity<>(entity, headers);
@@ -150,8 +151,7 @@ public class AsistentesIT {
     replaceAsistente.getEvaluador().setId(1L);
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ASISTENTES-EDITAR", "ETI-ASISTENTES-VER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-ACT-E")));
 
     final ResponseEntity<Asistentes> response = restTemplate.exchange(
         ASISTENTE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, buildRequest(headers, replaceAsistente),

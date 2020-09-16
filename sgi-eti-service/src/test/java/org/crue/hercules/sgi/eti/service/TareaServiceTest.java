@@ -166,6 +166,18 @@ public class TareaServiceTest {
   }
 
   @Test
+  public void deleteByEquipoTrabajo_WithExistingId_DeletesTarea() {
+    // given: Id existente
+    BDDMockito.doNothing().when(tareaRepository).deleteByEquipoTrabajoId(ArgumentMatchers.anyLong());
+
+    Assertions.assertThatCode(
+        // when: Delete con id existente
+        () -> tareaService.deleteByEquipoTrabajo(1L))
+        // then: No se lanza ninguna excepción
+        .doesNotThrowAnyException();
+  }
+
+  @Test
   public void findAll_Unlimited_ReturnsFullTareaList() {
     // given: One hundred tareas
     List<Tarea> tareas = new ArrayList<>();
@@ -223,6 +235,27 @@ public class TareaServiceTest {
     Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
     for (int i = 0, j = 31; i < 10; i++, j++) {
       Tarea tarea = page.getContent().get(i);
+      Assertions.assertThat(tarea.getTarea()).isEqualTo("Tarea" + String.format("%03d", j));
+    }
+  }
+
+  @Test
+  public void findAllTareasNoEliminablesPeticionEvaluacion_ReturnsTareasList() {
+    // given: One hundred tareas
+    List<Tarea> tareas = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      tareas.add(generarMockTarea(Long.valueOf(i), "Tarea" + String.format("%03d", i)));
+    }
+
+    BDDMockito.given(tareaRepository.findAllByEquipoTrabajoPeticionEvaluacionIdAndMemoriaEstadoActualIdNotIn(
+        ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>anyList())).willReturn(tareas);
+
+    List<Tarea> tareasNoEliminables = tareaService.findAllTareasNoEliminablesPeticionEvaluacion(1L);
+
+    // then: A list with one hundred tareas are returned
+    Assertions.assertThat(tareasNoEliminables.size()).isEqualTo(100);
+    for (int i = 0, j = 1; i < 10; i++, j++) {
+      Tarea tarea = tareasNoEliminables.get(i);
       Assertions.assertThat(tarea.getTarea()).isEqualTo("Tarea" + String.format("%03d", j));
     }
   }

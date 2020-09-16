@@ -760,14 +760,13 @@ public class EvaluacionControllerTest {
     peticionEvaluacion.setFechaInicio(LocalDate.now());
     peticionEvaluacion.setFuenteFinanciacion("Fuente financiación");
     peticionEvaluacion.setObjetivos("Objetivos1");
-    peticionEvaluacion.setOtroValorSocial("Otro valor social1");
     peticionEvaluacion.setResumen("Resumen");
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria");
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo("PeticionEvaluacion1");
     peticionEvaluacion.setPersonaRef("user-001");
-    peticionEvaluacion.setValorSocial(3);
+    peticionEvaluacion.setValorSocial("Valor social");
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);

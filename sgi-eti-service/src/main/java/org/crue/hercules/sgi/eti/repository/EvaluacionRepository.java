@@ -32,8 +32,10 @@ public interface EvaluacionRepository
    * Recupera aquellas evaluaciones activas que sean o no revisión mínima según el
    * parámetro recibido.
    * 
-   * @param esRevMinima      indicador de revisión mínima.
-   * @param idTipoEvaluacion identificador del tipo de evaluación a recuperar.
+   * @param esRevMinima           indicador de revisión mínima.
+   * @param idTipoEvaluacion      identificador del tipo de evaluación a
+   *                              recuperar.
+   * @param idConvocatoriaReunion identificador de la convocatoria a recuperar.
    * @return listado de evaluaciones.
    */
   List<Evaluacion> findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId(Long idTipoEvaluacion,

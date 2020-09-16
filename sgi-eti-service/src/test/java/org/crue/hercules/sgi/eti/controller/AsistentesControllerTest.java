@@ -134,7 +134,7 @@ public class AsistentesControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ASISTENTES-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-C", "ETI-ACT-E" })
   public void replaceAsistentes_ReturnsAsistentes() throws Exception {
     // given: Asistentes a modificar
     String replaceAsistentesJson = "{\"id\": 1, \"motivo\": \"Motivo1\", \"asistenecia\": \"true\", \"convocatoriaReunion\": {\"id\": \"1\"}, \"evaluador\": {\"id\": \"1\"}}";
@@ -155,7 +155,7 @@ public class AsistentesControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-ASISTENTES-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-C", "ETI-ACT-E" })
   public void replaceAsistentes_NotFound() throws Exception {
     // given: Asistentes a modificar
     String replaceAsistentesJson = "{\"id\": 1, \"motivo\": \"Motivo1\", \"asistenecia\": \"true\", \"convocatoriaReunion\": {\"id\": \"1\"}, \"evaluador\": {\"id\": \"1\"}}";

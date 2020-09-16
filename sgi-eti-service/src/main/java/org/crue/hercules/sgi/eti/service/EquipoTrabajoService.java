@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.service;
 
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 
 import java.util.List;
@@ -54,8 +55,13 @@ public interface EquipoTrabajoService {
   void delete(Long id) throws EquipoTrabajoNotFoundException;
 
   /**
-   * Elimina todos los {@link EquipoTrabajo}.
+   * Obtener todas las entidades paginadas {@link EquipoTrabajo} activas para una
+   * determinada {@link PeticionEvaluacion}.
+   *
+   * @param id       Id de {@link PeticionEvaluacion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link EquipoTrabajo} paginadas.
    */
-  void deleteAll();
+  Page<EquipoTrabajo> findAllByPeticionEvaluacionId(Long id, Pageable pageable);
 
 }

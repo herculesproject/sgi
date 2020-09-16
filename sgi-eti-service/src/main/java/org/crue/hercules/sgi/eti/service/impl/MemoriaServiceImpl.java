@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.eti.service.impl;
 import java.util.Arrays;
 import java.util.List;
 
+import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Memoria;
@@ -248,6 +249,20 @@ public class MemoriaServiceImpl implements MemoriaService {
       log.debug("update(Memoria memoriaActualizar) - end");
       return returnValue;
     }).orElseThrow(() -> new MemoriaNotFoundException(memoriaActualizar.getId()));
+  }
+
+  /**
+   * Devuelve las memorias de una petición evaluación con su fecha límite y de
+   * evaluación.
+   * 
+   * @param idPeticionEvaluacion Identificador {@link PeticionEvaluacion}
+   * @param pageable             información de paginación
+   * @return lista de memorias de {@link PeticionEvaluacion}
+   */
+  @Override
+  public Page<MemoriaPeticionEvaluacion> findMemoriaByPeticionEvaluacionMaxVersion(Long id, Pageable pageable) {
+    Page<MemoriaPeticionEvaluacion> returnValue = memoriaRepository.findMemoriasEvaluacion(id, pageable);
+    return returnValue;
   }
 
 }

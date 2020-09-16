@@ -6,6 +6,7 @@ import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 
 import java.util.List;
 
+import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -107,5 +108,15 @@ public interface MemoriaService {
    * @param id el id de la entidad {@link Memoria}.
    */
   void delete(Long id) throws MemoriaNotFoundException;
+
+  /**
+   * Devuelve las memorias de una petición evaluación con su fecha límite y de
+   * evaluación.
+   * 
+   * @param idPeticionEvaluacion Identificador {@link PeticionEvaluacion}
+   * @param pageable             información de paginación
+   * @return lista de memorias de {@link PeticionEvaluacion}
+   */
+  Page<MemoriaPeticionEvaluacion> findMemoriaByPeticionEvaluacionMaxVersion(Long id, Pageable pageable);
 
 }

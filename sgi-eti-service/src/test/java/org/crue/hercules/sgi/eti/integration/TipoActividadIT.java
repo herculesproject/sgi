@@ -44,8 +44,8 @@ public class TipoActividadIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "ETI-TIPOACTIVIDAD-EDITAR", "ETI-TIPOACTIVIDAD-VER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-TIPOACTIVIDAD-EDITAR",
+        "ETI-TIPOACTIVIDAD-VER", "ETI-PEV-CR", "ETI-MEM-CR")));
 
     HttpEntity<TipoActividad> request = new HttpEntity<>(entity, headers);
     return request;

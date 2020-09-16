@@ -203,6 +203,48 @@ public class EquipoTrabajoServiceTest {
   }
 
   @Test
+  public void findAllByPeticionEvaluacionId_WithPaging_ReturnsPage() {
+    // given: 10 EquipoTrabajos por PeticionEvaluacion
+    List<EquipoTrabajo> equipoTrabajos = new ArrayList<>();
+    for (int i = 1, j = 1; i <= 10; i++, j++) {
+      equipoTrabajos.add(generarMockEquipoTrabajo(Long.valueOf(i * 10 + j - 10),
+          generarMockPeticionEvaluacion(Long.valueOf(i), "PeticionEvaluacion" + String.format("%03d", i))));
+    }
+
+    BDDMockito.given(equipoTrabajoRepository.findAllByPeticionEvaluacionId(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<EquipoTrabajo>>() {
+          @Override
+          public Page<EquipoTrabajo> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<EquipoTrabajo> content = equipoTrabajos.subList(fromIndex, toIndex);
+            Page<EquipoTrabajo> page = new PageImpl<>(content, pageable, equipoTrabajos.size());
+            return page;
+          }
+        });
+
+    // when: Get page=1 with pagesize=5
+    Pageable paging = PageRequest.of(1, 5);
+    Page<EquipoTrabajo> page = equipoTrabajoService.findAllByPeticionEvaluacionId(1L, paging);
+
+    // then: A Page with ten EquipoTrabajos are returned containing
+    // descripcion='EquipoTrabajo006' to 'EquipoTrabajo010'
+    Assertions.assertThat(page.getContent().size()).as("page.content.size").isEqualTo(5);
+    Assertions.assertThat(page.getNumber()).as("page.number").isEqualTo(1);
+    Assertions.assertThat(page.getSize()).as("page.size").isEqualTo(5);
+    Assertions.assertThat(page.getTotalElements()).as("page.totalElements").isEqualTo(10);
+    for (int i = 0, j = 6; i < 10 && j <= 10; i++, j++) {
+      EquipoTrabajo equipoTrabajo = page.getContent().get(i);
+      Assertions.assertThat(equipoTrabajo.getPeticionEvaluacion().getTitulo())
+          .as("equipoTrabajo[" + j + "].peticionEvaluacion.titulo")
+          .isEqualTo("PeticionEvaluacion" + String.format("%03d", j));
+    }
+  }
+
+  @Test
   public void findAll_WithPaging_ReturnsPage() {
     // given: One hundred EquipoTrabajos
     List<EquipoTrabajo> equipoTrabajos = new ArrayList<>();
@@ -266,14 +308,13 @@ public class EquipoTrabajoServiceTest {
     peticionEvaluacion.setFechaInicio(LocalDate.now());
     peticionEvaluacion.setFuenteFinanciacion("Fuente financiación" + id);
     peticionEvaluacion.setObjetivos("Objetivos" + id);
-    peticionEvaluacion.setOtroValorSocial("Otro valor social" + id);
     peticionEvaluacion.setResumen("Resumen" + id);
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria" + id);
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo(titulo);
     peticionEvaluacion.setPersonaRef("user-00" + id);
-    peticionEvaluacion.setValorSocial(3);
+    peticionEvaluacion.setValorSocial("Valor social");
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     return peticionEvaluacion;

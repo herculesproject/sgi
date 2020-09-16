@@ -3,6 +3,9 @@ package org.crue.hercules.sgi.eti.service;
 import java.util.List;
 
 import org.crue.hercules.sgi.eti.exceptions.TareaNotFoundException;
+import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
+import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
@@ -54,8 +57,22 @@ public interface TareaService {
   void delete(Long id) throws TareaNotFoundException;
 
   /**
-   * Elimina todos las {@link Tarea}.
+   * Elimina las {@link Tarea} del {@link EquipoTrabajo}
+   * 
+   * @param idEquipoTrabajo el id de la entidad {@link EquipoTrabajo}.
    */
-  void deleteAll();
+  void deleteByEquipoTrabajo(Long idEquipoTrabajo);
+
+  /**
+   * Obtener todas las entidades {@link Tarea} para una determinada
+   * {@link PeticionEvaluacion} que estan asociadas a una {@link Memoria} que no
+   * esta en alguno de los siguiente estados: En elaboración, Completada,
+   * Favorable, Pendiente de Modificaciones Mínimas, Pendiente de correcciones y
+   * No procede evaluar.
+   *
+   * @param idPeticionEvaluacion Id de {@link PeticionEvaluacion}.
+   * @return la lista de entidades {@link Tarea}.
+   */
+  List<Tarea> findAllTareasNoEliminablesPeticionEvaluacion(Long idPeticionEvaluacion);
 
 }

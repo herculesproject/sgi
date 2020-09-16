@@ -94,8 +94,7 @@ public class Memoria extends BaseEntity {
 
   /** Retrospectiva. */
   @OneToOne
-  @JoinColumn(name = "retrospectiva_id", nullable = false)
-  @NotNull
+  @JoinColumn(name = "retrospectiva_id", nullable = true)
   private Retrospectiva retrospectiva;
 
   /** Version */

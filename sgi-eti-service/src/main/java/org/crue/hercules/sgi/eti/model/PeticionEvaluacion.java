@@ -75,12 +75,8 @@ public class PeticionEvaluacion extends BaseEntity {
   private String resumen;
 
   /** Valor social */
-  @Column(name = "valor_social", nullable = false)
-  private Integer valorSocial;
-
-  /** Otro valor social */
-  @Column(name = "otro_valor_social", length = 2000, nullable = false)
-  private String otroValorSocial;
+  @Column(name = "valor_social", length = 2000, nullable = false)
+  private String valorSocial;
 
   /** Objetivos */
   @Column(name = "objetivos", length = 2000, nullable = false)

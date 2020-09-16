@@ -18,9 +18,9 @@ VALUES
 
 -- Peticion Evaluacion
 INSERT INTO ETI.PETICION_EVALUACION
-  (ID,SOLICITUD_CONVOCATORIA_REF,CODIGO,TITULO,TIPO_ACTIVIDAD_ID,FUENTE_FINANCIACION,FECHA_INICIO,FECHA_FIN,RESUMEN,VALOR_SOCIAL,OTRO_VALOR_SOCIAL,OBJETIVOS,DIS_METODOLOGICO,EXTERNO,TIENE_FONDOS_PROPIOS,PERSONA_REF,ACTIVO)
+  (ID,SOLICITUD_CONVOCATORIA_REF,CODIGO,TITULO,TIPO_ACTIVIDAD_ID,FUENTE_FINANCIACION,FECHA_INICIO,FECHA_FIN,RESUMEN,VALOR_SOCIAL,OBJETIVOS,DIS_METODOLOGICO,EXTERNO,TIENE_FONDOS_PROPIOS,PERSONA_REF,ACTIVO)
 VALUES
-  (1, 'Ref solicitud convocatoria', 'Código PeticionEvaluacion1', 'PeticionEvaluacion1', 1, 'Fuente financiación', '2020-07-09', '2021-07-09', 'Resumen', 3, 'Otro valor social', 'Objetivos', 'Diseño metodológico', false, false, 'user-001', true);
+  (1, 'Ref solicitud convocatoria', 'Código PeticionEvaluacion1', 'PeticionEvaluacion1', 1, 'Fuente financiación', '2020-07-09', '2021-07-09', 'Resumen',  ' valor social', 'Objetivos', 'Diseño metodológico', false, false, 'user-001', true);
 
 -- Tipo Estado Memoria
 INSERT INTO ETI.TIPO_ESTADO_MEMORIA

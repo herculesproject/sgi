@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.service.EquipoTrabajoService;
+import org.crue.hercules.sgi.eti.service.TareaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -56,6 +57,9 @@ public class EquipoTrabajoControllerTest {
 
   @MockBean
   private EquipoTrabajoService equipoTrabajoService;
+
+  @MockBean
+  private TareaService tareaService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String EQUIPO_TRABAJO_CONTROLLER_BASE_PATH = "/equipotrabajos";
@@ -378,14 +382,13 @@ public class EquipoTrabajoControllerTest {
     peticionEvaluacion.setFechaInicio(LocalDate.now());
     peticionEvaluacion.setFuenteFinanciacion("Fuente financiación" + id);
     peticionEvaluacion.setObjetivos("Objetivos" + id);
-    peticionEvaluacion.setOtroValorSocial("Otro valor social" + id);
     peticionEvaluacion.setResumen("Resumen" + id);
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria" + id);
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo(titulo);
     peticionEvaluacion.setPersonaRef("user-00" + id);
-    peticionEvaluacion.setValorSocial(3);
+    peticionEvaluacion.setValorSocial("Valor social");
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     return peticionEvaluacion;

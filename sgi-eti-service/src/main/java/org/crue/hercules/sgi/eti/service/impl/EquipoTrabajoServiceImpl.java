@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.crue.hercules.sgi.eti.exceptions.EquipoTrabajoNotFoundException;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.repository.EquipoTrabajoRepository;
 import org.crue.hercules.sgi.eti.service.EquipoTrabajoService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
@@ -94,17 +95,6 @@ public class EquipoTrabajoServiceImpl implements EquipoTrabajoService {
   }
 
   /**
-   * Elimina todos los registros {@link EquipoTrabajo}.
-   */
-  @Transactional
-  public void deleteAll() {
-    log.debug("Petición a deleteAll de EquipoTrabajo: {} - start");
-    equipoTrabajoRepository.deleteAll();
-    log.debug("Petición a deleteAll de EquipoTrabajo: {} - end");
-
-  }
-
-  /**
    * Actualiza los datos del {@link EquipoTrabajo}.
    * 
    * @param equipoTrabajoActualizar {@link EquipoTrabajo} con los datos
@@ -131,6 +121,24 @@ public class EquipoTrabajoServiceImpl implements EquipoTrabajoService {
       log.debug("update(EquipoTrabajo equipoTrabajoActualizar) - end");
       return returnValue;
     }).orElseThrow(() -> new EquipoTrabajoNotFoundException(equipoTrabajoActualizar.getId()));
+  }
+
+  /**
+   * Obtener todas las entidades paginadas {@link EquipoTrabajo} activas para una
+   * determinada {@link PeticionEvaluacion}.
+   *
+   * @param id       Id de {@link PeticionEvaluacion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link EquipoTrabajo} paginadas.
+   */
+  @Override
+  public Page<EquipoTrabajo> findAllByPeticionEvaluacionId(Long id, Pageable pageable) {
+    log.debug("findAllByPeticionEvaluacionId(Long id, Pageable pageable) - start");
+    Assert.notNull(id, "PeticionEvaluacion id no puede ser null para buscar su equipo de trabajo");
+
+    Page<EquipoTrabajo> returnValue = equipoTrabajoRepository.findAllByPeticionEvaluacionId(id, pageable);
+    log.debug("findAllByPeticionEvaluacionId(Long id, Pageable pageable) - end");
+    return returnValue;
   }
 
 }

@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
@@ -46,10 +48,34 @@ public class PeticionEvaluacionIT {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization", String.format("bearer %s",
-        tokenBuilder.buildToken("user", "ETI-PETICIONEVALUACION-EDITAR", "ETI-PEV-VR", "ETI-PEV-V")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user",
+        "ETI-PETICIONEVALUACION-EDITAR", "ETI-PEV-VR", "ETI-PEV-V", "ETI-PEV-CR", "ETI-MEM-CR")));
 
     HttpEntity<PeticionEvaluacion> request = new HttpEntity<>(entity, headers);
+    return request;
+  }
+
+  private HttpEntity<EquipoTrabajo> buildRequestEquipoTrabajo(HttpHeaders headers, EquipoTrabajo entity)
+      throws Exception {
+    headers = (headers != null ? headers : new HttpHeaders());
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-CR", "ETI-PEV-ER")));
+
+    HttpEntity<EquipoTrabajo> request = new HttpEntity<>(entity, headers);
+    return request;
+  }
+
+  private HttpEntity<EquipoTrabajo> buildRequestMemoriaPeticionEvaluacion(HttpHeaders headers, EquipoTrabajo entity)
+      throws Exception {
+    headers = (headers != null ? headers : new HttpHeaders());
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-CR", "ETI-PEV-ER", "ETI-EVR-V")));
+
+    HttpEntity<EquipoTrabajo> request = new HttpEntity<>(entity, headers);
     return request;
   }
 
@@ -258,6 +284,65 @@ public class PeticionEvaluacionIT {
 
   }
 
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findEquipoInvestigador_WithPaging_ReturnsEquipoInvestigadorSubList() throws Exception {
+    // when: Obtiene la page=3 con pagesize=10
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "1");
+    headers.add("X-Page-Size", "5");
+
+    final ResponseEntity<List<EquipoTrabajo>> response = restTemplate.exchange(
+        PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/equipo-investigador", HttpMethod.GET,
+        buildRequestEquipoTrabajo(headers, null), new ParameterizedTypeReference<List<EquipoTrabajo>>() {
+        }, 1L);
+
+    // then: Respuesta OK, PeticionEvaluaciones retorna la información de la página
+    // correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<EquipoTrabajo> equiposTrabajo = response.getBody();
+    Assertions.assertThat(equiposTrabajo.size()).isEqualTo(3);
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
+
+    // Contiene de id='6' a '8'
+    Assertions.assertThat(equiposTrabajo.get(0).getId()).isEqualTo(6);
+    Assertions.assertThat(equiposTrabajo.get(1).getId()).isEqualTo(7);
+    Assertions.assertThat(equiposTrabajo.get(2).getId()).isEqualTo(8);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findMemorias_WithPaging_ReturnsMemoriaPeticionEvaluacionSubList() throws Exception {
+    // when: Obtiene la page=3 con pagesize=10
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "1");
+    headers.add("X-Page-Size", "5");
+
+    final ResponseEntity<List<MemoriaPeticionEvaluacion>> response = restTemplate.exchange(
+        PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/memorias", HttpMethod.GET,
+        buildRequestMemoriaPeticionEvaluacion(headers, null),
+        new ParameterizedTypeReference<List<MemoriaPeticionEvaluacion>>() {
+        }, 1L);
+
+    // then: Respuesta OK, PeticionEvaluaciones retorna la información de la página
+    // correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<MemoriaPeticionEvaluacion> memoriasPeticionEvaluacion = response.getBody();
+    Assertions.assertThat(memoriasPeticionEvaluacion.size()).isEqualTo(3);
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
+
+    // Contiene de id='6' a '8'
+    Assertions.assertThat(memoriasPeticionEvaluacion.get(0).getId()).isEqualTo(6);
+    Assertions.assertThat(memoriasPeticionEvaluacion.get(1).getId()).isEqualTo(7);
+    Assertions.assertThat(memoriasPeticionEvaluacion.get(2).getId()).isEqualTo(8);
+  }
+
   /**
    * Función que devuelve un objeto PeticionEvaluacion
    * 
@@ -281,14 +366,13 @@ public class PeticionEvaluacionIT {
     peticionEvaluacion.setFechaInicio(LocalDate.now());
     peticionEvaluacion.setFuenteFinanciacion("Fuente financiación" + id);
     peticionEvaluacion.setObjetivos("Objetivos" + id);
-    peticionEvaluacion.setOtroValorSocial("Otro valor social" + id);
     peticionEvaluacion.setResumen("Resumen" + id);
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria" + id);
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo(titulo);
     peticionEvaluacion.setPersonaRef("user-00" + id);
-    peticionEvaluacion.setValorSocial(3);
+    peticionEvaluacion.setValorSocial("valor social");
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     return peticionEvaluacion;

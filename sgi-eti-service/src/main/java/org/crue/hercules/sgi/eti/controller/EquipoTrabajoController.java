@@ -5,7 +5,9 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
+import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.service.EquipoTrabajoService;
+import org.crue.hercules.sgi.eti.service.TareaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -34,15 +36,20 @@ public class EquipoTrabajoController {
   /** EquipoTrabajo service */
   private final EquipoTrabajoService service;
 
+  /** Tarea service */
+  private final TareaService tareaService;
+
   /**
    * Instancia un nuevo EquipoTrabajoController.
    * 
-   * @param service EquipoTrabajoService
+   * @param service      EquipoTrabajoService
+   * @param tareaService TareaService
    */
-  public EquipoTrabajoController(EquipoTrabajoService service) {
-    log.debug("EquipoTrabajoController(EquipoTrabajoService service) - start");
+  public EquipoTrabajoController(EquipoTrabajoService service, TareaService tareaService) {
+    log.debug("EquipoTrabajoController(EquipoTrabajoService service, TareaService tareaService) - start");
     this.service = service;
-    log.debug("EquipoTrabajoController(EquipoTrabajoService service) - end");
+    this.tareaService = tareaService;
+    log.debug("EquipoTrabajoController(EquipoTrabajoService service, TareaService tareaService) - end");
   }
 
   /**
@@ -110,13 +117,14 @@ public class EquipoTrabajoController {
   }
 
   /**
-   * Elimina {@link EquipoTrabajo} con id indicado.
+   * Elimina {@link EquipoTrabajo} con id indicado y todas sus {@link Tarea}.
    * 
    * @param id Identificador de {@link EquipoTrabajo}.
    */
   @DeleteMapping("/{id}")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
+    tareaService.deleteByEquipoTrabajo(id);
     service.delete(id);
     log.debug("delete(Long id) - end");
   }

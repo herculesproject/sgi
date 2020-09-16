@@ -13,4 +13,12 @@ import org.springframework.stereotype.Repository;
 public interface PeticionEvaluacionRepository
     extends JpaRepository<PeticionEvaluacion, Long>, JpaSpecificationExecutor<PeticionEvaluacion> {
 
+  /**
+   * Recupera la última petición evaluación del año recibido por parámetro.
+   * 
+   * @param anio año a buscar en el código de la petición evaluación.
+   * @return petición evaluación.
+   */
+  PeticionEvaluacion findFirstByCodigoContainingOrderByCodigoDesc(String anio);
+
 }

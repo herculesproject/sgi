@@ -176,8 +176,7 @@
       <column name="fecha_inicio" type="DATE" />
       <column name="fecha_fin" type="DATE" />
       <column name="resumen" type="VARCHAR(2000)" />
-      <column name="valor_social" type="INT" />
-      <column name="otro_valor_social" type="VARCHAR(2000)" />
+      <column name="valor_social" type="VARCHAR(2000)" />
       <column name="objetivos" type="VARCHAR(2000)" />
       <column name="dis_metodologico" type="VARCHAR(2000)" />
       <column name="externo" type="BOOLEAN" defaultValueBoolean="false">

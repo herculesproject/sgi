@@ -1,8 +1,12 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.crue.hercules.sgi.eti.exceptions.TareaNotFoundException;
+import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
+import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.repository.TareaRepository;
 import org.crue.hercules.sgi.eti.service.TareaService;
@@ -92,14 +96,15 @@ public class TareaServiceImpl implements TareaService {
   }
 
   /**
-   * Elimina todos los registros {@link Tarea}.
+   * Elimina las {@link Tarea} del {@link EquipoTrabajo}
+   * 
+   * @param id el id de la entidad {@link EquipoTrabajo}.
    */
   @Transactional
-  public void deleteAll() {
-    log.debug("Petición a deleteAll de Tarea: {} - start");
-    tareaRepository.deleteAll();
-    log.debug("Petición a deleteAll de Tarea: {} - end");
-
+  public void deleteByEquipoTrabajo(Long id) {
+    log.debug("deleteByEquipoTrabajo(Long id) - start");
+    tareaRepository.deleteByEquipoTrabajoId(id);
+    log.debug("deleteByEquipoTrabajo(Long id) - end");
   }
 
   /**
@@ -131,6 +136,29 @@ public class TareaServiceImpl implements TareaService {
       log.debug("update(Tarea tareaActualizar) - end");
       return returnValue;
     }).orElseThrow(() -> new TareaNotFoundException(tareaActualizar.getId()));
+  }
+
+  /**
+   * Obtener todas las entidades {@link Tarea} para una determinada
+   * {@link PeticionEvaluacion} que estan asociadas a una {@link Memoria} que no
+   * esta en alguno de los siguiente estados: En elaboración, Completada,
+   * Favorable, Pendiente de Modificaciones Mínimas, Pendiente de correcciones y
+   * No procede evaluar.
+   *
+   * @param idPeticionEvaluacion Id de {@link PeticionEvaluacion}.
+   * @return la lista de entidades {@link Tarea}.
+   */
+  @Override
+  public List<Tarea> findAllTareasNoEliminablesPeticionEvaluacion(Long idPeticionEvaluacion) {
+    log.debug("findAllTareasNoEliminablesPeticionEvaluacion(Long idPeticionEvaluacion) - start");
+
+    List<Long> estadosEliminables = Arrays.asList(1L, 2L, 6L, 7L, 8L);
+
+    List<Tarea> returnValue = tareaRepository.findAllByEquipoTrabajoPeticionEvaluacionIdAndMemoriaEstadoActualIdNotIn(
+        idPeticionEvaluacion, estadosEliminables);
+    log.debug("findAllTareasNoEliminablesPeticionEvaluacion(Long idPeticionEvaluacion) - end");
+
+    return returnValue;
   }
 
 }

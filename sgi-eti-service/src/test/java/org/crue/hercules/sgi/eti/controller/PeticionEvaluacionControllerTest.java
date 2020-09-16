@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.controller;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,10 +11,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.config.SecurityConfig;
+import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
+import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
+import org.crue.hercules.sgi.eti.model.FormacionEspecifica;
+import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
+import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.eti.model.TipoTarea;
+import org.crue.hercules.sgi.eti.service.EquipoTrabajoService;
+import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.PeticionEvaluacionService;
+import org.crue.hercules.sgi.eti.service.TareaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -56,6 +68,15 @@ public class PeticionEvaluacionControllerTest {
   @MockBean
   private PeticionEvaluacionService peticionEvaluacionService;
 
+  @MockBean
+  private EquipoTrabajoService equipoTrabajoService;
+
+  @MockBean
+  private MemoriaService memoriaService;
+
+  @MockBean
+  private TareaService tareaService;
+
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PETICION_EVALUACION_CONTROLLER_BASE_PATH = "/peticionevaluaciones";
 
@@ -88,7 +109,7 @@ public class PeticionEvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PETICIONEVALUACION-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-CR", "ETI-MEM-CR" })
   public void newPeticionEvaluacion_ReturnsPeticionEvaluacion() throws Exception {
     // given: Un peticionEvaluacion nuevo
     String nuevoPeticionEvaluacionJson = "{\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}";
@@ -110,7 +131,7 @@ public class PeticionEvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PETICIONEVALUACION-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-CR", "ETI-MEM-CR" })
   public void newPeticionEvaluacion_Error_Returns400() throws Exception {
     // given: Un peticionEvaluacion nuevo que produce un error al crearse
     String nuevoPeticionEvaluacionJson = "{\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}";
@@ -345,6 +366,97 @@ public class PeticionEvaluacionControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-CR", "ETI-PEV-ER" })
+  public void findEquipoInvestigador_ReturnsEquipoTrabajoSubList() throws Exception {
+    // given: 10 EquipoTrabajos por PeticionEvaluacion
+    List<EquipoTrabajo> equipoTrabajos = new ArrayList<>();
+    for (int i = 1, j = 1; i <= 10; i++, j++) {
+      equipoTrabajos.add(generarMockEquipoTrabajo(Long.valueOf(i * 10 + j - 10),
+          generarMockPeticionEvaluacion(Long.valueOf(i), "PeticionEvaluacion" + String.format("%03d", i))));
+    }
+    BDDMockito.given(tareaService.findAllTareasNoEliminablesPeticionEvaluacion(ArgumentMatchers.<Long>any()))
+        .willReturn(new ArrayList<>());
+
+    BDDMockito.given(equipoTrabajoService.findAllByPeticionEvaluacionId(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<EquipoTrabajo>>() {
+          @Override
+          public Page<EquipoTrabajo> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<EquipoTrabajo> content = equipoTrabajos.subList(fromIndex, toIndex);
+            Page<EquipoTrabajo> page = new PageImpl<>(content, pageable, equipoTrabajos.size());
+            return page;
+          }
+        });
+
+    // when: get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/equipo-investigador", 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "1").header("X-Page-Size", "5")
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: the asked EquipoTrabajos are returned with the right page information
+        // in headers
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "1"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "5"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "10"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(5))).andReturn();
+
+    // this uses a TypeReference to inform Jackson about the Lists's generic type
+    List<EquipoTrabajo> actual = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<EquipoTrabajo>>() {
+        });
+
+    // containing peticionEvaluacion.titulo='PeticionEvaluacion006' to
+    // 'PeticionEvaluacion010'
+    for (int i = 0, j = 6; i < 10 & j <= 10; i++, j++) {
+      EquipoTrabajo equipoTrabajo = actual.get(i);
+      Assertions.assertThat(equipoTrabajo.getPeticionEvaluacion().getTitulo())
+          .isEqualTo("PeticionEvaluacion" + String.format("%03d", j));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-CR", "ETI-PEV-ER", "ETI-EVR-V" })
+  public void findMemorias_NotFound_Returns404() throws Exception {
+
+    BDDMockito.given(memoriaService.findMemoriaByPeticionEvaluacionMaxVersion(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).will((InvocationOnMock invocation) -> {
+          throw new PeticionEvaluacionNotFoundException(invocation.getArgument(0));
+        });
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/memorias", 1L)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-CR", "ETI-PEV-ER", "ETI-EVR-V" })
+  public void findMemorias_listMemoriaPeticionEvaluacion_ReturnsOk() throws Exception {
+
+    List<MemoriaPeticionEvaluacion> listMemoriaPeticionEvaluacion = new ArrayList<MemoriaPeticionEvaluacion>();
+
+    for (int i = 1, j = 1; i <= 10; i++, j++) {
+      listMemoriaPeticionEvaluacion.add(generarMockMemoriaPeticionEvaluacion(Long.valueOf(i * 10 + j - 10)));
+    }
+
+    BDDMockito.given(memoriaService.findMemoriaByPeticionEvaluacionMaxVersion(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(listMemoriaPeticionEvaluacion));
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/memorias", 1L)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+  }
+
   /**
    * Función que devuelve un objeto PeticionEvaluacion
    * 
@@ -352,7 +464,6 @@ public class PeticionEvaluacionControllerTest {
    * @param titulo el título de PeticionEvaluacion
    * @return el objeto PeticionEvaluacion
    */
-
   public PeticionEvaluacion generarMockPeticionEvaluacion(Long id, String titulo) {
     TipoActividad tipoActividad = new TipoActividad();
     tipoActividad.setId(1L);
@@ -368,17 +479,92 @@ public class PeticionEvaluacionControllerTest {
     peticionEvaluacion.setFechaInicio(LocalDate.now());
     peticionEvaluacion.setFuenteFinanciacion("Fuente financiación" + id);
     peticionEvaluacion.setObjetivos("Objetivos" + id);
-    peticionEvaluacion.setOtroValorSocial("Otro valor social" + id);
     peticionEvaluacion.setResumen("Resumen" + id);
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria" + id);
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo(titulo);
     peticionEvaluacion.setPersonaRef("user-00" + id);
-    peticionEvaluacion.setValorSocial(3);
+    peticionEvaluacion.setValorSocial("Valor social");
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     return peticionEvaluacion;
+  }
+
+  /**
+   * Crea una memoria de petición evaluación.
+   * 
+   * @param id identificador.
+   */
+  private MemoriaPeticionEvaluacion generarMockMemoriaPeticionEvaluacion(Long id) {
+
+    MemoriaPeticionEvaluacion memoria = new MemoriaPeticionEvaluacion();
+    memoria.setId(id);
+
+    Comite comite = new Comite();
+    comite.setId(id);
+    memoria.setComite(comite);
+
+    TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
+    tipoEstadoMemoria.setId(id);
+    memoria.setEstadoActual(tipoEstadoMemoria);
+
+    memoria.setFechaEvaluacion(LocalDateTime.of(2020, 7, 15, 0, 0, 1));
+    memoria.setFechaLimite(LocalDate.of(2020, 8, 18));
+    return memoria;
+  }
+
+  /**
+   * Función que devuelve un objeto EquipoTrabajo
+   * 
+   * @param id                 id del EquipoTrabajo
+   * @param peticionEvaluacion la PeticionEvaluacion del EquipoTrabajo
+   * @return el objeto EquipoTrabajo
+   */
+  public EquipoTrabajo generarMockEquipoTrabajo(Long id, PeticionEvaluacion peticionEvaluacion) {
+
+    EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
+    equipoTrabajo.setId(id);
+    equipoTrabajo.setPeticionEvaluacion(peticionEvaluacion);
+    equipoTrabajo.setPersonaRef("user-00" + id);
+
+    return equipoTrabajo;
+  }
+
+  /**
+   * Función que devuelve un objeto Tarea
+   * 
+   * @param id          id de la tarea
+   * @param descripcion descripcion de la tarea
+   * @return el objeto Tarea
+   */
+  public Tarea generarMockTarea(Long id, String descripcion) {
+    EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
+    equipoTrabajo.setId(id);
+
+    Memoria memoria = new Memoria();
+    memoria.setId(200L);
+
+    FormacionEspecifica formacionEspecifica = new FormacionEspecifica();
+    formacionEspecifica.setId(300L);
+
+    TipoTarea tipoTarea = new TipoTarea();
+    tipoTarea.setId(1L);
+    tipoTarea.setNombre("Eutanasia");
+    tipoTarea.setActivo(Boolean.TRUE);
+
+    Tarea tarea = new Tarea();
+    tarea.setId(id);
+    tarea.setEquipoTrabajo(equipoTrabajo);
+    tarea.setMemoria(memoria);
+    tarea.setTarea(descripcion);
+    tarea.setFormacion("Formacion" + id);
+    tarea.setFormacionEspecifica(formacionEspecifica);
+    tarea.setOrganismo("Organismo" + id);
+    tarea.setAnio(2020);
+    tarea.setTipoTarea(tipoTarea);
+
+    return tarea;
   }
 
 }

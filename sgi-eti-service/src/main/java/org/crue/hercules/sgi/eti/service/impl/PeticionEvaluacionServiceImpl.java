@@ -43,6 +43,22 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
     Assert.isNull(peticionEvaluacion.getId(),
         "PeticionEvaluacion id tiene que ser null para crear un nuevo peticionEvaluacion");
 
+    PeticionEvaluacion peticionEvaluacionAnio = peticionEvaluacionRepository
+        .findFirstByCodigoContainingOrderByCodigoDesc(String.valueOf(peticionEvaluacion.getFechaInicio().getYear()));
+
+    Long numEvaluacion = 1L;
+    if (peticionEvaluacionAnio != null) {
+      numEvaluacion = Long.valueOf(peticionEvaluacionAnio.getCodigo().split("/")[1]);
+      numEvaluacion++;
+    }
+
+    StringBuilder codigoPeticionEvaluacion = new StringBuilder();
+
+    codigoPeticionEvaluacion.append(String.valueOf(peticionEvaluacion.getFechaInicio().getYear())).append("/")
+        .append(String.format("%03d", numEvaluacion));
+
+    peticionEvaluacion.setCodigo(codigoPeticionEvaluacion.toString());
+
     return peticionEvaluacionRepository.save(peticionEvaluacion);
   }
 
@@ -139,7 +155,6 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
       peticionEvaluacion.setFechaInicio(peticionEvaluacionActualizar.getFechaInicio());
       peticionEvaluacion.setFuenteFinanciacion(peticionEvaluacionActualizar.getFuenteFinanciacion());
       peticionEvaluacion.setObjetivos(peticionEvaluacionActualizar.getObjetivos());
-      peticionEvaluacion.setOtroValorSocial(peticionEvaluacionActualizar.getOtroValorSocial());
       peticionEvaluacion.setResumen(peticionEvaluacionActualizar.getResumen());
       peticionEvaluacion.setSolicitudConvocatoriaRef(peticionEvaluacionActualizar.getSolicitudConvocatoriaRef());
       peticionEvaluacion.setTieneFondosPropios(peticionEvaluacionActualizar.getTieneFondosPropios());

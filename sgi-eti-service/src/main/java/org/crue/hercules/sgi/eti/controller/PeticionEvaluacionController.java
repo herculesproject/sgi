@@ -1,11 +1,19 @@
 package org.crue.hercules.sgi.eti.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
+import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.Tarea;
+import org.crue.hercules.sgi.eti.service.EquipoTrabajoService;
+import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.service.PeticionEvaluacionService;
+import org.crue.hercules.sgi.eti.service.TareaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -33,18 +41,36 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PeticionEvaluacionController {
 
+  /** EquipoTrabajo service */
+  private final EquipoTrabajoService equipoTrabajoService;
+
+  /** Memoria service */
+  private final MemoriaService memoriaService;
+
   /** PeticionEvaluacion service */
   private final PeticionEvaluacionService service;
+
+  /** Tarea service */
+  private final TareaService tareaService;
 
   /**
    * Instancia un nuevo PeticionEvaluacionController.
    * 
-   * @param service PeticionEvaluacionService
+   * @param service              PeticionEvaluacionService
+   * @param equipoTrabajoService EquipoTrabajoService
+   * @param memoriaService       MemoriaService
+   * @param tareaService         TareaService
    */
-  public PeticionEvaluacionController(PeticionEvaluacionService service) {
-    log.debug("PeticionEvaluacionController(PeticionEvaluacionService service) - start");
+  public PeticionEvaluacionController(PeticionEvaluacionService service, EquipoTrabajoService equipoTrabajoService,
+      MemoriaService memoriaService, TareaService tareaService) {
+    log.debug(
+        "PeticionEvaluacionController(PeticionEvaluacionService service, EquipoTrabajoService equipoTrabajoService, MemoriaService memoriaService, TareaService tareaService) - start");
     this.service = service;
-    log.debug("PeticionEvaluacionController(PeticionEvaluacionService service) - end");
+    this.equipoTrabajoService = equipoTrabajoService;
+    this.memoriaService = memoriaService;
+    this.tareaService = tareaService;
+    log.debug(
+        "PeticionEvaluacionController(PeticionEvaluacionService service, EquipoTrabajoService equipoTrabajoService, MemoriaService memoriaService, TareaService tareaService)) - end");
   }
 
   /**
@@ -77,6 +103,7 @@ public class PeticionEvaluacionController {
    * @return Nuevo {@link PeticionEvaluacion} creado.
    */
   @PostMapping
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-CR, ETI-MEM-CR')")
   ResponseEntity<PeticionEvaluacion> newPeticionEvaluacion(
       @Valid @RequestBody PeticionEvaluacion nuevoPeticionEvaluacion) {
     log.debug("newPeticionEvaluacion(PeticionEvaluacion nuevoPeticionEvaluacion) - start");
@@ -128,6 +155,63 @@ public class PeticionEvaluacionController {
     peticionEvaluacion.setActivo(Boolean.FALSE);
     service.update(peticionEvaluacion);
     log.debug("delete(Long id) - end");
+  }
+
+  /**
+   * Obtener todas las entidades paginadas {@link EquipoTrabajo} para una
+   * determinada {@link PeticionEvaluacion}.
+   *
+   * @param id       Id de {@link PeticionEvaluacion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link EquipoTrabajo} paginadas.
+   */
+  @GetMapping("/{id}/equipo-investigador")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-CR', 'ETI-PEV-ER')")
+  ResponseEntity<Page<EquipoTrabajo>> findEquipoInvestigador(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("findEquipoInvestigador(Long id, Pageable pageable) - start");
+    List<EquipoTrabajo> equipoTrabajosNoEliminables = tareaService.findAllTareasNoEliminablesPeticionEvaluacion(id)
+        .stream().map(Tarea::getEquipoTrabajo).collect(Collectors.toList());
+
+    Page<EquipoTrabajo> page = equipoTrabajoService.findAllByPeticionEvaluacionId(id, pageable).map(equipoTrabajo -> {
+      boolean isEliminable = !equipoTrabajosNoEliminables.stream()
+          .anyMatch(equipoTrabajoEliminable -> equipoTrabajoEliminable.getId().equals(equipoTrabajo.getId()));
+      equipoTrabajo.setEliminable(isEliminable);
+      return equipoTrabajo;
+    });
+
+    if (page.isEmpty()) {
+      log.debug("findEquipoInvestigador(Long id, Pageable pageable) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findEquipoInvestigador(Long id, Pageable pageable) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Obtener todas las entidades paginadas {@link EquipoTrabajo} para una
+   * determinada {@link PeticionEvaluacion}.
+   *
+   * @param id       Id de {@link PeticionEvaluacion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Memoria} paginadas.
+   */
+  @GetMapping("/{id}/memorias")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-CR', 'ETI-PEV-ER')")
+  ResponseEntity<Page<MemoriaPeticionEvaluacion>> findMemorias(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("findMemorias(Long id, Pageable pageable) - start");
+
+    Page<MemoriaPeticionEvaluacion> page = memoriaService.findMemoriaByPeticionEvaluacionMaxVersion(id, pageable);
+
+    if (page.isEmpty()) {
+      log.debug("findMemorias(Long id, Pageable pageable) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findMemorias(Long id, Pageable pageable) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
 }

@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.repository.custom;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,15 +15,20 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Selection;
 import javax.persistence.criteria.Subquery;
 
+import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Comite_;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion_;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva_;
+import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.Evaluacion_;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Memoria_;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion_;
 import org.crue.hercules.sgi.eti.model.Retrospectiva_;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion_;
@@ -35,6 +41,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Component;
 
+import liquibase.pro.packaged.q;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -167,6 +174,94 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     log.debug("findAllMemoriasAsignablesConvocatoria(Long idConvocatoriaReunion, Pageable pageable) - end");
 
     return returnValue;
+  }
+
+  /**
+   * Devuelve las memorias de una petición evaluación con su fecha límite y de
+   * evaluación.
+   * 
+   * @param idPeticionEvaluacion Identificador {@link PeticionEvaluacion}
+   * @param pageable             información de paginación
+   * @return lista de memorias de {@link PeticionEvaluacion}
+   */
+  @Override
+  public Page<MemoriaPeticionEvaluacion> findMemoriasEvaluacion(Long idPeticionEvaluacion, Pageable pageable) {
+    log.debug("findMemoriasEvaluacion( Pageable pageable) - start");
+
+    // Crete query
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaQuery<MemoriaPeticionEvaluacion> cq = cb.createQuery(MemoriaPeticionEvaluacion.class);
+    Root<Memoria> root = cq.from(Memoria.class);
+
+    cq.multiselect(root.get(Memoria_.id), root.get(Memoria_.numReferencia), root.get(Memoria_.comite),
+        root.get(Memoria_.estadoActual), getFechaEvaluacion(root, cb, cq).alias("fechaEvaluacion"),
+        getFechaLimite(root, cb, cq).alias("fechaLimite"));
+
+    cq.where(cb.equal(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id), idPeticionEvaluacion));
+
+    List<Order> orders = QueryUtils.toOrders(pageable.getSort(), root, cb);
+    cq.orderBy(orders);
+
+    TypedQuery<MemoriaPeticionEvaluacion> typedQuery = entityManager.createQuery(cq);
+    if (pageable != null && pageable.isPaged()) {
+      typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+      typedQuery.setMaxResults(pageable.getPageSize());
+    }
+
+    List<MemoriaPeticionEvaluacion> result = typedQuery.getResultList();
+    Page<MemoriaPeticionEvaluacion> returnValue = new PageImpl<MemoriaPeticionEvaluacion>(result, pageable,
+        result.size());
+
+    log.debug("findMemoriasEvaluacion( Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Recupera la fecha de evaluación de la máxima versión de una memoria.
+   * 
+   * @param root root
+   * @param cb   criteria builder
+   * @param cq   criteria query
+   * @return subquery que recupera la fecha de evaluación.
+   */
+  private Subquery<LocalDateTime> getFechaEvaluacion(Root<Memoria> root, CriteriaBuilder cb,
+      CriteriaQuery<MemoriaPeticionEvaluacion> cq) {
+    log.debug("getFechaEvaluacion : {} - start");
+
+    Subquery<LocalDateTime> queryFechaEvaluacion = cq.subquery(LocalDateTime.class);
+    Root<Evaluacion> subqRoot = queryFechaEvaluacion.from(Evaluacion.class);
+
+    queryFechaEvaluacion.select(subqRoot.get(Evaluacion_.convocatoriaReunion).get(ConvocatoriaReunion_.fechaEvaluacion))
+        .where(cb.equal(subqRoot.get(Evaluacion_.memoria).get(Memoria_.id), root.get(Memoria_.id)),
+            cb.equal(subqRoot.get(Evaluacion_.version), root.get(Memoria_.version)));
+
+    log.debug("getFechaEvaluacion : {} - end");
+
+    return queryFechaEvaluacion;
+  }
+
+  /**
+   * Recupera la fecha limite de la máxima versión de una memoria.
+   * 
+   * @param root root
+   * @param cb   criteria builder
+   * @param cq   criteria query
+   * @return subquery que recupera la fecha limite.
+   */
+  private Subquery<LocalDate> getFechaLimite(Root<Memoria> root, CriteriaBuilder cb,
+      CriteriaQuery<MemoriaPeticionEvaluacion> cq) {
+    log.debug("getFechaLimite : {} - start");
+
+    Subquery<LocalDate> queryFechaLimite = cq.subquery(LocalDate.class);
+    Root<Evaluacion> subqRoot = queryFechaLimite.from(Evaluacion.class);
+
+    queryFechaLimite.select(subqRoot.get(Evaluacion_.convocatoriaReunion).get(ConvocatoriaReunion_.fechaLimite)).where(
+        cb.equal(subqRoot.get(Evaluacion_.memoria).get(Memoria_.id), root.get(Memoria_.id)),
+        cb.equal(subqRoot.get(Evaluacion_.version), root.get(Memoria_.version)));
+
+    log.debug("getFechaLimite : {} - end");
+
+    return queryFechaLimite;
   }
 
 }

@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
@@ -368,6 +370,73 @@ public class MemoriaServiceTest {
     Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
   }
 
+  @Test
+  public void findMemoriaByPeticionEvaluacionMaxVersion_Unlimited_ReturnsFullMemoriaPeticionEvaluacionList() {
+
+    List<MemoriaPeticionEvaluacion> memorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      memorias.add(generarMockMemoriaPeticionEvaluacion(Long.valueOf(i)));
+    }
+
+    BDDMockito
+        .given(memoriaRepository.findMemoriasEvaluacion(ArgumentMatchers.<Long>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(memorias));
+
+    // when: find unlimited Memorias de petición evaluación
+    Page<MemoriaPeticionEvaluacion> page = memoriaService.findMemoriaByPeticionEvaluacionMaxVersion(1L,
+        Pageable.unpaged());
+
+    // then: Obtiene Memorias de petición evaluación con sus fecha límite y de
+    // evaluación
+
+    Assertions.assertThat(page.getContent().size()).isEqualTo(100);
+    Assertions.assertThat(page.getNumber()).isEqualTo(0);
+    Assertions.assertThat(page.getSize()).isEqualTo(100);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+  }
+
+  @Test
+  public void findMemoriaByPeticionEvaluacionMaxVersion_WithPaging_ReturnsPage() {
+    // given: idPEticionEvaluacion, One hundred MemoriaPeticionEvaluacion
+    Long idPeticionEvaluacion = 1L;
+    List<MemoriaPeticionEvaluacion> memorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      memorias.add(generarMockMemoriaPeticionEvaluacion(Long.valueOf(i)));
+    }
+
+    BDDMockito
+        .given(memoriaRepository.findMemoriasEvaluacion(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<MemoriaPeticionEvaluacion>>() {
+          @Override
+          public Page<MemoriaPeticionEvaluacion> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<MemoriaPeticionEvaluacion> content = memorias.subList(fromIndex, toIndex);
+            Page<MemoriaPeticionEvaluacion> page = new PageImpl<>(content, pageable, memorias.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10 asignables by convocatoria
+    Pageable paging = PageRequest.of(3, 10);
+    Page<MemoriaPeticionEvaluacion> page = memoriaService
+        .findMemoriaByPeticionEvaluacionMaxVersion(idPeticionEvaluacion, paging);
+
+    // then: A Page with ten Memorias are returned containing
+    // num referencia='NumRef-031' to 'NumRef-040'
+    Assertions.assertThat(page.getContent().size()).isEqualTo(10);
+    Assertions.assertThat(page.getNumber()).isEqualTo(3);
+    Assertions.assertThat(page.getSize()).isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      MemoriaPeticionEvaluacion memoria = page.getContent().get(i);
+      Assertions.assertThat(memoria.getNumReferencia()).isEqualTo("NumRef-" + String.format("%03d", j));
+    }
+  }
+
   /**
    * Función que devuelve un objeto Memoria.
    * 
@@ -385,6 +454,31 @@ public class MemoriaServiceTest {
         generarMockTipoMemoria(1L, "TipoMemoria1", true),
         generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.TRUE,
         generarMockRetrospectiva(1L), version, Boolean.TRUE);
+  }
+
+  /**
+   * Crea una memoria de petición evaluación.
+   * 
+   * @param id identificador.
+   */
+  private MemoriaPeticionEvaluacion generarMockMemoriaPeticionEvaluacion(Long id) {
+
+    MemoriaPeticionEvaluacion memoria = new MemoriaPeticionEvaluacion();
+    memoria.setId(id);
+
+    memoria.setNumReferencia("NumRef-" + String.format("%03d", id));
+
+    Comite comite = new Comite();
+    comite.setId(id);
+    memoria.setComite(comite);
+
+    TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
+    tipoEstadoMemoria.setId(id);
+    memoria.setEstadoActual(tipoEstadoMemoria);
+
+    memoria.setFechaEvaluacion(LocalDateTime.of(2020, 7, 15, 0, 0, 1));
+    memoria.setFechaLimite(LocalDate.of(2020, 8, 18));
+    return memoria;
   }
 
   /**
@@ -409,14 +503,13 @@ public class MemoriaServiceTest {
     peticionEvaluacion.setFechaInicio(LocalDate.now());
     peticionEvaluacion.setFuenteFinanciacion("Fuente financiación" + id);
     peticionEvaluacion.setObjetivos("Objetivos" + id);
-    peticionEvaluacion.setOtroValorSocial("Otro valor social" + id);
     peticionEvaluacion.setResumen("Resumen" + id);
     peticionEvaluacion.setSolicitudConvocatoriaRef("Referencia solicitud convocatoria" + id);
     peticionEvaluacion.setTieneFondosPropios(Boolean.FALSE);
     peticionEvaluacion.setTipoActividad(tipoActividad);
     peticionEvaluacion.setTitulo(titulo);
     peticionEvaluacion.setPersonaRef("user-00" + id);
-    peticionEvaluacion.setValorSocial(3);
+    peticionEvaluacion.setValorSocial("Valor social");
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
     return peticionEvaluacion;
