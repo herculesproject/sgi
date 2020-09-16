@@ -7,6 +7,7 @@ import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.MemoriaSpecifications;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
@@ -260,8 +261,10 @@ public class MemoriaServiceImpl implements MemoriaService {
    * @return lista de memorias de {@link PeticionEvaluacion}
    */
   @Override
-  public Page<MemoriaPeticionEvaluacion> findMemoriaByPeticionEvaluacionMaxVersion(Long id, Pageable pageable) {
-    Page<MemoriaPeticionEvaluacion> returnValue = memoriaRepository.findMemoriasEvaluacion(id, pageable);
+  public Page<MemoriaPeticionEvaluacion> findMemoriaByPeticionEvaluacionMaxVersion(Long idPeticionEvaluacion,
+      Pageable pageable) {
+    Page<MemoriaPeticionEvaluacion> returnValue = memoriaRepository.findMemoriasEvaluacion(idPeticionEvaluacion,
+        pageable);
     return returnValue;
   }
 

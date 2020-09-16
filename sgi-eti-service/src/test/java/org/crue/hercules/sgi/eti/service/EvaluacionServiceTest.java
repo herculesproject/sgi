@@ -25,7 +25,10 @@ import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
+import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
+import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
+import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.service.impl.EvaluacionServiceImpl;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,12 +54,19 @@ public class EvaluacionServiceTest {
 
   @Mock
   private EvaluacionRepository evaluacionRepository;
+  @Mock
+  private MemoriaRepository memoriaRepository;
+  @Mock
+  private EstadoMemoriaRepository estadoMemoriaRepository;
+  @Mock
+  private RetrospectivaRepository retrospectivaRepository;
 
   private EvaluacionService evaluacionService;
 
   @BeforeEach
   public void setUp() throws Exception {
-    evaluacionService = new EvaluacionServiceImpl(evaluacionRepository);
+    evaluacionService = new EvaluacionServiceImpl(evaluacionRepository, memoriaRepository, estadoMemoriaRepository,
+        retrospectivaRepository);
   }
 
   @Test

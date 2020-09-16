@@ -15,7 +15,6 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
 import javax.persistence.criteria.Subquery;
 
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
@@ -28,6 +27,7 @@ import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluacion_;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Memoria_;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion_;
 import org.crue.hercules.sgi.eti.model.Retrospectiva_;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
@@ -41,7 +41,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Component;
 
-import liquibase.pro.packaged.q;
 import lombok.extern.slf4j.Slf4j;
 
 /**

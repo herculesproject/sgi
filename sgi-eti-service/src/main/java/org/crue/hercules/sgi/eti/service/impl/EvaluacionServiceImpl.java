@@ -1,17 +1,23 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
+import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
+import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
+import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.EvaluacionSpecifications;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
+import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
@@ -32,21 +38,36 @@ import lombok.extern.slf4j.Slf4j;
 public class EvaluacionServiceImpl implements EvaluacionService {
   /** Evaluación repository */
   private final EvaluacionRepository evaluacionRepository;
+  /** Memoria repository */
+  private final MemoriaRepository memoriaRepository;
+  /** Estado Memoria repository */
+  private final EstadoMemoriaRepository estadoMemoriaRepository;
+  /** Retrospectiva repository */
+  private final RetrospectivaRepository retrospectivaRepository;
 
   /**
    * Instancia un nuevo {@link EvaluacionServiceImpl}
    * 
-   * @param evaluacionRepository {@link} EvaluacionRepository}
+   * @param evaluacionRepository    repository para {@link Evaluacion}
+   * @param memoriaRepository       repository para {@link Memoria}
+   * @param estadoMemoriaRepository repository para {@link EstadoMemoria}
+   * @param retrospectivaRepository repository para {@link Retrospectiva}
    */
-  public EvaluacionServiceImpl(EvaluacionRepository evaluacionRepository) {
+  public EvaluacionServiceImpl(EvaluacionRepository evaluacionRepository, MemoriaRepository memoriaRepository,
+      EstadoMemoriaRepository estadoMemoriaRepository, RetrospectivaRepository retrospectivaRepository) {
     this.evaluacionRepository = evaluacionRepository;
+    this.memoriaRepository = memoriaRepository;
+    this.estadoMemoriaRepository = estadoMemoriaRepository;
+    this.retrospectivaRepository = retrospectivaRepository;
   }
 
   /**
    * Guarda la entidad {@link Evaluacion}.
    * 
    * Cuando se generan las evaluaciones al asignar memorias a una
-   * {@link ConvocatoriaReunion} hay que actualizar el estado de la
+   * {@link ConvocatoriaReunion} el tipo de la evaluación vendrá dado por el tipo
+   * de la {@link ConvocatoriaReunion} y el estado de la {@link Memoria} o de la
+   * {@link Retrospectiva}. Además será necesario actualizar el estado de la
    * {@link Memoria} o de la {@link Retrospectiva} al estado 'En evaluacion'
    * dependiendo del tipo de evaluación.
    *
@@ -58,18 +79,56 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     log.debug("Petición a create Evaluacion : {} - start", evaluacion);
     Assert.isNull(evaluacion.getId(), "Evaluacion id tiene que ser null para crear una nueva evaluacion");
 
-    // if (evaluacion.getTipoEvaluacion().getId() == 1) {
-    // // Si es tipo 'Retrospectiva' cambiar el estado de retrospectiva a 'En
-    // // evaluación'
-    // evaluacion.getMemoria().getRetrospectiva().getEstadoRetrospectiva().setId(4L);
-    // retrospectivaRepository.save(evaluacion.getMemoria().getRetrospectiva());
+    // Si la evaluación es creada mediante la asignación de memorias en
+    // ConvocatoriaReunión
+    if (evaluacion.getConvocatoriaReunion() != null && evaluacion.getConvocatoriaReunion().getId() != null) {
 
-    // } else if (evaluacion.getTipoEvaluacion().getId() == 2) {
-    // // Si es tipo 'Memoria' cambiar el estado de la memoria a 'En
-    // // evaluación'
-    // evaluacion.getMemoria().getEstadoActual().setId(5L);
-    // memoriaRepository.save(evaluacion.getMemoria());
-    // }
+      // Convocatoria Seguimiento
+      if (evaluacion.getConvocatoriaReunion().getTipoConvocatoriaReunion()
+          .getId() == Constantes.TIPO_CONVOCATORIA_REUNION_SEGUIMIENTO) {
+        // mismo tipo seguimiento que la memoria Anual(3) Final(4)
+        evaluacion.getTipoEvaluacion()
+            .setId((evaluacion.getMemoria().getEstadoActual()
+                .getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_ANUAL)
+                    ? Constantes.TIPO_EVALUACION_SEGUIMIENTO_ANUAL
+                    : Constantes.TIPO_EVALUACION_SEGUIMIENTO_FINAL);
+        // se actualiza estado de la memoria a 'En evaluación'
+        evaluacion.getMemoria().getEstadoActual()
+            .setId((evaluacion.getMemoria().getEstadoActual()
+                .getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_SEGUIMIENTO_ANUAL)
+                    ? Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_ANUAL
+                    : Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION_SEGUIMIENTO_FINAL);
+
+        // Convocatoria Ordinaria o Extraordinaria
+      } else {
+        // memoria 'en secretaría' y retrospectiva 'en secretaría'
+        if (evaluacion.getMemoria().getEstadoActual().getId() > Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA
+            && evaluacion.getMemoria().getRequiereRetrospectiva() && evaluacion.getMemoria().getRetrospectiva()
+                .getEstadoRetrospectiva().getId() == Constantes.ESTADO_RETROSPECTIVA_EN_SECRETARIA) {
+          // tipo retrospectiva
+          evaluacion.getTipoEvaluacion().setId(Constantes.TIPO_EVALUACION_RETROSPECTIVA);
+          // se actualiza el estado retrospectiva a 'En evaluación'
+          evaluacion.getMemoria().getRetrospectiva().getEstadoRetrospectiva()
+              .setId(Constantes.ESTADO_RETROSPECTIVA_EN_EVALUACION);
+
+        } else {
+          // tipo 'memoria'
+          evaluacion.getTipoEvaluacion().setId(Constantes.TIPO_EVALUACION_MEMORIA);
+          // se actualiza estado de la memoria a 'En evaluación'
+          evaluacion.getMemoria().getEstadoActual().setId(Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION);
+        }
+      }
+
+      if (evaluacion.getTipoEvaluacion().getId() == Constantes.TIPO_EVALUACION_RETROSPECTIVA) {
+        retrospectivaRepository.save(evaluacion.getMemoria().getRetrospectiva());
+      } else {
+        this.estadoMemoriaRepository.save(new EstadoMemoria(null, evaluacion.getMemoria(),
+            evaluacion.getMemoria().getEstadoActual(), LocalDateTime.now()));
+      }
+      evaluacion.getMemoria().setVersion(evaluacion.getVersion());
+      this.memoriaRepository.save(evaluacion.getMemoria());
+
+    }
 
     return evaluacionRepository.save(evaluacion);
   }

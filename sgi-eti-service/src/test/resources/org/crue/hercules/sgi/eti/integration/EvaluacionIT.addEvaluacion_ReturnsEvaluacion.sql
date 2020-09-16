@@ -34,6 +34,7 @@ INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, 
 
 -- TIPO EVALUACION
 INSERT INTO eti.tipo_evaluacion (id, nombre, activo) VALUES (1, 'TipoEvaluacion1', true);
+INSERT INTO eti.tipo_evaluacion (id, nombre, activo) VALUES (2, 'TipoEvaluacion2', true);
 
  -- DICTAMEN
 INSERT INTO eti.dictamen (id, nombre, tipo_evaluacion_id, activo) VALUES (1, 'Dictamen1', 1, true);

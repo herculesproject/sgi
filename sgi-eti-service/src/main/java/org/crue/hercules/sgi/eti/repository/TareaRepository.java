@@ -32,7 +32,7 @@ public interface TareaRepository extends JpaRepository<Tarea, Long>, JpaSpecific
   /**
    * Elimina las {@link Tarea} para una determinado {@link EquipoTrabajo}
    * 
-   * @param idEquipoTrabajo
+   * @param idEquipoTrabajo identificador {@link EquipoTrabajo}
    */
   void deleteByEquipoTrabajoId(Long idEquipoTrabajo);
 

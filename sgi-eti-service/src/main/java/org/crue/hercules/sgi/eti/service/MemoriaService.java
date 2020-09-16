@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.service;
 
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 
 import java.util.List;
@@ -74,6 +75,7 @@ public interface MemoriaService {
    * 
    * @param query    filtro de {@link QueryCriteria}.
    * @param pageable pageable
+   * @return lista de memorias asignables
    */
   Page<Memoria> findAllAsignablesTipoConvocatoriaOrdExt(List<QueryCriteria> query, Pageable pageable);
 
@@ -91,6 +93,7 @@ public interface MemoriaService {
    * 
    * @param query    filtro de {@link QueryCriteria}.
    * @param pageable pageable
+   * @return lista de memorias asignables
    */
   Page<Memoria> findAllAsignablesTipoConvocatoriaSeguimiento(List<QueryCriteria> query, Pageable pageable);
 
@@ -117,6 +120,7 @@ public interface MemoriaService {
    * @param pageable             información de paginación
    * @return lista de memorias de {@link PeticionEvaluacion}
    */
-  Page<MemoriaPeticionEvaluacion> findMemoriaByPeticionEvaluacionMaxVersion(Long id, Pageable pageable);
+  Page<MemoriaPeticionEvaluacion> findMemoriaByPeticionEvaluacionMaxVersion(Long idPeticionEvaluacion,
+      Pageable pageable);
 
 }
