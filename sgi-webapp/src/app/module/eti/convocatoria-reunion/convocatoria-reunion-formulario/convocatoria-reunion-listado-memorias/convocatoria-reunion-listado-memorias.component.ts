@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { Subscription } from 'rxjs';
@@ -23,7 +23,7 @@ import { MatTableDataSource } from '@angular/material/table';
   templateUrl: './convocatoria-reunion-listado-memorias.component.html',
   styleUrls: ['./convocatoria-reunion-listado-memorias.component.scss']
 })
-export class ConvocatoriaReunionListadoMemoriasComponent extends FragmentComponent implements OnInit {
+export class ConvocatoriaReunionListadoMemoriasComponent extends FragmentComponent implements OnInit, OnDestroy {
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
@@ -32,8 +32,9 @@ export class ConvocatoriaReunionListadoMemoriasComponent extends FragmentCompone
 
   datasource: MatTableDataSource<StatusWrapper<IEvaluacion>> = new MatTableDataSource<StatusWrapper<IEvaluacion>>();
 
-  private subscriptions: Subscription[] = [];
   private listadoFragment: ConvocatoriaReunionListadoMemoriasFragment;
+  disableAsignarMemorias: boolean;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -54,6 +55,19 @@ export class ConvocatoriaReunionListadoMemoriasComponent extends FragmentCompone
     this.listadoFragment.evaluaciones$.subscribe((evaluaciones) => {
       this.datasource.data = evaluaciones;
     });
+
+    this.subscriptions.push(this.actionService.disableAsignarMemorias.subscribe(
+      (value: boolean) => {
+        this.disableAsignarMemorias = value;
+      }
+    ));
+  }
+
+
+  ngOnDestroy() {
+    this.logger.debug(ConvocatoriaReunionListadoMemoriasComponent.name, 'ngOnDestroy()', 'start');
+    this.subscriptions?.forEach(x => x.unsubscribe());
+    this.logger.debug(ConvocatoriaReunionListadoMemoriasComponent.name, 'ngOnDestroy()', 'end');
   }
 
   /**

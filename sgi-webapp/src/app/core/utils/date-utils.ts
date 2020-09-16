@@ -1,7 +1,28 @@
+import moment from 'moment';
+import { Moment } from 'moment';
+
 /**
  * Clase para definir funciones para trabajar con fechas
  */
 export class DateUtils {
+
+  /**
+   * Convierte una fecha en formato string, moment o Date a Date.
+   *
+   * @param fecha una fecha
+   * @return la fecha como un Date.
+   */
+  static fechaToDate(fecha: string | Moment | Date): Date {
+    let fechaDate: Date;
+    if (fecha && typeof fecha === 'string') {
+      fechaDate = new Date(fecha);
+    } else if (fecha instanceof Date) {
+      fechaDate = fecha as Date;
+    } else if (moment.isMoment(fecha)) {
+      fechaDate = fecha.toDate();
+    }
+    return fechaDate;
+  }
 
   /**
    * Recupera la fecha de inicio del dia correspondiente a la fecha (yyyy-MM-dd 00:00:00.000).
@@ -40,13 +61,16 @@ export class DateUtils {
    * @return un string con la fecha formateada o '' si la fecha no esta definida.
    */
   static formatFechaAsISODate(fecha: Date): string {
+
     if (!fecha) {
       return '';
     }
 
-    let mes = (fecha.getMonth() + 1).toString();
-    let dia = fecha.getDate().toString();
-    const anio = fecha.getFullYear().toString();
+    const fechaDate = this.fechaToDate(fecha);
+
+    let mes = (fechaDate.getMonth() + 1).toString();
+    let dia = fechaDate.getDate().toString();
+    const anio = fechaDate.getFullYear().toString();
 
     if (mes.length < 2) {
       mes = '0' + mes;
@@ -67,15 +91,18 @@ export class DateUtils {
    * @return un string con la fecha formateada o '' si la fecha no esta definida.
    */
   static formatFechaAsISODateTime(fecha: Date): string {
+
+
     if (!fecha) {
       return '';
     }
 
-    const fechaString = this.formatFechaAsISODate(fecha);
+    const fechaDate = this.fechaToDate(fecha);
+    const fechaString = this.formatFechaAsISODate(fechaDate);
 
-    let hora = fecha.getHours().toString();
-    let minuto = fecha.getMinutes().toString();
-    let segundo = fecha.getSeconds().toString();
+    let hora = fechaDate.getHours().toString();
+    let minuto = fechaDate.getMinutes().toString();
+    let segundo = fechaDate.getSeconds().toString();
 
     if (hora.length < 2) {
       hora = '0' + hora;

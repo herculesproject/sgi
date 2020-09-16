@@ -16,7 +16,12 @@ export class ConvocatoriaReunionDatosGeneralesFragment extends FormFragment<Conv
   private convocatoriaReunion: ConvocatoriaReunion;
   convocantes: IEvaluador[] = [];
 
-  constructor(private fb: FormBuilder, key: number, private service: ConvocatoriaReunionService, private asistenteService: AsistenteService) {
+  constructor(
+    private fb: FormBuilder,
+    key: number,
+    private service: ConvocatoriaReunionService,
+    private asistenteService: AsistenteService) {
+
     super(key);
     this.convocatoriaReunion = new ConvocatoriaReunion();
     this.convocatoriaReunion.activo = true;

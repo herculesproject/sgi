@@ -22,6 +22,9 @@ import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
+const MSG_ERROR_CARGAR_MEMORIA = marker('eti.convocatoriaReunion.formulario.asignacionMemorias.memoria.error.cargar');
+const MSG_ERROR_CARGAR_EVALUADOR1 = marker('eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador1.error.cargar');
+const MSG_ERROR_CARGAR_EVALUADOR2 = marker('eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador2.error.cargar');
 
 @Component({
   selector: 'sgi-convocatoria-reunion-asignacion-memorias',
@@ -179,7 +182,7 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
             );
         },
         () => {
-          this.snackBarService.showError('eti.convocatoriaReunion.formulario.asignacionMemorias.memoria.error.cargar');
+          this.snackBarService.showError(MSG_ERROR_CARGAR_MEMORIA);
         }
       ));
 
@@ -216,7 +219,7 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
             );
         },
         () => {
-          this.snackBarService.showError('eti.convocatoriaReunion.formulario.asignacionMemorias.memoria.error.cargar');
+          this.snackBarService.showError(MSG_ERROR_CARGAR_MEMORIA);
         }
       ));
 
@@ -253,7 +256,7 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
             );
         },
         () => {
-          this.snackBarService.showError('eti.convocatoriaReunion.formulario.asignacionMemorias.memoria.error.cargar');
+          this.snackBarService.showError(MSG_ERROR_CARGAR_MEMORIA);
         }
       ));
 
@@ -287,6 +290,10 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
                   const evaluadores = response.items;
 
                   const personaRefsEvaluadores = evaluadores.map((convocante: IEvaluador) => convocante.personaRef);
+
+                  if (personaRefsEvaluadores.length === 0) {
+                    return of([]);
+                  }
 
                   const evaluadoresWithDatosPersona$ = this.PersonafisicaService.findByPersonasRefs(personaRefsEvaluadores).pipe(
                     map((result: SgiRestListResult<Persona>) => {
@@ -322,7 +329,7 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
           );
       },
       () => {
-        this.snackBarService.showError('eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador1.error.cargar');
+        this.snackBarService.showError(MSG_ERROR_CARGAR_EVALUADOR1);
       }
     ));
 
@@ -337,7 +344,7 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
           );
       },
       () => {
-        this.snackBarService.showError('eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador2.error.cargar');
+        this.snackBarService.showError(MSG_ERROR_CARGAR_EVALUADOR2);
       }
     ));
 

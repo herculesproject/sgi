@@ -1,6 +1,6 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Comite } from '@core/models/eti/comite';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -31,7 +31,7 @@ const MSG_ERROR_LOAD_CONVOCANTES = marker('eti.convocatoriaReunion.formulario.da
   templateUrl: './convocatoria-reunion-datos-generales.component.html',
   styleUrls: ['./convocatoria-reunion-datos-generales.component.scss']
 })
-export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComponent<ConvocatoriaReunion> implements OnInit {
+export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComponent<ConvocatoriaReunion> implements OnInit, OnDestroy {
 
   fxFlexProperties: FxFlexProperties;
   fxFlexPropertiesInline: FxFlexProperties;
@@ -44,7 +44,9 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
   filteredTiposConvocatoriaReunion: Observable<TipoConvocatoriaReunion[]>;
 
   formFragment: ConvocatoriaReunionDatosGeneralesFragment;
+  disableCamposDatosGenerales: boolean;
   private subscriptions: Subscription[] = [];
+
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -53,7 +55,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
     private readonly tipoConvocatoriaReunionService: TipoConvocatoriaReunionService,
     private readonly snackBarService: SnackBarService,
     private readonly personaFisicaService: PersonaFisicaService,
-    actionService: ConvocatoriaReunionActionService
+    private readonly actionService: ConvocatoriaReunionActionService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
     this.formFragment = this.fragment as ConvocatoriaReunionDatosGeneralesFragment;
@@ -82,12 +84,24 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
     this.comites = [];
     this.tiposConvocatoriaReunion = [];
 
+    this.subscriptions.push(this.actionService.disableCamposDatosGenerales.subscribe(
+      (value: boolean) => {
+        this.disableCamposDatosGenerales = value;
+      }
+    ));
+
     // Inicializa los combos
     this.getComites();
     this.getTiposConvocatoriaReunion();
     this.getConvocantesComite();
 
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'ngOnInit()', 'end');
+  }
+
+  ngOnDestroy() {
+    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'ngOnDestroy()', 'start');
+    this.subscriptions?.forEach(x => x.unsubscribe());
+    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'ngOnDestroy()', 'end');
   }
 
   /**

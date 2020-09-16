@@ -144,23 +144,5 @@ export class ConvocatoriaReunionListadoMemoriasFragment extends Fragment {
     evaluacion.esRevMinima = false;
     evaluacion.fechaDictamen = this.convocatoriaReunion.fechaEvaluacion;
     evaluacion.tipoEvaluacion = new TipoEvaluacion();
-
-    // Convocatoria Seguimiento
-    if (this.convocatoriaReunion.tipoConvocatoriaReunion.id === 3) {
-      // mismo tipo seguimiento que la memoria Anual(3) Final(4)
-      evaluacion.tipoEvaluacion.id = (evaluacion.memoria.estadoActual.id === 12) ? 3 : 4;
-
-      // Convocatoria Ordinaria o Extraordinaria
-    } else {
-
-      // memoria 'en secretaría' y retrospectiva 'en secretaría'
-      if (evaluacion.memoria.estadoActual.id !== 3 && evaluacion.memoria.requiereRetrospectiva) {
-        // tipo retrospectiva
-        evaluacion.tipoEvaluacion.id = 1;
-      } else {
-        // tipo 'memoria'
-        evaluacion.tipoEvaluacion.id = 2;
-      }
-    }
   }
 }

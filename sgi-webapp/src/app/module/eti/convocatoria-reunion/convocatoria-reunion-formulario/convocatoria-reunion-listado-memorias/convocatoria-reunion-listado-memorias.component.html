@@ -54,13 +54,13 @@
     </table>
     <!-- Botón asignacion memoria -->
     <div class="separation-button">
-      <button mat-button color="three" *sgiHasAuthorityForAnyUO="'ETI-CNV-C'" (click)="openDialogAsignarMemoria()"
-        mat-button>
+      <button mat-button color="three" *sgiHasAuthorityForAnyUO="'ETI-CNV-C'" [disabled]="disableAsignarMemorias"
+        (click)="openDialogAsignarMemoria()" mat-button>
         <mat-icon>add_box</mat-icon>
         {{'eti.convocatoriaReunion.formulario.asignacionMemorias.nuevaMemoria' | translate}}
       </button>
 
-      <mat-card *ngIf="fragment.isEdit()">
+      <mat-card *ngIf="disableAsignarMemorias">
         {{'eti.convocatoriaReunion.formulario.asignacionMemorias.nuevaMemoria.disabled' | translate}}</mat-card>
     </div>
   </div>

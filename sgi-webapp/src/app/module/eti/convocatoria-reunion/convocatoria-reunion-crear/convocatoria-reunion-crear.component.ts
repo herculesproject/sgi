@@ -51,4 +51,18 @@ export class ConvocatoriaReunionCrearComponent extends ActionComponent {
       }
     );
   }
+
+  onTabClick(tabName: string): void {
+    this.logger.debug(ConvocatoriaReunionCrearComponent.name,
+      'onTabClick(tabName: string)',
+      'start');
+    if (tabName === this.actionService.FRAGMENT.DATOS_GENERALES) {
+      this.actionService.onEnterDatosGenerales();
+    } else if (tabName === this.actionService.FRAGMENT.ASIGNACION_MEMORIAS) {
+      this.actionService.onEnterAsignacionMemorias();
+    }
+    this.logger.debug(ConvocatoriaReunionCrearComponent.name,
+      'onTabClick(tabName: string)',
+      'start');
+  }
 }

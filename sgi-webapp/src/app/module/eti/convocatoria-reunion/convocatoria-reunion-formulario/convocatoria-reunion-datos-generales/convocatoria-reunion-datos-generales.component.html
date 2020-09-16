@@ -1,5 +1,5 @@
 <section class="convocatoria-reunion-datos-generales">
-  <mat-card *ngIf="fragment.isEdit()">
+  <mat-card *ngIf="disableCamposDatosGenerales">
     {{'eti.convocatoriaReunion.formulario.datosGenerales.campos.disabled' | translate}}</mat-card>
 
   <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
@@ -12,7 +12,7 @@
         <mat-label>{{'eti.convocatoriaReunion.formulario.datosGenerales.comite.titulo' | translate}}</mat-label>
         <input type="text" [placeholder]="'eti.convocatoriaReunion.formulario.datosGenerales.comite.titulo' | translate"
           arial-label="Number" matInput formControlName="comite" [matAutocomplete]="autocompleteComite" required
-          [readOnly]="fragment.isEdit()">
+          [readOnly]="disableCamposDatosGenerales">
         <mat-autocomplete #autocompleteComite="matAutocomplete" [displayWith]="getComite">
           <mat-option *ngFor="let comite of filteredComites | async" [value]="comite">
             {{comite.comite}}
@@ -47,7 +47,8 @@
       <mat-form-field>
         <mat-label>{{'eti.convocatoriaReunion.formulario.datosGenerales.fechaLimite.titulo' | translate}}
         </mat-label>
-        <input matInput formControlName="fechaLimite" [matDatepicker]="pickerFechaLimite" [readOnly]="fragment.isEdit()"
+        <input matInput formControlName="fechaLimite" [matDatepicker]="pickerFechaLimite"
+          [readOnly]="disableCamposDatosGenerales"
           [placeholder]="'eti.convocatoriaReunion.formulario.datosGenerales.fechaLimite.titulo' | translate" required>
         <mat-datepicker-toggle matSuffix [for]="pickerFechaLimite"></mat-datepicker-toggle>
         <mat-datepicker #pickerFechaLimite></mat-datepicker>
@@ -63,7 +64,7 @@
       <mat-form-field>
         <mat-label>{{'eti.convocatoriaReunion.formulario.datosGenerales.tipoConvocatoriaReunion.titulo' | translate}}
         </mat-label>
-        <input type="text" [readOnly]="fragment.isEdit()"
+        <input type="text" [readOnly]="disableCamposDatosGenerales"
           [placeholder]="'eti.convocatoriaReunion.formulario.datosGenerales.tipoConvocatoriaReunion.titulo' | translate"
           arial-label="Number" matInput formControlName="tipoConvocatoriaReunion"
           [matAutocomplete]="autocompleteTipoConvocatoriaReunion" required>
