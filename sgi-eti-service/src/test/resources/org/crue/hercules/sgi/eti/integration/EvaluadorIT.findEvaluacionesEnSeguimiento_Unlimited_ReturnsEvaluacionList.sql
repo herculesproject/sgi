@@ -15,13 +15,13 @@ INSERT INTO ETI.TIPO_ACTIVIDAD
   (ID,NOMBRE,ACTIVO)
 VALUES
   (1, 'Proyecto de investigación', true);
-  
+
 
 -- Peticion Evaluacion
 INSERT INTO ETI.PETICION_EVALUACION
   (ID,SOLICITUD_CONVOCATORIA_REF,CODIGO,TITULO,TIPO_ACTIVIDAD_ID,FUENTE_FINANCIACION,FECHA_INICIO,FECHA_FIN,RESUMEN,VALOR_SOCIAL,OBJETIVOS,DIS_METODOLOGICO,EXTERNO,TIENE_FONDOS_PROPIOS,PERSONA_REF,ACTIVO)
 VALUES
-  (1, 'Ref solicitud convocatoria', 'Código PeticionEvaluacion1', 'PeticionEvaluacion1', 1, 'Fuente financiación', '2020-07-09', '2021-07-09', 'Resumen',  ' valor social', 'Objetivos', 'Diseño metodológico', false, false, 'user-001', true);
+  (1, 'Ref solicitud convocatoria', 'Código PeticionEvaluacion1', 'PeticionEvaluacion1', 1, 'Fuente financiación', '2020-07-09', '2021-07-09', 'Resumen', ' valor social', 'Objetivos', 'Diseño metodológico', false, false, 'user-001', true);
 
 -- Tipo Estado Memoria
 INSERT INTO ETI.TIPO_ESTADO_MEMORIA
@@ -32,19 +32,19 @@ VALUES
 
 -- ESTADO RETROSPECTIVA
 INSERT INTO ETI.ESTADO_RETROSPECTIVA
-(ID, NOMBRE, ACTIVO)
+  (ID, NOMBRE, ACTIVO)
 VALUES(1, 'EstadoRetrospectiva01', true);
 
-    -- RETROSPECTIVA
+-- RETROSPECTIVA
 INSERT INTO ETI.RETROSPECTIVA
-(ID, ESTADO_RETROSPECTIVA_ID, FECHA_RETROSPECTIVA)
-VALUES(4, 1, '2020-07-01');     
+  (ID, ESTADO_RETROSPECTIVA_ID, FECHA_RETROSPECTIVA)
+VALUES(4, 1, '2020-07-01');
 
 -- Memoria
 INSERT INTO ETI.MEMORIA
   (ID,NUM_REFERENCIA,PETICION_EVALUACION_ID,COMITE_ID,TITULO,PERSONA_REF,TIPO_MEMORIA_ID,ESTADO_ACTUAL_ID,FECHA_ENVIO_SECRETARIA,REQUIERE_RETROSPECTIVA,RETROSPECTIVA_ID,VERSION,ACTIVO)
 VALUES
-  (1, 'ref-134', 1, 2, 'Memoria1', 'user-8984', 1, 11, '2020-07-09', true, 4, 1, true);
+  (1, 'ref-134', 1, 2, 'Memoria1', 'user-8984', 1, 11, '2020-07-09', true, 4, 2, true);
 
 -- Cargo comite
 INSERT INTO ETI.CARGO_COMITE
@@ -80,12 +80,17 @@ INSERT INTO ETI.TIPO_EVALUACION
 VALUES
   (2, 'Memoria', true);
 
-  -- EVALUADOR
-INSERT INTO eti.evaluador (id, resumen, comite_id, cargo_comite_id, fecha_alta, fecha_baja, persona_ref, activo)
-VALUES (1, 'Evaluador1', 2, 1, '2020-07-01', '2021-07-01', 'user-001', true);
-INSERT INTO eti.evaluador (id, resumen, comite_id, cargo_comite_id, fecha_alta, fecha_baja, persona_ref, activo)
-VALUES (2, 'Evaluador2', 2, 1, '2020-07-01', '2021-07-01', 'user-002', true);
+-- EVALUADOR
+INSERT INTO eti.evaluador
+  (id, resumen, comite_id, cargo_comite_id, fecha_alta, fecha_baja, persona_ref, activo)
+VALUES
+  (1, 'Evaluador1', 2, 1, '2020-07-01', '2021-07-01', 'user-006', true);
+INSERT INTO eti.evaluador
+  (id, resumen, comite_id, cargo_comite_id, fecha_alta, fecha_baja, persona_ref, activo)
+VALUES
+  (2, 'Evaluador2', 2, 1, '2020-07-01', '2021-07-01', 'user-002', true);
 
 -- EVALUACION
-INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima,  evaluador1_id, evaluador2_id, fecha_dictamen, version, activo) 
+INSERT INTO eti.evaluacion
+  (id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, evaluador1_id, evaluador2_id, fecha_dictamen, version, activo)
 VALUES(1, 1, 1, 1, 2, true, 1, 2, '2020-08-01', 2, true);

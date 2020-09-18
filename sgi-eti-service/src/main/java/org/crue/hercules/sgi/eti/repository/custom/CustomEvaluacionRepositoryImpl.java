@@ -144,6 +144,30 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
   }
 
   /**
+   * Devuelve una subconsulta con el listado de Memorias con estado 4 o 5 donde
+   * además la versión de la memoria sea igual a la versión del listado de
+   * evaluación.
+   * 
+   * @return Subquery<Long> Listado de Memorias con estado En Evaluacion o En
+   *         secretaría revisión mínima
+   */
+  private Subquery<Long> getIdsMemoriasEstadoActual(CriteriaBuilder cb, CriteriaQuery<Evaluacion> cq,
+      Root<Evaluacion> root) {
+
+    log.debug("getIdsMemoriasEstadoActual : {} - start");
+
+    Subquery<Long> queryMemoriasEstadoActual = cq.subquery(Long.class);
+    Root<Memoria> subqRoot = queryMemoriasEstadoActual.from(Memoria.class);
+    queryMemoriasEstadoActual.select(subqRoot.get(Memoria_.id))
+        .where(cb.and(subqRoot.get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id).in(Arrays.asList(4L, 5L)),
+            cb.equal(root.get(Evaluacion_.version), subqRoot.get(Memoria_.version))));
+
+    log.debug("getIdsMemoriasEstadoActual : {} - end");
+
+    return queryMemoriasEstadoActual;
+  }
+
+  /**
    * Recupera las evaluaciones del tipo memoria en estado 'En evaluacion' (id = 4)
    * o 'En secretaria revisión minima'(id = 5), o tipo retrospectiva, memoria que
    * requiere retrospectiva y el estado de la RETROSPECTIVA es 'En evaluacion' (id
@@ -166,25 +190,33 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     Root<Evaluacion> rootEvaluacion = cq.from(Evaluacion.class);
 
     List<Predicate> listPredicates = new ArrayList<>();
+    Predicate memoriaVersion = cb.equal(rootEvaluacion.get(Evaluacion_.version),
+        rootEvaluacion.get(Evaluacion_.memoria).get(Memoria_.version));
 
     // Memoria en estado 'En evaluacion' (id = 4)
     // o 'En secretaria revisión minima'(id = 5)
 
     Predicate memoria = cb.and(cb.equal(rootEvaluacion.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id), 2L),
         cb.in(rootEvaluacion.get(Evaluacion_.memoria).get(Memoria_.id))
-            .value(getIdsMemoriasEstadoActual(cb, cq, rootEvaluacion)));
+            .value(getIdsMemoriasEstadoActual(cb, cq, rootEvaluacion)),
+        memoriaVersion);
 
     // Tipo retrospectiva, memoria Requiere retrospectiva y el estado de la
-    // RETROSPECTIVA es 'En evaluacion'
-    // (id = 4)
+    // RETROSPECTIVA es 'En evaluacion' (id = 4)
 
     Subquery<Long> queryRetrospectiva = cq.subquery(Long.class);
     Root<Evaluacion> subqRoot = queryRetrospectiva.from(Evaluacion.class);
+
+    Predicate requiereRetrospectiva = cb.isTrue(subqRoot.get(Evaluacion_.memoria).get(Memoria_.requiereRetrospectiva));
+    Predicate estadoRetrospectiva = cb
+        .equal(subqRoot.get(Evaluacion_.memoria).get(Memoria_.retrospectiva).get(Retrospectiva_.id), 4L);
+    Predicate comite = cb.equal(subqRoot.get(Evaluacion_.memoria).get(Memoria_.comite).get(Comite_.id), 2L);
+    Predicate tipoEvaluacion = cb.equal(subqRoot.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id), 1L);
+    Predicate evaluador = cb.or(cb.equal(subqRoot.get(Evaluacion_.evaluador1).get(Evaluador_.personaRef), personaRef),
+        cb.equal(subqRoot.get(Evaluacion_.evaluador2).get(Evaluador_.personaRef), personaRef));
+
     queryRetrospectiva.select(subqRoot.get(Evaluacion_.id))
-        .where(cb.and(cb.isTrue(subqRoot.get(Evaluacion_.memoria).get(Memoria_.requiereRetrospectiva)),
-            cb.equal(subqRoot.get(Evaluacion_.memoria).get(Memoria_.retrospectiva).get(Retrospectiva_.id), 4L),
-            cb.equal(subqRoot.get(Evaluacion_.memoria).get(Memoria_.comite).get(Comite_.id), 2L),
-            cb.equal(subqRoot.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id), 1L)));
+        .where(cb.and(requiereRetrospectiva, estadoRetrospectiva, comite, tipoEvaluacion, evaluador, memoriaVersion));
 
     Predicate retrospectiva = cb.in(rootEvaluacion.get(Evaluacion_.memoria).get(Memoria_.id)).value(queryRetrospectiva);
 
@@ -240,9 +272,7 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     Root<Evaluacion> rootEvaluacion = cq.from(Evaluacion.class);
 
     // Evaluaciones en seguimiento
-    List<Predicate> listPredicates = getPredicateEvaluacionEnSeguimiento(rootEvaluacion, cb);
-
-    // TODO Falta filtro por personaRef
+    List<Predicate> listPredicates = getPredicateEvaluacionEnSeguimiento(rootEvaluacion, cb, personaRef);
 
     // Where
     if (query != null) {
@@ -271,25 +301,38 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
   }
 
   /**
-   * Devuelve una subconsulta con el listado de retrospectivas en estado 4 (En
-   * Evaluacion)
+   * Crea el predicate necesario para recuperar las evaluaciones de tipo memoria
+   * que se encuentran en seguimiento:
    * 
-   * @return Subquery<Long> Listado de Retrospectivas en estado En Evaluacion
+   * "En evaluación seguimiento anual" (id = 11), "En evaluación seguimiento
+   * final" (id = 12) o "En secretaría seguimiento final aclaraciones" (id = 13)
+   * 
+   * @param rootEvaluacion
+   * @param cb
+   * @return lista con los predicates necesarios
    */
+  private List<Predicate> getPredicateEvaluacionEnSeguimiento(Root<Evaluacion> rootEvaluacion, CriteriaBuilder cb,
+      String personaRef) {
 
-  private Subquery<Long> getRetrospectivas(CriteriaBuilder cb, CriteriaQuery<Evaluacion> cq) {
+    log.debug("getPredicateEvaluacionEnSeguimiento : {} - start");
+    List<Predicate> listPredicates = new ArrayList<Predicate>();
 
-    log.debug("getRetrospectivas : {} - start");
+    listPredicates.add(rootEvaluacion.get(Evaluacion_.memoria).get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id)
+        .in(Arrays.asList(11L, 12L, 13L)));
 
-    Subquery<Long> queryRetrospectivas = cq.subquery(Long.class);
-    Root<Retrospectiva> subqRoot = queryRetrospectivas.from(Retrospectiva.class);
-    queryRetrospectivas.select(subqRoot.get(Retrospectiva_.id))
-        .where(cb.equal(subqRoot.get(Retrospectiva_.estadoRetrospectiva).get(EstadoRetrospectiva_.id), 4L));
+    listPredicates.add(cb.isTrue(rootEvaluacion.get(Evaluacion_.activo)));
+    listPredicates.add(cb.equal(rootEvaluacion.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id), 2L));
+    listPredicates
+        .add(cb.or(cb.equal(rootEvaluacion.get(Evaluacion_.evaluador1).get(Evaluador_.personaRef), personaRef),
+            cb.equal(rootEvaluacion.get(Evaluacion_.evaluador2).get(Evaluador_.personaRef), personaRef)));
 
-    log.debug("getRetrospectivas : {} - end");
+    Predicate memoriaVersion = cb.equal(rootEvaluacion.get(Evaluacion_.version),
+        rootEvaluacion.get(Evaluacion_.memoria).get(Memoria_.version));
+    listPredicates.add(memoriaVersion);
 
-    return queryRetrospectivas;
+    log.debug("getPredicateEvaluacionEnSeguimiento : {} - end");
 
+    return listPredicates;
   }
 
   private Subquery<Long> getNumComentarios(Root<Evaluacion> root, CriteriaBuilder cb,
@@ -331,53 +374,24 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
   }
 
   /**
-   * Devuelve una subconsulta con el listado de Memorias con estado 4 o 5 donde
-   * además la versión de la memoria sea igual a la versión del listado de
-   * evaluación.
+   * Devuelve una subconsulta con el listado de retrospectivas en estado 4 (En
+   * Evaluacion)
    * 
-   * @return Subquery<Long> Listado de Memorias con estado En Evaluacion o En
-   *         secretaría revisión mínima
+   * @return Subquery<Long> Listado de Retrospectivas en estado En Evaluacion
    */
-  private Subquery<Long> getIdsMemoriasEstadoActual(CriteriaBuilder cb, CriteriaQuery<Evaluacion> cq,
-      Root<Evaluacion> root) {
 
-    log.debug("getIdsMemoriasEstadoActual : {} - start");
+  private Subquery<Long> getRetrospectivas(CriteriaBuilder cb, CriteriaQuery<Evaluacion> cq) {
 
-    Subquery<Long> queryMemoriasEstadoActual = cq.subquery(Long.class);
-    Root<Memoria> subqRoot = queryMemoriasEstadoActual.from(Memoria.class);
-    queryMemoriasEstadoActual.select(subqRoot.get(Memoria_.id))
-        .where(cb.and(subqRoot.get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id).in(Arrays.asList(4L, 5L)),
-            cb.equal(root.get(Evaluacion_.version), subqRoot.get(Memoria_.version))));
+    log.debug("getRetrospectivas : {} - start");
 
-    log.debug("getIdsMemoriasEstadoActual : {} - end");
+    Subquery<Long> queryRetrospectivas = cq.subquery(Long.class);
+    Root<Retrospectiva> subqRoot = queryRetrospectivas.from(Retrospectiva.class);
+    queryRetrospectivas.select(subqRoot.get(Retrospectiva_.id))
+        .where(cb.equal(subqRoot.get(Retrospectiva_.estadoRetrospectiva).get(EstadoRetrospectiva_.id), 4L));
 
-    return queryMemoriasEstadoActual;
-  }
+    log.debug("getRetrospectivas : {} - end");
 
-  /**
-   * Crea el predicate necesario para recuperar las evaluaciones de tipo memoria
-   * que se encuentran en seguimiento:
-   * 
-   * "En evaluación seguimiento anual" (id = 11), "En evaluación seguimiento
-   * final" (id = 12) o "En secretaría seguimiento final aclaraciones" (id = 13)
-   * 
-   * @param rootEvaluacion
-   * @param cb
-   * @return lista con los predicates necesarios
-   */
-  private List<Predicate> getPredicateEvaluacionEnSeguimiento(Root<Evaluacion> rootEvaluacion, CriteriaBuilder cb) {
+    return queryRetrospectivas;
 
-    log.debug("getPredicateEvaluacionEnSeguimiento : {} - start");
-    List<Predicate> listPredicates = new ArrayList<Predicate>();
-
-    listPredicates.add(rootEvaluacion.get(Evaluacion_.memoria).get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id)
-        .in(Arrays.asList(11L, 12L, 13L)));
-
-    listPredicates.add(cb.isTrue(rootEvaluacion.get(Evaluacion_.activo)));
-    listPredicates.add(cb.equal(rootEvaluacion.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id), 2L));
-
-    log.debug("getPredicateEvaluacionEnSeguimiento : {} - end");
-
-    return listPredicates;
   }
 }
