@@ -146,7 +146,7 @@ public class BloqueFormularioController {
    *         filtradas.
    */
   @GetMapping("/{id}/apartados")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
   ResponseEntity<Page<ApartadoFormulario>> getApartados(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("getApartados(Long id, Pageable paging - start");

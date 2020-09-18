@@ -164,7 +164,7 @@ public class EvaluadorController {
    * @return la lista de entidades {@link Evaluacion} paginadas.
    */
   @GetMapping("/{personaRef}/evaluaciones")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-VR', 'ETI-EVC-EVALR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V','ETI-EVC-VR', 'ETI-EVC-VR-INV', 'ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
   ResponseEntity<Page<Evaluacion>> getEvaluaciones(@PathVariable String personaRef,
       @RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable pageable) {
@@ -189,7 +189,7 @@ public class EvaluadorController {
    * @return la lista de entidades {@link Evaluacion} paginadas y/o filtradas.
    */
   @GetMapping("/{personaRef}/evaluaciones-seguimiento")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-VR', 'ETI-EVC-EVALR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-VR-INV', 'ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
   ResponseEntity<Page<Evaluacion>> findEvaluacionesEnSeguimiento(@PathVariable String personaRef,
       @RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable pageable) {

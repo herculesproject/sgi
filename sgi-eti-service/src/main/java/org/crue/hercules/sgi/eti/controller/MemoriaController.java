@@ -247,7 +247,7 @@ public class MemoriaController {
    * @return la lista de entidades {@link Evaluacion} paginadas.
    */
   @GetMapping("/{id}/evaluaciones-anteriores/{idEvaluacion}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
   ResponseEntity<Page<EvaluacionWithNumComentario>> getEvaluaciones(@PathVariable Long id,
       @PathVariable Long idEvaluacion, @RequestPageable(sort = "s") Pageable pageable) {
     log.debug("getEvaluaciones(Long id, Pageable pageable) - start");
@@ -271,7 +271,7 @@ public class MemoriaController {
    * @return la lista de entidades {@link Evaluacion} paginadas.
    */
   @GetMapping("/{id}/documentaciones")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-VR', 'ETI-EVC-EVALR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-VR-INV', 'ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
   ResponseEntity<Page<DocumentacionMemoria>> getDocumentaciones(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable pageable) {
     log.debug("getDocumentaciones(Long id, Pageable pageable) - start");
