@@ -48,7 +48,7 @@
         {{'eti.peticionEvaluacion.formulario.equipoInvestigador.listado.acciones' | translate}} </th>
       <td mat-cell *matCellDef="let wrapper;let i=index;">
         <ng-container *ngIf="wrapper.value.isEliminable">
-          <button mat-button *sgiHasAnyAuthorityForAnyUO="['ETI-PEV-CR', 'ETI-PEV-ER', 'ETI-ACT-V']"
+          <button mat-button *sgiHasAnyAuthorityForAnyUO="['ETI-PEV-C-INV', 'ETI-PEV-ER-INV']"
             matTooltip="{{'eti.peticionEvaluacion.formulario.equipoInvestigador.listado.borrar' | translate}}"
             (click)="delete(wrapper)">
             <mat-icon color="warn">highlight_off</mat-icon>
@@ -64,7 +64,7 @@
 
   <!-- Botón añadir equipo trabajo -->
   <div class="separation-button">
-    <button color="three" *sgiHasAnyAuthorityForAnyUO="['ETI-PEV-CR', 'ETI-PEV-ER']"
+    <button color="three" *sgiHasAnyAuthorityForAnyUO="['ETI-PEV-C-INV', 'ETI-PEV-ER-INV']"
       (click)="openModalAddEquipoTrabajo()" mat-button>
       <mat-icon>add_box</mat-icon>
       {{'eti.peticionEvaluacion.formulario.equipoInvestigador.listado.nuevaPersona' | translate}}

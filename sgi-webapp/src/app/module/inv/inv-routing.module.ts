@@ -38,7 +38,7 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_EVALUACIONES_TITLE,
-          hasAnyAuthorityForAnyUO: ['ETI-EVC-VR', 'ETI-EVC-EVALR']
+          hasAnyAuthorityForAnyUO: ['ETI-EVC-VR-INV', 'ETI-EVC-EVALR-INV']
         }
       },
       {
@@ -50,7 +50,7 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_SEGUIMIENTOS_TITLE,
-          hasAnyAuthorityForAnyUO: ['ETI-EVC-VR', 'ETI-EVC-EVALR']
+          hasAnyAuthorityForAnyUO: ['ETI-EVC-VR-INV', 'ETI-EVC-EVALR-INV']
         }
       },
       {
@@ -62,7 +62,7 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_PETICIONES_EVALUACION_TITLE,
-          hasAnyAuthorityForAnyUO: ['ETI-PEV-VR', 'ETI-PEV-CR', 'ETI-PEV-ER', 'ETI-PEV-BR']
+          hasAnyAuthorityForAnyUO: ['ETI-PEV-VR-INV', 'ETI-PEV-C-INV', 'ETI-PEV-ER-INV', 'ETI-PEV-BR-INV']
         }
       },
       { path: '**', component: null }

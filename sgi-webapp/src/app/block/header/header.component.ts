@@ -3,7 +3,6 @@ import { LayoutService } from '@core/services/layout.service';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { Module } from '@core/module';
-import { SgiAuthService } from '@sgi/framework/auth';
 
 @Component({
   selector: 'sgi-header',
@@ -19,8 +18,7 @@ export class HeaderComponent implements OnDestroy {
 
   constructor(
     private readonly logger: NGXLogger,
-    private readonly layout: LayoutService,
-    public authService: SgiAuthService
+    private readonly layout: LayoutService
   ) {
     this.anchoPantalla = window.innerWidth;
     this.subscription = this.layout.activeModule$.subscribe((res) => this.module = res);

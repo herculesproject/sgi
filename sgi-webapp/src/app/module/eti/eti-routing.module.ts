@@ -55,8 +55,7 @@ const routes: SgiRoutes = [
         data: {
           title: MSG_EVALUACIONES_TITLE,
           hasAnyAuthorityForAnyUO: [
-            'ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-C', 'ETI-EVC-E', 'ETI-EVC-B',
-            'ETI-EVC-EVAL', 'ETI-EVC-EVALR'
+            'ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-EVALR'
           ]
         }
       },
@@ -107,19 +106,7 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_SEGUIMIENTOS_TITLE,
-          hasAnyAuthorityForAnyUO: ['ETI-EVC-VR', 'ETI-EVC-EVALR']
-        }
-      },
-      {
-        path: ETI_ROUTE_NAMES.PETICIONES_EVALUACION_INV,
-        loadChildren: () =>
-          import('./peticion-evaluacion/peticion-evaluacion-inv.module').then(
-            (m) => m.PeticionEvaluacionInvModule
-          ),
-        canActivate: [SgiAuthGuard],
-        data: {
-          title: MSG_PETICIONES_EVALUACION_TITLE,
-          hasAnyAuthorityForAnyUO: ['ETI-PEV-VR', 'ETI-PEV-CR', 'ETI-PEV-ER', 'ETI-PEV-BR']
+          hasAnyAuthorityForAnyUO: ['ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-EVALR']
         }
       },
       {

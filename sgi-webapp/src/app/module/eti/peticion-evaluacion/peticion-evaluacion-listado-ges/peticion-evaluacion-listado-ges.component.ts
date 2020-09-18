@@ -2,13 +2,13 @@ import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Observable, of, merge, Subscription, zip } from 'rxjs';
+import { Observable, of, merge, Subscription } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 
 import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
 import { SgiAuthService } from '@sgi/framework/auth';
 
-import { tap, map, catchError, startWith, switchMap } from 'rxjs/operators';
+import { tap, map, catchError, startWith } from 'rxjs/operators';
 
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -21,7 +21,6 @@ import { ComiteService } from '@core/services/eti/comite.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 
-import { DateUtils } from '@core/utils/date-utils';
 import { ROUTE_NAMES } from '@core/route.names';
 
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
@@ -496,40 +495,6 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
    */
   public onSearch() {
     this.loadTable(true);
-  }
-
-  /**
-   * Elimina la peticion de evaluación con el id recibido por parametro.
-   * @param peticionEvaluacionId id de la petición de evaluación
-   * @param event evento lanzado
-   */
-  borrar(peticionEvaluacionId: number, $event: Event): void {
-    this.logger.debug(PeticionEvaluacionListadoGesComponent.name,
-      'borrar(peticionEvaluacionId: number, $event: Event) - start');
-
-    $event.stopPropagation();
-    $event.preventDefault();
-
-    this.dialogServiceSubscriptionGetSubscription = this.dialogService.showConfirmation(
-      'eti.peticionEvaluacion.listado.eliminar'
-    ).subscribe(
-      (aceptado: boolean) => {
-        if (aceptado) {
-          this.peticionEvaluacionServiceDeleteSubscription = this.peticionesEvaluacionService
-            .deleteById(peticionEvaluacionId)
-            .pipe(
-              map(() => {
-                return this.loadTable();
-              })
-            ).subscribe(() => {
-              this.snackBarService.showSuccess('peticionEvaluacion.listado.eliminarConfirmado');
-            });
-        }
-        aceptado = false;
-      });
-
-    this.logger.debug(PeticionEvaluacionListadoGesComponent.name,
-      'borrar(peticionEvaluacionId: number, $event: Event) - end');
   }
 
   /**

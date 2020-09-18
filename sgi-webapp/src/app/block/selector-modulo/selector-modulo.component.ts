@@ -3,12 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
-import { APP_ROUTE_NAMES } from 'src/app/app-route-names';
+import { Module } from '@core/module';
 
 const MSG_MODULO_ETI = marker('selector-modulo.etica');
+const MSG_MODULO_INV = marker('selector-modulo.investigador');
 
-export interface Modulo {
-  url: string;
+interface SelectorModulo {
+  module: Module;
   nombre: string;
 }
 
@@ -17,7 +18,7 @@ export interface Modulo {
   styleUrls: ['./selector-modulo.component.scss']
 })
 export class SelectorModuloComponent implements OnInit {
-  modulos: Modulo[];
+  modulos: SelectorModulo[];
 
   constructor(
     private logger: NGXLogger,
@@ -26,8 +27,12 @@ export class SelectorModuloComponent implements OnInit {
   ) {
     this.modulos = [
       {
-        url: APP_ROUTE_NAMES.ETI,
+        module: Module.ETI,
         nombre: MSG_MODULO_ETI
+      },
+      {
+        module: Module.INV,
+        nombre: MSG_MODULO_INV
       }
     ];
   }

@@ -97,12 +97,12 @@
     <ng-container matColumnDef="acciones" class="acciones">
       <th mat-header-cell *matHeaderCellDef> {{'eti.peticionEvaluacion.listado.acciones' | translate}} </th>
       <td mat-cell *matCellDef="let peticionEvaluacion;let i=index;">
-        <ng-container *sgiHasAuthorityForAnyUO="'ETI-PEV-ER'">
+        <ng-container *sgiHasAuthorityForAnyUO="'ETI-PEV-ER-INV'">
           <button mat-button [routerLink]="[peticionEvaluacion.id]"
             matTooltip="{{'eti.peticionEvaluacion.listado.editar' | translate}}">
             <mat-icon color="primary">border_color</mat-icon>
           </button>
-          <button mat-button color="warn" *sgiHasAuthorityForAnyUO="'ETI-PEV-BR'"
+          <button mat-button color="warn" *sgiHasAuthorityForAnyUO="'ETI-PEV-BR-INV'"
             matTooltip="{{'eti.peticionEvaluacion.listado.borrar' | translate}}"
             (click)="borrar(peticionEvaluacion.id, $event)">
             <mat-icon>highlight_off</mat-icon>
@@ -121,8 +121,7 @@
   <!-- Botón añadir peticionEvaluacion -->
 
 
-  <sgi-footer-crear *sgiHasAnyAuthorityForAnyUO="['ETI-PEV-CR', 'ETI-MEM-CR']" [texto]="textoCrear"
-    [route]="ROUTE_NAMES.NEW">
+  <sgi-footer-crear *sgiHasAnyAuthorityForAnyUO="['ETI-PEV-C-INV']" [texto]="textoCrear" [route]="ROUTE_NAMES.NEW">
   </sgi-footer-crear>
 
 </section>

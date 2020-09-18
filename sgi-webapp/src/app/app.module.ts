@@ -21,6 +21,7 @@ import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { CoreModule } from '@angular/flex-layout';
+import { HomeComponent } from './home/home.component';
 
 // Load supported locales
 registerLocaleData(localeEs);
@@ -28,6 +29,7 @@ registerLocaleData(localeEs);
 @NgModule({
   declarations: [
     AppComponent,
+    HomeComponent,
   ],
   imports: [
     AppRoutingModule,

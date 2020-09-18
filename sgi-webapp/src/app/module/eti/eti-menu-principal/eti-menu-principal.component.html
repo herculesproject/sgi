@@ -6,12 +6,6 @@
     <p matLine *ngIf="opened">{{'menu.principal.eti.peticionesEvaluacion' | translate}}</p>
   </a>
 
-  <a class="item" mat-list-item *sgiHasAuthorityForAnyUO="'ETI-PEV-VR'"
-    [routerLink]="[ETI_ROUTE_NAMES.PETICIONES_EVALUACION_INV]" [routerLinkActive]="['is-active']">
-    <mat-icon color="primary" mat-list-icon>content_paste</mat-icon>
-    <p matLine *ngIf="opened">{{'menu.principal.eti.peticionesEvaluacion' | translate}}</p>
-  </a>
-
   <a class="item" mat-list-item *sgiHasAuthorityForAnyUO="'ETI-CNV-V'"
     [routerLink]="[ETI_ROUTE_NAMES.SOLICITUDES_CONVOCATORIA]" [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>equalizer</mat-icon>
@@ -36,13 +30,13 @@
     <p matLine *ngIf="opened">{{'menu.principal.eti.evaluador' | translate}}</p>
   </a>
 
-  <a class="item" mat-list-item *sgiHasAnyAuthorityForAnyUO="['ETI-EVC-VR','ETI-EVC-EVALR']"
+  <a class="item" mat-list-item *sgiHasAnyAuthorityForAnyUO="['ETI-EVC-V', 'ETI-EVC-VR']"
     [routerLink]="[ETI_ROUTE_NAMES.EVALUACIONES]" [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>list_alt</mat-icon>
     <p matLine *ngIf="opened">{{'menu.principal.eti.evaluaciones' | translate}}</p>
   </a>
 
-  <a class="item" mat-list-item *sgiHasAnyAuthorityForAnyUO="['ETI-EVC-VR','ETI-EVC-EVALR']"
+  <a class="item" mat-list-item *sgiHasAnyAuthorityForAnyUO="['ETI-EVC-V', 'ETI-EVC-VR']"
     [routerLink]="[ETI_ROUTE_NAMES.SEGUIMIENTOS]" [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>verified_user</mat-icon>
     <p matLine *ngIf="opened">{{'menu.principal.eti.seguimientos' | translate}}</p>

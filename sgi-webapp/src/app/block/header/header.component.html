@@ -20,11 +20,9 @@
             <img src="assets/img/universidades/universidad_murcia.png" alt="">
           </a>
         </div>
-        <ng-container *ngIf="authService.authStatus$ | async as authStatus">
-          <div class="select-modulo" id="seleccionarModulo" *ngIf="!authStatus.isInvestigador && module !== Module.INV">
-            <h2>{{module?.title | translate}}</h2>
-          </div>
-        </ng-container>
+        <div class="select-modulo" id="seleccionarModulo" *ngIf="module !== Module.INV">
+          <h2>{{module?.title | translate}}</h2>
+        </div>
       </div>
     </div>
     <!-- FIN Columna menu movil (xs-sm) y logos-->

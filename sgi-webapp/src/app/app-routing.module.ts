@@ -5,8 +5,8 @@ import { SgiAuthGuard } from '@sgi/framework/auth';
 import { RootComponent } from '@shared/root/root.component';
 import { APP_ROUTE_NAMES } from './app-route-names';
 import { SgiRoutes } from '@core/route';
-import { DenyInvestigadorGuard } from '@core/guards/deny-investigador.guard';
-import { AllowInvestigadorGuard } from '@core/guards/allow-investigador.guard';
+import { AllowModuleGuard } from '@core/guards/allow-module.guard';
+import { HomeComponent } from './home/home.component';
 
 /**
  * Definimos las urls de la aplicación
@@ -15,8 +15,8 @@ const routes: SgiRoutes = [
   {
     path: '',
     pathMatch: 'full',
-    component: RootComponent,
-    canActivate: [SgiAuthGuard, DenyInvestigadorGuard]
+    component: HomeComponent,
+    canActivate: [SgiAuthGuard]
   },
   {
     path: APP_ROUTE_NAMES.ETI,
@@ -24,7 +24,7 @@ const routes: SgiRoutes = [
       import('./module/eti/eti.module').then(
         (m) => m.EtiModule
       ),
-    canActivate: [SgiAuthGuard, DenyInvestigadorGuard]
+    canActivate: [SgiAuthGuard, AllowModuleGuard]
   },
   {
     path: APP_ROUTE_NAMES.INV,
@@ -32,7 +32,7 @@ const routes: SgiRoutes = [
       import('./module/inv/inv.module').then(
         (m) => m.InvModule
       ),
-    canActivate: [SgiAuthGuard, AllowInvestigadorGuard]
+    canActivate: [SgiAuthGuard, AllowModuleGuard]
   },
   {
     path: '**',

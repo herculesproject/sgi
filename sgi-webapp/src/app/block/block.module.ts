@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { DialogComponent } from './dialog/dialog.component';
 import { SnackBarComponent } from './snack-bar/snack-bar.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { SgiAuthModule } from '@sgi/framework/auth';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { NavbarComponent } from './navbar/navbar.component';
     MaterialDesignModule,
     TranslateModule,
     SharedModule,
-    RouterModule
+    RouterModule,
+    SgiAuthModule
   ],
   exports: [
     HeaderComponent,

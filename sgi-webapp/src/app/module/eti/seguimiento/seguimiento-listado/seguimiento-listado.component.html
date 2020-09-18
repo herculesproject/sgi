@@ -107,7 +107,7 @@
       <th mat-header-cell *matHeaderCellDef> {{'eti.seguimiento.listado.acciones' | translate}} </th>
       <td mat-cell *matCellDef="let evaluacion">
         <button mat-button [routerLink]="[evaluacion.id]" matTooltip="{{'eti.seguimiento.listado.evaluar' | translate}}"
-          *sgiHasAuthorityForAnyUO="'ETI-EVC-EVALR'">
+          *sgiHasAnyAuthorityForAnyUO="['ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV']">
           <mat-icon color="primary">border_color</mat-icon>
         </button>
       </td>

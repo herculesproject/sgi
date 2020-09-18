@@ -46,7 +46,7 @@
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> {{'eti.peticionEvaluacion.tareas.listado.acciones' | translate}} </th>
       <td mat-cell *matCellDef="let wrapper;let i=index;">
-        <ng-container *sgiHasAuthorityForAnyUO="'ETI-PEV-ER'">
+        <ng-container *sgiHasAnyAuthorityForAnyUO="['ETI-PEV-C-INV', 'ETI-PEV-ER-INV']">
           <button (click)="openUpdateModal(wrapper)" mat-button
             matTooltip="{{'eti.peticionEvaluacion.tareas.listado.editar' | translate}}">
             <mat-icon color="primary">border_color</mat-icon>
@@ -61,7 +61,8 @@
   </table>
   <!-- Botón añadir petición de evaluación -->
   <div class="separation-button">
-    <button color="three" *sgiHasAnyAuthorityForAnyUO="['ETI-PEV-CR']" (click)="openModalAddTarea()" mat-button>
+    <button color="three" *sgiHasAnyAuthorityForAnyUO="['ETI-PEV-C-INV', 'ETI-PEV-ER-INV']"
+      (click)="openModalAddTarea()" mat-button>
       <mat-icon>add_box</mat-icon>
       {{'eti.peticionEvaluacion.formulario.tareas.listado.nuevaTarea' | translate}}
     </button>

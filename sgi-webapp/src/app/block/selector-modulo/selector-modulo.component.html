@@ -1,6 +1,9 @@
 <h3 mat-dialog-title>{{'seleccionar-modulo.titulo'| translate}}</h3>
 <mat-dialog-content class="mat-typography">
-  <button mat-button *ngFor="let modulo of modulos" (click)="abrirModulo(modulo.url)">{{modulo.nombre | translate}}</button>
+  <ng-container *ngFor="let modulo of modulos">
+    <button *sgiHasModuleAccess="modulo.module.code" mat-button
+      (click)="abrirModulo(modulo.module.path)">{{modulo.nombre | translate}}</button>
+  </ng-container>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button color="warn" (click)="cerrarModal()" mat-button
