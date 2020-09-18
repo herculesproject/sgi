@@ -8,6 +8,7 @@ import { SgiAuthService, defaultAuthStatus, IAuthStatus } from './auth.service';
 import { Router } from '@angular/router';
 import { PlatformLocation } from '@angular/common';
 import { SgiAuthConfig } from './auth.config';
+import { extractModuleAccess } from './auth.authority';
 
 interface IKeycloakToken extends Keycloak.KeycloakTokenParsed {
   preferred_username: string;
@@ -137,7 +138,8 @@ export class AuthKeycloakService extends SgiAuthService {
       isInvestigador: token.investigador,
       isAuthenticated: this.keycloak.authenticated,
       userRefId: token.user_ref_id,
-      authorities: token.realm_access?.roles ? token.realm_access.roles : []
+      authorities: token.realm_access?.roles ? token.realm_access.roles : [],
+      modules: token.realm_access?.roles ? extractModuleAccess(token.realm_access?.roles) : []
     };
   }
 

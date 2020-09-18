@@ -57,7 +57,8 @@ export class AuthInMemoryService extends SgiAuthService {
       isAuthenticated: this.authenticated,
       isInvestigador: this.defaultAuthStatus.isInvestigador,
       authorities: this.defaultAuthStatus.authorities,
-      userRefId: this.defaultAuthStatus.userRefId
+      userRefId: this.defaultAuthStatus.userRefId,
+      modules: this.defaultAuthStatus.modules
     };
   }
 }

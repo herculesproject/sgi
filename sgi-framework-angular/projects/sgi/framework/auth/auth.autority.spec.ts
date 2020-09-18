@@ -1,4 +1,4 @@
-import { hasAuthority, hasAnyAuthority, hasAuthorityForAnyUO, hasAnyAuthorityForAnyUO } from './auth.authority';
+import { hasAuthority, hasAnyAuthority, hasAuthorityForAnyUO, hasAnyAuthorityForAnyUO, hasModuleAccess, hasAnyModuleAccess, extractModuleAccess } from './auth.authority';
 
 describe(`hasAuthority()`, () => {
   const userAuthorizations = ['ONE', 'TWO', 'THREE', 'ONE_UO', 'ONE_UO2', 'TWO_UO'];
@@ -97,5 +97,50 @@ describe(`hasAnyAuthorityForAnyUO()`, () => {
 
   it('test for existing authority with only UO should return true', () => {
     expect(hasAnyAuthorityForAnyUO(userAuthorizations, ['FIVE', 'FOUR'])).toBeTrue();
+  });
+});
+
+describe(`hasModuleAccess()`, () => {
+  const userModules = ['GEN', 'MASTER', 'LOCK', 'ACCOUNT'];
+
+  it('test for existing module should return true', () => {
+    expect(hasModuleAccess(userModules, 'MASTER')).toBeTrue();
+  });
+
+  it('test for missing module should return false', () => {
+    expect(hasModuleAccess(userModules, 'CONFIG')).toBeFalse();
+  });
+});
+
+describe(`hasAnyModuleAccess()`, () => {
+  const userModules = ['GEN', 'MASTER', 'LOCK', 'ACCOUNT'];
+
+  it('test for existing module should return true', () => {
+    expect(hasAnyModuleAccess(userModules, ['MASTER'])).toBeTrue();
+  });
+
+  it('test for only one existing module should return true', () => {
+    expect(hasAnyModuleAccess(userModules, ['BALANCE', 'GAMES', 'LOCK'])).toBeTrue();
+  });
+
+  it('test for missing module should return false', () => {
+    expect(hasAnyModuleAccess(userModules, ['BALANCE'])).toBeFalse();
+  });
+
+  it('test for missing all modules should return false', () => {
+    expect(hasAnyModuleAccess(userModules, ['BALANCES', 'GAMES', 'SETTINGS'])).toBeFalse();
+  });
+});
+
+describe(`extractModuleAccess()`, () => {
+  const userAuthorizations = ['GEN-ONE', 'GEN-TWO', 'MASTER-THREE', 'GEN-ONE_UO', 'LOCK-ONE_UO2', 'GEN-TWO_UO', 'ACCOUNT-FOUR-INV_OU'];
+  const expected = ['GEN', 'MASTER', 'LOCK', 'INV'];
+
+  it('test for extract modules from authorities should return expected', () => {
+    expect(extractModuleAccess(userAuthorizations)).toEqual(expected);
+  });
+
+  it('test for extract modules from empty authorities should return empty', () => {
+    expect(extractModuleAccess([])).toEqual([]);
   });
 });

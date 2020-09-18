@@ -14,6 +14,8 @@ import { PlatformLocation } from '@angular/common';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SgiAuthHttpInterceptor } from './auth-http-interceptor';
 import { SGI_AUTH_CONFIG } from './auth.config';
+import { HasModuleAccessDirective } from './directives/has-module-access.directive';
+import { HasAnyModuleAccessDirective } from './directives/has-any-module-access.directive';
 
 
 @NgModule({
@@ -23,13 +25,17 @@ import { SGI_AUTH_CONFIG } from './auth.config';
     HasAnyAuthorityForAnyUODirective,
     HasAuthorityDirective,
     HasAnyAuthorityDirective,
+    HasModuleAccessDirective,
+    HasAnyModuleAccessDirective
   ],
   exports: [
     HasAuthorityForAnyUODirective,
     IfAuthenticatedDirective,
     HasAnyAuthorityForAnyUODirective,
     HasAuthorityDirective,
-    HasAnyAuthorityDirective
+    HasAnyAuthorityDirective,
+    HasModuleAccessDirective,
+    HasAnyModuleAccessDirective
   ]
 })
 export class SgiAuthModule {

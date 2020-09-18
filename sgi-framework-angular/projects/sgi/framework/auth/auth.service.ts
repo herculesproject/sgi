@@ -55,6 +55,8 @@ export interface IAuthStatus {
   isInvestigador: boolean;
   /** The external user reference ID */
   userRefId: string;
+  /** The modules access of the authenticated user */
+  modules: string[];
 }
 
 /**
@@ -64,7 +66,8 @@ export const defaultAuthStatus: IAuthStatus = {
   isAuthenticated: false,
   isInvestigador: false,
   authorities: [],
-  userRefId: ''
+  userRefId: '',
+  modules: []
 };
 
 /**
