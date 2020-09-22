@@ -55,6 +55,7 @@ public class EvaluacionIT {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String EVALUACION_CONTROLLER_BASE_PATH = "/evaluaciones";
   private static final String EVALUACION_LIST_PATH = "/evaluables";
+  private static final String EVALUACION_SEGUIMIENTO_PATH = "/memorias-seguimiento-final";
 
   private HttpEntity<Evaluacion> buildRequest(HttpHeaders headers, Evaluacion entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -465,6 +466,38 @@ public class EvaluacionIT {
         .isEqualTo("Dictamen" + String.format("%03d", 2));
     Assertions.assertThat(evaluaciones.get(2).getDictamen().getNombre())
         .isEqualTo("Dictamen" + String.format("%03d", 1));
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findByEvaluacionesEnSeguimientoFinal_ReturnsEvaluacionList() throws Exception {
+    // when: Obtiene la page=3 con pagesize=10
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "5");
+    // Authorization
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V", "ETI-EVC-EVAL")));
+
+    final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(
+        EVALUACION_CONTROLLER_BASE_PATH + EVALUACION_SEGUIMIENTO_PATH, HttpMethod.GET, buildRequest(headers, null),
+        new ParameterizedTypeReference<List<Evaluacion>>() {
+        });
+
+    // then: Respuesta OK, Evaluaciones retorna la información de la página
+    // correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Evaluacion> evaluaciones = response.getBody();
+    Assertions.assertThat(evaluaciones.size()).isEqualTo(1);
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("0");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("1");
+
+    // Contiene de memoria.titulo='Memoria2'
+
+    Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria2");
+
   }
 
   /**

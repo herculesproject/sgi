@@ -140,4 +140,15 @@ public interface EvaluacionService {
    */
   void deleteAll();
 
+  /**
+   * Obtener todas las entidades paginadas {@link Evaluacion} con memorias en determinados
+   * estados de seguimiento
+   * 
+   * @param query    filtro de {@link QueryCriteria}.
+   * @param pageable pageable
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+
+  Page<Evaluacion> findByEvaluacionesEnSeguimientoFinal(List<QueryCriteria> query, Pageable pageable);
+
 }

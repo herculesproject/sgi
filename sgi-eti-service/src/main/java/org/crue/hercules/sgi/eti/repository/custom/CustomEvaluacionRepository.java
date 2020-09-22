@@ -64,4 +64,15 @@ public interface CustomEvaluacionRepository {
    */
   Page<Evaluacion> findEvaluacionesEnSeguimientosByEvaluador(String personaRef, List<QueryCriteria> query,
       Pageable pageable);
+
+  /**
+   * Obtener todas las entidades {@link Evaluacion} paginadas asociadas a
+   * determinados tipos de seguimiento final
+   *
+   * @param query    filtro de {@link QueryCriteria}.
+   * @param pageable pageable
+   * @return la lista de entidades {@link Evaluacion} paginadas y/o filtradas.
+   */
+
+  public Page<Evaluacion> findByEvaluacionesEnSeguimientoFinal(List<QueryCriteria> query, Pageable pageable);
 }

@@ -87,6 +87,62 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
   }
 
   /**
+   * Obtener todas las entidades {@link Evaluacion} paginadas y/o filtradas
+   * asociadas a determinados tipos de seguimiento final
+   * 
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Evaluacion} paginadas y/o filtradas.
+   */
+  public Page<Evaluacion> findByEvaluacionesEnSeguimientoFinal(List<QueryCriteria> query, Pageable pageable) {
+
+    // Crete query
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaQuery<Evaluacion> cq = cb.createQuery(Evaluacion.class);
+
+    // Define FROM clause
+    Root<Evaluacion> root = cq.from(Evaluacion.class);
+
+    List<Predicate> listPredicates = new ArrayList<Predicate>();
+
+    listPredicates.add(cb.equal(root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id), 2L));
+
+    listPredicates.add(root.get(Evaluacion_.memoria).get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id)
+
+        .in(Arrays.asList(18L, 19L, 13L)));
+
+    listPredicates.add(cb.equal(root.get(Evaluacion_.version), root.get(Evaluacion_.memoria).get(Memoria_.version)));
+
+    listPredicates.add(cb.and(cb.isTrue(root.get(Evaluacion_.activo))));
+
+    // Where
+    if (query != null) {
+      Specification<Evaluacion> spec = new QuerySpecification<Evaluacion>(query);
+      listPredicates.add(spec.toPredicate(root, cq, cb));
+    }
+
+    // Filtros
+    cq.where(listPredicates.toArray(new Predicate[] {}));
+
+    // Ordenación
+    List<Order> orders = QueryUtils.toOrders(pageable.getSort(), root, cb);
+    cq.orderBy(orders);
+
+    // Paginación
+    TypedQuery<Evaluacion> typedQuery = entityManager.createQuery(cq);
+    if (pageable != null && pageable.isPaged()) {
+      typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+      typedQuery.setMaxResults(pageable.getPageSize());
+    }
+
+    List<Evaluacion> result = typedQuery.getResultList();
+    Page<Evaluacion> returnValue = new PageImpl<Evaluacion>(result, pageable, result.size());
+
+    return returnValue;
+
+  }
+
+  /**
    * Obtener todas las entidades {@link Evaluacion} paginadas y/o filtradas.
    *
    * @param query    la información del filtro.

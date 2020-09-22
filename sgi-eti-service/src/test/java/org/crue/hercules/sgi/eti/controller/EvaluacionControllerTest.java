@@ -83,6 +83,7 @@ public class EvaluacionControllerTest {
   private static final String PATH_PARAMETER_BY_COUNT = "/count";
   private static final String EVALUACION_CONTROLLER_BASE_PATH = "/evaluaciones";
   private static final String EVALUACION_LIST_PATH = "/evaluables";
+  private static final String EVALUACION_SEGUIMIENTO_PATH = "/memorias-seguimiento-final";
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-EVC-V" })
@@ -727,6 +728,28 @@ public class EvaluacionControllerTest {
       // Assertions.assertThat(evaluacion.getConvocatoriaReunion().getCodigo()).isEqualTo("CR-"
       // + String.format("%03d", j));
     }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-V", "ETI-EVC-EVAL" })
+  public void findByEvaluacionesEnSeguimientoFinal_ReturnsFiltratedEvaluacionList() throws Exception {
+    // given: Three Evaluacion
+    List<Evaluacion> evaluaciones = new ArrayList<>();
+    for (int i = 1; i <= 3; i++) {
+      evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i)));
+    }
+
+    BDDMockito.given(evaluacionService.findByEvaluacionesEnSeguimientoFinal(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(evaluaciones));
+
+    // when: find unlimited
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(EVALUACION_CONTROLLER_BASE_PATH + EVALUACION_SEGUIMIENTO_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Get a page three Evaluacion
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(3)));
   }
 
   /**

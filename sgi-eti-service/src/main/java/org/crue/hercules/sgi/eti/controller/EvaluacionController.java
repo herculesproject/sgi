@@ -296,4 +296,27 @@ public class EvaluacionController {
     log.debug("updateComentarios(List<Comentario> comentarios) - end");
   }
 
+  /**
+   * Obtiene un listado de {@link Evaluacion} con un * determinados tipos de
+   * seguimiento final
+   * 
+   * @param query    filtro de {@link QueryCriteria}.
+   * @param pageable pageable
+   */
+
+  @GetMapping("/memorias-seguimiento-final")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V', 'ETI-EVC-EVAL')")
+  ResponseEntity<Page<Evaluacion>> findByEvaluacionesEnSeguimientoFinal(
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
+    Page<Evaluacion> page = service.findByEvaluacionesEnSeguimientoFinal(query, pageable);
+    if (page.isEmpty()) {
+      log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
 }

@@ -372,4 +372,24 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       return returnValue;
     }).orElseThrow(() -> new EvaluacionNotFoundException(evaluacionActualizar.getId()));
   }
+
+  /**
+   * Obtiene la última versión de las memorias en estado "En evaluación
+   * seguimiento anual" o "En evaluación seguimiento final" o "En secretaría
+   * seguimiento final aclaraciones" .
+   * 
+   * @param pageable la información de paginación.
+   * @param query  información del filtro.
+   * @return el listado de entidades {@link Evaluacion} paginadas y filtradas.
+   */
+
+  @Override
+  public Page<Evaluacion> findByEvaluacionesEnSeguimientoFinal(List<QueryCriteria> query, Pageable pageable) {
+    log.debug("findByEvaluacionesEnSeguimientoFinal(List<QueryCriteria> query,Pageable paging) - start");
+
+    Page<Evaluacion> returnValue = evaluacionRepository.findByEvaluacionesEnSeguimientoFinal(query, pageable);
+    log.debug("findByEvaluacionesEnSeguimientoFinal(List<QueryCriteria> query,Pageable paging) - end");
+
+    return returnValue;
+  }
 }

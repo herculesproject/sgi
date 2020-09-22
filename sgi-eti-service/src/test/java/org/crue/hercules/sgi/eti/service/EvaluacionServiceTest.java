@@ -556,6 +556,35 @@ public class EvaluacionServiceTest {
     Assertions.assertThat(result.getTotalElements()).isEqualTo(response.size());
   }
 
+  @Test
+  public void findByEvaluacionesEnSeguimientoFinal_ReturnsList() {
+    // given: Ten Evaluacion
+    List<Evaluacion> evaluaciones = new ArrayList<>();
+    for (int i = 1; i <= 3; i++) {
+      evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i), 19L, 1L));
+    }
+    for (int i = 1; i <= 3; i++) {
+      evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i), 13L, 1L));
+    }
+    for (int i = 1; i <= 4; i++) {
+      evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i), 18L, 1L));
+    }
+
+    BDDMockito
+        .given(evaluacionRepository.findByEvaluacionesEnSeguimientoFinal(ArgumentMatchers.<List<QueryCriteria>>any(),
+            ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(evaluaciones));
+
+    // when: find unlimited
+    Page<Evaluacion> page = evaluacionService.findByEvaluacionesEnSeguimientoFinal(null, Pageable.unpaged());
+
+    // then: Get a page with ten Evaluaciones
+    Assertions.assertThat(page.getContent().size()).isEqualTo(10);
+    Assertions.assertThat(page.getNumber()).isEqualTo(0);
+    Assertions.assertThat(page.getSize()).isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(10);
+  }
+
   /**
    * Función que devuelve un objeto Evaluacion
    * 
