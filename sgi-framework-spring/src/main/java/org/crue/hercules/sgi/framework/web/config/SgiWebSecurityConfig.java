@@ -45,6 +45,12 @@ public class SgiWebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Value("${spring.security.oauth2.resourceserver.jwt.user-name-claim:sub}")
   private String userNameClaim;
 
+  @Value("${spring.security.csrf.enable:true}")
+  private boolean csrfEnabled;
+
+  @Value("${spring.security.frameoptions.enable:true}")
+  private boolean frameoptionsEnabled;
+
   @Autowired
   private ObjectMapper mapper;
 
@@ -56,10 +62,6 @@ public class SgiWebSecurityConfig extends WebSecurityConfigurerAdapter {
     log.debug("configure(HttpSecurity http) - start");
     // @formatter:off
     http
-        // CSRF protection by cookie
-        .csrf()
-        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-      .and()
         // Translate exceptions to JSON
         .exceptionHandling()
         .accessDeniedHandler(accessDeniedHandler())
@@ -79,6 +81,31 @@ public class SgiWebSecurityConfig extends WebSecurityConfigurerAdapter {
           .jwtAuthenticationConverter(jwtAuthenticationConverter())
         .and()
       .and();
+
+    // @formatter:on
+    if (csrfEnabled) {
+      // @formatter:off
+      http
+        // CSRF protection by cookie
+        .csrf()
+        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+    // @formatter:on
+    } else {
+      // @formatter:off
+      http
+        // CSRF protection disabled
+        .csrf()
+        .disable();
+    }
+
+    // @formatter:on
+    if (!frameoptionsEnabled) {
+      // @formatter:off
+      http
+        .headers()
+        // Disable X-Frame-Options
+        .frameOptions().disable();
+    }
 
     // @formatter:on
     if (loginEnabled) {

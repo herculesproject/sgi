@@ -1,6 +1,16 @@
 {
   "properties": [
     {
+      "name": "spring.security.csrf.enable",
+      "type": "java.lang.Boolean",
+      "defaultValue": "true"
+    },
+    {
+      "name": "spring.security.frameoptions.enable",
+      "type": "java.lang.Boolean",
+      "defaultValue": "true"
+    },
+    {
       "name": "spring.security.oauth2.enable-login",
       "type": "java.lang.Boolean",
       "defaultValue": "false"
@@ -13,6 +23,32 @@
     }
   ],
   "hints": [
+    {
+      "name": "spring.security.csrf.enable",
+      "values": [
+        {
+          "value": "true",
+          "description": "Enables CSRF protection."
+        },
+        {
+          "value": "false",
+          "description": "Disable CSRF protection."
+        }
+      ]
+    },
+    {
+      "name": "spring.security.frameoptions.enable",
+      "values": [
+        {
+          "value": "true",
+          "description": "Enables X-Frame-Options header options."
+        },
+        {
+          "value": "false",
+          "description": "Disable X-Frame-Options header options."
+        }
+      ]
+    },
     {
       "name": "spring.security.oauth2.enable-login",
       "values": [
