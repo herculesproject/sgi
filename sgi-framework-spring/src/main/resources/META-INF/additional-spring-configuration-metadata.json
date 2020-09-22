@@ -2,7 +2,14 @@
   "properties": [
     {
       "name": "spring.security.oauth2.enable-login",
-      "type": "java.lang.Boolean"
+      "type": "java.lang.Boolean",
+      "defaultValue": "false"
+    },
+    {
+      "name": "spring.security.oauth2.resourceserver.jwt.user-name-claim",
+      "type": "java.lang.String",
+      "description": "JWT claim that contains the user name.",
+      "defaultValue": "sub"
     }
   ],
   "hints": [

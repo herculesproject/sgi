@@ -9,12 +9,14 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.crue.hercules.sgi.framework.security.oauth2.client.oicd.userinfo.KeycloakOidcUserService;
+import org.crue.hercules.sgi.framework.security.oauth2.server.resource.authentication.SgiJwtAuthenticationConverter;
 import org.crue.hercules.sgi.framework.security.web.SgiAuthenticationEntryPoint;
 import org.crue.hercules.sgi.framework.security.web.access.SgiAccessDeniedHandler;
 import org.crue.hercules.sgi.framework.security.web.authentication.logout.KeycloakLogoutHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -25,7 +27,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -40,6 +41,9 @@ public class SgiWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Value("${spring.security.oauth2.enable-login:false}")
   private boolean loginEnabled;
+
+  @Value("${spring.security.oauth2.resourceserver.jwt.user-name-claim:sub}")
+  private String userNameClaim;
 
   @Autowired
   private ObjectMapper mapper;
@@ -108,14 +112,16 @@ public class SgiWebSecurityConfig extends WebSecurityConfigurerAdapter {
     return returnValue;
   }
 
-  protected JwtAuthenticationConverter jwtAuthenticationConverter() {
+  protected Converter<Jwt, AbstractAuthenticationToken> jwtAuthenticationConverter() {
     log.debug("jwtAuthenticationConverter() - start");
-    JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+    SgiJwtAuthenticationConverter sgiJwtAuthenticationConverter = new SgiJwtAuthenticationConverter();
     // Convert realm_access.roles claims to granted authorities, for use in access
     // decisions
-    jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter());
+    sgiJwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter());
+    // Specify the JWT claim to be used as username
+    sgiJwtAuthenticationConverter.setUserNameClaim(userNameClaim);
     log.debug("jwtAuthenticationConverter() - end");
-    return jwtAuthenticationConverter;
+    return sgiJwtAuthenticationConverter;
   }
 
   protected Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter() {
