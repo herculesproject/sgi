@@ -163,4 +163,21 @@ export class EvaluacionService extends SgiRestService<number, IEvaluacion>{
     );
   }
 
+  /**
+   * Devuelve todos las memorias de evaluación que tengan determinados estados.
+   *
+   * @param options opciones de búsqueda.
+   * @return las evaluaciones
+   */
+
+  findSeguimientoMemoria(options?: SgiRestFindOptions): Observable<SgiRestListResult<IEvaluacionSolicitante>> {
+    this.logger.debug(EvaluacionService.name, `findSeguimientoMemoria
+    (${options ? JSON.stringify(options) : ''})`, '-', 'START');
+    return this.find<IEvaluacion, IEvaluacionSolicitante>(`${environment.serviceServers.eti}${EvaluacionService.MAPPING}/memorias-seguimiento-final`,
+      options, EvaluacionService.CONVERTER_EVALUACIONES_SOLICITANTES).pipe(
+        tap(() => {
+          this.logger.debug(EvaluacionService.name, `findSeguimientoMemoria(${options ? JSON.stringify(options) : ''})`, '-', 'END');
+        }));
+  }
+
 }

@@ -42,5 +42,11 @@
     <p matLine *ngIf="opened">{{'menu.principal.eti.seguimientos' | translate}}</p>
   </a>
 
+  <a class="item" mat-list-item *sgiHasAuthorityForAnyUO="'ETI-EVC-V', 'ETI-EVC-EVAL'"
+    [routerLink]="[ETI_ROUTE_NAMES.GESTION_SEGUIMIENTO]" [routerLinkActive]="['is-active']">
+    <mat-icon color="primary" mat-list-icon>supervised_user_circle</mat-icon>
+    <p matLine *ngIf="opened">{{'menu.principal.eti.gestionSeguimiento' | translate}}</p>
+  </a>
+
 </div>
 <!-- FIN Menu principal -->
