@@ -1,6 +1,6 @@
 import { FormFragment } from '@core/services/action-service';
 import { PeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Observable, of, EMPTY } from 'rxjs';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { NullIdValidador } from '@core/validators/null-id-validador';
@@ -10,29 +10,31 @@ import { SgiAuthService } from '@sgi/framework/auth/public-api';
 export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<PeticionEvaluacion> {
 
   private peticionEvaluacion: PeticionEvaluacion;
+  public readonly: boolean;
 
   constructor(private fb: FormBuilder, key: number, private service: PeticionEvaluacionService,
-    private sgiAuthService: SgiAuthService) {
+    private sgiAuthService: SgiAuthService, readonly: boolean) {
     super(key);
     this.peticionEvaluacion = new PeticionEvaluacion();
     this.peticionEvaluacion.activo = true;
     this.peticionEvaluacion.externo = false;
     this.peticionEvaluacion.tieneFondosPropios = false;
     this.peticionEvaluacion.personaRef = sgiAuthService.authStatus$.getValue().userRefId;
+    this.readonly = readonly;
   }
 
 
   protected buildFormGroup(): FormGroup {
     return this.fb.group({
-      titulo: ['', Validators.required],
-      tipoActividad: ['', new NullIdValidador().isValid()],
-      financiacion: ['', Validators.required],
-      fechaInicio: ['', Validators.required],
-      fechaFin: ['', Validators.required],
-      resumen: ['', Validators.required],
-      valorSocial: ['', Validators.required],
-      objetivosCientificos: ['', Validators.required],
-      disenioMetodologico: ['', Validators.required],
+      titulo: new FormControl({ value: '', disabled: this.isEdit() }, [Validators.required]),
+      tipoActividad: new FormControl({ value: '', disabled: this.readonly }, [new NullIdValidador().isValid()]),
+      financiacion: new FormControl({ value: '', disabled: this.readonly }, [Validators.required]),
+      fechaInicio: new FormControl({ value: '', disabled: this.readonly }, [Validators.required]),
+      fechaFin: new FormControl({ value: '', disabled: this.readonly }, [Validators.required]),
+      resumen: new FormControl({ value: '', disabled: this.readonly }, [Validators.required]),
+      valorSocial: new FormControl({ value: '', disabled: this.readonly }, [Validators.required]),
+      objetivosCientificos: new FormControl({ value: '', disabled: this.readonly }, [Validators.required]),
+      disenioMetodologico: new FormControl({ value: '', disabled: this.readonly }, [Validators.required]),
     });
   }
 

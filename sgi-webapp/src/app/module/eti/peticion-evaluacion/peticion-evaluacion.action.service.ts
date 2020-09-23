@@ -30,11 +30,14 @@ export class PeticionEvaluacionActionService extends ActionService {
     MEMORIAS: 'memorias'
   };
 
+  public readonly: boolean;
+
   private peticionEvaluacion: PeticionEvaluacion;
   private datosGenerales: PeticionEvaluacionDatosGeneralesFragment;
   private equipoInvestigadorListado: EquipoInvestigadorListadoFragment;
   private tareas: PeticionEvaluacionTareasFragment;
   private memoriasListado: MemoriasListadoFragment;
+
 
   constructor(
     fb: FormBuilder,
@@ -53,10 +56,12 @@ export class PeticionEvaluacionActionService extends ActionService {
     if (route.snapshot.data.peticionEvaluacion) {
       this.peticionEvaluacion = route.snapshot.data.peticionEvaluacion;
       this.enableEdit();
+      this.readonly = route.snapshot.data.readonly;
     }
 
     this.datosGenerales =
-      new PeticionEvaluacionDatosGeneralesFragment(fb, this.peticionEvaluacion?.id, peticionEvaluacionService, sgiAuthService);
+      new PeticionEvaluacionDatosGeneralesFragment(
+        fb, this.peticionEvaluacion?.id, peticionEvaluacionService, sgiAuthService, this.readonly);
     this.equipoInvestigadorListado = new EquipoInvestigadorListadoFragment(
       this.peticionEvaluacion?.id, logger, personaFisicaService, equipoTrabajoService, peticionEvaluacionService, sgiAuthService);
     this.tareas = new PeticionEvaluacionTareasFragment(this.peticionEvaluacion?.id, personaFisicaService, tareaService);

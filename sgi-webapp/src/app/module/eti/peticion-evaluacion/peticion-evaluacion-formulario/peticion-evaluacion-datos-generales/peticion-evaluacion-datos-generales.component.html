@@ -8,8 +8,7 @@
       <mat-form-field class="input-form">
         <mat-label>{{'eti.peticionEvaluacion.titulo' | translate}}</mat-label>
         <input #nombre matInput formControlName="titulo" type="text" id="titulo"
-          placeholder="{{'eti.peticionEvaluacion.titulo' | translate}}" required maxlength="100"
-          [readonly]="fragment.isEdit()">
+          placeholder="{{'eti.peticionEvaluacion.titulo' | translate}}" required maxlength="100">
         <mat-error
           *ngIf="FormGroupUtil.checkError(formGroup, 'titulo') && (formGroup.get('titulo').errors.vacio || formGroup.get('titulo').errors.required)">
           {{'eti.peticionEvaluacion.titulo.vacio' | translate}}

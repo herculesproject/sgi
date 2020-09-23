@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { PeticionEvaluacionListadoGesComponent } from './peticion-evaluacion-listado-ges/peticion-evaluacion-listado-ges.component';
 import { PeticionEvaluacionGesRoutingModule } from './peticion-evaluacion-ges-routing.module';
+import { PeticionEvaluacionResolver } from './peticion-evaluacion.resolver';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,9 @@ import { PeticionEvaluacionGesRoutingModule } from './peticion-evaluacion-ges-ro
     FormsModule,
     ReactiveFormsModule,
     SgiAuthModule
+  ],
+  providers: [
+    PeticionEvaluacionResolver
   ]
 })
 export class PeticionEvaluacionGesModule { }
