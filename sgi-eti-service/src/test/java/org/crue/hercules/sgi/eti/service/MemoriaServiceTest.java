@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
+import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.service.impl.MemoriaServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,12 +44,12 @@ public class MemoriaServiceTest {
 
   @Mock
   private MemoriaRepository memoriaRepository;
-
+  private EstadoMemoriaRepository estadoMemoriaRepository;
   private MemoriaService memoriaService;
 
   @BeforeEach
   public void setUp() throws Exception {
-    memoriaService = new MemoriaServiceImpl(memoriaRepository);
+    memoriaService = new MemoriaServiceImpl(memoriaRepository, estadoMemoriaRepository);
   }
 
   @Test

@@ -57,6 +57,9 @@ public class DictamenControllerTest {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String DICTAMEN_CONTROLLER_BASE_PATH = "/dictamenes";
+  private static final String DICTAMEN_MEMORIA_REVISION_MINIMA_PATH = "/memoria-revision-minima";
+  private static final String DICTAMEN_MEMORIA_NO_REVISION_MINIMA_PATH = "/memoria-no-revision-minima";
+  private static final String DICTAMEN_RETROSPECTIVA_PATH = "/retrospectiva";
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-DICTAMEN-VER" })
@@ -197,6 +200,7 @@ public class DictamenControllerTest {
         // then: Get a page one hundred Dictamen
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
+
   }
 
   @Test
@@ -337,6 +341,108 @@ public class DictamenControllerTest {
         // then: Get a page one hundred Dictamen
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DICTAMEN-VER" })
+  public void findAllByMemoriaRevisionMinima_ReturnsDictamenList() throws Exception {
+    // given: One hundred Dictamen
+    List<Dictamen> dictamenes = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      dictamenes.add(generarMockDictamen(Long.valueOf(i), "Dictamen" + String.format("%03d", i)));
+    }
+
+    BDDMockito.given(dictamenService.findAllByMemoriaRevisionMinima()).willReturn(dictamenes);
+
+    // when: find unlimited
+    MvcResult result = mockMvc
+        .perform(MockMvcRequestBuilders.get(DICTAMEN_CONTROLLER_BASE_PATH + DICTAMEN_MEMORIA_REVISION_MINIMA_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Get a page one hundred Dictamen
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
+
+    // this uses a TypeReference to inform Jackson about the Lists's generic type
+    List<Dictamen> actual = mapper.readValue(result.getResponse().getContentAsString(),
+        new TypeReference<List<Dictamen>>() {
+        });
+
+    // containing tipoEvaluacion.nombre = "TipoEvaluacion1"
+    for (int i = 0; i <= 99; i++) {
+      Dictamen dictamen = actual.get(i);
+      Assertions.assertThat(dictamen.getTipoEvaluacion().getNombre()).isEqualTo("TipoEvaluacion1");
+      Assertions.assertThat(dictamen.getId()).isEqualTo(i + 1);
+
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DICTAMEN-VER" })
+  public void findAllByMemoriaNoRevisionMinima_ReturnsDictamenList() throws Exception {
+    // given: One hundred Dictamen
+    List<Dictamen> dictamenes = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      dictamenes.add(generarMockDictamen(Long.valueOf(i), "Dictamen" + String.format("%03d", i)));
+    }
+
+    BDDMockito.given(dictamenService.findAllByMemoriaNoRevisionMinima()).willReturn(dictamenes);
+
+    // when: find unlimited
+    MvcResult result = mockMvc
+        .perform(MockMvcRequestBuilders.get(DICTAMEN_CONTROLLER_BASE_PATH + DICTAMEN_MEMORIA_NO_REVISION_MINIMA_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Get a page one hundred Dictamen
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
+
+    // this uses a TypeReference to inform Jackson about the Lists's generic type
+    List<Dictamen> actual = mapper.readValue(result.getResponse().getContentAsString(),
+        new TypeReference<List<Dictamen>>() {
+        });
+
+    // containing tipoEvaluacion.nombre = "TipoEvaluacion1"
+    for (int i = 0; i <= 99; i++) {
+      Dictamen dictamen = actual.get(i);
+      Assertions.assertThat(dictamen.getTipoEvaluacion().getNombre()).isEqualTo("TipoEvaluacion1");
+      Assertions.assertThat(dictamen.getId()).isEqualTo(i + 1);
+
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-DICTAMEN-VER" })
+  public void findAllByRetrospectiva_ReturnsDictamenList() throws Exception {
+    // given: One hundred Dictamen
+    List<Dictamen> dictamenes = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      dictamenes.add(generarMockDictamen(Long.valueOf(i), "Dictamen" + String.format("%03d", i)));
+    }
+
+    BDDMockito.given(dictamenService.findAllByRetrospectiva()).willReturn(dictamenes);
+
+    // when: find unlimited
+    MvcResult result = mockMvc
+        .perform(MockMvcRequestBuilders.get(DICTAMEN_CONTROLLER_BASE_PATH + DICTAMEN_RETROSPECTIVA_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Get a page one hundred Dictamen
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
+
+    // this uses a TypeReference to inform Jackson about the Lists's generic type
+    List<Dictamen> actual = mapper.readValue(result.getResponse().getContentAsString(),
+        new TypeReference<List<Dictamen>>() {
+        });
+
+    // containing tipoEvaluacion.nombre = "TipoEvaluacion1"
+    for (int i = 0; i <= 99; i++) {
+      Dictamen dictamen = actual.get(i);
+      Assertions.assertThat(dictamen.getTipoEvaluacion().getNombre()).isEqualTo("TipoEvaluacion1");
+      Assertions.assertThat(dictamen.getId()).isEqualTo(i + 1);
+
+    }
   }
 
   /**

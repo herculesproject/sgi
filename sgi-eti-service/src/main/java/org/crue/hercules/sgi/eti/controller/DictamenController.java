@@ -67,6 +67,46 @@ public class DictamenController {
   }
 
   /**
+   * Devuelve los dictamenes para los que el TipoEvaluación sea Memoria y el
+   * TipoEstadoMemoria sea En secretaría revisión mínima
+   */
+  @GetMapping("/memoria-revision-minima")
+  List<Dictamen> findAllByMemoriaRevisionMinima() {
+    log.debug("findAllByMemoriaRevisionMinima - start");
+
+    List<Dictamen> returnValues = service.findAllByMemoriaRevisionMinima();
+
+    log.debug("findAllByMemoriaRevisionMinima - end");
+    return returnValues;
+  }
+
+  /**
+   * Devuelve los dictamenes para los que el TipoEvaluación sea Memoria y el
+   * TipoEstadoMemoria NO esté En secretaría revisión mínima
+   */
+  @GetMapping("/memoria-no-revision-minima")
+  List<Dictamen> findAllByMemoriaNoRevisionMinima() {
+    log.debug("findAllByMemoriaNoRevisionMinima - start");
+
+    List<Dictamen> returnValues = service.findAllByMemoriaNoRevisionMinima();
+
+    log.debug("findAllByMemoriaNoRevisionMinima - end");
+    return returnValues;
+  }
+
+  /**
+   * Devuelve los dictamenes para los que el TipoEvaluación sea Retrospectiva
+   */
+  @GetMapping("/retrospectiva")
+  List<Dictamen> findAllByRetrospectiva() {
+    log.debug("findAllByRetrospectiva - start");
+
+    List<Dictamen> returnValues = service.findAllByRetrospectiva();
+    log.debug("findAllByRetrospectiva - end");
+    return returnValues;
+  }
+
+  /**
    * Crea nuevo {@link Dictamen}.
    * 
    * @param nuevoDictamen {@link Dictamen}. que se quiere crear.

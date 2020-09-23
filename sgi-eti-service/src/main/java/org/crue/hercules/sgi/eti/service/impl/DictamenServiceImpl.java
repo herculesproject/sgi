@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.crue.hercules.sgi.eti.exceptions.DictamenNotFoundException;
@@ -132,6 +134,57 @@ public class DictamenServiceImpl implements DictamenService {
       log.debug("update(Dictamen dictamenActualizar) - end");
       return returnValue;
     }).orElseThrow(() -> new DictamenNotFoundException(dictamenActualizar.getId()));
+  }
+
+  /**
+   * Devuelve los dictamenes para los que el TipoEvaluación sea Memoria y el
+   * TipoEstadoMemoria sea En secretaría revisión mínima
+   * 
+   * @return listado de Dictamenes
+   */
+  @Override
+  public List<Dictamen> findAllByMemoriaRevisionMinima() {
+    log.debug("findAllByMemoriaRevisionMinima - start");
+
+    // Favorable (1) y Favorable pendiente de revisión mínima (2)
+    List<Long> ids = new ArrayList<Long>(Arrays.asList(1L, 2L));
+    List<Dictamen> listaDictamenes = dictamenRepository.findByIdIn(ids);
+
+    log.debug("findAllByMemoriaRevisionMinima - end");
+    return listaDictamenes;
+  }
+
+  /**
+   * Devuelve los dictamenes para los que el TipoEvaluación sea Memoria y el
+   * TipoEstadoMemoria NO esté En secretaría revisión mínima
+   * 
+   * @return listado de Dictamenes
+   */
+  @Override
+  public List<Dictamen> findAllByMemoriaNoRevisionMinima() {
+    log.debug("findAllByMemoriaNoRevisionMinima - start");
+
+    // Busqueda por TipoEvaluacion: Memoria (devuelve todas las de este tipo)
+    List<Dictamen> listaDictamenes = dictamenRepository.findByTipoEvaluacionId(2L);
+
+    log.debug("findAllByMemoriaNoRevisionMinima - end");
+    return listaDictamenes;
+  }
+
+  /**
+   * Devuelve los dictamenes para los que el TipoEvaluación sea Retrospectiva
+   * 
+   * @return listado de Dictamenes
+   */
+  @Override
+  public List<Dictamen> findAllByRetrospectiva() {
+    log.debug("findAllByRetrospectiva - start");
+
+    // Busqueda por TipoEvaluacion: Retrospectiva (devuelve todas las de este tipo)
+    List<Dictamen> listaDictamenes = dictamenRepository.findByTipoEvaluacionId(1L);
+
+    log.debug("findAllByRetrospectiva - end");
+    return listaDictamenes;
   }
 
 }

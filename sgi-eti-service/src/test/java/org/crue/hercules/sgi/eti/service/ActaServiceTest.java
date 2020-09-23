@@ -17,7 +17,6 @@ import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 import org.crue.hercules.sgi.eti.repository.ActaRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoActaRepository;
-import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
@@ -53,8 +52,6 @@ public class ActaServiceTest {
   @Mock
   private EstadoActaRepository estadoActaRepository;
   @Mock
-  private EstadoMemoriaRepository estadoMemoriaRepository;
-  @Mock
   private EvaluacionRepository evaluacionRepository;
   @Mock
   private MemoriaRepository memoriaRepository;
@@ -64,11 +61,12 @@ public class ActaServiceTest {
   private RetrospectivaRepository retrospectivaRepository;
 
   private ActaService actaService;
+  private MemoriaService memoriaService;
 
   @BeforeEach
   public void setUp() throws Exception {
     actaService = new ActaServiceImpl(actaRepository, estadoActaRepository, tipoEstadoActaRepository,
-        evaluacionRepository, retrospectivaRepository, estadoMemoriaRepository, memoriaRepository);
+        evaluacionRepository, retrospectivaRepository, memoriaService);
   }
 
   @Test

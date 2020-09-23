@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -226,6 +227,59 @@ public class DictamenServiceTest {
     }
   }
 
+  @Test
+  public void findAllByMemoriaRevisionMinima_ReturnsDictamenList() {
+    // given: One hundred dictamenes
+    List<Dictamen> dictamenes = new ArrayList<>();
+    for (int i = 1; i <= 2; i++) {
+      dictamenes.add(generarMockDictamen(Long.valueOf(i), "Dictamen" + String.format("%03d", i)));
+    }
+
+    List<Long> ids = new ArrayList<Long>(Arrays.asList(1L, 2L));
+
+    BDDMockito.given(dictamenRepository.findByIdIn(ids)).willReturn(dictamenes);
+
+    // when: find unlimited
+    List<Dictamen> result = dictamenService.findAllByMemoriaRevisionMinima();
+
+    // then: Get 2 Dictamenes
+    Assertions.assertThat(result.size()).isEqualTo(2);
+  }
+
+  @Test
+  public void findAllByMemoriaNoRevisionMinima_ReturnsDictamenList() {
+    // given: One hundred dictamenes
+    List<Dictamen> dictamenes = new ArrayList<>();
+    for (int i = 1; i <= 10; i++) {
+      dictamenes.add(generarMockDictamen(Long.valueOf(i), "Dictamen" + String.format("%03d", i)));
+    }
+
+    BDDMockito.given(dictamenRepository.findByTipoEvaluacionId(2L)).willReturn(dictamenes);
+
+    // when: find unlimited
+    List<Dictamen> result = dictamenService.findAllByMemoriaNoRevisionMinima();
+
+    // then: Get 10 Dictamenes
+    Assertions.assertThat(result.size()).isEqualTo(10);
+  }
+
+  @Test
+  public void findAllByRetrospectiva_ReturnsDictamenList() {
+    // given: One hundred dictamenes
+    List<Dictamen> dictamenes = new ArrayList<>();
+    for (int i = 1; i <= 10; i++) {
+      dictamenes.add(generarMockDictamen(Long.valueOf(i), "Dictamen" + String.format("%03d", i)));
+    }
+
+    BDDMockito.given(dictamenRepository.findByTipoEvaluacionId(1L)).willReturn(dictamenes);
+
+    // when: find unlimited
+    List<Dictamen> result = dictamenService.findAllByRetrospectiva();
+
+    // then: Get 10 Dictamenes
+    Assertions.assertThat(result.size()).isEqualTo(10);
+  }
+
   /**
    * Función que devuelve un objeto Dictamen
    * 
@@ -248,4 +302,5 @@ public class DictamenServiceTest {
 
     return dictamen;
   }
+
 }

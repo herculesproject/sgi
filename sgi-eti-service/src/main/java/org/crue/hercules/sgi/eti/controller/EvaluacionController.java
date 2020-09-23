@@ -134,7 +134,7 @@ public class EvaluacionController {
    * @param paging pageable
    */
   @GetMapping("/evaluables")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-EVAL')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V', 'ETI-EVC-EVAL')")
   ResponseEntity<Page<Evaluacion>> findAllByMemoriaAndRetrospectivaEnEvaluacion(
       @RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
@@ -172,7 +172,7 @@ public class EvaluacionController {
    * @return {@link Evaluacion} actualizado.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-E')")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-EVAL')")
   public Evaluacion replaceEvaluacion(@Valid @RequestBody Evaluacion updatedEvaluacion, @PathVariable Long id) {
     log.debug("replaceEvaluacion(Evaluacion updatedEvaluacion, Long id) - start");
     updatedEvaluacion.setId(id);

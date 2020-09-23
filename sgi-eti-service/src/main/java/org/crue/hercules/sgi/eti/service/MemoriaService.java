@@ -123,4 +123,14 @@ public interface MemoriaService {
   Page<MemoriaPeticionEvaluacion> findMemoriaByPeticionEvaluacionMaxVersion(Long idPeticionEvaluacion,
       Pageable pageable);
 
+  /**
+   * 
+   * Actualiza el estado de la {@link Memoria}.**
+   * 
+   * @param memoria a actualizar.*
+   * @param id      del estado de la memoria nuevo.
+   */
+
+  void updateEstadoMemoria(Memoria memoria, long id);
+
 }

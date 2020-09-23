@@ -40,6 +40,9 @@ public class DictamenIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String DICTAMEN_CONTROLLER_BASE_PATH = "/dictamenes";
+  private static final String DICTAMEN_MEMORIA_REVISION_MINIMA_PATH = "/memoria-revision-minima";
+  private static final String DICTAMEN_MEMORIA_NO_REVISION_MINIMA_PATH = "/memoria-no-revision-minima";
+  private static final String DICTAMEN_RETROSPECTIVA_PATH = "/retrospectiva";
 
   private HttpEntity<Dictamen> buildRequest(HttpHeaders headers, Dictamen entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -255,6 +258,75 @@ public class DictamenIT {
     Assertions.assertThat(dictamenes.get(0).getNombre()).isEqualTo("Pendiente de correcciones");
     Assertions.assertThat(dictamenes.get(1).getNombre()).isEqualTo("Favorable pendiente de revisión mínima");
 
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllByMemoriaRevisionMinima_ReturnsDictamenList() throws Exception {
+
+    URI uri = UriComponentsBuilder.fromUriString(DICTAMEN_CONTROLLER_BASE_PATH + DICTAMEN_MEMORIA_REVISION_MINIMA_PATH)
+        .build(false).toUri();
+
+    final ResponseEntity<List<Dictamen>> response = restTemplate.exchange(uri, HttpMethod.GET, buildRequest(null, null),
+        new ParameterizedTypeReference<List<Dictamen>>() {
+        });
+
+    // then: Respuesta OK, Dictamenes
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Dictamen> dictamenes = response.getBody();
+    Assertions.assertThat(dictamenes.size()).isEqualTo(2);
+
+    // Contiene de nombre='Favorable' y 'Favorable pendiente de revisión mínima'
+    Assertions.assertThat(dictamenes.get(0).getNombre()).isEqualTo("Favorable");
+    Assertions.assertThat(dictamenes.get(1).getNombre()).isEqualTo("Favorable pendiente de revisión mínima");
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllByMemoriaNoRevisionMinima_ReturnsDictamenList() throws Exception {
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(DICTAMEN_CONTROLLER_BASE_PATH + DICTAMEN_MEMORIA_NO_REVISION_MINIMA_PATH).build(false).toUri();
+
+    final ResponseEntity<List<Dictamen>> response = restTemplate.exchange(uri, HttpMethod.GET, buildRequest(null, null),
+        new ParameterizedTypeReference<List<Dictamen>>() {
+        });
+
+    // then: Respuesta OK, Dictamenes
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Dictamen> dictamenes = response.getBody();
+    Assertions.assertThat(dictamenes.size()).isEqualTo(4);
+
+    // Contiene de nombre='Favorable', 'Favorable pendiente de revisión mínima',
+    // 'Pendiente de correcciones' y 'No procede evaluar'
+    Assertions.assertThat(dictamenes.get(0).getNombre()).isEqualTo("Favorable");
+    Assertions.assertThat(dictamenes.get(1).getNombre()).isEqualTo("Favorable pendiente de revisión mínima");
+    Assertions.assertThat(dictamenes.get(2).getNombre()).isEqualTo("Pendiente de correcciones");
+    Assertions.assertThat(dictamenes.get(3).getNombre()).isEqualTo("No procede evaluar");
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllByRetrospectiva_ReturnsDictamenList() throws Exception {
+
+    URI uri = UriComponentsBuilder.fromUriString(DICTAMEN_CONTROLLER_BASE_PATH + DICTAMEN_RETROSPECTIVA_PATH)
+        .build(false).toUri();
+
+    final ResponseEntity<List<Dictamen>> response = restTemplate.exchange(uri, HttpMethod.GET, buildRequest(null, null),
+        new ParameterizedTypeReference<List<Dictamen>>() {
+        });
+
+    // then: Respuesta OK, Dictamenes
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Dictamen> dictamenes = response.getBody();
+    Assertions.assertThat(dictamenes.size()).isEqualTo(2);
+
+    // Contiene de nombre='Favorable', 'Desfavorable'
+    Assertions.assertThat(dictamenes.get(0).getNombre()).isEqualTo("Favorable");
+    Assertions.assertThat(dictamenes.get(1).getNombre()).isEqualTo("Desfavorable");
   }
 
   /**

@@ -164,7 +164,7 @@ public class EvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-E" })
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL" })
   public void replaceEvaluacion_ReturnsEvaluacion() throws Exception {
     // given: Una evaluacion a modificar
     String replaceEvaluacionJson = "{\"id\": 1, \"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
@@ -192,7 +192,7 @@ public class EvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-E" })
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL" })
   public void replaceEvaluacion_NotFound() throws Exception {
     // given: Una evaluacion a modificar
     String replaceEvaluacionJson = "{\"id\": 1, \"memoria\":{\"id\": 1, \"numReferencia\": \"numRef-5598\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"

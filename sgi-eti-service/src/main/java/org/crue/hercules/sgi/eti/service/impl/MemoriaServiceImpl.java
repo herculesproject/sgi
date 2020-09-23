@@ -1,13 +1,17 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.MemoriaSpecifications;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
@@ -30,10 +34,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class MemoriaServiceImpl implements MemoriaService {
+
+  /** Estado Memoria Repository. */
+  private final EstadoMemoriaRepository estadoMemoriaRepository;
+
   private final MemoriaRepository memoriaRepository;
 
-  public MemoriaServiceImpl(MemoriaRepository memoriaRepository) {
+  public MemoriaServiceImpl(MemoriaRepository memoriaRepository, EstadoMemoriaRepository estadoMemoriaRepository) {
     this.memoriaRepository = memoriaRepository;
+    this.estadoMemoriaRepository = estadoMemoriaRepository;
   }
 
   /**
@@ -266,6 +275,33 @@ public class MemoriaServiceImpl implements MemoriaService {
     Page<MemoriaPeticionEvaluacion> returnValue = memoriaRepository.findMemoriasEvaluacion(idPeticionEvaluacion,
         pageable);
     return returnValue;
+  }
+
+  /**
+   * Se crea el nuevo estado para la memoria recibida y se actualiza el estado
+   * actual de esta.
+   * 
+   * @param memoria             {@link Memoria} a actualizar estado.
+   * @param idTipoEstadoMemoria identificador del estado nuevo de la memoria.
+   */
+  @Override
+  public void updateEstadoMemoria(Memoria memoria, long idTipoEstadoMemoria) {
+    log.debug("updateEstadoMemoria(Memoria memoria, Long idEstadoMemoria) - start");
+
+    // se crea el nuevo estado para la memoria
+    TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
+    tipoEstadoMemoria.setId(idTipoEstadoMemoria);
+    EstadoMemoria estadoMemoria = new EstadoMemoria(null, memoria, tipoEstadoMemoria, LocalDateTime.now());
+
+    estadoMemoriaRepository.save(estadoMemoria);
+
+    // Se actualiza la memoria con el nuevo tipo estado memoria
+
+    memoria.setEstadoActual(tipoEstadoMemoria);
+    memoriaRepository.save(memoria);
+
+    log.debug("updateEstadoMemoria(Memoria memoria, Long idEstadoMemoria) - end");
+
   }
 
 }

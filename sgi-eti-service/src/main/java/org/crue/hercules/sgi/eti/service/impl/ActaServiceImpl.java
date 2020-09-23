@@ -9,20 +9,16 @@ import org.crue.hercules.sgi.eti.exceptions.ActaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.TareaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.EstadoActa;
-import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
-import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
-import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.repository.ActaRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoActaRepository;
-import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
-import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.repository.TipoEstadoActaRepository;
 import org.crue.hercules.sgi.eti.service.ActaService;
+import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,20 +42,17 @@ public class ActaServiceImpl implements ActaService {
   /** Estado Acta Repository. */
   private final EstadoActaRepository estadoActaRepository;
 
-  /** Estado Memoria Repository. */
-  private final EstadoMemoriaRepository estadoMemoriaRepository;
-
   /** Evaluacion Repository. */
   private final EvaluacionRepository evaluacionRepository;
-
-  /** Memoria Repository. */
-  private final MemoriaRepository memoriaRepository;
 
   /** Tipo Estado Acta Repository. */
   private final TipoEstadoActaRepository tipoEstadoActaRepository;
 
   /** Retrospectiva repository. */
   private final RetrospectivaRepository retrospectivaRepository;
+
+  /** Memoria Service. */
+  private final MemoriaService memoriaService;
 
   /**
    * Instancia un nuevo ActaServiceImpl.
@@ -69,21 +62,18 @@ public class ActaServiceImpl implements ActaService {
    * @param tipoEstadoActaRepository { @link TipoEstadoActaRepository}
    * @param evaluacionRepository     {@link EvaluacionRepository}
    * @param retrospectivaRepository  {@link RetrospectivaRepository}
-   * @param estadoMemoriaRepository  {@link EstadoMemoriaRepository}
-   * @param memoriaRepository        {@link MemoriaRepository}
+   * @param memoriaService           {@link MemoriaService}
    * 
    */
   public ActaServiceImpl(ActaRepository actaRepository, EstadoActaRepository estadoActaRepository,
       TipoEstadoActaRepository tipoEstadoActaRepository, EvaluacionRepository evaluacionRepository,
-      RetrospectivaRepository retrospectivaRepository, EstadoMemoriaRepository estadoMemoriaRepository,
-      MemoriaRepository memoriaRepository) {
+      RetrospectivaRepository retrospectivaRepository, MemoriaService memoriaService) {
     this.actaRepository = actaRepository;
     this.estadoActaRepository = estadoActaRepository;
     this.tipoEstadoActaRepository = tipoEstadoActaRepository;
     this.evaluacionRepository = evaluacionRepository;
     this.retrospectivaRepository = retrospectivaRepository;
-    this.estadoMemoriaRepository = estadoMemoriaRepository;
-    this.memoriaRepository = memoriaRepository;
+    this.memoriaService = memoriaService;
   }
 
   /**
@@ -227,26 +217,26 @@ public class ActaServiceImpl implements ActaService {
         case 1: {
           // Dictamen "Favorable"-
           // Se actualiza memoria a estado 9: "Fin evaluación"
-          updateEstadoMemoria(evaluacion.getMemoria(), 9L);
+          memoriaService.updateEstadoMemoria(evaluacion.getMemoria(), 9L);
           break;
         }
         case 2: {
           // Dictamen "Favorable pendiente de revisión mínima"-
           // Se actualiza memoria a estado 6: "Favorable Pendiente de Modificaciones
           // Mínimas"
-          updateEstadoMemoria(evaluacion.getMemoria(), 6L);
+          memoriaService.updateEstadoMemoria(evaluacion.getMemoria(), 6L);
           break;
         }
         case 3: {
           // Dictamen "Pendiente de correcciones"
           // Se actualiza memoria a estado 7: "Pendiente de correcciones"
-          updateEstadoMemoria(evaluacion.getMemoria(), 7L);
+          memoriaService.updateEstadoMemoria(evaluacion.getMemoria(), 7L);
           break;
         }
         case 4: {
           // Dictamen "No procede evaluar"
-          // Seactualiza memoria a estado 8: "No procede evaluar"
-          updateEstadoMemoria(evaluacion.getMemoria(), 8L);
+          // Se actualiza memoria a estado 8: "No procede evaluar"
+          memoriaService.updateEstadoMemoria(evaluacion.getMemoria(), 8L);
 
           break;
         }
@@ -283,32 +273,6 @@ public class ActaServiceImpl implements ActaService {
     actaRepository.save(acta);
 
     log.debug("finishActa(Long id) - end");
-  }
-
-  /**
-   * Se crea el nuevo estado para la memoria recibida y se actualiza el estado
-   * actual de esta.
-   * 
-   * @param memoria             {@link Memoria} a actualizar estado.
-   * @param idTipoEstadoMemoria identificador del estado nuevo de la memoria.
-   */
-  private void updateEstadoMemoria(Memoria memoria, long idTipoEstadoMemoria) {
-    log.debug("updateEstadoMemoria(Memoria memoria, Long idEstadoMemoria) - start");
-
-    // se crea el nuevo estado para la memoria
-    TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
-    tipoEstadoMemoria.setId(idTipoEstadoMemoria);
-    EstadoMemoria estadoMemoria = new EstadoMemoria(null, memoria, tipoEstadoMemoria, LocalDateTime.now());
-
-    estadoMemoriaRepository.save(estadoMemoria);
-
-    // Se actualiza la memoria con el nuevo tipo estado memoria
-
-    memoria.setEstadoActual(tipoEstadoMemoria);
-    memoriaRepository.save(memoria);
-
-    log.debug("updateEstadoMemoria(Memoria memoria, Long idEstadoMemoria) - end");
-
   }
 
 }

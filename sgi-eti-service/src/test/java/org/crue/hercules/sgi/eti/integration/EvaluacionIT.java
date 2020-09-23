@@ -157,7 +157,7 @@ public class EvaluacionIT {
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-E")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-EVAL")));
 
     final ResponseEntity<Evaluacion> response = restTemplate.exchange(
         EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, buildRequest(headers, replaceEvaluacion),

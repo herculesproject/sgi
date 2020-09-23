@@ -62,11 +62,12 @@ public class EvaluacionServiceTest {
   private RetrospectivaRepository retrospectivaRepository;
 
   private EvaluacionService evaluacionService;
+  private MemoriaService memoriaService;
 
   @BeforeEach
   public void setUp() throws Exception {
     evaluacionService = new EvaluacionServiceImpl(evaluacionRepository, memoriaRepository, estadoMemoriaRepository,
-        retrospectivaRepository);
+        retrospectivaRepository, memoriaService);
   }
 
   @Test

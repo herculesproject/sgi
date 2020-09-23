@@ -58,4 +58,27 @@ public interface DictamenService {
    */
   void deleteAll();
 
+  /**
+   * Devuelve los dictamenes para los que el TipoEvaluación sea Memoria y el
+   * TipoEstadoMemoria sea En secretaría revisión mínima
+   * 
+   * @return el listado de Dictámenes
+   */
+  List<Dictamen> findAllByMemoriaRevisionMinima();
+
+  /**
+   * Devuelve los dictamenes para los que el TipoEvaluación sea Memoria y el
+   * TipoEstadoMemoria NO esté En secretaría revisión mínima
+   * 
+   * @return el listado de Dictámenes
+   */
+  List<Dictamen> findAllByMemoriaNoRevisionMinima();
+
+  /**
+   * Devuelve los dictamenes para los que el TipoEvaluación sea Retrospectiva
+   * 
+   * @return el listado de Dictámenes.
+   */
+  List<Dictamen> findAllByRetrospectiva();
+
 }

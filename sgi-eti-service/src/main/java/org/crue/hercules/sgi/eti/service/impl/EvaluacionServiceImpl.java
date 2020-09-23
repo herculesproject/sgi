@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
@@ -18,6 +19,7 @@ import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.EvaluacionSpecifications;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.eti.util.Constantes;
+import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
@@ -44,6 +46,8 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   private final EstadoMemoriaRepository estadoMemoriaRepository;
   /** Retrospectiva repository */
   private final RetrospectivaRepository retrospectivaRepository;
+  /** Memorai service */
+  private final MemoriaService memoriaService;
 
   /**
    * Instancia un nuevo {@link EvaluacionServiceImpl}
@@ -54,11 +58,13 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    * @param retrospectivaRepository repository para {@link Retrospectiva}
    */
   public EvaluacionServiceImpl(EvaluacionRepository evaluacionRepository, MemoriaRepository memoriaRepository,
-      EstadoMemoriaRepository estadoMemoriaRepository, RetrospectivaRepository retrospectivaRepository) {
+      EstadoMemoriaRepository estadoMemoriaRepository, RetrospectivaRepository retrospectivaRepository,
+      MemoriaService memoriaService) {
     this.evaluacionRepository = evaluacionRepository;
     this.memoriaRepository = memoriaRepository;
     this.estadoMemoriaRepository = estadoMemoriaRepository;
     this.retrospectivaRepository = retrospectivaRepository;
+    this.memoriaService = memoriaService;
   }
 
   /**
@@ -264,6 +270,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    * @param query  información del filtro.
    * @return el listado de entidades {@link Evaluacion} paginadas y filtradas.
    */
+  @Override
   public Page<Evaluacion> findAllByMemoriaAndRetrospectivaEnEvaluacion(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAllByMemoriaAndRetrospectivaEnEvaluacion(List<QueryCriteria> query,Pageable paging) - start");
 
@@ -356,6 +363,28 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     log.debug("update(Evaluacion evaluacionActualizar) - start");
 
     Assert.notNull(evaluacionActualizar.getId(), "Evaluacion id no puede ser null para actualizar una evaluacion");
+
+    // Si el estado de la memoria es "En secretaría revisión mínima"
+    // se actualiza la fechaDictamen con la fecha actual
+    if (evaluacionActualizar.getMemoria().getEstadoActual().getId().equals(4L)) {
+      evaluacionActualizar.setFechaDictamen(LocalDate.now());
+    }
+
+    // Si el dictamen es "Favorable" y el estado de la memoria es
+    // "En secretaría de revisión mínima".
+    // Se cambia el estado de la memoria a "Fin evaluación"
+    if (evaluacionActualizar.getDictamen().getNombre().toUpperCase().equals("FAVORABLE")
+        && evaluacionActualizar.getMemoria().getEstadoActual().getId().equals(4L)) {
+      memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(), 9L);
+    }
+
+    // Si el dictamen es "Favorable pendiente de revisión mínima" y el estado de la
+    // memoria es "En secretaría de revisión mínima", se cambia el estado de la
+    // memoria a "Favorable Pendiente de Modificaciones Mínimas".
+    if (evaluacionActualizar.getDictamen().getId().equals(2L)
+        && evaluacionActualizar.getMemoria().getEstadoActual().getId().equals(4L)) {
+      memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(), 6L);
+    }
 
     return evaluacionRepository.findById(evaluacionActualizar.getId()).map(evaluacion -> {
       evaluacion.setDictamen(evaluacionActualizar.getDictamen());
