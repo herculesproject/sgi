@@ -8,6 +8,9 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FlexModule } from '@angular/flex-layout';
 import { NGXLogger } from 'ngx-logger';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { ConvocatoriaReunionActionService } from '../../convocatoria-reunion.action.service';
+import { FormBuilder } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 describe('ConvocatoriaReunionListadoMemoriasComponent', () => {
   let component: ConvocatoriaReunionListadoMemoriasComponent;
@@ -25,7 +28,10 @@ describe('ConvocatoriaReunionListadoMemoriasComponent', () => {
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-        { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() }
+        { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
+        ConvocatoriaReunionActionService,
+        FormBuilder,
+        ActivatedRoute
       ],
     })
       .compileComponents();

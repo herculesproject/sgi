@@ -8,6 +8,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FlexModule } from '@angular/flex-layout';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { PeticionEvaluacionActionService } from '../../../peticion-evaluacion.action.service';
+import { ActivatedRoute } from '@angular/router';
 
 describe('PeticionEvaluacionTareasListadoComponent', () => {
   let component: PeticionEvaluacionTareasListadoComponent;
@@ -29,7 +31,9 @@ describe('PeticionEvaluacionTareasListadoComponent', () => {
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-        { provide: FormBuilder, useValue: formBuilder }
+        { provide: FormBuilder, useValue: formBuilder },
+        PeticionEvaluacionActionService,
+        ActivatedRoute
       ],
 
     })
@@ -39,11 +43,6 @@ describe('PeticionEvaluacionTareasListadoComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PeticionEvaluacionTareasListadoComponent);
     component = fixture.componentInstance;
-
-    // pass in the form dynamically
-    component.formGroup = formBuilder.group({
-
-    });
     fixture.detectChanges();
   });
 

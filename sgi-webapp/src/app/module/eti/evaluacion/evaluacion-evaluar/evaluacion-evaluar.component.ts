@@ -5,7 +5,7 @@ import { NGXLogger } from 'ngx-logger';
 
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
-import { EvaluacionEvaluarActionService } from '../evaluacion-evaluar.action.service';
+import { EvaluacionActionService } from '../evaluacion.action.service';
 import { EVALUACION_ROUTE_NAMES } from '../evaluacion-route-names';
 import { DialogService } from '@core/services/dialog.service';
 
@@ -19,7 +19,7 @@ const MSG_ERROR_SAVE = marker('eti.evaluacion.evaluar.comentarios.error.crear');
   styleUrls: ['./evaluacion-evaluar.component.scss'],
   encapsulation: ViewEncapsulation.None,
   viewProviders: [
-    EvaluacionEvaluarActionService
+    EvaluacionActionService
   ]
 })
 export class EvaluacionEvaluarComponent extends ActionComponent {
@@ -32,7 +32,7 @@ export class EvaluacionEvaluarComponent extends ActionComponent {
     protected readonly snackBarService: SnackBarService,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    public actionService: EvaluacionEvaluarActionService,
+    public actionService: EvaluacionActionService,
     dialogService: DialogService
   ) {
     super(actionService, dialogService);

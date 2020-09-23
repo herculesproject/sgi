@@ -12,6 +12,7 @@ import { SharedModule } from '@shared/shared.module';
 import { NGXLogger } from 'ngx-logger';
 
 import { EvaluadorDatosGeneralesComponent } from './evaluador-datos-generales.component';
+import { EvaluadorActionService } from '../../evaluador.action.service';
 
 
 describe('EvaluadorCrearDatosGenerealesComponent', () => {
@@ -37,6 +38,7 @@ describe('EvaluadorCrearDatosGenerealesComponent', () => {
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
+        EvaluadorActionService
       ],
     })
       .compileComponents();

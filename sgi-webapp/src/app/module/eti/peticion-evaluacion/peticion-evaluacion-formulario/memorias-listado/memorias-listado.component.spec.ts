@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MemoriasListadoComponent } from './memorias-listado.component';
+import { NGXLogger } from 'ngx-logger';
+import TestUtils from '@core/utils/test-utils';
+import { MatDialog } from '@angular/material/dialog';
+import { Overlay } from '@angular/cdk/overlay';
 
 describe('MemoriasListadoComponent', () => {
   let component: MemoriasListadoComponent;
@@ -8,9 +12,14 @@ describe('MemoriasListadoComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MemoriasListadoComponent ]
+      declarations: [MemoriasListadoComponent],
+      providers: [
+        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+        MatDialog,
+        Overlay
+      ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

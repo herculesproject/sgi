@@ -7,13 +7,13 @@ import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { FooterGuardarComponent } from '@shared/footers/footer-guardar/footer-guardar.component';
-import { GenericTabLabelComponent } from '@shared/generic-tab-label/generic-tab-label.component';
 import { NGXLogger } from 'ngx-logger';
 
 import { ActaCrearComponent } from './acta-crear.component';
 import { ActaAsistentesListadoComponent } from '../acta-formulario/acta-asistentes/acta-asistentes-listado/acta-asistentes-listado.component';
 import { ActaDatosGeneralesComponent } from '../acta-formulario/acta-datos-generales/acta-datos-generales.component';
 import { ActaMemoriasComponent } from '../acta-formulario/acta-memorias/acta-memorias.component';
+import { ActaActionService } from '../acta.action.service';
 
 describe('ActaCrearComponent', () => {
   let component: ActaCrearComponent;
@@ -27,7 +27,6 @@ describe('ActaCrearComponent', () => {
         ActaDatosGeneralesComponent,
         ActaMemoriasComponent,
         FooterGuardarComponent,
-        GenericTabLabelComponent
       ],
       imports: [
         TestUtils.getIdiomas(),
@@ -40,6 +39,7 @@ describe('ActaCrearComponent', () => {
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+        ActaActionService
       ],
     })
       .compileComponents();

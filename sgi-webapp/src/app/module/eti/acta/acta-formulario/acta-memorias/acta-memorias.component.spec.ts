@@ -8,6 +8,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FlexModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ActaActionService } from '../../acta.action.service';
+import { ActivatedRoute } from '@angular/router';
 
 describe('ActaCrearMemoriasComponent', () => {
   let component: ActaMemoriasComponent;
@@ -26,6 +28,8 @@ describe('ActaCrearMemoriasComponent', () => {
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+        ActaActionService,
+        ActivatedRoute
       ],
     })
       .compileComponents();

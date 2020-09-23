@@ -11,6 +11,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NGXLogger } from 'ngx-logger';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiAuthService } from '@sgi/framework/auth';
+import { PeticionEvaluacionActionService } from '../../../peticion-evaluacion.action.service';
 
 describe('EquipoInvestigadorListadoComponent', () => {
   let component: EquipoInvestigadorListadoComponent;
@@ -31,7 +32,8 @@ describe('EquipoInvestigadorListadoComponent', () => {
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: SgiAuthService, useValue: TestUtils.getSgiAuthServiceSpy() }
+        { provide: SgiAuthService, useValue: TestUtils.getSgiAuthServiceSpy() },
+        PeticionEvaluacionActionService
       ]
     })
       .compileComponents();

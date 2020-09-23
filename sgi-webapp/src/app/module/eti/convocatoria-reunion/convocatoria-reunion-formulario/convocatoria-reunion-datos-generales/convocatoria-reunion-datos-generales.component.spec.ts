@@ -9,6 +9,8 @@ import { FlexModule } from '@angular/flex-layout';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { NGXLogger } from 'ngx-logger';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { ConvocatoriaReunionActionService } from '../../convocatoria-reunion.action.service';
+import { ActivatedRoute } from '@angular/router';
 
 describe('ConvocatoriaReunionDatosGeneralesComponent', () => {
   let component: ConvocatoriaReunionDatosGeneralesComponent;
@@ -30,7 +32,9 @@ describe('ConvocatoriaReunionDatosGeneralesComponent', () => {
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: FormBuilder, useValue: formBuilder }
+        { provide: FormBuilder, useValue: formBuilder },
+        ConvocatoriaReunionActionService,
+        ActivatedRoute
       ],
     })
       .compileComponents();
@@ -39,19 +43,6 @@ describe('ConvocatoriaReunionDatosGeneralesComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ConvocatoriaReunionDatosGeneralesComponent);
     component = fixture.componentInstance;
-
-    // pass in the form dynamically
-    component.formGroup = formBuilder.group({
-      comite: null,
-      fechaEvaluacion: null,
-      fechaLimite: null,
-      tipoConvocatoriaReunion: null,
-      horaInicio: null,
-      minutoInicio: null,
-      lugar: null,
-      ordenDia: null,
-      convocantes: null,
-    });
     fixture.detectChanges();
   });
 

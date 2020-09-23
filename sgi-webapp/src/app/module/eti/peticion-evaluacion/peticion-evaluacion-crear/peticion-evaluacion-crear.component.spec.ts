@@ -3,7 +3,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { PeticionEvaluacionCrearComponent } from './peticion-evaluacion-crear.component';
 import { PeticionEvaluacionDatosGeneralesComponent } from '../peticion-evaluacion-formulario/peticion-evaluacion-datos-generales/peticion-evaluacion-datos-generales.component';
 import { FooterGuardarComponent } from '@shared/footers/footer-guardar/footer-guardar.component';
-import { GenericTabLabelComponent } from '@shared/generic-tab-label/generic-tab-label.component';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,7 +11,7 @@ import { FlexModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NGXLogger } from 'ngx-logger';
-import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth/public-api';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 describe('PeticionEvaluacionCrearComponent', () => {
   let component: PeticionEvaluacionCrearComponent;
@@ -21,8 +20,7 @@ describe('PeticionEvaluacionCrearComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [PeticionEvaluacionCrearComponent, PeticionEvaluacionDatosGeneralesComponent,
-        FooterGuardarComponent,
-        GenericTabLabelComponent],
+        FooterGuardarComponent],
       imports: [
         TestUtils.getIdiomas(),
         MaterialDesignModule,
@@ -31,7 +29,6 @@ describe('PeticionEvaluacionCrearComponent', () => {
         FlexModule,
         ReactiveFormsModule,
         RouterTestingModule.withRoutes([]),
-        SgiAuthModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },

@@ -1,7 +1,7 @@
 import { Comite } from './comite';
 import { ConvocatoriaReunion } from './convocatoria-reunion';
-import { Dictamen } from './dictamen';
 import { IMemoria } from './memoria';
+import { IDictamen } from './dictamen';
 import { TipoEvaluacion } from './tipo-evaluacion';
 import { IEvaluador } from './evaluador';
 
@@ -25,7 +25,7 @@ export interface IEvaluacion {
   version: number;
 
   /** Dictamen */
-  dictamen: Dictamen;
+  dictamen: IDictamen;
 
   /** Evaluador 1 */
   evaluador1: IEvaluador;

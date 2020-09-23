@@ -13,6 +13,8 @@ import { FlexModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NGXLogger } from 'ngx-logger';
+import { ActaActionService } from '../acta.action.service';
+import { ActivatedRoute } from '@angular/router';
 
 describe('ActaEditarComponent', () => {
   let component: ActaEditarComponent;
@@ -38,6 +40,8 @@ describe('ActaEditarComponent', () => {
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+        ActaActionService,
+        ActivatedRoute
       ],
     })
       .compileComponents();

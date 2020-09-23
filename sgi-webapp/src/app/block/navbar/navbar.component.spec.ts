@@ -6,6 +6,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { NGXLogger } from 'ngx-logger';
 import TestUtils from '@core/utils/test-utils';
 import { HttpClientModule } from '@angular/common/http';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -19,7 +20,9 @@ describe('NavbarComponent', () => {
         HttpClientModule,
         TestUtils.getIdiomas()
       ],
-      providers: [{ provide: NGXLogger, useValue: TestUtils.getLoggerSpy() }],
+      providers: [{ provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+        SgiAuthService
+      ],
       declarations: [NavbarComponent],
     }).compileComponents();
   }));

@@ -10,8 +10,8 @@ import { InicioComponent } from './inicio/inicio.component';
 
 const MSG_ROOT_TITLE = marker('eti.root.title');
 const MSG_SOLICITUDES_CONVOCATORIA_TITLE = marker('menu.principal.eti.solicitudesConvocatoria');
+const MSG_EVALUACIONES_EVALUADOR_TITLE = marker('menu.principal.eti.evaluaciones');
 const MSG_EVALUACIONES_TITLE = marker('menu.principal.eti.evaluaciones');
-const MSG_GESTION_EVALUACIONES_TITLE = marker('menu.principal.eti.gestionEvaluaciones');
 const MSG_ACTAS_TITLE = marker('menu.principal.eti.acta');
 const MSG_EVALUADORES_TITLE = marker('menu.principal.eti.evaluador');
 const MSG_SEGUIMIENTOS_TITLE = marker('menu.principal.eti.seguimientos');
@@ -48,6 +48,20 @@ const routes: SgiRoutes = [
         }
       },
       {
+        path: ETI_ROUTE_NAMES.EVALUACIONES_EVALUADOR,
+        loadChildren: () =>
+          import('./evaluacion-evaluador/evaluacion-evaluador.module').then(
+            (m) => m.EvaluacionEvaluadorModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_EVALUACIONES_EVALUADOR_TITLE,
+          hasAnyAuthorityForAnyUO: [
+            'ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-EVALR'
+          ]
+        }
+      },
+      {
         path: ETI_ROUTE_NAMES.EVALUACIONES,
         loadChildren: () =>
           import('./evaluacion/evaluacion.module').then(
@@ -56,20 +70,6 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_EVALUACIONES_TITLE,
-          hasAnyAuthorityForAnyUO: [
-            'ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-EVALR'
-          ]
-        }
-      },
-      {
-        path: ETI_ROUTE_NAMES.GESTION_EVALUACIONES,
-        loadChildren: () =>
-          import('./gestion-evaluacion/gestion-evaluacion.module').then(
-            (m) => m.GestionEvaluacionModule
-          ),
-        canActivate: [SgiAuthGuard],
-        data: {
-          title: MSG_GESTION_EVALUACIONES_TITLE,
           hasAnyAuthorityForAnyUO: [
             'ETI-EVC-V', 'ETI-EVC-EVAL'
           ]

@@ -1,5 +1,5 @@
 
-import { Dictamen } from './dictamen';
+import { IDictamen } from './dictamen';
 
 export class MemoriaListado {
   /** Id */
@@ -11,9 +11,9 @@ export class MemoriaListado {
   /** Version */
   version: number;
 
-  dictamen: Dictamen;
+  dictamen: IDictamen;
 
-  constructor(id: number, numReferencia: string, version: number, dictamen: Dictamen) {
+  constructor(id: number, numReferencia: string, version: number, dictamen: IDictamen) {
     this.id = id;
     this.numReferencia = numReferencia;
     this.version = version;

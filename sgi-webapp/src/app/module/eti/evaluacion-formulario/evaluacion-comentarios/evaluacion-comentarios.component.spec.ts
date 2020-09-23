@@ -1,27 +1,23 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { EvaluacionComentariosComponent } from './evaluacion-comentarios.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterTestingModule } from '@angular/router/testing';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import TestUtils from '@core/utils/test-utils';
+import { RouterTestingModule } from '@angular/router/testing';
 import { NGXLogger } from 'ngx-logger';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { EvaluacionEvaluadorEvaluarActionService } from '../../evaluacion-evaluador/evaluacion-evaluador.action.service';
+import { FormBuilder } from '@angular/forms';
 
-import {
-  DocumentacionMemoriaListadoMemoriaComponent,
-} from '../../../documentacion-memoria/documentacion-memoria-listado-memoria/documentacion-memoria-listado-memoria.component';
-import { EvaluacionDocumentacionComponent } from './evaluacion-documentacion.component';
-
-describe('EvaluacionDocumentacionComponent', () => {
-  let component: EvaluacionDocumentacionComponent;
-  let fixture: ComponentFixture<EvaluacionDocumentacionComponent>;
+describe('EvaluacionComentariosComponent', () => {
+  let component: EvaluacionComentariosComponent;
+  let fixture: ComponentFixture<EvaluacionComentariosComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        EvaluacionDocumentacionComponent,
-        DocumentacionMemoriaListadoMemoriaComponent
-      ],
+      declarations: [EvaluacionComentariosComponent],
       imports: [
         BrowserAnimationsModule,
         MaterialDesignModule,
@@ -32,13 +28,15 @@ describe('EvaluacionDocumentacionComponent', () => {
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
+        EvaluacionEvaluadorEvaluarActionService,
+        FormBuilder
       ],
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EvaluacionDocumentacionComponent);
+    fixture = TestBed.createComponent(EvaluacionComentariosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

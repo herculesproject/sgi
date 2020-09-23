@@ -1,5 +1,5 @@
 <section class="comentarios-listado">
-  <h2>{{'eti.evaluacion.evaluar.comentarios.cabecera' | translate}}</h2>
+  <h2>{{'eti.evaluacionEvaluador.evaluar.comentarios.cabecera' | translate}}</h2>
   <!-- Comentario listado -->
   <div>
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 table-unidad">
@@ -37,9 +37,9 @@
             (click)="openEditModal(wrapper)">
             <mat-icon color="primary">border_color</mat-icon>
           </button>
-          <button color="warn" mat-button matTooltip="{{'eti.comentario.listado.eliminar' | translate}}"
+          <button mat-button matTooltip="{{'eti.comentario.listado.eliminar' | translate}}"
             (click)="deleteComentario(wrapper)">
-            <mat-icon>highlight_off</mat-icon>
+            <mat-icon color="warn">highlight_off</mat-icon>
           </button>
         </td>
       </ng-container>
@@ -47,10 +47,10 @@
       <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
     </table>
     <mat-paginator [pageSizeOptions]="elementosPagina" showFirstLastButtons></mat-paginator>
-    <div class="separation-button">
-      <button color="three" (click)="openCreateModal()" mat-button>
-        <mat-icon>add_box</mat-icon> {{'eti.evaluacion.evaluar.comentarios.crear' | translate}}
-      </button>
-    </div>
+  </div>
+  <div class="separation-button">
+    <button color="three" (click)="openCreateModal()" mat-button>
+      <mat-icon>add_box</mat-icon> {{'eti.evaluacionEvaluador.evaluar.comentarios.crear' | translate}}
+    </button>
   </div>
 </section>

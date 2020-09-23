@@ -8,7 +8,7 @@ import {
   EvaluacionListadoAnteriorMemoriaComponent,
 } from '../evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
 import { FormFragmentComponent } from '@core/component/fragment.component';
-import { EvaluacionEvaluarActionService } from '../../evaluacion-evaluar.action.service';
+import { EvaluacionEvaluadorEvaluarActionService } from '../../evaluacion-evaluador/evaluacion-evaluador.action.service';
 
 
 @Component({
@@ -25,7 +25,7 @@ export class EvaluacionDatosMemoriaComponent extends FormFragmentComponent<IMemo
 
   constructor(
     protected readonly logger: NGXLogger,
-    private actionService: EvaluacionEvaluarActionService
+    private actionService: EvaluacionEvaluadorEvaluarActionService
   ) {
     super(actionService.FRAGMENT.MEMORIA, actionService);
 

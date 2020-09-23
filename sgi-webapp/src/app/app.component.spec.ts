@@ -9,6 +9,7 @@ import { NavbarComponent } from '@block/navbar/navbar.component';
 import { NGXLogger } from 'ngx-logger';
 
 import { AppComponent } from './app.component';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -21,7 +22,8 @@ describe('AppComponent', () => {
         TestUtils.getIdiomas()
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() }
+        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+        SgiAuthService
       ],
       declarations: [
         AppComponent,

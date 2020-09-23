@@ -1,140 +1,163 @@
-<!-- Evaluacion listado -->
-<section class="evaluacion-listado">
-  <!-- Buscador de evaluaciones -->
-  <form class="formulario" [formGroup]=" formGroup" [fxLayout.xs]="fxLayoutProperties.xs"
-    [fxLayout]="fxLayoutProperties.layout" fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+<!-- Gestión de Evaluaciones listado -->
+<section class="gestion-evaluacion-listado">
+  <div class="formulario">
 
-    <!-- Comité -->
-    <div class="col">
-      <mat-form-field class="input-form">
-        <mat-label>{{'eti.evaluacion.listado.buscador.comite' | translate}}</mat-label>
-        <input type="text" [placeholder]="'eti.evaluacion.listado.buscador.comite' | translate" arial-label="Number"
-          matInput formControlName="comite" [matAutocomplete]="autocompleteComite">
-        <mat-autocomplete #autocompleteComite="matAutocomplete" [displayWith]="getNombreComite">
-          <mat-option *ngFor="let comite of comitesFiltrados | async" [value]="comite">
-            {{comite.comite}}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
+    <!-- Buscador de Gestión de Evaluaciones -->
+
+    <!--Persona-->
+    <div class="buscador">
+      <sgi-buscar-persona [textoLabel]="textoUsuarioLabel" [textoInput]="textoUsuarioInput"
+        [textoButton]="textoUsuarioButton" [datosUsuarioTexto]="datosUsuarioSolicitante" (usuarioSeleccionado)="
+                                        setPersona($event)"></sgi-buscar-persona>
     </div>
 
-    <!-- Fechas evaluacion-->
-    <div class="col">
-      <mat-form-field color="primary">
-        <mat-label>{{'eti.evaluacion.listado.buscador.fechaEvaluacionInicio'| translate}}</mat-label>
-        <input matInput [matDatepicker]="pickerFechaEvaluacionInicio" formControlName="fechaEvaluacionInicio">
-        <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaEvaluacionInicio"></mat-datepicker-toggle>
-        <mat-datepicker #pickerFechaEvaluacionInicio></mat-datepicker>
-      </mat-form-field>
-    </div>
+    <form [formGroup]="buscadorFormGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+      fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
-    <!-- Fechas evaluacion-->
-    <div class="col">
-      <mat-form-field color="primary">
-        <mat-label>{{'eti.evaluacion.listado.buscador.fechaEvaluacionFin'| translate}}</mat-label>
-        <input matInput [matDatepicker]="pickerFechaEvaluacionFin" formControlName="fechaEvaluacionFin">
-        <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaEvaluacionFin"></mat-datepicker-toggle>
-        <mat-datepicker #pickerFechaEvaluacionFin></mat-datepicker>
-      </mat-form-field>
-    </div>
-
-    <!-- Referencia memoria -->
-    <div class="col">
-      <mat-form-field>
-        <mat-label>{{'eti.evaluacion.listado.buscador.memoriaNumReferencia' | translate}}</mat-label>
-        <input matInput placeholder="{{'eti.evaluacion.listado.buscador.memoriaNumReferencia' | translate}}"
-          formControlName="memoriaNumReferencia">
-      </mat-form-field>
-    </div>
-
-    <!-- Convocatoria -->
-    <div class="col">
-      <mat-form-field class="input-form">
-        <mat-label>{{'eti.evaluacion.listado.buscador.tipoConvocatoria.titulo' | translate}}</mat-label>
-        <input type="text" [placeholder]="'eti.evaluacion.listado.buscador.tipoConvocatoria.titulo' | translate"
-          arial-label="Number" matInput formControlName="tipoConvocatoria"
-          [matAutocomplete]="autocompleteTipoConvocatoria">
-        <mat-autocomplete #autocompleteTipoConvocatoria="matAutocomplete"
-          [displayWith]="getNombreTipoConvocatoriaReunion">
-          <mat-option *ngFor="let convocatoria of tiposConvocatoriaReunion" [value]="convocatoria">
-            {{convocatoria.nombre}}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
-    </div>
-    <div class="buttons-final">
-      <div class="col filter-button">
-        <button color="primary" aria-label="Center Align" md-button mat-raised-button (click)="onSearch()">
-          <mat-icon>search</mat-icon> {{'botones.buscar'| translate}}
-        </button>
-        <button color="warn" class="md-primary" aria-label="Center Align" md-button (click)="onClearFilters()"
-          mat-button>{{'botones.limpiar'| translate}}
-        </button>
+      <!-- Comité -->
+      <div class="col">
+        <mat-form-field class="input-form">
+          <mat-label>{{'eti.evaluacion.listado.buscador.comite' | translate}}</mat-label>
+          <input type="text" [placeholder]="'eti.evaluacion.listado.buscador.comite' | translate" arial-label="Number"
+            matInput formControlName="comite" [matAutocomplete]="autocompleteComite">
+          <mat-autocomplete #autocompleteComite="matAutocomplete" [displayWith]="getComite">
+            <mat-option *ngFor="let comite of filteredComites | async" [value]="comite">
+              {{comite.comite}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
       </div>
-    </div>
-  </form>
 
-  <!-- FIN Buscador de evaluaciones -->
 
-  <!-- Listado de evaluaciones -->
-  <table mat-table class="mat-elevation-z8 table-unidad" [dataSource]="evaluaciones" matSort matSortActive="id"
-    matSortDirection="asc" matSortDisableClear>
-    <!-- Comite -->
-    <ng-container matColumnDef="convocatoriaReunion.comite.id">
+      <!-- Fechas evaluacion desde-->
+      <div class="col">
+        <mat-form-field color="primary">
+          <mat-label>{{'eti.evaluacion.listado.buscador.fechaEvaluacionInicio'| translate}}</mat-label>
+          <input matInput [matDatepicker]="pickerFechaEvaluacionInicio" formControlName="fechaEvaluacionInicio"
+            appDatepickerFormat>
+          <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaEvaluacionInicio">
+          </mat-datepicker-toggle>
+          <mat-datepicker #pickerFechaEvaluacionInicio></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <!-- Fechas evaluacion hasta-->
+      <div class="col">
+        <mat-form-field color="primary">
+          <mat-label>{{'eti.evaluacion.listado.buscador.fechaEvaluacionFin'| translate}}</mat-label>
+          <input matInput [matDatepicker]="pickerFechaEvaluacionFin" formControlName="fechaEvaluacionFin"
+            appDatepickerFormat>
+          <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaEvaluacionFin"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFechaEvaluacionFin></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <!-- Referencia memoria -->
+      <div class="col">
+        <mat-form-field>
+          <mat-label>{{'eti.evaluacion.listado.buscador.referenciaMemoria' | translate}}</mat-label>
+          <input matInput type="text" placeholder="{{'eti.evaluacion.listado.buscador.referenciaMemoria' | translate}}"
+            formControlName="referenciaMemoria">
+        </mat-form-field>
+      </div>
+
+      <!-- Tipo convocatoria -->
+      <div class="col">
+        <mat-form-field class="input-form">
+          <mat-label>{{'eti.evaluacion.listado.buscador.tipoConvocatoriaReunion' | translate}}</mat-label>
+          <input type="text" placeholder="{{'eti.evaluacion.listado.buscador.tipoConvocatoriaReunion' | translate}}"
+            arial-label="text" matInput formControlName="tipoConvocatoriaReunion"
+            [matAutocomplete]="autoCompleteTipoConvocatoria">
+          <mat-autocomplete #autoCompleteTipoConvocatoria="matAutocomplete" [displayWith]="getTipoConvocatoriaReunion">
+            <mat-option *ngFor="let tipoConvocatoria of filteredTipoConvocatoriaReunion | async"
+              [value]="tipoConvocatoria">
+              {{tipoConvocatoria.nombre}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div class="buttons-final">
+        <div class="col filter-button">
+          <button color="primary" aria-label="Center Align" md-button mat-raised-button (click)="onSearch()">
+            <mat-icon>search</mat-icon> {{'botones.buscar'| translate}}
+          </button>
+          <button color="warn" class="md-primary" aria-label="Center Align" md-button (click)="onClearFilters()"
+            mat-button>{{'botones.limpiar'| translate}}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <table class="mat-elevation-z8 table-evaluacion" mat-table [dataSource]="evaluaciones$ | async" matSort
+    matSortActive="id" matSortDirection="asc" matSortDisableClear>
+
+    <!-- Comite Column -->
+    <ng-container matColumnDef="convocatoriaReunion.comite.comite">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.evaluacion.listado.comite' | translate}}
       </th>
-      <td mat-cell *matCellDef="let evaluacion">{{evaluacion.convocatoriaReunion?.comite?.comite}}</td>
+      <td mat-cell *matCellDef="let evaluacion"> {{evaluacion.convocatoriaReunion.comite.comite}} </td>
     </ng-container>
 
-    <!-- Fecha de evaluación -->
-    <ng-container matColumnDef="convocatoriaReunion.fechaEvaluacion">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.evaluacion.listado.fechaEvaluacion' | translate}}
+    <!-- Fecha evaluacion Column -->
+    <ng-container matColumnDef="fechaDictamen">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{'eti.evaluacion.listado.fechaEvaluacion' | translate}}
       </th>
-      <td mat-cell *matCellDef="let evaluacion">{{evaluacion.convocatoriaReunion?.fechaEvaluacion | date:'dd/MM/yyyy'}}
+      <td mat-cell *matCellDef="let evaluacion"> {{evaluacion.fechaDictamen | date:'dd/MM/yyyy'}}
       </td>
     </ng-container>
 
-    <!-- Referencia -->
+    <!-- Referencia memoria Column -->
     <ng-container matColumnDef="memoria.numReferencia">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.evaluacion.listado.referenciaMemoria' | translate}}
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{'eti.evaluacion.listado.referenciaMemoria' | translate}}
       </th>
-      <td mat-cell *matCellDef="let evaluacion">{{evaluacion.memoria?.numReferencia}}</td>
+      <td mat-cell *matCellDef="let evaluacion"> {{evaluacion.memoria.numReferencia}} </td>
     </ng-container>
 
-    <!-- Solicitante -->
+    <!-- Solicitante Column -->
     <ng-container matColumnDef="solicitante">
-      <th mat-header-cell *matHeaderCellDef> {{'eti.evaluacion.listado.solicitante' | translate}}
-      </th>
-      <td mat-cell *matCellDef="let evaluacion">{{evaluacion.persona?.nombre}}
-        {{evaluacion.persona?.primerApellido}}
-        {{evaluacion.persona?.segundoApellido}}</td>
+      <th mat-header-cell *matHeaderCellDef>
+        {{'eti.evaluacion.listado.solicitante' | translate}} </th>
+      <td mat-cell *matCellDef="let evaluacion"> {{evaluacion.persona.nombre}}
+        {{evaluacion.persona.primerApellido}}
+        {{evaluacion.persona.segundoApellido}}</td>
     </ng-container>
 
-    <!-- Versión -->
+    <!-- Dictamen Column -->
+    <ng-container matColumnDef="dictamen.nombre">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.evaluacion.listado.dictamen' | translate}}
+      </th>
+      <td mat-cell *matCellDef="let evaluacion"> {{evaluacion.dictamen?.nombre}} </td>
+    </ng-container>
+
+    <!-- Version Column -->
     <ng-container matColumnDef="version">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.evaluacion.listado.version' | translate}}
       </th>
-      <td mat-cell *matCellDef="let evaluacion">{{evaluacion.version}}</td>
+      <td mat-cell *matCellDef="let evaluacion"> {{evaluacion.version}} </td>
     </ng-container>
 
-    <!-- Acciones -->
+    <!-- Acciones Column -->
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> {{'eti.evaluacion.listado.acciones' | translate}} </th>
       <td mat-cell *matCellDef="let evaluacion">
-        <button mat-button [routerLink]="[evaluacion.id]" matTooltip="{{'eti.evaluacion.listado.evaluar' | translate}}"
-          *sgiHasAnyAuthorityForAnyUO="['ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV']">
-          <mat-icon color="primary">border_color</mat-icon>
-        </button>
-        <button mat-button matTooltip="{{'eti.evaluacion.listado.borrar' | translate}}">
-          <mat-icon color="warn">highlight_off</mat-icon>
-        </button>
+        <ng-container *sgiHasAuthorityForAnyUO="'ETI-EVC-EVAL'">
+          <button color="primary" mat-button [routerLink]="evaluacion.id"
+            matTooltip="{{'eti.evaluacion.listado.evaluar' | translate}}">
+            <mat-icon>border_color</mat-icon>
+          </button>
+        </ng-container>
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="columnas"></tr>
-    <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+
   <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
   </mat-paginator>
+
 </section>
-<!-- FIN listado de evaluaciones -->
+<!-- FIN Gestión de Evaluaciones listado-->

@@ -7,7 +7,6 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { FooterGuardarComponent } from '@shared/footers/footer-guardar/footer-guardar.component';
-import { GenericTabLabelComponent } from '@shared/generic-tab-label/generic-tab-label.component';
 import { SharedModule } from '@shared/shared.module';
 import { NGXLogger } from 'ngx-logger';
 
@@ -25,8 +24,7 @@ describe('EvaluadorCrearComponent', () => {
       declarations: [
         EvaluadorCrearComponent,
         EvaluadorDatosGeneralesComponent,
-        FooterGuardarComponent,
-        GenericTabLabelComponent
+        FooterGuardarComponent
       ],
       imports: [
         BrowserAnimationsModule,

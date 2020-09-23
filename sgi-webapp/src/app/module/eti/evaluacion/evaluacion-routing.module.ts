@@ -7,14 +7,12 @@ import { EvaluacionEvaluarComponent } from './evaluacion-evaluar/evaluacion-eval
 import { EvaluacionListadoComponent } from './evaluacion-listado/evaluacion-listado.component';
 import { ActionGuard } from '@core/guards/master-form.guard';
 import { EVALUACION_ROUTE_NAMES } from './evaluacion-route-names';
-import { EvaluacionComentariosComponent } from './evaluacion-formulario/evaluacion-comentarios/evaluacion-comentarios.component';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
-import { EvaluacionDatosMemoriaComponent } from './evaluacion-formulario/evaluacion-datos-memoria/evaluacion-datos-memoria.component';
-import { EvaluacionDocumentacionComponent } from './evaluacion-formulario/evaluacion-documentacion/evaluacion-documentacion.component';
 import { EvaluacionResolver } from './evaluacion.resolver';
+import { EvaluacionEvaluacionComponent } from '../evaluacion-formulario/evaluacion-evaluacion/evaluacion-evaluacion.component';
 
-const MSG_LISTADO_TITLE = marker('eti.evaluacion.listado.titulo');
-const MSG_EVALUAR_TITLE = marker('eti.evaluacion.evaluar.titulo');
+const MSG_EVALUACION_LISTADO_TITLE = marker('eti.evaluacion.listado.titulo');
+const MSG_EVALUACION_EVALUAR_TITLE = marker('eti.evaluacion.evaluar.titulo');
 
 const routes: SgiAuthRoutes = [
   {
@@ -22,7 +20,7 @@ const routes: SgiAuthRoutes = [
     component: EvaluacionListadoComponent,
     canActivate: [SgiAuthGuard],
     data: {
-      title: MSG_LISTADO_TITLE,
+      title: MSG_EVALUACION_LISTADO_TITLE,
       hasAnyAuthorityForAnyUO: ['ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-VR-INV']
     }
   },
@@ -35,28 +33,18 @@ const routes: SgiAuthRoutes = [
       evaluacion: EvaluacionResolver
     },
     data: {
-      title: MSG_EVALUAR_TITLE,
+      title: MSG_EVALUACION_EVALUAR_TITLE,
       hasAnyAuthorityForAnyUO: ['ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV']
     },
     children: [
       {
         path: '',
         pathMatch: 'full',
-        redirectTo: EVALUACION_ROUTE_NAMES.MEMORIA
+        redirectTo: EVALUACION_ROUTE_NAMES.EVALUACIONES
       },
       {
-        path: EVALUACION_ROUTE_NAMES.COMENTARIOS,
-        component: EvaluacionComentariosComponent,
-        canDeactivate: [FragmentGuard]
-      },
-      {
-        path: EVALUACION_ROUTE_NAMES.MEMORIA,
-        component: EvaluacionDatosMemoriaComponent,
-        canDeactivate: [FragmentGuard]
-      },
-      {
-        path: EVALUACION_ROUTE_NAMES.DOCUMENTACION,
-        component: EvaluacionDocumentacionComponent,
+        path: EVALUACION_ROUTE_NAMES.EVALUACIONES,
+        component: EvaluacionEvaluacionComponent,
         canDeactivate: [FragmentGuard]
       }
     ]

@@ -9,6 +9,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -24,7 +25,9 @@ describe('HeaderComponent', () => {
         TestUtils.getIdiomas(),
         ReactiveFormsModule
       ],
-      providers: [{ provide: NGXLogger, useValue: TestUtils.getLoggerSpy() }],
+      providers: [{ provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+        SgiAuthService
+      ],
       declarations: [HeaderComponent, NavbarComponent],
     }).compileComponents();
   }));

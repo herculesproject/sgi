@@ -9,6 +9,8 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { NGXLogger } from 'ngx-logger';
 
 import { ActaDatosGeneralesComponent } from './acta-datos-generales.component';
+import { ActaActionService } from '../../acta.action.service';
+import { ActivatedRoute } from '@angular/router';
 
 
 describe('ActaCrearDatosGenerealesComponent', () => {
@@ -30,7 +32,9 @@ describe('ActaCrearDatosGenerealesComponent', () => {
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: FormBuilder, useValue: formBuilder }
+        { provide: FormBuilder, useValue: formBuilder },
+        ActaActionService,
+        ActivatedRoute
       ],
     })
       .compileComponents();
@@ -39,15 +43,6 @@ describe('ActaCrearDatosGenerealesComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ActaDatosGeneralesComponent);
     component = fixture.componentInstance;
-    // pass in the form dynamically
-    component.formGroup = formBuilder.group({
-      convocatoriaReunion: null,
-      horaInicio: null,
-      minutoInicio: null,
-      horaFin: null,
-      minutoFin: null,
-      resumen: null,
-    });
     fixture.detectChanges();
   });
 

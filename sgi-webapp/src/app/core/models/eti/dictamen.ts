@@ -1,6 +1,6 @@
 import { TipoEvaluacion } from './tipo-evaluacion';
 
-export class Dictamen {
+export interface IDictamen {
   /** Id */
   id: number;
 

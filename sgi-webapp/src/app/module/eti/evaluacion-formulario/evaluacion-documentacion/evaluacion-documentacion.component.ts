@@ -2,11 +2,10 @@ import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { DocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { NGXLogger } from 'ngx-logger';
 
-import {
-  DocumentacionMemoriaListadoMemoriaComponent,
-} from '../../../documentacion-memoria/documentacion-memoria-listado-memoria/documentacion-memoria-listado-memoria.component';
 import { FormFragmentComponent } from '@core/component/fragment.component';
-import { EvaluacionEvaluarActionService } from '../../evaluacion-evaluar.action.service';
+import { DocumentacionMemoriaListadoMemoriaComponent } from '../../documentacion-memoria/documentacion-memoria-listado-memoria/documentacion-memoria-listado-memoria.component';
+import { EvaluacionEvaluadorEvaluarActionService } from '../../evaluacion-evaluador/evaluacion-evaluador.action.service';
+
 
 @Component({
   selector: 'sgi-evaluacion-documentacion',
@@ -19,7 +18,7 @@ export class EvaluacionDocumentacionComponent extends FormFragmentComponent<Docu
 
   constructor(
     protected readonly logger: NGXLogger,
-    private actionService: EvaluacionEvaluarActionService
+    private actionService: EvaluacionEvaluadorEvaluarActionService
   ) {
     super(actionService.FRAGMENT.DOCUMENTACION, actionService);
   }

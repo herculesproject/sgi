@@ -10,14 +10,13 @@ import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 
-import { ComentarioCrearModalComponent } from '../../../comentario/comentario-crear-modal/comentario-crear-modal.component';
-import {
-  ComentarioEditarModalComponent,
-} from '../../../comentario/comentario-editar-modal/comentario-editar-modal.component';
 import { FragmentComponent } from '@core/component/fragment.component';
-import { EvaluacionEvaluarActionService } from '../../evaluacion-evaluar.action.service';
 import { EvaluacionComentarioFragment } from './evaluacion-comentarios.fragment';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+
+import { ComentarioCrearModalComponent } from '../../comentario/comentario-crear-modal/comentario-crear-modal.component';
+import { ComentarioEditarModalComponent } from '../../comentario/comentario-editar-modal/comentario-editar-modal.component';
+import { EvaluacionEvaluadorEvaluarActionService } from '../../evaluacion-evaluador/evaluacion-evaluador.action.service';
 
 const MSG_DELETE = marker('eti.comentario.listado.borrar.titulo');
 
@@ -42,7 +41,7 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
     protected readonly logger: NGXLogger,
     private readonly dialogService: DialogService,
     private matDialog: MatDialog,
-    private actionService: EvaluacionEvaluarActionService
+    private actionService: EvaluacionEvaluadorEvaluarActionService
   ) {
     super(actionService.FRAGMENT.COMENTARIOS, actionService);
     this.logger.debug(EvaluacionComentariosComponent.name, 'constructor()', 'start');

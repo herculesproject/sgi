@@ -11,6 +11,7 @@ import { FlexModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NGXLogger } from 'ngx-logger';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 describe('PeticionEvaluacionEditarComponent', () => {
   let component: PeticionEvaluacionEditarComponent;
@@ -34,6 +35,7 @@ describe('PeticionEvaluacionEditarComponent', () => {
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+        SgiAuthService
       ],
     })
       .compileComponents();
