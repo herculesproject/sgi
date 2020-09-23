@@ -208,7 +208,7 @@ public class DocumentacionMemoriaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-DOCUMENTACIONMEMORIA-VER" })
+  @WithMockUser(username = "user")
   public void findAll_Unlimited_ReturnsFullDocumentacionMemoriaList() throws Exception {
 
     TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);

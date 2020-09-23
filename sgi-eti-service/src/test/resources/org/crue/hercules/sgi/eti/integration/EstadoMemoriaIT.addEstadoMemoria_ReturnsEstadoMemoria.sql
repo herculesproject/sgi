@@ -49,19 +49,3 @@ INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, 
 INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, persona_ref, tipo_memoria_id, estado_actual_id, fecha_envio_secretaria, requiere_retrospectiva, retrospectiva_id, version, activo)
  VALUES (8, 'ref-777', 1, 2, 'Memoria8', 'userref-5555', 1, 1, null, false, 1, 1, true);
 
---INSERT INTO eti.estado_memoria (id, memoria_id, tipo_estado_memoria_id, fecha_estado)
--- VALUES (1, 1, 1, '2020-06-05 15:00:05');
-INSERT INTO eti.estado_memoria (id, memoria_id, tipo_estado_memoria_id, fecha_estado)
- VALUES (2, 2, 2, '2020-06-05 15:00:05');
-INSERT INTO eti.estado_memoria (id, memoria_id, tipo_estado_memoria_id, fecha_estado)
- VALUES (3, 3, 3, '2020-06-05 15:00:05');
-INSERT INTO eti.estado_memoria (id, memoria_id, tipo_estado_memoria_id, fecha_estado)
- VALUES (4, 4, 4, '2020-06-05 15:14:45');
-INSERT INTO eti.estado_memoria (id, memoria_id, tipo_estado_memoria_id, fecha_estado)
- VALUES (5, 5, 5, '2020-06-05 13:14:05');
-INSERT INTO eti.estado_memoria (id, memoria_id, tipo_estado_memoria_id, fecha_estado)
- VALUES (6, 6, 6, '2020-06-05 12:00:05');
-INSERT INTO eti.estado_memoria (id, memoria_id, tipo_estado_memoria_id, fecha_estado)
- VALUES (7, 7, 7, '2020-06-05 18:41:05');
-INSERT INTO eti.estado_memoria (id, memoria_id, tipo_estado_memoria_id, fecha_estado)
- VALUES (8, 8, 7, '2020-07-05 16:25:05');

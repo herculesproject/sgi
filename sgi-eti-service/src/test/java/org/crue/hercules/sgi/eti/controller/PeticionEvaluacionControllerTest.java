@@ -81,8 +81,9 @@ public class PeticionEvaluacionControllerTest {
   private static final String PETICION_EVALUACION_CONTROLLER_BASE_PATH = "/peticionevaluaciones";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PETICIONEVALUACION-VER" })
-  public void getPeticionEvaluacion_WithId_ReturnsPeticionEvaluacion() throws Exception {
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV", "ETI-PEV-V" })
+  public void getPeticionEvaluacion_WithId_ReturnsPeticionEvaluagetPeticionEvaluacion_NotFound_Returns404cion()
+      throws Exception {
     BDDMockito.given(peticionEvaluacionService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1")));
 
@@ -96,7 +97,7 @@ public class PeticionEvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-VR", "ETI-PEV-V" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-V", "ETI-PEV-VR-INV", "ETI-PEV-C-INV", "ETI-PEV-ER-INV" })
   public void getPeticionEvaluacion_NotFound_Returns404() throws Exception {
     BDDMockito.given(peticionEvaluacionService.findById(ArgumentMatchers.anyLong()))
         .will((InvocationOnMock invocation) -> {
@@ -109,7 +110,7 @@ public class PeticionEvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-CR", "ETI-MEM-CR" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-PEV-CR", "ETI-MEM-CR" })
   public void newPeticionEvaluacion_ReturnsPeticionEvaluacion() throws Exception {
     // given: Un peticionEvaluacion nuevo
     String nuevoPeticionEvaluacionJson = "{\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}";
@@ -131,7 +132,7 @@ public class PeticionEvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-CR", "ETI-MEM-CR" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-PEV-CR", "ETI-MEM-CR" })
   public void newPeticionEvaluacion_Error_Returns400() throws Exception {
     // given: Un peticionEvaluacion nuevo que produce un error al crearse
     String nuevoPeticionEvaluacionJson = "{\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}";
@@ -151,7 +152,7 @@ public class PeticionEvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PETICIONEVALUACION-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
   public void replacePeticionEvaluacion_ReturnsPeticionEvaluacion() throws Exception {
     // given: Un peticionEvaluacion a modificar
     String replacePeticionEvaluacionJson = "{\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"}";
@@ -173,7 +174,7 @@ public class PeticionEvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PETICIONEVALUACION-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
   public void replacePeticionEvaluacion_NotFound() throws Exception {
     // given: Un peticionEvaluacion a modificar
     String replacePeticionEvaluacionJson = "{\"id\": 1, \"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}";
@@ -191,7 +192,7 @@ public class PeticionEvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PETICIONEVALUACION-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-BR-INV" })
   public void removePeticionEvaluacion_ReturnsOk() throws Exception {
     BDDMockito.given(peticionEvaluacionService.findById(ArgumentMatchers.anyLong()))
         .willReturn(generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1"));
@@ -203,7 +204,7 @@ public class PeticionEvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-VR", "ETI-PEV-V" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-VR-INV", "ETI-PEV-V" })
   public void findAll_Unlimited_ReturnsFullPeticionEvaluacionList() throws Exception {
     // given: One hundred PeticionEvaluacion
     List<PeticionEvaluacion> peticionEvaluaciones = new ArrayList<>();
@@ -226,7 +227,7 @@ public class PeticionEvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-VR", "ETI-PEV-V" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-VR-INV", "ETI-PEV-V" })
   public void findAll_WithPaging_ReturnsPeticionEvaluacionSubList() throws Exception {
     // given: One hundred PeticionEvaluacion
     List<PeticionEvaluacion> peticionEvaluaciones = new ArrayList<>();
@@ -279,7 +280,7 @@ public class PeticionEvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-VR", "ETI-PEV-V" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-VR-INV", "ETI-PEV-V" })
   public void findAll_WithSearchQuery_ReturnsFilteredPeticionEvaluacionList() throws Exception {
     // given: One hundred PeticionEvaluacion and a search query
     List<PeticionEvaluacion> peticionEvaluaciones = new ArrayList<>();
@@ -367,7 +368,8 @@ public class PeticionEvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-CR", "ETI-PEV-ER" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-CR", "ETI-PEV-ER", "ETI-PEV-VR-INV", "ETI-PEV-C-INV",
+      "ETI-PEV-ER-INV" })
   public void findEquipoInvestigador_ReturnsEquipoTrabajoSubList() throws Exception {
     // given: 10 EquipoTrabajos por PeticionEvaluacion
     List<EquipoTrabajo> equipoTrabajos = new ArrayList<>();
@@ -424,7 +426,7 @@ public class PeticionEvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-CR", "ETI-PEV-ER", "ETI-EVR-V" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-PEV-ER-INV" })
   public void findMemorias_NotFound_Returns404() throws Exception {
 
     BDDMockito.given(memoriaService.findMemoriaByPeticionEvaluacionMaxVersion(ArgumentMatchers.anyLong(),
@@ -439,7 +441,7 @@ public class PeticionEvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-CR", "ETI-PEV-ER", "ETI-EVR-V" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-PEV-ER-INV" })
   public void findMemorias_listMemoriaPeticionEvaluacion_ReturnsOk() throws Exception {
 
     List<MemoriaPeticionEvaluacion> listMemoriaPeticionEvaluacion = new ArrayList<MemoriaPeticionEvaluacion>();
