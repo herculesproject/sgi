@@ -6,7 +6,7 @@ import { SgiAuthGuard } from '@sgi/framework/auth';
 
 import { EtiRootComponent } from './eti-root/eti-root.component';
 import { ETI_ROUTE_NAMES } from './eti-route-names';
-import { InicioComponent } from './inicio/inicio.component';
+import { EtiInicioComponent } from './eti-inicio/eti-inicio.component';
 
 const MSG_ROOT_TITLE = marker('eti.root.title');
 const MSG_SOLICITUDES_CONVOCATORIA_TITLE = marker('menu.principal.eti.solicitudesConvocatoria');
@@ -29,7 +29,7 @@ const routes: SgiRoutes = [
     children: [
       {
         path: '',
-        component: InicioComponent,
+        component: EtiInicioComponent,
         pathMatch: 'full',
         data: {
           title: MSG_ROOT_TITLE

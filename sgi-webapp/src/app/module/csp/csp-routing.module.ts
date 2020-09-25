@@ -1,0 +1,40 @@
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { SgiRoutes } from '@core/route';
+import { SgiAuthGuard } from '@sgi/framework/auth';
+
+import { CspRootComponent } from './csp-root/csp-root.component';
+import { CSP_ROUTE_NAMES } from './csp-route-names';
+import { CspInicioComponent } from './csp-inicio/csp-inicio.component';
+
+const MSG_ROOT_TITLE = marker('csp.root.title');
+
+
+const routes: SgiRoutes = [
+  {
+    path: '',
+    component: CspRootComponent,
+    data: {
+      title: MSG_ROOT_TITLE
+    },
+    children: [
+      {
+        path: '',
+        component: CspInicioComponent,
+        pathMatch: 'full',
+        data: {
+          title: MSG_ROOT_TITLE
+        }
+      },
+      { path: '**', component: null }
+    ]
+  }
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
+})
+export class CspRoutingModule {
+}

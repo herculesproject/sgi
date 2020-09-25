@@ -3,23 +3,23 @@ import { NgModule } from '@angular/core';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '@shared/shared.module';
-import { EtiRoutingModule } from './eti-routing.module';
-import { EtiRootComponent } from './eti-root/eti-root.component';
-import { EtiMenuPrincipalComponent } from './eti-menu-principal/eti-menu-principal.component';
+import { CspRoutingModule } from './csp-routing.module';
+import { CspRootComponent } from './csp-root/csp-root.component';
+import { CspMenuPrincipalComponent } from './csp-menu-principal/csp-menu-principal.component';
 import { SgiAuthModule } from '@sgi/framework/auth';
-import { EtiInicioComponent } from './eti-inicio/eti-inicio.component';
+import { CspInicioComponent } from './csp-inicio/csp-inicio.component';
 
 @NgModule({
-  declarations: [EtiRootComponent, EtiMenuPrincipalComponent, EtiInicioComponent],
+  declarations: [CspRootComponent, CspMenuPrincipalComponent, CspInicioComponent],
   imports: [
     SharedModule,
     CommonModule,
-    EtiRoutingModule,
+    CspRoutingModule,
     TranslateModule,
     MaterialDesignModule,
     SgiAuthModule
   ],
   providers: []
 })
-export class EtiModule {
+export class CspModule {
 }

@@ -7,10 +7,10 @@ import { InvRoutingModule } from './inv-routing.module';
 import { InvRootComponent } from './inv-root/inv-root.component';
 import { InvMenuPrincipalComponent } from './inv-menu-principal/inv-menu-principal.component';
 import { SgiAuthModule } from '@sgi/framework/auth';
-import { InicioComponent } from './inicio/inicio.component';
+import { InvInicioComponent } from './inv-inicio/inv-inicio.component';
 
 @NgModule({
-  declarations: [InvRootComponent, InvMenuPrincipalComponent, InicioComponent],
+  declarations: [InvRootComponent, InvMenuPrincipalComponent, InvInicioComponent],
   imports: [
     SharedModule,
     CommonModule,

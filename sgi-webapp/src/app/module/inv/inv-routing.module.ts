@@ -6,7 +6,7 @@ import { SgiAuthGuard } from '@sgi/framework/auth';
 
 import { InvRootComponent } from './inv-root/inv-root.component';
 import { INV_ROUTE_NAMES } from './inv-route-names';
-import { InicioComponent } from './inicio/inicio.component';
+import { InvInicioComponent } from './inv-inicio/inv-inicio.component';
 
 const MSG_ROOT_TITLE = marker('inv.root.title');
 const MSG_EVALUACIONES_TITLE = marker('menu.principal.inv.evaluaciones');
@@ -23,7 +23,7 @@ const routes: SgiRoutes = [
     children: [
       {
         path: '',
-        component: InicioComponent,
+        component: InvInicioComponent,
         pathMatch: 'full',
         data: {
           title: MSG_ROOT_TITLE

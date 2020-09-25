@@ -19,6 +19,14 @@ const routes: SgiRoutes = [
     canActivate: [SgiAuthGuard]
   },
   {
+    path: APP_ROUTE_NAMES.CSP,
+    loadChildren: () =>
+      import('./module/csp/csp.module').then(
+        (m) => m.CspModule
+      ),
+    canActivate: [SgiAuthGuard, AllowModuleGuard]
+  },
+  {
     path: APP_ROUTE_NAMES.ETI,
     loadChildren: () =>
       import('./module/eti/eti.module').then(

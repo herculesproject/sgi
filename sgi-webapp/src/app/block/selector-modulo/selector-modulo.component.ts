@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 import { Module } from '@core/module';
 
+const MSG_MODULO_CSP = marker('selector-modulo.csp');
 const MSG_MODULO_ETI = marker('selector-modulo.etica');
 const MSG_MODULO_INV = marker('selector-modulo.investigador');
 
@@ -26,6 +27,10 @@ export class SelectorModuloComponent implements OnInit {
     private router: Router
   ) {
     this.modulos = [
+      {
+        module: Module.CSP,
+        nombre: MSG_MODULO_CSP
+      },
       {
         module: Module.ETI,
         nombre: MSG_MODULO_ETI
