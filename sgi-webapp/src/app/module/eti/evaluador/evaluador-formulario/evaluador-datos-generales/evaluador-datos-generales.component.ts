@@ -48,6 +48,8 @@ export class EvaluadorDatosGeneralesComponent extends FormFragmentComponent<IEva
 
   datosGeneralesFragment: EvaluadorDatosGeneralesFragment;
 
+  isEditForm: boolean;
+
   constructor(
     protected readonly logger: NGXLogger,
     private readonly comiteService: ComiteService,
@@ -68,6 +70,7 @@ export class EvaluadorDatosGeneralesComponent extends FormFragmentComponent<IEva
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+    this.isEditForm = this.datosGeneralesFragment.isEditForm;
   }
 
   ngOnInit() {

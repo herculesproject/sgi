@@ -1,5 +1,5 @@
 import { FormFragment } from '@core/services/action-service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { NullIdValidador } from '@core/validators/null-id-validador';
 import { Observable, of, EMPTY } from 'rxjs';
 import { switchMap, catchError, map } from 'rxjs/operators';
@@ -14,10 +14,13 @@ export class EvaluadorDatosGeneralesFragment extends FormFragment<IEvaluador> {
   private selectedPersona: Persona;
   private initialPersonaRef: string;
 
-  constructor(private fb: FormBuilder, key: number, private service: EvaluadorService, private personaService: PersonaService) {
+  public isEditForm: boolean;
+
+  constructor(private fb: FormBuilder, key: number, private service: EvaluadorService, private personaService: PersonaService, isEditForm: boolean) {
     super(key, true);
     this.evaluador = {} as IEvaluador;
     this.evaluador.activo = true;
+    this.isEditForm = isEditForm;
   }
 
   setPersona(value: Persona): void {
@@ -47,11 +50,12 @@ export class EvaluadorDatosGeneralesFragment extends FormFragment<IEvaluador> {
   }
 
   protected buildFormGroup(): FormGroup {
+
     return this.fb.group({
-      comite: ['', new NullIdValidador().isValid()],
+      comite: new FormControl({ value: '', disabled: this.isEditForm }, [new NullIdValidador().isValid()]),
       fechaAlta: ['', Validators.required],
       fechaBaja: [''],
-      cargoComite: ['', new NullIdValidador().isValid()],
+      cargoComite: [null],
       resumen: ['']
     });
   }
@@ -82,10 +86,12 @@ export class EvaluadorDatosGeneralesFragment extends FormFragment<IEvaluador> {
 
   getValue(): IEvaluador {
     const form = this.getFormGroup().value;
-    this.evaluador.comite = form.comite;
+    if (!this.isEditForm) {
+      this.evaluador.comite = form.comite;
+    }
     this.evaluador.fechaAlta = form.fechaAlta;
     this.evaluador.fechaBaja = form.fechaBaja;
-    this.evaluador.cargoComite = form.cargoComite;
+    this.evaluador.cargoComite = form.cargoComite === '' ? null : form.cargoComite;
     this.evaluador.resumen = form.resumen;
     this.evaluador.personaRef = this.selectedPersona?.personaRef;
     return this.evaluador;

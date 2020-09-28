@@ -1,7 +1,7 @@
 <!-- Evaluador datos generales -->
 <section class="evaluador-datos-generales">
   <h2>{{'eti.evaluador.datosGenerales.title' | translate}}</h2>
-  <div class="separacion">
+  <div class="separacion" [ngClass]="{'disabled': isEditForm}">
     <sgi-buscar-persona [textoLabel]="textoUsuarioLabel" [textoInput]="textoUsuarioInput"
       [textoButton]="textoUsuarioButton" [datosUsuarioTexto]="datosGeneralesFragment.personaText" (usuarioSeleccionado)="
                     datosGeneralesFragment.setPersona($event)"></sgi-buscar-persona>

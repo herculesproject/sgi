@@ -94,7 +94,7 @@
     <!-- Cargo comite Column -->
     <ng-container matColumnDef="cargoComite">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.evaluador.listado.cargoComite' | translate}} </th>
-      <td mat-cell *matCellDef="let evaluador"> {{evaluador.cargoComite.nombre}} </td>
+      <td mat-cell *matCellDef="let evaluador"> {{evaluador.cargoComite?.nombre}} </td>
     </ng-container>
 
     <!-- Fecha alta Column -->

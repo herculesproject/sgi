@@ -396,7 +396,7 @@ export class EvaluadorListadoComponent implements AfterViewInit, OnInit, OnDestr
                 return this.loadTable();
               })
             ).subscribe(() => {
-              this.snackBarService.showSuccess('evaluador.listado.eliminarConfirmado');
+              this.snackBarService.showSuccess('eti.evaluador.listado.eliminarConfirmado');
             });
         }
         aceptado = false;

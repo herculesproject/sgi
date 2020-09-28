@@ -13,6 +13,13 @@
   }
 }
 
+.disabled
+{
+  pointer-events: none;
+  /* for "disabled" effect */
+  opacity: 0.5; 
+}
+
 #buttons {
   margin-top: 20px;
 }
