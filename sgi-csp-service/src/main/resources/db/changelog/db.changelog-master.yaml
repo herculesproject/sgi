@@ -1,5 +1,5 @@
 databaseChangeLog:
   - include:
-      file: classpath*:db/changelog/changes/20200601000000-initial-database.xml
+      file: classpath*:db/changelog/changes/20200928000000-initial-database.xml
   - include:
-      file: classpath*:db/changelog/changes/20200601000000-initial-data.xml
+      file: classpath*:db/changelog/changes/20200928000000-initial-data.xml
