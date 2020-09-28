@@ -16,7 +16,6 @@ export class EvaluadorActionService extends ActionService {
 
   private evaluador: IEvaluador;
   private datosGenerales: EvaluadorDatosGeneralesFragment;
-  private isEditForm: boolean;
 
   constructor(fb: FormBuilder, route: ActivatedRoute, service: EvaluadorService, personaService: PersonaService) {
     super();
@@ -24,9 +23,8 @@ export class EvaluadorActionService extends ActionService {
     if (route.snapshot.data.evaluador) {
       this.evaluador = route.snapshot.data.evaluador;
       this.enableEdit();
-      this.isEditForm = route.snapshot.data.isEditForm;
     }
-    this.datosGenerales = new EvaluadorDatosGeneralesFragment(fb, this.evaluador?.id, service, personaService, this.isEditForm);
+    this.datosGenerales = new EvaluadorDatosGeneralesFragment(fb, this.evaluador?.id, service, personaService);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
   }

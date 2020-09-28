@@ -70,7 +70,7 @@ export class EvaluadorDatosGeneralesComponent extends FormFragmentComponent<IEva
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-    this.isEditForm = this.datosGeneralesFragment.isEditForm;
+    this.isEditForm = this.datosGeneralesFragment.isEdit();
   }
 
   ngOnInit() {

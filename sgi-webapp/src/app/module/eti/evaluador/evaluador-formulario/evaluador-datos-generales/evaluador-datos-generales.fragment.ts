@@ -14,13 +14,10 @@ export class EvaluadorDatosGeneralesFragment extends FormFragment<IEvaluador> {
   private selectedPersona: IPersona;
   private initialPersonaRef: string;
 
-  public isEditForm: boolean;
-
-  constructor(private fb: FormBuilder, key: number, private service: EvaluadorService, private personaService: PersonaService, isEditForm: boolean) {
+  constructor(private fb: FormBuilder, key: number, private service: EvaluadorService, private personaService: PersonaService) {
     super(key, true);
     this.evaluador = {} as IEvaluador;
     this.evaluador.activo = true;
-    this.isEditForm = isEditForm;
   }
 
   setPersona(value: IPersona): void {
@@ -52,7 +49,7 @@ export class EvaluadorDatosGeneralesFragment extends FormFragment<IEvaluador> {
   protected buildFormGroup(): FormGroup {
 
     return this.fb.group({
-      comite: new FormControl({ value: '', disabled: this.isEditForm }, [new NullIdValidador().isValid()]),
+      comite: new FormControl({ value: '', disabled: this.isEdit() }, [new NullIdValidador().isValid()]),
       fechaAlta: ['', Validators.required],
       fechaBaja: [''],
       cargoComite: [null],
@@ -86,7 +83,7 @@ export class EvaluadorDatosGeneralesFragment extends FormFragment<IEvaluador> {
 
   getValue(): IEvaluador {
     const form = this.getFormGroup().value;
-    if (!this.isEditForm) {
+    if (!this.isEdit()) {
       this.evaluador.comite = form.comite;
     }
     this.evaluador.fechaAlta = form.fechaAlta;

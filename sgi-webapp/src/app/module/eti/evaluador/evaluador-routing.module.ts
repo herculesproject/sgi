@@ -34,8 +34,7 @@ const routes: SgiRoutes = [
     canDeactivate: [ActionGuard],
     data: {
       title: MSG_NEW_TITLE,
-      hasAuthorityForAnyUO: 'ETI-EVR-C',
-      isEditForm: false
+      hasAuthorityForAnyUO: 'ETI-EVR-C'
     },
     children: [
       {
@@ -60,8 +59,7 @@ const routes: SgiRoutes = [
     },
     data: {
       title: MSG_EDIT_TITLE,
-      hasAuthorityForAnyUO: 'ETI-EVR-E',
-      isEditForm: true
+      hasAuthorityForAnyUO: 'ETI-EVR-E'
     },
     children: [
       {
