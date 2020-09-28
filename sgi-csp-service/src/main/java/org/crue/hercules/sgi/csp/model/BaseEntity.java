@@ -1,4 +1,4 @@
-package org.crue.hercules.sgi.csp;
+package org.crue.hercules.sgi.csp.model;
 
 import java.io.Serializable;
 
