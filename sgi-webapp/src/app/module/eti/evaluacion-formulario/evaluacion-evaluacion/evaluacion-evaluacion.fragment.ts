@@ -4,21 +4,18 @@ import { Observable, of, BehaviorSubject } from 'rxjs';
 import { switchMap, map, catchError } from 'rxjs/operators';
 import { IMemoria } from '@core/models/eti/memoria';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
-import { Persona } from '@core/models/sgp/persona';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { NullIdValidador } from '@core/validators/null-id-validador';
 import { IDictamen } from '@core/models/eti/dictamen';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { NGXLogger } from 'ngx-logger';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { IMemoriaWithPersona } from '@core/models/eti/memoria-with-persona';
 
-interface MemoriaWithPersona extends IMemoria {
-  solicitante: Persona;
-}
 
-export class EvaluacionEvaluacionFragment extends FormFragment<MemoriaWithPersona> {
+export class EvaluacionEvaluacionFragment extends FormFragment<IMemoriaWithPersona> {
 
-  private memoria: MemoriaWithPersona;
+  private memoria: IMemoriaWithPersona;
   dictamenListado: IDictamen[] = [];
   filteredDictamenes: Observable<IDictamen[]>;
   evaluacion$: BehaviorSubject<IEvaluacion> = new BehaviorSubject<IEvaluacion>(null);
@@ -31,7 +28,7 @@ export class EvaluacionEvaluacionFragment extends FormFragment<MemoriaWithPerson
     private service: EvaluacionService,
     private personaFisicaService: PersonaFisicaService) {
     super(key);
-    this.memoria = {} as MemoriaWithPersona;
+    this.memoria = {} as IMemoriaWithPersona;
   }
 
   protected buildFormGroup(): FormGroup {
@@ -48,13 +45,13 @@ export class EvaluacionEvaluacionFragment extends FormFragment<MemoriaWithPerson
     });
   }
 
-  protected initializer(key: number): Observable<MemoriaWithPersona> {
+  protected initializer(key: number): Observable<IMemoriaWithPersona> {
     this.logger.debug(EvaluacionEvaluacionFragment.name, 'initializer()', 'start');
     this.logger.debug(EvaluacionEvaluacionFragment.name, 'initializer()', 'end');
 
     return this.service.findById(key).pipe(
       map((evaluacion) => {
-        this.memoria = evaluacion.memoria as MemoriaWithPersona;
+        this.memoria = evaluacion.memoria as IMemoriaWithPersona;
         this.evaluacion$.next(evaluacion);
         this.evaluacion = evaluacion;
         return this.memoria;
@@ -76,7 +73,7 @@ export class EvaluacionEvaluacionFragment extends FormFragment<MemoriaWithPerson
     );
   }
 
-  buildPatch(value: MemoriaWithPersona): { [key: string]: any } {
+  buildPatch(value: IMemoriaWithPersona): { [key: string]: any } {
     this.logger.debug(EvaluacionEvaluacionFragment.name, 'buildPatch()', 'start');
     this.logger.debug(EvaluacionEvaluacionFragment.name, 'buildPatch()', 'end');
     return {
@@ -88,7 +85,7 @@ export class EvaluacionEvaluacionFragment extends FormFragment<MemoriaWithPerson
     };
   }
 
-  getValue(): MemoriaWithPersona {
+  getValue(): IMemoriaWithPersona {
     this.logger.debug(EvaluacionEvaluacionFragment.name, 'getValue()', 'start');
     this.logger.debug(EvaluacionEvaluacionFragment.name, 'getValue()', 'end');
     return this.memoria;

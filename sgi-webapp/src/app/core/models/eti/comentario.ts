@@ -1,13 +1,13 @@
-import { ApartadoFormulario } from './apartado-formulario';
+import { IApartadoFormulario } from './apartado-formulario';
 import { IEvaluacion } from './evaluacion';
 import { TipoComentario } from './tipo-comentario';
 
-export class Comentario {
+export interface IComentario {
   /** Id */
   id: number;
 
   /** Apartado del formulario */
-  apartadoFormulario: ApartadoFormulario;
+  apartadoFormulario: IApartadoFormulario;
 
   /** Evaluación */
   evaluacion: IEvaluacion;
@@ -17,12 +17,4 @@ export class Comentario {
 
   /** Texto */
   texto: string;
-
-  constructor(comentario?: Comentario) {
-    this.id = comentario?.id;
-    this.apartadoFormulario = comentario?.apartadoFormulario;
-    this.evaluacion = comentario?.evaluacion;
-    this.tipoComentario = comentario?.tipoComentario;
-    this.texto = comentario?.texto;
-  }
 }

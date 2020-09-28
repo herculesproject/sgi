@@ -1,17 +1,19 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { PeticionEvaluacionEditarComponent } from './peticion-evaluacion-editar.component';
-import { PeticionEvaluacionTareasListadoComponent } from '../peticion-evaluacion-formulario/peticion-evaluacion-tareas/peticion-evaluacion-tareas-listado/peticion-evaluacion-tareas-listado.component';
-import { FooterGuardarComponent } from '@shared/footers/footer-guardar/footer-guardar.component';
+import { FlexModule } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { FlexModule } from '@angular/flex-layout';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
+import { FooterGuardarComponent } from '@shared/footers/footer-guardar/footer-guardar.component';
 import { NGXLogger } from 'ngx-logger';
-import { SgiAuthService } from '@sgi/framework/auth';
+
+import {
+  PeticionEvaluacionTareasListadoComponent,
+} from '../peticion-evaluacion-formulario/peticion-evaluacion-tareas/peticion-evaluacion-tareas-listado/peticion-evaluacion-tareas-listado.component';
+import { PeticionEvaluacionEditarComponent } from './peticion-evaluacion-editar.component';
 
 describe('PeticionEvaluacionEditarComponent', () => {
   let component: PeticionEvaluacionEditarComponent;
@@ -30,8 +32,10 @@ describe('PeticionEvaluacionEditarComponent', () => {
         BrowserAnimationsModule,
         HttpClientTestingModule,
         FlexModule,
+        FormsModule,
         ReactiveFormsModule,
-        RouterTestingModule.withRoutes([])
+        RouterTestingModule.withRoutes([]),
+        SgiAuthModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },

@@ -6,6 +6,8 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { MatDialogRef } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 
 describe('SelectorModuloComponent', () => {
   let component: SelectorModuloComponent;
@@ -17,11 +19,15 @@ describe('SelectorModuloComponent', () => {
       imports: [
         TestUtils.getIdiomas(),
         MaterialDesignModule,
-        RouterTestingModule
+        RouterTestingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        SgiAuthModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: MatDialogRef, useValue: {} },
+        SgiAuthService
       ]
     })
       .compileComponents();

@@ -1,6 +1,6 @@
-import { Formulario } from './formulario';
+import { IFormulario } from './formulario';
 
-export class TipoDocumento {
+export interface ITipoDocumento {
   /** Id */
   id: number;
 
@@ -8,15 +8,8 @@ export class TipoDocumento {
   nombre: string;
 
   /** Formulario */
-  formulario: Formulario;
+  formulario: IFormulario;
 
   /** Activo */
   activo: boolean;
-
-  constructor(tipoDocumento?: TipoDocumento) {
-    this.id = tipoDocumento?.id;
-    this.nombre = tipoDocumento?.nombre;
-    this.formulario = tipoDocumento?.formulario;
-    this.activo = tipoDocumento?.activo;
-  }
 }

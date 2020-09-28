@@ -1,35 +1,25 @@
-import { BloqueFormulario } from './bloque-formulario';
-import { ComponenteFormulario } from './componente-formulario';
+import { IBloqueFormulario } from './bloque-formulario';
+import { IComponenteFormulario } from './componente-formulario';
 
-export class ApartadoFormulario {
+export interface IApartadoFormulario {
   /** Id */
   id: number;
 
   /** Bloque del formulario */
-  bloqueFormulario: BloqueFormulario;
+  bloqueFormulario: IBloqueFormulario;
 
   /** Nombre */
   nombre: string;
 
   /** Apartado padre del formulario */
-  apartadoFormularioPadre: ApartadoFormulario;
+  apartadoFormularioPadre: IApartadoFormulario;
 
   /** Orden */
   orden: number;
 
   /** Componente del formulario */
-  componenteFormulario: ComponenteFormulario;
+  componenteFormulario: IComponenteFormulario;
 
   /** Activo */
   activo: boolean;
-
-  constructor(apartadoFormulario?: ApartadoFormulario) {
-    this.id = apartadoFormulario?.id;
-    this.bloqueFormulario = apartadoFormulario?.bloqueFormulario;
-    this.nombre = apartadoFormulario?.nombre;
-    this.apartadoFormularioPadre = apartadoFormulario?.apartadoFormularioPadre;
-    this.orden = apartadoFormulario?.orden;
-    this.componenteFormulario = apartadoFormulario?.componenteFormulario;
-    this.activo = apartadoFormulario?.activo;
-  }
 }

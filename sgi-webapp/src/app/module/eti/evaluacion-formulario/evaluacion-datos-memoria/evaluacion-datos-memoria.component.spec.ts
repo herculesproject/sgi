@@ -6,13 +6,14 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
+import { EvaluacionEvaluadorEvaluarActionService } from '../../evaluacion-evaluador/evaluacion-evaluador.action.service';
 
 import {
   EvaluacionListadoAnteriorMemoriaComponent,
 } from '../evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
 import { EvaluacionDatosMemoriaComponent } from './evaluacion-datos-memoria.component';
-import { EvaluacionEvaluadorEvaluarActionService } from '../../evaluacion-evaluador/evaluacion-evaluador.action.service';
 
 describe('EvaluacionDatosMemoriaComponent', () => {
   let component: EvaluacionDatosMemoriaComponent;
@@ -30,12 +31,14 @@ describe('EvaluacionDatosMemoriaComponent', () => {
         HttpClientTestingModule,
         TestUtils.getIdiomas(),
         RouterTestingModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        SgiAuthModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        EvaluacionEvaluadorEvaluarActionService
+        EvaluacionEvaluadorEvaluarActionService,
+        SgiAuthService
       ],
     })
       .compileComponents();

@@ -1,15 +1,15 @@
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { IAsistente } from '@core/models/eti/asistente';
+import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
+import { IEvaluador } from '@core/models/eti/evaluador';
 import { FormFragment } from '@core/services/action-service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { NullIdValidador } from '@core/validators/null-id-validador';
+import { AsistenteService } from '@core/services/eti/asistente.service';
+import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { HoraValidador } from '@core/validators/hora-validator';
 import { MinutoValidador } from '@core/validators/minuto-validator';
-import { Observable, of, EMPTY, from } from 'rxjs';
-import { switchMap, catchError, map, mergeMap, takeLast } from 'rxjs/operators';
-import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
-import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
-import { IEvaluador } from '@core/models/eti/evaluador';
-import { IAsistente } from '@core/models/eti/asistente';
-import { AsistenteService } from '@core/services/eti/asistente.service';
+import { NullIdValidador } from '@core/validators/null-id-validador';
+import { EMPTY, from, Observable, of } from 'rxjs';
+import { catchError, map, mergeMap, switchMap, takeLast } from 'rxjs/operators';
 
 export class ConvocatoriaReunionDatosGeneralesFragment extends FormFragment<ConvocatoriaReunion> {
 
@@ -20,8 +20,8 @@ export class ConvocatoriaReunionDatosGeneralesFragment extends FormFragment<Conv
     private fb: FormBuilder,
     key: number,
     private service: ConvocatoriaReunionService,
-    private asistenteService: AsistenteService) {
-
+    private asistenteService: AsistenteService
+  ) {
     super(key);
     this.convocatoriaReunion = new ConvocatoriaReunion();
     this.convocatoriaReunion.activo = true;

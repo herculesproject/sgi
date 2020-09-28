@@ -1,5 +1,6 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
@@ -19,10 +20,12 @@ describe('EtiMenuPrincipalComponent', () => {
       imports: [
         BrowserAnimationsModule,
         MaterialDesignModule,
-        HttpClientModule,
+        HttpClientTestingModule,
         TestUtils.getIdiomas(),
         RouterTestingModule.withRoutes([]),
-        SgiAuthModule
+        SgiAuthModule,
+        FormsModule,
+        ReactiveFormsModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },

@@ -1,12 +1,12 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import TestUtils from '@core/utils/test-utils';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
+import { NGXLogger } from 'ngx-logger';
 
 import { NavbarComponent } from './navbar.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialDesignModule } from '@material/material-design.module';
-import { NGXLogger } from 'ngx-logger';
-import TestUtils from '@core/utils/test-utils';
-import { HttpClientModule } from '@angular/common/http';
-import { SgiAuthService } from '@sgi/framework/auth';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -17,10 +17,12 @@ describe('NavbarComponent', () => {
       imports: [
         BrowserAnimationsModule,
         MaterialDesignModule,
-        HttpClientModule,
-        TestUtils.getIdiomas()
+        HttpClientTestingModule,
+        TestUtils.getIdiomas(),
+        SgiAuthModule
       ],
-      providers: [{ provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+      providers: [
+        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         SgiAuthService
       ],
       declarations: [NavbarComponent],

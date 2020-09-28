@@ -9,7 +9,7 @@ import { ComiteService } from '@core/services/eti/comite.service';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocatoria-reunion.service';
 import { IEvaluador } from '@core/models/eti/evaluador';
-import { Persona } from '@core/models/sgp/persona';
+import { IPersona } from '@core/models/sgp/persona';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
@@ -198,11 +198,11 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
                 const personaRefsConvocantes = convocantes.map((convocante: IEvaluador) => convocante.personaRef);
 
                 const convocantesWithDatosPersona$ = this.personaFisicaService.findByPersonasRefs(personaRefsConvocantes).pipe(
-                  map((result: SgiRestListResult<Persona>) => {
+                  map((result: SgiRestListResult<IPersona>) => {
                     const personas = result.items;
 
                     convocantes.forEach((convocante: IEvaluador) => {
-                      const datosPersonaConvocante = personas.find((persona: Persona) => convocante.personaRef === persona.personaRef);
+                      const datosPersonaConvocante = personas.find((persona: IPersona) => convocante.personaRef === persona.personaRef);
                       convocante.nombre = datosPersonaConvocante?.nombre;
                       convocante.primerApellido = datosPersonaConvocante?.primerApellido;
                       convocante.segundoApellido = datosPersonaConvocante?.segundoApellido;

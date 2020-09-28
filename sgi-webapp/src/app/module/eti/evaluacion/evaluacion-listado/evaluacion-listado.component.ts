@@ -17,8 +17,8 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
-import { IEvaluacionSolicitante } from '@core/models/eti/dto/evaluacion-solicitante';
-import { Persona } from '@core/models/sgp/persona';
+import { IEvaluacionSolicitante } from '@core/models/eti/evaluacion-solicitante';
+import { IPersona } from '@core/models/sgp/persona';
 
 const MSG_ERROR = marker('eti.evaluacion.listado.error');
 const MSG_ERROR_LOAD_TIPOS_CONVOCATORIA = marker('eti.evaluacion.listado.buscador.tipoConvocatoria.error');
@@ -396,7 +396,7 @@ export class EvaluacionListadoComponent implements OnInit, OnDestroy, AfterViewI
    * Setea el persona seleccionado a través del componente
    * @param persona Persona seleccionada
    */
-  public setPersona(persona: Persona) {
+  public setPersona(persona: IPersona) {
     this.personaRefSolicitante = persona.personaRef;
   }
 

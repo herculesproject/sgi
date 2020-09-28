@@ -1,7 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -10,6 +10,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 
+import { ConvocatoriaReunionActionService } from '../convocatoria-reunion.action.service';
 import { ConvocatoriaReunionListadoComponent } from './convocatoria-reunion-listado.component';
 
 describe('ConvocatoriaReunionListadoComponent', () => {
@@ -17,10 +18,6 @@ describe('ConvocatoriaReunionListadoComponent', () => {
   let fixture: ComponentFixture<ConvocatoriaReunionListadoComponent>;
 
   beforeEach(async(() => {
-    // Mock formBuilder
-    const formBuilderSpy: jasmine.SpyObj<FormBuilder> = jasmine.createSpyObj(FormBuilder.name,
-      TestUtils.getOwnMethodNames(FormBuilder.prototype));
-
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
@@ -36,7 +33,8 @@ describe('ConvocatoriaReunionListadoComponent', () => {
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        SgiAuthService
+        SgiAuthService,
+        ConvocatoriaReunionActionService
       ],
       declarations: [ConvocatoriaReunionListadoComponent]
     })

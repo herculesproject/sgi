@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NGXLogger } from 'ngx-logger';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { FormGroupUtil } from '@core/utils/form-group-util';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { Persona } from '@core/models/sgp/persona';
+import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { FormGroupUtil } from '@core/utils/form-group-util';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'sgi-equipo-investigador-crear-modal',
@@ -22,7 +22,7 @@ export class EquipoInvestigadorCrearModalComponent implements OnInit, OnDestroy 
   fxLayoutProperties: FxLayoutProperties;
 
 
-  nuevaPersonaEquipo: Persona;
+  nuevaPersonaEquipo: IPersona;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -108,7 +108,7 @@ export class EquipoInvestigadorCrearModalComponent implements OnInit, OnDestroy 
    * Setea el persona seleccionado a través del componente
    * @param persona persona seleccionada
    */
-  public onSelectPersona(personaSeleccionada: Persona): void {
+  public onSelectPersona(personaSeleccionada: IPersona): void {
     personaSeleccionada.vinculacion = 'PDI';
     personaSeleccionada.nivelAcademico = 'Licenciado';
     this.nuevaPersonaEquipo = personaSeleccionada;

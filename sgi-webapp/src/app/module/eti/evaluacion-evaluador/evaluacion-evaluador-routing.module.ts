@@ -23,7 +23,7 @@ const routes: SgiAuthRoutes = [
     canActivate: [SgiAuthGuard],
     data: {
       title: MSG_LISTADO_TITLE,
-      hasAnyAuthorityForAnyUO: ['ETI-EVC-V', 'ETI-EVC-VR']
+      hasAnyAuthorityForAnyUO: ['ETI-EVC-V', 'ETI-EVC-VR-INV']
     }
   },
   {
@@ -36,7 +36,7 @@ const routes: SgiAuthRoutes = [
     },
     data: {
       title: MSG_EVALUAR_TITLE,
-      hasAnyAuthorityForAnyUO: ['ETI-EVC-EVAL', 'ETI-EVC-EVALR']
+      hasAnyAuthorityForAnyUO: ['ETI-EVC-EVAL', 'ETI-EVC-EVALR-INV']
     },
     children: [
       {

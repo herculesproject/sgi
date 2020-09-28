@@ -1,10 +1,11 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { NGXLogger } from 'ngx-logger';
-import { BuscarPersonaDialogoComponent } from './dialogo/buscar-persona-dialogo.component';
-import { IPersonaDialogo } from '@core/models/eti/persona-dialogo';
-import { Persona } from '@core/models/sgp/persona';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { IPersonaDialogo } from '@core/models/eti/persona-dialogo';
+import { IPersona } from '@core/models/sgp/persona';
+import { NGXLogger } from 'ngx-logger';
+
+import { BuscarPersonaDialogoComponent } from './dialogo/buscar-persona-dialogo.component';
 
 const TEXT_USER_TITLE = marker('eti.buscarUsuario.titulo');
 const TEXT_USER_BUTTON = marker('eti.buscarUsuario.boton.buscar');
@@ -18,7 +19,7 @@ export class BuscarPersonaComponent implements OnChanges {
 
   datosUsuario: string;
   usuarioDialogo: IPersonaDialogo;
-  persona: Persona;
+  persona: IPersona;
 
   @Input() textoLabel = TEXT_USER_TITLE;
   @Input() textoInput = TEXT_USER_TITLE;
@@ -26,7 +27,7 @@ export class BuscarPersonaComponent implements OnChanges {
   @Input() datosUsuarioTexto: string;
 
   @Output()
-  usuarioSeleccionado: EventEmitter<Persona> = new EventEmitter();
+  usuarioSeleccionado: EventEmitter<IPersona> = new EventEmitter();
 
   constructor(public dialog: MatDialog, private readonly logger: NGXLogger) {
     this.usuarioDialogo = {
@@ -69,7 +70,7 @@ export class BuscarPersonaComponent implements OnChanges {
     });
   }
 
-  selectUsuario(persona: Persona) {
+  selectUsuario(persona: IPersona) {
     this.logger.debug(BuscarPersonaComponent.name, 'selectUsuario(persona: Persona)', 'start');
     this.usuarioSeleccionado.emit(persona);
     this.logger.debug(BuscarPersonaComponent.name, 'selectUsuario(persona: Persona)', 'end');

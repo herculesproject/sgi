@@ -1,25 +1,30 @@
 import { TestBed } from '@angular/core/testing';
-
-import { DialogService } from './dialog.service';
-import { NGXLogger } from 'ngx-logger';
+import { MatDialogModule } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { MatDialogModule } from '@angular/material/dialog';
-import { RouterTestingModule } from '@angular/router/testing';
+import { SgiAuthModule } from '@sgi/framework/auth';
+import { NGXLogger } from 'ngx-logger';
+
+import { DialogService } from './dialog.service';
 
 describe('DialogService', () => {
   let service: DialogService;
 
   beforeEach(() => {
-    // Mock logger
-    const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(
-      NGXLogger.name,
-      TestUtils.getOwnMethodNames(NGXLogger.prototype)
-    );
-
     TestBed.configureTestingModule({
-      imports: [MaterialDesignModule, MatDialogModule, RouterTestingModule],
-      providers: [{ provide: NGXLogger, useValue: loggerSpy }, DialogService],
+      imports: [
+        MaterialDesignModule,
+        MatDialogModule,
+        RouterTestingModule,
+        BrowserAnimationsModule,
+        SgiAuthModule
+      ],
+      providers: [
+        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+        DialogService
+      ],
     });
     service = TestBed.inject(DialogService);
   });

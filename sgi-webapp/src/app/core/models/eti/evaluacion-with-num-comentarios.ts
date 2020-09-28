@@ -1,4 +1,4 @@
-import { IEvaluacion } from '../evaluacion';
+import { IEvaluacion } from './evaluacion';
 
 export interface IEvaluacionWithNumComentario {
   evaluacion: IEvaluacion;

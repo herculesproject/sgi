@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
+import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { environment } from '@env';
 import { NGXLogger } from 'ngx-logger';
 import { SgiRestService, SgiRestListResult, SgiRestFindOptions } from '@sgi/framework/http';
@@ -12,7 +12,7 @@ import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoriaPeticionEval
 @Injectable({
   providedIn: 'root'
 })
-export class PeticionEvaluacionService extends SgiRestService<number, PeticionEvaluacion> {
+export class PeticionEvaluacionService extends SgiRestService<number, IPeticionEvaluacion> {
   private static readonly MAPPING = '/peticionevaluaciones';
 
   constructor(logger: NGXLogger, protected http: HttpClient) {

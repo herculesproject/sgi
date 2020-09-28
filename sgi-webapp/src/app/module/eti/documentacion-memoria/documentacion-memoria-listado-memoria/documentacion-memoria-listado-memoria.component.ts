@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
-import { AbstractPaginacionComponent } from '@core/component/abstract-paginacion.component';
-import { DocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { AbstractTableWithoutPaginationComponent } from '@core/component/abstract-table-without-pagination.component';
+import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiRestFilter, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 
 const MSG_ERROR = marker('eti.documentacion-memoria.listado.error');
 
@@ -15,8 +15,8 @@ const MSG_ERROR = marker('eti.documentacion-memoria.listado.error');
   templateUrl: './documentacion-memoria-listado-memoria.component.html',
   styleUrls: ['./documentacion-memoria-listado-memoria.component.scss']
 })
-export class DocumentacionMemoriaListadoMemoriaComponent extends AbstractPaginacionComponent<DocumentacionMemoria>  {
-  documentacionMemoria$: Observable<DocumentacionMemoria[]>;
+export class DocumentacionMemoriaListadoMemoriaComponent extends AbstractTableWithoutPaginationComponent<IDocumentacionMemoria>  {
+  documentacionMemoria$: Observable<IDocumentacionMemoria[]>;
   @Input() memoriaId: number;
 
   constructor(
@@ -27,14 +27,14 @@ export class DocumentacionMemoriaListadoMemoriaComponent extends AbstractPaginac
     super(logger, snackBarService, MSG_ERROR);
   }
 
-  protected createObservable(): Observable<SgiRestListResult<DocumentacionMemoria>> {
+  protected createObservable(): Observable<SgiRestListResult<IDocumentacionMemoria>> {
     this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, 'createObservable()', 'start');
     const observable$ = this.memoriaService.getDocumentaciones(this.memoriaId, this.getFindOptions());
     this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, 'createObservable()', 'end');
     return observable$;
   }
 
-  protected getObservableLoadTable(reset?: boolean): Observable<DocumentacionMemoria[]> {
+  protected getObservableLoadTable(reset?: boolean): Observable<IDocumentacionMemoria[]> {
     this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, `getObservableLoadTable(${reset})`, 'start');
     if (this.memoriaId) {
       this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, `getObservableLoadTable(${reset})`, 'end');

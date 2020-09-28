@@ -1,29 +1,26 @@
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { FragmentGuard } from '@core/guards/detail-form.guard';
+import { ActionGuard } from '@core/guards/master-form.guard';
+import { SgiRoutes } from '@core/route';
+import { ROUTE_NAMES } from '@core/route.names';
 import { SgiAuthGuard } from '@sgi/framework/auth';
 
 import { ActaCrearComponent } from './acta-crear/acta-crear.component';
 import { ActaEditarComponent } from './acta-editar/acta-editar.component';
-import { ActaListadoComponent } from './acta-listado/acta-listado.component';
-
-import { ROUTE_NAMES } from '@core/route.names';
-import { SgiRoutes } from '@core/route';
+import {
+  ActaAsistentesListadoComponent,
+} from './acta-formulario/acta-asistentes/acta-asistentes-listado/acta-asistentes-listado.component';
 import { ActaDatosGeneralesComponent } from './acta-formulario/acta-datos-generales/acta-datos-generales.component';
 import { ActaMemoriasComponent } from './acta-formulario/acta-memorias/acta-memorias.component';
-
-import { FragmentGuard } from '@core/guards/detail-form.guard';
-import { ActaResolver } from './acta.resolver';
-import { ActionGuard } from '@core/guards/master-form.guard';
+import { ActaListadoComponent } from './acta-listado/acta-listado.component';
 import { ACTA_ROUTE_NAMES } from './acta-route-names';
-import { ActaAsistentesListadoComponent } from './acta-formulario/acta-asistentes/acta-asistentes-listado/acta-asistentes-listado.component';
+import { ActaResolver } from './acta.resolver';
 
 const MSG_LISTADO_TITLE = marker('eti.acta.listado.titulo');
 const MSG_NEW_TITLE = marker('eti.acta.crear.titulo');
 const MSG_EDIT_TITLE = marker('eti.acta.editar.titulo');
-
-
 
 const routes: SgiRoutes = [
   {

@@ -1,30 +1,24 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
-import { FormGroup, FormControl } from '@angular/forms';
-import { Observable, of, merge, Subscription, zip } from 'rxjs';
-import { NGXLogger } from 'ngx-logger';
-
-import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
-import { SgiAuthService } from '@sgi/framework/auth';
-
-import { tap, map, catchError, startWith } from 'rxjs/operators';
-
+import { MatSort } from '@angular/material/sort';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { Comite } from '@core/models/eti/comite';
+import { IMemoria } from '@core/models/eti/memoria';
+import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-
-import { PeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
-import { Comite } from '@core/models/eti/comite';
+import { ROUTE_NAMES } from '@core/route.names';
 import { DialogService } from '@core/services/dialog.service';
 import { ComiteService } from '@core/services/eti/comite.service';
-import { SnackBarService } from '@core/services/snack-bar.service';
-
-import { ROUTE_NAMES } from '@core/route.names';
-
-import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { IMemoria } from '@core/models/eti/memoria';
+import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
+import { NGXLogger } from 'ngx-logger';
+import { merge, Observable, of, Subscription } from 'rxjs';
+import { catchError, map, startWith, tap } from 'rxjs/operators';
 
 
 const MSG_FOOTER = marker('eti.peticionEvaluacion.listado.nuevaPeticionEvaluacion');
@@ -51,7 +45,7 @@ export class PeticionEvaluacionListadoInvComponent implements AfterViewInit, OnI
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
-  peticionesEvaluacion$: Observable<PeticionEvaluacion[]> = of();
+  peticionesEvaluacion$: Observable<IPeticionEvaluacion[]> = of();
   memorias$: Observable<IMemoria[]> = of();
 
   comiteListado: Comite[];
@@ -143,7 +137,7 @@ export class PeticionEvaluacionListadoInvComponent implements AfterViewInit, OnI
 
   private async loadTable(reset?: boolean) {
     this.logger.debug(PeticionEvaluacionListadoInvComponent.name, 'loadTable()', 'start');
-    // si el usuario tiene asignada una memoria quiere decir que es responsable de memoria, 
+    // si el usuario tiene asignada una memoria quiere decir que es responsable de memoria,
     // se cargarán las peticiones de evaluación relacionadas a la memoria
     if (!this.loadTableResponsable(reset)) {
       // si el usuario no tiene asignada una memoria cargaremos las peticiones de evaluación creadas por él mismo
@@ -154,7 +148,7 @@ export class PeticionEvaluacionListadoInvComponent implements AfterViewInit, OnI
   private loadTableResponsable(reset?: boolean): boolean {
     this.logger.debug(PeticionEvaluacionListadoInvComponent.name, 'loadTableResponsable()', 'start');
     let responsable = false;
-    const peticionesEvaluacionByComiteExists: PeticionEvaluacion[] = new Array();
+    const peticionesEvaluacionByComiteExists: IPeticionEvaluacion[] = new Array();
     // Do the request with paginator/sort/filter values
     this.memoriaServiceSubscription = this.memoriaService
       .findAll({
@@ -229,8 +223,8 @@ export class PeticionEvaluacionListadoInvComponent implements AfterViewInit, OnI
       );
   }
 
-  private filterPeticionEvaluacionByComite(peticionesEvaluacion: PeticionEvaluacion[], comite: string) {
-    const peticionesEvaluacionByComiteExists: PeticionEvaluacion[] = new Array();
+  private filterPeticionEvaluacionByComite(peticionesEvaluacion: IPeticionEvaluacion[], comite: string) {
+    const peticionesEvaluacionByComiteExists: IPeticionEvaluacion[] = new Array();
     this.peticionesEvaluacion$ = of();
     peticionesEvaluacion.forEach((peticionEvaluacion, i) => {
       this.memoriaServiceSubscription = this.memoriaService
@@ -314,7 +308,7 @@ export class PeticionEvaluacionListadoInvComponent implements AfterViewInit, OnI
       const filterPersonaRef: SgiRestFilter = {
         field: 'personaRef',
         type: SgiRestFilterType.EQUALS,
-        value: this.sgiAuthService.authStatus$.getValue().userRefId,
+        value: this.sgiAuthService.authStatus$?.getValue()?.userRefId,
       };
 
       this.filter.push(filterPersonaRef);
@@ -355,7 +349,7 @@ export class PeticionEvaluacionListadoInvComponent implements AfterViewInit, OnI
     const filterPersonaRef: SgiRestFilter = {
       field: 'personaRef',
       type: SgiRestFilterType.EQUALS,
-      value: this.sgiAuthService.authStatus$.getValue().userRefId,
+      value: this.sgiAuthService.authStatus$?.getValue()?.userRefId,
     };
 
     this.filter.push(filterPersonaRef);

@@ -13,7 +13,7 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 
 import { IEvaluador } from '@core/models/eti/evaluador';
 import { Comite } from '@core/models/eti/comite';
-import { Persona } from '@core/models/sgp/persona';
+import { IPersona } from '@core/models/sgp/persona';
 import { DialogService } from '@core/services/dialog.service';
 import { ComiteService } from '@core/services/eti/comite.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -75,7 +75,7 @@ export class EvaluadorListadoComponent implements AfterViewInit, OnInit, OnDestr
 
   personasRef: string[];
 
-  personas$: Observable<Persona[]> = of();
+  personas$: Observable<IPersona[]> = of();
 
   constructor(
     private readonly logger: NGXLogger,
@@ -294,7 +294,7 @@ export class EvaluadorListadoComponent implements AfterViewInit, OnInit, OnDestr
   loadDatosUsuario(evaluador: IEvaluador): IEvaluador {
     this.personaServiceOneSubscritpion = this.personaFisicaService.getInformacionBasica(evaluador.personaRef)
       .subscribe(
-        (persona: Persona) => {
+        (persona: IPersona) => {
           evaluador.nombre = persona.nombre;
           evaluador.primerApellido = persona.primerApellido;
           evaluador.segundoApellido = persona.segundoApellido;
@@ -410,7 +410,7 @@ export class EvaluadorListadoComponent implements AfterViewInit, OnInit, OnDestr
    * Setea el persona seleccionado a través del componente
    * @param persona persona seleccionado
    */
-  public setUsuario(persona: Persona) {
+  public setUsuario(persona: IPersona) {
     this.personaRef = persona ? persona.personaRef : undefined;
   }
 

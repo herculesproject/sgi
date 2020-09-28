@@ -7,7 +7,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
+import { BuscarPersonaComponent } from '@shared/buscar-persona/buscar-persona.component';
 import { NGXLogger } from 'ngx-logger';
 import { EvaluacionEvaluadorListadoComponent } from './evaluacion-evaluador-listado.component';
 
@@ -27,6 +28,7 @@ describe('EvaluacionEvaluadorListadoComponent', () => {
         FlexLayoutModule,
         FormsModule,
         ReactiveFormsModule,
+        SgiAuthModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },

@@ -4,6 +4,7 @@ import { ActionFragmentMenuItemComponent } from './action-fragment-menu-item.com
 import TestUtils from '@core/utils/test-utils';
 import { NGXLogger } from 'ngx-logger';
 import { MaterialDesignModule } from '@material/material-design.module';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ActionFragmentMenuItemComponent', () => {
   let component: ActionFragmentMenuItemComponent;
@@ -13,7 +14,8 @@ describe('ActionFragmentMenuItemComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         TestUtils.getIdiomas(),
-        MaterialDesignModule
+        MaterialDesignModule,
+        RouterTestingModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },

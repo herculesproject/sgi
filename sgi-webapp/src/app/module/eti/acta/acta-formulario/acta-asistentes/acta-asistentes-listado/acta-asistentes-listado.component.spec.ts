@@ -1,15 +1,16 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FlexModule } from '@angular/flex-layout';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 
-import { ActaAsistentesListadoComponent } from './acta-asistentes-listado.component';
-import { MaterialDesignModule } from '@material/material-design.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { FlexModule } from '@angular/flex-layout';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { ActaActionService } from '../../../acta.action.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActaAsistentesListadoComponent } from './acta-asistentes-listado.component';
 
 describe('ActaAsistentesListadoComponent', () => {
   let component: ActaAsistentesListadoComponent;
@@ -27,13 +28,16 @@ describe('ActaAsistentesListadoComponent', () => {
         BrowserAnimationsModule,
         HttpClientTestingModule,
         FlexModule,
-        ReactiveFormsModule
+        FormsModule,
+        ReactiveFormsModule,
+        RouterTestingModule,
+        SgiAuthModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: FormBuilder, useValue: formBuilder },
         ActaActionService,
-        ActivatedRoute
+        SgiAuthService
       ],
 
     })

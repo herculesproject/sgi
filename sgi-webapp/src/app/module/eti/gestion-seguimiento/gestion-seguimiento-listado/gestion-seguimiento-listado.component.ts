@@ -16,8 +16,9 @@ import { SgiRestFilter, SgiRestSortDirection, SgiRestFilterType } from '@sgi/fra
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { IEvaluacionSolicitante } from '@core/models/eti/dto/evaluacion-solicitante';
 import { DateUtils } from '@core/utils/date-utils';
+import { IEvaluacionSolicitante } from '@core/models/eti/evaluacion-solicitante';
+import { IPersona } from '@core/models/sgp/persona';
 
 const TEXT_USER_TITLE = marker('eti.buscarSolicitante.titulo');
 const TEXT_USER_BUTTON = marker('eti.buscarSolicitante.boton.buscar');
@@ -163,7 +164,7 @@ export class GestionSeguimientoListadoComponent implements OnInit, OnDestroy, Af
             // Solicitantes
             const listObservables: Observable<IEvaluacionSolicitante>[] = [];
             response.items.forEach((evaluacion) => {
-              const evaluacion$ = this.personaFisicaService.getInformacionBasica(evaluacion.memoria ?.peticionEvaluacion ?.personaRef).pipe(
+              const evaluacion$ = this.personaFisicaService.getInformacionBasica(evaluacion.memoria?.peticionEvaluacion?.personaRef).pipe(
                 map((personaInfo) => {
                   evaluacion.persona = personaInfo;
 
@@ -193,44 +194,6 @@ export class GestionSeguimientoListadoComponent implements OnInit, OnDestroy, Af
       });
 
   }
-
-  /**
-   * Load table data
-   */
-  public onSearch() {
-    this.loadTable(true);
-  }
-
-  /**
-   * Setea el persona seleccionado a través del componente
-   * @param personaRef referencia del persona seleccionado
-   */
-  public setPersona(personaRef: any) {
-    this.personaRefSolicitante = personaRef.personaRef;
-  }
-
-  /**
-   * Clean filters an reload the table
-   */
-  public onClearFilters() {
-
-    this.logger.debug(GestionSeguimientoListadoComponent.name,
-      'onClearFilters()',
-      'start');
-    this.filter = [];
-    this.buscadorFormGroup.reset();
-    this.personaRefSolicitante = '';
-    this.datosUsuarioSolicitante = '';
-
-    this.loadTable(true);
-
-    this.logger.debug(GestionSeguimientoListadoComponent.name,
-      'onClearFilters()',
-      'end');
-  }
-
-
-
 
   private buildFilters(): SgiRestFilter[] {
     this.logger.debug(GestionSeguimientoListadoComponent.name, 'buildFilters()', 'start');
@@ -313,13 +276,13 @@ export class GestionSeguimientoListadoComponent implements OnInit, OnDestroy, Af
 
 
   /**
-  * Devuelve el nombre de un comité.
-  * @param comite comité
-  * returns nombre comité
-  */
+   * Devuelve el nombre de un comité.
+   * @param comite comité
+   * returns nombre comité
+   */
   getComite(comite: Comite): string {
 
-    return comite ?.comite;
+    return comite?.comite;
 
   }
 
@@ -330,13 +293,13 @@ export class GestionSeguimientoListadoComponent implements OnInit, OnDestroy, Af
    */
   getTipoConvocatoriaReunion(convocatoria: TipoConvocatoriaReunion): string {
 
-    return convocatoria ?.nombre;
+    return convocatoria?.nombre;
 
   }
 
   /**
-  * Recupera un listado de los comités que hay en el sistema.
-  */
+   * Recupera un listado de los comités que hay en el sistema.
+   */
   loadComites(): void {
     this.logger.debug(GestionSeguimientoListadoComponent.name,
       'loadComites()',
@@ -421,12 +384,47 @@ export class GestionSeguimientoListadoComponent implements OnInit, OnDestroy, Af
       (tipoConvocatoriaReunion => tipoConvocatoriaReunion.nombre.toLowerCase().includes(filterValue));
   }
 
+  /**
+   * Load table data
+   */
+  public onSearch() {
+    this.loadTable(true);
+  }
+
+  /**
+   * Setea el persona seleccionado a través del componente
+   * @param persona Persona seleccionada
+   */
+  public setPersona(persona: IPersona) {
+    this.personaRefSolicitante = persona.personaRef;
+  }
+
+  /**
+   * Clean filters an reload the table
+   */
+  public onClearFilters() {
+
+    this.logger.debug(GestionSeguimientoListadoComponent.name,
+      'onClearFilters()',
+      'start');
+    this.filter = [];
+    this.buscadorFormGroup.reset();
+    this.personaRefSolicitante = '';
+    this.datosUsuarioSolicitante = '';
+
+    this.loadTable(true);
+
+    this.logger.debug(GestionSeguimientoListadoComponent.name,
+      'onClearFilters()',
+      'end');
+  }
+
   ngOnDestroy(): void {
     this.logger.debug(GestionSeguimientoListadoComponent.name,
       'ngOnDestroy()',
       'start');
-    this.comitesSubscription ?.unsubscribe();
-    this.tipoConvocatoriasReunionSubscription ?.unsubscribe();
+    this.comitesSubscription?.unsubscribe();
+    this.tipoConvocatoriasReunionSubscription?.unsubscribe();
 
     this.logger.debug(GestionSeguimientoListadoComponent.name,
       'ngOnDestroy()',

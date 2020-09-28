@@ -1,13 +1,14 @@
-import { PeticionEvaluacion } from './peticion-evaluacion';
-import { Persona } from '../sgp/persona';
+import { IPersona } from '../sgp/persona';
+import { IPeticionEvaluacion } from './peticion-evaluacion';
 
-export interface IEquipoTrabajo extends Persona {
+
+export interface IEquipoTrabajo extends IPersona {
 
   /** ID */
   id: number;
 
   /** Peticion evaluación */
-  peticionEvaluacion: PeticionEvaluacion;
+  peticionEvaluacion: IPeticionEvaluacion;
 
   /** Flag eliminable */
   isEliminable: boolean;

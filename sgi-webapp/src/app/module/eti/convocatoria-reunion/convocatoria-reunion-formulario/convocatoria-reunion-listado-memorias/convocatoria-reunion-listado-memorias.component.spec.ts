@@ -1,16 +1,16 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ConvocatoriaReunionListadoMemoriasComponent } from './convocatoria-reunion-listado-memorias.component';
+import { FlexModule } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { FlexModule } from '@angular/flex-layout';
 import { NGXLogger } from 'ngx-logger';
-import { SnackBarService } from '@core/services/snack-bar.service';
+
 import { ConvocatoriaReunionActionService } from '../../convocatoria-reunion.action.service';
-import { FormBuilder } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ConvocatoriaReunionListadoMemoriasComponent } from './convocatoria-reunion-listado-memorias.component';
 
 describe('ConvocatoriaReunionListadoMemoriasComponent', () => {
   let component: ConvocatoriaReunionListadoMemoriasComponent;
@@ -21,17 +21,18 @@ describe('ConvocatoriaReunionListadoMemoriasComponent', () => {
       declarations: [ConvocatoriaReunionListadoMemoriasComponent],
       imports: [
         TestUtils.getIdiomas(),
+        FormsModule,
+        ReactiveFormsModule,
         MaterialDesignModule,
         BrowserAnimationsModule,
         HttpClientTestingModule,
-        FlexModule
+        FlexModule,
+        RouterTestingModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        ConvocatoriaReunionActionService,
-        FormBuilder,
-        ActivatedRoute
+        ConvocatoriaReunionActionService
       ],
     })
       .compileComponents();

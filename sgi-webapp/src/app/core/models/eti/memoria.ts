@@ -1,5 +1,5 @@
 
-import { PeticionEvaluacion } from './peticion-evaluacion';
+import { IPeticionEvaluacion } from './peticion-evaluacion';
 import { Comite } from './comite';
 import { TipoMemoria } from './tipo-memoria';
 import { TipoEstadoMemoria } from './tipo-estado-memoria';
@@ -11,7 +11,7 @@ export interface IMemoria {
   numReferencia: string;
 
   /** Petición evaluación */
-  peticionEvaluacion: PeticionEvaluacion;
+  peticionEvaluacion: IPeticionEvaluacion;
 
   /** Comité */
   comite: Comite;
@@ -39,6 +39,4 @@ export interface IMemoria {
 
   /** Estado Memoria Actual */
   estadoActual: TipoEstadoMemoria;
-
-
 }

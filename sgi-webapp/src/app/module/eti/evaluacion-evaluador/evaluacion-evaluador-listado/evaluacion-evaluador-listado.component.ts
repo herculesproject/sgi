@@ -4,7 +4,6 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Comite } from '@core/models/eti/comite';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
-import { Persona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ComiteService } from '@core/services/eti/comite.service';
@@ -14,13 +13,13 @@ import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service'
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateUtils } from '@core/utils/date-utils';
 import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
-import { AbstractPaginacionComponent } from '@core/component/abstract-paginacion.component';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { EvaluacionListado } from '@core/models/eti/dto/evaluacion-listado';
-import { EvaluacionConSolicitante } from '@core/models/eti/evaluacion-con-solicitante';
-import { IEvaluacionSolicitante } from '@core/models/eti/dto/evaluacion-solicitante';
+import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { IEvaluacionSolicitante } from '@core/models/eti/evaluacion-solicitante';
+import { IPersona } from '@core/models/sgp/persona';
+import { EvaluadorService } from '@core/services/eti/evaluador.service';
 
 const MSG_ERROR = marker('eti.evaluacion.listado.error');
 const MSG_ERROR_LOAD_TIPOS_CONVOCATORIA = marker('eti.evaluacion.listado.buscador.tipoConvocatoria.error');
@@ -30,7 +29,7 @@ const MSG_ERROR_LOAD_TIPOS_CONVOCATORIA = marker('eti.evaluacion.listado.buscado
   templateUrl: './evaluacion-evaluador-listado.component.html',
   styleUrls: ['./evaluacion-evaluador-listado.component.scss']
 })
-export class EvaluacionEvaluadorListadoComponent extends AbstractPaginacionComponent<IEvaluacion> implements OnInit {
+export class EvaluacionEvaluadorListadoComponent extends AbstractTablePaginationComponent<IEvaluacion> implements OnInit {
 
   evaluaciones: IEvaluacion[];
   fxFlexProperties: FxFlexProperties;
@@ -41,7 +40,7 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractPaginacionCompo
 
   constructor(
     protected readonly logger: NGXLogger,
-    private readonly evaluacionService: EvaluacionService,
+    private readonly evaluadorService: EvaluadorService,
     private readonly personaFisicaService: PersonaFisicaService,
     private readonly comiteService: ComiteService,
     private readonly tipoConvocatoriaReunionService: TipoConvocatoriaReunionService,
@@ -77,7 +76,7 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractPaginacionCompo
   }
 
   protected createObservable(): Observable<SgiRestListResult<IEvaluacion>> {
-    return this.evaluacionService.findAll(this.getFindOptions());
+    return this.evaluadorService.getEvaluaciones(this.getFindOptions());
   }
 
   protected initColumnas() {
@@ -118,7 +117,7 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractPaginacionCompo
       if (personaRef) {
         this.suscripciones.push(
           this.personaFisicaService.getInformacionBasica(personaRef).subscribe(
-            (persona: Persona) => {
+            (persona: IPersona) => {
               evaluacion.persona = persona;
             }
           )

@@ -1,5 +1,6 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { IMemoria } from '@core/models/eti/memoria';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { FormFragmentComponent } from '@core/component/fragment.component';
+import { IMemoriaWithPersona } from '@core/models/eti/memoria-with-persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { NGXLogger } from 'ngx-logger';
@@ -7,7 +8,6 @@ import { NGXLogger } from 'ngx-logger';
 import {
   EvaluacionListadoAnteriorMemoriaComponent,
 } from '../evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
-import { FormFragmentComponent } from '@core/component/fragment.component';
 import { EvaluacionEvaluadorEvaluarActionService } from '../../evaluacion-evaluador/evaluacion-evaluador.action.service';
 
 
@@ -16,7 +16,7 @@ import { EvaluacionEvaluadorEvaluarActionService } from '../../evaluacion-evalua
   templateUrl: './evaluacion-datos-memoria.component.html',
   styleUrls: ['./evaluacion-datos-memoria.component.scss']
 })
-export class EvaluacionDatosMemoriaComponent extends FormFragmentComponent<IMemoria> implements AfterViewInit {
+export class EvaluacionDatosMemoriaComponent extends FormFragmentComponent<IMemoriaWithPersona> implements AfterViewInit {
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
   fxFlexPropertiesInline: FxFlexProperties;
@@ -49,10 +49,11 @@ export class EvaluacionDatosMemoriaComponent extends FormFragmentComponent<IMemo
 
     this.logger.debug(EvaluacionDatosMemoriaComponent.name, 'constructor()', 'end');
   }
-
   ngAfterViewInit(): void {
-    this.evaluaciones.memoriaId = this.actionService.getEvaluacion().memoria.id;
-    this.evaluaciones.evaluacionId = this.actionService.getEvaluacion().id;
+    this.logger.debug(EvaluacionDatosMemoriaComponent.name, 'ngAfterViewInit()', 'start');
+    this.evaluaciones.memoriaId = this.actionService.getEvaluacion()?.memoria?.id;
+    this.evaluaciones.evaluacionId = this.actionService.getEvaluacion()?.id;
     this.evaluaciones.ngAfterViewInit();
+    this.logger.debug(EvaluacionDatosMemoriaComponent.name, 'ngAfterViewInit()', 'end');
   }
 }

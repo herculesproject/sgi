@@ -1,23 +1,23 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { NGXLogger } from 'ngx-logger';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ITarea } from '@core/models/eti/tarea';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { FormGroupUtil } from '@core/utils/form-group-util';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { Subscription, Observable, of, BehaviorSubject } from 'rxjs';
-import { TareaService } from '@core/services/eti/tarea.service';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { FormacionEspecifica } from '@core/models/eti/formacion-especifica';
-import { FormacionEspecificaService } from '@core/services/eti/formacion-especifica.service';
-import { startWith, map } from 'rxjs/operators';
-import { IMemoria } from '@core/models/eti/memoria';
-import { MemoriaService } from '@core/services/eti/memoria.service';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
+import { FormacionEspecifica } from '@core/models/eti/formacion-especifica';
+import { IMemoria } from '@core/models/eti/memoria';
+import { ITarea } from '@core/models/eti/tarea';
+import { IPersona } from '@core/models/sgp/persona';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { EquipoTrabajoService } from '@core/services/eti/equipo-trabajo.service';
-import { Persona } from '@core/models/sgp/persona';
+import { FormacionEspecificaService } from '@core/services/eti/formacion-especifica.service';
+import { MemoriaService } from '@core/services/eti/memoria.service';
+import { TareaService } from '@core/services/eti/tarea.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { FormGroupUtil } from '@core/utils/form-group-util';
+import { NGXLogger } from 'ngx-logger';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 const MSG_SUCCESS = marker('eti.acta.asistentes.correcto');
 const MSG_ERROR = marker('eti.acta.asistentes.error');
@@ -291,7 +291,7 @@ export class PeticionEvaluacionTareasEditarModalComponent implements OnInit, OnD
     equiposTrabajo.forEach(equipoTrabajo => {
       this.personaServiceOneSubscritpion = this.personaFisicaService.getInformacionBasica(equipoTrabajo.personaRef)
         .subscribe(
-          (persona: Persona) => {
+          (persona: IPersona) => {
             equipoTrabajo.nombre = persona.nombre;
             equipoTrabajo.primerApellido = persona.primerApellido;
             equipoTrabajo.segundoApellido = persona.segundoApellido;

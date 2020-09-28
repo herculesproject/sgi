@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NGXLogger } from 'ngx-logger';
 import { IPersonaDialogo } from '@core/models/eti/persona-dialogo';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
-import { Persona } from '@core/models/sgp/persona';
+import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
@@ -31,14 +31,14 @@ export class BuscarPersonaDialogoComponent implements AfterViewInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
-  personas$: Observable<Persona[]> = of();
+  personas$: Observable<IPersona[]> = of();
 
   usuarioDialogo: IPersonaDialogo;
-  persona: Persona;
+  persona: IPersona;
 
   constructor(
     public dialogRef: MatDialogRef<BuscarPersonaDialogoComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Persona,
+    @Inject(MAT_DIALOG_DATA) public data: IPersona,
     private readonly personaFisicaService: PersonaFisicaService,
     private readonly logger: NGXLogger,
     private readonly snackBarService: SnackBarService) {
@@ -121,7 +121,7 @@ export class BuscarPersonaDialogoComponent implements AfterViewInit {
 
   }
 
-  private buildFilters(persona: Persona): SgiRestFilter[] {
+  private buildFilters(persona: IPersona): SgiRestFilter[] {
     this.logger.debug(BuscarPersonaDialogoComponent.name, 'buildFilters()', 'start');
 
     this.filter = [];

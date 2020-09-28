@@ -1,25 +1,25 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { IMemoria } from '@core/models/eti/memoria';
-import { MemoriaService } from '@core/services/eti/memoria.service';
-import { NGXLogger } from 'ngx-logger';
-import { Observable, Subscription, of } from 'rxjs';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiRestListResult, SgiRestFilter, SgiRestFilterType } from '@sgi/framework/http';
-import { startWith, map, switchMap, shareReplay } from 'rxjs/operators';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { NullIdValidador } from '@core/validators/null-id-validador';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { DialogData } from '@block/dialog/dialog.component';
+import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { IEvaluador } from '@core/models/eti/evaluador';
-import { EvaluadorService } from '@core/services/eti/evaluador.service';
-import { FormGroupUtil } from '@core/utils/form-group-util';
+import { IMemoria } from '@core/models/eti/memoria';
+import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { EvaluadorService } from '@core/services/eti/evaluador.service';
+import { MemoriaService } from '@core/services/eti/memoria.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
-import { Persona } from '@core/models/sgp/persona';
-import { DialogData } from '@block/dialog/dialog.component';
+import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateUtils } from '@core/utils/date-utils';
-import { IEvaluacion } from '@core/models/eti/evaluacion';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { FormGroupUtil } from '@core/utils/form-group-util';
+import { NullIdValidador } from '@core/validators/null-id-validador';
+import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, of, Subscription } from 'rxjs';
+import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 const MSG_ERROR_CARGAR_MEMORIA = marker('eti.convocatoriaReunion.formulario.asignacionMemorias.memoria.error.cargar');
@@ -75,9 +75,11 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
     this.subscriptions = [];
 
     const params: any = data.params;
-    this.idConvocatoria = params.idConvocatoria;
-    this.memoriasAsignadas = params.memoriasAsignadas;
-    this.filterData = params.filterMemoriasAsignables;
+    if (params) {
+      this.idConvocatoria = params.idConvocatoria;
+      this.memoriasAsignadas = params.memoriasAsignadas;
+      this.filterData = params.filterMemoriasAsignables;
+    }
     this.buildFilters();
   }
 
@@ -296,11 +298,11 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
                   }
 
                   const evaluadoresWithDatosPersona$ = this.PersonafisicaService.findByPersonasRefs(personaRefsEvaluadores).pipe(
-                    map((result: SgiRestListResult<Persona>) => {
+                    map((result: SgiRestListResult<IPersona>) => {
                       const personas = result.items;
 
                       evaluadores.forEach((evaluador: IEvaluador) => {
-                        const datosPersonaEvaluador = personas.find((persona: Persona) => evaluador.personaRef === persona.personaRef);
+                        const datosPersonaEvaluador = personas.find((persona: IPersona) => evaluador.personaRef === persona.personaRef);
                         evaluador.nombre = datosPersonaEvaluador?.nombre;
                         evaluador.primerApellido = datosPersonaEvaluador?.primerApellido;
                         evaluador.segundoApellido = datosPersonaEvaluador?.segundoApellido;

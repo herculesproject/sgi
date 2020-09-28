@@ -1,8 +1,18 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { NGXLogger } from 'ngx-logger';
-import { Router, RouterEvent, ActivatedRouteSnapshot, Route, GuardsCheckEnd, UrlSegment, NavigationStart, NavigationEnd, NavigationCancel } from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  GuardsCheckEnd,
+  NavigationCancel,
+  NavigationEnd,
+  NavigationStart,
+  Route,
+  Router,
+  RouterEvent,
+  UrlSegment,
+} from '@angular/router';
 import { Module } from '@core/module';
+import { NGXLogger } from 'ngx-logger';
+import { BehaviorSubject } from 'rxjs';
 
 export interface BreadcrumbData {
   title: string;

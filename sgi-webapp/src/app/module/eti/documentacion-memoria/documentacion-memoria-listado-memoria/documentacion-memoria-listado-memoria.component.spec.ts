@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 
 import { DocumentacionMemoriaListadoMemoriaComponent } from './documentacion-memoria-listado-memoria.component';
@@ -21,10 +22,12 @@ describe('DocumentacionMemoriaListadoMemoriaComponent', () => {
         HttpClientTestingModule,
         TestUtils.getIdiomas(),
         RouterTestingModule,
+        SgiAuthModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
+        SgiAuthService
       ],
       declarations: [DocumentacionMemoriaListadoMemoriaComponent]
     })

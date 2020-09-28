@@ -8,27 +8,32 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import TestUtils from '@core/utils/test-utils';
 import { NGXLogger } from 'ngx-logger';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '@shared/shared.module';
 
 describe('PeticionEvaluacionListadoInvComponent', () => {
   let component: PeticionEvaluacionListadoInvComponent;
   let fixture: ComponentFixture<PeticionEvaluacionListadoInvComponent>;
 
   beforeEach(async(() => {
-
-
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
         MaterialDesignModule,
         HttpClientTestingModule,
         BrowserAnimationsModule,
-        TestUtils.getIdiomas()
+        TestUtils.getIdiomas(),
+        FormsModule,
+        ReactiveFormsModule,
+        SharedModule,
+        SgiAuthModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: SgiAuthService, useValue: TestUtils.getSgiAuthServiceSpy() }
+        { provide: SgiAuthService, useValue: TestUtils.getSgiAuthServiceSpy() },
+        SgiAuthService
       ],
       declarations: [PeticionEvaluacionListadoInvComponent]
     })

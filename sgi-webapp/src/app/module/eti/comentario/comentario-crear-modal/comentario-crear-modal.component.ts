@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { ApartadoFormulario } from '@core/models/eti/apartado-formulario';
-import { BloqueFormulario } from '@core/models/eti/bloque-formulario';
-import { Comentario } from '@core/models/eti/comentario';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { IApartadoFormulario } from '@core/models/eti/apartado-formulario';
+import { IBloqueFormulario } from '@core/models/eti/bloque-formulario';
+import { IComentario } from '@core/models/eti/comentario';
 import { TipoComentario } from '@core/models/eti/tipo-comentario';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ApartadoFormularioService } from '@core/services/eti/apartado-formulario.service';
@@ -11,10 +12,11 @@ import { BloqueFormularioService } from '@core/services/eti/bloque-formulario.se
 import { TipoComentarioService } from '@core/services/eti/tipo-comentario.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
+import { IsApartadoFormulario } from '@core/validators/is-apartado-formulario-validador';
+import { IsBloqueFormulario } from '@core/validators/is-bloque-formulario-validador';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 
 const MSG_ERROR_BLOQUE = marker('eti.comentario.crear.bloque.error.cargar');
 const MSG_ERROR_TIPO_COMENTARIO = marker('eti.comentario.crear.tipoComentario.error');
@@ -30,9 +32,9 @@ export class ComentarioCrearModalComponent implements OnInit, OnDestroy {
   formGroup: FormGroup;
   fxLayoutProperties: FxLayoutProperties;
 
-  bloquesFormulario: BloqueFormulario[];
-  apartadosFormulario: ApartadoFormulario[];
-  subapartados: ApartadoFormulario[];
+  bloquesFormulario: IBloqueFormulario[];
+  apartadosFormulario: IApartadoFormulario[];
+  subapartados: IApartadoFormulario[];
   suscripciones: Subscription[];
   tipoComentario: TipoComentario;
 
@@ -57,16 +59,26 @@ export class ComentarioCrearModalComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.logger.debug(ComentarioCrearModalComponent.name, 'ngOnInit()', 'start');
     this.suscripciones = [];
-    this.subapartados = [];
     this.formGroup = new FormGroup({
-      bloqueFormulario: new FormControl('', [Validators.required]),
-      apartadoFormulario: new FormControl('', [Validators.required]),
-      subapartado: new FormControl('', []),
-      comentario: new FormControl('', [Validators.required])
+      bloqueFormulario: new FormControl('', [IsBloqueFormulario.isValid()]),
+      apartadoFormulario: new FormControl('', [IsApartadoFormulario.isValid()]),
+      subapartado: new FormControl('', [IsApartadoFormulario.isValid()]),
+      comentario: new FormControl('', [])
     });
+    this.initDatosApartados();
     this.loadAllBloques();
     this.loadAllTipoComentario();
     this.logger.debug(ComentarioCrearModalComponent.name, 'ngOnInit()', 'end');
+  }
+
+  /**
+   * Reinicia los datos de los apartados cuando se cambia de bloque
+   */
+  private initDatosApartados(): void {
+    this.apartadosFormulario = [];
+    this.subapartados = [];
+    FormGroupUtil.setValue(this.formGroup, 'apartadoFormulario', '');
+    FormGroupUtil.setValue(this.formGroup, 'subapartado', '');
   }
 
   ngOnDestroy(): void {
@@ -82,7 +94,7 @@ export class ComentarioCrearModalComponent implements OnInit, OnDestroy {
     this.logger.debug(ComentarioCrearModalComponent.name, 'cargarBloques()', 'start');
     this.suscripciones.push(
       this.bloqueFormularioService.findAll().subscribe(
-        (res: SgiRestListResult<BloqueFormulario>) => {
+        (res: SgiRestListResult<IBloqueFormulario>) => {
           this.bloquesFormulario = res.items;
           this.logger.debug(ComentarioCrearModalComponent.name, 'cargarBloques()', 'end');
         },
@@ -122,11 +134,12 @@ export class ComentarioCrearModalComponent implements OnInit, OnDestroy {
    */
   loadApartados(): void {
     this.logger.debug(ComentarioCrearModalComponent.name, 'cargarApartadosBloque()', 'start');
+    this.initDatosApartados();
     const id = Number(FormGroupUtil.getValue(this.formGroup, 'bloqueFormulario')?.id);
     if (id && !isNaN(id)) {
       this.suscripciones.push(
         this.bloqueFormularioService.getApartados(id).subscribe(
-          (res: SgiRestListResult<ApartadoFormulario>) => {
+          (res: SgiRestListResult<IApartadoFormulario>) => {
             this.apartadosFormulario = res.items;
             this.logger.debug(ComentarioCrearModalComponent.name, 'cargarApartadosBloque()', 'end');
           },
@@ -148,7 +161,7 @@ export class ComentarioCrearModalComponent implements OnInit, OnDestroy {
     if (id && !isNaN(id)) {
       this.suscripciones.push(
         this.apartadoFormularioService.getHijos(id).subscribe(
-          (res: SgiRestListResult<ApartadoFormulario>) => {
+          (res: SgiRestListResult<IApartadoFormulario>) => {
             this.subapartados = res.items;
             this.logger.debug(ComentarioCrearModalComponent.name, 'cargarSubapartados()', 'end');
           },
@@ -178,17 +191,17 @@ export class ComentarioCrearModalComponent implements OnInit, OnDestroy {
    *
    * @param comentario Comentario creado
    */
-  closeModal(comentario?: Comentario): void {
+  closeModal(comentario?: IComentario): void {
     this.logger.debug(ComentarioCrearModalComponent.name, 'cerrarModal()', 'start');
     this.matDialogRef.close(comentario);
     this.logger.debug(ComentarioCrearModalComponent.name, 'cerrarModal()', 'end');
   }
 
-  getNombreBloqueFormulario(bloqueFormulario: BloqueFormulario): string {
+  getNombreBloqueFormulario(bloqueFormulario: IBloqueFormulario): string {
     return bloqueFormulario?.nombre;
   }
 
-  getNombreApartadoFormulario(apartadoFormulario: ApartadoFormulario): string {
+  getNombreApartadoFormulario(apartadoFormulario: IApartadoFormulario): string {
     return apartadoFormulario?.nombre;
   }
 
@@ -208,10 +221,10 @@ export class ComentarioCrearModalComponent implements OnInit, OnDestroy {
   /**
    * Método para actualizar la entidad con los datos de un formGroup
    */
-  private getDatosForm(): Comentario {
+  private getDatosForm(): IComentario {
     this.logger.debug(ComentarioCrearModalComponent.name, 'getDatosForm()', 'start');
-    const comentario = new Comentario();
-    const subapartado = FormGroupUtil.getValue(this.formGroup, 'subapartado');
+    const comentario = {} as IComentario;
+    const subapartado: IApartadoFormulario = FormGroupUtil.getValue(this.formGroup, 'subapartado');
     if (subapartado) {
       comentario.apartadoFormulario = subapartado;
     } else {

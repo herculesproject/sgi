@@ -32,8 +32,8 @@ const routes: SgiRoutes = [
       {
         path: INV_ROUTE_NAMES.EVALUACIONES,
         loadChildren: () =>
-          import('../eti/evaluacion/evaluacion.module').then(
-            (m) => m.EvaluacionModule
+          import('../eti/evaluacion-evaluador/evaluacion-evaluador.module').then(
+            (m) => m.EvaluacionEvaluadorModule
           ),
         canActivate: [SgiAuthGuard],
         data: {
@@ -45,7 +45,7 @@ const routes: SgiRoutes = [
         path: INV_ROUTE_NAMES.SEGUIMIENTOS,
         loadChildren: () =>
           import('../eti/seguimiento/seguimiento.module').then(
-            (m) => m.EvaluacionModule
+            (m) => m.SeguimientoModule
           ),
         canActivate: [SgiAuthGuard],
         data: {

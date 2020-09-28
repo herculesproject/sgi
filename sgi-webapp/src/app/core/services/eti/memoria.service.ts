@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
-import { IEvaluacionWithNumComentario } from '@core/models/eti/dto/evaluacion-with-num-comentarios';
+import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
+import { IEvaluacionWithNumComentario } from '@core/models/eti/evaluacion-with-num-comentarios';
 import { IMemoria } from '@core/models/eti/memoria';
 import { environment } from '@env';
 import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
@@ -24,9 +24,9 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
    *
    * @param id id de la memoria.
    */
-  getDocumentaciones(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<DocumentacionMemoria>> {
+  getDocumentaciones(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IDocumentacionMemoria>> {
     this.logger.debug(MemoriaService.name, `getDocumentaciones(${id}, ${options ? JSON.stringify(options) : options})`, 'start');
-    return this.find<DocumentacionMemoria, DocumentacionMemoria>(
+    return this.find<IDocumentacionMemoria, IDocumentacionMemoria>(
       `${this.endpointUrl}/${id}/documentaciones`, options).pipe(
         tap(() => this.logger.debug(MemoriaService.name,
           `getDocumentaciones(${id}, ${options ? JSON.stringify(options) : options})`, 'end'))
@@ -39,14 +39,14 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
    * @param memoriaId id de la memoria.
    * @param evaluacionId id de la evaluacion.
    */
-  getEvaluaciones(memoriaId: number, evaluacionId: number, options?: SgiRestFindOptions):
+  getEvaluacionesAnteriores(memoriaId: number, evaluacionId: number, options?: SgiRestFindOptions):
     Observable<SgiRestListResult<IEvaluacionWithNumComentario>> {
     this.logger.debug(MemoriaService.name,
-      `getEvaluaciones(${memoriaId}, ${evaluacionId}, ${options ? JSON.stringify(options) : options})`, '-', 'start');
+      `getEvaluacionesAnteriores(${memoriaId}, ${evaluacionId}, ${options ? JSON.stringify(options) : options})`, '-', 'start');
     return this.find<IEvaluacionWithNumComentario, IEvaluacionWithNumComentario>
       (`${this.endpointUrl}/${memoriaId}/evaluaciones-anteriores/${evaluacionId}`, options).pipe(
         tap(() => this.logger.debug(MemoriaService.name,
-          `getEvaluaciones(${memoriaId}, ${evaluacionId}, ${options ? JSON.stringify(options) : options})`, '-', 'end'))
+          `getEvaluacionesAnteriores(${memoriaId}, ${evaluacionId}, ${options ? JSON.stringify(options) : options})`, '-', 'end'))
       );
   }
 

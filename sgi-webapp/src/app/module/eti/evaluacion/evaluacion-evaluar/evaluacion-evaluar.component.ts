@@ -1,15 +1,15 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { ActionComponent } from '@core/component/action.component';
+import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { NGXLogger } from 'ngx-logger';
 
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { ActionComponent } from '@core/component/action.component';
 import { EvaluacionActionService } from '../evaluacion.action.service';
 import { EVALUACION_ROUTE_NAMES } from '../evaluacion-route-names';
-import { DialogService } from '@core/services/dialog.service';
 
-const MSG_BUTTON_SAVE = marker('footer.eti.evaluacion.guardar');
+const MSG_BUTTON_SAVE = marker('botones.guardar');
 const MSG_SUCCESS = marker('eti.evaluacion.evaluar.correcto');
 const MSG_ERROR_SAVE = marker('eti.evaluacion.evaluar.comentarios.error.crear');
 
@@ -36,17 +36,22 @@ export class EvaluacionEvaluarComponent extends ActionComponent {
     dialogService: DialogService
   ) {
     super(actionService, dialogService);
+    this.logger.debug(EvaluacionEvaluarComponent.name, 'constructor()', 'start');
+    this.logger.debug(EvaluacionEvaluarComponent.name, 'constructor()', 'end');
   }
 
   saveOrUpdate(): void {
+    this.logger.debug(EvaluacionEvaluarComponent.name, 'saveOrUpdate()', 'start');
     this.actionService.saveOrUpdate().subscribe(
       () => { },
       () => {
         this.snackBarService.showError(MSG_ERROR_SAVE);
+        this.logger.error(EvaluacionEvaluarComponent.name, 'saveOrUpdate()', 'error');
       },
       () => {
         this.snackBarService.showSuccess(MSG_SUCCESS);
         this.router.navigate(['../'], { relativeTo: this.route });
+        this.logger.debug(EvaluacionEvaluarComponent.name, 'saveOrUpdate()', 'end');
       }
     );
   }

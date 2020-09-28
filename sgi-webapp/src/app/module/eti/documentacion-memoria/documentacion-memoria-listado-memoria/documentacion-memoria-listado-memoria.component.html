@@ -13,15 +13,10 @@
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> {{'eti.documentacion-memoria.listado.memoria.acciones' | translate}} </th>
       <td mat-cell *matCellDef="let unidadMedida">
-        <button mat-button matTooltip="{{'eti.documentacion-memoria.listado.memoria.descargar' | translate}}">
-          <mat-icon color="primary">border_color</mat-icon>
-        </button>
       </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="columnas"></tr>
     <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
   </table>
-  <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
-  </mat-paginator>
 </div>

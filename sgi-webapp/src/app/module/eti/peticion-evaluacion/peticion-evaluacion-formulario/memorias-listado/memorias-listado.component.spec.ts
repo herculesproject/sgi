@@ -1,10 +1,14 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { MemoriasListadoComponent } from './memorias-listado.component';
-import { NGXLogger } from 'ngx-logger';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
-import { MatDialog } from '@angular/material/dialog';
-import { Overlay } from '@angular/cdk/overlay';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
+import { NGXLogger } from 'ngx-logger';
+
+import { PeticionEvaluacionActionService } from '../../peticion-evaluacion.action.service';
+import { MemoriasListadoComponent } from './memorias-listado.component';
 
 describe('MemoriasListadoComponent', () => {
   let component: MemoriasListadoComponent;
@@ -13,10 +17,19 @@ describe('MemoriasListadoComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [MemoriasListadoComponent],
+      imports: [
+        MaterialDesignModule,
+        HttpClientTestingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        RouterTestingModule,
+        SgiAuthModule,
+        TestUtils.getIdiomas()
+      ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-        MatDialog,
-        Overlay
+        PeticionEvaluacionActionService,
+        SgiAuthService
       ]
     })
       .compileComponents();

@@ -10,6 +10,7 @@ import { FlexModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NGXLogger } from 'ngx-logger';
 import { MatDialogRef } from '@angular/material/dialog';
+import { SharedModule } from '@shared/shared.module';
 
 describe('EquipoInvestigadorCrearModalComponent', () => {
   let component: EquipoInvestigadorCrearModalComponent;
@@ -25,7 +26,8 @@ describe('EquipoInvestigadorCrearModalComponent', () => {
         BrowserAnimationsModule,
         HttpClientTestingModule,
         FlexModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        SharedModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },

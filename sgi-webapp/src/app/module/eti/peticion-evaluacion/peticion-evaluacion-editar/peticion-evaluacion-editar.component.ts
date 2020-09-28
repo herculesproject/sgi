@@ -1,15 +1,14 @@
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, ViewEncapsulation } from '@angular/core';
-import { NGXLogger } from 'ngx-logger';
-import { SnackBarService } from '@core/services/snack-bar.service';
-
 import { ActivatedRoute, Router } from '@angular/router';
-
-import { PeticionEvaluacionActionService } from '../peticion-evaluacion.action.service';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ActionComponent } from '@core/component/action.component';
-import { DialogService } from '@core/services/dialog.service';
-import { PETICION_EVALUACION_ROUTE_NAMES } from '../peticion-evaluacion-route-names';
 import { ActionService } from '@core/services/action-service';
+import { DialogService } from '@core/services/dialog.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { NGXLogger } from 'ngx-logger';
+
+import { PETICION_EVALUACION_ROUTE_NAMES } from '../peticion-evaluacion-route-names';
+import { PeticionEvaluacionActionService } from '../peticion-evaluacion.action.service';
 
 const MSG_BUTTON_EDIT = marker('footer.eti.peticionEvaluacion.actualizar');
 const MSG_SUCCESS = marker('eti.peticionEvaluacion.editar.correcto');
@@ -34,7 +33,8 @@ export class PeticionEvaluacionEditarComponent extends ActionComponent {
 
   textoCrear = MSG_BUTTON_EDIT;
 
-  constructor(protected readonly logger: NGXLogger,
+  constructor(
+    protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     private readonly router: Router,
     private route: ActivatedRoute,

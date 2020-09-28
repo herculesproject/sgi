@@ -1,23 +1,26 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-
 import { ActivatedRoute } from '@angular/router';
-
+import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { ActionService } from '@core/services/action-service';
-
-import { SgiAuthService } from '@sgi/framework/auth/';
-
-
-import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
-import { PeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
-import { PeticionEvaluacionDatosGeneralesFragment } from './peticion-evaluacion-formulario/peticion-evaluacion-datos-generales/peticion-evaluacion-datos-generales.fragment';
-import { EquipoInvestigadorListadoFragment } from './peticion-evaluacion-formulario/equipo-investigador/equipo-investigador-listado/equipo-investigador-listado.fragment';
-import { MemoriasListadoFragment } from './peticion-evaluacion-formulario/memorias-listado/memorias-listado.fragment';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { EquipoTrabajoService } from '@core/services/eti/equipo-trabajo.service';
-import { NGXLogger } from 'ngx-logger';
+import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { TareaService } from '@core/services/eti/tarea.service';
-import { PeticionEvaluacionTareasFragment } from './peticion-evaluacion-formulario/peticion-evaluacion-tareas/peticion-evaluacion-tareas-listado/peticion-evaluacion-tareas-listado.fragment';
+import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { SgiAuthService } from '@sgi/framework/auth/';
+import { NGXLogger } from 'ngx-logger';
+
+import {
+  EquipoInvestigadorListadoFragment,
+} from './peticion-evaluacion-formulario/equipo-investigador/equipo-investigador-listado/equipo-investigador-listado.fragment';
+import { MemoriasListadoFragment } from './peticion-evaluacion-formulario/memorias-listado/memorias-listado.fragment';
+import {
+  PeticionEvaluacionDatosGeneralesFragment,
+} from './peticion-evaluacion-formulario/peticion-evaluacion-datos-generales/peticion-evaluacion-datos-generales.fragment';
+import {
+  PeticionEvaluacionTareasFragment,
+} from './peticion-evaluacion-formulario/peticion-evaluacion-tareas/peticion-evaluacion-tareas-listado/peticion-evaluacion-tareas-listado.fragment';
+
 
 
 
@@ -32,7 +35,7 @@ export class PeticionEvaluacionActionService extends ActionService {
 
   public readonly: boolean;
 
-  private peticionEvaluacion: PeticionEvaluacion;
+  private peticionEvaluacion: IPeticionEvaluacion;
   private datosGenerales: PeticionEvaluacionDatosGeneralesFragment;
   private equipoInvestigadorListado: EquipoInvestigadorListadoFragment;
   private tareas: PeticionEvaluacionTareasFragment;
@@ -51,7 +54,7 @@ export class PeticionEvaluacionActionService extends ActionService {
   ) {
     super();
 
-    this.peticionEvaluacion = new PeticionEvaluacion();
+    this.peticionEvaluacion = {} as IPeticionEvaluacion;
 
     if (route.snapshot.data.peticionEvaluacion) {
       this.peticionEvaluacion = route.snapshot.data.peticionEvaluacion;

@@ -1,73 +1,100 @@
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { IMemoriaWithPersona } from '@core/models/eti/memoria-with-persona';
+import { IPersona } from '@core/models/sgp/persona';
 import { FormFragment } from '@core/services/action-service';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { Observable, of } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
-import { IMemoria } from '@core/models/eti/memoria';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
-import { Persona } from '@core/models/sgp/persona';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
-interface MemoriaWithPersona extends IMemoria {
-  solicitante: Persona;
-}
+export class EvaluacionDatosMemoriaFragment extends FormFragment<IMemoriaWithPersona> {
 
-export class EvaluacionDatosMemoriaFragment extends FormFragment<MemoriaWithPersona> {
+  private memoria: IMemoriaWithPersona;
 
-  private memoria: MemoriaWithPersona;
-
-  constructor(private fb: FormBuilder, key: number, private service: EvaluacionService, private personaFisicaService: PersonaFisicaService) {
+  constructor(
+    private readonly logger: NGXLogger,
+    private fb: FormBuilder,
+    key: number,
+    private service: EvaluacionService,
+    private personaFisicaService: PersonaFisicaService
+  ) {
     super(key);
-    this.memoria = {} as MemoriaWithPersona;
+    this.logger.debug(EvaluacionDatosMemoriaFragment.name, 'constructor()', 'start');
+    this.memoria = {} as IMemoriaWithPersona;
+    this.logger.debug(EvaluacionDatosMemoriaFragment.name, 'constructor()', 'end');
   }
 
   protected buildFormGroup(): FormGroup {
-    return this.fb.group({
+    this.logger.debug(EvaluacionDatosMemoriaFragment.name, 'buildFormGroup()', 'start');
+    const fb = this.fb.group({
       comite: [{ value: '', disabled: true }],
       fechaEvaluacion: [{ value: '', disabled: true }],
       referenciaMemoria: [{ value: '', disabled: true }],
       solicitante: [{ value: '', disabled: true }],
       version: [{ value: '', disabled: true }]
     });
+    this.logger.debug(EvaluacionDatosMemoriaFragment.name, 'buildFormGroup()', 'end');
+    return fb;
   }
 
-  protected initializer(key: number): Observable<MemoriaWithPersona> {
+  protected initializer(key: number): Observable<IMemoriaWithPersona> {
+    this.logger.debug(EvaluacionDatosMemoriaFragment.name, `initializer(key: ${key})`, 'start');
     return this.service.findById(key).pipe(
       map((evaluacion) => {
-        this.memoria = evaluacion.memoria as MemoriaWithPersona;
+        this.memoria = evaluacion.memoria as IMemoriaWithPersona;
         return this.memoria;
       }),
       switchMap((memoria) => {
-        if (memoria.personaRef) {
-          return this.personaFisicaService.getInformacionBasica(memoria.personaRef).pipe(
-            map((persona) => {
-              memoria.solicitante = persona;
-              return memoria;
-            })
-          );
+        if (memoria.peticionEvaluacion?.personaRef) {
+          return this.personaFisicaService.getInformacionBasica(memoria.peticionEvaluacion.personaRef)
+            .pipe(
+              map((persona) => {
+                memoria.solicitante = persona;
+                return memoria;
+              }),
+              catchError(() => {
+                const solicitante = {} as IPersona;
+                solicitante.nombre = '';
+                solicitante.primerApellido = '';
+                solicitante.segundoApellido = '';
+                memoria.solicitante = solicitante;
+                return of(memoria);
+              })
+            );
         }
         else {
           return of(memoria);
         }
-      })
+      }),
+      tap(() => this.logger.debug(EvaluacionDatosMemoriaFragment.name, `initializer(key: ${key})`, 'end'))
     );
   }
 
-  buildPatch(value: MemoriaWithPersona): { [key: string]: any } {
-    return {
+  buildPatch(value: IMemoriaWithPersona): { [key: string]: any } {
+    this.logger.debug(EvaluacionDatosMemoriaFragment.name, `buildPatch(value: ${value})`, 'start');
+    const patch = {
       comite: value.comite.comite,
       fechaEvaluacion: value.fechaEnvioSecretaria,
       referenciaMemoria: value.numReferencia,
       version: value.version,
       solicitante: `${value?.solicitante?.nombre} ${value?.solicitante?.primerApellido} ${value?.solicitante?.segundoApellido}`
     };
+    this.logger.debug(EvaluacionDatosMemoriaFragment.name, `buildPatch(value: ${value})`, 'end');
+    return patch;
   }
 
-  getValue(): MemoriaWithPersona {
+  getValue(): IMemoriaWithPersona {
+    this.logger.debug(EvaluacionDatosMemoriaFragment.name, 'getValue()', 'start');
+    this.logger.debug(EvaluacionDatosMemoriaFragment.name, 'getValue()', 'end');
     return this.memoria;
   }
 
   saveOrUpdate(): Observable<void> {
-    return of(void 0);
+    this.logger.debug(EvaluacionDatosMemoriaFragment.name, 'saveOrUpdate()', 'start');
+    return of(void 0).pipe(
+      tap(() => this.logger.debug(EvaluacionDatosMemoriaFragment.name, 'saveOrUpdate()', 'end'))
+    );
   }
 
 }

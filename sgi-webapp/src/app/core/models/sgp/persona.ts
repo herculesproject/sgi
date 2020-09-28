@@ -1,4 +1,4 @@
-export class Persona {
+export interface IPersona {
 
   /** ID */
   personaRef: string;
@@ -23,15 +23,4 @@ export class Persona {
 
   /** Nivel académico */
   nivelAcademico: string;
-
-  constructor(personaFisica?: Persona) {
-    this.personaRef = personaFisica?.personaRef;
-    this.nombre = personaFisica?.nombre;
-    this.primerApellido = personaFisica?.primerApellido;
-    this.segundoApellido = personaFisica?.segundoApellido;
-    this.identificadorNumero = personaFisica?.identificadorNumero;
-    this.identificadorLetra = personaFisica?.identificadorLetra;
-  }
-
-
 }

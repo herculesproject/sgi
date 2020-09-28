@@ -103,7 +103,7 @@ const routes: SgiRoutes = [
         path: ETI_ROUTE_NAMES.SEGUIMIENTOS,
         loadChildren: () =>
           import('./seguimiento/seguimiento.module').then(
-            (m) => m.EvaluacionModule
+            (m) => m.SeguimientoModule
           ),
         canActivate: [SgiAuthGuard],
         data: {

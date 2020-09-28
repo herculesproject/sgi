@@ -8,6 +8,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthService } from '@sgi/framework/auth';
+import { SharedModule } from '@shared/shared.module';
 import { NGXLogger } from 'ngx-logger';
 
 import { GestionSeguimientoListadoComponent } from './gestion-seguimiento-listado.component';
@@ -27,7 +28,8 @@ describe('GestionSeguimientoListadoComponent', () => {
         TestUtils.getIdiomas(),
         FlexLayoutModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        SharedModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },

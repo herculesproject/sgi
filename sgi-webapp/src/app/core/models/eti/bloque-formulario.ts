@@ -1,11 +1,11 @@
-import { Formulario } from './formulario';
+import { IFormulario } from './formulario';
 
-export class BloqueFormulario {
+export interface IBloqueFormulario {
   /** Id */
   id: number;
 
   /** Formulario */
-  formulario: Formulario;
+  formulario: IFormulario;
 
   /** Nombre */
   nombre: string;
@@ -15,12 +15,4 @@ export class BloqueFormulario {
 
   /** Activo */
   activo: boolean;
-
-  constructor(bloqueFormulario?: BloqueFormulario) {
-    this.id = bloqueFormulario?.id;
-    this.formulario = bloqueFormulario?.formulario;
-    this.nombre = bloqueFormulario?.nombre;
-    this.orden = bloqueFormulario?.orden;
-    this.activo = bloqueFormulario?.activo;
-  }
 }

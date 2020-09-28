@@ -1,4 +1,4 @@
-export class Formulario {
+export interface IFormulario {
   /** Id */
   id: number;
 
@@ -10,11 +10,4 @@ export class Formulario {
 
   /** Activo */
   activo: boolean;
-
-  constructor(formulario?: Formulario) {
-    this.id = formulario?.id;
-    this.nombre = formulario?.nombre;
-    this.descripcion = formulario?.descripcion;
-    this.activo = formulario?.activo;
-  }
 }

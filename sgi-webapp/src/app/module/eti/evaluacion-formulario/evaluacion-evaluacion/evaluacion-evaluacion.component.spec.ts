@@ -9,7 +9,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { NGXLogger } from 'ngx-logger';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { EvaluacionActionService } from '../../evaluacion/evaluacion.action.service';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { EvaluacionListadoAnteriorMemoriaComponent } from '../evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
 
 describe('EvaluacionEvaluacionComponent', () => {
   let component: EvaluacionEvaluacionComponent;
@@ -17,13 +18,18 @@ describe('EvaluacionEvaluacionComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [EvaluacionEvaluacionComponent],
+      declarations: [
+        EvaluacionEvaluacionComponent,
+        EvaluacionListadoAnteriorMemoriaComponent
+      ],
       imports: [
         BrowserAnimationsModule,
         MaterialDesignModule,
         HttpClientTestingModule,
         TestUtils.getIdiomas(),
         RouterTestingModule,
+        FormsModule,
+        ReactiveFormsModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },

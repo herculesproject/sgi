@@ -1,12 +1,15 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { PeticionEvaluacionDatosGeneralesComponent } from './peticion-evaluacion-datos-generales.component';
-import { NGXLogger } from 'ngx-logger';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
-import { HttpClient, HttpHandler } from '@angular/common/http';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
+import { NGXLogger } from 'ngx-logger';
 import { PeticionEvaluacionActionService } from '../../peticion-evaluacion.action.service';
-import { FormBuilder } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { PeticionEvaluacionDatosGeneralesComponent } from './peticion-evaluacion-datos-generales.component';
+
 
 describe('PeticionEvaluacionDatosGeneralesComponent', () => {
   let component: PeticionEvaluacionDatosGeneralesComponent;
@@ -15,13 +18,20 @@ describe('PeticionEvaluacionDatosGeneralesComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [PeticionEvaluacionDatosGeneralesComponent],
+      imports: [
+        HttpClientTestingModule,
+        FormsModule,
+        ReactiveFormsModule,
+        RouterTestingModule,
+        SgiAuthModule,
+        TestUtils.getIdiomas(),
+        MaterialDesignModule,
+        BrowserAnimationsModule
+      ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         PeticionEvaluacionActionService,
-        HttpClient,
-        HttpHandler,
-        FormBuilder,
-        ActivatedRoute
+        SgiAuthService
       ]
     })
       .compileComponents();

@@ -13,10 +13,12 @@ export class ActaAsistentesFragment extends Fragment {
 
   private selectedIdConvocatoria: number;
 
-  constructor(key: number,
+  constructor(
+    key: number,
     private service: ConvocatoriaReunionService,
     private personaService: PersonaFisicaService,
-    private asistenteService: AsistenteService) {
+    private asistenteService: AsistenteService
+  ) {
     super(key);
     this.selectedIdConvocatoria = key;
   }

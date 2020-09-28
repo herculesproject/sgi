@@ -73,8 +73,8 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
 
   ngAfterViewInit(): void {
     this.logger.debug(EvaluacionEvaluacionComponent.name, 'ngAfterViewInit()', 'start');
-    this.evaluaciones.memoriaId = this.actionService.getEvaluacion().memoria.id;
-    this.evaluaciones.evaluacionId = this.actionService.getEvaluacion().id;
+    this.evaluaciones.memoriaId = this.actionService.getEvaluacion()?.memoria?.id;
+    this.evaluaciones.evaluacionId = this.actionService.getEvaluacion()?.id;
     this.evaluaciones.ngAfterViewInit();
     this.logger.debug(EvaluacionEvaluacionComponent.name, 'ngAfterViewInit()', 'end');
   }

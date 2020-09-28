@@ -1,18 +1,19 @@
-import { Fragment } from '@core/services/action-service';
-import { Observable, of, BehaviorSubject, from } from 'rxjs';
-import { map, mergeMap, endWith } from 'rxjs/operators';
 import { ITarea } from '@core/models/eti/tarea';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { Fragment } from '@core/services/action-service';
 import { TareaService } from '@core/services/eti/tarea.service';
+import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { SgiRestFilter, SgiRestFilterType } from '@sgi/framework/http';
+import { BehaviorSubject, from, Observable, of } from 'rxjs';
+import { endWith, map, mergeMap } from 'rxjs/operators';
 
 export class PeticionEvaluacionTareasFragment extends Fragment {
 
   tareas$: BehaviorSubject<StatusWrapper<ITarea>[]> = new BehaviorSubject<StatusWrapper<ITarea>[]>([]);
   filter: SgiRestFilter[];
 
-  constructor(key: number,
+  constructor(
+    key: number,
     private personaService: PersonaFisicaService,
     private tareaService: TareaService) {
     super(key);

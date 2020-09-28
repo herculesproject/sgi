@@ -7,6 +7,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
+import { SharedModule } from '@shared/shared.module';
 import { NGXLogger } from 'ngx-logger';
 
 import { EvaluacionListadoComponent } from './evaluacion-listado.component';
@@ -27,6 +28,7 @@ describe('EvaluacionListadoComponent', () => {
         FlexLayoutModule,
         FormsModule,
         ReactiveFormsModule,
+        SharedModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },

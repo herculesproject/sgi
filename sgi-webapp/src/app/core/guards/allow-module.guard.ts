@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { SgiAuthService, hasModuleAccess } from '@sgi/framework/auth';
 import { Module } from '@core/module';
 
+
 @Injectable({
   providedIn: 'root'
 })

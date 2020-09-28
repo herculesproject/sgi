@@ -1,12 +1,13 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HeaderComponent } from '@block/header/header.component';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 
 import { BuscarPersonaComponent } from './buscar-persona.component';
@@ -16,12 +17,6 @@ describe('BuscarPersonaComponent', () => {
   let fixture: ComponentFixture<BuscarPersonaComponent>;
 
   beforeEach(async(() => {
-    // Mock logger
-    const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(
-      NGXLogger.name,
-      TestUtils.getOwnMethodNames(NGXLogger.prototype)
-    );
-
     const mockDialogRef = {
       close: jasmine.createSpy('close'),
     };
@@ -37,15 +32,18 @@ describe('BuscarPersonaComponent', () => {
         HttpClientTestingModule,
         MatDialogModule,
         TestUtils.getIdiomas(),
-        FormsModule
+        FormsModule,
+        ReactiveFormsModule,
+        SgiAuthModule
       ],
       providers: [
         {
           provide: MatDialogRef,
           useValue: mockDialogRef,
         },
-        { provide: NGXLogger, useValue: loggerSpy },
+        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: MAT_DIALOG_DATA, useValue: matDialogData },
+        SgiAuthService
       ],
       declarations: [BuscarPersonaComponent, HeaderComponent],
     }).compileComponents();

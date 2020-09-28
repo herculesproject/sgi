@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ApartadoFormulario } from '@core/models/eti/apartado-formulario';
-import { BloqueFormulario } from '@core/models/eti/bloque-formulario';
+import { IApartadoFormulario } from '@core/models/eti/apartado-formulario';
+import { IBloqueFormulario } from '@core/models/eti/bloque-formulario';
 import { environment } from '@env';
 import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
@@ -11,7 +11,7 @@ import { tap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class BloqueFormularioService extends SgiRestService<number, BloqueFormulario> {
+export class BloqueFormularioService extends SgiRestService<number, IBloqueFormulario> {
   private static readonly MAPPING = '/bloqueformularios';
 
   constructor(logger: NGXLogger, protected http: HttpClient) {
@@ -29,9 +29,9 @@ export class BloqueFormularioService extends SgiRestService<number, BloqueFormul
    * @param id Id del bloque
    * @param options Opciones de paginación
    */
-  getApartados(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<ApartadoFormulario>> {
+  getApartados(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IApartadoFormulario>> {
     this.logger.debug(BloqueFormularioService.name, `getApartados(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
-    return this.find<ApartadoFormulario, ApartadoFormulario>(`${this.endpointUrl}/${id}/apartados`, options).pipe(
+    return this.find<IApartadoFormulario, IApartadoFormulario>(`${this.endpointUrl}/${id}/apartados`, options).pipe(
       tap(() => this.logger.debug(BloqueFormularioService.name, `getApartados(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
     );
   }

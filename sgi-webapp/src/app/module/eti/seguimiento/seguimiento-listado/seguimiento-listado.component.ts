@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { AbstractPaginacionComponent } from '@core/component/abstract-paginacion.component';
+import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { Comite } from '@core/models/eti/comite';
-import { EvaluacionListado } from '@core/models/eti/dto/evaluacion-listado';
-import { IEvaluacion } from '@core/models/eti/evaluacion';
-import { Persona } from '@core/models/sgp/persona';
+import { IEvaluacionSolicitante } from '@core/models/eti/evaluacion-solicitante';
+import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ComiteService } from '@core/services/eti/comite.service';
@@ -26,8 +25,8 @@ const MSG_ERROR = marker('eti.seguimiento.listado.error');
   templateUrl: './seguimiento-listado.component.html',
   styleUrls: ['./seguimiento-listado.component.scss']
 })
-export class SeguimientoListadoComponent extends AbstractPaginacionComponent<IEvaluacion> implements OnInit {
-  evaluaciones: EvaluacionListado[];
+export class SeguimientoListadoComponent extends AbstractTablePaginationComponent<IEvaluacionSolicitante> implements OnInit {
+  evaluaciones: IEvaluacionSolicitante[];
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
   comiteListado: Comite[];
@@ -36,7 +35,6 @@ export class SeguimientoListadoComponent extends AbstractPaginacionComponent<IEv
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
-    private readonly sgiAuthService: SgiAuthService,
     private readonly personaFisicaService: PersonaFisicaService,
     private readonly comiteService: ComiteService,
     private readonly evaluadorService: EvaluadorService
@@ -70,10 +68,9 @@ export class SeguimientoListadoComponent extends AbstractPaginacionComponent<IEv
     this.logger.debug(SeguimientoListadoComponent.name, 'ngOnInit()', 'end');
   }
 
-  protected createObservable(): Observable<SgiRestListResult<IEvaluacion>> {
+  protected createObservable(): Observable<SgiRestListResult<IEvaluacionSolicitante>> {
     this.logger.debug(SeguimientoListadoComponent.name, 'createObservable()', 'start');
-    const userRefId = this.sgiAuthService.authStatus$.getValue().userRefId;
-    const observable$ = this.evaluadorService.getSeguimientos(userRefId, this.getFindOptions());
+    const observable$ = this.evaluadorService.getSeguimientos(this.getFindOptions());
     this.logger.debug(SeguimientoListadoComponent.name, 'createObservable()', 'end');
     return observable$;
   }
@@ -90,7 +87,7 @@ export class SeguimientoListadoComponent extends AbstractPaginacionComponent<IEv
     const evaluaciones$ = this.getObservableLoadTable(reset);
     this.suscripciones.push(
       evaluaciones$.subscribe(
-        (evaluaciones: EvaluacionListado[]) => {
+        (evaluaciones: IEvaluacionSolicitante[]) => {
           this.evaluaciones = [];
           if (evaluaciones) {
             this.evaluaciones = evaluaciones;
@@ -110,12 +107,12 @@ export class SeguimientoListadoComponent extends AbstractPaginacionComponent<IEv
    */
   private loadSolicitantes(): void {
     this.logger.debug(SeguimientoListadoComponent.name, `loadSolicitantes()`, 'start');
-    this.evaluaciones.map((evaluacion: EvaluacionListado) => {
+    this.evaluaciones.map((evaluacion: IEvaluacionSolicitante) => {
       const personaRef = evaluacion.memoria?.peticionEvaluacion?.personaRef;
       if (personaRef) {
         this.suscripciones.push(
           this.personaFisicaService.getInformacionBasica(personaRef).subscribe(
-            (persona: Persona) => evaluacion.persona = persona
+            (persona: IPersona) => evaluacion.persona = persona
           )
         );
       }

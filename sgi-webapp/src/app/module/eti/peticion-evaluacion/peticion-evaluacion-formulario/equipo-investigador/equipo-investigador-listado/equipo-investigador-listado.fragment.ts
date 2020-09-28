@@ -1,23 +1,24 @@
+import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
+import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
+import { IPersona } from '@core/models/sgp/persona';
 import { Fragment } from '@core/services/action-service';
-import { Observable, of, BehaviorSubject, from } from 'rxjs';
-import { map, mergeMap, endWith, switchMap, tap } from 'rxjs/operators';
+import { EquipoTrabajoService } from '@core/services/eti/equipo-trabajo.service';
+import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
-import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
-import { EquipoTrabajoService } from '@core/services/eti/equipo-trabajo.service';
-import { Persona } from '@core/models/sgp/persona';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { PeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
+import { BehaviorSubject, from, Observable, of } from 'rxjs';
+import { endWith, map, mergeMap, switchMap, tap } from 'rxjs/operators';
+
 
 export class EquipoInvestigadorListadoFragment extends Fragment {
 
   equiposTrabajo$: BehaviorSubject<StatusWrapper<IEquipoTrabajo>[]> = new BehaviorSubject<StatusWrapper<IEquipoTrabajo>[]>([]);
   private deleted: StatusWrapper<IEquipoTrabajo>[] = [];
 
-  private peticionEvaluacion: PeticionEvaluacion;
+  private peticionEvaluacion: IPeticionEvaluacion;
 
   private selectedIdPeticionEvaluacion: number;
 
@@ -39,7 +40,7 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
     this.logger.debug(EquipoInvestigadorListadoFragment.name, 'onInitialize()', 'end');
   }
 
-  setPeticionEvaluacion(value: PeticionEvaluacion) {
+  setPeticionEvaluacion(value: IPeticionEvaluacion) {
     if (!value || value.id !== this.getKey()) {
       Error('Value mistmatch');
     }
@@ -72,11 +73,11 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
             if (response.items) {
               const personaRefsEquiposTrabajo = equiposTrabajo.map((equipoTrabajo: IEquipoTrabajo) => equipoTrabajo.personaRef);
               const equiposTrabajoWithDatosPersona$ = this.personaFisicaService.findByPersonasRefs([...personaRefsEquiposTrabajo]).pipe(
-                map((result: SgiRestListResult<Persona>) => {
+                map((result: SgiRestListResult<IPersona>) => {
                   const personas = result.items;
 
                   equiposTrabajo.forEach((equipoTrabajo: IEquipoTrabajo) => {
-                    const datosPersona = personas.find((persona: Persona) =>
+                    const datosPersona = personas.find((persona: IPersona) =>
                       equipoTrabajo.personaRef === persona.personaRef);
 
                     equipoTrabajo.nombre = datosPersona?.nombre;
@@ -184,9 +185,9 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
   private getInvestigadorActual(): Observable<IEquipoTrabajo> {
     this.logger.debug(EquipoInvestigadorListadoFragment.name, 'getInvestigadorActual()', 'start');
 
-    return this.personaFisicaService.getInformacionBasica(this.sgiAuthService.authStatus$.getValue().userRefId)
+    return this.personaFisicaService.getInformacionBasica(this.sgiAuthService.authStatus$?.getValue()?.userRefId)
       .pipe(
-        map((persona: Persona) => {
+        map((persona: IPersona) => {
           this.logger.debug(EquipoInvestigadorListadoFragment.name, 'getInvestigadorActual()', 'end');
           return {
             id: null,

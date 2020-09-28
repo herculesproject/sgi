@@ -1,22 +1,20 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { SnackBarComponent } from './snack-bar.component';
-import { NGXLogger } from 'ngx-logger';
-import TestUtils from '@core/utils/test-utils';
+import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
+import { SgiAuthModule } from '@sgi/framework/auth';
+import { NGXLogger } from 'ngx-logger';
+
+import { SnackBarComponent } from './snack-bar.component';
 
 describe('SnackBarComponent', () => {
   let component: SnackBarComponent;
   let fixture: ComponentFixture<SnackBarComponent>;
 
   beforeEach(async(() => {
-    // Mock logger
-    const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(NGXLogger.name, TestUtils.getOwnMethodNames(NGXLogger.prototype));
-
     // Mock MAT_SNACK_BAR_DATA
     const matSnackBarData = {};
 
@@ -26,10 +24,11 @@ describe('SnackBarComponent', () => {
         RouterTestingModule,
         MaterialDesignModule,
         HttpClientTestingModule,
-        TestUtils.getIdiomas()
+        TestUtils.getIdiomas(),
+        SgiAuthModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: loggerSpy },
+        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: MAT_SNACK_BAR_DATA, useValue: matSnackBarData }
       ],
       declarations: [SnackBarComponent]

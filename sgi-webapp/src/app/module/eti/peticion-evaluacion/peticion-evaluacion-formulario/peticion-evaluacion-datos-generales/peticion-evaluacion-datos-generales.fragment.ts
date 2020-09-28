@@ -1,28 +1,32 @@
+import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { FormFragment } from '@core/services/action-service';
-import { PeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Observable, of, EMPTY } from 'rxjs';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { NullIdValidador } from '@core/validators/null-id-validador';
-import { switchMap, catchError, map } from 'rxjs/operators';
 import { SgiAuthService } from '@sgi/framework/auth/public-api';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
-export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<PeticionEvaluacion> {
+export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeticionEvaluacion> {
 
-  private peticionEvaluacion: PeticionEvaluacion;
+  private peticionEvaluacion: IPeticionEvaluacion;
   public readonly: boolean;
 
-  constructor(private fb: FormBuilder, key: number, private service: PeticionEvaluacionService,
-    private sgiAuthService: SgiAuthService, readonly: boolean) {
+  constructor(
+    private fb: FormBuilder,
+    key: number,
+    private service: PeticionEvaluacionService,
+    private sgiAuthService: SgiAuthService,
+    readonly: boolean
+  ) {
     super(key);
-    this.peticionEvaluacion = new PeticionEvaluacion();
+    this.peticionEvaluacion = {} as IPeticionEvaluacion;
     this.peticionEvaluacion.activo = true;
     this.peticionEvaluacion.externo = false;
     this.peticionEvaluacion.tieneFondosPropios = false;
     this.peticionEvaluacion.personaRef = sgiAuthService.authStatus$.getValue().userRefId;
     this.readonly = readonly;
   }
-
 
   protected buildFormGroup(): FormGroup {
     return this.fb.group({
@@ -38,9 +42,9 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<Petic
     });
   }
 
-  protected initializer(key: number): Observable<PeticionEvaluacion> {
+  protected initializer(key: number): Observable<IPeticionEvaluacion> {
     return this.service.findById(key).pipe(
-      switchMap((value: PeticionEvaluacion) => {
+      switchMap((value: IPeticionEvaluacion) => {
         this.peticionEvaluacion = value;
         return of(value);
       }),
@@ -50,7 +54,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<Petic
     );
   }
 
-  protected buildPatch(value: PeticionEvaluacion): { [key: string]: any; } {
+  protected buildPatch(value: IPeticionEvaluacion): { [key: string]: any; } {
     return {
       titulo: value.titulo,
       tipoActividad: value.tipoActividad,
@@ -66,7 +70,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<Petic
     };
   }
 
-  getValue(): PeticionEvaluacion {
+  getValue(): IPeticionEvaluacion {
     const form = this.getFormGroup().value;
     this.peticionEvaluacion.titulo = form.titulo;
     this.peticionEvaluacion.tipoActividad = form.tipoActividad;

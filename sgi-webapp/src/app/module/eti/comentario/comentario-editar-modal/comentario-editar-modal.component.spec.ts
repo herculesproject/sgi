@@ -1,16 +1,16 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Comentario } from '@core/models/eti/comentario';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthModule } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 
 import { ComentarioEditarModalComponent } from './comentario-editar-modal.component';
-import { ReactiveFormsModule } from '@angular/forms';
 
 describe('ComentarioActualizarModalComponent', () => {
   let component: ComentarioEditarModalComponent;
@@ -25,7 +25,8 @@ describe('ComentarioActualizarModalComponent', () => {
         HttpClientTestingModule,
         TestUtils.getIdiomas(),
         RouterTestingModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        SgiAuthModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },

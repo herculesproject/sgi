@@ -1,8 +1,8 @@
-import { Persona } from '../sgp/persona';
+import { IPersona } from '../sgp/persona';
 import { CargoComite } from './cargo-comite';
 import { Comite } from './comite';
 
-export interface IEvaluador extends Persona {
+export interface IEvaluador extends IPersona {
 
   /** Id */
   id: number;

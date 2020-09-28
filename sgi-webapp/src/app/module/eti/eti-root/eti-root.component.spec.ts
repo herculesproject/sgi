@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
@@ -28,7 +29,9 @@ describe('EtiRootComponent', () => {
         TestUtils.getIdiomas(),
         MaterialDesignModule,
         RouterTestingModule.withRoutes([]),
-        SgiAuthModule
+        SgiAuthModule,
+        FormsModule,
+        ReactiveFormsModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },

@@ -1,0 +1,49 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import TestUtils from '@core/utils/test-utils';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
+import { NGXLogger } from 'ngx-logger';
+
+import { SeguimientoEvaluarActionService } from '../../seguimiento-evaluar.action.service';
+import { SeguimientoComentariosComponent } from './seguimiento-comentarios.component';
+
+describe('SeguimientoComentariosComponent', () => {
+  let component: SeguimientoComentariosComponent;
+  let fixture: ComponentFixture<SeguimientoComentariosComponent>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [SeguimientoComentariosComponent],
+      imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+        MaterialDesignModule,
+        HttpClientTestingModule,
+        TestUtils.getIdiomas(),
+        RouterTestingModule,
+        SgiAuthModule
+      ],
+      providers: [
+        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+        SeguimientoEvaluarActionService,
+        SgiAuthService
+      ]
+    })
+      .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(SeguimientoComentariosComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

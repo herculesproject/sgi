@@ -1,17 +1,19 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { PeticionEvaluacionCrearComponent } from './peticion-evaluacion-crear.component';
-import { PeticionEvaluacionDatosGeneralesComponent } from '../peticion-evaluacion-formulario/peticion-evaluacion-datos-generales/peticion-evaluacion-datos-generales.component';
-import { FooterGuardarComponent } from '@shared/footers/footer-guardar/footer-guardar.component';
-import TestUtils from '@core/utils/test-utils';
-import { MaterialDesignModule } from '@material/material-design.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FlexModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import TestUtils from '@core/utils/test-utils';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
+import { FooterGuardarComponent } from '@shared/footers/footer-guardar/footer-guardar.component';
 import { NGXLogger } from 'ngx-logger';
-import { SgiAuthService } from '@sgi/framework/auth';
+
+import {
+  PeticionEvaluacionDatosGeneralesComponent,
+} from '../peticion-evaluacion-formulario/peticion-evaluacion-datos-generales/peticion-evaluacion-datos-generales.component';
+import { PeticionEvaluacionCrearComponent } from './peticion-evaluacion-crear.component';
 
 describe('PeticionEvaluacionCrearComponent', () => {
   let component: PeticionEvaluacionCrearComponent;
@@ -19,8 +21,11 @@ describe('PeticionEvaluacionCrearComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [PeticionEvaluacionCrearComponent, PeticionEvaluacionDatosGeneralesComponent,
-        FooterGuardarComponent],
+      declarations: [
+        PeticionEvaluacionCrearComponent,
+        PeticionEvaluacionDatosGeneralesComponent,
+        FooterGuardarComponent
+      ],
       imports: [
         TestUtils.getIdiomas(),
         MaterialDesignModule,

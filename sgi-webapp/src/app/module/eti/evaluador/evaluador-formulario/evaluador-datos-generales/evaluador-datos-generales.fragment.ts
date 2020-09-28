@@ -6,12 +6,12 @@ import { switchMap, catchError, map } from 'rxjs/operators';
 import { IEvaluador } from '@core/models/eti/evaluador';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
-import { Persona } from '@core/models/sgp/persona';
+import { IPersona } from '@core/models/sgp/persona';
 
 export class EvaluadorDatosGeneralesFragment extends FormFragment<IEvaluador> {
 
   private evaluador: IEvaluador;
-  private selectedPersona: Persona;
+  private selectedPersona: IPersona;
   private initialPersonaRef: string;
 
   public isEditForm: boolean;
@@ -23,7 +23,7 @@ export class EvaluadorDatosGeneralesFragment extends FormFragment<IEvaluador> {
     this.isEditForm = isEditForm;
   }
 
-  setPersona(value: Persona): void {
+  setPersona(value: IPersona): void {
     const id = value?.personaRef;
     if (this.isEdit()) {
       this.setChanges(this.initialPersonaRef !== id);
@@ -35,7 +35,7 @@ export class EvaluadorDatosGeneralesFragment extends FormFragment<IEvaluador> {
     this.selectedPersona = value;
   }
 
-  getPersona(): Persona {
+  getPersona(): IPersona {
     return this.selectedPersona;
   }
 

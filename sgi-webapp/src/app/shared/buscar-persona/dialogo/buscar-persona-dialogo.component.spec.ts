@@ -7,6 +7,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HeaderComponent } from '@block/header/header.component';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthModule } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 
 import { BuscarPersonaDialogoComponent } from './buscar-persona-dialogo.component';
@@ -16,12 +17,6 @@ describe('BuscarPersonaDialogoComponent', () => {
   let fixture: ComponentFixture<BuscarPersonaDialogoComponent>;
 
   beforeEach(async(() => {
-    // Mock logger
-    const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(
-      NGXLogger.name,
-      TestUtils.getOwnMethodNames(NGXLogger.prototype)
-    );
-
     const mockDialogRef = {
       close: jasmine.createSpy('close'),
     };
@@ -37,14 +32,15 @@ describe('BuscarPersonaDialogoComponent', () => {
         HttpClientTestingModule,
         MatDialogModule,
         TestUtils.getIdiomas(),
-        FormsModule
+        FormsModule,
+        SgiAuthModule
       ],
       providers: [
         {
           provide: MatDialogRef,
           useValue: mockDialogRef,
         },
-        { provide: NGXLogger, useValue: loggerSpy },
+        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: MAT_DIALOG_DATA, useValue: matDialogData },
       ],
       declarations: [BuscarPersonaDialogoComponent, HeaderComponent],

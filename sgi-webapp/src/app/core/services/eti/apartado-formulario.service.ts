@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ApartadoFormulario } from '@core/models/eti/apartado-formulario';
+import { IApartadoFormulario } from '@core/models/eti/apartado-formulario';
 import { environment } from '@env';
 import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
@@ -10,7 +10,7 @@ import { tap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class ApartadoFormularioService extends SgiRestService<number, ApartadoFormulario> {
+export class ApartadoFormularioService extends SgiRestService<number, IApartadoFormulario> {
   private static readonly MAPPING = '/apartadoformularios';
 
   constructor(logger: NGXLogger, protected http: HttpClient) {
@@ -28,9 +28,9 @@ export class ApartadoFormularioService extends SgiRestService<number, ApartadoFo
    * @param id Id del apartado
    * @param options Opciones de paginación
    */
-  getHijos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<ApartadoFormulario>> {
+  getHijos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IApartadoFormulario>> {
     this.logger.debug(ApartadoFormularioService.name, `getHijos(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
-    return this.find<ApartadoFormulario, ApartadoFormulario>(`${this.endpointUrl}/${id}/hijos`, options).pipe(
+    return this.find<IApartadoFormulario, IApartadoFormulario>(`${this.endpointUrl}/${id}/hijos`, options).pipe(
       tap(() => this.logger.debug(ApartadoFormularioService.name, `getHijos(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
     );
   }

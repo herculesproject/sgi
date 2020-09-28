@@ -1,16 +1,19 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ConvocatoriaReunionCrearComponent } from './convocatoria-reunion-crear.component';
-import TestUtils from '@core/utils/test-utils';
-import { MaterialDesignModule } from '@material/material-design.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FlexModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NGXLogger } from 'ngx-logger';
-import { ConvocatoriaReunionDatosGeneralesComponent } from '../convocatoria-reunion-formulario/convocatoria-reunion-datos-generales/convocatoria-reunion-datos-generales.component';
+import TestUtils from '@core/utils/test-utils';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
+import { NGXLogger } from 'ngx-logger';
+
+import {
+  ConvocatoriaReunionDatosGeneralesComponent,
+} from '../convocatoria-reunion-formulario/convocatoria-reunion-datos-generales/convocatoria-reunion-datos-generales.component';
+import { ConvocatoriaReunionCrearComponent } from './convocatoria-reunion-crear.component';
 
 describe('ConvocatoriaReunionCrearComponent', () => {
   let component: ConvocatoriaReunionCrearComponent;
@@ -30,7 +33,8 @@ describe('ConvocatoriaReunionCrearComponent', () => {
         FlexModule,
         ReactiveFormsModule,
         RouterTestingModule.withRoutes([]),
-        SharedModule
+        SharedModule,
+        SgiAuthModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },

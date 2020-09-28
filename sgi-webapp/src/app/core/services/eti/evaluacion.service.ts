@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Comentario } from '@core/models/eti/comentario';
-import { IEvaluacionSolicitante } from '@core/models/eti/dto/evaluacion-solicitante';
+import { IComentario } from '@core/models/eti/comentario';
+import { IEvaluacionSolicitante } from '@core/models/eti/evaluacion-solicitante';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { environment } from '@env';
 import { SgiBaseConverter } from '@sgi/framework/core';
@@ -73,9 +73,9 @@ export class EvaluacionService extends SgiRestService<number, IEvaluacion>{
    * @param id Id de la evaluación
    * @param options Opciones de paginación
    */
-  getComentarios(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<Comentario>> {
+  getComentarios(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IComentario>> {
     this.logger.debug(EvaluacionService.name, `findByEvaluacionId(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
-    return this.find<Comentario, Comentario>(`${this.endpointUrl}/${id}/comentarios`, options).pipe(
+    return this.find<IComentario, IComentario>(`${this.endpointUrl}/${id}/comentarios`, options).pipe(
       tap(() => this.logger.debug(EvaluacionService.name, `findByEvaluacionId(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
     );
   }
@@ -98,9 +98,9 @@ export class EvaluacionService extends SgiRestService<number, IEvaluacion>{
    * @param id Id de la evaluación
    * @param comentarios Comentarios a crear
    */
-  createComentarios(id: number, comentarios: Comentario[]): Observable<Comentario[]> {
+  createComentarios(id: number, comentarios: IComentario[]): Observable<IComentario[]> {
     this.logger.debug(EvaluacionService.name, `createComentarios(${id}, ${comentarios})`, '-', 'start');
-    return this.http.post<Comentario[]>(`${this.endpointUrl}/${id}/comentarios`, comentarios).pipe(
+    return this.http.post<IComentario[]>(`${this.endpointUrl}/${id}/comentarios`, comentarios).pipe(
       tap(() => this.logger.debug(EvaluacionService.name, `createComentarios(${id}, ${comentarios})`, '-', 'end'))
     );
   }
@@ -111,9 +111,9 @@ export class EvaluacionService extends SgiRestService<number, IEvaluacion>{
    * @param id Id de la evaluación
    * @param comentarios Comentarios a actualizar
    */
-  updateComentarios(id: number, comentarios: Comentario[]): Observable<Comentario[]> {
+  updateComentarios(id: number, comentarios: IComentario[]): Observable<IComentario[]> {
     this.logger.debug(EvaluacionService.name, `updateComentarios(${id}, ${comentarios})`, '-', 'start');
-    return this.http.put<Comentario[]>(`${this.endpointUrl}/${id}/comentarios`, comentarios).pipe(
+    return this.http.put<IComentario[]>(`${this.endpointUrl}/${id}/comentarios`, comentarios).pipe(
       tap(() => this.logger.debug(EvaluacionService.name, `updateComentarios(${id}, ${comentarios})`, '-', 'end'))
     );
   }

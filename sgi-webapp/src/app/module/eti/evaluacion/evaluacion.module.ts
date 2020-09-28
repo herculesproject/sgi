@@ -11,11 +11,12 @@ import { EvaluacionRoutingModule } from './evaluacion-routing.module';
 import { EvaluacionEvaluarComponent } from './evaluacion-evaluar/evaluacion-evaluar.component';
 import { EvaluacionFormularioModule } from '../evaluacion-formulario/evaluacion-formulario.module';
 import { EvaluacionResolver } from '../evaluacion/evaluacion.resolver';
+import { EvaluacionListadoAnteriorMemoriaComponent } from '../evaluacion-formulario/evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
 
 @NgModule({
   declarations: [
     EvaluacionListadoComponent,
-    EvaluacionEvaluarComponent
+    EvaluacionEvaluarComponent,
   ],
   imports: [
     SharedModule,
@@ -27,6 +28,9 @@ import { EvaluacionResolver } from '../evaluacion/evaluacion.resolver';
     SgiAuthModule,
     FormsModule,
     ReactiveFormsModule
+  ],
+  exports: [
+    EvaluacionListadoAnteriorMemoriaComponent,
   ],
   providers: [
     EvaluacionResolver

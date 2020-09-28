@@ -1,9 +1,9 @@
-import { AfterViewInit, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { FormGroupUtil } from '@core/utils/form-group-util';
+import {AfterViewInit, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {FormGroup} from '@angular/forms';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {SnackBarService} from '@core/services/snack-bar.service';
+import {FormGroupUtil} from '@core/utils/form-group-util';
 import {
   SgiRestFilter,
   SgiRestFilterType,
@@ -11,11 +11,11 @@ import {
   SgiRestListResult,
   SgiRestSortDirection,
 } from '@sgi/framework/http';
-import { NGXLogger } from 'ngx-logger';
-import { merge, Observable, of, Subscription } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import {NGXLogger} from 'ngx-logger';
+import {merge, Observable, of, Subscription} from 'rxjs';
+import {catchError, map, tap} from 'rxjs/operators';
 
-export abstract class AbstractPaginacionComponent<T> implements OnInit, OnDestroy, AfterViewInit {
+export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnDestroy, AfterViewInit {
   columnas: string[];
   elementosPagina: number[];
   totalElementos: number;
@@ -23,70 +23,71 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, OnDestro
   suscripciones: Subscription[];
   formGroup: FormGroup;
 
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
 
   protected constructor(
     protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     protected readonly msgError: string
   ) {
-    this.logger.debug(AbstractPaginacionComponent.name, 'constructor()', 'start');
+    this.logger.debug(AbstractTablePaginationComponent.name, 'constructor()', 'start');
     this.elementosPagina = [5, 10, 25, 100];
-    this.logger.debug(AbstractPaginacionComponent.name, 'constructor()', 'end');
+    this.logger.debug(AbstractTablePaginationComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
-    this.logger.debug(AbstractPaginacionComponent.name, 'ngOnInit()', 'start');
+    this.logger.debug(AbstractTablePaginationComponent.name, 'ngOnInit()', 'start');
     this.totalElementos = 0;
     this.suscripciones = [];
     this.filter = [];
     this.initColumnas();
-    this.logger.debug(AbstractPaginacionComponent.name, 'ngOnInit()', 'end');
+    this.logger.debug(AbstractTablePaginationComponent.name, 'ngOnInit()', 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(AbstractPaginacionComponent.name, 'ngOnDestroy()', 'start');
+    this.logger.debug(AbstractTablePaginationComponent.name, 'ngOnDestroy()', 'start');
     this.suscripciones.forEach(x => x.unsubscribe());
-    this.logger.debug(AbstractPaginacionComponent.name, 'ngOnDestroy()', 'end');
+    this.logger.debug(AbstractTablePaginationComponent.name, 'ngOnDestroy()', 'end');
   }
 
   ngAfterViewInit(): void {
-    this.logger.debug(AbstractPaginacionComponent.name, 'ngAfterViewInit()', 'start');
+    this.logger.debug(AbstractTablePaginationComponent.name, 'ngAfterViewInit()', 'start');
     // Merge events that trigger load table data
     merge(
       // Link pageChange event to fire new request
       this.paginator?.page,
       // Link sortChange event to fire new request
       this.sort?.sortChange
-    )
-      .pipe(
-        tap(() => {
-          // Load table
-          this.loadTable();
-        })
-      )
-      .subscribe();
+    ).pipe(
+      tap(() => {
+        // Load table
+        this.loadTable();
+      }),
+      catchError(err => {
+        return err;
+      })
+    ).subscribe();
     // First load
     this.loadTable();
-    this.logger.debug(AbstractPaginacionComponent.name, 'ngAfterViewInit()', 'end');
+    this.logger.debug(AbstractTablePaginationComponent.name, 'ngAfterViewInit()', 'end');
   }
 
   /**
    * Load table data
    */
   onSearch(): void {
-    this.logger.debug(AbstractPaginacionComponent.name, 'onSearch()', 'start');
+    this.logger.debug(AbstractTablePaginationComponent.name, 'onSearch()', 'start');
     this.filter = this.createFiltros();
     this.loadTable(true);
-    this.logger.debug(AbstractPaginacionComponent.name, 'onSearch()', 'end');
+    this.logger.debug(AbstractTablePaginationComponent.name, 'onSearch()', 'end');
   }
 
   /**
    * Clean filters an reload the table
    */
   onClearFilters(): void {
-    this.logger.debug(AbstractPaginacionComponent.name, 'onClearFilters()', 'start');
+    this.logger.debug(AbstractTablePaginationComponent.name, 'onClearFilters()', 'start');
     FormGroupUtil.clean(this.formGroup);
     this.filter = [{
       field: undefined,
@@ -94,7 +95,7 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, OnDestro
       value: '',
     }];
     this.loadTable(true);
-    this.logger.debug(AbstractPaginacionComponent.name, 'onClearFilters()', 'end');
+    this.logger.debug(AbstractTablePaginationComponent.name, 'onClearFilters()', 'end');
   }
 
   /**
@@ -103,7 +104,7 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, OnDestro
    * @param reset Inidica si reinicializa la paginación
    */
   protected getObservableLoadTable(reset?: boolean): Observable<T[]> {
-    this.logger.debug(AbstractPaginacionComponent.name, `getObservableLoadTable(${reset})`, 'start');
+    this.logger.debug(AbstractTablePaginationComponent.name, `getObservableLoadTable(${reset})`, 'start');
     // Do the request with paginator/sort/filter values
     const observable$ = this.createObservable();
     return observable$?.pipe(
@@ -111,19 +112,19 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, OnDestro
         // Map respose total
         this.totalElementos = response.total;
         // Reset pagination to first page
-        if (reset) {
+        if (reset && this.paginator) {
           this.paginator.pageIndex = 0;
         }
-        this.logger.debug(AbstractPaginacionComponent.name, `getObservableLoadTable(${reset})`, 'end');
+        this.logger.debug(AbstractTablePaginationComponent.name, `getObservableLoadTable(${reset})`, 'end');
         // Return the values
         return response.items;
       }),
       catchError(() => {
         // On error reset pagination values
-        this.paginator.firstPage();
+        this.paginator?.firstPage();
         this.totalElementos = 0;
         this.showMensajeErrorLoadTable();
-        this.logger.error(AbstractPaginacionComponent.name, `getObservableLoadTable(${reset})`, 'error');
+        this.logger.error(AbstractTablePaginationComponent.name, `getObservableLoadTable(${reset})`, 'error');
         return of([]);
       })
     );
@@ -136,11 +137,11 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, OnDestro
    * @param reset Indica la pagina actual es la primera o no
    */
   protected getFindOptions(reset?: boolean): SgiRestFindOptions {
-    this.logger.debug(AbstractPaginacionComponent.name, `getFindOptions(${reset})`, 'start');
+    this.logger.debug(AbstractTablePaginationComponent.name, `getFindOptions(${reset})`, 'start');
     const options = {
       page: {
-        index: reset ? 0 : this.paginator.pageIndex,
-        size: this.paginator.pageSize,
+        index: reset ? 0 : this.paginator?.pageIndex,
+        size: this.paginator?.pageSize,
       },
       sort: {
         direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
@@ -148,12 +149,12 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, OnDestro
       },
       filters: this.filter,
     };
-    this.logger.debug(AbstractPaginacionComponent.name, `getFindOptions(${reset})`, 'end');
+    this.logger.debug(AbstractTablePaginationComponent.name, `getFindOptions(${reset})`, 'end');
     return options;
   }
 
   protected addFiltro(filtros: SgiRestFilter[], nombre: string, tipo: SgiRestFilterType, valor: any): void {
-    this.logger.debug(AbstractPaginacionComponent.name, `agregarFiltro([${filtros}], ${nombre}, ${tipo} , ${valor})`, 'start');
+    this.logger.debug(AbstractTablePaginationComponent.name, `agregarFiltro([${filtros}], ${nombre}, ${tipo} , ${valor})`, 'start');
     if (valor) {
       const filtro: SgiRestFilter = {
         field: nombre,
@@ -162,16 +163,16 @@ export abstract class AbstractPaginacionComponent<T> implements OnInit, OnDestro
       };
       filtros.push(filtro);
     }
-    this.logger.debug(AbstractPaginacionComponent.name, `agregarFiltro([${filtros}], ${nombre}, ${tipo} , ${valor})`, 'end');
+    this.logger.debug(AbstractTablePaginationComponent.name, `agregarFiltro([${filtros}], ${nombre}, ${tipo} , ${valor})`, 'end');
   }
 
   /**
    * Muestra un mensaje de error si se produce un error al cargar los datos de la tabla
    */
   protected showMensajeErrorLoadTable(): void {
-    this.logger.debug(AbstractPaginacionComponent.name, 'showMensajeErrorLoadTable()', 'start');
+    this.logger.debug(AbstractTablePaginationComponent.name, 'showMensajeErrorLoadTable()', 'start');
     this.snackBarService.showError(this.msgError);
-    this.logger.debug(AbstractPaginacionComponent.name, 'showMensajeErrorLoadTable()', 'end');
+    this.logger.debug(AbstractTablePaginationComponent.name, 'showMensajeErrorLoadTable()', 'end');
   }
 
   /**

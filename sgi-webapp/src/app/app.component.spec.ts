@@ -2,14 +2,14 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import TestUtils from '@core/utils/test-utils';
-import { MaterialDesignModule } from '@material/material-design.module';
 import { HeaderComponent } from '@block/header/header.component';
 import { NavbarComponent } from '@block/navbar/navbar.component';
+import TestUtils from '@core/utils/test-utils';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 
 import { AppComponent } from './app.component';
-import { SgiAuthService } from '@sgi/framework/auth';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -19,7 +19,8 @@ describe('AppComponent', () => {
         HttpClientTestingModule,
         MaterialDesignModule,
         BrowserAnimationsModule,
-        TestUtils.getIdiomas()
+        TestUtils.getIdiomas(),
+        SgiAuthModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },

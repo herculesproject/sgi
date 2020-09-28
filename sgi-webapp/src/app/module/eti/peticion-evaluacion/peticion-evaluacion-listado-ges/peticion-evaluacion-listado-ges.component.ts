@@ -1,34 +1,28 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
-import { FormGroup, FormControl } from '@angular/forms';
-import { Observable, of, merge, Subscription } from 'rxjs';
-import { NGXLogger } from 'ngx-logger';
-
-import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
-import { SgiAuthService } from '@sgi/framework/auth';
-
-import { tap, map, catchError, startWith } from 'rxjs/operators';
-
+import { MatSort } from '@angular/material/sort';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { Comite } from '@core/models/eti/comite';
+import { IMemoria } from '@core/models/eti/memoria';
+import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
+import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
+import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-
-import { PeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
-import { Comite } from '@core/models/eti/comite';
-import { Persona } from '@core/models/sgp/persona';
+import { ROUTE_NAMES } from '@core/route.names';
 import { DialogService } from '@core/services/dialog.service';
 import { ComiteService } from '@core/services/eti/comite.service';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
-
-import { ROUTE_NAMES } from '@core/route.names';
-
-import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { IMemoria } from '@core/models/eti/memoria';
-import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
+import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria.service';
+import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { SgiAuthService } from '@sgi/framework/auth';
+import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
+import { NGXLogger } from 'ngx-logger';
+import { merge, Observable, of, Subscription } from 'rxjs';
+import { catchError, map, startWith, tap } from 'rxjs/operators';
 
 
 const MSG_BUTTON_SAVE = marker('footer.eti.peticionEvaluacion.crear');
@@ -57,7 +51,7 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
-  peticionesEvaluacion$: Observable<PeticionEvaluacion[]> = of();
+  peticionesEvaluacion$: Observable<IPeticionEvaluacion[]> = of();
   memorias$: Observable<IMemoria[]> = of();
 
   comiteListado: Comite[];
@@ -178,7 +172,7 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
             this.paginator.pageIndex = 0;
           }
           this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'loadTable()', 'end');
-          let peticionesEvaluacionByFilters: PeticionEvaluacion[] = new Array();
+          let peticionesEvaluacionByFilters: IPeticionEvaluacion[] = new Array();
           peticionesEvaluacionByFilters = response.items;
           if (this.buscadorFormGroup.controls.comite.value || this.buscadorFormGroup.controls.tipoEstadoMemoria.value) {
             peticionesEvaluacionByFilters = this.filterPeticionEvaluacionByFilters(
@@ -199,12 +193,12 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
       );
   }
 
-  loadDatosUsuario(peticionesEvaluacion: PeticionEvaluacion[]): PeticionEvaluacion[] {
+  loadDatosUsuario(peticionesEvaluacion: IPeticionEvaluacion[]): IPeticionEvaluacion[] {
 
     peticionesEvaluacion.forEach((peticionEvaluacion) => {
       this.personaServiceOneSubscritpion = this.personaFisicaService.getInformacionBasica(peticionEvaluacion.personaRef)
         .subscribe(
-          (persona: Persona) => {
+          (persona: IPersona) => {
             peticionEvaluacion.nombre = persona.nombre;
             peticionEvaluacion.primerApellido = persona.primerApellido;
             peticionEvaluacion.segundoApellido = persona.segundoApellido;
@@ -230,8 +224,8 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
 
   }
 
-  private filterPeticionEvaluacionByFilters(peticionesEvaluacion: PeticionEvaluacion[]): PeticionEvaluacion[] {
-    const peticionesEvaluacionByComiteExists: PeticionEvaluacion[] = new Array();
+  private filterPeticionEvaluacionByFilters(peticionesEvaluacion: IPeticionEvaluacion[]): IPeticionEvaluacion[] {
+    const peticionesEvaluacionByComiteExists: IPeticionEvaluacion[] = new Array();
     this.peticionesEvaluacion$ = of();
     peticionesEvaluacion.forEach((peticionEvaluacion, i) => {
       this.memoriaServiceSubscription = this.memoriaService
@@ -486,7 +480,7 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
    * Setea el persona seleccionado a través del componente
    * @param personaRef referencia del persona seleccionado
    */
-  public setUsuario(solicitante: Persona) {
+  public setUsuario(solicitante: IPersona) {
     this.personaRef = solicitante?.personaRef;
   }
 

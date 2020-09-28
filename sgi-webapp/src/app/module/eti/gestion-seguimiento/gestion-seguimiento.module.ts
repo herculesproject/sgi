@@ -7,8 +7,7 @@ import { SharedModule } from '@shared/shared.module';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GestionSeguimientoRoutingModule } from './gestion-seguimiento-routing.module';
-import { GestionSeguimientoListadoComponent } from './gestion-seguimiento-listado/gestion-seguimiento-listado.component';/*  */
-
+import { GestionSeguimientoListadoComponent } from './gestion-seguimiento-listado/gestion-seguimiento-listado.component';
 
 @NgModule({
   declarations: [GestionSeguimientoListadoComponent],

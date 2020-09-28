@@ -1,9 +1,10 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import TestUtils from '@core/utils/test-utils';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
+import { NGXLogger } from 'ngx-logger';
 
 import { EstadoMemoriaService } from './estado-memoria.service';
-import { HttpClientModule } from '@angular/common/http';
-import { NGXLogger } from 'ngx-logger';
-import TestUtils from '@core/utils/test-utils';
 
 describe('EstadoMemoriaService', () => {
   let service: EstadoMemoriaService;
@@ -11,10 +12,12 @@ describe('EstadoMemoriaService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
+        SgiAuthModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+        SgiAuthService
       ],
     });
     service = TestBed.inject(EstadoMemoriaService);

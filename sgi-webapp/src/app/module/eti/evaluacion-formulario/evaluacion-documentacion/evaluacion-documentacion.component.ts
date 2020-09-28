@@ -1,8 +1,8 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { DocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { FormFragmentComponent } from '@core/component/fragment.component';
+import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { NGXLogger } from 'ngx-logger';
 
-import { FormFragmentComponent } from '@core/component/fragment.component';
 import { DocumentacionMemoriaListadoMemoriaComponent } from '../../documentacion-memoria/documentacion-memoria-listado-memoria/documentacion-memoria-listado-memoria.component';
 import { EvaluacionEvaluadorEvaluarActionService } from '../../evaluacion-evaluador/evaluacion-evaluador.action.service';
 
@@ -12,7 +12,7 @@ import { EvaluacionEvaluadorEvaluarActionService } from '../../evaluacion-evalua
   templateUrl: './evaluacion-documentacion.component.html',
   styleUrls: ['./evaluacion-documentacion.component.scss']
 })
-export class EvaluacionDocumentacionComponent extends FormFragmentComponent<DocumentacionMemoria> implements AfterViewInit {
+export class EvaluacionDocumentacionComponent extends FormFragmentComponent<IDocumentacionMemoria> implements AfterViewInit {
 
   @ViewChild('documentacionMemoriaListado') documentacion: DocumentacionMemoriaListadoMemoriaComponent;
 
@@ -21,10 +21,14 @@ export class EvaluacionDocumentacionComponent extends FormFragmentComponent<Docu
     private actionService: EvaluacionEvaluadorEvaluarActionService
   ) {
     super(actionService.FRAGMENT.DOCUMENTACION, actionService);
+    this.logger.debug(EvaluacionDocumentacionComponent.name, 'constructor()', 'start');
+    this.logger.debug(EvaluacionDocumentacionComponent.name, 'constructor()', 'end');
   }
 
   ngAfterViewInit() {
-    this.documentacion.memoriaId = this.actionService.getEvaluacion().memoria.id;
+    this.logger.debug(EvaluacionDocumentacionComponent.name, 'ngAfterViewInit()', 'start');
+    this.documentacion.memoriaId = this.actionService.getEvaluacion()?.memoria?.id;
     this.documentacion.ngAfterViewInit();
+    this.logger.debug(EvaluacionDocumentacionComponent.name, 'ngAfterViewInit()', 'end');
   }
 }

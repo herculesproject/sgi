@@ -6,15 +6,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
+import { BuscarPersonaComponent } from '@shared/buscar-persona/buscar-persona.component';
 import { FooterGuardarComponent } from '@shared/footers/footer-guardar/footer-guardar.component';
+import { SharedModule } from '@shared/shared.module';
 import { NGXLogger } from 'ngx-logger';
 
 import {
   EvaluadorDatosGeneralesComponent,
 } from '../evaluador-formulario/evaluador-datos-generales/evaluador-datos-generales.component';
 import { EvaluadorEditarComponent } from './evaluador-editar.component';
-import { SharedModule } from '@shared/shared.module';
-import { BuscarPersonaComponent } from '@shared/buscar-persona/buscar-persona.component';
 
 describe('EvaluadorEditarComponent', () => {
   let component: EvaluadorEditarComponent;
@@ -36,7 +36,8 @@ describe('EvaluadorEditarComponent', () => {
         FlexModule,
         ReactiveFormsModule,
         RouterTestingModule.withRoutes([]),
-        SharedModule
+        SharedModule,
+        RouterTestingModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },

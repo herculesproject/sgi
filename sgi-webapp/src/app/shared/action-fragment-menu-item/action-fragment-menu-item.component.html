@@ -1,6 +1,6 @@
 <a class="item-tab" mat-list-item [routerLink]="routerLink" [routerLinkActive]="['is-active']">
   <span>{{title}}</span>
-  <span *ngIf="fragment.status$ | async as status;">
+  <span *ngIf="fragment?.status$ | async as status;">
     <mat-icon *ngIf="status.changes && !status.errors" aria-hidden="false" class="icons warning-icon">
       error_outline</mat-icon>
     <mat-icon *ngIf="status.errors" aria-hidden="false" class="icons danger-icon">

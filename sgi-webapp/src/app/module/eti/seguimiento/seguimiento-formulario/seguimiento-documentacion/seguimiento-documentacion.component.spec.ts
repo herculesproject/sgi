@@ -1,0 +1,55 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import TestUtils from '@core/utils/test-utils';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
+import { NGXLogger } from 'ngx-logger';
+
+import {
+  DocumentacionMemoriaListadoMemoriaComponent,
+} from '../../../documentacion-memoria/documentacion-memoria-listado-memoria/documentacion-memoria-listado-memoria.component';
+import { SeguimientoEvaluarActionService } from '../../seguimiento-evaluar.action.service';
+import { SeguimientoDocumentacionComponent } from './seguimiento-documentacion.component';
+
+describe('SeguimientoDocumentacionComponent', () => {
+  let component: SeguimientoDocumentacionComponent;
+  let fixture: ComponentFixture<SeguimientoDocumentacionComponent>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        SeguimientoDocumentacionComponent,
+        DocumentacionMemoriaListadoMemoriaComponent
+      ],
+      imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+        MaterialDesignModule,
+        HttpClientTestingModule,
+        TestUtils.getIdiomas(),
+        RouterTestingModule,
+        SgiAuthModule
+      ],
+      providers: [
+        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+        SeguimientoEvaluarActionService,
+        SgiAuthService
+      ]
+    })
+      .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(SeguimientoDocumentacionComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

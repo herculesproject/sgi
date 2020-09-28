@@ -18,6 +18,9 @@
           <mat-error *ngIf="formGroup.controls.bloqueFormulario.errors?.required">
             {{'eti.comentario.editar.bloque.error.requerido' | translate}}
           </mat-error>
+          <mat-error *ngIf="formGroup.controls.bloqueFormulario.errors?.invalid">
+            {{'eti.comentario.crear.bloque.error.invalido' | translate}}
+          </mat-error>
         </mat-form-field>
       </div>
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
@@ -34,6 +37,9 @@
           <mat-error *ngIf="formGroup.controls.apartadoFormulario.errors?.required">
             {{'eti.comentario.editar.apartado.error.requerido' | translate}}
           </mat-error>
+          <mat-error *ngIf="formGroup.controls.apartadoFormulario.errors?.invalid">
+            {{'eti.comentario.crear.apartado.error.invalido' | translate}}
+          </mat-error>
         </mat-form-field>
       </div>
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign"
@@ -48,6 +54,9 @@
               {{subapartado.nombre}}
             </mat-option>
           </mat-autocomplete>
+          <mat-error *ngIf="formGroup.controls.subapartado.errors?.invalid">
+            {{'eti.comentario.crear.apartado.error.invalido' | translate}}
+          </mat-error>
         </mat-form-field>
       </div>
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
@@ -64,8 +73,7 @@
     </form>
   </main>
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
-    <button color="accent" (click)="updateComentario()" md-button mat-raised-button mat-dialog-close
-      type="submit">Guardar</button>
+    <button color="accent" (click)="updateComentario()" md-button mat-raised-button type="submit">Guardar</button>
     <button class="link-cancelar" mat-button (click)="closeModal()" type="button">Cancelar</button>
   </div>
 </div>

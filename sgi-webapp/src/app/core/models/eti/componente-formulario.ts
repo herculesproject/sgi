@@ -1,12 +1,7 @@
-export class ComponenteFormulario {
+export interface IComponenteFormulario {
   /** Id */
   id: number;
 
   /** Esquema */
   esquema: string;
-
-  constructor(componenteFormulario?: ComponenteFormulario) {
-    this.id = componenteFormulario?.id;
-    this.esquema = componenteFormulario?.esquema;
-  }
 }

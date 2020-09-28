@@ -1,25 +1,24 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { PeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
-import { NGXLogger } from 'ngx-logger';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { FormFragmentComponent } from '@core/component/fragment.component';
+import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
+import { ITipoActividad } from '@core/models/eti/tipo-actividad';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { FormGroupUtil } from '@core/utils/form-group-util';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { NullIdValidador } from '@core/validators/null-id-validador';
 import { TipoActividadService } from '@core/services/eti/tipo-actividad.service';
-import { ITipoActividad } from '@core/models/eti/tipo-actividad';
-import { Subscription, Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
-import { FormFragmentComponent } from '@core/component/fragment.component';
+import { FormGroupUtil } from '@core/utils/form-group-util';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, Subscription } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+
 import { PeticionEvaluacionActionService } from '../../peticion-evaluacion.action.service';
-import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'sgi-peticion-evaluacion-datos-generales',
   templateUrl: './peticion-evaluacion-datos-generales.component.html',
   styleUrls: ['./peticion-evaluacion-datos-generales.component.scss']
 })
-export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentComponent<PeticionEvaluacion> implements OnInit {
+export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentComponent<IPeticionEvaluacion> implements OnInit {
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
 
   FormGroupUtil = FormGroupUtil;
@@ -34,9 +33,11 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
   suscripciones: Subscription[] = [];
 
 
-  constructor(protected readonly logger: NGXLogger, private readonly tipoActividadService: TipoActividadService,
-    private actionService: PeticionEvaluacionActionService) {
-
+  constructor(
+    protected readonly logger: NGXLogger,
+    private readonly tipoActividadService: TipoActividadService,
+    private actionService: PeticionEvaluacionActionService
+  ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';

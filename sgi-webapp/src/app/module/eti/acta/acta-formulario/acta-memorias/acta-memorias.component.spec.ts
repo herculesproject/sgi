@@ -1,17 +1,18 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import TestUtils from '@core/utils/test-utils';
-import { NGXLogger } from 'ngx-logger';
-
-import { ActaMemoriasComponent } from './acta-memorias.component';
-import { MaterialDesignModule } from '@material/material-design.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FlexModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ActaActionService } from '../../acta.action.service';
-import { ActivatedRoute } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import TestUtils from '@core/utils/test-utils';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
+import { NGXLogger } from 'ngx-logger';
 
-describe('ActaCrearMemoriasComponent', () => {
+import { ActaActionService } from '../../acta.action.service';
+import { ActaMemoriasComponent } from './acta-memorias.component';
+
+describe('ActaMemoriasComponent', () => {
   let component: ActaMemoriasComponent;
   let fixture: ComponentFixture<ActaMemoriasComponent>;
 
@@ -19,17 +20,19 @@ describe('ActaCrearMemoriasComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ActaMemoriasComponent],
       imports: [
-        TestUtils.getIdiomas(),
-        MaterialDesignModule,
-        BrowserAnimationsModule,
-        HttpClientTestingModule,
         FlexModule,
-        ReactiveFormsModule
+        BrowserAnimationsModule,
+        MaterialDesignModule,
+        HttpClientTestingModule,
+        TestUtils.getIdiomas(),
+        RouterTestingModule,
+        ReactiveFormsModule,
+        SgiAuthModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         ActaActionService,
-        ActivatedRoute
+        SgiAuthService
       ],
     })
       .compileComponents();

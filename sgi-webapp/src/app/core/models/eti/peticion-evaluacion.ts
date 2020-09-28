@@ -1,7 +1,7 @@
+import { IPersona } from '../sgp/persona';
 import { ITipoActividad } from './tipo-actividad';
-import { Persona } from '../sgp/persona';
 
-export class PeticionEvaluacion extends Persona {
+export interface IPeticionEvaluacion extends IPersona {
 
   /** ID */
   id: number;
@@ -53,26 +53,4 @@ export class PeticionEvaluacion extends Persona {
 
   /** Activo */
   activo: boolean;
-
-  constructor() {
-    super();
-    this.id = null;
-    this.solicitudConvocatoriaRef = null;
-    this.codigo = null;
-    this.titulo = null;
-    this.tipoActividad = null;
-    this.fuenteFinanciacion = null;
-    this.fechaInicio = null;
-    this.fechaFin = null;
-    this.resumen = null;
-    this.valorSocial = null;
-    this.otroValorSocial = null;
-    this.objetivos = null;
-    this.disMetodologico = null;
-    this.externo = null;
-    this.tieneFondosPropios = null;
-    this.personaRef = null;
-    this.activo = true;
-  }
-
 }
