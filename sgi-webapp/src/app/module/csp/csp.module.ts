@@ -8,6 +8,7 @@ import { CspRootComponent } from './csp-root/csp-root.component';
 import { CspMenuPrincipalComponent } from './csp-menu-principal/csp-menu-principal.component';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { CspInicioComponent } from './csp-inicio/csp-inicio.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [CspRootComponent, CspMenuPrincipalComponent, CspInicioComponent],
@@ -17,7 +18,9 @@ import { CspInicioComponent } from './csp-inicio/csp-inicio.component';
     CspRoutingModule,
     TranslateModule,
     MaterialDesignModule,
-    SgiAuthModule
+    SgiAuthModule,
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: []
 })

@@ -9,6 +9,7 @@ import { CSP_ROUTE_NAMES } from './csp-route-names';
 import { CspInicioComponent } from './csp-inicio/csp-inicio.component';
 
 const MSG_ROOT_TITLE = marker('csp.root.title');
+const MSG_CONVOCATORIA_TITLE = marker('menu.principal.csp.convocatoria');
 
 
 const routes: SgiRoutes = [
@@ -26,6 +27,18 @@ const routes: SgiRoutes = [
         data: {
           title: MSG_ROOT_TITLE
         }
+      },
+      {
+        path: CSP_ROUTE_NAMES.CONVOCATORIA,
+        loadChildren: () =>
+          import('./convocatoria/convocatoria.module').then(
+            (m) => m.ConvocatoriaModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_CONVOCATORIA_TITLE,
+        }
+
       },
       { path: '**', component: null }
     ]
