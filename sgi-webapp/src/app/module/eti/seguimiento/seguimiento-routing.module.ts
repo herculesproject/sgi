@@ -36,7 +36,7 @@ const routes: SgiAuthRoutes = [
     },
     data: {
       title: MSG_EVALUAR_TITLE,
-      hasAnyAuthorityForAnyUO: ['ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-VR-INV']
+      hasAnyAuthorityForAnyUO: ['ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV']
     },
     children: [
       {
