@@ -6,9 +6,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { NGXLogger } from 'ngx-logger';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Observable, of } from 'rxjs';
+import { Observable, of, merge } from 'rxjs';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, tap, delay, startWith } from 'rxjs/operators';
 
 import { ROUTE_NAMES } from '@core/route.names';
 
@@ -40,7 +40,7 @@ export class ConvocatoriaListadoComponent implements AfterViewInit, OnInit {
   filter: SgiRestFilter[];
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   buscadorFormGroup: FormGroup;
 
@@ -78,6 +78,22 @@ export class ConvocatoriaListadoComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit(): void {
+
+    // Merge events that trigger load table data
+    merge(
+      // Link pageChange event to fire new request
+      this.paginator.page,
+      // Link sortChange event to fire new request
+      this.sort.sortChange
+    )
+      .pipe(
+
+        tap(() => {
+          // Load table
+          this.loadTable();
+        }),
+      )
+      .subscribe();
     this.loadTable();
 
   }
@@ -99,16 +115,18 @@ export class ConvocatoriaListadoComponent implements AfterViewInit, OnInit {
         filters: this.buildFilters()
       })
       .pipe(
+        // TODO eliminar delay cuando se realice llamada al back.
+        delay(0),
         map((response) => {
           // Map response total
-          this.totalElementos = response.convocatorias.length;
+          this.totalElementos = response.total;
           // Reset pagination to first page
           if (reset) {
             this.paginator.pageIndex = 0;
           }
           this.logger.debug(ConvocatoriaListadoComponent.name, 'loadTable()', 'end');
           // Return the values
-          return response.convocatorias;
+          return response.items;
         }),
         catchError(() => {
           // On error reset pagination values
