@@ -42,7 +42,6 @@ public class EvaluadorIT {
   private TokenBuilder tokenBuilder;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String PATH_PARAMETER_PERSONA_REF = "/{personaRef}";
   private static final String EVALUADOR_CONTROLLER_BASE_PATH = "/evaluadores";
   private static final String PATH_PARAMETER_EVALUACIONES = "/evaluaciones";
   private static final String PATH_PARAMETER_SINCONFLICTOINTERES = "/comite/{idComite}/sinconflictointereses/{idMemoria}";
@@ -304,8 +303,8 @@ public class EvaluadorIT {
         String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-VR", "ETI-EVC-EVALR")));
 
     final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(
-        EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_PERSONA_REF + PATH_PARAMETER_EVALUACIONES, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
+        EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_EVALUACIONES, HttpMethod.GET, buildRequest(headers, null),
+        new ParameterizedTypeReference<List<Evaluacion>>() {
         }, "user-001");
 
     // then: Respuesta OK, retorna la información de la página correcta en el header
@@ -324,8 +323,8 @@ public class EvaluadorIT {
         String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-VR", "ETI-EVC-EVALR")));
 
     final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(
-        EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_PERSONA_REF + "/evaluaciones-seguimiento", HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
+        EVALUADOR_CONTROLLER_BASE_PATH + "/evaluaciones-seguimiento", HttpMethod.GET, buildRequest(headers, null),
+        new ParameterizedTypeReference<List<Evaluacion>>() {
         }, "user-001");
 
     // then: Respuesta OK, retorna la información de la página correcta en el header
@@ -341,12 +340,12 @@ public class EvaluadorIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "5");
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-VR", "ETI-EVC-EVALR")));
+        String.format("bearer %s", tokenBuilder.buildToken("user-006", "ETI-EVC-VR", "ETI-EVC-EVALR")));
 
     final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(
-        EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_PERSONA_REF + "/evaluaciones-seguimiento", HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
-        }, "user-006");
+        EVALUADOR_CONTROLLER_BASE_PATH + "/evaluaciones-seguimiento", HttpMethod.GET, buildRequest(headers, null),
+        new ParameterizedTypeReference<List<Evaluacion>>() {
+        });
 
     // then: Respuesta OK, retorna la información de la página correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);

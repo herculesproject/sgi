@@ -75,7 +75,6 @@ public class EvaluadorControllerTest {
   private EvaluacionService evaluacionService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String PATH_PARAMETER_PERSONA_REF = "/{personaRef}";
   private static final String EVALUADOR_CONTROLLER_BASE_PATH = "/evaluadores";
   private static final String PATH_PARAMETER_EVALUACIONES = "/evaluaciones";
   private static final String PATH_PARAMETER_SINCONFLICTOINTERES = "/comite/{idComite}/sinconflictointereses/{idMemoria}";
@@ -378,8 +377,7 @@ public class EvaluadorControllerTest {
 
     // when: las recupero sin paginación
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_PERSONA_REF + PATH_PARAMETER_EVALUACIONES, "user-001")
+        .perform(MockMvcRequestBuilders.get(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_EVALUACIONES)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: obtengo un listado de 100 evaluaciones
@@ -398,8 +396,7 @@ public class EvaluadorControllerTest {
 
     // when: listo todo
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_PERSONA_REF + PATH_PARAMETER_EVALUACIONES, "user-001")
+        .perform(MockMvcRequestBuilders.get(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_EVALUACIONES)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: devuelve una página vacia
@@ -423,8 +420,7 @@ public class EvaluadorControllerTest {
 
     // when: las recupero sin paginación
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_PERSONA_REF + "/evaluaciones-seguimiento", "user-001")
+        .perform(MockMvcRequestBuilders.get(EVALUADOR_CONTROLLER_BASE_PATH + "/evaluaciones-seguimiento")
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: obtengo un listado de 100 evaluaciones
@@ -443,8 +439,7 @@ public class EvaluadorControllerTest {
 
     // when: listo todo
     mockMvc
-        .perform(MockMvcRequestBuilders
-            .get(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_PERSONA_REF + "/evaluaciones-seguimiento", "user-001")
+        .perform(MockMvcRequestBuilders.get(EVALUADOR_CONTROLLER_BASE_PATH + "/evaluaciones-seguimiento")
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: devuelve una página vacia
