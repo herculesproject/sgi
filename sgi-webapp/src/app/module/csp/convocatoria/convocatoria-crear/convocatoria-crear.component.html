@@ -13,6 +13,11 @@
         [title]="'label.plazos-fases' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.PLAZOS_FASES)">
       </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item [routerLink]="[CONVOCATORIA_ROUTE_NAMES.HITOS]"
+        [title]="'csp.convocatoria.hitos' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.HITOS)">
+      </sgi-action-fragment-menu-item>
+
     </mat-list>
   </mat-drawer>
   <mat-drawer-content class="mat-drawer-content">

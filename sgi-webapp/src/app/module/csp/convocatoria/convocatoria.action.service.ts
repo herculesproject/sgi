@@ -12,6 +12,7 @@ import { ConvocatoriaDatosGeneralesFragment } from './convocatoria-formulario/co
 import { ConvocatoriaPeriodosJustificacionFragment } from './convocatoria-formulario/convocatoria-periodos-justificacion/convocatoria-periodo-justificacion.fragment';
 import { ConvocatoriaPlazosFasesFragment } from './convocatoria-formulario/convocatoria-plazos-fases/convocatoria-plazos-fases.fragment';
 import { NGXLogger } from 'ngx-logger';
+import { ConvocatoriaHitosFragment } from './convocatoria-formulario/convocatoria-hitos/convocatoria-hitos.fragment';
 
 @Injectable()
 export class ConvocatoriaActionService extends ActionService {
@@ -19,12 +20,17 @@ export class ConvocatoriaActionService extends ActionService {
   public readonly FRAGMENT = {
     DATOS_GENERALES: 'datosGenerales',
     PERIODO_JUSTIFICACION: 'periodos-justificacion',
-    PLAZOS_FASES: 'plazos-fases'
+    PLAZOS_FASES: 'plazos-fases',
+    HITOS: 'hitos'
   };
+
+
 
   private datosGenerales: ConvocatoriaDatosGeneralesFragment;
   private plazosFases: ConvocatoriaPlazosFasesFragment;
   private periodoJustificacion: ConvocatoriaPeriodosJustificacionFragment;
+  private hitos: ConvocatoriaHitosFragment;
+
 
   private convocatoria: IConvocatoria;
 
@@ -38,10 +44,12 @@ export class ConvocatoriaActionService extends ActionService {
     this.datosGenerales = new ConvocatoriaDatosGeneralesFragment(fb, this.convocatoria?.id, service);
     this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(logger, this.convocatoria?.id, service);
     this.plazosFases = new ConvocatoriaPlazosFasesFragment(logger, this.convocatoria?.id, service);
+    this.hitos = new ConvocatoriaHitosFragment(this.convocatoria?.id, service);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.PERIODO_JUSTIFICACION, this.periodoJustificacion);
     this.addFragment(this.FRAGMENT.PLAZOS_FASES, this.plazosFases);
+    this.addFragment(this.FRAGMENT.HITOS, this.hitos);
 
   }
 

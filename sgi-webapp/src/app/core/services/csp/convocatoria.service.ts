@@ -8,6 +8,7 @@ import { IPeriodosJustificacion } from '@core/models/csp/periodo-justificacion';
 import { of, Observable } from 'rxjs';
 import { IPlazosFases } from '@core/models/csp/plazos-fases';
 import { tap } from 'rxjs/operators';
+import { IHito } from '@core/models/csp/hito';
 
 
 const convocatorias: IConvocatoria[] = [
@@ -55,6 +56,15 @@ const periodosJustificacion: IPeriodosJustificacion[] = [
   {
     id: 2, numPeriodo: 2, mesInicial: new Date(), mesFinal: new Date(),
     fechaInicio: new Date(), fechaFin: new Date(), observaciones: 'Segundo periodo de justificación', activo: true
+
+  }];
+
+const hitos: IHito[] = [
+  {
+    id: 1, fechaInicio: new Date(), tipoHito: 'Resolución interna', comentario: '', aviso: true
+  },
+  {
+    id: 1, fechaInicio: new Date(), tipoHito: 'Resolución definitiva', comentario: '', aviso: false
   }
 ];
 
@@ -72,6 +82,7 @@ const plazosFases: IPlazosFases[] = [
 })
 
 export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
+
   private static readonly MAPPING = '/convocatorias';
 
 
@@ -137,8 +148,30 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
       );
   }
 
+  /*
+     * Recupera una convocatoria por id.
+     * @param idConvocatoria Identificador de la convocatoria.
+     * @return convocatoria.
+     */
   findById(idConvocatoria: number) {
+    this.logger.debug(ConvocatoriaService.name, `findById(idConvocatoria)`, '-', 'START');
     return of(convocatorias[idConvocatoria - 1]);
   }
+
+
+  /**
+   * Recupera los hitos de una convocatoria
+   * @param idConvocatoria Identificador de la convocatoria.
+   * @returns Listado de hitos.
+   */
+  findHitosConvocatoria(idConvocatoria: number): Observable<SgiRestListResult<IHito>> {
+    this.logger.debug(ConvocatoriaService.name, `findHitos(idConvocatoria)`, '-', 'START');
+    return of({
+      page: null,
+      total: hitos.length,
+      items: hitos
+    } as SgiRestListResult<IHito>);
+  }
+
 
 }
