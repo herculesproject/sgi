@@ -11,6 +11,9 @@ import { ConvocatoriaListadoComponent } from './convocatoria-listado/convocatori
 import { ROUTE_NAMES } from '@core/route.names';
 import { ActionGuard } from '@core/guards/master-form.guard';
 import { ConvocatoriaCrearComponent } from './convocatoria-crear/convocatoria-crear.component';
+import { CONVOCATORIA_ROUTE_NAMES } from './convocatoria-route-names';
+import { ConvocatoriaDatosGeneralesComponent } from './convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.component';
+import { FragmentGuard } from '@core/guards/detail-form.guard';
 
 
 const MSG_LISTADO_TITLE = marker('csp.convocatoria.listado.titulo');
@@ -34,7 +37,15 @@ const routes: SgiRoutes = [
       title: MSG_NEW_TITLE,
     },
     children: [
-
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: CONVOCATORIA_ROUTE_NAMES.DATOS_GENERALES
+      }, {
+        path: CONVOCATORIA_ROUTE_NAMES.DATOS_GENERALES,
+        component: ConvocatoriaDatosGeneralesComponent,
+        canDeactivate: [FragmentGuard]
+      },
     ]
   },
 ];

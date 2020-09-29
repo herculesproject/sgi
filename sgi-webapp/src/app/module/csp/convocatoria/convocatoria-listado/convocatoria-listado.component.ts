@@ -46,7 +46,8 @@ export class ConvocatoriaListadoComponent implements AfterViewInit, OnInit {
 
   textoCrear = MSG_BUTTON_NEW;
 
-  constructor(private readonly logger: NGXLogger,
+  constructor(
+    private readonly logger: NGXLogger,
     private readonly snackBarService: SnackBarService,
     private readonly convocatoriaService: ConvocatoriaService) {
 

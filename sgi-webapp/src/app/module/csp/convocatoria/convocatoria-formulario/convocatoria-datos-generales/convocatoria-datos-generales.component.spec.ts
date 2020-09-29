@@ -1,44 +1,44 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ConvocatoriaListadoComponent } from './convocatoria-listado.component';
-import { FooterCrearComponent } from '@shared/footers/footer-crear/footer-crear.component';
+import { ConvocatoriaDatosGeneralesComponent } from './convocatoria-datos-generales.component';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FlexModule, FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FlexModule } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NGXLogger } from 'ngx-logger';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 
-describe('ConvocatoriaListadoComponent', () => {
-  let component: ConvocatoriaListadoComponent;
-  let fixture: ComponentFixture<ConvocatoriaListadoComponent>;
+describe('ConvocatoriaDatosGeneralesComponent', () => {
+  let component: ConvocatoriaDatosGeneralesComponent;
+  let fixture: ComponentFixture<ConvocatoriaDatosGeneralesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ConvocatoriaListadoComponent],
-      imports: [
-        RouterTestingModule,
-        MaterialDesignModule,
-        HttpClientTestingModule,
-        BrowserAnimationsModule,
+      declarations: [ConvocatoriaDatosGeneralesComponent], imports: [
         TestUtils.getIdiomas(),
-        FlexLayoutModule,
+        MaterialDesignModule,
+        BrowserAnimationsModule,
+        HttpClientTestingModule,
+        FlexModule,
         FormsModule,
         ReactiveFormsModule,
+        RouterTestingModule,
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
+        ConvocatoriaActionService
       ],
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConvocatoriaListadoComponent);
+    fixture = TestBed.createComponent(ConvocatoriaDatosGeneralesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -47,4 +47,3 @@ describe('ConvocatoriaListadoComponent', () => {
     expect(component).toBeTruthy();
   });
 });
-

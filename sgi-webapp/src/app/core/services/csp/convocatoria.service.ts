@@ -4,7 +4,7 @@ import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@env';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 
 
 const convocatorias: IConvocatoria[] = [
@@ -50,9 +50,8 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
    * @param options opciones de búsqueda.
    * @returns listado de convocatorias.
    */
-  findConvocatoria(options?: SgiRestFindOptions) {
+  findConvocatoria(options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoria>> {
     this.logger.debug(ConvocatoriaService.name, `findConvocatoria(${options ? JSON.stringify(options) : ''})`, '-', 'START');
-
 
     return of({
       page: null,

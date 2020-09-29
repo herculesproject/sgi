@@ -4,20 +4,30 @@ import { ConvocatoriaListadoComponent } from './convocatoria-listado/convocatori
 import { ConvocatoriaRoutingModule } from './convocatoria-routing.module';
 import { SharedModule } from '@shared/shared.module';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { ConvocatoriaCrearComponent } from './convocatoria-crear/convocatoria-crear.component';
+import { ConvocatoriaResolver } from './convocatoria.resolver';
+import { ConvocatoriaDatosGeneralesComponent } from './convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.component';
 
 
 
 @NgModule({
-  declarations: [ConvocatoriaListadoComponent],
+  declarations: [
+    ConvocatoriaListadoComponent,
+    ConvocatoriaCrearComponent,
+    ConvocatoriaDatosGeneralesComponent],
   imports: [
     CommonModule,
     SharedModule,
     ConvocatoriaRoutingModule,
     MaterialDesignModule,
     ReactiveFormsModule,
-    TranslateModule
+    TranslateModule,
+    FormsModule
+  ],
+  providers: [
+    ConvocatoriaResolver
   ]
 })
 export class ConvocatoriaModule { }
