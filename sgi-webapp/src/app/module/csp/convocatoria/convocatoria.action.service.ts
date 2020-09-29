@@ -15,6 +15,7 @@ import { NGXLogger } from 'ngx-logger';
 import { ConvocatoriaHitosFragment } from './convocatoria-formulario/convocatoria-hitos/convocatoria-hitos.fragment';
 import { ConvocatoriaEntidadesConvocantesFragment } from './convocatoria-formulario/convocatoria-entidades-convocantes/convocatoria-entidades-convocantes.fragment';
 import { ConvocatoriaSeguimientoCientificoFragment } from './convocatoria-formulario/convocatoria-seguimiento-cientifico/convocatoria-seguimiento-cientifico.fragment';
+import { ConvocatoriaEntidadesFinanciadorasFragment } from './convocatoria-formulario/convocatoria-entidades-financiadoras/convocatoria-entidades-financiadoras.fragment';
 
 @Injectable()
 export class ConvocatoriaActionService extends ActionService {
@@ -25,10 +26,9 @@ export class ConvocatoriaActionService extends ActionService {
     PLAZOS_FASES: 'plazos-fases',
     HITOS: 'hitos',
     ENTIDADES_CONVOCANTES: 'entidades-convocantes',
-    SEGUIMIENTO_CIENTIFICO: 'seguimiento-cientifico'
+    SEGUIMIENTO_CIENTIFICO: 'seguimiento-cientifico',
+    ENTIDADES_FINANCIADORAS: 'entidades-financiadoras'
   };
-
-
 
   private datosGenerales: ConvocatoriaDatosGeneralesFragment;
   private plazosFases: ConvocatoriaPlazosFasesFragment;
@@ -36,7 +36,7 @@ export class ConvocatoriaActionService extends ActionService {
   private seguimientoCientifico: ConvocatoriaSeguimientoCientificoFragment;
   private hitos: ConvocatoriaHitosFragment;
   private entidadesConvocantes: ConvocatoriaEntidadesConvocantesFragment;
-
+  private entidadesFinanciadorasFragment: ConvocatoriaEntidadesFinanciadorasFragment;
 
   private convocatoria: IConvocatoria;
 
@@ -57,10 +57,12 @@ export class ConvocatoriaActionService extends ActionService {
     this.entidadesConvocantes = new ConvocatoriaEntidadesConvocantesFragment(logger, this.convocatoria?.id, service);
     this.plazosFases = new ConvocatoriaPlazosFasesFragment(logger, this.convocatoria?.id, service);
     this.hitos = new ConvocatoriaHitosFragment(this.convocatoria?.id, service);
+    this.entidadesFinanciadorasFragment = new ConvocatoriaEntidadesFinanciadorasFragment(logger, this.convocatoria?.id, service);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.SEGUIMIENTO_CIENTIFICO, this.seguimientoCientifico);
     this.addFragment(this.FRAGMENT.ENTIDADES_CONVOCANTES, this.entidadesConvocantes);
+    this.addFragment(this.FRAGMENT.ENTIDADES_FINANCIADORAS, this.entidadesFinanciadorasFragment);
     this.addFragment(this.FRAGMENT.PERIODO_JUSTIFICACION, this.periodoJustificacion);
     this.addFragment(this.FRAGMENT.PLAZOS_FASES, this.plazosFases);
     this.addFragment(this.FRAGMENT.HITOS, this.hitos);

@@ -12,6 +12,7 @@ import { tap } from 'rxjs/operators';
 import { IHito } from '@core/models/csp/hito';
 import { IEntidadesConvocantes } from '@core/models/csp/entidades-convocantes';
 import { DateUtils } from '@core/utils/date-utils';
+import { IEntidadesFinanciadoras } from '@core/models/csp/entidades-financiadoras';
 
 
 const convocatorias: IConvocatoria[] = [
@@ -119,6 +120,26 @@ const seguimientosCientificos: ISeguimientoCientifico[] = [
   } as ISeguimientoCientifico,
 ];
 
+const entidadesFinanciadoras: IEntidadesFinanciadoras[] = [
+  {
+    id: 1,
+    nombre: 'Entidad 1',
+    cif: 'V2556493',
+    fuenteFinanciacion: 'PGE',
+    ambito: 'Nacional',
+    tipoFinanciacion: 'Subvención',
+    porcentajeFinanciacion: '80'
+  } as IEntidadesFinanciadoras,
+  {
+    id: 2,
+    nombre: 'Entidad 2',
+    cif: 'J8253179',
+    fuenteFinanciacion: 'Fondos propios 2020',
+    ambito: 'Propio',
+    tipoFinanciacion: 'Subvención',
+    porcentajeFinanciacion: '20'
+  } as IEntidadesFinanciadoras,
+];
 @Injectable({
   providedIn: 'root'
 })
@@ -249,4 +270,20 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
           `getSeguimientosCientificos(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
       );
   }
+
+  getEntidadesFinanciadoras(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IEntidadesFinanciadoras>> {
+    this.logger.debug(ConvocatoriaService.name,
+      `getEntidadesFinanciadores(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    const list = {
+      page: null,
+      total: entidadesFinanciadoras.length,
+      items: entidadesFinanciadoras
+    } as SgiRestListResult<IEntidadesFinanciadoras>;
+    return of(list)
+      .pipe(
+        tap(() => this.logger.debug(ConvocatoriaService.name,
+          `getEntidadesFinanciadoras(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+      );
+  }
+
 }

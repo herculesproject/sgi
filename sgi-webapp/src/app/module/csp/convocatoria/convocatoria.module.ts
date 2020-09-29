@@ -14,6 +14,7 @@ import { ConvocatoriaPlazosFasesComponent } from './convocatoria-formulario/conv
 import { ConvocatoriaHitosComponent } from './convocatoria-formulario/convocatoria-hitos/convocatoria-hitos.component';
 import { ConvocatoriaEntidadesConvocantesComponent } from './convocatoria-formulario/convocatoria-entidades-convocantes/convocatoria-entidades-convocantes.component';
 import { ConvocatoriaSeguimientoCientificoComponent } from './convocatoria-formulario/convocatoria-seguimiento-cientifico/convocatoria-seguimiento-cientifico.component';
+import { ConvocatoriaEntidadesFinanciadorasComponent } from './convocatoria-formulario/convocatoria-entidades-financiadoras/convocatoria-entidades-financiadoras.component';
 import { ConvocatoriaPeriodosJustificacionComponent } from './convocatoria-formulario/convocatoria-periodos-justificacion/convocatoria-periodos-justificacion.component';
 
 
@@ -28,6 +29,7 @@ import { ConvocatoriaPeriodosJustificacionComponent } from './convocatoria-formu
     ConvocatoriaHitosComponent,
     ConvocatoriaEntidadesConvocantesComponent,
     ConvocatoriaSeguimientoCientificoComponent,
+    ConvocatoriaEntidadesFinanciadorasComponent
   ],
   imports: [
     CommonModule,

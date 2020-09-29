@@ -4,5 +4,6 @@ export const CONVOCATORIA_ROUTE_NAMES = {
   PLAZOS_FASES: 'plazos-fases',
   HITOS: 'hitos',
   ENTIDADES_CONVOCANTES: 'entidades-convocantes',
-  SEGUIMIENTO_CIENTIFICO: 'seguimiento-cientifico'
+  SEGUIMIENTO_CIENTIFICO: 'seguimiento-cientifico',
+  ENTIDADES_FINANCIADORAS: 'entidades-financiadoras'
 };
