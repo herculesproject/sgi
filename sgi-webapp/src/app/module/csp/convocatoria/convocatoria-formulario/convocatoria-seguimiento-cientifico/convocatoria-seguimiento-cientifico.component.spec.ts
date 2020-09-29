@@ -1,32 +1,27 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { NGXLogger } from 'ngx-logger';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 
-import { ConvocatoriaDatosGeneralesComponent } from './convocatoria-datos-generales.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FlexModule } from '@angular/flex-layout';
-import { SnackBarService } from '@core/services/snack-bar.service';
+import { ConvocatoriaSeguimientoCientificoComponent } from './convocatoria-seguimiento-cientifico.component';
 
-describe('ConvocatoriaDatosGeneralesComponent', () => {
-  let component: ConvocatoriaDatosGeneralesComponent;
-  let fixture: ComponentFixture<ConvocatoriaDatosGeneralesComponent>;
+describe('ConvocatoriaSeguimientoCientificoComponent', () => {
+  let component: ConvocatoriaSeguimientoCientificoComponent;
+  let fixture: ComponentFixture<ConvocatoriaSeguimientoCientificoComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        ConvocatoriaDatosGeneralesComponent
-      ],
+      declarations: [ConvocatoriaSeguimientoCientificoComponent],
       imports: [
         TestUtils.getIdiomas(),
         MaterialDesignModule,
         BrowserAnimationsModule,
         HttpClientTestingModule,
-        FlexModule,
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule,
@@ -40,7 +35,7 @@ describe('ConvocatoriaDatosGeneralesComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConvocatoriaDatosGeneralesComponent);
+    fixture = TestBed.createComponent(ConvocatoriaSeguimientoCientificoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -17,6 +17,10 @@
         [title]="'label.periodo-justificacion' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.PERIODO_JUSTIFICACION)">
       </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item [routerLink]="[CONVOCATORIA_ROUTE_NAMES.SEGUIMIENTO_CIENTIFICO]"
+        [title]="'label.seguimiento-cientifico' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.SEGUIMIENTO_CIENTIFICO)">
+      </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [routerLink]="[CONVOCATORIA_ROUTE_NAMES.HITOS]"
         [title]="'csp.convocatoria.hitos' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.HITOS)">

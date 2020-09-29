@@ -3,5 +3,6 @@ export const CONVOCATORIA_ROUTE_NAMES = {
   PERIODO_JUSTIFICACION: 'periodos-justificacion',
   PLAZOS_FASES: 'plazos-fases',
   HITOS: 'hitos',
-  ENTIDADES_CONVOCANTES: 'entidades-convocantes'
+  ENTIDADES_CONVOCANTES: 'entidades-convocantes',
+  SEGUIMIENTO_CIENTIFICO: 'seguimiento-cientifico'
 };

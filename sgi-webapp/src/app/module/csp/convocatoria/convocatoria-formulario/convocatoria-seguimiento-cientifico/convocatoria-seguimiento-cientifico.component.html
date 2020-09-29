@@ -1,0 +1,73 @@
+<section class="seguimientos-cientificos-listado">
+  <h2>{{'csp.convocatoria.seguimientos-cientificos.cabecera' | translate}}</h2>
+  <!-- Entidades convocantes listado -->
+  <div>
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 table-unidad">
+      <!-- numPeriodo Column -->
+      <ng-container matColumnDef="numPeriodo">
+        <th mat-header-cell *matHeaderCellDef>{{'csp.convocatoria.seguimientos-cientificos.numPeriodo' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.numPeriodo}}
+        </td>
+      </ng-container>
+
+      <!-- mesInicial Column -->
+      <ng-container matColumnDef="mesInicial">
+        <th mat-header-cell *matHeaderCellDef>{{'csp.convocatoria.seguimientos-cientificos.mesInicial' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.mesInicial}}
+        </td>
+      </ng-container>
+
+      <!-- mesFinal Column -->
+      <ng-container matColumnDef="mesFinal">
+        <th mat-header-cell *matHeaderCellDef>{{'csp.convocatoria.seguimientos-cientificos.mesFinal' | translate}}</th>
+        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.mesFinal}}
+        </td>
+      </ng-container>
+
+      <!-- fechaInicio Column -->
+      <ng-container matColumnDef="fechaInicio">
+        <th mat-header-cell *matHeaderCellDef>{{'csp.convocatoria.seguimientos-cientificos.fechaInicio' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.fechaInicio | date:'dd/MM/yyyy'}} </td>
+      </ng-container>
+
+      <!-- fechaFin Column -->
+      <ng-container matColumnDef="fechaFin">
+        <th mat-header-cell *matHeaderCellDef>{{'csp.convocatoria.seguimientos-cientificos.fechaFin' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.fechaFin | date:'dd/MM/yyyy'}} </td>
+      </ng-container>
+
+      <!-- observaciones Column -->
+      <ng-container matColumnDef="observaciones">
+        <th mat-header-cell *matHeaderCellDef>{{'csp.convocatoria.seguimientos-cientificos.observaciones' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.observaciones}} </td>
+      </ng-container>
+
+      <!-- Acciones Column -->
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>{{'botones.acciones' | translate}}</th>
+        <td mat-cell *matCellDef="let wrapper">
+          <button mat-button matTooltip="{{'botones.editar' | translate}}">
+            <mat-icon color="primary">border_color</mat-icon>
+          </button>
+          <button mat-button matTooltip="{{'botones.eliminar' | translate}}">
+            <mat-icon color="warn">highlight_off</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
+    </mat-paginator>
+  </div>
+  <div class="separation-button">
+    <button color="three" mat-button mat-raised-button>
+      <mat-icon>add_circle_outline</mat-icon> {{'csp.convocatoria.seguimientos-cientificos.crear' | translate}}
+    </button>
+  </div>
+</section>

@@ -9,7 +9,7 @@ export class DateUtils {
   /**
    * Convierte una fecha en formato string, moment o Date a Date.
    *
-   * @param fecha una fecha
+   * @param fecha una fecha con formato MM/DD/YYYY
    * @return la fecha como un Date.
    */
   static fechaToDate(fecha: string | Moment | Date): Date {

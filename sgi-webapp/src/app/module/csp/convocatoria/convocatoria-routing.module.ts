@@ -14,6 +14,7 @@ import { ConvocatoriaCrearComponent } from './convocatoria-crear/convocatoria-cr
 import { CONVOCATORIA_ROUTE_NAMES } from './convocatoria-route-names';
 import { ConvocatoriaDatosGeneralesComponent } from './convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.component';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
+import { ConvocatoriaSeguimientoCientificoComponent } from './convocatoria-formulario/convocatoria-seguimiento-cientifico/convocatoria-seguimiento-cientifico.component';
 import { ConvocatoriaPeriodosJustificacionComponent } from './convocatoria-formulario/convocatoria-periodos-justificacion/convocatoria-periodos-justificacion.component';
 import { ConvocatoriaEditarComponent } from './convocatoria-editar/convocatoria-editar.component';
 import { ConvocatoriaResolver } from './convocatoria.resolver';
@@ -71,7 +72,12 @@ const routes: SgiRoutes = [
         path: CONVOCATORIA_ROUTE_NAMES.ENTIDADES_CONVOCANTES,
         component: ConvocatoriaEntidadesConvocantesComponent,
         canDeactivate: [FragmentGuard]
-      }
+      },
+      {
+        path: CONVOCATORIA_ROUTE_NAMES.SEGUIMIENTO_CIENTIFICO,
+        component: ConvocatoriaSeguimientoCientificoComponent,
+        canDeactivate: [FragmentGuard]
+      },
     ]
   },
   {
@@ -95,8 +101,7 @@ const routes: SgiRoutes = [
         path: CONVOCATORIA_ROUTE_NAMES.DATOS_GENERALES,
         component: ConvocatoriaDatosGeneralesComponent,
         canDeactivate: [FragmentGuard]
-      },
-      {
+      }, {
         path: CONVOCATORIA_ROUTE_NAMES.PERIODO_JUSTIFICACION,
         component: ConvocatoriaPeriodosJustificacionComponent,
         canDeactivate: [FragmentGuard]
@@ -109,16 +114,17 @@ const routes: SgiRoutes = [
       {
         path: CONVOCATORIA_ROUTE_NAMES.HITOS,
         component: ConvocatoriaHitosComponent
-      }, {
-        path: CONVOCATORIA_ROUTE_NAMES.PERIODO_JUSTIFICACION,
-        component: ConvocatoriaPeriodosJustificacionComponent,
-        canDeactivate: [FragmentGuard]
       },
       {
         path: CONVOCATORIA_ROUTE_NAMES.ENTIDADES_CONVOCANTES,
         component: ConvocatoriaEntidadesConvocantesComponent,
         canDeactivate: [FragmentGuard]
-      }
+      },
+      {
+        path: CONVOCATORIA_ROUTE_NAMES.SEGUIMIENTO_CIENTIFICO,
+        component: ConvocatoriaSeguimientoCientificoComponent,
+        canDeactivate: [FragmentGuard]
+      },
     ]
   }
 ];

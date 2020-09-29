@@ -7,9 +7,11 @@ import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IPeriodosJustificacion } from '@core/models/csp/periodo-justificacion';
 import { of, Observable } from 'rxjs';
 import { IPlazosFases } from '@core/models/csp/plazos-fases';
+import { ISeguimientoCientifico } from '@core/models/csp/seguimiento-cientifico';
 import { tap } from 'rxjs/operators';
 import { IHito } from '@core/models/csp/hito';
 import { IEntidadesConvocantes } from '@core/models/csp/entidades-convocantes';
+import { DateUtils } from '@core/utils/date-utils';
 
 
 const convocatorias: IConvocatoria[] = [
@@ -96,6 +98,25 @@ const entidadesConvocantes: IEntidadesConvocantes[] = [
     plan: 'Plan propio',
     programa: 'Programa ayudas propias'
   } as IEntidadesConvocantes
+];
+
+const seguimientosCientificos: ISeguimientoCientifico[] = [
+  {
+    numPeriodo: 1,
+    mesInicial: 1,
+    mesFinal: 18,
+    fechaInicio: DateUtils.fechaToDate('05/15/2020'),
+    fechaFin: DateUtils.fechaToDate('06/16/2020'),
+    observaciones: 'Primer periodo de seguimiento'
+  } as ISeguimientoCientifico,
+  {
+    numPeriodo: 2,
+    mesInicial: 19,
+    mesFinal: 36,
+    fechaInicio: DateUtils.fechaToDate('05/20/2020'),
+    fechaFin: DateUtils.fechaToDate('06/20/2020'),
+    observaciones: 'Segundo periodo de seguimiento'
+  } as ISeguimientoCientifico,
 ];
 
 @Injectable({
@@ -212,6 +233,20 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
       .pipe(
         tap(() => this.logger.debug(ConvocatoriaService.name,
           `getEntidadesConvocantes(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+      );
+  }
+  getSeguimientosCientificos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<ISeguimientoCientifico>> {
+    this.logger.debug(ConvocatoriaService.name,
+      `getSeguimientosCientificos(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    const list = {
+      page: null,
+      total: seguimientosCientificos.length,
+      items: seguimientosCientificos
+    } as SgiRestListResult<ISeguimientoCientifico>;
+    return of(list)
+      .pipe(
+        tap(() => this.logger.debug(ConvocatoriaService.name,
+          `getSeguimientosCientificos(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
       );
   }
 }
