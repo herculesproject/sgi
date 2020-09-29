@@ -17,6 +17,7 @@ import { FragmentGuard } from '@core/guards/detail-form.guard';
 import { ConvocatoriaPeriodosJustificacionComponent } from './convocatoria-formulario/convocatoria-periodos-justificacion/convocatoria-periodos-justificacion.component';
 import { ConvocatoriaEditarComponent } from './convocatoria-editar/convocatoria-editar.component';
 import { ConvocatoriaResolver } from './convocatoria.resolver';
+import { ConvocatoriaPlazosFasesComponent } from './convocatoria-formulario/convocatoria-plazos-fases/convocatoria-plazos-fases.component';
 
 
 const MSG_EDIT_TITLE = marker('csp.convocatoria.editar.titulo');
@@ -45,13 +46,19 @@ const routes: SgiRoutes = [
         path: '',
         pathMatch: 'full',
         redirectTo: CONVOCATORIA_ROUTE_NAMES.DATOS_GENERALES
-      }, {
+      },
+      {
         path: CONVOCATORIA_ROUTE_NAMES.DATOS_GENERALES,
         component: ConvocatoriaDatosGeneralesComponent,
         canDeactivate: [FragmentGuard]
       }, {
         path: CONVOCATORIA_ROUTE_NAMES.PERIODO_JUSTIFICACION,
         component: ConvocatoriaPeriodosJustificacionComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: CONVOCATORIA_ROUTE_NAMES.PLAZOS_FASES,
+        component: ConvocatoriaPlazosFasesComponent,
         canDeactivate: [FragmentGuard]
       },
     ]
@@ -77,7 +84,17 @@ const routes: SgiRoutes = [
         path: CONVOCATORIA_ROUTE_NAMES.DATOS_GENERALES,
         component: ConvocatoriaDatosGeneralesComponent,
         canDeactivate: [FragmentGuard]
-      }
+      },
+      {
+        path: CONVOCATORIA_ROUTE_NAMES.PERIODO_JUSTIFICACION,
+        component: ConvocatoriaPeriodosJustificacionComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: CONVOCATORIA_ROUTE_NAMES.PLAZOS_FASES,
+        component: ConvocatoriaPlazosFasesComponent,
+        canDeactivate: [FragmentGuard]
+      },
 
     ]
   }

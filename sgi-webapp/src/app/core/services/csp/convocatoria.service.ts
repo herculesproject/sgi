@@ -6,6 +6,7 @@ import { environment } from '@env';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IPeriodosJustificacion } from '@core/models/csp/periodo-justificacion';
 import { of, Observable } from 'rxjs';
+import { IPlazosFases } from '@core/models/csp/plazos-fases';
 import { tap } from 'rxjs/operators';
 
 
@@ -55,9 +56,16 @@ const periodosJustificacion: IPeriodosJustificacion[] = [
     id: 2, numPeriodo: 2, mesInicial: new Date(), mesFinal: new Date(),
     fechaInicio: new Date(), fechaFin: new Date(), observaciones: 'Segundo periodo de justificación', activo: true
   }
-
 ];
 
+const plazosFases: IPlazosFases[] = [
+  {
+    id: 1, fechaInicio: new Date(), fechaFin: new Date(), tipoFase: 'Presentación interna solicitudes', observaciones: 'Recogida de solicitudes en UGI', activo: true
+  },
+  {
+    id: 1, fechaInicio: new Date(), fechaFin: new Date(), tipoFase: 'Presentación solicitudes', observaciones: 'Entrega de solicitudes en Ministerio', activo: true
+  }
+];
 
 @Injectable({
   providedIn: 'root'
@@ -110,10 +118,27 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
       );
   }
 
+  /**
+   * Recupera listado mock de plazos y fases.
+   * @param id convocatoria
+   * @param options opciones de búsqueda.
+   */
+  getPlazosFases(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IPlazosFases>> {
+    this.logger.debug(ConvocatoriaService.name, `getPlazosFases(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    const list = {
+      page: null,
+      total: plazosFases.length,
+      items: plazosFases
+    } as SgiRestListResult<IPlazosFases>;
+    return of(list)
+      .pipe(
+        tap(() => this.logger.debug(ConvocatoriaService.name,
+          `findByEvaluacionId(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+      );
+  }
 
   findById(idConvocatoria: number) {
     return of(convocatorias[idConvocatoria - 1]);
   }
-
 
 }

@@ -23,25 +23,25 @@ export class ConvocatoriaPeriodosJustificacionFragment extends Fragment {
 
   protected onInitialize(): void {
     this.logger.debug(ConvocatoriaPeriodosJustificacionFragment.name, 'onInitialize()', 'start');
-    // if (this.getKey()) {
-    this.convocatoriaService.getPeriodosJustificacion(this.getKey() as number).pipe(
-      // TODO eliminar delay cuando se quite el mock
-      delay(0),
-      map((response) => {
-        if (response.items) {
-          return response.items;
-        }
-        else {
-          return [];
-        }
-      })
-    ).subscribe((periodosJustificacion) => {
-      this.periodosJustificacion$.next(periodosJustificacion.map(
-        entidadConvocantes => new StatusWrapper<IPeriodosJustificacion>(entidadConvocantes))
-      );
-      this.logger.debug(ConvocatoriaPeriodosJustificacionFragment.name, 'onInitialize()', 'end');
-    });
-    // }
+    if (this.getKey()) {
+      this.convocatoriaService.getPeriodosJustificacion(this.getKey() as number).pipe(
+        // TODO eliminar delay cuando se quite el mock
+        delay(0),
+        map((response) => {
+          if (response.items) {
+            return response.items;
+          }
+          else {
+            return [];
+          }
+        })
+      ).subscribe((periodosJustificacion) => {
+        this.periodosJustificacion$.next(periodosJustificacion.map(
+          entidadConvocantes => new StatusWrapper<IPeriodosJustificacion>(entidadConvocantes))
+        );
+        this.logger.debug(ConvocatoriaPeriodosJustificacionFragment.name, 'onInitialize()', 'end');
+      });
+    }
   }
 
   saveOrUpdate(): Observable<string | number | void> {

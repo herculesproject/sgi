@@ -10,6 +10,7 @@ import { ConvocatoriaCrearComponent } from './convocatoria-crear/convocatoria-cr
 import { ConvocatoriaResolver } from './convocatoria.resolver';
 import { ConvocatoriaDatosGeneralesComponent } from './convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.component';
 import { ConvocatoriaEditarComponent } from './convocatoria-editar/convocatoria-editar.component';
+import { ConvocatoriaPlazosFasesComponent } from './convocatoria-formulario/convocatoria-plazos-fases/convocatoria-plazos-fases.component';
 
 import { ConvocatoriaPeriodosJustificacionComponent } from './convocatoria-formulario/convocatoria-periodos-justificacion/convocatoria-periodos-justificacion.component';
 
@@ -20,7 +21,8 @@ import { ConvocatoriaPeriodosJustificacionComponent } from './convocatoria-formu
     ConvocatoriaCrearComponent,
     ConvocatoriaDatosGeneralesComponent,
     ConvocatoriaPeriodosJustificacionComponent,
-    ConvocatoriaEditarComponent],
+    ConvocatoriaEditarComponent,
+    ConvocatoriaPlazosFasesComponent],
   imports: [
     CommonModule,
     SharedModule,
