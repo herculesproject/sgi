@@ -12,6 +12,7 @@ import { tap } from 'rxjs/operators';
 import { IHito } from '@core/models/csp/hito';
 import { IEntidadesConvocantes } from '@core/models/csp/entidades-convocantes';
 import { DateUtils } from '@core/utils/date-utils';
+import { IEnlace } from '@core/models/csp/enlace';
 import { IEntidadesFinanciadoras } from '@core/models/csp/entidades-financiadoras';
 
 
@@ -140,6 +141,16 @@ const entidadesFinanciadoras: IEntidadesFinanciadoras[] = [
     porcentajeFinanciacion: '20'
   } as IEntidadesFinanciadoras,
 ];
+
+const enlaces: IEnlace[] = [
+  {
+    id: 1, url: 'www.boe.es', descripcion: 'Publicación BOE', tipoEnlace: 'BOE', activo: true
+  },
+  {
+    id: 2, url: 'www.solicitamineco.es', descripcion: 'URL de convocatoria', tipoEnlace: 'Publicación convocatoria', activo: true
+  }
+
+];
 @Injectable({
   providedIn: 'root'
 })
@@ -190,6 +201,29 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
           `findByEvaluacionId(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
       );
   }
+
+
+
+  /**
+   * Recupera listado mock de enlaces.
+   * @param id convocatoria
+   * @param options opciones de búsqueda.
+   */
+  getEnlaces(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IEnlace>> {
+    this.logger.debug(ConvocatoriaService.name, `findPeriodosJustificacion(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    // return this.find<IEntidadesConvocantes, IEntidadesConvocantes>(`${this.endpointUrl}/${id}/comentarios`, options)
+    const list = {
+      page: null,
+      total: enlaces.length,
+      items: enlaces
+    } as SgiRestListResult<IEnlace>;
+    return of(list)
+      .pipe(
+        tap(() => this.logger.debug(ConvocatoriaService.name,
+          `findByEvaluacionId(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+      );
+  }
+
 
   /**
    * Recupera listado mock de plazos y fases.

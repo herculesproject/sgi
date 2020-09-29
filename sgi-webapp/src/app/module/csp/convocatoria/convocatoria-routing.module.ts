@@ -22,6 +22,7 @@ import { ConvocatoriaPlazosFasesComponent } from './convocatoria-formulario/conv
 import { ConvocatoriaHitosComponent } from './convocatoria-formulario/convocatoria-hitos/convocatoria-hitos.component';
 import { ConvocatoriaEntidadesConvocantesComponent } from './convocatoria-formulario/convocatoria-entidades-convocantes/convocatoria-entidades-convocantes.component';
 import { ConvocatoriaEntidadesFinanciadorasComponent } from './convocatoria-formulario/convocatoria-entidades-financiadoras/convocatoria-entidades-financiadoras.component';
+import { ConvocatoriaEnlaceComponent } from './convocatoria-formulario/convocatoria-enlace/convocatoria-enlace.component';
 
 
 const MSG_EDIT_TITLE = marker('csp.convocatoria.editar.titulo');
@@ -85,6 +86,11 @@ const routes: SgiRoutes = [
         component: ConvocatoriaSeguimientoCientificoComponent,
         canDeactivate: [FragmentGuard]
       },
+      {
+        path: CONVOCATORIA_ROUTE_NAMES.ENLACES,
+        component: ConvocatoriaEnlaceComponent,
+        canDeactivate: [FragmentGuard]
+      },
     ]
   },
   {
@@ -131,7 +137,17 @@ const routes: SgiRoutes = [
         path: CONVOCATORIA_ROUTE_NAMES.ENTIDADES_FINANCIADORAS,
         component: ConvocatoriaEntidadesFinanciadorasComponent,
         canDeactivate: [FragmentGuard]
-      }
+      },
+      {
+        path: CONVOCATORIA_ROUTE_NAMES.ENLACES,
+        component: ConvocatoriaEnlaceComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: CONVOCATORIA_ROUTE_NAMES.SEGUIMIENTO_CIENTIFICO,
+        component: ConvocatoriaSeguimientoCientificoComponent,
+        canDeactivate: [FragmentGuard]
+      },
     ]
   }
 ];

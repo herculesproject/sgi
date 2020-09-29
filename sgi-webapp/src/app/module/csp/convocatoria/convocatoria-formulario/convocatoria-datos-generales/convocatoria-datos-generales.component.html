@@ -43,7 +43,7 @@
         <input matInput formControlName="unidadGestion" type="text" id="unidadGestion"
           placeholder="{{'csp.convocatoria.unidad.gestion' | translate}}" required maxlength="100"
           [matAutocomplete]="autoUnidadGestion">
-        <mat-autocomplete #autoUnidadGestion="matAutocomplete" [displayWith]="loadUnidadesGestion">
+        <mat-autocomplete #autoUnidadGestion="matAutocomplete" [displayWith]="getUnidadGestion">
           <mat-option *ngFor="let unidadGestion of unidadesGestion | async" [value]="unidadGestion">
             {{unidadGestion.nombre}}
           </mat-option>
@@ -139,7 +139,7 @@
         <input matInput formControlName="ambitoGeografico" type="text" id="ambitoGeografico"
           placeholder="{{'csp.convocatoria.ambito.geografico' | translate}}" required maxlength="100"
           [matAutocomplete]="autoAmbitoGeografico">
-        <mat-autocomplete #autoAmbitoGeografico="matAutocomplete" [displayWith]="loadAmbitosGeograficos">
+        <mat-autocomplete #autoAmbitoGeografico="matAutocomplete" [displayWith]="getAmbitoGeografico">
 
           <mat-option *ngFor="let ambitoGeografico of ambitosGeograficos | async" [value]="ambitoGeografico">
             {{ambitoGeografico.nombre}}
@@ -177,7 +177,7 @@
         <input matInput formControlName="regimenConcurrencia" type="text" id="regimenConcurrencia"
           placeholder="{{'csp.convocatoria.regimen.ocurrencia' | translate}}" maxlength="100"
           [matAutocomplete]="autoRegimenConcurrencia">
-        <mat-autocomplete #autoRegimenConcurrencia="matAutocomplete" [displayWith]="loadRegimenesConcurrencia">
+        <mat-autocomplete #autoRegimenConcurrencia="matAutocomplete" [displayWith]="getRegimenConcurrencia">
           <mat-option *ngFor="let regimenConcurrencia of regimenesConcurrencia | async" [value]="regimenConcurrencia">
             {{regimenConcurrencia.nombre}}
           </mat-option>
@@ -262,17 +262,12 @@
 
   </form>
 
-
-  <h2>{{'csp.convocatoria.area.tematica.titulo' | translate}}</h2>
   <!-- Botón añadir área temática -->
   <div class="separation-button">
     <h2>{{'csp.convocatoria.area.tematica.titulo' | translate}}</h2>
-    <!-- Botón añadir área temática -->
-    <div class="separation-button">
-      <button color="three" mat-button mat-raised-button>
-        <mat-icon>add_box</mat-icon>
-        {{'csp.convocatoria.area.tematica.aniadir' | translate}}
-      </button>
-    </div>
+    <button color="three" mat-button mat-raised-button>
+      <mat-icon>add_box</mat-icon>
+      {{'csp.convocatoria.area.tematica.aniadir' | translate}}
+    </button>
   </div>
 </section>

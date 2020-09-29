@@ -13,6 +13,9 @@
         [title]="'label.entidades-financiadoras' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.ENTIDADES_FINANCIADORAS)">
       </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item [routerLink]="[CONVOCATORIA_ROUTE_NAMES.ENLACES]"
+        [title]="'label.enlaces' | translate" [fragment]="actionService.getFragment(actionService.FRAGMENT.ENLACES)">
+      </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [routerLink]="[CONVOCATORIA_ROUTE_NAMES.PERIODO_JUSTIFICACION]"
         [title]="'label.periodo-justificacion' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.PERIODO_JUSTIFICACION)">
