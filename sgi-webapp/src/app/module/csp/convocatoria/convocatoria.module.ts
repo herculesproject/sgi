@@ -10,13 +10,15 @@ import { ConvocatoriaCrearComponent } from './convocatoria-crear/convocatoria-cr
 import { ConvocatoriaResolver } from './convocatoria.resolver';
 import { ConvocatoriaDatosGeneralesComponent } from './convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.component';
 
+import { ConvocatoriaPeriodosJustificacionComponent } from './convocatoria-formulario/convocatoria-periodos-justificacion/convocatoria-periodos-justificacion.component';
 
 
 @NgModule({
   declarations: [
     ConvocatoriaListadoComponent,
     ConvocatoriaCrearComponent,
-    ConvocatoriaDatosGeneralesComponent],
+    ConvocatoriaDatosGeneralesComponent,
+    ConvocatoriaPeriodosJustificacionComponent],
   imports: [
     CommonModule,
     SharedModule,

@@ -14,6 +14,7 @@ import { ConvocatoriaCrearComponent } from './convocatoria-crear/convocatoria-cr
 import { CONVOCATORIA_ROUTE_NAMES } from './convocatoria-route-names';
 import { ConvocatoriaDatosGeneralesComponent } from './convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.component';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
+import { ConvocatoriaPeriodosJustificacionComponent } from './convocatoria-formulario/convocatoria-periodos-justificacion/convocatoria-periodos-justificacion.component';
 
 
 const MSG_LISTADO_TITLE = marker('csp.convocatoria.listado.titulo');
@@ -44,6 +45,10 @@ const routes: SgiRoutes = [
       }, {
         path: CONVOCATORIA_ROUTE_NAMES.DATOS_GENERALES,
         component: ConvocatoriaDatosGeneralesComponent,
+        canDeactivate: [FragmentGuard]
+      }, {
+        path: CONVOCATORIA_ROUTE_NAMES.PERIODO_JUSTIFICACION,
+        component: ConvocatoriaPeriodosJustificacionComponent,
         canDeactivate: [FragmentGuard]
       },
     ]
