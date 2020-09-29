@@ -16,7 +16,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
 
   }
 
-
   protected buildFormGroup(): FormGroup {
     return this.fb.group({
       referencia: ['', Validators.required],

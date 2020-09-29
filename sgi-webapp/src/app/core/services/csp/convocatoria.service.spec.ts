@@ -1,10 +1,10 @@
+import { HttpClientModule } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
+import TestUtils from '@core/utils/test-utils';
+import { NGXLogger } from 'ngx-logger';
 
 import { ConvocatoriaService } from './convocatoria.service';
-import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NGXLogger } from 'ngx-logger';
-import TestUtils from '@core/utils/test-utils';
 
 describe('ConvocatoriaService', () => {
   let service: ConvocatoriaService;

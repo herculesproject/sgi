@@ -18,7 +18,10 @@ describe('ConvocatoriaListadoComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ConvocatoriaListadoComponent],
+      declarations: [
+        ConvocatoriaListadoComponent,
+        FooterCrearComponent
+      ],
       imports: [
         RouterTestingModule,
         MaterialDesignModule,

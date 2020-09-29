@@ -1,44 +1,40 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { NGXLogger } from 'ngx-logger';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 
-import { ConvocatoriaDatosGeneralesComponent } from './convocatoria-datos-generales.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FlexModule } from '@angular/flex-layout';
-import { SnackBarService } from '@core/services/snack-bar.service';
+import { ConvocatoriaEntidadesConvocantesComponent } from './convocatoria-entidades-convocantes.component';
 
-describe('ConvocatoriaDatosGeneralesComponent', () => {
-  let component: ConvocatoriaDatosGeneralesComponent;
-  let fixture: ComponentFixture<ConvocatoriaDatosGeneralesComponent>;
+describe('ConvocatoriaEntidadesConvocantesComponent', () => {
+  let component: ConvocatoriaEntidadesConvocantesComponent;
+  let fixture: ComponentFixture<ConvocatoriaEntidadesConvocantesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ConvocatoriaDatosGeneralesComponent], imports: [
-        TestUtils.getIdiomas(),
-        MaterialDesignModule,
-        BrowserAnimationsModule,
+      declarations: [ConvocatoriaEntidadesConvocantesComponent],
+      imports: [
         HttpClientTestingModule,
-        FlexModule,
         FormsModule,
         ReactiveFormsModule,
+        TestUtils.getIdiomas(),
         RouterTestingModule,
+        MaterialDesignModule,
+        BrowserAnimationsModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-        { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
         ConvocatoriaActionService
-      ],
-    })
-      .compileComponents();
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConvocatoriaDatosGeneralesComponent);
+    fixture = TestBed.createComponent(ConvocatoriaEntidadesConvocantesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

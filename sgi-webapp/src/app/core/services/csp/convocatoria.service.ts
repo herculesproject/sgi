@@ -9,6 +9,7 @@ import { of, Observable } from 'rxjs';
 import { IPlazosFases } from '@core/models/csp/plazos-fases';
 import { tap } from 'rxjs/operators';
 import { IHito } from '@core/models/csp/hito';
+import { IEntidadesConvocantes } from '@core/models/csp/entidades-convocantes';
 
 
 const convocatorias: IConvocatoria[] = [
@@ -77,6 +78,26 @@ const plazosFases: IPlazosFases[] = [
   }
 ];
 
+
+const entidadesConvocantes: IEntidadesConvocantes[] = [
+  {
+    id: 1,
+    nombre: 'Entidad 1',
+    cif: 'V5920978',
+    itemPrograma: 'Modalidad K',
+    plan: 'Plan Nacional 2020-2023',
+    programa: 'Programa 1'
+  } as IEntidadesConvocantes,
+  {
+    id: 2,
+    nombre: 'Entidad 2',
+    cif: 'V3142340',
+    itemPrograma: 'Predoctorales',
+    plan: 'Plan propio',
+    programa: 'Programa ayudas propias'
+  } as IEntidadesConvocantes
+];
+
 @Injectable({
   providedIn: 'root'
 })
@@ -84,7 +105,6 @@ const plazosFases: IPlazosFases[] = [
 export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
 
   private static readonly MAPPING = '/convocatorias';
-
 
   constructor(logger: NGXLogger, protected http: HttpClient) {
     super(
@@ -174,4 +194,24 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
   }
 
 
+  /**
+   * Recupera las entidades convocantes.
+   *
+   * @param id Id de la convocatoria
+   * @param options opciones de búsqueda.
+   */
+  getEntidadesConvocantes(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IEntidadesConvocantes>> {
+    this.logger.debug(ConvocatoriaService.name,
+      `getEntidadesConvocantes(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    const list = {
+      page: null,
+      total: entidadesConvocantes.length,
+      items: entidadesConvocantes
+    } as SgiRestListResult<IEntidadesConvocantes>;
+    return of(list)
+      .pipe(
+        tap(() => this.logger.debug(ConvocatoriaService.name,
+          `getEntidadesConvocantes(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+      );
+  }
 }

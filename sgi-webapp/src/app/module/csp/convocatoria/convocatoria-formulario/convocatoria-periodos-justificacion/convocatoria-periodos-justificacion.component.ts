@@ -46,10 +46,10 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
     this.totalElementos = 0;
     this.subscriptions = [];
     this.dataSource = new MatTableDataSource<StatusWrapper<IPeriodosJustificacion>>();
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.periodosJustificacion$.subscribe(elements => {
       this.dataSource.data = elements;
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
       this.logger.debug(ConvocatoriaPeriodosJustificacionComponent.name, 'ngOnInit()', 'end');
     }));
   }

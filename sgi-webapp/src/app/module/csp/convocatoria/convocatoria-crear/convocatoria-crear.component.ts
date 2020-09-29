@@ -32,7 +32,8 @@ export class ConvocatoriaCrearComponent extends ActionComponent {
 
   textoCrear = MSG_BUTTON_SAVE;
 
-  constructor(protected readonly logger: NGXLogger,
+  constructor(
+    protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,

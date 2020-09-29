@@ -1,16 +1,16 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import TestUtils from '@core/utils/test-utils';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { NGXLogger } from 'ngx-logger';
 
 import { ConvocatoriaCrearComponent } from './convocatoria-crear.component';
 import { ConvocatoriaDatosGeneralesComponent } from '../convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.component';
 import { FooterGuardarComponent } from '@shared/footers/footer-guardar/footer-guardar.component';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FlexModule } from '@angular/flex-layout';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialDesignModule } from '@material/material-design.module';
-import TestUtils from '@core/utils/test-utils';
-import { NGXLogger } from 'ngx-logger';
 import { ConvocatoriaActionService } from '../convocatoria.action.service';
 
 describe('ConvocatoriaCrearComponent', () => {
@@ -19,10 +19,11 @@ describe('ConvocatoriaCrearComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ConvocatoriaCrearComponent,
+      declarations: [
+        ConvocatoriaCrearComponent,
         ConvocatoriaDatosGeneralesComponent,
-        FooterGuardarComponent]
-      ,
+        FooterGuardarComponent
+      ],
       imports: [
         TestUtils.getIdiomas(),
         MaterialDesignModule,

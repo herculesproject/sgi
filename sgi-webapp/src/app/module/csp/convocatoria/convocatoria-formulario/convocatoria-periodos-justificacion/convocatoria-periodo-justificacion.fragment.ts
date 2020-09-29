@@ -37,7 +37,7 @@ export class ConvocatoriaPeriodosJustificacionFragment extends Fragment {
         })
       ).subscribe((periodosJustificacion) => {
         this.periodosJustificacion$.next(periodosJustificacion.map(
-          entidadConvocantes => new StatusWrapper<IPeriodosJustificacion>(entidadConvocantes))
+          periodoJustificacion => new StatusWrapper<IPeriodosJustificacion>(periodoJustificacion))
         );
         this.logger.debug(ConvocatoriaPeriodosJustificacionFragment.name, 'onInitialize()', 'end');
       });

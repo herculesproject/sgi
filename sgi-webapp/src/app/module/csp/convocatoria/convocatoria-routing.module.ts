@@ -19,6 +19,7 @@ import { ConvocatoriaEditarComponent } from './convocatoria-editar/convocatoria-
 import { ConvocatoriaResolver } from './convocatoria.resolver';
 import { ConvocatoriaPlazosFasesComponent } from './convocatoria-formulario/convocatoria-plazos-fases/convocatoria-plazos-fases.component';
 import { ConvocatoriaHitosComponent } from './convocatoria-formulario/convocatoria-hitos/convocatoria-hitos.component';
+import { ConvocatoriaEntidadesConvocantesComponent } from './convocatoria-formulario/convocatoria-entidades-convocantes/convocatoria-entidades-convocantes.component';
 
 
 const MSG_EDIT_TITLE = marker('csp.convocatoria.editar.titulo');
@@ -65,6 +66,11 @@ const routes: SgiRoutes = [
       {
         path: CONVOCATORIA_ROUTE_NAMES.HITOS,
         component: ConvocatoriaHitosComponent
+      },
+      {
+        path: CONVOCATORIA_ROUTE_NAMES.ENTIDADES_CONVOCANTES,
+        component: ConvocatoriaEntidadesConvocantesComponent,
+        canDeactivate: [FragmentGuard]
       }
     ]
   },
@@ -103,8 +109,16 @@ const routes: SgiRoutes = [
       {
         path: CONVOCATORIA_ROUTE_NAMES.HITOS,
         component: ConvocatoriaHitosComponent
+      }, {
+        path: CONVOCATORIA_ROUTE_NAMES.PERIODO_JUSTIFICACION,
+        component: ConvocatoriaPeriodosJustificacionComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: CONVOCATORIA_ROUTE_NAMES.ENTIDADES_CONVOCANTES,
+        component: ConvocatoriaEntidadesConvocantesComponent,
+        canDeactivate: [FragmentGuard]
       }
-
     ]
   }
 ];
