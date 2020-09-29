@@ -26,12 +26,10 @@
         <mat-label>{{'csp.convocatoria.estado' | translate}}</mat-label>
         <input type="text" placeholder="{{'csp.convocatoria.estado' | translate}}" arial-label="Number" matInput
           formControlName="estado" [matAutocomplete]="auto" required>
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option>
-            {{'csp.convocatoria.estado.borrador' | translate}}
-          </mat-option>
-          <mat-option>
-            {{'csp.convocatoria.estado.registrada' | translate}}
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="getEstado()">
+
+          <mat-option *ngFor="let estado of estados" [value]="estado | translate">
+            {{ estado | translate}}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
@@ -141,7 +139,7 @@
         <input matInput formControlName="ambitoGeografico" type="text" id="ambitoGeografico"
           placeholder="{{'csp.convocatoria.ambito.geografico' | translate}}" required maxlength="100"
           [matAutocomplete]="autoAmbitoGeografico">
-        <mat-autocomplete #autoAmbitoGeografico="matAutocomplete" [displayWith]="getAmbitoGeografico()">
+        <mat-autocomplete #autoAmbitoGeografico="matAutocomplete" [displayWith]="getAmbitoGeografico">
 
           <mat-option *ngFor="let ambitoGeografico of ambitosGeograficos | async" [value]="ambitoGeografico">
             {{ambitoGeografico.nombre}}
@@ -159,20 +157,11 @@
         <input matInput formControlName="clasificacionProduccion" type="text" id="clasificacionProduccion"
           placeholder="{{'csp.convocatoria.clasificacion.produccion' | translate}}" maxlength="100"
           [matAutocomplete]="autoclasificacionProduccion">
-        <mat-autocomplete #autoclasificacionProduccion="matAutocomplete">
+        <mat-autocomplete #autoclasificacionProduccion="matAutocomplete" [displayWith]="getClasificacionProduccion">
 
-          <mat-option>
-            {{'csp.convocatoria.clasificacion.produccion.ayudas' | translate}}
-          </mat-option>
-          <mat-option>
-            {{'csp.convocatoria.clasificacion.produccion.proyecto.competitivo' | translate}}
-          </mat-option>
-
-          <mat-option>
-            {{'csp.convocatoria.clasificacion.produccion.proyecto.no.competitivo' | translate}}
-          </mat-option>
-          <mat-option>
-            {{'csp.convocatoria.clasificacion.produccion.proyecto.estancias' | translate}}
+          <mat-option *ngFor="let clasificacionProduccion of clasificacionesProduccion"
+            [value]="clasificacionProduccion | translate">
+            {{ clasificacionProduccion | translate}}
           </mat-option>
 
         </mat-autocomplete>
@@ -204,15 +193,12 @@
         <input matInput formControlName="proyectoColaborativo" type="text" id="proyectoColaborativo"
           placeholder="{{'csp.convocatoria.proyecto.colaborativo' | translate}}" maxlength="100"
           [matAutocomplete]="autoProyectoColaborativo">
-        <mat-autocomplete #autoProyectoColaborativo="matAutocomplete">
+        <mat-autocomplete #autoProyectoColaborativo="matAutocomplete" [displayWith]="getProyectoColaborativo()">
 
-          <mat-option>
-            {{'label.si' | translate}}
+          <mat-option *ngFor="let proyectoColaborativo of proyectosColaborativo"
+            [value]="proyectoColaborativo | translate">
+            {{ proyectoColaborativo | translate}}
           </mat-option>
-          <mat-option>
-            {{'label.no' | translate}}
-          </mat-option>
-
         </mat-autocomplete>
       </mat-form-field>
     </div>
@@ -224,17 +210,10 @@
         <input matInput formControlName="destinatarios" type="text" id="destinatarios"
           placeholder="{{'csp.convocatoria.destinatarios' | translate}}" maxlength="100"
           [matAutocomplete]="autoDestinatarios">
-        <mat-autocomplete #autoDestinatarios="matAutocomplete">
+        <mat-autocomplete #autoDestinatarios="matAutocomplete" [displayWith]="getDestinatario">
 
-          <mat-option>
-            {{'csp.convocatoria.destinatarios.individual' | translate}}
-          </mat-option>
-          <mat-option>
-            {{'csp.convocatoria.destinatarios.equipo.proyecto' | translate}}
-          </mat-option>
-
-          <mat-option>
-            {{'csp.convocatoria.destinatarios.grupo.investigacion' | translate}}
+          <mat-option *ngFor="let destinatario of destinatarios" [value]="destinatario | translate">
+            {{ destinatario | translate}}
           </mat-option>
 
         </mat-autocomplete>

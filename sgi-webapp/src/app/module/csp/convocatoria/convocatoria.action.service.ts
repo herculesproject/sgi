@@ -28,7 +28,7 @@ export class ConvocatoriaActionService extends ActionService {
   constructor(logger: NGXLogger, fb: FormBuilder, route: ActivatedRoute, service: ConvocatoriaService) {
     super();
     this.convocatoria = {} as IConvocatoria;
-    if (route.snapshot.data.acta) {
+    if (route.snapshot.data.convocatoria) {
       this.convocatoria = route.snapshot.data.convocatoria;
       this.enableEdit();
     }

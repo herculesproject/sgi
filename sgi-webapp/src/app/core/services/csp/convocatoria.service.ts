@@ -13,17 +13,35 @@ const convocatorias: IConvocatoria[] = [
   {
     id: 1, referencia: 'REF001', titulo: 'Ayudas plan propio', fechaInicioSolicitud: new Date(),
     fechaFinSolicitud: new Date(), estadoConvocante: 'Universidad', planInvestigacion: 'Plan propio',
-    entidadFinanciadora: 'Universidad', fuenteFinanciacion: 'Fondos propios', activo: true
+    entidadFinanciadora: 'Universidad', fuenteFinanciacion: 'Fondos propios', activo: true,
+    estado: 'Borrador', unidadGestion: { id: 1, nombre: 'OTRI' }, anio: 2020,
+    modeloEjecucion: { id: 2, nombre: 'Contratos' }, finalidad: { id: 3, nombre: 'Servicios Técnicos' },
+    duracionMeses: 20, ambitoGeografico: { id: 2, nombre: 'Concesión directa' }, clasificacionProduccion: 'Proyectos competitivos',
+    regimenConcurrencia: { id: 2, nombre: 'Concurrencia competitiva' },
+    proyectoColaborativo: 'Sí', destinatarios: 'Equipo de proyecto', entidadGestora: '',
+    descripcionConvocatoria: 'Plan fondos propios de Universidad', observaciones: ''
   },
   {
     id: 2, referencia: 'REF002', titulo: 'Programa 2020', fechaInicioSolicitud: new Date(),
     fechaFinSolicitud: new Date(), estadoConvocante: 'AEI', planInvestigacion: 'Plan Nacional 2020',
-    entidadFinanciadora: 'AEI', fuenteFinanciacion: 'Presupuestos generados estado', activo: false
+    entidadFinanciadora: 'AEI', fuenteFinanciacion: 'Presupuestos generados estado', activo: false,
+    estado: 'Borrador', unidadGestion: { id: 1, nombre: 'OTRI' }, anio: 2019,
+    modeloEjecucion: { id: 2, nombre: 'Contratos' }, finalidad: { id: 2, nombre: 'Contratación RRHH' },
+    duracionMeses: 12, ambitoGeografico: { id: 2, nombre: 'Concurrencia competitiva' }, clasificacionProduccion: 'Contratos, convenios  y proyectos no competitivos',
+    regimenConcurrencia: { id: 1, nombre: 'Contratación RRHH' },
+    proyectoColaborativo: 'No', destinatarios: 'Grupo de investigación', entidadGestora: '',
+    descripcionConvocatoria: '', observaciones: 'Contratación 2019'
   },
   {
     id: 3, referencia: 'REF003', titulo: 'Fondo COVID', fechaInicioSolicitud: new Date(),
     fechaFinSolicitud: new Date(), estadoConvocante: 'CRUE', planInvestigacion: 'Plan COVID',
-    entidadFinanciadora: 'CSIC', fuenteFinanciacion: 'Fondos COVID', activo: true
+    entidadFinanciadora: 'CSIC', fuenteFinanciacion: 'Fondos COVID', activo: true,
+    estado: 'Borrador', unidadGestion: { id: 2, nombre: 'OPE' }, anio: 2020,
+    modeloEjecucion: { id: 1, nombre: 'Ayudas y subvenciones' }, finalidad: { id: 3, nombre: 'Proyectos I+D' },
+    duracionMeses: 24, ambitoGeografico: { id: 2, nombre: 'Concesión directa' }, clasificacionProduccion: 'Proyectos competitivos',
+    regimenConcurrencia: { id: 2, nombre: 'Concurrencia competitiva' },
+    proyectoColaborativo: 'Sí', destinatarios: 'Individual', entidadGestora: '',
+    descripcionConvocatoria: 'Convocatoria Proyecto Covid I+D', observaciones: ''
   }
 
 ];
@@ -90,6 +108,11 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
         tap(() => this.logger.debug(ConvocatoriaService.name,
           `findByEvaluacionId(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
       );
+  }
+
+
+  findById(idConvocatoria: number) {
+    return of(convocatorias[idConvocatoria - 1]);
   }
 
 

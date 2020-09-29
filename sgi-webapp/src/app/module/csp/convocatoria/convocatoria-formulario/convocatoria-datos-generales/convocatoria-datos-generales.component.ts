@@ -27,6 +27,20 @@ import { RegimenConcurrenciaService } from '@core/services/csp/regimen-concurren
 
 const MSG_ERROR_INIT = marker('csp.convocatoria.datos.generales.error.cargar');
 
+const clasificacionesProduccionAyuda = marker('csp.convocatoria.clasificacion.produccion.ayudas');
+const clasificacionesProyectoCompetitivo = marker('csp.convocatoria.clasificacion.produccion.proyecto.competitivo');
+const clasificacionesProyectoNoCompetitivo = marker('csp.convocatoria.clasificacion.produccion.proyecto.no.competitivo');
+const clasificacionesProyectoEstancias = marker('csp.convocatoria.clasificacion.produccion.proyecto.estancias');
+
+const destinatarioIndividual = marker('csp.convocatoria.destinatarios.individual');
+const destinatarioEquipoProyecto = marker('csp.convocatoria.destinatarios.equipo.proyecto');
+const destinatarioGrupoInvestigacion = marker('csp.convocatoria.destinatarios.grupo.investigacion');
+
+const estadoBorrador = marker('csp.convocatoria.estado.borrador');
+const estadoRegistrada = marker('csp.convocatoria.estado.registrada');
+
+const proyectoColaborativoSi = marker('label.si');
+const proyectoColaborativoNo = marker('label.no');
 
 @Component({
   selector: 'sgi-convocatoria-datos-generales',
@@ -61,6 +75,15 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
   unidadesGestion: Observable<IUnidadGestion[]>;
 
   suscripciones: Subscription[] = [];
+
+
+  clasificacionesProduccion: string[] =
+    [clasificacionesProduccionAyuda, clasificacionesProyectoCompetitivo, clasificacionesProyectoNoCompetitivo,
+      clasificacionesProyectoEstancias];
+  destinatarios: string[] = [destinatarioIndividual, destinatarioEquipoProyecto, destinatarioGrupoInvestigacion];
+  estados: string[] = [estadoBorrador, estadoRegistrada];
+  proyectosColaborativo: string[] = [proyectoColaborativoSi, proyectoColaborativoNo];
+
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -129,7 +152,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
             .pipe(
 
               startWith(''),
-              map(value => this.filtroModeloEjecucion(value))
+              map(value => this.filtroUnidadGestion(value))
             );
           this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'loadUnidadesGestion()', 'end');
         },
@@ -338,6 +361,44 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
   getAmbitoGeografico(ambitoGeografico?: IAmbitoGeografico): string | undefined {
     return typeof ambitoGeografico === 'string' ? ambitoGeografico : ambitoGeografico?.nombre;
   }
+
+
+  /**
+   * Devuelve el nombre de una clasificación proudcción.
+   * @param clasificacionProduccion  clasificación proudcción.
+   * @returns nombre de una  clasificación proudcción.
+   */
+  getClasificacionProduccion(clasificacionProduccion?: string): string | undefined {
+    return clasificacionProduccion;
+  }
+
+  /**
+   * Devuelve el nombre de un destinatario.
+   * @param destinatario destinatario.
+   * @returns nombre de un destinatario.
+   */
+  getDestinatario(destinatario?: string): string | undefined {
+    return destinatario;
+  }
+
+  /**
+   * Devuelve el nombre de un estado.
+   * @param estado estado.
+   * @returns nombre de un estado.
+   */
+  getEstado(estado?: string): string | undefined {
+    return estado;
+  }
+
+  /**
+   * Devuelve el nombre de un proyecto colaborativo.
+   * @param proyectoColaborativo proyecto colaborativo.
+   * @returns nombre de un proyecto colaborativo.
+   */
+  getProyectoColaborativo(proyectoColaborativo?: string): string | undefined {
+    return proyectoColaborativo;
+  }
+
 
 
   /**

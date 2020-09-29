@@ -15,8 +15,11 @@ import { CONVOCATORIA_ROUTE_NAMES } from './convocatoria-route-names';
 import { ConvocatoriaDatosGeneralesComponent } from './convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.component';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
 import { ConvocatoriaPeriodosJustificacionComponent } from './convocatoria-formulario/convocatoria-periodos-justificacion/convocatoria-periodos-justificacion.component';
+import { ConvocatoriaEditarComponent } from './convocatoria-editar/convocatoria-editar.component';
+import { ConvocatoriaResolver } from './convocatoria.resolver';
 
 
+const MSG_EDIT_TITLE = marker('csp.convocatoria.editar.titulo');
 const MSG_LISTADO_TITLE = marker('csp.convocatoria.listado.titulo');
 const MSG_NEW_TITLE = marker('csp.convocatoria.crear.titulo');
 
@@ -53,6 +56,31 @@ const routes: SgiRoutes = [
       },
     ]
   },
+  {
+    path: `:id`,
+    component: ConvocatoriaEditarComponent,
+    canActivate: [SgiAuthGuard],
+    canDeactivate: [ActionGuard],
+    resolve: {
+      convocatoria: ConvocatoriaResolver
+    },
+    data: {
+      title: MSG_EDIT_TITLE,
+    },
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: CONVOCATORIA_ROUTE_NAMES.DATOS_GENERALES
+      },
+      {
+        path: CONVOCATORIA_ROUTE_NAMES.DATOS_GENERALES,
+        component: ConvocatoriaDatosGeneralesComponent,
+        canDeactivate: [FragmentGuard]
+      }
+
+    ]
+  }
 ];
 
 

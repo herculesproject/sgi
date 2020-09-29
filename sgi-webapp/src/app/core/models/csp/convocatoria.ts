@@ -1,3 +1,9 @@
+import { IUnidadGestion } from './unidad-gestion';
+import { IModeloEjecucion } from './modelo-ejecucion';
+import { IFinalidad } from './finalidad';
+import { IAmbitoGeografico } from './ambito-geografico';
+import { IRegimenConcurrencia } from './regimen-concurrencia';
+
 export interface IConvocatoria {
   /** Id */
   id: number;
@@ -28,5 +34,47 @@ export interface IConvocatoria {
 
   /** Activo */
   activo: boolean;
+
+  /** Estado. */
+  estado: string;
+
+  /** Unidad de gestión */
+  unidadGestion: IUnidadGestion;
+
+  /** Anio */
+  anio: number;
+
+  /** Modelo de ejecución */
+  modeloEjecucion: IModeloEjecucion;
+
+  /** Finalidad */
+  finalidad: IFinalidad;
+
+  /** Duración meses */
+  duracionMeses: number;
+
+  /** Ámbito geográfico */
+  ambitoGeografico: IAmbitoGeografico;
+
+  /** Clasificación Producción */
+  clasificacionProduccion: string;
+
+  /** Régimen concurrencia */
+  regimenConcurrencia: IRegimenConcurrencia;
+
+  /** Proyecto Colaborativo */
+  proyectoColaborativo: string;
+
+  /** Destinatarios */
+  destinatarios: string;
+
+  /** Entidad gestora */
+  entidadGestora: string;
+
+  /** Descripción convocatoria */
+  descripcionConvocatoria: string;
+
+  /** Observaciones */
+  observaciones: string;
 
 }

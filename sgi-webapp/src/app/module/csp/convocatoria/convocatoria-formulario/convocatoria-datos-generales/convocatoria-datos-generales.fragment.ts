@@ -20,7 +20,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   protected buildFormGroup(): FormGroup {
     return this.fb.group({
       referencia: ['', Validators.required],
-      estado: ['', new NullIdValidador().isValid()],
+      estado: ['', Validators.required],
       unidadGestion: ['', new NullIdValidador().isValid()],
       anio: ['', Validators.required],
       titulo: ['', Validators.required],
@@ -55,7 +55,22 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
 
   buildPatch(value: IConvocatoria): { [key: string]: any } {
     return {
-
+      referencia: value.referencia,
+      estado: value.estado,
+      unidadGestion: value.unidadGestion,
+      anio: value.anio,
+      titulo: value.titulo,
+      modeloEjecucion: value.modeloEjecucion,
+      finalidad: value.finalidad,
+      duracionMeses: value.duracionMeses,
+      ambitoGeografico: value.ambitoGeografico,
+      clasificacionProduccion: value.clasificacionProduccion,
+      regimenConcurrencia: value.regimenConcurrencia,
+      proyectoColaborativo: value.proyectoColaborativo,
+      destinatarios: value.destinatarios,
+      entidadGestora: value.entidadGestora,
+      descripcionConvocatoria: value.descripcionConvocatoria,
+      observaciones: value.observaciones,
     };
   }
 
