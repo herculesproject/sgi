@@ -77,7 +77,7 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
   openModalHito(hito?: StatusWrapper<IHito>): void {
     this.logger.debug(ConvocatoriaHitosComponent.name, 'openModalHito()', 'start');
     const config = {
-      width: GLOBAL_CONSTANTS.maxWidthModal,
+      width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
       data: hito?.value,
       autoFocus: false

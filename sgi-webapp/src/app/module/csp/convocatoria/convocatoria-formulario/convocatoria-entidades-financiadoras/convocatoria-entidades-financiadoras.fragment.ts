@@ -41,7 +41,20 @@ export class ConvocatoriaEntidadesFinanciadorasFragment extends Fragment {
         this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name, 'onInitialize()', 'end');
       });
     }
+  }
 
+  public addEntidadFinanciadora(entidadFinanciadora: IEntidadesFinanciadoras) {
+    this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name,
+      `addEntidadFinanciadora(comentario: ${entidadFinanciadora})`, 'start');
+    const wrapped = new StatusWrapper<IEntidadesFinanciadoras>(entidadFinanciadora);
+    wrapped.setCreated();
+    const current = this.entidadesFinanciadoras$.value;
+    current.push(wrapped);
+    this.entidadesFinanciadoras$.next(current);
+    this.setChanges(true);
+    this.setErrors(false);
+    this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name,
+      `addEntidadFinanciadora(comentario: ${entidadFinanciadora})`, 'end');
   }
 
   saveOrUpdate(): Observable<string | number | void> {

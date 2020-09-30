@@ -4,7 +4,29 @@
     <mat-icon color="primary" mat-list-icon>content_paste</mat-icon>
     <p matLine *ngIf="opened">{{'menu.principal.csp.convocatoria' | translate}}</p>
   </a>
-
-
+  <a class="item" mat-list-item [routerLinkActive]="['is-active']">
+    <mat-icon color="primary" mat-list-icon>description</mat-icon>
+    <p matLine *ngIf="opened">{{'menu.principal.csp.solicitudes' | translate}}</p>
+  </a>
+  <a class="item" mat-list-item [routerLinkActive]="['is-active']">
+    <mat-icon color="primary" mat-list-icon>work</mat-icon>
+    <p matLine *ngIf="opened">{{'menu.principal.csp.proyectos' | translate}}</p>
+  </a>
+  <a class="item" mat-list-item [routerLinkActive]="['is-active']">
+    <mat-icon color="primary" mat-list-icon>attach_money</mat-icon>
+    <p matLine *ngIf="opened">{{'menu.principal.csp.ejecucionEconomica' | translate}}</p>
+  </a>
+  <a class="item" mat-list-item [routerLinkActive]="['is-active']">
+    <mat-icon color="primary" mat-list-icon>send</mat-icon>
+    <p matLine *ngIf="opened">{{'menu.principal.csp.notificacionesSGE' | translate}}</p>
+  </a>
+  <a class="item" mat-list-item [routerLinkActive]="['is-active']">
+    <mat-icon color="primary" mat-list-icon>insert_invitation</mat-icon>
+    <p matLine *ngIf="opened">{{'menu.principal.csp.timesheet' | translate}}</p>
+  </a>
+  <a class="item" mat-list-item [routerLinkActive]="['is-active']">
+    <mat-icon color="primary" mat-list-icon>local_library</mat-icon>
+    <p matLine *ngIf="opened">{{'menu.principal.csp.contratosRRHH' | translate}}</p>
+  </a>
 </div>
 <!-- FIN Menu principal -->

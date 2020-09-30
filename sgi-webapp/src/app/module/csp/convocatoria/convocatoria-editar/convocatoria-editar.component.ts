@@ -14,7 +14,7 @@ import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 
 
-const MSG_BUTTON_EDIT = marker('botones.editar');
+const MSG_BUTTON_EDIT = marker('botones.guardar');
 const MSG_SUCCESS = marker('csp.convocatoria.editar.correcto');
 const MSG_ERROR = marker('csp.convocatoria.editar.error');
 

@@ -7,9 +7,9 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { NGXLogger } from 'ngx-logger';
-import { EvaluacionEvaluadorEvaluarActionService } from '../../evaluacion-evaluador/evaluacion-evaluador.action.service';
 
 import { EvaluacionComentariosComponent } from './evaluacion-comentarios.component';
+import {EvaluacionEvaluadorActionService} from "../../evaluacion-evaluador/evaluacion-evaluador.action.service";
 
 describe('EvaluacionComentariosComponent', () => {
   let component: EvaluacionComentariosComponent;
@@ -33,7 +33,7 @@ describe('EvaluacionComentariosComponent', () => {
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        EvaluacionEvaluadorEvaluarActionService
+        EvaluacionEvaluadorActionService
       ],
     })
       .compileComponents();

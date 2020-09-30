@@ -1,6 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -8,22 +9,17 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
-import { EvaluacionEvaluadorActionService } from '../../evaluacion-evaluador/evaluacion-evaluador.action.service';
 
-import {
-  EvaluacionListadoAnteriorMemoriaComponent,
-} from '../evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
-import { EvaluacionDatosMemoriaComponent } from './evaluacion-datos-memoria.component';
+import { ConvocatoriaEntidadFinanciadoraModalComponent } from './convocatoria-entidad-financiadora-modal.component';
 
-describe('EvaluacionDatosMemoriaComponent', () => {
-  let component: EvaluacionDatosMemoriaComponent;
-  let fixture: ComponentFixture<EvaluacionDatosMemoriaComponent>;
+describe('ConvocatoriaEntidadFinanciadoraModalComponent', () => {
+  let component: ConvocatoriaEntidadFinanciadoraModalComponent;
+  let fixture: ComponentFixture<ConvocatoriaEntidadFinanciadoraModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        EvaluacionDatosMemoriaComponent,
-        EvaluacionListadoAnteriorMemoriaComponent
+        ConvocatoriaEntidadFinanciadoraModalComponent
       ],
       imports: [
         BrowserAnimationsModule,
@@ -31,21 +27,21 @@ describe('EvaluacionDatosMemoriaComponent', () => {
         HttpClientTestingModule,
         TestUtils.getIdiomas(),
         RouterTestingModule,
-        ReactiveFormsModule,
-        SgiAuthModule
+        FormsModule,
+        ReactiveFormsModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        EvaluacionEvaluadorActionService,
-        SgiAuthService
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: {} },
       ],
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EvaluacionDatosMemoriaComponent);
+    fixture = TestBed.createComponent(ConvocatoriaEntidadFinanciadoraModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

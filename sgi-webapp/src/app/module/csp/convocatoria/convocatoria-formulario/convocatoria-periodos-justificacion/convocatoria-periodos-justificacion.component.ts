@@ -66,7 +66,7 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
   openModalPeriodo(justificacion?: StatusWrapper<IPeriodosJustificacion>): void {
     this.logger.debug(ConvocatoriaPeriodosJustificacionComponent.name, 'openModalPeriodo()', 'start');
     const config = {
-      width: GLOBAL_CONSTANTS.maxWidthModal,
+      width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
       data: justificacion ? justificacion.value : {} as IPeriodosJustificacion,
       autoFocus: false

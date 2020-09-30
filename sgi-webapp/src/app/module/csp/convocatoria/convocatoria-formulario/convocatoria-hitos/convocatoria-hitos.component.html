@@ -56,9 +56,11 @@
 
   <div class="separation-button">
     <!-- Botón añadir hitos -->
-    <button color="three" mat-button mat-raised-button (click)="openModalHito()">
-      <mat-icon>add_circle_outline</mat-icon>
-      {{'csp.convocatoria.hitos.aniadir' | translate}}
-    </button>
+    <div class="separation-button">
+      <button color="three" mat-button mat-raised-button (click)="openModalHito()">
+        <mat-icon color="accent">add_circle</mat-icon>
+        {{'csp.convocatoria.hitos.aniadir' | translate}}
+      </button>
+    </div>
   </div>
 </section>
