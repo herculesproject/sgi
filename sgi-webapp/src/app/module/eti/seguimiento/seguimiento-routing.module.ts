@@ -5,13 +5,13 @@ import { FragmentGuard } from '@core/guards/detail-form.guard';
 import { ActionGuard } from '@core/guards/master-form.guard';
 import { SgiAuthGuard, SgiAuthRoutes } from '@sgi/framework/auth';
 import { SeguimientoEvaluarComponent } from './seguimiento-evaluar/seguimiento-evaluar.component';
-import { SeguimientoComentariosComponent } from './seguimiento-formulario/seguimiento-comentarios/seguimiento-comentarios.component';
-import { SeguimientoDatosMemoriaComponent } from './seguimiento-formulario/seguimiento-datos-memoria/seguimiento-datos-memoria.component';
-import { SeguimientoDocumentacionComponent } from './seguimiento-formulario/seguimiento-documentacion/seguimiento-documentacion.component';
 
 import { SeguimientoListadoComponent } from './seguimiento-listado/seguimiento-listado.component';
 import { SEGUIMIENTO_ROUTE_NAMES } from './seguimiento-route-names';
 import { SeguimientoResolver } from './seguimiento.resolver';
+import { SeguimientoComentariosComponent } from '../seguimiento-formulario/seguimiento-comentarios/seguimiento-comentarios.component';
+import { SeguimientoDatosMemoriaComponent } from '../seguimiento-formulario/seguimiento-datos-memoria/seguimiento-datos-memoria.component';
+import { SeguimientoDocumentacionComponent } from '../seguimiento-formulario/seguimiento-documentacion/seguimiento-documentacion.component';
 
 const MSG_LISTADO_TITLE = marker('eti.seguimiento.listado.titulo');
 const MSG_EVALUAR_TITLE = marker('eti.seguimiento.evaluar.titulo');

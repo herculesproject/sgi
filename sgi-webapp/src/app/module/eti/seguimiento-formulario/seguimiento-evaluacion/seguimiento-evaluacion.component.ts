@@ -1,45 +1,46 @@
-import { Component, ViewChild, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { NGXLogger } from 'ngx-logger';
 
-import {
-  EvaluacionListadoAnteriorMemoriaComponent,
-} from '../evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
+
 import { FormFragmentComponent } from '@core/component/fragment.component';
 
 import { IEvaluacion } from '@core/models/eti/evaluacion';
+import { DictamenService } from '@core/services/eti/dictamen.service';
 import { Subscription, Observable } from 'rxjs';
 import { IDictamen } from '@core/models/eti/dictamen';
-import { EvaluacionEvaluacionFragment } from './evaluacion-evaluacion.fragment';
 import { IMemoria } from '@core/models/eti/memoria';
+import { GestionSeguimientoActionService } from '../../gestion-seguimiento/gestion-seguimiento.action.service';
 import { TipoEvaluacionService } from '@core/services/eti/tipo-evaluacion.service';
-import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
+import { SeguimientoEvaluacionFragment } from './seguimiento-evaluacion.fragment';
+import { SeguimientoListadoAnteriorMemoriaComponent } from '../seguimiento-listado-anterior-memoria/seguimiento-listado-anterior-memoria.component';
 
 @Component({
-  selector: 'sgi-evaluacion-evaluacion',
-  templateUrl: './evaluacion-evaluacion.component.html',
-  styleUrls: ['./evaluacion-evaluacion.component.scss']
+  selector: 'sgi-seguimiento-evaluacion',
+  templateUrl: './seguimiento-evaluacion.component.html',
+  styleUrls: ['./seguimiento-evaluacion.component.scss']
 })
-export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemoria> implements AfterViewInit, OnInit, OnDestroy {
+export class SeguimientoEvaluacionComponent extends FormFragmentComponent<IMemoria> implements AfterViewInit, OnInit {
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
   fxFlexPropertiesInline: FxFlexProperties;
 
-  @ViewChild('evaluaciones') evaluaciones: EvaluacionListadoAnteriorMemoriaComponent;
+  @ViewChild('evaluaciones') evaluaciones: SeguimientoListadoAnteriorMemoriaComponent;
 
   dictamenListado: IDictamen[];
   filteredDictamenes: Observable<IDictamen[]>;
-  suscriptions: Subscription[] = [];
+  dictamenSubscription: Subscription;
 
   constructor(
     protected readonly logger: NGXLogger,
-    private actionService: EvaluacionFormularioActionService,
+    private actionService: GestionSeguimientoActionService,
+    private dictamenService: DictamenService,
     private tipoEvaluacionService: TipoEvaluacionService
   ) {
     super(actionService.FRAGMENT.EVALUACIONES, actionService);
-    this.logger.debug(EvaluacionEvaluacionComponent.name, 'constructor()', 'start');
+    this.logger.debug(SeguimientoEvaluacionComponent.name, 'constructor()', 'start');
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -57,29 +58,26 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
 
-    this.logger.debug(EvaluacionEvaluacionComponent.name, 'constructor()', 'end');
+    this.logger.debug(SeguimientoEvaluacionComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit() {
-    this.logger.debug(EvaluacionEvaluacionComponent.name, 'ngOnInit()', 'start');
+    this.logger.debug(SeguimientoEvaluacionComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
-    this.suscriptions.push(this.formGroup.controls.dictamen.valueChanges.subscribe((dictamen) => {
-      this.actionService.setDictamen(dictamen);
-    }));
-    this.suscriptions.push((this.fragment as EvaluacionEvaluacionFragment).evaluacion$.subscribe((evaluacion) => {
+    (this.fragment as SeguimientoEvaluacionFragment).evaluacion$.subscribe((evaluacion) => {
       if (evaluacion) {
         this.loadDictamenes(evaluacion);
       }
-    }));
-    this.logger.debug(EvaluacionEvaluacionComponent.name, 'ngOnInit()', 'end');
+    });
+    this.logger.debug(SeguimientoEvaluacionComponent.name, 'ngOnInit()', 'end');
   }
 
   ngAfterViewInit(): void {
-    this.logger.debug(EvaluacionEvaluacionComponent.name, 'ngAfterViewInit()', 'start');
+    this.logger.debug(SeguimientoEvaluacionComponent.name, 'ngAfterViewInit()', 'start');
     this.evaluaciones.memoriaId = this.actionService.getEvaluacion()?.memoria?.id;
     this.evaluaciones.evaluacionId = this.actionService.getEvaluacion()?.id;
     this.evaluaciones.ngAfterViewInit();
-    this.logger.debug(EvaluacionEvaluacionComponent.name, 'ngAfterViewInit()', 'end');
+    this.logger.debug(SeguimientoEvaluacionComponent.name, 'ngAfterViewInit()', 'end');
   }
 
   /**
@@ -95,26 +93,22 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
    * Recupera un listado de los dictamenes que hay en el sistema.
    */
   loadDictamenes(evaluacion: IEvaluacion): void {
-    this.logger.debug(EvaluacionEvaluacionComponent.name,
+    this.logger.debug(SeguimientoEvaluacionComponent.name,
       'getDictamenes()',
       'start');
 
     /**
      * Devuelve el listado de dictámenes dependiendo del tipo de Evaluación y si es de Revisión Mínima
      */
-    this.suscriptions.push(this.tipoEvaluacionService.findAllDictamenByTipoEvaluacionAndRevisionMinima(
+    this.dictamenSubscription = this.tipoEvaluacionService.findAllDictamenByTipoEvaluacionAndRevisionMinima(
       evaluacion.tipoEvaluacion.id, evaluacion.esRevMinima).subscribe(
         (response) => {
           this.dictamenListado = response.items;
-        }));
+        });
 
-    this.logger.debug(EvaluacionEvaluacionComponent.name,
+    this.logger.debug(SeguimientoEvaluacionComponent.name,
       'getDictamenes()',
       'end');
-  }
-
-  ngOnDestroy(): void {
-    this.suscriptions.forEach((suscription) => suscription.unsubscribe());
   }
 
 }

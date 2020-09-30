@@ -6,16 +6,10 @@ import { ActionService } from '@core/services/action-service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { NGXLogger } from 'ngx-logger';
+import { SeguimientoComentarioFragment } from '../seguimiento-formulario/seguimiento-comentarios/seguimiento-comentarios.fragment';
+import { SeguimientoDatosMemoriaFragment } from '../seguimiento-formulario/seguimiento-datos-memoria/seguimiento-datos-memoria.fragment';
+import { SeguimientoDocumentacionFragment } from '../seguimiento-formulario/seguimiento-documentacion/seguimiento-documentacion.fragment';
 
-import {
-  SeguimientoComentarioFragment,
-} from './seguimiento-formulario/seguimiento-comentarios/seguimiento-comentarios.fragment';
-import {
-  SeguimientoDatosMemoriaFragment,
-} from './seguimiento-formulario/seguimiento-datos-memoria/seguimiento-datos-memoria.fragment';
-import {
-  SeguimientoDocumentacionFragment,
-} from './seguimiento-formulario/seguimiento-documentacion/seguimiento-documentacion.fragment';
 
 @Injectable()
 export class SeguimientoEvaluarActionService extends ActionService {

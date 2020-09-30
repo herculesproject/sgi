@@ -7,21 +7,17 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
-import { EvaluacionListadoAnteriorMemoriaComponent } from '../../../evaluacion-formulario/evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
 
-import { SeguimientoEvaluarActionService } from '../../seguimiento-evaluar.action.service';
-import { SeguimientoDatosMemoriaComponent } from './seguimiento-datos-memoria.component';
+import { SeguimientoComentariosComponent } from './seguimiento-comentarios.component';
+import { SeguimientoEvaluarActionService } from '../../seguimiento/seguimiento-evaluar.action.service';
 
-describe('SeguimientoDatosMemoriaComponent', () => {
-  let component: SeguimientoDatosMemoriaComponent;
-  let fixture: ComponentFixture<SeguimientoDatosMemoriaComponent>;
+describe('SeguimientoComentariosComponent', () => {
+  let component: SeguimientoComentariosComponent;
+  let fixture: ComponentFixture<SeguimientoComentariosComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        SeguimientoDatosMemoriaComponent,
-        EvaluacionListadoAnteriorMemoriaComponent
-      ],
+      declarations: [SeguimientoComentariosComponent],
       imports: [
         FormsModule,
         ReactiveFormsModule,
@@ -30,8 +26,6 @@ describe('SeguimientoDatosMemoriaComponent', () => {
         HttpClientTestingModule,
         TestUtils.getIdiomas(),
         RouterTestingModule,
-        FormsModule,
-        ReactiveFormsModule,
         SgiAuthModule
       ],
       providers: [
@@ -44,7 +38,7 @@ describe('SeguimientoDatosMemoriaComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SeguimientoDatosMemoriaComponent);
+    fixture = TestBed.createComponent(SeguimientoComentariosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

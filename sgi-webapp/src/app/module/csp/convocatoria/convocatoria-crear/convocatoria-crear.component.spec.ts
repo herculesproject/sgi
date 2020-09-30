@@ -10,8 +10,9 @@ import { NGXLogger } from 'ngx-logger';
 import { ConvocatoriaCrearComponent } from './convocatoria-crear.component';
 import { ConvocatoriaDatosGeneralesComponent } from '../convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.component';
 import { FooterGuardarComponent } from '@shared/footers/footer-guardar/footer-guardar.component';
-import { FlexModule } from '@angular/flex-layout';
+import { FlexModule, FlexLayoutModule } from '@angular/flex-layout';
 import { ConvocatoriaActionService } from '../convocatoria.action.service';
+import { SharedModule } from '@shared/shared.module';
 
 describe('ConvocatoriaCrearComponent', () => {
   let component: ConvocatoriaCrearComponent;
@@ -33,6 +34,15 @@ describe('ConvocatoriaCrearComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule.withRoutes([]),
+        RouterTestingModule,
+        MaterialDesignModule,
+        HttpClientTestingModule,
+        BrowserAnimationsModule,
+        TestUtils.getIdiomas(),
+        FlexLayoutModule,
+        FormsModule,
+        ReactiveFormsModule,
+        SharedModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },

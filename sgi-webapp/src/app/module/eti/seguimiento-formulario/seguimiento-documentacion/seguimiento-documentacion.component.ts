@@ -2,11 +2,9 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { NGXLogger } from 'ngx-logger';
+import { DocumentacionMemoriaListadoMemoriaComponent } from '../../documentacion-memoria/documentacion-memoria-listado-memoria/documentacion-memoria-listado-memoria.component';
+import { SeguimientoEvaluarActionService } from '../../seguimiento/seguimiento-evaluar.action.service';
 
-import {
-  DocumentacionMemoriaListadoMemoriaComponent,
-} from '../../../documentacion-memoria/documentacion-memoria-listado-memoria/documentacion-memoria-listado-memoria.component';
-import { SeguimientoEvaluarActionService } from '../../seguimiento-evaluar.action.service';
 
 @Component({
   selector: 'sgi-seguimiento-documentacion',

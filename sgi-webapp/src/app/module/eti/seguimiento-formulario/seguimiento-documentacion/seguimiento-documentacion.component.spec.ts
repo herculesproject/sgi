@@ -1,52 +1,48 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
-import {
-  EvaluacionListadoAnteriorMemoriaComponent,
-} from '../evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
-import { EvaluacionDatosMemoriaComponent } from './evaluacion-datos-memoria.component';
-import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
-import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 
-describe('EvaluacionDatosMemoriaComponent', () => {
-  let component: EvaluacionDatosMemoriaComponent;
-  let fixture: ComponentFixture<EvaluacionDatosMemoriaComponent>;
+import { SeguimientoDocumentacionComponent } from './seguimiento-documentacion.component';
+import { DocumentacionMemoriaListadoMemoriaComponent } from '../../documentacion-memoria/documentacion-memoria-listado-memoria/documentacion-memoria-listado-memoria.component';
+import { SeguimientoEvaluarActionService } from '../../seguimiento/seguimiento-evaluar.action.service';
+
+describe('SeguimientoDocumentacionComponent', () => {
+  let component: SeguimientoDocumentacionComponent;
+  let fixture: ComponentFixture<SeguimientoDocumentacionComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        EvaluacionDatosMemoriaComponent,
-        EvaluacionListadoAnteriorMemoriaComponent
+        SeguimientoDocumentacionComponent,
+        DocumentacionMemoriaListadoMemoriaComponent
       ],
       imports: [
+        FormsModule,
+        ReactiveFormsModule,
         BrowserAnimationsModule,
         MaterialDesignModule,
         HttpClientTestingModule,
         TestUtils.getIdiomas(),
         RouterTestingModule,
-        ReactiveFormsModule,
         SgiAuthModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-        { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        EvaluacionFormularioActionService,
-        EvaluacionService,
+        SeguimientoEvaluarActionService,
         SgiAuthService
-      ],
+      ]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EvaluacionDatosMemoriaComponent);
+    fixture = TestBed.createComponent(SeguimientoDocumentacionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

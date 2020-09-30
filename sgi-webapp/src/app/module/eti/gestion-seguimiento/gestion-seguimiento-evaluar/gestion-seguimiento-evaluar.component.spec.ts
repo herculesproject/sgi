@@ -1,46 +1,40 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { GestionSeguimientoEvaluarComponent } from './gestion-seguimiento-evaluar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterTestingModule } from '@angular/router/testing';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import TestUtils from '@core/utils/test-utils';
+import { RouterTestingModule } from '@angular/router/testing';
 import { NGXLogger } from 'ngx-logger';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { SharedModule } from '@shared/shared.module';
 
-import { EvaluacionComentariosComponent } from './evaluacion-comentarios.component';
-import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
-
-describe('EvaluacionComentariosComponent', () => {
-  let component: EvaluacionComentariosComponent;
-  let fixture: ComponentFixture<EvaluacionComentariosComponent>;
+describe('GestionSeguimientoEvaluarComponent', () => {
+  let component: GestionSeguimientoEvaluarComponent;
+  let fixture: ComponentFixture<GestionSeguimientoEvaluarComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        EvaluacionComentariosComponent
-      ],
+      declarations: [GestionSeguimientoEvaluarComponent],
       imports: [
-        FormsModule,
-        ReactiveFormsModule,
         BrowserAnimationsModule,
         MaterialDesignModule,
         HttpClientTestingModule,
         TestUtils.getIdiomas(),
         RouterTestingModule,
-
+        SharedModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        EvaluacionFormularioActionService
       ],
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EvaluacionComentariosComponent);
+    fixture = TestBed.createComponent(GestionSeguimientoEvaluarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

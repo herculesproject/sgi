@@ -8,21 +8,19 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 
-import {
-  DocumentacionMemoriaListadoMemoriaComponent,
-} from '../../../documentacion-memoria/documentacion-memoria-listado-memoria/documentacion-memoria-listado-memoria.component';
-import { SeguimientoEvaluarActionService } from '../../seguimiento-evaluar.action.service';
-import { SeguimientoDocumentacionComponent } from './seguimiento-documentacion.component';
+import { SeguimientoDatosMemoriaComponent } from './seguimiento-datos-memoria.component';
+import { EvaluacionListadoAnteriorMemoriaComponent } from '../../evaluacion-formulario/evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
+import { SeguimientoEvaluarActionService } from '../../seguimiento/seguimiento-evaluar.action.service';
 
-describe('SeguimientoDocumentacionComponent', () => {
-  let component: SeguimientoDocumentacionComponent;
-  let fixture: ComponentFixture<SeguimientoDocumentacionComponent>;
+describe('SeguimientoDatosMemoriaComponent', () => {
+  let component: SeguimientoDatosMemoriaComponent;
+  let fixture: ComponentFixture<SeguimientoDatosMemoriaComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        SeguimientoDocumentacionComponent,
-        DocumentacionMemoriaListadoMemoriaComponent
+        SeguimientoDatosMemoriaComponent,
+        EvaluacionListadoAnteriorMemoriaComponent
       ],
       imports: [
         FormsModule,
@@ -32,6 +30,8 @@ describe('SeguimientoDocumentacionComponent', () => {
         HttpClientTestingModule,
         TestUtils.getIdiomas(),
         RouterTestingModule,
+        FormsModule,
+        ReactiveFormsModule,
         SgiAuthModule
       ],
       providers: [
@@ -44,7 +44,7 @@ describe('SeguimientoDocumentacionComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SeguimientoDocumentacionComponent);
+    fixture = TestBed.createComponent(SeguimientoDatosMemoriaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

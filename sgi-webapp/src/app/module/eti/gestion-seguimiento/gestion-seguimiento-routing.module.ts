@@ -3,9 +3,17 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SgiAuthGuard, SgiAuthRoutes } from '@sgi/framework/auth';
 import { GestionSeguimientoListadoComponent } from './gestion-seguimiento-listado/gestion-seguimiento-listado.component';
+import { GestionSeguimientoEvaluarComponent } from './gestion-seguimiento-evaluar/gestion-seguimiento-evaluar.component';
+import { ActionGuard } from '@core/guards/master-form.guard';
+import { GestionSeguimientoResolver } from './gestion-seguimiento.resolver';
+import { FragmentGuard } from '@core/guards/detail-form.guard';
+import { GESTION_SEGUIMIENTO_ROUTE_NAMES } from './gestion-seguimiento-route-names';
+import { SeguimientoEvaluacionComponent } from '../seguimiento-formulario/seguimiento-evaluacion/seguimiento-evaluacion.component';
 
 
 const MSG_LISTADO_TITLE = marker('eti.gestionSeguimiento.listado.titulo');
+const MSG_GESTION_SEGUIMIENTO_EVALUAR_TITLE = marker('eti.gestionSeguimiento.evaluar.titulo');
+
 
 const routes: SgiAuthRoutes = [
   {
@@ -15,8 +23,33 @@ const routes: SgiAuthRoutes = [
     canActivate: [SgiAuthGuard],
     data: {
       title: MSG_LISTADO_TITLE,
-      hasAuthorityForAnyUO: 'ETI-CNV-C'
+      hasAnyAuthorityForAnyUO: ['ETI-EVC-V', 'ETI-EVC-EVAL']
     }
+  },
+  {
+    path: `:id`,
+    component: GestionSeguimientoEvaluarComponent,
+    canActivate: [SgiAuthGuard],
+    canDeactivate: [ActionGuard],
+    resolve: {
+      evaluacion: GestionSeguimientoResolver
+    },
+    data: {
+      title: MSG_GESTION_SEGUIMIENTO_EVALUAR_TITLE,
+      hasAnyAuthorityForAnyUO: ['ETI-EVC-EVAL']
+    },
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: GESTION_SEGUIMIENTO_ROUTE_NAMES.EVALUACIONES
+      },
+      {
+        path: GESTION_SEGUIMIENTO_ROUTE_NAMES.EVALUACIONES,
+        component: SeguimientoEvaluacionComponent,
+        canDeactivate: [FragmentGuard]
+      }
+    ]
   }
 ];
 

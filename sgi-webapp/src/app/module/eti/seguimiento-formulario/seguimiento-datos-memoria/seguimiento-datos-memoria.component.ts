@@ -4,9 +4,8 @@ import { IMemoriaWithPersona } from '@core/models/eti/memoria-with-persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { NGXLogger } from 'ngx-logger';
-import { EvaluacionListadoAnteriorMemoriaComponent } from '../../../evaluacion-formulario/evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
-
-import { SeguimientoEvaluarActionService } from '../../seguimiento-evaluar.action.service';
+import { EvaluacionListadoAnteriorMemoriaComponent } from '../../evaluacion-formulario/evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
+import { SeguimientoEvaluarActionService } from '../../seguimiento/seguimiento-evaluar.action.service';
 
 @Component({
   selector: 'sgi-seguimiento-datos-memoria',

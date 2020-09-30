@@ -12,12 +12,10 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 
-import { ComentarioCrearModalComponent } from '../../../comentario/comentario-crear-modal/comentario-crear-modal.component';
-import {
-  ComentarioEditarModalComponent,
-} from '../../../comentario/comentario-editar-modal/comentario-editar-modal.component';
-import { SeguimientoEvaluarActionService } from '../../seguimiento-evaluar.action.service';
 import { SeguimientoComentarioFragment } from './seguimiento-comentarios.fragment';
+import { SeguimientoEvaluarActionService } from '../../seguimiento/seguimiento-evaluar.action.service';
+import { ComentarioCrearModalComponent } from '../../comentario/comentario-crear-modal/comentario-crear-modal.component';
+import { ComentarioEditarModalComponent } from '../../comentario/comentario-editar-modal/comentario-editar-modal.component';
 
 const MSG_DELETE = marker('eti.comentario.listado.borrar.titulo');
 

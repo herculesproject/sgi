@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EvaluacionEvaluacionComponent } from './evaluacion-evaluacion.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -8,46 +7,44 @@ import TestUtils from '@core/utils/test-utils';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NGXLogger } from 'ngx-logger';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { EvaluacionActionService } from '../../evaluacion/evaluacion.action.service';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { EvaluacionListadoAnteriorMemoriaComponent } from '../evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
-import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
-import { SgiAuthModule } from '@sgi/framework/auth';
-import { FlexModule } from '@angular/flex-layout';
+import { SeguimientoEvaluacionComponent } from './seguimiento-evaluacion.component';
+import { SeguimientoListadoAnteriorMemoriaComponent } from '../seguimiento-listado-anterior-memoria/seguimiento-listado-anterior-memoria.component';
+import { GestionSeguimientoActionService } from '../../gestion-seguimiento/gestion-seguimiento.action.service';
 
-describe('EvaluacionEvaluacionComponent', () => {
-  let component: EvaluacionEvaluacionComponent;
-  let fixture: ComponentFixture<EvaluacionEvaluacionComponent>;
-  const formBuilder: FormBuilder = new FormBuilder();
+describe('SeguimientoEvaluacionComponent', () => {
+  let component: SeguimientoEvaluacionComponent;
+  let fixture: ComponentFixture<SeguimientoEvaluacionComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        EvaluacionEvaluacionComponent,
-        EvaluacionListadoAnteriorMemoriaComponent
+        SeguimientoEvaluacionComponent,
+        SeguimientoListadoAnteriorMemoriaComponent
       ],
       imports: [
-        TestUtils.getIdiomas(),
-        MaterialDesignModule,
         BrowserAnimationsModule,
+        MaterialDesignModule,
         HttpClientTestingModule,
-        FlexModule,
-        FormsModule,
-        ReactiveFormsModule,
+        TestUtils.getIdiomas(),
         RouterTestingModule,
-        SgiAuthModule
+        FormsModule,
+        ReactiveFormsModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: FormBuilder, useValue: formBuilder },
-        EvaluacionFormularioActionService,
+        EvaluacionActionService,
+        GestionSeguimientoActionService,
+        FormBuilder
       ],
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EvaluacionEvaluacionComponent);
+    fixture = TestBed.createComponent(SeguimientoEvaluacionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
