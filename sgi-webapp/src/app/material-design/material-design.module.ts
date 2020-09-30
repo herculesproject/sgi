@@ -30,6 +30,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatTreeModule } from '@angular/material/tree';
 
 @NgModule({
   exports: [
@@ -62,7 +63,8 @@ import { MatRadioModule } from '@angular/material/radio';
     MatGridListModule,
     MatMomentDateModule,
     MatRadioModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatTreeModule
   ]
 })
 export class MaterialDesignModule { }

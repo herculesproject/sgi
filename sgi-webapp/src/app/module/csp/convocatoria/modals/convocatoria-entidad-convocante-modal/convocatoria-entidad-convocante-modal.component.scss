@@ -1,0 +1,19 @@
+@import "colors.scss";
+
+.modal-convocatoria-entidad-convocante{
+  .form-inline{
+    display: block!important;
+  }
+  .wrapper {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .fields-wrapper {
+    display: inline-flex;
+    flex-wrap: wrap;
+    padding-right: 15px;
+  }
+}

@@ -21,6 +21,7 @@ import { ConvocatoriaHitosModalComponent } from './modals/convocatoria-hitos-mod
 import { ConvocatoriaPeriodosJustificacionModalComponent } from './modals/convocatoria-periodos-justificacion-modal/convocatoria-periodos-justificacion-modal.component';
 import { ConvocatoriaEntidadFinanciadoraModalComponent } from './modals/convocatoria-entidad-financiadora-modal/convocatoria-entidad-financiadora-modal.component';
 import { ConvocatoriaEnlaceModalComponent } from './modals/convocatoria-enlace-modal/convocatoria-enlace-modal.component';
+import { ConvocatoriaEntidadConvocanteaModalComponent } from './modals/convocatoria-entidad-convocante-modal/convocatoria-entidad-convocante-modal.component';
 
 
 @NgModule({
@@ -39,8 +40,8 @@ import { ConvocatoriaEnlaceModalComponent } from './modals/convocatoria-enlace-m
     ConvocatoriaHitosModalComponent,
     ConvocatoriaPeriodosJustificacionModalComponent,
     ConvocatoriaEntidadFinanciadoraModalComponent,
-    ConvocatoriaEnlaceModalComponent
-  ],
+    ConvocatoriaEnlaceModalComponent,
+    ConvocatoriaEntidadConvocanteaModalComponent],
   imports: [
     CommonModule,
     SharedModule,
