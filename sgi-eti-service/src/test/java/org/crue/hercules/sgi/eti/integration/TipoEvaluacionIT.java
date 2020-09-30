@@ -1,10 +1,12 @@
 package org.crue.hercules.sgi.eti.integration;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +40,9 @@ public class TipoEvaluacionIT {
   private TokenBuilder tokenBuilder;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String TIPO_EVALUACION_CONTROLLER_BASE_PATH = "/tipoEvaluaciones";
+  private static final String PATH_PARAMETER = "/{boolean}";
+  private static final String TIPO_EVALUACION_CONTROLLER_BASE_PATH = "/tipoevaluaciones";
+  private static final String DICTAMENES_REV_MINIMA = "/dictamenes-revision-minima";
 
   private HttpEntity<TipoEvaluacion> buildRequest(HttpHeaders headers, TipoEvaluacion entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -252,6 +256,31 @@ public class TipoEvaluacionIT {
 
   }
 
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllDictamenByTipoEvaluacionAndRevisionMinima_WithTipoEvaluacionId_ReturnsListaDictamen()
+      throws Exception {
+
+    TipoEvaluacion tipoEvaluacion = generarMockTipoEvaluacion(3L, "Seguimiento anual");
+    Dictamen dictamen1 = generarMockDictamen(5L, "Favorable", tipoEvaluacion);
+    Dictamen dictamen2 = generarMockDictamen(6L, "Solicitud de modificaciones", tipoEvaluacion);
+    List<Dictamen> listaDictamenes = new ArrayList<Dictamen>();
+    listaDictamenes.add(dictamen1);
+    listaDictamenes.add(dictamen2);
+
+    final String url = new StringBuilder(TIPO_EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append(DICTAMENES_REV_MINIMA).append(PATH_PARAMETER).toString();
+
+    final ResponseEntity<List<Dictamen>> response = restTemplate.exchange(url, HttpMethod.GET, buildRequest(null, null),
+        new ParameterizedTypeReference<List<Dictamen>>() {
+        }, 3L, Boolean.TRUE);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Dictamen> dictamenes = response.getBody();
+    Assertions.assertThat(dictamenes).isEqualTo(listaDictamenes);
+  }
+
   /**
    * Función que devuelve un objeto TipoEvaluacion
    * 
@@ -268,6 +297,26 @@ public class TipoEvaluacionIT {
     tipoEvaluacion.setActivo(Boolean.TRUE);
 
     return tipoEvaluacion;
+  }
+
+  /**
+   * Función que devuelve un objeto Dictamen
+   * 
+   * @param id             id del Dictamen
+   * @param nombre         nombre del Dictamen
+   * @param tipoEvaluacion Tipo Evaluación del Dictamen
+   * @return el objeto Dictamen
+   */
+
+  public Dictamen generarMockDictamen(Long id, String nombre, TipoEvaluacion tipoEvaluacion) {
+
+    Dictamen dictamen = new Dictamen();
+    dictamen.setId(id);
+    dictamen.setNombre(nombre);
+    dictamen.setActivo(Boolean.TRUE);
+    dictamen.setTipoEvaluacion(tipoEvaluacion);
+
+    return dictamen;
   }
 
 }

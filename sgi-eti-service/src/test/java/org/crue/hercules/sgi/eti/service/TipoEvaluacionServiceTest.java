@@ -6,7 +6,9 @@ import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.TipoEvaluacionNotFoundException;
+import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
+import org.crue.hercules.sgi.eti.repository.DictamenRepository;
 import org.crue.hercules.sgi.eti.repository.TipoEvaluacionRepository;
 import org.crue.hercules.sgi.eti.service.impl.TipoEvaluacionServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,11 +35,14 @@ public class TipoEvaluacionServiceTest {
   @Mock
   private TipoEvaluacionRepository tipoEvaluacionRepository;
 
+  @Mock
+  private DictamenRepository dictamenRepository;
+
   private TipoEvaluacionService tipoEvaluacionService;
 
   @BeforeEach
   public void setUp() throws Exception {
-    tipoEvaluacionService = new TipoEvaluacionServiceImpl(tipoEvaluacionRepository);
+    tipoEvaluacionService = new TipoEvaluacionServiceImpl(tipoEvaluacionRepository, dictamenRepository);
   }
 
   @Test
@@ -227,6 +232,24 @@ public class TipoEvaluacionServiceTest {
     }
   }
 
+  @Test
+  public void findAllDictamenByTipoEvaluacionAndRevisionMinima() {
+
+    TipoEvaluacion tipoEvaluacion1 = generarMockTipoEvaluacion(3L, "Seguimiento anual");
+    Dictamen dictamen1 = generarMockDictamen(5L, "Favorable", tipoEvaluacion1);
+    Dictamen dictamen2 = generarMockDictamen(6L, "Solicitud de modificaciones", tipoEvaluacion1);
+    List<Dictamen> listaDictamenes = new ArrayList<Dictamen>();
+    listaDictamenes.add(dictamen1);
+    listaDictamenes.add(dictamen2);
+
+    BDDMockito.given(dictamenRepository.findByTipoEvaluacionId(tipoEvaluacion1.getId())).willReturn(listaDictamenes);
+
+    List<Dictamen> lista = tipoEvaluacionService
+        .findAllDictamenByTipoEvaluacionAndRevisionMinima(tipoEvaluacion1.getId(), true);
+    Assertions.assertThat(lista).isEqualTo(listaDictamenes);
+
+  }
+
   /**
    * Función que devuelve un objeto TipoEvaluacion
    * 
@@ -243,5 +266,25 @@ public class TipoEvaluacionServiceTest {
     tipoEvaluacion.setActivo(Boolean.TRUE);
 
     return tipoEvaluacion;
+  }
+
+  /**
+   * Función que devuelve un objeto Dictamen
+   * 
+   * @param id             id del Dictamen
+   * @param nombre         nombre del Dictamen
+   * @param tipoEvaluacion Tipo Evaluación del Dictamen
+   * @return el objeto Dictamen
+   */
+
+  public Dictamen generarMockDictamen(Long id, String nombre, TipoEvaluacion tipoEvaluacion) {
+
+    Dictamen dictamen = new Dictamen();
+    dictamen.setId(id);
+    dictamen.setNombre(nombre);
+    dictamen.setActivo(Boolean.TRUE);
+    dictamen.setTipoEvaluacion(tipoEvaluacion);
+
+    return dictamen;
   }
 }

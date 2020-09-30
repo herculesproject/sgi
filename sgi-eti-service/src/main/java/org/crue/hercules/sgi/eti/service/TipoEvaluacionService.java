@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.eti.service;
 
+import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 
@@ -57,5 +58,15 @@ public interface TipoEvaluacionService {
    * Elimina todos los {@link TipoEvaluacion}.
    */
   void deleteAll();
+
+  /**
+   * Devuelve el listado de dictamenes dependiendo del tipo de Evaluación y si es
+   * Revisión mínima
+   * 
+   * @param esRevisionMinima Boolean para saber si la evaluación es revisión
+   *                         mínima
+   * @param idTipoEvaluacion Identificador {@link TipoEvaluacion}.
+   */
+  List<Dictamen> findAllDictamenByTipoEvaluacionAndRevisionMinima(Long idTipoEvaluacion, Boolean esRevisionMinima);
 
 }

@@ -105,7 +105,7 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
 
     List<Predicate> listPredicates = new ArrayList<Predicate>();
 
-    listPredicates.add(cb.equal(root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id), 2L));
+    listPredicates.add(root.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id).in(Arrays.asList(3L, 4L)));
 
     listPredicates.add(root.get(Evaluacion_.memoria).get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id)
 

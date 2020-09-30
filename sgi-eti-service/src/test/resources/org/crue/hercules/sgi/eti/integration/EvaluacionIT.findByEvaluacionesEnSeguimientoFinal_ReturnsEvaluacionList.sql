@@ -44,6 +44,7 @@ INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, 
 -- TIPO EVALUACION
 INSERT INTO eti.tipo_evaluacion (id, nombre, activo) VALUES (1, 'TipoEvaluacion1', true);
 INSERT INTO eti.tipo_evaluacion (id, nombre, activo) VALUES (2, 'TipoEvaluacion2', true);
+INSERT INTO eti.tipo_evaluacion (id, nombre, activo) VALUES (3, 'TipoEvaluacion3', true);
 
  -- DICTAMEN
 INSERT INTO eti.dictamen (id, nombre, tipo_evaluacion_id, activo) VALUES (1, 'Dictamen1', 2, true);
@@ -67,4 +68,4 @@ VALUES (2, 'Evaluador2', 1, 1, '2020-07-01', '2021-07-01', 'user-002', true);
 
 -- EVALUACION
 INSERT INTO eti.evaluacion(id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima,  evaluador1_id, evaluador2_id, fecha_dictamen, version, activo) 
-VALUES(1, 2, 1, 1, 2, true, 1, 2, '2020-08-01', 1, true);
+VALUES(1, 2, 1, 1, 3, true, 1, 2, '2020-08-01', 1, true);

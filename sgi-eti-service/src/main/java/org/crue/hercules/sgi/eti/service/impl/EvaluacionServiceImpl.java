@@ -370,41 +370,39 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
     Assert.notNull(evaluacionActualizar.getId(), "Evaluacion id no puede ser null para actualizar una evaluacion");
 
-    // Si el dictamen es "Favorable pendiente de revisión mínima" o "Pendiente de
-    // correcciones"
-    // comprobar si hay comentarios, en el caso de que si se hace el update
-    if (evaluacionActualizar.getDictamen().getId().equals(2L)
-        || evaluacionActualizar.getDictamen().getId().equals(3L)) {
+    // Si la Evaluación es de Revisión Mínima
+    // se actualiza la fechaDictamen con la fecha actual
+    if (evaluacionActualizar.getEsRevMinima()) {
+      evaluacionActualizar.setFechaDictamen(LocalDate.now());
+    }
 
-      // Se debe comprobar que no tenga comentarios asociados
-      int numComentarios = this.comentarioRepository.countByEvaluacionId(evaluacionActualizar.getId());
+    // Si el dictamen es "Favorable" y la Evaluación es de Revisión Mínima
+    if (evaluacionActualizar.getDictamen().getNombre().toUpperCase().equals("FAVORABLE")
+        && evaluacionActualizar.getEsRevMinima()) {
 
-      if (numComentarios > 0) {
-
-        // Si el dictamen es "Favorable pendiente de revisión mínima" y el estado de la
-        // memoria es "En secretaría de revisión mínima", se cambia el estado de la
-        // memoria a "Favorable Pendiente de Modificaciones Mínimas".
-        if (evaluacionActualizar.getDictamen().getId().equals(2L)
-            && evaluacionActualizar.getMemoria().getEstadoActual().getId().equals(4L)) {
-          memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(), 6L);
-        }
-
-      } else {
-        Assert.isTrue(numComentarios > 0, "Es necesario introducir comentarios antes de guardar la evaluación.");
+      // Si el estado de la memoria es "En evaluación" o
+      // "En secretaria revisión mínima"
+      // Se cambia el estado de la memoria a "Fin evaluación"
+      if (evaluacionActualizar.getMemoria().getEstadoActual().getId().equals(4L)
+          || evaluacionActualizar.getMemoria().getEstadoActual().getId().equals(5L)) {
+        memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(), 9L);
+      }
+      // Si el estado de la memoria es "En evaluación seguimiento anual" o "En
+      // evaluación seguimiento final" o "En secretaría seguimiento final
+      // aclaraciones"
+      // Se cambia el estado de la memoria a "Fin evaluación seguimiento final"
+      if (evaluacionActualizar.getMemoria().getEstadoActual().getId().equals(13L)
+          || evaluacionActualizar.getMemoria().getEstadoActual().getId().equals(19L)
+          || evaluacionActualizar.getMemoria().getEstadoActual().getId().equals(18L)) {
+        memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(), 20L);
       }
     }
 
-    // Si el estado de la memoria es "En secretaría revisión mínima"
-    // se actualiza la fechaDictamen con la fecha actual
-    if (evaluacionActualizar.getMemoria().getEstadoActual().getId().equals(4L)) {
-      evaluacionActualizar.setFechaDictamen(LocalDate.now());
-
-      // Si el dictamen es "Favorable" y el estado de la memoria es
-      // "En secretaría de revisión mínima".
-      // Se cambia el estado de la memoria a "Fin evaluación"
-      if (evaluacionActualizar.getDictamen().getNombre().toUpperCase().equals("FAVORABLE")) {
-        memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(), 9L);
-      }
+    // Si el dictamen es "Favorable pendiente de revisión mínima" y
+    // la Evaluación es de Revisión Mínima, se cambia el estado de la
+    // memoria a "Favorable Pendiente de Modificaciones Mínimas".
+    if (evaluacionActualizar.getDictamen().getId().equals(2L) && evaluacionActualizar.getEsRevMinima()) {
+      memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(), 6L);
     }
 
     return evaluacionRepository.findById(evaluacionActualizar.getId()).map(evaluacion -> {

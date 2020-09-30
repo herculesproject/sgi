@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.config.SecurityConfig;
 import org.crue.hercules.sgi.eti.exceptions.TipoEvaluacionNotFoundException;
+import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.service.TipoEvaluacionService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -55,7 +56,9 @@ public class TipoEvaluacionControllerTest {
   private TipoEvaluacionService tipoEvaluacionService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String TIPO_EVALUACION_CONTROLLER_BASE_PATH = "/tipoEvaluaciones";
+  private static final String PATH_PARAMETER = "/{boolean}";
+  private static final String TIPO_EVALUACION_CONTROLLER_BASE_PATH = "/tipoevaluaciones";
+  private static final String DICTAMENES_REV_MINIMA = "/dictamenes-revision-minima";
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-TIPOEVALUACION-VER" })
@@ -339,6 +342,34 @@ public class TipoEvaluacionControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL" })
+  public void findAllDictamenByTipoEvaluacionAndRevisionMinima_WithTipoEvaluacionId_ReturnsListaDictamen()
+      throws Exception {
+
+    TipoEvaluacion tipoEvaluacion = generarMockTipoEvaluacion(4L, "Seguimiento final");
+    Dictamen dictamen1 = generarMockDictamen(7L, "Favorable", tipoEvaluacion);
+    Dictamen dictamen2 = generarMockDictamen(8L, "Solicitud de aclaraciones", tipoEvaluacion);
+
+    List<Dictamen> listaDictamen = new ArrayList<Dictamen>();
+    listaDictamen.add(dictamen1);
+    listaDictamen.add(dictamen2);
+
+    BDDMockito.given(tipoEvaluacionService.findAllDictamenByTipoEvaluacionAndRevisionMinima(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.anyBoolean())).willReturn(listaDictamen);
+
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(TIPO_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + DICTAMENES_REV_MINIMA + PATH_PARAMETER, 4L,
+                true)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(7L))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(8L))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)));
+    ;
+  }
+
   /**
    * Función que devuelve un objeto TipoEvaluacion
    * 
@@ -355,6 +386,26 @@ public class TipoEvaluacionControllerTest {
     tipoEvaluacion.setActivo(Boolean.TRUE);
 
     return tipoEvaluacion;
+  }
+
+  /**
+   * Función que devuelve un objeto Dictamen
+   * 
+   * @param id             id del Dictamen
+   * @param nombre         nombre del Dictamen
+   * @param tipoEvaluacion Tipo Evaluación del Dictamen
+   * @return el objeto Dictamen
+   */
+
+  public Dictamen generarMockDictamen(Long id, String nombre, TipoEvaluacion tipoEvaluacion) {
+
+    Dictamen dictamen = new Dictamen();
+    dictamen.setId(id);
+    dictamen.setNombre(nombre);
+    dictamen.setActivo(Boolean.TRUE);
+    dictamen.setTipoEvaluacion(tipoEvaluacion);
+
+    return dictamen;
   }
 
 }
