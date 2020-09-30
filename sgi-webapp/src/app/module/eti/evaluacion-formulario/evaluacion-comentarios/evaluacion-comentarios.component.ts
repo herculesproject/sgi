@@ -4,18 +4,21 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { FragmentComponent } from '@core/component/fragment.component';
 import { IComentario } from '@core/models/eti/comentario';
 import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable, of } from 'rxjs';
+
+import { FragmentComponent } from '@core/component/fragment.component';
 import { EvaluacionComentarioFragment } from './evaluacion-comentarios.fragment';
 
 import { ComentarioCrearModalComponent } from '../../comentario/comentario-crear-modal/comentario-crear-modal.component';
 import { ComentarioEditarModalComponent } from '../../comentario/comentario-editar-modal/comentario-editar-modal.component';
-import { EvaluacionEvaluadorEvaluarActionService } from '../../evaluacion-evaluador/evaluacion-evaluador.action.service';
+import { EvaluacionFormularioActionService, Gestion } from '../evaluacion-formulario.action.service';
+import { TipoComentario } from '@core/models/eti/tipo-comentario';
+import { TipoComentarioService } from '@core/services/eti/tipo-comentario.service';
 
 const MSG_DELETE = marker('eti.comentario.listado.borrar.titulo');
 
@@ -31,16 +34,19 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
 
   columnas: string[];
   elementosPagina: number[];
+  tipoComentario$: Observable<TipoComentario>;
 
   dataSource: MatTableDataSource<StatusWrapper<IComentario>> = new MatTableDataSource<StatusWrapper<IComentario>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+
   constructor(
     protected readonly logger: NGXLogger,
     private readonly dialogService: DialogService,
+    private tipoComentarioService: TipoComentarioService,
     private matDialog: MatDialog,
-    private actionService: EvaluacionEvaluadorEvaluarActionService
+    private actionService: EvaluacionFormularioActionService,
   ) {
     super(actionService.FRAGMENT.COMENTARIOS, actionService);
     this.logger.debug(EvaluacionComentariosComponent.name, 'constructor()', 'start');
@@ -96,7 +102,6 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
     dialogRef.afterClosed().subscribe(
       (comentario: IComentario) => {
         if (comentario) {
-          comentario.evaluacion = this.actionService.getEvaluacion();
           this.formPart.addComentario(comentario);
         }
         this.logger.debug(EvaluacionComentariosComponent.name, 'abrirModalCrear()', 'end');
@@ -121,6 +126,11 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
     dialogRef.afterClosed().subscribe(
       (resultado: IComentario) => {
         if (resultado) {
+          this.subscriptions.push(this.getTipoComentario().subscribe(
+            (tipoComentario) => {
+              resultado.tipoComentario = tipoComentario;
+            }
+          ));
           if (!wrapperRef.created) {
             wrapperRef.setEdited();
           }
@@ -148,5 +158,14 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
         }
       )
     );
+  }
+
+  getTipoComentario(): Observable<TipoComentario> {
+    if (this.actionService.getGestion() === Gestion.GESTOR) {
+      this.tipoComentario$ = this.tipoComentarioService.findById(1);
+    } else {
+      this.tipoComentario$ = this.tipoComentarioService.findById(2);
+    }
+    return this.tipoComentario$;
   }
 }

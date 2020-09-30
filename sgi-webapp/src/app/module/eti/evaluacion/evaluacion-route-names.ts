@@ -1,3 +1,4 @@
 export const EVALUACION_ROUTE_NAMES = {
-  EVALUACIONES: 'evaluaciones'
+  COMENTARIOS: 'comentarios',
+  EVALUACIONES: 'evaluaciones',
 };

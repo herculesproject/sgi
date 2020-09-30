@@ -10,6 +10,7 @@ import { EVALUACION_ROUTE_NAMES } from './evaluacion-route-names';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
 import { EvaluacionResolver } from './evaluacion.resolver';
 import { EvaluacionEvaluacionComponent } from '../evaluacion-formulario/evaluacion-evaluacion/evaluacion-evaluacion.component';
+import { EvaluacionComentariosComponent } from '../evaluacion-formulario/evaluacion-comentarios/evaluacion-comentarios.component';
 
 const MSG_EVALUACION_LISTADO_TITLE = marker('eti.evaluacion.listado.titulo');
 const MSG_EVALUACION_EVALUAR_TITLE = marker('eti.evaluacion.evaluar.titulo');
@@ -45,6 +46,11 @@ const routes: SgiAuthRoutes = [
       {
         path: EVALUACION_ROUTE_NAMES.EVALUACIONES,
         component: EvaluacionEvaluacionComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: EVALUACION_ROUTE_NAMES.COMENTARIOS,
+        component: EvaluacionComentariosComponent,
         canDeactivate: [FragmentGuard]
       }
     ]

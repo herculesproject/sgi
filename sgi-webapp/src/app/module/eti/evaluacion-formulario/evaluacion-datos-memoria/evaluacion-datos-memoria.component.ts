@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { FormFragmentComponent } from '@core/component/fragment.component';
 import { IMemoriaWithPersona } from '@core/models/eti/memoria-with-persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -8,7 +7,9 @@ import { NGXLogger } from 'ngx-logger';
 import {
   EvaluacionListadoAnteriorMemoriaComponent,
 } from '../evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
-import { EvaluacionEvaluadorEvaluarActionService } from '../../evaluacion-evaluador/evaluacion-evaluador.action.service';
+import { FormFragmentComponent } from '@core/component/fragment.component';
+import { EvaluacionEvaluadorActionService } from '../../evaluacion-evaluador/evaluacion-evaluador.action.service';
+import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
 
 
 @Component({
@@ -25,7 +26,7 @@ export class EvaluacionDatosMemoriaComponent extends FormFragmentComponent<IMemo
 
   constructor(
     protected readonly logger: NGXLogger,
-    private actionService: EvaluacionEvaluadorEvaluarActionService
+    private actionService: EvaluacionFormularioActionService
   ) {
     super(actionService.FRAGMENT.MEMORIA, actionService);
 

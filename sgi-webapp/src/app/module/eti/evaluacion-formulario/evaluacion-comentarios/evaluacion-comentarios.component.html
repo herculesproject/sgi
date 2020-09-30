@@ -52,4 +52,7 @@
       <mat-icon>add_box</mat-icon> {{'eti.evaluacionEvaluador.evaluar.comentarios.crear' | translate}}
     </button>
   </div>
+  <div *ngIf="fragment.hasErrors()">
+    <mat-error>{{'eti.evaluacion.evaluar.comentarios.error.guardar' | translate}}</mat-error>
+  </div>
 </section>

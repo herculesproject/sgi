@@ -1,30 +1,30 @@
 import { FormFragment } from '@core/services/action-service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable, of, BehaviorSubject } from 'rxjs';
+import { Observable, of, BehaviorSubject, throwError } from 'rxjs';
 import { switchMap, map, catchError } from 'rxjs/operators';
-import { IMemoria } from '@core/models/eti/memoria';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { NullIdValidador } from '@core/validators/null-id-validador';
-import { IDictamen } from '@core/models/eti/dictamen';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { NGXLogger } from 'ngx-logger';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IMemoriaWithPersona } from '@core/models/eti/memoria-with-persona';
-
+import { IComentario } from '@core/models/eti/comentario';
+import { SnackBarService } from '@core/services/snack-bar.service';
 
 export class EvaluacionEvaluacionFragment extends FormFragment<IMemoriaWithPersona> {
 
   private memoria: IMemoriaWithPersona;
-  dictamenListado: IDictamen[] = [];
-  filteredDictamenes: Observable<IDictamen[]>;
   evaluacion$: BehaviorSubject<IEvaluacion> = new BehaviorSubject<IEvaluacion>(null);
   evaluacion: IEvaluacion;
-  evaluacionActualizada: StatusWrapper<IEvaluacion> = new StatusWrapper<IEvaluacion>(null);
+  comentarios$: BehaviorSubject<StatusWrapper<IComentario>[]> = new BehaviorSubject<StatusWrapper<IComentario>[]>([]);
+
 
   constructor(
     private readonly logger: NGXLogger,
-    private fb: FormBuilder, key: number,
+    private fb: FormBuilder,
+    key: number,
+    protected readonly snackBarService: SnackBarService,
     private service: EvaluacionService,
     private personaFisicaService: PersonaFisicaService) {
     super(key);
@@ -81,7 +81,8 @@ export class EvaluacionEvaluacionFragment extends FormFragment<IMemoriaWithPerso
       fechaEvaluacion: value.fechaEnvioSecretaria,
       referenciaMemoria: value.numReferencia,
       version: value.version,
-      solicitante: `${value?.solicitante?.nombre} ${value?.solicitante?.primerApellido} ${value?.solicitante?.segundoApellido}`
+      solicitante: `${value?.solicitante?.nombre} ${value?.solicitante?.primerApellido} ${value?.solicitante?.segundoApellido}`,
+      dictamen: this.evaluacion.dictamen
     };
   }
 
@@ -95,12 +96,11 @@ export class EvaluacionEvaluacionFragment extends FormFragment<IMemoriaWithPerso
     this.logger.debug(EvaluacionEvaluacionFragment.name, 'saveOrUpdate()', 'start');
 
     this.evaluacion = this.getValueFormDictamen();
-    // Si es Favorable pendiente de revisión mínima o Pendiente de correcciones
-    // comprobar si hay comentarios o no, en el caso de que si se hace el update
-    const obs = this.isEdit() ? this.service.update(this.evaluacion.id, this.evaluacion) : this.service.create(this.evaluacion);
+
+    const obsEvaluacion$ = this.service.update(this.evaluacion.id, this.evaluacion);
 
     this.logger.debug(EvaluacionEvaluacionFragment.name, 'saveOrUpdate()', 'end');
-    return obs.pipe(
+    return obsEvaluacion$.pipe(
       map((value) => {
         this.evaluacion = value;
         return this.evaluacion.id;
@@ -114,6 +114,10 @@ export class EvaluacionEvaluacionFragment extends FormFragment<IMemoriaWithPerso
     this.evaluacion.dictamen = form.dictamen;
     this.logger.debug(EvaluacionEvaluacionFragment.name, 'getValueFormDictamen()', 'end');
     return this.evaluacion;
+  }
+
+  setComentarios(comentarios: BehaviorSubject<StatusWrapper<IComentario>[]>) {
+    this.comentarios$ = comentarios;
   }
 
 }

@@ -9,7 +9,6 @@ import { TipoComentario } from '@core/models/eti/tipo-comentario';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ApartadoFormularioService } from '@core/services/eti/apartado-formulario.service';
 import { BloqueFormularioService } from '@core/services/eti/bloque-formulario.service';
-import { TipoComentarioService } from '@core/services/eti/tipo-comentario.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { IsApartadoFormulario } from '@core/validators/is-apartado-formulario-validador';
@@ -45,7 +44,6 @@ export class ComentarioEditarModalComponent implements OnInit, OnDestroy {
     private readonly bloqueFormularioService: BloqueFormularioService,
     private readonly apartadoFormularioService: ApartadoFormularioService,
     private readonly snackBarService: SnackBarService,
-    private readonly tipoComentarioService: TipoComentarioService,
     public readonly matDialogRef: MatDialogRef<ComentarioEditarModalComponent>,
     @Inject(MAT_DIALOG_DATA) public comentario: IComentario,
   ) {
@@ -68,7 +66,6 @@ export class ComentarioEditarModalComponent implements OnInit, OnDestroy {
     this.loadAllBloques();
     this.loadApartados();
     this.loadHijos();
-    this.loadAllTipoComentario();
     this.logger.debug(ComentarioEditarModalComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -90,7 +87,7 @@ export class ComentarioEditarModalComponent implements OnInit, OnDestroy {
     this.formGroup = new FormGroup({
       bloqueFormulario: new FormControl(this.comentario?.apartadoFormulario?.bloqueFormulario, [IsBloqueFormulario.isValid()]),
       apartadoFormulario: new FormControl(apartado, [IsApartadoFormulario.isValid()]),
-      subapartado: new FormControl(subapartado, [IsApartadoFormulario.isValid()]),
+      subapartado: new FormControl(subapartado, []),
       comentario: new FormControl(this.comentario.texto, [])
     });
     this.logger.debug(ComentarioEditarModalComponent.name, 'inicialFormGroup()', 'end');
@@ -116,29 +113,6 @@ export class ComentarioEditarModalComponent implements OnInit, OnDestroy {
         () => {
           this.closeModalError(MSG_ERROR_BLOQUE);
           this.logger.error(ComentarioEditarModalComponent.name, 'loadAllBloques()', 'error');
-        }
-      )
-    );
-  }
-
-  /**
-   * Carga todos los tipos de comentarios existentes para luego seleccionar el de tipo 'EVALUADOR'
-   */
-  private loadAllTipoComentario(): void {
-    this.logger.debug(ComentarioEditarModalComponent.name, 'loadAllTipoComentario()', 'start');
-    this.suscripciones.push(
-      this.tipoComentarioService.findAll().subscribe(
-        (res: SgiRestListResult<TipoComentario>) => {
-          res.items.forEach(tipoComentario => {
-            if (tipoComentario.nombre.toUpperCase() === 'EVALUADOR') {
-              this.tipoComentario = tipoComentario;
-            }
-          });
-          this.logger.debug(ComentarioEditarModalComponent.name, 'loadAllTipoComentario()', 'end');
-        },
-        () => {
-          this.closeModalError(MSG_ERROR_TIPO_COMENTARIO);
-          this.logger.error(ComentarioEditarModalComponent.name, 'loadAllTipoComentario()', 'error');
         }
       )
     );

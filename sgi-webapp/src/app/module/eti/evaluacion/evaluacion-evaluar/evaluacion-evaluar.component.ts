@@ -8,6 +8,7 @@ import { NGXLogger } from 'ngx-logger';
 
 import { EvaluacionActionService } from '../evaluacion.action.service';
 import { EVALUACION_ROUTE_NAMES } from '../evaluacion-route-names';
+import { EvaluacionFormularioActionService } from '../../evaluacion-formulario/evaluacion-formulario.action.service';
 
 const MSG_BUTTON_SAVE = marker('botones.guardar');
 const MSG_SUCCESS = marker('eti.evaluacion.evaluar.correcto');
@@ -19,7 +20,12 @@ const MSG_ERROR_SAVE = marker('eti.evaluacion.evaluar.comentarios.error.crear');
   styleUrls: ['./evaluacion-evaluar.component.scss'],
   encapsulation: ViewEncapsulation.None,
   viewProviders: [
-    EvaluacionActionService
+    EvaluacionActionService,
+    {
+      provide: EvaluacionFormularioActionService,
+      useExisting: EvaluacionActionService
+    }
+
   ]
 })
 export class EvaluacionEvaluarComponent extends ActionComponent {

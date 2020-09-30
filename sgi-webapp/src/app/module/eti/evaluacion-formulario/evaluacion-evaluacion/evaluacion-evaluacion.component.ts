@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { NGXLogger } from 'ngx-logger';
@@ -12,16 +12,16 @@ import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { DictamenService } from '@core/services/eti/dictamen.service';
 import { Subscription, Observable } from 'rxjs';
 import { IDictamen } from '@core/models/eti/dictamen';
-import { EvaluacionActionService } from '../../evaluacion/evaluacion.action.service';
 import { EvaluacionEvaluacionFragment } from './evaluacion-evaluacion.fragment';
 import { IMemoria } from '@core/models/eti/memoria';
+import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
 
 @Component({
   selector: 'sgi-evaluacion-evaluacion',
   templateUrl: './evaluacion-evaluacion.component.html',
   styleUrls: ['./evaluacion-evaluacion.component.scss']
 })
-export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemoria> implements AfterViewInit, OnInit {
+export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemoria> implements AfterViewInit, OnInit, OnDestroy {
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
@@ -31,11 +31,11 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
 
   dictamenListado: IDictamen[];
   filteredDictamenes: Observable<IDictamen[]>;
-  dictamenSubscription: Subscription;
+  suscriptions: Subscription[] = [];
 
   constructor(
     protected readonly logger: NGXLogger,
-    private actionService: EvaluacionActionService,
+    private actionService: EvaluacionFormularioActionService,
     private dictamenService: DictamenService
   ) {
     super(actionService.FRAGMENT.EVALUACIONES, actionService);
@@ -63,11 +63,14 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
   ngOnInit() {
     this.logger.debug(EvaluacionEvaluacionComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
-    (this.fragment as EvaluacionEvaluacionFragment).evaluacion$.subscribe((evaluacion) => {
+    this.suscriptions.push(this.formGroup.controls.dictamen.valueChanges.subscribe((dictamen) => {
+      this.actionService.setDictamen(dictamen);
+    }));
+    this.suscriptions.push((this.fragment as EvaluacionEvaluacionFragment).evaluacion$.subscribe((evaluacion) => {
       if (evaluacion) {
         this.getDictamenes(evaluacion);
       }
-    });
+    }));
     this.logger.debug(EvaluacionEvaluacionComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -100,36 +103,40 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
     if ((evaluacion.tipoEvaluacion.id === 2)
       && (evaluacion.memoria.estadoActual.id === 4)) {
 
-      this.dictamenSubscription = this.dictamenService.findAllByMemoriaRevisionMinima().subscribe(
+      this.suscriptions.push(this.dictamenService.findAllByMemoriaRevisionMinima().subscribe(
         (response) => {
 
           this.dictamenListado = response.items;
-        });
+        }));
     }
 
     // TipoEvaluacion: Memoria y TipoEstadoMemoria: NO En secretaría revisión mínima
     if ((evaluacion.tipoEvaluacion.id === 2)
       && (evaluacion.memoria.estadoActual.id !== 4)) {
 
-      this.dictamenSubscription = this.dictamenService.findAllByMemoriaNoRevisionMinima().subscribe(
+      this.suscriptions.push(this.dictamenService.findAllByMemoriaNoRevisionMinima().subscribe(
         (response) => {
 
           this.dictamenListado = response.items;
-        });
+        }));
     }
 
     // TipoEvaluacion: Retrospectiva
     if (evaluacion.tipoEvaluacion.id === 1) {
 
-      this.dictamenSubscription = this.dictamenService.findAllByRetrospectiva().subscribe(
+      this.suscriptions.push(this.dictamenService.findAllByRetrospectiva().subscribe(
         (response) => {
           this.dictamenListado = response.items;
-        });
+        }));
     }
 
     this.logger.debug(EvaluacionEvaluacionComponent.name,
       'getDictamenes()',
       'end');
+  }
+
+  ngOnDestroy(): void {
+    this.suscriptions.forEach((suscription) => suscription.unsubscribe());
   }
 
 }

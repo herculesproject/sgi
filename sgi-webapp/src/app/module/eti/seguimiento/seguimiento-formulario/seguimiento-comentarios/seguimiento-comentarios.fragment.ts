@@ -3,8 +3,8 @@ import { Fragment } from '@core/services/action-service';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, merge, Observable, of } from 'rxjs';
-import { endWith, map, takeLast, tap } from 'rxjs/operators';
+import { BehaviorSubject, merge, Observable, of, from } from 'rxjs';
+import { endWith, map, takeLast, tap, mergeMap } from 'rxjs/operators';
 
 export class SeguimientoComentarioFragment extends Fragment {
   comentarios$: BehaviorSubject<StatusWrapper<IComentario>[]>;
@@ -25,7 +25,7 @@ export class SeguimientoComentarioFragment extends Fragment {
   protected onInitialize(): void {
     this.logger.debug(SeguimientoComentarioFragment.name, 'onInitialize()', 'start');
     if (this.getKey()) {
-      this.service.getComentarios(this.getKey() as number).pipe(
+      this.service.getComentariosEvaluador(this.getKey() as number).pipe(
         map((response) => {
           if (response.items) {
             return response.items;
@@ -44,9 +44,9 @@ export class SeguimientoComentarioFragment extends Fragment {
   saveOrUpdate(): Observable<void> {
     this.logger.debug(SeguimientoComentarioFragment.name, 'saveOrUpdate()', 'start');
     return merge(
-      this.deleteComentarios(),
-      this.updateComentarios(),
-      this.createComentarios()
+      this.deleteComentariosEvaluador(),
+      this.updateComentariosEvaluador(),
+      this.createComentariosEvaluador()
     ).pipe(
       takeLast(1),
       tap(() => this.setChanges(false)),
@@ -80,59 +80,58 @@ export class SeguimientoComentarioFragment extends Fragment {
     this.logger.debug(SeguimientoComentarioFragment.name, `deleteComentario(comentario: ${comentario})`, 'end');
   }
 
-  private deleteComentarios(): Observable<void> {
+  private deleteComentariosEvaluador(): Observable<void> {
     this.logger.debug(SeguimientoComentarioFragment.name, 'deleteComentarios()', 'start');
     if (this.comentariosEliminados.length === 0) {
       this.logger.debug(SeguimientoComentarioFragment.name, 'deleteComentarios()', 'end');
       return of(void 0);
     }
-    return this.service.deleteComentarios(
-      this.getKey() as number,
-      this.comentariosEliminados.map((comentarioWrapped) => comentarioWrapped.value.id)
-    ).pipe(
-      map(() => {
-        this.comentariosEliminados = [];
+    return from(this.comentariosEliminados).pipe(
+      mergeMap((wrappedComentario) => {
+
+        return this.service.deleteComentarioEvaluador(this.getKey() as number, wrappedComentario.value.id);
       }),
-      tap(() => this.logger.debug(SeguimientoComentarioFragment.name, 'deleteComentarios()', 'end'))
+      endWith()
     );
   }
 
-  private updateComentarios(): Observable<void> {
+  private updateComentariosEvaluador(): Observable<void> {
     this.logger.debug(SeguimientoComentarioFragment.name, 'updateComentarios()', 'start');
     const comentariosEditados = this.comentarios$.value.filter((comentario) => comentario.edited);
     if (comentariosEditados.length === 0) {
       this.logger.debug(SeguimientoComentarioFragment.name, 'updateComentarios()', 'end');
       return of(void 0);
     }
-    return this.service.updateComentarios(
-      this.getKey() as number,
-      comentariosEditados.map((comentarioWrapped) => comentarioWrapped.value)
-    ).pipe(
-      map((comentarios) => {
-        const updatedComentarios = this.comentarios$.value.filter((comentario) => !comentario.edited);
-        updatedComentarios.push(...comentarios.map((comentario) => new StatusWrapper<IComentario>(comentario)));
-        this.comentarios$.next(updatedComentarios);
+    return from(comentariosEditados).pipe(
+      mergeMap((wrappedComentario) => {
+
+        return this.service.updateComentarioEvaluador(this.getKey() as number, wrappedComentario.value, wrappedComentario.value.id).pipe(
+          map((updatedComentario) => {
+            const index = this.comentarios$.value.findIndex((currentComentario) => currentComentario === wrappedComentario);
+            this.comentarios$[index] = new StatusWrapper<IComentario>(updatedComentario);
+          })
+        );
       }),
-      endWith(),
-      tap(() => this.logger.debug(SeguimientoComentarioFragment.name, 'updateComentarios()', 'end'))
+      endWith()
     );
   }
 
-  private createComentarios(): Observable<void> {
+  private createComentariosEvaluador(): Observable<void> {
     this.logger.debug(SeguimientoComentarioFragment.name, 'createComentarios()', 'start');
     const comentariosCreados = this.comentarios$.value.filter((comentario) => comentario.created);
     if (comentariosCreados.length === 0) {
       this.logger.debug(SeguimientoComentarioFragment.name, 'createComentarios()', 'end');
       return of(void 0);
     }
-    return this.service.createComentarios(
-      this.getKey() as number,
-      comentariosCreados.map((comentarioWrapped) => comentarioWrapped.value)
-    ).pipe(
-      map((comentarios) => {
-        const updatedComentarios = this.comentarios$.value.filter((comentario) => !comentario.created);
-        updatedComentarios.push(...comentarios.map((comentario) => new StatusWrapper<IComentario>(comentario)));
-        this.comentarios$.next(updatedComentarios);
+    return from(comentariosCreados).pipe(
+      mergeMap((wrappedComentario) => {
+
+        return this.service.createComentarioEvaluador(this.getKey() as number, wrappedComentario.value).pipe(
+          map((savedComentario) => {
+            const index = this.comentarios$.value.findIndex((currentComentario) => currentComentario === wrappedComentario);
+            this.comentarios$[index] = new StatusWrapper<IComentario>(savedComentario);
+          })
+        );
       }),
       endWith(),
       tap(() => this.logger.debug(SeguimientoComentarioFragment.name, 'createComentarios()', 'end'))

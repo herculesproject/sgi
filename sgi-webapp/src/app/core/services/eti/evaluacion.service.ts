@@ -68,67 +68,113 @@ export class EvaluacionService extends SgiRestService<number, IEvaluacion>{
   }
 
   /**
-   * Devuelve los comentarios de una evalución
+   * Devuelve los comentarios de tipo GESTOR de una evalución
    *
    * @param id Id de la evaluación
    * @param options Opciones de paginación
    */
-  getComentarios(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IComentario>> {
-    this.logger.debug(EvaluacionService.name, `findByEvaluacionId(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
-    return this.find<IComentario, IComentario>(`${this.endpointUrl}/${id}/comentarios`, options).pipe(
-      tap(() => this.logger.debug(EvaluacionService.name, `findByEvaluacionId(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+  getComentariosGestor(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IComentario>> {
+    this.logger.debug(EvaluacionService.name, `getComentariosGestor(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    return this.find<IComentario, IComentario>(`${this.endpointUrl}/${id}/comentarios-gestor`, options).pipe(
+      tap(() => this.logger.debug(EvaluacionService.name, `getComentariosGestor(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
     );
   }
 
   /**
-   * Obtiene el número total de comentarios que tiene una evaluación
+   * Devuelve los comentarios de tipo EVALUADOR de una evalución
    *
    * @param id Id de la evaluación
+   * @param options Opciones de paginación
    */
-  countComentarios(id: number): Observable<number> {
-    this.logger.debug(EvaluacionService.name, `countByEvaluacionId(${id})`, '-', 'start');
-    return this.http.get<number>(`${this.endpointUrl}/${id}/comentarios/count`).pipe(
-      tap(() => this.logger.debug(EvaluacionService.name, `countByEvaluacionId(${id})`, '-', 'end'))
+  getComentariosEvaluador(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IComentario>> {
+    this.logger.debug(EvaluacionService.name, `getComentariosEvaluador(${id}, ${options ?
+      JSON.stringify(options) : options}`, '-', 'start');
+    return this.find<IComentario, IComentario>(`${this.endpointUrl}/${id}/comentarios-evaluador`, options).pipe(
+      tap(() => this.logger.debug(EvaluacionService.name, `getComentariosEvaluador(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+    );
+  }
+
+
+
+  /**
+   * Añade un comentario de tipo GESTOR a una evaluación
+   *
+   * @param id Id de la evaluación
+   * @param comentario Comentario a crear
+   */
+  createComentarioGestor(id: number, comentario: IComentario): Observable<IComentario> {
+    this.logger.debug(EvaluacionService.name, `createComentarioGestor(${id}, ${comentario})`, '-', 'start');
+    return this.http.post<IComentario>(`${this.endpointUrl}/${id}/comentario-gestor`, comentario).pipe(
+      tap(() => this.logger.debug(EvaluacionService.name, `createComentarioGestor(${id}, ${comentario})`, '-', 'end'))
     );
   }
 
   /**
-   * Añade un listado de comentarios a una evaluación
+   * Añade un comentario de tipo EVALUADOR a una evaluación
    *
    * @param id Id de la evaluación
-   * @param comentarios Comentarios a crear
+   * @param comentario Comentario a crear
    */
-  createComentarios(id: number, comentarios: IComentario[]): Observable<IComentario[]> {
-    this.logger.debug(EvaluacionService.name, `createComentarios(${id}, ${comentarios})`, '-', 'start');
-    return this.http.post<IComentario[]>(`${this.endpointUrl}/${id}/comentarios`, comentarios).pipe(
-      tap(() => this.logger.debug(EvaluacionService.name, `createComentarios(${id}, ${comentarios})`, '-', 'end'))
+  createComentarioEvaluador(id: number, comentario: IComentario): Observable<IComentario> {
+    this.logger.debug(EvaluacionService.name, `createComentarioEvaluador(${id}, ${comentario})`, '-', 'start');
+    return this.http.post<IComentario>(`${this.endpointUrl}/${id}/comentario-evaluador`, comentario).pipe(
+      tap(() => this.logger.debug(EvaluacionService.name, `createComentarioEvaluador(${id}, ${comentario})`, '-', 'end'))
     );
   }
 
   /**
-   * Actualiza un listado de comentarios de una evaluación
+   * Actualiza un comentario de tipo GESTOR de una evaluación
    *
    * @param id Id de la evaluación
-   * @param comentarios Comentarios a actualizar
+   * @param comentario Comentario a actualizar
+   * @param idComentario Id del Comentario
    */
-  updateComentarios(id: number, comentarios: IComentario[]): Observable<IComentario[]> {
-    this.logger.debug(EvaluacionService.name, `updateComentarios(${id}, ${comentarios})`, '-', 'start');
-    return this.http.put<IComentario[]>(`${this.endpointUrl}/${id}/comentarios`, comentarios).pipe(
-      tap(() => this.logger.debug(EvaluacionService.name, `updateComentarios(${id}, ${comentarios})`, '-', 'end'))
+  updateComentarioGestor(id: number, comentario: IComentario, idComentario: number): Observable<IComentario> {
+    this.logger.debug(EvaluacionService.name, `updateComentarioGestor(${id}, ${comentario}, ${idComentario})`, '-', 'start');
+    return this.http.put<IComentario>(`${this.endpointUrl}/${id}/comentario-gestor/${idComentario}`, comentario).pipe(
+      tap(() => this.logger.debug(EvaluacionService.name, `updateComentarioGestor(${id}, ${comentario}, ${idComentario})`, '-', 'end'))
     );
   }
 
   /**
-   * Elimina un listado de comentarios de una evaluación
+   * Actualiza un comentario de tipo EVALUADOR de una evaluación
    *
    * @param id Id de la evaluación
-   * @param ids Listado de ids de los comentarios
+   * @param comentario Comentario a actualizar
+   * @param idComentario Id del Comentario
    */
-  deleteComentarios(id: number, ids: number[]): Observable<void> {
-    this.logger.debug(EvaluacionService.name, `deleteComentarios(${id}, ${ids})`, '-', 'start');
-    const params = new HttpParams().set('ids', ids.toString());
-    return this.http.delete<void>(`${this.endpointUrl}/${id}/comentarios`, { params }).pipe(
-      tap(() => this.logger.debug(EvaluacionService.name, `deleteComentarios(${id}, ${ids})`, '-', 'end'))
+  updateComentarioEvaluador(id: number, comentario: IComentario, idComentario: number): Observable<IComentario> {
+    this.logger.debug(EvaluacionService.name, `updateComentarioEvaluador(${id}, ${comentario}, ${idComentario})`, '-', 'start');
+    return this.http.put<IComentario>(`${this.endpointUrl}/${id}/comentario-evaluador/${idComentario}`, comentario).pipe(
+      tap(() => this.logger.debug(EvaluacionService.name, `updateComentarioEvaluador(${id}, ${comentario}, ${idComentario})`, '-', 'end'))
+    );
+  }
+
+  /**
+   * Elimina un comentario de tipo GESTOR de una evaluación
+   *
+   * @param id Id de la evaluación
+   * @param idComentario Id del comentario
+   */
+  deleteComentarioGestor(id: number, idComentario: number): Observable<void> {
+    this.logger.debug(EvaluacionService.name, `deleteComentarioGestor(${id}, ${idComentario})`, '-', 'start');
+    const params = new HttpParams().set('idComentario', idComentario.toString());
+    return this.http.delete<void>(`${this.endpointUrl}/${id}/comentario-gestor/${idComentario}`, { params }).pipe(
+      tap(() => this.logger.debug(EvaluacionService.name, `deleteComentarioGestor(${id}, ${idComentario})`, '-', 'end'))
+    );
+  }
+
+  /**
+   * Elimina un comentario de tipo EVALUADOR de una evaluación
+   *
+   * @param id Id de la evaluación
+   * @param idComentario Id del comentario
+   */
+  deleteComentarioEvaluador(id: number, idComentario: number): Observable<void> {
+    this.logger.debug(EvaluacionService.name, `deleteComentarioEvaluador(${id}, ${idComentario})`, '-', 'start');
+    const params = new HttpParams().set('idComentario', idComentario.toString());
+    return this.http.delete<void>(`${this.endpointUrl}/${id}/comentario-evaluador/${idComentario}`, { params }).pipe(
+      tap(() => this.logger.debug(EvaluacionService.name, `deleteComentarioEvaluador(${id}, ${idComentario})`, '-', 'end'))
     );
   }
 

@@ -4,7 +4,8 @@ import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { NGXLogger } from 'ngx-logger';
 
 import { DocumentacionMemoriaListadoMemoriaComponent } from '../../documentacion-memoria/documentacion-memoria-listado-memoria/documentacion-memoria-listado-memoria.component';
-import { EvaluacionEvaluadorEvaluarActionService } from '../../evaluacion-evaluador/evaluacion-evaluador.action.service';
+import { EvaluacionEvaluadorActionService } from '../../evaluacion-evaluador/evaluacion-evaluador.action.service';
+import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
 
 
 @Component({
@@ -18,7 +19,7 @@ export class EvaluacionDocumentacionComponent extends FormFragmentComponent<IDoc
 
   constructor(
     protected readonly logger: NGXLogger,
-    private actionService: EvaluacionEvaluadorEvaluarActionService
+    private actionService: EvaluacionFormularioActionService
   ) {
     super(actionService.FRAGMENT.DOCUMENTACION, actionService);
     this.logger.debug(EvaluacionDocumentacionComponent.name, 'constructor()', 'start');
