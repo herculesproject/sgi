@@ -1,0 +1,164 @@
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+
+import { NGXLogger } from 'ngx-logger';
+
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+import { IHito } from '@core/models/csp/hito';
+
+import { FormGroupUtil } from '@core/utils/form-group-util';
+
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { Observable, Subscription } from 'rxjs';
+import { ITipoHito } from '@core/models/csp/tipo-hito';
+import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
+import { SgiRestListResult } from '@sgi/framework/http/types';
+import { startWith, map } from 'rxjs/operators';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+
+const MSG_ERROR_INIT = marker('csp.convocatoria.hitos.error.cargar');
+
+@Component({
+  templateUrl: './convocatoria-hitos-modal.component.html',
+  styleUrls: ['./convocatoria-hitos-modal.component.scss']
+})
+export class ConvocatoriaHitosModalComponent implements OnInit {
+
+  @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
+
+  FormGroupUtil = FormGroupUtil;
+  formGroup: FormGroup;
+
+  fxFlexProperties: FxFlexProperties;
+  fxFlexProperties2: FxFlexProperties;
+  fxFlexProperties3: FxFlexProperties;
+  fxLayoutProperties: FxLayoutProperties;
+
+  tiposHitoFiltered: ITipoHito[];
+  tiposHito: Observable<ITipoHito[]>;
+
+  suscripciones: Subscription[] = [];
+
+  constructor(
+    private readonly logger: NGXLogger,
+    public readonly matDialogRef: MatDialogRef<ConvocatoriaHitosModalComponent>,
+    @Inject(MAT_DIALOG_DATA) public hito: IHito,
+    private readonly snackBarService: SnackBarService,
+    private readonly modeloEjecucionService: ModeloEjecucionService) {
+
+    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'constructor()', 'start');
+    this.fxFlexProperties = new FxFlexProperties();
+    this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
+    this.fxFlexProperties.md = '0 1 calc(33%-10px)';
+    this.fxFlexProperties.gtMd = '0 1 calc(15%-10px)';
+    this.fxFlexProperties.order = '2';
+
+    this.fxFlexProperties2 = new FxFlexProperties();
+    this.fxFlexProperties2.sm = '0 1 calc(100%-10px)';
+    this.fxFlexProperties2.md = '0 1 calc(100%-10px)';
+    this.fxFlexProperties2.gtMd = '0 1 calc(40%-10px)';
+    this.fxFlexProperties2.order = '3';
+
+    this.fxFlexProperties3 = new FxFlexProperties();
+    this.fxFlexProperties3.sm = '0 1 calc(100%-10px)';
+    this.fxFlexProperties3.md = '0 1 calc(100%-10px)';
+    this.fxFlexProperties3.gtMd = '0 1 calc(100%-10px)';
+    this.fxFlexProperties3.order = '3';
+
+    this.fxLayoutProperties = new FxLayoutProperties();
+    this.fxLayoutProperties.gap = '20px';
+    this.fxLayoutProperties.layout = 'row wrap';
+    this.fxLayoutProperties.xs = 'column';
+    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'constructor()', 'end');
+  }
+
+  ngOnInit(): void {
+
+    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'ngOnInit()', 'start');
+
+    this.initFormGroup();
+
+    this.loadTiposHito();
+
+    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'ngOnInit()', 'start');
+  }
+
+
+  /**
+   * Inicializa formulario de creación/edición de hito.
+   */
+  private initFormGroup() {
+    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'initFormGroup()', 'start');
+    this.formGroup = new FormGroup({
+      tipoHito: new FormControl(this.hito?.tipoHito, [Validators.required]),
+      fechaInicio: new FormControl(this.hito?.fechaInicio, [Validators.required]),
+      comentario: new FormControl(this.hito?.comentario),
+      aviso: new FormControl(this.hito?.aviso)
+    });
+    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'initFormGroup()', 'end');
+  }
+
+
+
+  loadTiposHito() {
+
+    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'loadTiposHito()', 'start');
+    this.suscripciones.push(
+      this.modeloEjecucionService.findTipoHitos(1).subscribe(
+        (res: SgiRestListResult<ITipoHito>) => {
+          this.tiposHitoFiltered = res.items;
+          this.tiposHito = this.formGroup.controls.tipoHito.valueChanges
+            .pipe(
+
+              startWith(''),
+              map(value => this.filtroTipoHito(value))
+            );
+          this.logger.debug(ConvocatoriaHitosModalComponent.name, 'loadTiposHito()', 'end');
+        },
+        () => {
+          this.snackBarService.showError(MSG_ERROR_INIT);
+          this.logger.debug(ConvocatoriaHitosModalComponent.name, 'loadTiposHito()', 'end');
+        }
+      )
+    );
+    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'loadTiposHito()', 'end');
+  }
+
+  /**
+   * Devuelve el nombre de un tipo de hito.
+   * @param tipoHito tipo de hito.
+   * @returns nombre de un tipo de hito.
+   */
+  getTipoHito(tipoHito?: ITipoHito): string | undefined {
+    return typeof tipoHito === 'string' ? tipoHito : tipoHito?.nombre;
+  }
+
+
+  /**
+   * Filtra la lista devuelta por el servicio.
+   *
+   * @param value del input para autocompletar
+   */
+  filtroTipoHito(value: string): ITipoHito[] {
+    const filterValue = value.toString().toLowerCase();
+    return this.tiposHitoFiltered.filter(tipoHito => tipoHito.nombre.toLowerCase().includes(filterValue));
+  }
+
+
+  /**
+   * Cierra la ventana modal y devuelve el hito modificado o creado.
+   *
+   * @param hito hito modificado o creado.
+   */
+  closeModal(hito?: IHito): void {
+    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'closeModal()', 'start');
+    this.matDialogRef.close(hito);
+    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'closeModal()', 'end');
+  }
+
+
+}

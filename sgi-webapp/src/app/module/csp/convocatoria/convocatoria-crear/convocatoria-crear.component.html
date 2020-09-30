@@ -24,10 +24,6 @@
         [title]="'label.plazos-fases' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.PLAZOS_FASES)">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item [routerLink]="[CONVOCATORIA_ROUTE_NAMES.PLAZOS_FASES]"
-        [title]="'label.plazos-fases' | translate"
-        [fragment]="actionService.getFragment(actionService.FRAGMENT.PLAZOS_FASES)">
-      </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [routerLink]="[CONVOCATORIA_ROUTE_NAMES.SEGUIMIENTO_CIENTIFICO]"
         [title]="'label.seguimiento-cientifico' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.SEGUIMIENTO_CIENTIFICO)">
@@ -35,6 +31,20 @@
       <sgi-action-fragment-menu-item [routerLink]="[CONVOCATORIA_ROUTE_NAMES.HITOS]"
         [title]="'csp.convocatoria.hitos' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.HITOS)">
+      </sgi-action-fragment-menu-item>
+
+
+      <sgi-action-fragment-menu-item class="demo" [title]="'csp.convocatoria.documentos' | translate">
+      </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item class="demo" [title]="'csp.convocatoria.requisitos.ip' | translate">
+      </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item class="demo" [title]="'csp.convocatoria.requisitos.equipo' | translate">
+      </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item class="demo" [title]="'csp.convocatoria.elegibilidad' | translate">
+      </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item class="demo" [title]="'csp.convocatoria.codigos.economicos' | translate">
+      </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item class="demo" [title]="'csp.convocatoria.configuracion.solicitudes' | translate">
       </sgi-action-fragment-menu-item>
     </mat-list>
   </mat-drawer>

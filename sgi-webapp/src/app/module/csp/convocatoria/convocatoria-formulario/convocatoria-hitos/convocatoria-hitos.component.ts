@@ -12,6 +12,9 @@ import { ConvocatoriaHitosFragment } from './convocatoria-hitos.fragment';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
+import { MatDialog } from '@angular/material/dialog';
+import { ConvocatoriaHitosModalComponent } from '../../modals/convocatoria-hitos-modal/convocatoria-hitos-modal.component';
 
 @Component({
   selector: 'sgi-convocatoria-hitos',
@@ -39,7 +42,8 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly convocatoriaReunionService: ConvocatoriaService,
-    actionService: ConvocatoriaActionService
+    actionService: ConvocatoriaActionService,
+    private matDialog: MatDialog,
   ) {
     super(actionService.FRAGMENT.HITOS, actionService);
     this.formPart = this.fragment as ConvocatoriaHitosFragment;
@@ -62,6 +66,26 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
       this.dataSource.data = elements;
       this.logger.debug(ConvocatoriaHitosComponent.name, 'ngOnInit()', 'end');
     }));
+  }
+
+
+
+  /**
+   * Apertura de modal de hitos (edición/creación)
+   * @param idHito Identificador de hito a editar.
+   */
+  openModalHito(hito?: StatusWrapper<IHito>): void {
+    this.logger.debug(ConvocatoriaHitosComponent.name, 'openModalHito()', 'start');
+    const config = {
+      width: GLOBAL_CONSTANTS.maxWidthModal,
+      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+      data: hito?.value,
+      autoFocus: false
+    };
+    this.matDialog.open(ConvocatoriaHitosModalComponent, config);
+
+    this.logger.debug(ConvocatoriaHitosComponent.name, 'openModalHito()', 'end');
+
   }
 
   ngOnDestroy(): void {

@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@env';
 import { of, Observable } from 'rxjs';
 import { IFinalidad } from '@core/models/csp/finalidad';
+import { ITipoHito } from '@core/models/csp/tipo-hito';
 
 
 
@@ -36,6 +37,17 @@ const finalidades: IFinalidad[] = [
   },
   {
     id: 4, nombre: 'Infraestructuras'
+  }
+
+];
+
+
+const tiposHito: ITipoHito[] = [
+  {
+    id: 1, nombre: 'Resolución interna'
+  },
+  {
+    id: 2, nombre: 'Resolución definitiva'
   }
 
 ];
@@ -85,5 +97,20 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
       total: finalidades.length,
       items: finalidades
     } as SgiRestListResult<IFinalidad>);
+  }
+
+
+  /**
+   * Recupera los hitos de una convocatoria
+   * @param idModeloEjecucion Identificador del modelo de ejecución.
+   * @returns Listado de tipos de hitos.
+   */
+  findTipoHitos(idModeloEjecucion: number): Observable<SgiRestListResult<ITipoHito>> {
+    this.logger.debug(ModeloEjecucionService.name, `findTipoHitos(idModeloEjecucion)`, '-', 'START');
+    return of({
+      page: null,
+      total: tiposHito.length,
+      items: tiposHito
+    } as SgiRestListResult<ITipoHito>);
   }
 }

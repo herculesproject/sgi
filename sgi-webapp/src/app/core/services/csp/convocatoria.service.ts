@@ -23,7 +23,7 @@ const convocatorias: IConvocatoria[] = [
     entidadFinanciadora: 'Universidad', fuenteFinanciacion: 'Fondos propios', activo: true,
     estado: 'Borrador', unidadGestion: { id: 1, nombre: 'OTRI' }, anio: 2020,
     modeloEjecucion: { id: 2, nombre: 'Contratos' }, finalidad: { id: 3, nombre: 'Servicios Técnicos' },
-    duracionMeses: 20, ambitoGeografico: { id: 2, nombre: 'Concesión directa' }, clasificacionProduccion: 'Proyectos competitivos',
+    duracionMeses: 20, ambitoGeografico: { id: 3, nombre: 'Autonómico' }, clasificacionProduccion: 'Proyectos competitivos',
     regimenConcurrencia: { id: 2, nombre: 'Concurrencia competitiva' },
     proyectoColaborativo: 'Sí', destinatarios: 'Equipo de proyecto', entidadGestora: '',
     descripcionConvocatoria: 'Plan fondos propios de Universidad', observaciones: ''
@@ -34,7 +34,7 @@ const convocatorias: IConvocatoria[] = [
     entidadFinanciadora: 'AEI', fuenteFinanciacion: 'Presupuestos generados estado', activo: false,
     estado: 'Borrador', unidadGestion: { id: 1, nombre: 'OTRI' }, anio: 2019,
     modeloEjecucion: { id: 2, nombre: 'Contratos' }, finalidad: { id: 2, nombre: 'Contratación RRHH' },
-    duracionMeses: 12, ambitoGeografico: { id: 2, nombre: 'Concurrencia competitiva' }, clasificacionProduccion: 'Contratos, convenios  y proyectos no competitivos',
+    duracionMeses: 12, ambitoGeografico: { id: 2, nombre: 'Local' }, clasificacionProduccion: 'Contratos, convenios  y proyectos no competitivos',
     regimenConcurrencia: { id: 1, nombre: 'Contratación RRHH' },
     proyectoColaborativo: 'No', destinatarios: 'Grupo de investigación', entidadGestora: '',
     descripcionConvocatoria: '', observaciones: 'Contratación 2019'
@@ -45,7 +45,7 @@ const convocatorias: IConvocatoria[] = [
     entidadFinanciadora: 'CSIC', fuenteFinanciacion: 'Fondos COVID', activo: true,
     estado: 'Borrador', unidadGestion: { id: 2, nombre: 'OPE' }, anio: 2020,
     modeloEjecucion: { id: 1, nombre: 'Ayudas y subvenciones' }, finalidad: { id: 3, nombre: 'Proyectos I+D' },
-    duracionMeses: 24, ambitoGeografico: { id: 2, nombre: 'Concesión directa' }, clasificacionProduccion: 'Proyectos competitivos',
+    duracionMeses: 24, ambitoGeografico: { id: 5, nombre: 'Europeo' }, clasificacionProduccion: 'Proyectos competitivos',
     regimenConcurrencia: { id: 2, nombre: 'Concurrencia competitiva' },
     proyectoColaborativo: 'Sí', destinatarios: 'Individual', entidadGestora: '',
     descripcionConvocatoria: 'Convocatoria Proyecto Covid I+D', observaciones: ''
@@ -66,10 +66,10 @@ const periodosJustificacion: IPeriodosJustificacion[] = [
 
 const hitos: IHito[] = [
   {
-    id: 1, fechaInicio: new Date(), tipoHito: 'Resolución interna', comentario: '', aviso: true
+    id: 1, fechaInicio: new Date(), tipoHito: { id: 1, nombre: 'Resolución interna' }, comentario: '', aviso: true
   },
   {
-    id: 1, fechaInicio: new Date(), tipoHito: 'Resolución definitiva', comentario: '', aviso: false
+    id: 1, fechaInicio: new Date(), tipoHito: { id: 2, nombre: 'Resolución definitiva' }, comentario: '', aviso: false
   }
 ];
 
@@ -268,7 +268,6 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
       items: hitos
     } as SgiRestListResult<IHito>);
   }
-
 
   /**
    * Recupera las entidades convocantes.

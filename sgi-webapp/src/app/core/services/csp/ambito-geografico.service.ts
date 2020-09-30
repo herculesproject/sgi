@@ -9,10 +9,24 @@ import { Observable, of } from 'rxjs';
 
 const ambitosGeografico: IAmbitoGeografico[] = [
   {
-    id: 1, nombre: 'Concesión directa'
+    id: 1, nombre: 'Propio'
   },
   {
-    id: 2, nombre: 'Concurrencia competitiva'
+    id: 2, nombre: 'Local'
+  },
+  {
+    id: 3, nombre: 'Autonómico'
+  },
+  {
+    id: 4, nombre: 'Estatal'
+  }
+  ,
+  {
+    id: 5, nombre: 'Europeo'
+
+  },
+  {
+    id: 6, nombre: 'Internacional no europeo'
   }
 
 ];

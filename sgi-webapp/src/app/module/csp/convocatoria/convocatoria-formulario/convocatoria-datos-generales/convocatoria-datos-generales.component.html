@@ -26,12 +26,15 @@
         <mat-label>{{'csp.convocatoria.estado' | translate}}</mat-label>
         <input type="text" placeholder="{{'csp.convocatoria.estado' | translate}}" arial-label="Number" matInput
           formControlName="estado" [matAutocomplete]="auto" required>
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="getEstado()">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="getEstado">
 
           <mat-option *ngFor="let estado of estados" [value]="estado | translate">
             {{ estado | translate}}
           </mat-option>
         </mat-autocomplete>
+        <mat-error *ngIf="formGroup.controls.estado.errors?.required">
+          {{'csp.convocatoria.estado.error.vacio' | translate}}
+        </mat-error>
       </mat-form-field>
     </div>
 
@@ -146,7 +149,11 @@
           </mat-option>
 
         </mat-autocomplete>
+        <mat-error *ngIf="formGroup.controls.ambitoGeografico.errors?.required">
+          {{'csp.convocatoria.ambito.geografico.error.vacio' | translate}}
+        </mat-error>
       </mat-form-field>
+
     </div>
 
 

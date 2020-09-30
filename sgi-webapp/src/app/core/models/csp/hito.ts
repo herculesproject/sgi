@@ -1,3 +1,6 @@
+import { ITipoDocumento } from '../eti/tipo-documento';
+import { ITipoHito } from './tipo-hito';
+
 export interface IHito {
   /** Id */
   id: number;
@@ -6,7 +9,7 @@ export interface IHito {
   fechaInicio: Date;
 
   /** Tipo de hito */
-  tipoHito: string;
+  tipoHito: ITipoHito;
 
   /** Comentario */
   comentario: string;
