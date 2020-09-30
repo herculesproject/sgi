@@ -9,6 +9,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IPeriodosJustificacion } from '@core/models/csp/periodo-justificacion';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
+import { ConvocatoriaPeriodosJustificacionModalComponent } from '../../modals/convocatoria-periodos-justificacion-modal/convocatoria-periodos-justificacion-modal.component';
+import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'sgi-convocatoria-periodos-justificacion',
@@ -30,7 +33,8 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
 
   constructor(
     protected readonly logger: NGXLogger,
-    protected readonly actionService: ConvocatoriaActionService
+    protected readonly actionService: ConvocatoriaActionService,
+    private matDialog: MatDialog
   ) {
     super(actionService.FRAGMENT.PERIODO_JUSTIFICACION, actionService);
     this.logger.debug(ConvocatoriaPeriodosJustificacionComponent.name, 'constructor()', 'start');
@@ -52,6 +56,44 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
       this.dataSource.data = elements;
       this.logger.debug(ConvocatoriaPeriodosJustificacionComponent.name, 'ngOnInit()', 'end');
     }));
+  }
+
+
+  /**
+   * Apertura de modal de periodos justificacion (edición/creación)
+   * @param idPeriodoJustificacion Identificador de periodos justificacion a editar.
+   */
+  openModalPeriodo(justificacion?: StatusWrapper<IPeriodosJustificacion>): void {
+    this.logger.debug(ConvocatoriaPeriodosJustificacionComponent.name, 'openModalPeriodo()', 'start');
+    const config = {
+      width: GLOBAL_CONSTANTS.maxWidthModal,
+      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+      data: justificacion ? justificacion.value : {} as IPeriodosJustificacion,
+      autoFocus: false
+    };
+
+    const dialogRef = this.matDialog.open(ConvocatoriaPeriodosJustificacionModalComponent, config);
+    dialogRef.afterClosed().subscribe(
+      (periodosJustificacion: IPeriodosJustificacion) => {
+        if (periodosJustificacion) {
+          if (justificacion) {
+            if (!justificacion.created) {
+              justificacion.setEdited();
+            }
+            this.formPart.setChanges(true);
+          } else {
+            // TODO coger estos datos del back
+
+            this.formPart.addPeriodoJustificacion(periodosJustificacion);
+          }
+        }
+        this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'openEditModal()', 'end');
+      }
+    );
+
+
+    this.logger.debug(ConvocatoriaPeriodosJustificacionComponent.name, 'openModalPeriodo()', 'end');
+
   }
 
   ngOnDestroy(): void {

@@ -7,6 +7,7 @@ import { environment } from '@env';
 import { of, Observable } from 'rxjs';
 import { IFinalidad } from '@core/models/csp/finalidad';
 import { ITipoHito } from '@core/models/csp/tipo-hito';
+import { ITipoPeriodoJustificacion } from '@core/models/csp/tipo-periodo-justificacion';
 
 
 
@@ -48,6 +49,16 @@ const tiposHito: ITipoHito[] = [
   },
   {
     id: 2, nombre: 'Resolución definitiva'
+  }
+
+];
+
+const tipoJustificacion: ITipoPeriodoJustificacion[] = [
+  {
+    id: 1, nombre: 'Periodica'
+  },
+  {
+    id: 2, nombre: 'Final'
   }
 
 ];
@@ -113,4 +124,19 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
       items: tiposHito
     } as SgiRestListResult<ITipoHito>);
   }
+
+  /**
+   * Recupera los tipos de un tipo de periodo de justificacion
+   * @param idModeloEjecucion Identificador del modelo de ejecución.
+   * @returns Listado de periodo de justigicacion
+   */
+  findTipoJustificacion(idModeloEjecucion: number): Observable<SgiRestListResult<ITipoPeriodoJustificacion>> {
+    this.logger.debug(ModeloEjecucionService.name, `findTipoJustificacion(idModeloEjecucion)`, '-', 'START');
+    return of({
+      page: null,
+      total: tipoJustificacion.length,
+      items: tipoJustificacion
+    } as SgiRestListResult<ITipoPeriodoJustificacion>);
+  }
+
 }

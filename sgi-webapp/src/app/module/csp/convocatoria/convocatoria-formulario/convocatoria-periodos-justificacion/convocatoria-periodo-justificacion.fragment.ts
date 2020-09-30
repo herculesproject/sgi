@@ -44,6 +44,25 @@ export class ConvocatoriaPeriodosJustificacionFragment extends Fragment {
     }
   }
 
+  /**
+   * Insertamos periodo justificacion
+   * @param periodoJustificacion
+   */
+  public addPeriodoJustificacion(periodoJustificacion: IPeriodosJustificacion) {
+    this.logger.debug(ConvocatoriaPeriodosJustificacionFragment.name,
+      `addEntidadFinanciadora(comentario: ${periodoJustificacion})`, 'start');
+    const wrapped = new StatusWrapper<IPeriodosJustificacion>(periodoJustificacion);
+    wrapped.setCreated();
+    const current = this.periodosJustificacion$.value;
+    current.push(wrapped);
+    this.periodosJustificacion$.next(current);
+    this.setChanges(true);
+    this.setErrors(false);
+    this.logger.debug(ConvocatoriaPeriodosJustificacionFragment.name,
+      `addEntidadFinanciadora(comentario: ${periodoJustificacion})`, 'end');
+  }
+
+
   saveOrUpdate(): Observable<string | number | void> {
     this.logger.debug(ConvocatoriaPeriodosJustificacionFragment.name, 'saveOrUpdate()', 'start');
     return of(void 0).pipe(

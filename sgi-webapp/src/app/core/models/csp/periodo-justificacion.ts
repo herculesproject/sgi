@@ -1,3 +1,5 @@
+import { ITipoPeriodoJustificacion } from './tipo-periodo-justificacion';
+
 export interface IPeriodosJustificacion {
   /** Id */
   id: number;
@@ -5,11 +7,14 @@ export interface IPeriodosJustificacion {
   /** Num Periodo */
   numPeriodo: number;
 
+  /** Tipo */
+  tipoJustificacion: ITipoPeriodoJustificacion;
+
   /** Mes inicial */
-  mesInicial: Date;
+  mesInicial: string;
 
   /** Mes final */
-  mesFinal: Date;
+  mesFinal: string;
 
   /** Fecha inicio */
   fechaInicio: Date;

@@ -18,6 +18,7 @@ import { ConvocatoriaEnlaceComponent } from './convocatoria-formulario/convocato
 import { ConvocatoriaEntidadesFinanciadorasComponent } from './convocatoria-formulario/convocatoria-entidades-financiadoras/convocatoria-entidades-financiadoras.component';
 import { ConvocatoriaPeriodosJustificacionComponent } from './convocatoria-formulario/convocatoria-periodos-justificacion/convocatoria-periodos-justificacion.component';
 import { ConvocatoriaHitosModalComponent } from './modals/convocatoria-hitos-modal/convocatoria-hitos-modal.component';
+import { ConvocatoriaPeriodosJustificacionModalComponent } from './modals/convocatoria-periodos-justificacion-modal/convocatoria-periodos-justificacion-modal.component';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { ConvocatoriaHitosModalComponent } from './modals/convocatoria-hitos-mod
     ConvocatoriaSeguimientoCientificoComponent,
     ConvocatoriaEntidadesFinanciadorasComponent,
     ConvocatoriaEnlaceComponent,
-    ConvocatoriaHitosModalComponent],
+    ConvocatoriaHitosModalComponent,
+    ConvocatoriaPeriodosJustificacionModalComponent],
   imports: [
     CommonModule,
     SharedModule,

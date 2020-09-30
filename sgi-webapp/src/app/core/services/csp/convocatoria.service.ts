@@ -55,11 +55,11 @@ const convocatorias: IConvocatoria[] = [
 
 const periodosJustificacion: IPeriodosJustificacion[] = [
   {
-    id: 1, numPeriodo: 1, mesInicial: new Date(), mesFinal: new Date(),
+    id: 1, numPeriodo: 1, tipoJustificacion: { id: 1, nombre: 'Periódica' }, mesInicial: 'Enero', mesFinal: 'Marzo',
     fechaInicio: new Date(), fechaFin: new Date(), observaciones: 'Primer periodo de justificación', activo: true
   },
   {
-    id: 2, numPeriodo: 2, mesInicial: new Date(), mesFinal: new Date(),
+    id: 2, numPeriodo: 2, tipoJustificacion: { id: 2, nombre: 'Periódica' }, mesInicial: 'Septiembre', mesFinal: 'Diciembre',
     fechaInicio: new Date(), fechaFin: new Date(), observaciones: 'Segundo periodo de justificación', activo: true
 
   }];
