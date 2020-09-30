@@ -10,6 +10,9 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { ConvocatoriaEnlaceFragment } from './convocatoria-enlace.fragment';
 import { Subscription } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
+import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
+import { ConvocatoriaEnlaceModalComponent } from '../../modals/convocatoria-enlace-modal/convocatoria-enlace-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'sgi-convocatoria-enlace',
@@ -32,7 +35,8 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
 
   constructor(
     protected readonly logger: NGXLogger,
-    protected readonly actionService: ConvocatoriaActionService
+    protected readonly actionService: ConvocatoriaActionService,
+    private matDialog: MatDialog
   ) {
     super(actionService.FRAGMENT.ENLACES, actionService);
     this.logger.debug(ConvocatoriaEnlaceComponent.name, 'constructor()', 'start');
@@ -60,6 +64,31 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
     this.logger.debug(ConvocatoriaEnlaceComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
     this.logger.debug(ConvocatoriaEnlaceComponent.name, 'ngOnDestroy()', 'end');
+  }
+
+  openModal(wrapper?: StatusWrapper<IEnlace>): void {
+    this.logger.debug(ConvocatoriaEnlaceComponent.name, 'openEditModal()', 'start');
+    const config = {
+      width: GLOBAL_CONSTANTS.widthModalCSP,
+      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+      data: wrapper ? wrapper.value : {} as IEnlace
+    };
+    const dialogRef = this.matDialog.open(ConvocatoriaEnlaceModalComponent, config);
+    dialogRef.afterClosed().subscribe(
+      (entidadFinanciadora: IEnlace) => {
+        if (entidadFinanciadora) {
+          if (wrapper) {
+            if (!wrapper.created) {
+              wrapper.setEdited();
+            }
+            this.formPart.setChanges(true);
+          } else {
+            this.formPart.addEnlace(entidadFinanciadora);
+          }
+        }
+        this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'openEditModal()', 'end');
+      }
+    );
   }
 }
 
