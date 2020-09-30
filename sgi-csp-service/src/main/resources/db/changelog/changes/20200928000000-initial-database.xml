@@ -4,16 +4,36 @@
   <!-- ########################################################## -->
   <!-- SEQUENCE -->
   <!-- ########################################################## -->
+  <changeSet author="master" id="20200928000000-tipo_documento_seq">
+    <createSequence sequenceName="tipo_documento_seq" />
+  </changeSet>
 
 
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
+  <changeSet author="master" id="20200928000000-tipo_documento">
+    <createTable tableName="tipo_documento">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_documento_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_documento_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="descripcion" type="VARCHAR(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
 
 
   <!-- ########################################################## -->
   <!-- UNIQUE CONSTRAINT -->
   <!-- ########################################################## -->
+  <changeSet author="master" id="20200928000000-tipo_documento_uk">
+    <addUniqueConstraint columnNames="nombre" constraintName="tipo_documento_uk" tableName="tipo_documento" />
+  </changeSet>
 
   <!-- ########################################################## -->
   <!-- INDEX -->

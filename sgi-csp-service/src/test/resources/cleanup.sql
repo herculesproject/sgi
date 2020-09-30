@@ -1,2 +1,2 @@
 -- vacia la bd
--- DELETE FROM csp.tabla
+DELETE FROM csp.tipo_documento;

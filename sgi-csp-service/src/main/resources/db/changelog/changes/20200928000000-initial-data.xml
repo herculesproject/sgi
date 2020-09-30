@@ -10,4 +10,22 @@
   <!-- FIN ENUMERATION -->
   <!-- ########################################################## -->
 
+  <changeSet author="master" id="20200928000000-tipo_documento">
+    <insert tableName="tipo_documento">
+      <column name="nombre" value="nombre-001" />
+      <column name="descripcion" value="descripcion-001" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="nombre" value="nombre-002" />
+      <column name="descripcion" value="descripcion-002" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="nombre" value="nombre-003" />
+      <column name="descripcion" value="descripcion-003" />
+      <column name="activo" value="false" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>
