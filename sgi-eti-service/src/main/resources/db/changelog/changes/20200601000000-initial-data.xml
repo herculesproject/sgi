@@ -1882,4 +1882,19 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-conflicto_interes">
+    <insert tableName="conflicto_interes">
+      <column name="evaluador_id" valueComputed="(select id from eti.evaluador where resumen='Evaluador1')" />
+      <column name="persona_conflicto_ref" value="user-012" />
+    </insert>
+    <insert tableName="conflicto_interes">
+      <column name="evaluador_id" valueComputed="(select id from eti.evaluador where resumen='Evaluador2')" />
+      <column name="persona_conflicto_ref" value="user-022" />
+    </insert>
+    <insert tableName="conflicto_interes">
+      <column name="evaluador_id" valueComputed="(select id from eti.evaluador  where resumen='Evaluador3')" />
+      <column name="persona_conflicto_ref" value="user-032" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>

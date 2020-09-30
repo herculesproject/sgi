@@ -101,6 +101,10 @@
     <createSequence sequenceName="tipo_memoria_comite_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-conflicto_interes_seq">
+    <createSequence sequenceName="conflicto_interes_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -694,6 +698,18 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-conflicto_interes">
+    <createTable tableName="conflicto_interes">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="conflicto_interes_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="conflicto_interes_pk" />
+      </column>
+      <column name="evaluador_id" type="BIGINT" />
+      <column name="persona_conflicto_ref" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
   <!-- ########################################################## -->
@@ -894,6 +910,10 @@
 
   <changeSet author="master" id="20200601000000-retrospectica_estado_retrospectiva_FK">
     <addForeignKeyConstraint baseColumnNames="estado_retrospectiva_id" baseTableName="retrospectiva" constraintName="retrospectica_estado_retrospectiva_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="estado_retrospectiva" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-conflicto_interes_evaluador_FK">
+    <addForeignKeyConstraint baseColumnNames="evaluador_id" baseTableName="conflicto_interes" constraintName="conflicto_interes_evaluador_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="evaluador" validate="true" />
   </changeSet>
 
   <!-- ########################################################## -->

@@ -63,8 +63,7 @@ public class EvaluadorIT {
   public void getEvaluador_WithId_ReturnsEvaluador() throws Exception {
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVALUADOR-EDITAR", "ETI-EVALUADOR-VER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVR-E", "ETI-EVR-V")));
 
     final ResponseEntity<Evaluador> response = restTemplate.exchange(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.GET, buildRequest(headers, null), Evaluador.class, 1L);
@@ -89,8 +88,7 @@ public class EvaluadorIT {
     nuevoEvaluador.setActivo(Boolean.TRUE);
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVALUADOR-EDITAR", "ETI-EVALUADOR-VER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVR-C")));
 
     final ResponseEntity<Evaluador> response = restTemplate.exchange(EVALUADOR_CONTROLLER_BASE_PATH, HttpMethod.POST,
         buildRequest(headers, nuevoEvaluador), Evaluador.class);
@@ -107,8 +105,7 @@ public class EvaluadorIT {
     long id = 1L;
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVALUADOR-EDITAR", "ETI-EVALUADOR-VER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVR-B", "ETI-EVR-V")));
 
     final ResponseEntity<Evaluador> response = restTemplate.exchange(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.DELETE, buildRequest(headers, null), Evaluador.class, id);
@@ -124,8 +121,7 @@ public class EvaluadorIT {
   public void removeEvaluador_DoNotGetEvaluador() throws Exception {
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVALUADOR-EDITAR", "ETI-EVALUADOR-VER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVR-B", "ETI-EVR-V")));
 
     restTemplate.exchange(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE,
         buildRequest(headers, null), Evaluador.class, 1L);
@@ -145,8 +141,7 @@ public class EvaluadorIT {
     Evaluador replaceEvaluador = generarMockEvaluador(1L, "Evaluador1");
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVALUADOR-EDITAR", "ETI-EVALUADOR-VER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVR-E")));
 
     final ResponseEntity<Evaluador> response = restTemplate.exchange(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.PUT, buildRequest(headers, replaceEvaluador), Evaluador.class, 1L);
@@ -166,8 +161,7 @@ public class EvaluadorIT {
   public void findAll_WithPaging_ReturnsEvaluadorSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVALUADOR-EDITAR", "ETI-EVALUADOR-VER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVR-V")));
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
@@ -205,8 +199,7 @@ public class EvaluadorIT {
 
     // when: Búsqueda por query
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVALUADOR-EDITAR", "ETI-EVALUADOR-VER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVR-V")));
 
     final ResponseEntity<List<Evaluador>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluador>>() {
@@ -233,8 +226,7 @@ public class EvaluadorIT {
 
     // when: Búsqueda por query
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVALUADOR-EDITAR", "ETI-EVALUADOR-VER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVR-V")));
 
     final ResponseEntity<List<Evaluador>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluador>>() {
@@ -258,8 +250,7 @@ public class EvaluadorIT {
   public void findAll_WithPagingSortingAndFiltering_ReturnsEvaluadorSubList() throws Exception {
     // when: Obtiene page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVALUADOR-EDITAR", "ETI-EVALUADOR-VER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVR-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por resumen desc

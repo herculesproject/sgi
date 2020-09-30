@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.eti.config.SecurityConfig;
 import org.crue.hercules.sgi.eti.exceptions.EvaluadorNotFoundException;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.ConflictoInteres;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
@@ -27,6 +28,7 @@ import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
+import org.crue.hercules.sgi.eti.service.ConflictoInteresService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.eti.service.EvaluadorService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -74,13 +76,17 @@ public class EvaluadorControllerTest {
   @MockBean
   private EvaluacionService evaluacionService;
 
+  @MockBean
+  private ConflictoInteresService conflictoInteresService;
+
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String EVALUADOR_CONTROLLER_BASE_PATH = "/evaluadores";
   private static final String PATH_PARAMETER_EVALUACIONES = "/evaluaciones";
   private static final String PATH_PARAMETER_SINCONFLICTOINTERES = "/comite/{idComite}/sinconflictointereses/{idMemoria}";
+  private static final String PATH_PARAMETER_CONFLICTOS_INTERES = "/{id}/conflictos";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVALUADOR-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-EVR-V" })
   public void getEvaluador_WithId_ReturnsEvaluador() throws Exception {
     BDDMockito.given(evaluadorService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockEvaluador(1L, "Evaluador1")));
@@ -95,7 +101,7 @@ public class EvaluadorControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVALUADOR-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-EVR-V" })
   public void getEvaluador_NotFound_Returns404() throws Exception {
     BDDMockito.given(evaluadorService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new EvaluadorNotFoundException(invocation.getArgument(0));
@@ -107,7 +113,7 @@ public class EvaluadorControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVALUADOR-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-EVR-C" })
   public void newEvaluador_ReturnsEvaluador() throws Exception {
     // given: Un evaluador nuevo
     Evaluador evaluador = generarMockEvaluador(1L, "Evaluador1");
@@ -129,7 +135,7 @@ public class EvaluadorControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVALUADOR-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-EVR-C" })
   public void newEvaluador_Error_Returns400() throws Exception {
     // given: Un evaluador nuevo que produce un error al crearse
     String nuevoEvaluadorJson = "{\"resumen\": \"Evaluador1\", \"activo\": \"true\"}";
@@ -149,7 +155,7 @@ public class EvaluadorControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVALUADOR-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-EVR-E" })
   public void replaceEvaluador_ReturnsEvaluador() throws Exception {
     // given: Un evaluador a modificar
     Evaluador evaluador = generarMockEvaluador(1L, "Replace Evaluador1");
@@ -169,7 +175,7 @@ public class EvaluadorControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVALUADOR-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-EVR-E" })
   public void replaceEvaluador_NotFound() throws Exception {
     // given: Un evaluador a modificar
     String replaceEvaluadorJson = mapper.writeValueAsString(generarMockEvaluador(1L, "Evaluador1"));
@@ -186,7 +192,7 @@ public class EvaluadorControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVALUADOR-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-EVR-B" })
   public void removeEvaluador_ReturnsOk() throws Exception {
     BDDMockito.given(evaluadorService.findById(ArgumentMatchers.anyLong()))
         .willReturn(generarMockEvaluador(1L, "Evaluador1"));
@@ -198,7 +204,7 @@ public class EvaluadorControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVALUADOR-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-EVR-V" })
   public void findAll_Unlimited_ReturnsFullEvaluadorList() throws Exception {
     // given: One hundred Evaluador
     List<Evaluador> evaluadores = new ArrayList<>();
@@ -221,7 +227,7 @@ public class EvaluadorControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVALUADOR-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-EVR-V" })
   public void findAll_WithPaging_ReturnsEvaluadorSubList() throws Exception {
     // given: One hundred Evaluador
     List<Evaluador> evaluadores = new ArrayList<>();
@@ -274,7 +280,7 @@ public class EvaluadorControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVALUADOR-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-EVR-V" })
   public void findAll_WithSearchQuery_ReturnsFilteredEvaluadorList() throws Exception {
     // given: One hundred Evaluador and a search query
     List<Evaluador> evaluadores = new ArrayList<>();
@@ -527,6 +533,49 @@ public class EvaluadorControllerTest {
     }
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVR-C", "ETI-EVR-E" })
+  public void getConflictosInteres_Unlimited_ReturnsFullConflictoInteresList() throws Exception {
+    // given: Existen 100 conflictos
+    List<ConflictoInteres> conflictos = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      conflictos.add(generarMockConflictoInteres(Long.valueOf(i), String.format("%03d", i)));
+    }
+
+    BDDMockito
+        .given(
+            conflictoInteresService.findAllByEvaluadorId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(conflictos));
+
+    // when: las recupero sin paginación
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_CONFLICTOS_INTERES, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: obtengo un listado de 100 conflictos
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVR-C", "ETI-EVR-E" })
+  public void getConflictosInteres_Unlimited_ReturnsFullEmptyList() throws Exception {
+    // given: No hay conflictos
+    BDDMockito
+        .given(
+            conflictoInteresService.findAllByEvaluadorId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(new ArrayList<>()));
+
+    // when: listo todo
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(EVALUADOR_CONTROLLER_BASE_PATH + PATH_PARAMETER_CONFLICTOS_INTERES, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: devuelve una página vacia
+        .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+        .andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
+  }
+
   /**
    * Función que devuelve un objeto Evaluador
    * 
@@ -642,6 +691,24 @@ public class EvaluadorControllerTest {
     evaluacion.setActivo(Boolean.TRUE);
 
     return evaluacion;
+  }
+
+  /**
+   * Función que devuelve un objeto ConflictoInteres
+   * 
+   * @param id                  id del ConflictoInteres
+   * @param personaConflictoRef la persona del conflicto de interés
+   * @return el objeto ConflictoInteres
+   */
+  public ConflictoInteres generarMockConflictoInteres(Long id, String sufijo) {
+
+    String sufijoStr = (sufijo == null ? id.toString() : sufijo);
+
+    ConflictoInteres conflicto = new ConflictoInteres();
+    conflicto.setId(id);
+    conflicto.setEvaluador(generarMockEvaluador(id, "Resumen" + (id != null ? id : "1")));
+    conflicto.setPersonaConflictoRef("user-00" + sufijoStr);
+    return conflicto;
   }
 
 }

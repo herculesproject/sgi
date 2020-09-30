@@ -4,8 +4,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.eti.model.ConflictoInteres;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.service.ConflictoInteresService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.eti.service.EvaluadorService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -42,16 +44,21 @@ public class EvaluadorController {
   /** Evaluación service. */
   private final EvaluacionService evaluacionService;
 
+  /** ConflictoInteres service */
+  private final ConflictoInteresService conflictoInteresService;
+
   /**
    * Instancia un nuevo EvaluadorController. x
    * 
    * @param evaluadorService  EvaluadorService
    * @param evaluacionService EvaluacionService
    */
-  public EvaluadorController(EvaluadorService evaluadorService, EvaluacionService evaluacionService) {
+  public EvaluadorController(EvaluadorService evaluadorService, EvaluacionService evaluacionService,
+      ConflictoInteresService conflictoInteresService) {
     log.debug("EvaluadorController(EvaluadorService service) - start");
     this.evaluadorService = evaluadorService;
     this.evaluacionService = evaluacionService;
+    this.conflictoInteresService = conflictoInteresService;
     log.debug("EvaluadorController(EvaluadorService service) - end");
   }
 
@@ -62,6 +69,7 @@ public class EvaluadorController {
    * @param paging pageable
    */
   @GetMapping()
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVR-V')")
   ResponseEntity<Page<Evaluador>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
@@ -104,6 +112,7 @@ public class EvaluadorController {
    * @return Nuevo {@link Evaluador} creado.
    */
   @PostMapping
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVR-C')")
   ResponseEntity<Evaluador> newEvaluador(@Valid @RequestBody Evaluador nuevoEvaluador) {
     log.debug("newEvaluador(Evaluador nuevoEvaluador) - start");
     Evaluador returnValue = evaluadorService.create(nuevoEvaluador);
@@ -119,6 +128,7 @@ public class EvaluadorController {
    * @return {@link Evaluador} actualizado.
    */
   @PutMapping("/{id}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVR-E')")
   Evaluador replaceEvaluador(@Valid @RequestBody Evaluador updatedEvaluador, @PathVariable Long id) {
     log.debug("replaceEvaluador(Evaluador updatedEvaluador, Long id) - start");
     updatedEvaluador.setId(id);
@@ -147,6 +157,7 @@ public class EvaluadorController {
    * @param id Identificador de {@link Evaluador}.
    */
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVR-B')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     Evaluador evaluador = this.one(id);
@@ -199,6 +210,27 @@ public class EvaluadorController {
     String personaRef = authorization.getName();
     Page<Evaluacion> page = evaluacionService.findEvaluacionesEnSeguimientosByEvaluador(personaRef, query, pageable);
     log.debug("findEvaluacionesEnSeguimiento(List<QueryCriteria> query, Pageable pageable) - end");
+    if (page.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link ConflictoInteres} según su
+   * {@link Evaluador}.
+   * 
+   * @param id       id {@Evaluador}
+   * @param pageable pageable
+   * @return la lista de entidades {@link ConflictoInteres} paginadas.
+   */
+  @GetMapping("{id}/conflictos")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVR-C', 'ETI-EVR-E')")
+  ResponseEntity<Page<ConflictoInteres>> getConflictosInteres(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("getConflictosInteres(Long id, Pageable pageable) - start");
+    Page<ConflictoInteres> page = conflictoInteresService.findAllByEvaluadorId(id, pageable);
+    log.debug("getConflictosInteres(Long id, Pageable pageable) - end");
     if (page.isEmpty()) {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
