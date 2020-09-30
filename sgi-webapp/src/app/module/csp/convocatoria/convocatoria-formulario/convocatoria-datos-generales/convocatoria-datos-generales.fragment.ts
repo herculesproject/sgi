@@ -2,11 +2,15 @@ import { FormFragment } from '@core/services/action-service';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable, of, EMPTY } from 'rxjs';
+import { Observable, of, EMPTY, BehaviorSubject } from 'rxjs';
 import { switchMap, catchError, map } from 'rxjs/operators';
 import { NullIdValidador } from '@core/validators/null-id-validador';
+import { IAreaTematica } from '@core/models/csp/area-tematica';
+import { StatusWrapper } from '@core/utils/status-wrapper';
 
 export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocatoria> {
+
+  areasTematicas$: BehaviorSubject<StatusWrapper<IAreaTematica>[]> = new BehaviorSubject<StatusWrapper<IAreaTematica>[]>([]);
 
   private convocatoria: IConvocatoria;
 
@@ -39,16 +43,38 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   }
 
   protected initializer(key: number): Observable<IConvocatoria> {
-    return this.service.findById(key).pipe(
-      switchMap((value) => {
-        this.convocatoria = value;
 
-        return of(this.convocatoria);
-      }),
-      catchError(() => {
-        return EMPTY;
+    if (this.getKey()) {
+      this.loadAreasTematicas(this.getKey() as number);
+      return this.service.findById(key).pipe(
+        switchMap((value) => {
+          this.convocatoria = value;
+
+          return of(this.convocatoria);
+        }),
+        catchError(() => {
+          return EMPTY;
+        })
+      );
+    }
+  }
+
+
+  loadAreasTematicas(idConvoatoria: number): void {
+    this.service.findAreaTematica(idConvoatoria).pipe(
+      map((response) => {
+        if (response.items) {
+
+          return response.items.map((areaTematica) => new StatusWrapper<IAreaTematica>(areaTematica));
+        }
+        else {
+          return [];
+        }
       })
-    );
+    ).subscribe((areasTematicas) => {
+
+      this.areasTematicas$.next(areasTematicas);
+    });
   }
 
 

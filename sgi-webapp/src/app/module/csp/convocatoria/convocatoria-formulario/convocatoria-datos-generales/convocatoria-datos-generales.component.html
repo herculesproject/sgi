@@ -269,12 +269,63 @@
 
   </form>
 
-  <!-- Botón añadir área temática -->
   <div class="separation-button">
-    <h2>{{'csp.convocatoria.area.tematica.titulo' | translate}}</h2>
-    <button color="three" mat-button mat-raised-button>
-      <mat-icon>add_box</mat-icon>
-      {{'csp.convocatoria.area.tematica.aniadir' | translate}}
-    </button>
+
+    <h3>{{'csp.convocatoria.area.tematica.titulo' | translate}}</h3>
+
+    <table class="mat-elevation-z8 table-acta" mat-table [dataSource]="areasTematicas$ | async" matSort
+      matSortActive="id" matSortDirection="asc" matSortDisableClear>
+
+      <!-- Listado Areas Column -->
+      <ng-container matColumnDef="listadoAreas">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.convocatoria.area.tematica.listado.areas' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.listadoArea}} </td>
+      </ng-container>
+
+
+      <!--  Areas Temáticas Column -->
+      <ng-container matColumnDef="areaTematica">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.convocatoria.area.tematica.area' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.area}} </td>
+      </ng-container>
+
+      <!--  Observaciones Temáticas Column -->
+      <ng-container matColumnDef="observaciones">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{'csp.convocatoria.area.tematica.observaciones' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.observaciones}} </td>
+      </ng-container>
+
+      <!-- Acciones Column -->
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.listado.acciones' | translate}} </th>
+        <td mat-cell *matCellDef="let areaTematica;let i=index;">
+          <ng-container>
+            <button mat-button matTooltip="{{'botones.editar' | translate}}">
+              <mat-icon color="primary">border_color</mat-icon>
+            </button>
+          </ng-container>
+          <ng-container>
+            <button mat-button matTooltip="{{'botones.borrar' | translate}}">
+              <mat-icon color="warn">highlight_off</mat-icon>
+            </button>
+          </ng-container>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+
+    <div class="separation-button">
+      <button color="three" mat-button mat-raised-button>
+        <mat-icon>add_box</mat-icon>
+        {{'csp.convocatoria.area.tematica.aniadir' | translate}}
+      </button>
+    </div>
   </div>
 </section>

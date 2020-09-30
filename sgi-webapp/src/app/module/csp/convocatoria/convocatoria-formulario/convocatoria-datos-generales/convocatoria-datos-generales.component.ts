@@ -9,7 +9,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { IModeloEjecucion } from '@core/models/csp/modelo-ejecucion';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { SgiRestListResult } from '@sgi/framework/http/types';
 import { startWith, map, delay } from 'rxjs/operators';
@@ -22,6 +22,10 @@ import { IAmbitoGeografico } from '@core/models/csp/ambito-geografico';
 import { AmbitoGeograficoService } from '@core/services/csp/ambito-geografico.service';
 import { IRegimenConcurrencia } from '@core/models/csp/regimen-concurrencia';
 import { RegimenConcurrenciaService } from '@core/services/csp/regimen-concurrencia.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { MatDialog } from '@angular/material/dialog';
+import { IAreaTematica } from '@core/models/csp/area-tematica';
+import { ConvocatoriaDatosGeneralesFragment } from './convocatoria-datos-generales.fragment';
 
 
 
@@ -50,6 +54,8 @@ const proyectoColaborativoNo = marker('label.no');
 export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<IConvocatoria> implements OnInit {
 
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
+
+  areasTematicas$: BehaviorSubject<StatusWrapper<IAreaTematica>[]>;
 
   FormGroupUtil = FormGroupUtil;
 
@@ -84,6 +90,10 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
   estados: string[] = [estadoBorrador, estadoRegistrada];
   proyectosColaborativo: string[] = [proyectoColaborativoSi, proyectoColaborativoNo];
 
+  totalElementos: number;
+  displayedColumns: string[];
+  elementosPagina: number[];
+
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -93,7 +103,8 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     private modeloEjecucionService: ModeloEjecucionService,
     private unidadGestionService: UnidadGestionService,
     private regimenConcurrenciaService: RegimenConcurrenciaService,
-    private ambitoGeograficoService: AmbitoGeograficoService) {
+    private ambitoGeograficoService: AmbitoGeograficoService,
+    private matDialog: MatDialog) {
 
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
 
@@ -125,6 +136,12 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+
+    this.areasTematicas$ = (this.fragment as ConvocatoriaDatosGeneralesFragment).areasTematicas$;
+
+
+    this.displayedColumns = ['listadoAreas', 'areaTematica', 'observaciones', 'acciones'];
+
   }
 
 

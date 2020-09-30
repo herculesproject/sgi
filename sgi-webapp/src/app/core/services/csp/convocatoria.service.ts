@@ -14,6 +14,7 @@ import { IEntidadesConvocantes } from '@core/models/csp/entidades-convocantes';
 import { DateUtils } from '@core/utils/date-utils';
 import { IEnlace } from '@core/models/csp/enlace';
 import { IEntidadesFinanciadoras } from '@core/models/csp/entidades-financiadoras';
+import { IAreaTematica } from '@core/models/csp/area-tematica';
 
 
 const convocatorias: IConvocatoria[] = [
@@ -151,6 +152,18 @@ const enlaces: IEnlace[] = [
   }
 
 ];
+
+
+const areasTematicas: IAreaTematica[] = [
+  {
+    id: 1, listadoArea: 'AEI', area: 'Cáncer', observaciones: ' Estudio del impacto genético'
+  },
+  {
+    id: 2, listadoArea: 'DPT', area: 'Inmunidad, infección  y nuevas terapias', observaciones: 'Estudio del impacto genético'
+  }
+
+];
+
 @Injectable({
   providedIn: 'root'
 })
@@ -317,6 +330,22 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
         tap(() => this.logger.debug(ConvocatoriaService.name,
           `getEntidadesFinanciadoras(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
       );
+  }
+
+
+  /**
+   * Recupera listado mock de modelos de áreas temáticas.
+   * @param idConvocatoria opciones de búsqueda.
+   * @returns listado de modelos de áreas temáticas.
+   */
+  findAreaTematica(idConvocatoria: number): Observable<SgiRestListResult<IAreaTematica>> {
+    this.logger.debug(ConvocatoriaService.name, `findAreaTematica(idConvocatoria)`, '-', 'START');
+
+    return of({
+      page: null,
+      total: areasTematicas.length,
+      items: areasTematicas
+    } as SgiRestListResult<IAreaTematica>);
   }
 
 }
