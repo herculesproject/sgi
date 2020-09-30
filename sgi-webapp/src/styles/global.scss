@@ -1,7 +1,8 @@
+@import "vars.scss";
+
 /**/
 /** CUERPO HTML */
 /**/
-
 html,
 body {
   height: 100%;
@@ -35,8 +36,13 @@ body {
 /** Tabs verticales */
 /**/
 
+.mat-drawer-content-panel {
+  max-height: calc(100vh - #{$headerHeight} - #{$breadcrumHeight} - #{$footerHeight});
+}
+
 .mat-drawer-tabs {
-  min-height: calc(100vh - 155px);
+  min-height: calc(100vh - #{$headerHeight} - #{$breadcrumHeight});
+  max-height: calc(100vh - #{$headerHeight} - #{$breadcrumHeight});
   .tabs {
     background-color: map-get($palette-primary, 50);
     border-right-width: 0;

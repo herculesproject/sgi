@@ -1,5 +1,5 @@
 <footer class="separation footer" *ngIf="actionService?.status$ | async as status;">
-  <div class="boton">
+  <div class="boton" fxLayout="row" fxLayoutAlign="baseline center">
     <button color="accent" class="fixed" aria-label="Center Align" md-button (click)="save()" md-button
       mat-raised-button
       [disabled]="(status.edit && (!status.changes || status.errors)) || (!status.edit && !status.complete)">

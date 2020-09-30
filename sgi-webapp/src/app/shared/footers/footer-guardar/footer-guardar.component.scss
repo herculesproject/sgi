@@ -1,19 +1,17 @@
 @import "colors.scss";
+@import "vars.scss";
 
 .separation {
-  padding: 25px;
+  height: $footerHeight;
   &.footer {
-    @media only screen and (min-width: 800px) {
-      position: fixed;
-      bottom: 0px;
-      height: 33px;
-      width: 100%;
-      box-shadow: inset 0px 14px 12px -12px map-get($palette-grease, 100);
-      margin-left: -20px;
-      background: white;
-    }
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    box-shadow: inset 0px 14px 12px -12px map-get($palette-grease, 100);
+    background: white;
   }
   .boton {
-    padding: 3px 15px 15px 25px;
+    height: 100%;
+    padding-left: 32px;
   }
 }

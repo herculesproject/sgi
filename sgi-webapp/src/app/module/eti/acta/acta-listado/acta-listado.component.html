@@ -152,10 +152,7 @@
 
   <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
   </mat-paginator>
-
-  <sgi-footer-crear *sgiHasAuthorityForAnyUO="'ETI-ACT-C'" [texto]="textoCrear" [route]="ROUTE_NAMES.NEW">
-  </sgi-footer-crear>
-
-
 </section>
+<sgi-footer-crear *sgiHasAuthorityForAnyUO="'ETI-ACT-C'" [texto]="textoCrear" [route]="ROUTE_NAMES.NEW">
+</sgi-footer-crear>
 <!-- FIN actas listado-->

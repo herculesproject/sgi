@@ -1,13 +1,14 @@
 @import "colors.scss";
+@import "vars.scss";
 
 $padding: 15px;
 $config: mat-typography-config();
 
 /* HEADER */
 .header {
-  border-bottom: 1px solid map-get($palette-primary, 50);
+  border-bottom: #{$borderWidth} solid map-get($palette-primary, 50);
   padding: 0px 0px 0px 0px;
-
+  height: calc(#{$headerHeight} - #{$borderWidth * 1});
   .menu {
     width: 40px;
     float: left;
