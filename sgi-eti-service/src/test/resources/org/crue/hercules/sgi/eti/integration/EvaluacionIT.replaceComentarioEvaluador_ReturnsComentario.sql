@@ -82,22 +82,10 @@ VALUES (2, 'Evaluador2', 1, 1, '2020-07-01', '2021-07-01', 'user-002', true);
 INSERT INTO eti.evaluacion(id, memoria_id, convocatoria_reunion_id, tipo_evaluacion_id, dictamen_id, evaluador1_id, evaluador2_id, fecha_dictamen, version, es_rev_minima, activo) VALUES(200, 1, 1, 1, 1, 1, 2, '2020-07-13', 1, true, true);
 
 -- TIPO COMENTARIO
-INSERT INTO eti.tipo_comentario (id, nombre, activo) VALUES (300, 'GESTOR', true);
+INSERT INTO eti.tipo_comentario (id, nombre, activo) VALUES (2, 'EVALUADOR', true);
 
 -- COMENTARIO
 INSERT INTO eti.comentario (id, apartado_formulario_id, evaluacion_id, tipo_comentario_id, texto)
-  VALUES (1, 100, 200, 300, 'Comentario001');
+  VALUES (1, 100, 200, 2, 'Comentario1');
 INSERT INTO eti.comentario (id, apartado_formulario_id, evaluacion_id, tipo_comentario_id, texto)
-  VALUES (2, 100, 200, 300, 'Comentario002');
-INSERT INTO eti.comentario (id, apartado_formulario_id, evaluacion_id, tipo_comentario_id, texto)
-  VALUES (3, 100, 200, 300, 'Comentario003');
-INSERT INTO eti.comentario (id, apartado_formulario_id, evaluacion_id, tipo_comentario_id, texto)
-  VALUES (4, 100, 200, 300, 'Comentario4');
-INSERT INTO eti.comentario (id, apartado_formulario_id, evaluacion_id, tipo_comentario_id, texto)
-  VALUES (5, 100, 200, 300, 'Comentario5');
-INSERT INTO eti.comentario (id, apartado_formulario_id, evaluacion_id, tipo_comentario_id, texto)
-  VALUES (6, 100, 200, 300, 'Comentario6');
-INSERT INTO eti.comentario (id, apartado_formulario_id, evaluacion_id, tipo_comentario_id, texto)
-  VALUES (7, 100, 200, 300, 'Comentario7');
-INSERT INTO eti.comentario (id, apartado_formulario_id, evaluacion_id, tipo_comentario_id, texto)
-  VALUES (8, 100, 200, 300, 'Comentario8');
+  VALUES (2, 100, 200, 2, 'Comentario2');

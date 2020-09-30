@@ -25,9 +25,9 @@ import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
+import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
-import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.service.impl.EvaluacionServiceImpl;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -53,21 +53,23 @@ import org.springframework.data.jpa.domain.Specification;
 public class EvaluacionServiceTest {
 
   @Mock
-  private EvaluacionRepository evaluacionRepository;
+  private ComentarioRepository comentarioRepository;
+
   @Mock
-  private MemoriaRepository memoriaRepository;
+  private EvaluacionRepository evaluacionRepository;
   @Mock
   private EstadoMemoriaRepository estadoMemoriaRepository;
   @Mock
   private RetrospectivaRepository retrospectivaRepository;
 
   private EvaluacionService evaluacionService;
+  @Mock
   private MemoriaService memoriaService;
 
   @BeforeEach
   public void setUp() throws Exception {
-    evaluacionService = new EvaluacionServiceImpl(evaluacionRepository, memoriaRepository, estadoMemoriaRepository,
-        retrospectivaRepository, memoriaService);
+    evaluacionService = new EvaluacionServiceImpl(evaluacionRepository, estadoMemoriaRepository,
+        retrospectivaRepository, memoriaService, comentarioRepository);
   }
 
   @Test

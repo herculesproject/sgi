@@ -29,7 +29,7 @@ INSERT INTO eti.tipo_memoria (id, nombre, activo) VALUES (1, 'TipoMemoria1', tru
 
 --PETICION EVALUACION
 INSERT INTO eti.peticion_evaluacion (id, titulo, codigo, solicitud_convocatoria_ref, tipo_actividad_id, fuente_financiacion, fecha_inicio, fecha_fin, resumen, valor_social,  objetivos, dis_metodologico, externo, tiene_fondos_propios, persona_ref, activo)
-VALUES(1, 'PeticionEvaluacion1', 'Codigo', 'Ref solicitud convocatoria', 1, 'Fuente financiadora', '2020-07-09', '2021-07-09', 'Resumen',  ' valor social', 'Objetivos', 'Metodologico', false, false, 'user-001', true);
+VALUES(1, 'PeticionEvaluacion1', 'Codigo', 'Ref solicitud convocatoria', 1, 'Fuente financiadora', '2020-07-09', '2021-07-09', 'Resumen', 'valor social', 'Objetivos', 'Metodologico', false, false, 'user-001', true);
 
  -- TIPO ESTADO MEMORIA 
 INSERT INTO eti.tipo_estado_memoria (id, nombre, activo) VALUES (1, 'En elaboración', true);
@@ -82,8 +82,4 @@ VALUES (2, 'Evaluador2', 1, 1, '2020-07-01', '2021-07-01', 'user-002', true);
 INSERT INTO eti.evaluacion(id, memoria_id, convocatoria_reunion_id, tipo_evaluacion_id, dictamen_id, evaluador1_id, evaluador2_id, fecha_dictamen, version, es_rev_minima, activo) VALUES(200, 1, 1, 1, 1, 1, 2, '2020-07-13', 1, true, true);
 
 -- TIPO COMENTARIO
-INSERT INTO eti.tipo_comentario (id, nombre, activo) VALUES (300, 'GESTOR', true);
-
--- COMENTARIO
-INSERT INTO eti.comentario (id, apartado_formulario_id, evaluacion_id, tipo_comentario_id, texto)
-  VALUES (1, 100, 200, 300, 'Comentario1');
+INSERT INTO eti.tipo_comentario (id, nombre, activo) VALUES (1, 'GESTOR', true);

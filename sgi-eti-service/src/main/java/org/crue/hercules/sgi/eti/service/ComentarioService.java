@@ -1,11 +1,9 @@
 package org.crue.hercules.sgi.eti.service;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.eti.exceptions.ComentarioNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,47 +13,43 @@ import org.springframework.data.domain.Pageable;
 public interface ComentarioService {
 
   /**
-   * Guardar {@link Comentario}.
-   *
-   * @param comentario la entidad {@link Comentario} a guardar.
-   * @return la entidad {@link Comentario} persistida.
-   */
-  Comentario create(Comentario comentario);
-
-  /**
-   * Guardar un listado de {@link Comentario} de una {@link Evaluacion}.
+   * Guardar un {@link Comentario} de {@link TipoComentario} "GESTOR" de una
+   * {@link Evaluacion}.
    *
    * @param evaluacionId Id de la evaluación
-   * @param comentarios  lista de entidades {@link Comentario} a guardar.
+   * @param comentario   {@link Comentario} a guardar.
    * @return lista de entidades {@link Comentario} persistida.
    */
-  List<Comentario> createAll(Long evaluacionId, List<Comentario> comentarios);
+  Comentario createComentarioGestor(Long evaluacionId, Comentario comentario);
 
   /**
-   * Actualizar {@link Comentario}.
-   *
-   * @param comentario la entidad {@link Comentario} a actualizar.
-   * @return la entidad {@link Comentario} persistida.
-   */
-  Comentario update(Comentario comentario);
-
-  /**
-   * Actualizar un listado {@link Comentario} de una {@link Evaluacion}.
+   * Guardar un {@link Comentario} de {@link TipoComentario} "EVALUADOR" de una
+   * {@link Evaluacion}.
    *
    * @param evaluacionId Id de la evaluación
-   * @param comentarios  listado de entidades {@link Comentario} a actualizar.
-   * @return listado de entidades {@link Comentario} persistida.
+   * @param comentario   {@link Comentario} a guardar.
+   * @return lista de entidades {@link Comentario} persistida.
    */
-  List<Comentario> updateAll(Long evaluacionId, List<Comentario> comentarios);
+  Comentario createComentarioEvaluador(Long evaluacionId, Comentario comentario);
 
   /**
-   * Obtener todas las entidades {@link Comentario} paginadas y/o filtradas.
+   * Actualizar un {@link Comentario} de tipo "GESTOR" de una {@link Evaluacion}.
    *
-   * @param pageable la información de la paginación.
-   * @param query    la información del filtro.
-   * @return la lista de entidades {@link Comentario} paginadas y/o filtradas.
+   * @param evaluacionId Id de la evaluación
+   * @param comentario   {@link Comentario} a actualizar.
+   * @return {@link Comentario} actualizado.
    */
-  Page<Comentario> findAll(List<QueryCriteria> query, Pageable pageable);
+  Comentario updateComentarioGestor(Long evaluacionId, Comentario comentario);
+
+  /**
+   * Actualizar un {@link Comentario} de tipo "EVALUADOR" de una
+   * {@link Evaluacion}.
+   *
+   * @param evaluacionId Id de la evaluación
+   * @param comentario   {@link Comentario} a actualizar.
+   * @return {@link Comentario} actualizado.
+   */
+  Comentario updateComentarioEvaluador(Long evaluacionId, Comentario comentario);
 
   /**
    * Obtiene {@link Comentario} por id.
@@ -66,35 +60,39 @@ public interface ComentarioService {
   Comentario findById(Long id);
 
   /**
-   * Obtiene {@link Comentario} por el id de su evaluación.
+   * Obtiene todos los {@link Comentario} del tipo "GESTOR" por el id de su
+   * evaluación.
    *
-   * @param id       el id de la entidad {@link Comentario}.
+   * @param id       el id de la entidad {@link Evaluacion}.
    * @param pageable la información de la paginación.
    * @return la lista de entidades {@link Comentario} paginadas.
    */
-  Page<Comentario> findByEvaluacionId(Long id, Pageable pageable);
+  Page<Comentario> findByEvaluacionIdGestor(Long id, Pageable pageable);
 
   /**
-   * Elimina el {@link Comentario} por id.
+   * Obtiene todos los {@link Comentario} del tipo "EVALUADOR" por el id de su
+   * evaluación.
    *
-   * @param id el id de la entidad {@link Comentario}.
+   * @param id       el id de la entidad {@link Evaluacion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Comentario} paginadas.
    */
-  void delete(Long id) throws ComentarioNotFoundException;
+  Page<Comentario> findByEvaluacionIdEvaluador(Long id, Pageable pageable);
 
   /**
-   * Elimina un listado de {@link Comentario} de una {@link Evaluacion}.
+   * Elimina un {@link Comentario} de tipo "GESTOR" de una {@link Evaluacion}.
    *
-   * @param evaluacionId Id de la evaluación
-   * @param ids          listado de id de la entidad {@link Comentario}.
+   * @param evaluacionId Id de {@link Evaluacion}
+   * @param idComentario Id de {@link Comentario}
    */
-  void deleteAll(Long evaluacionId, List<Long> ids) throws ComentarioNotFoundException;
+  void deleteComentarioGestor(Long evaluacionId, Long idComentario) throws ComentarioNotFoundException;
 
   /**
-   * Obtiene el número total de {@link Comentario} para un determinado
-   * {@link Evaluacion}.
-   * 
-   * @param id Id de {@link Evaluacion}.
-   * @return número de entidades {@link Comentario}
+   * Elimina un {@link Comentario} de tipo "EVALUADOR" de una {@link Evaluacion}.
+   *
+   * @param evaluacionId Id de {@link Evaluacion}
+   * @param idComentario Id de {@link Comentario}
    */
-  int countByEvaluacionId(Long id);
+  void deleteComentarioEvaluador(Long evaluacionId, Long idComentario) throws ComentarioNotFoundException;
+
 }

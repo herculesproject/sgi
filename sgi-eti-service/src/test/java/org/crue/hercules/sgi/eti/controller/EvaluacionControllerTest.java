@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.config.SecurityConfig;
+import org.crue.hercules.sgi.eti.exceptions.ComentarioNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.ApartadoFormulario;
 import org.crue.hercules.sgi.eti.model.Comentario;
@@ -79,8 +80,6 @@ public class EvaluacionControllerTest {
   private ComentarioService comentarioService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String PATH_PARAMETER_BY_COMENTARIO = "/comentarios";
-  private static final String PATH_PARAMETER_BY_COUNT = "/count";
   private static final String EVALUACION_CONTROLLER_BASE_PATH = "/evaluaciones";
   private static final String EVALUACION_LIST_PATH = "/evaluables";
   private static final String EVALUACION_SEGUIMIENTO_PATH = "/memorias-seguimiento-final";
@@ -392,14 +391,15 @@ public class EvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
-  public void getComentariosEmptyList() throws Exception {
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL" })
+  public void getComentariosGestorEmptyList() throws Exception {
     // given: Existe la evaluación pero no tiene comentarios
     Long id = 3L;
     final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
-        .append(PATH_PARAMETER_BY_COMENTARIO).toString();
+        .append("/comentarios-gestor").toString();
 
-    BDDMockito.given(comentarioService.findByEvaluacionId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito
+        .given(comentarioService.findByEvaluacionIdGestor(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(Collections.emptyList()));
 
     // when: Se buscan todos los datos
@@ -410,18 +410,19 @@ public class EvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
-  public void getComentariosValid() throws Exception {
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL" })
+  public void getComentariosGestorValid() throws Exception {
     // given: Datos existentes con evaluacion
     Long id = 3L;
     final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
-        .append(PATH_PARAMETER_BY_COMENTARIO).toString();
+        .append("/comentarios-gestor").toString();
 
     List<Comentario> response = new ArrayList<>();
-    response.add(generarMockComentario(Long.valueOf(1), "texto"));
-    response.add(generarMockComentario(Long.valueOf(3), "texto2"));
+    response.add(generarMockComentario(Long.valueOf(1), "texto", 1L));
+    response.add(generarMockComentario(Long.valueOf(3), "texto2", 1L));
 
-    BDDMockito.given(comentarioService.findByEvaluacionId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito
+        .given(comentarioService.findByEvaluacionIdGestor(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(response));
 
     // when: Se buscan todos los comentarios
@@ -439,69 +440,72 @@ public class EvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
-  public void countComentariosInvalidId() throws Exception {
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVALR" })
+  public void getComentariosEvaluadorEmptyList() throws Exception {
     // given: Existe la evaluación pero no tiene comentarios
-    Long id = -3L;
+    Long id = 3L;
     final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
-        .append(PATH_PARAMETER_BY_COMENTARIO).append(PATH_PARAMETER_BY_COUNT).toString();
+        .append("/comentarios-evaluador").toString();
 
-    BDDMockito.given(comentarioService.countByEvaluacionId(ArgumentMatchers.anyLong())).willReturn(0);
+    BDDMockito
+        .given(
+            comentarioService.findByEvaluacionIdEvaluador(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(Collections.emptyList()));
 
-    // when: Se hace el recuento
-    MvcResult result = mockMvc
-        .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
+    // when: Se buscan todos los datos
+    mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(MockMvcResultHandlers.print())
-        // then: Se recupera el número total de comentarios
-        .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+        // then: Se recupera lista vacía
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVALR" })
+  public void getComentariosEvaluadorValid() throws Exception {
+    // given: Datos existentes con evaluacion
+    Long id = 3L;
+    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append("/comentarios-evaluador").toString();
+
+    List<Comentario> response = new ArrayList<>();
+    response.add(generarMockComentario(Long.valueOf(1), "texto", 2L));
+    response.add(generarMockComentario(Long.valueOf(3), "texto2", 2L));
+
+    BDDMockito
+        .given(
+            comentarioService.findByEvaluacionIdEvaluador(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(response));
+
+    // when: Se buscan los comentarios de tipo Evaluador
+    MvcResult result = mockMvc
+        .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recuperan los comentarios de tipo Evaluador
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2))).andReturn();
 
     Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
-        new TypeReference<Integer>() {
-        })).isEqualTo(0);
+        new TypeReference<List<Comentario>>() {
+        })).isEqualTo(response);
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
-  public void countComentariosValidId() throws Exception {
+  public void createComentarioGestorValidComentarios() throws Exception {
     // given: Existe la evaluación y tiene comentarios
     Long id = 3L;
     final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
-        .append(PATH_PARAMETER_BY_COMENTARIO).append(PATH_PARAMETER_BY_COUNT).toString();
+        .append("/comentario-gestor").toString();
 
-    BDDMockito.given(comentarioService.countByEvaluacionId(ArgumentMatchers.anyLong())).willReturn(100);
-
-    // when: Se hace el recuento
-    MvcResult result = mockMvc
-        .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print())
-        // then: Se recupera el número total de comentarios
-        .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
-
-    Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
-        new TypeReference<Integer>() {
-        })).isEqualTo(100);
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
-  public void createComentariosValidComentarios() throws Exception {
-    // given: Existe la evaluación y tiene comentarios
-    Long id = 3L;
-    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
-        .append(PATH_PARAMETER_BY_COMENTARIO).toString();
-
-    List<Comentario> comentarios = new ArrayList<>();
-    comentarios.add(generarMockComentario(300L, "Comentario1"));
-    comentarios.add(generarMockComentario(400L, "Comentario2"));
+    Comentario comentario = generarMockComentario(300L, "Comentario1", 1L);
 
     // given: Un listado de comentarios
-    String nuevoComentarioJson = "["
-        + "{\"apartadoFormulario\": {\"id\": 100}, \"evaluacion\": {\"id\": 200}, \"tipoComentario\": {\"id\": 300}, \"texto\": \"Comentario1\"},"
-        + "{\"apartadoFormulario\": {\"id\": 200}, \"evaluacion\": {\"id\": 300}, \"tipoComentario\": {\"id\": 400}, \"texto\": \"Comentario1\"}"
-        + "]";
+    String nuevoComentarioJson = "{\"apartadoFormulario\": {\"id\": 100},  \"texto\": \"Comentario1\"}";
 
-    BDDMockito.given(comentarioService.createAll(ArgumentMatchers.anyLong(), ArgumentMatchers.<List<Comentario>>any()))
-        .willReturn(comentarios);
+    BDDMockito
+        .given(comentarioService.createComentarioGestor(ArgumentMatchers.anyLong(), ArgumentMatchers.<Comentario>any()))
+        .willReturn(comentario);
 
     // when: Creamos el listado comentario
     MvcResult result = mockMvc
@@ -513,136 +517,161 @@ public class EvaluacionControllerTest {
         .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
 
     Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
-        new TypeReference<List<Comentario>>() {
-        })).isEqualTo(comentarios);
+        new TypeReference<Comentario>() {
+        })).isEqualTo(comentario);
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL" })
+  public void createComentarioGestor_WithId_Returns400() throws Exception {
+
+    // given: Nueva entidad con Id
+    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append("/comentario-gestor").toString();
+
+    String nuevoComentarioJson = mapper.writeValueAsString(generarMockComentario(1L, "Comentario1", 1L));
+
+    BDDMockito
+        .given(comentarioService.createComentarioGestor(ArgumentMatchers.anyLong(), ArgumentMatchers.<Comentario>any()))
+        .willThrow(new IllegalArgumentException());
+
+    // when: Se crea la entidad
+    // then: Se produce error porque ya tiene Id
+    mockMvc
+        .perform(MockMvcRequestBuilders.post(url, 1L).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON).content(nuevoComentarioJson))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isBadRequest());
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
-  public void createComentariosEmptyComentarios() throws Exception {
-    // given: Existe la evaluación
+  public void createComentarioEvaluadorSuccess() throws Exception {
+    // given: Existe la evaluación y tiene comentarios
     Long id = 3L;
     final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
-        .append(PATH_PARAMETER_BY_COMENTARIO).toString();
+        .append("/comentario-gestor").toString();
 
-    // given: Un listado vacio
-    String nuevoComentarioJson = "[]";
+    Comentario comentario = generarMockComentario(300L, "Comentario1", 1L);
 
-    BDDMockito.given(comentarioService.createAll(ArgumentMatchers.anyLong(), ArgumentMatchers.<List<Comentario>>any()))
-        .willReturn(new ArrayList<>());
+    // given: Un listado de comentarios
+    String nuevoComentarioJson = "{\"apartadoFormulario\": {\"id\": 100},  \"texto\": \"Comentario1\"}";
 
-    // when: Intenta crear los comentarios
-    MvcResult result = mockMvc
+    BDDMockito
+        .given(
+            comentarioService.createComentarioEvaluador(ArgumentMatchers.anyLong(), ArgumentMatchers.<Comentario>any()))
+        .willReturn(comentario);
+
+    // when: Creamos el listado comentario
+    mockMvc
         .perform(MockMvcRequestBuilders.post(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(nuevoComentarioJson))
         .andDo(MockMvcResultHandlers.print())
-        // then: Realiza la petición se realiza correctamente sin realizar cambios
+        // then: Crea los comentario y los devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
 
-    Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
-        new TypeReference<List<Comentario>>() {
-        })).isEqualTo(new ArrayList<>());
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
-  public void updateComentariosValidComentarios() throws Exception {
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVALR", "ETI-EVC-EVALR-INV" })
+  public void createComentarioEvaluador_WithId_Returns400() throws Exception {
+
+    // given: Nueva entidad con Id
+    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append("/comentario-evaluador").toString();
+
+    String nuevoComentarioJson = mapper.writeValueAsString(generarMockComentario(1L, "Comentario1", 1L));
+
+    BDDMockito
+        .given(
+            comentarioService.createComentarioEvaluador(ArgumentMatchers.anyLong(), ArgumentMatchers.<Comentario>any()))
+        .willThrow(new IllegalArgumentException());
+
+    // when: Se crea la entidad
+    // then: Se produce error porque ya tiene Id
+    mockMvc
+        .perform(MockMvcRequestBuilders.post(url, 1L).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON).content(nuevoComentarioJson))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL" })
+  public void updateComentarioGestor_Success() throws Exception {
     // given: Existe la evaluación
     Long id = 3L;
     final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
-        .append(PATH_PARAMETER_BY_COMENTARIO).toString();
+        .append("/comentario-gestor").append("/{idComentario}").toString();
 
-    List<Comentario> comentarios = new ArrayList<>();
-    comentarios.add(generarMockComentario(300L, "Comentario1"));
-    comentarios.add(generarMockComentario(400L, "Comentario2"));
+    Comentario comentario = generarMockComentario(1L, "Comentario Replace", 1L);
 
     // given: Comentarios para actualizar
-    String nuevoComentarioJson = "["
-        + "{\"apartadoFormulario\": {\"id\": 100}, \"evaluacion\": {\"id\": 200}, \"tipoComentario\": {\"id\": 300}, \"texto\": \"Comentario1\"},"
-        + "{\"apartadoFormulario\": {\"id\": 200}, \"evaluacion\": {\"id\": 300}, \"tipoComentario\": {\"id\": 400}, \"texto\": \"Comentario1\"}"
-        + "]";
+    String replaceComentarioJson = "{\"id\": 1, \"apartadoFormulario\": {\"id\": 100}, \"evaluacion\": {\"id\": 200}, \"tipoComentario\": {\"id\": 1}, \"texto\": \"Comentario\"}";
 
-    BDDMockito.given(comentarioService.updateAll(ArgumentMatchers.anyLong(), ArgumentMatchers.<List<Comentario>>any()))
-        .willReturn(comentarios);
+    BDDMockito
+        .given(comentarioService.updateComentarioGestor(ArgumentMatchers.anyLong(), ArgumentMatchers.<Comentario>any()))
+        .willReturn(comentario);
 
-    // when: Actualiza los comentarios
-    MvcResult result = mockMvc
-        .perform(MockMvcRequestBuilders.put(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(nuevoComentarioJson))
+    mockMvc
+        .perform(MockMvcRequestBuilders.put(url, id, 1L).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON).content(replaceComentarioJson))
         .andDo(MockMvcResultHandlers.print())
-        // then: Actualiza los comentarios y los devuelve
-        .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
-
-    Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
-        new TypeReference<List<Comentario>>() {
-        })).isEqualTo(comentarios);
+        // then: Modifica el comentario y lo devuelve
+        .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
+        .andExpect(MockMvcResultMatchers.jsonPath("texto").value("Comentario Replace"));
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
-  public void updateComentariosEmptyComentarios() throws Exception {
-    // given: Existe la evaluación y tiene comentarios
-    Long id = 3L;
-    final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
-        .append(PATH_PARAMETER_BY_COMENTARIO).toString();
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL" })
+  public void updateComentarioGestor_NotFound() throws Exception {
+    // given: Un comentario a modificar
+    String replaceComentarioJson = "{\"id\": 1, \"apartadoFormulario\": {\"id\": 100}, \"evaluacion\": {\"id\": 200}, \"tipoComentario\": {\"id\": 1}, \"texto\": \"Comentario\"}";
 
-    // given: Un comentario nuevo
-    String nuevoComentarioJson = "[]";
-
-    BDDMockito.given(comentarioService.updateAll(ArgumentMatchers.anyLong(), ArgumentMatchers.<List<Comentario>>any()))
-        .willReturn(new ArrayList<>());
-
-    // when: Intenta actualizar los comentarios
-    MvcResult result = mockMvc
-        .perform(MockMvcRequestBuilders.put(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
+    BDDMockito
+        .given(comentarioService.updateComentarioGestor(ArgumentMatchers.anyLong(), ArgumentMatchers.<Comentario>any()))
+        .will((InvocationOnMock invocation) -> {
+          throw new ComentarioNotFoundException((invocation.getArgument(0)));
+        });
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .put(EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comentario-gestor" + "/{idComentario}", 1L, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(nuevoComentarioJson))
-        .andDo(MockMvcResultHandlers.print())
-        // then: Realiza la petición se realiza correctamente sin realizar cambios
-        .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
+            .content(replaceComentarioJson))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
 
-    Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
-        new TypeReference<List<Comentario>>() {
-        })).isEqualTo(new ArrayList<>());
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
-  public void deleteComentariosValidComentarios() throws Exception {
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL" })
+  public void deleteComentarioGestor_Success() throws Exception {
     // given: Existe la evaluación
-    Long id = 3L;
+    Long idEvaluacion = 3L;
+    Long idComentario = 4L;
     final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
-        .append(PATH_PARAMETER_BY_COMENTARIO).toString();
-
-    // given: Un comentario nuevo
-    String ids = "1, 4";
+        .append("/comentario-gestor").append("/{idComentario}").toString();
 
     // given: Listado de ids de comentario para eliminar
     mockMvc
-        .perform(
-            MockMvcRequestBuilders.delete(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()).param("ids", ids))
+        .perform(MockMvcRequestBuilders.delete(url, idEvaluacion, idComentario)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(MockMvcResultHandlers.print())
         // then: Realiza la petición se realiza correctamente
         .andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
-  public void deleteComentariosEmptyComentarios() throws Exception {
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVALR" })
+  public void deleteComentarioEvaluador_Success() throws Exception {
     // given: Existe la evaluación
-    Long id = 3L;
+    Long idEvaluacion = 3L;
+    Long idComentario = 4L;
     final String url = new StringBuilder(EVALUACION_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
-        .append(PATH_PARAMETER_BY_COMENTARIO).toString();
+        .append("/comentario-evaluador").append("/{idComentario}").toString();
 
-    // given: Listado vacio de ids de comentario para eliminar
-    String ids = "";
-
-    // when: borramos los comentarios
+    // given: Listado de ids de comentario para eliminar
     mockMvc
-        .perform(
-            MockMvcRequestBuilders.delete(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()).param("ids", ids))
+        .perform(MockMvcRequestBuilders.delete(url, idEvaluacion, idComentario)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(MockMvcResultHandlers.print())
         // then: Realiza la petición se realiza correctamente
         .andExpect(MockMvcResultMatchers.status().isOk());
@@ -855,7 +884,7 @@ public class EvaluacionControllerTest {
    * @param texto texto del comentario
    * @return el objeto Comentario
    */
-  private Comentario generarMockComentario(Long id, String texto) {
+  private Comentario generarMockComentario(Long id, String texto, Long tipoComentarioId) {
     ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
     apartadoFormulario.setId(100L);
 
@@ -863,7 +892,7 @@ public class EvaluacionControllerTest {
     evaluacion.setId(200L);
 
     TipoComentario tipoComentario = new TipoComentario();
-    tipoComentario.setId(300L);
+    tipoComentario.setId(tipoComentarioId);
 
     Comentario comentario = new Comentario();
     comentario.setId(id);

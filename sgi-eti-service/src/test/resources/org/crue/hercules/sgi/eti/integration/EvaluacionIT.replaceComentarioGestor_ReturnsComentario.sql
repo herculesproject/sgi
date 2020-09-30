@@ -82,10 +82,10 @@ VALUES (2, 'Evaluador2', 1, 1, '2020-07-01', '2021-07-01', 'user-002', true);
 INSERT INTO eti.evaluacion(id, memoria_id, convocatoria_reunion_id, tipo_evaluacion_id, dictamen_id, evaluador1_id, evaluador2_id, fecha_dictamen, version, es_rev_minima, activo) VALUES(200, 1, 1, 1, 1, 1, 2, '2020-07-13', 1, true, true);
 
 -- TIPO COMENTARIO
-INSERT INTO eti.tipo_comentario (id, nombre, activo) VALUES (300, 'GESTOR', true);
+INSERT INTO eti.tipo_comentario (id, nombre, activo) VALUES (1, 'GESTOR', true);
 
 -- COMENTARIO
 INSERT INTO eti.comentario (id, apartado_formulario_id, evaluacion_id, tipo_comentario_id, texto)
-  VALUES (1, 100, 200, 300, 'Comentario1');
+  VALUES (1, 100, 200, 1, 'Comentario1');
 INSERT INTO eti.comentario (id, apartado_formulario_id, evaluacion_id, tipo_comentario_id, texto)
-  VALUES (2, 100, 200, 300, 'Comentario2');
+  VALUES (2, 100, 200, 1, 'Comentario2');

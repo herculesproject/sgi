@@ -12,9 +12,9 @@ import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
+import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
-import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.EvaluacionSpecifications;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
@@ -38,33 +38,39 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class EvaluacionServiceImpl implements EvaluacionService {
-  /** Evaluación repository */
-  private final EvaluacionRepository evaluacionRepository;
-  /** Memoria repository */
-  private final MemoriaRepository memoriaRepository;
+
+  /** Comentario repository. */
+  private final ComentarioRepository comentarioRepository;
+
   /** Estado Memoria repository */
   private final EstadoMemoriaRepository estadoMemoriaRepository;
+
+  /** Evaluación repository */
+  private final EvaluacionRepository evaluacionRepository;
+
   /** Retrospectiva repository */
   private final RetrospectivaRepository retrospectivaRepository;
-  /** Memorai service */
+
+  /** Memoria service */
   private final MemoriaService memoriaService;
 
   /**
    * Instancia un nuevo {@link EvaluacionServiceImpl}
    * 
-   * @param evaluacionRepository    repository para {@link Evaluacion}
-   * @param memoriaRepository       repository para {@link Memoria}
-   * @param estadoMemoriaRepository repository para {@link EstadoMemoria}
-   * @param retrospectivaRepository repository para {@link Retrospectiva}
+   * @param evaluacionRepository    {@link EvaluacionRepository}
+   * @param estadoMemoriaRepository {@link EstadoMemoriaRepository}
+   * @param retrospectivaRepository {@link RetrospectivaRepository}
+   * @param comentarioRepository    {@link ComentarioRepository}
+   * @param memoriaService          {@link MemoriaService}
    */
-  public EvaluacionServiceImpl(EvaluacionRepository evaluacionRepository, MemoriaRepository memoriaRepository,
+  public EvaluacionServiceImpl(EvaluacionRepository evaluacionRepository,
       EstadoMemoriaRepository estadoMemoriaRepository, RetrospectivaRepository retrospectivaRepository,
-      MemoriaService memoriaService) {
+      MemoriaService memoriaService, ComentarioRepository comentarioRepository) {
     this.evaluacionRepository = evaluacionRepository;
-    this.memoriaRepository = memoriaRepository;
     this.estadoMemoriaRepository = estadoMemoriaRepository;
     this.retrospectivaRepository = retrospectivaRepository;
     this.memoriaService = memoriaService;
+    this.comentarioRepository = comentarioRepository;
   }
 
   /**
@@ -128,11 +134,11 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       if (evaluacion.getTipoEvaluacion().getId() == Constantes.TIPO_EVALUACION_RETROSPECTIVA) {
         retrospectivaRepository.save(evaluacion.getMemoria().getRetrospectiva());
       } else {
-        this.estadoMemoriaRepository.save(new EstadoMemoria(null, evaluacion.getMemoria(),
+        estadoMemoriaRepository.save(new EstadoMemoria(null, evaluacion.getMemoria(),
             evaluacion.getMemoria().getEstadoActual(), LocalDateTime.now()));
       }
       evaluacion.getMemoria().setVersion(evaluacion.getVersion());
-      this.memoriaRepository.save(evaluacion.getMemoria());
+      memoriaService.update(evaluacion.getMemoria());
 
     }
 
@@ -364,26 +370,41 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
     Assert.notNull(evaluacionActualizar.getId(), "Evaluacion id no puede ser null para actualizar una evaluacion");
 
+    // Si el dictamen es "Favorable pendiente de revisión mínima" o "Pendiente de
+    // correcciones"
+    // comprobar si hay comentarios, en el caso de que si se hace el update
+    if (evaluacionActualizar.getDictamen().getId().equals(2L)
+        || evaluacionActualizar.getDictamen().getId().equals(3L)) {
+
+      // Se debe comprobar que no tenga comentarios asociados
+      int numComentarios = this.comentarioRepository.countByEvaluacionId(evaluacionActualizar.getId());
+
+      if (numComentarios > 0) {
+
+        // Si el dictamen es "Favorable pendiente de revisión mínima" y el estado de la
+        // memoria es "En secretaría de revisión mínima", se cambia el estado de la
+        // memoria a "Favorable Pendiente de Modificaciones Mínimas".
+        if (evaluacionActualizar.getDictamen().getId().equals(2L)
+            && evaluacionActualizar.getMemoria().getEstadoActual().getId().equals(4L)) {
+          memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(), 6L);
+        }
+
+      } else {
+        Assert.isTrue(numComentarios > 0, "Es necesario introducir comentarios antes de guardar la evaluación.");
+      }
+    }
+
     // Si el estado de la memoria es "En secretaría revisión mínima"
     // se actualiza la fechaDictamen con la fecha actual
     if (evaluacionActualizar.getMemoria().getEstadoActual().getId().equals(4L)) {
       evaluacionActualizar.setFechaDictamen(LocalDate.now());
-    }
 
-    // Si el dictamen es "Favorable" y el estado de la memoria es
-    // "En secretaría de revisión mínima".
-    // Se cambia el estado de la memoria a "Fin evaluación"
-    if (evaluacionActualizar.getDictamen().getNombre().toUpperCase().equals("FAVORABLE")
-        && evaluacionActualizar.getMemoria().getEstadoActual().getId().equals(4L)) {
-      memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(), 9L);
-    }
-
-    // Si el dictamen es "Favorable pendiente de revisión mínima" y el estado de la
-    // memoria es "En secretaría de revisión mínima", se cambia el estado de la
-    // memoria a "Favorable Pendiente de Modificaciones Mínimas".
-    if (evaluacionActualizar.getDictamen().getId().equals(2L)
-        && evaluacionActualizar.getMemoria().getEstadoActual().getId().equals(4L)) {
-      memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(), 6L);
+      // Si el dictamen es "Favorable" y el estado de la memoria es
+      // "En secretaría de revisión mínima".
+      // Se cambia el estado de la memoria a "Fin evaluación"
+      if (evaluacionActualizar.getDictamen().getNombre().toUpperCase().equals("FAVORABLE")) {
+        memoriaService.updateEstadoMemoria(evaluacionActualizar.getMemoria(), 9L);
+      }
     }
 
     return evaluacionRepository.findById(evaluacionActualizar.getId()).map(evaluacion -> {
@@ -408,7 +429,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    * seguimiento final aclaraciones" .
    * 
    * @param pageable la información de paginación.
-   * @param query  información del filtro.
+   * @param query    información del filtro.
    * @return el listado de entidades {@link Evaluacion} paginadas y filtradas.
    */
 

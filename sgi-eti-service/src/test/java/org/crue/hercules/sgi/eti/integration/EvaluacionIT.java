@@ -7,7 +7,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.model.ApartadoFormulario;
 import org.crue.hercules.sgi.eti.model.CargoComite;
+import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
@@ -18,6 +20,7 @@ import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
+import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
@@ -66,6 +69,19 @@ public class EvaluacionIT {
     }
 
     HttpEntity<Evaluacion> request = new HttpEntity<>(entity, headers);
+    return request;
+
+  }
+
+  private HttpEntity<Comentario> buildRequestComentario(HttpHeaders headers, Comentario entity) throws Exception {
+    headers = (headers != null ? headers : new HttpHeaders());
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    if (!headers.containsKey("Authorization")) {
+      headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user")));
+    }
+
+    HttpEntity<Comentario> request = new HttpEntity<>(entity, headers);
     return request;
 
   }
@@ -472,7 +488,7 @@ public class EvaluacionIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findByEvaluacionesEnSeguimientoFinal_ReturnsEvaluacionList() throws Exception {
-    // when: Obtiene la page=3 con pagesize=10
+    // when: Obtiene la page=3 con pagesize=5
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "5");
@@ -497,6 +513,277 @@ public class EvaluacionIT {
     // Contiene de memoria.titulo='Memoria2'
 
     Assertions.assertThat(evaluaciones.get(0).getMemoria().getTitulo()).isEqualTo("Memoria2");
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void getComentariosGestor_WithId_ReturnsComentario() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "5");
+
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-EVAL")));
+
+    final ResponseEntity<List<Comentario>> response = restTemplate.exchange(
+        EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comentarios-gestor", HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Comentario>>() {
+        }, 200L);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    final List<Comentario> comentarios = response.getBody();
+
+    Assertions.assertThat(comentarios.size()).isEqualTo(2);
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("0");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("2");
+
+    // Contiene de comentario.id=1L
+
+    Assertions.assertThat(comentarios.get(0).getId()).isEqualTo(1L);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void getComentariosEvaluador_WithId_ReturnsComentario() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "5");
+
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-EVALR")));
+
+    final ResponseEntity<List<Comentario>> response = restTemplate.exchange(
+        EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comentarios-evaluador", HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Comentario>>() {
+        }, 200L);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    final List<Comentario> comentarios = response.getBody();
+
+    Assertions.assertThat(comentarios.size()).isEqualTo(2);
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("0");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("2");
+
+    // Contiene de comentario.id=2L
+    Assertions.assertThat(comentarios.get(0).getId()).isEqualTo(1L);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void addComentarioGestor_ReturnsComentario() throws Exception {
+
+    ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
+    apartadoFormulario.setId(100L);
+
+    Comentario comentario = new Comentario();
+    comentario.setApartadoFormulario(apartadoFormulario);
+    comentario.setTexto("comentario1");
+
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-EVAL")));
+
+    final ResponseEntity<Comentario> response = restTemplate.exchange(
+        EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comentario-gestor", HttpMethod.POST,
+        buildRequestComentario(headers, comentario), Comentario.class, 200L);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void addComentarioEvaluador_ReturnsError400() throws Exception {
+
+    Evaluacion evaluacion = generarMockEvaluacion(200L, "eval");
+    ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
+    apartadoFormulario.setId(100L);
+
+    Comentario comentario = new Comentario();
+    comentario.setApartadoFormulario(apartadoFormulario);
+    comentario.setEvaluacion(evaluacion);
+    comentario.setTexto("comentario1");
+
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-EVALR", "ETI-EVC-EVALR-INV")));
+
+    final ResponseEntity<Comentario> response = restTemplate.exchange(
+        EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comentario-evaluador", HttpMethod.POST,
+        buildRequestComentario(headers, comentario), Comentario.class, 200L);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void addComentarioEvaluador_ReturnsComentario() throws Exception {
+
+    ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
+    apartadoFormulario.setId(100L);
+
+    Comentario comentario = new Comentario();
+    comentario.setApartadoFormulario(apartadoFormulario);
+    comentario.setTexto("comentario1");
+
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-EVALR", "ETI-EVC-EVALR-INV")));
+
+    final ResponseEntity<Comentario> response = restTemplate.exchange(
+        EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comentario-evaluador", HttpMethod.POST,
+        buildRequestComentario(headers, comentario), Comentario.class, 200L);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void addComentarioGestor_ReturnsError400() throws Exception {
+
+    Evaluacion evaluacion = generarMockEvaluacion(200L, "eval");
+    ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
+    apartadoFormulario.setId(100L);
+
+    Comentario comentario = new Comentario();
+    comentario.setApartadoFormulario(apartadoFormulario);
+    comentario.setEvaluacion(evaluacion);
+    comentario.setTexto("comentario1");
+
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-EVAL")));
+
+    final ResponseEntity<Comentario> response = restTemplate.exchange(
+        EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comentario-gestor", HttpMethod.POST,
+        buildRequestComentario(headers, comentario), Comentario.class, 200L);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void replaceComentarioGestor_ReturnsComentario() throws Exception {
+
+    Evaluacion evaluacion = generarMockEvaluacion(200L, null);
+    ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
+    apartadoFormulario.setId(100L);
+
+    TipoComentario tipoComentario = new TipoComentario();
+    tipoComentario.setId(1L);
+
+    Comentario comentarioReplace = new Comentario();
+    comentarioReplace.setId(1L);
+    comentarioReplace.setApartadoFormulario(apartadoFormulario);
+    comentarioReplace.setEvaluacion(evaluacion);
+    comentarioReplace.setTipoComentario(tipoComentario);
+    comentarioReplace.setTexto("Actualizado");
+
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-EVAL")));
+
+    final ResponseEntity<Comentario> response = restTemplate.exchange(
+        EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comentario-gestor" + "/{idComentario}", HttpMethod.PUT,
+        buildRequestComentario(headers, comentarioReplace), Comentario.class, 200L, 1L);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    final Comentario comentario = response.getBody();
+
+    Assertions.assertThat(comentario.getId()).isNotNull();
+    Assertions.assertThat(comentario.getEvaluacion().getId()).isEqualTo(200L);
+    Assertions.assertThat(comentario.getTexto()).isEqualTo("Actualizado");
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void replaceComentarioEvaluador_ReturnsComentario() throws Exception {
+
+    Evaluacion evaluacion = generarMockEvaluacion(200L, null);
+    ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
+    apartadoFormulario.setId(100L);
+
+    TipoComentario tipoComentario = new TipoComentario();
+    tipoComentario.setId(2L);
+
+    Comentario comentarioReplace = new Comentario();
+    comentarioReplace.setId(1L);
+    comentarioReplace.setApartadoFormulario(apartadoFormulario);
+    comentarioReplace.setEvaluacion(evaluacion);
+    comentarioReplace.setTipoComentario(tipoComentario);
+    comentarioReplace.setTexto("Actualizado");
+
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-EVALR", "ETI-EVC-EVALR-INV")));
+
+    final ResponseEntity<Comentario> response = restTemplate.exchange(
+        EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comentario-evaluador" + "/{idComentario}",
+        HttpMethod.PUT, buildRequestComentario(headers, comentarioReplace), Comentario.class, 200L, 1L);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    final Comentario comentario = response.getBody();
+
+    Assertions.assertThat(comentario.getId()).isNotNull();
+    Assertions.assertThat(comentario.getEvaluacion().getId()).isEqualTo(200L);
+    Assertions.assertThat(comentario.getTexto()).isEqualTo("Actualizado");
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void removeComentarioGestor_Success() throws Exception {
+
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-EVAL")));
+
+    // when: Delete con id existente
+    final ResponseEntity<Comentario> response = restTemplate.exchange(
+        EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comentario-gestor" + "/{idComentario}",
+        HttpMethod.DELETE, buildRequestComentario(headers, null), Comentario.class, 200L, 1L);
+
+    // then: 200
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void removeComentarioEvaluador_Success() throws Exception {
+
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-EVAL", "ETI-EVC-EVALR-INV")));
+
+    // when: Delete con id existente
+    final ResponseEntity<Comentario> response = restTemplate.exchange(
+        EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comentario-evaluador" + "/{idComentario}",
+        HttpMethod.DELETE, buildRequestComentario(headers, null), Comentario.class, 200L, 1L);
+
+    // then: 200
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
   }
 

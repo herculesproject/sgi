@@ -45,13 +45,13 @@ public class Comentario extends BaseEntity {
   /** Evaluacion */
   @ManyToOne
   @JoinColumn(name = "evaluacion_id", nullable = false)
-  @NotNull
+  @NotNull(groups = { Update.class })
   private Evaluacion evaluacion;
 
   /** Comentario */
   @ManyToOne
   @JoinColumn(name = "tipo_comentario_id", nullable = false)
-  @NotNull
+  @NotNull(groups = { Update.class })
   private TipoComentario tipoComentario;
 
   /** Texto. */

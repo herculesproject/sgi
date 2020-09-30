@@ -1,21 +1,17 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.eti.exceptions.ComentarioNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.service.ComentarioService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -38,59 +34,39 @@ public class ComentarioServiceImpl implements ComentarioService {
   }
 
   /**
-   * Guarda la entidad {@link Comentario}.
-   *
-   * @param comentario la entidad {@link Comentario} a guardar.
-   * @return la entidad {@link Comentario} persistida.
-   */
-  @Transactional
-  public Comentario create(Comentario comentario) {
-    log.debug("Petición a create Comentario : {} - start", comentario);
-    Assert.isNull(comentario.getId(), "Comentario id tiene que ser null para crear un nuevo comentario");
-
-    return comentarioRepository.save(comentario);
-  }
-
-  /**
-   * Guardar un listado de {@link Comentario} de una {@link Evaluacion}.
-   *
+   * Guardar un {@link Comentario} de {@link TipoComentario} "GESTOR" de una
+   * {@link Evaluacion}.
+   * 
    * @param evaluacionId Id de la evaluación
-   * @param comentarios  lista de entidades {@link Comentario} a guardar.
+   * @param comentario   {@link Comentario} a guardar.
    * @return lista de entidades {@link Comentario} persistida.
    */
+  @Override
   @Transactional
-  public List<Comentario> createAll(Long evaluacionId, List<Comentario> comentarios) {
-    log.debug("createAll(Long evaluacionId, List<Comentario> comentarios) - start");
-    Assert.notNull(evaluacionId, "Evaluacion id no tiene que ser null para crear un listado de comentario");
-    Optional<Evaluacion> optional = this.evaluacionRepository.findById(evaluacionId);
-    if (optional.isPresent()) {
-      Evaluacion evaluacion = optional.get();
-      List<Comentario> listado = new ArrayList<>();
-      for (Comentario comentario : comentarios) {
-        Assert.isTrue(evaluacion.getId().equals(comentario.getEvaluacion().getId()),
-            "EvaluacionId debe coincidir con el id de la evaluacion del comentario para crearlo");
-        listado.add(this.create(comentario));
-      }
-      log.debug("createAll(Long evaluacionId, List<Comentario> comentarios) - end");
-      return listado;
-    }
-    throw new EvaluacionNotFoundException(evaluacionId);
+  public Comentario createComentarioGestor(Long evaluacionId, Comentario comentario) {
+    log.debug("createComentarioGestor(Long evaluacionId, Comentario comentario) - start");
+    log.debug("createComentarioGestor(Long evaluacionId, Comentario comentario) - end");
+
+    return createComentarioEvaluacion(evaluacionId, comentario, 1L);
+
   }
 
   /**
-   * Obtiene todas las entidades {@link Comentario} paginadas y filtadas.
-   *
-   * @param paging la información de paginación.
-   * @param query  información del filtro.
-   * @return el listado de entidades {@link Comentario} paginadas y filtradas.
+   * Guardar un {@link Comentario} de {@link TipoComentario} "EVALUADOR" de una
+   * {@link Evaluacion}.
+   * 
+   * @param evaluacionId Id de la evaluación
+   * @param comentario   {@link Comentario} a guardar.
+   * @return lista de entidades {@link Comentario} persistida.
    */
-  public Page<Comentario> findAll(List<QueryCriteria> query, Pageable paging) {
-    log.debug("findAllComentario(List<QueryCriteria> query, Pageable paging) - start");
-    Specification<Comentario> spec = new QuerySpecification<Comentario>(query);
+  @Override
+  @Transactional
+  public Comentario createComentarioEvaluador(Long evaluacionId, Comentario comentario) {
+    log.debug("createComentarioEvaluador(Long evaluacionId, Comentario comentario) - start");
+    log.debug("createComentarioEvaluador(Long evaluacionId, Comentario comentario) - end");
 
-    Page<Comentario> returnValue = comentarioRepository.findAll(spec, paging);
-    log.debug("findAllComentario(List<QueryCriteria> query, Pageable paging) - end");
-    return returnValue;
+    return createComentarioEvaluacion(evaluacionId, comentario, 2L);
+
   }
 
   /**
@@ -111,139 +87,187 @@ public class ComentarioServiceImpl implements ComentarioService {
   }
 
   /**
-   * Elimina una entidad {@link Comentario} por id.
+   * Elimina un {@link Comentario} de tipo "GESTOR" de una {@link Evaluacion}.
    *
-   * @param id el id de la entidad {@link Comentario}.
+   * @param evaluacionId Id de {@link Evaluacion}
+   * @param comentarioId Id de {@link Comentario}
    */
+  @Override
   @Transactional
-  public void delete(Long id) throws ComentarioNotFoundException {
-    log.debug("Petición a delete Comentario : {}  - start", id);
-    Assert.notNull(id, "El id de Comentario no puede ser null.");
-    if (!comentarioRepository.existsById(id)) {
-      throw new ComentarioNotFoundException(id);
-    }
-    comentarioRepository.deleteById(id);
-    log.debug("Petición a delete Comentario : {}  - end", id);
+  public void deleteComentarioGestor(Long evaluacionId, Long comentarioId) throws ComentarioNotFoundException {
+    log.debug("deleteComentarioGestor(Long evaluacionId, Long comentarioId) - start");
+    deleteComentarioEvaluacion(evaluacionId, comentarioId, 1L);
+    log.debug("deleteComentarioGestor(Long evaluacionId, Long comentarioId) - end");
+
   }
 
   /**
-   * Elimina un listado de {@link Comentario} de una {@link Evaluacion}.
+   * Elimina un {@link Comentario} de tipo "GESTOR" de una {@link Evaluacion}.
    *
-   * @param evaluacionId Id de la evaluación
-   * @param ids          listado de id de la entidad {@link Comentario}.
+   * @param evaluacionId Id de {@link Evaluacion}
+   * @param comentarioId Id de {@link Comentario}
    */
+  @Override
   @Transactional
-  public void deleteAll(Long evaluacionId, List<Long> ids) throws ComentarioNotFoundException {
-    log.debug("deleteAll(Long evaluacionId, List<Long> ids) - start");
-    Assert.notNull(evaluacionId, "Evaluacion id no tiene que ser null para eliminar un listado de comentario");
-    Optional<Evaluacion> optional = this.evaluacionRepository.findById(evaluacionId);
-    if (optional.isPresent()) {
-      Evaluacion evaluacion = optional.get();
-      for (Long id : ids) {
-        Comentario comentario = this.findById(id);
-        Assert.isTrue(evaluacion.getId().equals(comentario.getEvaluacion().getId()),
-            "EvaluacionId debe coincidir con el id de la evaluacion del comentario para eliminarlo");
-        this.delete(id);
-      }
-      log.debug("deleteAll(Long evaluacionId, List<Long> ids) - end");
-    } else {
-      throw new EvaluacionNotFoundException(evaluacionId);
-    }
+  public void deleteComentarioEvaluador(Long evaluacionId, Long comentarioId) throws ComentarioNotFoundException {
+    log.debug("deleteComentarioEvaluador(Long evaluacionId, Long comentarioId) - start");
+
+    deleteComentarioEvaluacion(evaluacionId, comentarioId, 2L);
+
+    log.debug("deleteComentarioEvaluador(Long evaluacionId, Long comentarioId) - end");
   }
 
   /**
-   * Elimina todos los registros {@link Comentario}.
+   * Actualizar un {@link Comentario} del tipo "GESTOR" de una {@link Evaluacion}.
+   *
+   * @param evaluacionId         Id de la evaluación
+   * @param comentarioActualizar {@link Comentario} a actualizar.
+   * @return {@link Comentario} actualizado.
    */
+  @Override
   @Transactional
-  public void deleteAll() {
-    log.debug("Petición a deleteAll de Comentario: {} - start");
-    comentarioRepository.deleteAll();
-    log.debug("Petición a deleteAll de Comentario: {} - end");
+  public Comentario updateComentarioGestor(Long evaluacionId, Comentario comentarioActualizar) {
+    log.debug("updateComentarioGestor(Long evaluacionId, Comentario comentarioActualizar) - start");
+
+    Assert.notNull(evaluacionId, "Evaluación id no puede ser null  para actualizar un comentario.");
+    Assert.isTrue(comentarioActualizar.getTipoComentario().getId().equals(1L),
+        "No se puede actualizar un tipo de comentario que no sea del tipo Gestor.");
+
+    log.debug("updateComentarioGestor(Long evaluacionId, Comentario comentarioActualizar) - end");
+
+    return updateComentarioEvaluacion(evaluacionId, comentarioActualizar);
+
   }
 
   /**
-   * Actualiza los datos del {@link Comentario}.
+   * Actualizar un {@link Comentario} del tipo "EVALUADOR" de una
+   * {@link Evaluacion}.
+   *
+   * @param evaluacionId         Id de la evaluación
+   * @param comentarioActualizar {@link Comentario} a actualizar.
+   * @return {@link Comentario} actualizado.
+   */
+  @Override
+  @Transactional
+  public Comentario updateComentarioEvaluador(Long evaluacionId, Comentario comentarioActualizar) {
+    log.debug("updateComentarioEvaluador(Long evaluacionId, Comentario comentarioActualizar) - start");
+
+    Assert.notNull(evaluacionId, "Evaluación id no puede ser null  para actualizar un comentario.");
+    Assert.isTrue(comentarioActualizar.getTipoComentario().getId().equals(2L),
+        "No se puede actualizar un tipo de comentario que no sea del tipo Evaluador.");
+
+    log.debug("updateComentarioEvaluador(Long evaluacionId, Comentario comentarioActualizar) - end");
+
+    return updateComentarioEvaluacion(evaluacionId, comentarioActualizar);
+
+  }
+
+  /**
+   * Obtiene todos los {@link Comentario} del tipo "GESTOR" por el id de su
+   * evaluación.
+   *
+   * @param id       el id de la entidad {@link Evaluacion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Comentario} paginadas.
+   */
+  @Override
+  public Page<Comentario> findByEvaluacionIdGestor(Long id, Pageable pageable) {
+    log.debug("findByEvaluacionIdGestor(Long id, Pageable pageable) - start");
+    Assert.notNull(id, "El id de la evaluación no puede ser nulo para listar sus comentarios");
+    Page<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioId(id, 1L, pageable);
+    log.debug("findByEvaluacionIdGestor(Long id, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene todos los {@link Comentario} del tipo "EVALUADOR" por el id de su
+   * evaluación.
+   *
+   * @param id       el id de la entidad {@link Evaluacion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Comentario} paginadas.
+   */
+  @Override
+  public Page<Comentario> findByEvaluacionIdEvaluador(Long id, Pageable pageable) {
+    log.debug("findByEvaluacionIdEvaluador(Long id, Pageable pageable) - start");
+    Assert.notNull(id, "El id de la evaluación no puede ser nulo para listar sus comentarios");
+    Page<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioId(id, 2L, pageable);
+    log.debug("findByEvaluacionIdEvaluador(Long id, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Crea un comentario seteandole la evaluación y el tipo correspondiente.
    * 
-   * @param comentarioActualizar {@link Comentario} con los datos actualizados.
-   * @return El {@link Comentario} actualizado.
-   * @throws ComentarioNotFoundException Si no existe ningún {@link Comentario}
-   *                                     con ese id.
-   * @throws IllegalArgumentException    Si el {@link Comentario} no tiene id.
+   * @param evaluacionId     Identificador de la {@link Evaluacion}
+   * @param comentario       {@link Comentario}
+   * @param tipoComentarioId Identificador del {@link TipoComentario}
+   * @return {@link Comentario}
    */
-  @Transactional
-  public Comentario update(final Comentario comentarioActualizar) {
-    log.debug("update(Comentario comentarioActualizar) - start");
+  private Comentario createComentarioEvaluacion(Long evaluacionId, Comentario comentario, Long tipoComentarioId) {
+    log.debug("createComentarioEvaluacion(Long evaluacionId, Comentario comentario, Long tipoComentarioId) - start");
 
-    Assert.notNull(comentarioActualizar.getId(), "Comentario id no puede ser null para actualizar un comentario");
+    Assert.notNull(evaluacionId, "Evaluación id no puede ser null para crear un nuevo comentario");
+    Assert.isNull(comentario.getId(), "Comentario id  tiene que ser null para crear un nuevo comentario");
+    Assert.isNull(comentario.getEvaluacion(), "La evaluación no debe estar rellena para crear un nuevo comentario");
+
+    return evaluacionRepository.findById(evaluacionId).map(evaluacion -> {
+      comentario.setEvaluacion(evaluacion);
+      TipoComentario tipoComentario = new TipoComentario();
+      tipoComentario.setId(tipoComentarioId);
+      comentario.setTipoComentario(tipoComentario);
+
+      log.debug("createComentarioEvaluacion(Long evaluacionId, Comentario comentario, Long tipoComentarioId) - end");
+      return comentarioRepository.save(comentario);
+
+    }).orElseThrow(() -> new EvaluacionNotFoundException(evaluacionId));
+  }
+
+  /**
+   * Actualiza un comentario de una evaluación en concreto.
+   * 
+   * @param evaluacionId         Identificador de la {@link Evaluacion}
+   * @param comentarioActualizar {@link Comentario} a actualizar
+   */
+  private Comentario updateComentarioEvaluacion(Long evaluacionId, Comentario comentarioActualizar) {
+    log.debug("updateComentarioEvaluacion(Long evaluacionId, Comentario comentario) - start");
 
     return comentarioRepository.findById(comentarioActualizar.getId()).map(comentario -> {
+
+      Assert.isTrue(comentario.getEvaluacion().getId().equals(evaluacionId),
+          "El comentario no pertenece a la evaluación recibida.");
+
       comentario.setApartadoFormulario(comentarioActualizar.getApartadoFormulario());
       comentario.setEvaluacion(comentarioActualizar.getEvaluacion());
       comentario.setTipoComentario(comentarioActualizar.getTipoComentario());
       comentario.setTexto(comentarioActualizar.getTexto());
 
       Comentario returnValue = comentarioRepository.save(comentario);
-      log.debug("update(Comentario comentarioActualizar) - end");
+      log.debug("updateComentarioEvaluacion(Long evaluacionId, Comentario comentario) - end");
       return returnValue;
     }).orElseThrow(() -> new ComentarioNotFoundException(comentarioActualizar.getId()));
   }
 
-  /**
-   * Actualizar un listado {@link Comentario} de una {@link Evaluacion}.
-   *
-   * @param evaluacionId Id de la evaluación
-   * @param comentarios  listado de entidades {@link Comentario} a actualizar.
-   * @return listado de entidades {@link Comentario} persistida.
-   */
-  @Transactional
-  public List<Comentario> updateAll(Long evaluacionId, List<Comentario> comentarios) {
-    log.debug("updateAll(Long evaluacionId, List<Comentario> comentarios) - start");
-    Assert.notNull(evaluacionId, "Evaluacion id no tiene que ser null para actualizar un listado de comentario");
-    Optional<Evaluacion> optional = this.evaluacionRepository.findById(evaluacionId);
-    if (optional.isPresent()) {
-      Evaluacion evaluacion = optional.get();
-      List<Comentario> listado = new ArrayList<>();
-      for (Comentario comentario : comentarios) {
-        Assert.isTrue(evaluacion.getId().equals(comentario.getEvaluacion().getId()),
-            "EvaluacionId debe coincidir con el id de la evaluacion del comentario para actualizarlo");
-        Comentario resultado = update(comentario);
-        listado.add(resultado);
-      }
-      log.debug("updateAll(Long evaluacionId, List<Comentario> comentarios) - end");
-      return listado;
+  private void deleteComentarioEvaluacion(Long evaluacionId, Long comentarioId, Long tipoComentarioId) {
+
+    Assert.notNull(evaluacionId, "Evaluación id no puede ser null para eliminar un comentario");
+    Assert.notNull(comentarioId, "Comentario id no puede ser null para eliminar un comentario");
+
+    Optional<Comentario> comentario = comentarioRepository.findById(comentarioId);
+
+    if (!comentario.isPresent()) {
+      throw new ComentarioNotFoundException(comentarioId);
     }
-    throw new EvaluacionNotFoundException(evaluacionId);
+
+    Assert.isTrue(comentario.get().getEvaluacion().getId().equals(evaluacionId),
+        "El comentario no pertenece a la evaluación recibida");
+
+    // TODO Refactorizar texto cuando se tengan enumerados.
+    Assert.isTrue(comentario.get().getTipoComentario().getId().equals(tipoComentarioId),
+        "No se puede eliminar el comentario debido a su tipo");
+
+    comentarioRepository.deleteById(comentarioId);
+
   }
 
-  /**
-   * Obtiene {@link Comentario} por el id de su evaluación.
-   *
-   * @param id       el id de la entidad {@link Comentario}.
-   * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link Comentario} paginadas.
-   */
-  @Override
-  public Page<Comentario> findByEvaluacionId(Long id, Pageable pageable) {
-    log.debug("findByEvaluacionId(Long id, Pageable pageable) - start");
-    Assert.notNull(id, "El id de la evaluación no puede ser nulo para listar sus comentarios");
-    Page<Comentario> returnValue = comentarioRepository.findByEvaluacionId(id, pageable);
-    log.debug("findByEvaluacionId(Long id, Pageable pageable) - end");
-    return returnValue;
-  }
-
-  /**
-   * Obtiene el número total de {@link Comentario} para un determinado
-   * {@link Evaluacion}.
-   * 
-   * @param id Id de {@link Evaluacion}.
-   * @return número de entidades {@link Comentario}
-   */
-  @Override
-  public int countByEvaluacionId(Long id) {
-    log.debug("countByEvaluacionId(Long id) - start");
-    Assert.notNull(id, "El id de la evaluación no puede ser nulo para mostrar el número total de sus comentarios");
-    int count = comentarioRepository.countByEvaluacionId(id);
-    log.debug("countByEvaluacionId(Long id) - end");
-    return count;
-  }
 }
