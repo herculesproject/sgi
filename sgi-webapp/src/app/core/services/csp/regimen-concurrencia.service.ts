@@ -28,7 +28,7 @@ export class RegimenConcurrenciaService extends SgiRestService<number, IRegimenC
     super(
       RegimenConcurrenciaService.name,
       logger,
-      `${environment.serviceServers.eti}${RegimenConcurrenciaService.MAPPING}`,
+      `${environment.serviceServers.csp}${RegimenConcurrenciaService.MAPPING}`,
       http
     );
   }

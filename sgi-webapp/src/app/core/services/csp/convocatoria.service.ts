@@ -176,7 +176,7 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
     super(
       ConvocatoriaService.name,
       logger,
-      `${environment.serviceServers.eti}${ConvocatoriaService.MAPPING}`,
+      `${environment.serviceServers.csp}${ConvocatoriaService.MAPPING}`,
       http
     );
   }
@@ -202,7 +202,7 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
    * @param options opciones de búsqueda.
    */
   getPeriodosJustificacion(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IPeriodosJustificacion>> {
-    this.logger.debug(ConvocatoriaService.name, `findPeriodosJustificacion(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    this.logger.debug(ConvocatoriaService.name, `getPeriodosJustificacion(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
     const list = {
       page: null,
       total: periodosJustificacion.length,
@@ -211,7 +211,7 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
     return of(list)
       .pipe(
         tap(() => this.logger.debug(ConvocatoriaService.name,
-          `findByEvaluacionId(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+          `getPeriodosJustificacion(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
       );
   }
 
@@ -223,7 +223,7 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
    * @param options opciones de búsqueda.
    */
   getEnlaces(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IEnlace>> {
-    this.logger.debug(ConvocatoriaService.name, `findPeriodosJustificacion(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    this.logger.debug(ConvocatoriaService.name, `getEnlaces(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
     // return this.find<IEntidadesConvocantes, IEntidadesConvocantes>(`${this.endpointUrl}/${id}/comentarios`, options)
     const list = {
       page: null,
@@ -233,7 +233,7 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
     return of(list)
       .pipe(
         tap(() => this.logger.debug(ConvocatoriaService.name,
-          `findByEvaluacionId(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+          `getEnlaces(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
       );
   }
 
@@ -253,7 +253,7 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
     return of(list)
       .pipe(
         tap(() => this.logger.debug(ConvocatoriaService.name,
-          `findByEvaluacionId(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+          `getPlazosFases(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
       );
   }
 
@@ -274,7 +274,7 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
    * @returns Listado de hitos.
    */
   findHitosConvocatoria(idConvocatoria: number): Observable<SgiRestListResult<IHito>> {
-    this.logger.debug(ConvocatoriaService.name, `findHitos(idConvocatoria)`, '-', 'START');
+    this.logger.debug(ConvocatoriaService.name, `findHitosConvocatoria(idConvocatoria)`, '-', 'START');
     return of({
       page: null,
       total: hitos.length,
@@ -346,6 +346,14 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
       total: areasTematicas.length,
       items: areasTematicas
     } as SgiRestListResult<IAreaTematica>);
+  }
+
+  create(convocatoria: IConvocatoria): Observable<IConvocatoria> {
+    return of(convocatoria);
+  }
+
+  update(idConvocatoria: number, convocatoria: IConvocatoria): Observable<IConvocatoria> {
+    return of(convocatoria);
   }
 
 }

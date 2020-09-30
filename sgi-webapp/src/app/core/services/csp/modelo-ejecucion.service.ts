@@ -73,7 +73,7 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
     super(
       ModeloEjecucionService.name,
       logger,
-      `${environment.serviceServers.eti}${ModeloEjecucionService.MAPPING}`,
+      `${environment.serviceServers.csp}${ModeloEjecucionService.MAPPING}`,
       http
     );
   }

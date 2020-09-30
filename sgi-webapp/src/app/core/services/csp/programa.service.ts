@@ -46,7 +46,7 @@ export class ProgramaService extends SgiRestService<number, IPrograma> {
     super(
       ProgramaService.name,
       logger,
-      `${environment.serviceServers.eti}${ProgramaService.MAPPING}`,
+      `${environment.serviceServers.csp}${ProgramaService.MAPPING}`,
       http
     );
   }

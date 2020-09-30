@@ -30,7 +30,7 @@ export class UnidadGestionService extends SgiRestService<number, IUnidadGestion>
     super(
       UnidadGestionService.name,
       logger,
-      `${environment.serviceServers.eti}${UnidadGestionService.MAPPING}`,
+      `${environment.serviceServers.csp}${UnidadGestionService.MAPPING}`,
       http
     );
   }

@@ -5,7 +5,8 @@ export const environment = {
   production: true,
   serviceServers: {
     eti: '/api/eti',
-    sgp: '/api/sgp'
+    sgp: '/api/sgp',
+    csp: '/api/csp'
   },
   loggerConfig: {
     enableSourceMaps: true, // <-- THIS IS REQUIRED, to make "line-numbers" work in SourceMap Object defition (without evalSourceMap)

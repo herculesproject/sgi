@@ -33,7 +33,7 @@ export class PlanService extends SgiRestService<number, IPlan> {
     super(
       PlanService.name,
       logger,
-      `${environment.serviceServers.eti}${PlanService.MAPPING}`,
+      `${environment.serviceServers.csp}${PlanService.MAPPING}`,
       http
     );
   }

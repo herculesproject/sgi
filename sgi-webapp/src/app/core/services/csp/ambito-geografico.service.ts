@@ -41,7 +41,7 @@ export class AmbitoGeograficoService extends SgiRestService<number, IAmbitoGeogr
     super(
       AmbitoGeograficoService.name,
       logger,
-      `${environment.serviceServers.eti}${AmbitoGeograficoService.MAPPING}`,
+      `${environment.serviceServers.csp}${AmbitoGeograficoService.MAPPING}`,
       http
     );
   }
