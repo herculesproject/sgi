@@ -2,7 +2,6 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { IActa } from '@core/models/eti/acta';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiResolverResolver } from '@core/resolver/sgi-resolver';
 import { IConvocatoria } from '@core/models/csp/convocatoria';

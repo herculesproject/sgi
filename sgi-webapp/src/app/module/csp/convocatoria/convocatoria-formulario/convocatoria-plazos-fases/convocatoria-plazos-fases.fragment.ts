@@ -44,6 +44,24 @@ export class ConvocatoriaPlazosFasesFragment extends Fragment {
     }
   }
 
+  /**
+   * Insertamos plazos fase
+   * @param plazoFase
+   */
+  public addPlazosFases(plazoFase: IPlazosFases) {
+    this.logger.debug(ConvocatoriaPlazosFasesFragment.name,
+      `addEntidadFinanciadora(comentario: ${plazoFase})`, 'start');
+    const wrapped = new StatusWrapper<IPlazosFases>(plazoFase);
+    wrapped.setCreated();
+    const current = this.plazosFase$.value;
+    current.push(wrapped);
+    this.plazosFase$.next(current);
+    this.setChanges(true);
+    this.setErrors(false);
+    this.logger.debug(ConvocatoriaPlazosFasesFragment.name,
+      `addEntidadFinanciadora(comentario: ${plazoFase})`, 'end');
+  }
+
   saveOrUpdate(): Observable<string | number | void> {
     this.logger.debug(ConvocatoriaPlazosFasesFragment.name, 'saveOrUpdate()', 'start');
     return of(void 0).pipe(

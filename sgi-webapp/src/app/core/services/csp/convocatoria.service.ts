@@ -76,10 +76,12 @@ const hitos: IHito[] = [
 
 const plazosFases: IPlazosFases[] = [
   {
-    id: 1, fechaInicio: new Date(), fechaFin: new Date(), tipoFase: 'Presentación interna solicitudes', observaciones: 'Recogida de solicitudes en UGI', activo: true
+    id: 1, fechaInicio: new Date(), fechaFin: new Date(), tipoPlazosFases: { id: 1, nombre: 'Presentación interna solicitudes' },
+    observaciones: 'Recogida de solicitudes en UGI', activo: true
   },
   {
-    id: 1, fechaInicio: new Date(), fechaFin: new Date(), tipoFase: 'Presentación solicitudes', observaciones: 'Entrega de solicitudes en Ministerio', activo: true
+    id: 1, fechaInicio: new Date(), fechaFin: new Date(), tipoPlazosFases: { id: 2, nombre: 'Presentación solicitudes' },
+    observaciones: 'Entrega de solicitudes en Ministerio', activo: true
   }
 ];
 

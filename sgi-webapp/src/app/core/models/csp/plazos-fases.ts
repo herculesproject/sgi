@@ -1,3 +1,5 @@
+import { ITipoPlazosFases } from './tipo-plazos-fases';
+
 export interface IPlazosFases {
   /** Id */
   id: number;
@@ -5,11 +7,11 @@ export interface IPlazosFases {
   /** Fecha Inicio */
   fechaInicio: Date;
 
+  /** Plazos */
+  tipoPlazosFases: ITipoPlazosFases;
+
   /** Fecha Fin */
   fechaFin: Date;
-
-  /** tipos de fase */
-  tipoFase: string;
 
   /** Observaciones */
   observaciones: string;

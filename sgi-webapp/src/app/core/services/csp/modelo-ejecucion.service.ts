@@ -8,6 +8,7 @@ import { of, Observable } from 'rxjs';
 import { IFinalidad } from '@core/models/csp/finalidad';
 import { ITipoHito } from '@core/models/csp/tipo-hito';
 import { ITipoPeriodoJustificacion } from '@core/models/csp/tipo-periodo-justificacion';
+import { ITipoPlazosFases } from '@core/models/csp/tipo-plazos-fases';
 
 
 
@@ -59,6 +60,16 @@ const tipoJustificacion: ITipoPeriodoJustificacion[] = [
   },
   {
     id: 2, nombre: 'Final'
+  }
+
+];
+
+const tipoPlazoFase: ITipoPlazosFases[] = [
+  {
+    id: 1, nombre: 'Presentación interna solicitudes'
+  },
+  {
+    id: 2, nombre: 'Presentación solicitudes'
   }
 
 ];
@@ -137,6 +148,20 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
       total: tipoJustificacion.length,
       items: tipoJustificacion
     } as SgiRestListResult<ITipoPeriodoJustificacion>);
+  }
+
+  /**
+   * Recupera los tipos de una fase de plazo
+   * @param idModeloEjecucion Identificador del modelo de ejecución.
+   * @returns Listado de una fase de plazo
+   */
+  findPlazoFase(idModeloEjecucion: number): Observable<SgiRestListResult<ITipoPlazosFases>> {
+    this.logger.debug(ModeloEjecucionService.name, `findPlazoFase(idModeloEjecucion)`, '-', 'START');
+    return of({
+      page: null,
+      total: tipoPlazoFase.length,
+      items: tipoPlazoFase
+    } as SgiRestListResult<ITipoPlazosFases>);
   }
 
 }
