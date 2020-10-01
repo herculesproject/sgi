@@ -31,6 +31,10 @@ export interface IActionService {
    * @param name The name of the fragment
    */
   getFragment(name: string): IFragment;
+  /**
+   * Returns the action links associated to the action.
+   */
+  getActionLinks(): ActionLink[];
 }
 
 interface GroupStatus {
@@ -205,9 +209,9 @@ export interface IFragment {
    */
   setKey(value: string | number): void;
   /**
- * Validate the fragment to check errors or changes
- * @param markAllTouched When true all form controls are marked as touched. False by default
- */
+   * Validate the fragment to check errors or changes
+   * @param markAllTouched When true all form controls are marked as touched. False by default
+   */
   performChecks(markAllTouched?: boolean): void;
 }
 
@@ -221,6 +225,18 @@ export interface IFormFragment<T> extends IFragment {
    */
   getValue(): T;
 }
+
+export interface ActionLink {
+  /**
+   * Title of the action link
+   */
+  title: string;
+  /**
+   * Router link of the action link
+   */
+  routerLink: string | string[];
+}
+
 
 export abstract class Fragment implements IFragment {
   status$: BehaviorSubject<FragmentStatus>;
@@ -713,6 +729,7 @@ export abstract class ActionService implements IActionService, OnDestroy {
   protected subscriptions: Subscription[] = [];
   private edit = false;
   private masterFragmentName: string;
+  private actionLinks: ActionLink[] = [];
 
   status$: BehaviorSubject<ActionStatus> = new BehaviorSubject<ActionStatus>({ changes: false, complete: false, errors: false, edit: false });
 
@@ -799,7 +816,7 @@ export abstract class ActionService implements IActionService, OnDestroy {
     const changes = this.hasChanges();
     let complete = this.isComplete();
     let update = false;
-    //If one element transit to edition, we too
+    // If one element transit to edition, we too
     if (status.edit) {
       this.edit = true;
     }
@@ -859,5 +876,17 @@ export abstract class ActionService implements IActionService, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     this.fragments.forEach((fragment) => fragment.destroy());
+  }
+
+  /**
+   * Add a action link
+   * @param value action link to add
+   */
+  protected addActionLink(value: ActionLink) {
+    this.actionLinks.push(value);
+  }
+
+  getActionLinks(): ActionLink[] {
+    return this.actionLinks;
   }
 }

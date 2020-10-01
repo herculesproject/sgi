@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BuscarPersonaComponent } from './buscar-persona/buscar-persona.component';
 import { BuscarPersonaDialogoComponent } from './buscar-persona/dialogo/buscar-persona-dialogo.component';
 import { ActionFragmentMenuItemComponent } from './action-fragment-menu-item/action-fragment-menu-item.component';
+import { ActionFragmentLinkItemComponent } from './action-fragment-link-item/action-fragment-link-item.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { ActionFragmentMenuItemComponent } from './action-fragment-menu-item/act
     RootComponent,
     BuscarPersonaComponent,
     BuscarPersonaDialogoComponent,
-    ActionFragmentMenuItemComponent
+    ActionFragmentMenuItemComponent,
+    ActionFragmentLinkItemComponent
   ],
   imports: [
     CommonModule,
@@ -38,7 +40,8 @@ import { ActionFragmentMenuItemComponent } from './action-fragment-menu-item/act
     RootComponent,
     BuscarPersonaComponent,
     BuscarPersonaDialogoComponent,
-    ActionFragmentMenuItemComponent
+    ActionFragmentMenuItemComponent,
+    ActionFragmentLinkItemComponent
   ]
 })
 export class SharedModule {
