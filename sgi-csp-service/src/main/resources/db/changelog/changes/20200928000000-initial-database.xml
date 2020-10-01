@@ -4,20 +4,27 @@
   <!-- ########################################################## -->
   <!-- SEQUENCE -->
   <!-- ########################################################## -->
+
   <changeSet author="master" id="20200928000000-tipo_documento_seq">
     <createSequence sequenceName="tipo_documento_seq" />
   </changeSet>
-  <changeSet author="master" id="20200928000000-tipo_hito_seq">
-    <createSequence sequenceName="tipo_hito_seq" />
+
+  <changeSet author="master" id="20200928000000-tipo_enlace_seq">
+    <createSequence sequenceName="tipo_enlace_seq" />
   </changeSet>
 
   <changeSet author="master" id="20200928000000-tipo_finalidad_seq">
     <createSequence sequenceName="tipo_finalidad_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-tipo_hito_seq">
+    <createSequence sequenceName="tipo_hito_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
+
   <changeSet author="master" id="20200928000000-tipo_documento">
     <createTable tableName="tipo_documento">
       <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_documento_seq">
@@ -32,15 +39,16 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="master" id="20200928000000-tipo_hito">
-    <createTable tableName="tipo_hito">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_hito_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_hito_pk" />
+
+  <changeSet author="master" id="20200928000000-tipo_enlace">
+    <createTable tableName="tipo_enlace">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_enlace_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_enlace_pk" />
       </column>
-      <column name="nombre" type="VARCHAR(50)">
+      <column name="nombre" type="VARCHAR2(50)">
         <constraints nullable="false" />
       </column>
-      <column name="descripcion" type="VARCHAR(250)" />
+      <column name="descripcion" type="VARCHAR2(250)" />
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>
@@ -62,11 +70,31 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-tipo_hito">
+    <createTable tableName="tipo_hito">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_hito_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_hito_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="descripcion" type="VARCHAR(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- UNIQUE CONSTRAINT -->
   <!-- ########################################################## -->
+
   <changeSet author="master" id="20200928000000-tipo_documento_uk">
     <addUniqueConstraint columnNames="nombre" constraintName="tipo_documento_uk" tableName="tipo_documento" />
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-tipo_enlace_uk">
+    <addUniqueConstraint columnNames="nombre" constraintName="tipo_enlace_uk" tableName="tipo_enlace" />
   </changeSet>
 
   <changeSet author="master" id="20200928000000-tipo_finalidad_uk">
@@ -76,6 +104,7 @@
   <changeSet author="master" id="20200928000000-tipo_hito_uk">
     <addUniqueConstraint columnNames="nombre" constraintName="tipo_hito_uk" tableName="tipo_hito" />
   </changeSet>
+
   <!-- ########################################################## -->
   <!-- INDEX -->
   <!-- ########################################################## -->

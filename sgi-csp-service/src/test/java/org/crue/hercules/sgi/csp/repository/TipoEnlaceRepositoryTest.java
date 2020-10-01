@@ -1,0 +1,64 @@
+package org.crue.hercules.sgi.csp.repository;
+
+import java.util.Optional;
+
+import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.model.TipoEnlace;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+
+@DataJpaTest
+public class TipoEnlaceRepositoryTest {
+
+  @Autowired
+  private TestEntityManager entityManager;
+
+  @Autowired
+  private TipoEnlaceRepository repository;
+
+  @Test
+  public void findByNombre_ReturnsTipoEnlace() throws Exception {
+    // given: data TipoEnlace with nombre to find
+    TipoEnlace data = generarMockTipoEnlace(1L, Boolean.TRUE);
+    entityManager.persistAndFlush(data);
+    entityManager.persistAndFlush(generarMockTipoEnlace(2L, Boolean.TRUE));
+    entityManager.persistAndFlush(generarMockTipoEnlace(3L, Boolean.TRUE));
+
+    // when: find given nombre
+    Optional<TipoEnlace> dataFound = repository.findByNombre(data.getNombre());
+
+    // then: TipoEnlace with given name is found
+    Assertions.assertThat(dataFound.get()).isNotNull();
+    Assertions.assertThat(dataFound.get().getId()).isEqualTo(data.getId());
+    Assertions.assertThat(dataFound.get().getNombre()).isEqualTo(data.getNombre());
+    Assertions.assertThat(dataFound.get().getDescripcion()).isEqualTo(data.getDescripcion());
+    Assertions.assertThat(dataFound.get().getActivo()).isEqualTo(data.getActivo());
+  }
+
+  @Test
+  public void findByNombre_ReturnsNull() throws Exception {
+    // given: data TipoEnlace with nombre to find
+    TipoEnlace data = generarMockTipoEnlace(1L, Boolean.TRUE);
+    entityManager.persistAndFlush(generarMockTipoEnlace(2L, Boolean.TRUE));
+    entityManager.persistAndFlush(generarMockTipoEnlace(3L, Boolean.TRUE));
+
+    // when: find given nombre
+    Optional<TipoEnlace> dataFound = repository.findByNombre(data.getNombre());
+
+    // then: TipoEnlace with given name is not found
+    Assertions.assertThat(dataFound).isEqualTo(Optional.empty());
+  }
+
+  /**
+   * Función que devuelve un objeto TipoEnlace
+   * 
+   * @param id
+   * @param activo
+   * @return TipoEnlace
+   */
+  private TipoEnlace generarMockTipoEnlace(Long id, Boolean activo) {
+    return TipoEnlace.builder().nombre("nombre-" + id).descripcion("descripcion-" + id).activo(activo).build();
+  }
+}

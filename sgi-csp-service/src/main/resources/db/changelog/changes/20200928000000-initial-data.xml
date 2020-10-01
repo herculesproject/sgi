@@ -5,26 +5,6 @@
   <!-- ENUMERATION -->
   <!-- ########################################################## -->
 
-  <changeSet author="master" id="20200601000000-tipo_hito">
-    <insert tableName="tipo_hito">
-      <column name="nombre" value="Hito1" />
-      <column name="descripcion" value="Descripción del Hito1"></column>
-      <column name="activo" value="true" />
-    </insert>
-
-    <insert tableName="tipo_hito">
-      <column name="nombre" value="Hito2" />
-      <column name="descripcion" value="Descripción del Hito2"></column>
-      <column name="activo" value="true" />
-    </insert>
-
-    <insert tableName="tipo_hito">
-      <column name="nombre" value="Hito3" />
-      <column name="descripcion" value="Descripción del Hito3"></column>
-      <column name="activo" value="true" />
-    </insert>
-
-  </changeSet>
   <!-- ########################################################## -->
   <!-- FIN ENUMERATION -->
   <!-- ########################################################## -->
@@ -43,6 +23,34 @@
     <insert tableName="tipo_documento">
       <column name="nombre" value="nombre-003" />
       <column name="descripcion" value="descripcion-003" />
+      <column name="activo" value="false" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-tipo_enlace">
+    <insert tableName="tipo_enlace">
+      <column name="nombre" value="tipo_enlace AAA" />
+      <column name="descripcion" value="tipo_enlace AAA" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_enlace">
+      <column name="nombre" value="tipo_enlace BBB" />
+      <column name="descripcion" value="tipo_enlace BBB" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_enlace">
+      <column name="nombre" value="tipo_enlace CCC" />
+      <column name="descripcion" value="tipo_enlace CCC" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_enlace">
+      <column name="nombre" value="tipo_enlace DDD" />
+      <column name="descripcion" value="tipo_enlace DDD" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_enlace">
+      <column name="nombre" value="tipo_enlace FFF" />
+      <column name="descripcion" value="tipo_enlace FFF" />
       <column name="activo" value="false" />
     </insert>
   </changeSet>
@@ -72,6 +80,24 @@
       <column name="nombre" value="tipo finalidad FFF" />
       <column name="descripcion" value="tipo finalidad FFF" />
       <column name="activo" value="false" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-tipo_hito">
+    <insert tableName="tipo_hito">
+      <column name="nombre" value="Hito1" />
+      <column name="descripcion" value="Descripción del Hito1"></column>
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_hito">
+      <column name="nombre" value="Hito2" />
+      <column name="descripcion" value="Descripción del Hito2"></column>
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_hito">
+      <column name="nombre" value="Hito3" />
+      <column name="descripcion" value="Descripción del Hito3"></column>
+      <column name="activo" value="true" />
     </insert>
   </changeSet>
 
