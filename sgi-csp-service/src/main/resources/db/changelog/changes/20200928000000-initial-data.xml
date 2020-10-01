@@ -28,4 +28,32 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-tipo_finalidad">
+    <insert tableName="tipo_finalidad">
+      <column name="nombre" value="tipo finalidad AAA" />
+      <column name="descripcion" value="tipo finalidad AAA" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_finalidad">
+      <column name="nombre" value="tipo finalidad BBB" />
+      <column name="descripcion" value="tipo finalidad BBB" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_finalidad">
+      <column name="nombre" value="tipo finalidad CCC" />
+      <column name="descripcion" value="tipo finalidad CCC" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_finalidad">
+      <column name="nombre" value="tipo finalidad DDD" />
+      <column name="descripcion" value="tipo finalidad DDD" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_finalidad">
+      <column name="nombre" value="tipo finalidad FFF" />
+      <column name="descripcion" value="tipo finalidad FFF" />
+      <column name="activo" value="false" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>

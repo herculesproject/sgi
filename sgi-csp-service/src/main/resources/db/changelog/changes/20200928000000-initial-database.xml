@@ -8,6 +8,9 @@
     <createSequence sequenceName="tipo_documento_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-tipo_finalidad_seq">
+    <createSequence sequenceName="tipo_finalidad_seq" />
+  </changeSet>
 
   <!-- ########################################################## -->
   <!-- TABLE -->
@@ -27,12 +30,30 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-tipo_finalidad">
+    <createTable tableName="tipo_finalidad">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_finalidad_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_finalidad_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR2(50)" >
+        <constraints nullable="false" />
+      </column>
+      <column name="descripcion" type="VARCHAR2(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
 
   <!-- ########################################################## -->
   <!-- UNIQUE CONSTRAINT -->
   <!-- ########################################################## -->
   <changeSet author="master" id="20200928000000-tipo_documento_uk">
     <addUniqueConstraint columnNames="nombre" constraintName="tipo_documento_uk" tableName="tipo_documento" />
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-tipo_finalidad_uk">
+    <addUniqueConstraint columnNames="nombre" constraintName="tipo_finalidad_uk" tableName="tipo_finalidad" />
   </changeSet>
 
   <!-- ########################################################## -->

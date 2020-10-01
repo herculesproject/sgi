@@ -1,0 +1,64 @@
+package org.crue.hercules.sgi.csp.repository;
+
+import java.util.Optional;
+
+import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+
+@DataJpaTest
+public class TipoFinalidadRepositoryTest {
+
+  @Autowired
+  private TestEntityManager entityManager;
+
+  @Autowired
+  private TipoFinalidadRepository repository;
+
+  @Test
+  public void findByNombre_ReturnsTipoFinalidad() throws Exception {
+    // given: data TipoFinalidad with nombre to find
+    TipoFinalidad data = generarMockTipoFinalidad(1L, Boolean.TRUE);
+    entityManager.persistAndFlush(data);
+    entityManager.persistAndFlush(generarMockTipoFinalidad(2L, Boolean.TRUE));
+    entityManager.persistAndFlush(generarMockTipoFinalidad(3L, Boolean.TRUE));
+
+    // when: find given nombre
+    Optional<TipoFinalidad> dataFound = repository.findByNombre(data.getNombre());
+
+    // then: TipoFinalidad with given name is found
+    Assertions.assertThat(dataFound.get()).isNotNull();
+    Assertions.assertThat(dataFound.get().getId()).isEqualTo(data.getId());
+    Assertions.assertThat(dataFound.get().getNombre()).isEqualTo(data.getNombre());
+    Assertions.assertThat(dataFound.get().getDescripcion()).isEqualTo(data.getDescripcion());
+    Assertions.assertThat(dataFound.get().getActivo()).isEqualTo(data.getActivo());
+  }
+
+  @Test
+  public void findByNombre_ReturnsNull() throws Exception {
+    // given: data TipoFinalidad with nombre to find
+    TipoFinalidad data = generarMockTipoFinalidad(1L, Boolean.TRUE);
+    entityManager.persistAndFlush(generarMockTipoFinalidad(2L, Boolean.TRUE));
+    entityManager.persistAndFlush(generarMockTipoFinalidad(3L, Boolean.TRUE));
+
+    // when: find given nombre
+    Optional<TipoFinalidad> dataFound = repository.findByNombre(data.getNombre());
+
+    // then: TipoFinalidad with given name is not found
+    Assertions.assertThat(dataFound).isEqualTo(Optional.empty());
+  }
+
+  /**
+   * Función que devuelve un objeto TipoFinalidad
+   * 
+   * @param id
+   * @param activo
+   * @return TipoFinalidad
+   */
+  private TipoFinalidad generarMockTipoFinalidad(Long id, Boolean activo) {
+    return TipoFinalidad.builder().nombre("nombre-" + id).descripcion("descripcion-" + id).activo(activo).build();
+  }
+}
