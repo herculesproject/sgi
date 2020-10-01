@@ -7,6 +7,9 @@
   <changeSet author="master" id="20200928000000-tipo_documento_seq">
     <createSequence sequenceName="tipo_documento_seq" />
   </changeSet>
+  <changeSet author="master" id="20200928000000-tipo_hito_seq">
+    <createSequence sequenceName="tipo_hito_seq" />
+  </changeSet>
 
   <changeSet author="master" id="20200928000000-tipo_finalidad_seq">
     <createSequence sequenceName="tipo_finalidad_seq" />
@@ -29,13 +32,27 @@
       </column>
     </createTable>
   </changeSet>
+  <changeSet author="master" id="20200928000000-tipo_hito">
+    <createTable tableName="tipo_hito">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_hito_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_hito_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="descripcion" type="VARCHAR(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
 
   <changeSet author="master" id="20200928000000-tipo_finalidad">
     <createTable tableName="tipo_finalidad">
       <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_finalidad_seq">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_finalidad_pk" />
       </column>
-      <column name="nombre" type="VARCHAR2(50)" >
+      <column name="nombre" type="VARCHAR2(50)">
         <constraints nullable="false" />
       </column>
       <column name="descripcion" type="VARCHAR2(250)" />
@@ -56,6 +73,9 @@
     <addUniqueConstraint columnNames="nombre" constraintName="tipo_finalidad_uk" tableName="tipo_finalidad" />
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-tipo_hito_uk">
+    <addUniqueConstraint columnNames="nombre" constraintName="tipo_hito_uk" tableName="tipo_hito" />
+  </changeSet>
   <!-- ########################################################## -->
   <!-- INDEX -->
   <!-- ########################################################## -->
