@@ -12,6 +12,7 @@ import { EVALUADOR_ROUTE_NAMES } from './evaluador-route-names';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
 import { EvaluadorDatosGeneralesComponent } from './evaluador-formulario/evaluador-datos-generales/evaluador-datos-generales.component';
 import { EvaluadorResolver } from './evaluador.resolver';
+import { EvaluadorConflictosInteresListadoComponent } from './evaluador-formulario/evaluador-conflictos-interes/evaluador-conflictos-interes-listado/evaluador-conflictos-interes-listado.component';
 
 const MSG_LISTADO_TITLE = marker('eti.evaluador.listado.titulo');
 const MSG_NEW_TITLE = marker('eti.evaluador.crear.titulo');
@@ -46,6 +47,11 @@ const routes: SgiRoutes = [
         path: EVALUADOR_ROUTE_NAMES.DATOS_GENERALES,
         component: EvaluadorDatosGeneralesComponent,
         canDeactivate: [FragmentGuard]
+      },
+      {
+        path: EVALUADOR_ROUTE_NAMES.CONFLICTOS_INTERES,
+        component: EvaluadorConflictosInteresListadoComponent,
+        canDeactivate: [FragmentGuard]
       }
     ]
   },
@@ -70,6 +76,11 @@ const routes: SgiRoutes = [
       {
         path: EVALUADOR_ROUTE_NAMES.DATOS_GENERALES,
         component: EvaluadorDatosGeneralesComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: EVALUADOR_ROUTE_NAMES.CONFLICTOS_INTERES,
+        component: EvaluadorConflictosInteresListadoComponent,
         canDeactivate: [FragmentGuard]
       }
     ]

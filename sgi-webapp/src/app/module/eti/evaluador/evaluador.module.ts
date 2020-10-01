@@ -12,13 +12,17 @@ import { EvaluadorCrearComponent } from './evaluador-crear/evaluador-crear.compo
 import { EvaluadorEditarComponent } from './evaluador-editar/evaluador-editar.component';
 import { EvaluadorRoutingModule } from './evaluador-routing.module';
 import { EvaluadorResolver } from './evaluador.resolver';
+import { EvaluadorConflictosInteresListadoComponent } from './evaluador-formulario/evaluador-conflictos-interes/evaluador-conflictos-interes-listado/evaluador-conflictos-interes-listado.component';
+import { EvaluadorConflictosInteresModalComponent } from './evaluador-formulario/evaluador-conflictos-interes/evaluador-conflictos-interes-modal/evaluador-conflictos-interes-modal.component';
 
 @NgModule({
   declarations: [
     EvaluadorCrearComponent,
     EvaluadorEditarComponent,
     EvaluadorListadoComponent,
-    EvaluadorDatosGeneralesComponent
+    EvaluadorDatosGeneralesComponent,
+    EvaluadorConflictosInteresListadoComponent,
+    EvaluadorConflictosInteresModalComponent
   ],
   imports: [
     SharedModule,

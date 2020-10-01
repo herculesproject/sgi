@@ -122,5 +122,4 @@ export class DateUtils {
     return [fechaString, horaString].join('T');
   }
 
-
 }

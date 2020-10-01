@@ -9,6 +9,7 @@ import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { IConflictoInteres } from '@core/models/eti/conflicto-interes';
 
 @Injectable({
   providedIn: 'root'
@@ -68,4 +69,15 @@ export class EvaluadorService extends SgiRestService<number, IEvaluador>{
     );
   }
 
+
+  /**
+   * Devuelve todos los conflictos de interés por evaluador id.
+   * @param idEvaluador id evaluador.
+   */
+  findConflictosInteres(idEvaluador: number) {
+    this.logger.debug(EvaluadorService.name, `findConflictosInteres(${idEvaluador})`, '-', 'START');
+    return this.find<IConflictoInteres, IConflictoInteres>(`${this.endpointUrl}/${idEvaluador}/conflictos`, null).pipe(
+      tap(() => this.logger.debug(EvaluadorService.name, `findConflictosInteres(${idEvaluador})`, '-', 'END'))
+    );
+  }
 }

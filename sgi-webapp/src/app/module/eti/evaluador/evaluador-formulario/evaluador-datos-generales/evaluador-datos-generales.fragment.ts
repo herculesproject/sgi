@@ -7,6 +7,8 @@ import { IEvaluador } from '@core/models/eti/evaluador';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { IPersona } from '@core/models/sgp/persona';
+import { DateUtils } from '@core/utils/date-utils';
+import { DateValidator } from '@core/validators/date-validator';
 
 export class EvaluadorDatosGeneralesFragment extends FormFragment<IEvaluador> {
 
@@ -54,6 +56,8 @@ export class EvaluadorDatosGeneralesFragment extends FormFragment<IEvaluador> {
       fechaBaja: [''],
       cargoComite: [null],
       resumen: ['']
+    }, {
+      validator: [new DateValidator().isAfter('fechaAlta', 'fechaBaja')]
     });
   }
 
