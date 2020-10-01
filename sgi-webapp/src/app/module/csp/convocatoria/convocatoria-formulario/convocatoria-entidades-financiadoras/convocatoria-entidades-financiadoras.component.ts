@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FragmentComponent } from '@core/component/fragment.component';
-import { IEntidadesFinanciadoras } from '@core/models/csp/entidades-financiadoras';
+import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
@@ -27,7 +27,7 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
   columnas: string[];
   elementosPagina: number[];
 
-  dataSource: MatTableDataSource<StatusWrapper<IEntidadesFinanciadoras>>;
+  dataSource: MatTableDataSource<StatusWrapper<IEntidadFinanciadora>>;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -50,7 +50,7 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
     super.ngOnInit();
     this.totalElementos = 0;
     this.subscriptions = [];
-    this.dataSource = new MatTableDataSource<StatusWrapper<IEntidadesFinanciadoras>>();
+    this.dataSource = new MatTableDataSource<StatusWrapper<IEntidadFinanciadora>>();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.entidadesFinanciadoras$.subscribe(elements => {
@@ -65,16 +65,16 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, 'ngOnDestroy()', 'end');
   }
 
-  openModal(wrapper?: StatusWrapper<IEntidadesFinanciadoras>): void {
+  openModal(wrapper?: StatusWrapper<IEntidadFinanciadora>): void {
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, 'openEditModal()', 'start');
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: wrapper ? wrapper.value : {} as IEntidadesFinanciadoras
+      data: wrapper ? wrapper.value : {} as IEntidadFinanciadora
     };
     const dialogRef = this.matDialog.open(ConvocatoriaEntidadFinanciadoraModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (entidadFinanciadora: IEntidadesFinanciadoras) => {
+      (entidadFinanciadora: IEntidadFinanciadora) => {
         if (entidadFinanciadora) {
           if (wrapper) {
             if (!wrapper.created) {

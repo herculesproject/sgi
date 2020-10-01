@@ -1,4 +1,4 @@
-export interface IEntidadesConvocantes {
+export interface IEntidadConvocante {
   id: number;
   nombre: string;
   cif: string;

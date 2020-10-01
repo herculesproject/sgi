@@ -2,12 +2,14 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { FormGroupUtil } from './form-group-util';
 
-describe('Pruebas de FormGroupUtil', () => {
+describe('FormGroupUtil', () => {
   let formGroup: FormGroup;
   const emailKey = 'email';
   const contraseniaKey = 'contraseña';
   const noValidKey = 'noExiste';
   const email = 'email@gmail.com';
+  const errorKey = `No existe el valor ${noValidKey} dentro del formGroup`;
+  const errorFormGroup = `No existe el formGroup`;
 
   beforeEach(() => {
     formGroup = new FormGroup({
@@ -24,17 +26,12 @@ describe('Pruebas de FormGroupUtil', () => {
 
   it('Comprueba el método setValue con una clave que no existe', () => {
     expect(formGroup.get(noValidKey)).toBeNull();
-    FormGroupUtil.setValue(formGroup, noValidKey, email);
-    expect(formGroup.get(noValidKey)).toBeNull();
+    expect(() => FormGroupUtil.setValue(formGroup, noValidKey, email)).toThrowError(errorKey);
   });
 
   it('Comprueba el método setValue con un formGroup no válido', () => {
-    expect(() => {
-      FormGroupUtil.setValue(null, noValidKey, email);
-    }).not.toThrow();
-    expect(() => {
-      FormGroupUtil.setValue(undefined, noValidKey, email);
-    }).not.toThrow();
+    expect(() => FormGroupUtil.setValue(null, noValidKey, email)).toThrowError(errorFormGroup);
+    expect(() => FormGroupUtil.setValue(undefined, noValidKey, email)).toThrowError(errorFormGroup);
   });
 
   it('Comprueba el método getValue con una clave que existe', () => {
@@ -44,12 +41,12 @@ describe('Pruebas de FormGroupUtil', () => {
   });
 
   it('Comprueba el método getValue con una clave que no existe', () => {
-    expect(FormGroupUtil.getValue(formGroup, noValidKey)).toBeNull();
+    expect(() => FormGroupUtil.getValue(formGroup, noValidKey)).toThrowError(errorKey);
   });
 
   it('Comprueba el método getValue con un formGroup no válido', () => {
-    expect(FormGroupUtil.getValue(null, emailKey)).toBeNull();
-    expect(FormGroupUtil.getValue(undefined, emailKey)).toBeNull();
+    expect(() => FormGroupUtil.getValue(null, emailKey)).toThrowError(errorFormGroup);
+    expect(() => FormGroupUtil.getValue(undefined, emailKey)).toThrowError(errorFormGroup);
   });
 
   it('Comprueba el método getError con una clave que existe', () => {
@@ -66,12 +63,12 @@ describe('Pruebas de FormGroupUtil', () => {
   });
 
   it('Comprueba el método getError con una clave que no existe', () => {
-    expect(FormGroupUtil.getError(formGroup, noValidKey)).toBeNull();
+    expect(() => FormGroupUtil.getError(formGroup, noValidKey)).toThrowError(errorKey);
   });
 
   it('Comprueba el método getError con un formGroup no válido', () => {
-    expect(FormGroupUtil.getError(null, contraseniaKey)).toBeNull();
-    expect(FormGroupUtil.getError(undefined, emailKey)).toBeNull();
+    expect(() => FormGroupUtil.getError(null, contraseniaKey)).toThrowError(errorFormGroup);
+    expect(() => FormGroupUtil.getError(undefined, emailKey)).toThrowError(errorFormGroup);
   });
 
   it('Comprueba el método checkError con una clave que existe', () => {
@@ -88,11 +85,11 @@ describe('Pruebas de FormGroupUtil', () => {
   });
 
   it('Comprueba el método checkError con una clave que no existe', () => {
-    expect(FormGroupUtil.checkError(formGroup, noValidKey)).toBeFalse();
+    expect(() => FormGroupUtil.checkError(formGroup, noValidKey)).toThrowError(errorKey);
   });
 
   it('Comprueba el método checkError con un formGroup nulo', () => {
-    expect(FormGroupUtil.checkError(null, contraseniaKey)).toBeFalse();
+    expect(() => FormGroupUtil.checkError(null, contraseniaKey)).toThrowError(errorFormGroup);
   });
 
   it('Comprueba el método validFormGroup', () => {
@@ -105,7 +102,7 @@ describe('Pruebas de FormGroupUtil', () => {
   });
 
   it('Comprueba el método validFormGroup con un formGroup inválido', () => {
-    expect(FormGroupUtil.valid(null)).toBeFalse();
+    expect(() => FormGroupUtil.valid(null)).toThrowError(errorFormGroup);
   });
 
   it('Comprueba el método changeValidator con una clave que existe', () => {
@@ -135,30 +132,12 @@ describe('Pruebas de FormGroupUtil', () => {
   });
 
   it('Comprueba el método changeValidator con una clave que no existe', () => {
-    expect(() => {
-      FormGroupUtil.changeValidator(
-        formGroup,
-        noValidKey,
-        [Validators.minLength(2)],
-        '1'
-      );
-    }).not.toThrow();
+    expect(() => FormGroupUtil.changeValidator(formGroup, noValidKey, [Validators.minLength(2)], '1')).toThrowError(errorKey);
   });
 
   it('Comprueba el método changeValidator con un formGroup nulo', () => {
-    expect(() => {
-      FormGroupUtil.changeValidator(
-        null,
-        emailKey,
-        [Validators.minLength(2)],
-        '1'
-      );
-    }).not.toThrow();
-    expect(() => {
-      FormGroupUtil.changeValidator(undefined, contraseniaKey, [
-        Validators.minLength(2),
-      ]);
-    }).not.toThrow();
+    expect(() => FormGroupUtil.changeValidator(null, emailKey, [Validators.minLength(2)], '1')).toThrowError(errorFormGroup);
+    expect(() => FormGroupUtil.changeValidator(undefined, contraseniaKey, [Validators.minLength(2)])).toThrowError(errorFormGroup);
   });
 
   it('Comprueba el método addFormControl con datos válidos', () => {
@@ -168,15 +147,7 @@ describe('Pruebas de FormGroupUtil', () => {
   });
 
   it('Comprueba el método addFormControl con datos inválidos', () => {
-    expect(() => {
-      FormGroupUtil.addFormControl(formGroup, 'prueba', null);
-    }).not.toThrow();
-    expect(() => {
-      FormGroupUtil.addFormControl(
-        undefined,
-        'prueba',
-        new FormControl('', [])
-      );
-    }).not.toThrow();
+    expect(() => FormGroupUtil.addFormControl(formGroup, 'prueba', null)).toThrowError(`No existe el formControl`);
+    expect(() => FormGroupUtil.addFormControl(undefined, 'prueba', new FormControl('', []))).toThrowError(errorFormGroup);
   });
 });

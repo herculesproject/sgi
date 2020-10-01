@@ -13,7 +13,6 @@ import { Subscription } from 'rxjs';
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 
 @Component({
-  selector: 'sgi-convocatoria-enlace-modal',
   templateUrl: './convocatoria-enlace-modal.component.html',
   styleUrls: ['./convocatoria-enlace-modal.component.scss']
 })

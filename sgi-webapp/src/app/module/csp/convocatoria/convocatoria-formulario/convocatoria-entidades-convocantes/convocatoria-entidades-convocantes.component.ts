@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FragmentComponent } from '@core/component/fragment.component';
-import { IEntidadesConvocantes } from '@core/models/csp/entidades-convocantes';
+import { IEntidadConvocante } from '@core/models/csp/entidad-convocante';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs/internal/Subscription';
@@ -27,7 +27,7 @@ export class ConvocatoriaEntidadesConvocantesComponent extends FragmentComponent
   columnas: string[];
   elementosPagina: number[];
 
-  dataSource: MatTableDataSource<StatusWrapper<IEntidadesConvocantes>>;
+  dataSource: MatTableDataSource<StatusWrapper<IEntidadConvocante>>;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -49,7 +49,7 @@ export class ConvocatoriaEntidadesConvocantesComponent extends FragmentComponent
     super.ngOnInit();
     this.totalElementos = 0;
     this.subscriptions = [];
-    this.dataSource = new MatTableDataSource<StatusWrapper<IEntidadesConvocantes>>();
+    this.dataSource = new MatTableDataSource<StatusWrapper<IEntidadConvocante>>();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.entidadesConvocantes$.subscribe(elements => {
@@ -63,7 +63,7 @@ export class ConvocatoriaEntidadesConvocantesComponent extends FragmentComponent
    * Apertura de modal de entidad convocante (edición/creación)
    * @param entidadConvocante entidad convocante a editar.
    */
-  openModalEntidadConvocante(entidadConvocante?: StatusWrapper<IEntidadesConvocantes>): void {
+  openModalEntidadConvocante(entidadConvocante?: StatusWrapper<IEntidadConvocante>): void {
     this.logger.debug(ConvocatoriaEntidadesConvocantesComponent.name, 'openModalEntidadConvocante()', 'start');
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,

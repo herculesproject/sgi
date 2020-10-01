@@ -1,4 +1,4 @@
-import { IEntidadesFinanciadoras } from '@core/models/csp/entidades-financiadoras';
+import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 import { Fragment } from '@core/services/action-service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { delay, map, tap } from 'rxjs/operators';
 
 export class ConvocatoriaEntidadesFinanciadorasFragment extends Fragment {
-  entidadesFinanciadoras$: BehaviorSubject<StatusWrapper<IEntidadesFinanciadoras>[]>;
+  entidadesFinanciadoras$: BehaviorSubject<StatusWrapper<IEntidadFinanciadora>[]>;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -16,7 +16,7 @@ export class ConvocatoriaEntidadesFinanciadorasFragment extends Fragment {
   ) {
     super(key);
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name, 'constructor()', 'start');
-    this.entidadesFinanciadoras$ = new BehaviorSubject<StatusWrapper<IEntidadesFinanciadoras>[]>([]);
+    this.entidadesFinanciadoras$ = new BehaviorSubject<StatusWrapper<IEntidadFinanciadora>[]>([]);
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name, 'constructor()', 'end');
   }
 
@@ -36,17 +36,17 @@ export class ConvocatoriaEntidadesFinanciadorasFragment extends Fragment {
         })
       ).subscribe((entidadesFinanciadoras) => {
         this.entidadesFinanciadoras$.next(entidadesFinanciadoras.map(
-          entidadesFinanciadora => new StatusWrapper<IEntidadesFinanciadoras>(entidadesFinanciadora))
+          entidadesFinanciadora => new StatusWrapper<IEntidadFinanciadora>(entidadesFinanciadora))
         );
         this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name, 'onInitialize()', 'end');
       });
     }
   }
 
-  public addEntidadFinanciadora(entidadFinanciadora: IEntidadesFinanciadoras) {
+  public addEntidadFinanciadora(entidadFinanciadora: IEntidadFinanciadora) {
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name,
-      `addEntidadFinanciadora(comentario: ${entidadFinanciadora})`, 'start');
-    const wrapped = new StatusWrapper<IEntidadesFinanciadoras>(entidadFinanciadora);
+      `addEntidadFinanciadora(entidadFinanciadora: ${entidadFinanciadora})`, 'start');
+    const wrapped = new StatusWrapper<IEntidadFinanciadora>(entidadFinanciadora);
     wrapped.setCreated();
     const current = this.entidadesFinanciadoras$.value;
     current.push(wrapped);
@@ -54,7 +54,7 @@ export class ConvocatoriaEntidadesFinanciadorasFragment extends Fragment {
     this.setChanges(true);
     this.setErrors(false);
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name,
-      `addEntidadFinanciadora(comentario: ${entidadFinanciadora})`, 'end');
+      `addEntidadFinanciadora(entidadFinanciadora: ${entidadFinanciadora})`, 'end');
   }
 
   saveOrUpdate(): Observable<string | number | void> {

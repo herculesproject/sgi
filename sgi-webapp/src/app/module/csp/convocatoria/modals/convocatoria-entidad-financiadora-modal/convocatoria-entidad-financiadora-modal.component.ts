@@ -2,7 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { IEntidadesFinanciadoras } from '@core/models/csp/entidades-financiadoras';
+import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -29,7 +29,7 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent implements OnInit, On
     private readonly logger: NGXLogger,
     private readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<ConvocatoriaEntidadFinanciadoraModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public entidadFinanciadora: IEntidadesFinanciadoras,
+    @Inject(MAT_DIALOG_DATA) public entidadFinanciadora: IEntidadFinanciadora,
   ) {
     this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, 'constructor()', 'start');
     this.fxLayoutProperties = new FxLayoutProperties();
@@ -100,7 +100,7 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent implements OnInit, On
    *
    * @param entidadFinanciadora Entidad financiadora modificada
    */
-  closeModal(entidadFinanciadora?: IEntidadesFinanciadoras): void {
+  closeModal(entidadFinanciadora?: IEntidadFinanciadora): void {
     this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, 'closeModal()', 'start');
     this.matDialogRef.close(entidadFinanciadora);
     this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, 'closeModal()', 'end');

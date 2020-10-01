@@ -7,7 +7,7 @@ import { ConvocatoriaPeriodosJustificacionFragment } from './convocatoria-period
 import { Subscription } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { IPeriodosJustificacion } from '@core/models/csp/periodo-justificacion';
+import { IPeriodoJustificacion } from '@core/models/csp/periodo-justificacion';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaPeriodosJustificacionModalComponent } from '../../modals/convocatoria-periodos-justificacion-modal/convocatoria-periodos-justificacion-modal.component';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
@@ -27,7 +27,7 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
   displayedColumns: string[];
   elementosPagina: number[];
 
-  dataSource: MatTableDataSource<StatusWrapper<IPeriodosJustificacion>>;
+  dataSource: MatTableDataSource<StatusWrapper<IPeriodoJustificacion>>;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -49,7 +49,7 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
     super.ngOnInit();
     this.totalElementos = 0;
     this.subscriptions = [];
-    this.dataSource = new MatTableDataSource<StatusWrapper<IPeriodosJustificacion>>();
+    this.dataSource = new MatTableDataSource<StatusWrapper<IPeriodoJustificacion>>();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.periodosJustificacion$.subscribe(elements => {
@@ -63,18 +63,18 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
    * Apertura de modal de periodos justificacion (edición/creación)
    * @param idPeriodoJustificacion Identificador de periodos justificacion a editar.
    */
-  openModalPeriodo(justificacion?: StatusWrapper<IPeriodosJustificacion>): void {
+  openModalPeriodo(justificacion?: StatusWrapper<IPeriodoJustificacion>): void {
     this.logger.debug(ConvocatoriaPeriodosJustificacionComponent.name, 'openModalPeriodo()', 'start');
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: justificacion ? justificacion.value : {} as IPeriodosJustificacion,
+      data: justificacion ? justificacion.value : {} as IPeriodoJustificacion,
       autoFocus: false
     };
 
     const dialogRef = this.matDialog.open(ConvocatoriaPeriodosJustificacionModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (periodosJustificacion: IPeriodosJustificacion) => {
+      (periodosJustificacion: IPeriodoJustificacion) => {
         if (periodosJustificacion) {
           if (justificacion) {
             if (!justificacion.created) {

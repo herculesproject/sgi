@@ -1,6 +1,6 @@
 import { ITipoPeriodoJustificacion } from './tipo-periodo-justificacion';
 
-export interface IPeriodosJustificacion {
+export interface IPeriodoJustificacion {
   /** Id */
   id: number;
 

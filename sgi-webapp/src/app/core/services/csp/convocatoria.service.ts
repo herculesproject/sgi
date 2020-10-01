@@ -4,16 +4,16 @@ import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@env';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
-import { IPeriodosJustificacion } from '@core/models/csp/periodo-justificacion';
+import { IPeriodoJustificacion } from '@core/models/csp/periodo-justificacion';
 import { of, Observable } from 'rxjs';
 import { IPlazosFases } from '@core/models/csp/plazos-fases';
 import { ISeguimientoCientifico } from '@core/models/csp/seguimiento-cientifico';
 import { tap } from 'rxjs/operators';
 import { IHito } from '@core/models/csp/hito';
-import { IEntidadesConvocantes } from '@core/models/csp/entidades-convocantes';
+import { IEntidadConvocante } from '@core/models/csp/entidad-convocante';
 import { DateUtils } from '@core/utils/date-utils';
 import { IEnlace } from '@core/models/csp/enlace';
-import { IEntidadesFinanciadoras } from '@core/models/csp/entidades-financiadoras';
+import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
 
 
@@ -54,7 +54,7 @@ const convocatorias: IConvocatoria[] = [
 
 ];
 
-const periodosJustificacion: IPeriodosJustificacion[] = [
+const periodosJustificacion: IPeriodoJustificacion[] = [
   {
     id: 1, numPeriodo: 1, tipoJustificacion: { id: 1, nombre: 'Periódica' }, mesInicial: 'Enero', mesFinal: 'Marzo',
     fechaInicio: new Date(), fechaFin: new Date(), observaciones: 'Primer periodo de justificación', activo: true
@@ -86,7 +86,7 @@ const plazosFases: IPlazosFases[] = [
 ];
 
 
-const entidadesConvocantes: IEntidadesConvocantes[] = [
+const entidadesConvocantes: IEntidadConvocante[] = [
   {
     id: 1,
     nombre: 'Entidad 1',
@@ -94,7 +94,7 @@ const entidadesConvocantes: IEntidadesConvocantes[] = [
     itemPrograma: 'Modalidad K',
     plan: 'Plan Nacional 2020-2023',
     programa: 'Programa 1'
-  } as IEntidadesConvocantes,
+  } as IEntidadConvocante,
   {
     id: 2,
     nombre: 'Entidad 2',
@@ -102,7 +102,7 @@ const entidadesConvocantes: IEntidadesConvocantes[] = [
     itemPrograma: 'Predoctorales',
     plan: 'Plan propio',
     programa: 'Programa ayudas propias'
-  } as IEntidadesConvocantes
+  } as IEntidadConvocante
 ];
 
 const seguimientosCientificos: ISeguimientoCientifico[] = [
@@ -124,7 +124,7 @@ const seguimientosCientificos: ISeguimientoCientifico[] = [
   } as ISeguimientoCientifico,
 ];
 
-const entidadesFinanciadoras: IEntidadesFinanciadoras[] = [
+const entidadesFinanciadoras: IEntidadFinanciadora[] = [
   {
     id: 1,
     nombre: 'Entidad 1',
@@ -133,7 +133,7 @@ const entidadesFinanciadoras: IEntidadesFinanciadoras[] = [
     ambito: 'Nacional',
     tipoFinanciacion: 'Subvención',
     porcentajeFinanciacion: '80'
-  } as IEntidadesFinanciadoras,
+  } as IEntidadFinanciadora,
   {
     id: 2,
     nombre: 'Entidad 2',
@@ -142,7 +142,7 @@ const entidadesFinanciadoras: IEntidadesFinanciadoras[] = [
     ambito: 'Propio',
     tipoFinanciacion: 'Subvención',
     porcentajeFinanciacion: '20'
-  } as IEntidadesFinanciadoras,
+  } as IEntidadFinanciadora,
 ];
 
 const enlaces: IEnlace[] = [
@@ -203,13 +203,13 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
    * @param id convocatoria
    * @param options opciones de búsqueda.
    */
-  getPeriodosJustificacion(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IPeriodosJustificacion>> {
+  getPeriodosJustificacion(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IPeriodoJustificacion>> {
     this.logger.debug(ConvocatoriaService.name, `getPeriodosJustificacion(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
     const list = {
       page: null,
       total: periodosJustificacion.length,
       items: periodosJustificacion
-    } as SgiRestListResult<IPeriodosJustificacion>;
+    } as SgiRestListResult<IPeriodoJustificacion>;
     return of(list)
       .pipe(
         tap(() => this.logger.debug(ConvocatoriaService.name,
@@ -290,14 +290,14 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
    * @param id Id de la convocatoria
    * @param options opciones de búsqueda.
    */
-  getEntidadesConvocantes(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IEntidadesConvocantes>> {
+  getEntidadesConvocantes(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IEntidadConvocante>> {
     this.logger.debug(ConvocatoriaService.name,
       `getEntidadesConvocantes(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
     const list = {
       page: null,
       total: entidadesConvocantes.length,
       items: entidadesConvocantes
-    } as SgiRestListResult<IEntidadesConvocantes>;
+    } as SgiRestListResult<IEntidadConvocante>;
     return of(list)
       .pipe(
         tap(() => this.logger.debug(ConvocatoriaService.name,
@@ -319,14 +319,14 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
       );
   }
 
-  getEntidadesFinanciadoras(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IEntidadesFinanciadoras>> {
+  getEntidadesFinanciadoras(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IEntidadFinanciadora>> {
     this.logger.debug(ConvocatoriaService.name,
       `getEntidadesFinanciadores(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
     const list = {
       page: null,
       total: entidadesFinanciadoras.length,
       items: entidadesFinanciadoras
-    } as SgiRestListResult<IEntidadesFinanciadoras>;
+    } as SgiRestListResult<IEntidadFinanciadora>;
     return of(list)
       .pipe(
         tap(() => this.logger.debug(ConvocatoriaService.name,

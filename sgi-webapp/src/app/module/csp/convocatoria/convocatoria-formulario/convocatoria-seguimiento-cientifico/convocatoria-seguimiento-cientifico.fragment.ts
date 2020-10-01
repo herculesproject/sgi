@@ -43,6 +43,20 @@ export class ConvocatoriaSeguimientoCientificoFragment extends Fragment {
     }
   }
 
+  addSeguimientoCientifico(seguimientoCientifico: ISeguimientoCientifico) {
+    this.logger.debug(ConvocatoriaSeguimientoCientificoFragment.name,
+      `addSeguimientoCientifico(seguimientoCientifico: ${seguimientoCientifico})`, 'start');
+    const wrapped = new StatusWrapper<ISeguimientoCientifico>(seguimientoCientifico);
+    wrapped.setCreated();
+    const current = this.seguimientosCientificos$.value;
+    current.push(wrapped);
+    this.seguimientosCientificos$.next(current);
+    this.setChanges(true);
+    this.setErrors(false);
+    this.logger.debug(ConvocatoriaSeguimientoCientificoFragment.name,
+      `addSeguimientoCientifico(seguimientoCientifico: ${seguimientoCientifico})`, 'end');
+  }
+
   saveOrUpdate(): Observable<string | number | void> {
     this.logger.debug(ConvocatoriaSeguimientoCientificoFragment.name, 'saveOrUpdate()', 'start');
     return of(void 0).pipe(

@@ -3,12 +3,12 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
-import { IPeriodosJustificacion } from '@core/models/csp/periodo-justificacion';
+import { IPeriodoJustificacion } from '@core/models/csp/periodo-justificacion';
 import { tap, delay, map } from 'rxjs/operators';
 
 
 export class ConvocatoriaPeriodosJustificacionFragment extends Fragment {
-  periodosJustificacion$: BehaviorSubject<StatusWrapper<IPeriodosJustificacion>[]>;
+  periodosJustificacion$: BehaviorSubject<StatusWrapper<IPeriodoJustificacion>[]>;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -17,7 +17,7 @@ export class ConvocatoriaPeriodosJustificacionFragment extends Fragment {
   ) {
     super(key);
     this.logger.debug(ConvocatoriaPeriodosJustificacionFragment.name, 'constructor()', 'start');
-    this.periodosJustificacion$ = new BehaviorSubject<StatusWrapper<IPeriodosJustificacion>[]>([]);
+    this.periodosJustificacion$ = new BehaviorSubject<StatusWrapper<IPeriodoJustificacion>[]>([]);
     this.logger.debug(ConvocatoriaPeriodosJustificacionFragment.name, 'constructor()', 'end');
   }
 
@@ -37,7 +37,7 @@ export class ConvocatoriaPeriodosJustificacionFragment extends Fragment {
         })
       ).subscribe((periodosJustificacion) => {
         this.periodosJustificacion$.next(periodosJustificacion.map(
-          periodoJustificacion => new StatusWrapper<IPeriodosJustificacion>(periodoJustificacion))
+          periodoJustificacion => new StatusWrapper<IPeriodoJustificacion>(periodoJustificacion))
         );
         this.logger.debug(ConvocatoriaPeriodosJustificacionFragment.name, 'onInitialize()', 'end');
       });
@@ -46,12 +46,13 @@ export class ConvocatoriaPeriodosJustificacionFragment extends Fragment {
 
   /**
    * Insertamos periodo justificacion
-   * @param periodoJustificacion
+   * 
+   * @param periodoJustificacion Periodo de justificación
    */
-  public addPeriodoJustificacion(periodoJustificacion: IPeriodosJustificacion) {
+  public addPeriodoJustificacion(periodoJustificacion: IPeriodoJustificacion) {
     this.logger.debug(ConvocatoriaPeriodosJustificacionFragment.name,
-      `addEntidadFinanciadora(comentario: ${periodoJustificacion})`, 'start');
-    const wrapped = new StatusWrapper<IPeriodosJustificacion>(periodoJustificacion);
+      `addPeriodoJustificacion(periodoJustificacion: ${periodoJustificacion})`, 'start');
+    const wrapped = new StatusWrapper<IPeriodoJustificacion>(periodoJustificacion);
     wrapped.setCreated();
     const current = this.periodosJustificacion$.value;
     current.push(wrapped);
@@ -59,7 +60,7 @@ export class ConvocatoriaPeriodosJustificacionFragment extends Fragment {
     this.setChanges(true);
     this.setErrors(false);
     this.logger.debug(ConvocatoriaPeriodosJustificacionFragment.name,
-      `addEntidadFinanciadora(comentario: ${periodoJustificacion})`, 'end');
+      `addPeriodoJustificacion(periodoJustificacion: ${periodoJustificacion})`, 'end');
   }
 
 

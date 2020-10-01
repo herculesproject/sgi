@@ -1,4 +1,4 @@
-export interface IEntidadesFinanciadoras {
+export interface IEntidadFinanciadora {
   id: number;
   nombre: string;
   cif: string;

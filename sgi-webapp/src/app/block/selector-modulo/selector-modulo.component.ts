@@ -48,14 +48,14 @@ export class SelectorModuloComponent implements OnInit {
     this.logger.debug(SelectorModuloComponent.name, 'ngOnInit()', 'end');
   }
 
-  cerrarModal(): void {
+  closeModal(): void {
     this.dialogRef.close();
   }
 
-  abrirModulo(modulo: string) {
+  openModulo(modulo: string) {
     this.router.navigateByUrl(modulo).then(
       () => {
-        this.cerrarModal();
+        this.closeModal();
       }
     );
   }

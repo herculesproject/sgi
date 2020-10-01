@@ -2,7 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { IPeriodosJustificacion } from '@core/models/csp/periodo-justificacion';
+import { IPeriodoJustificacion } from '@core/models/csp/periodo-justificacion';
 import { ITipoPeriodoJustificacion } from '@core/models/csp/tipo-periodo-justificacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -18,7 +18,6 @@ const MSG_ERROR_INIT = marker('csp.convocatoria.periodo.justificacion.error.carg
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 
 @Component({
-  selector: 'sgi-convocatoria-periodos-justificacion-modal',
   templateUrl: './convocatoria-periodos-justificacion-modal.component.html',
   styleUrls: ['./convocatoria-periodos-justificacion-modal.component.scss']
 })
@@ -34,14 +33,14 @@ export class ConvocatoriaPeriodosJustificacionModalComponent implements OnInit, 
   tiposPeriodoFiltered: ITipoPeriodoJustificacion[];
   tiposPeriodo: Observable<ITipoPeriodoJustificacion[]>;
 
-  periodoJustificacionData: IPeriodosJustificacion;
+  periodoJustificacionData: IPeriodoJustificacion;
 
   suscripciones: Subscription[];
 
   constructor(
     private readonly logger: NGXLogger,
     private readonly snackBarService: SnackBarService,
-    @Inject(MAT_DIALOG_DATA) public periodoJustificacion: IPeriodosJustificacion,
+    @Inject(MAT_DIALOG_DATA) public periodoJustificacion: IPeriodoJustificacion,
     public readonly matDialogRef: MatDialogRef<ConvocatoriaPeriodosJustificacionModalComponent>,
     private readonly modeloEjecucionService: ModeloEjecucionService
   ) {
@@ -122,14 +121,14 @@ export class ConvocatoriaPeriodosJustificacionModalComponent implements OnInit, 
    * Actualizar o guardar datos
    */
   saveOrUpdate(): void {
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'updateComentario()', 'start');
+    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'saveOrUpdate()', 'start');
     if (FormGroupUtil.valid(this.formGroup)) {
       this.loadDatosForm();
       this.closeModal(this.periodoJustificacionData);
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'updateComentario()', 'end');
+    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'saveOrUpdate()', 'end');
   }
 
   /**
@@ -138,7 +137,7 @@ export class ConvocatoriaPeriodosJustificacionModalComponent implements OnInit, 
    * @returns Comentario con los datos del formulario
    */
   private loadDatosForm(): void {
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'getDatosForm()', 'start');
+    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'loadDatosForm()', 'start');
     this.periodoJustificacionData.numPeriodo = FormGroupUtil.getValue(this.formGroup, 'numPeriodo');
     this.periodoJustificacionData.mesInicial = FormGroupUtil.getValue(this.formGroup, 'desdeMes');
     this.periodoJustificacionData.mesFinal = FormGroupUtil.getValue(this.formGroup, 'hastaMes');
@@ -146,7 +145,7 @@ export class ConvocatoriaPeriodosJustificacionModalComponent implements OnInit, 
     this.periodoJustificacionData.fechaFin = FormGroupUtil.getValue(this.formGroup, 'fechaFin');
     this.periodoJustificacionData.tipoJustificacion = FormGroupUtil.getValue(this.formGroup, 'tipoPeriodo');
     this.periodoJustificacionData.observaciones = FormGroupUtil.getValue(this.formGroup, 'observaciones');
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'getDatosForm()', 'end');
+    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'loadDatosForm()', 'end');
   }
 
 
@@ -176,10 +175,10 @@ export class ConvocatoriaPeriodosJustificacionModalComponent implements OnInit, 
    * Cierra la ventana modal
    *
    */
-  closeModal(periodo?: IPeriodosJustificacion): void {
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'cerrarModal()', 'start');
+  closeModal(periodo?: IPeriodoJustificacion): void {
+    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'closeModal()', 'start');
     this.matDialogRef.close(periodo);
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'cerrarModal()', 'end');
+    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'closeModal()', 'end');
   }
 
 

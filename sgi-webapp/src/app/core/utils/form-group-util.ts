@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 export class FormGroupUtil {
   /**
    * Comprueba que todos los datos de un formGroup son válidos.
-   * Si nos ha fallos devuelve true.
+   * Si no hay fallos devuelve true.
    * En caso contrario, marca todos los campos con errores y devuelve false.
    *
    * @param formGroup FormGroup a comprobar
@@ -24,8 +24,9 @@ export class FormGroupUtil {
         }
       });
       return result;
+    } else {
+      throw new Error(`No existe el formGroup`);
     }
-    return false;
   }
 
   /**
@@ -44,8 +45,9 @@ export class FormGroupUtil {
           abstractControl.markAllAsTouched();
         }
       });
+    } else {
+      return errors;
     }
-    return errors;
   }
 
   /**
@@ -64,8 +66,10 @@ export class FormGroupUtil {
           (abstractControl.dirty || abstractControl.touched)
         );
       }
+      throw new Error(`No existe el valor ${key} dentro del formGroup`);
+    } else {
+      throw new Error(`No existe el formGroup`);
     }
-    return false;
   }
 
   /**
@@ -80,8 +84,10 @@ export class FormGroupUtil {
       if (abstractControl) {
         return abstractControl.errors;
       }
+      throw new Error(`No existe el valor ${key} dentro del formGroup`);
+    } else {
+      throw new Error(`No existe el formGroup`);
     }
-    return null;
   }
 
   /**
@@ -97,8 +103,10 @@ export class FormGroupUtil {
       if (abstractControl) {
         return abstractControl.value;
       }
+      throw new Error(`No existe el valor ${key} dentro del formGroup`);
+    } else {
+      throw new Error(`No existe el formGroup`);
     }
-    return null;
   }
 
   /**
@@ -113,7 +121,11 @@ export class FormGroupUtil {
       const abstractControl: AbstractControl = formGroup.get(key);
       if (abstractControl) {
         abstractControl.setValue(value);
+      } else {
+        throw new Error(`No existe el valor ${key} dentro del formGroup`);
       }
+    } else {
+      throw new Error(`No existe el formGroup`);
     }
   }
 
@@ -135,7 +147,11 @@ export class FormGroupUtil {
       const abstractControl: AbstractControl = formGroup.get(key);
       if (abstractControl) {
         formGroup.setControl(key, new FormControl(initValue, validator));
+      } else {
+        throw new Error(`No existe el valor ${key} dentro del formGroup`);
       }
+    } else {
+      throw new Error(`No existe el formGroup`);
     }
   }
 
@@ -151,8 +167,14 @@ export class FormGroupUtil {
     key: string,
     formControl: FormControl
   ): void {
-    if (formGroup && formControl) {
-      formGroup.addControl(key, formControl);
+    if (formGroup) {
+      if (formControl) {
+        formGroup.addControl(key, formControl);
+      } else {
+        throw new Error(`No existe el formControl`);
+      }
+    } else {
+      throw new Error(`No existe el formGroup`);
     }
   }
 
@@ -172,8 +194,10 @@ export class FormGroupUtil {
           fun(value);
         });
       }
+      throw new Error(`No existe el valor ${key} dentro del formGroup`);
+    } else {
+      throw new Error(`No existe el formGroup`);
     }
-    return null;
   }
 
   /**
@@ -191,17 +215,24 @@ export class FormGroupUtil {
         result.push(this.subscribeOneValue(formGroup, key, fun));
       });
       return result;
+    } else {
+      throw new Error(`No existe el formGroup`);
     }
-    return null;
   }
 
+  /**
+   * Limpia todos los campos del formGroup
+   * 
+   * @param formGroup Formgroup
+   */
   static clean(formGroup: FormGroup): void {
     if (formGroup) {
       const list: string[] = Object.keys(formGroup.controls);
       list.forEach((key: string) => {
-        const abstractControl: AbstractControl = formGroup.get(key);
         this.setValue(formGroup, key, '');
       });
+    } else {
+      throw new Error(`No existe el formGroup`);
     }
   }
 }

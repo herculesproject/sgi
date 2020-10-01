@@ -12,7 +12,7 @@ import { startWith, map } from 'rxjs/operators';
 
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree';
-import { IEntidadesConvocantes } from '@core/models/csp/entidades-convocantes';
+import { IEntidadConvocante } from '@core/models/csp/entidad-convocante';
 import { IPrograma } from '@core/models/csp/programa';
 import { IObjectTree } from '@core/models/csp/object-tree';
 import { ProgramaService } from '@core/services/csp/programa.service';
@@ -67,7 +67,7 @@ export class ConvocatoriaEntidadConvocanteaModalComponent implements OnInit {
   constructor(
     private readonly logger: NGXLogger,
     public readonly matDialogRef: MatDialogRef<ConvocatoriaEntidadConvocanteaModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public entidadConvocante: IEntidadesConvocantes,
+    @Inject(MAT_DIALOG_DATA) public entidadConvocante: IEntidadConvocante,
     private readonly snackBarService: SnackBarService,
     private readonly programaService: ProgramaService,
     private readonly planService: PlanService) {
@@ -196,7 +196,7 @@ export class ConvocatoriaEntidadConvocanteaModalComponent implements OnInit {
    *
    * @param entidadConvocante entidad convocante modificada o creada.
    */
-  closeModal(entidadConvocante?: IEntidadesConvocantes): void {
+  closeModal(entidadConvocante?: IEntidadConvocante): void {
     this.logger.debug(ConvocatoriaEntidadConvocanteaModalComponent.name, 'closeModal()', 'start');
     this.matDialogRef.close(entidadConvocante);
     this.logger.debug(ConvocatoriaEntidadConvocanteaModalComponent.name, 'closeModal()', 'end');

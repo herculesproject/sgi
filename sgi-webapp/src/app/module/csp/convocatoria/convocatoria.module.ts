@@ -23,6 +23,7 @@ import { ConvocatoriaEntidadFinanciadoraModalComponent } from './modals/convocat
 import { ConvocatoriaEnlaceModalComponent } from './modals/convocatoria-enlace-modal/convocatoria-enlace-modal.component';
 import { ConvocatoriaEntidadConvocanteaModalComponent } from './modals/convocatoria-entidad-convocante-modal/convocatoria-entidad-convocante-modal.component';
 import { ConvocatoriaPlazosFaseModalComponent } from './modals/convocatoria-plazos-fase-modal/convocatoria-plazos-fase-modal.component';
+import { ConvocatoriaSeguimientoCientificoModalComponent } from './modals/convocatoria-seguimiento-cientifico-modal/convocatoria-seguimiento-cientifico-modal.component';
 
 
 @NgModule({
@@ -43,7 +44,9 @@ import { ConvocatoriaPlazosFaseModalComponent } from './modals/convocatoria-plaz
     ConvocatoriaEntidadFinanciadoraModalComponent,
     ConvocatoriaEnlaceModalComponent,
     ConvocatoriaEntidadConvocanteaModalComponent,
-    ConvocatoriaPlazosFaseModalComponent],
+    ConvocatoriaPlazosFaseModalComponent,
+    ConvocatoriaSeguimientoCientificoModalComponent
+  ],
   imports: [
     CommonModule,
     SharedModule,

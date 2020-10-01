@@ -45,7 +45,7 @@ export class ConvocatoriaEnlaceFragment extends Fragment {
   }
 
   public addEnlace(enlace: IEnlace): void {
-    this.logger.debug(ConvocatoriaEnlaceFragment.name, `addEnlace(comentario: ${enlace})`, 'start');
+    this.logger.debug(ConvocatoriaEnlaceFragment.name, `addEnlace(enlace: ${enlace})`, 'start');
     const wrapped = new StatusWrapper<IEnlace>(enlace);
     wrapped.setCreated();
     const current = this.enlace$.value;
@@ -53,7 +53,7 @@ export class ConvocatoriaEnlaceFragment extends Fragment {
     this.enlace$.next(current);
     this.setChanges(true);
     this.setErrors(false);
-    this.logger.debug(ConvocatoriaEnlaceFragment.name, `addEnlace(comentario: ${enlace})`, 'end');
+    this.logger.debug(ConvocatoriaEnlaceFragment.name, `addEnlace(enlace: ${enlace})`, 'end');
   }
 
   saveOrUpdate(): Observable<string | number | void> {

@@ -163,10 +163,10 @@ export class ComentarioCrearModalComponent implements OnInit, OnDestroy {
    * @param texto Texto de error a mostrar
    */
   private closeModalError(texto: string): void {
-    this.logger.debug(ComentarioCrearModalComponent.name, `cerrarModalError(${texto})`, 'start');
+    this.logger.debug(ComentarioCrearModalComponent.name, `closeModalError(${texto})`, 'start');
     this.snackBarService.showError(texto);
     this.closeModal();
-    this.logger.debug(ComentarioCrearModalComponent.name, `cerrarModalError(${texto})`, 'end');
+    this.logger.debug(ComentarioCrearModalComponent.name, `closeModalError(${texto})`, 'end');
   }
 
   /**
@@ -175,9 +175,9 @@ export class ComentarioCrearModalComponent implements OnInit, OnDestroy {
    * @param comentario Comentario creado
    */
   closeModal(comentario?: IComentario): void {
-    this.logger.debug(ComentarioCrearModalComponent.name, 'cerrarModal()', 'start');
+    this.logger.debug(ComentarioCrearModalComponent.name, 'closeModal()', 'start');
     this.matDialogRef.close(comentario);
-    this.logger.debug(ComentarioCrearModalComponent.name, 'cerrarModal()', 'end');
+    this.logger.debug(ComentarioCrearModalComponent.name, 'closeModal()', 'end');
   }
 
   getNombreBloqueFormulario(bloqueFormulario: IBloqueFormulario): string {

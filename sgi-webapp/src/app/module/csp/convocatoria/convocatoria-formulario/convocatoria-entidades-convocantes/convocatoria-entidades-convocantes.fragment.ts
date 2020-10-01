@@ -1,4 +1,4 @@
-import { IEntidadesConvocantes } from '@core/models/csp/entidades-convocantes';
+import { IEntidadConvocante } from '@core/models/csp/entidad-convocante';
 import { Fragment } from '@core/services/action-service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { delay, map, tap } from 'rxjs/operators';
 
 export class ConvocatoriaEntidadesConvocantesFragment extends Fragment {
-  entidadesConvocantes$: BehaviorSubject<StatusWrapper<IEntidadesConvocantes>[]>;
+  entidadesConvocantes$: BehaviorSubject<StatusWrapper<IEntidadConvocante>[]>;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -16,7 +16,7 @@ export class ConvocatoriaEntidadesConvocantesFragment extends Fragment {
   ) {
     super(key);
     this.logger.debug(ConvocatoriaEntidadesConvocantesFragment.name, 'constructor()', 'start');
-    this.entidadesConvocantes$ = new BehaviorSubject<StatusWrapper<IEntidadesConvocantes>[]>([]);
+    this.entidadesConvocantes$ = new BehaviorSubject<StatusWrapper<IEntidadConvocante>[]>([]);
     this.logger.debug(ConvocatoriaEntidadesConvocantesFragment.name, 'constructor()', 'end');
   }
 
@@ -36,7 +36,7 @@ export class ConvocatoriaEntidadesConvocantesFragment extends Fragment {
         })
       ).subscribe((entidadesConvocantes) => {
         this.entidadesConvocantes$.next(entidadesConvocantes.map(
-          entidadConvocantes => new StatusWrapper<IEntidadesConvocantes>(entidadConvocantes))
+          entidadConvocantes => new StatusWrapper<IEntidadConvocante>(entidadConvocantes))
         );
         this.logger.debug(ConvocatoriaEntidadesConvocantesFragment.name, 'onInitialize()', 'end');
       });
