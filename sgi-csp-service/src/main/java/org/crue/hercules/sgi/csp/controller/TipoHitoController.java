@@ -42,8 +42,8 @@ public class TipoHitoController {
   /**
    * Devuelve todas las entidades {@link TipoHito} paginadas
    *
-   * @param pageable la información de la paginación.
    * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
    * @return la lista de entidades {@link TipoHito} paginadas
    */
   @GetMapping()

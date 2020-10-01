@@ -43,7 +43,7 @@ public class TipoHitoServiceTest {
   }
 
   @Test
-  public void find_WhithId_ReturnsTipoHito() {
+  public void find_WithId_ReturnsTipoHito() {
     BDDMockito.given(tipoHitoRepository.findById(1L)).willReturn(Optional.of(generarMockTipoHito(1L, "TipoHito1")));
 
     TipoHito tipoHito = tipoHitoService.findById(1L);

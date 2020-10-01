@@ -33,8 +33,8 @@ public interface TipoHitoService {
   /**
    * Obtener todas las entidades {@link TipoHito} paginadas y/o filtradas
    *
-   * @param pageable la información de la paginación.
    * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
    * @return la lista de entidades {@link TipoHito} paginadas y/o filtradas
    */
   Page<TipoHito> findAll(List<QueryCriteria> query, Pageable pageable);

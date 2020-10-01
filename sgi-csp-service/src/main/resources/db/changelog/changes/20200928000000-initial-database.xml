@@ -16,6 +16,9 @@
   <changeSet author="master" id="20200928000000-tipo_finalidad_seq">
     <createSequence sequenceName="tipo_finalidad_seq" />
   </changeSet>
+  <changeSet author="master" id="20200928000000-tipo_fase_seq">
+    <createSequence sequenceName="tipo_fase_seq" />
+  </changeSet>
 
   <changeSet author="master" id="20200928000000-tipo_hito_seq">
     <createSequence sequenceName="tipo_hito_seq" />
@@ -39,7 +42,6 @@
       </column>
     </createTable>
   </changeSet>
-
   <changeSet author="master" id="20200928000000-tipo_enlace">
     <createTable tableName="tipo_enlace">
       <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_enlace_seq">
@@ -54,7 +56,20 @@
       </column>
     </createTable>
   </changeSet>
-
+  <changeSet author="master" id="20200928000000-tipo_fase">
+    <createTable tableName="tipo_fase">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_fase_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_fase_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR2(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="descripcion" type="VARCHAR2(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
   <changeSet author="master" id="20200928000000-tipo_finalidad">
     <createTable tableName="tipo_finalidad">
       <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_finalidad_seq">
@@ -69,7 +84,6 @@
       </column>
     </createTable>
   </changeSet>
-
   <changeSet author="master" id="20200928000000-tipo_hito">
     <createTable tableName="tipo_hito">
       <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_hito_seq">
@@ -97,6 +111,10 @@
     <addUniqueConstraint columnNames="nombre" constraintName="tipo_enlace_uk" tableName="tipo_enlace" />
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-tipo_fase_uk">
+    <addUniqueConstraint columnNames="nombre" constraintName="tipo_fase_uk" tableName="tipo_fase" />
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-tipo_finalidad_uk">
     <addUniqueConstraint columnNames="nombre" constraintName="tipo_finalidad_uk" tableName="tipo_finalidad" />
   </changeSet>
@@ -104,6 +122,7 @@
   <changeSet author="master" id="20200928000000-tipo_hito_uk">
     <addUniqueConstraint columnNames="nombre" constraintName="tipo_hito_uk" tableName="tipo_hito" />
   </changeSet>
+
 
   <!-- ########################################################## -->
   <!-- INDEX -->

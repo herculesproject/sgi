@@ -55,6 +55,27 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-tipo_fase">
+    <insert tableName="tipo_fase">
+      <column name="nombre" value="Fase1" />
+      <column name="descripcion" value="Descripción del Fase1"></column>
+      <column name="activo" value="true" />
+    </insert>
+
+    <insert tableName="tipo_fase">
+      <column name="nombre" value="Fase2" />
+      <column name="descripcion" value="Descripción del Fase2"></column>
+      <column name="activo" value="true" />
+    </insert>
+
+    <insert tableName="tipo_fase">
+      <column name="nombre" value="Fase3" />
+      <column name="descripcion" value="Descripción del Fase3"></column>
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
+
   <changeSet author="master" id="20200928000000-tipo_finalidad">
     <insert tableName="tipo_finalidad">
       <column name="nombre" value="tipo finalidad AAA" />
@@ -89,11 +110,13 @@
       <column name="descripcion" value="Descripción del Hito1"></column>
       <column name="activo" value="true" />
     </insert>
+
     <insert tableName="tipo_hito">
       <column name="nombre" value="Hito2" />
       <column name="descripcion" value="Descripción del Hito2"></column>
       <column name="activo" value="true" />
     </insert>
+
     <insert tableName="tipo_hito">
       <column name="nombre" value="Hito3" />
       <column name="descripcion" value="Descripción del Hito3"></column>
