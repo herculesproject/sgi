@@ -9,6 +9,7 @@ import { NGXLogger } from 'ngx-logger';
 import { EvaluacionComentarioFragment } from '../evaluacion-formulario/evaluacion-comentarios/evaluacion-comentarios.fragment';
 import { EvaluacionFormularioActionService, Gestion } from '../evaluacion-formulario/evaluacion-formulario.action.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { EvaluacionDocumentacionFragment } from '../evaluacion-formulario/evaluacion-documentacion/evaluacion-documentacion.fragment';
 
 @Injectable()
 export class EvaluacionActionService extends EvaluacionFormularioActionService {
@@ -29,9 +30,12 @@ export class EvaluacionActionService extends EvaluacionFormularioActionService {
     this.evaluaciones = new EvaluacionEvaluacionFragment(
       logger, fb, this.evaluacion?.id, snackBarService, service, personaFisicaService);
     this.comentarios = new EvaluacionComentarioFragment(this.logger, this.evaluacion?.id, Gestion.GESTOR, service);
+    this.documentacion = new EvaluacionDocumentacionFragment(this.logger, this.evaluacion?.id);
+
 
     this.addFragment(this.FRAGMENT.COMENTARIOS, this.comentarios);
     this.addFragment(this.FRAGMENT.EVALUACIONES, this.evaluaciones);
+    this.addFragment(this.FRAGMENT.DOCUMENTACION, this.documentacion);
     this.evaluaciones.setComentarios(this.comentarios.comentarios$);
   }
 
