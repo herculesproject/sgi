@@ -9,21 +9,11 @@ import { NGXLogger } from 'ngx-logger';
 import { SeguimientoComentarioFragment } from '../seguimiento-formulario/seguimiento-comentarios/seguimiento-comentarios.fragment';
 import { SeguimientoDatosMemoriaFragment } from '../seguimiento-formulario/seguimiento-datos-memoria/seguimiento-datos-memoria.fragment';
 import { SeguimientoDocumentacionFragment } from '../seguimiento-formulario/seguimiento-documentacion/seguimiento-documentacion.fragment';
+import { Gestion, SeguimientoFormularioActionService } from '../seguimiento-formulario/seguimiento-formulario.action.service';
 
 
 @Injectable()
-export class SeguimientoEvaluarActionService extends ActionService {
-
-  public readonly FRAGMENT = {
-    COMENTARIOS: 'comentarios',
-    MEMORIA: 'memoria',
-    DOCUMENTACION: 'documentarion'
-  };
-
-  private evaluacion: IEvaluacion;
-  private comentarios: SeguimientoComentarioFragment;
-  private datosMemoria: SeguimientoDatosMemoriaFragment;
-  private documentacion: SeguimientoDocumentacionFragment;
+export class SeguimientoEvaluarActionService extends SeguimientoFormularioActionService {
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -38,7 +28,7 @@ export class SeguimientoEvaluarActionService extends ActionService {
       this.evaluacion = route.snapshot.data.evaluacion;
       this.enableEdit();
     }
-    this.comentarios = new SeguimientoComentarioFragment(this.logger, this.evaluacion?.id, service);
+    this.comentarios = new SeguimientoComentarioFragment(this.logger, this.evaluacion?.id, Gestion.EVALUADOR, service);
     this.datosMemoria = new SeguimientoDatosMemoriaFragment(this.logger, fb, this.evaluacion?.id, service, personaFisicaService);
     this.documentacion = new SeguimientoDocumentacionFragment(this.logger, this.evaluacion?.id);
 
@@ -49,5 +39,9 @@ export class SeguimientoEvaluarActionService extends ActionService {
 
   getEvaluacion(): IEvaluacion {
     return this.evaluacion;
+  }
+
+  getGestion(): Gestion {
+    return Gestion.EVALUADOR;
   }
 }

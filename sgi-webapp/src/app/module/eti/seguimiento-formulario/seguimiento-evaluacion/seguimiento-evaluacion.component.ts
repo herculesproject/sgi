@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { NGXLogger } from 'ngx-logger';
@@ -15,13 +15,14 @@ import { GestionSeguimientoActionService } from '../../gestion-seguimiento/gesti
 import { TipoEvaluacionService } from '@core/services/eti/tipo-evaluacion.service';
 import { SeguimientoEvaluacionFragment } from './seguimiento-evaluacion.fragment';
 import { SeguimientoListadoAnteriorMemoriaComponent } from '../seguimiento-listado-anterior-memoria/seguimiento-listado-anterior-memoria.component';
+import { SeguimientoFormularioActionService } from '../seguimiento-formulario.action.service';
 
 @Component({
   selector: 'sgi-seguimiento-evaluacion',
   templateUrl: './seguimiento-evaluacion.component.html',
   styleUrls: ['./seguimiento-evaluacion.component.scss']
 })
-export class SeguimientoEvaluacionComponent extends FormFragmentComponent<IMemoria> implements AfterViewInit, OnInit {
+export class SeguimientoEvaluacionComponent extends FormFragmentComponent<IMemoria> implements AfterViewInit, OnInit, OnDestroy {
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
@@ -31,12 +32,11 @@ export class SeguimientoEvaluacionComponent extends FormFragmentComponent<IMemor
 
   dictamenListado: IDictamen[];
   filteredDictamenes: Observable<IDictamen[]>;
-  dictamenSubscription: Subscription;
+  suscriptions: Subscription[] = [];
 
   constructor(
     protected readonly logger: NGXLogger,
-    private actionService: GestionSeguimientoActionService,
-    private dictamenService: DictamenService,
+    private actionService: SeguimientoFormularioActionService,
     private tipoEvaluacionService: TipoEvaluacionService
   ) {
     super(actionService.FRAGMENT.EVALUACIONES, actionService);
@@ -64,11 +64,14 @@ export class SeguimientoEvaluacionComponent extends FormFragmentComponent<IMemor
   ngOnInit() {
     this.logger.debug(SeguimientoEvaluacionComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
-    (this.fragment as SeguimientoEvaluacionFragment).evaluacion$.subscribe((evaluacion) => {
+    this.suscriptions.push(this.formGroup.controls.dictamen.valueChanges.subscribe((dictamen) => {
+      this.actionService.setDictamen(dictamen);
+    }));
+    this.suscriptions.push((this.fragment as SeguimientoEvaluacionFragment).evaluacion$.subscribe((evaluacion) => {
       if (evaluacion) {
         this.loadDictamenes(evaluacion);
       }
-    });
+    }));
     this.logger.debug(SeguimientoEvaluacionComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -100,15 +103,19 @@ export class SeguimientoEvaluacionComponent extends FormFragmentComponent<IMemor
     /**
      * Devuelve el listado de dictámenes dependiendo del tipo de Evaluación y si es de Revisión Mínima
      */
-    this.dictamenSubscription = this.tipoEvaluacionService.findAllDictamenByTipoEvaluacionAndRevisionMinima(
+    this.suscriptions.push(this.tipoEvaluacionService.findAllDictamenByTipoEvaluacionAndRevisionMinima(
       evaluacion.tipoEvaluacion.id, evaluacion.esRevMinima).subscribe(
         (response) => {
           this.dictamenListado = response.items;
-        });
+        }));
 
     this.logger.debug(SeguimientoEvaluacionComponent.name,
       'getDictamenes()',
       'end');
+  }
+
+  ngOnDestroy(): void {
+    this.suscriptions.forEach((suscription) => suscription.unsubscribe());
   }
 
 }

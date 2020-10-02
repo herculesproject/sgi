@@ -109,7 +109,7 @@ export class EvaluacionComentarioFragment extends Fragment {
       this.setChanges(true);
     }
     if (this.comentarios$.value.length === 0 &&
-      (this.dictamen.id === 2 || this.dictamen.id === 3)) {
+      (this.dictamen?.id === 2 || this.dictamen?.id === 3)) {
       this.setErrors(true);
     } else {
       this.setErrors(false);

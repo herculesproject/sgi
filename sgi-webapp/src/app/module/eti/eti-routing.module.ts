@@ -10,7 +10,7 @@ import { EtiInicioComponent } from './eti-inicio/eti-inicio.component';
 
 const MSG_ROOT_TITLE = marker('eti.root.title');
 const MSG_SOLICITUDES_CONVOCATORIA_TITLE = marker('menu.principal.eti.solicitudesConvocatoria');
-const MSG_EVALUACIONES_EVALUADOR_TITLE = marker('menu.principal.eti.evaluaciones');
+const MSG_EVALUACIONES_EVALUADOR_TITLE = marker('menu.principal.eti.evaluacionesEvaluador');
 const MSG_EVALUACIONES_TITLE = marker('menu.principal.eti.evaluaciones');
 const MSG_ACTAS_TITLE = marker('menu.principal.eti.acta');
 const MSG_EVALUADORES_TITLE = marker('menu.principal.eti.evaluador');

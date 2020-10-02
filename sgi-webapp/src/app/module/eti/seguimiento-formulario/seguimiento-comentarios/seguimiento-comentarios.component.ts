@@ -10,12 +10,15 @@ import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 import { SeguimientoComentarioFragment } from './seguimiento-comentarios.fragment';
 import { SeguimientoEvaluarActionService } from '../../seguimiento/seguimiento-evaluar.action.service';
 import { ComentarioCrearModalComponent } from '../../comentario/comentario-crear-modal/comentario-crear-modal.component';
 import { ComentarioEditarModalComponent } from '../../comentario/comentario-editar-modal/comentario-editar-modal.component';
+import { SeguimientoFormularioActionService, Gestion } from '../seguimiento-formulario.action.service';
+import { TipoComentarioService } from '@core/services/eti/tipo-comentario.service';
+import { TipoComentario } from '@core/models/eti/tipo-comentario';
 
 const MSG_DELETE = marker('eti.comentario.listado.borrar.titulo');
 
@@ -27,6 +30,7 @@ const MSG_DELETE = marker('eti.comentario.listado.borrar.titulo');
 export class SeguimientoComentariosComponent extends FragmentComponent implements OnInit, OnDestroy {
   private formPart: SeguimientoComentarioFragment;
   private subscriptions: Subscription[] = [];
+  tipoComentario$: Observable<TipoComentario>;
 
   columnas: string[];
   elementosPagina: number[];
@@ -38,8 +42,9 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
   constructor(
     protected readonly logger: NGXLogger,
     private readonly dialogService: DialogService,
+    private tipoComentarioService: TipoComentarioService,
     private matDialog: MatDialog,
-    private actionService: SeguimientoEvaluarActionService
+    private actionService: SeguimientoFormularioActionService
   ) {
     super(actionService.FRAGMENT.COMENTARIOS, actionService);
     this.logger.debug(SeguimientoComentariosComponent.name, 'constructor()', 'start');
@@ -96,7 +101,6 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
     dialogRef.afterClosed().subscribe(
       (comentario: IComentario) => {
         if (comentario) {
-          comentario.evaluacion = this.actionService.getEvaluacion();
           this.formPart.addComentario(comentario);
         }
         this.logger.debug(SeguimientoComentariosComponent.name, 'abrirModalCrear()', 'end');
@@ -121,6 +125,11 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
     dialogRef.afterClosed().subscribe(
       (resultado: IComentario) => {
         if (resultado) {
+          this.subscriptions.push(this.getTipoComentario().subscribe(
+            (tipoComentario) => {
+              resultado.tipoComentario = tipoComentario;
+            }
+          ));
           if (!wrapperRef.created) {
             wrapperRef.setEdited();
           }
@@ -148,5 +157,14 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
         }
       )
     );
+  }
+
+  getTipoComentario(): Observable<TipoComentario> {
+    if (this.actionService.getGestion() === Gestion.GESTOR) {
+      this.tipoComentario$ = this.tipoComentarioService.findById(1);
+    } else {
+      this.tipoComentario$ = this.tipoComentarioService.findById(2);
+    }
+    return this.tipoComentario$;
   }
 }

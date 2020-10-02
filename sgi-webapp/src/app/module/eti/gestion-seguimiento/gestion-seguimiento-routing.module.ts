@@ -9,6 +9,7 @@ import { GestionSeguimientoResolver } from './gestion-seguimiento.resolver';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
 import { GESTION_SEGUIMIENTO_ROUTE_NAMES } from './gestion-seguimiento-route-names';
 import { SeguimientoEvaluacionComponent } from '../seguimiento-formulario/seguimiento-evaluacion/seguimiento-evaluacion.component';
+import { SeguimientoComentariosComponent } from '../seguimiento-formulario/seguimiento-comentarios/seguimiento-comentarios.component';
 
 
 const MSG_LISTADO_TITLE = marker('eti.gestionSeguimiento.listado.titulo');
@@ -23,7 +24,7 @@ const routes: SgiAuthRoutes = [
     canActivate: [SgiAuthGuard],
     data: {
       title: MSG_LISTADO_TITLE,
-      hasAnyAuthorityForAnyUO: ['ETI-EVC-V', 'ETI-EVC-EVAL']
+      hasAnyAuthorityForAnyUO: ['ETI-EVC-V']
     }
   },
   {
@@ -47,6 +48,11 @@ const routes: SgiAuthRoutes = [
       {
         path: GESTION_SEGUIMIENTO_ROUTE_NAMES.EVALUACIONES,
         component: SeguimientoEvaluacionComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: GESTION_SEGUIMIENTO_ROUTE_NAMES.COMENTARIOS,
+        component: SeguimientoComentariosComponent,
         canDeactivate: [FragmentGuard]
       }
     ]

@@ -5,53 +5,81 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, merge, Observable, of, from } from 'rxjs';
 import { endWith, map, takeLast, tap, mergeMap } from 'rxjs/operators';
+import { IDictamen } from '@core/models/eti/dictamen';
+import { Gestion } from '../seguimiento-formulario.action.service';
 
 export class SeguimientoComentarioFragment extends Fragment {
-  comentarios$: BehaviorSubject<StatusWrapper<IComentario>[]>;
-  comentariosEliminados: StatusWrapper<IComentario>[];
+  comentarios$: BehaviorSubject<StatusWrapper<IComentario>[]> = new BehaviorSubject<StatusWrapper<IComentario>[]>([]);
+  comentariosEliminados: StatusWrapper<IComentario>[] = [];
+  private dictamen: IDictamen;
 
   constructor(
     private readonly logger: NGXLogger,
     key: number,
-    private service: EvaluacionService
-  ) {
+    private rol: Gestion,
+    private service: EvaluacionService) {
     super(key);
     this.logger.debug(SeguimientoComentarioFragment.name, 'constructor()', 'start');
-    this.comentarios$ = new BehaviorSubject<StatusWrapper<IComentario>[]>([]);
-    this.comentariosEliminados = [];
     this.logger.debug(SeguimientoComentarioFragment.name, 'constructor()', 'end');
   }
 
   protected onInitialize(): void {
     this.logger.debug(SeguimientoComentarioFragment.name, 'onInitialize()', 'start');
+
     if (this.getKey()) {
-      this.service.getComentariosEvaluador(this.getKey() as number).pipe(
-        map((response) => {
-          if (response.items) {
-            return response.items;
-          }
-          else {
-            return [];
-          }
-        })
-      ).subscribe((comentarios) => {
-        this.comentarios$.next(comentarios.map(comentario => new StatusWrapper<IComentario>(comentario)));
-        this.logger.debug(SeguimientoComentarioFragment.name, 'onInitialize()', 'end');
-      });
+      // Se muestran el listado de los comentarios del GESTOR
+      if (this.rol === Gestion.GESTOR) {
+        this.service.getComentariosGestor(this.getKey() as number).pipe(
+          map((response) => {
+            if (response.items) {
+              return response.items;
+            }
+            else {
+              return [];
+            }
+          })
+        ).subscribe((comentarios) => {
+          this.comentarios$.next(comentarios.map(comentario => new StatusWrapper<IComentario>(comentario)));
+        });
+
+        // Se muestra el listado de los comentarios del EVALUADOR
+      } else {
+        this.service.getComentariosEvaluador(this.getKey() as number).pipe(
+          map((response) => {
+            if (response.items) {
+              return response.items;
+            }
+            else {
+              return [];
+            }
+          })
+        ).subscribe((comentarios) => {
+          this.comentarios$.next(comentarios.map(comentario => new StatusWrapper<IComentario>(comentario)));
+        });
+      }
     }
   }
 
   saveOrUpdate(): Observable<void> {
-    this.logger.debug(SeguimientoComentarioFragment.name, 'saveOrUpdate()', 'start');
-    return merge(
-      this.deleteComentariosEvaluador(),
-      this.updateComentariosEvaluador(),
-      this.createComentariosEvaluador()
-    ).pipe(
-      takeLast(1),
-      tap(() => this.setChanges(false)),
-      tap(() => this.logger.debug(SeguimientoComentarioFragment.name, 'saveOrUpdate()', 'end'))
-    );
+    if (this.rol === Gestion.GESTOR) {
+      return merge(
+        this.deleteComentarioGestor(),
+        this.updateComentarioGestor(),
+        this.createComentarioGestor()
+      ).pipe(
+        takeLast(1),
+        tap(() => this.setChanges(false))
+      );
+    } else {
+      return merge(
+        this.deleteComentarioEvaluador(),
+        this.updateComentarioEvaluador(),
+        this.createComentarioEvaluador()
+      ).pipe(
+        takeLast(1),
+        tap(() => this.setChanges(false))
+      );
+    }
   }
 
   public addComentario(comentario: IComentario) {
@@ -62,6 +90,7 @@ export class SeguimientoComentarioFragment extends Fragment {
     current.push(wrapped);
     this.comentarios$.next(current);
     this.setChanges(true);
+    this.setErrors(false);
     this.logger.debug(SeguimientoComentarioFragment.name, `addComentario(comentario: ${comentario})`, 'end');
   }
 
@@ -77,13 +106,31 @@ export class SeguimientoComentarioFragment extends Fragment {
       this.comentarios$.next(current);
       this.setChanges(true);
     }
+    if (this.comentarios$.value.length === 0 &&
+      (this.dictamen?.id === 6 || this.dictamen?.id === 8)) {
+      this.setErrors(true);
+    } else {
+      this.setErrors(false);
+    }
     this.logger.debug(SeguimientoComentarioFragment.name, `deleteComentario(comentario: ${comentario})`, 'end');
   }
 
-  private deleteComentariosEvaluador(): Observable<void> {
-    this.logger.debug(SeguimientoComentarioFragment.name, 'deleteComentarios()', 'start');
+  private deleteComentarioGestor(): Observable<void> {
     if (this.comentariosEliminados.length === 0) {
       this.logger.debug(SeguimientoComentarioFragment.name, 'deleteComentarios()', 'end');
+      return of(void 0);
+    }
+    return from(this.comentariosEliminados).pipe(
+      mergeMap((wrappedComentario) => {
+
+        return this.service.deleteComentarioGestor(this.getKey() as number, wrappedComentario.value.id);
+      }),
+      endWith()
+    );
+  }
+
+  private deleteComentarioEvaluador(): Observable<void> {
+    if (this.comentariosEliminados.length === 0) {
       return of(void 0);
     }
     return from(this.comentariosEliminados).pipe(
@@ -95,11 +142,30 @@ export class SeguimientoComentarioFragment extends Fragment {
     );
   }
 
-  private updateComentariosEvaluador(): Observable<void> {
-    this.logger.debug(SeguimientoComentarioFragment.name, 'updateComentarios()', 'start');
+  private updateComentarioGestor(): Observable<void> {
     const comentariosEditados = this.comentarios$.value.filter((comentario) => comentario.edited);
     if (comentariosEditados.length === 0) {
       this.logger.debug(SeguimientoComentarioFragment.name, 'updateComentarios()', 'end');
+      return of(void 0);
+    }
+    return from(comentariosEditados).pipe(
+      mergeMap((wrappedComentario) => {
+
+        return this.service.updateComentarioGestor(this.getKey() as number, wrappedComentario.value, wrappedComentario.value.id).pipe(
+          map((updatedComentario) => {
+            const index = this.comentarios$.value.findIndex((currentComentario) => currentComentario === wrappedComentario);
+            this.comentarios$[index] = new StatusWrapper<IComentario>(updatedComentario);
+          })
+        );
+      }),
+      endWith(),
+      tap(() => this.logger.debug(SeguimientoComentarioFragment.name, 'updateComentarios()', 'end'))
+    );
+  }
+
+  private updateComentarioEvaluador(): Observable<void> {
+    const comentariosEditados = this.comentarios$.value.filter((comentario) => comentario.edited);
+    if (comentariosEditados.length === 0) {
       return of(void 0);
     }
     return from(comentariosEditados).pipe(
@@ -116,13 +182,33 @@ export class SeguimientoComentarioFragment extends Fragment {
     );
   }
 
-  private createComentariosEvaluador(): Observable<void> {
-    this.logger.debug(SeguimientoComentarioFragment.name, 'createComentarios()', 'start');
+  private createComentarioGestor(): Observable<void> {
+    const comentariosCreados = this.comentarios$.value.filter((comentario) => comentario.created);
+    if (comentariosCreados.length === 0) {
+      return of(void 0);
+    }
+
+    return from(comentariosCreados).pipe(
+      mergeMap((wrappedComentario) => {
+
+        return this.service.createComentarioGestor(this.getKey() as number, wrappedComentario.value).pipe(
+          map((savedComentario) => {
+            const index = this.comentarios$.value.findIndex((currentComentario) => currentComentario === wrappedComentario);
+            this.comentarios$[index] = new StatusWrapper<IComentario>(savedComentario);
+          })
+        );
+      }),
+      endWith()
+    );
+  }
+
+  private createComentarioEvaluador(): Observable<void> {
     const comentariosCreados = this.comentarios$.value.filter((comentario) => comentario.created);
     if (comentariosCreados.length === 0) {
       this.logger.debug(SeguimientoComentarioFragment.name, 'createComentarios()', 'end');
       return of(void 0);
     }
+
     return from(comentariosCreados).pipe(
       mergeMap((wrappedComentario) => {
 
@@ -136,5 +222,10 @@ export class SeguimientoComentarioFragment extends Fragment {
       endWith(),
       tap(() => this.logger.debug(SeguimientoComentarioFragment.name, 'createComentarios()', 'end'))
     );
+  }
+
+  setDictamen(dictamen: IDictamen) {
+    this.dictamen = dictamen;
+    this.setErrors((this.dictamen.id === 6 || this.dictamen.id === 8) && this.comentarios$.value.length === 0);
   }
 }

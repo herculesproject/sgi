@@ -10,6 +10,7 @@ import { NGXLogger } from 'ngx-logger';
 
 import { SeguimientoComentariosComponent } from './seguimiento-comentarios.component';
 import { SeguimientoEvaluarActionService } from '../../seguimiento/seguimiento-evaluar.action.service';
+import { SeguimientoFormularioActionService } from '../seguimiento-formulario.action.service';
 
 describe('SeguimientoComentariosComponent', () => {
   let component: SeguimientoComentariosComponent;
@@ -30,7 +31,7 @@ describe('SeguimientoComentariosComponent', () => {
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-        SeguimientoEvaluarActionService,
+        SeguimientoFormularioActionService,
         SgiAuthService
       ]
     })

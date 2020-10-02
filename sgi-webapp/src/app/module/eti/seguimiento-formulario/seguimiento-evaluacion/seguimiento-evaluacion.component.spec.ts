@@ -12,6 +12,7 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SeguimientoEvaluacionComponent } from './seguimiento-evaluacion.component';
 import { SeguimientoListadoAnteriorMemoriaComponent } from '../seguimiento-listado-anterior-memoria/seguimiento-listado-anterior-memoria.component';
 import { GestionSeguimientoActionService } from '../../gestion-seguimiento/gestion-seguimiento.action.service';
+import { SeguimientoFormularioActionService } from '../seguimiento-formulario.action.service';
 
 describe('SeguimientoEvaluacionComponent', () => {
   let component: SeguimientoEvaluacionComponent;
@@ -36,7 +37,7 @@ describe('SeguimientoEvaluacionComponent', () => {
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
         EvaluacionActionService,
-        GestionSeguimientoActionService,
+        SeguimientoFormularioActionService,
         FormBuilder
       ],
     })

@@ -8,6 +8,7 @@ import { NGXLogger } from 'ngx-logger';
 
 import { SeguimientoEvaluarActionService } from '../seguimiento-evaluar.action.service';
 import { SEGUIMIENTO_ROUTE_NAMES } from '../seguimiento-route-names';
+import { SeguimientoFormularioActionService } from '../../seguimiento-formulario/seguimiento-formulario.action.service';
 
 const MSG_BUTTON_SAVE = marker('botones.guardar');
 const MSG_SUCCESS = marker('eti.seguimiento.evaluar.correcto');
@@ -19,7 +20,11 @@ const MSG_ERROR_SAVE = marker('eti.seguimiento.evaluar.comentarios.error.crear')
   styleUrls: ['./seguimiento-evaluar.component.scss'],
   encapsulation: ViewEncapsulation.None,
   viewProviders: [
-    SeguimientoEvaluarActionService
+    SeguimientoEvaluarActionService,
+    {
+      provide: SeguimientoFormularioActionService,
+      useExisting: SeguimientoEvaluarActionService
+    }
   ]
 })
 export class SeguimientoEvaluarComponent extends ActionComponent {

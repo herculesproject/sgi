@@ -8,6 +8,7 @@ import { ActionComponent } from '@core/component/action.component';
 import { GestionSeguimientoActionService } from '../gestion-seguimiento.action.service';
 import { GESTION_SEGUIMIENTO_ROUTE_NAMES } from '../gestion-seguimiento-route-names';
 import { DialogService } from '@core/services/dialog.service';
+import { SeguimientoFormularioActionService } from '../../seguimiento-formulario/seguimiento-formulario.action.service';
 
 const MSG_BUTTON_SAVE = marker('footer.eti.evaluacion.guardar');
 const MSG_SUCCESS = marker('eti.evaluacion.evaluar.correcto');
@@ -19,7 +20,11 @@ const MSG_ERROR_SAVE = marker('eti.evaluacion.evaluar.comentarios.error.crear');
   styleUrls: ['./gestion-seguimiento-evaluar.component.scss'],
   encapsulation: ViewEncapsulation.None,
   viewProviders: [
-    GestionSeguimientoActionService
+    GestionSeguimientoActionService,
+    {
+      provide: SeguimientoFormularioActionService,
+      useExisting: GestionSeguimientoActionService
+    }
   ]
 })
 export class GestionSeguimientoEvaluarComponent extends ActionComponent {

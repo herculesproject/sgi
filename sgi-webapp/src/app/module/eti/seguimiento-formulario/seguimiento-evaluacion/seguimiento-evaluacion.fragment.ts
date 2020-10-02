@@ -8,16 +8,23 @@ import { NullIdValidador } from '@core/validators/null-id-validador';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { NGXLogger } from 'ngx-logger';
 import { IMemoriaWithPersona } from '@core/models/eti/memoria-with-persona';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { IComentario } from '@core/models/eti/comentario';
+import { SnackBarService } from '@core/services/snack-bar.service';
 
 export class SeguimientoEvaluacionFragment extends FormFragment<IMemoriaWithPersona> {
 
   private memoria: IMemoriaWithPersona;
   evaluacion$: BehaviorSubject<IEvaluacion> = new BehaviorSubject<IEvaluacion>(null);
   evaluacion: IEvaluacion;
+  comentarios$: BehaviorSubject<StatusWrapper<IComentario>[]> = new BehaviorSubject<StatusWrapper<IComentario>[]>([]);
+
 
   constructor(
     private readonly logger: NGXLogger,
-    private fb: FormBuilder, key: number,
+    private fb: FormBuilder,
+    key: number,
+    protected readonly snackBarService: SnackBarService,
     private service: EvaluacionService,
     private personaFisicaService: PersonaFisicaService) {
     super(key);
@@ -108,5 +115,8 @@ export class SeguimientoEvaluacionFragment extends FormFragment<IMemoriaWithPers
     return this.evaluacion;
   }
 
+  setComentarios(comentarios: BehaviorSubject<StatusWrapper<IComentario>[]>) {
+    this.comentarios$ = comentarios;
+  }
 }
 
