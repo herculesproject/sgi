@@ -1,12 +1,14 @@
 package org.crue.hercules.sgi.eti.service;
 
-import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
-import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
-
 import java.util.List;
 
+import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.EquipoTrabajoNotFoundException;
+import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
+import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.Tarea;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -23,15 +25,8 @@ public interface EquipoTrabajoService {
   EquipoTrabajo create(EquipoTrabajo equipoTrabajo);
 
   /**
-   * Actualizar {@link EquipoTrabajo}.
-   *
-   * @param equipoTrabajo la entidad {@link EquipoTrabajo} a actualizar.
-   * @return la entidad {@link EquipoTrabajo} persistida.
-   */
-  EquipoTrabajo update(EquipoTrabajo equipoTrabajo);
-
-  /**
-   * Obtener todas las entidades {@link EquipoTrabajo} paginadas y/o filtradas.
+   * Obtener todas las entidades {@link EquipoTrabajo} paginadas y/o filtradas con
+   * informacion de si es eliminable.
    *
    * @param pageable la información de la paginación.
    * @param query    la información del filtro.
@@ -56,12 +51,18 @@ public interface EquipoTrabajoService {
 
   /**
    * Obtener todas las entidades paginadas {@link EquipoTrabajo} activas para una
-   * determinada {@link PeticionEvaluacion}.
+   * determinada {@link PeticionEvaluacion} con la informacion de si es eliminable
+   * o no.
+   * 
+   * No son eliminables los {@link EquipoTrabajo} que tienen tareas {@link Tarea}
+   * que estan asociadas a una {@link Memoria} que no esta en alguno de los
+   * siguiente estados: En elaboración, Completada, Favorable, Pendiente de
+   * Modificaciones Mínimas, Pendiente de correcciones y No procede evaluar.
    *
    * @param id       Id de {@link PeticionEvaluacion}.
    * @param pageable la información de la paginación.
    * @return la lista de entidades {@link EquipoTrabajo} paginadas.
    */
-  Page<EquipoTrabajo> findAllByPeticionEvaluacionId(Long id, Pageable pageable);
+  Page<EquipoTrabajoWithIsEliminable> findAllByPeticionEvaluacionId(Long id, Pageable pageable);
 
 }

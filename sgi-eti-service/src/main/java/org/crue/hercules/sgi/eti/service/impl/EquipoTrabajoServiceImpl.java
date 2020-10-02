@@ -2,9 +2,12 @@ package org.crue.hercules.sgi.eti.service.impl;
 
 import java.util.List;
 
+import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.EquipoTrabajoNotFoundException;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
+import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.repository.EquipoTrabajoRepository;
 import org.crue.hercules.sgi.eti.service.EquipoTrabajoService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
@@ -125,18 +128,25 @@ public class EquipoTrabajoServiceImpl implements EquipoTrabajoService {
 
   /**
    * Obtener todas las entidades paginadas {@link EquipoTrabajo} activas para una
-   * determinada {@link PeticionEvaluacion}.
+   * determinada {@link PeticionEvaluacion} con la informacion de si es eliminable
+   * o no.
+   * 
+   * No son eliminables los {@link EquipoTrabajo} que tienen tareas {@link Tarea}
+   * que estan asociadas a una {@link Memoria} que no esta en alguno de los
+   * siguiente estados: En elaboración, Completada, Favorable, Pendiente de
+   * Modificaciones Mínimas, Pendiente de correcciones y No procede evaluar.
    *
    * @param id       Id de {@link PeticionEvaluacion}.
    * @param pageable la información de la paginación.
    * @return la lista de entidades {@link EquipoTrabajo} paginadas.
    */
   @Override
-  public Page<EquipoTrabajo> findAllByPeticionEvaluacionId(Long id, Pageable pageable) {
+  public Page<EquipoTrabajoWithIsEliminable> findAllByPeticionEvaluacionId(Long id, Pageable pageable) {
     log.debug("findAllByPeticionEvaluacionId(Long id, Pageable pageable) - start");
     Assert.notNull(id, "PeticionEvaluacion id no puede ser null para buscar su equipo de trabajo");
 
-    Page<EquipoTrabajo> returnValue = equipoTrabajoRepository.findAllByPeticionEvaluacionId(id, pageable);
+    Page<EquipoTrabajoWithIsEliminable> returnValue = equipoTrabajoRepository.findAllByPeticionEvaluacionId(id,
+        pageable);
     log.debug("findAllByPeticionEvaluacionId(Long id, Pageable pageable) - end");
     return returnValue;
   }

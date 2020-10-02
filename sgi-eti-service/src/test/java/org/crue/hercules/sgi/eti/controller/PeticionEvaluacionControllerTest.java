@@ -11,7 +11,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.config.SecurityConfig;
+import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
+import org.crue.hercules.sgi.eti.dto.TareaWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
@@ -93,7 +95,6 @@ public class PeticionEvaluacionControllerTest {
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
         .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("PeticionEvaluacion1"));
-    ;
   }
 
   @Test
@@ -132,7 +133,7 @@ public class PeticionEvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-PEV-CR", "ETI-MEM-CR" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-MEM-C-INV" })
   public void newPeticionEvaluacion_Error_Returns400() throws Exception {
     // given: Un peticionEvaluacion nuevo que produce un error al crearse
     String nuevoPeticionEvaluacionJson = "{\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}";
@@ -372,25 +373,23 @@ public class PeticionEvaluacionControllerTest {
       "ETI-PEV-ER-INV" })
   public void findEquipoInvestigador_ReturnsEquipoTrabajoSubList() throws Exception {
     // given: 10 EquipoTrabajos por PeticionEvaluacion
-    List<EquipoTrabajo> equipoTrabajos = new ArrayList<>();
+    List<EquipoTrabajoWithIsEliminable> equipoTrabajos = new ArrayList<>();
     for (int i = 1, j = 1; i <= 10; i++, j++) {
-      equipoTrabajos.add(generarMockEquipoTrabajo(Long.valueOf(i * 10 + j - 10),
+      equipoTrabajos.add(generarMockEquipoTrabajoWithIsEliminable(Long.valueOf(i * 10 + j - 10),
           generarMockPeticionEvaluacion(Long.valueOf(i), "PeticionEvaluacion" + String.format("%03d", i))));
     }
-    BDDMockito.given(tareaService.findAllTareasNoEliminablesPeticionEvaluacion(ArgumentMatchers.<Long>any()))
-        .willReturn(new ArrayList<>());
 
     BDDMockito.given(equipoTrabajoService.findAllByPeticionEvaluacionId(ArgumentMatchers.<Long>any(),
-        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<EquipoTrabajo>>() {
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<EquipoTrabajoWithIsEliminable>>() {
           @Override
-          public Page<EquipoTrabajo> answer(InvocationOnMock invocation) throws Throwable {
+          public Page<EquipoTrabajoWithIsEliminable> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(1, Pageable.class);
             int size = pageable.getPageSize();
             int index = pageable.getPageNumber();
             int fromIndex = size * index;
             int toIndex = fromIndex + size;
-            List<EquipoTrabajo> content = equipoTrabajos.subList(fromIndex, toIndex);
-            Page<EquipoTrabajo> page = new PageImpl<>(content, pageable, equipoTrabajos.size());
+            List<EquipoTrabajoWithIsEliminable> content = equipoTrabajos.subList(fromIndex, toIndex);
+            Page<EquipoTrabajoWithIsEliminable> page = new PageImpl<>(content, pageable, equipoTrabajos.size());
             return page;
           }
         });
@@ -427,6 +426,60 @@ public class PeticionEvaluacionControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-PEV-ER-INV" })
+  public void findTareas_ReturnsTareaSubList() throws Exception {
+    // given: One hundred tareas
+    List<TareaWithIsEliminable> tareas = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      tareas.add(generarMockTareaWithIsEliminable(Long.valueOf(i), "Tarea" + String.format("%03d", i)));
+    }
+
+    BDDMockito
+        .given(
+            tareaService.findAllByPeticionEvaluacionId(ArgumentMatchers.<Long>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<TareaWithIsEliminable>>() {
+          @Override
+          public Page<TareaWithIsEliminable> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<TareaWithIsEliminable> content = tareas.subList(fromIndex, toIndex);
+            Page<TareaWithIsEliminable> page = new PageImpl<>(content, pageable, tareas.size());
+            return page;
+          }
+        });
+
+    // when: get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/tareas", 1L)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
+                .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: the asked tareas are returned with the right page information in
+        // headers
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "100"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10))).andReturn();
+
+    // this uses a TypeReference to inform Jackson about the Lists's generic type
+    List<TareaWithIsEliminable> actual = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<TareaWithIsEliminable>>() {
+        });
+
+    // containing tarea='Tarea031' to 'Tarea040'
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      TareaWithIsEliminable tarea = actual.get(i);
+      Assertions.assertThat(tarea.getTarea()).isEqualTo("Tarea" + String.format("%03d", j));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-PEV-ER-INV" })
   public void findMemorias_NotFound_Returns404() throws Exception {
 
     BDDMockito.given(memoriaService.findMemoriaByPeticionEvaluacionMaxVersion(ArgumentMatchers.anyLong(),
@@ -457,6 +510,143 @@ public class PeticionEvaluacionControllerTest {
             MockMvcRequestBuilders.get(PETICION_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/memorias", 1L)
                 .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-PEV-ER-INV" })
+  public void newTarea_ReturnsTarea() throws Exception {
+    // given: Una tarea nueva
+    String nuevaTareaJson = "{\"tarea\": \"Tarea1\", \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": \"Formacion1\", \"formacionEspecifica\": {\"id\": 300}, \"organismo\": \"Organismo1\", \"anio\": 2020}";
+
+    Tarea tarea = generarMockTarea(1L, "Tarea1");
+    EquipoTrabajo equipoTrabajo = generarMockEquipoTrabajo(1L,
+        generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1"));
+
+    BDDMockito.given(equipoTrabajoService.findById(1L)).willReturn(equipoTrabajo);
+    BDDMockito.given(tareaService.create(ArgumentMatchers.<Tarea>any())).willReturn(tarea);
+
+    // when: Creamos una tarea
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .post(PETICION_EVALUACION_CONTROLLER_BASE_PATH
+                + "/{idPeticionEvaluacion}/equipos-trabajo/{idEquipoTrabajo}/tareas", 1L, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevaTareaJson))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Crea la nueva tarea y la devuelve
+        .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
+        .andExpect(MockMvcResultMatchers.jsonPath("tarea").value("Tarea1"));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-PEV-ER-INV" })
+  public void newTarea_Error_Returns400() throws Exception {
+    // given: Una tarea nueva que produce un error al crearse
+    String nuevaTareaJson = "{\"id\": 1, \"tarea\": \"Tarea1\", \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": \"Formacion1\", \"formacionEspecifica\": {\"id\": 300}, \"organismo\": \"Organismo1\", \"anio\": 2020}";
+
+    EquipoTrabajo equipoTrabajo = generarMockEquipoTrabajo(1L,
+        generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1"));
+    BDDMockito.given(equipoTrabajoService.findById(1L)).willReturn(equipoTrabajo);
+    BDDMockito.given(tareaService.create(ArgumentMatchers.<Tarea>any())).willThrow(new IllegalArgumentException());
+
+    // when: Creamos una tarea
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .post(PETICION_EVALUACION_CONTROLLER_BASE_PATH
+                + "/{idPeticionEvaluacion}/equipos-trabajo/{idEquipoTrabajo}/tareas", 1L, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevaTareaJson))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devueve un error 400
+        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-PEV-ER-INV" })
+  public void newEquipoTrabajo_ReturnsEquipoTrabajo() throws Exception {
+    // given: Un equipo de trabajo nuevo
+    String nuevoEquipoTrabajoJson = "{\"personaRef\": \"user-001\", \"peticionEvaluacion\": {\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}}";
+
+    PeticionEvaluacion peticionEvaluacion = generarMockPeticionEvaluacion(1L, "peticionEvaluacion1");
+
+    EquipoTrabajo equipoTrabajo = generarMockEquipoTrabajo(1L,
+        generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1"));
+
+    BDDMockito.given(peticionEvaluacionService.findById(1L)).willReturn(peticionEvaluacion);
+    BDDMockito.given(equipoTrabajoService.create(ArgumentMatchers.<EquipoTrabajo>any())).willReturn(equipoTrabajo);
+
+    // when: Creamos un EquipoTrabajo
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .post(PETICION_EVALUACION_CONTROLLER_BASE_PATH + "/{idPeticionEvaluacion}/equipos-trabajo", 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoEquipoTrabajoJson))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Crea el nuevo EquipoTrabajo y lo devuelve
+        .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
+        .andExpect(MockMvcResultMatchers.jsonPath("personaRef").value("user-001"))
+        .andExpect(MockMvcResultMatchers.jsonPath("peticionEvaluacion.titulo").value("PeticionEvaluacion1"));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-PEV-ER-INV" })
+  public void newEquipoTrabajo_Error_Returns400() throws Exception {
+    // given: Un equipo de trabajo nuevo que produce un error al crearse
+    String nuevoEquipoTrabajoJson = "{\"personaRef\": \"user-001\", \"peticionEvaluacion\": {\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}}";
+
+    PeticionEvaluacion peticionEvaluacion = generarMockPeticionEvaluacion(1L, "peticionEvaluacion1");
+    BDDMockito.given(peticionEvaluacionService.findById(1L)).willReturn(peticionEvaluacion);
+    BDDMockito.given(equipoTrabajoService.create(ArgumentMatchers.<EquipoTrabajo>any()))
+        .willThrow(new IllegalArgumentException());
+
+    // when: Creamos un equipo de trabajo
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .post(PETICION_EVALUACION_CONTROLLER_BASE_PATH + "/{idPeticionEvaluacion}/equipos-trabajo", 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevoEquipoTrabajoJson))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devueve un error 400
+        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
+  public void removeTarea_ReturnsOk() throws Exception {
+
+    long idPeticionEvaluacion = 1L;
+    long idEquipoTrabajo = 1L;
+    long idTarea = 1L;
+
+    BDDMockito.given(tareaService.findById(idTarea)).willReturn(generarMockTarea(1L, "Tarea1"));
+    BDDMockito.doNothing().when(tareaService).delete(idTarea);
+
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .delete(
+                PETICION_EVALUACION_CONTROLLER_BASE_PATH
+                    + "/{idPeticionEvaluacion}/equipos-trabajo/{idEquipoTrabajo}/tareas/{idTarea}",
+                idPeticionEvaluacion, idEquipoTrabajo, idTarea)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
+  public void removeEquipoTrabajo_ReturnsOk() throws Exception {
+    long idPeticionEvaluacion = 1L;
+    long idEquipoTrabajo = 111L;
+
+    BDDMockito.given(equipoTrabajoService.findById(idEquipoTrabajo))
+        .willReturn((generarMockEquipoTrabajo(1L, generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1"))));
+
+    BDDMockito.doNothing().when(tareaService).deleteByEquipoTrabajo(idEquipoTrabajo);
+    BDDMockito.doNothing().when(equipoTrabajoService).delete(idEquipoTrabajo);
+
+    mockMvc.perform(MockMvcRequestBuilders
+        .delete(PETICION_EVALUACION_CONTROLLER_BASE_PATH + "/{idPeticionEvaluacion}/equipos-trabajo/{idEquipoTrabajo}",
+            idPeticionEvaluacion, idEquipoTrabajo)
+        .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON));
   }
 
   /**
@@ -534,6 +724,25 @@ public class PeticionEvaluacionControllerTest {
   }
 
   /**
+   * Función que devuelve un objeto EquipoTrabajoWithIsEliminable
+   * 
+   * @param id                 id del EquipoTrabajo
+   * @param peticionEvaluacion la PeticionEvaluacion del EquipoTrabajo
+   * @return el objeto EquipoTrabajo
+   */
+  public EquipoTrabajoWithIsEliminable generarMockEquipoTrabajoWithIsEliminable(Long id,
+      PeticionEvaluacion peticionEvaluacion) {
+
+    EquipoTrabajoWithIsEliminable equipoTrabajo = new EquipoTrabajoWithIsEliminable();
+    equipoTrabajo.setId(id);
+    equipoTrabajo.setPeticionEvaluacion(peticionEvaluacion);
+    equipoTrabajo.setPersonaRef("user-00" + id);
+    equipoTrabajo.setEliminable(true);
+
+    return equipoTrabajo;
+  }
+
+  /**
    * Función que devuelve un objeto Tarea
    * 
    * @param id          id de la tarea
@@ -541,8 +750,12 @@ public class PeticionEvaluacionControllerTest {
    * @return el objeto Tarea
    */
   public Tarea generarMockTarea(Long id, String descripcion) {
+    PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
+    peticionEvaluacion.setId(id);
+
     EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
     equipoTrabajo.setId(id);
+    equipoTrabajo.setPeticionEvaluacion(peticionEvaluacion);
 
     Memoria memoria = new Memoria();
     memoria.setId(200L);
@@ -565,6 +778,45 @@ public class PeticionEvaluacionControllerTest {
     tarea.setOrganismo("Organismo" + id);
     tarea.setAnio(2020);
     tarea.setTipoTarea(tipoTarea);
+
+    return tarea;
+  }
+
+  /**
+   * Función que devuelve un objeto TareaWithIsEliminable
+   * 
+   * @param id          id de la tarea
+   * @param descripcion descripcion de la tarea
+   * @return el objeto TareaWithIsEliminable
+   */
+  public TareaWithIsEliminable generarMockTareaWithIsEliminable(Long id, String descripcion) {
+    PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
+    peticionEvaluacion.setId(id);
+
+    EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
+    equipoTrabajo.setId(id);
+    equipoTrabajo.setPeticionEvaluacion(peticionEvaluacion);
+
+    Memoria memoria = new Memoria();
+    memoria.setId(200L);
+
+    FormacionEspecifica formacionEspecifica = new FormacionEspecifica();
+    formacionEspecifica.setId(300L);
+
+    TipoTarea tipoTarea = new TipoTarea();
+    tipoTarea.setId(1L);
+    tipoTarea.setNombre("Eutanasia");
+    tipoTarea.setActivo(Boolean.TRUE);
+
+    TareaWithIsEliminable tarea = new TareaWithIsEliminable();
+    tarea.setId(id);
+    tarea.setEquipoTrabajo(equipoTrabajo);
+    tarea.setMemoria(memoria);
+    tarea.setTarea(descripcion);
+    tarea.setFormacion("Formacion" + id);
+    tarea.setFormacionEspecifica(formacionEspecifica);
+    tarea.setOrganismo("Organismo" + id);
+    tarea.setEliminable(true);
 
     return tarea;
   }

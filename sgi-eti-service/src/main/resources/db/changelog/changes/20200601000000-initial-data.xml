@@ -820,7 +820,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-934" />
+      <column name="num_referencia" value="ref-884" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria4" />
@@ -834,7 +834,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-934" />
+      <column name="num_referencia" value="ref-324" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria5" />
@@ -848,7 +848,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-934" />
+      <column name="num_referencia" value="ref-634" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
       <column name="titulo" value="Memoria6" />
@@ -862,7 +862,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-934" />
+      <column name="num_referencia" value="ref-984" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria7" />
@@ -904,7 +904,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-934" />
+      <column name="num_referencia" value="ref-034" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria10" />
@@ -992,8 +992,8 @@
     </insert>
     <insert tableName="memoria">
       <column name="num_referencia" value="ref-669" />
-      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
+      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion5')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
       <column name="titulo" value="Memoria14" />
       <column name="persona_ref" value="user-047" />
       <column name="tipo_memoria_id" value="2" />
@@ -1067,7 +1067,6 @@
     <insert tableName="tarea">
       <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where persona_ref='user-001')" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
-      <column name="tarea" value="Tarea1" />
       <column name="formacion" value="Formacion1" />
       <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where id=1)" />
       <column name="organismo" value="Organismo1" />
@@ -1077,8 +1076,6 @@
     <insert tableName="tarea">
       <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where persona_ref='user-003')" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
-      <column name="tarea" value="Tarea2" />
-      <column name="formacion" value="Formacion2" />
       <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where id=2)" />
       <column name="organismo" value="Organismo2" />
       <column name="anio" value="2020" />
@@ -1087,8 +1084,6 @@
     <insert tableName="tarea">
       <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where persona_ref='user-003')" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
-      <column name="tarea" value="Tarea3" />
-      <column name="formacion" value="Formacion3" />
       <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where id=3)" />
       <column name="organismo" value="Organismo3" />
       <column name="anio" value="2020" />
@@ -1097,8 +1092,6 @@
     <insert tableName="tarea">
       <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where persona_ref='user-004')" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
-      <column name="tarea" value="Tarea4" />
-      <column name="formacion" value="Formacion4" />
       <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where id=4)" />
       <column name="organismo" value="Organismo4" />
       <column name="anio" value="2021" />
@@ -1106,23 +1099,16 @@
     </insert>
     <insert tableName="tarea">
       <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where persona_ref='user-005')" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
       <column name="tarea" value="Tarea5" />
       <column name="formacion" value="Formacion5" />
-      <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where id=5)" />
-      <column name="organismo" value="Organismo5" />
-      <column name="anio" value="2021" />
-      <column name="tipo_tarea_id" valueComputed="(select id from eti.tipo_tarea where nombre='Diseño de proyecto y procedimientos')" />
     </insert>
     <insert tableName="tarea">
       <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where persona_ref='user-006')" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-334')" />
       <column name="tarea" value="Tarea6" />
       <column name="formacion" value="Formacion6" />
-      <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where id=6)" />
-      <column name="organismo" value="Organismo6" />
-      <column name="anio" value="2021" />
-      <column name="tipo_tarea_id" valueComputed="(select id from eti.tipo_tarea where nombre='Manipulación de animales')" />
+
     </insert>
   </changeSet>
 

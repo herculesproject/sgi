@@ -25,6 +25,8 @@ public class MemoriaPeticionEvaluacion implements Serializable {
 
   private String numReferencia;
 
+  private String titulo;
+
   private Comite comite;
 
   private TipoEstadoMemoria estadoActual;

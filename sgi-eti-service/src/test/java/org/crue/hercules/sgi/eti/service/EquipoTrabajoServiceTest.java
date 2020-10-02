@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.EquipoTrabajoNotFoundException;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
@@ -97,55 +98,6 @@ public class EquipoTrabajoServiceTest {
   }
 
   @Test
-  public void update_ReturnsEquipoTrabajo() {
-    // given: Un nuevo EquipoTrabajo con el servicio actualizado
-    EquipoTrabajo equipoTrabajoServicioActualizado = generarMockEquipoTrabajo(1L,
-        generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1 actualizada"));
-
-    EquipoTrabajo equipoTrabajo = generarMockEquipoTrabajo(1L,
-        generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1"));
-
-    BDDMockito.given(equipoTrabajoRepository.findById(1L)).willReturn(Optional.of(equipoTrabajo));
-    BDDMockito.given(equipoTrabajoRepository.save(equipoTrabajo)).willReturn(equipoTrabajoServicioActualizado);
-
-    // when: Actualizamos el EquipoTrabajo
-    EquipoTrabajo equipoTrabajoActualizado = equipoTrabajoService.update(equipoTrabajo);
-
-    // then: El EquipoTrabajo se actualiza correctamente.
-    Assertions.assertThat(equipoTrabajoActualizado.getId()).isEqualTo(1L);
-    Assertions.assertThat(equipoTrabajoActualizado.getPersonaRef()).isEqualTo("user-001");
-    Assertions.assertThat(equipoTrabajoActualizado.getPeticionEvaluacion().getTitulo())
-        .isEqualTo("PeticionEvaluacion1 actualizada");
-
-  }
-
-  @Test
-  public void update_ThrowsEquipoTrabajoNotFoundException() {
-    // given: Un nuevo EquipoTrabajo a actualizar
-    EquipoTrabajo equipoTrabajo = generarMockEquipoTrabajo(1L,
-        generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1"));
-
-    // then: Lanza una excepcion porque el EquipoTrabajo no existe
-    Assertions.assertThatThrownBy(() -> equipoTrabajoService.update(equipoTrabajo))
-        .isInstanceOf(EquipoTrabajoNotFoundException.class);
-
-  }
-
-  @Test
-  public void update_WithoutId_ThrowsIllegalArgumentException() {
-
-    // given: Un EquipoTrabajo que venga sin id
-    EquipoTrabajo equipoTrabajo = generarMockEquipoTrabajo(null,
-        generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1"));
-
-    Assertions.assertThatThrownBy(
-        // when: update EquipoTrabajo
-        () -> equipoTrabajoService.update(equipoTrabajo))
-        // then: Lanza una excepción, el id es necesario
-        .isInstanceOf(IllegalArgumentException.class);
-  }
-
-  @Test
   public void delete_WithoutId_ThrowsIllegalArgumentException() {
     // given: Sin id
     Assertions.assertThatThrownBy(
@@ -205,30 +157,30 @@ public class EquipoTrabajoServiceTest {
   @Test
   public void findAllByPeticionEvaluacionId_WithPaging_ReturnsPage() {
     // given: 10 EquipoTrabajos por PeticionEvaluacion
-    List<EquipoTrabajo> equipoTrabajos = new ArrayList<>();
+    List<EquipoTrabajoWithIsEliminable> equipoTrabajos = new ArrayList<>();
     for (int i = 1, j = 1; i <= 10; i++, j++) {
-      equipoTrabajos.add(generarMockEquipoTrabajo(Long.valueOf(i * 10 + j - 10),
+      equipoTrabajos.add(generarMockEquipoTrabajoWithIsEliminable(Long.valueOf(i * 10 + j - 10),
           generarMockPeticionEvaluacion(Long.valueOf(i), "PeticionEvaluacion" + String.format("%03d", i))));
     }
 
     BDDMockito.given(equipoTrabajoRepository.findAllByPeticionEvaluacionId(ArgumentMatchers.<Long>any(),
-        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<EquipoTrabajo>>() {
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<EquipoTrabajoWithIsEliminable>>() {
           @Override
-          public Page<EquipoTrabajo> answer(InvocationOnMock invocation) throws Throwable {
+          public Page<EquipoTrabajoWithIsEliminable> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(1, Pageable.class);
             int size = pageable.getPageSize();
             int index = pageable.getPageNumber();
             int fromIndex = size * index;
             int toIndex = fromIndex + size;
-            List<EquipoTrabajo> content = equipoTrabajos.subList(fromIndex, toIndex);
-            Page<EquipoTrabajo> page = new PageImpl<>(content, pageable, equipoTrabajos.size());
+            List<EquipoTrabajoWithIsEliminable> content = equipoTrabajos.subList(fromIndex, toIndex);
+            Page<EquipoTrabajoWithIsEliminable> page = new PageImpl<>(content, pageable, equipoTrabajos.size());
             return page;
           }
         });
 
     // when: Get page=1 with pagesize=5
     Pageable paging = PageRequest.of(1, 5);
-    Page<EquipoTrabajo> page = equipoTrabajoService.findAllByPeticionEvaluacionId(1L, paging);
+    Page<EquipoTrabajoWithIsEliminable> page = equipoTrabajoService.findAllByPeticionEvaluacionId(1L, paging);
 
     // then: A Page with ten EquipoTrabajos are returned containing
     // descripcion='EquipoTrabajo006' to 'EquipoTrabajo010'
@@ -237,7 +189,7 @@ public class EquipoTrabajoServiceTest {
     Assertions.assertThat(page.getSize()).as("page.size").isEqualTo(5);
     Assertions.assertThat(page.getTotalElements()).as("page.totalElements").isEqualTo(10);
     for (int i = 0, j = 6; i < 10 && j <= 10; i++, j++) {
-      EquipoTrabajo equipoTrabajo = page.getContent().get(i);
+      EquipoTrabajoWithIsEliminable equipoTrabajo = page.getContent().get(i);
       Assertions.assertThat(equipoTrabajo.getPeticionEvaluacion().getTitulo())
           .as("equipoTrabajo[" + j + "].peticionEvaluacion.titulo")
           .isEqualTo("PeticionEvaluacion" + String.format("%03d", j));
@@ -327,7 +279,6 @@ public class EquipoTrabajoServiceTest {
    * @param peticionEvaluacion la PeticionEvaluacion del EquipoTrabajo
    * @return el objeto EquipoTrabajo
    */
-
   public EquipoTrabajo generarMockEquipoTrabajo(Long id, PeticionEvaluacion peticionEvaluacion) {
 
     EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
@@ -337,4 +288,24 @@ public class EquipoTrabajoServiceTest {
 
     return equipoTrabajo;
   }
+
+  /**
+   * Función que devuelve un objeto EquipoTrabajoWithIsEliminable
+   * 
+   * @param id                 id del EquipoTrabajo
+   * @param peticionEvaluacion la PeticionEvaluacion del EquipoTrabajo
+   * @return el objeto EquipoTrabajo
+   */
+  public EquipoTrabajoWithIsEliminable generarMockEquipoTrabajoWithIsEliminable(Long id,
+      PeticionEvaluacion peticionEvaluacion) {
+
+    EquipoTrabajoWithIsEliminable equipoTrabajo = new EquipoTrabajoWithIsEliminable();
+    equipoTrabajo.setId(id);
+    equipoTrabajo.setPeticionEvaluacion(peticionEvaluacion);
+    equipoTrabajo.setPersonaRef("user-00" + id);
+    equipoTrabajo.setEliminable(true);
+
+    return equipoTrabajo;
+  }
+
 }

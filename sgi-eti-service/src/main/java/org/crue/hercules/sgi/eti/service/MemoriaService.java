@@ -133,4 +133,15 @@ public interface MemoriaService {
 
   void updateEstadoMemoria(Memoria memoria, long id);
 
+  /**
+   * Obtener todas las entidades {@link Memoria} paginadas y/o filtradas por
+   * referencia de la persona
+   *
+   * @param pageable   la información de la paginación.
+   * @param query      la información del filtro.
+   * @param personaRef Referencia de la persona
+   * @return la lista de entidades {@link Memoria} paginadas y/o filtradas.
+   */
+  Page<Memoria> findAllByPersonaRef(List<QueryCriteria> query, Pageable pageable, String personaRef);
+
 }

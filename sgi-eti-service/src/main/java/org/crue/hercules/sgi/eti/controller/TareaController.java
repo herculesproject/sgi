@@ -12,15 +12,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -66,20 +66,6 @@ public class TareaController {
   }
 
   /**
-   * Crea nueva {@link Tarea}.
-   * 
-   * @param nuevaTarea {@link Tarea}. que se quiere crear.
-   * @return Nueva {@link Tarea} creada.
-   */
-  @PostMapping
-  public ResponseEntity<Tarea> newTarea(@Valid @RequestBody Tarea nuevaTarea) {
-    log.debug("newTarea(Tarea nuevaTarea) - start");
-    Tarea returnValue = service.create(nuevaTarea);
-    log.debug("newTarea(Tarea nuevaTarea) - end");
-    return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
-  }
-
-  /**
    * Actualiza {@link Tarea}.
    * 
    * @param updatedTarea {@link Tarea} a actualizar.
@@ -107,18 +93,6 @@ public class TareaController {
     Tarea returnValue = service.findById(id);
     log.debug("Tarea one(Long id) - end");
     return returnValue;
-  }
-
-  /**
-   * Elimina {@link Tarea} con id indicado.
-   * 
-   * @param id Identificador de {@link Tarea}.
-   */
-  @DeleteMapping("/{id}")
-  void delete(@PathVariable Long id) {
-    log.debug("delete(Long id) - start");
-    service.delete(id);
-    log.debug("delete(Long id) - end");
   }
 
 }

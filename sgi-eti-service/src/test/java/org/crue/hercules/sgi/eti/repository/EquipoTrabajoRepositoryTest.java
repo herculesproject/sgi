@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.eti.repository;
 import java.time.LocalDate;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
@@ -49,7 +50,8 @@ public class EquipoTrabajoRepositoryTest {
     Pageable pageable = PageRequest.of(0, 5);
 
     // when: Se buscan los datos paginados
-    Page<EquipoTrabajo> result = repository.findAllByPeticionEvaluacionId(peticionEvaluacion1.getId(), pageable);
+    Page<EquipoTrabajoWithIsEliminable> result = repository.findAllByPeticionEvaluacionId(peticionEvaluacion1.getId(),
+        pageable);
 
     // then: Se recuperan los datos correctamente según la paginación solicitada
     Assertions.assertThat(result.getNumber()).as("Number").isEqualTo(0);
@@ -82,7 +84,8 @@ public class EquipoTrabajoRepositoryTest {
     Pageable pageable = PageRequest.of(0, 5);
 
     // when: Se buscan los datos paginados
-    Page<EquipoTrabajo> result = repository.findAllByPeticionEvaluacionId(peticionEvaluacion2.getId(), pageable);
+    Page<EquipoTrabajoWithIsEliminable> result = repository.findAllByPeticionEvaluacionId(peticionEvaluacion2.getId(),
+        pageable);
 
     // then: Se recuperan los datos correctamente según la paginación solicitada
     Assertions.assertThat(result.getNumber()).isEqualTo(0);

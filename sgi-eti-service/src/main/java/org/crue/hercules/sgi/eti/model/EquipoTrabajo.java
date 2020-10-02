@@ -9,10 +9,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -50,11 +46,6 @@ public class EquipoTrabajo extends BaseEntity {
   /** Peticion Evaluación */
   @ManyToOne
   @JoinColumn(name = "peticion_evaluacion_id", nullable = false)
-  @NotNull
   private PeticionEvaluacion peticionEvaluacion;
-
-  @Transient
-  @JsonProperty("isEliminable")
-  private boolean isEliminable;
 
 }

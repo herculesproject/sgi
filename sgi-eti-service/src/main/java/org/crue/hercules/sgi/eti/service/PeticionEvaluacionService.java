@@ -60,4 +60,16 @@ public interface PeticionEvaluacionService {
    */
   void deleteAll();
 
+  /**
+   * Obtener todas las entidades {@link PeticionEvaluacion} paginadas y/o
+   * filtradas por la persona.
+   *
+   * @param pageable   la información de la paginación.
+   * @param query      la información del filtro.
+   * @param personaRef Referencia de la persona
+   * @return la lista de entidades {@link PeticionEvaluacion} paginadas y/o
+   *         filtradas.
+   */
+  Page<PeticionEvaluacion> findAllByPersonaRef(List<QueryCriteria> query, Pageable pageable, String personaRef);
+
 }

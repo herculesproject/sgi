@@ -2,27 +2,20 @@ package org.crue.hercules.sgi.eti.controller;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
-import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.service.EquipoTrabajoService;
-import org.crue.hercules.sgi.eti.service.TareaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -36,20 +29,15 @@ public class EquipoTrabajoController {
   /** EquipoTrabajo service */
   private final EquipoTrabajoService service;
 
-  /** Tarea service */
-  private final TareaService tareaService;
-
   /**
    * Instancia un nuevo EquipoTrabajoController.
    * 
-   * @param service      EquipoTrabajoService
-   * @param tareaService TareaService
+   * @param service EquipoTrabajoService
    */
-  public EquipoTrabajoController(EquipoTrabajoService service, TareaService tareaService) {
-    log.debug("EquipoTrabajoController(EquipoTrabajoService service, TareaService tareaService) - start");
+  public EquipoTrabajoController(EquipoTrabajoService service) {
+    log.debug("EquipoTrabajoController(EquipoTrabajoService service) - start");
     this.service = service;
-    this.tareaService = tareaService;
-    log.debug("EquipoTrabajoController(EquipoTrabajoService service, TareaService tareaService) - end");
+    log.debug("EquipoTrabajoController(EquipoTrabajoService service) - end");
   }
 
   /**
@@ -73,36 +61,6 @@ public class EquipoTrabajoController {
   }
 
   /**
-   * Crea nuevo {@link EquipoTrabajo}.
-   * 
-   * @param nuevoEquipoTrabajo {@link EquipoTrabajo}. que se quiere crear.
-   * @return Nuevo {@link EquipoTrabajo} creado.
-   */
-  @PostMapping
-  public ResponseEntity<EquipoTrabajo> newEquipoTrabajo(@Valid @RequestBody EquipoTrabajo nuevoEquipoTrabajo) {
-    log.debug("newEquipoTrabajo(EquipoTrabajo nuevoEquipoTrabajo) - start");
-    EquipoTrabajo returnValue = service.create(nuevoEquipoTrabajo);
-    log.debug("newEquipoTrabajo(EquipoTrabajo nuevoEquipoTrabajo) - end");
-    return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
-  }
-
-  /**
-   * Actualiza {@link EquipoTrabajo}.
-   * 
-   * @param updatedEquipoTrabajo {@link EquipoTrabajo} a actualizar.
-   * @param id                   id {@link EquipoTrabajo} a actualizar.
-   * @return {@link EquipoTrabajo} actualizado.
-   */
-  @PutMapping("/{id}")
-  EquipoTrabajo replaceEquipoTrabajo(@Valid @RequestBody EquipoTrabajo updatedEquipoTrabajo, @PathVariable Long id) {
-    log.debug("replaceEquipoTrabajo(EquipoTrabajo updatedEquipoTrabajo, Long id) - start");
-    updatedEquipoTrabajo.setId(id);
-    EquipoTrabajo returnValue = service.update(updatedEquipoTrabajo);
-    log.debug("replaceEquipoTrabajo(EquipoTrabajo updatedEquipoTrabajo, Long id) - end");
-    return returnValue;
-  }
-
-  /**
    * Devuelve el {@link EquipoTrabajo} con el id indicado.
    * 
    * @param id Identificador de {@link EquipoTrabajo}.
@@ -114,19 +72,6 @@ public class EquipoTrabajoController {
     EquipoTrabajo returnValue = service.findById(id);
     log.debug("EquipoTrabajo one(Long id) - end");
     return returnValue;
-  }
-
-  /**
-   * Elimina {@link EquipoTrabajo} con id indicado y todas sus {@link Tarea}.
-   * 
-   * @param id Identificador de {@link EquipoTrabajo}.
-   */
-  @DeleteMapping("/{id}")
-  void delete(@PathVariable Long id) {
-    log.debug("delete(Long id) - start");
-    tareaService.deleteByEquipoTrabajo(id);
-    service.delete(id);
-    log.debug("delete(Long id) - end");
   }
 
 }

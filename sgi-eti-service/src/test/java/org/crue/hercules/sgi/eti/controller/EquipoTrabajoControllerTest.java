@@ -15,7 +15,6 @@ import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.service.EquipoTrabajoService;
-import org.crue.hercules.sgi.eti.service.TareaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -58,9 +57,6 @@ public class EquipoTrabajoControllerTest {
   @MockBean
   private EquipoTrabajoService equipoTrabajoService;
 
-  @MockBean
-  private TareaService tareaService;
-
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String EQUIPO_TRABAJO_CONTROLLER_BASE_PATH = "/equipotrabajos";
 
@@ -90,102 +86,6 @@ public class EquipoTrabajoControllerTest {
         .perform(MockMvcRequestBuilders.get(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EQUIPOTRABAJO-EDITAR" })
-  public void newEquipoTrabajo_ReturnsEquipoTrabajo() throws Exception {
-    // given: Un equipo de trabajo nuevo
-    String nuevoEquipoTrabajoJson = "{\"personaRef\": \"user-001\", \"peticionEvaluacion\": {\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}}";
-
-    EquipoTrabajo equipoTrabajo = generarMockEquipoTrabajo(1L,
-        generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1"));
-
-    BDDMockito.given(equipoTrabajoService.create(ArgumentMatchers.<EquipoTrabajo>any())).willReturn(equipoTrabajo);
-
-    // when: Creamos un EquipoTrabajo
-    mockMvc
-        .perform(MockMvcRequestBuilders.post(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(nuevoEquipoTrabajoJson))
-        .andDo(MockMvcResultHandlers.print())
-        // then: Crea el nuevo EquipoTrabajo y lo devuelve
-        .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("personaRef").value("user-001"))
-        .andExpect(MockMvcResultMatchers.jsonPath("peticionEvaluacion.titulo").value("PeticionEvaluacion1"));
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EQUIPOTRABAJO-EDITAR" })
-  public void newEquipoTrabajo_Error_Returns400() throws Exception {
-    // given: Un equipo de trabajo nuevo que produce un error al crearse
-    String nuevoEquipoTrabajoJson = "{\"personaRef\": \"user-001\", \"peticionEvaluacion\": {\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}}";
-
-    BDDMockito.given(equipoTrabajoService.create(ArgumentMatchers.<EquipoTrabajo>any()))
-        .willThrow(new IllegalArgumentException());
-
-    // when: Creamos un equipo de trabajo
-    mockMvc
-        .perform(MockMvcRequestBuilders.post(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(nuevoEquipoTrabajoJson))
-        .andDo(MockMvcResultHandlers.print())
-        // then: Devueve un error 400
-        .andExpect(MockMvcResultMatchers.status().isBadRequest());
-
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EQUIPOTRABAJO-EDITAR" })
-  public void replaceEquipoTrabajo_ReturnsEquipoTrabajo() throws Exception {
-    // given: Un EquipoTrabajo a modificar
-    String replaceEquipoTrabajoJson = "{\"id\": 1, \"personaRef\": \"user-001\", \"peticionEvaluacion\": {\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}}";
-
-    EquipoTrabajo equipoTrabajo = generarMockEquipoTrabajo(1L,
-        generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1"));
-
-    BDDMockito.given(equipoTrabajoService.update(ArgumentMatchers.<EquipoTrabajo>any())).willReturn(equipoTrabajo);
-
-    mockMvc
-        .perform(MockMvcRequestBuilders.put(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(replaceEquipoTrabajoJson))
-        .andDo(MockMvcResultHandlers.print())
-        // then: Modifica el EquipoTrabajo y lo devuelve
-        .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("personaRef").value("user-001"))
-        .andExpect(MockMvcResultMatchers.jsonPath("peticionEvaluacion.titulo").value("PeticionEvaluacion1"));
-
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EQUIPOTRABAJO-EDITAR" })
-  public void replaceEquipoTrabajo_NotFound() throws Exception {
-    // given: Un EquipoTrabajo a modificar
-    String replaceEquipoTrabajoJson = "{\"id\": 1, \"personaRef\": \"user-001\", \"peticionEvaluacion\": {\"titulo\": \"PeticionEvaluacion1\", \"activo\": \"true\"}}";
-
-    BDDMockito.given(equipoTrabajoService.update(ArgumentMatchers.<EquipoTrabajo>any()))
-        .will((InvocationOnMock invocation) -> {
-          throw new EquipoTrabajoNotFoundException(((EquipoTrabajo) invocation.getArgument(0)).getId());
-        });
-    mockMvc
-        .perform(MockMvcRequestBuilders.put(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(replaceEquipoTrabajoJson))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
-
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EQUIPOTRABAJO-EDITAR" })
-  public void removeEquipoTrabajo_ReturnsOk() throws Exception {
-    BDDMockito.given(equipoTrabajoService.findById(ArgumentMatchers.anyLong()))
-        .willReturn(generarMockEquipoTrabajo(1L, generarMockPeticionEvaluacion(1L, "PeticionEvaluacion1")));
-
-    mockMvc
-        .perform(MockMvcRequestBuilders.delete(EQUIPO_TRABAJO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test

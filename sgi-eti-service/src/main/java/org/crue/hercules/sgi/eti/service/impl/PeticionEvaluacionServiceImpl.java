@@ -170,4 +170,26 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
     }).orElseThrow(() -> new PeticionEvaluacionNotFoundException(peticionEvaluacionActualizar.getId()));
   }
 
+  /**
+   * Obtiene todas las entidades {@link PeticionEvaluacion} paginadas y filtadas.
+   *
+   * @param paging     la información de paginación.
+   * @param query      información del filtro.
+   * @param personaRef Referencia de la persona
+   * @return el listado de entidades {@link PeticionEvaluacion} paginadas y
+   *         filtradas.
+   */
+  public Page<PeticionEvaluacion> findAllByPersonaRef(List<QueryCriteria> query, Pageable paging, String personaRef) {
+    log.debug("findAllPeticionEvaluacion(List<QueryCriteria> query,Pageable paging) - start");
+    Specification<PeticionEvaluacion> specByQuery = new QuerySpecification<PeticionEvaluacion>(query);
+    Specification<PeticionEvaluacion> specActivos = PeticionEvaluacionSpecifications.activos();
+    Specification<PeticionEvaluacion> specByPersonaRef = PeticionEvaluacionSpecifications.byPersonaRef(personaRef);
+
+    Specification<PeticionEvaluacion> specs = Specification.where(specActivos).and(specByQuery).and(specByPersonaRef);
+
+    Page<PeticionEvaluacion> returnValue = peticionEvaluacionRepository.findAll(specs, paging);
+    log.debug("findAllPeticionEvaluacion(List<QueryCriteria> query,Pageable paging) - end");
+    return returnValue;
+  }
+
 }

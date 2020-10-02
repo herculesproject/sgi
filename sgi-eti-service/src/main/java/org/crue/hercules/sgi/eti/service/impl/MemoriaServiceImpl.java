@@ -301,7 +301,28 @@ public class MemoriaServiceImpl implements MemoriaService {
     memoriaRepository.save(memoria);
 
     log.debug("updateEstadoMemoria(Memoria memoria, Long idEstadoMemoria) - end");
+  }
 
+  /**
+   * Obtiene todas las entidades {@link Memoria} paginadas y filtadas.
+   *
+   * @param paging     la información de paginación.
+   * @param query      información del filtro.
+   * @param personaRef la referencia de la persona
+   * @return el listado de entidades {@link Memoria} paginadas y filtradas.
+   */
+  @Override
+  public Page<Memoria> findAllByPersonaRef(List<QueryCriteria> query, Pageable paging, String personaRef) {
+    log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
+    Specification<Memoria> specByQuery = new QuerySpecification<Memoria>(query);
+    Specification<Memoria> specActivos = MemoriaSpecifications.activos();
+    Specification<Memoria> specByPersonaRef = MemoriaSpecifications.byPersonaRef(personaRef);
+
+    Specification<Memoria> specs = Specification.where(specActivos).and(specByQuery).and(specByPersonaRef);
+
+    Page<Memoria> returnValue = memoriaRepository.findAll(specs, paging);
+    log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
+    return returnValue;
   }
 
 }

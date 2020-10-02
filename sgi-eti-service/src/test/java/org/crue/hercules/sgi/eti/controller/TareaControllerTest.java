@@ -89,45 +89,6 @@ public class TareaControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-TAREA-EDITAR" })
-  public void newTarea_ReturnsTarea() throws Exception {
-    // given: Una tarea nueva
-    String nuevaTareaJson = "{\"tarea\": \"Tarea1\", \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": \"Formacion1\", \"formacionEspecifica\": {\"id\": 300}, \"organismo\": \"Organismo1\", \"anio\": 2020}";
-
-    Tarea tarea = generarMockTarea(1L, "Tarea1");
-
-    BDDMockito.given(tareaService.create(ArgumentMatchers.<Tarea>any())).willReturn(tarea);
-
-    // when: Creamos una tarea
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.post(TAREA_CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
-                .contentType(MediaType.APPLICATION_JSON).content(nuevaTareaJson))
-        .andDo(MockMvcResultHandlers.print())
-        // then: Crea la nueva tarea y la devuelve
-        .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("tarea").value("Tarea1"));
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-TAREA-EDITAR" })
-  public void newTarea_Error_Returns400() throws Exception {
-    // given: Una tarea nueva que produce un error al crearse
-    String nuevaTareaJson = "{\"id\": 1, \"tarea\": \"Tarea1\", \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": \"Formacion1\", \"formacionEspecifica\": {\"id\": 300}, \"organismo\": \"Organismo1\", \"anio\": 2020}";
-
-    BDDMockito.given(tareaService.create(ArgumentMatchers.<Tarea>any())).willThrow(new IllegalArgumentException());
-
-    // when: Creamos una tarea
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.post(TAREA_CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
-                .contentType(MediaType.APPLICATION_JSON).content(nuevaTareaJson))
-        .andDo(MockMvcResultHandlers.print())
-        // then: Devueve un error 400
-        .andExpect(MockMvcResultMatchers.status().isBadRequest());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-TAREA-EDITAR" })
   public void replaceTarea_ReturnsTarea() throws Exception {
     // given: Una tarea a modificar
     String replaceTareaJson = "{\"id\": 1, \"tarea\": \"Tarea1 actualizada\", \"equipoTrabajo\": {\"id\": 100}, \"memoria\": {\"id\": 200}, \"formacion\": \"Formacion1\", \"formacionEspecifica\": {\"id\": 300}, \"organismo\": \"Organismo1\", \"anio\": 2020}";
@@ -160,17 +121,6 @@ public class TareaControllerTest {
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(replaceTareaJson))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-TAREA-EDITAR" })
-  public void removeTarea_ReturnsOk() throws Exception {
-    BDDMockito.given(tareaService.findById(ArgumentMatchers.anyLong())).willReturn(generarMockTarea(1L, "Tarea1"));
-
-    mockMvc
-        .perform(MockMvcRequestBuilders.delete(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   @Test

@@ -81,59 +81,6 @@ public class TareaIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void addTarea_ReturnsTarea() throws Exception {
-
-    Tarea nuevaTarea = generarMockTarea(null, "Tarea");
-
-    final ResponseEntity<Tarea> response = restTemplate.exchange(TAREA_CONTROLLER_BASE_PATH, HttpMethod.POST,
-        buildRequest(null, nuevaTarea), Tarea.class);
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
-    final Tarea tarea = response.getBody();
-
-    Assertions.assertThat(tarea.getId()).as("id").isEqualTo(1L);
-    Assertions.assertThat(tarea.getEquipoTrabajo()).as("equipoTrabajo").isNotNull();
-    Assertions.assertThat(tarea.getEquipoTrabajo().getId()).as("equipoTrabajo.id").isEqualTo(100L);
-    Assertions.assertThat(tarea.getMemoria()).as("memoria").isNotNull();
-    Assertions.assertThat(tarea.getMemoria().getId()).as("memoria.id").isEqualTo(200L);
-    Assertions.assertThat(tarea.getTarea()).as("tarea").isEqualTo("Tarea");
-    Assertions.assertThat(tarea.getFormacion()).as("formacion").isEqualTo("Formacion");
-    Assertions.assertThat(tarea.getFormacionEspecifica()).as("formacionEspecifica").isNotNull();
-    Assertions.assertThat(tarea.getFormacionEspecifica().getId()).as("formacionEspecifica.id").isEqualTo(300L);
-    Assertions.assertThat(tarea.getOrganismo()).as("organismo").isEqualTo("Organismo");
-    Assertions.assertThat(tarea.getAnio()).as("anio").isEqualTo(2020);
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  public void removeTarea_Success() throws Exception {
-
-    // when: Delete con id existente
-    long id = 1L;
-    final ResponseEntity<Tarea> response = restTemplate.exchange(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.DELETE, buildRequest(null, null), Tarea.class, id);
-
-    // then: 200
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  public void removeTarea_DoNotGetTarea() throws Exception {
-
-    final ResponseEntity<Tarea> response = restTemplate.exchange(TAREA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.DELETE, buildRequest(null, null), Tarea.class, 1L);
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
   public void replaceTarea_ReturnsTarea() throws Exception {
 
     Tarea replaceTarea = generarMockTarea(1L, "Tarea1");

@@ -38,7 +38,6 @@ public class Tarea extends BaseEntity {
   /** Equipo trabajo */
   @ManyToOne
   @JoinColumn(name = "equipo_trabajo_id", nullable = false)
-  @NotNull
   private EquipoTrabajo equipoTrabajo;
 
   /** Memoria */
@@ -48,11 +47,11 @@ public class Tarea extends BaseEntity {
   private Memoria memoria;
 
   /** Tarea */
-  @Column(name = "tarea", length = 250, nullable = false)
+  @Column(name = "tarea", length = 250, nullable = true)
   private String tarea;
 
   /** Formacion */
-  @Column(name = "formacion", length = 250, nullable = false)
+  @Column(name = "formacion", length = 250, nullable = true)
   private String formacion;
 
   /** Formacion especifica */
@@ -70,7 +69,7 @@ public class Tarea extends BaseEntity {
 
   /** Tipo tarea */
   @ManyToOne
-  @JoinColumn(name = "tipo_tarea_id", nullable = false)
+  @JoinColumn(name = "tipo_tarea_id", nullable = true)
   private TipoTarea tipoTarea;
 
 }

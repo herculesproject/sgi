@@ -192,9 +192,9 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     CriteriaQuery<MemoriaPeticionEvaluacion> cq = cb.createQuery(MemoriaPeticionEvaluacion.class);
     Root<Memoria> root = cq.from(Memoria.class);
 
-    cq.multiselect(root.get(Memoria_.id), root.get(Memoria_.numReferencia), root.get(Memoria_.comite),
-        root.get(Memoria_.estadoActual), getFechaEvaluacion(root, cb, cq).alias("fechaEvaluacion"),
-        getFechaLimite(root, cb, cq).alias("fechaLimite"));
+    cq.multiselect(root.get(Memoria_.id), root.get(Memoria_.numReferencia), root.get(Memoria_.titulo),
+        root.get(Memoria_.comite), root.get(Memoria_.estadoActual),
+        getFechaEvaluacion(root, cb, cq).alias("fechaEvaluacion"), getFechaLimite(root, cb, cq).alias("fechaLimite"));
 
     cq.where(cb.equal(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id), idPeticionEvaluacion));
 

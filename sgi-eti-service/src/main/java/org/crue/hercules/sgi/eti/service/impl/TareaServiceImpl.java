@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.eti.service.impl;
 import java.util.Arrays;
 import java.util.List;
 
+import org.crue.hercules.sgi.eti.dto.TareaWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.TareaNotFoundException;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.Memoria;
@@ -29,6 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class TareaServiceImpl implements TareaService {
   private final TareaRepository tareaRepository;
+
+  private final static List<Long> estadosMemoriaEliminables = Arrays.asList(1L, 2L, 6L, 7L, 8L);
 
   public TareaServiceImpl(TareaRepository tareaRepository) {
     this.tareaRepository = tareaRepository;
@@ -80,8 +83,9 @@ public class TareaServiceImpl implements TareaService {
   }
 
   /**
-   * Elimina una entidad {@link Tarea} por id.
-   *
+   * Elimina una entidad {@link Tarea} por id si no esta asignada a una
+   * {@link Memoria} que este en un estado lo eliminable.
+   * 
    * @param id el id de la entidad {@link Tarea}.
    */
   @Transactional
@@ -91,20 +95,32 @@ public class TareaServiceImpl implements TareaService {
     if (!tareaRepository.existsById(id)) {
       throw new TareaNotFoundException(id);
     }
+
+    Assert.isTrue(tareaRepository.existsByIdAndMemoriaEstadoActualIdIn(id, estadosMemoriaEliminables),
+        "La memoria de la tarea esta en un estado no eliminable.");
+
     tareaRepository.deleteById(id);
     log.debug("Petición a delete Tarea : {}  - end", id);
   }
 
   /**
-   * Elimina las {@link Tarea} del {@link EquipoTrabajo}
+   * Elimina las {@link Tarea} del {@link EquipoTrabajo} si ninguna de las tareas
+   * esta asignada a una {@link Memoria} que este en un estado lo eliminable.
    * 
-   * @param id el id de la entidad {@link EquipoTrabajo}.
+   * @param idEquipoTrabajo el id de la entidad {@link EquipoTrabajo}.
    */
   @Transactional
-  public void deleteByEquipoTrabajo(Long id) {
-    log.debug("deleteByEquipoTrabajo(Long id) - start");
-    tareaRepository.deleteByEquipoTrabajoId(id);
-    log.debug("deleteByEquipoTrabajo(Long id) - end");
+  public void deleteByEquipoTrabajo(Long idEquipoTrabajo) {
+    log.debug("deleteByEquipoTrabajo(Long idEquipoTrabajo) - start");
+    Assert.notNull(idEquipoTrabajo, "El id de EquipoTrabajo no puede ser null.");
+    tareaRepository.deleteByEquipoTrabajoId(idEquipoTrabajo);
+
+    List<Tarea> tareasNoEliminables = tareaRepository
+        .findAllByEquipoTrabajoIdAndMemoriaEstadoActualIdNotIn(idEquipoTrabajo, estadosMemoriaEliminables);
+    Assert.isTrue(tareasNoEliminables.isEmpty(),
+        "El equipo de trabajo tiene tareas con memorias en un estado no eliminable.");
+
+    log.debug("deleteByEquipoTrabajo(Long idEquipoTrabajo) - end");
   }
 
   /**
@@ -139,25 +155,41 @@ public class TareaServiceImpl implements TareaService {
   }
 
   /**
-   * Obtener todas las entidades {@link Tarea} para una determinada
-   * {@link PeticionEvaluacion} que estan asociadas a una {@link Memoria} que no
-   * esta en alguno de los siguiente estados: En elaboración, Completada,
-   * Favorable, Pendiente de Modificaciones Mínimas, Pendiente de correcciones y
-   * No procede evaluar.
+   * Obtiene todas las entidades {@link Tarea} para una determinada
+   * {@link PeticionEvaluacion} con la informacion de si es eliminable o no.
+   * 
+   * No son eliminables las {@link Tarea} que estan asociadas a una
+   * {@link Memoria} que no esta en alguno de los siguiente estados: En
+   * elaboración, Completada, Favorable, Pendiente de Modificaciones Mínimas,
+   * Pendiente de correcciones y No procede evaluar.
    *
    * @param idPeticionEvaluacion Id de {@link PeticionEvaluacion}.
-   * @return la lista de entidades {@link Tarea}.
+   * @param pageable             la información de paginación.
+   * @return el listado de entidades {@link Tarea} paginadas y filtradas.
    */
+  public Page<TareaWithIsEliminable> findAllByPeticionEvaluacionId(Long idPeticionEvaluacion, Pageable pageable) {
+    log.debug("findAllByPeticionEvaluacionId(Long idPeticionEvaluacion, Pageable paging) - start");
+    Page<TareaWithIsEliminable> returnValue = tareaRepository.findAllByPeticionEvaluacionId(idPeticionEvaluacion,
+        pageable);
+    log.debug("findAllByPeticionEvaluacionId(Long idPeticionEvaluacion, Pageable paging) - end");
+    return returnValue;
+  }
+
+  /**
+   * Busca las tareas de una petición de evaluación
+   * 
+   * @param idPeticionEvaluacion el id de la petición de evaluación
+   * @param pageable             la paginación
+   * @return la lista de tareas de la petición de evaluación
+   */
+
   @Override
-  public List<Tarea> findAllTareasNoEliminablesPeticionEvaluacion(Long idPeticionEvaluacion) {
+  public Page<Tarea> findAllByEquipoTrabajoPeticionEvaluacionId(Long idPeticionEvaluacion, Pageable pageable) {
     log.debug("findAllTareasNoEliminablesPeticionEvaluacion(Long idPeticionEvaluacion) - start");
 
-    List<Long> estadosEliminables = Arrays.asList(1L, 2L, 6L, 7L, 8L);
-
-    List<Tarea> returnValue = tareaRepository.findAllByEquipoTrabajoPeticionEvaluacionIdAndMemoriaEstadoActualIdNotIn(
-        idPeticionEvaluacion, estadosEliminables);
+    Page<Tarea> returnValue = tareaRepository.findAllByEquipoTrabajoPeticionEvaluacionId(idPeticionEvaluacion,
+        pageable);
     log.debug("findAllTareasNoEliminablesPeticionEvaluacion(Long idPeticionEvaluacion) - end");
-
     return returnValue;
   }
 

@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.service;
 
 import java.util.List;
 
+import org.crue.hercules.sgi.eti.dto.TareaWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.TareaNotFoundException;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.Memoria;
@@ -57,7 +58,7 @@ public interface TareaService {
   void delete(Long id) throws TareaNotFoundException;
 
   /**
-   * Elimina las {@link Tarea} del {@link EquipoTrabajo}
+   * Elimina las {@link Tarea} del {@link EquipoTrabajo}.
    * 
    * @param idEquipoTrabajo el id de la entidad {@link EquipoTrabajo}.
    */
@@ -65,14 +66,27 @@ public interface TareaService {
 
   /**
    * Obtener todas las entidades {@link Tarea} para una determinada
-   * {@link PeticionEvaluacion} que estan asociadas a una {@link Memoria} que no
-   * esta en alguno de los siguiente estados: En elaboración, Completada,
-   * Favorable, Pendiente de Modificaciones Mínimas, Pendiente de correcciones y
-   * No procede evaluar.
+   * {@link PeticionEvaluacion} con la informacion de si es eliminable o no.
+   * 
+   * No son eliminables las {@link Tarea} que estan asociadas a una
+   * {@link Memoria} que no esta en alguno de los siguiente estados: En
+   * elaboración, Completada, Favorable, Pendiente de Modificaciones Mínimas,
+   * Pendiente de correcciones y No procede evaluar.
    *
    * @param idPeticionEvaluacion Id de {@link PeticionEvaluacion}.
-   * @return la lista de entidades {@link Tarea}.
+   * @param pageable             la información de paginación.
+   * @return la lista de entidades {@link Tarea} paginadas y/o filtradas.
    */
-  List<Tarea> findAllTareasNoEliminablesPeticionEvaluacion(Long idPeticionEvaluacion);
+  Page<TareaWithIsEliminable> findAllByPeticionEvaluacionId(Long idPeticionEvaluacion, Pageable pageable);
+
+  /**
+   * Busca las tareas de una petición de evaluación
+   * 
+   * @param idPeticionEvaluacion el id de la petición de evaluación
+   * @param pageable             la paginación
+   * @return la lista de tareas de la petición de evaluación
+   */
+
+  Page<Tarea> findAllByEquipoTrabajoPeticionEvaluacionId(Long idPeticionEvaluacion, Pageable pageable);
 
 }

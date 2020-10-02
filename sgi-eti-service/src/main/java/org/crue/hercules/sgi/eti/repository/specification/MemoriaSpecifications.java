@@ -43,4 +43,10 @@ public class MemoriaSpecifications {
       }
     };
   }
+
+  public static Specification<Memoria> byPersonaRef(String personaRef) {
+    return (root, query, cb) -> {
+      return cb.equal(root.get(Memoria_.personaRef), personaRef);
+    };
+  }
 }

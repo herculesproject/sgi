@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.dto.TareaWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.TareaNotFoundException;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.FormacionEspecifica;
@@ -156,6 +157,8 @@ public class TareaServiceTest {
   public void delete_WithExistingId_DeletesTarea() {
     // given: Id existente
     BDDMockito.given(tareaRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+    BDDMockito.given(tareaRepository.existsByIdAndMemoriaEstadoActualIdIn(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Long>anyList())).willReturn(Boolean.TRUE);
     BDDMockito.doNothing().when(tareaRepository).deleteById(ArgumentMatchers.anyLong());
 
     Assertions.assertThatCode(
@@ -240,22 +243,41 @@ public class TareaServiceTest {
   }
 
   @Test
-  public void findAllTareasNoEliminablesPeticionEvaluacion_ReturnsTareasList() {
+  public void findAllByPeticionEvaluacionId_WithPaging_ReturnsPage() {
     // given: One hundred tareas
-    List<Tarea> tareas = new ArrayList<>();
+    List<TareaWithIsEliminable> tareas = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      tareas.add(generarMockTarea(Long.valueOf(i), "Tarea" + String.format("%03d", i)));
+      tareas.add(generarMockTareaWithIsEliminable(Long.valueOf(i), "Tarea" + String.format("%03d", i)));
     }
 
-    BDDMockito.given(tareaRepository.findAllByEquipoTrabajoPeticionEvaluacionIdAndMemoriaEstadoActualIdNotIn(
-        ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>anyList())).willReturn(tareas);
+    BDDMockito.given(
+        tareaRepository.findAllByPeticionEvaluacionId(ArgumentMatchers.<Long>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<TareaWithIsEliminable>>() {
+          @Override
+          public Page<TareaWithIsEliminable> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<TareaWithIsEliminable> content = tareas.subList(fromIndex, toIndex);
+            Page<TareaWithIsEliminable> page = new PageImpl<>(content, pageable, tareas.size());
+            return page;
+          }
+        });
 
-    List<Tarea> tareasNoEliminables = tareaService.findAllTareasNoEliminablesPeticionEvaluacion(1L);
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<TareaWithIsEliminable> page = tareaService.findAllByPeticionEvaluacionId(1L, paging);
 
-    // then: A list with one hundred tareas are returned
-    Assertions.assertThat(tareasNoEliminables.size()).isEqualTo(100);
-    for (int i = 0, j = 1; i < 10; i++, j++) {
-      Tarea tarea = tareasNoEliminables.get(i);
+    // then: A Page with ten tareas are returned containing descripcion='Tarea031'
+    // to 'Tarea040'
+    Assertions.assertThat(page.getContent().size()).isEqualTo(10);
+    Assertions.assertThat(page.getNumber()).isEqualTo(3);
+    Assertions.assertThat(page.getSize()).isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      TareaWithIsEliminable tarea = page.getContent().get(i);
       Assertions.assertThat(tarea.getTarea()).isEqualTo("Tarea" + String.format("%03d", j));
     }
   }
@@ -292,6 +314,41 @@ public class TareaServiceTest {
     tarea.setOrganismo("Organismo" + id);
     tarea.setAnio(2020);
     tarea.setTipoTarea(tipoTarea);
+
+    return tarea;
+  }
+
+  /**
+   * Función que devuelve un objeto TareaWithIsEliminable
+   * 
+   * @param id          id de la tarea
+   * @param descripcion descripcion de la tarea
+   * @return el objeto TareaWithIsEliminable
+   */
+  public TareaWithIsEliminable generarMockTareaWithIsEliminable(Long id, String descripcion) {
+    EquipoTrabajo equipoTrabajo = new EquipoTrabajo();
+    equipoTrabajo.setId(100L);
+
+    Memoria memoria = new Memoria();
+    memoria.setId(200L);
+
+    FormacionEspecifica formacionEspecifica = new FormacionEspecifica();
+    formacionEspecifica.setId(300L);
+
+    TipoTarea tipoTarea = new TipoTarea();
+    tipoTarea.setId(1L);
+    tipoTarea.setNombre("Eutanasia");
+    tipoTarea.setActivo(Boolean.TRUE);
+
+    TareaWithIsEliminable tarea = new TareaWithIsEliminable();
+    tarea.setId(id);
+    tarea.setEquipoTrabajo(equipoTrabajo);
+    tarea.setMemoria(memoria);
+    tarea.setTarea(descripcion);
+    tarea.setFormacion("Formacion" + id);
+    tarea.setFormacionEspecifica(formacionEspecifica);
+    tarea.setOrganismo("Organismo" + id);
+    tarea.setEliminable(true);
 
     return tarea;
   }

@@ -17,4 +17,10 @@ public class PeticionEvaluacionSpecifications {
       return cb.equal(root.get(PeticionEvaluacion_.activo), Boolean.FALSE);
     };
   }
+
+  public static Specification<PeticionEvaluacion> byPersonaRef(String personaRef) {
+    return (root, query, cb) -> {
+      return cb.equal(root.get(PeticionEvaluacion_.personaRef), personaRef);
+    };
+  }
 }

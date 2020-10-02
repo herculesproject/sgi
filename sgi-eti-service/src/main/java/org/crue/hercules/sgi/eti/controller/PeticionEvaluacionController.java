@@ -1,11 +1,15 @@
 package org.crue.hercules.sgi.eti.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
+import org.crue.hercules.sgi.eti.dto.TareaWithIsEliminable;
+import org.crue.hercules.sgi.eti.exceptions.EquipoTrabajoNotFoundException;
+import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
+import org.crue.hercules.sgi.eti.exceptions.TareaNotFoundException;
 import org.crue.hercules.sgi.eti.model.EquipoTrabajo;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
@@ -21,6 +25,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.Assert;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -78,6 +84,7 @@ public class PeticionEvaluacionController {
    * 
    * @param query  filtro de {@link QueryCriteria}.
    * @param paging pageable
+   * @return la lista de entidades {@link PeticionEvaluacion} paginadas.
    */
   @GetMapping()
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-VR-INV', 'ETI-PEV-V')")
@@ -170,18 +177,11 @@ public class PeticionEvaluacionController {
    */
   @GetMapping("/{id}/equipo-investigador")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-V', 'ETI-PEV-VR-INV', 'ETI-PEV-C-INV', 'ETI-PEV-ER-INV')")
-  ResponseEntity<Page<EquipoTrabajo>> findEquipoInvestigador(@PathVariable Long id,
+  ResponseEntity<Page<EquipoTrabajoWithIsEliminable>> findEquipoInvestigador(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable pageable) {
     log.debug("findEquipoInvestigador(Long id, Pageable pageable) - start");
-    List<EquipoTrabajo> equipoTrabajosNoEliminables = tareaService.findAllTareasNoEliminablesPeticionEvaluacion(id)
-        .stream().map(Tarea::getEquipoTrabajo).collect(Collectors.toList());
 
-    Page<EquipoTrabajo> page = equipoTrabajoService.findAllByPeticionEvaluacionId(id, pageable).map(equipoTrabajo -> {
-      boolean isEliminable = !equipoTrabajosNoEliminables.stream()
-          .anyMatch(equipoTrabajoEliminable -> equipoTrabajoEliminable.getId().equals(equipoTrabajo.getId()));
-      equipoTrabajo.setEliminable(isEliminable);
-      return equipoTrabajo;
-    });
+    Page<EquipoTrabajoWithIsEliminable> page = equipoTrabajoService.findAllByPeticionEvaluacionId(id, pageable);
 
     if (page.isEmpty()) {
       log.debug("findEquipoInvestigador(Long id, Pageable pageable) - end");
@@ -189,6 +189,31 @@ public class PeticionEvaluacionController {
     }
 
     log.debug("findEquipoInvestigador(Long id, Pageable pageable) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Obtener todas las entidades paginadas {@link TareaWithIsEliminable} para una
+   * determinada {@link PeticionEvaluacion}.
+   *
+   * @param id       Id de {@link PeticionEvaluacion}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link TareaWithIsEliminable} paginadas.
+   */
+  @GetMapping("/{id}/tareas")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-C-INV', 'ETI-PEV-ER-INV')")
+  ResponseEntity<Page<TareaWithIsEliminable>> findTareas(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("findTareas(Long id, Pageable pageable) - start");
+
+    Page<TareaWithIsEliminable> page = tareaService.findAllByPeticionEvaluacionId(id, pageable);
+
+    if (page.isEmpty()) {
+      log.debug("findTareas(Long id, Pageable pageable) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findTareas(Long id, Pageable pageable) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -214,6 +239,144 @@ public class PeticionEvaluacionController {
     }
 
     log.debug("findMemorias(Long id, Pageable pageable) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Crea un nuevo {@link EquipoTrabajo} para la {@link PeticionEvaluacion} con el
+   * id indicado.
+   * 
+   * @param id                 Identificador de {@link PeticionEvaluacion}.
+   * @param nuevoEquipoTrabajo {@link EquipoTrabajo}. que se quiere crear.
+   * @return Nuevo {@link EquipoTrabajo} creado.
+   */
+  @PostMapping("/{id}/equipos-trabajo")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-C-INV', 'ETI-PEV-ER-INV')")
+  public ResponseEntity<EquipoTrabajo> createEquipoTrabajo(@PathVariable Long id,
+      @Valid @RequestBody EquipoTrabajo nuevoEquipoTrabajo) {
+    log.debug("createEquipoTrabajo(Long id, EquipoTrabajo nuevoEquipoTrabajo) - start");
+
+    PeticionEvaluacion peticionEvaluacion = service.findById(id);
+    if (peticionEvaluacion == null) {
+      throw new PeticionEvaluacionNotFoundException(id);
+    }
+
+    nuevoEquipoTrabajo.setPeticionEvaluacion(peticionEvaluacion);
+
+    EquipoTrabajo returnValue = equipoTrabajoService.create(nuevoEquipoTrabajo);
+    log.debug("createEquipoTrabajo(Long id, EquipoTrabajo nuevoEquipoTrabajo) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
+  }
+
+  /**
+   * Crea un nuevo {@link EquipoTrabajo} para la {@link PeticionEvaluacion} con el
+   * id indicado.
+   * 
+   * @param idPeticionEvaluacion Identificador de {@link PeticionEvaluacion}.
+   * @param idEquipoTrabajo      Identificador de {@link EquipoTrabajo}.
+   * @param nuevaTarea           {@link Tarea} que se quiere crear.
+   * @return Nuevo {@link EquipoTrabajo} creado.
+   */
+  @PostMapping("/{idPeticionEvaluacion}/equipos-trabajo/{idEquipoTrabajo}/tareas")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-C-INV', 'ETI-PEV-ER-INV')")
+  public ResponseEntity<Tarea> createTarea(@PathVariable Long idPeticionEvaluacion, @PathVariable Long idEquipoTrabajo,
+      @Valid @RequestBody Tarea nuevaTarea) {
+    log.debug("createTarea(Long idPeticionEvaluacion, Long idEquipoTrabajo, Tarea nuevaTarea) - start");
+
+    EquipoTrabajo equipoTrabajo = equipoTrabajoService.findById(idEquipoTrabajo);
+    if (equipoTrabajo == null) {
+      throw new EquipoTrabajoNotFoundException(idEquipoTrabajo);
+    }
+
+    Assert.isTrue(equipoTrabajo.getPeticionEvaluacion().getId().equals(idPeticionEvaluacion),
+        "El equipo de trabajo no pertenece a la peticion de evaluación");
+
+    nuevaTarea.setEquipoTrabajo(equipoTrabajo);
+
+    Tarea returnValue = tareaService.create(nuevaTarea);
+    log.debug("createTarea(Long idPeticionEvaluacion, Long idEquipoTrabajo, Tarea nuevaTarea) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
+  }
+
+  /**
+   * Elimina la {@link Tarea} con el idTarea indicado de
+   * {@link PeticionEvaluacion} con idPeticionEvaluacion indicado.
+   * 
+   * @param idPeticionEvaluacion Identificador de {@link PeticionEvaluacion}.
+   * @param idEquipoTrabajo      Identificador de {@link EquipoTrabajo}.
+   */
+  @DeleteMapping("/{idPeticionEvaluacion}/equipos-trabajo/{idEquipoTrabajo}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-ER-INV')")
+  void deleteEquipoTrabajo(@PathVariable Long idPeticionEvaluacion, @PathVariable Long idEquipoTrabajo) {
+    log.debug("deleteEquipoTrabajo(Long idPeticionEvaluacion, Long idEquipoTrabajo) - start");
+
+    EquipoTrabajo equipoTrabajo = equipoTrabajoService.findById(idEquipoTrabajo);
+    if (equipoTrabajo == null) {
+      throw new EquipoTrabajoNotFoundException(idEquipoTrabajo);
+    }
+
+    Assert.isTrue(equipoTrabajo.getPeticionEvaluacion().getId().equals(idPeticionEvaluacion),
+        "El equipo de trabajo no pertenece a la peticion de evaluación");
+
+    tareaService.deleteByEquipoTrabajo(idEquipoTrabajo);
+    equipoTrabajoService.delete(idEquipoTrabajo);
+
+    log.debug("deleteEquipoTrabajo(Long idPeticionEvaluacion, Long idEquipoTrabajo) - end");
+  }
+
+  /**
+   * Elimina la {@link Tarea} con el idTarea indicado de
+   * {@link PeticionEvaluacion} con idPeticionEvaluacion indicado.
+   * 
+   * @param idPeticionEvaluacion Identificador de {@link PeticionEvaluacion}.
+   * @param idEquipoTrabajo      Identificador de {@link EquipoTrabajo}.
+   * @param idTarea              Identificador de {@link Tarea}.
+   */
+  @DeleteMapping("/{idPeticionEvaluacion}/equipos-trabajo/{idEquipoTrabajo}/tareas/{idTarea}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-ER-INV')")
+  void deleteTarea(@PathVariable Long idPeticionEvaluacion, @PathVariable Long idEquipoTrabajo,
+      @PathVariable Long idTarea) {
+    log.debug("deleteTarea(Long idPeticionEvaluacion, Long idTarea) - start");
+
+    Tarea tarea = tareaService.findById(idTarea);
+    if (tarea == null) {
+      throw new TareaNotFoundException(idTarea);
+    }
+
+    Assert.isTrue(tarea.getEquipoTrabajo().getId().equals(idEquipoTrabajo),
+        "La tarea no pertenece al equipo de trabajo");
+
+    Assert.isTrue(tarea.getEquipoTrabajo().getPeticionEvaluacion().getId().equals(idPeticionEvaluacion),
+        "La tarea no pertenece a la peticion de evaluación");
+
+    tareaService.delete(idTarea);
+
+    log.debug("deleteTarea(Long idPeticionEvaluacion, Long idTarea) - end");
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link PeticionEvaluacion} de una
+   * persona.
+   * 
+   * @param query          filtro de {@link QueryCriteria}.
+   * @param paging         pageable
+   * @param authentication Authentication
+   * @return la lista de entidades {@link PeticionEvaluacion} paginadas.
+   */
+  @GetMapping("persona")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-VR-INV', 'ETI-PEV-V')")
+  ResponseEntity<Page<PeticionEvaluacion>> findAllByPersonaRef(
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging, Authentication authentication) {
+    log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
+    String personaRef = authentication.getName();
+    Page<PeticionEvaluacion> page = service.findAllByPersonaRef(query, paging, personaRef);
+
+    if (page.isEmpty()) {
+      log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
