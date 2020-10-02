@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject } from 'rxjs';
@@ -19,7 +19,7 @@ import { ActaMemoriasFragment } from './acta-memorias.fragment';
   templateUrl: './acta-memorias.component.html',
   styleUrls: ['./acta-memorias.component.scss']
 })
-export class ActaMemoriasComponent extends FragmentComponent {
+export class ActaMemoriasComponent extends FragmentComponent implements OnInit {
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;

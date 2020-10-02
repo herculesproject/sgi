@@ -18,7 +18,7 @@ export class ActaMemoriasFragment extends Fragment {
   }
 
   onInitialize(): void {
-    if (!this.getKey()) {
+    if (this.getKey()) {
       this.loadMemorias(this.getKey() as number);
     }
   }
