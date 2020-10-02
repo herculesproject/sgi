@@ -1,17 +1,17 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FooterGuardarComponent } from './footer-guardar.component';
+import { ActionFooterComponent } from './action-footer.component';
 import TestUtils from '@core/utils/test-utils';
 import { NGXLogger } from 'ngx-logger';
 import { MaterialDesignModule } from '@material/material-design.module';
 
-describe('FooterGuardarComponent', () => {
-  let component: FooterGuardarComponent;
-  let fixture: ComponentFixture<FooterGuardarComponent>;
+describe('ActionFooterComponent', () => {
+  let component: ActionFooterComponent;
+  let fixture: ComponentFixture<ActionFooterComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [FooterGuardarComponent],
+      declarations: [ActionFooterComponent],
       imports: [
         TestUtils.getIdiomas(),
         MaterialDesignModule
@@ -24,7 +24,7 @@ describe('FooterGuardarComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FooterGuardarComponent);
+    fixture = TestBed.createComponent(ActionFooterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -9,7 +9,7 @@ import { NGXLogger } from 'ngx-logger';
 
 import { ConvocatoriaCrearComponent } from './convocatoria-crear.component';
 import { ConvocatoriaDatosGeneralesComponent } from '../convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.component';
-import { FooterGuardarComponent } from '@shared/footers/footer-guardar/footer-guardar.component';
+import { ActionFooterComponent } from '@shared/action-footer/action-footer.component';
 import { FlexModule, FlexLayoutModule } from '@angular/flex-layout';
 import { ConvocatoriaActionService } from '../convocatoria.action.service';
 import { SharedModule } from '@shared/shared.module';
@@ -23,7 +23,7 @@ describe('ConvocatoriaCrearComponent', () => {
       declarations: [
         ConvocatoriaCrearComponent,
         ConvocatoriaDatosGeneralesComponent,
-        FooterGuardarComponent
+        ActionFooterComponent
       ],
       imports: [
         TestUtils.getIdiomas(),

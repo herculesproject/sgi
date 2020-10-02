@@ -37,12 +37,12 @@ export class ActaEditarComponent extends ActionComponent {
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
-    private readonly router: Router,
-    private route: ActivatedRoute,
+    router: Router,
+    route: ActivatedRoute,
     public actionService: ActaActionService,
     dialogService: DialogService
   ) {
-    super(actionService, dialogService);
+    super(router, route, actionService, dialogService);
   }
 
   saveOrUpdate(): void {
@@ -53,7 +53,7 @@ export class ActaEditarComponent extends ActionComponent {
       },
       () => {
         this.snackBarService.showSuccess(MSG_SUCCESS);
-        this.router.navigate(['../'], { relativeTo: this.route });
+        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }

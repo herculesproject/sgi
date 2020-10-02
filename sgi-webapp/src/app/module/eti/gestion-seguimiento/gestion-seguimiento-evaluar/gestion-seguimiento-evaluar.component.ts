@@ -35,12 +35,12 @@ export class GestionSeguimientoEvaluarComponent extends ActionComponent {
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
+    route: ActivatedRoute,
+    router: Router,
     public actionService: GestionSeguimientoActionService,
     dialogService: DialogService
   ) {
-    super(actionService, dialogService);
+    super(router, route, actionService, dialogService);
   }
 
   saveOrUpdate(): void {
@@ -51,7 +51,7 @@ export class GestionSeguimientoEvaluarComponent extends ActionComponent {
       },
       () => {
         this.snackBarService.showSuccess(MSG_SUCCESS);
-        this.router.navigate(['../'], { relativeTo: this.route });
+        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }

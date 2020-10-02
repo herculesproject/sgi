@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { FooterCrearComponent } from './footers/footer-crear/footer-crear.component';
-import { FooterGuardarComponent } from './footers/footer-guardar/footer-guardar.component';
+import { ActionFooterComponent } from './action-footer/action-footer.component';
 import { RootComponent } from './root/root.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -18,7 +18,7 @@ import { ActionFragmentLinkItemComponent } from './action-fragment-link-item/act
   declarations: [
     BreadcrumbComponent,
     FooterCrearComponent,
-    FooterGuardarComponent,
+    ActionFooterComponent,
     RootComponent,
     BuscarPersonaComponent,
     BuscarPersonaDialogoComponent,
@@ -36,7 +36,7 @@ import { ActionFragmentLinkItemComponent } from './action-fragment-link-item/act
   exports: [
     BreadcrumbComponent,
     FooterCrearComponent,
-    FooterGuardarComponent,
+    ActionFooterComponent,
     RootComponent,
     BuscarPersonaComponent,
     BuscarPersonaDialogoComponent,

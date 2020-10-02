@@ -36,12 +36,12 @@ export class EvaluacionEvaluadorEvaluarComponent extends ActionComponent {
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
+    route: ActivatedRoute,
+    router: Router,
     public actionService: EvaluacionEvaluadorActionService,
     dialogService: DialogService
   ) {
-    super(actionService, dialogService);
+    super(router, route, actionService, dialogService);
   }
 
   saveOrUpdate(): void {
@@ -52,7 +52,7 @@ export class EvaluacionEvaluadorEvaluarComponent extends ActionComponent {
       },
       () => {
         this.snackBarService.showSuccess(MSG_SUCCESS);
-        this.router.navigate(['../'], { relativeTo: this.route });
+        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }

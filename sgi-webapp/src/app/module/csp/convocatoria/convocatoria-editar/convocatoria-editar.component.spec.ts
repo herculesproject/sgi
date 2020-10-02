@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConvocatoriaEditarComponent } from './convocatoria-editar.component';
 import { ConvocatoriaDatosGeneralesComponent } from '../convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.component';
-import { FooterGuardarComponent } from '@shared/footers/footer-guardar/footer-guardar.component';
+import { ActionFooterComponent } from '@shared/action-footer/action-footer.component';
 import TestUtils from '@core/utils/test-utils';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -21,7 +21,7 @@ describe('ConvocatoriaEditarComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ConvocatoriaEditarComponent,
         ConvocatoriaDatosGeneralesComponent,
-        FooterGuardarComponent]
+        ActionFooterComponent]
       ,
       imports: [
         TestUtils.getIdiomas(),

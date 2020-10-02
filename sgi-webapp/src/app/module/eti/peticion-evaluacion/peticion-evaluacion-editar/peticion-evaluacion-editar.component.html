@@ -25,7 +25,7 @@
     <div class="mat-drawer-content-panel">
       <router-outlet></router-outlet>
     </div>
-    <sgi-footer-guardar [texto]="textoCrear" [actionService]="actionService" (emitter)="saveOrUpdate()">
-    </sgi-footer-guardar>
+    <sgi-action-footer [texto]="textoCrear" [actionService]="actionService">
+    </sgi-action-footer>
   </mat-drawer-content>
 </mat-drawer-container>

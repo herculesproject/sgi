@@ -35,13 +35,13 @@ export class ConvocatoriaCrearComponent extends ActionComponent {
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
-    private readonly router: Router,
-    private readonly route: ActivatedRoute,
+    router: Router,
+    route: ActivatedRoute,
     public readonly actionService: ConvocatoriaActionService,
     dialogService: DialogService
   ) {
 
-    super(actionService, dialogService);
+    super(router, route, actionService, dialogService);
   }
 
   saveOrUpdate(): void {
@@ -52,7 +52,7 @@ export class ConvocatoriaCrearComponent extends ActionComponent {
       },
       () => {
         this.snackBarService.showSuccess(MSG_SUCCESS);
-        this.router.navigate(['../'], { relativeTo: this.route });
+        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
   }

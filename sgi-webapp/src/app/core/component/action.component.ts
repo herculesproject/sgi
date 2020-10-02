@@ -1,8 +1,11 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IActionService } from '@core/services/action-service';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { DialogService } from '@core/services/dialog.service';
 import { map } from 'rxjs/operators';
+import { OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActionFooterComponent } from '@shared/action-footer/action-footer.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 const MSG_FORM_UNSAVED = marker('common.dialog.unsaved.msg');
 const MSG_FORM_UNSAVED_CANCEL = marker('botones.cancelar');
@@ -12,13 +15,36 @@ export interface SgiAllowNavigation {
   allowNavigation(): Observable<boolean>;
 }
 
-export abstract class ActionComponent implements SgiAllowNavigation {
+export abstract class ActionComponent implements SgiAllowNavigation, OnInit, OnDestroy {
+  @ViewChild(ActionFooterComponent, { static: true }) footer: ActionFooterComponent;
   // tslint:disable-next-line: variable-name
   private _service: IActionService;
+  protected router: Router;
+  protected activatedRoute: ActivatedRoute;
+  protected subscriptions: Subscription[] = [];
 
 
-  constructor(actionService: IActionService, private dialogService: DialogService) {
+  constructor(router: Router, activatedRoute: ActivatedRoute, actionService: IActionService, private dialogService: DialogService) {
+    this.router = router;
+    this.activatedRoute = activatedRoute;
     this._service = actionService;
+  }
+
+  ngOnInit(): void {
+    if (this.footer) {
+      this.subscriptions.push(this.footer.event$.subscribe((value: boolean) => {
+        if (value) {
+          this.saveOrUpdate();
+        }
+        else {
+          this.cancel();
+        }
+      }));
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   allowNavigation(): Observable<boolean> {
@@ -31,6 +57,10 @@ export abstract class ActionComponent implements SgiAllowNavigation {
       ).pipe(map((val) => val));
     }
     return of(true);
+  }
+
+  protected cancel(): void {
+    this.router.navigate(['../'], { relativeTo: this.activatedRoute });
   }
 
   abstract saveOrUpdate(): void;
