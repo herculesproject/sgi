@@ -448,8 +448,8 @@ public class EvaluacionControllerTest {
         .append("/comentarios-evaluador").toString();
 
     BDDMockito
-        .given(
-            comentarioService.findByEvaluacionIdEvaluador(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .given(comentarioService.findByEvaluacionIdEvaluador(ArgumentMatchers.anyLong(),
+            ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyString()))
         .willReturn(new PageImpl<>(Collections.emptyList()));
 
     // when: Se buscan todos los datos
@@ -471,10 +471,8 @@ public class EvaluacionControllerTest {
     response.add(generarMockComentario(Long.valueOf(1), "texto", 2L));
     response.add(generarMockComentario(Long.valueOf(3), "texto2", 2L));
 
-    BDDMockito
-        .given(
-            comentarioService.findByEvaluacionIdEvaluador(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(response));
+    BDDMockito.given(comentarioService.findByEvaluacionIdEvaluador(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyString())).willReturn(new PageImpl<>(response));
 
     // when: Se buscan los comentarios de tipo Evaluador
     MvcResult result = mockMvc
@@ -556,10 +554,8 @@ public class EvaluacionControllerTest {
     // given: Un listado de comentarios
     String nuevoComentarioJson = "{\"apartadoFormulario\": {\"id\": 100},  \"texto\": \"Comentario1\"}";
 
-    BDDMockito
-        .given(
-            comentarioService.createComentarioEvaluador(ArgumentMatchers.anyLong(), ArgumentMatchers.<Comentario>any()))
-        .willReturn(comentario);
+    BDDMockito.given(comentarioService.createComentarioEvaluador(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Comentario>any(), ArgumentMatchers.anyString())).willReturn(comentario);
 
     // when: Creamos el listado comentario
     mockMvc
@@ -583,8 +579,8 @@ public class EvaluacionControllerTest {
     String nuevoComentarioJson = mapper.writeValueAsString(generarMockComentario(1L, "Comentario1", 1L));
 
     BDDMockito
-        .given(
-            comentarioService.createComentarioEvaluador(ArgumentMatchers.anyLong(), ArgumentMatchers.<Comentario>any()))
+        .given(comentarioService.createComentarioEvaluador(ArgumentMatchers.anyLong(),
+            ArgumentMatchers.<Comentario>any(), ArgumentMatchers.anyString()))
         .willThrow(new IllegalArgumentException());
 
     // when: Se crea la entidad

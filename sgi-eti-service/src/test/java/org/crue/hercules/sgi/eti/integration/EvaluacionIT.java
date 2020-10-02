@@ -553,7 +553,7 @@ public class EvaluacionIT {
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "5");
 
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-EVALR")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user-001", "ETI-EVC-EVALR")));
 
     final ResponseEntity<List<Comentario>> response = restTemplate.exchange(
         EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comentarios-evaluador", HttpMethod.GET,
@@ -587,7 +587,7 @@ public class EvaluacionIT {
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-EVAL")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user-001", "ETI-EVC-EVAL")));
 
     final ResponseEntity<Comentario> response = restTemplate.exchange(
         EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comentario-gestor", HttpMethod.POST,
@@ -639,7 +639,7 @@ public class EvaluacionIT {
     // Authorization
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-EVALR", "ETI-EVC-EVALR-INV")));
+        String.format("bearer %s", tokenBuilder.buildToken("user-001", "ETI-EVC-EVALR", "ETI-EVC-EVALR-INV")));
 
     final ResponseEntity<Comentario> response = restTemplate.exchange(
         EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comentario-evaluador", HttpMethod.POST,
@@ -696,7 +696,7 @@ public class EvaluacionIT {
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-EVAL")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user-001", "ETI-EVC-EVAL")));
 
     final ResponseEntity<Comentario> response = restTemplate.exchange(
         EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comentario-gestor" + "/{idComentario}", HttpMethod.PUT,
@@ -733,7 +733,7 @@ public class EvaluacionIT {
     // Authorization
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-EVALR", "ETI-EVC-EVALR-INV")));
+        String.format("bearer %s", tokenBuilder.buildToken("user-001", "ETI-EVC-EVALR", "ETI-EVC-EVALR-INV")));
 
     final ResponseEntity<Comentario> response = restTemplate.exchange(
         EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comentario-evaluador" + "/{idComentario}",
@@ -775,7 +775,7 @@ public class EvaluacionIT {
     // Authorization
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-EVAL", "ETI-EVC-EVALR-INV")));
+        String.format("bearer %s", tokenBuilder.buildToken("user-001", "ETI-EVC-EVAL", "ETI-EVC-EVALR-INV")));
 
     // when: Delete con id existente
     final ResponseEntity<Comentario> response = restTemplate.exchange(
@@ -882,7 +882,7 @@ public class EvaluacionIT {
     evaluador2.setCargoComite(cargoComite);
     evaluador2.setFechaAlta(LocalDate.of(2020, 7, 1));
     evaluador2.setFechaBaja(LocalDate.of(2021, 7, 1));
-    evaluador2.setPersonaRef("user-002");
+    evaluador2.setPersonaRef("user");
     evaluador2.setActivo(Boolean.TRUE);
 
     Evaluacion evaluacion = new Evaluacion();

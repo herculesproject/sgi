@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -242,11 +243,12 @@ public class EvaluacionController {
    * @return la lista de entidades {@link Comentario} paginadas.
    */
   @GetMapping("/{id}/comentarios-evaluador")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-EVALR')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
   ResponseEntity<Page<Comentario>> getComentariosEvaluador(@PathVariable Long id,
-      @RequestPageable(sort = "s") Pageable pageable) {
+      @RequestPageable(sort = "s") Pageable pageable, Authentication authorization) {
     log.debug("getComentariosEvaluador(Long id, Pageable pageable) - start");
-    Page<Comentario> page = comentarioService.findByEvaluacionIdEvaluador(id, pageable);
+    String personaRef = authorization.getName();
+    Page<Comentario> page = comentarioService.findByEvaluacionIdEvaluador(id, pageable, personaRef);
     log.debug("getComentariosEvaluador(Long id, Pageable pageable) - end");
     if (page.isEmpty()) {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -278,11 +280,12 @@ public class EvaluacionController {
    * @return Nuevo {@link Comentario} creado.
    */
   @PostMapping("/{id}/comentario-evaluador")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
-  ResponseEntity<Comentario> createComentarioEvaluador(@PathVariable Long id,
-      @Valid @RequestBody Comentario comentario) {
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
+  ResponseEntity<Comentario> createComentarioEvaluador(@PathVariable Long id, @Valid @RequestBody Comentario comentario,
+      Authentication authorization) {
     log.debug("createComentarioEvaluador(Comentario comentario) - start");
-    Comentario returnValue = comentarioService.createComentarioEvaluador(id, comentario);
+    String personaRef = authorization.getName();
+    Comentario returnValue = comentarioService.createComentarioEvaluador(id, comentario, personaRef);
     log.debug("createComentarioEvaluador(comentario) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
   }
@@ -316,12 +319,13 @@ public class EvaluacionController {
    * @return {@link Comentario} actualizado.
    */
   @PutMapping("/{id}/comentario-evaluador/{idComentario}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
   public Comentario replaceComentarioEvaluador(@PathVariable Long id, @PathVariable Long idComentario,
-      @Validated({ Comentario.Update.class }) @RequestBody Comentario comentario) {
+      @Validated({ Comentario.Update.class }) @RequestBody Comentario comentario, Authentication authorization) {
     log.debug("replaceComentarioEvaluador( Long id,  Long idComentario, Comentario comentario) - start");
+    String personaRef = authorization.getName();
     comentario.setId(idComentario);
-    Comentario returnValue = comentarioService.updateComentarioEvaluador(id, comentario);
+    Comentario returnValue = comentarioService.updateComentarioEvaluador(id, comentario, personaRef);
     log.debug("replaceComentarioEvaluador( Long id,  Long idComentario, Comentario comentario) - end");
 
     return returnValue;
@@ -348,10 +352,12 @@ public class EvaluacionController {
    * @param ids Listado de identificadores de {@link Comentario}.
    */
   @DeleteMapping("/{id}/comentario-evaluador/{idComentario}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
-  void deleteComentarioEvaluacion(@PathVariable Long id, @PathVariable Long idComentario) {
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
+  void deleteComentarioEvaluacion(@PathVariable Long id, @PathVariable Long idComentario,
+      Authentication authorization) {
     log.debug("deleteComentarioEvaluacion(Long id,  Long idComentario) - start");
-    comentarioService.deleteComentarioEvaluador(id, idComentario);
+    String personaRef = authorization.getName();
+    comentarioService.deleteComentarioEvaluador(id, idComentario, personaRef);
     log.debug("deleteComentarioEvaluacion(Long id,  Long idComentario) - end");
   }
 

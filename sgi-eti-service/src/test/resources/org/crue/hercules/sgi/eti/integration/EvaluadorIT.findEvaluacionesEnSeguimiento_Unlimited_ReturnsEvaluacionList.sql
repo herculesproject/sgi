@@ -78,7 +78,7 @@ VALUES
 INSERT INTO ETI.TIPO_EVALUACION
   (ID,NOMBRE,ACTIVO)
 VALUES
-  (2, 'Memoria', true);
+  (3, 'Seguimiento anual', true);
 
 -- EVALUADOR
 INSERT INTO eti.evaluador
@@ -93,4 +93,4 @@ VALUES
 -- EVALUACION
 INSERT INTO eti.evaluacion
   (id, memoria_id, dictamen_id, convocatoria_reunion_id, tipo_evaluacion_id, es_rev_minima, evaluador1_id, evaluador2_id, fecha_dictamen, version, activo)
-VALUES(1, 1, 1, 1, 2, true, 1, 2, '2020-08-01', 2, true);
+VALUES(1, 1, 1, 1, 3, true, 1, 2, '2020-08-01', 2, true);

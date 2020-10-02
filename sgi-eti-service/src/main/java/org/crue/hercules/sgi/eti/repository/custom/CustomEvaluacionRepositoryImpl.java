@@ -255,7 +255,9 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
     Predicate memoria = cb.and(cb.equal(rootEvaluacion.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id), 2L),
         cb.in(rootEvaluacion.get(Evaluacion_.memoria).get(Memoria_.id))
             .value(getIdsMemoriasEstadoActual(cb, cq, rootEvaluacion)),
-        memoriaVersion);
+        memoriaVersion,
+        cb.or(cb.equal(rootEvaluacion.get(Evaluacion_.evaluador1).get(Evaluador_.personaRef), personaRef),
+            cb.equal(rootEvaluacion.get(Evaluacion_.evaluador2).get(Evaluador_.personaRef), personaRef)));
 
     // Tipo retrospectiva, memoria Requiere retrospectiva y el estado de la
     // RETROSPECTIVA es 'En evaluacion' (id = 4)
@@ -377,7 +379,8 @@ public class CustomEvaluacionRepositoryImpl implements CustomEvaluacionRepositor
         .in(Arrays.asList(11L, 12L, 13L)));
 
     listPredicates.add(cb.isTrue(rootEvaluacion.get(Evaluacion_.activo)));
-    listPredicates.add(cb.equal(rootEvaluacion.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id), 2L));
+    listPredicates
+        .add(rootEvaluacion.get(Evaluacion_.tipoEvaluacion).get(TipoEvaluacion_.id).in(Arrays.asList(3L, 4L)));
     listPredicates
         .add(cb.or(cb.equal(rootEvaluacion.get(Evaluacion_.evaluador1).get(Evaluador_.personaRef), personaRef),
             cb.equal(rootEvaluacion.get(Evaluacion_.evaluador2).get(Evaluador_.personaRef), personaRef)));

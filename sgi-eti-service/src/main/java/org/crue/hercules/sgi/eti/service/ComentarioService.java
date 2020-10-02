@@ -28,9 +28,10 @@ public interface ComentarioService {
    *
    * @param evaluacionId Id de la evaluación
    * @param comentario   {@link Comentario} a guardar.
+   * @param personaRef   Usuario logueado
    * @return lista de entidades {@link Comentario} persistida.
    */
-  Comentario createComentarioEvaluador(Long evaluacionId, Comentario comentario);
+  Comentario createComentarioEvaluador(Long evaluacionId, Comentario comentario, String personaRef);
 
   /**
    * Actualizar un {@link Comentario} de tipo "GESTOR" de una {@link Evaluacion}.
@@ -47,9 +48,10 @@ public interface ComentarioService {
    *
    * @param evaluacionId Id de la evaluación
    * @param comentario   {@link Comentario} a actualizar.
+   * @param personaRef   Usuario logueado
    * @return {@link Comentario} actualizado.
    */
-  Comentario updateComentarioEvaluador(Long evaluacionId, Comentario comentario);
+  Comentario updateComentarioEvaluador(Long evaluacionId, Comentario comentario, String personaRef);
 
   /**
    * Obtiene {@link Comentario} por id.
@@ -73,11 +75,12 @@ public interface ComentarioService {
    * Obtiene todos los {@link Comentario} del tipo "EVALUADOR" por el id de su
    * evaluación.
    *
-   * @param id       el id de la entidad {@link Evaluacion}.
-   * @param pageable la información de la paginación.
+   * @param id         el id de la entidad {@link Evaluacion}.
+   * @param pageable   la información de la paginación.
+   * @param personaRef Usuario logueado
    * @return la lista de entidades {@link Comentario} paginadas.
    */
-  Page<Comentario> findByEvaluacionIdEvaluador(Long id, Pageable pageable);
+  Page<Comentario> findByEvaluacionIdEvaluador(Long id, Pageable pageable, String personaRef);
 
   /**
    * Elimina un {@link Comentario} de tipo "GESTOR" de una {@link Evaluacion}.
@@ -92,7 +95,9 @@ public interface ComentarioService {
    *
    * @param evaluacionId Id de {@link Evaluacion}
    * @param idComentario Id de {@link Comentario}
+   * @param personaRef   Usuario logeado
    */
-  void deleteComentarioEvaluador(Long evaluacionId, Long idComentario) throws ComentarioNotFoundException;
+  void deleteComentarioEvaluador(Long evaluacionId, Long idComentario, String personaRef)
+      throws ComentarioNotFoundException;
 
 }

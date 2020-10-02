@@ -10,7 +10,10 @@ import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.ApartadoFormulario;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
+import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.service.impl.ComentarioServiceImpl;
@@ -78,6 +81,9 @@ public class ComentarioServiceTest {
     final Long tipoComentarioId = 1L;
     final int numeroComentario = 6;
     final List<Comentario> comentarios = new ArrayList<>();
+
+    BDDMockito.given(evaluacionRepository.findById(1L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
+
     for (int i = 0; i < numeroComentario; i++) {
       comentarios.add(generarMockComentario(Long.valueOf(i), "Comentario" + String.format("%03d", i), 1L));
     }
@@ -103,6 +109,9 @@ public class ComentarioServiceTest {
     // given: EL id de la evaluación sea valido
     final Long evaluacionId = 1L;
     final int numeroComentario = 100;
+
+    BDDMockito.given(evaluacionRepository.findById(1L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
+
     final List<Comentario> comentarios = new ArrayList<>();
     for (int i = 1; i <= numeroComentario; i++) {
       comentarios.add(generarMockComentario(Long.valueOf(i), "Comentario" + String.format("%03d", i), 1L));
@@ -160,7 +169,10 @@ public class ComentarioServiceTest {
     final Long evaluacionId = 1L;
     final Long tipoComentarioId = 2L;
     final int numeroComentario = 6;
+    final String personaRef = "user-002";
     final List<Comentario> comentarios = new ArrayList<>();
+    BDDMockito.given(evaluacionRepository.findById(1L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
+
     for (int i = 0; i < numeroComentario; i++) {
       comentarios.add(generarMockComentario(Long.valueOf(i), "Comentario" + String.format("%03d", i), 2L));
     }
@@ -168,7 +180,8 @@ public class ComentarioServiceTest {
         comentarioRepository.findByEvaluacionIdAndTipoComentarioId(evaluacionId, tipoComentarioId, Pageable.unpaged()))
         .willReturn(new PageImpl<>(comentarios));
     // when: se listen sus comentarios
-    final Page<Comentario> page = comentarioService.findByEvaluacionIdEvaluador(evaluacionId, Pageable.unpaged());
+    final Page<Comentario> page = comentarioService.findByEvaluacionIdEvaluador(evaluacionId, Pageable.unpaged(),
+        personaRef);
 
     // then: se debe devolver una lista de comentarios
     Assertions.assertThat(page.getContent().size()).isEqualTo(numeroComentario);
@@ -186,6 +199,10 @@ public class ComentarioServiceTest {
     // given: EL id de la evaluación sea valido
     final Long evaluacionId = 1L;
     final int numeroComentario = 100;
+    final String personaRef = "user-002";
+
+    BDDMockito.given(evaluacionRepository.findById(1L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
+
     final List<Comentario> comentarios = new ArrayList<>();
     for (int i = 1; i <= numeroComentario; i++) {
       comentarios.add(generarMockComentario(Long.valueOf(i), "Comentario" + String.format("%03d", i), 1L));
@@ -209,7 +226,7 @@ public class ComentarioServiceTest {
           }
         });
     // when: se listen sus comentarios
-    final Page<Comentario> page = comentarioService.findByEvaluacionIdEvaluador(evaluacionId, paging);
+    final Page<Comentario> page = comentarioService.findByEvaluacionIdEvaluador(evaluacionId, paging, personaRef);
 
     // then: se debe devolver una lista de comentarios
     Assertions.assertThat(page.getContent().size()).isEqualTo(numElementos);
@@ -226,9 +243,10 @@ public class ComentarioServiceTest {
   public void findByEvaluacionEvaluadorNullId() {
     // given: EL id de la evaluación sea null
     final Long evaluacionId = null;
+    final String personaRef = "user-002";
     try {
       // when: se quiera listar sus comentario
-      comentarioService.findByEvaluacionIdEvaluador(evaluacionId, Pageable.unpaged());
+      comentarioService.findByEvaluacionIdEvaluador(evaluacionId, Pageable.unpaged(), personaRef);
       Assertions.fail("El id no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
@@ -241,13 +259,15 @@ public class ComentarioServiceTest {
   public void createComentarioGestorEvaluacionIdNull() {
     // given: EL id de la evaluación sea null
     final Long evaluacionId = null;
+
     try {
       // when: se quiera añadir comentario
       comentarioService.createComentarioGestor(evaluacionId, new Comentario());
-      Assertions.fail("Evaluación id no puede ser null para crear un nuevo comentario");
+      Assertions.fail("Evaluación id no puede ser null para crear un nuevo comentario.");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluación id no puede ser null para crear un nuevo comentario");
+      Assertions.assertThat(e.getMessage())
+          .isEqualTo("Evaluación id no puede ser null para crear un nuevo comentario.");
     }
   }
 
@@ -255,6 +275,9 @@ public class ComentarioServiceTest {
   public void createComentarioGestorEvaluacionNotExists() {
     // given: EL id de la evaluación es válido pero no existe
     final Long evaluacionId = 12L;
+
+    BDDMockito.given(evaluacionRepository.findById(12L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
+
     try {
       // when: se quiera añadir comentarios
       comentarioService.createComentarioGestor(evaluacionId, new Comentario());
@@ -273,6 +296,8 @@ public class ComentarioServiceTest {
     final Comentario comentario = generarMockComentario(null, "texto", 1L);
     // when: se quiere insertar un comentario cuya evaluacion no coincide con el
     // id indicado
+    BDDMockito.given(evaluacionRepository.findById(12L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
+
     try {
       comentarioService.createComentarioGestor(evaluacionId, comentario);
       Assertions.fail("La evaluación no debe estar rellena para crear un nuevo comentario");
@@ -287,15 +312,18 @@ public class ComentarioServiceTest {
   public void createComentarioEvaluadorValid() {
     // given: EL id de la evaluación es válido
     final Long evaluacionId = 12L;
+    final String personaRef = "user-002";
     BDDMockito.given(evaluacionRepository.findById(evaluacionId))
         .willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
     final Comentario comentario = generarMockComentario(null, "texto", 2L);
     comentario.setEvaluacion(null);
     final Comentario comentarioNew = generarMockComentario(12L, "texto", 2L);
+    BDDMockito.given(evaluacionRepository.findById(12L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
     BDDMockito.given(comentarioRepository.save(comentario)).willReturn(comentarioNew);
 
     // when: se crea el comentario
-    final Comentario comentarioCreado = comentarioService.createComentarioEvaluador(evaluacionId, comentario);
+    final Comentario comentarioCreado = comentarioService.createComentarioEvaluador(evaluacionId, comentario,
+        personaRef);
 
     // then: Comprobamos que se ha creado el comentario.
     Assertions.assertThat(comentarioCreado).isNotNull();
@@ -307,13 +335,16 @@ public class ComentarioServiceTest {
   public void createComentarioEvaluadorEvaluacionIdNull() {
     // given: EL id de la evaluación sea null
     final Long evaluacionId = null;
+    final String personaRef = "user-002";
+
     try {
       // when: se quiera añadir comentario
-      comentarioService.createComentarioEvaluador(evaluacionId, new Comentario());
-      Assertions.fail("Evaluación id no puede ser null para crear un nuevo comentario");
+      comentarioService.createComentarioEvaluador(evaluacionId, new Comentario(), personaRef);
+      Assertions.fail("Evaluación id no puede ser null para crear un nuevo comentario.");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluación id no puede ser null para crear un nuevo comentario");
+      Assertions.assertThat(e.getMessage())
+          .isEqualTo("Evaluación id no puede ser null para crear un nuevo comentario.");
     }
   }
 
@@ -321,9 +352,11 @@ public class ComentarioServiceTest {
   public void createComentarioEvaluadorEvaluacionNotExists() {
     // given: EL id de la evaluación es válido pero no existe
     final Long evaluacionId = 12L;
+    final String personaRef = "user-002";
+    BDDMockito.given(evaluacionRepository.findById(12L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
     try {
       // when: se quiere añadir comentario
-      comentarioService.createComentarioEvaluador(evaluacionId, new Comentario());
+      comentarioService.createComentarioEvaluador(evaluacionId, new Comentario(), personaRef);
       Assertions.fail("El id de la evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final EvaluacionNotFoundException e) {
@@ -335,12 +368,15 @@ public class ComentarioServiceTest {
   public void createComentariosEvaluadorComentariosNotValid() {
     // given: EL id de la evaluación es válido
     final Long evaluacionId = 12L;
+    final String personaRef = "user-002";
+
+    BDDMockito.given(evaluacionRepository.findById(12L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
 
     final Comentario comentario = generarMockComentario(null, "texto", 2L);
     // when: se quiere insertar un comentario cuya evaluacion no coincide con el
     // id indicado
     try {
-      comentarioService.createComentarioEvaluador(evaluacionId, comentario);
+      comentarioService.createComentarioEvaluador(evaluacionId, comentario, personaRef);
       Assertions.fail("La evaluación no debe estar rellena para crear un nuevo comentario");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
@@ -388,6 +424,8 @@ public class ComentarioServiceTest {
   public void updateComentarioGestor_ThrowNotFoundException() {
     // given: EL comentario a actualizar no existe
     final Long evaluacionId = 12L;
+    BDDMockito.given(evaluacionRepository.findById(12L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
+
     Assertions
         .assertThatThrownBy(
             () -> comentarioService.updateComentarioGestor(evaluacionId, generarMockComentario(1L, "comentario1", 1L)))
@@ -405,9 +443,11 @@ public class ComentarioServiceTest {
       Comentario comentario = generarMockComentario(1L, "comentario1", 1L);
       Comentario comentarioActualizado = generarMockComentario(1L, "comentario1 actualizado", 1L);
 
+      BDDMockito.given(evaluacionRepository.findById(12L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
       BDDMockito.given(comentarioRepository.findById(1L)).willReturn(Optional.of(comentario));
       // when: se quiera actualizar un comentario cuya evaluación no es la misma que
       // la recibida
+
       comentarioService.updateComentarioGestor(evaluacionId, comentarioActualizado);
 
       Assertions.fail("El comentario no pertenece a la evaluación recibida.");
@@ -445,6 +485,8 @@ public class ComentarioServiceTest {
 
     final Comentario comentario = generarMockComentario(12L, "texto", 1L);
     comentario.setEvaluacion(generarMockEvaluacion(evaluacionId));
+    BDDMockito.given(evaluacionRepository.findById(12L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
+
     BDDMockito.given(comentarioRepository.save(comentario)).willReturn(comentario);
 
     BDDMockito.given(comentarioRepository.findById(evaluacionId)).willReturn(Optional.of(comentario));
@@ -460,9 +502,11 @@ public class ComentarioServiceTest {
   public void updateComentarioEvaluador_EvaluacionIdNull() {
     // given: EL id de la evaluación sea null
     final Long evaluacionId = null;
+    final String personaRef = "user-002";
     try {
       // when: se quiera añadir comentarios
-      comentarioService.updateComentarioEvaluador(evaluacionId, generarMockComentario(1L, "comentario1", 2L));
+      comentarioService.updateComentarioEvaluador(evaluacionId, generarMockComentario(1L, "comentario1", 2L),
+          personaRef);
       Assertions.fail("Evaluación id no puede ser null  para actualizar un comentario.");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
@@ -475,9 +519,11 @@ public class ComentarioServiceTest {
   public void updateComentarioEvaluador_ThrowNotFoundException() {
     // given: EL comentario a actualizar no existe
     final Long evaluacionId = 12L;
-    Assertions.assertThatThrownBy(
-        () -> comentarioService.updateComentarioEvaluador(evaluacionId, generarMockComentario(1L, "comentario1", 2L)))
-        .isInstanceOf(ComentarioNotFoundException.class);
+    final String personaRef = "user-002";
+    BDDMockito.given(evaluacionRepository.findById(12L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
+
+    Assertions.assertThatThrownBy(() -> comentarioService.updateComentarioEvaluador(evaluacionId,
+        generarMockComentario(1L, "comentario1", 2L), personaRef)).isInstanceOf(ComentarioNotFoundException.class);
 
   }
 
@@ -485,6 +531,9 @@ public class ComentarioServiceTest {
   public void updateComentarioEvaluador_EvaluacionIdNotValid() {
     // given: EL id de la evaluación es válido
     final Long evaluacionId = 12L;
+    final String personaRef = "user-002";
+
+    BDDMockito.given(evaluacionRepository.findById(12L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
 
     try {
 
@@ -494,7 +543,7 @@ public class ComentarioServiceTest {
       BDDMockito.given(comentarioRepository.findById(1L)).willReturn(Optional.of(comentario));
       // when: se quiera actualizar un comentario cuya evaluación no es la misma que
       // la recibida
-      comentarioService.updateComentarioEvaluador(evaluacionId, comentarioActualizado);
+      comentarioService.updateComentarioEvaluador(evaluacionId, comentarioActualizado, personaRef);
 
       Assertions.fail("El comentario no pertenece a la evaluación recibida.");
     } catch (
@@ -509,13 +558,14 @@ public class ComentarioServiceTest {
     // given: EL id de la evaluación es válido
     final Long evaluacionId = 12L;
     final Long comentarioId = 1L;
+    final String personaRef = "user-002";
 
     final Comentario comentario = generarMockComentario(comentarioId, "texto", 1L);
 
     // when: se quiera actualizar un comentario cuya evaluacion no
     // coincide con el id indicado
     try {
-      comentarioService.updateComentarioEvaluador(evaluacionId, comentario);
+      comentarioService.updateComentarioEvaluador(evaluacionId, comentario, personaRef);
       Assertions.fail("No se puede actualizar un tipo de comentario que no sea del tipo Evaluador.");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
@@ -528,6 +578,9 @@ public class ComentarioServiceTest {
   public void updateComentarioEvaluador_Success() {
     // given: EL id de la evaluación es válido
     final Long evaluacionId = 12L;
+    final String personaRef = "user-002";
+
+    BDDMockito.given(evaluacionRepository.findById(12L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
 
     final Comentario comentario = generarMockComentario(12L, "texto", 2L);
     comentario.setEvaluacion(generarMockEvaluacion(evaluacionId));
@@ -536,7 +589,7 @@ public class ComentarioServiceTest {
     BDDMockito.given(comentarioRepository.findById(evaluacionId)).willReturn(Optional.of(comentario));
 
     // when: se quiera actualizar una lista de comentarios
-    final Comentario resultados = comentarioService.updateComentarioEvaluador(evaluacionId, comentario);
+    final Comentario resultados = comentarioService.updateComentarioEvaluador(evaluacionId, comentario, personaRef);
 
     // then: obtenemos una lista de comentarios actualizados
     Assertions.assertThat(resultados != null);
@@ -547,13 +600,14 @@ public class ComentarioServiceTest {
     // given: EL id de la evaluación sea null
     final Long evaluacionId = null;
     final Long comentarioId = 1L;
+
     try {
       // when: se quiera eliminar comentario
       comentarioService.deleteComentarioGestor(evaluacionId, comentarioId);
-      Assertions.fail("Evaluación id no puede ser null para eliminar un comentario");
+      Assertions.fail("Evaluación id no puede ser null para eliminar un comentario.");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluación id no puede ser null para eliminar un comentario");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluación id no puede ser null para eliminar un comentario.");
     }
   }
 
@@ -564,10 +618,10 @@ public class ComentarioServiceTest {
     try {
       // when: se quiera eliminar comentario
       comentarioService.deleteComentarioGestor(evaluacionId, null);
-      Assertions.fail("Comentario id no puede ser null para eliminar un comentario");
+      Assertions.fail("Comentario id no puede ser null para eliminar un comentario.");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("Comentario id no puede ser null para eliminar un comentario");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Comentario id no puede ser null para eliminar un comentario.");
     }
   }
 
@@ -577,6 +631,7 @@ public class ComentarioServiceTest {
     final Long evaluacionId = 12L;
     final Long comentarioId = 1L;
 
+    BDDMockito.given(evaluacionRepository.findById(12L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
     BDDMockito.given(comentarioRepository.findById(comentarioId))
         .willReturn(Optional.of(generarMockComentario(comentarioId, "", 1L)));
 
@@ -596,6 +651,8 @@ public class ComentarioServiceTest {
     // given: EL id de la evaluación es válido
     final Long evaluacionId = 12L;
     final Long comentarioId = 1L;
+
+    BDDMockito.given(evaluacionRepository.findById(12L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
 
     BDDMockito.given(comentarioRepository.findById(comentarioId))
         .willReturn(Optional.of(generarMockComentario(comentarioId, "", 2L)));
@@ -618,6 +675,7 @@ public class ComentarioServiceTest {
     final Long comentarioId = 1L;
 
     // when: se quiera eliminar un comentario que no existe
+    BDDMockito.given(evaluacionRepository.findById(12L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
 
     Assertions.assertThatThrownBy(() -> comentarioService.deleteComentarioGestor(evaluacionId, comentarioId))
         .isInstanceOf(ComentarioNotFoundException.class);
@@ -629,13 +687,15 @@ public class ComentarioServiceTest {
     // given: EL id de la evaluación sea null
     final Long evaluacionId = null;
     final Long comentarioId = 1L;
+    final String personaRef = "user-002";
+
     try {
       // when: se quiera eliminar comentario
-      comentarioService.deleteComentarioEvaluador(evaluacionId, comentarioId);
-      Assertions.fail("Evaluación id no puede ser null para eliminar un comentario");
+      comentarioService.deleteComentarioEvaluador(evaluacionId, comentarioId, personaRef);
+      Assertions.fail("Evaluación id no puede ser null para eliminar un comentario.");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluación id no puede ser null para eliminar un comentario");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Evaluación id no puede ser null para eliminar un comentario.");
     }
   }
 
@@ -643,13 +703,15 @@ public class ComentarioServiceTest {
   public void deleteComentarioEvaluadorEvaluacion_ComentarioIdNull() {
     // given: EL id de la evaluación es válido pero no existe
     final Long evaluacionId = 12L;
+    final String personaRef = "user-002";
+
     try {
       // when: se quiera eliminar comentario
-      comentarioService.deleteComentarioEvaluador(evaluacionId, null);
-      Assertions.fail("Comentario id no puede ser null para eliminar un comentario");
+      comentarioService.deleteComentarioEvaluador(evaluacionId, null, personaRef);
+      Assertions.fail("Comentario id no puede ser null para eliminar un comentario.");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
-      Assertions.assertThat(e.getMessage()).isEqualTo("Comentario id no puede ser null para eliminar un comentario");
+      Assertions.assertThat(e.getMessage()).isEqualTo("Comentario id no puede ser null para eliminar un comentario.");
     }
   }
 
@@ -658,6 +720,9 @@ public class ComentarioServiceTest {
     // given: EL id de la evaluación es válido
     final Long evaluacionId = 12L;
     final Long comentarioId = 1L;
+    final String personaRef = "user-002";
+
+    BDDMockito.given(evaluacionRepository.findById(12L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
 
     BDDMockito.given(comentarioRepository.findById(comentarioId))
         .willReturn(Optional.of(generarMockComentario(comentarioId, "", 2L)));
@@ -665,7 +730,7 @@ public class ComentarioServiceTest {
     // when: se quiera eliminar un comentario cuya evaluacion no coincide
     // con el id indicado
     try {
-      comentarioService.deleteComentarioEvaluador(evaluacionId, comentarioId);
+      comentarioService.deleteComentarioEvaluador(evaluacionId, comentarioId, personaRef);
       Assertions.fail("El comentario no pertenece a la evaluación recibida");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
@@ -678,6 +743,9 @@ public class ComentarioServiceTest {
     // given: EL id de la evaluación es válido
     final Long evaluacionId = 200L;
     final Long comentarioId = 1L;
+    final String personaRef = "user-002";
+
+    BDDMockito.given(evaluacionRepository.findById(200L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
 
     BDDMockito.given(comentarioRepository.findById(comentarioId))
         .willReturn(Optional.of(generarMockComentario(comentarioId, "", 1L)));
@@ -685,7 +753,7 @@ public class ComentarioServiceTest {
     // when: se quiera eliminar un comentario cuya evaluacion no coincide
     // con el id indicado
     try {
-      comentarioService.deleteComentarioEvaluador(evaluacionId, comentarioId);
+      comentarioService.deleteComentarioEvaluador(evaluacionId, comentarioId, personaRef);
       Assertions.fail("No se puede eliminar el comentario debido a su tipo");
       // then: se debe lanzar una excepción
     } catch (final IllegalArgumentException e) {
@@ -698,10 +766,14 @@ public class ComentarioServiceTest {
     // given: EL id de la evaluación es válido
     final Long evaluacionId = 12L;
     final Long comentarioId = 1L;
+    final String personaRef = "user-002";
+
+    BDDMockito.given(evaluacionRepository.findById(12L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
 
     // when: se quiera eliminar un comentario que no existe
 
-    Assertions.assertThatThrownBy(() -> comentarioService.deleteComentarioEvaluador(evaluacionId, comentarioId))
+    Assertions
+        .assertThatThrownBy(() -> comentarioService.deleteComentarioEvaluador(evaluacionId, comentarioId, personaRef))
         .isInstanceOf(ComentarioNotFoundException.class);
 
   }
@@ -734,8 +806,16 @@ public class ComentarioServiceTest {
   }
 
   private Evaluacion generarMockEvaluacion(final Long id) {
+    final Memoria memoria = new Memoria();
+    final TipoEstadoMemoria estadoMemoria = new TipoEstadoMemoria();
+    final Evaluador evaluador = new Evaluador();
+    evaluador.setPersonaRef("user-002");
+    estadoMemoria.setId(4L);
+    memoria.setEstadoActual(estadoMemoria);
     final Evaluacion evaluacion = new Evaluacion();
     evaluacion.setId(id);
+    evaluacion.setMemoria(memoria);
+    evaluacion.setEvaluador1(evaluador);
     return evaluacion;
   }
 

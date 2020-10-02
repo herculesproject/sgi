@@ -45,9 +45,25 @@ public class ComentarioServiceImpl implements ComentarioService {
   @Transactional
   public Comentario createComentarioGestor(Long evaluacionId, Comentario comentario) {
     log.debug("createComentarioGestor(Long evaluacionId, Comentario comentario) - start");
-    log.debug("createComentarioGestor(Long evaluacionId, Comentario comentario) - end");
 
-    return createComentarioEvaluacion(evaluacionId, comentario, 1L);
+    Assert.notNull(evaluacionId, "Evaluación id no puede ser null para crear un nuevo comentario.");
+
+    return evaluacionRepository.findById(evaluacionId).map(evaluacion -> {
+
+      Assert.isTrue(
+          evaluacion.getMemoria().getEstadoActual().getId().equals(4L)
+              || evaluacion.getMemoria().getEstadoActual().getId().equals(5L)
+              || evaluacion.getMemoria().getEstadoActual().getId().equals(13L)
+              || evaluacion.getMemoria().getEstadoActual().getId().equals(18L)
+              || evaluacion.getMemoria().getEstadoActual().getId().equals(19L)
+              || evaluacion.getMemoria().getRetrospectiva().getEstadoRetrospectiva().getId().equals(4L),
+          "La Evaluación no está en un estado adecuado para añadir comentarios.");
+
+      log.debug("createComentarioGestor(Long evaluacionId, Comentario comentario) - end");
+
+      return createComentarioEvaluacion(evaluacionId, comentario, 1L);
+
+    }).orElseThrow(() -> new EvaluacionNotFoundException(evaluacionId));
 
   }
 
@@ -61,11 +77,22 @@ public class ComentarioServiceImpl implements ComentarioService {
    */
   @Override
   @Transactional
-  public Comentario createComentarioEvaluador(Long evaluacionId, Comentario comentario) {
+  public Comentario createComentarioEvaluador(Long evaluacionId, Comentario comentario, String personaRef) {
     log.debug("createComentarioEvaluador(Long evaluacionId, Comentario comentario) - start");
-    log.debug("createComentarioEvaluador(Long evaluacionId, Comentario comentario) - end");
 
-    return createComentarioEvaluacion(evaluacionId, comentario, 2L);
+    Assert.notNull(evaluacionId, "Evaluación id no puede ser null para crear un nuevo comentario.");
+
+    return evaluacionRepository.findById(evaluacionId).map(evaluacion -> {
+
+      Assert.isTrue(
+          (evaluacion.getEvaluador1().getPersonaRef()).equals(personaRef)
+              || evaluacion.getEvaluador2().getPersonaRef().equals(personaRef),
+          "El usuario no coincide con ninguno de los Evaluadores de la Evaluación.");
+
+      log.debug("createComentarioEvaluador(Long evaluacionId, Comentario comentario) - end");
+      return createComentarioEvaluacion(evaluacionId, comentario, 2L);
+
+    }).orElseThrow(() -> new EvaluacionNotFoundException(evaluacionId));
 
   }
 
@@ -96,25 +123,58 @@ public class ComentarioServiceImpl implements ComentarioService {
   @Transactional
   public void deleteComentarioGestor(Long evaluacionId, Long comentarioId) throws ComentarioNotFoundException {
     log.debug("deleteComentarioGestor(Long evaluacionId, Long comentarioId) - start");
-    deleteComentarioEvaluacion(evaluacionId, comentarioId, 1L);
-    log.debug("deleteComentarioGestor(Long evaluacionId, Long comentarioId) - end");
+
+    Assert.notNull(evaluacionId, "Evaluación id no puede ser null para eliminar un comentario.");
+    Assert.notNull(comentarioId, "Comentario id no puede ser null para eliminar un comentario.");
+
+    evaluacionRepository.findById(evaluacionId).map(evaluacion -> {
+
+      Assert.isTrue(
+          evaluacion.getMemoria().getEstadoActual().getId().equals(4L)
+              || evaluacion.getMemoria().getEstadoActual().getId().equals(5L)
+              || evaluacion.getMemoria().getEstadoActual().getId().equals(13L)
+              || evaluacion.getMemoria().getEstadoActual().getId().equals(18L)
+              || evaluacion.getMemoria().getEstadoActual().getId().equals(19L)
+              || evaluacion.getMemoria().getRetrospectiva().getEstadoRetrospectiva().getId().equals(4L),
+          "La Evaluación no está en un estado adecuado para eliminar comentarios.");
+
+      deleteComentarioEvaluacion(evaluacionId, comentarioId, 1L);
+
+      log.debug("deleteComentarioGestor(Long evaluacionId, Long comentarioId) - end");
+      return evaluacion;
+
+    }).orElseThrow(() -> new EvaluacionNotFoundException(evaluacionId));
 
   }
 
   /**
-   * Elimina un {@link Comentario} de tipo "GESTOR" de una {@link Evaluacion}.
+   * Elimina un {@link Comentario} de tipo "EVALUADOR" de una {@link Evaluacion}.
    *
    * @param evaluacionId Id de {@link Evaluacion}
    * @param comentarioId Id de {@link Comentario}
    */
   @Override
   @Transactional
-  public void deleteComentarioEvaluador(Long evaluacionId, Long comentarioId) throws ComentarioNotFoundException {
+  public void deleteComentarioEvaluador(Long evaluacionId, Long comentarioId, String personaRef)
+      throws ComentarioNotFoundException {
     log.debug("deleteComentarioEvaluador(Long evaluacionId, Long comentarioId) - start");
 
-    deleteComentarioEvaluacion(evaluacionId, comentarioId, 2L);
+    Assert.notNull(evaluacionId, "Evaluación id no puede ser null para eliminar un comentario.");
+    Assert.notNull(comentarioId, "Comentario id no puede ser null para eliminar un comentario.");
 
-    log.debug("deleteComentarioEvaluador(Long evaluacionId, Long comentarioId) - end");
+    evaluacionRepository.findById(evaluacionId).map(evaluacion -> {
+
+      Assert.isTrue(
+          (evaluacion.getEvaluador1().getPersonaRef()).equals(personaRef)
+              || evaluacion.getEvaluador2().getPersonaRef().equals(personaRef),
+          "El usuario no coincide con ninguno de los Evaluadores de la Evaluación.");
+
+      deleteComentarioEvaluacion(evaluacionId, comentarioId, 2L);
+
+      log.debug("deleteComentarioEvaluador(Long evaluacionId, Long comentarioId) - end");
+      return evaluacion;
+    }).orElseThrow(() -> new EvaluacionNotFoundException(evaluacionId));
+
   }
 
   /**
@@ -133,9 +193,21 @@ public class ComentarioServiceImpl implements ComentarioService {
     Assert.isTrue(comentarioActualizar.getTipoComentario().getId().equals(1L),
         "No se puede actualizar un tipo de comentario que no sea del tipo Gestor.");
 
-    log.debug("updateComentarioGestor(Long evaluacionId, Comentario comentarioActualizar) - end");
+    return evaluacionRepository.findById(evaluacionId).map(evaluacion -> {
 
-    return updateComentarioEvaluacion(evaluacionId, comentarioActualizar);
+      Assert.isTrue(
+          evaluacion.getMemoria().getEstadoActual().getId().equals(4L)
+              || evaluacion.getMemoria().getEstadoActual().getId().equals(5L)
+              || evaluacion.getMemoria().getEstadoActual().getId().equals(13L)
+              || evaluacion.getMemoria().getEstadoActual().getId().equals(18L)
+              || evaluacion.getMemoria().getEstadoActual().getId().equals(19L)
+              || evaluacion.getMemoria().getRetrospectiva().getEstadoRetrospectiva().getId().equals(4L),
+          "La Evaluación no está en un estado adecuado para actualizar comentarios.");
+
+      log.debug("updateComentarioGestor(Long evaluacionId, Comentario comentarioActualizar) - end");
+      return updateComentarioEvaluacion(evaluacionId, comentarioActualizar);
+
+    }).orElseThrow(() -> new EvaluacionNotFoundException(evaluacionId));
 
   }
 
@@ -149,7 +221,7 @@ public class ComentarioServiceImpl implements ComentarioService {
    */
   @Override
   @Transactional
-  public Comentario updateComentarioEvaluador(Long evaluacionId, Comentario comentarioActualizar) {
+  public Comentario updateComentarioEvaluador(Long evaluacionId, Comentario comentarioActualizar, String personaRef) {
     log.debug("updateComentarioEvaluador(Long evaluacionId, Comentario comentarioActualizar) - start");
 
     Assert.notNull(evaluacionId, "Evaluación id no puede ser null  para actualizar un comentario.");
@@ -158,8 +230,16 @@ public class ComentarioServiceImpl implements ComentarioService {
 
     log.debug("updateComentarioEvaluador(Long evaluacionId, Comentario comentarioActualizar) - end");
 
-    return updateComentarioEvaluacion(evaluacionId, comentarioActualizar);
+    return evaluacionRepository.findById(evaluacionId).map(evaluacion -> {
 
+      Assert.isTrue(
+          (evaluacion.getEvaluador1().getPersonaRef()).equals(personaRef)
+              || evaluacion.getEvaluador2().getPersonaRef().equals(personaRef),
+          "El usuario no coincide con ninguno de los Evaluadores de la Evaluación.");
+
+      return updateComentarioEvaluacion(evaluacionId, comentarioActualizar);
+
+    }).orElseThrow(() -> new EvaluacionNotFoundException(evaluacionId));
   }
 
   /**
@@ -174,9 +254,23 @@ public class ComentarioServiceImpl implements ComentarioService {
   public Page<Comentario> findByEvaluacionIdGestor(Long id, Pageable pageable) {
     log.debug("findByEvaluacionIdGestor(Long id, Pageable pageable) - start");
     Assert.notNull(id, "El id de la evaluación no puede ser nulo para listar sus comentarios");
-    Page<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioId(id, 1L, pageable);
-    log.debug("findByEvaluacionIdGestor(Long id, Pageable pageable) - end");
-    return returnValue;
+
+    return evaluacionRepository.findById(id).map(evaluacion -> {
+
+      Assert.isTrue(
+          evaluacion.getMemoria().getEstadoActual().getId().equals(4L)
+              || evaluacion.getMemoria().getEstadoActual().getId().equals(5L)
+              || evaluacion.getMemoria().getEstadoActual().getId().equals(13L)
+              || evaluacion.getMemoria().getEstadoActual().getId().equals(18L)
+              || evaluacion.getMemoria().getEstadoActual().getId().equals(19L)
+              || evaluacion.getMemoria().getRetrospectiva().getEstadoRetrospectiva().getId().equals(4L),
+          "La Evaluación no está en un estado adecuado para visualizar sus comentarios.");
+
+      Page<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioId(id, 1L, pageable);
+      log.debug("findByEvaluacionIdGestor(Long id, Pageable pageable) - end");
+      return returnValue;
+    }).orElseThrow(() -> new EvaluacionNotFoundException(id));
+
   }
 
   /**
@@ -188,12 +282,22 @@ public class ComentarioServiceImpl implements ComentarioService {
    * @return la lista de entidades {@link Comentario} paginadas.
    */
   @Override
-  public Page<Comentario> findByEvaluacionIdEvaluador(Long id, Pageable pageable) {
+  public Page<Comentario> findByEvaluacionIdEvaluador(Long id, Pageable pageable, String personaRef) {
     log.debug("findByEvaluacionIdEvaluador(Long id, Pageable pageable) - start");
     Assert.notNull(id, "El id de la evaluación no puede ser nulo para listar sus comentarios");
-    Page<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioId(id, 2L, pageable);
-    log.debug("findByEvaluacionIdEvaluador(Long id, Pageable pageable) - end");
-    return returnValue;
+
+    return evaluacionRepository.findById(id).map(evaluacion -> {
+
+      Assert.isTrue(
+          (evaluacion.getEvaluador1().getPersonaRef()).equals(personaRef)
+              || evaluacion.getEvaluador2().getPersonaRef().equals(personaRef),
+          "El usuario no coincide con ninguno de los Evaluadores de la Evaluación.");
+
+      Page<Comentario> returnValue = comentarioRepository.findByEvaluacionIdAndTipoComentarioId(id, 2L, pageable);
+      log.debug("findByEvaluacionIdEvaluador(Long id, Pageable pageable) - end");
+      return returnValue;
+    }).orElseThrow(() -> new EvaluacionNotFoundException(id));
+
   }
 
   /**
