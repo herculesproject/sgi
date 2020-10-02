@@ -1,27 +1,12 @@
 import { Injectable } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  GuardsCheckEnd,
-  NavigationCancel,
-  NavigationEnd,
-  NavigationStart,
-  Route,
-  Router,
-  RouterEvent,
-  UrlSegment,
-} from '@angular/router';
 import { Module } from '@core/module';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject } from 'rxjs';
+import { Navigation, NavigationService } from './navigation.service';
 
 export interface BreadcrumbData {
   title: string;
   path: string;
-}
-
-interface Navigation {
-  segments: UrlSegment[];
-  routeConfig: Route;
 }
 
 @Injectable({
@@ -35,36 +20,17 @@ export class LayoutService {
   breadcrumData$ = new BehaviorSubject<BreadcrumbData[]>([]);
   title$ = new BehaviorSubject<string>('');
 
-  private navigationStack: Navigation[] = [];
-
-  constructor(protected logger: NGXLogger, private router: Router) {
+  constructor(protected logger: NGXLogger, private navigationService: NavigationService) {
     this.logger.debug(LayoutService.name, 'constructor(protected logger: NGXLogger)', 'start');
-    this.router.events.subscribe((event: RouterEvent) => this.processEvent(event));
+    this.navigationService.navigation$.subscribe((navigationStack) => {
+      if (navigationStack.length > 0) {
+        this.parseNavigationStack(navigationStack);
+      }
+    });
     this.logger.debug(LayoutService.name, 'constructor(protected logger: NGXLogger)', 'end');
   }
 
-  private processEvent(event: RouterEvent): void {
-    if (event instanceof NavigationStart) {
-      this.navigationStack = [];
-    }
-    if (event instanceof GuardsCheckEnd) {
-      const guardsCheckEnd: GuardsCheckEnd = event;
-      if (guardsCheckEnd.shouldActivate) {
-        this.navigationStack = this.getNavigation(guardsCheckEnd.state.root);
-      }
-    }
-    if (event instanceof NavigationCancel) {
-      this.navigationStack = [];
-    }
-    if (event instanceof NavigationEnd) {
-      if (this.navigationStack.length > 0) {
-        this.parseNavigationStack(this.navigationStack);
-      }
-    }
-  }
-
   private parseNavigationStack(navigationStack: Navigation[]): void {
-
     // Build breadcrumb data
     const breadcrumbData = this.getBreadcrumbData(navigationStack);
 
@@ -85,18 +51,6 @@ export class LayoutService {
       this.menuAutoclose$.next(false);
       this.openMenu();
     }
-  }
-
-  private getNavigation(route: ActivatedRouteSnapshot): Navigation[] {
-    const navigations: Navigation[] = [];
-    navigations.push({
-      routeConfig: route.routeConfig ? route.routeConfig : undefined,
-      segments: route.url ? route.url : []
-    });
-    route.children.forEach((child) => {
-      navigations.push(...this.getNavigation(child));
-    });
-    return navigations;
   }
 
   private getBreadcrumbData(navigationStack: Navigation[]): BreadcrumbData[] {
