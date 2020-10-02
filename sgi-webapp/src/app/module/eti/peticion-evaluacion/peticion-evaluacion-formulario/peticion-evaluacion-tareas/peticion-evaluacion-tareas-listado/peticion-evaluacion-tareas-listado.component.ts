@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { ITarea } from '@core/models/eti/tarea';
-import { PeticionEvaluacionTareasEditarModalComponent } from '../peticion-evaluacion-tareas-editar-modal/peticion-evaluacion-tareas-editar-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
@@ -15,9 +14,13 @@ import { PeticionEvaluacionTareasFragment } from './peticion-evaluacion-tareas-l
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { PeticionEvaluacionTareasCrearModalComponent } from '../peticion-evaluacion-tareas-crear-modal/peticion-evaluacion-tareas-crear-modal.component';
+import { PeticionEvaluacionTareasModalComponent } from '../peticion-evaluacion-tareas-modal/peticion-evaluacion-tareas-modal.component';
 import { MatTableDataSource } from '@angular/material/table';
+import { DialogService } from '@core/services/dialog.service';
+import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
+import { IMemoria } from '@core/models/eti/memoria';
 
+const MSG_CONFIRM_DELETE = marker('eti.peticionEvaluacion.tareas.listado.eliminar');
 const MSG_ERROR_TAREA_REPETIDA = marker('eti.peticionEvaluacion.formulario.equipoInvestigador.listado.investigadorRepetido');
 
 @Component({
@@ -25,7 +28,7 @@ const MSG_ERROR_TAREA_REPETIDA = marker('eti.peticionEvaluacion.formulario.equip
   templateUrl: './peticion-evaluacion-tareas-listado.component.html',
   styleUrls: ['./peticion-evaluacion-tareas-listado.component.scss']
 })
-export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent implements OnInit {
+export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent implements OnInit, OnDestroy {
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
@@ -34,10 +37,12 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
 
   tareas$: BehaviorSubject<StatusWrapper<ITarea>[]>;
   private listadoFragment: PeticionEvaluacionTareasFragment;
+  private subscriptions: Subscription[] = [];
 
   datasource: MatTableDataSource<StatusWrapper<ITarea>> = new MatTableDataSource<StatusWrapper<ITarea>>();
 
   constructor(
+    protected readonly dialogService: DialogService,
     protected readonly logger: NGXLogger,
     protected readonly convocatoriaReunionService: ConvocatoriaReunionService,
     protected readonly personaFisicaService: PersonaFisicaService,
@@ -71,26 +76,37 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
   openModalAddTarea(): void {
     this.logger.debug(PeticionEvaluacionTareasListadoComponent.name, 'openModalAddTarea() - start');
 
-    const config = {
-      width: GLOBAL_CONSTANTS.minWidthModal,
-      maxHeight: GLOBAL_CONSTANTS.minHeightModal
+
+    const tarea: ITarea = {
+      organismo: null,
+      anio: null,
+      memoria: null,
+      equipoTrabajo: null,
+      formacion: null,
+      formacionEspecifica: null,
+      tarea: null,
+      tipoTarea: null,
+      id: null,
+      eliminable: true
     };
 
-    const dialogRef = this.matDialog.open(PeticionEvaluacionTareasCrearModalComponent, config);
+    const equiposTrabajo: IEquipoTrabajo[] = this.listadoFragment.equiposTrabajo;
+    const memorias: IMemoria[] = this.listadoFragment.memorias;
+
+    const config = {
+      width: GLOBAL_CONSTANTS.minWidthModal,
+      maxHeight: GLOBAL_CONSTANTS.minHeightModal,
+      data: {
+        tarea, equiposTrabajo, memorias
+      },
+      autoFocus: false
+    };
+
+    const dialogRef = this.matDialog.open(PeticionEvaluacionTareasModalComponent, config);
 
     dialogRef.afterClosed().subscribe(
       (tareaAniadida: ITarea) => {
         if (tareaAniadida) {
-          const isRepetido =
-            this.listadoFragment.tareas$.value.some(tareaWrapper =>
-              tareaAniadida.equipoTrabajo.personaRef === tareaWrapper.value.equipoTrabajo.personaRef);
-
-          if (isRepetido) {
-            this.snackBarService.showError(MSG_ERROR_TAREA_REPETIDA);
-            this.logger.debug(PeticionEvaluacionTareasListadoComponent.name, 'openModalAddTarea() - end');
-            return;
-          }
-
           this.listadoFragment.addTarea(tareaAniadida);
 
           this.logger.debug(PeticionEvaluacionTareasListadoComponent.name, 'openModalAddEquipoTrabajo() - end');
@@ -104,18 +120,25 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
    *
    * @param tarea tarea a modificar
    */
-  openUpdateModal(asistente: StatusWrapper<ITarea>): void {
+  openUpdateModal(tarea: StatusWrapper<ITarea>): void {
     this.logger.debug(PeticionEvaluacionTareasListadoComponent.name, 'openUpdateModal()', 'start');
+
+    const equiposTrabajo: IEquipoTrabajo[] = this.listadoFragment.equiposTrabajo;
+    const memorias: IMemoria[] = this.listadoFragment.memorias;
+
     const config = {
       width: GLOBAL_CONSTANTS.minWidthModal,
       maxHeight: GLOBAL_CONSTANTS.minHeightModal,
-      data: asistente.value
+      data: {
+        tarea: tarea.value, equiposTrabajo, memorias
+      },
+      autoFocus: false
     };
-    const dialogRef = this.matDialog.open(PeticionEvaluacionTareasEditarModalComponent, config);
+    const dialogRef = this.matDialog.open(PeticionEvaluacionTareasModalComponent, config);
     dialogRef.afterClosed().subscribe(
       (resultado: ITarea) => {
         if (resultado) {
-          asistente.setEdited();
+          tarea.setEdited();
           this.fragment.setChanges(true);
           this.fragment.setComplete(true);
         }
@@ -123,4 +146,34 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
       }
     );
   }
+
+  /**
+   * Elimina la persona del equipo de trabajo.
+   *
+   * @param wrappedTarea equipo de trabajo a eliminar.
+   */
+  delete(wrappedTarea: StatusWrapper<ITarea>): void {
+    this.logger.debug(PeticionEvaluacionTareasListadoComponent.name,
+      'delete(wrappedEquipoTrabajo: StatusWrapper<IEquipoTrabajo>) - start');
+
+    const dialogSubscription = this.dialogService.showConfirmation(
+      MSG_CONFIRM_DELETE
+    ).subscribe((aceptado) => {
+      if (aceptado) {
+        this.listadoFragment.deleteTarea(wrappedTarea);
+      }
+    });
+
+    this.subscriptions.push(dialogSubscription);
+
+    this.logger.debug(PeticionEvaluacionTareasListadoComponent.name,
+      'delete(wrappedEquipoTrabajo: StatusWrapper<IEquipoTrabajo>) - end');
+  }
+
+  ngOnDestroy(): void {
+    this.logger.debug(PeticionEvaluacionTareasListadoComponent.name, 'ngOnDestroy()', 'start');
+    this.subscriptions?.forEach(x => x.unsubscribe());
+    this.logger.debug(PeticionEvaluacionTareasListadoComponent.name, 'ngOnDestroy()', 'end');
+  }
+
 }

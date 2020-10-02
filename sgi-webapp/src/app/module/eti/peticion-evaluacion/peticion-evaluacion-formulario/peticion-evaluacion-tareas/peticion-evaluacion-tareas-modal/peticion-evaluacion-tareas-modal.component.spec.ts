@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PeticionEvaluacionTareasEditarModalComponent } from './peticion-evaluacion-tareas-editar-modal.component';
+import { PeticionEvaluacionTareasModalComponent } from './peticion-evaluacion-tareas-modal.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialDesignModule } from '@material/material-design.module';
 import TestUtils from '@core/utils/test-utils';
@@ -11,13 +11,13 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('PeticionEvaluacionTareasEditarModalComponent', () => {
-  let component: PeticionEvaluacionTareasEditarModalComponent;
-  let fixture: ComponentFixture<PeticionEvaluacionTareasEditarModalComponent>;
+describe('PeticionEvaluacionTareasModalComponent', () => {
+  let component: PeticionEvaluacionTareasModalComponent;
+  let fixture: ComponentFixture<PeticionEvaluacionTareasModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [PeticionEvaluacionTareasEditarModalComponent],
+      declarations: [PeticionEvaluacionTareasModalComponent],
       imports: [
         BrowserAnimationsModule,
         MaterialDesignModule,
@@ -37,7 +37,7 @@ describe('PeticionEvaluacionTareasEditarModalComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PeticionEvaluacionTareasEditarModalComponent);
+    fixture = TestBed.createComponent(PeticionEvaluacionTareasModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

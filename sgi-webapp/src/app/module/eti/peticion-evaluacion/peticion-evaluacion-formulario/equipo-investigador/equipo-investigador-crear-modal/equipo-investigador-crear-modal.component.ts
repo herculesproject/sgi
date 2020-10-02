@@ -61,32 +61,7 @@ export class EquipoInvestigadorCrearModalComponent implements OnInit, OnDestroy 
 
     const equipoTrabajo: IEquipoTrabajo = {
       id: null,
-      peticionEvaluacion: {
-        id: null,
-        solicitudConvocatoriaRef: null,
-        codigo: null,
-        titulo: null,
-        tipoActividad: null,
-        fuenteFinanciacion: null,
-        fechaInicio: null,
-        fechaFin: null,
-        resumen: null,
-        valorSocial: null,
-        otroValorSocial: null,
-        objetivos: null,
-        disMetodologico: null,
-        externo: null,
-        tieneFondosPropios: null,
-        personaRef: null,
-        nombre: null,
-        primerApellido: null,
-        segundoApellido: null,
-        identificadorNumero: null,
-        identificadorLetra: null,
-        nivelAcademico: null,
-        vinculacion: null,
-        activo: null
-      },
+      peticionEvaluacion: null,
       personaRef: this.nuevaPersonaEquipo?.personaRef,
       nombre: this.nuevaPersonaEquipo?.nombre,
       primerApellido: this.nuevaPersonaEquipo?.primerApellido,
@@ -95,7 +70,7 @@ export class EquipoInvestigadorCrearModalComponent implements OnInit, OnDestroy 
       identificadorLetra: this.nuevaPersonaEquipo?.identificadorLetra,
       nivelAcademico: this.nuevaPersonaEquipo?.nivelAcademico,
       vinculacion: this.nuevaPersonaEquipo?.vinculacion,
-      isEliminable: true
+      eliminable: true
     };
 
 

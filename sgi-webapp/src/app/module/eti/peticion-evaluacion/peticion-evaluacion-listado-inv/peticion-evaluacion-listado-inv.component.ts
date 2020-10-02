@@ -151,7 +151,7 @@ export class PeticionEvaluacionListadoInvComponent implements AfterViewInit, OnI
     const peticionesEvaluacionByComiteExists: IPeticionEvaluacion[] = new Array();
     // Do the request with paginator/sort/filter values
     this.memoriaServiceSubscription = this.memoriaService
-      .findAll({
+      .findAllByPersonaRef({
         filters: this.buildFiltersMemoria()
       })
       .subscribe(
@@ -184,7 +184,7 @@ export class PeticionEvaluacionListadoInvComponent implements AfterViewInit, OnI
     this.logger.debug(PeticionEvaluacionListadoInvComponent.name, 'loadTableCreador()', 'start');
     // Do the request with paginator/sort/filter values
     this.peticionesEvaluacion$ = this.peticionesEvaluacionService
-      .findAll({
+      .findAllByPersonaRef({
         page: {
           index: reset ? 0 : this.paginator.pageIndex,
           size: this.paginator.pageSize
@@ -302,16 +302,6 @@ export class PeticionEvaluacionListadoInvComponent implements AfterViewInit, OnI
         value: idPeticionEvaluacion.toString(),
       };
       this.filter.push(filterPeticionEvaluacion);
-    } else {
-      // si el usuario es investigador o solicitante se muestran solo sus memorias para saber si es responsable
-      this.logger.debug(PeticionEvaluacionListadoInvComponent.name, 'buildFilters()', 'personaRef');
-      const filterPersonaRef: SgiRestFilter = {
-        field: 'personaRef',
-        type: SgiRestFilterType.EQUALS,
-        value: this.sgiAuthService.authStatus$?.getValue()?.userRefId,
-      };
-
-      this.filter.push(filterPersonaRef);
     }
 
     return this.filter;
@@ -343,17 +333,6 @@ export class PeticionEvaluacionListadoInvComponent implements AfterViewInit, OnI
       this.filter.push(filterTitulo);
 
     }
-
-    // si el usuario es investigador o solicitante se muestran solo sus peticiones de evaluación
-    this.logger.debug(PeticionEvaluacionListadoInvComponent.name, 'buildFilters()', 'personaRef');
-    const filterPersonaRef: SgiRestFilter = {
-      field: 'personaRef',
-      type: SgiRestFilterType.EQUALS,
-      value: this.sgiAuthService.authStatus$?.getValue()?.userRefId,
-    };
-
-    this.filter.push(filterPersonaRef);
-
 
     this.logger.debug(PeticionEvaluacionListadoInvComponent.name, 'buildFilters()', 'end');
     return this.filter;

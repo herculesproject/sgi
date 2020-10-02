@@ -16,9 +16,8 @@ import { MemoriasListadoComponent } from './peticion-evaluacion-formulario/memor
 
 import { PeticionEvaluacionResolver } from './peticion-evaluacion.resolver';
 import { PeticionEvaluacionTareasListadoComponent } from './peticion-evaluacion-formulario/peticion-evaluacion-tareas/peticion-evaluacion-tareas-listado/peticion-evaluacion-tareas-listado.component';
-import { PeticionEvaluacionTareasEditarModalComponent } from './peticion-evaluacion-formulario/peticion-evaluacion-tareas/peticion-evaluacion-tareas-editar-modal/peticion-evaluacion-tareas-editar-modal.component';
 import { PeticionEvaluacionEditarComponent } from './peticion-evaluacion-editar/peticion-evaluacion-editar.component';
-import { PeticionEvaluacionTareasCrearModalComponent } from './peticion-evaluacion-formulario/peticion-evaluacion-tareas/peticion-evaluacion-tareas-crear-modal/peticion-evaluacion-tareas-crear-modal.component';
+import { PeticionEvaluacionTareasModalComponent } from './peticion-evaluacion-formulario/peticion-evaluacion-tareas/peticion-evaluacion-tareas-modal/peticion-evaluacion-tareas-modal.component';
 
 @NgModule({
   declarations: [
@@ -29,8 +28,7 @@ import { PeticionEvaluacionTareasCrearModalComponent } from './peticion-evaluaci
     EquipoInvestigadorCrearModalComponent,
     MemoriasListadoComponent,
     PeticionEvaluacionTareasListadoComponent,
-    PeticionEvaluacionTareasEditarModalComponent,
-    PeticionEvaluacionTareasCrearModalComponent,
+    PeticionEvaluacionTareasModalComponent,
     PeticionEvaluacionEditarComponent
   ],
   imports: [

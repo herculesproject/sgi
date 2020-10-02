@@ -11,6 +11,6 @@ export interface IEquipoTrabajo extends IPersona {
   peticionEvaluacion: IPeticionEvaluacion;
 
   /** Flag eliminable */
-  isEliminable: boolean;
+  eliminable: boolean;
 
 }

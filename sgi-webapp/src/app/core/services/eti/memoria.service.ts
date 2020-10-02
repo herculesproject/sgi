@@ -94,4 +94,12 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
       tap(() => this.logger.debug(MemoriaService.name, `findAllAsignablesTipoConvocatoriaOrdExt()`, '-', 'END'))
     );
   }
+
+  findAllByPersonaRef(options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IMemoria>> {
+    this.logger.debug(MemoriaService.name, `findAllByPersonaRef()`, '-', 'START');
+    return this.find<IMemoria, IMemoria>(`${this.endpointUrl}/persona`, options).pipe(
+      tap(() => this.logger.debug(MemoriaService.name, `findAllByPersonaRef()`, '-', 'END'))
+    );
+  }
 }

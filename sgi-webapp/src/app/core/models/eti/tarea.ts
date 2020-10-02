@@ -32,4 +32,7 @@ export interface ITarea {
   /** Tipo tarea */
   tipoTarea: TipoTarea;
 
+  /** Flag eliminable */
+  eliminable: boolean;
+
 }

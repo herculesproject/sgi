@@ -1,4 +1,4 @@
-import { Persona } from '../sgp/persona';
+import { IPersona } from '../sgp/persona';
 import { IEvaluacion } from './evaluacion';
 import { IMemoria } from './memoria';
 import { Comite } from './comite';
@@ -22,5 +22,5 @@ export class EvaluacionConSolicitante implements IEvaluacion {
   activo: boolean;
 
   /** Persona */
-  persona: Persona;
+  persona: IPersona;
 }

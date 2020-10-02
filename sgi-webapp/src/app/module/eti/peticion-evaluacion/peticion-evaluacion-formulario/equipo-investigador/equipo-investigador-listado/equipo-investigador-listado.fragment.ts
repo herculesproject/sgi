@@ -4,21 +4,18 @@ import { IPersona } from '@core/models/sgp/persona';
 import { Fragment } from '@core/services/action-service';
 import { EquipoTrabajoService } from '@core/services/eti/equipo-trabajo.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
+import { Observable, of, BehaviorSubject, from, zip, merge } from 'rxjs';
+import { map, mergeMap, endWith, switchMap, tap, takeLast } from 'rxjs/operators';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, from, Observable, of } from 'rxjs';
-import { endWith, map, mergeMap, switchMap, tap } from 'rxjs/operators';
-
 
 export class EquipoInvestigadorListadoFragment extends Fragment {
 
   equiposTrabajo$: BehaviorSubject<StatusWrapper<IEquipoTrabajo>[]> = new BehaviorSubject<StatusWrapper<IEquipoTrabajo>[]>([]);
-  private deleted: StatusWrapper<IEquipoTrabajo>[] = [];
-
-  private peticionEvaluacion: IPeticionEvaluacion;
+  private deletedEquiposTrabajo: StatusWrapper<IEquipoTrabajo>[] = [];
 
   private selectedIdPeticionEvaluacion: number;
 
@@ -38,13 +35,6 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
     this.logger.debug(EquipoInvestigadorListadoFragment.name, 'onInitialize()', 'start');
     this.loadEquiposTrabajo(this.getKey() as number);
     this.logger.debug(EquipoInvestigadorListadoFragment.name, 'onInitialize()', 'end');
-  }
-
-  setPeticionEvaluacion(value: IPeticionEvaluacion) {
-    if (!value || value.id !== this.getKey()) {
-      Error('Value mistmatch');
-    }
-    this.peticionEvaluacion = value;
   }
 
   loadEquiposTrabajo(idPeticionEvaluacion: number): void {
@@ -85,8 +75,10 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
                     equipoTrabajo.segundoApellido = datosPersona?.segundoApellido;
                     equipoTrabajo.identificadorNumero = datosPersona?.identificadorNumero;
                     equipoTrabajo.identificadorLetra = datosPersona?.identificadorLetra;
-                    equipoTrabajo.isEliminable = equipoTrabajo.personaRef !==
-                      this.sgiAuthService.authStatus$.getValue().userRefId && equipoTrabajo.isEliminable;
+                    equipoTrabajo.vinculacion = 'PDI';
+                    equipoTrabajo.nivelAcademico = 'Licenciado';
+                    equipoTrabajo.eliminable = equipoTrabajo.personaRef !==
+                      this.sgiAuthService.authStatus$.getValue().userRefId && equipoTrabajo.eliminable;
                   });
 
                   return equiposTrabajo.map((equipoTrabajo) => new StatusWrapper<IEquipoTrabajo>(equipoTrabajo));
@@ -105,34 +97,24 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
       equiposTrabajoRecuperados$.subscribe((equiposTrabajo) => {
         this.setComplete(true);
         this.equiposTrabajo$.next(equiposTrabajo);
-        this.logger.debug(EquipoInvestigadorListadoFragment.name, 'loadEquiposTrabajo(idPeticionEvaluacion: number)', 'start');
+        this.logger.debug(EquipoInvestigadorListadoFragment.name, 'loadEquiposTrabajo(idPeticionEvaluacion: number)', 'end');
       });
     }
   }
 
   saveOrUpdate(): Observable<void> {
-    const createdEquiposTrabajo = this.equiposTrabajo$.value.filter((equipoTrabajo) => equipoTrabajo.created);
-    if (createdEquiposTrabajo.length === 0) {
-      return of(void 0);
-    }
-
-    return from(createdEquiposTrabajo).pipe(
-      mergeMap((wrappedEquipoTrabajo) => {
-
-        if (this.isEdit()) {
-          wrappedEquipoTrabajo.value.peticionEvaluacion.id = +this.getKey();
-        } else {
-          wrappedEquipoTrabajo.value.peticionEvaluacion = this.peticionEvaluacion;
+    this.logger.debug(EquipoInvestigadorListadoFragment.name, 'saveOrUpdate()', 'start');
+    return merge(
+      this.deleteEquipos(),
+      this.createEquipos()
+    ).pipe(
+      takeLast(1),
+      tap(() => {
+        if (this.isSaveOrUpdateComplete) {
+          this.setChanges(false);
         }
-
-        return this.equipoTrabajoService.create(wrappedEquipoTrabajo.value).pipe(
-          map((savedEquipoTrabajo) => {
-            const index = this.equiposTrabajo$.value.findIndex((currentEquipoTrabajo) => currentEquipoTrabajo === wrappedEquipoTrabajo);
-            this.equiposTrabajo$[index] = new StatusWrapper<IEquipoTrabajo>(savedEquipoTrabajo);
-          })
-        );
       }),
-      endWith()
+      tap(() => this.logger.debug(EquipoInvestigadorListadoFragment.name, 'saveOrUpdate()', 'end'))
     );
   }
 
@@ -154,7 +136,7 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
   }
 
   /**
-   * Elimina un miembro del equipo investigador
+   * Elimina un miembro del equipo investigador de la lista de equipos de trabajo y le añade a la de equipos de trabajo a eliminar.
    *
    * @param equipoTrabajo un equipoTrabajo
    */
@@ -164,14 +146,13 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
     const index = current.findIndex((value) => value === equipoTrabajo);
     if (index >= 0) {
       if (!equipoTrabajo.created) {
-        this.deleted.push(current[index]);
+        current[index].setDeleted();
+        this.deletedEquiposTrabajo.push(current[index]);
       }
+
       current.splice(index, 1);
       this.equiposTrabajo$.next(current);
       this.setChanges(true);
-    }
-    if (current.length === 0) {
-      this.setComplete(false);
     }
 
     this.logger.debug(EquipoInvestigadorListadoFragment.name, 'deleteEquipoTrabajo(equipoTrabajo: StatusWrapper<IEquipoTrabajo>)', 'end');
@@ -191,32 +172,7 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
           this.logger.debug(EquipoInvestigadorListadoFragment.name, 'getInvestigadorActual()', 'end');
           return {
             id: null,
-            peticionEvaluacion: {
-              id: this.getKey() as number,
-              solicitudConvocatoriaRef: null,
-              codigo: null,
-              titulo: null,
-              tipoActividad: null,
-              fuenteFinanciacion: null,
-              fechaInicio: null,
-              fechaFin: null,
-              resumen: null,
-              valorSocial: null,
-              otroValorSocial: null,
-              objetivos: null,
-              disMetodologico: null,
-              externo: null,
-              tieneFondosPropios: null,
-              personaRef: null,
-              nombre: null,
-              primerApellido: null,
-              segundoApellido: null,
-              identificadorNumero: null,
-              identificadorLetra: null,
-              nivelAcademico: null,
-              vinculacion: null,
-              activo: null
-            },
+            peticionEvaluacion: null,
             personaRef: persona.personaRef,
             nombre: persona.nombre,
             primerApellido: persona.primerApellido,
@@ -225,9 +181,56 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
             identificadorLetra: persona.identificadorLetra,
             nivelAcademico: 'Licenciado',
             vinculacion: 'PDI',
-            isEliminable: false
+            eliminable: false
           };
         })
       );
+  }
+
+  private deleteEquipos(): Observable<void> {
+    this.logger.debug(EquipoInvestigadorListadoFragment.name, 'deleteEquipos()', 'start');
+    if (this.deletedEquiposTrabajo.length === 0) {
+      this.logger.debug(EquipoInvestigadorListadoFragment.name, 'deleteEquipos()', 'end');
+      return of(void 0);
+    }
+    return from(this.deletedEquiposTrabajo).pipe(
+      mergeMap((wrappedEquipoTrabajo) => {
+        return this.peticionEvaluacionService
+          .deleteEquipoTrabajoPeticionEvaluacion(wrappedEquipoTrabajo.value.peticionEvaluacion.id, wrappedEquipoTrabajo.value.id)
+          .pipe(
+            tap(_ => {
+              this.deletedEquiposTrabajo = this.deletedEquiposTrabajo.filter(deletedEquipoTrabajo =>
+                deletedEquipoTrabajo.value.id !== wrappedEquipoTrabajo.value.id);
+            })
+          );
+      }));
+  }
+
+  private createEquipos(): Observable<void> {
+    this.logger.debug(EquipoInvestigadorListadoFragment.name, 'createEquipos()', 'start');
+    const createdEquipos = this.equiposTrabajo$.value.filter((equipo) => equipo.created);
+    if (createdEquipos.length === 0) {
+      this.logger.debug(EquipoInvestigadorListadoFragment.name, 'createEquipos()', 'end');
+      return of(void 0);
+    }
+
+    return from(createdEquipos).pipe(
+      mergeMap((wrappedEquipoTrabajo) => {
+        return this.peticionEvaluacionService.createEquipoTrabajo(this.getKey() as number, wrappedEquipoTrabajo.value).pipe(
+          map((savedEquipoTrabajo) => {
+            const index = this.equiposTrabajo$.value.findIndex((currentEquipoTrabajo) => currentEquipoTrabajo === wrappedEquipoTrabajo);
+            this.equiposTrabajo$.value[index] = new StatusWrapper<IEquipoTrabajo>(savedEquipoTrabajo);
+            this.equiposTrabajo$.next(this.equiposTrabajo$.value);
+          })
+        );
+      }));
+  }
+
+  private isSaveOrUpdateComplete(): boolean {
+    const touched: boolean = this.equiposTrabajo$.value.some((wrapper) => wrapper.touched);
+    if (this.deletedEquiposTrabajo.length > 0 || touched) {
+      return false;
+    }
+    return true;
   }
 }

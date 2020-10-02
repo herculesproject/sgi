@@ -6,16 +6,16 @@ import { FragmentComponent } from '@core/component/fragment.component';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { DialogService } from '@core/services/dialog.service';
-import { EquipoTrabajoService } from '@core/services/eti/equipo-trabajo.service';
+import { NGXLogger } from 'ngx-logger';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { Subscription } from 'rxjs';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
-import { SnackBarService } from '@core/services/snack-bar.service';
+import { DialogService } from '@core/services/dialog.service';
+import { EquipoTrabajoService } from '@core/services/eti/equipo-trabajo.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { SgiAuthService } from '@sgi/framework/auth';
-import { NGXLogger } from 'ngx-logger';
-import { Subscription } from 'rxjs';
 
 import { PeticionEvaluacionActionService } from '../../../peticion-evaluacion.action.service';
 import {
@@ -23,7 +23,6 @@ import {
 } from '../equipo-investigador-crear-modal/equipo-investigador-crear-modal.component';
 import { EquipoInvestigadorListadoFragment } from './equipo-investigador-listado.fragment';
 
-const MSG_SUCCESS_DELETE = marker('eti.peticionEvaluacion.formulario.equipoInvestigador.listado.eliminarConfirmado');
 const MSG_CONFIRM_DELETE = marker('eti.peticionEvaluacion.formulario.equipoInvestigador.listado.eliminar');
 const MSG_ERROR_INVESTIGADOR_REPETIDO = marker('eti.peticionEvaluacion.formulario.equipoInvestigador.listado.investigadorRepetido');
 
@@ -55,7 +54,7 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
     protected readonly peticionEvaluacionService: PeticionEvaluacionService,
     protected readonly sgiAuthService: SgiAuthService,
     protected readonly snackBarService: SnackBarService,
-    actionService: PeticionEvaluacionActionService
+    private actionService: PeticionEvaluacionActionService
   ) {
     super(actionService.FRAGMENT.EQUIPO_INVESTIGADOR, actionService);
     this.listadoFragment = this.fragment as EquipoInvestigadorListadoFragment;
@@ -122,7 +121,7 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
     ).subscribe((aceptado) => {
       if (aceptado) {
         this.listadoFragment.deleteEquipoTrabajo(wrappedEquipoTrabajo);
-        this.snackBarService.showSuccess(MSG_SUCCESS_DELETE);
+        this.actionService.eliminarTareasEquipoTrabajo(wrappedEquipoTrabajo);
       }
     });
 
