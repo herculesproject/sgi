@@ -37,7 +37,7 @@ public class TipoDocumentoIT {
   private TokenBuilder tokenBuilder;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String TIPO_DOCUMENTO_CONTROLLER_BASE_PATH = "/tiposdocumento";
+  private static final String TIPO_DOCUMENTO_CONTROLLER_BASE_PATH = "/tipodocumentos";
 
   private HttpEntity<TipoDocumento> buildRequest(HttpHeaders headers, TipoDocumento entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());

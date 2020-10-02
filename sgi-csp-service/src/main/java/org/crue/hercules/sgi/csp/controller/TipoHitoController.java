@@ -6,13 +6,12 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.service.TipoHitoService;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/tiposhito")
+@RequestMapping("/tipohitos")
 @Slf4j
 public class TipoHitoController {
 
@@ -47,7 +46,7 @@ public class TipoHitoController {
    * @return la lista de entidades {@link TipoHito} paginadas
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
+  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
   ResponseEntity<Page<TipoHito>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
@@ -69,7 +68,7 @@ public class TipoHitoController {
    * @return returnTipoHito {@link TipoHito} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-C')")
+  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-C')")
   public ResponseEntity<TipoHito> create(@Valid @RequestBody TipoHito nuevoTipoHito) {
     log.debug("createTipoHito(TipoHito nuevoTipoHito) - start");
     TipoHito returnTipoHito = tipoHitoService.create(nuevoTipoHito);
@@ -84,7 +83,7 @@ public class TipoHitoController {
    * @return returnTipoHito {@link TipoHito} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
+  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
   TipoHito findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     TipoHito returnTipoHito = tipoHitoService.findById(id);
@@ -100,7 +99,7 @@ public class TipoHitoController {
    * @return {@link TipoHito} actualizado.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-E')")
+  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-E')")
   TipoHito update(@PathVariable Long id, @Valid @RequestBody TipoHito updatedTipoHito) {
     log.debug("updateTipoHito(Long id, TipoHito updatedTipoHito) - start");
     updatedTipoHito.setId(id);
@@ -115,7 +114,7 @@ public class TipoHitoController {
    * @param id Identificador de {@link Tipo}.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-B')")
+  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-B')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");

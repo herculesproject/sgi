@@ -46,6 +46,7 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
     Assert.isNull(tipoDocumentoRepository.findByNombre(tipoDocumento.getNombre()),
         "TipoDocumento nombre tiene que ser unico");
 
+    tipoDocumento.setActivo(Boolean.TRUE);
     TipoDocumento returnValue = tipoDocumentoRepository.save(tipoDocumento);
 
     log.debug("create(TipoDocumento tipoDocumento) - end");

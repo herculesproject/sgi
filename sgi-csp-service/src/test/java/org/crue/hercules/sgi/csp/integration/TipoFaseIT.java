@@ -37,7 +37,7 @@ public class TipoFaseIT {
   private TokenBuilder tokenBuilder;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String TIPO_FASE_CONTROLLER_BASE_PATH = "/tiposfase";
+  private static final String TIPO_FASE_CONTROLLER_BASE_PATH = "/tipofases";
 
   private HttpEntity<TipoFase> buildRequest(HttpHeaders headers, TipoFase entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());

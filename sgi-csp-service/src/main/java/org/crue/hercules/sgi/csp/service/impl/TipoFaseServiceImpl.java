@@ -40,8 +40,10 @@ public class TipoFaseServiceImpl implements TipoFaseService {
     Assert.isNull(tipoFase.getId(), "tipoFase id no puede ser null para crear un nuevo tipoFase");
     Assert.isNull(tipoFaseRepository.findByNombre(tipoFase.getNombre()), "TipoFase nombre tiene que ser unico");
 
+    tipoFase.setActivo(Boolean.TRUE);
+    TipoFase returnValue = tipoFaseRepository.save(tipoFase);
     log.debug("create (TipoFase tipoFase) - start");
-    return tipoFaseRepository.save(tipoFase);
+    return returnValue;
   }
 
   /**

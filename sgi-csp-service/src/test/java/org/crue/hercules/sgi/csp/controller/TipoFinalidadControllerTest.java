@@ -56,7 +56,7 @@ public class TipoFinalidadControllerTest {
   private TipoFinalidadService service;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String CONTROLLER_BASE_PATH = "/tiposfinalidad";
+  private static final String CONTROLLER_BASE_PATH = "/tipofinalidades";
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-TFIN-C" })

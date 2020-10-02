@@ -40,8 +40,10 @@ public class TipoHitoServiceImpl implements TipoHitoService {
     Assert.isNull(tipoHito.getId(), "tipoHito id tiene que ser null para crear un nuevo tipoHito");
     Assert.isNull(tipoHitoRepository.findByNombre(tipoHito.getNombre()), "TipoHito nombre tiene que ser unico");
 
+    tipoHito.setActivo(Boolean.TRUE);
+    TipoHito returnValue = tipoHitoRepository.save(tipoHito);
     log.debug("create(TipoHito tipoHito) - end");
-    return tipoHitoRepository.save(tipoHito);
+    return returnValue;
   }
 
   /**

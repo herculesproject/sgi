@@ -6,13 +6,12 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.service.TipoFaseService;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/tiposfase")
+@RequestMapping("/tipofases")
 @Slf4j
 public class TipoFaseController {
 
@@ -47,7 +46,7 @@ public class TipoFaseController {
    * @return la lista de entidades {@link TipoFase} paginadas
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO ('CSP-TFAS-V')")
+  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-TFAS-V')")
   ResponseEntity<Page<TipoFase>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
@@ -69,7 +68,7 @@ public class TipoFaseController {
    * @return returnTipoFase {@link TipoFase} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO ('CSP-TFAS-C')")
+  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-TFAS-C')")
   public ResponseEntity<TipoFase> create(@Valid @RequestBody TipoFase nuevoTipoFase) {
     log.debug("createTipoFase(TipoFase nuevoTipoFase) - start");
     TipoFase returnTipoFase = tipoFaseService.create(nuevoTipoFase);
@@ -84,7 +83,7 @@ public class TipoFaseController {
    * @return returnTipoFase {@link TipoFase} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO ('CSP-TFAS-V')")
+  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-TFAS-V')")
   TipoFase findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     TipoFase returnTipoFase = tipoFaseService.findById(id);
@@ -100,7 +99,7 @@ public class TipoFaseController {
    * @return {@link TipoFase} actualizado.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO ('CSP-TFAS-E')")
+  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-TFAS-E')")
   TipoFase update(@PathVariable Long id, @Valid @RequestBody TipoFase updatedTipoFase) {
     log.debug("updateTipoFase(Long id, TipoFase updatedTipoFase) - start");
     updatedTipoFase.setId(id);
@@ -115,7 +114,7 @@ public class TipoFaseController {
    * @param id Identificador de {@link Tipo}.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO ('CSP-TFAS-B')")
+  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-TFAS-B')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");

@@ -47,7 +47,7 @@ public class TipoHitoControllerTest {
   @MockBean
   private TipoHitoService tipoHitoService;
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String TIPO_HITO_CONTROLLER_BASE_PATH = "/tiposhito";
+  private static final String TIPO_HITO_CONTROLLER_BASE_PATH = "/tipohitos";
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-THIT-C" })

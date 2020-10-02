@@ -48,6 +48,7 @@ public class TipoEnlaceServiceImpl implements TipoEnlaceService {
       throw new IllegalArgumentException("Ya existe un TipoEnlace con el nombre " + data.getNombre());
     });
 
+    tipoEnlace.setActivo(Boolean.TRUE);
     TipoEnlace returnValue = repository.save(tipoEnlace);
     log.debug("create(TipoEnlace tipoEnlace) - end");
     return returnValue;

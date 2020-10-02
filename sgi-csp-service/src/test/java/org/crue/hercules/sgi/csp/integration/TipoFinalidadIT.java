@@ -38,7 +38,7 @@ public class TipoFinalidadIT {
   private TokenBuilder tokenBuilder;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String CONTROLLER_BASE_PATH = "/tiposfinalidad";
+  private static final String CONTROLLER_BASE_PATH = "/tipofinalidades";
 
   private HttpEntity<TipoFinalidad> buildRequest(HttpHeaders headers, TipoFinalidad entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());

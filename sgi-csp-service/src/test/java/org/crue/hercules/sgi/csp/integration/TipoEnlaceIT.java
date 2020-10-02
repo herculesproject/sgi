@@ -38,7 +38,7 @@ public class TipoEnlaceIT {
   private TokenBuilder tokenBuilder;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String CONTROLLER_BASE_PATH = "/tiposenlace";
+  private static final String CONTROLLER_BASE_PATH = "/tipoenlaces";
 
   private HttpEntity<TipoEnlace> buildRequest(HttpHeaders headers, TipoEnlace entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());

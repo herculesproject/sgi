@@ -47,7 +47,7 @@ public class TipoFaseControllerTest {
   @MockBean
   private TipoFaseService tipoFaseService;
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String TIPO_FASE_CONTROLLER_BASE_PATH = "/tiposfase";
+  private static final String TIPO_FASE_CONTROLLER_BASE_PATH = "/tipofases";
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-TFAS-C" })

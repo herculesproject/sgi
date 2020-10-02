@@ -37,7 +37,7 @@ public class TipoHitoIT {
   private TokenBuilder tokenBuilder;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String TIPO_HITO_CONTROLLER_BASE_PATH = "/tiposhito";
+  private static final String TIPO_HITO_CONTROLLER_BASE_PATH = "/tipohitos";
 
   private HttpEntity<TipoHito> buildRequest(HttpHeaders headers, TipoHito entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());

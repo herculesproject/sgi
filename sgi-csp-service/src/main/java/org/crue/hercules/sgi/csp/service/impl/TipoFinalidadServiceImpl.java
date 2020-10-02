@@ -48,6 +48,7 @@ public class TipoFinalidadServiceImpl implements TipoFinalidadService {
       throw new IllegalArgumentException("Ya existe un TipoFinalidad con el nombre " + data.getNombre());
     });
 
+    tipoFinalidad.setActivo(Boolean.TRUE);
     TipoFinalidad returnValue = repository.save(tipoFinalidad);
     log.debug("create(TipoFinalidad tipoFinalidad) - end");
     return returnValue;

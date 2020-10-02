@@ -14,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
  * TipoDocumentoController
  */
 @RestController
-@RequestMapping("/tiposdocumento")
+@RequestMapping("/tipodocumentos")
 @Slf4j
 public class TipoDocumentoController {
 
@@ -58,7 +57,7 @@ public class TipoDocumentoController {
    * @param paging pageable.
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
   ResponseEntity<Page<TipoDocumento>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
@@ -80,7 +79,7 @@ public class TipoDocumentoController {
    * @return {@link TipoDocumento} correspondiente al id.
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
   TipoDocumento findById(@PathVariable Long id) {
     log.debug("findById(Long id) - start");
     TipoDocumento returnValue = tipoDocumentoService.findById(id);
@@ -95,7 +94,7 @@ public class TipoDocumentoController {
    * @return Nuevo {@link TipoDocumento} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-C')")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-C')")
   ResponseEntity<TipoDocumento> create(@Valid @RequestBody TipoDocumento tipoDocumento) {
     log.debug("create(TipoDocumento tipoDocumento) - start");
     TipoDocumento returnValue = tipoDocumentoService.create(tipoDocumento);
@@ -111,7 +110,7 @@ public class TipoDocumentoController {
    * @return {@link TipoDocumento} actualizado.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-E')")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-E')")
   TipoDocumento update(@Validated({ Update.class, Default.class }) @RequestBody TipoDocumento tipoDocumento,
       @PathVariable Long id) {
     log.debug("update(TipoDocumento tipoDocumento, Long id) - start");
@@ -127,7 +126,7 @@ public class TipoDocumentoController {
    * @param id Identificador de {@link TipoDocumento}.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-B')")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-B')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");

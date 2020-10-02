@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @RestController
-@RequestMapping("/tiposenlace")
+@RequestMapping("/tipoenlaces")
 @Slf4j
 public class TipoEnlaceController {
 
@@ -51,7 +50,7 @@ public class TipoEnlaceController {
    * @return Nuevo {@link TipoEnlace} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-TENL-C')")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TENL-C')")
   public ResponseEntity<TipoEnlace> create(@Valid @RequestBody TipoEnlace tipoEnlace) {
     log.debug("create(TipoEnlace tipoEnlace) - start");
     TipoEnlace returnValue = service.create(tipoEnlace);
@@ -67,7 +66,7 @@ public class TipoEnlaceController {
    * @return TipoEnlace {@link TipoEnlace} actualizado
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-TENL-E')")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TENL-E')")
   public TipoEnlace update(@Valid @RequestBody TipoEnlace tipoEnlace, @PathVariable Long id) {
     log.debug("update(TipoEnlace tipoEnlace, Long id) - start");
     tipoEnlace.setId(id);
@@ -82,7 +81,7 @@ public class TipoEnlaceController {
    * @param id Identificador de {@link TipoEnlace}.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-TENL-B')")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TENL-B')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void deleteById(@PathVariable Long id) {
     log.debug("deleteById(Long id) - start");
@@ -98,7 +97,7 @@ public class TipoEnlaceController {
    * @return el listado de entidades {@link TipoEnlace} paginadas y filtradas.
    */
   @GetMapping()
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-TENL-V')")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TENL-V')")
   ResponseEntity<Page<TipoEnlace>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
@@ -119,7 +118,7 @@ public class TipoEnlaceController {
    * @return TipoEnlace {@link TipoEnlace} correspondiente al id
    */
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('CSP-TENL-V')")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TENL-V')")
   TipoEnlace findById(@PathVariable Long id) {
     log.debug("TipoEnlace findById(Long id) - start");
     TipoEnlace returnValue = service.findById(id);
