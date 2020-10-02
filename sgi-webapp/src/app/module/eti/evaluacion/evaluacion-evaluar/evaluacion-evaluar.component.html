@@ -1,15 +1,15 @@
 <mat-drawer-container class="mat-drawer-tabs">
   <mat-drawer class="tabs" mode="side" opened>
     <mat-list class="opciones-menu">
-      <sgi-action-fragment-menu-item [routerLink]="[EVALUACION_ROUTE_NAMES.EVALUACIONES]"
+      <sgi-action-fragment-menu-item [route]="[EVALUACION_ROUTE_NAMES.EVALUACIONES]"
         [title]="'eti.evaluacion.evaluar.evaluaciones.cabecera' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.EVALUACIONES)">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item [routerLink]="[EVALUACION_ROUTE_NAMES.COMENTARIOS]"
+      <sgi-action-fragment-menu-item [route]="[EVALUACION_ROUTE_NAMES.COMENTARIOS]"
         [title]="'eti.evaluacionEvaluador.evaluar.comentarios.cabecera' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.COMENTARIOS)">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item [routerLink]="[EVALUACION_ROUTE_NAMES.DOCUMENTACION]"
+      <sgi-action-fragment-menu-item [route]="[EVALUACION_ROUTE_NAMES.DOCUMENTACION]"
         [title]="'eti.evaluacionEvaluador.evaluar.documentacion.cabecera' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.DOCUMENTACION)">
       </sgi-action-fragment-menu-item>

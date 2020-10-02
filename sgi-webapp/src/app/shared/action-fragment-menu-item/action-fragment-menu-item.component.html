@@ -1,4 +1,4 @@
-<a class="item-tab" mat-list-item [routerLink]="routerLink" [routerLinkActive]="['is-active']">
+<a class="item-tab" mat-list-item [routerLink]="route" [routerLinkActive]="['is-active']">
   <span>{{title}}</span>
   <span *ngIf="fragment?.status$ | async as status;">
     <mat-icon *ngIf="status.changes && !status.errors" aria-hidden="false" class="icons warning-icon">

@@ -42,7 +42,6 @@ export class ConvocatoriaReunionCrearComponent extends ActionComponent {
     this.actionService.saveOrUpdate().subscribe(
       () => { },
       (error) => {
-        console.error(error);
         this.snackBarService.showError(MSG_ERROR);
       },
       () => {

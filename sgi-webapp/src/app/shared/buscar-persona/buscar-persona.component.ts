@@ -61,7 +61,6 @@ export class BuscarPersonaComponent implements OnChanges {
     });
 
     dialogRef.afterClosed().subscribe(persona => {
-      console.log('formularioBuscarUsuario - closed');
       if (persona) {
         this.datosUsuario = persona.nombre + ' ' + persona.primerApellido + ' ' +
           persona.segundoApellido + '(' + persona.identificadorNumero + persona.identificadorLetra + ')';

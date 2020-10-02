@@ -1,34 +1,34 @@
 <mat-drawer-container class="mat-drawer-tabs">
   <mat-drawer mode="side" class="tabs" opened>
     <mat-list class="opciones-menu">
-      <sgi-action-fragment-menu-item [routerLink]="[CONVOCATORIA_ROUTE_NAMES.DATOS_GENERALES]"
+      <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.DATOS_GENERALES]"
         [title]="'label.datos-generales' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.DATOS_GENERALES)">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item [routerLink]="[CONVOCATORIA_ROUTE_NAMES.ENTIDADES_CONVOCANTES]"
+      <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.ENTIDADES_CONVOCANTES]"
         [title]="'label.entidades-convocantes' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.ENTIDADES_CONVOCANTES)">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item [routerLink]="[CONVOCATORIA_ROUTE_NAMES.ENTIDADES_FINANCIADORAS]"
+      <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.ENTIDADES_FINANCIADORAS]"
         [title]="'label.entidades-financiadoras' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.ENTIDADES_FINANCIADORAS)">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item [routerLink]="[CONVOCATORIA_ROUTE_NAMES.ENLACES]"
-        [title]="'label.enlaces' | translate" [fragment]="actionService.getFragment(actionService.FRAGMENT.ENLACES)">
+      <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.ENLACES]" [title]="'label.enlaces' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.ENLACES)">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item [routerLink]="[CONVOCATORIA_ROUTE_NAMES.PERIODO_JUSTIFICACION]"
+      <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.PERIODO_JUSTIFICACION]"
         [title]="'label.periodo-justificacion' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.PERIODO_JUSTIFICACION)">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item [routerLink]="[CONVOCATORIA_ROUTE_NAMES.PLAZOS_FASES]"
+      <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.PLAZOS_FASES]"
         [title]="'label.plazos-fases' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.PLAZOS_FASES)">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item [routerLink]="[CONVOCATORIA_ROUTE_NAMES.SEGUIMIENTO_CIENTIFICO]"
+      <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.SEGUIMIENTO_CIENTIFICO]"
         [title]="'label.seguimiento-cientifico' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.SEGUIMIENTO_CIENTIFICO)">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item [routerLink]="[CONVOCATORIA_ROUTE_NAMES.HITOS]"
+      <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.HITOS]"
         [title]="'csp.convocatoria.hitos' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.HITOS)">
       </sgi-action-fragment-menu-item>

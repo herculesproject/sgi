@@ -37,7 +37,6 @@ export class NavigationService {
   }
 
   private processEvent(event: RouterEvent): void {
-    console.log(event);
     if (event instanceof NavigationStart) {
       this.navigationStack = [];
     }
@@ -58,7 +57,6 @@ export class NavigationService {
       else {
         nav.extras.state = { from: this.currentNavigation };
       }
-      console.log(nav.extras.state);
     }
     if (event instanceof NavigationEnd) {
       if (!this.lastNavigation) {
@@ -69,8 +67,6 @@ export class NavigationService {
         this.lastNavigation = this.currentNavigation;
         this.currentNavigation = this.getLastNavigationUrl(this.navigationStack);
       }
-      console.log(this.lastNavigation);
-      console.log(this.currentNavigation);
       this.navigation$.next(this.navigationStack);
     }
   }

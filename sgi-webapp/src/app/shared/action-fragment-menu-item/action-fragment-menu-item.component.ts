@@ -9,7 +9,7 @@ import { IFragment } from '@core/services/action-service';
 })
 export class ActionFragmentMenuItemComponent {
   @Input() fragment: IFragment;
-  @Input() routerLink: string | string[];
+  @Input() route: string | string[];
   @Input() title: string;
 
   constructor() { }
