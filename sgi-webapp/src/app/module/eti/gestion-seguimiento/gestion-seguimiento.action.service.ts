@@ -9,6 +9,7 @@ import { SeguimientoEvaluacionFragment } from '../seguimiento-formulario/seguimi
 import { SeguimientoFormularioActionService, Gestion } from '../seguimiento-formulario/seguimiento-formulario.action.service';
 import { SeguimientoComentarioFragment } from '../seguimiento-formulario/seguimiento-comentarios/seguimiento-comentarios.fragment';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { SeguimientoDocumentacionFragment } from '../seguimiento-formulario/seguimiento-documentacion/seguimiento-documentacion.fragment';
 
 @Injectable()
 export class GestionSeguimientoActionService extends SeguimientoFormularioActionService {
@@ -30,10 +31,13 @@ export class GestionSeguimientoActionService extends SeguimientoFormularioAction
     this.evaluaciones = new SeguimientoEvaluacionFragment(
       logger, fb, this.evaluacion?.id, snackBarService, service, personaFisicaService);
     this.comentarios = new SeguimientoComentarioFragment(this.logger, this.evaluacion?.id, Gestion.GESTOR, service);
+    this.documentacion = new SeguimientoDocumentacionFragment(this.logger, this.evaluacion?.id);
 
     this.addFragment(this.FRAGMENT.COMENTARIOS, this.comentarios);
     this.addFragment(this.FRAGMENT.EVALUACIONES, this.evaluaciones);
+    this.addFragment(this.FRAGMENT.DOCUMENTACION, this.documentacion);
     this.evaluaciones.setComentarios(this.comentarios.comentarios$);
+
 
   }
 

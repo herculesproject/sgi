@@ -18,6 +18,7 @@ const MSG_ERROR = marker('eti.documentacion-memoria.listado.error');
 export class DocumentacionMemoriaListadoMemoriaComponent extends AbstractTableWithoutPaginationComponent<IDocumentacionMemoria>  {
   documentacionMemoria$: Observable<IDocumentacionMemoria[]>;
   @Input() memoriaId: number;
+  @Input() tipoEvaluacion: number;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -29,7 +30,7 @@ export class DocumentacionMemoriaListadoMemoriaComponent extends AbstractTableWi
 
   protected createObservable(): Observable<SgiRestListResult<IDocumentacionMemoria>> {
     this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, 'createObservable()', 'start');
-    const observable$ = this.memoriaService.getDocumentaciones(this.memoriaId, this.getFindOptions());
+    const observable$ = this.memoriaService.getDocumentacionesTipoEvaluacion(this.memoriaId, this.tipoEvaluacion, this.getFindOptions());
     this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, 'createObservable()', 'end');
     return observable$;
   }

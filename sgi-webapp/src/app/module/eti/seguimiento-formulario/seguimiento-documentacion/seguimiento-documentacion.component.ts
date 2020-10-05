@@ -4,6 +4,7 @@ import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { NGXLogger } from 'ngx-logger';
 import { DocumentacionMemoriaListadoMemoriaComponent } from '../../documentacion-memoria/documentacion-memoria-listado-memoria/documentacion-memoria-listado-memoria.component';
 import { SeguimientoEvaluarActionService } from '../../seguimiento/seguimiento-evaluar.action.service';
+import { SeguimientoFormularioActionService } from '../seguimiento-formulario.action.service';
 
 
 @Component({
@@ -16,7 +17,7 @@ export class SeguimientoDocumentacionComponent extends FormFragmentComponent<IDo
 
   constructor(
     protected readonly logger: NGXLogger,
-    private actionService: SeguimientoEvaluarActionService
+    private actionService: SeguimientoFormularioActionService
   ) {
     super(actionService.FRAGMENT.DOCUMENTACION, actionService);
     this.logger.debug(SeguimientoDocumentacionComponent.name, 'constructor()', 'start');
@@ -26,6 +27,7 @@ export class SeguimientoDocumentacionComponent extends FormFragmentComponent<IDo
   ngAfterViewInit() {
     this.logger.debug(SeguimientoDocumentacionComponent.name, 'ngAfterViewInit()', 'start');
     this.documentacion.memoriaId = this.actionService.getEvaluacion()?.memoria?.id;
+    this.documentacion.tipoEvaluacion = this.actionService.getEvaluacion()?.tipoEvaluacion?.id;
     this.documentacion?.ngAfterViewInit();
     this.logger.debug(SeguimientoDocumentacionComponent.name, 'ngAfterViewInit()', 'end');
   }

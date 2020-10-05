@@ -9,8 +9,8 @@ import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 
 import { SeguimientoDatosMemoriaComponent } from './seguimiento-datos-memoria.component';
-import { EvaluacionListadoAnteriorMemoriaComponent } from '../../evaluacion-formulario/evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
 import { SeguimientoEvaluarActionService } from '../../seguimiento/seguimiento-evaluar.action.service';
+import { SeguimientoListadoAnteriorMemoriaComponent } from '../seguimiento-listado-anterior-memoria/seguimiento-listado-anterior-memoria.component';
 
 describe('SeguimientoDatosMemoriaComponent', () => {
   let component: SeguimientoDatosMemoriaComponent;
@@ -20,7 +20,7 @@ describe('SeguimientoDatosMemoriaComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         SeguimientoDatosMemoriaComponent,
-        EvaluacionListadoAnteriorMemoriaComponent
+        SeguimientoListadoAnteriorMemoriaComponent
       ],
       imports: [
         FormsModule,

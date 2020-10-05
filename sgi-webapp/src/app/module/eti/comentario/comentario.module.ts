@@ -6,8 +6,6 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { ComentarioCrearModalComponent } from './comentario-crear-modal/comentario-crear-modal.component';
 import { ComentarioEditarModalComponent } from './comentario-editar-modal/comentario-editar-modal.component';
-import { EvaluacionFormularioActionService } from '../evaluacion-formulario/evaluacion-formulario.action.service';
-
 
 @NgModule({
   declarations: [

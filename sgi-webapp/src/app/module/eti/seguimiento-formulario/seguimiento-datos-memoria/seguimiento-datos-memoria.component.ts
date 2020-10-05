@@ -4,8 +4,8 @@ import { IMemoriaWithPersona } from '@core/models/eti/memoria-with-persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { NGXLogger } from 'ngx-logger';
-import { EvaluacionListadoAnteriorMemoriaComponent } from '../../evaluacion-formulario/evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
-import { SeguimientoEvaluarActionService } from '../../seguimiento/seguimiento-evaluar.action.service';
+import { SeguimientoFormularioActionService } from '../seguimiento-formulario.action.service';
+import { SeguimientoListadoAnteriorMemoriaComponent } from '../seguimiento-listado-anterior-memoria/seguimiento-listado-anterior-memoria.component';
 
 @Component({
   selector: 'sgi-seguimiento-datos-memoria',
@@ -17,11 +17,11 @@ export class SeguimientoDatosMemoriaComponent extends FormFragmentComponent<IMem
   fxLayoutProperties: FxLayoutProperties;
   fxFlexPropertiesInline: FxFlexProperties;
 
-  @ViewChild('evaluaciones') evaluaciones: EvaluacionListadoAnteriorMemoriaComponent;
+  @ViewChild('evaluaciones') evaluaciones: SeguimientoListadoAnteriorMemoriaComponent;
 
   constructor(
     protected readonly logger: NGXLogger,
-    private actionService: SeguimientoEvaluarActionService
+    private actionService: SeguimientoFormularioActionService
   ) {
     super(actionService.FRAGMENT.MEMORIA, actionService);
     this.logger.debug(SeguimientoDatosMemoriaComponent.name, 'constructor()', 'start');

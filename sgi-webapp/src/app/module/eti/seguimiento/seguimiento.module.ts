@@ -15,14 +15,12 @@ import { SeguimientoResolver } from './seguimiento.resolver';
 import { SeguimientoComentariosComponent } from '../seguimiento-formulario/seguimiento-comentarios/seguimiento-comentarios.component';
 import { SeguimientoDatosMemoriaComponent } from '../seguimiento-formulario/seguimiento-datos-memoria/seguimiento-datos-memoria.component';
 import { SeguimientoDocumentacionComponent } from '../seguimiento-formulario/seguimiento-documentacion/seguimiento-documentacion.component';
+import { SeguimientoFormularioModule } from '../seguimiento-formulario/seguimiento-formulario.module';
 
 @NgModule({
   declarations: [
     SeguimientoListadoComponent,
     SeguimientoEvaluarComponent,
-    SeguimientoComentariosComponent,
-    SeguimientoDatosMemoriaComponent,
-    SeguimientoDocumentacionComponent
   ],
   imports: [
     SharedModule,
@@ -30,6 +28,7 @@ import { SeguimientoDocumentacionComponent } from '../seguimiento-formulario/seg
     TranslateModule,
     MaterialDesignModule,
     SeguimientoRoutingModule,
+    SeguimientoFormularioModule,
     SgiAuthModule,
     FormsModule,
     ReactiveFormsModule,

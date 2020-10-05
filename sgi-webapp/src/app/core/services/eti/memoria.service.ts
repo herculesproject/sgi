@@ -24,12 +24,30 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
    *
    * @param id id de la memoria.
    */
-  getDocumentaciones(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IDocumentacionMemoria>> {
-    this.logger.debug(MemoriaService.name, `getDocumentaciones(${id}, ${options ? JSON.stringify(options) : options})`, 'start');
+  getDocumentaciones(
+    idMemoria: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IDocumentacionMemoria>> {
+    this.logger.debug(MemoriaService.name, `getDocumentaciones(${idMemoria}, ${options ? JSON.stringify(options) : options})`, 'start');
     return this.find<IDocumentacionMemoria, IDocumentacionMemoria>(
-      `${this.endpointUrl}/${id}/documentaciones`, options).pipe(
+      `${this.endpointUrl}/${idMemoria}/documentaciones`, options).pipe(
         tap(() => this.logger.debug(MemoriaService.name,
-          `getDocumentaciones(${id}, ${options ? JSON.stringify(options) : options})`, 'end'))
+          `getDocumentaciones(${idMemoria},  ${options ? JSON.stringify(options) : options})`, 'end'))
+      );
+  }
+
+  /**
+   * Devuelve toda la documentación asociada a una memoria según el tipo de la Evaluación
+   *
+   * @param id id de la memoria.
+   * @param idTipoEvaluacion id del tipo de la evaluación.
+   */
+  getDocumentacionesTipoEvaluacion(
+    idMemoria: number, idTipoEvaluacion: number,
+    options?: SgiRestFindOptions): Observable<SgiRestListResult<IDocumentacionMemoria>> {
+    this.logger.debug(MemoriaService.name, `getDocumentacionesTipoEvaluacion(${idMemoria},${idTipoEvaluacion}, ${options ? JSON.stringify(options) : options})`, 'start');
+    return this.find<IDocumentacionMemoria, IDocumentacionMemoria>(
+      `${this.endpointUrl}/${idMemoria}/documentaciones/${idTipoEvaluacion}`, options).pipe(
+        tap(() => this.logger.debug(MemoriaService.name,
+          `getDocumentacionesTipoEvaluacion(${idMemoria}, ${idTipoEvaluacion}, ${options ? JSON.stringify(options) : options})`, 'end'))
       );
   }
 

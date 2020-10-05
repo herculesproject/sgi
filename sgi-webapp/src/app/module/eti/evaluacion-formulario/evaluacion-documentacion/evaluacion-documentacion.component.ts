@@ -4,7 +4,6 @@ import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { NGXLogger } from 'ngx-logger';
 
 import { DocumentacionMemoriaListadoMemoriaComponent } from '../../documentacion-memoria/documentacion-memoria-listado-memoria/documentacion-memoria-listado-memoria.component';
-import { EvaluacionEvaluadorActionService } from '../../evaluacion-evaluador/evaluacion-evaluador.action.service';
 import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
 
 
@@ -29,6 +28,7 @@ export class EvaluacionDocumentacionComponent extends FormFragmentComponent<IDoc
   ngAfterViewInit() {
     this.logger.debug(EvaluacionDocumentacionComponent.name, 'ngAfterViewInit()', 'start');
     this.documentacion.memoriaId = this.actionService.getEvaluacion()?.memoria?.id;
+    this.documentacion.tipoEvaluacion = this.actionService.getEvaluacion()?.tipoEvaluacion?.id;
     this.documentacion.ngAfterViewInit();
     this.logger.debug(EvaluacionDocumentacionComponent.name, 'ngAfterViewInit()', 'end');
   }
