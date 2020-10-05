@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '@shared/shared.module';
@@ -19,6 +19,7 @@ import { EtiInicioComponent } from './eti-inicio/eti-inicio.component';
     MaterialDesignModule,
     SgiAuthModule
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: []
 })
 export class EtiModule {

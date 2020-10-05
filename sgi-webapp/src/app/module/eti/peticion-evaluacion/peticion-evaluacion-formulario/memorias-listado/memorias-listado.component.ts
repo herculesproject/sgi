@@ -16,6 +16,7 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { PeticionEvaluacionActionService } from '../../peticion-evaluacion.action.service';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoriaPeticionEvaluacion';
+import { MEMORIAS_ROUTE } from '../../../memoria/memoria-route-names';
 
 const MSG_SUCCESS_DELETE = marker('eti.peticionEvaluacion.formulario.memorias.listado.eliminarConfirmado');
 const MSG_CONFIRM_DELETE = marker('eti.peticionEvaluacion.formulario.memorias.listado.eliminar');
@@ -27,7 +28,7 @@ const MSG_ERROR = marker('eti.peticionEvaluacion.formulario.memorias.listado.err
   styleUrls: ['./memorias-listado.component.scss']
 })
 export class MemoriasListadoComponent extends FragmentComponent implements OnInit, OnDestroy {
-
+  MEMORIAS_ROUTE = MEMORIAS_ROUTE;
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
@@ -47,7 +48,7 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
     protected readonly personaFisicaService: PersonaFisicaService,
     protected readonly peticionEvaluacionService: PeticionEvaluacionService,
     protected readonly snackBarService: SnackBarService,
-    private actionService: PeticionEvaluacionActionService
+    actionService: PeticionEvaluacionActionService
   ) {
     super(actionService.FRAGMENT.MEMORIAS, actionService);
     this.listadoFragment = this.fragment as MemoriasListadoFragment;

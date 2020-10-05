@@ -14,10 +14,10 @@ const MSG_EVALUACIONES_EVALUADOR_TITLE = marker('menu.principal.eti.evaluaciones
 const MSG_EVALUACIONES_TITLE = marker('menu.principal.eti.evaluaciones');
 const MSG_ACTAS_TITLE = marker('menu.principal.eti.acta');
 const MSG_EVALUADORES_TITLE = marker('menu.principal.eti.evaluador');
+const MSG_MEMORIAS_TITLE = marker('menu.principal.eti.memoria');
 const MSG_SEGUIMIENTOS_TITLE = marker('menu.principal.eti.seguimientos');
 const MSG_PETICIONES_EVALUACION_TITLE = marker('menu.principal.eti.peticionesEvaluacion');
 const MSG_GESTION_SEGUIMIENTO_TITLE = marker('menu.principal.eti.gestionSeguimiento');
-
 
 const routes: SgiRoutes = [
   {
@@ -100,6 +100,18 @@ const routes: SgiRoutes = [
         }
       },
       {
+        path: ETI_ROUTE_NAMES.MEMORIAS,
+        loadChildren: () =>
+          import('./memoria/memoria-ges.module').then(
+            (m) => m.MemoriaGesModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_MEMORIAS_TITLE,
+          hasAnyAuthorityForAnyUO: ['ETI-MEM-CEST']
+        }
+      },
+      {
         path: ETI_ROUTE_NAMES.SEGUIMIENTOS,
         loadChildren: () =>
           import('./seguimiento/seguimiento.module').then(
@@ -124,7 +136,7 @@ const routes: SgiRoutes = [
         }
       },
       {
-        path: ETI_ROUTE_NAMES.PETICIONES_EVALUACION_GES,
+        path: ETI_ROUTE_NAMES.PETICIONES_EVALUACION,
         loadChildren: () =>
           import('./peticion-evaluacion/peticion-evaluacion-ges.module').then(
             (m) => m.PeticionEvaluacionGesModule

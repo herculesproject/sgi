@@ -130,4 +130,5 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent implements OnInit, On
     this.entidadFinanciadora.porcentajeFinanciacion = FormGroupUtil.getValue(this.formGroup, 'porcentajeFinanciacion');
     this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, 'getDatosForm()', 'end');
   }
+
 }

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
@@ -42,7 +42,8 @@ import { ActionFragmentLinkItemComponent } from './action-fragment-link-item/act
     BuscarPersonaDialogoComponent,
     ActionFragmentMenuItemComponent,
     ActionFragmentLinkItemComponent
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SharedModule {
 }

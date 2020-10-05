@@ -8,6 +8,7 @@ import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/fram
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoriaPeticionEvaluacion';
 
 @Injectable({
   providedIn: 'root'
@@ -120,4 +121,99 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
       tap(() => this.logger.debug(MemoriaService.name, `findAllByPersonaRef()`, '-', 'END'))
     );
   }
+
+  findAll(options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IMemoriaPeticionEvaluacion>> {
+    this.logger.debug(MemoriaService.name, `findAll()`, '-', 'START');
+    return this.find<IMemoriaPeticionEvaluacion, IMemoriaPeticionEvaluacion>(`${this.endpointUrl}`, options).pipe(
+      tap(() => this.logger.debug(MemoriaService.name, `findAll()`, '-', 'END'))
+    );
+  }
+  /**
+   * Devuelve toda la documentación por tipo de formulario de una memoria.
+   *
+   * @param id id de la memoria.
+   */
+  findDocumentacionFormulario(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IDocumentacionMemoria>> {
+    this.logger.debug(MemoriaService.name, `findDocumentacionFormulario(${id}, ${options ? JSON.stringify(options) : options})`, 'start');
+    return this.find<IDocumentacionMemoria, IDocumentacionMemoria>(
+      `${this.endpointUrl}/${id}/documentacion-formulario`, options).pipe(
+        tap(() => this.logger.debug(MemoriaService.name,
+          `findDocumentacionFormulario(${id}, ${options ? JSON.stringify(options) : options})`, 'end'))
+      );
+  }
+
+
+  /**
+   * Devuelve toda la documentación por tipo de seguimiento anual de una memoria.
+   *
+   * @param id id de la memoria.
+   */
+  findDocumentacionSeguimientoAnual(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IDocumentacionMemoria>> {
+    this.logger.debug(MemoriaService.name, `findDocumentacionSeguimientoAnual(${id}, ${options ? JSON.stringify(options) : options})`, 'start');
+    return this.find<IDocumentacionMemoria, IDocumentacionMemoria>(
+      `${this.endpointUrl}/${id}/documentacion-seguimiento-anual`, options).pipe(
+        tap(() => this.logger.debug(MemoriaService.name,
+          `findDocumentacionSeguimientoAnual(${id}, ${options ? JSON.stringify(options) : options})`, 'end'))
+      );
+  }
+
+
+  /**
+   * Devuelve toda la documentación por tipo de seguimiento final de una memoria.
+   *
+   * @param id id de la memoria.
+   */
+  findDocumentacionSeguimientoFinal(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IDocumentacionMemoria>> {
+    this.logger.debug(MemoriaService.name, `findDocumentacionSeguimientoFinal(${id}, ${options ? JSON.stringify(options) : options})`, 'start');
+    return this.find<IDocumentacionMemoria, IDocumentacionMemoria>(
+      `${this.endpointUrl}/${id}/documentacion-seguimiento-final`, options).pipe(
+        tap(() => this.logger.debug(MemoriaService.name,
+          `findDocumentacionSeguimientoFinal(${id}, ${options ? JSON.stringify(options) : options})`, 'end'))
+      );
+  }
+
+
+  /**
+   * Devuelve toda la documentación por tipo de retrospectiva de una memoria.
+   *
+   * @param id id de la memoria.
+   */
+  findDocumentacionRetrospectiva(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IDocumentacionMemoria>> {
+    this.logger.debug(MemoriaService.name,
+      `findDocumentacionRetrospectiva(${id}, ${options ? JSON.stringify(options) : options})`, 'start');
+    return this.find<IDocumentacionMemoria, IDocumentacionMemoria>(
+      `${this.endpointUrl}/${id}/documentacion-retrospectiva`, options).pipe(
+        tap(() => this.logger.debug(MemoriaService.name,
+          `findDocumentacionRetrospectiva(${id}, ${options ? JSON.stringify(options) : options})`, 'end'))
+      );
+  }
+
+
+  createDocumentacionInicial(id: number, documentacionMemoria: IDocumentacionMemoria): Observable<IDocumentacionMemoria> {
+    this.logger.debug(MemoriaService.name, `createDocumentacionInicial(${id}, ${documentacionMemoria})`, '-', 'start');
+    return this.http.post<IDocumentacionMemoria>(`${this.endpointUrl}/${id}/documentacion-inicial`, documentacionMemoria).pipe(
+      tap(() => this.logger.debug(MemoriaService.name, `createDocumentacionInicial(${id}, ${documentacionMemoria})`, '-', 'end'))
+    );
+
+  }
+
+  createDocumentacionSeguimientoAnual(id: number, documentacionMemoria: IDocumentacionMemoria): Observable<IDocumentacionMemoria> {
+    this.logger.debug(MemoriaService.name, `createDocumentacionSeguimientoAnual(${id}, ${documentacionMemoria})`, '-', 'start');
+    return this.http.post<IDocumentacionMemoria>(`${this.endpointUrl}/${id}/documentacion-seguimiento-anual`, documentacionMemoria).pipe(
+      tap(() => this.logger.debug(MemoriaService.name, `createDocumentacionSeguimientoAnual(${id}, ${documentacionMemoria})`, '-', 'end'))
+    );
+
+  }
+
+  updateDocumentacion(
+    id: number, documentacionMemoria: IDocumentacionMemoria, idDocumentacionMemoria: number): Observable<IDocumentacionMemoria> {
+    this.logger.debug(MemoriaService.name, `updateDocumentacion(${id}, ${documentacionMemoria}, ${idDocumentacionMemoria})`, '-', 'start');
+    return this.http.put<IDocumentacionMemoria>
+      (`${this.endpointUrl}/${id}/documentacion-inicial/${idDocumentacionMemoria}`, documentacionMemoria).pipe(
+        tap(() =>
+          this.logger.debug(MemoriaService.name, `updateDocumentacion(${id}, ${documentacionMemoria}, ${idDocumentacionMemoria})`, '-', 'end'))
+      );
+  }
+
 }

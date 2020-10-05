@@ -1,7 +1,7 @@
 <div class="opciones-menu">
 
   <a class="item" mat-list-item *sgiHasAuthorityForAnyUO="'ETI-PEV-V'"
-    [routerLink]="[ETI_ROUTE_NAMES.PETICIONES_EVALUACION_GES]" [routerLinkActive]="['is-active']">
+    [routerLink]="[ETI_ROUTE_NAMES.PETICIONES_EVALUACION]" [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>content_paste</mat-icon>
     <p matLine *ngIf="opened">{{'menu.principal.eti.peticionesEvaluacion' | translate}}</p>
   </a>
@@ -46,6 +46,12 @@
     [routerLink]="[ETI_ROUTE_NAMES.SEGUIMIENTOS]" [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>verified_user</mat-icon>
     <p matLine *ngIf="opened">{{'menu.principal.eti.seguimientos' | translate}}</p>
+  </a>
+
+  <a class="item" mat-list-item *sgiHasAnyAuthorityForAnyUO="['ETI-MEM-V', 'ETI-MEM-CEST']"
+    [routerLink]="[ETI_ROUTE_NAMES.MEMORIAS]" [routerLinkActive]="['is-active']">
+    <mat-icon color="primary" mat-list-icon>file_copy</mat-icon>
+    <p matLine *ngIf="opened">{{'menu.principal.eti.memorias' | translate}}</p>
   </a>
 
 </div>

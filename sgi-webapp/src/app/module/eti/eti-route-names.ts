@@ -1,3 +1,6 @@
+import { MEMORIAS_ROUTE } from './memoria/memoria-route-names';
+import { PETICION_EVALUACION_ROUTE } from './peticion-evaluacion/peticion-evaluacion-route-names';
+
 export const ETI_ROUTE_NAMES = {
   SOLICITUDES_CONVOCATORIA: 'solicitudes-convocatoria',
   ACTAS: 'actas',
@@ -5,6 +8,7 @@ export const ETI_ROUTE_NAMES = {
   EVALUACIONES_EVALUADOR: 'evaluaciones-evaluador',
   EVALUADORES: 'evaluadores',
   SEGUIMIENTOS: 'seguimientos',
-  PETICIONES_EVALUACION_GES: 'peticiones-evaluacion-ges',
-  GESTION_SEGUIMIENTO: 'gestion-seguimiento'
+  PETICIONES_EVALUACION: PETICION_EVALUACION_ROUTE,
+  GESTION_SEGUIMIENTO: 'gestion-seguimiento',
+  MEMORIAS: MEMORIAS_ROUTE
 };

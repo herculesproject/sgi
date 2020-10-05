@@ -12,6 +12,7 @@ const MSG_ROOT_TITLE = marker('inv.root.title');
 const MSG_EVALUACIONES_TITLE = marker('menu.principal.inv.evaluaciones');
 const MSG_SEGUIMIENTOS_TITLE = marker('menu.principal.inv.seguimientos');
 const MSG_PETICIONES_EVALUACION_TITLE = marker('menu.principal.inv.peticionesEvaluacion');
+const MSG_MEMORIAS_TITLE = marker('menu.principal.inv.memorias');
 
 const routes: SgiRoutes = [
   {
@@ -62,6 +63,18 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_PETICIONES_EVALUACION_TITLE,
+          hasAnyAuthorityForAnyUO: ['ETI-PEV-VR-INV', 'ETI-PEV-C-INV', 'ETI-PEV-ER-INV', 'ETI-PEV-BR-INV']
+        }
+      },
+      {
+        path: INV_ROUTE_NAMES.MEMORIAS,
+        loadChildren: () =>
+          import('../eti/memoria/memoria-inv.module').then(
+            (m) => m.MemoriaInvModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_MEMORIAS_TITLE,
           hasAnyAuthorityForAnyUO: ['ETI-PEV-VR-INV', 'ETI-PEV-C-INV', 'ETI-PEV-ER-INV', 'ETI-PEV-BR-INV']
         }
       },

@@ -46,6 +46,8 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
   totalElementos: number;
   filter: SgiRestFilter[];
 
+  datosUsuarioSolicitante: string;
+
   textoCrear = MSG_BUTTON_SAVE;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -371,7 +373,7 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
    */
   getComite(comite: Comite): string {
 
-    return comite?.comite;
+    return comite ?.comite;
 
   }
 
@@ -383,7 +385,7 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
    */
   getEstadoMemoria(tipoEstadoMemoria: TipoEstadoMemoria): string {
 
-    return tipoEstadoMemoria?.nombre;
+    return tipoEstadoMemoria ?.nombre;
 
   }
 
@@ -481,7 +483,7 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
    * @param personaRef referencia del persona seleccionado
    */
   public setUsuario(solicitante: IPersona) {
-    this.personaRef = solicitante?.personaRef;
+    this.personaRef = solicitante ?.personaRef;
   }
 
   /**
@@ -516,7 +518,7 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
     this.logger.debug(PeticionEvaluacionListadoGesComponent.name,
       'ngOnDestroy()',
       'start');
-    this.comitesSubscription?.unsubscribe();
+    this.comitesSubscription ?.unsubscribe();
 
     this.logger.debug(PeticionEvaluacionListadoGesComponent.name,
       'ngOnDestroy()',

@@ -18,5 +18,11 @@
     <p matLine *ngIf="opened">{{'menu.principal.inv.seguimientos' | translate}}</p>
   </a>
 
+  <a class="item" mat-list-item [routerLink]="[INV_ROUTE_NAMES.MEMORIAS]" [routerLinkActive]="['is-active']">
+    <mat-icon color="primary" mat-list-icon>attachment</mat-icon>
+    <p matLine *ngIf="opened">{{'menu.principal.inv.memorias' | translate}}</p>
+  </a>
+
+
 </div>
 <!-- FIN Menu principal -->
