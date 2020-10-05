@@ -1,13 +1,17 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.crue.hercules.sgi.eti.exceptions.DocumentacionMemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
-import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.crue.hercules.sgi.eti.repository.DocumentacionMemoriaRepository;
 import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
+import org.crue.hercules.sgi.eti.service.TipoDocumentoService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
@@ -27,9 +31,12 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaService {
   private final DocumentacionMemoriaRepository documentacionMemoriaRepository;
+  private final TipoDocumentoService tipoDocumentoService;
 
-  public DocumentacionMemoriaServiceImpl(DocumentacionMemoriaRepository DocumentacionMemoriaRepository) {
+  public DocumentacionMemoriaServiceImpl(DocumentacionMemoriaRepository DocumentacionMemoriaRepository,
+      TipoDocumentoService tipoDocumentoService) {
     this.documentacionMemoriaRepository = DocumentacionMemoriaRepository;
+    this.tipoDocumentoService = tipoDocumentoService;
   }
 
   /**
@@ -145,19 +152,72 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
   }
 
   /**
-   * Obtener todas las entidades paginadas {@link Evaluacion} para una determinada
-   * {@link Memoria}.
+   * Obtener todas las entidades paginadas {@link DocumentacionMemoria} para una
+   * determinada {@link Memoria}.
    *
    * @param id       Id de {@link Memoria}.
    * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link Evaluacion} paginadas.
+   * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
    */
   @Override
   public Page<DocumentacionMemoria> findByMemoriaId(Long id, Pageable pageable) {
     log.debug("findByMemoriaId(Long id, Pageable pageable) - start");
     Assert.isTrue(id != null, "El id de la memoria no puede ser nulo para mostrar su documentacion");
+
     Page<DocumentacionMemoria> returnValue = documentacionMemoriaRepository.findByMemoriaId(id, pageable);
+
     log.debug("findByMemoriaId(Long id, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtener todas las entidades paginadas {@link DocumentacionMemoria} para una
+   * determinada {@link Memoria}.
+   *
+   * @param id               Id de {@link Memoria}.
+   * @param idTipoEvaluacion Id de {@link TipoEvaluacion}
+   * @param pageable         la información de la paginación.
+   * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
+   */
+  @Override
+  public Page<DocumentacionMemoria> findByMemoriaIdAndTipoEvaluacion(Long id, Long idTipoEvaluacion,
+      Pageable pageable) {
+    log.debug("findByMemoriaIdAndTipoEvaluacion(Long id, Long idTipoEvaluacion, Pageable pageable) - start");
+    Assert.isTrue(id != null, "El id de la memoria no puede ser nulo para mostrar su documentacion");
+    Assert.isTrue(idTipoEvaluacion != null,
+        "El id del tipo de evaluación no puede ser nulo para mostrar su documentacion");
+
+    Page<DocumentacionMemoria> returnValue = null;
+    TipoDocumento tipoDocumento = new TipoDocumento();
+
+    // TipoEvaluación Retrospectiva muestra la documentación de tipo Retrospectiva
+    if (idTipoEvaluacion.equals(1L)) {
+      tipoDocumento = tipoDocumentoService.findById(3L);
+      returnValue = documentacionMemoriaRepository.findByMemoriaIdAndTipoDocumentoId(id, tipoDocumento.getId(),
+          pageable);
+    }
+    // TipoEvaluación Memoria muestra todas la documentación que no sea de tipo
+    // Retrospectiva, Seguimiento Anual o Seguimiento Final
+    if (idTipoEvaluacion.equals(2L)) {
+      List<Long> tipoDocumentos = new ArrayList<Long>(Arrays.asList(1L, 2L, 3L));
+      returnValue = documentacionMemoriaRepository.findByMemoriaIdAndTipoDocumentoIdNotIn(id, tipoDocumentos, pageable);
+    }
+    // TipoEvaluación Seguimiento Anual muestra la documentación de tipo Seguimiento
+    // Anual
+    if (idTipoEvaluacion.equals(3L)) {
+      tipoDocumento = tipoDocumentoService.findById(1L);
+      returnValue = documentacionMemoriaRepository.findByMemoriaIdAndTipoDocumentoId(id, tipoDocumento.getId(),
+          pageable);
+    }
+    // TipoEvaluación Seguimiento Final muestra la documentación de tipo Seguimiento
+    // Final
+    if (idTipoEvaluacion.equals(4L)) {
+      tipoDocumento = tipoDocumentoService.findById(2L);
+      returnValue = documentacionMemoriaRepository.findByMemoriaIdAndTipoDocumentoId(id, tipoDocumento.getId(),
+          pageable);
+    }
+
+    log.debug("findByMemoriaIdAndTipoEvaluacion(Long id, Long idTipoEvaluacion, Pageable pageable) - end");
     return returnValue;
   }
 }

@@ -1183,7 +1183,7 @@
     <insert tableName="documentacion_memoria">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria5')" />
       <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where nombre='Documento de cesión de datos')" />
-      <column name="documento_ref" value="DocumentoRef5" />
+      <column name="documento_ref" value="DocumentoRef5: Documento de cesión de datos" />
       <column name="aportado" value="false" />
     </insert>
     <insert tableName="documentacion_memoria">
@@ -1194,14 +1194,32 @@
     </insert>
     <insert tableName="documentacion_memoria">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria9')" />
-      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where nombre='Documento de autorización')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where nombre='Seguimiento Anual')" />
       <column name="documento_ref" value="DocumentoRef7" />
       <column name="aportado" value="true" />
     </insert>
     <insert tableName="documentacion_memoria">
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria9')" />
-      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where nombre='Documento de autorización')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria200')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where nombre='Seguimiento Anual')" />
       <column name="documento_ref" value="DocumentoRef8" />
+      <column name="aportado" value="true" />
+    </insert>
+    <insert tableName="documentacion_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria13')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where nombre='Documento de autorización')" />
+      <column name="documento_ref" value="DocumentoRef9" />
+      <column name="aportado" value="true" />
+    </insert>
+    <insert tableName="documentacion_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria13')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where nombre='Retrospectiva')" />
+      <column name="documento_ref" value="DocumentoRef10" />
+      <column name="aportado" value="true" />
+    </insert>
+    <insert tableName="documentacion_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria1')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where nombre='Retrospectiva')" />
+      <column name="documento_ref" value="DocumentoRef11" />
       <column name="aportado" value="true" />
     </insert>
   </changeSet>

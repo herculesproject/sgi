@@ -9,6 +9,7 @@ import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
@@ -265,12 +266,12 @@ public class MemoriaController {
   }
 
   /**
-   * Obtener todas las entidades paginadas {@link Evaluacion} activas para una
-   * determinada {@link ConvocatoriaReunion}.
+   * Obtener todas las entidades paginadas {@link DocumentacionMemoria} activas
+   * para una determinada {@link Memoria}.
    *
-   * @param id       Id de {@link ConvocatoriaReunion}.
+   * @param id       Id de {@link Memoria}.
    * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link Evaluacion} paginadas.
+   * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
    */
   @GetMapping("/{id}/documentaciones")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-VR-INV', 'ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
@@ -284,6 +285,31 @@ public class MemoriaController {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     log.debug("getDocumentaciones(Long id, Pageable pageable) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Obtener todas las entidades paginadas {@link DocumentacionMemoria} activas
+   * para una determinada {@link Memoria} según el {@link TipoEvaluacion}.
+   *
+   * @param id               Id de {@link Memoria}.
+   * @param idTipoEvaluacion Id de {@link TipoEvaluacion}.
+   * @param pageable         la información de la paginación.
+   * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
+   */
+  @GetMapping("/{id}/documentaciones/{idTipoEvaluacion}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-V', 'ETI-EVC-VR', 'ETI-EVC-VR-INV', 'ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
+  ResponseEntity<Page<DocumentacionMemoria>> getDocumentacionesTipoEvaluacion(@PathVariable Long id,
+      @PathVariable Long idTipoEvaluacion, @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("getDocumentacionesTipoEvaluacion(Long id, Long idTipoEvaluacion, Pageable pageable) - start");
+    Page<DocumentacionMemoria> page = documentacionMemoriaService.findByMemoriaIdAndTipoEvaluacion(id, idTipoEvaluacion,
+        pageable);
+
+    if (page.isEmpty()) {
+      log.debug("getDocumentacionesTipoEvaluacion(Long id, Long idTipoEvaluacion, Pageable pageable) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("getDocumentacionesTipoEvaluacion(Long id, Long idTipoEvaluacion, Pageable pageable) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

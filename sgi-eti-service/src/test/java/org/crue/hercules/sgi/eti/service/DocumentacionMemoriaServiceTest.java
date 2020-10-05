@@ -38,9 +38,13 @@ public class DocumentacionMemoriaServiceTest {
 
   private DocumentacionMemoriaService documentacionMemoriaService;
 
+  @Mock
+  private TipoDocumentoService tipoDocumentoService;
+
   @BeforeEach
   public void setUp() throws Exception {
-    documentacionMemoriaService = new DocumentacionMemoriaServiceImpl(documentacionMemoriaRepository);
+    documentacionMemoriaService = new DocumentacionMemoriaServiceImpl(documentacionMemoriaRepository,
+        tipoDocumentoService);
   }
 
   @Test
