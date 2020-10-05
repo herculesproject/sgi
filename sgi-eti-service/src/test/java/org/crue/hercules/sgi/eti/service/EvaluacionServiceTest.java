@@ -26,8 +26,10 @@ import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
+import org.crue.hercules.sgi.eti.repository.ConvocatoriaReunionRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
+import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
 import org.crue.hercules.sgi.eti.service.impl.EvaluacionServiceImpl;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -65,11 +67,17 @@ public class EvaluacionServiceTest {
   private EvaluacionService evaluacionService;
   @Mock
   private MemoriaService memoriaService;
+  @Mock
+  private ConvocatoriaReunionRepository convocatoriaReunionRepository;
+
+  @Mock
+  private MemoriaRepository memoriaRepository;
 
   @BeforeEach
   public void setUp() throws Exception {
     evaluacionService = new EvaluacionServiceImpl(evaluacionRepository, estadoMemoriaRepository,
-        retrospectivaRepository, memoriaService, comentarioRepository);
+        retrospectivaRepository, memoriaService, comentarioRepository, convocatoriaReunionRepository,
+        memoriaRepository);
   }
 
   @Test
@@ -101,6 +109,8 @@ public class EvaluacionServiceTest {
 
     Evaluacion evaluacion = generarMockEvaluacion(1L, " New", 1L, 1L);
 
+    BDDMockito.given(convocatoriaReunionRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(evaluacionNew.getConvocatoriaReunion()));
     BDDMockito.given(evaluacionRepository.save(evaluacionNew)).willReturn(evaluacion);
 
     // when: Creamos la Evaluacion
@@ -131,7 +141,7 @@ public class EvaluacionServiceTest {
 
     Evaluacion evaluacion = generarMockEvaluacion(1L, null, 1L, 1L);
 
-    BDDMockito.given(evaluacionRepository.findById(1L)).willReturn(Optional.of(evaluacion));
+    BDDMockito.given(evaluacionRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(evaluacion));
     BDDMockito.given(evaluacionRepository.save(evaluacion)).willReturn(evaluacionServicioActualizado);
 
     // when: Actualizamos la evaluacion
@@ -586,6 +596,27 @@ public class EvaluacionServiceTest {
     Assertions.assertThat(page.getNumber()).isEqualTo(0);
     Assertions.assertThat(page.getSize()).isEqualTo(10);
     Assertions.assertThat(page.getTotalElements()).isEqualTo(10);
+  }
+
+  @Test
+  public void deleteMemoria_fecha_anterior() {
+
+    Evaluacion evaluacion = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), 1L, 1L);
+    Memoria memoria = evaluacion.getMemoria();
+
+    Optional<Evaluacion> response = Optional.of(evaluacion);
+    Optional<Memoria> responseMemo = Optional.of(memoria);
+    BDDMockito.given(evaluacionRepository.findById(ArgumentMatchers.anyLong())).willReturn(response);
+    BDDMockito.given(memoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(responseMemo);
+    try {
+
+      evaluacionService.deleteMemoria(response.get().getConvocatoriaReunion().getId(), response.get().getId());
+    } catch (
+
+    IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage()).isEqualTo("La fecha de la convocatoria es anterior a la actual");
+    }
+
   }
 
   /**

@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
 import org.crue.hercules.sgi.eti.model.*;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
@@ -47,6 +48,7 @@ public class ConvocatoriaReunionIT {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH = "/convocatoriareuniones";
   private static final String PATH_PARAMETER_BY_EVALUACIONES = "/evaluaciones";
+  private static final String PATH_PARAMETER_WITH_DATOS_GENERALES = "/datos-generales";
 
   private HttpEntity<ConvocatoriaReunion> buildRequest(HttpHeaders headers, ConvocatoriaReunion entity)
       throws Exception {
@@ -54,8 +56,7 @@ public class ConvocatoriaReunionIT {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     if (!headers.containsKey("Authorization")) {
-      headers.set("Authorization",
-          String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E", "ETI-CNV-V")));
+      headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user")));
     }
 
     HttpEntity<ConvocatoriaReunion> request = new HttpEntity<>(entity, headers);
@@ -67,13 +68,17 @@ public class ConvocatoriaReunionIT {
   @Test
   public void create_ReturnsConvocatoriaReunion() throws Exception {
 
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C")));
+
     // given: Nueva entidad
     final ConvocatoriaReunion newConvocatoriaReunion = getMockData(1L, 1L, 1L);
     newConvocatoriaReunion.setId(null);
 
     // when: Se crea la entidad
     final ResponseEntity<ConvocatoriaReunion> response = restTemplate.exchange(
-        CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH, HttpMethod.POST, buildRequest(null, newConvocatoriaReunion),
+        CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH, HttpMethod.POST, buildRequest(headers, newConvocatoriaReunion),
         ConvocatoriaReunion.class);
 
     // then: La entidad se crea correctamente
@@ -89,6 +94,10 @@ public class ConvocatoriaReunionIT {
   @Test
   public void update_WithExistingId_ReturnsConvocatoriaReunion() throws Exception {
 
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-E")));
+
     // given: Entidad existente que se va a actualizar
     final ConvocatoriaReunion updatedConvocatoriaReunion = getMockData(2L, 1L, 2L);
     updatedConvocatoriaReunion.setId(1L);
@@ -96,7 +105,8 @@ public class ConvocatoriaReunionIT {
     // when: Se actualiza la entidad
     final ResponseEntity<ConvocatoriaReunion> response = restTemplate.exchange(
         CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT,
-        buildRequest(null, updatedConvocatoriaReunion), ConvocatoriaReunion.class, updatedConvocatoriaReunion.getId());
+        buildRequest(headers, updatedConvocatoriaReunion), ConvocatoriaReunion.class,
+        updatedConvocatoriaReunion.getId());
 
     // then: Los datos se actualizan correctamente
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -108,24 +118,28 @@ public class ConvocatoriaReunionIT {
   @Test
   public void delete_WithExistingId_Return204() throws Exception {
 
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-V", "ETI-CNV-B")));
+
     // given: Entidad existente con la propiedad activo a true
     Long id = 1L;
 
     ResponseEntity<ConvocatoriaReunion> response = restTemplate.exchange(
-        CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
+        CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(headers, null),
         ConvocatoriaReunion.class, id);
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     Assertions.assertThat(response.getBody().getActivo()).isEqualTo(Boolean.TRUE);
 
     // when: Se elimina la entidad
     response = restTemplate.exchange(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE,
-        buildRequest(null, null), ConvocatoriaReunion.class, id);
+        buildRequest(headers, null), ConvocatoriaReunion.class, id);
 
     // then: La entidad pasa a tener propiedad activo a false
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
     response = restTemplate.exchange(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET,
-        buildRequest(null, null), ConvocatoriaReunion.class, id);
+        buildRequest(headers, null), ConvocatoriaReunion.class, id);
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     Assertions.assertThat(response.getBody().getActivo()).isEqualTo(Boolean.FALSE);
   }
@@ -135,12 +149,16 @@ public class ConvocatoriaReunionIT {
   @Test
   public void findById_WithExistingId_ReturnsConvocatoriaReunion() throws Exception {
 
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-V", "ETI-CNV-E")));
+
     // given: Entidad con un determinado Id
     final ConvocatoriaReunion convocatoriaReunion = getMockData(1L, 1L, 1L);
 
     // when: Se busca la entidad por ese Id
     ResponseEntity<ConvocatoriaReunion> response = restTemplate.exchange(
-        CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
+        CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(headers, null),
         ConvocatoriaReunion.class, convocatoriaReunion.getId());
 
     // then: Se recupera la entidad con el Id
@@ -152,13 +170,61 @@ public class ConvocatoriaReunionIT {
   @Test
   public void findById_WithNotExistingId_Returns404() throws Exception {
 
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-V", "ETI-CNV-E")));
+
     // given: No existe entidad con el id indicado
     Long id = 1L;
 
     // when: Se busca la entidad por ese Id
     ResponseEntity<ConvocatoriaReunion> response = restTemplate.exchange(
-        CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
+        CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(headers, null),
         ConvocatoriaReunion.class, id);
+
+    // then: Se produce error porque no encuentra la entidad con ese Id
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findByIdWithDatosGenerales_WithExistingId_ReturnsConvocatoriaReunionDatosGenerales() throws Exception {
+
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-V", "ETI-CNV-E")));
+
+    // given: Entidad con un determinado Id
+    final ConvocatoriaReunionDatosGenerales convocatoriaReunion = new ConvocatoriaReunionDatosGenerales(
+        getMockData(1L, 1L, 1L), 1L, 1L);
+
+    // when: Se busca la entidad por ese Id
+    ResponseEntity<ConvocatoriaReunionDatosGenerales> response = restTemplate.exchange(
+        CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_WITH_DATOS_GENERALES,
+        HttpMethod.GET, buildRequest(headers, null), ConvocatoriaReunionDatosGenerales.class,
+        convocatoriaReunion.getId());
+
+    // then: Se recupera la entidad con el Id
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Assertions.assertThat(response.getBody()).isEqualTo(convocatoriaReunion);
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findByIdWithDatosGenerales_WithNotExistingId_Returns404() throws Exception {
+
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-V", "ETI-CNV-E")));
+
+    // given: No existe entidad con el id indicado
+    Long id = 1L;
+
+    // when: Se busca la entidad por ese Id
+    ResponseEntity<ConvocatoriaReunionDatosGenerales> response = restTemplate.exchange(
+        CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_WITH_DATOS_GENERALES,
+        HttpMethod.GET, buildRequest(headers, null), ConvocatoriaReunionDatosGenerales.class, id);
 
     // then: Se produce error porque no encuentra la entidad con ese Id
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);

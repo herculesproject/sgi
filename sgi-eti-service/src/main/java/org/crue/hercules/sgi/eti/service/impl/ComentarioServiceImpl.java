@@ -374,4 +374,9 @@ public class ComentarioServiceImpl implements ComentarioService {
 
   }
 
+  @Override
+  public int countByEvaluacionId(Long id) {
+    return comentarioRepository.countByEvaluacionId(id);
+  }
+
 }

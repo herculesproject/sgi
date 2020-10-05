@@ -158,8 +158,8 @@ public class EvaluacionController {
    * @return Nuevo {@link Evaluacion} creado.
    */
   @PostMapping
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-C','ETI-CNV-C', 'ETI-CNV-E')")
-  public ResponseEntity<Evaluacion> newEvaluacion(@Valid @RequestBody Evaluacion nuevoEvaluacion) {
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-C', 'ETI-EVC-E','ETI-CNV-C', 'ETI-CNV-E')")
+  public ResponseEntity<Evaluacion> newEvaluacion(@RequestBody Evaluacion nuevoEvaluacion) {
     log.debug("newEvaluacion(Evaluacion nuevoEvaluacion) - start");
     Evaluacion returnValue = service.create(nuevoEvaluacion);
     log.debug("newEvaluacion(Evaluacion nuevoEvaluacion) - end");
@@ -174,7 +174,7 @@ public class EvaluacionController {
    * @return {@link Evaluacion} actualizado.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-EVAL')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-CNV-E')")
   public Evaluacion replaceEvaluacion(@Valid @RequestBody Evaluacion updatedEvaluacion, @PathVariable Long id) {
     log.debug("replaceEvaluacion(Evaluacion updatedEvaluacion, Long id) - start");
     updatedEvaluacion.setId(id);
@@ -204,7 +204,7 @@ public class EvaluacionController {
    * @param id Identificador de {@link Evaluacion}.
    */
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-B')")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-CNV-E')")
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
     Evaluacion evaluacion = this.one(id);
@@ -382,6 +382,23 @@ public class EvaluacionController {
     }
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Obtiene el número de {@link Comentario} de la evaluación
+   * 
+   * @param id       id {@link Evaluacion}
+   * @param pageable pageable
+   * @return
+   * @return
+   */
+  @GetMapping("/{id}/numero-comentarios")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-CNV-E')")
+  ResponseEntity<Integer> numComentariosEvaluacion(@PathVariable Long id) {
+    log.debug("countComentariosEvaluacion(@PathVariable Long id) - start");
+    int countComentarios = comentarioService.countByEvaluacionId(id);
+    log.debug("countComentariosEvaluacion(@PathVariable Long id) - end");
+    return new ResponseEntity<>(countComentarios, HttpStatus.OK);
   }
 
 }

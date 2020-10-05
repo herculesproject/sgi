@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
 import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
@@ -175,6 +176,33 @@ public class ConvocatoriaReunionServiceTest {
     // when: Se busca entidad con ese id
     // then: Se produce error porque no encuentra la entidad con ese Id
     Assertions.assertThatThrownBy(() -> service.findById(id)).isInstanceOf(ConvocatoriaReunionNotFoundException.class);
+  }
+
+  @Test
+  public void findWithNumEvaluacionesActivasNoRevMin_WithExistingId_ReturnsConvocatoriaReunionDatosGenerales() {
+
+    // given: Entidad con un determinado Id
+    ConvocatoriaReunionDatosGenerales response = new ConvocatoriaReunionDatosGenerales(getMockData(1L, 1L, 1L), 1L, 1L);
+    BDDMockito.given(repository.findByIdWithDatosGenerales(response.getId())).willReturn(Optional.of(response));
+
+    // when: Se busca la entidad por ese Id
+    ConvocatoriaReunionDatosGenerales result = service.findByIdWithDatosGenerales(response.getId());
+
+    // then: Se recupera la entidad con el Id
+    Assertions.assertThat(result).isEqualTo(response);
+  }
+
+  @Test
+  public void findWithNumEvaluacionesActivasNoRevMin_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+
+    // given: No existe entidad con el id indicado
+    Long id = 1L;
+    BDDMockito.given(repository.findByIdWithDatosGenerales(id)).willReturn(Optional.empty());
+
+    // when: Se busca entidad con ese id
+    // then: Se produce error porque no encuentra la entidad con ese Id
+    Assertions.assertThatThrownBy(() -> service.findByIdWithDatosGenerales(id))
+        .isInstanceOf(ConvocatoriaReunionNotFoundException.class);
   }
 
   @Test

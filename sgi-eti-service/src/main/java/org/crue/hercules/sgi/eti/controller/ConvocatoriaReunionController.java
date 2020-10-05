@@ -5,6 +5,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import lombok.extern.slf4j.Slf4j;
+
+import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
 import org.crue.hercules.sgi.eti.model.Asistentes;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
@@ -78,6 +80,7 @@ public class ConvocatoriaReunionController {
    *                                  tiene id.
    */
   @PostMapping()
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-C')")
   public ResponseEntity<ConvocatoriaReunion> newConvocatoriaReunion(
       @Valid @RequestBody ConvocatoriaReunion convocatoriaReunion) {
     log.debug("newConvocatoriaReunion(ConvocatoriaReunion convocatoriaReunion) - start");
@@ -100,6 +103,7 @@ public class ConvocatoriaReunionController {
    *                                  tiene id.
    */
   @PutMapping("/{id}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-E')")
   ConvocatoriaReunion replaceConvocatoriaReunion(@Valid @RequestBody ConvocatoriaReunion convocatoriaReunion,
       @PathVariable Long id) {
     log.debug("replaceConvocatoriaReunion(ConvocatoriaReunion convocatoriaReunion, Long id) - start");
@@ -119,6 +123,7 @@ public class ConvocatoriaReunionController {
    *                                  tiene id.
    */
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-B')")
   @ResponseStatus(value = HttpStatus.NO_CONTENT)
   void delete(@PathVariable Long id) {
     log.debug("delete(Long id) - start");
@@ -165,6 +170,26 @@ public class ConvocatoriaReunionController {
     log.debug("one(Long id) - start");
     ConvocatoriaReunion returnValue = convocatoriaReunionService.findById(id);
     log.debug("one(Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene la entidad {@link ConvocatoriaReunionDatosGenerales} por id con el
+   * número de evaluaciones activas que no son de revisión mínima.
+   *
+   * @param id El id de la entidad {@link ConvocatoriaReunionDatosGenerales}.
+   * @return La entidad {@link ConvocatoriaReunionDatosGenerales}.
+   * @throws NotFoundException        Si no existe ninguna entidad
+   *                                  {@link ConvocatoriaReunionDatosGenerales}
+   *                                  con ese id.
+   * @throws IllegalArgumentException Si no se informa id.
+   */
+  @GetMapping("/{id}/datos-generales")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-V', 'ETI-CNV-E')")
+  ConvocatoriaReunionDatosGenerales oneWithDatosGenerales(@PathVariable Long id) {
+    log.debug("oneWithDatosGenerales(Long id) - start");
+    ConvocatoriaReunionDatosGenerales returnValue = convocatoriaReunionService.findByIdWithDatosGenerales(id);
+    log.debug("oneWithDatosGenerales(Long id) - end");
     return returnValue;
   }
 
@@ -233,5 +258,21 @@ public class ConvocatoriaReunionController {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Eliminar la memoria del listado de memorias a evaluar en una convocatoria
+   * 
+   * @throws Exception
+   */
+  @DeleteMapping("/{idConvocatoriaReunion}/evaluacion/{idEvaluacion}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-C', 'ETI-CNV-E')")
+  void deleteMemoria(@PathVariable Long idConvocatoriaReunion, @PathVariable Long idEvaluacion) {
+    log.debug("deleteMemoria(Long idConvocatoriaReunion, Long idEvaluacion, Long idMemoria) - start");
+
+    evaluacionService.deleteMemoria(idConvocatoriaReunion, idEvaluacion);
+
+    log.debug("deleteMemoria(Long idConvocatoriaReunion, Long idEvaluacion, Long idMemoria) - end");
+
   }
 }

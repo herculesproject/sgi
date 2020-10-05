@@ -166,7 +166,7 @@ public class MemoriaIT {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEMORIA-EDITAR", "ETI-MEMORIA-VER")));
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-VR-INV", "ETI-PEV-V")));
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
@@ -203,7 +203,7 @@ public class MemoriaIT {
     // when: Búsqueda por query
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEMORIA-EDITAR", "ETI-MEMORIA-VER")));
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-VR-INV", "ETI-PEV-V")));
 
     final ResponseEntity<List<Memoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<Memoria>>() {
@@ -231,7 +231,7 @@ public class MemoriaIT {
     // when: Búsqueda por query
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEMORIA-EDITAR", "ETI-MEMORIA-VER")));
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-VR-INV", "ETI-PEV-V")));
 
     final ResponseEntity<List<Memoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<Memoria>>() {
@@ -256,7 +256,7 @@ public class MemoriaIT {
     // when: Obtiene page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEMORIA-EDITAR", "ETI-MEMORIA-VER")));
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-VR-INV", "ETI-PEV-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     // when: Ordena por titulo desc

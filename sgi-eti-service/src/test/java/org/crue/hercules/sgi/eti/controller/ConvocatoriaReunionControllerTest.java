@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.config.SecurityConfig;
+import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
 import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Asistentes;
 import org.crue.hercules.sgi.eti.model.CargoComite;
@@ -86,6 +87,7 @@ public class ConvocatoriaReunionControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH = "/convocatoriareuniones";
   private static final String PATH_PARAMETER_BY_EVALUACIONES = "/evaluaciones";
+  private static final String PATH_PARAMETER_WITH_DATOS_GENERALES = "/datos-generales";
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-CNV-C" })
@@ -205,7 +207,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CNV-E" })
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-B" })
   public void delete_WithExistingId_Return204() throws Exception {
 
     // given: Entidad existente
@@ -226,7 +228,7 @@ public class ConvocatoriaReunionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-CNV-E" })
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-B" })
   public void delete_WithNoExistingId_Returns404() throws Exception {
 
     // given: Id de una entidad que no existe
@@ -296,6 +298,70 @@ public class ConvocatoriaReunionControllerTest {
         .toString();
 
     BDDMockito.given(convocatoriaReunionService.findById(ArgumentMatchers.anyLong()))
+        .will((InvocationOnMock invocation) -> {
+          throw new ConvocatoriaReunionNotFoundException(invocation.getArgument(0));
+        });
+
+    // when: Se busca entidad con ese id
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(url, response.getId()).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se produce error porque no encuentra la entidad con ese Id
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-V", "ETI-CNV-E" })
+  public void findByIdWithNumEvaluacionesActivasNoRevMin_WithExistingId_ReturnsConvocatoriaReunionDatosGenerales()
+      throws Exception {
+
+    // given: Entidad con un determinado Id
+    ConvocatoriaReunionDatosGenerales response = new ConvocatoriaReunionDatosGenerales(getMockData(1L, 1L, 1L), 1L, 1L);
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
+        .append(PATH_PARAMETER_WITH_DATOS_GENERALES)//
+        .toString();
+
+    BDDMockito.given(convocatoriaReunionService.findByIdWithDatosGenerales(response.getId())).willReturn(response);
+
+    // when: Se busca la entidad por ese Id
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(url, response.getId()).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recupera la entidad con el Id
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(response.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("comite").value(response.getComite()))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaEvaluacion").value(response.getFechaEvaluacion().toString()))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaLimite").value(response.getFechaLimite().toString()))
+        .andExpect(MockMvcResultMatchers.jsonPath("lugar").value(response.getLugar()))
+        .andExpect(MockMvcResultMatchers.jsonPath("ordenDia").value(response.getOrdenDia()))
+        .andExpect(MockMvcResultMatchers.jsonPath("anio").value(response.getAnio()))
+        .andExpect(MockMvcResultMatchers.jsonPath("numeroActa").value(response.getNumeroActa()))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("tipoConvocatoriaReunion").value(response.getTipoConvocatoriaReunion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("horaInicio").value(response.getHoraInicio()))
+        .andExpect(MockMvcResultMatchers.jsonPath("minutoInicio").value(response.getMinutoInicio()))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaEnvio").value(response.getFechaEnvio().toString()))
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(response.getActivo()))
+        .andExpect(MockMvcResultMatchers.jsonPath("numEvaluaciones").value(response.getNumEvaluaciones()));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-V", "ETI-CNV-E" })
+  public void findByIdWithNumEvaluacionesActivasNoRevMin_WithNoExistingId_Returns404() throws Exception {
+
+    // given: No existe entidad con el id indicado
+    ConvocatoriaReunionDatosGenerales response = new ConvocatoriaReunionDatosGenerales(getMockData(1L, 1L, 1L), 1L, 1L);
+
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append(PATH_PARAMETER_ID)//
+        .append(PATH_PARAMETER_WITH_DATOS_GENERALES)//
+        .toString();
+
+    BDDMockito.given(convocatoriaReunionService.findByIdWithDatosGenerales(ArgumentMatchers.anyLong()))
         .will((InvocationOnMock invocation) -> {
           throw new ConvocatoriaReunionNotFoundException(invocation.getArgument(0));
         });
@@ -873,6 +939,29 @@ public class ConvocatoriaReunionControllerTest {
     Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
         new TypeReference<List<Evaluacion>>() {
         })).isEqualTo(response);
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-CNV-C", "ETI-CNV-E" })
+  public void delete_memoria_Return200() throws Exception {
+
+    // given: Entidad existente
+    ConvocatoriaReunion response = getMockData(1L, 1L, 1L);
+    Evaluacion respoEvaluacion = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1));
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH)//
+        .append("/" + response.getId().toString()).append("/evaluacion")
+        .append("/" + respoEvaluacion.getId().toString())//
+        .toString();
+
+    BDDMockito.given(convocatoriaReunionService.findById(ArgumentMatchers.anyLong())).willReturn(response);
+
+    // when: Se elimina la entidad
+    mockMvc
+        .perform(MockMvcRequestBuilders.delete(url).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: La entidad se elimina correctamente
+        .andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   /**

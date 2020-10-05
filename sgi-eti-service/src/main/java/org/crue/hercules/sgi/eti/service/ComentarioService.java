@@ -100,4 +100,13 @@ public interface ComentarioService {
   void deleteComentarioEvaluador(Long evaluacionId, Long idComentario, String personaRef)
       throws ComentarioNotFoundException;
 
+  /**
+   * Obtiene el número total de {@link Comentario} para una determinada
+   * {@link Evaluacion}.
+   * 
+   * @param id Id de {@link Evaluacion}.
+   * @return número de {@link Comentario}
+   */
+  int countByEvaluacionId(Long id);
+
 }

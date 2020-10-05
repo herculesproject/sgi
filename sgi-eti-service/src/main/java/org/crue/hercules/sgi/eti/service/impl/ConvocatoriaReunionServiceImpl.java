@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.eti.service.impl;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
 import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.repository.ConvocatoriaReunionRepository;
@@ -172,6 +173,27 @@ public class ConvocatoriaReunionServiceImpl implements ConvocatoriaReunionServic
     final ConvocatoriaReunion convocatoriaReunion = repository.findById(id)
         .orElseThrow(() -> new ConvocatoriaReunionNotFoundException(id));
     log.debug("findById(final Long id) - end");
+    return convocatoriaReunion;
+  }
+
+  /**
+   * Obtiene {@link ConvocatoriaReunionDatosGenerales} por id con el número de
+   * evaluaciones activas que no son revisión mínima.
+   *
+   * @param id El id de la entidad {@link ConvocatoriaReunionDatosGenerales}.
+   * @return La entidad {@link ConvocatoriaReunionDatosGenerales}.
+   * @throws ConvocatoriaReunionNotFoundException Si no existe ninguna entidad
+   *                                              {@link ConvocatoriaReunionDatosGenerales}
+   *                                              con ese id.
+   * @throws IllegalArgumentException             Si no se informa Id.
+   */
+  @Override
+  public ConvocatoriaReunionDatosGenerales findByIdWithDatosGenerales(final Long id) {
+    log.debug("findByIdWithDatosGenerales(final Long id) - start");
+    Assert.notNull(id, "ConvocatoriaReunion id no puede ser null para buscar una ConvocatoriaReunion por Id");
+    final ConvocatoriaReunionDatosGenerales convocatoriaReunion = repository.findByIdWithDatosGenerales(id)
+        .orElseThrow(() -> new ConvocatoriaReunionNotFoundException(id));
+    log.debug("findByIdWithDatosGenerales(final Long id) - end");
     return convocatoriaReunion;
   }
 

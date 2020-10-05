@@ -213,7 +213,7 @@ public class EvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-B" })
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-B", "ETI-CNV-E" })
   public void removeEvaluacion_ReturnsOk() throws Exception {
     BDDMockito.given(evaluacionService.findById(ArgumentMatchers.anyLong()))
         .willReturn(generarMockEvaluacion(1L, null));

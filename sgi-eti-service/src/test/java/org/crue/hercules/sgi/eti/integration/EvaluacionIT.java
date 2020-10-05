@@ -131,16 +131,14 @@ public class EvaluacionIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void removeEvaluacion_Success() throws Exception {
-
     // Authorization
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-B")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
 
-    // when: Delete con id existente
+    // when: Delete
     long id = 1L;
-    final ResponseEntity<Evaluacion> response = restTemplate.exchange(
-        EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(headers, null),
-        Evaluacion.class, id);
+    final ResponseEntity<Evaluacion> response = restTemplate.exchange("/convocatoriareuniones/1/evaluacion/1",
+        HttpMethod.DELETE, buildRequest(headers, null), Evaluacion.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -154,7 +152,8 @@ public class EvaluacionIT {
 
     // Authorization
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-B")));
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-B", "ETI-CNV-C", "ETI-CNV-E")));
 
     final ResponseEntity<Evaluacion> response = restTemplate.exchange(
         EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(headers, null),

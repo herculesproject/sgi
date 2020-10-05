@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.service;
 
 import java.util.List;
 
+import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
 import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -78,5 +79,19 @@ public interface ConvocatoriaReunionService {
    * @throws IllegalArgumentException             Si no se informa Id.
    */
   ConvocatoriaReunion findById(Long id) throws ConvocatoriaReunionNotFoundException, IllegalArgumentException;
+
+  /**
+   * Obtiene {@link ConvocatoriaReunionDatosGenerales} por id con el número de
+   * evaluaciones activas que no son revisión mínima.
+   *
+   * @param id El id de la entidad {@link ConvocatoriaReunionDatosGenerales}.
+   * @return La entidad {@link ConvocatoriaReunionDatosGenerales}.
+   * @throws ConvocatoriaReunionNotFoundException Si no existe ninguna entidad
+   *                                              {@link ConvocatoriaReunionDatosGenerales}
+   *                                              con ese id.
+   * @throws IllegalArgumentException             Si no se informa Id.
+   */
+  ConvocatoriaReunionDatosGenerales findByIdWithDatosGenerales(Long id)
+      throws ConvocatoriaReunionNotFoundException, IllegalArgumentException;
 
 }

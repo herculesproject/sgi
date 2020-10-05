@@ -141,8 +141,8 @@ public interface EvaluacionService {
   void deleteAll();
 
   /**
-   * Obtener todas las entidades paginadas {@link Evaluacion} con memorias en determinados
-   * estados de seguimiento
+   * Obtener todas las entidades paginadas {@link Evaluacion} con memorias en
+   * determinados estados de seguimiento
    * 
    * @param query    filtro de {@link QueryCriteria}.
    * @param pageable pageable
@@ -150,5 +150,13 @@ public interface EvaluacionService {
    */
 
   Page<Evaluacion> findByEvaluacionesEnSeguimientoFinal(List<QueryCriteria> query, Pageable pageable);
+
+  /**
+   * Elimina las memorias asignadas a una convocatoria de reunión
+   * 
+   * @param idConvocatoriaReunion id de la {@link ConvocatoriaReunion}
+   * @param idEvaluacion          id de la {@Evaluacion}
+   */
+  void deleteMemoria(Long idConvocatoriaReunion, Long idEvaluacion);
 
 }

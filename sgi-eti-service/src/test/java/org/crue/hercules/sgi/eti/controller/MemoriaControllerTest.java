@@ -207,7 +207,7 @@ public class MemoriaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-MEMORIA-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-VR-INV", "ETI-PEV-V" })
   public void findAll_Unlimited_ReturnsFullMemoriaList() throws Exception {
     // given: One hundred Memoria
     List<Memoria> memorias = new ArrayList<>();
@@ -231,7 +231,7 @@ public class MemoriaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-MEMORIA-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-VR-INV", "ETI-PEV-V" })
   public void findAll_WithPaging_ReturnsMemoriaSubList() throws Exception {
     // given: One hundred Memoria
     List<Memoria> memorias = new ArrayList<>();
@@ -284,7 +284,7 @@ public class MemoriaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-MEMORIA-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-VR-INV", "ETI-PEV-V" })
   public void findAll_WithSearchQuery_ReturnsFilteredMemoriaList() throws Exception {
     // given: One hundred Memoria and a search query
     List<Memoria> memorias = new ArrayList<>();
