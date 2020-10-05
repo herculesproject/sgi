@@ -5,9 +5,11 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
+import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
@@ -21,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -75,11 +78,12 @@ public class MemoriaController {
    * @param paging pageable
    */
   @GetMapping()
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-VR-INV', 'ETI-PEV-V')")
-  ResponseEntity<Page<Memoria>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-VR-INV', 'ETI-PEV-V', 'ETI-MEM-V')")
+  ResponseEntity<Page<MemoriaPeticionEvaluacion>> findAll(
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
-    Page<Memoria> page = service.findAll(query, paging);
+    Page<MemoriaPeticionEvaluacion> page = service.findAll(query, paging);
 
     if (page.isEmpty()) {
       log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
@@ -190,7 +194,7 @@ public class MemoriaController {
    * @return Nueva {@link Memoria} creada.
    */
   @PostMapping
-  public ResponseEntity<Memoria> newMemoria(@Valid @RequestBody Memoria nuevaMemoria) {
+  public ResponseEntity<Memoria> newMemoria(@Validated({ Memoria.Create.class }) @RequestBody Memoria nuevaMemoria) {
     log.debug("newMemoria(Memoria nuevaMemoria) - start");
     Memoria returnValue = service.create(nuevaMemoria);
     log.debug("newMemoria(Memoria nuevaMemoria) - end");
@@ -205,6 +209,7 @@ public class MemoriaController {
    * @return {@link Memoria} actualizada.
    */
   @PutMapping("/{id}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-ER')")
   Memoria replaceMemoria(@Valid @RequestBody Memoria updatedMemoria, @PathVariable Long id) {
     log.debug("replaceMemoria(Memoria updatedMemoria, Long id) - start");
     updatedMemoria.setId(id);
@@ -288,6 +293,97 @@ public class MemoriaController {
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
+  /*
+   * Obtiene todas las entidades {@link DocumentacionMemoria} asociadas al {@link
+   * Formulario} de la {@link Memoria}.
+   * 
+   * @param id Id de {@link Memoria}.
+   * 
+   * @param pageable la información de la paginación.
+   * 
+   * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
+   */
+
+  @GetMapping("/{id}/documentacion-formulario")
+  ResponseEntity<Page<DocumentacionMemoria>> getDocumentacionFormulario(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("getDocumentacionFormulario(Long id, Pageable pageable) - start");
+    Page<DocumentacionMemoria> page = documentacionMemoriaService.findDocumentacionFormularioMemoria(id, pageable);
+
+    if (page.isEmpty()) {
+      log.debug("getDocumentacionFormulario(Long id, Pageable pageable) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("getDocumentacionFormulario(Long id, Pageable pageable) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Obtiene todas las entidades {@link DocumentacionMemoria} asociadas al
+   * {@link Formulario} de la {@link Memoria} del tipo Seguimiento Anual.
+   * 
+   * @param id       Id de {@link Memoria}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
+   */
+  @GetMapping("/{id}/documentacion-seguimiento-anual")
+  ResponseEntity<Page<DocumentacionMemoria>> getDocumentacionSeguimientoAnual(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("getDocumentacionSeguimientoAnual(Long id, Pageable pageable) - start");
+    Page<DocumentacionMemoria> page = documentacionMemoriaService.findDocumentacionSeguimientoAnual(id, pageable);
+
+    if (page.isEmpty()) {
+      log.debug("getDocumentacionSeguimientoAnual(Long id, Pageable pageable) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("getDocumentacionSeguimientoAnual(Long id, Pageable pageable) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Obtiene todas las entidades {@link DocumentacionMemoria} asociadas al
+   * {@link Formulario} de la {@link Memoria} del tipo Seguimiento Final.
+   * 
+   * @param id       Id de {@link Memoria}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
+   */
+  @GetMapping("/{id}/documentacion-seguimiento-final")
+  ResponseEntity<Page<DocumentacionMemoria>> getDocumentacionSeguimientoFinal(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("getDocumentacionSeguimientoFinal(Long id, Pageable pageable) - start");
+    Page<DocumentacionMemoria> page = documentacionMemoriaService.findDocumentacionSeguimientoFinal(id, pageable);
+
+    if (page.isEmpty()) {
+      log.debug("getDocumentacionSeguimientoFinal(Long id, Pageable pageable) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("getDocumentacionSeguimientoFinal(Long id, Pageable pageable) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Obtiene todas las entidades {@link DocumentacionMemoria} asociadas al
+   * {@link Formulario} de la {@link Memoria} del tipo Retrospectiva.
+   * 
+   * @param id       Id de {@link Memoria}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
+   */
+  @GetMapping("/{id}/documentacion-retrospectiva")
+  ResponseEntity<Page<DocumentacionMemoria>> getDocumentacionRetrospectiva(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("getDocumentacionRetrospectiva(Long id, Pageable pageable) - start");
+    Page<DocumentacionMemoria> page = documentacionMemoriaService.findDocumentacionRetrospectiva(id, pageable);
+
+    if (page.isEmpty()) {
+      log.debug("getDocumentacionRetrospectiva(Long id, Pageable pageable) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("getDocumentacionRetrospectiva(Long id, Pageable pageable) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
   /**
    * Obtener todas las entidades paginadas {@link DocumentacionMemoria} activas
    * para una determinada {@link Memoria} según el {@link TipoEvaluacion}.
@@ -338,4 +434,58 @@ public class MemoriaController {
     log.debug("findAllPeticionesEvaluacionWithPersonaRefInMemoria(List<QueryCriteria> query,Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
+
+  /**
+   * Crea nueva {@link DocumentacionMemoria}.
+   * 
+   * @param documentacionMemoria {@link DocumentacionMemoria}. que se quiere
+   *                             crear.
+   * @return Nueva {@link DocumentacionMemoria} creada.
+   */
+  @PostMapping("/{id}/documentacion-inicial")
+  public ResponseEntity<DocumentacionMemoria> newDocumentacionMemoriaInicial(@PathVariable Long id,
+      @Valid @RequestBody DocumentacionMemoria documentacionMemoria) {
+    log.debug("newDocumentacionMemoriaInicial(Long id, DocumentacionMemoria documentacionMemoria) - start");
+    DocumentacionMemoria returnValue = documentacionMemoriaService.create(id, documentacionMemoria);
+
+    log.debug("newDocumentacionMemoriaInicial(Long id, DocumentacionMemoria documentacionMemoria) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
+  }
+
+  /**
+   * Crea nueva {@link DocumentacionMemoria} de seguimiento anual.
+   * 
+   * @param documentacionMemoria {@link DocumentacionMemoria}. que se quiere
+   *                             crear.
+   * @return Nueva {@link DocumentacionMemoria} creada.
+   */
+  @PostMapping("/{id}/documentacion-seguimiento-anual")
+  public ResponseEntity<DocumentacionMemoria> newDocumentacionMemoriaSeguimientoAnual(@PathVariable Long id,
+      @Valid @RequestBody DocumentacionMemoria documentacionMemoria) {
+
+    log.debug("newDocumentacionMemoriaSeguimientoAnual(Long id, DocumentacionMemoria documentacionMemoria) - start");
+    DocumentacionMemoria returnValue = documentacionMemoriaService.createSeguimientoAnual(id, documentacionMemoria);
+
+    log.debug("newDocumentacionMemoriaSeguimientoAnual(Long id, DocumentacionMemoria documentacionMemoria) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
+  }
+
+  /**
+   * Actualiza {@link DocumentacionMemoria}.
+   * 
+   * @param updatedDocumentacionMemoria {@link DocumentacionMemoria} a actualizar.
+   * @param id                          id {@link DocumentacionMemoria} a
+   *                                    actualizar.
+   * @return {@link Memoria} actualizada.
+   */
+  @PutMapping("/{id}/documentacion-inicial/{idDocumentacionMemoria}")
+  DocumentacionMemoria replaceDocumentacionMemoria(@PathVariable Long id,
+      @Valid @RequestBody DocumentacionMemoria updatedDocumentacionMemoria, @PathVariable Long idDocumentacionMemoria) {
+    log.debug("replaceMemoria(Memoria updatedMemoria, Long id) - start");
+    updatedDocumentacionMemoria.setId(idDocumentacionMemoria);
+    DocumentacionMemoria returnValue = documentacionMemoriaService.update(id, updatedDocumentacionMemoria);
+    log.debug("replaceMemoria(Memoria updatedMemoria, Long id) - end");
+    return returnValue;
+  }
+
 }

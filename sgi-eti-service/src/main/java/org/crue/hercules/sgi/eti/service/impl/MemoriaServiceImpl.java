@@ -61,21 +61,18 @@ public class MemoriaServiceImpl implements MemoriaService {
   }
 
   /**
-   * Obtiene todas las entidades {@link Memoria} paginadas y filtadas.
+   * Obtiene todas las entidades {@link MemoriaPeticionEvaluacion} paginadas y
+   * filtadas.
    *
    * @param paging la información de paginación.
    * @param query  información del filtro.
-   * @return el listado de entidades {@link Memoria} paginadas y filtradas.
+   * @return el listado de entidades {@link MemoriaPeticionEvaluacion} paginadas y
+   *         filtradas.
    */
   @Override
-  public Page<Memoria> findAll(List<QueryCriteria> query, Pageable paging) {
+  public Page<MemoriaPeticionEvaluacion> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
-    Specification<Memoria> specByQuery = new QuerySpecification<Memoria>(query);
-    Specification<Memoria> specActivos = MemoriaSpecifications.activos();
-
-    Specification<Memoria> specs = Specification.where(specActivos).and(specByQuery);
-
-    Page<Memoria> returnValue = memoriaRepository.findAll(specs, paging);
+    Page<MemoriaPeticionEvaluacion> returnValue = memoriaRepository.findAllMemoriasEvaluaciones(query, paging);
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
   }
@@ -322,6 +319,19 @@ public class MemoriaServiceImpl implements MemoriaService {
 
     Page<Memoria> returnValue = memoriaRepository.findAll(specs, paging);
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
+    return returnValue;
+  }
+
+  /**
+   * Devuelve las memorias de las peticiones de evaluación con su fecha límite y
+   * de evaluación.
+   * 
+   * @param pageable información de paginación
+   * @return lista de memorias de {@link PeticionEvaluacion}
+   */
+  @Override
+  public Page<MemoriaPeticionEvaluacion> findAllMemoriasPeticionesEvaluacion(Pageable pageable) {
+    Page<MemoriaPeticionEvaluacion> returnValue = memoriaRepository.findMemoriasEvaluacion(null, pageable);
     return returnValue;
   }
 

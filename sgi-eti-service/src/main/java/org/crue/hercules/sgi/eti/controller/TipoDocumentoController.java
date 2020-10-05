@@ -124,4 +124,26 @@ public class TipoDocumentoController {
     log.debug("delete(Long id) - end");
   }
 
+  /**
+   * Devuelve una lista paginada y filtrada {@link TipoDocumento} inicial de una
+   * memoria.
+   * 
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable
+   */
+  @GetMapping("/iniciales")
+  ResponseEntity<Page<TipoDocumento>> findTipoDocumentacionInicial(
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findTipoDocumentacionInicial(List<QueryCriteria> query,Pageable paging) - start");
+    Page<TipoDocumento> page = service.findTipoDocumentacionInicial(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findTipoDocumentacionInicial(List<QueryCriteria> query,Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findTipoDocumentacionInicial(List<QueryCriteria> query,Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
 }

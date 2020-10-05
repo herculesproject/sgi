@@ -7,6 +7,8 @@ import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.crue.hercules.sgi.eti.exceptions.DocumentacionMemoriaNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,21 +19,23 @@ import org.springframework.data.domain.Pageable;
 public interface DocumentacionMemoriaService {
   /**
    * Guardar {@link DocumentacionMemoria}.
-   *
+   * 
+   * @param idMemoria            Id de la {@link Memoria}
    * @param DocumentacionMemoria la entidad {@link DocumentacionMemoria} a
    *                             guardar.
    * @return la entidad {@link DocumentacionMemoria} persistida.
    */
-  DocumentacionMemoria create(DocumentacionMemoria DocumentacionMemoria);
+  DocumentacionMemoria create(Long idMemoria, DocumentacionMemoria DocumentacionMemoria);
 
   /**
    * Actualizar {@link DocumentacionMemoria}.
    *
+   * @param idMemoria            Id de la {@link Memoria}
    * @param DocumentacionMemoria la entidad {@link DocumentacionMemoria} a
    *                             actualizar.
    * @return la entidad {@link DocumentacionMemoria} persistida.
    */
-  DocumentacionMemoria update(DocumentacionMemoria DocumentacionMemoria);
+  DocumentacionMemoria update(Long idMemoria, DocumentacionMemoria DocumentacionMemoria);
 
   /**
    * Obtener todas las entidades {@link DocumentacionMemoria} paginadas y/o
@@ -84,4 +88,53 @@ public interface DocumentacionMemoriaService {
    * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
    */
   Page<DocumentacionMemoria> findByMemoriaIdAndTipoEvaluacion(Long id, Long idTipoEvaluacion, Pageable pageable);
+
+  /**
+   * Obtiene todas las entidades {@link DocumentacionMemoria} asociadas al
+   * {@link Formulario} de la {@link Memoria}.
+   * 
+   * @param idMemoria Id de {@link Memoria}.
+   * @param pageable  la información de la paginación.
+   * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
+   */
+  Page<DocumentacionMemoria> findDocumentacionFormularioMemoria(Long idMemoria, Pageable pageable);
+
+  /**
+   * Obtiene todas las entidades {@link DocumentacionMemoria} asociadas al
+   * {@link Formulario} de la {@link Memoria} del tipo Seguimiento Anual.
+   * 
+   * @param id       Id de {@link Memoria}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
+   */
+  Page<DocumentacionMemoria> findDocumentacionSeguimientoAnual(Long id, Pageable pageable);
+
+  /**
+   * Obtiene todas las entidades {@link DocumentacionMemoria} asociadas al
+   * {@link Formulario} de la {@link Memoria} del tipo Seguimiento Final.
+   * 
+   * @param id       Id de {@link Memoria}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
+   */
+  Page<DocumentacionMemoria> findDocumentacionSeguimientoFinal(Long id, Pageable pageable);
+
+  /**
+   * Obtiene todas las entidades {@link DocumentacionMemoria} asociadas al
+   * {@link Formulario} de la {@link Memoria} del tipo Retrospectiva.
+   * 
+   * @param id       Id de {@link Memoria}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
+   */
+  Page<DocumentacionMemoria> findDocumentacionRetrospectiva(Long id, Pageable pageable);
+
+  /**
+   * Crea un {@link DocumentacionMemoria} del tipo seguimiento anual.
+   * 
+   * @param idMemoria            Id de {@link Memoria}
+   * @param documentacionMemoria {@link DocumentacionMemoria} a crear
+   * @return {@link DocumentacionMemoria} creada
+   */
+  DocumentacionMemoria createSeguimientoAnual(Long idMemoria, @Valid DocumentacionMemoria documentacionMemoria);
 }

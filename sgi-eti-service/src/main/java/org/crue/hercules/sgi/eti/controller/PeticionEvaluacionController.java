@@ -201,7 +201,7 @@ public class PeticionEvaluacionController {
    * @return la lista de entidades {@link TareaWithIsEliminable} paginadas.
    */
   @GetMapping("/{id}/tareas")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-C-INV', 'ETI-PEV-ER-INV')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-C-INV', 'ETI-PEV-ER-INV', 'ETI-PEV-V')")
   ResponseEntity<Page<TareaWithIsEliminable>> findTareas(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable pageable) {
     log.debug("findTareas(Long id, Pageable pageable) - start");
@@ -226,7 +226,7 @@ public class PeticionEvaluacionController {
    * @return la lista de entidades {@link Memoria} paginadas.
    */
   @GetMapping("/{id}/memorias")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-C-INV', 'ETI-PEV-ER-INV')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-C-INV', 'ETI-PEV-ER-INV', 'ETI-PEV-V')")
   ResponseEntity<Page<MemoriaPeticionEvaluacion>> findMemorias(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable pageable) {
     log.debug("findMemorias(Long id, Pageable pageable) - start");

@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.crue.hercules.sgi.eti.exceptions.TipoDocumentoNotFoundException;
@@ -136,6 +137,30 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
       log.debug("update(TipoDocumento tipoDocumentoActualizar) - end");
       return returnValue;
     }).orElseThrow(() -> new TipoDocumentoNotFoundException(tipoDocumentoActualizar.getId()));
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link TipoDocumento} inicial de una
+   * memoria.
+   * 
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable
+   */
+  @Override
+  public Page<TipoDocumento> findTipoDocumentacionInicial(List<QueryCriteria> query, Pageable paging) {
+    log.debug("findTipoDocumentacionInicial(List<QueryCriteria> query,Pageable paging) - start");
+    Specification<TipoDocumento> specByQuery = new QuerySpecification<TipoDocumento>(query);
+    Specification<TipoDocumento> specActivos = TipoDocumentoSpecifications.activos();
+
+    Specification<TipoDocumento> specTipoDocumentoIdNotIn = TipoDocumentoSpecifications
+        .byIdNotIn(Arrays.asList(1L, 2L, 3L));
+
+    Specification<TipoDocumento> specs = Specification.where(specActivos).and(specByQuery)
+        .and(specTipoDocumentoIdNotIn);
+
+    Page<TipoDocumento> returnValue = tipoDocumentoRepository.findAll(specs, paging);
+    log.debug("findTipoDocumentacionInicial(List<QueryCriteria> query,Pageable paging) - end");
+    return returnValue;
   }
 
 }

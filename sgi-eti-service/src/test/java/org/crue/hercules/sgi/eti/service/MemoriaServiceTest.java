@@ -195,7 +195,7 @@ public class MemoriaServiceTest {
         .willReturn(new PageImpl<>(memorias));
 
     // when: find unlimited
-    Page<Memoria> page = memoriaService.findAll(null, Pageable.unpaged());
+    Page<MemoriaPeticionEvaluacion> page = memoriaService.findAll(null, Pageable.unpaged());
 
     // then: Get a page with one hundred Memorias
     Assertions.assertThat(page.getContent().size()).isEqualTo(100);
@@ -232,7 +232,7 @@ public class MemoriaServiceTest {
 
     // when: Get page=3 with pagesize=10
     Pageable paging = PageRequest.of(3, 10);
-    Page<Memoria> page = memoriaService.findAll(null, paging);
+    Page<MemoriaPeticionEvaluacion> page = memoriaService.findAll(null, paging);
 
     // then: A Page with ten Memorias are returned containing
     // titulo='Memoria031' to 'Memoria040'
@@ -241,7 +241,7 @@ public class MemoriaServiceTest {
     Assertions.assertThat(page.getSize()).isEqualTo(10);
     Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
     for (int i = 0, j = 31; i < 10; i++, j++) {
-      Memoria memoria = page.getContent().get(i);
+      MemoriaPeticionEvaluacion memoria = page.getContent().get(i);
       Assertions.assertThat(memoria.getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
       Assertions.assertThat(memoria.getNumReferencia()).isEqualTo("numRef-5" + String.format("%03d", j));
     }

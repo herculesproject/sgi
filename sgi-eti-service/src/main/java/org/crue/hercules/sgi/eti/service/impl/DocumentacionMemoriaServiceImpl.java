@@ -3,13 +3,21 @@ package org.crue.hercules.sgi.eti.service.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.exceptions.DocumentacionMemoriaNotFoundException;
+import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
+import org.crue.hercules.sgi.eti.exceptions.TipoDocumentoNotFoundException;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.crue.hercules.sgi.eti.repository.DocumentacionMemoriaRepository;
+import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
+import org.crue.hercules.sgi.eti.repository.TipoDocumentoRepository;
+import org.crue.hercules.sgi.eti.repository.specification.DocumentacionMemoriaSpecifications;
 import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
 import org.crue.hercules.sgi.eti.service.TipoDocumentoService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
@@ -30,29 +38,46 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional(readOnly = true)
 public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaService {
-  private final DocumentacionMemoriaRepository documentacionMemoriaRepository;
-  private final TipoDocumentoService tipoDocumentoService;
 
-  public DocumentacionMemoriaServiceImpl(DocumentacionMemoriaRepository DocumentacionMemoriaRepository,
-      TipoDocumentoService tipoDocumentoService) {
-    this.documentacionMemoriaRepository = DocumentacionMemoriaRepository;
-    this.tipoDocumentoService = tipoDocumentoService;
+  /** Documentacion memoria repository */
+  private final DocumentacionMemoriaRepository documentacionMemoriaRepository;
+
+  /** Memoria repository */
+  private final MemoriaRepository memoriaRepository;
+
+  /** Tipo Memoria repository */
+  private final TipoDocumentoRepository tipoDocumentoRepository;
+
+  public DocumentacionMemoriaServiceImpl(DocumentacionMemoriaRepository documentacionMemoriaRepository,
+      MemoriaRepository memoriaRepository, TipoDocumentoRepository tipoDocumentoRepository) {
+    this.documentacionMemoriaRepository = documentacionMemoriaRepository;
+    this.memoriaRepository = memoriaRepository;
+    this.tipoDocumentoRepository = tipoDocumentoRepository;
   }
 
   /**
    * Guarda la entidad {@link DocumentacionMemoria}.
    *
-   * @param DocumentacionMemoria la entidad {@link DocumentacionMemoria} a
+   * @param idMemoria            Id de la {@link Memoria}
+   * @param documentacionMemoria la entidad {@link DocumentacionMemoria} a
    *                             guardar.
    * @return la entidad {@link DocumentacionMemoria} persistida.
    */
   @Transactional
-  public DocumentacionMemoria create(DocumentacionMemoria DocumentacionMemoria) {
-    log.debug("Petición a create DocumentacionMemoria : {} - start", DocumentacionMemoria);
-    Assert.isNull(DocumentacionMemoria.getId(),
+  public DocumentacionMemoria create(Long idMemoria, DocumentacionMemoria documentacionMemoria) {
+    log.debug("Petición a create DocumentacionMemoria : {} - start", documentacionMemoria);
+    Assert.isNull(documentacionMemoria.getId(),
         "DocumentacionMemoria id tiene que ser null para crear un nuevo DocumentacionMemoria");
 
-    return documentacionMemoriaRepository.save(DocumentacionMemoria);
+    Assert.notNull(idMemoria,
+        "El identificador de la memoria no puede ser null para crear un nuevo documento asociado a esta");
+
+    return memoriaRepository.findByIdAndActivoTrue(idMemoria).map(memoria -> {
+
+      documentacionMemoria.setMemoria(memoria);
+      return documentacionMemoriaRepository.save(documentacionMemoria);
+    }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
+
   }
 
   /**
@@ -121,6 +146,7 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
   /**
    * Actualiza los datos del {@link DocumentacionMemoria}.
    * 
+   * @param idMemoria                      Id de la {@link Memoria}
    * @param documentacionMemoriaActualizar {@link DocumentacionMemoria} con los
    *                                       datos actualizados.
    * @return El {@link DocumentacionMemoria} actualizado.
@@ -133,22 +159,26 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
    */
 
   @Transactional
-  public DocumentacionMemoria update(final DocumentacionMemoria documentacionMemoriaActualizar) {
+  public DocumentacionMemoria update(Long idMemoria, final DocumentacionMemoria documentacionMemoriaActualizar) {
     log.debug("update(DocumentacionMemoria DocumentacionMemoriaActualizar) - start");
 
     Assert.notNull(documentacionMemoriaActualizar.getId(),
-        "DocumentacionMemoria id no puede ser null para actualizar una documentacion memoria");
+        "DocumentacionMemoria id no puede ser null para actualizar una documentación memoria");
 
-    return documentacionMemoriaRepository.findById(documentacionMemoriaActualizar.getId()).map(documentacionMemoria -> {
-      documentacionMemoria.setDocumentoRef(documentacionMemoriaActualizar.getDocumentoRef());
-      documentacionMemoria.setMemoria(documentacionMemoriaActualizar.getMemoria());
-      documentacionMemoria.setTipoDocumento(documentacionMemoriaActualizar.getTipoDocumento());
-      documentacionMemoria.setAportado(documentacionMemoriaActualizar.getAportado());
+    Assert.notNull(idMemoria, "Memoria id no puede ser null para actualizar una documentación memoria");
 
-      DocumentacionMemoria returnValue = documentacionMemoriaRepository.save(documentacionMemoria);
-      log.debug("update(DocumentacionMemoria DocumentacionMemoriaActualizar) - end");
-      return returnValue;
-    }).orElseThrow(() -> new DocumentacionMemoriaNotFoundException(documentacionMemoriaActualizar.getId()));
+    return documentacionMemoriaRepository
+        .findByIdAndMemoriaIdAndMemoriaActivoTrue(documentacionMemoriaActualizar.getId(), idMemoria)
+        .map(documentacionMemoria -> {
+          documentacionMemoria.setDocumentoRef(documentacionMemoriaActualizar.getDocumentoRef());
+          documentacionMemoria.setMemoria(documentacionMemoriaActualizar.getMemoria());
+          documentacionMemoria.setTipoDocumento(documentacionMemoriaActualizar.getTipoDocumento());
+          documentacionMemoria.setAportado(documentacionMemoriaActualizar.getAportado());
+
+          DocumentacionMemoria returnValue = documentacionMemoriaRepository.save(documentacionMemoria);
+          log.debug("update(DocumentacionMemoria DocumentacionMemoriaActualizar) - end");
+          return returnValue;
+        }).orElseThrow(() -> new DocumentacionMemoriaNotFoundException(documentacionMemoriaActualizar.getId()));
   }
 
   /**
@@ -188,12 +218,12 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
         "El id del tipo de evaluación no puede ser nulo para mostrar su documentacion");
 
     Page<DocumentacionMemoria> returnValue = null;
-    TipoDocumento tipoDocumento = new TipoDocumento();
+    Optional<TipoDocumento> tipoDocumento = null;
 
     // TipoEvaluación Retrospectiva muestra la documentación de tipo Retrospectiva
     if (idTipoEvaluacion.equals(1L)) {
-      tipoDocumento = tipoDocumentoService.findById(3L);
-      returnValue = documentacionMemoriaRepository.findByMemoriaIdAndTipoDocumentoId(id, tipoDocumento.getId(),
+      tipoDocumento = tipoDocumentoRepository.findById(3L);
+      returnValue = documentacionMemoriaRepository.findByMemoriaIdAndTipoDocumentoId(id, tipoDocumento.get().getId(),
           pageable);
     }
     // TipoEvaluación Memoria muestra todas la documentación que no sea de tipo
@@ -205,19 +235,177 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
     // TipoEvaluación Seguimiento Anual muestra la documentación de tipo Seguimiento
     // Anual
     if (idTipoEvaluacion.equals(3L)) {
-      tipoDocumento = tipoDocumentoService.findById(1L);
-      returnValue = documentacionMemoriaRepository.findByMemoriaIdAndTipoDocumentoId(id, tipoDocumento.getId(),
+      tipoDocumento = tipoDocumentoRepository.findById(1L);
+      returnValue = documentacionMemoriaRepository.findByMemoriaIdAndTipoDocumentoId(id, tipoDocumento.get().getId(),
           pageable);
     }
     // TipoEvaluación Seguimiento Final muestra la documentación de tipo Seguimiento
     // Final
     if (idTipoEvaluacion.equals(4L)) {
-      tipoDocumento = tipoDocumentoService.findById(2L);
-      returnValue = documentacionMemoriaRepository.findByMemoriaIdAndTipoDocumentoId(id, tipoDocumento.getId(),
+      tipoDocumento = tipoDocumentoRepository.findById(2L);
+      returnValue = documentacionMemoriaRepository.findByMemoriaIdAndTipoDocumentoId(id, tipoDocumento.get().getId(),
           pageable);
     }
 
     log.debug("findByMemoriaIdAndTipoEvaluacion(Long id, Long idTipoEvaluacion, Pageable pageable) - end");
     return returnValue;
+  }
+
+  /**
+   * Obtiene todas las entidades {@link DocumentacionMemoria} asociadas al
+   * {@link Formulario} de la {@link Memoria}.
+   * 
+   * @param idMemoria Id de {@link Memoria}.
+   * @param pageable  la información de la paginación.
+   * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
+   */
+  @Override
+  public Page<DocumentacionMemoria> findDocumentacionFormularioMemoria(Long idMemoria, Pageable pageable) {
+    log.debug("findDocumentacionFormularioMemoria(Long idMemoria, Pageable pageable) - start");
+    Assert.isTrue(idMemoria != null, "El id de la memoria no puede ser nulo para mostrar su documentación");
+
+    return memoriaRepository.findByIdAndActivoTrue(idMemoria).map(memoria -> {
+
+      Specification<DocumentacionMemoria> specMemoriaId = DocumentacionMemoriaSpecifications.memoriaId(idMemoria);
+
+      Specification<DocumentacionMemoria> specFormularioActivo = DocumentacionMemoriaSpecifications
+          .tipoDocumentoFormularioActivo();
+
+      // Aquellos que no son del tipo 1: Seguimiento Anual, 2: Seguimiento Final y 3:
+      // Retrospectiva
+      Specification<DocumentacionMemoria> specTipoDocumentoNotIn = DocumentacionMemoriaSpecifications
+          .tipoDocumentoNotIn(Arrays.asList(1L, 2L, 3L));
+
+      Specification<DocumentacionMemoria> specs = Specification.where(specMemoriaId).and(specFormularioActivo)
+          .and(specTipoDocumentoNotIn);
+
+      Page<DocumentacionMemoria> returnValue = documentacionMemoriaRepository.findAll(specs, pageable);
+
+      log.debug("findDocumentacionFormularioMemoria(Long idMemoria, Pageable pageable) - end");
+      return returnValue;
+    }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
+
+  }
+
+  /**
+   * Obtiene todas las entidades {@link DocumentacionMemoria} asociadas al
+   * {@link Formulario} de la {@link Memoria} del tipo Seguimiento Anual.
+   * 
+   * @param id       Id de {@link Memoria}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
+   */
+  @Override
+  public Page<DocumentacionMemoria> findDocumentacionSeguimientoAnual(Long idMemoria, Pageable pageable) {
+    log.debug("findDocumentacionSeguimientoAnual(Long idMemoria, Pageable pageable) - start");
+    Assert.isTrue(idMemoria != null, "El id de la memoria no puede ser nulo para mostrar su documentación");
+
+    return memoriaRepository.findByIdAndActivoTrue(idMemoria).map(memoria -> {
+
+      Specification<DocumentacionMemoria> specMemoriaId = DocumentacionMemoriaSpecifications.memoriaId(idMemoria);
+
+      Specification<DocumentacionMemoria> specFormularioActivo = DocumentacionMemoriaSpecifications
+          .tipoDocumentoFormularioActivo();
+
+      // Aquellos que no son del tipo 1: Seguimiento Anual
+      Specification<DocumentacionMemoria> specTipoDocumento = DocumentacionMemoriaSpecifications.tipoDocumento(1L);
+
+      Specification<DocumentacionMemoria> specs = Specification.where(specMemoriaId).and(specFormularioActivo)
+          .and(specTipoDocumento);
+
+      Page<DocumentacionMemoria> returnValue = documentacionMemoriaRepository.findAll(specs, pageable);
+
+      log.debug("findDocumentacionSeguimientoAnual(Long idMemoria, Pageable pageable) - end");
+      return returnValue;
+    }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
+
+  }
+
+  /**
+   * Obtiene todas las entidades {@link DocumentacionMemoria} asociadas al
+   * {@link Formulario} de la {@link Memoria} del tipo Seguimiento Final.
+   * 
+   * @param id       Id de {@link Memoria}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
+   */
+  @Override
+  public Page<DocumentacionMemoria> findDocumentacionSeguimientoFinal(Long idMemoria, Pageable pageable) {
+    log.debug("findDocumentacionSeguimientoFinal(Long idMemoria, Pageable pageable) - start");
+    Assert.isTrue(idMemoria != null, "El id de la memoria no puede ser nulo para mostrar su documentación");
+
+    return memoriaRepository.findByIdAndActivoTrue(idMemoria).map(memoria -> {
+
+      Specification<DocumentacionMemoria> specMemoriaId = DocumentacionMemoriaSpecifications.memoriaId(idMemoria);
+
+      Specification<DocumentacionMemoria> specFormularioActivo = DocumentacionMemoriaSpecifications
+          .tipoDocumentoFormularioActivo();
+
+      // Aquellos que no son del tipo 2: Seguimiento Final
+      Specification<DocumentacionMemoria> specTipoDocumento = DocumentacionMemoriaSpecifications.tipoDocumento(2L);
+
+      Specification<DocumentacionMemoria> specs = Specification.where(specMemoriaId).and(specFormularioActivo)
+          .and(specTipoDocumento);
+
+      Page<DocumentacionMemoria> returnValue = documentacionMemoriaRepository.findAll(specs, pageable);
+
+      log.debug("findDocumentacionSeguimientoFinal(Long idMemoria, Pageable pageable) - end");
+      return returnValue;
+    }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
+
+  }
+
+  /**
+   * Obtiene todas las entidades {@link DocumentacionMemoria} asociadas al
+   * {@link Formulario} de la {@link Memoria} del tipo Retrospectiva.
+   * 
+   * @param id       Id de {@link Memoria}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
+   */
+  @Override
+  public Page<DocumentacionMemoria> findDocumentacionRetrospectiva(Long idMemoria, Pageable pageable) {
+    log.debug("findDocumentacionRetrospectiva(Long idMemoria, Pageable pageable) - start");
+    Assert.isTrue(idMemoria != null, "El id de la memoria no puede ser nulo para mostrar su documentación");
+
+    return memoriaRepository.findByIdAndActivoTrue(idMemoria).map(memoria -> {
+
+      Specification<DocumentacionMemoria> specMemoriaId = DocumentacionMemoriaSpecifications.memoriaId(idMemoria);
+
+      Specification<DocumentacionMemoria> specFormularioActivo = DocumentacionMemoriaSpecifications
+          .tipoDocumentoFormularioActivo();
+
+      // Aquellos que no son del tipo 3: Retrospectiva
+      Specification<DocumentacionMemoria> specTipoDocumento = DocumentacionMemoriaSpecifications.tipoDocumento(3L);
+
+      Specification<DocumentacionMemoria> specs = Specification.where(specMemoriaId).and(specFormularioActivo)
+          .and(specTipoDocumento);
+
+      Page<DocumentacionMemoria> returnValue = documentacionMemoriaRepository.findAll(specs, pageable);
+
+      log.debug("findDocumentacionRetrospectiva(Long idMemoria, Pageable pageable) - end");
+      return returnValue;
+    }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
+
+  }
+
+  @Override
+  public DocumentacionMemoria createSeguimientoAnual(Long idMemoria, @Valid DocumentacionMemoria documentacionMemoria) {
+    log.debug("Petición a create DocumentacionMemoria seguimiento anual : {} - start", documentacionMemoria);
+    Assert.isNull(documentacionMemoria.getId(),
+        "DocumentacionMemoria id tiene que ser null para crear un nuevo DocumentacionMemoria");
+
+    Assert.notNull(idMemoria,
+        "El identificador de la memoria no puede ser null para crear un nuevo documento de tipo seguimiento anual asociado a esta");
+
+    return memoriaRepository.findByIdAndActivoTrue(idMemoria).map(memoria -> {
+
+      documentacionMemoria.setMemoria(memoria);
+      return tipoDocumentoRepository.findByIdAndActivoTrue(1L).map(tipoDocumento -> {
+        documentacionMemoria.setTipoDocumento(tipoDocumento);
+        return documentacionMemoriaRepository.save(documentacionMemoria);
+      }).orElseThrow(() -> new TipoDocumentoNotFoundException(1L));
+
+    }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
   }
 }

@@ -55,9 +55,6 @@ import org.springframework.data.jpa.domain.Specification;
 public class EvaluacionServiceTest {
 
   @Mock
-  private ComentarioRepository comentarioRepository;
-
-  @Mock
   private EvaluacionRepository evaluacionRepository;
   @Mock
   private EstadoMemoriaRepository estadoMemoriaRepository;
@@ -69,6 +66,9 @@ public class EvaluacionServiceTest {
   private MemoriaService memoriaService;
   @Mock
   private ConvocatoriaReunionRepository convocatoriaReunionRepository;
+
+  @Mock
+  private ComentarioRepository comentarioRepository;
 
   @Mock
   private MemoriaRepository memoriaRepository;

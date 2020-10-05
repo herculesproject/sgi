@@ -58,4 +58,13 @@ public interface TipoDocumentoService {
    */
   void deleteAll();
 
+  /**
+   * Devuelve una lista paginada y filtrada {@link TipoDocumento} inicial de una
+   * memoria.
+   * 
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable
+   */
+  Page<TipoDocumento> findTipoDocumentacionInicial(List<QueryCriteria> query, Pageable paging);
+
 }

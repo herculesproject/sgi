@@ -34,10 +34,14 @@ import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion_;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria_;
+import org.crue.hercules.sgi.eti.repository.specification.MemoriaSpecifications;
 import org.crue.hercules.sgi.eti.util.Constantes;
+import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Component;
 
@@ -261,6 +265,50 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     log.debug("getFechaLimite : {} - end");
 
     return queryFechaLimite;
+  }
+
+  /**
+   * Devuelve todas las memorias con la fecha límite y de evaluación.
+   * 
+   * @param idPeticionEvaluacion Identificador {@link PeticionEvaluacion}
+   * @param pageable             información de paginación
+   * @return lista de memorias de {@link PeticionEvaluacion}
+   */
+  @Override
+  public Page<MemoriaPeticionEvaluacion> findAllMemoriasEvaluaciones(List<QueryCriteria> query, Pageable pageable) {
+    log.debug("findMemoriasEvaluacion( Pageable pageable) - start");
+
+    // Crete query
+    CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+    CriteriaQuery<MemoriaPeticionEvaluacion> cq = cb.createQuery(MemoriaPeticionEvaluacion.class);
+    Root<Memoria> root = cq.from(Memoria.class);
+
+    // Where
+    if (query != null) {
+      Specification<Memoria> spec = new QuerySpecification<Memoria>(query);
+      Specification<Memoria> specActivos = MemoriaSpecifications.activos();
+      cq.where(spec.toPredicate(root, cq, cb), specActivos.toPredicate(root, cq, cb));
+    }
+
+    cq.multiselect(root.get(Memoria_.id), root.get(Memoria_.numReferencia), root.get(Memoria_.titulo),
+        root.get(Memoria_.comite), root.get(Memoria_.estadoActual),
+        getFechaEvaluacion(root, cb, cq).alias("fechaEvaluacion"), getFechaLimite(root, cb, cq).alias("fechaLimite"));
+
+    List<Order> orders = QueryUtils.toOrders(pageable.getSort(), root, cb);
+    cq.orderBy(orders);
+
+    TypedQuery<MemoriaPeticionEvaluacion> typedQuery = entityManager.createQuery(cq);
+    if (pageable != null && pageable.isPaged()) {
+      typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+      typedQuery.setMaxResults(pageable.getPageSize());
+    }
+
+    List<MemoriaPeticionEvaluacion> result = typedQuery.getResultList();
+    Page<MemoriaPeticionEvaluacion> returnValue = new PageImpl<MemoriaPeticionEvaluacion>(result, pageable,
+        result.size());
+
+    log.debug("findMemoriasEvaluacion( Pageable pageable) - end");
+    return returnValue;
   }
 
 }

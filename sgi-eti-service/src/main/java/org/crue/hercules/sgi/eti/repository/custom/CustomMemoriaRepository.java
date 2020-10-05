@@ -1,7 +1,10 @@
 package org.crue.hercules.sgi.eti.repository.custom;
 
+import java.util.List;
+
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.springframework.data.domain.Page;
@@ -44,5 +47,7 @@ public interface CustomMemoriaRepository {
    * @return lista de memorias de {@link PeticionEvaluacion}
    */
   Page<MemoriaPeticionEvaluacion> findMemoriasEvaluacion(Long idPeticionEvaluacion, Pageable pageable);
+
+  Page<MemoriaPeticionEvaluacion> findAllMemoriasEvaluaciones(List<QueryCriteria> query, Pageable pageable);
 
 }

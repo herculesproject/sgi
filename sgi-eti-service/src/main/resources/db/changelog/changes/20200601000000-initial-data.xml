@@ -859,13 +859,13 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-984" />
-      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
+      <column name="num_referencia" value="ref-934" />
+      <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion5')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria7" />
       <column name="persona_ref" value="user-003" />
       <column name="tipo_memoria_id" value="2" />
-      <column name="estado_actual_id" value="3" />
+      <column name="estado_actual_id" value="1" />
       <column name="fecha_envio_secretaria" value="2020-06-09" />
       <column name="requiere_retrospectiva" value="true" />
       <column name="retrospectiva_id" value="3" />
@@ -873,7 +873,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-934" />
+      <column name="num_referencia" value="ref-834" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion5')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria8" />
@@ -1196,7 +1196,7 @@
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria9')" />
       <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where nombre='Seguimiento Anual')" />
       <column name="documento_ref" value="DocumentoRef7" />
-      <column name="aportado" value="true" />
+      <column name="aportado" value="false" />
     </insert>
     <insert tableName="documentacion_memoria">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria200')" />
@@ -1222,6 +1222,73 @@
       <column name="documento_ref" value="DocumentoRef11" />
       <column name="aportado" value="true" />
     </insert>
+    <insert tableName="documentacion_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria300')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where id=4)" />
+      <column name="documento_ref" value="DocumentoRef4" />
+      <column name="aportado" value="false" />
+    </insert>
+    <insert tableName="documentacion_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria300')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where id=5)" />
+      <column name="documento_ref" value="DocumentoRef5" />
+      <column name="aportado" value="false" />
+    </insert>
+    <insert tableName="documentacion_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria300')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where id=6)" />
+      <column name="documento_ref" value="DocumentoRef6" />
+      <column name="aportado" value="false" />
+    </insert>
+    <insert tableName="documentacion_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria300')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where id=7)" />
+      <column name="documento_ref" value="DocumentoRef7" />
+      <column name="aportado" value="false" />
+    </insert>
+    <insert tableName="documentacion_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria300')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where id=8)" />
+      <column name="documento_ref" value="DocumentoRef8" />
+      <column name="aportado" value="false" />
+    </insert>
+    <insert tableName="documentacion_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria300')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where id=9)" />
+      <column name="documento_ref" value="DocumentoRef9" />
+      <column name="aportado" value="false" />
+    </insert>
+    <insert tableName="documentacion_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria300')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where id=10)" />
+      <column name="documento_ref" value="DocumentoRef10" />
+      <column name="aportado" value="false" />
+    </insert>
+    <insert tableName="documentacion_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria300')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where id=11)" />
+      <column name="documento_ref" value="DocumentoRef11" />
+      <column name="aportado" value="false" />
+    </insert>
+    <insert tableName="documentacion_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria300')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where id=12)" />
+      <column name="documento_ref" value="DocumentoRef12" />
+      <column name="aportado" value="false" />
+    </insert>
+    <insert tableName="documentacion_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria300')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where id=13)" />
+      <column name="documento_ref" value="DocumentoRef13" />
+      <column name="aportado" value="false" />
+    </insert>
+    <insert tableName="documentacion_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria300')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where id=14)" />
+      <column name="documento_ref" value="DocumentoRef14" />
+      <column name="aportado" value="false" />
+    </insert>
+
   </changeSet>
 
   <changeSet author="master" id="20200601000000-convocatoria_reunion">
@@ -1718,7 +1785,7 @@
 
   <changeSet author="master" id="20200601000000-formulario_memoria">
     <insert tableName="formulario_memoria">
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-834')" />
       <column name="formulario_id" valueComputed="(select id from eti.formulario where descripcion='Descripcion1')" />
       <column name="activo" value="true" />
     </insert>

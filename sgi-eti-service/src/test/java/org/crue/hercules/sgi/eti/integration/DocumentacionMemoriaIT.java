@@ -76,30 +76,6 @@ public class DocumentacionMemoriaIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void addDocumentacionMemoria_ReturnsDocumentacionMemoria() throws Exception {
-
-    Memoria memoria = generarMockMemoria(1L, "Memoria1");
-    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
-
-    DocumentacionMemoria nuevoDocumentacionMemoria = generarMockDocumentacionMemoria(null, memoria, tipoDocumento);
-
-    final ResponseEntity<DocumentacionMemoria> response = restTemplate.exchange(
-        DOCUMENTACION_MEMORIA_CONTROLLER_BASE_PATH, HttpMethod.POST, buildRequest(null, nuevoDocumentacionMemoria),
-        DocumentacionMemoria.class);
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-
-    final DocumentacionMemoria DocumentacionMemoria = response.getBody();
-
-    Assertions.assertThat(DocumentacionMemoria.getId()).isEqualTo(1L);
-    Assertions.assertThat(DocumentacionMemoria.getMemoria().getTitulo()).isEqualTo("Memoria1");
-    Assertions.assertThat(DocumentacionMemoria.getTipoDocumento().getNombre()).isEqualTo("TipoDocumento1");
-    Assertions.assertThat(DocumentacionMemoria.getDocumentoRef()).isEqualTo("doc-001");
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
   public void removeDocumentacionMemoria_Success() throws Exception {
 
     // when: Delete con id existente

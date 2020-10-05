@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
@@ -536,6 +537,184 @@ public class MemoriaIT {
     // Memoria 8 tiene estado 17(En Secretaría seguimiento final) pero su fecha de
     // envío es menor que
     // la fecha límite, por lo que no es asignable.
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void getDocumentacionFormulario_Unlimited_ReturnsDocumentacion() throws Exception {
+
+    // when: find unlimited asignables para la memoria
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
+
+    final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
+        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-formulario", HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<DocumentacionMemoria>>() {
+        }, 1L);
+
+    // then: Obtiene la documentación de memoria que no se encuentra en estado 1,2 o
+    // 3
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<DocumentacionMemoria> documentacionMemoria = response.getBody();
+    Assertions.assertThat(documentacionMemoria.size()).isEqualTo(4);
+
+    Assertions.assertThat(documentacionMemoria.get(0).getDocumentoRef()).isEqualTo("doc-001");
+    Assertions.assertThat(documentacionMemoria.get(1).getDocumentoRef()).isEqualTo("doc-002");
+    Assertions.assertThat(documentacionMemoria.get(2).getDocumentoRef()).isEqualTo("doc-003");
+    Assertions.assertThat(documentacionMemoria.get(3).getDocumentoRef()).isEqualTo("doc-004");
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void getDocumentacionFormulario_Unlimited_ReturnsEmptyDocumentacion() throws Exception {
+
+    // when: find unlimited asignables para la memoria
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
+
+    final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
+        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-formulario", HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<DocumentacionMemoria>>() {
+        }, 1L);
+
+    // then: Obtiene la documentación de memoria que no se encuentra en estado 1,2 o
+    // 3
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void getDocumentacionSeguimientoAnual_Unlimited_ReturnsDocumentacion() throws Exception {
+
+    // when: find unlimited asignables para la memoria
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
+
+    final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
+        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-anual", HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<DocumentacionMemoria>>() {
+        }, 1L);
+
+    // then: Obtiene la documentación de memoria que no se encuentra en estado 1,2 o
+    // 3
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<DocumentacionMemoria> documentacionMemoria = response.getBody();
+    Assertions.assertThat(documentacionMemoria.size()).isEqualTo(2);
+
+    Assertions.assertThat(documentacionMemoria.get(0).getDocumentoRef()).isEqualTo("doc-001");
+    Assertions.assertThat(documentacionMemoria.get(1).getDocumentoRef()).isEqualTo("doc-003");
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void getDocumentacionSeguimientoAnual_Unlimited_ReturnsEmptyDocumentacion() throws Exception {
+
+    // when: find unlimited asignables para la memoria
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
+
+    final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
+        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-anual", HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<DocumentacionMemoria>>() {
+        }, 1L);
+
+    // then: Obtiene la documentación de memoria que no se encuentra en estado 1,2 o
+    // 3
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void getDocumentacionSeguimientoFinal_Unlimited_ReturnsDocumentacion() throws Exception {
+
+    // when: find unlimited asignables para la memoria
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
+
+    final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
+        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-final", HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<DocumentacionMemoria>>() {
+        }, 1L);
+
+    // then: Obtiene la documentación de memoria que no se encuentra en estado 1,2 o
+    // 3
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<DocumentacionMemoria> documentacionMemoria = response.getBody();
+    Assertions.assertThat(documentacionMemoria.size()).isEqualTo(2);
+
+    Assertions.assertThat(documentacionMemoria.get(0).getDocumentoRef()).isEqualTo("doc-002");
+    Assertions.assertThat(documentacionMemoria.get(1).getDocumentoRef()).isEqualTo("doc-004");
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void getDocumentacionSeguimientoFinal_Unlimited_ReturnsEmptyDocumentacion() throws Exception {
+
+    // when: find unlimited asignables para la memoria
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
+
+    final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
+        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-final", HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<DocumentacionMemoria>>() {
+        }, 1L);
+
+    // then: Obtiene la documentación de memoria que no se encuentra en estado 1,2 o
+    // 3
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void getDocumentacionRetrospectiva_Unlimited_ReturnsDocumentacion() throws Exception {
+
+    // when: find unlimited asignables para la memoria
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
+
+    final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
+        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-retrospectiva", HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<DocumentacionMemoria>>() {
+        }, 1L);
+
+    // then: Obtiene la documentación de memoria que no se encuentra en estado 1,2 o
+    // 3
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<DocumentacionMemoria> documentacionMemoria = response.getBody();
+    Assertions.assertThat(documentacionMemoria.size()).isEqualTo(2);
+
+    Assertions.assertThat(documentacionMemoria.get(0).getDocumentoRef()).isEqualTo("doc-001");
+    Assertions.assertThat(documentacionMemoria.get(1).getDocumentoRef()).isEqualTo("doc-002");
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void getDocumentacionRetrospectiva_Unlimited_ReturnsEmptyDocumentacion() throws Exception {
+
+    // when: find unlimited asignables para la memoria
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
+
+    final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
+        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-retrospectiva", HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<DocumentacionMemoria>>() {
+        }, 1L);
+
+    // then: Obtiene la documentación de memoria que no se encuentra en estado 1,2 o
+    // 3
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
   }
 

@@ -80,6 +80,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       EstadoMemoriaRepository estadoMemoriaRepository, RetrospectivaRepository retrospectivaRepository,
       MemoriaService memoriaService, ComentarioRepository comentarioRepository,
       ConvocatoriaReunionRepository convocatoriaReunionRepository, MemoriaRepository memoriaRepository) {
+
     this.evaluacionRepository = evaluacionRepository;
     this.estadoMemoriaRepository = estadoMemoriaRepository;
     this.retrospectivaRepository = retrospectivaRepository;

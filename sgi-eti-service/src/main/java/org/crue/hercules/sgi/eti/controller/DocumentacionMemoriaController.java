@@ -2,8 +2,6 @@ package org.crue.hercules.sgi.eti.controller;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -15,9 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -64,40 +59,6 @@ public class DocumentacionMemoriaController {
     }
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
-  }
-
-  /**
-   * Crea nuevo {@link DocumentacionMemoria}.
-   * 
-   * @param nuevoDocumentacionMemoria {@link DocumentacionMemoria}. que se quiere
-   *                                  crear.
-   * @return Nuevo {@link DocumentacionMemoria} creado.
-   */
-  @PostMapping
-  public ResponseEntity<DocumentacionMemoria> newDocumentacionMemoria(
-      @Valid @RequestBody DocumentacionMemoria nuevoDocumentacionMemoria) {
-    log.debug("newDocumentacionMemoria(DocumentacionMemoria nuevoDocumentacionMemoria) - start");
-    DocumentacionMemoria returnValue = service.create(nuevoDocumentacionMemoria);
-    log.debug("newDocumentacionMemoria(DocumentacionMemoria nuevoDocumentacionMemoria) - end");
-    return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
-  }
-
-  /**
-   * Actualiza {@link DocumentacionMemoria}.
-   * 
-   * @param updatedDocumentacionMemoria {@link DocumentacionMemoria} a actualizar.
-   * @param id                          id {@link DocumentacionMemoria} a
-   *                                    actualizar.
-   * @return {@link DocumentacionMemoria} actualizado.
-   */
-  @PutMapping("/{id}")
-  DocumentacionMemoria replaceDocumentacionMemoria(@Valid @RequestBody DocumentacionMemoria updatedDocumentacionMemoria,
-      @PathVariable Long id) {
-    log.debug("replaceDocumentacionMemoria(DocumentacionMemoria updatedDocumentacionMemoria, Long id) - start");
-    updatedDocumentacionMemoria.setId(id);
-    DocumentacionMemoria returnValue = service.update(updatedDocumentacionMemoria);
-    log.debug("replaceDocumentacionMemoria(DocumentacionMemoria updatedDocumentacionMemoria, Long id) - end");
-    return returnValue;
   }
 
   /**

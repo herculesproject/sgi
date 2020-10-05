@@ -39,7 +39,7 @@ public interface MemoriaService {
    * @param query    la información del filtro.
    * @return la lista de entidades {@link Memoria} paginadas y/o filtradas.
    */
-  Page<Memoria> findAll(List<QueryCriteria> query, Pageable pageable);
+  Page<MemoriaPeticionEvaluacion> findAll(List<QueryCriteria> query, Pageable pageable);
 
   /**
    * Devuelve una lista paginada de {@link Memoria} asignables para una
@@ -143,5 +143,14 @@ public interface MemoriaService {
    * @return la lista de entidades {@link Memoria} paginadas y/o filtradas.
    */
   Page<Memoria> findAllByPersonaRef(List<QueryCriteria> query, Pageable pageable, String personaRef);
+
+  /**
+   * Devuelve las memorias de las peticiones de evaluación con su fecha límite y
+   * de evaluación.
+   * 
+   * @param pageable información de paginación
+   * @return lista de memorias de {@link PeticionEvaluacion}
+   */
+  Page<MemoriaPeticionEvaluacion> findAllMemoriasPeticionesEvaluacion(Pageable pageable);
 
 }

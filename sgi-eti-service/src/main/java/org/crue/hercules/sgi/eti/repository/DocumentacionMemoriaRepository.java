@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.Memoria;
@@ -53,4 +54,13 @@ public interface DocumentacionMemoriaRepository
   Page<DocumentacionMemoria> findByMemoriaIdAndTipoDocumentoIdNotIn(Long id, List<Long> idTipoDocumentos,
       Pageable pageable);
 
+  /**
+   * Recupera una {@link DocumentacionMemoria} por id y su memoria activa.**
+   * 
+   * @param id        Id {@link DocumentacionMemoria}*
+   * @param idMemoria Id {@link Memoria}*@return {@link DocumentacionMemoria}
+   * 
+   * @return documentacion memoria
+   */
+  Optional<DocumentacionMemoria> findByIdAndMemoriaIdAndMemoriaActivoTrue(Long id, Long idMemoria);
 }

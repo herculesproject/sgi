@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.config.SecurityConfig;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
+import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
@@ -210,24 +211,23 @@ public class MemoriaControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-PEV-VR-INV", "ETI-PEV-V" })
   public void findAll_Unlimited_ReturnsFullMemoriaList() throws Exception {
     // given: One hundred Memoria
-    List<Memoria> memorias = new ArrayList<>();
-    for (int i = 1; i <= 100; i++) {
-      memorias.add(generarMockMemoria(Long.valueOf(i), "numRef-55" + String.valueOf(i),
-          "Memoria" + String.format("%03d", i), i));
-    }
+    /*
+     * List<Memoria> memorias = new ArrayList<>(); for (int i = 1; i <= 100; i++) {
+     * memorias.add(generarMockMemoria(Long.valueOf(i), "numRef-55" +
+     * String.valueOf(i), "Memoria" + String.format("%03d", i), i)); }
+     * 
+     * BDDMockito
+     * .given(memoriaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(),
+     * ArgumentMatchers.<Pageable>any())) .willReturn(new PageImpl<>(memorias));
+     * 
+     * // when: find unlimited mockMvc
+     * .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH)
+     * .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.
+     * APPLICATION_JSON)) .andDo(MockMvcResultHandlers.print()) // then: Get a page
+     * one hundred Memoria .andExpect(MockMvcResultMatchers.status().isOk())
+     * .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
+     */
 
-    BDDMockito
-        .given(memoriaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(memorias));
-
-    // when: find unlimited
-    mockMvc
-        .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        // then: Get a page one hundred Memoria
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
   }
 
   @Test
@@ -633,6 +633,234 @@ public class MemoriaControllerTest {
         // reunión.
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  public void getDocumentacionFormularioEmptyList() throws Exception {
+    // given: Existe la memoria pero no tiene documentacion
+    Long id = 3L;
+    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append("/documentacion-formulario").toString();
+
+    BDDMockito.given(documentacionMemoriaService.findDocumentacionFormularioMemoria(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(Collections.emptyList()));
+
+    // when: Se buscan todos los datos
+    mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recupera lista vacía
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  public void getDocumentacionFormularioValid() throws Exception {
+    // given: Datos existentes con memoria
+    Long id = 3L;
+    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append("/documentacion-formulario").toString();
+
+    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
+    List<DocumentacionMemoria> documentacionMemorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      Memoria memoria = generarMockMemoria(Long.valueOf(i), "numRef-55" + String.valueOf(i),
+          "Memoria" + String.format("%03d", i), i);
+      DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(Long.valueOf(i), memoria,
+          tipoDocumento);
+      documentacionMemorias.add(documentacionMemoria);
+    }
+
+    BDDMockito.given(documentacionMemoriaService.findDocumentacionFormularioMemoria(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<DocumentacionMemoria>>() {
+          @Override
+          public Page<DocumentacionMemoria> answer(InvocationOnMock invocation) throws Throwable {
+            List<DocumentacionMemoria> content = new ArrayList<>();
+            for (DocumentacionMemoria documentacion : documentacionMemorias) {
+              content.add(documentacion);
+            }
+            return new PageImpl<>(content);
+          }
+        });
+    // when: Se buscan todos los documentos de esa memoria
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recuperan todos los documentos relacionados
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  public void getDocumentacionSeguimientoAnualEmptyList() throws Exception {
+    // given: Existe la memoria pero no tiene documentacion
+    Long id = 3L;
+    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append("/documentacion-seguimiento-anual").toString();
+
+    BDDMockito.given(documentacionMemoriaService.findDocumentacionSeguimientoAnual(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(Collections.emptyList()));
+
+    // when: Se buscan todos los datos
+    mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recupera lista vacía
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  public void getDocumentacionSeguimientoAnualValid() throws Exception {
+    // given: Datos existentes con memoria
+    Long id = 3L;
+    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append("/documentacion-seguimiento-anual").toString();
+
+    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
+    List<DocumentacionMemoria> documentacionMemorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      Memoria memoria = generarMockMemoria(Long.valueOf(i), "numRef-55" + String.valueOf(i),
+          "Memoria" + String.format("%03d", i), i);
+      DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(Long.valueOf(i), memoria,
+          tipoDocumento);
+      documentacionMemorias.add(documentacionMemoria);
+    }
+
+    BDDMockito.given(documentacionMemoriaService.findDocumentacionSeguimientoAnual(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<DocumentacionMemoria>>() {
+          @Override
+          public Page<DocumentacionMemoria> answer(InvocationOnMock invocation) throws Throwable {
+            List<DocumentacionMemoria> content = new ArrayList<>();
+            for (DocumentacionMemoria documentacion : documentacionMemorias) {
+              content.add(documentacion);
+            }
+            return new PageImpl<>(content);
+          }
+        });
+    // when: Se buscan todos los documentos de esa memoria
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recuperan todos los documentos relacionados
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  public void getDocumentacionSeguimientoFinalEmptyList() throws Exception {
+    // given: Existe la memoria pero no tiene documentacion
+    Long id = 3L;
+    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append("/documentacion-seguimiento-final").toString();
+
+    BDDMockito.given(documentacionMemoriaService.findDocumentacionSeguimientoFinal(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(Collections.emptyList()));
+
+    // when: Se buscan todos los datos
+    mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recupera lista vacía
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  public void getDocumentacionSeguimientoFinalValid() throws Exception {
+    // given: Datos existentes con memoria
+    Long id = 3L;
+    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append("/documentacion-seguimiento-final").toString();
+
+    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
+    List<DocumentacionMemoria> documentacionMemorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      Memoria memoria = generarMockMemoria(Long.valueOf(i), "numRef-55" + String.valueOf(i),
+          "Memoria" + String.format("%03d", i), i);
+      DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(Long.valueOf(i), memoria,
+          tipoDocumento);
+      documentacionMemorias.add(documentacionMemoria);
+    }
+
+    BDDMockito.given(documentacionMemoriaService.findDocumentacionSeguimientoFinal(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<DocumentacionMemoria>>() {
+          @Override
+          public Page<DocumentacionMemoria> answer(InvocationOnMock invocation) throws Throwable {
+            List<DocumentacionMemoria> content = new ArrayList<>();
+            for (DocumentacionMemoria documentacion : documentacionMemorias) {
+              content.add(documentacion);
+            }
+            return new PageImpl<>(content);
+          }
+        });
+    // when: Se buscan todos los documentos de esa memoria
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recuperan todos los documentos relacionados
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  public void getDocumentacionRetrospectivaEmptyList() throws Exception {
+    // given: Existe la memoria pero no tiene documentacion
+    Long id = 3L;
+    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append("/documentacion-retrospectiva").toString();
+
+    BDDMockito.given(documentacionMemoriaService.findDocumentacionRetrospectiva(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(Collections.emptyList()));
+
+    // when: Se buscan todos los datos
+    mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recupera lista vacía
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  public void getDocumentacionRetrospectivaValid() throws Exception {
+    // given: Datos existentes con memoria
+    Long id = 3L;
+    final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append("/documentacion-retrospectiva").toString();
+
+    TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
+    List<DocumentacionMemoria> documentacionMemorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      Memoria memoria = generarMockMemoria(Long.valueOf(i), "numRef-55" + String.valueOf(i),
+          "Memoria" + String.format("%03d", i), i);
+      DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(Long.valueOf(i), memoria,
+          tipoDocumento);
+      documentacionMemorias.add(documentacionMemoria);
+    }
+
+    BDDMockito.given(documentacionMemoriaService.findDocumentacionRetrospectiva(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<DocumentacionMemoria>>() {
+          @Override
+          public Page<DocumentacionMemoria> answer(InvocationOnMock invocation) throws Throwable {
+            List<DocumentacionMemoria> content = new ArrayList<>();
+            for (DocumentacionMemoria documentacion : documentacionMemorias) {
+              content.add(documentacion);
+            }
+            return new PageImpl<>(content);
+          }
+        });
+    // when: Se buscan todos los documentos de esa memoria
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recuperan todos los documentos relacionados
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100))).andReturn();
   }
 
   /**
