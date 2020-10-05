@@ -17,24 +17,26 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "tipo_fase")
+@Table(name = "modelo_ejecucion")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class TipoFase extends BaseEntity {
+public class ModeloEjecucion extends BaseEntity {
 
   /**
    * Serial version
    */
   private static final long serialVersionUID = 1L;
+
   /** Id. */
   @Id
   @Column(name = "id", nullable = false)
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tipo_fase_seq")
-  @SequenceGenerator(name = "tipo_fase_seq", sequenceName = "tipo_fase_seq", allocationSize = 1)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "modelo_ejecucion_seq")
+  @SequenceGenerator(name = "modelo_ejecucion_seq", sequenceName = "modelo_ejecucion_seq", allocationSize = 1)
   private Long id;
 
+  /** Nombre. */
   @Column(name = "nombre", length = 50, nullable = false)
   @NotEmpty
   @Size(max = 50)

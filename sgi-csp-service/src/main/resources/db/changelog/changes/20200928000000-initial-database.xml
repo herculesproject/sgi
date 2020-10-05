@@ -4,6 +4,33 @@
   <!-- ########################################################## -->
   <!-- SEQUENCE -->
   <!-- ########################################################## -->
+  <changeSet author="master" id="20200928000000-modelo_ejecucion_seq">
+    <createSequence sequenceName="modelo_ejecucion_seq" />
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-modelo_tipo_enlace_seq">
+    <createSequence sequenceName="modelo_tipo_enlace_seq" />
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-modelo_tipo_fase_seq">
+    <createSequence sequenceName="modelo_tipo_fase_seq" />
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-modelo_tipo_fase_documento_seq">
+    <createSequence sequenceName="modelo_tipo_fase_documento_seq" />
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-modelo_tipo_finalidad_seq">
+    <createSequence sequenceName="modelo_tipo_finalidad_seq" />
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-modelo_tipo_hito_seq">
+    <createSequence sequenceName="modelo_tipo_hito_seq" />
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-modelo_unidad_seq">
+    <createSequence sequenceName="modelo_unidad_seq" />
+  </changeSet>
 
   <changeSet author="master" id="20200928000000-tipo_documento_seq">
     <createSequence sequenceName="tipo_documento_seq" />
@@ -11,6 +38,10 @@
 
   <changeSet author="master" id="20200928000000-tipo_enlace_seq">
     <createSequence sequenceName="tipo_enlace_seq" />
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-tipo_fase_seq">
+    <createSequence sequenceName="tipo_fase_seq" />
   </changeSet>
 
   <changeSet author="master" id="20200928000000-tipo_finalidad_seq">
@@ -27,6 +58,20 @@
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
+  <changeSet author="master" id="20200928000000-modelo_ejecucion">
+    <createTable tableName="modelo_ejecucion">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="modelo_ejecucion_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_ejecucion_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="descripcion" type="VARCHAR(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
 
   <changeSet author="master" id="20200928000000-tipo_documento">
     <createTable tableName="tipo_documento">
@@ -70,6 +115,7 @@
       </column>
     </createTable>
   </changeSet>
+
   <changeSet author="master" id="20200928000000-tipo_finalidad">
     <createTable tableName="tipo_finalidad">
       <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_finalidad_seq">
@@ -99,9 +145,172 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-modelo_tipo_enlace">
+    <createTable tableName="modelo_tipo_enlace">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="modelo_tipo_enlace_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_tipo_enlace_pk" />
+      </column>
+      <column name="tipo_enlace_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="modelo_ejecucion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-modelo_tipo_fase">
+    <createTable tableName="modelo_tipo_fase">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="modelo_tipo_fase_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_tipo_fase_pk" />
+      </column>
+      <column name="tipo_fase_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="modelo_ejecucion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="activo_solicitud" type="BOOLEAN" defaultValueBoolean="false">
+        <constraints nullable="false" />
+      </column>
+      <column name="activo_convocatoria" type="BOOLEAN" defaultValueBoolean="false">
+        <constraints nullable="false" />
+      </column>
+      <column name="activo_proyecto" type="BOOLEAN" defaultValueBoolean="false">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-modelo_tipo_fase_documento">
+    <createTable tableName="modelo_tipo_fase_documento">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="modelo_tipo_fase_documento_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_tipo_fase_documento_pk" />
+      </column>
+      <column name="tipo_documento_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="modelo_ejecucion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="modelo_tipo_fase_id" type="BIGINT" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-modelo_tipo_finalidad">
+    <createTable tableName="modelo_tipo_finalidad">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="modelo_tipo_finalidad_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_tipo_finalidad_pk" />
+      </column>
+      <column name="tipo_finalidad_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="modelo_ejecucion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-modelo_tipo_hito">
+    <createTable tableName="modelo_tipo_hito">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="modelo_tipo_hito_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_tipo_hito_pk" />
+      </column>
+      <column name="tipo_hito_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="modelo_ejecucion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="activo_solicitud" type="BOOLEAN" defaultValueBoolean="false">
+        <constraints nullable="false" />
+      </column>
+      <column name="activo_convocatoria" type="BOOLEAN" defaultValueBoolean="false">
+        <constraints nullable="false" />
+      </column>
+      <column name="activo_proyecto" type="BOOLEAN" defaultValueBoolean="false">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-modelo_unidad">
+    <createTable tableName="modelo_unidad">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="modelo_unidad_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_unidad_pk" />
+      </column>
+      <column name="unidad_gestion" type="VARCHAR2(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="modelo_ejecucion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <!-- ########################################################## -->
+  <!-- FOREIGN KEY CONSTRAINT -->
+  <!-- ########################################################## -->
+  <changeSet author="master" id="20200601000000-modelo_tipo_enlace_tipo_enlace_FK">
+    <addForeignKeyConstraint baseColumnNames="tipo_enlace_id" baseTableName="modelo_tipo_enlace" constraintName="modelo_tipo_enlace_tipo_enlace_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_enlace" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-modelo_tipo_enlace_modelo_ejecucion_FK">
+    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_enlace" constraintName="modelo_tipo_enlace_modelo_ejecucion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-modelo_tipo_fase_tipo_fase_FK">
+    <addForeignKeyConstraint baseColumnNames="tipo_fase_id" baseTableName="modelo_tipo_fase" constraintName="modelo_tipo_fase_tipo_fase_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_fase" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-modelo_tipo_fase_modelo_ejecucion_FK">
+    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_fase" constraintName="modelo_tipo_fase_modelo_ejecucion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-modelo_tipo_fase_documento_tipo_documento_FK">
+    <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="modelo_tipo_fase_documento" constraintName="modelo_tipo_fase_documento_tipo_documento_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-modelo_tipo_fase_documento_modelo_ejecucion_FK">
+    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_fase_documento" constraintName="modelo_tipo_fase_documento_modelo_ejecucion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-modelo_tipo_fase_documento_modelo_tipo_fase_FK">
+    <addForeignKeyConstraint baseColumnNames="modelo_tipo_fase_id" baseTableName="modelo_tipo_fase_documento" constraintName="modelo_tipo_fase_documento_modelo_tipo_fase_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="modelo_tipo_fase" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-modelo_tipo_finalidad_tipo_finalidad_FK">
+    <addForeignKeyConstraint baseColumnNames="tipo_finalidad_id" baseTableName="modelo_tipo_finalidad" constraintName="modelo_tipo_finalidad_tipo_finalidad_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_finalidad" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-modelo_tipo_finalidad_modelo_ejecucion_FK">
+    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_finalidad" constraintName="modelo_tipo_finalidad_modelo_ejecucion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-modelo_tipo_hito_tipo_hito_FK">
+    <addForeignKeyConstraint baseColumnNames="tipo_hito_id" baseTableName="modelo_tipo_hito" constraintName="modelo_tipo_hito_tipo_hito_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_hito" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-modelo_tipo_hito_modelo_ejecucion_FK">
+    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_hito" constraintName="modelo_tipo_hito_modelo_ejecucion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-modelo_unidad_modelo_ejecucion_FK">
+    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_unidad" constraintName="modelo_unidad_modelo_ejecucion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- UNIQUE CONSTRAINT -->
   <!-- ########################################################## -->
+  <changeSet author="master" id="20200928000000-modelo_ejecucion_uk">
+    <addUniqueConstraint columnNames="nombre" constraintName="modelo_ejecucion_uk" tableName="modelo_ejecucion" />
+  </changeSet>
 
   <changeSet author="master" id="20200928000000-tipo_documento_uk">
     <addUniqueConstraint columnNames="nombre" constraintName="tipo_documento_uk" tableName="tipo_documento" />

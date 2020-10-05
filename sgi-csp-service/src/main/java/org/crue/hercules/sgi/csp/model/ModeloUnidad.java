@@ -5,11 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,37 +17,38 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "tipo_fase")
+@Table(name = "modelo_unidad")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class TipoFase extends BaseEntity {
+public class ModeloUnidad extends BaseEntity {
 
   /**
    * Serial version
    */
   private static final long serialVersionUID = 1L;
+
   /** Id. */
   @Id
   @Column(name = "id", nullable = false)
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tipo_fase_seq")
-  @SequenceGenerator(name = "tipo_fase_seq", sequenceName = "tipo_fase_seq", allocationSize = 1)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "modelo_unidad_seq")
+  @SequenceGenerator(name = "modelo_unidad_seq", sequenceName = "modelo_unidad_seq", allocationSize = 1)
   private Long id;
 
-  @Column(name = "nombre", length = 50, nullable = false)
-  @NotEmpty
-  @Size(max = 50)
-  private String nombre;
+  /** Unidad gestion. */
+  @Column(name = "unidad_gestion", nullable = false)
+  @NotNull
+  private String unidadGestion;
 
-  /** Descripcion. */
-  @Column(name = "descripcion", length = 250, nullable = true)
-  @Size(max = 250)
-  private String descripcion;
+  /** Modelo ejecución. */
+  @ManyToOne
+  @JoinColumn(name = "modelo_ejecucion_id", nullable = false)
+  @NotNull
+  private ModeloEjecucion modeloEjecucion;
 
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)
-  @NotNull(groups = { Update.class })
   private Boolean activo;
 
 }

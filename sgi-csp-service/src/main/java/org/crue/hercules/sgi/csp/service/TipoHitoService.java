@@ -1,13 +1,12 @@
 package org.crue.hercules.sgi.csp.service;
 
+import java.util.List;
+
 import org.crue.hercules.sgi.csp.exceptions.TipoHitoNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
-
-import java.util.List;
-
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Service Interface para gestionar {@link TipoHito}.
@@ -51,6 +50,7 @@ public interface TipoHitoService {
    * Elimina el {@link TipoHito} por id.
    *
    * @param id el id de la entidad {@link TipoHito}.
+   * @return la entidad {@link TipoHito} actualizadas.
    */
   TipoHito disable(Long id) throws TipoHitoNotFoundException;
 

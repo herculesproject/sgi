@@ -1,0 +1,60 @@
+package org.crue.hercules.sgi.csp.repository.specification;
+
+import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloEjecucion_;
+import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
+import org.crue.hercules.sgi.csp.model.ModeloTipoHito_;
+import org.springframework.data.jpa.domain.Specification;
+
+public class ModeloTipoHitoSpecifications {
+
+  /**
+   * {@link ModeloTipoHito} con activoConvocatoria a true.
+   * 
+   * @return specification para obtener los {@link ModeloTipoHito} con
+   *         activoConvocatoria a true.
+   */
+  public static Specification<ModeloTipoHito> activosConvocatoria() {
+    return (root, query, cb) -> {
+      return cb.equal(root.get(ModeloTipoHito_.activoConvocatoria), Boolean.TRUE);
+    };
+  }
+
+  /**
+   * {@link ModeloTipoHito} con activoProyecto a true.
+   * 
+   * @return specification para obtener los {@link ModeloTipoHito} con
+   *         activoProyecto a true.
+   */
+  public static Specification<ModeloTipoHito> activosProyecto() {
+    return (root, query, cb) -> {
+      return cb.equal(root.get(ModeloTipoHito_.activoProyecto), Boolean.TRUE);
+    };
+  }
+
+  /**
+   * {@link ModeloTipoHito} con activoSolicitud a true.
+   * 
+   * @return specification para obtener los {@link ModeloTipoHito} con
+   *         activoSolicitud a true.
+   */
+  public static Specification<ModeloTipoHito> activosSolcitud() {
+    return (root, query, cb) -> {
+      return cb.equal(root.get(ModeloTipoHito_.activoSolicitud), Boolean.TRUE);
+    };
+  }
+
+  /**
+   * {@link ModeloTipoHito} del {@link ModeloEjecucion} con el id indicado.
+   * 
+   * @param id identificador del {@link ModeloEjecucion}.
+   * @return specification para obtener los {@link ModeloTipoHito} del
+   *         {@link ModeloEjecucion} con el id indicado.
+   */
+  public static Specification<ModeloTipoHito> byModeloEjecucionId(Long id) {
+    return (root, query, cb) -> {
+      return cb.equal(root.get(ModeloTipoHito_.modeloEjecucion).get(ModeloEjecucion_.id), id);
+    };
+  }
+
+}

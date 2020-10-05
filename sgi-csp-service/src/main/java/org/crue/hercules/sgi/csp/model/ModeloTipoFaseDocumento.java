@@ -5,11 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,33 +17,42 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "tipo_fase")
+@Table(name = "modelo_tipo_fase_documento")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class TipoFase extends BaseEntity {
+public class ModeloTipoFaseDocumento extends BaseEntity {
 
   /**
    * Serial version
    */
   private static final long serialVersionUID = 1L;
+
   /** Id. */
   @Id
   @Column(name = "id", nullable = false)
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tipo_fase_seq")
-  @SequenceGenerator(name = "tipo_fase_seq", sequenceName = "tipo_fase_seq", allocationSize = 1)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "modelo_tipo_fase_documento_seq")
+  @SequenceGenerator(name = "modelo_tipo_fase_documento_seq", sequenceName = "modelo_tipo_fase_documento_seq", allocationSize = 1)
   private Long id;
 
-  @Column(name = "nombre", length = 50, nullable = false)
-  @NotEmpty
-  @Size(max = 50)
-  private String nombre;
+  /** Tipo documento. */
+  @ManyToOne
+  @JoinColumn(name = "tipo_documento_id", nullable = false)
+  @NotNull
+  private TipoDocumento tipoDocumento;
 
-  /** Descripcion. */
-  @Column(name = "descripcion", length = 250, nullable = true)
-  @Size(max = 250)
-  private String descripcion;
+  /** Modelo ejecución. */
+  @ManyToOne
+  @JoinColumn(name = "modelo_ejecucion_id", nullable = false)
+  @NotNull
+  private ModeloEjecucion modeloEjecucion;
+
+  /** Modelo tipo fase. */
+  @ManyToOne
+  @JoinColumn(name = "modelo_tipo_fase_id", nullable = true)
+  @NotNull
+  private ModeloTipoFase modeloTipoFase;
 
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)

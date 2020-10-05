@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,10 +39,13 @@ public class TipoEnlace extends BaseEntity {
 
   /** Nombre */
   @Column(name = "nombre", length = 50, nullable = false)
+  @NotEmpty
+  @Size(max = 50)
   private String nombre;
 
   /** Descripción */
-  @Column(name = "descripcion", length = 255)
+  @Column(name = "descripcion", length = 250)
+  @Size(max = 250)
   private String descripcion;
 
   /** Activo */
