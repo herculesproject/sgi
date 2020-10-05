@@ -226,4 +226,16 @@ export class EvaluacionService extends SgiRestService<number, IEvaluacion>{
         }));
   }
 
+  /**
+   * Devuelve el número de comentarios de una evalución
+   *
+   * @param id Id de la evaluación
+   */
+  getNumComentariosEvaluacion(id: number): Observable<SgiRestListResult<number>> {
+    this.logger.debug(EvaluacionService.name, `getNumComentariosEvaluacion(${id})`, '-', 'start');
+    return this.find<number, number>(`${this.endpointUrl}/${id}/numero-comentarios`).pipe(
+      tap(() => this.logger.debug(EvaluacionService.name, `getNumComentariosEvaluacion(${id})`, '-', 'end'))
+    );
+  }
+
 }

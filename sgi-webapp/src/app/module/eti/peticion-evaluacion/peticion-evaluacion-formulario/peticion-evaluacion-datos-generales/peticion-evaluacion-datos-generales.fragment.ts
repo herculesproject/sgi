@@ -6,6 +6,7 @@ import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacio
 import { NullIdValidador } from '@core/validators/null-id-validador';
 import { SgiAuthService } from '@sgi/framework/auth/public-api';
 import { catchError, map, switchMap } from 'rxjs/operators';
+import { NGXLogger } from 'ngx-logger';
 
 export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeticionEvaluacion> {
 
@@ -65,8 +66,6 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
       valorSocial: value.valorSocial,
       objetivosCientificos: value.objetivos,
       disenioMetodologico: value.disMetodologico
-
-
     };
   }
 
@@ -95,7 +94,5 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
       })
     );
   }
-
-
 }
 

@@ -20,11 +20,13 @@ import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framew
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
+import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 const MSG_ERROR_CARGAR_MEMORIA = marker('eti.convocatoriaReunion.formulario.asignacionMemorias.memoria.error.cargar');
 const MSG_ERROR_CARGAR_EVALUADOR1 = marker('eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador1.error.cargar');
 const MSG_ERROR_CARGAR_EVALUADOR2 = marker('eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador2.error.cargar');
+const MSG_ERROR_EVALUADOR_REPETIDO = marker('eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador.repetido');
 
 @Component({
   selector: 'sgi-convocatoria-reunion-asignacion-memorias',
@@ -35,6 +37,7 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
+  FormGroupUtil = FormGroupUtil;
   formGroup: FormGroup;
 
   evaluadores: IEvaluador[];
@@ -51,6 +54,7 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
   filterData: { idComite: number, idTipoConvocatoria: number, fechaLimite: Date };
   filterMemoriasAsignables: SgiRestFilter[];
   memoriasAsignadas: IMemoria[];
+  evaluacion: IEvaluacion;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -79,6 +83,7 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
       this.idConvocatoria = params.idConvocatoria;
       this.memoriasAsignadas = params.memoriasAsignadas;
       this.filterData = params.filterMemoriasAsignables;
+      this.evaluacion = params.evaluacion;
     }
     this.buildFilters();
   }
@@ -86,7 +91,7 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
   ngOnInit(): void {
     this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'ngOnInit()', 'start');
 
-    this.formGroup = this.createFormGroup();
+    this.initFormGroup();
 
     if (this.idConvocatoria) {
       this.getMemoriasAsignablesConvocatoria();
@@ -101,6 +106,19 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
     this.getEvaluadores();
 
     this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'ngOnInit()', 'end');
+  }
+
+  /**
+   * Inicializa el formGroup
+   */
+  private initFormGroup() {
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'initFormGroup()', 'start');
+    this.formGroup = new FormGroup({
+      memoria: new FormControl(this.evaluacion.memoria, [Validators.required]),
+      evaluador1: new FormControl(this.evaluacion.evaluador1),
+      evaluador2: new FormControl(this.evaluacion.evaluador2),
+    });
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'initFormGroup()', 'end');
   }
 
   ngOnDestroy(): void {
@@ -422,22 +440,34 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
 
   getDatosForm(): IEvaluacion {
     this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'getDatosFormulario()', 'start');
-    const returnData = {
-      id: null,
-      memoria: FormGroupUtil.getValue(this.formGroup, 'memoria'),
-      comite: null,
-      convocatoriaReunion: null,
-      tipoEvaluacion: null,
-      version: null,
-      dictamen: null,
-      evaluador1: FormGroupUtil.getValue(this.formGroup, 'evaluador1'),
-      evaluador2: FormGroupUtil.getValue(this.formGroup, 'evaluador2'),
-      fechaDictamen: null,
-      esRevMinima: null,
+    const evaluacion = this.evaluacion;
+    const convocatoriaReunion: IConvocatoriaReunion = {
       activo: null,
+      anio: null,
+      codigo: null,
+      comite: null,
+      convocantes: null,
+      fechaEnvio: null,
+      fechaEvaluacion: null,
+      fechaLimite: null,
+      horaInicio: null,
+      id: null,
+      idActa: null,
+      lugar: null,
+      minutoInicio: null,
+      numEvaluaciones: null,
+      numeroActa: null,
+      ordenDia: null,
+      tipoConvocatoriaReunion: null
     };
+
+    this.evaluacion.memoria = FormGroupUtil.getValue(this.formGroup, 'memoria');
+    this.evaluacion.convocatoriaReunion = convocatoriaReunion;
+    this.evaluacion.evaluador1 = FormGroupUtil.getValue(this.formGroup, 'evaluador1');
+    this.evaluacion.evaluador2 = FormGroupUtil.getValue(this.formGroup, 'evaluador2');
+
     this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'getDatosFormulario()', 'end');
-    return returnData;
+    return this.evaluacion;
   }
 
   /**
@@ -446,8 +476,16 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
   onAsignarmemoria(): void {
     this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'onAsignarmemoria()', 'start');
 
+    const evaluacion: IEvaluacion = this.getDatosForm();
+
+    if (evaluacion.evaluador1 === evaluacion.evaluador2) {
+      this.snackBarService.showError(MSG_ERROR_EVALUADOR_REPETIDO);
+      this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'onAsignarmemoria() - end');
+      return;
+    }
+
     if (FormGroupUtil.valid(this.formGroup)) {
-      this.dialogRef.close(this.getDatosForm());
+      this.dialogRef.close(evaluacion);
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }

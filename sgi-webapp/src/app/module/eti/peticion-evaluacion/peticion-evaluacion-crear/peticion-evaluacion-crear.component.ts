@@ -12,6 +12,12 @@ import {
 import {
   PeticionEvaluacionDatosGeneralesComponent,
 } from '../peticion-evaluacion-formulario/peticion-evaluacion-datos-generales/peticion-evaluacion-datos-generales.component';
+import { SgiAuthService } from '@sgi/framework/auth';
+
+import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
+import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
+
+
 import { PETICION_EVALUACION_ROUTE_NAMES } from '../peticion-evaluacion-route-names';
 import { PeticionEvaluacionActionService } from '../peticion-evaluacion.action.service';
 

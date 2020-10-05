@@ -7,8 +7,13 @@ import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service'
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { IMemoria } from '@core/models/eti/memoria';
 
-export class EvaluacionDatosMemoriaFragment extends FormFragment<IMemoriaWithPersona> {
+interface MemoriaWithPersona extends IMemoria {
+  solicitante: IPersona;
+}
+
+export class EvaluacionDatosMemoriaFragment extends FormFragment<MemoriaWithPersona> {
 
   private memoria: IMemoriaWithPersona;
 

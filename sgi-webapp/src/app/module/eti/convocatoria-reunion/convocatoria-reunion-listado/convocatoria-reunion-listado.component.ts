@@ -5,7 +5,7 @@ import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/fra
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { Observable, of, Subscription, merge } from 'rxjs';
-import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
+import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { NGXLogger } from 'ngx-logger';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -57,7 +57,7 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
   tipoConvocatoriaReunionListado: TipoConvocatoriaReunion[];
   filteredTiposConvocatoriaReunion: Observable<TipoConvocatoriaReunion[]>;
 
-  convocatoriaReunion$: Observable<ConvocatoriaReunion[]> = of();
+  convocatoriaReunion$: Observable<IConvocatoriaReunion[]> = of();
   dialogSubscription: Subscription;
   convocatoriaReunionDeleteSubscription: Subscription;
   comitesSubscription: Subscription;

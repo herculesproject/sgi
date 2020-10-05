@@ -1,7 +1,7 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Comite } from '@core/models/eti/comite';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
+import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -20,6 +20,8 @@ import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service'
 import { ConvocatoriaReunionActionService } from '../../convocatoria-reunion.action.service';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { ConvocatoriaReunionDatosGeneralesFragment } from './convocatoria-reunion-datos-generales.fragment';
+import { IAsistente } from '@core/models/eti/asistente';
+import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 
 
 const MSG_ERROR_LOAD_COMITES = marker('eti.convocatoriaReunion.formulario.datosGenerales.comite.error.cargar');
@@ -31,7 +33,7 @@ const MSG_ERROR_LOAD_CONVOCANTES = marker('eti.convocatoriaReunion.formulario.da
   templateUrl: './convocatoria-reunion-datos-generales.component.html',
   styleUrls: ['./convocatoria-reunion-datos-generales.component.scss']
 })
-export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComponent<ConvocatoriaReunion> implements OnInit, OnDestroy {
+export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComponent<IConvocatoriaReunion> implements OnInit, OnDestroy {
 
   fxFlexProperties: FxFlexProperties;
   fxFlexPropertiesInline: FxFlexProperties;
@@ -55,9 +57,11 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
     private readonly tipoConvocatoriaReunionService: TipoConvocatoriaReunionService,
     private readonly snackBarService: SnackBarService,
     private readonly personaFisicaService: PersonaFisicaService,
-    private readonly actionService: ConvocatoriaReunionActionService
+    private readonly actionService: ConvocatoriaReunionActionService,
+    private readonly convocatoriaReunionService: ConvocatoriaReunionService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
+    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'constructor()', 'start');
     this.formFragment = this.fragment as ConvocatoriaReunionDatosGeneralesFragment;
 
     this.fxFlexProperties = new FxFlexProperties();
@@ -76,11 +80,12 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit() {
-    super.ngOnInit();
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'ngOnInit()', 'start');
+    super.ngOnInit();
     this.comites = [];
     this.tiposConvocatoriaReunion = [];
 
@@ -93,7 +98,6 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
     // Inicializa los combos
     this.getComites();
     this.getTiposConvocatoriaReunion();
-    this.getConvocantesComite();
 
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'ngOnInit()', 'end');
   }
@@ -171,7 +175,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
   /**
    * Recupera el listado de convocantes correspondiente al comite seleccionado.
    */
-  private getConvocantesComite(): void {
+  getConvocantesComite(): void {
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
       'getConvocantesComite()',
       'start');
@@ -182,42 +186,12 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
           if (typeof comite === 'string' || !comite.id) {
             return of([]);
           }
-
-          const filterComite = {
-            field: 'comite.id',
-            type: SgiRestFilterType.EQUALS,
-            value: comite.id.toString()
-          };
-
-          return this.evaluadorService
-            .findAll({ filters: [filterComite] })
-            .pipe(
-              switchMap((response: SgiRestListResult<IEvaluador>) => {
-                const convocantes = response.items;
-
-                const personaRefsConvocantes = convocantes.map((convocante: IEvaluador) => convocante.personaRef);
-
-                const convocantesWithDatosPersona$ = this.personaFisicaService.findByPersonasRefs(personaRefsConvocantes).pipe(
-                  map((result: SgiRestListResult<IPersona>) => {
-                    const personas = result.items;
-
-                    convocantes.forEach((convocante: IEvaluador) => {
-                      const datosPersonaConvocante = personas.find((persona: IPersona) => convocante.personaRef === persona.personaRef);
-                      convocante.nombre = datosPersonaConvocante?.nombre;
-                      convocante.primerApellido = datosPersonaConvocante?.primerApellido;
-                      convocante.segundoApellido = datosPersonaConvocante?.segundoApellido;
-                    });
-
-                    return convocantes;
-                  }));
-
-                return convocantesWithDatosPersona$;
-              })
-            );
+          return this.getConvocantes(comite);
         })
       ).subscribe(
         (convocantes: IEvaluador[]) => {
           this.formFragment.convocantes = convocantes;
+          this.formFragment.evaluadoresComite = convocantes;
         },
         () => {
           this.snackBarService.showError(MSG_ERROR_LOAD_CONVOCANTES);
@@ -232,8 +206,76 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
       'end');
   }
 
+  private getConvocantes(comite: Comite): Observable<IEvaluador[]> {
+    const filterComite = {
+      field: 'comite.id',
+      type: SgiRestFilterType.EQUALS,
+      value: comite.id.toString()
+    };
+    return this.evaluadorService.findAll({ filters: [filterComite] })
+      .pipe(
+        switchMap((listadoConvocantes: SgiRestListResult<IEvaluador>) => {
+          const personaRefsConvocantes = listadoConvocantes.items.map((convocante: IEvaluador) => convocante.personaRef);
+          const convocantesWithDatosPersona$ = this.personaFisicaService.findByPersonasRefs(personaRefsConvocantes)
+            .pipe(
+              map((personas: SgiRestListResult<IPersona>) => {
+                return this.loadDatosPersona(personas, listadoConvocantes.items);
+              })
+            );
+          return convocantesWithDatosPersona$;
+        }),
+        switchMap((convocantes: IEvaluador[]) => {
+          this.getAsistentes(convocantes);
+          return of(convocantes);
+        })
+      );
+  }
+
+  /**
+   * Carga los datos personales de los evaluadores
+   *
+   * @param listado Listado de personas
+   * @param evaluadores Evaluadores
+   */
+  private loadDatosPersona(listado: SgiRestListResult<IPersona>, evaluadores: IEvaluador[]): IEvaluador[] {
+    const personas = listado.items;
+    evaluadores.forEach((convocante: IEvaluador) => {
+      const datosPersonaConvocante = personas.find((persona: IPersona) => convocante.personaRef === persona.personaRef);
+      convocante.nombre = datosPersonaConvocante?.nombre;
+      convocante.primerApellido = datosPersonaConvocante?.primerApellido;
+      convocante.segundoApellido = datosPersonaConvocante?.segundoApellido;
+    });
+    return evaluadores;
+  }
+
+  /**
+   * Carga los asistentes de la convocatoria dentro del formGroup
+   *
+   * @param convocantes Convocantes
+   */
+  private getAsistentes(convocantes: IEvaluador[]): Observable<SgiRestListResult<IAsistente>> {
+    const id = this.actionService?.convocatoriaReunion?.id;
+    if (id) {
+      return this.convocatoriaReunionService.findAsistentes(id).pipe(
+        switchMap((asistentes: SgiRestListResult<IAsistente>) => {
+          const ids = asistentes.items.map((convocante: IAsistente) => convocante.evaluador.id);
+          const asistentesFormGroup = [];
+          convocantes.forEach((evaluador: IEvaluador) => {
+            if (ids.includes(evaluador.id)) {
+              asistentesFormGroup.push(evaluador);
+            }
+          });
+          this.formGroup.get('convocantes').setValue(asistentesFormGroup);
+          return of(asistentes);
+        })
+      );
+    }
+    return of();
+  }
+
   /**
    * Filtro de campo autocompletable comite.
+   *
    * @param value value a filtrar (string o Comite.
    * @returns lista de comites filtrada.
    */
@@ -255,6 +297,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
 
   /**
    * Filtro de campo autocompletable tipo convocatoria reunion.
+   *
    * @param value value a filtrar (string o TipoConvocatoriaReunion).
    * @returns lista de tipos de convocatoria reunion filtrada.
    */

@@ -4,7 +4,6 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IPersonaDialogo } from '@core/models/eti/persona-dialogo';
 import { IPersona } from '@core/models/sgp/persona';
 import { NGXLogger } from 'ngx-logger';
-
 import { BuscarPersonaDialogoComponent } from './dialogo/buscar-persona-dialogo.component';
 
 const TEXT_USER_TITLE = marker('eti.buscarUsuario.titulo');

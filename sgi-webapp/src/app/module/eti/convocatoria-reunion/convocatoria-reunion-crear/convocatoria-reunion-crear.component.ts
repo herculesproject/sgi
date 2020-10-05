@@ -32,7 +32,7 @@ export class ConvocatoriaReunionCrearComponent extends ActionComponent {
     protected readonly snackBarService: SnackBarService,
     router: Router,
     route: ActivatedRoute,
-    public actionService: ConvocatoriaReunionActionService,
+    public readonly actionService: ConvocatoriaReunionActionService,
     dialogService: DialogService
   ) {
     super(router, route, actionService, dialogService);
@@ -41,7 +41,7 @@ export class ConvocatoriaReunionCrearComponent extends ActionComponent {
   saveOrUpdate(): void {
     this.actionService.saveOrUpdate().subscribe(
       () => { },
-      (error) => {
+      () => {
         this.snackBarService.showError(MSG_ERROR);
       },
       () => {
@@ -49,19 +49,5 @@ export class ConvocatoriaReunionCrearComponent extends ActionComponent {
         this.router.navigate(['../'], { relativeTo: this.activatedRoute });
       }
     );
-  }
-
-  onTabClick(tabName: string): void {
-    this.logger.debug(ConvocatoriaReunionCrearComponent.name,
-      'onTabClick(tabName: string)',
-      'start');
-    if (tabName === this.actionService.FRAGMENT.DATOS_GENERALES) {
-      this.actionService.onEnterDatosGenerales();
-    } else if (tabName === this.actionService.FRAGMENT.ASIGNACION_MEMORIAS) {
-      this.actionService.onEnterAsignacionMemorias();
-    }
-    this.logger.debug(ConvocatoriaReunionCrearComponent.name,
-      'onTabClick(tabName: string)',
-      'start');
   }
 }

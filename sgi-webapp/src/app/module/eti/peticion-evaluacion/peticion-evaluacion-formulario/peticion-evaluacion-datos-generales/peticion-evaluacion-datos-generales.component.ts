@@ -1,13 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { ITipoActividad } from '@core/models/eti/tipo-actividad';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { NGXLogger } from 'ngx-logger';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { TipoActividadService } from '@core/services/eti/tipo-actividad.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
-import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 

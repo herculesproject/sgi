@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable, of, BehaviorSubject, throwError } from 'rxjs';
 import { switchMap, map, catchError } from 'rxjs/operators';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
+import { IPersona } from '@core/models/sgp/persona';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { NullIdValidador } from '@core/validators/null-id-validador';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
@@ -11,8 +12,13 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IMemoriaWithPersona } from '@core/models/eti/memoria-with-persona';
 import { IComentario } from '@core/models/eti/comentario';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { IMemoria } from '@core/models/eti/memoria';
 
-export class EvaluacionEvaluacionFragment extends FormFragment<IMemoriaWithPersona> {
+interface MemoriaWithPersona extends IMemoria {
+  solicitante: IPersona;
+}
+
+export class EvaluacionEvaluacionFragment extends FormFragment<MemoriaWithPersona> {
 
   private memoria: IMemoriaWithPersona;
   evaluacion$: BehaviorSubject<IEvaluacion> = new BehaviorSubject<IEvaluacion>(null);

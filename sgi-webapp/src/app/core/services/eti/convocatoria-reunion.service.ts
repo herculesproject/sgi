@@ -1,18 +1,19 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IAsistente } from '@core/models/eti/asistente';
 import { Comite } from '@core/models/eti/comite';
-import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
+import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
 import { environment } from '@env';
 import { SgiBaseConverter } from '@sgi/framework/core/';
-import { SgiMutableRestService } from '@sgi/framework/http';
+import { SgiMutableRestService, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { tap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 
-interface IConvocatoriaReunion {
+interface IConvocatoriaReunionService {
 
   /** ID */
   id: number;
@@ -40,16 +41,20 @@ interface IConvocatoriaReunion {
   fechaEnvio: Date;
   /** Activo */
   activo: boolean;
+  /** Num Evaluaciones */
+  numEvaluaciones: number;
+  /** id Acta */
+  idActa: number;
 }
 
 
 @Injectable({
   providedIn: 'root',
 })
-export class ConvocatoriaReunionService extends SgiMutableRestService<number, IConvocatoriaReunion, ConvocatoriaReunion> {
+export class ConvocatoriaReunionService extends SgiMutableRestService<number, IConvocatoriaReunionService, IConvocatoriaReunion> {
   private static readonly MAPPING = '/convocatoriareuniones';
-  private static readonly CONVERTER = new class extends SgiBaseConverter<IConvocatoriaReunion, ConvocatoriaReunion> {
-    toTarget(value: IConvocatoriaReunion): ConvocatoriaReunion {
+  private static readonly CONVERTER = new class extends SgiBaseConverter<IConvocatoriaReunionService, IConvocatoriaReunion> {
+    toTarget(value: IConvocatoriaReunionService): IConvocatoriaReunion {
       return {
         id: value.id,
         comite: value.comite,
@@ -66,9 +71,12 @@ export class ConvocatoriaReunionService extends SgiMutableRestService<number, IC
         activo: value.activo,
         convocantes: [],
         codigo: `ACTA${value.numeroActa}/${value.anio}/${value.comite.comite}`,
+        numEvaluaciones: value.numEvaluaciones,
+        idActa: value.idActa,
       };
     }
-    fromTarget(value: ConvocatoriaReunion): IConvocatoriaReunion {
+
+    fromTarget(value: IConvocatoriaReunion): IConvocatoriaReunionService {
       return {
         id: value.id,
         comite: value.comite,
@@ -82,7 +90,9 @@ export class ConvocatoriaReunionService extends SgiMutableRestService<number, IC
         anio: value.anio,
         numeroActa: value.numeroActa,
         fechaEnvio: value.fechaEnvio,
-        activo: value.activo
+        activo: value.activo,
+        numEvaluaciones: value.numEvaluaciones,
+        idActa: value.idActa,
       };
     }
   }();
@@ -98,10 +108,10 @@ export class ConvocatoriaReunionService extends SgiMutableRestService<number, IC
   }
 
   /**
-   * Devuelve todos los asitentes por convocatoria id.
+   * Devuelve todos los asistentes por convocatoria id.
    * @param idConvocatoria id convocatoria.
    */
-  findAsistentes(idConvocatoria: number) {
+  findAsistentes(idConvocatoria: number): Observable<SgiRestListResult<IAsistente>> {
     this.logger.debug(ConvocatoriaReunionService.name, `findAsistentes(${idConvocatoria})`, '-', 'START');
     return this.find<IAsistente, IAsistente>(`${this.endpointUrl}/${idConvocatoria}/asistentes`, null).pipe(
       tap(() => this.logger.debug(ConvocatoriaReunionService.name, `findAsistentes(${idConvocatoria})`, '-', 'END'))
@@ -112,10 +122,43 @@ export class ConvocatoriaReunionService extends SgiMutableRestService<number, IC
    * Devuelve todos las evaluaciones por convocatoria id.
    * @param idConvocatoria id convocatoria.
    */
-  findEvaluacionesActivas(idConvocatoria: number) {
+  findEvaluacionesActivas(idConvocatoria: number): Observable<SgiRestListResult<IEvaluacion>> {
     this.logger.debug(ConvocatoriaReunionService.name, `findEvaluacionesActivas(${idConvocatoria})`, '-', 'START');
     return this.find<IEvaluacion, IEvaluacion>(`${this.endpointUrl}/${idConvocatoria}/evaluaciones-activas`, null).pipe(
       tap(() => this.logger.debug(ConvocatoriaReunionService.name, `findEvaluacionesActivas(${idConvocatoria})`, '-', 'END'))
+    );
+  }
+
+  /**
+   * Devuelve la convocatoria por id.con el número de evaluaciones activas que no son revisión mínima
+   * @param idConvocatoria id convocatoria.
+   */
+  public findByIdWithDatosGenerales(idConvocatoria: number): Observable<IConvocatoriaReunion> {
+    this.logger.debug(ConvocatoriaReunionService.name, `findByIdWithDatosGenerales(${idConvocatoria})`, '-', 'START');
+    return this.http.get<IConvocatoriaReunion>(`${this.endpointUrl}/${idConvocatoria}/datos-generales`).pipe(
+      // TODO: Explore the use a global HttpInterceptor with or without a custom error
+      catchError((error: HttpErrorResponse) => {
+        // Log the error
+        this.logger.error(ConvocatoriaReunionService.name, `findByIdWithDatosGenerales(${idConvocatoria}):`, error);
+        // Pass the error to subscribers. Anyway they would decide what to do with the error.
+        return throwError(error);
+      }),
+      map((convocatoriaReunion: IConvocatoriaReunion) => {
+        this.logger.debug(ConvocatoriaReunionService.name, `findByIdWithDatosGenerales(${idConvocatoria})`, '-', 'END');
+        return this.converter.toTarget(convocatoriaReunion);
+      })
+    );
+  }
+
+  /** Elimina las memorias asignadas a la convocatoria de reunión
+   * @param evaluacion la Evaluacion a borrar
+   */
+  deleteEvaluacion(evaluacion: IEvaluacion) {
+    this.logger.debug(ConvocatoriaReunionService.name, `${this.endpointUrl}/${evaluacion.convocatoriaReunion.id}/evaluacion/${evaluacion.id}`, '-', 'START');
+    return this.http.delete<void>(`${this.endpointUrl}/${evaluacion.convocatoriaReunion.id}/evaluacion/${evaluacion.id}`).pipe(
+      tap(() => {
+        this.logger.debug(ConvocatoriaReunionService.name, `${this.endpointUrl}/${evaluacion.convocatoriaReunion.id}/evaluacion/${evaluacion.id}`, '-', 'end')
+      })
     );
   }
 

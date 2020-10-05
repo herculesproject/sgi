@@ -10,13 +10,14 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 
-import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
+import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { SgiRestListResult } from '@sgi/framework/http/types';
 import { startWith, map } from 'rxjs/operators';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { ActaActionService } from '../../acta.action.service';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { IActa } from '@core/models/eti/acta';
+import { FormGroup } from '@angular/forms';
 
 const MSG_ERROR_INIT = marker('eti.acta.crear.datosGenerales.convocatoriaReunion.error.cargar');
 
@@ -32,8 +33,8 @@ export class ActaDatosGeneralesComponent extends FormFragmentComponent<IActa> im
   fxLayoutProperties: FxLayoutProperties;
   fxFlexPropertiesInline: FxFlexProperties;
 
-  convocatoriasReunionFitlered: ConvocatoriaReunion[];
-  convocatoriasReunion: Observable<ConvocatoriaReunion[]>;
+  convocatoriasReunionFitlered: IConvocatoriaReunion[];
+  convocatoriasReunion: Observable<IConvocatoriaReunion[]>;
 
   suscripciones: Subscription[] = [];
 
@@ -68,7 +69,7 @@ export class ActaDatosGeneralesComponent extends FormFragmentComponent<IActa> im
     this.logger.debug(ActaDatosGeneralesComponent.name, 'ngOnInit()', 'start');
     this.suscripciones.push(
       this.convocatoriaReunionService.findAll().subscribe(
-        (res: SgiRestListResult<ConvocatoriaReunion>) => {
+        (res: SgiRestListResult<IConvocatoriaReunion>) => {
           this.convocatoriasReunionFitlered = res.items;
           this.convocatoriasReunion = this.formGroup.controls.convocatoriaReunion.valueChanges
             .pipe(
@@ -90,7 +91,7 @@ export class ActaDatosGeneralesComponent extends FormFragmentComponent<IActa> im
    *
    * @param value del input para autocompletar
    */
-  filtro(value: string): ConvocatoriaReunion[] {
+  filtro(value: string): IConvocatoriaReunion[] {
     const filterValue = value.toString().toLowerCase();
     return this.convocatoriasReunionFitlered.filter(convocatoriaReunion => convocatoriaReunion.codigo.toLowerCase().includes(filterValue));
   }
@@ -100,7 +101,7 @@ export class ActaDatosGeneralesComponent extends FormFragmentComponent<IActa> im
    * @param convocatoria convocatoria
    * @returns código de una convocatoria reunión
    */
-  getConvocatoria(convocatoriaReunion?: ConvocatoriaReunion): string | undefined {
+  getConvocatoria(convocatoriaReunion?: IConvocatoriaReunion): string | undefined {
     return typeof convocatoriaReunion === 'string' ? convocatoriaReunion : convocatoriaReunion?.codigo;
   }
 
@@ -108,9 +109,9 @@ export class ActaDatosGeneralesComponent extends FormFragmentComponent<IActa> im
    * Registra el evento de modificación de convocatoria reunión.
    * @param convocatoriaReunion  convocatoria reunión seleccionada
    */
-  selectConvocatoriaReunion(convocatoriaReunion: ConvocatoriaReunion | string) {
+  selectConvocatoriaReunion(convocatoriaReunion: IConvocatoriaReunion | string) {
     this.logger.debug(ActaDatosGeneralesComponent.name, 'selectConvocatoriaReunion(convocatoriaReunion: ConvocatoriaReunion)', 'start');
-    this.actionService.setIdConvocatoria(convocatoriaReunion ? (convocatoriaReunion as ConvocatoriaReunion).id : null);
+    this.actionService.setIdConvocatoria(convocatoriaReunion ? (convocatoriaReunion as IConvocatoriaReunion).id : null);
     this.logger.debug(ActaDatosGeneralesComponent.name, 'selectConvocatoriaReunion(convocatoriaReunion: ConvocatoriaReunion)', 'end');
   }
 

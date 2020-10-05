@@ -1,4 +1,4 @@
-import { ConvocatoriaReunion } from './convocatoria-reunion';
+import { IConvocatoriaReunion } from './convocatoria-reunion';
 import { TipoEstadoActa } from './tipo-estado-acta';
 
 export interface IActa {
@@ -6,7 +6,7 @@ export interface IActa {
   id: number;
 
   /** Convocatoria de la reunión */
-  convocatoriaReunion: ConvocatoriaReunion;
+  convocatoriaReunion: IConvocatoriaReunion;
 
   /** Hora inicio */
   horaInicio: number;

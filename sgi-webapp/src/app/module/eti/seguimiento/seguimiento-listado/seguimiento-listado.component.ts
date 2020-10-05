@@ -4,6 +4,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { Comite } from '@core/models/eti/comite';
 import { IEvaluacionSolicitante } from '@core/models/eti/evaluacion-solicitante';
+import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';

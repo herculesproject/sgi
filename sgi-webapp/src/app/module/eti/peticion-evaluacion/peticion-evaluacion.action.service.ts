@@ -7,20 +7,17 @@ import { EquipoTrabajoService } from '@core/services/eti/equipo-trabajo.service'
 import { SgiAuthService } from '@sgi/framework/auth/';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { TareaService } from '@core/services/eti/tarea.service';
+import { PeticionEvaluacionDatosGeneralesFragment } from './peticion-evaluacion-formulario/peticion-evaluacion-datos-generales/peticion-evaluacion-datos-generales.fragment';
+import { EquipoInvestigadorListadoFragment } from './peticion-evaluacion-formulario/equipo-investigador/equipo-investigador-listado/equipo-investigador-listado.fragment';
+import { MemoriasListadoFragment } from './peticion-evaluacion-formulario/memorias-listado/memorias-listado.fragment';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { NGXLogger } from 'ngx-logger';
-import {
-  EquipoInvestigadorListadoFragment,
-} from './peticion-evaluacion-formulario/equipo-investigador/equipo-investigador-listado/equipo-investigador-listado.fragment';
-import { MemoriasListadoFragment } from './peticion-evaluacion-formulario/memorias-listado/memorias-listado.fragment';
-import {
-  PeticionEvaluacionDatosGeneralesFragment,
-} from './peticion-evaluacion-formulario/peticion-evaluacion-datos-generales/peticion-evaluacion-datos-generales.fragment';
 import { PeticionEvaluacionTareasFragment } from './peticion-evaluacion-formulario/peticion-evaluacion-tareas/peticion-evaluacion-tareas-listado/peticion-evaluacion-tareas-listado.fragment';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { Observable, throwError, from, of } from 'rxjs';
 import { filter, concatMap, switchMap, tap, takeLast } from 'rxjs/operators';
+
 
 @Injectable()
 export class PeticionEvaluacionActionService extends ActionService {

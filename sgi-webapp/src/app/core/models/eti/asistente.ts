@@ -1,4 +1,4 @@
-import { ConvocatoriaReunion } from './convocatoria-reunion';
+import { IConvocatoriaReunion } from './convocatoria-reunion';
 import { IEvaluador } from './evaluador';
 
 export interface IAsistente {
@@ -9,7 +9,7 @@ export interface IAsistente {
   evaluador: IEvaluador;
 
   /** Convocatoria de la reunión */
-  convocatoriaReunion: ConvocatoriaReunion;
+  convocatoriaReunion: IConvocatoriaReunion;
 
   /** Asistencia */
   asistencia: boolean;

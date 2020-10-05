@@ -1,20 +1,17 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { ActionService } from '@core/services/action-service';
 import { AsistenteService } from '@core/services/eti/asistente.service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
+import { ConvocatoriaReunionDatosGeneralesFragment } from './convocatoria-reunion-formulario/convocatoria-reunion-datos-generales/convocatoria-reunion-datos-generales.fragment';
+import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
+import { ConvocatoriaReunionListadoMemoriasFragment } from './convocatoria-reunion-formulario/convocatoria-reunion-listado-memorias/convocatoria-reunion-listado-memorias.fragment';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { Subject } from 'rxjs';
-
-import {
-  ConvocatoriaReunionDatosGeneralesFragment,
-} from './convocatoria-reunion-formulario/convocatoria-reunion-datos-generales/convocatoria-reunion-datos-generales.fragment';
-import {
-  ConvocatoriaReunionListadoMemoriasFragment,
-} from './convocatoria-reunion-formulario/convocatoria-reunion-listado-memorias/convocatoria-reunion-listado-memorias.fragment';
+import { NGXLogger } from 'ngx-logger';
+import { EvaluadorService } from '@core/services/eti/evaluador.service';
 
 interface DatosAsignacionEvaluacion {
   idComite: number;
@@ -30,7 +27,7 @@ export class ConvocatoriaReunionActionService extends ActionService {
     ASIGNACION_MEMORIAS: 'asignacionMemorias'
   };
 
-  private convocatoriaReunion: ConvocatoriaReunion;
+  convocatoriaReunion: IConvocatoriaReunion;
   private datosGenerales: ConvocatoriaReunionDatosGeneralesFragment;
   private asignacionMemorias: ConvocatoriaReunionListadoMemoriasFragment;
 
@@ -38,52 +35,86 @@ export class ConvocatoriaReunionActionService extends ActionService {
   public disableCamposDatosGenerales: Subject<boolean> = new Subject<boolean>();
 
   constructor(
+    private readonly logger: NGXLogger,
     fb: FormBuilder,
     route: ActivatedRoute,
     service: ConvocatoriaReunionService,
     asistenteService: AsistenteService,
     evaluacionService: EvaluacionService,
-    personaFisicaService: PersonaFisicaService
+    personaFisicaService: PersonaFisicaService,
+    evaluadorService: EvaluadorService
   ) {
     super();
-    this.convocatoriaReunion = new ConvocatoriaReunion();
+    this.logger.debug(ConvocatoriaReunionActionService.name, 'constructor()', 'start');
+    this.convocatoriaReunion = {} as IConvocatoriaReunion;
     if (route.snapshot.data.convocatoriaReunion) {
       this.convocatoriaReunion = route.snapshot.data.convocatoriaReunion;
       this.enableEdit();
     }
-    this.datosGenerales = new ConvocatoriaReunionDatosGeneralesFragment(fb, this.convocatoriaReunion?.id, service, asistenteService);
+    this.datosGenerales = new ConvocatoriaReunionDatosGeneralesFragment(
+      logger,
+      fb, this.convocatoriaReunion?.id,
+      service, asistenteService, personaFisicaService, evaluadorService);
     this.asignacionMemorias = new ConvocatoriaReunionListadoMemoriasFragment(
-      this.convocatoriaReunion?.id, evaluacionService, personaFisicaService);
+      logger,
+      this.convocatoriaReunion?.id,
+      evaluacionService, personaFisicaService, service);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.ASIGNACION_MEMORIAS, this.asignacionMemorias);
+    this.logger.debug(ConvocatoriaReunionActionService.name, 'constructor()', 'end');
   }
 
   public getDatosAsignacion(): DatosAsignacionEvaluacion {
-    return {
+    this.logger.debug(ConvocatoriaReunionActionService.name, 'getDatosAsignacion()', 'start');
+    const datosAsignacionEvaluacion = {
       idComite: this.datosGenerales.getFormGroup().controls.comite.value?.id,
       idTipoConvocatoria: this.datosGenerales.getFormGroup().controls.tipoConvocatoriaReunion.value?.id,
       fechaLimite: this.datosGenerales.getFormGroup().controls.fechaLimite.value
-    };
+    } as DatosAsignacionEvaluacion;
+    this.logger.debug(ConvocatoriaReunionActionService.name, 'getDatosAsignacion()', 'end');
+    return datosAsignacionEvaluacion;
   }
 
   onKeyChange(value: number) {
+    this.logger.debug(ConvocatoriaReunionActionService.name, `onKeyChange(value: ${value})`, 'start');
     this.asignacionMemorias.setKey(value);
     this.asignacionMemorias.setConvocatoriaReunion(this.datosGenerales.getValue());
+    this.logger.debug(ConvocatoriaReunionActionService.name, `onKeyChange(value: ${value})`, 'end');
   }
 
   /**
    * Actualiza el valor de disableCamposDatosGenerales utilizado para evitar que se
    * modifiquen los datos del comité, del tipo de convocatoria y de la fecha límite
    * de la convocatoria cuando ya tiene memorias asignadas.
+   *
+   * Si la convocatoria tiene Acta los campos ya estarán desactivados
+   *
+   * Los disable/enable se asignan desde aquí porque no se recomienda hacerlo en la plantilla.
+   *
    */
   onEnterDatosGenerales(): void {
+    this.logger.debug(ConvocatoriaReunionActionService.name, 'onEnterDatosGenerales', 'start');
+
+    // Si la convocatoria tiene Acta los campos ya estarán desactivados
+    if (this.datosGenerales.hasActa()) {
+      return;
+    }
+
     let disable = true;
+    this.datosGenerales.getFormGroup().controls.comite.disable({ onlySelf: true });
+    this.datosGenerales.getFormGroup().controls.fechaLimite.disable({ onlySelf: true });
+    this.datosGenerales.getFormGroup().controls.tipoConvocatoriaReunion.disable({ onlySelf: true });
 
     if (this.asignacionMemorias.evaluaciones$.value.length === 0) {
       disable = false;
+      this.datosGenerales.getFormGroup().controls.comite.enable({ onlySelf: true });
+      this.datosGenerales.getFormGroup().controls.fechaLimite.enable({ onlySelf: true });
+      this.datosGenerales.getFormGroup().controls.tipoConvocatoriaReunion.enable({ onlySelf: true });
     }
+
     this.disableCamposDatosGenerales.next(disable);
+    this.logger.debug(ConvocatoriaReunionActionService.name, 'onEnterDatosGenerales', 'end');
   }
 
   /**
@@ -92,10 +123,18 @@ export class ConvocatoriaReunionActionService extends ActionService {
    * al comité, al tipo de convocatoria y ni a la fecha límite, ya que esos datos
    * son necesarios para determinar las memorias que podrán ser asignadas a la
    * convocatoria.
+   *
+   * Si la convocatoria tiene Acta siempre tendrá valor en los campos requeridos
    */
   onEnterAsignacionMemorias(): void {
-    let disable = true;
+    this.logger.debug(ConvocatoriaReunionActionService.name, 'onEnterAsignacionMemorias', 'start');
 
+    // Si la convocatoria tiene Acta siempre tendrá valor en los campos requeridos
+    if (this.datosGenerales.hasActa()) {
+      return;
+    }
+
+    let disable = true;
     if (this.datosGenerales.getFormGroup().controls.comite.value &&
       this.datosGenerales.getFormGroup().controls.tipoConvocatoriaReunion.value &&
       this.datosGenerales.getFormGroup().controls.fechaLimite.value) {
@@ -103,5 +142,6 @@ export class ConvocatoriaReunionActionService extends ActionService {
     }
 
     this.disableAsignarMemorias.next(disable);
+    this.logger.debug(ConvocatoriaReunionActionService.name, 'onEnterAsignacionMemorias', 'end');
   }
 }

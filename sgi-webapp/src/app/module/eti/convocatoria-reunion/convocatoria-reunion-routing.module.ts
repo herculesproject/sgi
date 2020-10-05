@@ -11,9 +11,13 @@ import { CONVOCATORIA_REUNION_ROUTE_NAMES } from './convocatoria-reunion-route-n
 import { ConvocatoriaReunionDatosGeneralesComponent } from './convocatoria-reunion-formulario/convocatoria-reunion-datos-generales/convocatoria-reunion-datos-generales.component';
 import { FragmentGuard } from '@core/guards/detail-form.guard';
 import { ConvocatoriaReunionListadoMemoriasComponent } from './convocatoria-reunion-formulario/convocatoria-reunion-listado-memorias/convocatoria-reunion-listado-memorias.component';
+import { ConvocatoriaReunionEditarComponent } from './convocatoria-reunion-editar/convocatoria-reunion-editar.component';
+import { ConvocatoriaReunionResolver } from './convocatoria-reunion.resolver';
+
 
 const MSG_LISTADO_TITLE = marker('eti.convocatoriaReunion.listado.titulo');
 const MSG_NEW_TITLE = marker('eti.convocatoriaReunion.crear.titulo');
+const MSG_EDIT_TITLE = marker('eti.convocatoriaReunion.editar.titulo');
 
 const routes: SgiRoutes = [
   {
@@ -51,7 +55,38 @@ const routes: SgiRoutes = [
         canDeactivate: [FragmentGuard]
       }
     ]
-  }
+  },
+  {
+    path: `:id`,
+    component: ConvocatoriaReunionEditarComponent,
+    canActivate: [SgiAuthGuard],
+    canDeactivate: [ActionGuard],
+    resolve: {
+      convocatoriaReunion: ConvocatoriaReunionResolver
+    },
+    data: {
+      title: MSG_EDIT_TITLE,
+      hasAuthorityForAnyUO: 'ETI-CNV-E'
+    },
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: CONVOCATORIA_REUNION_ROUTE_NAMES.DATOS_GENERALES
+      },
+      {
+        path: CONVOCATORIA_REUNION_ROUTE_NAMES.DATOS_GENERALES,
+        component: ConvocatoriaReunionDatosGeneralesComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: CONVOCATORIA_REUNION_ROUTE_NAMES.ASIGNACION_MEMORIAS,
+        component: ConvocatoriaReunionListadoMemoriasComponent,
+        canDeactivate: [FragmentGuard]
+      }
+    ]
+  },
+
 ];
 
 @NgModule({

@@ -11,6 +11,8 @@ import { SgiAuthModule } from '@sgi/framework/auth';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConvocatoriaReunionListadoMemoriasComponent } from './convocatoria-reunion-formulario/convocatoria-reunion-listado-memorias/convocatoria-reunion-listado-memorias.component';
 import { ConvocatoriaReunionAsignacionMemoriasComponent } from './convocatoria-reunion-formulario/convocatoria-reunion-asignacion-memorias/convocatoria-reunion-asignacion-memorias.component';
+import { ConvocatoriaReunionEditarComponent } from './convocatoria-reunion-editar/convocatoria-reunion-editar.component';
+import { ConvocatoriaReunionResolver } from './convocatoria-reunion.resolver';
 
 
 @NgModule({
@@ -19,7 +21,8 @@ import { ConvocatoriaReunionAsignacionMemoriasComponent } from './convocatoria-r
     ConvocatoriaReunionListadoComponent,
     ConvocatoriaReunionDatosGeneralesComponent,
     ConvocatoriaReunionListadoMemoriasComponent,
-    ConvocatoriaReunionAsignacionMemoriasComponent
+    ConvocatoriaReunionAsignacionMemoriasComponent,
+    ConvocatoriaReunionEditarComponent
   ],
   imports: [
     SharedModule,
@@ -30,6 +33,9 @@ import { ConvocatoriaReunionAsignacionMemoriasComponent } from './convocatoria-r
     SgiAuthModule,
     FormsModule,
     ReactiveFormsModule
+  ],
+  providers: [
+    ConvocatoriaReunionResolver
   ]
 })
 export class ConvocatoriaReunionModule { }

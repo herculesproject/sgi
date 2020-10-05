@@ -1,5 +1,5 @@
 import { Comite } from './comite';
-import { ConvocatoriaReunion } from './convocatoria-reunion';
+import { IConvocatoriaReunion } from './convocatoria-reunion';
 import { IMemoria } from './memoria';
 import { IDictamen } from './dictamen';
 import { TipoEvaluacion } from './tipo-evaluacion';
@@ -16,7 +16,7 @@ export interface IEvaluacion {
   comite: Comite;
 
   /** Convocatoria reunión */
-  convocatoriaReunion: ConvocatoriaReunion;
+  convocatoriaReunion: IConvocatoriaReunion;
 
   /** Tipo evaluación */
   tipoEvaluacion: TipoEvaluacion;
