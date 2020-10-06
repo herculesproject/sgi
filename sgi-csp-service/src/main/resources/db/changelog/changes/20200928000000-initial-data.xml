@@ -27,6 +27,34 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-modelo_unidad">
+    <insert tableName="modelo_unidad">
+      <column name="unidad_gestion_ref" value="unidad-001" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')"></column>
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="modelo_unidad">
+      <column name="unidad_gestion_ref" value="unidad-002" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')"></column>
+      <column name="activo" value="false" />
+    </insert>
+    <insert tableName="modelo_unidad">
+      <column name="unidad_gestion_ref" value="unidad-003" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')"></column>
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="modelo_unidad">
+      <column name="unidad_gestion_ref" value="unidad-001" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-002')"></column>
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="modelo_unidad">
+      <column name="unidad_gestion_ref" value="unidad-004" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-002')"></column>
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-tipo_documento">
     <insert tableName="tipo_documento">
       <column name="nombre" value="nombre-001" />
@@ -70,6 +98,34 @@
       <column name="nombre" value="tipo_enlace FFF" />
       <column name="descripcion" value="tipo_enlace FFF" />
       <column name="activo" value="false" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-modelo_tipo_enlace">
+    <insert tableName="modelo_tipo_enlace">
+      <column name="tipo_enlace_id" valueComputed="(select id from csp.tipo_enlace where nombre = 'tipo_enlace AAA')" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')"></column>
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="modelo_tipo_enlace">
+      <column name="tipo_enlace_id" valueComputed="(select id from csp.tipo_enlace where nombre = 'tipo_enlace BBB')" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')"></column>
+      <column name="activo" value="false" />
+    </insert>
+    <insert tableName="modelo_tipo_enlace">
+      <column name="tipo_enlace_id" valueComputed="(select id from csp.tipo_enlace where nombre = 'tipo_enlace CCC')" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')"></column>
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="modelo_tipo_enlace">
+      <column name="tipo_enlace_id" valueComputed="(select id from csp.tipo_enlace where nombre = 'tipo_enlace AAA')" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-002')"></column>
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="modelo_tipo_enlace">
+      <column name="tipo_enlace_id" valueComputed="(select id from csp.tipo_enlace where nombre = 'tipo_enlace DDD')" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-002')"></column>
+      <column name="activo" value="true" />
     </insert>
   </changeSet>
 

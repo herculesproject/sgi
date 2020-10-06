@@ -603,8 +603,8 @@ public class ModeloEjecucionIT {
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "10");
-    String sort = "unidadGestion-";
-    String filter = "unidadGestion~%00%";
+    String sort = "unidadGestionRef-";
+    String filter = "unidadGestionRef~%00%";
 
     Long idModeloEjecucion = 1L;
 
@@ -624,11 +624,11 @@ public class ModeloEjecucionIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(unidadesModelo.get(0).getUnidadGestion()).as("get(0).getUnidadGestion())")
+    Assertions.assertThat(unidadesModelo.get(0).getUnidadGestionRef()).as("get(0).getUnidadGestion())")
         .isEqualTo("unidad-" + String.format("%03d", 3));
-    Assertions.assertThat(unidadesModelo.get(1).getUnidadGestion()).as("get(1).getUnidadGestion())")
+    Assertions.assertThat(unidadesModelo.get(1).getUnidadGestionRef()).as("get(1).getUnidadGestion())")
         .isEqualTo("unidad-" + String.format("%03d", 2));
-    Assertions.assertThat(unidadesModelo.get(2).getUnidadGestion()).as("get(2).getUnidadGestion())")
+    Assertions.assertThat(unidadesModelo.get(2).getUnidadGestionRef()).as("get(2).getUnidadGestion())")
         .isEqualTo("unidad-" + String.format("%03d", 1));
   }
 

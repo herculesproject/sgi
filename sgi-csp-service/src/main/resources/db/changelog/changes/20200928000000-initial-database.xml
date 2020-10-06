@@ -248,7 +248,7 @@
       <column name="id" type="BIGINT" defaultValueSequenceNext="modelo_unidad_seq">
         <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_unidad_pk" />
       </column>
-      <column name="unidad_gestion" type="VARCHAR2(50)">
+      <column name="unidad_gestion_ref" type="VARCHAR2(50)">
         <constraints nullable="false" />
       </column>
       <column name="modelo_ejecucion_id" type="BIGINT">

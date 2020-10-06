@@ -37,9 +37,9 @@ public class ModeloUnidad extends BaseEntity {
   private Long id;
 
   /** Unidad gestion. */
-  @Column(name = "unidad_gestion", nullable = false)
+  @Column(name = "unidad_gestion_ref", nullable = false)
   @NotNull
-  private String unidadGestion;
+  private String unidadGestionRef;
 
   /** Modelo ejecución. */
   @ManyToOne

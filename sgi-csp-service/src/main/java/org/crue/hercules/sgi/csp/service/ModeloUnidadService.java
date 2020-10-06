@@ -14,6 +14,30 @@ import org.springframework.data.domain.Pageable;
 public interface ModeloUnidadService {
 
   /**
+   * Guarda la entidad {@link ModeloUnidad}.
+   * 
+   * @param modeloUnidad la entidad {@link ModeloUnidad} a guardar.
+   * @return la entidad {@link ModeloUnidad} persistida.
+   */
+  ModeloUnidad create(ModeloUnidad modeloUnidad);
+
+  /**
+   * Desactiva el {@link ModeloUnidad}.
+   *
+   * @param id Id del {@link ModeloUnidad}.
+   * @return la entidad {@link ModeloUnidad} persistida.
+   */
+  ModeloUnidad disable(Long id);
+
+  /**
+   * Obtiene una entidad {@link ModeloUnidad} por id.
+   * 
+   * @param id Identificador de la entidad {@link ModeloUnidad}.
+   * @return la entidad {@link ModeloUnidad}.
+   */
+  ModeloUnidad findById(final Long id);
+
+  /**
    * Obtiene los {@link ModeloUnidad} activos para un {@link ModeloEjecucion}.
    *
    * @param idModeloEjecucion el id de la entidad {@link ModeloEjecucion}.

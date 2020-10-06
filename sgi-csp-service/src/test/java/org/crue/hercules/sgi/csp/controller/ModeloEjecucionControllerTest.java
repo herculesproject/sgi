@@ -1378,7 +1378,7 @@ public class ModeloEjecucionControllerTest {
 
     for (int i = 31; i <= 37; i++) {
       ModeloUnidad modeloUnidad = unidadesModeloResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(modeloUnidad.getUnidadGestion()).isEqualTo("Unidad" + String.format("%03d", i));
+      Assertions.assertThat(modeloUnidad.getUnidadGestionRef()).isEqualTo("Unidad" + String.format("%03d", i));
     }
   }
 
@@ -1589,7 +1589,7 @@ public class ModeloEjecucionControllerTest {
     ModeloUnidad modeloUnidad = new ModeloUnidad();
     modeloUnidad.setId(id);
     modeloUnidad.setModeloEjecucion(modeloEjecucion);
-    modeloUnidad.setUnidadGestion(nombre);
+    modeloUnidad.setUnidadGestionRef(nombre);
     modeloUnidad.setActivo(true);
 
     return modeloUnidad;
