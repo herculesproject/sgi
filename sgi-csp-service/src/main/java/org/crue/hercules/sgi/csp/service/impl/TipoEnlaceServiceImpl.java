@@ -69,11 +69,8 @@ public class TipoEnlaceServiceImpl implements TipoEnlaceService {
     Assert.notNull(tipoEnlace.getId(), "Id no puede ser null para actualizar TipoEnlace");
     Assert.notNull(tipoEnlace.getNombre(), "Nombre no puede ser null para actualizar TipoEnlace");
 
-    repository.findByNombre(tipoEnlace.getNombre()).map((data) -> {
-      if (tipoEnlace.getId() != data.getId()) {
-        throw new IllegalArgumentException("Ya existe un TipoEnlace con el nombre " + data.getNombre());
-      }
-      return data;
+    repository.findByNombre(tipoEnlace.getNombre()).ifPresent((data) -> {
+      Assert.isTrue(tipoEnlace.getId() == data.getId(), "Ya existe un TipoEnlace con el nombre " + data.getNombre());
     });
 
     return repository.findById(tipoEnlace.getId()).map((data) -> {
