@@ -76,11 +76,11 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
     return observable$;
   }
 
-  protected initColumnas(): void {
-    this.logger.debug(SeguimientoListadoComponent.name, 'initColumnas()', 'start');
+  protected initColumns(): void {
+    this.logger.debug(SeguimientoListadoComponent.name, 'initColumns()', 'start');
     this.columnas = ['convocatoriaReunion.comite.id', 'convocatoriaReunion.fechaEvaluacion',
       'memoria.numReferencia', 'solicitante', 'version', 'acciones'];
-    this.logger.debug(SeguimientoListadoComponent.name, 'initColumnas()', 'end');
+    this.logger.debug(SeguimientoListadoComponent.name, 'initColumns()', 'end');
   }
 
   protected loadTable(reset?: boolean): void {
@@ -121,8 +121,8 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
     this.logger.debug(SeguimientoListadoComponent.name, `loadSolicitantes()`, 'end');
   }
 
-  protected createFiltros(): SgiRestFilter[] {
-    this.logger.debug(SeguimientoListadoComponent.name, `createFiltros()`, 'start');
+  protected createFilters(): SgiRestFilter[] {
+    this.logger.debug(SeguimientoListadoComponent.name, `createFilters()`, 'start');
     const filtros = [];
     this.addFiltro(filtros, 'convocatoriaReunion.comite.id', SgiRestFilterType.EQUALS,
       this.formGroup.controls.comite.value.id);
@@ -134,7 +134,7 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
       DateUtils.formatFechaAsISODateTime(fin));
     this.addFiltro(filtros, 'memoria.numReferencia', SgiRestFilterType.EQUALS,
       this.formGroup.controls.memoriaNumReferencia.value);
-    this.logger.debug(SeguimientoListadoComponent.name, `createFiltros()`, 'end');
+    this.logger.debug(SeguimientoListadoComponent.name, `createFilters()`, 'end');
     return filtros;
   }
 

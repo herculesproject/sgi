@@ -63,5 +63,4 @@ export class ConvocatoriaEntidadesFinanciadorasFragment extends Fragment {
       tap(() => this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name, 'saveOrUpdate()', 'end'))
     );
   }
-
 }

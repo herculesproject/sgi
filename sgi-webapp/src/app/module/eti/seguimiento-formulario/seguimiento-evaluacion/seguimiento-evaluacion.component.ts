@@ -7,11 +7,9 @@ import { NGXLogger } from 'ngx-logger';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 
 import { IEvaluacion } from '@core/models/eti/evaluacion';
-import { DictamenService } from '@core/services/eti/dictamen.service';
 import { Subscription, Observable } from 'rxjs';
 import { IDictamen } from '@core/models/eti/dictamen';
 import { IMemoria } from '@core/models/eti/memoria';
-import { GestionSeguimientoActionService } from '../../gestion-seguimiento/gestion-seguimiento.action.service';
 import { TipoEvaluacionService } from '@core/services/eti/tipo-evaluacion.service';
 import { SeguimientoEvaluacionFragment } from './seguimiento-evaluacion.fragment';
 import { SeguimientoListadoAnteriorMemoriaComponent } from '../seguimiento-listado-anterior-memoria/seguimiento-listado-anterior-memoria.component';

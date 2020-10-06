@@ -4,6 +4,7 @@ import { EvaluacionComentarioFragment } from '../evaluacion-formulario/evaluacio
 import { EvaluacionDatosMemoriaFragment } from '../evaluacion-formulario/evaluacion-datos-memoria/evaluacion-datos-memoria.fragment';
 import { EvaluacionDocumentacionFragment } from '../evaluacion-formulario/evaluacion-documentacion/evaluacion-documentacion.fragment';
 import { EvaluacionEvaluacionFragment } from './evaluacion-evaluacion/evaluacion-evaluacion.fragment';
+import { IDictamen } from '@core/models/eti/dictamen';
 
 export enum Gestion { EVALUADOR, GESTOR }
 
@@ -27,7 +28,7 @@ export abstract class EvaluacionFormularioActionService extends ActionService {
     return this.evaluacion;
   }
 
-  setDictamen(dictamen) {
+  setDictamen(dictamen: IDictamen): void {
     this.comentarios.setDictamen(dictamen);
   }
 

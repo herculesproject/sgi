@@ -1,63 +1,45 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { IMemoria } from '@core/models/eti/memoria';
-import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
-import { MemoriaActionService } from '../../memoria.action.service';
 
-import { MemoriaDocumentacionComponent } from './memoria-documentacion.component';
+import { TipoFinalidadListadoComponent } from './tipo-finalidad-listado.component';
 
-describe('MemoriaDocumentacionComponent', () => {
-  let component: MemoriaDocumentacionComponent;
-  let fixture: ComponentFixture<MemoriaDocumentacionComponent>;
-
-  const snapshotData = {
-    memoria: {
-      peticionEvaluacion: {
-        id: 1
-      } as IPeticionEvaluacion
-    } as IMemoria
-  };
+describe('TipoFinalidadListadoComponent', () => {
+  let component: TipoFinalidadListadoComponent;
+  let fixture: ComponentFixture<TipoFinalidadListadoComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        MemoriaDocumentacionComponent
+        TipoFinalidadListadoComponent
       ],
       imports: [
-        BrowserAnimationsModule,
+        RouterTestingModule,
         MaterialDesignModule,
         HttpClientTestingModule,
+        BrowserAnimationsModule,
         TestUtils.getIdiomas(),
-        RouterTestingModule,
+        FlexLayoutModule,
         FormsModule,
         ReactiveFormsModule,
-        SgiAuthModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: {} },
-        { provide: MAT_DIALOG_DATA, useValue: {} },
-        { provide: ActivatedRoute, useValue: { snapshot: { data: snapshotData } } },
-        MemoriaActionService,
-        SgiAuthService
-      ],
+      ]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MemoriaDocumentacionComponent);
+    fixture = TestBed.createComponent(TipoFinalidadListadoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

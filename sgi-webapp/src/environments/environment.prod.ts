@@ -24,7 +24,8 @@ export const environment = {
       isInvestigador: false
     },
     protectedResources: [
-      /\/api\/eti.*/i
+      /\/api\/eti.*/i,
+      /\/api\/csp.*/i
     ]
   } as SgiAuthConfig
 };

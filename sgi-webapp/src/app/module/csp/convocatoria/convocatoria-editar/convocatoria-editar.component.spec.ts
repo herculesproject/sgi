@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ConvocatoriaActionService } from '../convocatoria.action.service';
 import { NGXLogger } from 'ngx-logger';
+import { SgiAuthModule } from '@sgi/framework/auth';
 
 describe('ConvocatoriaEditarComponent', () => {
   let component: ConvocatoriaEditarComponent;
@@ -31,7 +32,8 @@ describe('ConvocatoriaEditarComponent', () => {
         FlexModule,
         FormsModule,
         ReactiveFormsModule,
-        RouterTestingModule.withRoutes([]),
+        RouterTestingModule,
+        SgiAuthModule,
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },

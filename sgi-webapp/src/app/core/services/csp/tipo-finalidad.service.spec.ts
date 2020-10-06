@@ -4,10 +4,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import TestUtils from '@core/utils/test-utils';
 import { NGXLogger } from 'ngx-logger';
 
-import { PlanService } from './plan.service';
+import { TipoFinalidadService } from './tipo-finalidad.service';
 
-describe('PlanService', () => {
-  let service: PlanService;
+describe('TipoFinalidadService', () => {
+  let service: TipoFinalidadService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -19,7 +19,7 @@ describe('PlanService', () => {
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
       ],
     });
-    service = TestBed.inject(PlanService);
+    service = TestBed.inject(TipoFinalidadService);
   });
 
   it('should be created', () => {

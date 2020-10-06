@@ -46,7 +46,8 @@ export class ConvocatoriaPlazosFasesFragment extends Fragment {
 
   /**
    * Insertamos plazos fase
-   * @param plazoFase
+   *
+   * @param plazoFase PlazoFase
    */
   public addPlazosFases(plazoFase: IPlazosFases) {
     this.logger.debug(ConvocatoriaPlazosFasesFragment.name,

@@ -46,7 +46,7 @@ export class ConvocatoriaPeriodosJustificacionFragment extends Fragment {
 
   /**
    * Insertamos periodo justificacion
-   * 
+   *
    * @param periodoJustificacion Periodo de justificación
    */
   public addPeriodoJustificacion(periodoJustificacion: IPeriodoJustificacion) {

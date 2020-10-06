@@ -79,11 +79,11 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
     return this.evaluadorService.getEvaluaciones(this.getFindOptions());
   }
 
-  protected initColumnas() {
-    this.logger.debug(EvaluacionEvaluadorListadoComponent.name, 'initColumnas()', 'start');
+  protected initColumns() {
+    this.logger.debug(EvaluacionEvaluadorListadoComponent.name, 'initColumns()', 'start');
     this.columnas = ['convocatoriaReunion.comite.id', 'convocatoriaReunion.fechaEvaluacion',
       'memoria.numReferencia', 'solicitante', 'version', 'acciones'];
-    this.logger.debug(EvaluacionEvaluadorListadoComponent.name, 'initColumnas()', 'end');
+    this.logger.debug(EvaluacionEvaluadorListadoComponent.name, 'initColumns()', 'end');
   }
 
   protected loadTable(reset?: boolean) {
@@ -203,7 +203,7 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
     return tipoConvocatoriaReunion?.nombre;
   }
 
-  protected createFiltros(): SgiRestFilter[] {
+  protected createFilters(): SgiRestFilter[] {
     this.logger.debug(EvaluacionEvaluadorListadoComponent.name, `crearFiltros()`, 'start');
     const filtros = [];
     this.addFiltro(filtros, 'convocatoriaReunion.comite.id', SgiRestFilterType.EQUALS,

@@ -31,7 +31,7 @@ describe('SeguimientoComentariosComponent', () => {
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-        SeguimientoFormularioActionService,
+        { provide: SeguimientoFormularioActionService, useClass: SeguimientoEvaluarActionService },
         SgiAuthService
       ]
     })

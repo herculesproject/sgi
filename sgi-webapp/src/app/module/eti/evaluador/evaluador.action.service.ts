@@ -22,7 +22,8 @@ export class EvaluadorActionService extends ActionService {
   private datosGenerales: EvaluadorDatosGeneralesFragment;
   private conflictoInteres: EvaluadorConflictosInteresFragment;
 
-  constructor(fb: FormBuilder, route: ActivatedRoute, service: EvaluadorService,
+  constructor(
+    fb: FormBuilder, route: ActivatedRoute, service: EvaluadorService,
     personaService: PersonaService, conflictoInteresService: ConflictoInteresService, protected readonly logger: NGXLogger
   ) {
     super();

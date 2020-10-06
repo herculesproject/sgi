@@ -1,8 +1,8 @@
-import {AfterViewInit, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormGroup} from '@angular/forms';
-import {MatSort} from '@angular/material/sort';
-import {SnackBarService} from '@core/services/snack-bar.service';
-import {FormGroupUtil} from '@core/utils/form-group-util';
+import { AfterViewInit, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { MatSort } from '@angular/material/sort';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { FormGroupUtil } from '@core/utils/form-group-util';
 import {
   SgiRestFilter,
   SgiRestFilterType,
@@ -10,9 +10,9 @@ import {
   SgiRestListResult,
   SgiRestSortDirection,
 } from '@sgi/framework/http';
-import {NGXLogger} from 'ngx-logger';
-import {merge, Observable, of, Subscription} from 'rxjs';
-import {catchError, map, tap} from 'rxjs/operators';
+import { NGXLogger } from 'ngx-logger';
+import { merge, Observable, of, Subscription } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 export abstract class AbstractTableWithoutPaginationComponent<T> implements OnInit, OnDestroy, AfterViewInit {
   columnas: string[];
@@ -22,7 +22,7 @@ export abstract class AbstractTableWithoutPaginationComponent<T> implements OnIn
   suscripciones: Subscription[];
   formGroup: FormGroup;
 
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   protected constructor(
     protected readonly logger: NGXLogger,
@@ -39,7 +39,7 @@ export abstract class AbstractTableWithoutPaginationComponent<T> implements OnIn
     this.totalElementos = 0;
     this.suscripciones = [];
     this.filter = [];
-    this.initColumnas();
+    this.initColumns();
     this.logger.debug(AbstractTableWithoutPaginationComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -74,7 +74,7 @@ export abstract class AbstractTableWithoutPaginationComponent<T> implements OnIn
    */
   onSearch(): void {
     this.logger.debug(AbstractTableWithoutPaginationComponent.name, 'onSearch()', 'start');
-    this.filter = this.createFiltros();
+    this.filter = this.createFilters();
     this.loadTable(true);
     this.logger.debug(AbstractTableWithoutPaginationComponent.name, 'onSearch()', 'end');
   }
@@ -171,7 +171,7 @@ export abstract class AbstractTableWithoutPaginationComponent<T> implements OnIn
   /**
    * Crea e indica el orden las columnas de la tabla
    */
-  protected abstract initColumnas(): void;
+  protected abstract initColumns(): void;
 
   /**
    * Carga los datos de la tabla
@@ -183,5 +183,5 @@ export abstract class AbstractTableWithoutPaginationComponent<T> implements OnIn
   /**
    * Crea los filtros para el listado
    */
-  protected abstract createFiltros(formGroup?: FormGroup): SgiRestFilter[];
+  protected abstract createFilters(formGroup?: FormGroup): SgiRestFilter[];
 }

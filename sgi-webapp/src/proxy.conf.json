@@ -13,6 +13,14 @@
     "secure": false,
     "logLevel": "debug"
   },
+  "/api/csp": {
+    "target": "http://hercules-sgi-csp:8080",
+    "pathRewrite": {
+      "^/api/csp": ""
+    },
+    "secure": false,
+    "logLevel": "debug"
+  },
   "/api/sgp": {
     "target": "http://hercules-sgp-service:8080",
     "pathRewrite": {

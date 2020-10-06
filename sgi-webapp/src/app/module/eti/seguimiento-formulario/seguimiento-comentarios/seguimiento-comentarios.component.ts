@@ -13,10 +13,9 @@ import { NGXLogger } from 'ngx-logger';
 import { Subscription, Observable } from 'rxjs';
 
 import { SeguimientoComentarioFragment } from './seguimiento-comentarios.fragment';
-import { SeguimientoEvaluarActionService } from '../../seguimiento/seguimiento-evaluar.action.service';
 import { ComentarioCrearModalComponent } from '../../comentario/comentario-crear-modal/comentario-crear-modal.component';
 import { ComentarioEditarModalComponent } from '../../comentario/comentario-editar-modal/comentario-editar-modal.component';
-import { SeguimientoFormularioActionService, Gestion } from '../seguimiento-formulario.action.service';
+import { Gestion, SeguimientoFormularioActionService } from '../seguimiento-formulario.action.service';
 import { TipoComentarioService } from '@core/services/eti/tipo-comentario.service';
 import { TipoComentario } from '@core/models/eti/tipo-comentario';
 

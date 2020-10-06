@@ -18,7 +18,9 @@ describe('ConvocatoriaEntidadesFinanciadorasComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ConvocatoriaEntidadesFinanciadorasComponent],
+      declarations: [
+        ConvocatoriaEntidadesFinanciadorasComponent
+      ],
       imports: [
         TestUtils.getIdiomas(),
         MaterialDesignModule,

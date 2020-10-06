@@ -1,15 +1,16 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { IEnlace } from '@core/models/csp/enlace';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import TestUtils from '@core/utils/test-utils';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { NGXLogger } from 'ngx-logger';
 
 import { ConvocatoriaEnlaceModalComponent } from './convocatoria-enlace-modal.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialDesignModule } from '@material/material-design.module';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import TestUtils from '@core/utils/test-utils';
-import { RouterTestingModule } from '@angular/router/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NGXLogger } from 'ngx-logger';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 describe('ConvocatoriaEnlaceModalComponent', () => {
   let component: ConvocatoriaEnlaceModalComponent;
@@ -17,7 +18,9 @@ describe('ConvocatoriaEnlaceModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ConvocatoriaEnlaceModalComponent],
+      declarations: [
+        ConvocatoriaEnlaceModalComponent
+      ],
       imports: [
         BrowserAnimationsModule,
         MaterialDesignModule,
@@ -30,9 +33,9 @@ describe('ConvocatoriaEnlaceModalComponent', () => {
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: {} },
-        { provide: MAT_DIALOG_DATA, useValue: {} },
-      ],
+        { provide: MatDialogRef, useValue: {} as IEnlace },
+        { provide: MAT_DIALOG_DATA, useValue: {} as IEnlace },
+      ]
     })
       .compileComponents();
   }));

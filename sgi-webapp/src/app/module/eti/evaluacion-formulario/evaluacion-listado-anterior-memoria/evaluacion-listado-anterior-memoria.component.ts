@@ -41,10 +41,10 @@ export class EvaluacionListadoAnteriorMemoriaComponent extends AbstractTableWith
     return observable$;
   }
 
-  protected initColumnas(): void {
-    this.logger.debug(EvaluacionListadoAnteriorMemoriaComponent.name, 'initColumnas()', 'start');
+  protected initColumns(): void {
+    this.logger.debug(EvaluacionListadoAnteriorMemoriaComponent.name, 'initColumns()', 'start');
     this.columnas = ['memoria.numReferencia', 'version', 'fechaDictamen', 'dictamen.nombre', 'numComentarios', 'pdf'];
-    this.logger.debug(EvaluacionListadoAnteriorMemoriaComponent.name, 'initColumnas()', 'end');
+    this.logger.debug(EvaluacionListadoAnteriorMemoriaComponent.name, 'initColumns()', 'end');
   }
 
   protected loadTable(reset?: boolean): void {
@@ -53,9 +53,9 @@ export class EvaluacionListadoAnteriorMemoriaComponent extends AbstractTableWith
     this.logger.debug(EvaluacionListadoAnteriorMemoriaComponent.name, 'loadTable()', 'end');
   }
 
-  protected createFiltros(): SgiRestFilter[] {
-    this.logger.debug(EvaluacionListadoAnteriorMemoriaComponent.name, 'createFiltros()', 'start');
-    this.logger.debug(EvaluacionListadoAnteriorMemoriaComponent.name, 'createFiltros()', 'end');
+  protected createFilters(): SgiRestFilter[] {
+    this.logger.debug(EvaluacionListadoAnteriorMemoriaComponent.name, 'createFilters()', 'start');
+    this.logger.debug(EvaluacionListadoAnteriorMemoriaComponent.name, 'createFilters()', 'end');
     return [];
   }
 }

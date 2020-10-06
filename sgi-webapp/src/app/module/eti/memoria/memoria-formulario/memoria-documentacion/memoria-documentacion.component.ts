@@ -17,7 +17,6 @@ import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { MemoriaDocumentacionMemoriaModalComponent } from '../../modals/memoria-documentacion-memoria-modal/memoria-documentacion-memoria-modal.component';
 import { DialogService } from '@core/services/dialog.service';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { MatGridTileHeaderCssMatStyler } from '@angular/material/grid-list';
 import { IFormulario } from '@core/models/eti/formulario';
 import { MemoriaDocumentacionSeguimientosModalComponent } from '../../modals/memoria-documentacion-seguimientos-modal/memoria-documentacion-seguimientos-modal.component';
 

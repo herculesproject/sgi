@@ -16,7 +16,9 @@ describe('ConvocatoriaEntidadesConvocantesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ConvocatoriaEntidadesConvocantesComponent],
+      declarations: [
+        ConvocatoriaEntidadesConvocantesComponent
+      ],
       imports: [
         HttpClientTestingModule,
         FormsModule,

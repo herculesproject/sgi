@@ -1,9 +1,9 @@
-import {AfterViewInit, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormGroup} from '@angular/forms';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {SnackBarService} from '@core/services/snack-bar.service';
-import {FormGroupUtil} from '@core/utils/form-group-util';
+import { AfterViewInit, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { FormGroupUtil } from '@core/utils/form-group-util';
 import {
   SgiRestFilter,
   SgiRestFilterType,
@@ -11,9 +11,9 @@ import {
   SgiRestListResult,
   SgiRestSortDirection,
 } from '@sgi/framework/http';
-import {NGXLogger} from 'ngx-logger';
-import {merge, Observable, of, Subscription} from 'rxjs';
-import {catchError, map, tap} from 'rxjs/operators';
+import { NGXLogger } from 'ngx-logger';
+import { merge, Observable, of, Subscription } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnDestroy, AfterViewInit {
   columnas: string[];
@@ -23,8 +23,8 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
   suscripciones: Subscription[];
   formGroup: FormGroup;
 
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   protected constructor(
     protected readonly logger: NGXLogger,
@@ -41,7 +41,7 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
     this.totalElementos = 0;
     this.suscripciones = [];
     this.filter = [];
-    this.initColumnas();
+    this.initColumns();
     this.logger.debug(AbstractTablePaginationComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -78,7 +78,7 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
    */
   onSearch(): void {
     this.logger.debug(AbstractTablePaginationComponent.name, 'onSearch()', 'start');
-    this.filter = this.createFiltros();
+    this.filter = this.createFilters();
     this.loadTable(true);
     this.logger.debug(AbstractTablePaginationComponent.name, 'onSearch()', 'end');
   }
@@ -183,7 +183,7 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
   /**
    * Crea e indica el orden las columnas de la tabla
    */
-  protected abstract initColumnas(): void;
+  protected abstract initColumns(): void;
 
   /**
    * Carga los datos de la tabla
@@ -195,5 +195,5 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
   /**
    * Crea los filtros para el listado
    */
-  protected abstract createFiltros(formGroup?: FormGroup): SgiRestFilter[];
+  protected abstract createFilters(): SgiRestFilter[];
 }

@@ -148,6 +148,6 @@ describe('FormGroupUtil', () => {
 
   it('Comprueba el método addFormControl con datos inválidos', () => {
     expect(() => FormGroupUtil.addFormControl(formGroup, 'prueba', null)).toThrowError(`No existe el formControl`);
-    expect(() => FormGroupUtil.addFormControl(undefined, 'prueba', new FormControl('', []))).toThrowError(errorFormGroup);
+    expect(() => FormGroupUtil.addFormControl(undefined, 'prueba', new FormControl(''))).toThrowError(errorFormGroup);
   });
 });

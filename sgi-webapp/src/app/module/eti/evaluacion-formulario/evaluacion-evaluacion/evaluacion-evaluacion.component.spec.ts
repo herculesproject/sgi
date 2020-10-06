@@ -8,16 +8,16 @@ import TestUtils from '@core/utils/test-utils';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NGXLogger } from 'ngx-logger';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EvaluacionListadoAnteriorMemoriaComponent } from '../evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
 import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
-import { SgiAuthModule } from '@sgi/framework/auth';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { FlexModule } from '@angular/flex-layout';
+import { EvaluacionActionService } from '../../evaluacion/evaluacion.action.service';
 
 describe('EvaluacionEvaluacionComponent', () => {
   let component: EvaluacionEvaluacionComponent;
   let fixture: ComponentFixture<EvaluacionEvaluacionComponent>;
-  const formBuilder: FormBuilder = new FormBuilder();
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -39,8 +39,8 @@ describe('EvaluacionEvaluacionComponent', () => {
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: FormBuilder, useValue: formBuilder },
-        EvaluacionFormularioActionService,
+        { provide: EvaluacionFormularioActionService, useClass: EvaluacionActionService },
+        SgiAuthService
       ],
     })
       .compileComponents();

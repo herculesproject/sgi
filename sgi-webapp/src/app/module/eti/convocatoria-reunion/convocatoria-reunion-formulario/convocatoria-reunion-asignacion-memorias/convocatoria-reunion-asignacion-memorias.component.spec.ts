@@ -1,10 +1,12 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FlexModule } from '@angular/flex-layout';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { IEvaluacion } from '@core/models/eti/evaluacion';
+import { IMemoria } from '@core/models/eti/memoria';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
@@ -17,7 +19,18 @@ describe('ConvocatoriaReunionAsignacionMemoriasComponent', () => {
   let component: ConvocatoriaReunionAsignacionMemoriasComponent;
   let fixture: ComponentFixture<ConvocatoriaReunionAsignacionMemoriasComponent>;
 
-  const formBuilder: FormBuilder = new FormBuilder();
+  const dialogData = {
+    params: {
+      idConvocatoria: 0,
+      memoriasAsignadas: [] as IMemoria[],
+      filterMemoriasAsignables: {
+        idComite: 0,
+        idTipoConvocatoria: 0,
+        fechaLimite: new Date()
+      },
+      evaluacion: {} as IEvaluacion
+    }
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -37,9 +50,8 @@ describe('ConvocatoriaReunionAsignacionMemoriasComponent', () => {
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: FormBuilder, useValue: formBuilder },
-        { provide: MAT_DIALOG_DATA, useValue: {} },
-        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: dialogData },
+        { provide: MatDialogRef, useValue: dialogData },
         SgiAuthService
       ],
     })

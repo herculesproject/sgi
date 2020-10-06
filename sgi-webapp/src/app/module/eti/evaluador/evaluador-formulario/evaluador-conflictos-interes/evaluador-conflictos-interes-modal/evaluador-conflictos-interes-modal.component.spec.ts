@@ -9,6 +9,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EvaluadorConflictosInteresModalComponent } from './evaluador-conflictos-interes-modal.component';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 
 describe('EvaluadorConflictosInteresModalComponent', () => {
   let component: EvaluadorConflictosInteresModalComponent;
@@ -23,13 +24,15 @@ describe('EvaluadorConflictosInteresModalComponent', () => {
         HttpClientTestingModule,
         TestUtils.getIdiomas(),
         RouterTestingModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        SgiAuthModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: [] },
+        SgiAuthService
       ],
     })
       .compileComponents();

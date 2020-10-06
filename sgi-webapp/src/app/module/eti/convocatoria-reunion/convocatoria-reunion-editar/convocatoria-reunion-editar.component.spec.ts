@@ -1,4 +1,14 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FlexModule } from '@angular/flex-layout';
+import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import TestUtils from '@core/utils/test-utils';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthModule } from '@sgi/framework/auth';
+import { SharedModule } from '@shared/shared.module';
+import { NGXLogger } from 'ngx-logger';
 
 import { ConvocatoriaReunionEditarComponent } from './convocatoria-reunion-editar.component';
 
@@ -8,9 +18,25 @@ describe('ConvocatoriaReunionEditarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConvocatoriaReunionEditarComponent ]
+      declarations: [
+        ConvocatoriaReunionEditarComponent
+      ],
+      imports: [
+        TestUtils.getIdiomas(),
+        MaterialDesignModule,
+        BrowserAnimationsModule,
+        HttpClientTestingModule,
+        FlexModule,
+        ReactiveFormsModule,
+        RouterTestingModule.withRoutes([]),
+        SharedModule,
+        SgiAuthModule
+      ],
+      providers: [
+        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+      ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

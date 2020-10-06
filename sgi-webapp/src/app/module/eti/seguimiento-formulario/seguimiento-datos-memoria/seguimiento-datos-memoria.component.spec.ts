@@ -11,6 +11,7 @@ import { NGXLogger } from 'ngx-logger';
 import { SeguimientoDatosMemoriaComponent } from './seguimiento-datos-memoria.component';
 import { SeguimientoEvaluarActionService } from '../../seguimiento/seguimiento-evaluar.action.service';
 import { SeguimientoListadoAnteriorMemoriaComponent } from '../seguimiento-listado-anterior-memoria/seguimiento-listado-anterior-memoria.component';
+import { SeguimientoFormularioActionService } from '../seguimiento-formulario.action.service';
 
 describe('SeguimientoDatosMemoriaComponent', () => {
   let component: SeguimientoDatosMemoriaComponent;
@@ -36,7 +37,7 @@ describe('SeguimientoDatosMemoriaComponent', () => {
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-        SeguimientoEvaluarActionService,
+        { provide: SeguimientoFormularioActionService, useClass: SeguimientoEvaluarActionService },
         SgiAuthService
       ]
     })

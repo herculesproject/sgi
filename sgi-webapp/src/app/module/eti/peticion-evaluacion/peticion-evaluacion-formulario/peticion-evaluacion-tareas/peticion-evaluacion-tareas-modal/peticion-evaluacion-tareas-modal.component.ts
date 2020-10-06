@@ -18,12 +18,9 @@ import { FormGroupUtil } from '@core/utils/form-group-util';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { StatusWrapper } from '@core/utils/status-wrapper';
 import { TipoTarea } from '@core/models/eti/tipo-tarea';
 import { TipoTareaService } from '@core/services/eti/tipo-tarea.service';
 
-const MSG_SUCCESS = marker('eti.acta.asistentes.correcto');
-const MSG_ERROR = marker('eti.acta.asistentes.error');
 const MSG_ERROR_FORM = marker('form-group.error');
 
 @Component({
@@ -31,7 +28,7 @@ const MSG_ERROR_FORM = marker('form-group.error');
   templateUrl: './peticion-evaluacion-tareas-modal.component.html',
   styleUrls: ['./peticion-evaluacion-tareas-modal.component.scss']
 })
-export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy, AfterViewInit {
+export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy {
 
   FormGroupUtil = FormGroupUtil;
   formGroup: FormGroup;
@@ -115,15 +112,16 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
   private initFormGroup() {
     this.logger.debug(PeticionEvaluacionTareasModalComponent.name, 'initFormGroup()', 'start');
     this.formGroup = new FormGroup({
-      tarea: new FormControl(this.data.tarea.tarea),
-      tipoTarea: new FormControl(this.data.tarea.tipoTarea),
-      organismo: new FormControl(this.data.tarea.organismo),
-      anio: new FormControl(this.data.tarea.anio),
-      formacionEspecifica: new FormControl(this.data.tarea.formacionEspecifica),
-      formacion: new FormControl(this.data.tarea.formacion),
-      memoria: new FormControl(this.data.tarea.memoria, [Validators.required]),
-      equipoTrabajo: new FormControl(this.data.tarea.equipoTrabajo == null ? '' : this.data.tarea.equipoTrabajo, [Validators.required])
+      tarea: new FormControl(this.data.tarea?.tarea),
+      tipoTarea: new FormControl(this.data.tarea?.tipoTarea),
+      organismo: new FormControl(this.data.tarea?.organismo),
+      anio: new FormControl(this.data.tarea?.anio),
+      formacionEspecifica: new FormControl(this.data.tarea?.formacionEspecifica),
+      formacion: new FormControl(this.data.tarea?.formacion),
+      memoria: new FormControl(this.data.tarea?.memoria, [Validators.required]),
+      equipoTrabajo: new FormControl(this.data.tarea?.equipoTrabajo == null ? '' : this.data.tarea?.equipoTrabajo, [Validators.required])
     });
+    this.onClickMemoria(this.data.tarea?.memoria);
     this.logger.debug(PeticionEvaluacionTareasModalComponent.name, 'initFormGroup()', 'end');
   }
 
@@ -241,7 +239,7 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
    * muestra y oculta los campos oportunos
    */
   onClickMemoria(memoria: IMemoria): void {
-    if (memoria.comite.comite === 'CEIAB' || memoria.comite.comite === 'CEEA') {
+    if (memoria?.comite?.comite === 'CEIAB' || memoria?.comite?.comite === 'CEEA') {
       this.mostrarOrganismoYanio$.next(true);
       this.formGroup.controls.organismo.setValidators(Validators.required);
       this.formGroup.controls.anio.setValidators(Validators.required);
@@ -251,7 +249,7 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
       this.formGroup.controls.anio.clearValidators();
     }
 
-    if (memoria.comite.comite === 'CEISH' || memoria.comite.comite === 'CEIAB') {
+    if (memoria?.comite?.comite === 'CEISH' || memoria?.comite?.comite === 'CEIAB') {
       this.tareaYformacionTexto$.next(true);
       this.formGroup.controls.tarea.setValidators(Validators.required);
       this.formGroup.controls.formacion.setValidators(Validators.required);
@@ -434,7 +432,7 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
       filterValue = value.nombre.toLowerCase() + ' ' + value.primerApellido.toLowerCase() + ' ' + value.segundoApellido.toLowerCase();
     }
 
-    return this.equipoTrabajoListado.filter
+    return this.equipoTrabajoListado?.filter
       (equipoTrabajo => (equipoTrabajo.nombre.toLowerCase() + ' ' + equipoTrabajo.primerApellido.toLowerCase() + ' ' +
         equipoTrabajo.segundoApellido.toLowerCase()).includes(filterValue));
   }
@@ -477,9 +475,4 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
     this.mostrarOrganismo$?.unsubscribe();
     this.logger.debug(PeticionEvaluacionTareasModalComponent.name, 'ngOnDestroy()', 'end');
   }
-
-  ngAfterViewInit(): void {
-    this.onClickMemoria(FormGroupUtil.getValue(this.formGroup, 'memoria'));
-  }
-
 }

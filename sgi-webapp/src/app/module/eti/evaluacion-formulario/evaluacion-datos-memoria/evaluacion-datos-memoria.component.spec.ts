@@ -12,8 +12,8 @@ import {
   EvaluacionListadoAnteriorMemoriaComponent,
 } from '../evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
 import { EvaluacionDatosMemoriaComponent } from './evaluacion-datos-memoria.component';
+import { EvaluacionEvaluadorActionService } from '../../evaluacion-evaluador/evaluacion-evaluador.action.service';
 import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
-import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 
 describe('EvaluacionDatosMemoriaComponent', () => {
   let component: EvaluacionDatosMemoriaComponent;
@@ -37,8 +37,7 @@ describe('EvaluacionDatosMemoriaComponent', () => {
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        EvaluacionFormularioActionService,
-        EvaluacionService,
+        { provide: EvaluacionFormularioActionService, useClass: EvaluacionEvaluadorActionService },
         SgiAuthService
       ],
     })

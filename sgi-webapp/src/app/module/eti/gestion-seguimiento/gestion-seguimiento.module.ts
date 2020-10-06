@@ -6,7 +6,7 @@ import { SharedModule } from '@shared/shared.module';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GestionSeguimientoRoutingModule } from './gestion-seguimiento-routing.module';
-import { GestionSeguimientoListadoComponent } from './gestion-seguimiento-listado/gestion-seguimiento-listado.component';/*  */
+import { GestionSeguimientoListadoComponent } from './gestion-seguimiento-listado/gestion-seguimiento-listado.component';
 import { GestionSeguimientoEvaluarComponent } from './gestion-seguimiento-evaluar/gestion-seguimiento-evaluar.component';
 import { GestionSeguimientoResolver } from './gestion-seguimiento.resolver';
 import { SeguimientoListadoAnteriorMemoriaComponent } from '../seguimiento-formulario/seguimiento-listado-anterior-memoria/seguimiento-listado-anterior-memoria.component';

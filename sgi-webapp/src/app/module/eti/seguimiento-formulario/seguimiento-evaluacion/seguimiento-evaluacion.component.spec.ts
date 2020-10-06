@@ -8,11 +8,11 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { NGXLogger } from 'ngx-logger';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { EvaluacionActionService } from '../../evaluacion/evaluacion.action.service';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SeguimientoEvaluacionComponent } from './seguimiento-evaluacion.component';
 import { SeguimientoListadoAnteriorMemoriaComponent } from '../seguimiento-listado-anterior-memoria/seguimiento-listado-anterior-memoria.component';
-import { GestionSeguimientoActionService } from '../../gestion-seguimiento/gestion-seguimiento.action.service';
 import { SeguimientoFormularioActionService } from '../seguimiento-formulario.action.service';
+import { GestionSeguimientoActionService } from '../../gestion-seguimiento/gestion-seguimiento.action.service';
 
 describe('SeguimientoEvaluacionComponent', () => {
   let component: SeguimientoEvaluacionComponent;
@@ -36,9 +36,8 @@ describe('SeguimientoEvaluacionComponent', () => {
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
+        { provide: SeguimientoFormularioActionService, useClass: GestionSeguimientoActionService },
         EvaluacionActionService,
-        SeguimientoFormularioActionService,
-        FormBuilder
       ],
     })
       .compileComponents();

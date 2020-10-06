@@ -9,6 +9,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { NGXLogger } from 'ngx-logger';
 
 import { EvaluacionComentariosComponent } from './evaluacion-comentarios.component';
+import { EvaluacionActionService } from '../../evaluacion/evaluacion.action.service';
 import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
 
 describe('EvaluacionComentariosComponent', () => {
@@ -21,19 +22,17 @@ describe('EvaluacionComentariosComponent', () => {
         EvaluacionComentariosComponent
       ],
       imports: [
+        HttpClientTestingModule,
         FormsModule,
         ReactiveFormsModule,
-        BrowserAnimationsModule,
-        MaterialDesignModule,
-        HttpClientTestingModule,
         TestUtils.getIdiomas(),
         RouterTestingModule,
-
+        MaterialDesignModule,
+        BrowserAnimationsModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-        { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        EvaluacionFormularioActionService
+        { provide: EvaluacionFormularioActionService, useClass: EvaluacionActionService }
       ],
     })
       .compileComponents();

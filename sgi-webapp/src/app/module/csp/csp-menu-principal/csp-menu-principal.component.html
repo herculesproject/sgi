@@ -1,5 +1,8 @@
 <div class="opciones-menu">
-
+  <a class="item" mat-list-item [routerLink]="[CSP_ROUTE_NAMES.TIPO_FINALIDAD]" [routerLinkActive]="['is-active']">
+    <mat-icon color="primary" mat-list-icon>content_paste</mat-icon>
+    <p matLine *ngIf="opened">{{'menu.principal.csp.tipo.finalidad' | translate}}</p>
+  </a>
   <a class="item" mat-list-item [routerLink]="[CSP_ROUTE_NAMES.CONVOCATORIA]" [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>content_paste</mat-icon>
     <p matLine *ngIf="opened">{{'menu.principal.csp.convocatoria' | translate}}</p>

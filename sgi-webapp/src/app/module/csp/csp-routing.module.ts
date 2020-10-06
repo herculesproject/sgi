@@ -38,7 +38,17 @@ const routes: SgiRoutes = [
         data: {
           title: MSG_CONVOCATORIA_TITLE,
         }
-
+      },
+      {
+        path: CSP_ROUTE_NAMES.TIPO_FINALIDAD,
+        loadChildren: () =>
+          import('./tipo-finalidad/tipo-finalidad.module').then(
+            (m) => m.TipoFinalidadModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_CONVOCATORIA_TITLE,
+        }
       },
       { path: '**', component: null }
     ]

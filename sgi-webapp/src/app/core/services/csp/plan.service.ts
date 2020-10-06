@@ -43,7 +43,7 @@ export class PlanService extends SgiRestService<number, IPlan> {
    * Recupera listado mock de planes.
    * @param options opciones de búsqueda.
    * @returns listado de modelos de planes.
-  */
+   */
   findPlanes(options?: SgiRestFindOptions): Observable<SgiRestListResult<IPlan>> {
     this.logger.debug(PlanService.name, `findPlanes(${options ? JSON.stringify(options) : ''})`, '-', 'START');
 

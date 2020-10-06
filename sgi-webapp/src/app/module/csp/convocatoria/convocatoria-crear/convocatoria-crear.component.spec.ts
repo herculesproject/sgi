@@ -33,15 +33,8 @@ describe('ConvocatoriaCrearComponent', () => {
         FlexModule,
         FormsModule,
         ReactiveFormsModule,
-        RouterTestingModule.withRoutes([]),
         RouterTestingModule,
-        MaterialDesignModule,
-        HttpClientTestingModule,
-        BrowserAnimationsModule,
-        TestUtils.getIdiomas(),
         FlexLayoutModule,
-        FormsModule,
-        ReactiveFormsModule,
         SharedModule
       ],
       providers: [

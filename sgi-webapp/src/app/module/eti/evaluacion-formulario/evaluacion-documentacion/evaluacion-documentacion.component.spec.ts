@@ -7,7 +7,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { NGXLogger } from 'ngx-logger';
 
 import { EvaluacionDocumentacionComponent } from './evaluacion-documentacion.component';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DocumentacionMemoriaListadoMemoriaComponent } from '../../documentacion-memoria/documentacion-memoria-listado-memoria/documentacion-memoria-listado-memoria.component';
 import { EvaluacionEvaluadorActionService } from '../../evaluacion-evaluador/evaluacion-evaluador.action.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -35,9 +35,7 @@ describe('EvaluacionDocumentacionComponent', () => {
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: FormBuilder },
-        EvaluacionEvaluadorActionService,
-        EvaluacionFormularioActionService,
+        { provide: EvaluacionFormularioActionService, useClass: EvaluacionEvaluadorActionService }
       ],
     })
       .compileComponents();

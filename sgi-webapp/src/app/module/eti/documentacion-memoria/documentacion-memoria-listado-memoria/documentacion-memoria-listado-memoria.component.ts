@@ -45,10 +45,10 @@ export class DocumentacionMemoriaListadoMemoriaComponent extends AbstractTableWi
     return null;
   }
 
-  protected initColumnas(): void {
-    this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, 'initColumnas()', 'start');
+  protected initColumns(): void {
+    this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, 'initColumns()', 'start');
     this.columnas = ['documentoRef', 'acciones'];
-    this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, 'initColumnas()', 'end');
+    this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, 'initColumns()', 'end');
   }
 
   protected loadTable(reset?: boolean): void {
@@ -57,9 +57,9 @@ export class DocumentacionMemoriaListadoMemoriaComponent extends AbstractTableWi
     this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, 'loadTable()', 'end');
   }
 
-  protected createFiltros(): SgiRestFilter[] {
-    this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, 'createFiltros()', 'start');
-    this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, 'createFiltros()', 'end');
+  protected createFilters(): SgiRestFilter[] {
+    this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, 'createFilters()', 'start');
+    this.logger.debug(DocumentacionMemoriaListadoMemoriaComponent.name, 'createFilters()', 'end');
     return [];
   }
 }
