@@ -27,14 +27,14 @@ public class TipoFinalidadRepositoryTest {
     entityManager.persistAndFlush(generarMockTipoFinalidad(3L, Boolean.TRUE));
 
     // when: find given nombre
-    Optional<TipoFinalidad> dataFound = repository.findByNombre(data.getNombre());
+    TipoFinalidad dataFound = repository.findByNombre(data.getNombre()).get();
 
     // then: TipoFinalidad with given name is found
-    Assertions.assertThat(dataFound.get()).isNotNull();
-    Assertions.assertThat(dataFound.get().getId()).isEqualTo(data.getId());
-    Assertions.assertThat(dataFound.get().getNombre()).isEqualTo(data.getNombre());
-    Assertions.assertThat(dataFound.get().getDescripcion()).isEqualTo(data.getDescripcion());
-    Assertions.assertThat(dataFound.get().getActivo()).isEqualTo(data.getActivo());
+    Assertions.assertThat(dataFound).isNotNull();
+    Assertions.assertThat(dataFound.getId()).isEqualTo(data.getId());
+    Assertions.assertThat(dataFound.getNombre()).isEqualTo(data.getNombre());
+    Assertions.assertThat(dataFound.getDescripcion()).isEqualTo(data.getDescripcion());
+    Assertions.assertThat(dataFound.getActivo()).isEqualTo(data.getActivo());
   }
 
   @Test

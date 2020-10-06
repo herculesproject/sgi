@@ -34,14 +34,18 @@ public class TipoFaseServiceImpl implements TipoFaseService {
    * @param tipoFase la entidad {@link TipoFase} a guardar.
    * @return la entidad {@link TipoFase} persistida.
    */
+  @Override
+  @Transactional
   public TipoFase create(TipoFase tipoFase) {
     log.debug("create (TipoFase tipoFase) - start");
 
     Assert.isNull(tipoFase.getId(), "tipoFase id no puede ser null para crear un nuevo tipoFase");
-    Assert.isNull(tipoFaseRepository.findByNombre(tipoFase.getNombre()), "TipoFase nombre tiene que ser unico");
+    Assert.isTrue(!(tipoFaseRepository.findByNombre(tipoFase.getNombre()).isPresent()),
+        "Ya existe TipoFase con el nombre " + tipoFase.getNombre());
 
     tipoFase.setActivo(Boolean.TRUE);
     TipoFase returnValue = tipoFaseRepository.save(tipoFase);
+
     log.debug("create (TipoFase tipoFase) - start");
     return returnValue;
   }
@@ -52,12 +56,16 @@ public class TipoFaseServiceImpl implements TipoFaseService {
    * @param tipoFaseActualizar la entidad {@link TipoFase} a actualizar.
    * @return la entidad {@link TipoFase} persistida.
    */
+  @Override
+  @Transactional
   public TipoFase update(TipoFase tipoFaseActualizar) {
     log.debug("update(TipoFase tipoFaseActualizar) - start");
+
     Assert.notNull(tipoFaseActualizar.getId(), "TipoFase id no puede ser null para actualizar");
-    TipoFase tipoFaseMismoNombre = tipoFaseRepository.findByNombre(tipoFaseActualizar.getNombre());
-    Assert.isTrue(tipoFaseMismoNombre == null || tipoFaseMismoNombre.getId().equals(tipoFaseActualizar.getId()),
-        "TipoFase nombre tiene que ser unico");
+    tipoFaseRepository.findByNombre(tipoFaseActualizar.getNombre()).ifPresent((tipoFaseExistente) -> {
+      Assert.isTrue(tipoFaseActualizar.getId() == tipoFaseExistente.getId(),
+          "Ya existe un TipoFase con el nombre " + tipoFaseExistente.getNombre());
+    });
 
     return tipoFaseRepository.findById(tipoFaseActualizar.getId()).map(tipoFase -> {
       tipoFase.setNombre(tipoFaseActualizar.getNombre());
@@ -77,6 +85,7 @@ public class TipoFaseServiceImpl implements TipoFaseService {
    * @param query    la información del filtro.
    * @return la lista de entidades {@link TipoFase} paginadas y/o filtradas.
    */
+  @Override
   public Page<TipoFase> findAll(List<QueryCriteria> query, Pageable pageable) {
     log.debug("findAllTipoFase (List<QueryCriteria> query, Pageable pageable) - start");
 
@@ -95,6 +104,7 @@ public class TipoFaseServiceImpl implements TipoFaseService {
    * @param id el id de la entidad {@link TipoFase}.
    * @return la entidad {@link TipoFase}.
    */
+  @Override
   public TipoFase findById(Long id) throws TipoFaseNotFoundException {
     log.debug("findById(Long id) - start");
     TipoFase tipoFase = tipoFaseRepository.findById(id).orElseThrow(() -> new TipoFaseNotFoundException(id));
@@ -107,6 +117,8 @@ public class TipoFaseServiceImpl implements TipoFaseService {
    *
    * @param id el id de la entidad {@link TipoFase}.
    */
+  @Override
+  @Transactional
   public TipoFase disable(Long id) throws TipoFaseNotFoundException {
     log.debug("disable(Long id) - start");
     Assert.notNull(id, "El id no puede ser nulo");

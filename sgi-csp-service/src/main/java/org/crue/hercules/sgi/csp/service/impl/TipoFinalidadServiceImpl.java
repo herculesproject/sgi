@@ -41,15 +41,14 @@ public class TipoFinalidadServiceImpl implements TipoFinalidadService {
   @Transactional
   public TipoFinalidad create(TipoFinalidad tipoFinalidad) {
     log.debug("create(TipoFinalidad tipoFinalidad) - start");
-    Assert.isNull(tipoFinalidad.getId(), "Id tiene que ser null para crear TipoFinalidad");
-    Assert.notNull(tipoFinalidad.getNombre(), "Nombre no puede ser null para crear TipoFinalidad");
 
-    repository.findByNombre(tipoFinalidad.getNombre()).map((data) -> {
-      throw new IllegalArgumentException("Ya existe un TipoFinalidad con el nombre " + data.getNombre());
-    });
+    Assert.isNull(tipoFinalidad.getId(), "Id tiene que ser null para crear TipoFinalidad");
+    Assert.isTrue(!(repository.findByNombre(tipoFinalidad.getNombre()).isPresent()),
+        "Ya existe TipoFinalidad con el nombre " + tipoFinalidad.getNombre());
 
     tipoFinalidad.setActivo(Boolean.TRUE);
     TipoFinalidad returnValue = repository.save(tipoFinalidad);
+
     log.debug("create(TipoFinalidad tipoFinalidad) - end");
     return returnValue;
   }
@@ -67,13 +66,9 @@ public class TipoFinalidadServiceImpl implements TipoFinalidadService {
     log.debug("update(TipoFinalidad tipoFinalidad) - start");
 
     Assert.notNull(tipoFinalidad.getId(), "Id no puede ser null para actualizar TipoFinalidad");
-    Assert.notNull(tipoFinalidad.getNombre(), "Nombre no puede ser null para actualizar TipoFinalidad");
-
-    repository.findByNombre(tipoFinalidad.getNombre()).map((data) -> {
-      if (tipoFinalidad.getId() != data.getId()) {
-        throw new IllegalArgumentException("Ya existe un TipoFinalidad con el nombre " + data.getNombre());
-      }
-      return data;
+    repository.findByNombre(tipoFinalidad.getNombre()).ifPresent((tipoFinalidadExistente) -> {
+      Assert.isTrue(tipoFinalidad.getId() == tipoFinalidadExistente.getId(),
+          "Ya existe un TipoFinalidad con el nombre " + tipoFinalidadExistente.getNombre());
     });
 
     return repository.findById(tipoFinalidad.getId()).map((data) -> {

@@ -34,14 +34,18 @@ public class TipoHitoServiceImpl implements TipoHitoService {
    * @param tipoHito la entidad {@link TipoHito} a guardar.
    * @return la entidad {@link TipoHito} persistida.
    */
+  @Override
+  @Transactional
   public TipoHito create(TipoHito tipoHito) {
     log.debug("create(TipoHito tipoHito) - start");
 
     Assert.isNull(tipoHito.getId(), "tipoHito id tiene que ser null para crear un nuevo tipoHito");
-    Assert.isNull(tipoHitoRepository.findByNombre(tipoHito.getNombre()), "TipoHito nombre tiene que ser unico");
+    Assert.isTrue(!(tipoHitoRepository.findByNombre(tipoHito.getNombre()).isPresent()),
+        "Ya existe TipoHito con el nombre " + tipoHito.getNombre());
 
     tipoHito.setActivo(Boolean.TRUE);
     TipoHito returnValue = tipoHitoRepository.save(tipoHito);
+
     log.debug("create(TipoHito tipoHito) - end");
     return returnValue;
   }
@@ -52,12 +56,16 @@ public class TipoHitoServiceImpl implements TipoHitoService {
    * @param tipoHitoActualizar la entidad {@link TipoHito} a actualizar.
    * @return la entidad {@link TipoHito} persistida.
    */
+  @Override
+  @Transactional
   public TipoHito update(TipoHito tipoHitoActualizar) {
     log.debug("update(TipoHito tipoHitoActualizar) - start");
+
     Assert.notNull(tipoHitoActualizar.getId(), "TipoHito id no puede ser null para actualizar");
-    TipoHito tipoHitoMismoNombre = tipoHitoRepository.findByNombre(tipoHitoActualizar.getNombre());
-    Assert.isTrue(tipoHitoMismoNombre == null || tipoHitoMismoNombre.getId().equals(tipoHitoActualizar.getId()),
-        "TipoHito nombre tiene que ser unico");
+    tipoHitoRepository.findByNombre(tipoHitoActualizar.getNombre()).ifPresent((tipoHitoExistente) -> {
+      Assert.isTrue(tipoHitoActualizar.getId() == tipoHitoExistente.getId(),
+          "Ya existe un TipoHito con el nombre " + tipoHitoExistente.getNombre());
+    });
 
     return tipoHitoRepository.findById(tipoHitoActualizar.getId()).map(tipoHito -> {
       tipoHito.setNombre(tipoHitoActualizar.getNombre());
@@ -77,6 +85,7 @@ public class TipoHitoServiceImpl implements TipoHitoService {
    * @param query    información del filtro.
    * @return la lista de entidades {@link TipoHito} paginadas
    */
+  @Override
   public Page<TipoHito> findAll(List<QueryCriteria> query, Pageable pageable) {
     log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
     Specification<TipoHito> spec = new QuerySpecification<TipoHito>(query);
@@ -94,6 +103,7 @@ public class TipoHitoServiceImpl implements TipoHitoService {
    * @param id el id de la entidad {@link TipoHito}.
    * @return la entidad {@link TipoHito}.
    */
+  @Override
   public TipoHito findById(Long id) throws TipoHitoNotFoundException {
     log.debug("findById(Long id) id:{}- start", id);
     TipoHito tipoHito = tipoHitoRepository.findById(id).orElseThrow(() -> new TipoHitoNotFoundException(id));
@@ -106,6 +116,7 @@ public class TipoHitoServiceImpl implements TipoHitoService {
    *
    * @param id el id de la entidad {@link TipoHito}.
    */
+  @Override
   @Transactional
   public TipoHito disable(Long id) throws TipoHitoNotFoundException {
     log.debug("disable(Long id) start");

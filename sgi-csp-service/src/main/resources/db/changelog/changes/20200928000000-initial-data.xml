@@ -135,20 +135,17 @@
       <column name="descripcion" value="Descripción del Fase1"></column>
       <column name="activo" value="true" />
     </insert>
-
     <insert tableName="tipo_fase">
       <column name="nombre" value="Fase2" />
       <column name="descripcion" value="Descripción del Fase2"></column>
       <column name="activo" value="true" />
     </insert>
-
     <insert tableName="tipo_fase">
       <column name="nombre" value="Fase3" />
       <column name="descripcion" value="Descripción del Fase3"></column>
       <column name="activo" value="true" />
     </insert>
   </changeSet>
-
 
   <changeSet author="master" id="20200928000000-tipo_finalidad">
     <insert tableName="tipo_finalidad">
@@ -175,6 +172,34 @@
       <column name="nombre" value="tipo finalidad FFF" />
       <column name="descripcion" value="tipo finalidad FFF" />
       <column name="activo" value="false" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-modelo_tipo_finalidad">
+    <insert tableName="modelo_tipo_finalidad">
+      <column name="tipo_finalidad_id" valueComputed="(select id from csp.tipo_enlace where nombre like '% AAA')" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre like '%-001')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="modelo_tipo_finalidad">
+      <column name="tipo_finalidad_id" valueComputed="(select id from csp.tipo_enlace where nombre like '% BBB')" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre like '%-001')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="modelo_tipo_finalidad">
+      <column name="tipo_finalidad_id" valueComputed="(select id from csp.tipo_enlace where nombre like '% BBB')" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre like '%-002')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="modelo_tipo_finalidad">
+      <column name="tipo_finalidad_id" valueComputed="(select id from csp.tipo_enlace where nombre like '% CCC')" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre like '%-002')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="modelo_tipo_finalidad">
+      <column name="tipo_finalidad_id" valueComputed="(select id from csp.tipo_enlace where nombre like '% DDD')" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre like '%-003')" />
+      <column name="activo" value="true" />
     </insert>
   </changeSet>
 

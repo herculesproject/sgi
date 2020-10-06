@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.Optional;
+
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.junit.jupiter.api.Test;
@@ -32,7 +34,7 @@ public class TipoDocumentoRepositoryTest {
     String nombreBuscado = "nombre-tipoDocumento1";
 
     // when: se busca el TipoDocumentopor nombre
-    TipoDocumento tipoDocumentoEncontrado = repository.findByNombre(nombreBuscado);
+    TipoDocumento tipoDocumentoEncontrado = repository.findByNombre(nombreBuscado).get();
 
     // then: Se recupera el TipoDocumento con el nombre buscado
     Assertions.assertThat(tipoDocumentoEncontrado.getId()).as("getId").isNotNull();
@@ -55,10 +57,10 @@ public class TipoDocumentoRepositoryTest {
     String nombreBuscado = "nombre-tipoDocumento-noexiste";
 
     // when: se busca el TipoDocumento por nombre
-    TipoDocumento tipoDocumentoEncontrado = repository.findByNombre(nombreBuscado);
+    Optional<TipoDocumento> tipoDocumentoEncontrado = repository.findByNombre(nombreBuscado);
 
     // then: Se recupera el TipoDocumento con el nombre buscado
-    Assertions.assertThat(tipoDocumentoEncontrado).isNull();
+    Assertions.assertThat(tipoDocumentoEncontrado).isEqualTo(Optional.empty());
   }
 
 }

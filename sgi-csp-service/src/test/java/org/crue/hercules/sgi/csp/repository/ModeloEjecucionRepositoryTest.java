@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.Optional;
+
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.junit.jupiter.api.Test;
@@ -32,7 +34,7 @@ public class ModeloEjecucionRepositoryTest {
     String nombreBuscado = "nombre-1";
 
     // when: se busca el ModeloEjecucion por nombre
-    ModeloEjecucion modeloEjecucionEncontrado = repository.findByNombre(nombreBuscado);
+    ModeloEjecucion modeloEjecucionEncontrado = repository.findByNombre(nombreBuscado).get();
 
     // then: Se recupera el ModeloEjecucion con el nombre buscado
     Assertions.assertThat(modeloEjecucionEncontrado.getId()).as("getId").isNotNull();
@@ -57,10 +59,10 @@ public class ModeloEjecucionRepositoryTest {
     String nombreBuscado = "nombre-noexiste";
 
     // when: se busca el ModeloEjecucion por nombre
-    ModeloEjecucion modeloEjecucionEncontrado = repository.findByNombre(nombreBuscado);
+    Optional<ModeloEjecucion> modeloEjecucionEncontrado = repository.findByNombre(nombreBuscado);
 
     // then: Se recupera el TipoDocumento con el nombre buscado
-    Assertions.assertThat(modeloEjecucionEncontrado).isNull();
+    Assertions.assertThat(modeloEjecucionEncontrado).isEqualTo(Optional.empty());
   }
 
 }

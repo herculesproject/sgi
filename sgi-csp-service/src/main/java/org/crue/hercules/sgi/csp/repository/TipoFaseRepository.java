@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.Optional;
+
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -18,6 +20,6 @@ public interface TipoFaseRepository extends JpaRepository<TipoFase, Long>, JpaSp
    * @param nombre Nombre del {@link TipoFase}.
    * @return un {@link TipoFase} si tiene el nombre buscado.
    */
-  TipoFase findByNombre(String nombre);
+  Optional<TipoFase> findByNombre(String nombre);
 
 }

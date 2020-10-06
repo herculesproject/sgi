@@ -164,31 +164,6 @@ public class TipoFinalidadControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFIN-E" })
-  public void update_WithDuplicatedNombre_Returns400() throws Exception {
-    // given: a TipoFinalidad with duplicated Nombre
-    TipoFinalidad data = generarMockTipoFinalidad(1L, Boolean.TRUE);
-
-    BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer(new Answer<TipoFinalidad>() {
-      @Override
-      public TipoFinalidad answer(InvocationOnMock invocation) throws Throwable {
-        Long id = invocation.getArgument(0, Long.class);
-        return generarMockTipoFinalidad(id, Boolean.FALSE);
-      }
-    });
-    BDDMockito.given(service.update(ArgumentMatchers.<TipoFinalidad>any())).willThrow(new IllegalArgumentException());
-
-    // when: update TipoFinalidad
-    mockMvc
-        .perform(MockMvcRequestBuilders.put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, data.getId())
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(data)))
-        .andDo(MockMvcResultHandlers.print())
-        // then: 400 error
-        .andExpect(MockMvcResultMatchers.status().isBadRequest());
-  }
-
-  @Test
   @WithMockUser(username = "user", authorities = { "CSP-TFIN-B" })
   public void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
@@ -206,7 +181,7 @@ public class TipoFinalidadControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-TFIN-B" })
-  public void delete_NonExistingId_Return404() throws Exception {
+  public void delete_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
 

@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.Optional;
+
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -18,6 +20,6 @@ public interface TipoDocumentoRepository
    * @param nombre Nombre del {@link TipoDocumento}.
    * @return un {@link TipoDocumento} si tiene el nombre buscado.
    */
-  TipoDocumento findByNombre(String nombre);
+  Optional<TipoDocumento> findByNombre(String nombre);
 
 }

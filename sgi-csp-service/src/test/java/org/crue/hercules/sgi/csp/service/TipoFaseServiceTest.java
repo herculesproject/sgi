@@ -65,7 +65,7 @@ public class TipoFaseServiceTest {
     // given: Un nuevo TipoFase
     TipoFase tipoFase = generarMockTipoFase(null);
 
-    BDDMockito.given(tipoFaseRepository.findByNombre(tipoFase.getNombre())).willReturn(null);
+    BDDMockito.given(tipoFaseRepository.findByNombre(tipoFase.getNombre())).willReturn(Optional.empty());
 
     BDDMockito.given(tipoFaseRepository.save(tipoFase)).will((InvocationOnMock invocation) -> {
       TipoFase tipoFaseCreado = invocation.getArgument(0);
@@ -172,7 +172,7 @@ public class TipoFaseServiceTest {
     BeanUtils.copyProperties(givenData, newTFase);
     newTFase.setId(null);
 
-    BDDMockito.given(tipoFaseRepository.findByNombre(ArgumentMatchers.anyString())).willReturn(givenData);
+    BDDMockito.given(tipoFaseRepository.findByNombre(ArgumentMatchers.anyString())).willReturn(Optional.of(givenData));
 
     Assertions.assertThatThrownBy(
         // when: create TipoFase
@@ -187,7 +187,7 @@ public class TipoFaseServiceTest {
     TipoFase tipoFaseUpdated = generarMockTipoFase(1L, "nombreRepetido");
     TipoFase tipoFase = generarMockTipoFase(2L, "nombreRepetido");
 
-    BDDMockito.given(tipoFaseRepository.findByNombre(tipoFaseUpdated.getNombre())).willReturn(tipoFase);
+    BDDMockito.given(tipoFaseRepository.findByNombre(tipoFaseUpdated.getNombre())).willReturn(Optional.of(tipoFase));
 
     // when: Actualizamos el TipoFase
     // then: Lanza una excepcion porque ya existe otro TipoFase con ese nombre

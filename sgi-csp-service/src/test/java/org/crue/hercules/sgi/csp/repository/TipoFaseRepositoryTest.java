@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.Optional;
+
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.junit.jupiter.api.Test;
@@ -32,7 +34,7 @@ public class TipoFaseRepositoryTest {
     String nombreBuscado = "nombre-tipoFase1";
 
     // when: se busca el TipoFasepor nombre
-    TipoFase tipoFaseEncontrado = repository.findByNombre(nombreBuscado);
+    TipoFase tipoFaseEncontrado = repository.findByNombre(nombreBuscado).get();
 
     // then: Se recupera el TipoFase con el nombre buscado
     Assertions.assertThat(tipoFaseEncontrado.getId()).as("getId").isNotNull();
@@ -55,10 +57,10 @@ public class TipoFaseRepositoryTest {
     String nombreBuscado = "nombre-tipoFase-noexiste";
 
     // when: se busca el TipoFase por nombre
-    TipoFase tipoFaseEncontrado = repository.findByNombre(nombreBuscado);
+    Optional<TipoFase> tipoFaseEncontrado = repository.findByNombre(nombreBuscado);
 
     // then: Se recupera el TipoFase con el nombre buscado
-    Assertions.assertThat(tipoFaseEncontrado).isNull();
+    Assertions.assertThat(tipoFaseEncontrado).isEqualTo(Optional.empty());
   }
 
 }

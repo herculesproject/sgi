@@ -206,7 +206,7 @@ public class TipoEnlaceControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-TENL-B" })
-  public void delete_NonExistingId_Return404() throws Exception {
+  public void delete_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
 

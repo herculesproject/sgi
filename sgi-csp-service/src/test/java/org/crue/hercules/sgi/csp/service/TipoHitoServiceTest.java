@@ -65,7 +65,7 @@ public class TipoHitoServiceTest {
     // given: Un nuevo TipoHito
     TipoHito tipoHito = generarMockTipoHito(null);
 
-    BDDMockito.given(tipoHitoRepository.findByNombre(tipoHito.getNombre())).willReturn(null);
+    BDDMockito.given(tipoHitoRepository.findByNombre(tipoHito.getNombre())).willReturn(Optional.empty());
 
     BDDMockito.given(tipoHitoRepository.save(tipoHito)).will((InvocationOnMock invocation) -> {
       TipoHito tipoHitoCreado = invocation.getArgument(0);
@@ -132,7 +132,7 @@ public class TipoHitoServiceTest {
     BeanUtils.copyProperties(givenData, newTHito);
     newTHito.setId(null);
 
-    BDDMockito.given(tipoHitoRepository.findByNombre(ArgumentMatchers.anyString())).willReturn(givenData);
+    BDDMockito.given(tipoHitoRepository.findByNombre(ArgumentMatchers.anyString())).willReturn(Optional.of(givenData));
 
     Assertions.assertThatThrownBy(
         // when: create TipoHito
@@ -147,7 +147,7 @@ public class TipoHitoServiceTest {
     TipoHito tipoHitoUpdated = generarMockTipoHito(1L, "nombreRepetido");
     TipoHito tipoHito = generarMockTipoHito(2L, "nombreRepetido");
 
-    BDDMockito.given(tipoHitoRepository.findByNombre(tipoHitoUpdated.getNombre())).willReturn(tipoHito);
+    BDDMockito.given(tipoHitoRepository.findByNombre(tipoHitoUpdated.getNombre())).willReturn(Optional.of(tipoHito));
 
     // when: Actualizamos el TipoHito
     // then: Lanza una excepcion porque ya existe otro TipoHito con ese nombre

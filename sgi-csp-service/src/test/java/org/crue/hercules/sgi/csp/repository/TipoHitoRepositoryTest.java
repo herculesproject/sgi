@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.Optional;
+
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.junit.jupiter.api.Test;
@@ -32,7 +34,7 @@ public class TipoHitoRepositoryTest {
     String nombreBuscado = "nombre-tipoHito1";
 
     // when: se busca el TipoHitopor nombre
-    TipoHito tipoHitoEncontrado = repository.findByNombre(nombreBuscado);
+    TipoHito tipoHitoEncontrado = repository.findByNombre(nombreBuscado).get();
 
     // then: Se recupera el TipoHito con el nombre buscado
     Assertions.assertThat(tipoHitoEncontrado.getId()).as("getId").isNotNull();
@@ -55,10 +57,10 @@ public class TipoHitoRepositoryTest {
     String nombreBuscado = "nombre-tipoHito-noexiste";
 
     // when: se busca el TipoHito por nombre
-    TipoHito tipoHitoEncontrado = repository.findByNombre(nombreBuscado);
+    Optional<TipoHito> tipoHitoEncontrado = repository.findByNombre(nombreBuscado);
 
     // then: Se recupera el TipoHito con el nombre buscado
-    Assertions.assertThat(tipoHitoEncontrado).isNull();
+    Assertions.assertThat(tipoHitoEncontrado).isEqualTo(Optional.empty());
   }
 
 }

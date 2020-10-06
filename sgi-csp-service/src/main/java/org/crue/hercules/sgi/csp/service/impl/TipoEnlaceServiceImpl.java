@@ -41,15 +41,14 @@ public class TipoEnlaceServiceImpl implements TipoEnlaceService {
   @Transactional
   public TipoEnlace create(TipoEnlace tipoEnlace) {
     log.debug("create(TipoEnlace tipoEnlace) - start");
-    Assert.isNull(tipoEnlace.getId(), "Id tiene que ser null para crear TipoEnlace");
-    Assert.notNull(tipoEnlace.getNombre(), "Nombre no puede ser null para crear TipoEnlace");
 
-    repository.findByNombre(tipoEnlace.getNombre()).map((data) -> {
-      throw new IllegalArgumentException("Ya existe un TipoEnlace con el nombre " + data.getNombre());
-    });
+    Assert.isNull(tipoEnlace.getId(), "Id tiene que ser null para crear TipoEnlace");
+    Assert.isTrue(!(repository.findByNombre(tipoEnlace.getNombre()).isPresent()),
+        "Ya existe TipoEnlace con el nombre " + tipoEnlace.getNombre());
 
     tipoEnlace.setActivo(Boolean.TRUE);
     TipoEnlace returnValue = repository.save(tipoEnlace);
+
     log.debug("create(TipoEnlace tipoEnlace) - end");
     return returnValue;
   }
@@ -67,10 +66,9 @@ public class TipoEnlaceServiceImpl implements TipoEnlaceService {
     log.debug("update(TipoEnlace tipoEnlace) - start");
 
     Assert.notNull(tipoEnlace.getId(), "Id no puede ser null para actualizar TipoEnlace");
-    Assert.notNull(tipoEnlace.getNombre(), "Nombre no puede ser null para actualizar TipoEnlace");
-
-    repository.findByNombre(tipoEnlace.getNombre()).ifPresent((data) -> {
-      Assert.isTrue(tipoEnlace.getId() == data.getId(), "Ya existe un TipoEnlace con el nombre " + data.getNombre());
+    repository.findByNombre(tipoEnlace.getNombre()).ifPresent((tipoEnlaceExistente) -> {
+      Assert.isTrue(tipoEnlace.getId() == tipoEnlaceExistente.getId(),
+          "Ya existe un TipoEnlace con el nombre " + tipoEnlaceExistente.getNombre());
     });
 
     return repository.findById(tipoEnlace.getId()).map((data) -> {

@@ -45,7 +45,7 @@ public class TipoDocumentoServiceTest {
     // given: Un nuevo TipoDocumento
     TipoDocumento tipoDocumento = generarMockTipoDocumento(null);
 
-    BDDMockito.given(tipoDocumentoRepository.findByNombre(tipoDocumento.getNombre())).willReturn(null);
+    BDDMockito.given(tipoDocumentoRepository.findByNombre(tipoDocumento.getNombre())).willReturn(Optional.empty());
 
     BDDMockito.given(tipoDocumentoRepository.save(tipoDocumento)).will((InvocationOnMock invocation) -> {
       TipoDocumento tipoDocumentoCreado = invocation.getArgument(0);
@@ -80,7 +80,8 @@ public class TipoDocumentoServiceTest {
     TipoDocumento tipoDocumentoNew = generarMockTipoDocumento(null, "nombreRepetido");
     TipoDocumento tipoDocumento = generarMockTipoDocumento(1L, "nombreRepetido");
 
-    BDDMockito.given(tipoDocumentoRepository.findByNombre(tipoDocumentoNew.getNombre())).willReturn(tipoDocumento);
+    BDDMockito.given(tipoDocumentoRepository.findByNombre(tipoDocumentoNew.getNombre()))
+        .willReturn(Optional.of(tipoDocumento));
 
     // when: Creamos el TipoDocumento
     // then: Lanza una excepcion porque hay otro TipoDocumento con ese nombre
@@ -95,7 +96,7 @@ public class TipoDocumentoServiceTest {
     TipoDocumento tipoDocumentoNombreActualizado = generarMockTipoDocumento(1L, "NombreActualizado");
 
     BDDMockito.given(tipoDocumentoRepository.findByNombre(tipoDocumentoNombreActualizado.getNombre()))
-        .willReturn(tipoDocumento);
+        .willReturn(Optional.of(tipoDocumento));
 
     BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(tipoDocumento));
@@ -164,7 +165,8 @@ public class TipoDocumentoServiceTest {
     TipoDocumento tipoDocumentoUpdated = generarMockTipoDocumento(1L, "nombreRepetido");
     TipoDocumento tipoDocumento = generarMockTipoDocumento(2L, "nombreRepetido");
 
-    BDDMockito.given(tipoDocumentoRepository.findByNombre(tipoDocumentoUpdated.getNombre())).willReturn(tipoDocumento);
+    BDDMockito.given(tipoDocumentoRepository.findByNombre(tipoDocumentoUpdated.getNombre()))
+        .willReturn(Optional.of(tipoDocumento));
 
     // when: Actualizamos el TipoDocumento
     // then: Lanza una excepcion porque ya existe otro TipoDocumento con ese nombre

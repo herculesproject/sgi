@@ -43,8 +43,8 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
     log.debug("create(ModeloEjecucion modeloEjecucion) - start");
 
     Assert.isNull(modeloEjecucion.getId(), "ModeloEjecucion id tiene que ser null para crear un nuevo ModeloEjecucion");
-    Assert.isNull(modeloEjecucionRepository.findByNombre(modeloEjecucion.getNombre()),
-        "ModeloEjecucion nombre tiene que ser unico");
+    Assert.isTrue(!(modeloEjecucionRepository.findByNombre(modeloEjecucion.getNombre()).isPresent()),
+        "Ya existe ModeloEjecucion con el nombre " + modeloEjecucion.getNombre());
 
     modeloEjecucion.setActivo(true);
 
@@ -68,13 +68,11 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
 
     Assert.notNull(modeloEjecucionActualizar.getId(),
         "ModeloEjecucion id no puede ser null para actualizar un ModeloEjecucion");
-
-    ModeloEjecucion modeloEjecucionMismoNombre = modeloEjecucionRepository
-        .findByNombre(modeloEjecucionActualizar.getNombre());
-    Assert.isTrue(
-        modeloEjecucionMismoNombre == null
-            || modeloEjecucionMismoNombre.getId().equals(modeloEjecucionActualizar.getId()),
-        "ModeloEjecucion nombre tiene que ser unico");
+    modeloEjecucionRepository.findByNombre(modeloEjecucionActualizar.getNombre())
+        .ifPresent((modeloEjecucionExistente) -> {
+          Assert.isTrue(modeloEjecucionActualizar.getId() == modeloEjecucionExistente.getId(),
+              "Ya existe un ModeloEjecucion con el nombre " + modeloEjecucionExistente.getNombre());
+        });
 
     return modeloEjecucionRepository.findById(modeloEjecucionActualizar.getId()).map(modeloEjecucion -> {
       modeloEjecucion.setNombre(modeloEjecucionActualizar.getNombre());

@@ -15,6 +15,31 @@ import org.springframework.data.domain.Pageable;
 public interface ModeloTipoFinalidadService {
 
   /**
+   * Guarda la entidad {@link ModeloTipoFinalidad}.
+   * 
+   * @param modeloTipoFinalidad la entidad {@link ModeloTipoFinalidad} a guardar.
+   * @return ModeloTipoFinalidad la entidad {@link ModeloTipoFinalidad}
+   *         persistida.
+   */
+  public ModeloTipoFinalidad create(ModeloTipoFinalidad modeloTipoFinalidad);
+
+  /**
+   * Desactiva el {@link ModeloTipoFinalidad}.
+   *
+   * @param id Id del {@link ModeloTipoFinalidad}.
+   * @return la entidad {@link ModeloTipoFinalidad} persistida.
+   */
+  ModeloTipoFinalidad disable(Long id);
+
+  /**
+   * Obtiene una entidad {@link ModeloTipoFinalidad} por id.
+   * 
+   * @param id Identificador de la entidad {@link ModeloTipoFinalidad}.
+   * @return ModeloTipoFinalidad la entidad {@link ModeloTipoFinalidad}.
+   */
+  public ModeloTipoFinalidad findById(final Long id);
+
+  /**
    * Obtiene los {@link ModeloTipoFinalidad} activos para un
    * {@link ModeloEjecucion}.
    *

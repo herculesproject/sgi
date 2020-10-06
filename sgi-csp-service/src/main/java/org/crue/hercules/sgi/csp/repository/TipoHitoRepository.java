@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.csp.repository;
 
+import java.util.Optional;
+
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -18,6 +20,6 @@ public interface TipoHitoRepository extends JpaRepository<TipoHito, Long>, JpaSp
    * @param nombre Nombre del {@link TipoHito}.
    * @return un {@link TipoHito} si tiene el nombre buscado.
    */
-  TipoHito findByNombre(String nombre);
+  Optional<TipoHito> findByNombre(String nombre);
 
 }

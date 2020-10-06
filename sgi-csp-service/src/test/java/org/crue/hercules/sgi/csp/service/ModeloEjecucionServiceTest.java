@@ -45,7 +45,7 @@ public class ModeloEjecucionServiceTest {
     // given: Un nuevo ModeloEjecucion
     ModeloEjecucion modeloEjecucion = generarMockModeloEjecucion(null);
 
-    BDDMockito.given(modeloEjecucionRepository.findByNombre(modeloEjecucion.getNombre())).willReturn(null);
+    BDDMockito.given(modeloEjecucionRepository.findByNombre(modeloEjecucion.getNombre())).willReturn(Optional.empty());
 
     BDDMockito.given(modeloEjecucionRepository.save(modeloEjecucion)).will((InvocationOnMock invocation) -> {
       ModeloEjecucion modeloEjecucionCreado = invocation.getArgument(0);
@@ -81,7 +81,7 @@ public class ModeloEjecucionServiceTest {
     ModeloEjecucion modeloEjecucion = generarMockModeloEjecucion(1L, "nombreRepetido");
 
     BDDMockito.given(modeloEjecucionRepository.findByNombre(modeloEjecucionNew.getNombre()))
-        .willReturn(modeloEjecucion);
+        .willReturn(Optional.of(modeloEjecucion));
 
     // when: Creamos el ModeloEjecucion
     // then: Lanza una excepcion porque hay otro ModeloEjecucion con ese nombre
@@ -96,7 +96,7 @@ public class ModeloEjecucionServiceTest {
     ModeloEjecucion modeloEjecucionNombreActualizado = generarMockModeloEjecucion(1L, "NombreActualizado");
 
     BDDMockito.given(modeloEjecucionRepository.findByNombre(modeloEjecucionNombreActualizado.getNombre()))
-        .willReturn(modeloEjecucion);
+        .willReturn(Optional.of(modeloEjecucion));
 
     BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(modeloEjecucion));
@@ -167,7 +167,7 @@ public class ModeloEjecucionServiceTest {
     ModeloEjecucion modeloEjecucion = generarMockModeloEjecucion(2L, "nombreRepetido");
 
     BDDMockito.given(modeloEjecucionRepository.findByNombre(modeloEjecucionUpdated.getNombre()))
-        .willReturn(modeloEjecucion);
+        .willReturn(Optional.of(modeloEjecucion));
 
     // when: Actualizamos el ModeloEjecucion
     // then: Lanza una excepcion porque ya existe otro ModeloEjecucion con ese
