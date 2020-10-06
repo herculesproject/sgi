@@ -6,10 +6,12 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '@shared/shared.module';
+import { TipoFinalidadModalComponent } from './tipo-finalidad-modal/tipo-finalidad-modal.component';
 
 @NgModule({
   declarations: [
-    TipoFinalidadListadoComponent
+    TipoFinalidadListadoComponent,
+    TipoFinalidadModalComponent
   ],
   imports: [
     CommonModule,

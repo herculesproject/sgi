@@ -77,17 +77,17 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
    * Load table data
    */
   onSearch(): void {
-    this.logger.debug(AbstractTablePaginationComponent.name, 'onSearch()', 'start');
+    this.logger.debug(AbstractTablePaginationComponent.name, `${this.onSearch.name}()`, 'start');
     this.filter = this.createFilters();
     this.loadTable(true);
-    this.logger.debug(AbstractTablePaginationComponent.name, 'onSearch()', 'end');
+    this.logger.debug(AbstractTablePaginationComponent.name, `${this.onSearch.name}()`, 'end');
   }
 
   /**
    * Clean filters an reload the table
    */
   onClearFilters(): void {
-    this.logger.debug(AbstractTablePaginationComponent.name, 'onClearFilters()', 'start');
+    this.logger.debug(AbstractTablePaginationComponent.name, `${this.onClearFilters.name}()`, 'start');
     FormGroupUtil.clean(this.formGroup);
     this.filter = [{
       field: undefined,
@@ -95,7 +95,7 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
       value: '',
     }];
     this.loadTable(true);
-    this.logger.debug(AbstractTablePaginationComponent.name, 'onClearFilters()', 'end');
+    this.logger.debug(AbstractTablePaginationComponent.name, `${this.onClearFilters.name}()`, 'end');
   }
 
   /**
@@ -104,7 +104,7 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
    * @param reset Inidica si reinicializa la paginación
    */
   protected getObservableLoadTable(reset?: boolean): Observable<T[]> {
-    this.logger.debug(AbstractTablePaginationComponent.name, `getObservableLoadTable(${reset})`, 'start');
+    this.logger.debug(AbstractTablePaginationComponent.name, `${this.getObservableLoadTable.name}(${reset})`, 'start');
     // Do the request with paginator/sort/filter values
     const observable$ = this.createObservable();
     return observable$?.pipe(
@@ -115,7 +115,7 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
         if (reset && this.paginator) {
           this.paginator.pageIndex = 0;
         }
-        this.logger.debug(AbstractTablePaginationComponent.name, `getObservableLoadTable(${reset})`, 'end');
+        this.logger.debug(AbstractTablePaginationComponent.name, `${this.getObservableLoadTable.name}(${reset})`, 'end');
         // Return the values
         return response.items;
       }),
@@ -124,7 +124,7 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
         this.paginator?.firstPage();
         this.totalElementos = 0;
         this.showMensajeErrorLoadTable();
-        this.logger.error(AbstractTablePaginationComponent.name, `getObservableLoadTable(${reset})`, 'error');
+        this.logger.error(AbstractTablePaginationComponent.name, `${this.getObservableLoadTable.name}(${reset})`, 'error');
         return of([]);
       })
     );
@@ -137,24 +137,25 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
    * @param reset Indica la pagina actual es la primera o no
    */
   protected getFindOptions(reset?: boolean): SgiRestFindOptions {
-    this.logger.debug(AbstractTablePaginationComponent.name, `getFindOptions(${reset})`, 'start');
+    this.logger.debug(AbstractTablePaginationComponent.name, `${this.getFindOptions.name}(${reset})`, 'start');
     const options = {
       page: {
         index: reset ? 0 : this.paginator?.pageIndex,
         size: this.paginator?.pageSize,
       },
       sort: {
-        direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
-        field: this.sort.active,
+        direction: SgiRestSortDirection.fromSortDirection(this.sort?.direction),
+        field: this.sort?.active,
       },
       filters: this.filter,
     };
-    this.logger.debug(AbstractTablePaginationComponent.name, `getFindOptions(${reset})`, 'end');
+    this.logger.debug(AbstractTablePaginationComponent.name, `${this.getFindOptions.name}(${reset})`, 'end');
     return options;
   }
 
   protected addFiltro(filtros: SgiRestFilter[], nombre: string, tipo: SgiRestFilterType, valor: any): void {
-    this.logger.debug(AbstractTablePaginationComponent.name, `agregarFiltro([${filtros}], ${nombre}, ${tipo} , ${valor})`, 'start');
+    this.logger.debug(AbstractTablePaginationComponent.name,
+      `${this.addFiltro.name}([${filtros}], ${nombre}, ${tipo} , ${valor})`, 'start');
     if (valor) {
       const filtro: SgiRestFilter = {
         field: nombre,
@@ -163,16 +164,17 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
       };
       filtros.push(filtro);
     }
-    this.logger.debug(AbstractTablePaginationComponent.name, `agregarFiltro([${filtros}], ${nombre}, ${tipo} , ${valor})`, 'end');
+    this.logger.debug(AbstractTablePaginationComponent.name,
+      `${this.addFiltro.name}([${filtros}], ${nombre}, ${tipo} , ${valor})`, 'end');
   }
 
   /**
    * Muestra un mensaje de error si se produce un error al cargar los datos de la tabla
    */
   protected showMensajeErrorLoadTable(): void {
-    this.logger.debug(AbstractTablePaginationComponent.name, 'showMensajeErrorLoadTable()', 'start');
+    this.logger.debug(AbstractTablePaginationComponent.name, `${this.showMensajeErrorLoadTable.name}()`, 'start');
     this.snackBarService.showError(this.msgError);
-    this.logger.debug(AbstractTablePaginationComponent.name, 'showMensajeErrorLoadTable()', 'end');
+    this.logger.debug(AbstractTablePaginationComponent.name, `${this.showMensajeErrorLoadTable.name}()`, 'end');
   }
 
   /**
