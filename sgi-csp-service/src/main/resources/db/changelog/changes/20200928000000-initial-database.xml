@@ -173,13 +173,16 @@
       <column name="modelo_ejecucion_id" type="BIGINT">
         <constraints nullable="false" />
       </column>
-      <column name="activo_solicitud" type="BOOLEAN" defaultValueBoolean="false">
+      <column name="solicitud" type="BOOLEAN" defaultValueBoolean="false">
         <constraints nullable="false" />
       </column>
-      <column name="activo_convocatoria" type="BOOLEAN" defaultValueBoolean="false">
+      <column name="convocatoria" type="BOOLEAN" defaultValueBoolean="false">
         <constraints nullable="false" />
       </column>
-      <column name="activo_proyecto" type="BOOLEAN" defaultValueBoolean="false">
+      <column name="proyecto" type="BOOLEAN" defaultValueBoolean="false">
+        <constraints nullable="false" />
+      </column>
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>
     </createTable>

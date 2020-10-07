@@ -223,4 +223,31 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-modelo_tipo_fase">
+    <insert tableName="modelo_tipo_fase">
+      <column name="tipo_fase_id" valueComputed="(select id from csp.tipo_fase where nombre='Fase1')"></column>
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')"></column>
+      <column name="solicitud" value="false" />
+      <column name="convocatoria" value="true" />
+      <column name="proyecto" value="false" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="modelo_tipo_fase">
+      <column name="tipo_fase_id" valueComputed="(select id from csp.tipo_fase where nombre='Fase2')"></column>
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-002')"></column>
+      <column name="solicitud" value="true" />
+      <column name="convocatoria" value="false" />
+      <column name="proyecto" value="true" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="modelo_tipo_fase">
+      <column name="tipo_fase_id" valueComputed="(select id from csp.tipo_fase where nombre='Fase3')"></column>
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-003')"></column>
+      <column name="solicitud" value="true" />
+      <column name="convocatoria" value="true" />
+      <column name="proyecto" value="true" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>

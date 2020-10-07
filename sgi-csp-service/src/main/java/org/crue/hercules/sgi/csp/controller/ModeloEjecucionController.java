@@ -79,6 +79,7 @@ public class ModeloEjecucionController {
    * @param modeloTipoFaseService          {@link ModeloTipoFaseService}.
    * @param modeloTipoFaseDocumentoService {@link ModeloTipoFaseDocumentoService}.
    * @param modeloTipoFinalidadService     {@link ModeloTipoFinalidadService}.
+   * @param modeloTipoHitoService          {@link ModeloTipoHitoService}.
    * @param modeloUnidadService            {@link ModeloUnidadService}.
    */
   public ModeloEjecucionController(ModeloEjecucionService modeloEjecucionService,

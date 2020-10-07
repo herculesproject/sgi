@@ -16,7 +16,7 @@ public class ModeloTipoFaseSpecifications {
    */
   public static Specification<ModeloTipoFase> activosConvocatoria() {
     return (root, query, cb) -> {
-      return cb.equal(root.get(ModeloTipoFase_.activoConvocatoria), Boolean.TRUE);
+      return cb.equal(root.get(ModeloTipoFase_.convocatoria), Boolean.TRUE);
     };
   }
 
@@ -28,7 +28,7 @@ public class ModeloTipoFaseSpecifications {
    */
   public static Specification<ModeloTipoFase> activosProyecto() {
     return (root, query, cb) -> {
-      return cb.equal(root.get(ModeloTipoFase_.activoProyecto), Boolean.TRUE);
+      return cb.equal(root.get(ModeloTipoFase_.proyecto), Boolean.TRUE);
     };
   }
 
@@ -40,7 +40,7 @@ public class ModeloTipoFaseSpecifications {
    */
   public static Specification<ModeloTipoFase> activosSolcitud() {
     return (root, query, cb) -> {
-      return cb.equal(root.get(ModeloTipoFase_.activoSolicitud), Boolean.TRUE);
+      return cb.equal(root.get(ModeloTipoFase_.solicitud), Boolean.TRUE);
     };
   }
 
@@ -54,6 +54,17 @@ public class ModeloTipoFaseSpecifications {
   public static Specification<ModeloTipoFase> byModeloEjecucionId(Long id) {
     return (root, query, cb) -> {
       return cb.equal(root.get(ModeloTipoFase_.modeloEjecucion).get(ModeloEjecucion_.id), id);
+    };
+  }
+
+  /**
+   * {@link ModeloTipoFase} con Activo a True
+   * 
+   * @return specification para obtener los {@link ModeloTipoFase} activos
+   */
+  public static Specification<ModeloTipoFase> activos() {
+    return (root, query, cb) -> {
+      return cb.equal(root.get(ModeloTipoFase_.activo), Boolean.TRUE);
     };
   }
 

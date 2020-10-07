@@ -1463,9 +1463,10 @@ public class ModeloEjecucionControllerTest {
     modeloTipoFase.setId(id);
     modeloTipoFase.setModeloEjecucion(modeloEjecucion);
     modeloTipoFase.setTipoFase(tipoFase);
-    modeloTipoFase.setActivoConvocatoria(true);
-    modeloTipoFase.setActivoProyecto(true);
-    modeloTipoFase.setActivoSolicitud(false);
+    modeloTipoFase.setConvocatoria(true);
+    modeloTipoFase.setProyecto(true);
+    modeloTipoFase.setSolicitud(false);
+    modeloTipoFase.setActivo(true);
 
     return modeloTipoFase;
   }

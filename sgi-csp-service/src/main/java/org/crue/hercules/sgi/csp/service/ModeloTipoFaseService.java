@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.util.List;
 
+import org.crue.hercules.sgi.csp.exceptions.ModeloTipoFaseNotFoundException;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -13,6 +14,38 @@ import org.springframework.data.domain.Pageable;
  */
 
 public interface ModeloTipoFaseService {
+
+  /**
+   * Guardar {@link ModeloTipoFase}.
+   *
+   * @param modeloTipoFase la entidad {@link ModeloTipoFase} a guardar.
+   * @return la entidad {@link ModeloTipoFase} persistida.
+   */
+  ModeloTipoFase create(ModeloTipoFase modeloTipoFase);
+
+  /**
+   * Actualizar {@link ModeloTipoFase}.
+   *
+   * @param modeloTipoFase la entidad {@link ModeloTipoFase} a actualizar.
+   * @return la entidad {@link ModeloTipoFase} persistida.
+   */
+  ModeloTipoFase update(ModeloTipoFase modeloTipoFase);
+
+  /**
+   * Obtiene {@link ModeloTipoFase} por id.
+   *
+   * @param id el id de la entidad {@link ModeloTipoFase}.
+   * @return la entidad {@link ModeloTipoFase}.
+   */
+  ModeloTipoFase findById(Long id);
+
+  /**
+   * Desactiva el {@link ModeloTipoFase} por id.
+   *
+   * @param id el id de la entidad {@link ModeloTipoFase}.
+   * @return la entidad {@link ModeloTipoFase} persistida.
+   */
+  ModeloTipoFase disable(Long id) throws ModeloTipoFaseNotFoundException;
 
   /**
    * Obtiene los {@link ModeloTipoFase} para un {@link ModeloEjecucion}.
