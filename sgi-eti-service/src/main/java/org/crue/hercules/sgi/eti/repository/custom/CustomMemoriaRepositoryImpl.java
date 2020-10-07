@@ -12,6 +12,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -29,6 +30,7 @@ import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Memoria_;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion_;
+import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.Retrospectiva_;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion_;
@@ -42,6 +44,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Component;
 
+import ch.qos.logback.core.subst.Token.Type;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -123,6 +126,7 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     Root<Memoria> root = cq.from(Memoria.class);
     Join<Memoria, Comite> joinMemoriaComite = root.join(Memoria_.comite);
     Join<Memoria, TipoEstadoMemoria> joinMemoriaTipoEstado = root.join(Memoria_.estadoActual);
+    Join<Memoria, Retrospectiva> joinMemoriaRetrospectiva = root.join(Memoria_.retrospectiva, JoinType.LEFT);
 
     // Memorias convocatoria ordinaria o extraordinaria
     Predicate comiteConvocatoriaReunionOrdExtraord = cb.equal(joinMemoriaComite.get(Comite_.id),
@@ -132,7 +136,7 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     Predicate fechaEnvioMenorFechaLimite = cb.lessThanOrEqualTo(root.get(Memoria_.fechaEnvioSecretaria),
         sqFechaLimiteConvocatoria);
     Predicate retrospectivaSecretaria = cb.equal(
-        root.get(Memoria_.retrospectiva).get(Retrospectiva_.estadoRetrospectiva).get(EstadoRetrospectiva_.id),
+        joinMemoriaRetrospectiva.get(Retrospectiva_.estadoRetrospectiva).get(EstadoRetrospectiva_.id),
         Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA);
 
     Predicate memoriasConvocatoriaOrdinariaExtraordinaria = cb.and(comiteConvocatoriaReunionOrdExtraord,
