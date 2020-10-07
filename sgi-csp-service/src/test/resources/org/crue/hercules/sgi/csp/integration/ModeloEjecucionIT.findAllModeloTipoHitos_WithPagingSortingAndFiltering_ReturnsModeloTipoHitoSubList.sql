@@ -13,12 +13,13 @@ INSERT INTO csp.modelo_ejecucion (id, nombre, descripcion, activo) VALUES (1, 'n
 INSERT INTO csp.modelo_ejecucion (id, nombre, descripcion, activo) VALUES (2, 'nombre-002', 'descripcion-002', true);
 
 -- MODELO TIPO HITO
-INSERT INTO csp.modelo_tipo_hito (id, tipo_hito_id, modelo_ejecucion_id, activo_solicitud, activo_convocatoria, activo_proyecto) VALUES (1, 1, 1, true, true, true);
-INSERT INTO csp.modelo_tipo_hito (id, tipo_hito_id, modelo_ejecucion_id, activo_solicitud, activo_convocatoria, activo_proyecto) VALUES (2, 2, 1, true, true, true);
-INSERT INTO csp.modelo_tipo_hito (id, tipo_hito_id, modelo_ejecucion_id, activo_solicitud, activo_convocatoria, activo_proyecto) VALUES (3, 3, 1, true, true, true);
-INSERT INTO csp.modelo_tipo_hito (id, tipo_hito_id, modelo_ejecucion_id, activo_solicitud, activo_convocatoria, activo_proyecto) VALUES (4, 10, 1, true, true, true);
-INSERT INTO csp.modelo_tipo_hito (id, tipo_hito_id, modelo_ejecucion_id, activo_solicitud, activo_convocatoria, activo_proyecto) VALUES (5, 1, 2, true, true, true);
-INSERT INTO csp.modelo_tipo_hito (id, tipo_hito_id, modelo_ejecucion_id, activo_solicitud, activo_convocatoria, activo_proyecto) VALUES (6, 11, 2, true, true, true);
-INSERT INTO csp.modelo_tipo_hito (id, tipo_hito_id, modelo_ejecucion_id, activo_solicitud, activo_convocatoria, activo_proyecto) VALUES (7, 12, 2, true, true, true);
-INSERT INTO csp.modelo_tipo_hito (id, tipo_hito_id, modelo_ejecucion_id, activo_solicitud, activo_convocatoria, activo_proyecto) VALUES (8, 13, 2, true, true, true);
-INSERT INTO csp.modelo_tipo_hito (id, tipo_hito_id, modelo_ejecucion_id, activo_solicitud, activo_convocatoria, activo_proyecto) VALUES (9, 14, 2, true, true, true);
+INSERT INTO csp.modelo_tipo_hito (id, tipo_hito_id, modelo_ejecucion_id, solicitud, proyecto, convocatoria, activo) VALUES (1, 1, 1, true, true, true, true);
+INSERT INTO csp.modelo_tipo_hito (id, tipo_hito_id, modelo_ejecucion_id, solicitud, proyecto, convocatoria, activo) VALUES (2, 2, 1, true, true, true, true);
+INSERT INTO csp.modelo_tipo_hito (id, tipo_hito_id, modelo_ejecucion_id, solicitud, proyecto, convocatoria, activo) VALUES (3, 3, 1, true, true, true, true);
+INSERT INTO csp.modelo_tipo_hito (id, tipo_hito_id, modelo_ejecucion_id, solicitud, proyecto, convocatoria, activo) VALUES (4, 10, 1, true, true, true, true);
+INSERT INTO csp.modelo_tipo_hito (id, tipo_hito_id, modelo_ejecucion_id, solicitud, proyecto, convocatoria, activo) VALUES (5, 1, 2, true, true, true, true);
+INSERT INTO csp.modelo_tipo_hito (id, tipo_hito_id, modelo_ejecucion_id, solicitud, proyecto, convocatoria, activo) VALUES (6, 11, 2, true, true, true, true);
+INSERT INTO csp.modelo_tipo_hito (id, tipo_hito_id, modelo_ejecucion_id, solicitud, proyecto, convocatoria, activo) VALUES (7, 12, 2, true, true, true, true);
+INSERT INTO csp.modelo_tipo_hito (id, tipo_hito_id, modelo_ejecucion_id, solicitud, proyecto, convocatoria, activo) VALUES (8, 13, 2, true, true, true, true);
+INSERT INTO csp.modelo_tipo_hito (id, tipo_hito_id, modelo_ejecucion_id, solicitud, proyecto, convocatoria, activo) VALUES (9, 14, 2, true, true, true, true);
+INSERT INTO csp.modelo_tipo_hito (id, tipo_hito_id, modelo_ejecucion_id, solicitud, proyecto, convocatoria, activo) VALUES (10, 11, 1, true, true, true, false);

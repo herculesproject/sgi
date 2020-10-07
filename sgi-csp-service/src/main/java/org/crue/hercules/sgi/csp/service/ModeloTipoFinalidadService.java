@@ -21,7 +21,7 @@ public interface ModeloTipoFinalidadService {
    * @return ModeloTipoFinalidad la entidad {@link ModeloTipoFinalidad}
    *         persistida.
    */
-  public ModeloTipoFinalidad create(ModeloTipoFinalidad modeloTipoFinalidad);
+  ModeloTipoFinalidad create(ModeloTipoFinalidad modeloTipoFinalidad);
 
   /**
    * Desactiva el {@link ModeloTipoFinalidad}.
@@ -37,7 +37,7 @@ public interface ModeloTipoFinalidadService {
    * @param id Identificador de la entidad {@link ModeloTipoFinalidad}.
    * @return ModeloTipoFinalidad la entidad {@link ModeloTipoFinalidad}.
    */
-  public ModeloTipoFinalidad findById(final Long id);
+  ModeloTipoFinalidad findById(final Long id);
 
   /**
    * Obtiene los {@link ModeloTipoFinalidad} activos para un

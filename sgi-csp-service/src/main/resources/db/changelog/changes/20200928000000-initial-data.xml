@@ -147,6 +147,33 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-modelo_tipo_fase">
+    <insert tableName="modelo_tipo_fase">
+      <column name="tipo_fase_id" valueComputed="(select id from csp.tipo_fase where nombre='Fase1')"></column>
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')"></column>
+      <column name="solicitud" value="false" />
+      <column name="convocatoria" value="true" />
+      <column name="proyecto" value="false" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="modelo_tipo_fase">
+      <column name="tipo_fase_id" valueComputed="(select id from csp.tipo_fase where nombre='Fase2')"></column>
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-002')"></column>
+      <column name="solicitud" value="true" />
+      <column name="convocatoria" value="false" />
+      <column name="proyecto" value="true" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="modelo_tipo_fase">
+      <column name="tipo_fase_id" valueComputed="(select id from csp.tipo_fase where nombre='Fase3')"></column>
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-003')"></column>
+      <column name="solicitud" value="true" />
+      <column name="convocatoria" value="true" />
+      <column name="proyecto" value="true" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-tipo_finalidad">
     <insert tableName="tipo_finalidad">
       <column name="nombre" value="tipo finalidad AAA" />
@@ -209,13 +236,11 @@
       <column name="descripcion" value="Descripción del Hito1"></column>
       <column name="activo" value="true" />
     </insert>
-
     <insert tableName="tipo_hito">
       <column name="nombre" value="Hito2" />
       <column name="descripcion" value="Descripción del Hito2"></column>
       <column name="activo" value="true" />
     </insert>
-
     <insert tableName="tipo_hito">
       <column name="nombre" value="Hito3" />
       <column name="descripcion" value="Descripción del Hito3"></column>
@@ -223,26 +248,42 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-modelo_tipo_fase">
-    <insert tableName="modelo_tipo_fase">
-      <column name="tipo_fase_id" valueComputed="(select id from csp.tipo_fase where nombre='Fase1')"></column>
-      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')"></column>
+  <changeSet author="master" id="20200928000000-modelo_tipo_hito">
+    <insert tableName="modelo_tipo_hito">
+      <column name="tipo_hito_id" valueComputed="(select id from csp.tipo_hito where nombre like '%Hito1')" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre like '%-001')" />
+      <column name="solicitud" value="false" />
+      <column name="convocatoria" value="true" />
+      <column name="proyecto" value="true" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="modelo_tipo_hito">
+      <column name="tipo_hito_id" valueComputed="(select id from csp.tipo_hito where nombre like '%Hito2')" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre like '%-001')" />
       <column name="solicitud" value="false" />
       <column name="convocatoria" value="true" />
       <column name="proyecto" value="false" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="modelo_tipo_fase">
-      <column name="tipo_fase_id" valueComputed="(select id from csp.tipo_fase where nombre='Fase2')"></column>
-      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-002')"></column>
-      <column name="solicitud" value="true" />
+    <insert tableName="modelo_tipo_hito">
+      <column name="tipo_hito_id" valueComputed="(select id from csp.tipo_hito where nombre like '%Hito1')" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre like '%-002')" />
+      <column name="solicitud" value="false" />
       <column name="convocatoria" value="false" />
       <column name="proyecto" value="true" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="modelo_tipo_fase">
-      <column name="tipo_fase_id" valueComputed="(select id from csp.tipo_fase where nombre='Fase3')"></column>
-      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-003')"></column>
+    <insert tableName="modelo_tipo_hito">
+      <column name="tipo_hito_id" valueComputed="(select id from csp.tipo_hito where nombre like '%Hito3')" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre like '%-002')" />
+      <column name="solicitud" value="true" />
+      <column name="convocatoria" value="false" />
+      <column name="proyecto" value="false" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="modelo_tipo_hito">
+      <column name="tipo_hito_id" valueComputed="(select id from csp.tipo_hito where nombre like '%Hito3')" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre like '%-003')" />
       <column name="solicitud" value="true" />
       <column name="convocatoria" value="true" />
       <column name="proyecto" value="true" />

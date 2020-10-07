@@ -15,6 +15,38 @@ import org.springframework.data.domain.Pageable;
 public interface ModeloTipoHitoService {
 
   /**
+   * Guarda la entidad {@link ModeloTipoHito}.
+   * 
+   * @param modeloTipoHito la entidad {@link ModeloTipoHito} a guardar.
+   * @return ModeloTipoHito la entidad {@link ModeloTipoHito} persistida.
+   */
+  ModeloTipoHito create(ModeloTipoHito modeloTipoHito);
+
+  /**
+   * Actualizar {@link ModeloTipoHito}.
+   *
+   * @param modeloTipoHito la entidad {@link ModeloTipoHito} a actualizar.
+   * @return la entidad {@link ModeloTipoHito} persistida.
+   */
+  ModeloTipoHito update(ModeloTipoHito modeloTipoHito);
+
+  /**
+   * Desactiva el {@link ModeloTipoHito}.
+   *
+   * @param id Id del {@link ModeloTipoHito}.
+   * @return la entidad {@link ModeloTipoHito} persistida.
+   */
+  ModeloTipoHito disable(Long id);
+
+  /**
+   * Obtiene una entidad {@link ModeloTipoHito} por id.
+   * 
+   * @param id Identificador de la entidad {@link ModeloTipoHito}.
+   * @return ModeloTipoHito la entidad {@link ModeloTipoHito}.
+   */
+  ModeloTipoHito findById(final Long id);
+
+  /**
    * Obtiene los {@link ModeloTipoHito} para un {@link ModeloEjecucion}.
    *
    * @param idModeloEjecucion el id de la entidad {@link ModeloEjecucion}.

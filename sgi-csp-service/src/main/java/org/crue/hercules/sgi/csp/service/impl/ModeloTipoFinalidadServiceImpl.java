@@ -74,13 +74,13 @@ public class ModeloTipoFinalidadServiceImpl implements ModeloTipoFinalidadServic
     Assert.isTrue(modeloTipoFinalidad.getTipoFinalidad().getActivo(), "El TipoFinalidad debe estar Activo");
 
     // Comprobar si ya existe una relación activa entre Modelo y Tipo
-    modeloTipoFinalidadRepository
-        .findByModeloEjecucionIdAndTipoFinalidadId(
-            modeloTipoFinalidad.getModeloEjecucion().getId(), modeloTipoFinalidad.getTipoFinalidad().getId())
+    modeloTipoFinalidadRepository.findByModeloEjecucionIdAndTipoFinalidadId(
+        modeloTipoFinalidad.getModeloEjecucion().getId(), modeloTipoFinalidad.getTipoFinalidad().getId())
         .ifPresent(modeloTipoFinalidadExistente -> {
 
           // Si ya está activa no se podrá insertar TipoFinalidad
-          Assert.isTrue(!modeloTipoFinalidadExistente.getActivo(), "El  ya se encuentra asociado al  ModeloEjecucion");
+          Assert.isTrue(!modeloTipoFinalidadExistente.getActivo(),
+              "El TipoFinalidad ya se encuentra asociado al  ModeloEjecucion");
 
           // Se está desactivado se activará la relación existente
           modeloTipoFinalidad.setId(modeloTipoFinalidadExistente.getId());

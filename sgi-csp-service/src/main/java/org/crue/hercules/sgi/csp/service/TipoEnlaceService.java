@@ -19,7 +19,7 @@ public interface TipoEnlaceService {
    * @param tipoEnlace la entidad {@link TipoEnlace} a guardar.
    * @return TipoEnlace la entidad {@link TipoEnlace} persistida.
    */
-  public TipoEnlace create(TipoEnlace tipoEnlace);
+  TipoEnlace create(TipoEnlace tipoEnlace);
 
   /**
    * Actualiza los datos del {@link TipoEnlace}.
@@ -27,7 +27,7 @@ public interface TipoEnlaceService {
    * @param tipoEnlaceActualizar {@link TipoEnlace} con los datos actualizados.
    * @return TipoEnlace {@link TipoEnlace} actualizado.
    */
-  public TipoEnlace update(final TipoEnlace tipoEnlaceActualizar);
+  TipoEnlace update(final TipoEnlace tipoEnlaceActualizar);
 
   /**
    * Desactiva el {@link TipoEnlace}.
@@ -44,7 +44,7 @@ public interface TipoEnlaceService {
    * @param paging información de paginación.
    * @return el listado de entidades {@link TipoEnlace} paginadas y filtradas.
    */
-  public Page<TipoEnlace> findAll(List<QueryCriteria> query, Pageable paging);
+  Page<TipoEnlace> findAll(List<QueryCriteria> query, Pageable paging);
 
   /**
    * Obtiene una entidad {@link TipoEnlace} por id.
@@ -52,6 +52,6 @@ public interface TipoEnlaceService {
    * @param id Identificador de la entidad {@link TipoEnlace}.
    * @return TipoEnlace la entidad {@link TipoEnlace}.
    */
-  public TipoEnlace findById(final Long id);
+  TipoEnlace findById(final Long id);
 
 }

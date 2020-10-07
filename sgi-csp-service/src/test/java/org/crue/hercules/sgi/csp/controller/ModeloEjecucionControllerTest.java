@@ -1569,9 +1569,9 @@ public class ModeloEjecucionControllerTest {
     modeloTipoHito.setId(id);
     modeloTipoHito.setModeloEjecucion(modeloEjecucion);
     modeloTipoHito.setTipoHito(tipoHito);
-    modeloTipoHito.setActivoConvocatoria(true);
-    modeloTipoHito.setActivoProyecto(true);
-    modeloTipoHito.setActivoSolicitud(true);
+    modeloTipoHito.setConvocatoria(true);
+    modeloTipoHito.setProyecto(true);
+    modeloTipoHito.setSolicitud(true);
 
     return modeloTipoHito;
   }

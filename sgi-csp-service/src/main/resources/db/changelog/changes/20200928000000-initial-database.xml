@@ -234,13 +234,16 @@
       <column name="modelo_ejecucion_id" type="BIGINT">
         <constraints nullable="false" />
       </column>
-      <column name="activo_solicitud" type="BOOLEAN" defaultValueBoolean="false">
+      <column name="solicitud" type="BOOLEAN" defaultValueBoolean="false">
         <constraints nullable="false" />
       </column>
-      <column name="activo_convocatoria" type="BOOLEAN" defaultValueBoolean="false">
+      <column name="convocatoria" type="BOOLEAN" defaultValueBoolean="false">
         <constraints nullable="false" />
       </column>
-      <column name="activo_proyecto" type="BOOLEAN" defaultValueBoolean="false">
+      <column name="proyecto" type="BOOLEAN" defaultValueBoolean="false">
+        <constraints nullable="false" />
+      </column>
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>
     </createTable>
@@ -313,6 +316,14 @@
   <!-- ########################################################## -->
   <changeSet author="master" id="20200928000000-modelo_ejecucion_uk">
     <addUniqueConstraint columnNames="nombre" constraintName="modelo_ejecucion_uk" tableName="modelo_ejecucion" />
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-modelo_tipo_fase_uk">
+    <addUniqueConstraint columnNames="modelo_ejecucion_id, tipo_fase_id" constraintName="modelo_tipo_fase_uk" tableName="modelo_tipo_fase" />
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-modelo_tipo_hito_uk">
+    <addUniqueConstraint columnNames="modelo_ejecucion_id, tipo_hito_id" constraintName="modelo_tipo_hito_uk" tableName="modelo_tipo_hito" />
   </changeSet>
 
   <changeSet author="master" id="20200928000000-tipo_documento_uk">

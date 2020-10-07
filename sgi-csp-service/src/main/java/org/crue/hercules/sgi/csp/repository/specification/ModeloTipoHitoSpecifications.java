@@ -9,6 +9,17 @@ import org.springframework.data.jpa.domain.Specification;
 public class ModeloTipoHitoSpecifications {
 
   /**
+   * {@link ModeloTipoHito} activos.
+   * 
+   * @return specification para obtener los {@link ModeloTipoHito} activos.
+   */
+  public static Specification<ModeloTipoHito> activos() {
+    return (root, query, cb) -> {
+      return cb.equal(root.get(ModeloTipoHito_.activo), Boolean.TRUE);
+    };
+  }
+
+  /**
    * {@link ModeloTipoHito} con activoConvocatoria a true.
    * 
    * @return specification para obtener los {@link ModeloTipoHito} con
@@ -16,7 +27,7 @@ public class ModeloTipoHitoSpecifications {
    */
   public static Specification<ModeloTipoHito> activosConvocatoria() {
     return (root, query, cb) -> {
-      return cb.equal(root.get(ModeloTipoHito_.activoConvocatoria), Boolean.TRUE);
+      return cb.equal(root.get(ModeloTipoHito_.convocatoria), Boolean.TRUE);
     };
   }
 
@@ -28,7 +39,7 @@ public class ModeloTipoHitoSpecifications {
    */
   public static Specification<ModeloTipoHito> activosProyecto() {
     return (root, query, cb) -> {
-      return cb.equal(root.get(ModeloTipoHito_.activoProyecto), Boolean.TRUE);
+      return cb.equal(root.get(ModeloTipoHito_.proyecto), Boolean.TRUE);
     };
   }
 
@@ -40,7 +51,7 @@ public class ModeloTipoHitoSpecifications {
    */
   public static Specification<ModeloTipoHito> activosSolcitud() {
     return (root, query, cb) -> {
-      return cb.equal(root.get(ModeloTipoHito_.activoSolicitud), Boolean.TRUE);
+      return cb.equal(root.get(ModeloTipoHito_.solicitud), Boolean.TRUE);
     };
   }
 

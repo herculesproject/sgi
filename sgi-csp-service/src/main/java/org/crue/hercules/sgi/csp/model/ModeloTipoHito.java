@@ -49,18 +49,23 @@ public class ModeloTipoHito extends BaseEntity {
   private ModeloEjecucion modeloEjecucion;
 
   /** Activo para solicitudes */
-  @Column(name = "activo_solicitud", columnDefinition = "boolean default false", nullable = false)
+  @Column(name = "solicitud", columnDefinition = "boolean default false", nullable = false)
   @NotNull
-  private Boolean activoSolicitud;
+  private Boolean solicitud;
 
   /** Activo para convocatorias */
-  @Column(name = "activo_convocatoria", columnDefinition = "boolean default false", nullable = false)
+  @Column(name = "convocatoria", columnDefinition = "boolean default false", nullable = false)
   @NotNull
-  private Boolean activoConvocatoria;
+  private Boolean convocatoria;
 
   /** Activo para proyectos */
-  @Column(name = "activo_proyecto", columnDefinition = "boolean default false", nullable = false)
+  @Column(name = "proyecto", columnDefinition = "boolean default false", nullable = false)
   @NotNull
-  private Boolean activoProyecto;
+  private Boolean proyecto;
+
+  /** Activo para ModeloTipoHito */
+  @Column(name = "activo", columnDefinition = "boolean default false", nullable = false)
+  @NotNull
+  private Boolean activo;
 
 }

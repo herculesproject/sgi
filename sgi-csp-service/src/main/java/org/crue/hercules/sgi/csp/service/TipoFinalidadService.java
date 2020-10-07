@@ -19,7 +19,7 @@ public interface TipoFinalidadService {
    * @param tipoFinalidad la entidad {@link TipoFinalidad} a guardar.
    * @return TipoFinalidad la entidad {@link TipoFinalidad} persistida.
    */
-  public TipoFinalidad create(TipoFinalidad tipoFinalidad);
+  TipoFinalidad create(TipoFinalidad tipoFinalidad);
 
   /**
    * Actualiza los datos del {@link TipoFinalidad}.
@@ -28,7 +28,7 @@ public interface TipoFinalidadService {
    *                                actualizados.
    * @return TipoFinalidad {@link TipoFinalidad} actualizado.
    */
-  public TipoFinalidad update(final TipoFinalidad tipoFinalidadActualizar);
+  TipoFinalidad update(final TipoFinalidad tipoFinalidadActualizar);
 
   /**
    * Desactiva el {@link TipoFinalidad}.
@@ -45,7 +45,7 @@ public interface TipoFinalidadService {
    * @param paging información de paginación.
    * @return el listado de entidades {@link TipoFinalidad} paginadas y filtradas.
    */
-  public Page<TipoFinalidad> findAll(List<QueryCriteria> query, Pageable paging);
+  Page<TipoFinalidad> findAll(List<QueryCriteria> query, Pageable paging);
 
   /**
    * Obtiene una entidad {@link TipoFinalidad} por id.
@@ -53,6 +53,6 @@ public interface TipoFinalidadService {
    * @param id Identificador de la entidad {@link TipoFinalidad}.
    * @return TipoFinalidad la entidad {@link TipoFinalidad}.
    */
-  public TipoFinalidad findById(final Long id);
+  TipoFinalidad findById(final Long id);
 
 }
