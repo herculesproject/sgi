@@ -10,9 +10,9 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.SecurityConfig;
 import org.crue.hercules.sgi.csp.exceptions.ModeloEjecucionNotFoundException;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoEnlace;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
-import org.crue.hercules.sgi.csp.model.ModeloTipoFaseDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
@@ -22,8 +22,8 @@ import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.service.ModeloEjecucionService;
+import org.crue.hercules.sgi.csp.service.ModeloTipoDocumentoService;
 import org.crue.hercules.sgi.csp.service.ModeloTipoEnlaceService;
-import org.crue.hercules.sgi.csp.service.ModeloTipoFaseDocumentoService;
 import org.crue.hercules.sgi.csp.service.ModeloTipoFaseService;
 import org.crue.hercules.sgi.csp.service.ModeloTipoFinalidadService;
 import org.crue.hercules.sgi.csp.service.ModeloTipoHitoService;
@@ -74,7 +74,7 @@ public class ModeloEjecucionControllerTest {
   private ModeloTipoFaseService modeloTipoFaseService;
 
   @MockBean
-  private ModeloTipoFaseDocumentoService modeloTipoFaseDocumentoService;
+  private ModeloTipoDocumentoService modeloTipoDocumentoService;
 
   @MockBean
   private ModeloTipoFinalidadService modeloTipoFinalidadService;
@@ -750,32 +750,32 @@ public class ModeloEjecucionControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
-  public void findAllModeloTipoFaseDocumentos_ReturnsPage() throws Exception {
-    // given: Una lista con 37 ModeloTipoFaseDocumento para el ModeloEjecucion
+  public void findAllModeloTipoDocumentos_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ModeloTipoDocumento para el ModeloEjecucion
     Long idModeloEjecucion = 1L;
 
-    List<ModeloTipoFaseDocumento> modeloTipoFaseDocumentos = new ArrayList<>();
+    List<ModeloTipoDocumento> modeloTipoDocumentos = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
-      modeloTipoFaseDocumentos.add(generarMockModeloTipoFaseDocumento(i, "TipoDocumento" + String.format("%03d", i)));
+      modeloTipoDocumentos.add(generarMockModeloTipoDocumento(i, "TipoDocumento" + String.format("%03d", i)));
     }
 
     Integer page = 3;
     Integer pageSize = 10;
 
     BDDMockito
-        .given(modeloTipoFaseDocumentoService.findAllByModeloEjecucion(ArgumentMatchers.<Long>any(),
+        .given(modeloTipoDocumentoService.findAllByModeloEjecucion(ArgumentMatchers.<Long>any(),
             ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<ModeloTipoFaseDocumento>>() {
+        .willAnswer(new Answer<Page<ModeloTipoDocumento>>() {
           @Override
-          public Page<ModeloTipoFaseDocumento> answer(InvocationOnMock invocation) throws Throwable {
+          public Page<ModeloTipoDocumento> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(2, Pageable.class);
             int size = pageable.getPageSize();
             int index = pageable.getPageNumber();
             int fromIndex = size * index;
             int toIndex = fromIndex + size;
-            toIndex = toIndex > modeloTipoFaseDocumentos.size() ? modeloTipoFaseDocumentos.size() : toIndex;
-            List<ModeloTipoFaseDocumento> content = modeloTipoFaseDocumentos.subList(fromIndex, toIndex);
-            Page<ModeloTipoFaseDocumento> page = new PageImpl<>(content, pageable, modeloTipoFaseDocumentos.size());
+            toIndex = toIndex > modeloTipoDocumentos.size() ? modeloTipoDocumentos.size() : toIndex;
+            List<ModeloTipoDocumento> content = modeloTipoDocumentos.subList(fromIndex, toIndex);
+            Page<ModeloTipoDocumento> page = new PageImpl<>(content, pageable, modeloTipoDocumentos.size());
             return page;
           }
         });
@@ -783,12 +783,11 @@ public class ModeloEjecucionControllerTest {
     // when: Get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
         .perform(MockMvcRequestBuilders
-            .get(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipofasedocumentos",
-                idModeloEjecucion)
+            .get(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipodocumentos", idModeloEjecucion)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
-        // then: Devuelve la pagina 3 con los ModeloTipoFaseDocumento del 31 al 37
+        // then: Devuelve la pagina 3 con los ModeloTipoDocumento del 31 al 37
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
@@ -797,35 +796,35 @@ public class ModeloEjecucionControllerTest {
         .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
 
-    List<ModeloTipoFaseDocumento> tiposDocumentoResponse = mapper.readValue(
-        requestResult.getResponse().getContentAsString(), new TypeReference<List<ModeloTipoFaseDocumento>>() {
+    List<ModeloTipoDocumento> tiposDocumentoResponse = mapper
+        .readValue(requestResult.getResponse().getContentAsString(), new TypeReference<List<ModeloTipoDocumento>>() {
         });
 
     for (int i = 31; i <= 37; i++) {
-      ModeloTipoFaseDocumento modeloTipoFaseDocumento = tiposDocumentoResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(modeloTipoFaseDocumento.getTipoDocumento().getNombre())
+      ModeloTipoDocumento modeloTipoDocumento = tiposDocumentoResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(modeloTipoDocumento.getTipoDocumento().getNombre())
           .isEqualTo("TipoDocumento" + String.format("%03d", i));
     }
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
-  public void findAllModeloTipoFaseDocumentos_EmptyList_Returns204() throws Exception {
-    // given: Una lista vacia de ModeloTipoFaseDocumento del ModeloEjecucion
+  public void findAllModeloTipoDocumentos_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de ModeloTipoDocumento del ModeloEjecucion
     Long idModeloEjecucion = 1L;
-    List<ModeloTipoFaseDocumento> modeloTipoFaseDocumentos = new ArrayList<>();
+    List<ModeloTipoDocumento> modeloTipoDocumentos = new ArrayList<>();
 
     Integer page = 0;
     Integer pageSize = 10;
 
     BDDMockito
-        .given(modeloTipoFaseDocumentoService.findAllByModeloEjecucion(ArgumentMatchers.<Long>any(),
+        .given(modeloTipoDocumentoService.findAllByModeloEjecucion(ArgumentMatchers.<Long>any(),
             ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<ModeloTipoFaseDocumento>>() {
+        .willAnswer(new Answer<Page<ModeloTipoDocumento>>() {
           @Override
-          public Page<ModeloTipoFaseDocumento> answer(InvocationOnMock invocation) throws Throwable {
+          public Page<ModeloTipoDocumento> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(2, Pageable.class);
-            Page<ModeloTipoFaseDocumento> page = new PageImpl<>(modeloTipoFaseDocumentos, pageable, 0);
+            Page<ModeloTipoDocumento> page = new PageImpl<>(modeloTipoDocumentos, pageable, 0);
             return page;
           }
         });
@@ -833,8 +832,7 @@ public class ModeloEjecucionControllerTest {
     // when: Get page=0 with pagesize=10
     mockMvc
         .perform(MockMvcRequestBuilders
-            .get(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipofasedocumentos",
-                idModeloEjecucion)
+            .get(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipodocumentos", idModeloEjecucion)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
@@ -1472,13 +1470,13 @@ public class ModeloEjecucionControllerTest {
   }
 
   /**
-   * Función que devuelve un objeto ModeloTipoFaseDocumento
+   * Función que devuelve un objeto ModeloTipoDocumento
    * 
-   * @param id     id del ModeloTipoFaseDocumento
+   * @param id     id del ModeloTipoDocumento
    * @param nombre nombre del TipoDocumento
-   * @return el objeto ModeloTipoFaseDocumento
+   * @return el objeto ModeloTipoDocumento
    */
-  private ModeloTipoFaseDocumento generarMockModeloTipoFaseDocumento(Long id, String nombre) {
+  private ModeloTipoDocumento generarMockModeloTipoDocumento(Long id, String nombre) {
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion();
     modeloEjecucion.setId(1L);
 
@@ -1488,14 +1486,14 @@ public class ModeloEjecucionControllerTest {
     tipoDocumento.setDescripcion("descripcion-" + id);
     tipoDocumento.setActivo(Boolean.TRUE);
 
-    ModeloTipoFaseDocumento modeloTipoFaseDocumento = new ModeloTipoFaseDocumento();
-    modeloTipoFaseDocumento.setId(id);
-    modeloTipoFaseDocumento.setModeloEjecucion(modeloEjecucion);
-    modeloTipoFaseDocumento.setTipoDocumento(tipoDocumento);
-    modeloTipoFaseDocumento.setModeloTipoFase(null);
-    modeloTipoFaseDocumento.setActivo(true);
+    ModeloTipoDocumento modeloTipoDocumento = new ModeloTipoDocumento();
+    modeloTipoDocumento.setId(id);
+    modeloTipoDocumento.setModeloEjecucion(modeloEjecucion);
+    modeloTipoDocumento.setTipoDocumento(tipoDocumento);
+    modeloTipoDocumento.setModeloTipoFase(null);
+    modeloTipoDocumento.setActivo(true);
 
-    return modeloTipoFaseDocumento;
+    return modeloTipoDocumento;
   }
 
   /**

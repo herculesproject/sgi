@@ -29,9 +29,9 @@ public class ModeloTipoEnlaceController {
   private final ModeloTipoEnlaceService service;
 
   public ModeloTipoEnlaceController(ModeloTipoEnlaceService service) {
-    log.debug("TipoEnlaceController(ModeloTipoEnlaceService service) - start");
+    log.debug("ModeloTipoEnlaceController(ModeloTipoEnlaceService service) - start");
     this.service = service;
-    log.debug("TipoEnlaceController(ModeloTipoEnlaceService service) - end");
+    log.debug("ModeloTipoEnlaceController(ModeloTipoEnlaceService service) - end");
   }
 
   /**

@@ -17,12 +17,12 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "modelo_tipo_fase_documento")
+@Table(name = "modelo_tipo_documento")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ModeloTipoFaseDocumento extends BaseEntity {
+public class ModeloTipoDocumento extends BaseEntity {
 
   /**
    * Serial version
@@ -32,8 +32,8 @@ public class ModeloTipoFaseDocumento extends BaseEntity {
   /** Id. */
   @Id
   @Column(name = "id", nullable = false)
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "modelo_tipo_fase_documento_seq")
-  @SequenceGenerator(name = "modelo_tipo_fase_documento_seq", sequenceName = "modelo_tipo_fase_documento_seq", allocationSize = 1)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "modelo_tipo_documento_seq")
+  @SequenceGenerator(name = "modelo_tipo_documento_seq", sequenceName = "modelo_tipo_documento_seq", allocationSize = 1)
   private Long id;
 
   /** Tipo documento. */
@@ -51,7 +51,6 @@ public class ModeloTipoFaseDocumento extends BaseEntity {
   /** Modelo tipo fase. */
   @ManyToOne
   @JoinColumn(name = "modelo_tipo_fase_id", nullable = true)
-  @NotNull
   private ModeloTipoFase modeloTipoFase;
 
   /** Activo */

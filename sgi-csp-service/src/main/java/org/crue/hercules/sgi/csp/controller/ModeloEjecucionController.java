@@ -9,7 +9,7 @@ import org.crue.hercules.sgi.csp.model.BaseEntity.Update;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoEnlace;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
-import org.crue.hercules.sgi.csp.model.ModeloTipoFaseDocumento;
+import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
@@ -17,7 +17,7 @@ import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.service.ModeloEjecucionService;
 import org.crue.hercules.sgi.csp.service.ModeloTipoEnlaceService;
-import org.crue.hercules.sgi.csp.service.ModeloTipoFaseDocumentoService;
+import org.crue.hercules.sgi.csp.service.ModeloTipoDocumentoService;
 import org.crue.hercules.sgi.csp.service.ModeloTipoFaseService;
 import org.crue.hercules.sgi.csp.service.ModeloTipoFinalidadService;
 import org.crue.hercules.sgi.csp.service.ModeloTipoHitoService;
@@ -59,8 +59,8 @@ public class ModeloEjecucionController {
   /** ModeloTipoFase service */
   private final ModeloTipoFaseService modeloTipoFaseService;
 
-  /** ModeloTipoFaseDocumento service */
-  private final ModeloTipoFaseDocumentoService modeloTipoFaseDocumentoService;
+  /** ModeloTipoDocumento service */
+  private final ModeloTipoDocumentoService modeloTipoDocumentoService;
 
   /** ModeloTipoFinalidad service */
   private final ModeloTipoFinalidadService modeloTipoFinalidadService;
@@ -74,23 +74,22 @@ public class ModeloEjecucionController {
   /**
    * Instancia un nuevo ModeloEjecucionController.
    * 
-   * @param modeloEjecucionService         {@link ModeloEjecucionService}.
-   * @param modeloTipoEnlaceService        {@link ModeloTipoEnlaceService}.
-   * @param modeloTipoFaseService          {@link ModeloTipoFaseService}.
-   * @param modeloTipoFaseDocumentoService {@link ModeloTipoFaseDocumentoService}.
-   * @param modeloTipoFinalidadService     {@link ModeloTipoFinalidadService}.
-   * @param modeloTipoHitoService          {@link ModeloTipoHitoService}.
-   * @param modeloUnidadService            {@link ModeloUnidadService}.
+   * @param modeloEjecucionService     {@link ModeloEjecucionService}.
+   * @param modeloTipoEnlaceService    {@link ModeloTipoEnlaceService}.
+   * @param modeloTipoFaseService      {@link ModeloTipoFaseService}.
+   * @param modeloTipoDocumentoService {@link ModeloTipoDocumentoService}.
+   * @param modeloTipoFinalidadService {@link ModeloTipoFinalidadService}.
+   * @param modeloTipoHitoService      {@link ModeloTipoHitoService}.
+   * @param modeloUnidadService        {@link ModeloUnidadService}.
    */
   public ModeloEjecucionController(ModeloEjecucionService modeloEjecucionService,
       ModeloTipoEnlaceService modeloTipoEnlaceService, ModeloTipoFaseService modeloTipoFaseService,
-      ModeloTipoFaseDocumentoService modeloTipoFaseDocumentoService,
-      ModeloTipoFinalidadService modeloTipoFinalidadService, ModeloTipoHitoService modeloTipoHitoService,
-      ModeloUnidadService modeloUnidadService) {
+      ModeloTipoDocumentoService modeloTipoDocumentoService, ModeloTipoFinalidadService modeloTipoFinalidadService,
+      ModeloTipoHitoService modeloTipoHitoService, ModeloUnidadService modeloUnidadService) {
     this.modeloEjecucionService = modeloEjecucionService;
     this.modeloTipoEnlaceService = modeloTipoEnlaceService;
     this.modeloTipoFaseService = modeloTipoFaseService;
-    this.modeloTipoFaseDocumentoService = modeloTipoFaseDocumentoService;
+    this.modeloTipoDocumentoService = modeloTipoDocumentoService;
     this.modeloTipoFinalidadService = modeloTipoFinalidadService;
     this.modeloTipoHitoService = modeloTipoHitoService;
     this.modeloUnidadService = modeloUnidadService;
@@ -299,27 +298,27 @@ public class ModeloEjecucionController {
    */
 
   /**
-   * Devuelve una lista paginada y filtrada de {@link ModeloTipoFaseDocumento} del
+   * Devuelve una lista paginada y filtrada de {@link ModeloTipoDocumento} del
    * {@link ModeloEjecucion}.
    * 
    * @param id     Identificador de {@link ModeloEjecucion}.
    * @param query  filtro de {@link QueryCriteria}.
    * @param paging pageable.
    */
-  @GetMapping("/{id}/modelotipofasedocumentos")
+  @GetMapping("/{id}/modelotipodocumentos")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
-  ResponseEntity<Page<ModeloTipoFaseDocumento>> findAllModeloTipoFaseDocumentos(@PathVariable Long id,
+  ResponseEntity<Page<ModeloTipoDocumento>> findAllModeloTipoDocumentos(@PathVariable Long id,
       @RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllModeloTipoFaseDocumentos(Long id, List<QueryCriteria> query, Pageable paging) - start");
-    Page<ModeloTipoFaseDocumento> page = modeloTipoFaseDocumentoService.findAllByModeloEjecucion(id, query, paging);
+    log.debug("findAllModeloTipoDocumentos(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<ModeloTipoDocumento> page = modeloTipoDocumentoService.findAllByModeloEjecucion(id, query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllModeloTipoFaseDocumentos(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllModeloTipoDocumentos(Long id, List<QueryCriteria> query, Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    log.debug("findAllModeloTipoFaseDocumentos(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllModeloTipoDocumentos(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

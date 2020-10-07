@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoEnlace;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
-import org.crue.hercules.sgi.csp.model.ModeloTipoFaseDocumento;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
@@ -353,7 +353,7 @@ public class ModeloEjecucionIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllModeloTipoFaseDocumentos_WithPagingSortingAndFiltering_ReturnsModeloTipoFaseDocumentoSubList()
+  public void findAllModeloTipoDocumentos_WithPagingSortingAndFiltering_ReturnsModeloTipoDocumentoSubList()
       throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
@@ -365,26 +365,26 @@ public class ModeloEjecucionIT {
     Long idModeloEjecucion = 1L;
 
     URI uri = UriComponentsBuilder
-        .fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipofasedocumentos")
+        .fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelotipodocumentos")
         .queryParam("s", sort).queryParam("q", filter).buildAndExpand(idModeloEjecucion).toUri();
 
-    final ResponseEntity<List<ModeloTipoFaseDocumento>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<ModeloTipoFaseDocumento>>() {
+    final ResponseEntity<List<ModeloTipoDocumento>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ModeloTipoDocumento>>() {
         });
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<ModeloTipoFaseDocumento> modeloTipoFaseDocumentos = response.getBody();
-    Assertions.assertThat(modeloTipoFaseDocumentos.size()).isEqualTo(3);
+    final List<ModeloTipoDocumento> modeloTipoDocumentos = response.getBody();
+    Assertions.assertThat(modeloTipoDocumentos.size()).isEqualTo(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
 
-    Assertions.assertThat(modeloTipoFaseDocumentos.get(0).getTipoDocumento().getNombre())
+    Assertions.assertThat(modeloTipoDocumentos.get(0).getTipoDocumento().getNombre())
         .as("get(0).getTipoDocumento().getNombre())").isEqualTo("nombre-" + String.format("%03d", 3));
-    Assertions.assertThat(modeloTipoFaseDocumentos.get(1).getTipoDocumento().getNombre())
+    Assertions.assertThat(modeloTipoDocumentos.get(1).getTipoDocumento().getNombre())
         .as("get(1).getTipoDocumento().getNombre())").isEqualTo("nombre-" + String.format("%03d", 2));
-    Assertions.assertThat(modeloTipoFaseDocumentos.get(2).getTipoDocumento().getNombre())
+    Assertions.assertThat(modeloTipoDocumentos.get(2).getTipoDocumento().getNombre())
         .as("get(2).getTipoDocumento().getNombre())").isEqualTo("nombre-" + String.format("%03d", 1));
   }
 
