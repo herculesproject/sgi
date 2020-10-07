@@ -4,6 +4,7 @@ export interface ITipoHito {
 
   /** Nombre  */
   nombre: string;
-
+  descripcion: string;
+  activo: boolean;
 }
 

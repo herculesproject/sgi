@@ -67,10 +67,16 @@ const periodosJustificacion: IPeriodoJustificacion[] = [
 
 const hitos: IHito[] = [
   {
-    id: 1, fechaInicio: new Date(), tipoHito: { id: 1, nombre: 'Resolución interna' }, comentario: '', aviso: true
+    id: 1, fechaInicio: new Date(), tipoHito: {
+      id: 1, nombre: 'Resolución interna',
+      descripcion: '', activo: false
+    }, comentario: '', aviso: true
   },
   {
-    id: 1, fechaInicio: new Date(), tipoHito: { id: 2, nombre: 'Resolución definitiva' }, comentario: '', aviso: false
+    id: 1, fechaInicio: new Date(), tipoHito: {
+      id: 2, nombre: 'Resolución definitiva',
+      descripcion: '', activo: false
+    }, comentario: '', aviso: false
   }
 ];
 

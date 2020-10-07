@@ -46,11 +46,11 @@ const finalidades: IFinalidad[] = [
 
 const tiposHito: ITipoHito[] = [
   {
-    id: 1, nombre: 'Resolución interna'
+    id: 1, nombre: 'Resolución interna', descripcion: '', activo: false
   },
   {
-    id: 2, nombre: 'Resolución definitiva'
-  }
+    id: 2, nombre: 'Resolución definitiva', descripcion: '', activo: false
+  } as ITipoHito
 
 ];
 

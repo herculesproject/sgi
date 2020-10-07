@@ -11,6 +11,7 @@ import { CspInicioComponent } from './csp-inicio/csp-inicio.component';
 const MSG_ROOT_TITLE = marker('csp.root.title');
 const MSG_CONVOCATORIA_TITLE = marker('menu.principal.csp.convocatoria');
 const MSG_TIPO_ENLACE_TITLE = marker('menu.principal.csp.tipo.enlace');
+const MSG_TIPO_HITO_TITLE = marker('menu.principal.csp.tipo.hito');
 
 const routes: SgiRoutes = [
   {
@@ -61,6 +62,17 @@ const routes: SgiRoutes = [
           title: MSG_TIPO_ENLACE_TITLE,
         }
 
+      },
+      {
+        path: CSP_ROUTE_NAMES.TIPO_HITO,
+        loadChildren: () =>
+          import('./tipo-hito/tipo-hito.module').then(
+            (m) => m.TipoHitoModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_TIPO_HITO_TITLE,
+        }
       },
       { path: '**', component: null }
     ]
