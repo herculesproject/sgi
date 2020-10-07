@@ -37,4 +37,28 @@ export class TipoEvaluacionService extends SgiRestService<number, TipoEvaluacion
         tap(() => this.logger.debug(TipoEvaluacionService.name, `findAllDictamenByTipoEvaluacionAndRevisionMinima()`, '-', 'end'))
       );
   }
+
+  /**
+   * Devuelve el los tipos de evaluación: Memoria y Retrospectiva.
+   */
+
+  findTipoEvaluacionMemoriaRetrospectiva(): Observable<SgiRestListResult<TipoEvaluacion>> {
+    this.logger.debug(TipoEvaluacionService.name, `findTipoEvaluacionMemoriaRetrospectiva()`, '-', 'start');
+    return this.find<TipoEvaluacion, TipoEvaluacion>(`${this.endpointUrl}/memoria-retrospectiva`, null)
+      .pipe(
+        tap(() => this.logger.debug(TipoEvaluacionService.name, `findTipoEvaluacionMemoriaRetrospectiva()`, '-', 'end'))
+      );
+  }
+
+  /**
+   * Devuelve el los tipos de evaluación: Seguimiento Anual y Seguimiento final.
+   */
+
+  findTipoEvaluacionSeguimientoAnualFinal(): Observable<SgiRestListResult<TipoEvaluacion>> {
+    this.logger.debug(TipoEvaluacionService.name, `findTipoEvaluacionSeguimientoAnualFinal()`, '-', 'start');
+    return this.find<TipoEvaluacion, TipoEvaluacion>(`${this.endpointUrl}/seguimiento-anual-final`, null)
+      .pipe(
+        tap(() => this.logger.debug(TipoEvaluacionService.name, `findTipoEvaluacionSeguimientoAnualFinal()`, '-', 'end'))
+      );
+  }
 }

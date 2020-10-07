@@ -18,6 +18,8 @@ import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framew
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { TipoEvaluacion } from '@core/models/eti/tipo-evaluacion';
+import { TipoEvaluacionService } from '@core/services/eti/tipo-evaluacion.service';
 
 const MSG_ERROR = marker('eti.seguimiento.listado.error');
 
@@ -32,12 +34,15 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
   fxLayoutProperties: FxLayoutProperties;
   comiteListado: Comite[];
   comitesFiltrados: Observable<Comite[]>;
+  tipoEvaluacionListado: TipoEvaluacion[];
+  tipoEvaluacionFiltrados: Observable<TipoEvaluacion[]>;
 
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     private readonly personaFisicaService: PersonaFisicaService,
     private readonly comiteService: ComiteService,
+    private readonly tipoEvaluacionService: TipoEvaluacionService,
     private readonly evaluadorService: EvaluadorService
   ) {
     super(logger, snackBarService, MSG_ERROR);
@@ -63,9 +68,11 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
       fechaEvaluacionInicio: new FormControl(''),
       fechaEvaluacionFin: new FormControl(''),
       memoriaNumReferencia: new FormControl(''),
-      tipoConvocatoria: new FormControl('')
+      tipoConvocatoria: new FormControl(''),
+      tipoEvaluacion: new FormControl('')
     });
     this.loadComites();
+    this.loadTipoEvaluacion();
     this.logger.debug(SeguimientoListadoComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -78,7 +85,7 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
 
   protected initColumns(): void {
     this.logger.debug(SeguimientoListadoComponent.name, 'initColumns()', 'start');
-    this.columnas = ['convocatoriaReunion.comite.id', 'convocatoriaReunion.fechaEvaluacion',
+    this.columnas = ['convocatoriaReunion.comite.id', 'tipoEvaluacion', 'convocatoriaReunion.fechaEvaluacion',
       'memoria.numReferencia', 'solicitante', 'version', 'acciones'];
     this.logger.debug(SeguimientoListadoComponent.name, 'initColumns()', 'end');
   }
@@ -134,6 +141,8 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
       DateUtils.formatFechaAsISODateTime(fin));
     this.addFiltro(filtros, 'memoria.numReferencia', SgiRestFilterType.EQUALS,
       this.formGroup.controls.memoriaNumReferencia.value);
+    this.addFiltro(filtros, 'tipoEvaluacion.id', SgiRestFilterType.EQUALS,
+      this.formGroup.controls.tipoEvaluacion.value.id);
     this.logger.debug(SeguimientoListadoComponent.name, `createFilters()`, 'end');
     return filtros;
   }
@@ -162,6 +171,29 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
   }
 
   /**
+   * Carga los tipos de evaluacion: Seguimiento Anual y Seguimiento Final
+   */
+  private loadTipoEvaluacion(): void {
+    this.logger.debug(SeguimientoListadoComponent.name, 'getComites()', 'start');
+    this.suscripciones.push(
+      this.tipoEvaluacionService.findTipoEvaluacionSeguimientoAnualFinal().subscribe(
+        (res: SgiRestListResult<TipoEvaluacion>) => {
+          if (res) {
+            this.tipoEvaluacionListado = res.items;
+            this.tipoEvaluacionFiltrados = this.formGroup.controls.tipoEvaluacion.valueChanges
+              .pipe(
+                startWith(''),
+                map(valor => this.filterTipoEvaluacion(valor))
+              );
+          } else {
+            this.tipoEvaluacionListado = [];
+          }
+        })
+    );
+    this.logger.debug(SeguimientoListadoComponent.name, 'getComites()', 'end');
+  }
+
+  /**
    * Filtro de campo autocompletable comité.
    *
    * @param filtro valor a filtrar (string o nombre comité).
@@ -180,11 +212,38 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
   }
 
   /**
+   * Filtro de campo autocompletable tipo evaluacion.
+   *
+   * @param filtro valor a filtrar (string o nombre tipo evaluacion).
+   * @return lista de tipo evaluacion filtrados.
+   */
+  private filterTipoEvaluacion(filtro: string | TipoEvaluacion): TipoEvaluacion[] {
+    const valorLog = filtro instanceof String ? filtro : JSON.stringify(filtro);
+    this.logger.debug(SeguimientoListadoComponent.name, `filterTipoEvaluacion(${valorLog})`, 'start');
+    const result = this.tipoEvaluacionListado.filter(
+      (tipoEvaluacion: TipoEvaluacion) => tipoEvaluacion.nombre.toLowerCase().includes(
+        typeof filtro === 'string' ? filtro.toLowerCase() : filtro.nombre.toLowerCase()
+      )
+    );
+    this.logger.debug(SeguimientoListadoComponent.name, `filterTipoEvaluacion(${valorLog})`, 'end');
+    return result;
+  }
+
+  /**
    * Devuelve el nombre de un comité.
    * @param comite comité
    * @returns nombre comité
    */
   getNombreComite(comite: Comite): string {
     return comite?.comite;
+  }
+
+  /**
+   * Devuelve el nombre de un tipo evaluacion.
+   * @param tipoEvaluacion tipo de evaluación
+   * @returns nombre de un tipo de evaluación
+   */
+  getNombreTipoEvaluacion(tipoEvaluacion: TipoEvaluacion): string {
+    return tipoEvaluacion?.nombre;
   }
 }

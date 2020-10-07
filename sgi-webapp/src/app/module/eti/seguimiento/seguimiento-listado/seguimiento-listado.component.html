@@ -18,6 +18,20 @@
       </mat-form-field>
     </div>
 
+    <!-- Tipo Evaluación -->
+    <div class="col">
+      <mat-form-field class="input-form">
+        <mat-label>{{'eti.seguimiento.listado.buscador.tipoEvaluacion' | translate}}</mat-label>
+        <input type="text" [placeholder]="'eti.seguimiento.listado.buscador.tipoEvaluacion' | translate"
+          arial-label="Number" matInput formControlName="tipoEvaluacion" [matAutocomplete]="autocompleteTipoEvaluacion">
+        <mat-autocomplete #autocompleteTipoEvaluacion="matAutocomplete" [displayWith]="getNombreTipoEvaluacion">
+          <mat-option *ngFor="let tipoEvaluacion of tipoEvaluacionFiltrados | async" [value]="tipoEvaluacion">
+            {{tipoEvaluacion.nombre}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+
     <!-- Fecha inicio-->
     <div class="col">
       <mat-form-field color="primary">
@@ -69,6 +83,15 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.seguimiento.listado.comite' | translate}}
       </th>
       <td mat-cell *matCellDef="let evaluacion">{{evaluacion.convocatoriaReunion?.comite?.comite}}</td>
+    </ng-container>
+
+    <!-- Tipo de evaluación -->
+    <ng-container matColumnDef="tipoEvaluacion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{'eti.seguimiento.listado.tipoEvaluacion' | translate}}
+      </th>
+      <td mat-cell *matCellDef="let evaluacion">{{evaluacion.tipoEvaluacion.nombre | translate}}
+      </td>
     </ng-container>
 
     <!-- Fecha de evaluación -->
