@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eti.repository;
 
+import java.util.List;
+
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -12,5 +14,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TipoEvaluacionRepository
     extends JpaRepository<TipoEvaluacion, Long>, JpaSpecificationExecutor<TipoEvaluacion> {
+
+  /**
+   * Obtener lista de {@link TipoEvaluacion} según ids.
+   * 
+   * @return la lista de entidades {@link TipoEvaluacion}.
+   */
+  List<TipoEvaluacion> findByActivoTrueAndIdIn(List<Long> lista);
 
 }

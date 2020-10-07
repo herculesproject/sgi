@@ -233,7 +233,7 @@ public class TipoEvaluacionServiceTest {
   }
 
   @Test
-  public void findAllDictamenByTipoEvaluacionAndRevisionMinima() {
+  public void findAllDictamenByTipoEvaluacionAndRevisionMinima_ReturnList() {
 
     TipoEvaluacion tipoEvaluacion1 = generarMockTipoEvaluacion(3L, "Seguimiento anual");
     Dictamen dictamen1 = generarMockDictamen(5L, "Favorable", tipoEvaluacion1);
@@ -247,6 +247,42 @@ public class TipoEvaluacionServiceTest {
     List<Dictamen> lista = tipoEvaluacionService
         .findAllDictamenByTipoEvaluacionAndRevisionMinima(tipoEvaluacion1.getId(), true);
     Assertions.assertThat(lista).isEqualTo(listaDictamenes);
+
+  }
+
+  @Test
+  public void findTipoEvaluacionMemoriaRetrospectiva_ReturnList() {
+
+    TipoEvaluacion tipoEvaluacion1 = generarMockTipoEvaluacion(1L, "Retrospectiva");
+    TipoEvaluacion tipoEvaluacion2 = generarMockTipoEvaluacion(2L, "Memoria");
+
+    List<TipoEvaluacion> listaTipoEvaluacion = new ArrayList<TipoEvaluacion>();
+    listaTipoEvaluacion.add(tipoEvaluacion1);
+    listaTipoEvaluacion.add(tipoEvaluacion2);
+
+    BDDMockito.given(tipoEvaluacionRepository.findByActivoTrueAndIdIn(ArgumentMatchers.anyList()))
+        .willReturn(listaTipoEvaluacion);
+
+    List<TipoEvaluacion> results = tipoEvaluacionService.findTipoEvaluacionMemoriaRetrospectiva();
+    Assertions.assertThat(results).isEqualTo(listaTipoEvaluacion);
+
+  }
+
+  @Test
+  public void findTipoEvaluacionSeguimientoAnualFinal_ReturnList() {
+
+    TipoEvaluacion tipoEvaluacion1 = generarMockTipoEvaluacion(3L, "Seguimiento anual");
+    TipoEvaluacion tipoEvaluacion2 = generarMockTipoEvaluacion(4L, "Seguimiento final");
+
+    List<TipoEvaluacion> listaTipoEvaluacion = new ArrayList<TipoEvaluacion>();
+    listaTipoEvaluacion.add(tipoEvaluacion1);
+    listaTipoEvaluacion.add(tipoEvaluacion2);
+
+    BDDMockito.given(tipoEvaluacionRepository.findByActivoTrueAndIdIn(ArgumentMatchers.anyList()))
+        .willReturn(listaTipoEvaluacion);
+
+    List<TipoEvaluacion> results = tipoEvaluacionService.findTipoEvaluacionSeguimientoAnualFinal();
+    Assertions.assertThat(results).isEqualTo(listaTipoEvaluacion);
 
   }
 

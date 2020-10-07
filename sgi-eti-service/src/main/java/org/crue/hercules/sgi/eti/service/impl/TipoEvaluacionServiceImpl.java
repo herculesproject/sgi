@@ -198,4 +198,26 @@ public class TipoEvaluacionServiceImpl implements TipoEvaluacionService {
     return listaDictamenes;
   }
 
+  @Override
+  public List<TipoEvaluacion> findTipoEvaluacionMemoriaRetrospectiva() {
+    log.debug("findTipoEvaluacionMemoriaRetrospectiva - start");
+
+    List<Long> lista = new ArrayList<Long>(Arrays.asList(1L, 2L));
+    List<TipoEvaluacion> listaTipoEvaluacion = tipoEvaluacionRepository.findByActivoTrueAndIdIn(lista);
+
+    log.debug("findTipoEvaluacionMemoriaRetrospectiva - end");
+    return listaTipoEvaluacion;
+  }
+
+  @Override
+  public List<TipoEvaluacion> findTipoEvaluacionSeguimientoAnualFinal() {
+    log.debug("findTipoEvaluacionSeguimientoAnualFinal - start");
+
+    List<Long> lista = new ArrayList<Long>(Arrays.asList(3L, 4L));
+    List<TipoEvaluacion> listaTipoEvaluacion = tipoEvaluacionRepository.findByActivoTrueAndIdIn(lista);
+
+    log.debug("findTipoEvaluacionSeguimientoAnualFinal - end");
+    return listaTipoEvaluacion;
+  }
+
 }

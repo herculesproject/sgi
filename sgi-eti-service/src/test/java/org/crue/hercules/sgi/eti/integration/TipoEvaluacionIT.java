@@ -43,6 +43,8 @@ public class TipoEvaluacionIT {
   private static final String PATH_PARAMETER = "/{boolean}";
   private static final String TIPO_EVALUACION_CONTROLLER_BASE_PATH = "/tipoevaluaciones";
   private static final String DICTAMENES_REV_MINIMA = "/dictamenes-revision-minima";
+  private static final String MEMORIA_RETROSPECTIVA_PATH = "/memoria-retrospectiva";
+  private static final String SEGUIMIENT_ANUAL_FINAL_PATH = "/seguimiento-anual-final";
 
   private HttpEntity<TipoEvaluacion> buildRequest(HttpHeaders headers, TipoEvaluacion entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -279,6 +281,54 @@ public class TipoEvaluacionIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Dictamen> dictamenes = response.getBody();
     Assertions.assertThat(dictamenes).isEqualTo(listaDictamenes);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findTipoEvaluacionMemoriaRetrospectiva_ReturnsListaTipoEvaluacion() throws Exception {
+
+    TipoEvaluacion tipoEvaluacion1 = generarMockTipoEvaluacion(1L, "Retrospectiva");
+    TipoEvaluacion tipoEvaluacion2 = generarMockTipoEvaluacion(2L, "Memoria");
+
+    List<TipoEvaluacion> listaTipoEvaluacion = new ArrayList<TipoEvaluacion>();
+    listaTipoEvaluacion.add(tipoEvaluacion1);
+    listaTipoEvaluacion.add(tipoEvaluacion2);
+
+    final String url = new StringBuilder(TIPO_EVALUACION_CONTROLLER_BASE_PATH).append(MEMORIA_RETROSPECTIVA_PATH)
+        .toString();
+
+    final ResponseEntity<List<TipoEvaluacion>> response = restTemplate.exchange(url, HttpMethod.GET,
+        buildRequest(null, null), new ParameterizedTypeReference<List<TipoEvaluacion>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<TipoEvaluacion> tipoEvaluaciones = response.getBody();
+    Assertions.assertThat(tipoEvaluaciones).isEqualTo(listaTipoEvaluacion);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findTipoEvaluacionSeguimientoAnualFinal_ReturnsListaTipoEvaluacion() throws Exception {
+
+    TipoEvaluacion tipoEvaluacion1 = generarMockTipoEvaluacion(3L, "Seguimiento anual");
+    TipoEvaluacion tipoEvaluacion2 = generarMockTipoEvaluacion(4L, "Seguimiento final");
+
+    List<TipoEvaluacion> listaTipoEvaluacion = new ArrayList<TipoEvaluacion>();
+    listaTipoEvaluacion.add(tipoEvaluacion1);
+    listaTipoEvaluacion.add(tipoEvaluacion2);
+
+    final String url = new StringBuilder(TIPO_EVALUACION_CONTROLLER_BASE_PATH).append(SEGUIMIENT_ANUAL_FINAL_PATH)
+        .toString();
+
+    final ResponseEntity<List<TipoEvaluacion>> response = restTemplate.exchange(url, HttpMethod.GET,
+        buildRequest(null, null), new ParameterizedTypeReference<List<TipoEvaluacion>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<TipoEvaluacion> tipoEvaluaciones = response.getBody();
+    Assertions.assertThat(tipoEvaluaciones).isEqualTo(listaTipoEvaluacion);
   }
 
   /**

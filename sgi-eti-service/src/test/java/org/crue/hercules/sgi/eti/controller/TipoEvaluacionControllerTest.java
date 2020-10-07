@@ -58,7 +58,9 @@ public class TipoEvaluacionControllerTest {
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER = "/{boolean}";
   private static final String TIPO_EVALUACION_CONTROLLER_BASE_PATH = "/tipoevaluaciones";
-  private static final String DICTAMENES_REV_MINIMA = "/dictamenes-revision-minima";
+  private static final String DICTAMENES_REV_MINIMA_PATH = "/dictamenes-revision-minima";
+  private static final String MEMORIA_RETROSPECTIVA_PATH = "/memoria-retrospectiva";
+  private static final String SEGUIMIENT_ANUAL_FINAL_PATH = "/seguimiento-anual-final";
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-TIPOEVALUACION-VER" })
@@ -360,12 +362,58 @@ public class TipoEvaluacionControllerTest {
 
     mockMvc
         .perform(MockMvcRequestBuilders
-            .get(TIPO_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + DICTAMENES_REV_MINIMA + PATH_PARAMETER, 4L,
-                true)
+            .get(TIPO_EVALUACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + DICTAMENES_REV_MINIMA_PATH + PATH_PARAMETER,
+                4L, true)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(7L))
         .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(8L))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)));
+    ;
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-V", "ETI-EVC-VR" })
+  public void findTipoEvaluacionMemoriaRetrospectiva() throws Exception {
+
+    TipoEvaluacion tipoEvaluacion1 = generarMockTipoEvaluacion(1L, "Retrospectiva");
+    TipoEvaluacion tipoEvaluacion2 = generarMockTipoEvaluacion(2L, "Memoria");
+
+    List<TipoEvaluacion> listaTipoEvaluacion = new ArrayList<TipoEvaluacion>();
+    listaTipoEvaluacion.add(tipoEvaluacion1);
+    listaTipoEvaluacion.add(tipoEvaluacion2);
+
+    BDDMockito.given(tipoEvaluacionService.findTipoEvaluacionMemoriaRetrospectiva()).willReturn(listaTipoEvaluacion);
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(TIPO_EVALUACION_CONTROLLER_BASE_PATH + MEMORIA_RETROSPECTIVA_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1L))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2L))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)));
+    ;
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-V", "ETI-EVC-VR" })
+  public void findTipoEvaluacionSeguimientoAnualFinal() throws Exception {
+
+    TipoEvaluacion tipoEvaluacion1 = generarMockTipoEvaluacion(3L, "Seguimiento anual");
+    TipoEvaluacion tipoEvaluacion2 = generarMockTipoEvaluacion(4L, "Seguimiento final");
+
+    List<TipoEvaluacion> listaTipoEvaluacion = new ArrayList<TipoEvaluacion>();
+    listaTipoEvaluacion.add(tipoEvaluacion1);
+    listaTipoEvaluacion.add(tipoEvaluacion2);
+
+    BDDMockito.given(tipoEvaluacionService.findTipoEvaluacionSeguimientoAnualFinal()).willReturn(listaTipoEvaluacion);
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(TIPO_EVALUACION_CONTROLLER_BASE_PATH + SEGUIMIENT_ANUAL_FINAL_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(3L))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(4L))
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)));
     ;
   }

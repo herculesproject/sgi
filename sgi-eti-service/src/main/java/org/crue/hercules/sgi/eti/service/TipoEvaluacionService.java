@@ -66,7 +66,22 @@ public interface TipoEvaluacionService {
    * @param esRevisionMinima Boolean para saber si la evaluación es revisión
    *                         mínima
    * @param idTipoEvaluacion Identificador {@link TipoEvaluacion}.
+   * @return listado de dictamenes.
    */
   List<Dictamen> findAllDictamenByTipoEvaluacionAndRevisionMinima(Long idTipoEvaluacion, Boolean esRevisionMinima);
 
+  /**
+   * Devuelve el listado de tipo de evaluaciones: Memoria y Retrospectiva.
+   * 
+   * @return listado de tipo de evaluaciones.
+   */
+  List<TipoEvaluacion> findTipoEvaluacionMemoriaRetrospectiva();
+
+  /**
+   * Devuelve el listado de tipo de evaluaciones: Seguimiento Anual y Seguimiento
+   * Final.
+   * 
+   * @return listado de tipo de evaluaciones.
+   */
+  List<TipoEvaluacion> findTipoEvaluacionSeguimientoAnualFinal();
 }

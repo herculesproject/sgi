@@ -144,4 +144,32 @@ public class TipoEvaluacionController {
     log.debug("findAllDictamenByTipoEvaluacionAndRevisionMinima - end");
     return returnValues;
   }
+
+  /**
+   * Devuelve el los tipos de evaluación: Memoria y Retrospectiva
+   * 
+   * @return Lista de tipos de evaluación.
+   */
+  @GetMapping("/memoria-retrospectiva")
+  List<TipoEvaluacion> findTipoEvaluacionMemoriaRetrospectiva() {
+    log.debug("findTipoEvaluacionMemoriaRetrospectiva - start");
+
+    List<TipoEvaluacion> returnValues = service.findTipoEvaluacionMemoriaRetrospectiva();
+    log.debug("findTipoEvaluacionMemoriaRetrospectiva - end");
+    return returnValues;
+  }
+
+  /**
+   * Devuelve el los tipos de evaluación: Seguimiento Anual y Seguimiento Final
+   * 
+   * @return Lista de tipos de evaluación.
+   */
+  @GetMapping("/seguimiento-anual-final")
+  List<TipoEvaluacion> findTipoEvaluacionSeguimientoAnualFinal() {
+    log.debug("findTipoEvaluacionSeguimientoAnualFinal - start");
+
+    List<TipoEvaluacion> returnValues = service.findTipoEvaluacionSeguimientoAnualFinal();
+    log.debug("findTipoEvaluacionSeguimientoAnualFinal - end");
+    return returnValues;
+  }
 }
