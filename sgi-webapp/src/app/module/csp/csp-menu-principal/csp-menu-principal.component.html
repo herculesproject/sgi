@@ -1,8 +1,4 @@
 <div class="opciones-menu">
-  <a class="item" mat-list-item [routerLink]="[CSP_ROUTE_NAMES.TIPO_FINALIDAD]" [routerLinkActive]="['is-active']">
-    <mat-icon color="primary" mat-list-icon>content_paste</mat-icon>
-    <p matLine *ngIf="opened">{{'menu.principal.csp.tipo.finalidad' | translate}}</p>
-  </a>
   <a class="item" mat-list-item [routerLink]="[CSP_ROUTE_NAMES.CONVOCATORIA]" [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>content_paste</mat-icon>
     <p matLine *ngIf="opened">{{'menu.principal.csp.convocatoria' | translate}}</p>
@@ -31,5 +27,25 @@
     <mat-icon color="primary" mat-list-icon>local_library</mat-icon>
     <p matLine *ngIf="opened">{{'menu.principal.csp.contratosRRHH' | translate}}</p>
   </a>
+
+  <mat-accordion #accordion="matAccordion" class="acordeon">
+    <mat-expansion-panel #expPanel class="panel"
+      [expanded]="panelDesplegado && opened ? !panelDesplegado : panelDesplegado">
+      <mat-expansion-panel-header class="header item" (click)="activarAcordeon($event)">
+        <mat-panel-title class="titulo">
+          <mat-icon color="primary" mat-list-icon>list_alt</mat-icon>
+          <span *ngIf="opened">{{'menu.principal.csp.configracion' | translate}}</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="opciones-accordion" *ngIf="opened">
+        <a mat-list-item [routerLink]="[CSP_ROUTE_NAMES.TIPO_FINALIDAD]"
+          [routerLinkActive]="['is-active']">{{'menu.principal.csp.tipo.finalidad' | translate}}</a>
+        <a mat-list-item [routerLink]="[CSP_ROUTE_NAMES.TIPO_ENLACE]"
+          [routerLinkActive]="['is-active']">{{'menu.principal.csp.tipos.enlace' | translate}}</a>
+      </div>
+    </mat-expansion-panel>
+
+  </mat-accordion>
+
 </div>
 <!-- FIN Menu principal -->

@@ -10,7 +10,7 @@ import { CspInicioComponent } from './csp-inicio/csp-inicio.component';
 
 const MSG_ROOT_TITLE = marker('csp.root.title');
 const MSG_CONVOCATORIA_TITLE = marker('menu.principal.csp.convocatoria');
-
+const MSG_TIPO_ENLACE_TITLE = marker('menu.principal.csp.tipo.enlace');
 
 const routes: SgiRoutes = [
   {
@@ -49,6 +49,18 @@ const routes: SgiRoutes = [
         data: {
           title: MSG_CONVOCATORIA_TITLE,
         }
+      },
+      {
+        path: CSP_ROUTE_NAMES.TIPO_ENLACE,
+        loadChildren: () =>
+          import('./tipo-enlace/tipo-enlace.module').then(
+            (m) => m.TipoEnlaceModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_TIPO_ENLACE_TITLE,
+        }
+
       },
       { path: '**', component: null }
     ]

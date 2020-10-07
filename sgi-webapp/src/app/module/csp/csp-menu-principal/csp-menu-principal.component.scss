@@ -27,7 +27,11 @@
 
   // Menu desplegable
   .acordeon {
+    ::ng-deep .mat-expansion-panel-content{
+      background:map-get($palette-primary, 50);
+    }
     .panel {
+      border-radius: 0px;
       .header {
         padding: 4px 7px 4px 20px;
         &.item {
@@ -59,19 +63,24 @@
           width: 100%;
           box-sizing: border-box;
           padding: 0;
-          font-size: mat-font-size($custom-typography, caption);
+          font-size: mat-font-size($custom-typography, body-2);
           padding-left: 17px;
           margin: 0;
         }
       }
-      .opciones {
+      .opciones-accordion {
+        padding-top: 5px;
         a {
           font-size: mat-font-size($custom-typography, caption);
+          color: map-get($custom-colors, black);
+          background: map-get($custom-colors, white);
+          height: 25px;
+          border-radius: 18px;
+          padding: 2px 0px 2px 0px;
+          margin-top: 5px;
           &:hover,
           &:focus {
-            &:before {
-              @extend .border-seleccion;
-            }
+            font-weight: bold;
           }
           mat-icon {
             color: map-get($custom-colors, success);
@@ -79,11 +88,11 @@
             width: 100%;
             justify-content: flex-end;
           }
+          &.is-active{
+            font-weight: bold;
+          }
         }
       }
-    }
-    [mat-expansion-panel-content] {
-      background: red;
     }
   }
 }
