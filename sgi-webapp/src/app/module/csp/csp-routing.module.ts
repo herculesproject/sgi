@@ -74,6 +74,17 @@ const routes: SgiRoutes = [
           title: MSG_TIPO_HITO_TITLE,
         }
       },
+      {
+        path: CSP_ROUTE_NAMES.TIPO_FASE,
+        loadChildren: () =>
+          import('./tipo-fase/tipo-fase.module').then(
+            (m) => m.TipoFaseModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_CONVOCATORIA_TITLE,
+        }
+      },
       { path: '**', component: null }
     ]
   }

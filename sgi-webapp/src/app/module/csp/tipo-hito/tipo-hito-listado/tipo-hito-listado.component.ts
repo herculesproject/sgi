@@ -108,7 +108,7 @@ export class TipoHitoListadoComponent extends AbstractTablePaginationComponent<I
    * @param tipoHito Tipo de finalidad
    */
   openModal(tipoHito?: ITipoHito): void {
-    this.logger.debug(TipoHitoListadoComponent.name, `${this.openModal.name}()`, 'start');
+    this.logger.debug(TipoHitoListadoComponent.name, `${this.openModal.name}(tipoHito?: ITipoHito)`, 'start');
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
@@ -124,11 +124,11 @@ export class TipoHitoListadoComponent extends AbstractTablePaginationComponent<I
               () => {
                 this.snackBarService.showSuccess(MSG_UPDATE);
                 this.loadTable();
-                this.logger.debug(TipoHitoListadoComponent.name, `${this.openModal.name}()`, 'end');
+                this.logger.debug(TipoHitoListadoComponent.name, `${this.openModal.name}(tipoHito?: ITipoHito)`, 'end');
               },
               () => {
                 this.snackBarService.showError(MSG_ERROR_UPDATE);
-                this.logger.error(TipoHitoListadoComponent.name, `${this.openModal.name}()`, 'error');
+                this.logger.error(TipoHitoListadoComponent.name, `${this.openModal.name}(tipoHito?: ITipoHito)`, 'error');
               }
             );
           } else {
@@ -136,11 +136,11 @@ export class TipoHitoListadoComponent extends AbstractTablePaginationComponent<I
               () => {
                 this.snackBarService.showSuccess(MSG_SAVE);
                 this.loadTable();
-                this.logger.debug(TipoHitoListadoComponent.name, `${this.openModal.name}()`, 'end');
+                this.logger.debug(TipoHitoListadoComponent.name, `${this.openModal.name}(tipoHito?: ITipoHito)`, 'end');
               },
               () => {
                 this.snackBarService.showError(MSG_ERROR_SAVE);
-                this.logger.error(TipoHitoListadoComponent.name, `${this.openModal.name}()`, 'error');
+                this.logger.error(TipoHitoListadoComponent.name, `${this.openModal.name}(tipoHito?: ITipoHito)`, 'error');
               }
             );
           }

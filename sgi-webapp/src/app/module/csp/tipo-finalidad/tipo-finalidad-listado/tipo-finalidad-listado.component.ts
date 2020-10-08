@@ -109,7 +109,7 @@ export class TipoFinalidadListadoComponent extends AbstractTablePaginationCompon
    * @param tipoFinalidad Tipo de finalidad
    */
   openModal(tipoFinalidad?: ITipoFinalidad): void {
-    this.logger.debug(TipoFinalidadListadoComponent.name, `${this.openModal.name}()`, 'start');
+    this.logger.debug(TipoFinalidadListadoComponent.name, `${this.openModal.name}(tipoFinalidad?: ITipoFinalidad)`, 'start');
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
@@ -125,11 +125,11 @@ export class TipoFinalidadListadoComponent extends AbstractTablePaginationCompon
               () => {
                 this.snackBarService.showSuccess(MSG_UPDATE);
                 this.loadTable();
-                this.logger.debug(TipoFinalidadListadoComponent.name, `${this.openModal.name}()`, 'end');
+                this.logger.debug(TipoFinalidadListadoComponent.name, `${this.openModal.name}(tipoFinalidad?: ITipoFinalidad)`, 'end');
               },
               () => {
                 this.snackBarService.showError(MSG_ERROR_UPDATE);
-                this.logger.error(TipoFinalidadListadoComponent.name, `${this.openModal.name}()`, 'error');
+                this.logger.error(TipoFinalidadListadoComponent.name, `${this.openModal.name}(tipoFinalidad?: ITipoFinalidad)`, 'error');
               }
             );
           } else {
@@ -137,11 +137,11 @@ export class TipoFinalidadListadoComponent extends AbstractTablePaginationCompon
               () => {
                 this.snackBarService.showSuccess(MSG_SAVE);
                 this.loadTable();
-                this.logger.debug(TipoFinalidadListadoComponent.name, `${this.openModal.name}()`, 'end');
+                this.logger.debug(TipoFinalidadListadoComponent.name, `${this.openModal.name}(tipoFinalidad?: ITipoFinalidad)`, 'end');
               },
               () => {
                 this.snackBarService.showError(MSG_ERROR_SAVE);
-                this.logger.error(TipoFinalidadListadoComponent.name, `${this.openModal.name}()`, 'error');
+                this.logger.error(TipoFinalidadListadoComponent.name, `${this.openModal.name}(tipoFinalidad?: ITipoFinalidad)`, 'error');
               }
             );
           }

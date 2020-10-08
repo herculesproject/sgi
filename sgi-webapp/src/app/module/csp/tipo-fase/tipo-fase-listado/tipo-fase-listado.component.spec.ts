@@ -1,46 +1,47 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ITipoHito } from '@core/models/csp/tipo-hito';
+import { TipoFaseService } from '@core/services/csp/tipo-fase.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { NGXLogger } from 'ngx-logger';
-import { TipoHitoModalComponent } from './tipo-hito-modal.component';
 
-describe('TipoHitoModalComponent', () => {
-  let component: TipoHitoModalComponent;
-  let fixture: ComponentFixture<TipoHitoModalComponent>;
+import { TipoFaseListadoComponent } from './tipo-fase-listado.component';
+
+describe('TipoFaseListadoComponent', () => {
+  let component: TipoFaseListadoComponent;
+  let fixture: ComponentFixture<TipoFaseListadoComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        TipoHitoModalComponent
+        TipoFaseListadoComponent
       ],
       imports: [
-        BrowserAnimationsModule,
+        RouterTestingModule,
         MaterialDesignModule,
         HttpClientTestingModule,
+        BrowserAnimationsModule,
         TestUtils.getIdiomas(),
-        RouterTestingModule,
+        FlexLayoutModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: {} as ITipoHito },
-        { provide: MAT_DIALOG_DATA, useValue: {} as ITipoHito },
+        TipoFaseService
       ]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TipoHitoModalComponent);
+    fixture = TestBed.createComponent(TipoFaseListadoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

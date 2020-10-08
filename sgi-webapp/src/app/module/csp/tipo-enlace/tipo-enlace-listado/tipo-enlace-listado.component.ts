@@ -108,7 +108,7 @@ export class TipoEnlaceListadoComponent extends AbstractTablePaginationComponent
    * @param tipoEnlace Tipo de enlace
    */
   openModal(tipoEnlace?: ITipoEnlace): void {
-    this.logger.debug(TipoEnlaceListadoComponent.name, `${this.openModal.name}()`, 'start');
+    this.logger.debug(TipoEnlaceListadoComponent.name, `${this.openModal.name}(tipoEnlace?: ITipoEnlace)`, 'start');
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
@@ -124,11 +124,11 @@ export class TipoEnlaceListadoComponent extends AbstractTablePaginationComponent
               () => {
                 this.snackBarService.showSuccess(MSG_UPDATE);
                 this.loadTable();
-                this.logger.debug(TipoEnlaceListadoComponent.name, `${this.openModal.name}()`, 'end');
+                this.logger.debug(TipoEnlaceListadoComponent.name, `${this.openModal.name}(tipoEnlace?: ITipoEnlace)`, 'end');
               },
               () => {
                 this.snackBarService.showError(MSG_ERROR_UPDATE);
-                this.logger.error(TipoEnlaceListadoComponent.name, `${this.openModal.name}()`, 'error');
+                this.logger.error(TipoEnlaceListadoComponent.name, `${this.openModal.name}(tipoEnlace?: ITipoEnlace)`, 'error');
               }
             );
           } else {
@@ -136,11 +136,11 @@ export class TipoEnlaceListadoComponent extends AbstractTablePaginationComponent
               () => {
                 this.snackBarService.showSuccess(MSG_SAVE);
                 this.loadTable();
-                this.logger.debug(TipoEnlaceListadoComponent.name, `${this.openModal.name}()`, 'end');
+                this.logger.debug(TipoEnlaceListadoComponent.name, `${this.openModal.name}(tipoEnlace?: ITipoEnlace)`, 'end');
               },
               () => {
                 this.snackBarService.showError(MSG_ERROR_SAVE);
-                this.logger.error(TipoEnlaceListadoComponent.name, `${this.openModal.name}()`, 'error');
+                this.logger.error(TipoEnlaceListadoComponent.name, `${this.openModal.name}(tipoEnlace?: ITipoEnlace)`, 'error');
               }
             );
           }

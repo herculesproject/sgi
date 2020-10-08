@@ -4,21 +4,22 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ITipoHito } from '@core/models/csp/tipo-hito';
+import { ITipoFase } from '@core/models/csp/tipo-fase';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { NGXLogger } from 'ngx-logger';
-import { TipoHitoModalComponent } from './tipo-hito-modal.component';
 
-describe('TipoHitoModalComponent', () => {
-  let component: TipoHitoModalComponent;
-  let fixture: ComponentFixture<TipoHitoModalComponent>;
+import { TipoFaseModalComponent } from './tipo-fase-modal.component';
+
+describe('TipoFaseModalComponent', () => {
+  let component: TipoFaseModalComponent;
+  let fixture: ComponentFixture<TipoFaseModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        TipoHitoModalComponent
+        TipoFaseModalComponent
       ],
       imports: [
         BrowserAnimationsModule,
@@ -32,15 +33,15 @@ describe('TipoHitoModalComponent', () => {
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: {} as ITipoHito },
-        { provide: MAT_DIALOG_DATA, useValue: {} as ITipoHito },
+        { provide: MatDialogRef, useValue: {} as ITipoFase },
+        { provide: MAT_DIALOG_DATA, useValue: {} as ITipoFase },
       ]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TipoHitoModalComponent);
+    fixture = TestBed.createComponent(TipoFaseModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
