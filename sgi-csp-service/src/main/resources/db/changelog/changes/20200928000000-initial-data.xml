@@ -5,6 +5,17 @@
   <!-- ENUMERATION -->
   <!-- ########################################################## -->
 
+  <changeSet author="master" id="20200601000000-tipo_origen_fuente_financiacion">
+    <insert tableName="tipo_origen_fuente_financiacion">
+      <column name="nombre" value="Público" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_origen_fuente_financiacion">
+      <column name="nombre" value="Privado" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
   <changeSet author="master" id="20200601000000-tipo_regimen_concurrencia">
     <insert tableName="tipo_regimen_concurrencia">
       <column name="nombre" value="Concesión directa" />
@@ -79,6 +90,42 @@
       <column name="nombre" value="nombre-003" />
       <column name="activo" value="false" />
     </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-fuente_financiacion">
+    <insert tableName="fuente_financiacion">
+      <column name="nombre" value="nombre-001" />
+      <column name="descripcion" value="descripcion-001" />
+      <column name="fondo_estructural" value="true" />
+      <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'nombre-001')" />
+      <column name="tipo_origen_fuente_financiacion_id" valueComputed="(select id from csp.tipo_origen_fuente_financiacion where nombre = 'Público')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="fuente_financiacion">
+      <column name="nombre" value="nombre-002" />
+      <column name="descripcion" value="descripcion-002" />
+      <column name="fondo_estructural" value="true" />
+      <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'nombre-001')" />
+      <column name="tipo_origen_fuente_financiacion_id" valueComputed="(select id from csp.tipo_origen_fuente_financiacion where nombre = 'Privado')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="fuente_financiacion">
+      <column name="nombre" value="nombre-003" />
+      <column name="descripcion" value="descripcion-003" />
+      <column name="fondo_estructural" value="false" />
+      <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'nombre-002')" />
+      <column name="tipo_origen_fuente_financiacion_id" valueComputed="(select id from csp.tipo_origen_fuente_financiacion where nombre = 'Público')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="fuente_financiacion">
+      <column name="nombre" value="nombre-004" />
+      <column name="descripcion" value="descripcion-004" />
+      <column name="fondo_estructural" value="true" />
+      <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'nombre-003')" />
+      <column name="tipo_origen_fuente_financiacion_id" valueComputed="(select id from csp.tipo_origen_fuente_financiacion where nombre = 'Privado')" />
+      <column name="activo" value="false" />
+    </insert>
+
   </changeSet>
 
   <changeSet author="master" id="20200928000000-tipo_documento">

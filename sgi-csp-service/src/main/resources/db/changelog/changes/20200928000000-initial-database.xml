@@ -4,6 +4,10 @@
   <!-- ########################################################## -->
   <!-- SEQUENCE -->
   <!-- ########################################################## -->
+  <changeSet author="master" id="20200928000000-fuente_financiacion_seq">
+    <createSequence sequenceName="fuente_financiacion_seq" />
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-modelo_ejecucion_seq">
     <createSequence sequenceName="modelo_ejecucion_seq" />
   </changeSet>
@@ -309,6 +313,30 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-fuente_financiacion">
+    <createTable tableName="fuente_financiacion">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="fuente_financiacion_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="fuente_financiacion_seq" />
+      </column>
+      <column name="nombre" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="descripcion" type="VARCHAR(250)" />
+      <column name="fondo_estructural" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+      <column name="tipo_ambito_geografico_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="tipo_origen_fuente_financiacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-tipo_regimen_concurrencia">
     <createTable tableName="tipo_regimen_concurrencia">
       <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_regimen_concurrencia_seq">
@@ -326,6 +354,13 @@
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
   <!-- ########################################################## -->
+  <changeSet author="master" id="20200601000000-fuente_financiacion_tipo_ambito_geografico_FK">
+    <addForeignKeyConstraint baseColumnNames="tipo_ambito_geografico_id" baseTableName="fuente_financiacion" constraintName="fuente_financiacion_tipo_ambito_geografico_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_ambito_geografico" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-fuente_financiacion_tipo_origen_fuente_financiacion_FK">
+    <addForeignKeyConstraint baseColumnNames="tipo_origen_fuente_financiacion_id" baseTableName="fuente_financiacion" constraintName="fuente_financiacion_tipo_origen_fuente_financiacion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_origen_fuente_financiacion" validate="true" />
+  </changeSet>
+
   <changeSet author="master" id="20200601000000-modelo_tipo_enlace_tipo_enlace_FK">
     <addForeignKeyConstraint baseColumnNames="tipo_enlace_id" baseTableName="modelo_tipo_enlace" constraintName="modelo_tipo_enlace_tipo_enlace_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_enlace" validate="true" />
   </changeSet>
@@ -371,6 +406,10 @@
   <!-- ########################################################## -->
   <!-- UNIQUE CONSTRAINT -->
   <!-- ########################################################## -->
+  <changeSet author="master" id="20200928000000-fuente_financiacion_uk">
+    <addUniqueConstraint columnNames="nombre" constraintName="fuente_financiacion_uk" tableName="fuente_financiacion" />
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-modelo_ejecucion_uk">
     <addUniqueConstraint columnNames="nombre" constraintName="modelo_ejecucion_uk" tableName="modelo_ejecucion" />
   </changeSet>

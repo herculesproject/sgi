@@ -1,0 +1,59 @@
+package org.crue.hercules.sgi.csp.service;
+
+import java.util.List;
+
+import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+/**
+ * Service Interface para gestionar {@link FuenteFinanciacion}.
+ */
+public interface FuenteFinanciacionService {
+
+  /**
+   * Guardar un nuevo {@link FuenteFinanciacion}.
+   *
+   * @param fuenteFinanciacion la entidad {@link FuenteFinanciacion} a guardar.
+   * @return la entidad {@link FuenteFinanciacion} persistida.
+   */
+  FuenteFinanciacion create(FuenteFinanciacion fuenteFinanciacion);
+
+  /**
+   * Actualizar {@link FuenteFinanciacion}.
+   *
+   * @param fuenteFinanciacionActualizar la entidad {@link FuenteFinanciacion} a
+   *                                     actualizar.
+   * @return la entidad {@link FuenteFinanciacion} persistida.
+   */
+  FuenteFinanciacion update(FuenteFinanciacion fuenteFinanciacionActualizar);
+
+  /**
+   * Desactiva el {@link FuenteFinanciacion}.
+   *
+   * @param id Id del {@link FuenteFinanciacion}.
+   * @return la entidad {@link FuenteFinanciacion} persistida.
+   */
+  FuenteFinanciacion disable(Long id);
+
+  /**
+   * Obtener todas las entidades {@link FuenteFinanciacion} paginadas y/o
+   * filtradas.
+   *
+   * @param pageable la información de la paginación.
+   * @param query    la información del filtro.
+   * @return la lista de entidades {@link FuenteFinanciacion} paginadas y/o
+   *         filtradas.
+   */
+  Page<FuenteFinanciacion> findAll(List<QueryCriteria> query, Pageable pageable);
+
+  /**
+   * Obtiene {@link FuenteFinanciacion} por su id.
+   *
+   * @param id el id de la entidad {@link FuenteFinanciacion}.
+   * @return la entidad {@link FuenteFinanciacion}.
+   */
+  FuenteFinanciacion findById(Long id);
+
+}
