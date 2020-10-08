@@ -11,10 +11,15 @@
   <artifactId>usr</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>usr</name>
-  <description>Servicio Usuarios SGI HERCULES</description>
+  <description>Gestión de Usuarios SGI HERCULES</description>
 
 
   <dependencies>
+    <dependency>
+      <groupId>org.crue.hercules.sgi</groupId>
+      <artifactId>sgi-framework</artifactId>
+      <version>${sgi-framework.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -60,10 +65,6 @@
       <artifactId>liquibase-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
@@ -75,11 +76,19 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-jpamodelgen</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
       <scope>runtime</scope>
     </dependency>
-    <!-- ###################################33 -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
     <dependency>
       <groupId>com.oracle.ojdbc</groupId>
       <artifactId>ojdbc8</artifactId>
@@ -90,11 +99,36 @@
       <artifactId>validation-api</artifactId>
       <version>2.0.1.Final</version>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-oauth2-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.tomakehurst</groupId>
+      <artifactId>wiremock-jre8</artifactId>
+      <version>${wiremock.version}</version>
+      <scope>test</scope>
+    </dependency>
 
   </dependencies>
 
   <properties>
     <java.version>1.8</java.version>
+    <sgi-framework.version>0.0.1-SNAPSHOT</sgi-framework.version>
+    <wiremock.version>2.27.1</wiremock.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -127,7 +161,7 @@
     <maven.deploy.skip>true</maven.deploy.skip>
 
     <!-- Custom properties -->
-    <docker.image.prefix>nexus.treelogic.local:8083/hercules/sgi-usrservice</docker.image.prefix>
+    <docker.image.prefix>nexus.treelogic.local:8083/hercules/sgi-usr</docker.image.prefix>
     <full-artifact-name>target/${project.artifactId}-${project.version}-exec.jar</full-artifact-name>
     <diffChangeLogFile>src/main/resources/db/changelog/to-be-changed.yaml</diffChangeLogFile>
     <outputChangeLogFile>src/main/resources/db/changelog/changes/initial-database.xml</outputChangeLogFile>
@@ -138,6 +172,16 @@
     <skip.unit.tests>false</skip.unit.tests>
     <skip.startlocalpostgres>true</skip.startlocalpostgres>
   </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-jpamodelgen</artifactId>
+        <version>${org.hibernate-jpamodelgen.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
 
   <profiles>
@@ -303,14 +347,12 @@
               <artifactId>lombok</artifactId>
               <version>${lombok.version}</version>
             </path>
-
             <!-- JPA Static Metamodel Generator -->
             <path>
               <groupId>org.hibernate</groupId>
               <artifactId>hibernate-jpamodelgen</artifactId>
               <version>${org.hibernate-jpamodelgen.version}</version>
             </path>
-
           </annotationProcessorPaths>
         </configuration>
       </plugin>
@@ -634,7 +676,7 @@
                 <env>
                   <POSTGRES_USER>postgres</POSTGRES_USER>
                   <POSTGRES_PASSWORD>admin</POSTGRES_PASSWORD>
-                  <POSTGRES_DB>usrservice</POSTGRES_DB>
+                  <POSTGRES_DB>usr</POSTGRES_DB>
                 </env>
               </run>
             </image>

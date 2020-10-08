@@ -20,7 +20,7 @@ Proyecto generado con [Spring Initializr](https://start.spring.io/) con la sigui
     *  **Options**:
         *  **Name**: usr
         *  **Description**: 
-        *  **Package name**: org.crue.hercules.sgi.usr
+        *  **Package name**: org.crue.hercules.sgi
         *  **Packaging**: Jar
         *  **Java**: 8
 *  **Dependencies**:
