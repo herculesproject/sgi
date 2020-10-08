@@ -10,7 +10,7 @@
           arial-label="Number" matInput formControlName="convocatoriaReunion" [matAutocomplete]="auto" required>
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="getConvocatoria"
           (optionSelected)="selectConvocatoriaReunion($event.option.value)">
-          <mat-option *ngFor="let convocatoria of convocatoriasReunion | async" [value]="convocatoria">
+          <mat-option *ngFor="let convocatoria of convocatoriasReunionFitlered | async" [value]="convocatoria">
             {{convocatoria.codigo}}
           </mat-option>
         </mat-autocomplete>

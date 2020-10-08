@@ -7,7 +7,7 @@ import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
 import { environment } from '@env';
 import { SgiBaseConverter } from '@sgi/framework/core/';
-import { SgiMutableRestService, SgiRestListResult } from '@sgi/framework/http';
+import { SgiMutableRestService, SgiRestListResult, SgiRestFindOptions } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -160,6 +160,20 @@ export class ConvocatoriaReunionService extends SgiMutableRestService<number, IC
         this.logger.debug(ConvocatoriaReunionService.name, `${this.endpointUrl}/${evaluacion.convocatoriaReunion.id}/evaluacion/${evaluacion.id}`, '-', 'end')
       })
     );
+  }
+
+
+  /**
+   * Devuelve todos las convocatorias que no estén asociadas a un acta.
+   * @param options opciones de búsqueda.
+   */
+  findConvocatoriasSinActa(options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaReunion>> {
+    this.logger.debug(ConvocatoriaReunionService.name, `findConvocatoriasSinActa(${options ? JSON.stringify(options) : ''})`, '-', 'START');
+    return this.find<IConvocatoriaReunionService, IConvocatoriaReunion>(`${this.endpointUrl}/acta-no-asignada`, null
+      , ConvocatoriaReunionService.CONVERTER).pipe(
+        tap(() => {
+          this.logger.debug(ConvocatoriaReunionService.name, `findConvocatoriasSinActa(${options ? JSON.stringify(options) : ''})`, '-', 'END');
+        }));
   }
 
 }

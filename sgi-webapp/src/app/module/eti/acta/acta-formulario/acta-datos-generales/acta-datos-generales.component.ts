@@ -33,8 +33,8 @@ export class ActaDatosGeneralesComponent extends FormFragmentComponent<IActa> im
   fxLayoutProperties: FxLayoutProperties;
   fxFlexPropertiesInline: FxFlexProperties;
 
-  convocatoriasReunionFitlered: IConvocatoriaReunion[];
-  convocatoriasReunion: Observable<IConvocatoriaReunion[]>;
+  convocatoriasReunionFitlered: Observable<IConvocatoriaReunion[]>;
+  convocatoriasReunion: IConvocatoriaReunion[];
 
   suscripciones: Subscription[] = [];
 
@@ -68,10 +68,10 @@ export class ActaDatosGeneralesComponent extends FormFragmentComponent<IActa> im
     super.ngOnInit();
     this.logger.debug(ActaDatosGeneralesComponent.name, 'ngOnInit()', 'start');
     this.suscripciones.push(
-      this.convocatoriaReunionService.findAll().subscribe(
+      this.convocatoriaReunionService.findConvocatoriasSinActa().subscribe(
         (res: SgiRestListResult<IConvocatoriaReunion>) => {
-          this.convocatoriasReunionFitlered = res.items;
-          this.convocatoriasReunion = this.formGroup.controls.convocatoriaReunion.valueChanges
+          this.convocatoriasReunion = res.items;
+          this.convocatoriasReunionFitlered = this.formGroup.controls.convocatoriaReunion.valueChanges
             .pipe(
               startWith(''),
               map(value => this.filtro(value))
@@ -91,9 +91,16 @@ export class ActaDatosGeneralesComponent extends FormFragmentComponent<IActa> im
    *
    * @param value del input para autocompletar
    */
-  filtro(value: string): IConvocatoriaReunion[] {
-    const filterValue = value.toString().toLowerCase();
-    return this.convocatoriasReunionFitlered.filter(convocatoriaReunion => convocatoriaReunion.codigo.toLowerCase().includes(filterValue));
+  filtro(value: string | IConvocatoriaReunion): IConvocatoriaReunion[] {
+    let filterValue: string;
+    if (typeof value === 'string') {
+      filterValue = value.toLowerCase();
+    } else {
+      filterValue = value.codigo.toLowerCase();
+    }
+
+    return this.convocatoriasReunion.filter
+      (convocatoriaReunion => convocatoriaReunion.codigo.toLowerCase().includes(filterValue));
   }
 
   /**
