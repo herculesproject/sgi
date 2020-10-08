@@ -63,6 +63,10 @@
     <createSequence sequenceName="tipo_origen_fuente_financiacion_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-tipo_regimen_concurrencia_seq">
+    <createSequence sequenceName="tipo_regimen_concurrencia_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -305,6 +309,20 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-tipo_regimen_concurrencia">
+    <createTable tableName="tipo_regimen_concurrencia">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_regimen_concurrencia_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_regimen_concurrencia_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
   <!-- ########################################################## -->
@@ -407,6 +425,10 @@
 
   <changeSet author="master" id="20201007000000-tipo_origen_fuente_financiacion_uk">
     <addUniqueConstraint columnNames="nombre" constraintName="tipo_origen_fuente_financiacion_uk" tableName="tipo_origen_fuente_financiacion" />
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-tipo_regimen_concurrencia_uk">
+    <addUniqueConstraint columnNames="nombre" constraintName="tipo_regimen_concurrencia_uk" tableName="tipo_regimen_concurrencia" />
   </changeSet>
 
   <!-- ########################################################## -->

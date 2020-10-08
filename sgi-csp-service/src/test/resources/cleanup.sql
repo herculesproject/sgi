@@ -13,3 +13,4 @@ DELETE FROM csp.tipo_fase;
 DELETE FROM csp.tipo_finalidad;
 DELETE FROM csp.tipo_hito;
 DELETE FROM csp.tipo_fase;
+DELETE FROM csp.tipo_regimen_concurrencia;

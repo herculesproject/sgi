@@ -37,8 +37,8 @@ public class TipoOrigenFuenteFinanciacionServiceImpl implements TipoOrigenFuente
    * Obtener todas las entidades {@link TipoOrigenFuenteFinanciacion} paginadas
    * y/o filtradas.
    *
-   * @param pageable la información de la paginación.
-   * @param query    la información del filtro.
+   * @param query  la información del filtro.
+   * @param paging la información de la paginación.
    * @return la lista de entidades {@link TipoOrigenFuenteFinanciacion} paginadas
    *         y/o filtradas.
    */
