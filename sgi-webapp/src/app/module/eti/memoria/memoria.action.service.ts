@@ -15,6 +15,8 @@ import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { TipoDocumentoService } from '@core/services/eti/tipo-documento.service';
 import { DocumentacionMemoriaService } from '@core/services/eti/documentacion-memoria.service';
 import { NGXLogger } from 'ngx-logger';
+import { MemoriaEvaluacionesFragment } from './memoria-formulario/memoria-evaluaciones/memoria-evaluaciones.fragment';
+import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 
 
 const MSG_PETICIONES_EVALUACION = marker('eti.memoria.link.peticionEvaluacion');
@@ -27,13 +29,15 @@ export class MemoriaActionService extends ActionService {
 
   public readonly FRAGMENT = {
     DATOS_GENERALES: 'datosGenerales',
-    DOCUMENTACION: 'documentacion'
+    DOCUMENTACION: 'documentacion',
+    EVALUACIONES: 'evaluaciones'
   };
 
   private memoria: IMemoria;
   private datosGenerales: MemoriaDatosGeneralesFragment;
   public readonly: boolean;
   private documentacion: MemoriaDocumentacionFragment;
+  private evaluaciones: MemoriaEvaluacionesFragment;
 
   constructor(
     fb: FormBuilder,
@@ -57,9 +61,11 @@ export class MemoriaActionService extends ActionService {
     }
     this.datosGenerales = new MemoriaDatosGeneralesFragment(fb, this.readonly, this.memoria?.id, service, personaFisicaService);
     this.documentacion = new MemoriaDocumentacionFragment(logger, this.memoria?.id, service, tipoDocumentoService);
+    this.evaluaciones = new MemoriaEvaluacionesFragment(logger, this.memoria?.id, service);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.DOCUMENTACION, this.documentacion);
+    this.addFragment(this.FRAGMENT.EVALUACIONES, this.evaluaciones);
   }
 
   private addPeticionEvaluacionLink(idPeticionEvaluacion: number): void {

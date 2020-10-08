@@ -14,6 +14,7 @@ import { MemoriaCrearComponent } from './memoria-crear/memoria-crear.component';
 import { MemoriaCrearGuard } from './memoria-crear/memoria-crear.guard';
 import { MemoriaListadoGesComponent } from './memoria-listado-ges/memoria-listado-ges.component';
 import { MemoriaDocumentacionComponent } from './memoria-formulario/memoria-documentacion/memoria-documentacion.component';
+import { MemoriaEvaluacionesComponent } from './memoria-formulario/memoria-evaluaciones/memoria-evaluaciones.component';
 
 const MSG_LISTADO_TITLE = marker('eti.memoria.listado.titulo');
 const MSG_NEW_TITLE = marker('eti.memoria.crear.titulo');

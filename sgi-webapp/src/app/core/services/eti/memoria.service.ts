@@ -9,6 +9,7 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoriaPeticionEvaluacion';
+import { IEvaluacion } from '@core/models/eti/evaluacion';
 
 @Injectable({
   providedIn: 'root'
@@ -214,6 +215,18 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
         tap(() =>
           this.logger.debug(MemoriaService.name, `updateDocumentacion(${id}, ${documentacionMemoria}, ${idDocumentacionMemoria})`, '-', 'end'))
       );
+  }
+
+  /**
+   * Devuelve todos las evaluaciones de una memoria id.
+   *
+   * @param memoriaId id memoria.
+   */
+  getEvaluacionesMemoria(memoriaId: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IEvaluacion>> {
+    this.logger.debug(MemoriaService.name, `getEvaluacionesMemoria(${memoriaId}, ${options ? JSON.stringify(options) : options})`, '-', 'start');
+    return this.find<IEvaluacion, IEvaluacion>(`${this.endpointUrl}/${memoriaId}/evaluaciones`, options).pipe(
+      tap(() => this.logger.debug(MemoriaService.name, `getEvaluacionesMemoria(${memoriaId}, ${options ? JSON.stringify(options) : options})`, '-', 'end'))
+    );
   }
 
 }
