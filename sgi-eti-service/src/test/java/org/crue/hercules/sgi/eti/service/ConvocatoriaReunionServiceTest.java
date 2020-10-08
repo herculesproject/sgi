@@ -285,6 +285,27 @@ public class ConvocatoriaReunionServiceTest {
     Assertions.assertThat(result).isEmpty();
   }
 
+  @Test
+  public void findConvocatoriasSinActa() {
+
+    // given: Datos existentes
+    List<ConvocatoriaReunion> response = new LinkedList<ConvocatoriaReunion>();
+    response.add(getMockData(1L, 1L, 1L));
+    response.add(getMockData(2L, 1L, 2L));
+
+    BDDMockito.given(repository.findConvocatoriasReunionSinActa(ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(response));
+
+    // when: Se buscan todos las datos
+    Page<ConvocatoriaReunion> result = service.findConvocatoriasSinActa(Pageable.unpaged());
+
+    // then: Se recuperan todos los datos
+    Assertions.assertThat(result.getContent()).isEqualTo(response);
+    Assertions.assertThat(result.getNumber()).isEqualTo(0);
+    Assertions.assertThat(result.getSize()).isEqualTo(response.size());
+    Assertions.assertThat(result.getTotalElements()).isEqualTo(response.size());
+  }
+
   /**
    * Genera un objeto {@link ConvocatoriaReunion}
    * 

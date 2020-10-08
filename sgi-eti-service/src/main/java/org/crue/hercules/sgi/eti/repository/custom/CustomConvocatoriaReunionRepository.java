@@ -3,6 +3,9 @@ package org.crue.hercules.sgi.eti.repository.custom;
 import java.util.Optional;
 
 import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
+import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,5 +24,15 @@ public interface CustomConvocatoriaReunionRepository {
    * @return la {@link ConvocatoriaReunionDatosGenerales}
    */
   Optional<ConvocatoriaReunionDatosGenerales> findByIdWithDatosGenerales(Long idConvocatoria);
+
+  /**
+   * Devuelve una lista de convocatorias de reunión que no tengan acta**
+   * 
+   * @param query    la información del filtro.**@return la lista de convocatorias
+   *                 de reunión
+   * @param pageable datos de la paginación
+   * @return lista paginada de convocatoria reunión
+   */
+  public Page<ConvocatoriaReunion> findConvocatoriasReunionSinActa(Pageable pageable);
 
 }

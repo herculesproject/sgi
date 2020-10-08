@@ -94,4 +94,14 @@ public interface ConvocatoriaReunionService {
   ConvocatoriaReunionDatosGenerales findByIdWithDatosGenerales(Long id)
       throws ConvocatoriaReunionNotFoundException, IllegalArgumentException;
 
+  /**
+   * Devuelve una lista de convocatorias de reunión que no tengan acta
+   * 
+   * @param pageable pageable
+   *
+   * @return la lista de convocatorias de reunión
+   */
+
+  Page<ConvocatoriaReunion> findConvocatoriasSinActa(Pageable pageable);
+
 }

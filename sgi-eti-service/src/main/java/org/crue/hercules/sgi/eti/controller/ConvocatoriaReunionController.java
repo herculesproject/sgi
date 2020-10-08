@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
 import org.crue.hercules.sgi.eti.model.Asistentes;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
@@ -31,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * ConvocatoriaReunionController
@@ -275,4 +275,26 @@ public class ConvocatoriaReunionController {
     log.debug("deleteMemoria(Long idConvocatoriaReunion, Long idEvaluacion, Long idMemoria) - end");
 
   }
+
+  /**
+   * Devuelve una lista de entidad {@link ConvocatoriaReunion} que no tengan acta
+   * asociada y se encuentren activas
+   * 
+   * @param pageable pageable
+   * @return la lista de {@link ConvocatoriaReunion}
+   */
+  @GetMapping("/acta-no-asignada")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-ACT-C', 'ETI-ACT-E')")
+  ResponseEntity<Page<ConvocatoriaReunion>> findConvocatoriasSinActa(@RequestPageable Pageable pageable) {
+    log.debug("findConvocatoriasSinActa(Pageable pageable) - start");
+    Page<ConvocatoriaReunion> page = convocatoriaReunionService.findConvocatoriasSinActa(pageable);
+
+    if (page.isEmpty()) {
+      log.debug("findConvocatoriasSinActa(Pageable pageable) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findConvocatoriasSinActa(Pageable pageable) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
 }

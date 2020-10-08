@@ -197,4 +197,24 @@ public class ConvocatoriaReunionServiceImpl implements ConvocatoriaReunionServic
     return convocatoriaReunion;
   }
 
+  /**
+   * Devuelve una lista de convocatorias de reunión que no tengan acta
+   * 
+   * @param pageable pageable
+   *
+   * @return la lista de convocatorias de reunión
+   */
+
+  @Override
+  public Page<ConvocatoriaReunion> findConvocatoriasSinActa(Pageable pageable) {
+    log.debug("findConvocatoriasSinActa(Pageable pageable) - start");
+
+    Page<ConvocatoriaReunion> convocatoriaReunion = repository.findConvocatoriasReunionSinActa(pageable);
+
+    log.debug("findConvocatoriasSinActa(Pageable pageable) - end");
+
+    return convocatoriaReunion;
+
+  }
+
 }

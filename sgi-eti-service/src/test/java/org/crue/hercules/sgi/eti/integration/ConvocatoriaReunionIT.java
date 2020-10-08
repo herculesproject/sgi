@@ -623,6 +623,34 @@ public class ConvocatoriaReunionIT {
     Assertions.assertThat(response.getBody()).isEqualTo(pageResult.getContent());
   }
 
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findConvocatoriasSinActa() throws Exception {
+    // when: Obtiene page=1 con pagesize=5
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "5");
+
+    // Authorization
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-ACT-E")));
+
+    URI uri = UriComponentsBuilder.fromUriString(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + "/acta-no-asignada")
+        .build(false).toUri();
+
+    final ResponseEntity<List<ConvocatoriaReunion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ConvocatoriaReunion>>() {
+        });
+
+    // then: Respuesta OK
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("5");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("5");
+  }
+
   /**
    * Genera un objeto {@link ConvocatoriaReunion}
    *

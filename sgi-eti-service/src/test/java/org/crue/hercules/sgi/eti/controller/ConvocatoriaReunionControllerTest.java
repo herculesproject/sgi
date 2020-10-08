@@ -964,6 +964,35 @@ public class ConvocatoriaReunionControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk());
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-C", "ETI-ACT-E" })
+  public void findConvocatoriasSinActa() throws Exception {
+
+    // given: Datos existentes
+    final String url = new StringBuilder(CONVOCATORIA_REUNION_CONTROLLER_BASE_PATH + "/acta-no-asignada").toString();
+
+    List<ConvocatoriaReunion> response = new LinkedList<ConvocatoriaReunion>();
+    response.add(getMockData(1L, 1L, 1L));
+    response.add(getMockData(2L, 1L, 2L));
+
+    BDDMockito.given(convocatoriaReunionService.findConvocatoriasSinActa(ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(response));
+
+    // when: Se buscan todos los datos
+    MvcResult result = mockMvc
+        .perform(MockMvcRequestBuilders.get(url).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Se recuperan todos los datos
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2))).andReturn();
+
+    Assertions.assertThat(mapper.readValue(result.getResponse().getContentAsString(Charset.forName("UTF-8")),
+        new TypeReference<List<ConvocatoriaReunion>>() {
+        })).isEqualTo(response);
+
+  }
+
   /**
    * Genera un objeto {@link ConvocatoriaReunion}
    * 

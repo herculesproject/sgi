@@ -19,7 +19,6 @@ import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.TipoDocumentoRepository;
 import org.crue.hercules.sgi.eti.repository.specification.DocumentacionMemoriaSpecifications;
 import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
-import org.crue.hercules.sgi.eti.service.TipoDocumentoService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
