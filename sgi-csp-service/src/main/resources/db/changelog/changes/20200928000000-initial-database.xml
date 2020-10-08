@@ -36,6 +36,10 @@
     <createSequence sequenceName="modelo_unidad_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-plan_seq">
+    <createSequence sequenceName="plan_seq" />
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-tipo_documento_seq">
     <createSequence sequenceName="tipo_documento_seq" />
   </changeSet>
@@ -299,6 +303,21 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20201007000000-plan">
+    <createTable tableName="plan">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="plan_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="plan_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="descripcion" type="VARCHAR(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
   <changeSet author="master" id="20201007000000-tipo_origen_fuente_financiacion">
     <createTable tableName="tipo_origen_fuente_financiacion">
       <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_origen_fuente_financiacion_seq">
@@ -436,6 +455,10 @@
 
   <changeSet author="master" id="20200928000000-modelo_unidad_uk">
     <addUniqueConstraint columnNames="modelo_ejecucion_id, unidad_gestion_ref" constraintName="modelo_unidad_uk" tableName="modelo_unidad" />
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-plan_uk">
+    <addUniqueConstraint columnNames="nombre" constraintName="plan_uk" tableName="plan" />
   </changeSet>
 
   <changeSet author="master" id="20200928000000-tipo_ambito_geografico_uk">

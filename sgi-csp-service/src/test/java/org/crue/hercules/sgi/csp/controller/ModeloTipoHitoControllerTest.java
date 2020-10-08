@@ -142,7 +142,7 @@ public class ModeloTipoHitoControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
-  public void update_WithNoId_Returns400() throws Exception {
+  public void update_WithNoExistingId_Returns404() throws Exception {
     // given: No existing Id
     Long id = 1L;
     ModeloTipoHito modeloTipoHito = generarModeloTipoHito(null, 1L, 1L);

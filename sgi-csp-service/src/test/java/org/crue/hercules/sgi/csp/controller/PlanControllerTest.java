@@ -8,12 +8,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.SecurityConfig;
-import org.crue.hercules.sgi.csp.exceptions.FuenteFinanciacionNotFoundException;
-import org.crue.hercules.sgi.csp.exceptions.TipoAmbitoGeograficoNotFoundException;
-import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
-import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
-import org.crue.hercules.sgi.csp.model.TipoOrigenFuenteFinanciacion;
-import org.crue.hercules.sgi.csp.service.FuenteFinanciacionService;
+import org.crue.hercules.sgi.csp.exceptions.PlanNotFoundException;
+import org.crue.hercules.sgi.csp.model.Plan;
+import org.crue.hercules.sgi.csp.service.PlanService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -38,11 +35,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
- * FuenteFinanciacionControllerTest
+ * PlanControllerTest
  */
-@WebMvcTest(FuenteFinanciacionController.class)
+@WebMvcTest(PlanController.class)
 @Import(SecurityConfig.class)
-public class FuenteFinanciacionControllerTest {
+public class PlanControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
@@ -51,58 +48,51 @@ public class FuenteFinanciacionControllerTest {
   private ObjectMapper mapper;
 
   @MockBean
-  private FuenteFinanciacionService service;
+  private PlanService service;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String CONTROLLER_BASE_PATH = "/fuentefinanciaciones";
+  private static final String CONTROLLER_BASE_PATH = "/planes";
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-ME-C" })
-  public void create_ReturnsFuenteFinanciacion() throws Exception {
-    // given: new FuenteFinanciacion
-    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
+  public void create_ReturnsModeloPlan() throws Exception {
+    // given: new Plan
+    Plan plan = generarMockPlan(1L);
 
-    BDDMockito.given(service.create(ArgumentMatchers.<FuenteFinanciacion>any()))
-        .willAnswer((InvocationOnMock invocation) -> {
-          FuenteFinanciacion newFuenteFinanciacion = new FuenteFinanciacion();
-          BeanUtils.copyProperties(invocation.getArgument(0), newFuenteFinanciacion);
-          newFuenteFinanciacion.setId(1L);
-          return newFuenteFinanciacion;
-        });
+    BDDMockito.given(service.create(ArgumentMatchers.<Plan>any())).willAnswer((InvocationOnMock invocation) -> {
+      Plan newPlan = new Plan();
+      BeanUtils.copyProperties(invocation.getArgument(0), newPlan);
+      newPlan.setId(1L);
+      return newPlan;
+    });
 
-    // when: create FuenteFinanciacion
+    // when: create Plan
     mockMvc
         .perform(MockMvcRequestBuilders.post(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(fuenteFinanciacion)))
+            .content(mapper.writeValueAsString(plan)))
         .andDo(MockMvcResultHandlers.print())
-        // then: new FuenteFinanciacion is created
+        // then: new Plan is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(fuenteFinanciacion.getNombre()))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(fuenteFinanciacion.getDescripcion()))
-        .andExpect(MockMvcResultMatchers.jsonPath("fondoEstructural").value(fuenteFinanciacion.getFondoEstructural()))
-        .andExpect(MockMvcResultMatchers.jsonPath("tipoAmbitoGeografico.id")
-            .value(fuenteFinanciacion.getTipoAmbitoGeografico().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("tipoOrigenFuenteFinanciacion.id")
-            .value(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(fuenteFinanciacion.getActivo()));
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(plan.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(plan.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(plan.getActivo()));
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-ME-C" })
   public void create_WithId_Returns400() throws Exception {
-    // given: a FuenteFinanciacion with id filled
-    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
+    // given: a Plan with id filled
+    Plan plan = generarMockPlan(1L);
 
-    BDDMockito.given(service.create(ArgumentMatchers.<FuenteFinanciacion>any()))
-        .willThrow(new IllegalArgumentException());
+    BDDMockito.given(service.create(ArgumentMatchers.<Plan>any())).willThrow(new IllegalArgumentException());
 
-    // when: create FuenteFinanciacion
+    // when: create Plan
     mockMvc
         .perform(MockMvcRequestBuilders.post(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(fuenteFinanciacion)))
+            .content(mapper.writeValueAsString(plan)))
         .andDo(MockMvcResultHandlers.print())
         // then: 400 error
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -110,34 +100,28 @@ public class FuenteFinanciacionControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
-  public void update_ReturnsFuenteFinanciacion() throws Exception {
-    // given: Existing TipoAmbitoGeografico to be updated
-    FuenteFinanciacion fuenteFinanciacionExistente = generarMockFuenteFinanciacion(1L);
-    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
-    fuenteFinanciacion.setNombre("nuevo-nombre");
+  public void update_ReturnsPlan() throws Exception {
+    // given: Existing Plan to be updated
+    Plan planExistente = generarMockPlan(1L);
+    Plan plan = generarMockPlan(1L);
+    plan.setNombre("nuevo-nombre");
 
-    BDDMockito.given(service.findById(ArgumentMatchers.<Long>any())).willReturn(fuenteFinanciacionExistente);
-    BDDMockito.given(service.update(ArgumentMatchers.<FuenteFinanciacion>any()))
+    BDDMockito.given(service.findById(ArgumentMatchers.<Long>any())).willReturn(planExistente);
+    BDDMockito.given(service.update(ArgumentMatchers.<Plan>any()))
         .willAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
 
-    // when: update FuenteFinanciacion
+    // when: update Plan
     mockMvc
-        .perform(
-            MockMvcRequestBuilders.put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, fuenteFinanciacionExistente.getId())
-                .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(fuenteFinanciacion)))
+        .perform(MockMvcRequestBuilders.put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, planExistente.getId())
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(plan)))
         .andDo(MockMvcResultHandlers.print())
-        // then: FuenteFinanciacion is updated
-        .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(fuenteFinanciacion.getNombre()))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(fuenteFinanciacionExistente.getDescripcion()))
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("fondoEstructural").value(fuenteFinanciacionExistente.getFondoEstructural()))
-        .andExpect(MockMvcResultMatchers.jsonPath("tipoAmbitoGeografico.id")
-            .value(fuenteFinanciacionExistente.getTipoAmbitoGeografico().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("tipoOrigenFuenteFinanciacion.id")
-            .value(fuenteFinanciacionExistente.getTipoOrigenFuenteFinanciacion().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(fuenteFinanciacionExistente.getActivo()));
+        // then: Plan is updated
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(planExistente.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(plan.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(plan.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(planExistente.getActivo()));
   }
 
   @Test
@@ -145,16 +129,15 @@ public class FuenteFinanciacionControllerTest {
   public void update_WithNoExistingId_Returns404() throws Exception {
     // given: No existing Id
     Long id = 1L;
-    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
+    Plan plan = generarMockPlan(1L);
 
-    BDDMockito.willThrow(new TipoAmbitoGeograficoNotFoundException(id)).given(service)
-        .update(ArgumentMatchers.<FuenteFinanciacion>any());
+    BDDMockito.willThrow(new PlanNotFoundException(id)).given(service).update(ArgumentMatchers.<Plan>any());
 
-    // when: update FuenteFinanciacion
+    // when: update Plan
     mockMvc
         .perform(MockMvcRequestBuilders.put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(fuenteFinanciacion)))
+            .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(plan)))
         .andDo(MockMvcResultHandlers.print())
         // then: 404 error
         .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -164,17 +147,17 @@ public class FuenteFinanciacionControllerTest {
   @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
   public void delete_WithExistingId_Return204() throws Exception {
     // given: existing id
-    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
+    Plan plan = generarMockPlan(1L);
     BDDMockito.given(service.disable(ArgumentMatchers.<Long>any())).willAnswer((InvocationOnMock invocation) -> {
-      FuenteFinanciacion fuenteFinanciacionDisabled = new FuenteFinanciacion();
-      BeanUtils.copyProperties(fuenteFinanciacion, fuenteFinanciacionDisabled);
-      fuenteFinanciacionDisabled.setActivo(false);
-      return fuenteFinanciacionDisabled;
+      Plan planDisabled = new Plan();
+      BeanUtils.copyProperties(plan, planDisabled);
+      planDisabled.setActivo(false);
+      return planDisabled;
     });
 
     // when: delete by id
     mockMvc
-        .perform(MockMvcRequestBuilders.delete(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, fuenteFinanciacion.getId())
+        .perform(MockMvcRequestBuilders.delete(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, plan.getId())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: 204
@@ -187,8 +170,7 @@ public class FuenteFinanciacionControllerTest {
     // given: non existing id
     Long id = 1L;
 
-    BDDMockito.willThrow(new FuenteFinanciacionNotFoundException(id)).given(service)
-        .disable(ArgumentMatchers.<Long>any());
+    BDDMockito.willThrow(new PlanNotFoundException(id)).given(service).disable(ArgumentMatchers.<Long>any());
 
     // when: delete by non existing id
     mockMvc
@@ -203,10 +185,10 @@ public class FuenteFinanciacionControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
   public void findAll_ReturnsPage() throws Exception {
-    // given: Una lista con 37 FuenteFinanciacion
-    List<FuenteFinanciacion> fuenteFinanciaciones = new ArrayList<>();
+    // given: Una lista con 37 Plan
+    List<Plan> planes = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
-      fuenteFinanciaciones.add(generarMockFuenteFinanciacion(i, "FuenteFinanciacion" + String.format("%03d", i)));
+      planes.add(generarMockPlan(i, "Plan" + String.format("%03d", i)));
     }
 
     Integer page = 3;
@@ -219,9 +201,9 @@ public class FuenteFinanciacionControllerTest {
           int index = pageable.getPageNumber();
           int fromIndex = size * index;
           int toIndex = fromIndex + size;
-          toIndex = toIndex > fuenteFinanciaciones.size() ? fuenteFinanciaciones.size() : toIndex;
-          List<FuenteFinanciacion> content = fuenteFinanciaciones.subList(fromIndex, toIndex);
-          Page<FuenteFinanciacion> pageResponse = new PageImpl<>(content, pageable, fuenteFinanciaciones.size());
+          toIndex = toIndex > planes.size() ? planes.size() : toIndex;
+          List<Plan> content = planes.subList(fromIndex, toIndex);
+          Page<Plan> pageResponse = new PageImpl<>(content, pageable, planes.size());
           return pageResponse;
         });
 
@@ -230,7 +212,7 @@ public class FuenteFinanciacionControllerTest {
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
             .header("X-Page", page).header("X-Page-Size", pageSize).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
-        // then: Devuelve la pagina 3 con los FuenteFinanciacion del 31 al 37
+        // then: Devuelve la pagina 3 con los Plan del 31 al 37
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
@@ -239,21 +221,21 @@ public class FuenteFinanciacionControllerTest {
         .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
 
-    List<FuenteFinanciacion> fuenteFinanciacionesResponse = mapper
-        .readValue(requestResult.getResponse().getContentAsString(), new TypeReference<List<FuenteFinanciacion>>() {
+    List<Plan> planesResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<Plan>>() {
         });
 
     for (int i = 31; i <= 37; i++) {
-      FuenteFinanciacion fuenteFinanciacion = fuenteFinanciacionesResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(fuenteFinanciacion.getNombre()).isEqualTo("FuenteFinanciacion" + String.format("%03d", i));
+      Plan plan = planesResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(plan.getNombre()).isEqualTo("Plan" + String.format("%03d", i));
     }
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
   public void findAll_EmptyList_Returns204() throws Exception {
-    // given: Una lista vacia de FuenteFinanciacion
-    List<FuenteFinanciacion> fuenteFinanciaciones = new ArrayList<>();
+    // given: Una lista vacia de Plan
+    List<Plan> planes = new ArrayList<>();
 
     Integer page = 0;
     Integer pageSize = 10;
@@ -261,7 +243,7 @@ public class FuenteFinanciacionControllerTest {
     BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<FuenteFinanciacion> pageResponse = new PageImpl<>(fuenteFinanciaciones, pageable, 0);
+          Page<Plan> pageResponse = new PageImpl<>(planes, pageable, 0);
           return pageResponse;
         });
 
@@ -272,14 +254,15 @@ public class FuenteFinanciacionControllerTest {
         .andDo(MockMvcResultHandlers.print())
         // then: Devuelve un 204
         .andExpect(MockMvcResultMatchers.status().isNoContent());
+
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
-  public void findById_WithExistingId_ReturnsTipoAmbitoGeografico() throws Exception {
+  public void findById_WithExistingId_ReturnsPlan() throws Exception {
     // given: existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {
-      return generarMockFuenteFinanciacion(invocation.getArgument(0));
+      return generarMockPlan(invocation.getArgument(0));
     });
 
     // when: find by existing id
@@ -289,8 +272,11 @@ public class FuenteFinanciacionControllerTest {
         .andDo(MockMvcResultHandlers.print())
         // then: response is OK
         .andExpect(MockMvcResultMatchers.status().isOk())
-        // and the requested FuenteFinanciacion is resturned as JSON object
-        .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L));
+        // and the requested Plan is resturned as JSON object
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("nombre-1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value("descripcion-1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true));
   }
 
   @Test
@@ -298,7 +284,7 @@ public class FuenteFinanciacionControllerTest {
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
-      throw new FuenteFinanciacionNotFoundException(1L);
+      throw new PlanNotFoundException(1L);
     });
 
     // when: find by non existing id
@@ -311,39 +297,30 @@ public class FuenteFinanciacionControllerTest {
   }
 
   /**
-   * Función que devuelve un objeto FuenteFinanciacion
+   * Función que devuelve un objeto Plan
    * 
-   * @param id id del FuenteFinanciacion
-   * @return el objeto FuenteFinanciacion
+   * @param id id del Plan
+   * @return el objeto Plan
    */
-  private FuenteFinanciacion generarMockFuenteFinanciacion(Long id) {
-    return generarMockFuenteFinanciacion(id, "nombre-" + id);
+  private Plan generarMockPlan(Long id) {
+    return generarMockPlan(id, "nombre-" + id);
   }
 
   /**
-   * Función que devuelve un objeto FuenteFinanciacion
+   * Función que devuelve un objeto Plan
    * 
-   * @param id     id del FuenteFinanciacion
-   * @param nombre nombre del FuenteFinanciacion
-   * @return el objeto FuenteFinanciacion
+   * @param id     id del Plan
+   * @param nombre nombre del Plan
+   * @return el objeto Plan
    */
-  private FuenteFinanciacion generarMockFuenteFinanciacion(Long id, String nombre) {
-    TipoAmbitoGeografico tipoAmbitoGeografico = new TipoAmbitoGeografico();
-    tipoAmbitoGeografico.setId(1L);
+  private Plan generarMockPlan(Long id, String nombre) {
+    Plan plan = new Plan();
+    plan.setId(id);
+    plan.setNombre(nombre);
+    plan.setDescripcion("descripcion-" + id);
+    plan.setActivo(true);
 
-    TipoOrigenFuenteFinanciacion tipoOrigenFuenteFinanciacion = new TipoOrigenFuenteFinanciacion();
-    tipoOrigenFuenteFinanciacion.setId(1L);
-
-    FuenteFinanciacion fuenteFinanciacion = new FuenteFinanciacion();
-    fuenteFinanciacion.setId(id);
-    fuenteFinanciacion.setNombre(nombre);
-    fuenteFinanciacion.setDescripcion("descripcion-" + id);
-    fuenteFinanciacion.setFondoEstructural(true);
-    fuenteFinanciacion.setTipoAmbitoGeografico(tipoAmbitoGeografico);
-    fuenteFinanciacion.setTipoOrigenFuenteFinanciacion(tipoOrigenFuenteFinanciacion);
-    fuenteFinanciacion.setActivo(true);
-
-    return fuenteFinanciacion;
+    return plan;
   }
 
 }
