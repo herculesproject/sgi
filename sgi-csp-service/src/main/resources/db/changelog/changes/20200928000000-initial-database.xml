@@ -55,6 +55,10 @@
     <createSequence sequenceName="tipo_hito_seq" />
   </changeSet>
 
+  <changeSet author="master" id="202001007000000-tipo_origen_fuente_financiacion_seq">
+    <createSequence sequenceName="tipo_origen_fuente_financiacion_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -266,6 +270,20 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20201007000000-tipo_origen_fuente_financiacion">
+    <createTable tableName="tipo_origen_fuente_financiacion">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_origen_fuente_financiacion_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_origen_fuente_financiacion_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
   <!-- ########################################################## -->
@@ -362,6 +380,9 @@
     <addUniqueConstraint columnNames="nombre" constraintName="tipo_hito_uk" tableName="tipo_hito" />
   </changeSet>
 
+  <changeSet author="master" id="20201007000000-tipo_origen_fuente_financiacion_uk">
+    <addUniqueConstraint columnNames="nombre" constraintName="tipo_origen_fuente_financiacion_uk" tableName="tipo_origen_fuente_financiacion" />
+  </changeSet>
 
   <!-- ########################################################## -->
   <!-- INDEX -->
