@@ -36,6 +36,10 @@
     <createSequence sequenceName="tipo_documento_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-tipo_ambito_geografico_seq">
+    <createSequence sequenceName="tipo_ambito_geografico_seq" />
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-tipo_enlace_seq">
     <createSequence sequenceName="tipo_enlace_seq" />
   </changeSet>
@@ -77,6 +81,20 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-tipo_ambito_geografico">
+    <createTable tableName="tipo_ambito_geografico">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_ambito_geografico_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_ambito_geografico_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-tipo_documento">
     <createTable tableName="tipo_documento">
       <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_documento_seq">
@@ -91,6 +109,7 @@
       </column>
     </createTable>
   </changeSet>
+
   <changeSet author="master" id="20200928000000-tipo_enlace">
     <createTable tableName="tipo_enlace">
       <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_enlace_seq">
@@ -105,6 +124,7 @@
       </column>
     </createTable>
   </changeSet>
+
   <changeSet author="master" id="20200928000000-tipo_fase">
     <createTable tableName="tipo_fase">
       <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_fase_seq">
@@ -134,6 +154,7 @@
       </column>
     </createTable>
   </changeSet>
+
   <changeSet author="master" id="20200928000000-tipo_hito">
     <createTable tableName="tipo_hito">
       <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_hito_seq">
@@ -358,6 +379,10 @@
 
   <changeSet author="master" id="20200928000000-modelo_unidad_uk">
     <addUniqueConstraint columnNames="modelo_ejecucion_id, unidad_gestion_ref" constraintName="modelo_unidad_uk" tableName="modelo_unidad" />
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-tipo_ambito_geografico_uk">
+    <addUniqueConstraint columnNames="nombre" constraintName="tipo_ambito_geografico_uk" tableName="tipo_ambito_geografico" />
   </changeSet>
 
   <changeSet author="master" id="20200928000000-tipo_documento_uk">

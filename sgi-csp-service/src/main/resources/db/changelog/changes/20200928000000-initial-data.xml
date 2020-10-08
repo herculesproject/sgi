@@ -55,6 +55,21 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-tipo_ambito_geografico">
+    <insert tableName="tipo_ambito_geografico">
+      <column name="nombre" value="nombre-001" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_ambito_geografico">
+      <column name="nombre" value="nombre-002" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_ambito_geografico">
+      <column name="nombre" value="nombre-003" />
+      <column name="activo" value="false" />
+    </insert>
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-tipo_documento">
     <insert tableName="tipo_documento">
       <column name="nombre" value="nombre-001" />
