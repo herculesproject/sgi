@@ -7,7 +7,8 @@
       <mat-form-field>
         <mat-label>{{'eti.acta.crear.datosGenerales.convocatoriaReunion.titulo' | translate}}</mat-label>
         <input type="text" placeholder="{{'eti.acta.crear.datosGenerales.convocatoriaReunion.titulo' | translate}}"
-          arial-label="Number" matInput formControlName="convocatoriaReunion" [matAutocomplete]="auto" required>
+          arial-label="Number" matInput formControlName="convocatoriaReunion" [matAutocomplete]="auto" required
+          [readonly]="readonly">
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="getConvocatoria"
           (optionSelected)="selectConvocatoriaReunion($event.option.value)">
           <mat-option *ngFor="let convocatoria of convocatoriasReunionFitlered | async" [value]="convocatoria">
@@ -24,7 +25,8 @@
       <mat-form-field>
         <mat-label>{{'eti.acta.crear.datosGenerales.horaInicio.titulo' | translate}}</mat-label>
         <input matInput formControlName="horaInicio" id="horaInicio" type="number"
-          placeholder="{{'eti.acta.crear.datosGenerales.horaInicio.titulo' | translate}}" required>
+          placeholder="{{'eti.acta.crear.datosGenerales.horaInicio.titulo' | translate}}" required
+          [readonly]="readonly">
         <mat-error
           *ngIf="formGroup.controls.horaInicio.errors?.vacio || formGroup.controls.horaInicio.errors?.required">
           {{'eti.acta.crear.datosGenerales.horaInicio.error.vacio' | translate}}
@@ -42,7 +44,8 @@
       <mat-form-field>
         <mat-label>{{'eti.acta.crear.datosGenerales.minutoInicio.titulo' | translate}}</mat-label>
         <input matInput formControlName="minutoInicio" id="minutoInicio" type="number"
-          placeholder="{{'eti.acta.crear.datosGenerales.minutoInicio.titulo' | translate}}" required>
+          placeholder="{{'eti.acta.crear.datosGenerales.minutoInicio.titulo' | translate}}" required
+          [readonly]="readonly">
         <mat-error
           *ngIf="formGroup.controls.minutoInicio.errors?.vacio || formGroup.controls.minutoInicio.errors?.required">
           {{'eti.acta.crear.datosGenerales.minutoInicio.error.vacio' | translate}}
@@ -60,7 +63,7 @@
       <mat-form-field>
         <mat-label>{{'eti.acta.crear.datosGenerales.horaFin.titulo' | translate}}</mat-label>
         <input matInput formControlName="horaFin" id="horaFin" type="number"
-          placeholder="{{'eti.acta.crear.datosGenerales.horaFin.titulo' | translate}}" required>
+          placeholder="{{'eti.acta.crear.datosGenerales.horaFin.titulo' | translate}}" required [readonly]="readonly">
         <mat-error *ngIf="formGroup.controls.horaFin.errors?.vacio || formGroup.controls.horaFin.errors?.required">
           {{'eti.acta.crear.datosGenerales.horaFin.error.vacio' | translate}}
         </mat-error>
@@ -77,7 +80,7 @@
       <mat-form-field>
         <mat-label>{{'eti.acta.crear.datosGenerales.minutoFin.titulo' | translate}}</mat-label>
         <input matInput formControlName="minutoFin" id="minutoFin" type="number"
-          placeholder="{{'eti.acta.crear.datosGenerales.minutoFin.titulo' | translate}}" required>
+          placeholder="{{'eti.acta.crear.datosGenerales.minutoFin.titulo' | translate}}" required [readonly]="readonly">
         <mat-error *ngIf="formGroup.controls.minutoFin.errors?.vacio || formGroup.controls.minutoFin.errors?.required">
           {{'eti.acta.crear.datosGenerales.minutoFin.error.vacio' | translate}}
         </mat-error>
@@ -94,7 +97,8 @@
       <mat-form-field>
         <mat-label>{{'eti.acta.crear.datosGenerales.resumen.titulo' | translate}}</mat-label>
         <textarea matInput formControlName="resumen" id="resumen"
-          placeholder="{{'eti.acta.crear.datosGenerales.resumen.titulo' | translate}}" required></textarea>
+          placeholder="{{'eti.acta.crear.datosGenerales.resumen.titulo' | translate}}" required
+          [readonly]="readonly"></textarea>
         <mat-error *ngIf="formGroup.controls.minutoFin.errors?.required">
           {{'eti.acta.crear.datosGenerales.resumen.error.required' | translate}}
         </mat-error>

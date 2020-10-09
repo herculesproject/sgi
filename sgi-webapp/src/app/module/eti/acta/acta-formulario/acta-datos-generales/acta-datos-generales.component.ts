@@ -38,6 +38,8 @@ export class ActaDatosGeneralesComponent extends FormFragmentComponent<IActa> im
 
   suscripciones: Subscription[] = [];
 
+  readonly: boolean;
+
   constructor(
     protected readonly logger: NGXLogger,
     private readonly convocatoriaReunionService: ConvocatoriaReunionService,
@@ -67,6 +69,9 @@ export class ActaDatosGeneralesComponent extends FormFragmentComponent<IActa> im
   ngOnInit() {
     super.ngOnInit();
     this.logger.debug(ActaDatosGeneralesComponent.name, 'ngOnInit()', 'start');
+
+    this.readonly = this.actionService.readonly;
+
     this.suscripciones.push(
       this.convocatoriaReunionService.findConvocatoriasSinActa().subscribe(
         (res: SgiRestListResult<IConvocatoriaReunion>) => {

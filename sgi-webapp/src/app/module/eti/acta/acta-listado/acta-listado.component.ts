@@ -25,6 +25,7 @@ import { ActaService } from '@core/services/eti/acta.service';
 import { ROUTE_NAMES } from '@core/route.names';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
+import { IActa } from '@core/models/eti/acta';
 
 const MSG_BUTTON_NEW = marker('footer.eti.acta.crear');
 const MSG_ERROR = marker('eti.acta.listado.error');
@@ -406,6 +407,24 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
       'finishActa()',
       'end');
 
+  }
+
+  /**
+   * Comprueba si una acta se encuentra en estado finalizada.
+   * @param acta acta a comprobar.
+   * @return indicador de si el acta se encuentra finalizada.
+   */
+  isFinalizada(acta: IActaEvaluaciones): boolean {
+    return acta.estadoActa.id === 2;
+  }
+
+  /**
+   * Comprueba si una acta puede ser finalizado.
+   * @param acta acta a comprobar.
+   * @return indicador de si se puede finalizar el acta.
+   */
+  hasFinalizarActa(acta: IActaEvaluaciones): boolean {
+    return acta.estadoActa.id === 1 && acta.numEvaluacionesNoEvaluadas === 0;
   }
 
 

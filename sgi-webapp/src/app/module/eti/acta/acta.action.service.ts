@@ -23,6 +23,8 @@ export class ActaActionService extends ActionService {
     MEMORIAS: 'memorias'
   };
 
+  public readonly = false;
+
   private acta: IActa;
   private datosGenerales: ActaDatosGeneralesFragment;
   private asistentes: ActaAsistentesFragment;
@@ -41,11 +43,14 @@ export class ActaActionService extends ActionService {
     if (route.snapshot.data.acta) {
       this.acta = route.snapshot.data.acta;
       this.enableEdit();
+      this.readonly = this.acta.estadoActual.id === 2 ? true : false;
     }
     this.datosGenerales = new ActaDatosGeneralesFragment(fb, this.acta?.id, service);
     this.memorias = new ActaMemoriasFragment(this.acta?.convocatoriaReunion?.id, convocatoriaReunionService);
     this.asistentes = new ActaAsistentesFragment(
       this.acta?.convocatoriaReunion?.id, convocatoriaReunionService, personaFisicaService, asistenteService);
+
+
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.MEMORIAS, this.memorias);

@@ -28,18 +28,28 @@ export class ActaAsistentesListadoComponent extends FragmentComponent implements
 
   asistentes$: BehaviorSubject<StatusWrapper<IAsistente>[]>;
 
+  readonly: boolean;
+
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly convocatoriaReunionService: ConvocatoriaReunionService,
     protected readonly personaFisicaService: PersonaFisicaService,
     protected matDialog: MatDialog,
-    actionService: ActaActionService
+    private actionService: ActaActionService
   ) {
     super(actionService.FRAGMENT.ASISTENTES, actionService);
     this.asistentes$ = (this.fragment as ActaAsistentesFragment).asistentes$;
 
     this.displayedColumns = ['evaluador.identificadorNumero', 'evaluador.nombre', 'asistencia', 'motivo', 'acciones'];
 
+  }
+
+  ngOnInit() {
+    this.logger.debug(ActaAsistentesListadoComponent.name, 'ngOnInit()', 'start');
+    super.ngOnInit();
+    this.readonly = this.actionService.readonly;
+
+    this.logger.debug(ActaAsistentesListadoComponent.name, 'ngOnInit()', 'end');
   }
 
   /**
