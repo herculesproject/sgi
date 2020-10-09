@@ -427,4 +427,23 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20201009000000-concepto_gasto">
+    <insert tableName="concepto_gasto">
+      <column name="nombre" value="conceptoGasto1" />
+      <column name="descripcion" value="descripción conceptoGasto1" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="concepto_gasto">
+      <column name="nombre" value="conceptoGasto2" />
+      <column name="descripcion" value="descripción conceptoGasto2" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="concepto_gasto">
+      <column name="nombre" value="conceptoGasto3" />
+      <column name="descripcion" value="conceptoGasto3" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
+
 </databaseChangeLog>

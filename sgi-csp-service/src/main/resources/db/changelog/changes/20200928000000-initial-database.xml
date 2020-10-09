@@ -4,6 +4,10 @@
   <!-- ########################################################## -->
   <!-- SEQUENCE -->
   <!-- ########################################################## -->
+  <changeSet author="master" id="20201009000000-concepto_gasto_seq">
+    <createSequence sequenceName="concepto_gasto_seq" />
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-fuente_financiacion_seq">
     <createSequence sequenceName="fuente_financiacion_seq" />
   </changeSet>
@@ -391,6 +395,22 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-concepto_gasto">
+    <createTable tableName="concepto_gasto">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="concepto_gasto_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="concepto_gasto_seq" />
+      </column>
+      <column name="nombre" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="descripcion" type="VARCHAR(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
   <!-- ########################################################## -->
@@ -446,6 +466,10 @@
   <!-- ########################################################## -->
   <!-- UNIQUE CONSTRAINT -->
   <!-- ########################################################## -->
+  <changeSet author="master" id="20200928000000-concepto_gasto_uk">
+    <addUniqueConstraint columnNames="nombre" constraintName="concepto_gasto_uk" tableName="concepto_gasto" />
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-fuente_financiacion_uk">
     <addUniqueConstraint columnNames="nombre" constraintName="fuente_financiacion_uk" tableName="fuente_financiacion" />
   </changeSet>

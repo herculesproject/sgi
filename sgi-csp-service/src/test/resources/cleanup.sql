@@ -1,4 +1,5 @@
 -- vacia la bd
+DELETE FROM csp.concepto_gasto;
 DELETE FROM csp.fuente_financiacion;
 DELETE FROM csp.modelo_tipo_enlace;
 DELETE FROM csp.modelo_tipo_documento;
