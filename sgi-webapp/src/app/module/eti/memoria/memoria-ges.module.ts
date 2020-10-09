@@ -19,14 +19,7 @@ import { MemoriaDocumentacionSeguimientosModalComponent } from './modals/memoria
 
 @NgModule({
   declarations: [
-    MemoriaListadoGesComponent,
-    // MemoriaCrearComponent,
-    //MemoriaEditarComponent,
-    //MemoriaDatosGeneralesComponent,
-    //    MemoriaDocumentacionComponent,
-    //   MemoriaDocumentacionMemoriaModalComponent,
-    //  MemoriaDocumentacionSeguimientosModalComponent
-
+    MemoriaListadoGesComponent
   ],
   imports: [
     SharedModule,

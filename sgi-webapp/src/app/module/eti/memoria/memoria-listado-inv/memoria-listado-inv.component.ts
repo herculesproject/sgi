@@ -22,7 +22,6 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 
 import { ROUTE_NAMES } from '@core/route.names';
-
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
@@ -32,16 +31,17 @@ import { MatTableDataSource } from '@angular/material/table';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { MEMORIAS_ROUTE } from '../memoria-route-names';
 
+
 const MSG_BUTTON_SAVE = marker('footer.eti.peticionEvaluacion.crear');
 const TEXT_USER_TITLE = marker('eti.peticionEvaluacion.listado.buscador.solicitante');
 const TEXT_USER_BUTTON = marker('eti.peticionEvaluacion.listado.buscador.buscar.solicitante');
 
 @Component({
-  selector: 'sgi-memoria-listado-ges',
-  templateUrl: './memoria-listado-ges.component.html',
-  styleUrls: ['./memoria-listado-ges.component.scss']
+  selector: 'sgi-memoria-listado-inv',
+  templateUrl: './memoria-listado-inv.component.html',
+  styleUrls: ['./memoria-listado-inv.component.scss']
 })
-export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDestroy {
+export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDestroy {
   MEMORIAS_ROUTE = MEMORIAS_ROUTE;
   ROUTE_NAMES = ROUTE_NAMES;
 
@@ -91,9 +91,9 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
     private readonly dialogService: DialogService,
     private readonly sgiAuthService: SgiAuthService,
     private readonly memoriaService: MemoriaService,
-    private readonly personaFisicaService: PersonaFisicaService
+    private readonly personaFisicaService: PersonaFisicaService,
   ) {
-    this.displayedColumns = ['num_referencia', 'comite', 'estado', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
+    this.displayedColumns = ['numReferencia', 'comite', 'estadoActual', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
     this.elementosPagina = [5, 10, 25, 100];
     this.totalElementos = 0;
 
@@ -117,7 +117,7 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
   }
 
   ngOnInit(): void {
-    this.logger.debug(MemoriaListadoGesComponent.name, 'ngOnInit()', 'start');
+    this.logger.debug(MemoriaListadoInvComponent.name, 'ngOnInit()', 'start');
 
     this.buscadorFormGroup = new FormGroup({
       comite: new FormControl('', []),
@@ -128,11 +128,11 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
 
     this.loadComites();
     this.loadEstadosMemoria();
-    this.logger.debug(MemoriaListadoGesComponent.name, 'ngOnInit()', 'end');
+    this.logger.debug(MemoriaListadoInvComponent.name, 'ngOnInit()', 'end');
   }
 
   ngAfterViewInit(): void {
-    this.logger.debug(MemoriaListadoGesComponent.name, 'ngAfterViewInit()', 'start');
+    this.logger.debug(MemoriaListadoInvComponent.name, 'ngAfterViewInit()', 'start');
 
     // Merge events that trigger load table data
     merge(
@@ -151,15 +151,15 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
     // First load
     this.loadTable();
 
-    this.logger.debug(MemoriaListadoGesComponent.name, 'ngAfterViewInit()', 'end');
+    this.logger.debug(MemoriaListadoInvComponent.name, 'ngAfterViewInit()', 'end');
   }
 
   private async loadTable(reset?: boolean) {
-    this.logger.debug(MemoriaListadoGesComponent.name, 'loadTable()', 'start');
+    this.logger.debug(MemoriaListadoInvComponent.name, 'loadTable()', 'start');
     // Do the request with paginator/sort/filter values
 
     this.memorias$ = this.memoriaService
-      .findAll({
+      .findAllByPersonaRefPeticionEvaluacion({
         page: {
           index: reset ? 0 : this.paginator.pageIndex,
           size: this.paginator.pageSize
@@ -182,7 +182,7 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
   }
 
   private buildFilters(): SgiRestFilter[] {
-    this.logger.debug(MemoriaListadoGesComponent.name, 'buildFilters()', 'start');
+    this.logger.debug(MemoriaListadoInvComponent.name, 'buildFilters()', 'start');
     this.filter = [];
 
     const comite = FormGroupUtil.getValue(this.buscadorFormGroup, 'comite');
@@ -239,7 +239,7 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
       this.filter.push(filterPersona);
     }
 
-    this.logger.debug(MemoriaListadoGesComponent.name, 'buildFilters()', 'end');
+    this.logger.debug(MemoriaListadoInvComponent.name, 'buildFilters()', 'end');
 
     return this.filter;
   }
@@ -271,7 +271,7 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
    * Recupera un listado de los comités que hay en el sistema.
    */
   loadComites(): void {
-    this.logger.debug(MemoriaListadoGesComponent.name,
+    this.logger.debug(MemoriaListadoInvComponent.name,
       'getComites()',
       'start');
 
@@ -286,7 +286,7 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
           );
       });
 
-    this.logger.debug(MemoriaListadoGesComponent.name,
+    this.logger.debug(MemoriaListadoInvComponent.name,
       'getComites()',
       'end');
   }
@@ -295,7 +295,7 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
    * Recupera un listado de los estados memoria que hay en el sistema.
    */
   loadEstadosMemoria(): void {
-    this.logger.debug(MemoriaListadoGesComponent.name,
+    this.logger.debug(MemoriaListadoInvComponent.name,
       'getEstadosMemoria()',
       'start');
 
@@ -310,7 +310,7 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
           );
       });
 
-    this.logger.debug(MemoriaListadoGesComponent.name,
+    this.logger.debug(MemoriaListadoInvComponent.name,
       'getEstadosMemoria()',
       'end');
   }
@@ -376,7 +376,7 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
    */
   public onClearFilters() {
 
-    this.logger.debug(MemoriaListadoGesComponent.name,
+    this.logger.debug(MemoriaListadoInvComponent.name,
       'onClearFilters()',
       'start');
     this.filter = [];
@@ -386,19 +386,19 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
     this.loadComites();
     this.loadEstadosMemoria();
     this.datosSolicitante = '';
-    this.logger.debug(MemoriaListadoGesComponent.name,
+    this.logger.debug(MemoriaListadoInvComponent.name,
       'onClearFilters()',
       'end');
   }
 
 
   ngOnDestroy(): void {
-    this.logger.debug(MemoriaListadoGesComponent.name,
+    this.logger.debug(MemoriaListadoInvComponent.name,
       'ngOnDestroy()',
       'start');
     this.comitesSubscription?.unsubscribe();
 
-    this.logger.debug(MemoriaListadoGesComponent.name,
+    this.logger.debug(MemoriaListadoInvComponent.name,
       'ngOnDestroy()',
       'end');
 

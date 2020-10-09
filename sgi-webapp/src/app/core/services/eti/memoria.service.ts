@@ -229,4 +229,19 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
     );
   }
 
+
+  /**
+   * Devuelve todos las memorias de responsable y creador a partir de una persona ref
+   *
+   * @param options opciones de busqueda.
+   */
+  findAllByPersonaRefPeticionEvaluacion(options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IMemoriaPeticionEvaluacion>> {
+    this.logger.debug(MemoriaService.name, `findAllByPersonaRefPeticionEvaluacion()`, '-', 'START');
+    return this.find<IMemoriaPeticionEvaluacion, IMemoriaPeticionEvaluacion>(
+      `${this.endpointUrl}/persona/peticion-evaluacion`, options).pipe(
+        tap(() => this.logger.debug(MemoriaService.name, `findAllByPersonaRefPeticionEvaluacion()`, '-', 'END'))
+      );
+  }
+
 }

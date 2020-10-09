@@ -16,11 +16,12 @@ import { MemoriaDocumentacionSeguimientosModalComponent } from './modals/memoria
 import { MemoriaListadoGesComponent } from './memoria-listado-ges/memoria-listado-ges.component';
 import { MemoriaCrearComponent } from './memoria-crear/memoria-crear.component';
 import { MemoriaEvaluacionesComponent } from './memoria-formulario/memoria-evaluaciones/memoria-evaluaciones.component';
+import { MemoriaListadoInvComponent } from './memoria-listado-inv/memoria-listado-inv.component';
 
 
 @NgModule({
   declarations: [
-    // MemoriaListadoGesComponent,
+    MemoriaListadoInvComponent,
     MemoriaCrearComponent,
     MemoriaDatosGeneralesComponent,
     MemoriaEditarComponent,

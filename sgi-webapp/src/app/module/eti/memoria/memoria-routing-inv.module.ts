@@ -15,21 +15,22 @@ import { MemoriaCrearGuard } from './memoria-crear/memoria-crear.guard';
 import { MemoriaListadoGesComponent } from './memoria-listado-ges/memoria-listado-ges.component';
 import { MemoriaDocumentacionComponent } from './memoria-formulario/memoria-documentacion/memoria-documentacion.component';
 import { MemoriaEvaluacionesComponent } from './memoria-formulario/memoria-evaluaciones/memoria-evaluaciones.component';
+import { MemoriaListadoInvComponent } from './memoria-listado-inv/memoria-listado-inv.component';
 
 const MSG_LISTADO_TITLE = marker('eti.memoria.listado.titulo');
 const MSG_NEW_TITLE = marker('eti.memoria.crear.titulo');
 const MSG_EDIT_TITLE = marker('eti.memoria.editar.titulo');
 
 const routes: SgiRoutes = [
-  // {
-  //   path: '',
-  //   component: MemoriaListadoGesComponent,
-  //   canActivate: [SgiAuthGuard],
-  //   data: {
-  //     title: MSG_LISTADO_TITLE,
-  //     hasAuthorityForAnyUO: 'ETI-MEM-CEST'
-  //   }
-  // },
+  {
+    path: '',
+    component: MemoriaListadoInvComponent,
+    canActivate: [SgiAuthGuard],
+    data: {
+      title: MSG_LISTADO_TITLE,
+      hasAuthorityForAnyUO: 'ETI-PEV-VR-INV'
+    }
+  },
   {
     path: ROUTE_NAMES.NEW,
     component: MemoriaCrearComponent,
@@ -62,7 +63,7 @@ const routes: SgiRoutes = [
     },
     data: {
       title: MSG_EDIT_TITLE,
-      hasAnyAuthorityForAnyUO: ['ETI-PEV-C-INV', 'ETI-PEV-ER-INV', 'ETI-MEM-CEST'],
+      hasAuthorityForAnyUO: 'ETI-PEV-ER-INV',
       readonly: false
     },
     children: [

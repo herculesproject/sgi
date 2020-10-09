@@ -39,4 +39,7 @@ export interface IMemoria {
 
   /** Estado Memoria Actual */
   estadoActual: TipoEstadoMemoria;
+
+  /** Responsable de memoria */
+  isResponsable: boolean;
 }
