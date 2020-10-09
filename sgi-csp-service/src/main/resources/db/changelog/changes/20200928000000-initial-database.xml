@@ -63,6 +63,11 @@
     <createSequence sequenceName="tipo_fase_seq" />
   </changeSet>
 
+
+  <changeSet author="master" id="20201008000000-tipo_financiacion_seq">
+    <createSequence sequenceName="tipo_financiacion_seq" />
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-tipo_hito_seq">
     <createSequence sequenceName="tipo_hito_seq" />
   </changeSet>
@@ -166,6 +171,22 @@
       </column>
     </createTable>
   </changeSet>
+
+  <changeSet author="master" id="20201088000000-tipo_financiacion">
+    <createTable tableName="tipo_financiacion">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_financiacion_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_financiacion_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR2(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="descripcion" type="VARCHAR2(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
 
   <changeSet author="master" id="20200928000000-tipo_hito">
     <createTable tableName="tipo_hito">
@@ -479,6 +500,10 @@
 
   <changeSet author="master" id="20200928000000-tipo_finalidad_uk">
     <addUniqueConstraint columnNames="nombre" constraintName="tipo_finalidad_uk" tableName="tipo_finalidad" />
+  </changeSet>
+
+  <changeSet author="master" id="20201008000000-tipo_financiacion_uk">
+    <addUniqueConstraint columnNames="nombre" constraintName="tipo_financiacion_uk" tableName="tipo_financiacion" />
   </changeSet>
 
   <changeSet author="master" id="20200928000000-tipo_hito_uk">

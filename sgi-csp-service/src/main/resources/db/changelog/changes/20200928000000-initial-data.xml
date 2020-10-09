@@ -320,6 +320,24 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20201008000000-tipo_financiacion">
+    <insert tableName="tipo_financiacion">
+      <column name="nombre" value="nombreTipoFinanciacion1" />
+      <column name="descripcion" value="descripción tipoFinanciacion1" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_financiacion">
+      <column name="nombre" value="nombreTipoFinanciacion2" />
+      <column name="descripcion" value="descripción tipoFinanciacion2" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_financiacion">
+      <column name="nombre" value="nombreTipoFinanciacion3" />
+      <column name="descripcion" value="descripción tipoFinanciacion3" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-modelo_tipo_finalidad">
     <insert tableName="modelo_tipo_finalidad">
       <column name="tipo_finalidad_id" valueComputed="(select id from csp.tipo_enlace where nombre like '% AAA')" />

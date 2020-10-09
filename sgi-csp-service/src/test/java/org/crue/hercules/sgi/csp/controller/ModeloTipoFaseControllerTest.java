@@ -1,7 +1,7 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hazelcast.config.SecurityConfig;
+import org.crue.hercules.sgi.csp.config.SecurityConfig;
 
 import org.crue.hercules.sgi.csp.exceptions.ModeloTipoFaseNotFoundException;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;

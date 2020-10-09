@@ -13,6 +13,7 @@ DELETE FROM csp.tipo_documento;
 DELETE FROM csp.tipo_enlace;
 DELETE FROM csp.tipo_fase;
 DELETE FROM csp.tipo_finalidad;
+DELETE FROM csp.tipo_financiacion;
 DELETE FROM csp.tipo_hito;
 DELETE FROM csp.tipo_origen_fuente_financiacion;
 DELETE FROM csp.tipo_regimen_concurrencia;
