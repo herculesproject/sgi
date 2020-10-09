@@ -4,6 +4,7 @@ import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion_;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluacion_;
+import org.crue.hercules.sgi.eti.model.Memoria_;
 import org.springframework.data.jpa.domain.Specification;
 
 /**
@@ -57,6 +58,12 @@ public class EvaluacionSpecifications {
   public static Specification<Evaluacion> byEsRevMinima(boolean esRevMinima) {
     return (root, query, cb) -> {
       return cb.equal(root.get(Evaluacion_.esRevMinima), esRevMinima);
+    };
+  }
+
+  public static Specification<Evaluacion> memoriaId(Long idMemoria) {
+    return (root, query, cb) -> {
+      return cb.equal(root.get(Evaluacion_.memoria).get(Memoria_.id), idMemoria);
     };
   }
 

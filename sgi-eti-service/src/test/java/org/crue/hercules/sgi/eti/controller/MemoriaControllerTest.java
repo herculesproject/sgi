@@ -88,6 +88,7 @@ public class MemoriaControllerTest {
   private static final String MEMORIA_CONTROLLER_BASE_PATH = "/memorias";
   private static final String PATH_PARAMETER_BY_DOCUMENTACION = "/documentaciones";
   private static final String PATH_PARAMETER_PERSONA_PETICION_EVALUACION = "/persona/peticion-evaluacion";
+  private static final String PATH_PARAMETER_EVALUACIONES = "/evaluaciones";
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-MEMORIA-VER" })
@@ -886,6 +887,28 @@ public class MemoriaControllerTest {
             .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Get a page one hundred Memoria
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
+  public void getEvaluacionesMemoria_ReturnsList() throws Exception {
+    // given: Existen 100 evaluaciones
+    List<Evaluacion> evaluaciones = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      evaluaciones.add(generarMockEvaluacion(Long.valueOf(i), String.format("%03d", i)));
+    }
+    BDDMockito.given(evaluacionService.findAllByMemoriaId(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(evaluaciones));
+
+    // when: las recupero sin paginación
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_EVALUACIONES, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: obtengo un listado de 100 conflictos
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
   }

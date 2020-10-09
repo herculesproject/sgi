@@ -191,7 +191,7 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
   @Override
   public Page<DocumentacionMemoria> findByMemoriaId(Long id, Pageable pageable) {
     log.debug("findByMemoriaId(Long id, Pageable pageable) - start");
-    Assert.isTrue(id != null, "El id de la memoria no puede ser nulo para mostrar su documentacion");
+    Assert.isTrue(id != null, "El id de la memoria no puede ser nulo para mostrar su documentación");
 
     Page<DocumentacionMemoria> returnValue = documentacionMemoriaRepository.findByMemoriaId(id, pageable);
 
@@ -212,7 +212,7 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
   public Page<DocumentacionMemoria> findByMemoriaIdAndTipoEvaluacion(Long id, Long idTipoEvaluacion,
       Pageable pageable) {
     log.debug("findByMemoriaIdAndTipoEvaluacion(Long id, Long idTipoEvaluacion, Pageable pageable) - start");
-    Assert.isTrue(id != null, "El id de la memoria no puede ser nulo para mostrar su documentacion");
+    Assert.isTrue(id != null, "El id de la memoria no puede ser nulo para mostrar su documentación");
     Assert.isTrue(idTipoEvaluacion != null,
         "El id del tipo de evaluación no puede ser nulo para mostrar su documentacion");
 

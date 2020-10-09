@@ -619,6 +619,72 @@ public class EvaluacionServiceTest {
 
   }
 
+  @Test
+  public void findAllByMemoriaId_ReturnsFullEvaluacionList() {
+
+    // given: Datos existentes con memoriaId = 1
+    Memoria memoria = new Memoria(1L, "numRef-001", null, null, "Memoria", "user-001", null, null, LocalDate.now(),
+        Boolean.TRUE, null, 3, Boolean.TRUE);
+
+    Long memoriaId = 1L;
+    List<Evaluacion> response = new LinkedList<Evaluacion>();
+    response.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), 1L, 1L));
+    response.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3), 1L, 1L));
+
+    BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(memoria));
+    BDDMockito.given(evaluacionRepository.findAll(ArgumentMatchers.<Specification<Evaluacion>>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(response));
+
+    // when: Se buscan todos las datos
+    Page<Evaluacion> result = evaluacionService.findAllByMemoriaId(memoriaId, Pageable.unpaged());
+
+    // then: Se recuperan todos los datos
+    Assertions.assertThat(result.getContent()).isEqualTo(response);
+    Assertions.assertThat(result.getNumber()).isEqualTo(0);
+    Assertions.assertThat(result.getSize()).isEqualTo(response.size());
+    Assertions.assertThat(result.getTotalElements()).isEqualTo(response.size());
+  }
+
+  @Test
+  public void findAllByMemoriaId_ReturnEmptyPage() {
+
+    Memoria memoria = new Memoria(1L, "numRef-001", null, null, "Memoria", "user-001", null, null, LocalDate.now(),
+        Boolean.TRUE, null, 3, Boolean.TRUE);
+    // given: No hay datos con memoriaId = 1
+    Long memoriaId = 1L;
+
+    List<Evaluacion> response = new LinkedList<Evaluacion>();
+    Pageable pageable = PageRequest.of(1, 2);
+    Page<Evaluacion> pageResponse = new PageImpl<>(response, pageable, response.size());
+
+    BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(memoria));
+    BDDMockito.given(evaluacionRepository.findAll(ArgumentMatchers.<Specification<Evaluacion>>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(pageResponse);
+
+    // when: Se buscan los datos paginados
+    Page<Evaluacion> result = evaluacionService.findAllByMemoriaId(memoriaId, pageable);
+
+    // then: Se recupera lista de datos paginados vacía
+    Assertions.assertThat(result).isEmpty();
+  }
+
+  @Test
+  public void findAllByMemoriaId_IdNull() {
+    // given: Es memoriaId es null
+    Long memoriaId = null;
+    try {
+      // when: se quiere listar sus evaluaciones
+      evaluacionService.findAllByMemoriaId(memoriaId, Pageable.unpaged());
+      Assertions.fail("El id de la memoria no puede ser nulo para mostrar sus evaluaciones");
+      // then: se debe lanzar una excepción
+    } catch (IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage())
+          .isEqualTo("El id de la memoria no puede ser nulo para mostrar sus evaluaciones");
+    }
+  }
+
   /**
    * Función que devuelve un objeto Evaluacion
    * 
@@ -676,7 +742,7 @@ public class EvaluacionServiceTest {
     estadoRetrospectiva.setId(idEstadoRetrospectiva);
 
     Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
-        tipoMemoria, tipoEstadoMemoria, LocalDate.now(), Boolean.FALSE,
+        tipoMemoria, tipoEstadoMemoria, LocalDate.now(), Boolean.TRUE,
         new Retrospectiva(id, estadoRetrospectiva, LocalDate.now()), 3, Boolean.TRUE);
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);

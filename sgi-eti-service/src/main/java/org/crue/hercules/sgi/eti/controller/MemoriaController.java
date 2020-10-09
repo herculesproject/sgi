@@ -256,7 +256,7 @@ public class MemoriaController {
    */
   @GetMapping("/{id}/evaluaciones-anteriores/{idEvaluacion}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-EVC-EVALR-INV')")
-  ResponseEntity<Page<EvaluacionWithNumComentario>> getEvaluaciones(@PathVariable Long id,
+  ResponseEntity<Page<EvaluacionWithNumComentario>> getEvaluacionesAnteriores(@PathVariable Long id,
       @PathVariable Long idEvaluacion, @RequestPageable(sort = "s") Pageable pageable) {
     log.debug("getEvaluaciones(Long id, Pageable pageable) - start");
     Page<EvaluacionWithNumComentario> page = evaluacionService.findEvaluacionesAnterioresByMemoria(id, idEvaluacion,
@@ -512,6 +512,27 @@ public class MemoriaController {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     log.debug("findAllByPersonaRefPeticionEvaluacion(List<QueryCriteria> query,Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Obtener todas las entidades {@link Evaluacion} activas para una determinada
+   * {@link Memoria}.
+   *
+   * @param id       Id de {@link Memoria}.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+  @GetMapping("/{id}/evaluaciones")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-ER-INV')")
+  ResponseEntity<Page<Evaluacion>> getEvaluacionesMemoria(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("getEvaluacionesMemoria(Long id, Pageable pageable) - start");
+    Page<Evaluacion> page = evaluacionService.findAllByMemoriaId(id, pageable);
+    log.debug("getEvaluacionesMemoria(Long id, Pageable pageable) - end");
+    if (page.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

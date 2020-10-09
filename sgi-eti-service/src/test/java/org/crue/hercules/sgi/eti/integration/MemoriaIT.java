@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
+import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
@@ -52,6 +53,7 @@ public class MemoriaIT {
   private static final String PATH_PARAMETER_ASIGNABLES_ORDEXT = "/tipo-convocatoria-ord-ext";
   private static final String PATH_PARAMETER_ASIGNABLES_SEG = "/tipo-convocatoria-seg";
   private static final String MEMORIA_CONTROLLER_BASE_PATH = "/memorias";
+  private static final String PATH_PARAMETER_EVALUACIONES = "/evaluaciones";
 
   private HttpEntity<Memoria> buildRequest(HttpHeaders headers, Memoria entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -788,7 +790,34 @@ public class MemoriaIT {
     Assertions.assertThat(memorias.get(0).getTitulo()).isEqualTo("Memoria" + String.format("%03d", 3));
     Assertions.assertThat(memorias.get(1).getTitulo()).isEqualTo("Memoria" + String.format("%03d", 2));
     Assertions.assertThat(memorias.get(2).getTitulo()).isEqualTo("Memoria" + String.format("%03d", 1));
+  }
 
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void getEvaluacionesMemoria_ReturnsEvaluadorSubList() throws Exception {
+
+    // given: idMemoria
+    Long idMemoria = 2L;
+    // when: Busca las evaluaciones de la memoria 1L
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
+
+    final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(
+        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_EVALUACIONES, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
+        }, idMemoria);
+
+    // then: Respuesta OK, Evaluaciones retorna la información de la página
+    // correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Evaluacion> evaluaciones = response.getBody();
+    Assertions.assertThat(evaluaciones.size()).isEqualTo(3);
+
+    // Contiene las evaluaciones con Id '1', '2' y '3'
+    Assertions.assertThat(evaluaciones.get(0).getId()).isEqualTo(1L);
+    Assertions.assertThat(evaluaciones.get(1).getId()).isEqualTo(2L);
+    Assertions.assertThat(evaluaciones.get(2).getId()).isEqualTo(3L);
   }
 
   @Sql
@@ -819,6 +848,24 @@ public class MemoriaIT {
     Assertions.assertThat(memorias.size()).isEqualTo(1);
     Assertions.assertThat(memorias.get(0).getId()).isEqualTo(id);
     Assertions.assertThat(memorias.get(0).getTitulo()).startsWith("Memoria");
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void getEvaluacionesMemoria_ReturnsEmptyList() throws Exception {
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
+
+    final ResponseEntity<List<Evaluacion>> response = restTemplate.exchange(
+        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_EVALUACIONES, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Evaluacion>>() {
+        }, 2L);
+
+    // then: La memoria no tiene evaluaciones
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
   }
 
   /**

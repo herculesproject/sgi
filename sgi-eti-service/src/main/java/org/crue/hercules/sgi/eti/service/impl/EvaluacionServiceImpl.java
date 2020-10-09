@@ -506,4 +506,26 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     memoriaRepository.save(memoria);
 
   }
+
+  @Override
+  public Page<Evaluacion> findAllByMemoriaId(Long id, Pageable pageable) {
+    log.debug("findAllByMemoriaId(Long id,Pageable paging) - start");
+
+    Assert.notNull(id, "El id de la memoria no puede ser nulo para mostrar sus evaluaciones");
+
+    return memoriaRepository.findByIdAndActivoTrue(id).map(memoria -> {
+
+      Specification<Evaluacion> specMemoriaId = EvaluacionSpecifications.memoriaId(id);
+
+      Specification<Evaluacion> specEvaluacionActiva = EvaluacionSpecifications.activos();
+
+      Specification<Evaluacion> specs = Specification.where(specMemoriaId).and(specEvaluacionActiva);
+
+      Page<Evaluacion> returnValue = evaluacionRepository.findAll(specs, pageable);
+
+      log.debug("findAllByMemoriaId(Long id,Pageable paging) - end");
+      return returnValue;
+    }).orElseThrow(() -> new MemoriaNotFoundException(id));
+
+  }
 }

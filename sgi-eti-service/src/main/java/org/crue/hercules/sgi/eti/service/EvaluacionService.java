@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
+import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
-import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -158,5 +158,15 @@ public interface EvaluacionService {
    * @param idEvaluacion          id de la {@Evaluacion}
    */
   void deleteMemoria(Long idConvocatoriaReunion, Long idEvaluacion);
+
+  /**
+   * Obtener todas las entidades paginadas {@link Evaluacion} de una
+   * {@link Memoria}
+   * 
+   * @param id       Id de la {@link Memoria}
+   * @param pageable pageable
+   * @return la lista de entidades {@link Evaluacion} paginadas.
+   */
+  Page<Evaluacion> findAllByMemoriaId(Long id, Pageable pageable);
 
 }
