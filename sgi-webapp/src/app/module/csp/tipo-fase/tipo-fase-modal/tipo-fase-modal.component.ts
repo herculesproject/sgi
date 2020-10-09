@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { ITipoFase } from '@core/models/csp/tipo-fase';
+import { ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -73,10 +73,10 @@ export class TipoFaseModalComponent implements OnInit {
    */
   private loadDatosForm(): void {
     this.logger.debug(TipoFaseModalComponent.name, `${this.loadDatosForm.name}()`, 'start');
-    this.tipoFase.nombre = FormGroupUtil.getValue(this.formGroup, 'nombre');
-    this.tipoFase.descripcion = FormGroupUtil.getValue(this.formGroup, 'descripcion');
+    this.tipoFase.nombre = this.formGroup.get('nombre').value;
+    this.tipoFase.descripcion = this.formGroup.get('descripcion').value;
     if (this.tipoFase?.id) {
-      this.tipoFase.activo = FormGroupUtil.getValue(this.formGroup, 'activo');
+      this.tipoFase.activo = this.formGroup.get('activo').value;
     }
     this.logger.debug(TipoFaseModalComponent.name, `${this.loadDatosForm.name}()`, 'end');
   }

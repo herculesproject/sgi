@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ITipoHito } from '@core/models/csp/tipo-hito';
+import { ITipoHito } from '@core/models/csp/tipos-configuracion';
 import { environment } from '@env';
 import { SgiRestService } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';

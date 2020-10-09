@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { ITipoEnlace } from '@core/models/csp/tipo-enlace';
+import { ITipoEnlace } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -72,10 +72,10 @@ export class TipoEnlaceModalComponent implements OnInit {
    */
   private loadDatosForm(): void {
     this.logger.debug(TipoEnlaceModalComponent.name, `${this.loadDatosForm.name}()`, 'start');
-    this.tipoEnlace.nombre = FormGroupUtil.getValue(this.formGroup, 'nombre');
-    this.tipoEnlace.descripcion = FormGroupUtil.getValue(this.formGroup, 'descripcion');
+    this.tipoEnlace.nombre = this.formGroup.get('nombre').value;
+    this.tipoEnlace.descripcion = this.formGroup.get('descripcion').value;
     if (this.tipoEnlace?.id) {
-      this.tipoEnlace.activo = FormGroupUtil.getValue(this.formGroup, 'activo');
+      this.tipoEnlace.activo = this.formGroup.get('activo').value;
     }
     this.logger.debug(TipoEnlaceModalComponent.name, `${this.loadDatosForm.name}()`, 'end');
   }

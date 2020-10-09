@@ -1,5 +1,4 @@
-import { ITipoDocumento } from '../eti/tipo-documento';
-import { ITipoHito } from './tipo-hito';
+import { ITipoHito } from './tipos-configuracion';
 
 export interface IHito {
   /** Id */

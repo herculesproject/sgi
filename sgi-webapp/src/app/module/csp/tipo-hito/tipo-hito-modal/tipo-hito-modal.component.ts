@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { ITipoHito } from '@core/models/csp/tipo-hito';
+import { ITipoHito } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -51,10 +51,10 @@ export class TipoHitoModalComponent implements OnInit {
     this.logger.debug(TipoHitoModalComponent.name, 'ngOnInit()', 'end');
   }
 
-  closeModal(entidadFinanciadora?: ITipoHito): void {
-    this.logger.debug(TipoHitoModalComponent.name, `${this.closeModal.name}()`, 'start');
-    this.matDialogRef.close(entidadFinanciadora);
-    this.logger.debug(TipoHitoModalComponent.name, `${this.closeModal.name}()`, 'end');
+  closeModal(tipoHito?: ITipoHito): void {
+    this.logger.debug(TipoHitoModalComponent.name, `${this.closeModal.name}(tipoHito: ${tipoHito})`, 'start');
+    this.matDialogRef.close(tipoHito);
+    this.logger.debug(TipoHitoModalComponent.name, `${this.closeModal.name}(tipoHito: ${tipoHito})`, 'end');
   }
 
   saveOrUpdate(): void {
@@ -73,10 +73,10 @@ export class TipoHitoModalComponent implements OnInit {
    */
   private loadDatosForm(): void {
     this.logger.debug(TipoHitoModalComponent.name, `${this.loadDatosForm.name}()`, 'start');
-    this.tipoHito.nombre = FormGroupUtil.getValue(this.formGroup, 'nombre');
-    this.tipoHito.descripcion = FormGroupUtil.getValue(this.formGroup, 'descripcion');
+    this.tipoHito.nombre = this.formGroup.get('nombre').value;
+    this.tipoHito.descripcion = this.formGroup.get('descripcion').value;
     if (this.tipoHito?.id) {
-      this.tipoHito.activo = FormGroupUtil.getValue(this.formGroup, 'activo');
+      this.tipoHito.activo = this.formGroup.get('activo').value;
     }
     this.logger.debug(TipoHitoModalComponent.name, `${this.loadDatosForm.name}()`, 'end');
   }

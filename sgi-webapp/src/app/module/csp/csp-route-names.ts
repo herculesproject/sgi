@@ -3,5 +3,6 @@ export const CSP_ROUTE_NAMES = {
   TIPO_FINALIDAD: 'tipo-finalidades',
   TIPO_ENLACE: 'tipo-enlaces',
   TIPO_HITO: 'tipo-hitos',
-  TIPO_FASE: 'tipo-fases'
+  TIPO_FASE: 'tipo-fases',
+  TIPO_DOCUMENTO: 'tipo-documentos',
 };

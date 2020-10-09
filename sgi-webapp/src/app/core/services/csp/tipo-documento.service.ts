@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
+import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
 import { environment } from '@env';
 import { SgiRestService } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
@@ -8,14 +8,14 @@ import { NGXLogger } from 'ngx-logger';
 @Injectable({
   providedIn: 'root'
 })
-export class TipoFinalidadService extends SgiRestService<number, ITipoFinalidad> {
-  private static readonly MAPPING = '/tipofinalidades';
+export class TipoDocumentoService extends SgiRestService<number, ITipoDocumento> {
+  private static readonly MAPPING = '/tipodocumentos';
 
   constructor(logger: NGXLogger, protected http: HttpClient) {
     super(
-      TipoFinalidadService.name,
+      TipoDocumentoService.name,
       logger,
-      `${environment.serviceServers.csp}${TipoFinalidadService.MAPPING}`,
+      `${environment.serviceServers.csp}${TipoDocumentoService.MAPPING}`,
       http
     );
   }

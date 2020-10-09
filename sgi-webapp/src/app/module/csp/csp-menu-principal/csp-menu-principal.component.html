@@ -38,14 +38,16 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
       <div class="opciones-accordion" *ngIf="opened">
+        <a mat-list-item [routerLink]="[CSP_ROUTE_NAMES.TIPO_FASE]"
+          [routerLinkActive]="['is-active']">{{'menu.principal.csp.tipo.fase' | translate}}</a>
         <a mat-list-item [routerLink]="[CSP_ROUTE_NAMES.TIPO_FINALIDAD]"
           [routerLinkActive]="['is-active']">{{'menu.principal.csp.tipo.finalidad' | translate}}</a>
+        <a mat-list-item [routerLink]="[CSP_ROUTE_NAMES.TIPO_DOCUMENTO]"
+          [routerLinkActive]="['is-active']">{{'menu.principal.csp.tipo.documento' | translate}}</a>
         <a mat-list-item [routerLink]="[CSP_ROUTE_NAMES.TIPO_ENLACE]"
           [routerLinkActive]="['is-active']">{{'menu.principal.csp.tipos.enlace' | translate}}</a>
         <a mat-list-item [routerLink]="[CSP_ROUTE_NAMES.TIPO_HITO]"
           [routerLinkActive]="['is-active']">{{'menu.principal.csp.tipo.hito' | translate}}</a>
-        <a mat-list-item [routerLink]="[CSP_ROUTE_NAMES.TIPO_FASE]"
-          [routerLinkActive]="['is-active']">{{'menu.principal.csp.tipo.fase' | translate}}</a>
       </div>
     </mat-expansion-panel>
 

@@ -12,13 +12,13 @@ import { FormGroupUtil } from '@core/utils/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { Observable, Subscription } from 'rxjs';
-import { ITipoHito } from '@core/models/csp/tipo-hito';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { SgiRestListResult } from '@sgi/framework/http/types';
 import { startWith, map } from 'rxjs/operators';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { ITipoHito } from '@core/models/csp/tipos-configuracion';
 
 const MSG_ERROR_INIT = marker('csp.convocatoria.hitos.error.cargar');
 

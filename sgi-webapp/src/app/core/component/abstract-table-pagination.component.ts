@@ -23,8 +23,8 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
   suscripciones: Subscription[];
   formGroup: FormGroup;
 
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   protected constructor(
     protected readonly logger: NGXLogger,

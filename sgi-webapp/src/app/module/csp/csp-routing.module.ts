@@ -12,6 +12,8 @@ const MSG_ROOT_TITLE = marker('csp.root.title');
 const MSG_CONVOCATORIA_TITLE = marker('menu.principal.csp.convocatoria');
 const MSG_TIPO_ENLACE_TITLE = marker('menu.principal.csp.tipo.enlace');
 const MSG_TIPO_HITO_TITLE = marker('menu.principal.csp.tipo.hito');
+const MSG_TIPO_FINALIDAD_TITLE = marker('menu.principal.csp.tipo.finalidad');
+const MSG_TIPO_DOCUMENTO_TITLE = marker('menu.principal.csp.tipo.documento');
 
 const routes: SgiRoutes = [
   {
@@ -41,6 +43,17 @@ const routes: SgiRoutes = [
         }
       },
       {
+        path: CSP_ROUTE_NAMES.TIPO_DOCUMENTO,
+        loadChildren: () =>
+          import('./tipo-documento/tipo-documento.module').then(
+            (m) => m.TipoDocumentoModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_TIPO_DOCUMENTO_TITLE,
+        }
+      },
+      {
         path: CSP_ROUTE_NAMES.TIPO_FINALIDAD,
         loadChildren: () =>
           import('./tipo-finalidad/tipo-finalidad.module').then(
@@ -48,7 +61,7 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_CONVOCATORIA_TITLE,
+          title: MSG_TIPO_FINALIDAD_TITLE,
         }
       },
       {

@@ -6,9 +6,9 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@env';
 import { of, Observable } from 'rxjs';
 import { IFinalidad } from '@core/models/csp/finalidad';
-import { ITipoHito } from '@core/models/csp/tipo-hito';
 import { ITipoPeriodoJustificacion } from '@core/models/csp/tipo-periodo-justificacion';
 import { ITipoPlazosFases } from '@core/models/csp/tipo-plazos-fases';
+import { ITipoHito } from '@core/models/csp/tipos-configuracion';
 
 
 

@@ -3,7 +3,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
-import { ITipoFinalidad } from '@core/models/csp/tipo-finalidad';
+import { ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
@@ -109,7 +109,7 @@ export class TipoFinalidadListadoComponent extends AbstractTablePaginationCompon
    * @param tipoFinalidad Tipo de finalidad
    */
   openModal(tipoFinalidad?: ITipoFinalidad): void {
-    this.logger.debug(TipoFinalidadListadoComponent.name, `${this.openModal.name}(tipoFinalidad?: ITipoFinalidad)`, 'start');
+    this.logger.debug(TipoFinalidadListadoComponent.name, `${this.openModal.name}(tipoFinalidad: ${tipoFinalidad})`, 'start');
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
@@ -125,11 +125,13 @@ export class TipoFinalidadListadoComponent extends AbstractTablePaginationCompon
               () => {
                 this.snackBarService.showSuccess(MSG_UPDATE);
                 this.loadTable();
-                this.logger.debug(TipoFinalidadListadoComponent.name, `${this.openModal.name}(tipoFinalidad?: ITipoFinalidad)`, 'end');
+                this.logger.debug(TipoFinalidadListadoComponent.name,
+                  `${this.openModal.name}(tipoFinalidad: ${tipoFinalidad})`, 'end');
               },
               () => {
                 this.snackBarService.showError(MSG_ERROR_UPDATE);
-                this.logger.error(TipoFinalidadListadoComponent.name, `${this.openModal.name}(tipoFinalidad?: ITipoFinalidad)`, 'error');
+                this.logger.error(TipoFinalidadListadoComponent.name,
+                  `${this.openModal.name}(tipoFinalidad: ${tipoFinalidad})`, 'error');
               }
             );
           } else {
@@ -137,11 +139,13 @@ export class TipoFinalidadListadoComponent extends AbstractTablePaginationCompon
               () => {
                 this.snackBarService.showSuccess(MSG_SAVE);
                 this.loadTable();
-                this.logger.debug(TipoFinalidadListadoComponent.name, `${this.openModal.name}(tipoFinalidad?: ITipoFinalidad)`, 'end');
+                this.logger.debug(TipoFinalidadListadoComponent.name,
+                  `${this.openModal.name}(tipoFinalidad: ${tipoFinalidad})`, 'end');
               },
               () => {
                 this.snackBarService.showError(MSG_ERROR_SAVE);
-                this.logger.error(TipoFinalidadListadoComponent.name, `${this.openModal.name}(tipoFinalidad?: ITipoFinalidad)`, 'error');
+                this.logger.error(TipoFinalidadListadoComponent.name,
+                  `${this.openModal.name}(tipoFinalidad: ${tipoFinalidad})`, 'error');
               }
             );
           }
@@ -152,7 +156,8 @@ export class TipoFinalidadListadoComponent extends AbstractTablePaginationCompon
   }
 
   disableTipoFinalidad(tipoFinalidad: ITipoFinalidad): void {
-    this.logger.debug(TipoFinalidadListadoComponent.name, `${this.disableTipoFinalidad.name}()`, 'start');
+    this.logger.debug(TipoFinalidadListadoComponent.name,
+      `${this.disableTipoFinalidad.name}(tipoFinalidad: ${tipoFinalidad})`, 'start');
     const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE).subscribe(
       (accept) => {
         if (accept) {
@@ -160,11 +165,13 @@ export class TipoFinalidadListadoComponent extends AbstractTablePaginationCompon
             () => {
               this.snackBarService.showSuccess(MSG_SUCCESS_DEACTIVATE);
               this.loadTable();
-              this.logger.debug(TipoFinalidadListadoComponent.name, `${this.disableTipoFinalidad.name}()`, 'end');
+              this.logger.debug(TipoFinalidadListadoComponent.name,
+                `${this.disableTipoFinalidad.name}(tipoFinalidad: ${tipoFinalidad})`, 'end');
             },
             () => {
               this.snackBarService.showError(MSG_ERROR_DEACTIVATE);
-              this.logger.error(TipoFinalidadListadoComponent.name, `${this.disableTipoFinalidad.name}()`, 'error');
+              this.logger.error(TipoFinalidadListadoComponent.name,
+                `${this.disableTipoFinalidad.name}(tipoFinalidad: ${tipoFinalidad})`, 'error');
             }
           );
           this.suscripciones.push(deleteSubcription);
