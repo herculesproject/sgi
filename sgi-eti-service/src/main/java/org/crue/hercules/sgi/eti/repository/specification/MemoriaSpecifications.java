@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva_;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Memoria_;
+import org.crue.hercules.sgi.eti.model.PeticionEvaluacion_;
 import org.crue.hercules.sgi.eti.model.Retrospectiva_;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria_;
 import org.springframework.data.jpa.domain.Specification;
@@ -47,6 +48,12 @@ public class MemoriaSpecifications {
   public static Specification<Memoria> byPersonaRef(String personaRef) {
     return (root, query, cb) -> {
       return cb.equal(root.get(Memoria_.personaRef), personaRef);
+    };
+  }
+
+  public static Specification<Memoria> byPersonaRefPeticionEvaluacion(String personaRef) {
+    return (root, query, cb) -> {
+      return cb.equal(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.personaRef), personaRef);
     };
   }
 }

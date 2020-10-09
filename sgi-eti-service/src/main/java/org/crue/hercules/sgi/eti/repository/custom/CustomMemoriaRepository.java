@@ -1,14 +1,12 @@
 package org.crue.hercules.sgi.eti.repository.custom;
 
-import java.util.List;
-
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 /**
@@ -46,8 +44,10 @@ public interface CustomMemoriaRepository {
    * @param pageable             información de paginación
    * @return lista de memorias de {@link PeticionEvaluacion}
    */
-  Page<MemoriaPeticionEvaluacion> findMemoriasEvaluacion(Long idPeticionEvaluacion, Pageable pageable);
+  Page<MemoriaPeticionEvaluacion> findMemoriasEvaluacion(Long idPeticionEvaluacion, Pageable pageable,
+      String personaRefConsulta);
 
-  Page<MemoriaPeticionEvaluacion> findAllMemoriasEvaluaciones(List<QueryCriteria> query, Pageable pageable);
+  Page<MemoriaPeticionEvaluacion> findAllMemoriasEvaluaciones(Specification<Memoria> specs, Pageable pageable,
+      String personaRefConsulta);
 
 }

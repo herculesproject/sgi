@@ -153,4 +153,17 @@ public interface MemoriaService {
    */
   Page<MemoriaPeticionEvaluacion> findAllMemoriasPeticionesEvaluacion(Pageable pageable);
 
+  /**
+   * Devuelve las memorias de las peticiones de evaluación con su fecha límite y
+   * de evaluación en las que la personaRef sea la creadora
+   * 
+   * @param paging     información de paginación
+   * @param query      la información del filtro.
+   * @param personaRef Referencia de la persona creadora de la petición de
+   *                   evaluación
+   * @return lista de memorias de {@link PeticionEvaluacion}
+   */
+  Page<MemoriaPeticionEvaluacion> findAllByPersonaRefPeticionEvaluacion(List<QueryCriteria> query, Pageable paging,
+      String personaRef);
+
 }

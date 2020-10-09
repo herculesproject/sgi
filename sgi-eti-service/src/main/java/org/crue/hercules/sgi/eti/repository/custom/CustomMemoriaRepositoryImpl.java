@@ -34,10 +34,7 @@ import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion_;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria_;
-import org.crue.hercules.sgi.eti.repository.specification.MemoriaSpecifications;
 import org.crue.hercules.sgi.eti.util.Constantes;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -188,7 +185,8 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
    * @return lista de memorias de {@link PeticionEvaluacion}
    */
   @Override
-  public Page<MemoriaPeticionEvaluacion> findMemoriasEvaluacion(Long idPeticionEvaluacion, Pageable pageable) {
+  public Page<MemoriaPeticionEvaluacion> findMemoriasEvaluacion(Long idPeticionEvaluacion, Pageable pageable,
+      String personaRefConsulta) {
     log.debug("findMemoriasEvaluacion( Pageable pageable) - start");
 
     // Crete query
@@ -198,7 +196,9 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
 
     cq.multiselect(root.get(Memoria_.id), root.get(Memoria_.numReferencia), root.get(Memoria_.titulo),
         root.get(Memoria_.comite), root.get(Memoria_.estadoActual),
-        getFechaEvaluacion(root, cb, cq).alias("fechaEvaluacion"), getFechaLimite(root, cb, cq).alias("fechaLimite"));
+        getFechaEvaluacion(root, cb, cq).alias("fechaEvaluacion"), getFechaLimite(root, cb, cq).alias("fechaLimite"),
+        cb.equal(root.get(Memoria_.personaRef), personaRefConsulta != null ? personaRefConsulta : "")
+            .alias("isResponsable"));
 
     cq.where(cb.equal(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id), idPeticionEvaluacion));
 
@@ -275,7 +275,8 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
    * @return lista de memorias de {@link PeticionEvaluacion}
    */
   @Override
-  public Page<MemoriaPeticionEvaluacion> findAllMemoriasEvaluaciones(List<QueryCriteria> query, Pageable pageable) {
+  public Page<MemoriaPeticionEvaluacion> findAllMemoriasEvaluaciones(Specification<Memoria> specs, Pageable pageable,
+      String personaRefConsulta) {
     log.debug("findMemoriasEvaluacion( Pageable pageable) - start");
 
     // Crete query
@@ -284,15 +285,15 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     Root<Memoria> root = cq.from(Memoria.class);
 
     // Where
-    if (query != null) {
-      Specification<Memoria> spec = new QuerySpecification<Memoria>(query);
-      Specification<Memoria> specActivos = MemoriaSpecifications.activos();
-      cq.where(spec.toPredicate(root, cq, cb), specActivos.toPredicate(root, cq, cb));
+    if (specs != null) {
+      cq.where(specs.toPredicate(root, cq, cb));
     }
 
     cq.multiselect(root.get(Memoria_.id), root.get(Memoria_.numReferencia), root.get(Memoria_.titulo),
         root.get(Memoria_.comite), root.get(Memoria_.estadoActual),
-        getFechaEvaluacion(root, cb, cq).alias("fechaEvaluacion"), getFechaLimite(root, cb, cq).alias("fechaLimite"));
+        getFechaEvaluacion(root, cb, cq).alias("fechaEvaluacion"), getFechaLimite(root, cb, cq).alias("fechaLimite"),
+        cb.equal(root.get(Memoria_.personaRef), personaRefConsulta != null ? personaRefConsulta : "")
+            .alias("isResponsable"));
 
     List<Order> orders = QueryUtils.toOrders(pageable.getSort(), root, cb);
     cq.orderBy(orders);

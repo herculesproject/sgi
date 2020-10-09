@@ -72,7 +72,10 @@ public class MemoriaServiceImpl implements MemoriaService {
   @Override
   public Page<MemoriaPeticionEvaluacion> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
-    Page<MemoriaPeticionEvaluacion> returnValue = memoriaRepository.findAllMemoriasEvaluaciones(query, paging);
+    Specification<Memoria> spec = new QuerySpecification<Memoria>(query);
+    Specification<Memoria> specActivos = MemoriaSpecifications.activos();
+    Specification<Memoria> specs = Specification.where(specActivos).and(spec);
+    Page<MemoriaPeticionEvaluacion> returnValue = memoriaRepository.findAllMemoriasEvaluaciones(specs, paging, null);
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
     return returnValue;
   }
@@ -270,7 +273,7 @@ public class MemoriaServiceImpl implements MemoriaService {
   public Page<MemoriaPeticionEvaluacion> findMemoriaByPeticionEvaluacionMaxVersion(Long idPeticionEvaluacion,
       Pageable pageable) {
     Page<MemoriaPeticionEvaluacion> returnValue = memoriaRepository.findMemoriasEvaluacion(idPeticionEvaluacion,
-        pageable);
+        pageable, null);
     return returnValue;
   }
 
@@ -331,7 +334,32 @@ public class MemoriaServiceImpl implements MemoriaService {
    */
   @Override
   public Page<MemoriaPeticionEvaluacion> findAllMemoriasPeticionesEvaluacion(Pageable pageable) {
-    Page<MemoriaPeticionEvaluacion> returnValue = memoriaRepository.findMemoriasEvaluacion(null, pageable);
+    Page<MemoriaPeticionEvaluacion> returnValue = memoriaRepository.findMemoriasEvaluacion(null, pageable, null);
+    return returnValue;
+  }
+
+  /**
+   * Devuelve las memorias de las peticiones de evaluación con su fecha límite y
+   * de evaluación de una personaRef con filtros
+   * 
+   * @param personaRef persona creadora de la memoria
+   * @param paging     la información de paginación.
+   * @param query      información del filtro.
+   * @return lista de memorias de {@link PeticionEvaluacion}
+   */
+  @Override
+  public Page<MemoriaPeticionEvaluacion> findAllByPersonaRefPeticionEvaluacion(List<QueryCriteria> query,
+      Pageable paging, String personaRef) {
+    Specification<Memoria> spec = new QuerySpecification<Memoria>(query);
+    Specification<Memoria> specActivos = MemoriaSpecifications.activos();
+    Specification<Memoria> specByPersonaRefPeticionEvaluacion = MemoriaSpecifications
+        .byPersonaRefPeticionEvaluacion(personaRef);
+    Specification<Memoria> specByPersonaRef = MemoriaSpecifications.byPersonaRef(personaRef);
+
+    Specification<Memoria> specs = Specification.where(spec).and(specActivos)
+        .and((specByPersonaRef).or(specByPersonaRefPeticionEvaluacion));
+    Page<MemoriaPeticionEvaluacion> returnValue = memoriaRepository.findAllMemoriasEvaluaciones(specs, paging,
+        personaRef);
     return returnValue;
   }
 

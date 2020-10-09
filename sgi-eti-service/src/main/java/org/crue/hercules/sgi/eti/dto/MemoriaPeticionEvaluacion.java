@@ -35,4 +35,6 @@ public class MemoriaPeticionEvaluacion implements Serializable {
 
   private LocalDate fechaLimite;
 
+  private boolean isResponsable;
+
 }

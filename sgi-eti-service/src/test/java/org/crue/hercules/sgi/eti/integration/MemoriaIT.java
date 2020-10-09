@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
@@ -145,8 +146,7 @@ public class MemoriaIT {
     Memoria replaceMemoria = generarMockMemoria(1L, "ref-5588", "Memoria1", 1);
 
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEMORIA-EDITAR", "ETI-MEMORIA-VER")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER")));
 
     final ResponseEntity<Memoria> response = restTemplate.exchange(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.PUT, buildRequest(headers, replaceMemoria), Memoria.class, 1L);
@@ -716,6 +716,109 @@ public class MemoriaIT {
     // 3
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllByPersonaRefPeticionEvaluacion_WithSortQuery_ReturnsOrderedMemoriaPeticionEvaluacionList()
+      throws Exception {
+    // when: Ordenación por titulo desc
+    String query = "titulo-";
+
+    URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH + "/persona/peticion-evaluacion")
+        .queryParam("s", query).build(false).toUri();
+
+    // when: Búsqueda por query
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s",
+        tokenBuilder.buildToken("user-001", "ETI-PEV-VR-INV", "ETI-PEV-V", "ETI-MEM-CR-INV")));
+
+    final ResponseEntity<List<MemoriaPeticionEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<MemoriaPeticionEvaluacion>>() {
+        });
+
+    // then: Respuesta OK, Memorias retorna la información de la página
+    // correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<MemoriaPeticionEvaluacion> memorias = response.getBody();
+    Assertions.assertThat(memorias.size()).isEqualTo(8);
+    for (int i = 0; i < 8; i++) {
+      MemoriaPeticionEvaluacion memoria = memorias.get(i);
+      Assertions.assertThat(memoria.getId()).isEqualTo(8 - i);
+      Assertions.assertThat(memoria.getTitulo()).isEqualTo("Memoria" + String.format("%03d", 8 - i));
+    }
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllByPersonaRefPeticionEvaluacion_WithPagingSortingAndFiltering_ReturnsMemoriaPeticionEvaluacionSubList()
+      throws Exception {
+    // when: Obtiene page=3 con pagesize=10
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s",
+        tokenBuilder.buildToken("user-001", "ETI-PEV-VR-INV", "ETI-PEV-V", "ETI-MEM-CR-INV")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    // when: Ordena por titulo desc
+    String sort = "titulo-";
+    // when: Filtra por titulo like e id equals
+    String filter = "titulo~%00%";
+
+    URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH + "/persona/peticion-evaluacion")
+        .queryParam("s", sort).queryParam("q", filter).build(false).toUri();
+
+    final ResponseEntity<List<MemoriaPeticionEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<MemoriaPeticionEvaluacion>>() {
+        });
+
+    // then: Respuesta OK, Memorias retorna la información de la página
+    // correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<MemoriaPeticionEvaluacion> memorias = response.getBody();
+    Assertions.assertThat(memorias.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("3");
+
+    // Contiene titulo='Memoria001', 'Memoria002',
+    // 'Memoria003'
+    Assertions.assertThat(memorias.get(0).getTitulo()).isEqualTo("Memoria" + String.format("%03d", 3));
+    Assertions.assertThat(memorias.get(1).getTitulo()).isEqualTo("Memoria" + String.format("%03d", 2));
+    Assertions.assertThat(memorias.get(2).getTitulo()).isEqualTo("Memoria" + String.format("%03d", 1));
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllByPersonaRefPeticionEvaluacion_WithSearchQuery_ReturnsFilteredMemoriaPeticionEvaluacionList()
+      throws Exception {
+    // when: Búsqueda por titulo like e id equals
+    Long id = 5L;
+    String query = "titulo~Memoria%,id:" + id;
+
+    URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH + "/persona/peticion-evaluacion")
+        .queryParam("q", query).build(false).toUri();
+
+    // when: Búsqueda por query
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user-001", "ETI-PEV-VR-INV", "ETI-PEV-V")));
+
+    final ResponseEntity<List<MemoriaPeticionEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<MemoriaPeticionEvaluacion>>() {
+        });
+
+    // then: Respuesta OK, Memorias retorna la información de la página
+    // correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<MemoriaPeticionEvaluacion> memorias = response.getBody();
+    Assertions.assertThat(memorias.size()).isEqualTo(1);
+    Assertions.assertThat(memorias.get(0).getId()).isEqualTo(id);
+    Assertions.assertThat(memorias.get(0).getTitulo()).startsWith("Memoria");
   }
 
   /**

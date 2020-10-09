@@ -181,18 +181,15 @@ public class MemoriaServiceTest {
   }
 
   @Test
-  public void findAll_Unlimited_ReturnsFullMemoriaList() {
+  public void findAll_Unlimited_ReturnsFullMemoriaPeticionEvaluacionist() {
     // given: One hundred Memoria
-    List<Memoria> memorias = new ArrayList<>();
+    List<MemoriaPeticionEvaluacion> memorias = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      memorias.add(generarMockMemoria(Long.valueOf(i), "numRef-5" + String.format("%03d", i),
-          "Memoria" + String.format("%03d", i), 1));
+      memorias.add(generarMockMemoriaPeticionEvaluacion(Long.valueOf(i)));
     }
 
-    BDDMockito
-        .given(
-            memoriaRepository.findAll(ArgumentMatchers.<Specification<Memoria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(memorias));
+    BDDMockito.given(memoriaRepository.findAllMemoriasEvaluaciones(ArgumentMatchers.<Specification<Memoria>>any(),
+        ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<String>any())).willReturn(new PageImpl<>(memorias));
 
     // when: find unlimited
     Page<MemoriaPeticionEvaluacion> page = memoriaService.findAll(null, Pageable.unpaged());
@@ -207,25 +204,24 @@ public class MemoriaServiceTest {
   @Test
   public void findAll_WithPaging_ReturnsPage() {
     // given: One hundred Memorias
-    List<Memoria> memorias = new ArrayList<>();
+    List<MemoriaPeticionEvaluacion> memorias = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      memorias.add(generarMockMemoria(Long.valueOf(i), "numRef-5" + String.format("%03d", i),
-          "Memoria" + String.format("%03d", i), 1));
+      memorias.add(generarMockMemoriaPeticionEvaluacion(Long.valueOf(i)));
     }
 
     BDDMockito
-        .given(
-            memoriaRepository.findAll(ArgumentMatchers.<Specification<Memoria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<Memoria>>() {
+        .given(memoriaRepository.findAllMemoriasEvaluaciones(ArgumentMatchers.<Specification<Memoria>>any(),
+            ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<String>any()))
+        .willAnswer(new Answer<Page<MemoriaPeticionEvaluacion>>() {
           @Override
-          public Page<Memoria> answer(InvocationOnMock invocation) throws Throwable {
+          public Page<MemoriaPeticionEvaluacion> answer(InvocationOnMock invocation) throws Throwable {
             Pageable pageable = invocation.getArgument(1, Pageable.class);
             int size = pageable.getPageSize();
             int index = pageable.getPageNumber();
             int fromIndex = size * index;
             int toIndex = fromIndex + size;
-            List<Memoria> content = memorias.subList(fromIndex, toIndex);
-            Page<Memoria> page = new PageImpl<>(content, pageable, memorias.size());
+            List<MemoriaPeticionEvaluacion> content = memorias.subList(fromIndex, toIndex);
+            Page<MemoriaPeticionEvaluacion> page = new PageImpl<>(content, pageable, memorias.size());
             return page;
           }
         });
@@ -242,8 +238,7 @@ public class MemoriaServiceTest {
     Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
     for (int i = 0, j = 31; i < 10; i++, j++) {
       MemoriaPeticionEvaluacion memoria = page.getContent().get(i);
-      Assertions.assertThat(memoria.getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
-      Assertions.assertThat(memoria.getNumReferencia()).isEqualTo("numRef-5" + String.format("%03d", j));
+      Assertions.assertThat(memoria.getNumReferencia()).isEqualTo("NumRef-" + String.format("%03d", j));
     }
   }
 
@@ -379,9 +374,8 @@ public class MemoriaServiceTest {
       memorias.add(generarMockMemoriaPeticionEvaluacion(Long.valueOf(i)));
     }
 
-    BDDMockito
-        .given(memoriaRepository.findMemoriasEvaluacion(ArgumentMatchers.<Long>any(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(memorias));
+    BDDMockito.given(memoriaRepository.findMemoriasEvaluacion(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<String>any())).willReturn(new PageImpl<>(memorias));
 
     // when: find unlimited Memorias de petición evaluación
     Page<MemoriaPeticionEvaluacion> page = memoriaService.findMemoriaByPeticionEvaluacionMaxVersion(1L,
@@ -405,8 +399,8 @@ public class MemoriaServiceTest {
       memorias.add(generarMockMemoriaPeticionEvaluacion(Long.valueOf(i)));
     }
 
-    BDDMockito
-        .given(memoriaRepository.findMemoriasEvaluacion(ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(memoriaRepository.findMemoriasEvaluacion(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<String>any()))
         .willAnswer(new Answer<Page<MemoriaPeticionEvaluacion>>() {
           @Override
           public Page<MemoriaPeticionEvaluacion> answer(InvocationOnMock invocation) throws Throwable {
@@ -425,6 +419,72 @@ public class MemoriaServiceTest {
     Pageable paging = PageRequest.of(3, 10);
     Page<MemoriaPeticionEvaluacion> page = memoriaService
         .findMemoriaByPeticionEvaluacionMaxVersion(idPeticionEvaluacion, paging);
+
+    // then: A Page with ten Memorias are returned containing
+    // num referencia='NumRef-031' to 'NumRef-040'
+    Assertions.assertThat(page.getContent().size()).isEqualTo(10);
+    Assertions.assertThat(page.getNumber()).isEqualTo(3);
+    Assertions.assertThat(page.getSize()).isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      MemoriaPeticionEvaluacion memoria = page.getContent().get(i);
+      Assertions.assertThat(memoria.getNumReferencia()).isEqualTo("NumRef-" + String.format("%03d", j));
+    }
+  }
+
+  @Test
+  public void findMemoriaByPersonaPeticionEvaluacion_Unlimited_ReturnsFullMemoriaPeticionEvaluacionList() {
+
+    List<MemoriaPeticionEvaluacion> memorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      memorias.add(generarMockMemoriaPeticionEvaluacion(Long.valueOf(i)));
+    }
+
+    BDDMockito.given(memoriaRepository.findAllMemoriasEvaluaciones(ArgumentMatchers.<Specification<Memoria>>any(),
+        ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<String>any())).willReturn(new PageImpl<>(memorias));
+
+    // when: find unlimited Memorias de petición evaluación
+    Page<MemoriaPeticionEvaluacion> page = memoriaService.findAllByPersonaRefPeticionEvaluacion(null,
+        Pageable.unpaged(), "user-001");
+
+    // then: Obtiene Memorias de petición evaluación con sus fecha límite y de
+    // evaluación
+
+    Assertions.assertThat(page.getContent().size()).isEqualTo(100);
+    Assertions.assertThat(page.getNumber()).isEqualTo(0);
+    Assertions.assertThat(page.getSize()).isEqualTo(100);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+  }
+
+  @Test
+  public void findMemoriaByPersonaPeticionEvaluacion_WithPaging_ReturnsPage() {
+    // given: One hundred MemoriaPeticionEvaluacion
+    List<MemoriaPeticionEvaluacion> memorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      memorias.add(generarMockMemoriaPeticionEvaluacion(Long.valueOf(i)));
+    }
+
+    BDDMockito
+        .given(memoriaRepository.findAllMemoriasEvaluaciones(ArgumentMatchers.<Specification<Memoria>>any(),
+            ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<String>any()))
+        .willAnswer(new Answer<Page<MemoriaPeticionEvaluacion>>() {
+          @Override
+          public Page<MemoriaPeticionEvaluacion> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<MemoriaPeticionEvaluacion> content = memorias.subList(fromIndex, toIndex);
+            Page<MemoriaPeticionEvaluacion> page = new PageImpl<>(content, pageable, memorias.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10 asignables by convocatoria
+    Pageable paging = PageRequest.of(3, 10);
+    Page<MemoriaPeticionEvaluacion> page = memoriaService.findAllByPersonaRefPeticionEvaluacion(null, paging,
+        "user-001");
 
     // then: A Page with ten Memorias are returned containing
     // num referencia='NumRef-031' to 'NumRef-040'
