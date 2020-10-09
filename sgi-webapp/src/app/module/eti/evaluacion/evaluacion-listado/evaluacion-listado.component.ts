@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
-import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
+import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection, SgiRestListResult } from '@sgi/framework/http';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { NGXLogger } from 'ngx-logger';
@@ -19,6 +19,8 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { IEvaluacionSolicitante } from '@core/models/eti/evaluacion-solicitante';
 import { IPersona } from '@core/models/sgp/persona';
+import { TipoEvaluacion } from '@core/models/eti/tipo-evaluacion';
+import { TipoEvaluacionService } from '@core/services/eti/tipo-evaluacion.service';
 
 const MSG_ERROR = marker('eti.evaluacion.listado.error');
 const MSG_ERROR_LOAD_TIPOS_CONVOCATORIA = marker('eti.evaluacion.listado.buscador.tipoConvocatoria.error');
@@ -45,15 +47,14 @@ export class EvaluacionListadoComponent implements OnInit, OnDestroy, AfterViewI
 
   evaluaciones$: Observable<IEvaluacionSolicitante[]> = of();
 
-  comiteListado: Comite[];
-  comitesSubscription: Subscription;
+  private comiteListado: Comite[];
+  private tipoEvaluacionListado: TipoEvaluacion[];
+  private tipoConvocatoriaReunionListado: TipoConvocatoriaReunion[];
+  private suscripciones: Subscription[] = [];
+
   filteredComites: Observable<Comite[]>;
-
-  tipoConvocatoriaReunionListado: TipoConvocatoriaReunion[];
-  tipoConvocatoriasReunionSubscription: Subscription;
+  filteredTipoEvaluacion: Observable<TipoEvaluacion[]>;
   filteredTipoConvocatoriaReunion: Observable<TipoConvocatoriaReunion[]>;
-  subscripciones: Subscription[];
-
   buscadorFormGroup: FormGroup;
 
   textoUsuarioLabel = TEXT_USER_TITLE;
@@ -67,11 +68,12 @@ export class EvaluacionListadoComponent implements OnInit, OnDestroy, AfterViewI
     private readonly evaluacionesService: EvaluacionService,
     private readonly snackBarService: SnackBarService,
     private readonly comiteService: ComiteService,
+    private readonly tipoEvaluacionService: TipoEvaluacionService,
     private readonly tipoConvocatoriaReunionService: TipoConvocatoriaReunionService,
     protected readonly personaFisicaService: PersonaFisicaService
 
   ) {
-    this.displayedColumns = ['convocatoriaReunion.comite.comite', 'fechaDictamen', 'memoria.numReferencia', 'solicitante',
+    this.displayedColumns = ['convocatoriaReunion.comite.comite', 'tipoEvaluacion', 'fechaDictamen', 'memoria.numReferencia', 'solicitante',
       'dictamen.nombre', 'version', 'acciones'];
     this.elementosPagina = [5, 10, 25, 100];
     this.totalElementos = 0;
@@ -104,12 +106,13 @@ export class EvaluacionListadoComponent implements OnInit, OnDestroy, AfterViewI
       fechaEvaluacionFin: new FormControl('', []),
       referenciaMemoria: new FormControl('', []),
       tipoConvocatoriaReunion: new FormControl('', []),
-      solicitante: new FormControl('', [])
+      solicitante: new FormControl('', []),
+      tipoEvaluacion: new FormControl('', [])
     });
 
-    this.getComites();
-
-    this.getTipoConvocatoriasReunion();
+    this.loadComites();
+    this.loadTipoEvaluaciones();
+    this.loadTipoConvocatoriasReunion();
 
     this.logger.debug(EvaluacionListadoComponent.name, 'ngOnInit()', 'end');
   }
@@ -212,6 +215,17 @@ export class EvaluacionListadoComponent implements OnInit, OnDestroy, AfterViewI
       this.filter.push(filterComite);
 
     }
+    if (this.buscadorFormGroup.controls.tipoEvaluacion.value) {
+      this.logger.debug(EvaluacionListadoComponent.name, 'buildFilters()', 'tipoEvaluacion');
+      const filterTipoEvaluacion: SgiRestFilter = {
+        field: 'tipoEvaluacion.id',
+        type: SgiRestFilterType.EQUALS,
+        value: this.buscadorFormGroup.controls.tipoEvaluacion.value.id,
+      };
+
+      this.filter.push(filterTipoEvaluacion);
+
+    }
     if (this.buscadorFormGroup.controls.fechaEvaluacionInicio.value) {
       this.logger.debug(EvaluacionListadoComponent.name, 'buildFilters()', 'fechaEvaluacionInicio');
       const fechaFilter = DateUtils.getFechaInicioDia(this.buscadorFormGroup.controls.fechaEvaluacionInicio.value);
@@ -288,6 +302,15 @@ export class EvaluacionListadoComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   /**
+   * Devuelve el nombre de un tipo evaluacion.
+   * @param tipoEvaluacion tipo de evaluación
+   * @returns nombre de un tipo de evaluación
+   */
+  getTipoEvaluacion(tipoEvaluacion: TipoEvaluacion): string {
+    return tipoEvaluacion?.nombre;
+  }
+
+  /**
    * Devuelve el nombre de un tipo convocatoria reunión.
    * @param convocatoria tipo convocatoria reunión.
    * returns nombre tipo convocatoria reunión.
@@ -301,12 +324,12 @@ export class EvaluacionListadoComponent implements OnInit, OnDestroy, AfterViewI
   /**
    * Recupera un listado de los comités que hay en el sistema.
    */
-  getComites(): void {
+  loadComites(): void {
     this.logger.debug(EvaluacionListadoComponent.name,
-      'getComites()',
+      'loadComites()',
       'start');
 
-    this.comitesSubscription = this.comiteService.findAll().subscribe(
+    this.suscripciones.push(this.comiteService.findAll().subscribe(
       (response) => {
         this.comiteListado = response.items;
 
@@ -315,22 +338,47 @@ export class EvaluacionListadoComponent implements OnInit, OnDestroy, AfterViewI
             startWith(''),
             map(value => this.filterComite(value))
           );
-      });
+      }));
 
     this.logger.debug(EvaluacionListadoComponent.name,
-      'getComites()',
+      'loadComites()',
       'end');
   }
 
   /**
-   * Recupera un listado de los tipos convocatoria que hay en el sistema.
+   * Recupera un listado de los tipos de evaluacion que hay en el sistema.
    */
-  getTipoConvocatoriasReunion(): void {
+  loadTipoEvaluaciones(): void {
     this.logger.debug(EvaluacionListadoComponent.name,
-      'getTipoConvocatoriasReunion()',
+      'loadTipoEvaluaciones()',
       'start');
 
-    this.tipoConvocatoriasReunionSubscription = this.tipoConvocatoriaReunionService.findAll().subscribe(
+    this.suscripciones.push(this.tipoEvaluacionService.findTipoEvaluacionMemoriaRetrospectiva().subscribe(
+      (response) => {
+        this.tipoEvaluacionListado = response.items;
+
+        this.filteredTipoEvaluacion = this.buscadorFormGroup.controls.tipoEvaluacion.valueChanges
+          .pipe(
+            startWith(''),
+            map(value => this.filterTipoEvaluacion(value))
+          );
+      }));
+
+    this.logger.debug(EvaluacionListadoComponent.name,
+      'loadTipoEvaluaciones()',
+      'end');
+  }
+
+
+  /**
+   * Recupera un listado de los tipos convocatoria que hay en el sistema.
+   */
+  loadTipoConvocatoriasReunion(): void {
+    this.logger.debug(EvaluacionListadoComponent.name,
+      'loadTipoConvocatoriasReunion()',
+      'start');
+
+    this.suscripciones.push(this.tipoConvocatoriaReunionService.findAll().subscribe(
       (response) => {
         this.tipoConvocatoriaReunionListado = response.items;
 
@@ -343,10 +391,10 @@ export class EvaluacionListadoComponent implements OnInit, OnDestroy, AfterViewI
       () => {
         this.snackBarService.showError(MSG_ERROR_LOAD_TIPOS_CONVOCATORIA);
       }
-    );
+    ));
 
     this.logger.debug(EvaluacionListadoComponent.name,
-      'getTipoConvocatoriasReunion()',
+      'loadTipoConvocatoriasReunion()',
       'end');
   }
 
@@ -366,6 +414,23 @@ export class EvaluacionListadoComponent implements OnInit, OnDestroy, AfterViewI
 
     return this.comiteListado.filter
       (comite => comite.comite.toLowerCase().includes(filterValue));
+  }
+
+  /**
+   * Filtro de campo autocompletable tipo evaluación.
+   * @param value value a filtrar (string o nombre tipo evaluación).
+   * @returns lista de tipo evaluación filtrados.
+   */
+  private filterTipoEvaluacion(value: string | TipoEvaluacion): TipoEvaluacion[] {
+    let filterValue: string;
+    if (typeof value === 'string') {
+      filterValue = value.toLowerCase();
+    } else {
+      filterValue = value.nombre.toLowerCase();
+    }
+
+    return this.tipoEvaluacionListado.filter
+      (tipoEvaluacion => tipoEvaluacion.nombre.toLowerCase().includes(filterValue));
   }
 
   /**
@@ -414,6 +479,7 @@ export class EvaluacionListadoComponent implements OnInit, OnDestroy, AfterViewI
     this.datosUsuarioSolicitante = '';
 
     this.loadTable(true);
+    this.loadTipoEvaluaciones();
 
     this.logger.debug(EvaluacionListadoComponent.name,
       'onClearFilters()',
@@ -424,8 +490,8 @@ export class EvaluacionListadoComponent implements OnInit, OnDestroy, AfterViewI
     this.logger.debug(EvaluacionListadoComponent.name,
       'ngOnDestroy()',
       'start');
-    this.comitesSubscription?.unsubscribe();
-    this.tipoConvocatoriasReunionSubscription?.unsubscribe();
+
+    this.suscripciones.forEach(x => x.unsubscribe());
 
     this.logger.debug(EvaluacionListadoComponent.name,
       'ngOnDestroy()',

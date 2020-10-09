@@ -4,7 +4,6 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 import { Comite } from '@core/models/eti/comite';
 import { IEvaluacionSolicitante } from '@core/models/eti/evaluacion-solicitante';
-import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -13,7 +12,6 @@ import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { DateUtils } from '@core/utils/date-utils';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
@@ -174,7 +172,7 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
    * Carga los tipos de evaluacion: Seguimiento Anual y Seguimiento Final
    */
   private loadTipoEvaluacion(): void {
-    this.logger.debug(SeguimientoListadoComponent.name, 'getComites()', 'start');
+    this.logger.debug(SeguimientoListadoComponent.name, 'loadTipoEvaluacion()', 'start');
     this.suscripciones.push(
       this.tipoEvaluacionService.findTipoEvaluacionSeguimientoAnualFinal().subscribe(
         (res: SgiRestListResult<TipoEvaluacion>) => {
@@ -190,7 +188,7 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
           }
         })
     );
-    this.logger.debug(SeguimientoListadoComponent.name, 'getComites()', 'end');
+    this.logger.debug(SeguimientoListadoComponent.name, 'loadTipoEvaluacion()', 'end');
   }
 
   /**

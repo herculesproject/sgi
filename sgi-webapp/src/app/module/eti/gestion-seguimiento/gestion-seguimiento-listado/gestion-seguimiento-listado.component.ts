@@ -19,6 +19,8 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DateUtils } from '@core/utils/date-utils';
 import { IEvaluacionSolicitante } from '@core/models/eti/evaluacion-solicitante';
 import { IPersona } from '@core/models/sgp/persona';
+import { TipoEvaluacion } from '@core/models/eti/tipo-evaluacion';
+import { TipoEvaluacionService } from '@core/services/eti/tipo-evaluacion.service';
 
 const TEXT_USER_TITLE = marker('eti.buscarSolicitante.titulo');
 const TEXT_USER_BUTTON = marker('eti.buscarSolicitante.boton.buscar');
@@ -54,24 +56,25 @@ export class GestionSeguimientoListadoComponent implements OnInit, OnDestroy, Af
   datosUsuarioSolicitante: string;
   personaRefSolicitante: string;
 
-  comiteListado: Comite[];
-  comitesSubscription: Subscription;
-  filteredComites: Observable<Comite[]>;
+  private comiteListado: Comite[];
+  private tipoEvaluacionListado: TipoEvaluacion[];
+  private tipoConvocatoriaReunionListado: TipoConvocatoriaReunion[];
+  private suscripciones: Subscription[] = [];
 
-  tipoConvocatoriaReunionListado: TipoConvocatoriaReunion[];
-  tipoConvocatoriasReunionSubscription: Subscription;
+  filteredComites: Observable<Comite[]>;
+  filteredTipoEvaluacion: Observable<TipoEvaluacion[]>;
   filteredTipoConvocatoriaReunion: Observable<TipoConvocatoriaReunion[]>;
-  subscripciones: Subscription[];
 
   constructor(
     private readonly logger: NGXLogger,
     private readonly evaluacionesService: EvaluacionService,
     private readonly snackBarService: SnackBarService,
     private readonly comiteService: ComiteService,
+    private readonly tipoEvaluacionService: TipoEvaluacionService,
     private readonly tipoConvocatoriaReunionService: TipoConvocatoriaReunionService,
     protected readonly personaFisicaService: PersonaFisicaService
   ) {
-    this.displayedColumns = ['convocatoriaReunion.comite.comite', 'fechaDictamen', 'memoria.numReferencia', 'solicitante',
+    this.displayedColumns = ['convocatoriaReunion.comite.comite', 'tipoEvaluacion', 'fechaDictamen', 'memoria.numReferencia', 'solicitante',
       'dictamen.nombre', 'version', 'acciones'];
     this.elementosPagina = [5, 10, 25, 100];
     this.totalElementos = 0;
@@ -103,11 +106,12 @@ export class GestionSeguimientoListadoComponent implements OnInit, OnDestroy, Af
       fechaEvaluacionFin: new FormControl('', []),
       referenciaMemoria: new FormControl('', []),
       tipoConvocatoriaReunion: new FormControl('', []),
-      solicitante: new FormControl('', [])
+      solicitante: new FormControl('', []),
+      tipoEvaluacion: new FormControl('', [])
     });
 
     this.loadComites();
-
+    this.loadTipoEvaluacion();
     this.loadConvocatoriasReunion();
 
     this.logger.debug(GestionSeguimientoListadoComponent.name, 'ngOnInit()', 'end');
@@ -210,6 +214,17 @@ export class GestionSeguimientoListadoComponent implements OnInit, OnDestroy, Af
       this.filter.push(filterComite);
 
     }
+    if (this.buscadorFormGroup.controls.tipoEvaluacion.value) {
+      this.logger.debug(GestionSeguimientoListadoComponent.name, 'buildFilters()', 'tipoEvaluacion');
+      const filterTipoEvaluacion: SgiRestFilter = {
+        field: 'tipoEvaluacion.id',
+        type: SgiRestFilterType.EQUALS,
+        value: this.buscadorFormGroup.controls.tipoEvaluacion.value.id,
+      };
+
+      this.filter.push(filterTipoEvaluacion);
+
+    }
     if (this.buscadorFormGroup.controls.fechaEvaluacionInicio.value) {
       this.logger.debug(GestionSeguimientoListadoComponent.name, 'buildFilters()', 'fechaEvaluacionInicio');
       const fechaFilter = DateUtils.getFechaInicioDia(this.buscadorFormGroup.controls.fechaEvaluacionInicio.value);
@@ -287,6 +302,15 @@ export class GestionSeguimientoListadoComponent implements OnInit, OnDestroy, Af
   }
 
   /**
+   * Devuelve el nombre de un tipo evaluacion.
+   * @param tipoEvaluacion tipo de evaluación
+   * @returns nombre de un tipo de evaluación
+   */
+  getTipoEvaluacion(tipoEvaluacion: TipoEvaluacion): string {
+    return tipoEvaluacion?.nombre;
+  }
+
+  /**
    * Devuelve el nombre de un tipo convocatoria reunión.
    * @param convocatoria tipo convocatoria reunión.
    * returns nombre tipo convocatoria reunión.
@@ -305,7 +329,7 @@ export class GestionSeguimientoListadoComponent implements OnInit, OnDestroy, Af
       'loadComites()',
       'start');
 
-    this.comitesSubscription = this.comiteService.findAll().subscribe(
+    this.suscripciones.push(this.comiteService.findAll().subscribe(
       (response) => {
         this.comiteListado = response.items;
 
@@ -314,10 +338,34 @@ export class GestionSeguimientoListadoComponent implements OnInit, OnDestroy, Af
             startWith(''),
             map(value => this.filterComite(value))
           );
-      });
+      }));
 
     this.logger.debug(GestionSeguimientoListadoComponent.name,
       'loadComites()',
+      'end');
+  }
+
+  /**
+   * Recupera un listado de los tipos de evaluacion que hay en el sistema.
+   */
+  loadTipoEvaluacion(): void {
+    this.logger.debug(GestionSeguimientoListadoComponent.name,
+      'loadTipoEvaluacion()',
+      'start');
+
+    this.suscripciones.push(this.tipoEvaluacionService.findTipoEvaluacionSeguimientoAnualFinal().subscribe(
+      (response) => {
+        this.tipoEvaluacionListado = response.items;
+
+        this.filteredTipoEvaluacion = this.buscadorFormGroup.controls.tipoEvaluacion.valueChanges
+          .pipe(
+            startWith(''),
+            map(value => this.filterTipoEvaluacion(value))
+          );
+      }));
+
+    this.logger.debug(GestionSeguimientoListadoComponent.name,
+      'loadTipoEvaluacion()',
       'end');
   }
 
@@ -329,7 +377,7 @@ export class GestionSeguimientoListadoComponent implements OnInit, OnDestroy, Af
       'loadConvocatoriasReunion()',
       'start');
 
-    this.tipoConvocatoriasReunionSubscription = this.tipoConvocatoriaReunionService.findAll().subscribe(
+    this.suscripciones.push(this.tipoConvocatoriaReunionService.findAll().subscribe(
       (response) => {
         this.tipoConvocatoriaReunionListado = response.items;
 
@@ -342,7 +390,7 @@ export class GestionSeguimientoListadoComponent implements OnInit, OnDestroy, Af
       () => {
         this.snackBarService.showError(MSG_ERROR_LOAD_TIPOS_CONVOCATORIA);
       }
-    );
+    ));
 
     this.logger.debug(GestionSeguimientoListadoComponent.name,
       'loadConvocatoriasReunion()',
@@ -365,6 +413,23 @@ export class GestionSeguimientoListadoComponent implements OnInit, OnDestroy, Af
 
     return this.comiteListado.filter
       (comite => comite.comite.toLowerCase().includes(filterValue));
+  }
+
+  /**
+   * Filtro de campo autocompletable tipo evaluación.
+   * @param value value a filtrar (string o nombre tipo evaluación).
+   * @returns lista de tipo evaluación filtrados.
+   */
+  private filterTipoEvaluacion(value: string | TipoEvaluacion): TipoEvaluacion[] {
+    let filterValue: string;
+    if (typeof value === 'string') {
+      filterValue = value.toLowerCase();
+    } else {
+      filterValue = value.nombre.toLowerCase();
+    }
+
+    return this.tipoEvaluacionListado.filter
+      (tipoEvaluacion => tipoEvaluacion.nombre.toLowerCase().includes(filterValue));
   }
 
   /**
@@ -413,6 +478,7 @@ export class GestionSeguimientoListadoComponent implements OnInit, OnDestroy, Af
     this.datosUsuarioSolicitante = '';
 
     this.loadTable(true);
+    this.loadTipoEvaluacion();
 
     this.logger.debug(GestionSeguimientoListadoComponent.name,
       'onClearFilters()',
@@ -423,8 +489,8 @@ export class GestionSeguimientoListadoComponent implements OnInit, OnDestroy, Af
     this.logger.debug(GestionSeguimientoListadoComponent.name,
       'ngOnDestroy()',
       'start');
-    this.comitesSubscription?.unsubscribe();
-    this.tipoConvocatoriasReunionSubscription?.unsubscribe();
+
+    this.suscripciones.forEach(x => x.unsubscribe());
 
     this.logger.debug(GestionSeguimientoListadoComponent.name,
       'ngOnDestroy()',

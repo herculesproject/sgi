@@ -8,7 +8,6 @@ import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ComiteService } from '@core/services/eti/comite.service';
-import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocatoria-reunion.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -162,7 +161,7 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
    * Carga los tipos de evaluacion: Memoria y Retrospectiva
    */
   private loadTipoEvaluacion(): void {
-    this.logger.debug(EvaluacionEvaluadorListadoComponent.name, 'getComites()', 'start');
+    this.logger.debug(EvaluacionEvaluadorListadoComponent.name, 'loadTipoEvaluacion()', 'start');
     this.suscripciones.push(
       this.tipoEvaluacionService.findTipoEvaluacionMemoriaRetrospectiva().subscribe(
         (res: SgiRestListResult<TipoEvaluacion>) => {
@@ -178,7 +177,7 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
           }
         })
     );
-    this.logger.debug(EvaluacionEvaluadorListadoComponent.name, 'getComites()', 'end');
+    this.logger.debug(EvaluacionEvaluadorListadoComponent.name, 'loadTipoEvaluacion()', 'end');
   }
 
   /**
