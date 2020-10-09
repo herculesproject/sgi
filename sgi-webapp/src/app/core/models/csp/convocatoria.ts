@@ -1,8 +1,8 @@
 import { IUnidadGestion } from './unidad-gestion';
-import { IModeloEjecucion } from './modelo-ejecucion';
 import { IFinalidad } from './finalidad';
 import { IAmbitoGeografico } from './ambito-geografico';
 import { IRegimenConcurrencia } from './regimen-concurrencia';
+import { IModeloEjecucion } from './tipos-configuracion';
 
 export interface IConvocatoria {
   /** Id */

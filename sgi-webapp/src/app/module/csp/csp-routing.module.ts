@@ -14,6 +14,7 @@ const MSG_TIPO_ENLACE_TITLE = marker('menu.principal.csp.tipo.enlace');
 const MSG_TIPO_HITO_TITLE = marker('menu.principal.csp.tipo.hito');
 const MSG_TIPO_FINALIDAD_TITLE = marker('menu.principal.csp.tipo.finalidad');
 const MSG_TIPO_DOCUMENTO_TITLE = marker('menu.principal.csp.tipo.documento');
+const MSG_MODELO_EJECUCION_TITLE = marker('menu.principal.csp.modelo.ejecucion');
 
 const routes: SgiRoutes = [
   {
@@ -62,6 +63,17 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_TIPO_FINALIDAD_TITLE,
+        }
+      },
+      {
+        path: CSP_ROUTE_NAMES.MODELO_EJECUCION,
+        loadChildren: () =>
+          import('./modelo-ejecucion/modelo-ejecucion.module').then(
+            (m) => m.ModeloEjecucionModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_MODELO_EJECUCION_TITLE,
         }
       },
       {

@@ -1,47 +1,47 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ITipoEnlace } from '@core/models/csp/tipos-configuracion';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
+import { FooterCrearComponent } from '@shared/footers/footer-crear/footer-crear.component';
 import { NGXLogger } from 'ngx-logger';
 
-import { TipoEnlaceModalComponent } from './tipo-enlace-modal.component';
+import { ModeloEjecucionListadoComponent } from './modelo-ejecucion-listado.component';
 
-describe('TipoEnlaceModalComponent', () => {
-  let component: TipoEnlaceModalComponent;
-  let fixture: ComponentFixture<TipoEnlaceModalComponent>;
+describe('ModeloEjecucionListadoComponent', () => {
+  let component: ModeloEjecucionListadoComponent;
+  let fixture: ComponentFixture<ModeloEjecucionListadoComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        TipoEnlaceModalComponent
+        ModeloEjecucionListadoComponent,
+        FooterCrearComponent
       ],
       imports: [
-        BrowserAnimationsModule,
+        RouterTestingModule,
         MaterialDesignModule,
         HttpClientTestingModule,
+        BrowserAnimationsModule,
         TestUtils.getIdiomas(),
-        RouterTestingModule,
+        FlexLayoutModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: {} as ITipoEnlace },
-        { provide: MAT_DIALOG_DATA, useValue: {} as ITipoEnlace },
       ]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TipoEnlaceModalComponent);
+    fixture = TestBed.createComponent(ModeloEjecucionListadoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

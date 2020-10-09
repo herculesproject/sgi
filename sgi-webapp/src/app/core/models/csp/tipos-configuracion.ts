@@ -6,6 +6,9 @@ interface TipoConfiguracion {
 }
 
 // tslint:disable: no-empty-interface
+export interface IModeloEjecucion extends TipoConfiguracion {
+}
+
 export interface ITipoDocumento extends TipoConfiguracion {
 }
 

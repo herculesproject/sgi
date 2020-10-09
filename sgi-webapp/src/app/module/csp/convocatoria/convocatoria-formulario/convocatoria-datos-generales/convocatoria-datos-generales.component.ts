@@ -8,7 +8,6 @@ import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { FormGroupUtil } from '@core/utils/form-group-util';
-import { IModeloEjecucion } from '@core/models/csp/modelo-ejecucion';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { SgiRestListResult } from '@sgi/framework/http/types';
@@ -26,6 +25,7 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { MatDialog } from '@angular/material/dialog';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
 import { ConvocatoriaDatosGeneralesFragment } from './convocatoria-datos-generales.fragment';
+import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 
 
 

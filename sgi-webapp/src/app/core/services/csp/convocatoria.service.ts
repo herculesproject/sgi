@@ -15,6 +15,7 @@ import { DateUtils } from '@core/utils/date-utils';
 import { IEnlace } from '@core/models/csp/enlace';
 import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
+import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 
 
 const convocatorias: IConvocatoria[] = [
@@ -23,7 +24,7 @@ const convocatorias: IConvocatoria[] = [
     fechaFinSolicitud: new Date(), estadoConvocante: 'Universidad', planInvestigacion: 'Plan propio',
     entidadFinanciadora: 'Universidad', fuenteFinanciacion: 'Fondos propios', activo: true,
     estado: 'Borrador', unidadGestion: { id: 1, nombre: 'OTRI' }, anio: 2020,
-    modeloEjecucion: { id: 2, nombre: 'Contratos' }, finalidad: { id: 3, nombre: 'Servicios Técnicos' },
+    modeloEjecucion: { id: 2, nombre: 'Contratos' } as IModeloEjecucion, finalidad: { id: 3, nombre: 'Servicios Técnicos' },
     duracionMeses: 20, ambitoGeografico: { id: 3, nombre: 'Autonómico' }, clasificacionProduccion: 'Proyectos competitivos',
     regimenConcurrencia: { id: 2, nombre: 'Concurrencia competitiva' },
     proyectoColaborativo: 'Sí', destinatarios: 'Equipo de proyecto', entidadGestora: '',
@@ -34,7 +35,7 @@ const convocatorias: IConvocatoria[] = [
     fechaFinSolicitud: new Date(), estadoConvocante: 'AEI', planInvestigacion: 'Plan Nacional 2020',
     entidadFinanciadora: 'AEI', fuenteFinanciacion: 'Presupuestos generados estado', activo: false,
     estado: 'Borrador', unidadGestion: { id: 1, nombre: 'OTRI' }, anio: 2019,
-    modeloEjecucion: { id: 2, nombre: 'Contratos' }, finalidad: { id: 2, nombre: 'Contratación RRHH' },
+    modeloEjecucion: { id: 2, nombre: 'Contratos' } as IModeloEjecucion, finalidad: { id: 2, nombre: 'Contratación RRHH' },
     duracionMeses: 12, ambitoGeografico: { id: 2, nombre: 'Local' }, clasificacionProduccion: 'Contratos, convenios  y proyectos no competitivos',
     regimenConcurrencia: { id: 1, nombre: 'Contratación RRHH' },
     proyectoColaborativo: 'No', destinatarios: 'Grupo de investigación', entidadGestora: '',
@@ -45,7 +46,7 @@ const convocatorias: IConvocatoria[] = [
     fechaFinSolicitud: new Date(), estadoConvocante: 'CRUE', planInvestigacion: 'Plan COVID',
     entidadFinanciadora: 'CSIC', fuenteFinanciacion: 'Fondos COVID', activo: true,
     estado: 'Borrador', unidadGestion: { id: 2, nombre: 'OPE' }, anio: 2020,
-    modeloEjecucion: { id: 1, nombre: 'Ayudas y subvenciones' }, finalidad: { id: 3, nombre: 'Proyectos I+D' },
+    modeloEjecucion: { id: 1, nombre: 'Ayudas y subvenciones' } as IModeloEjecucion, finalidad: { id: 3, nombre: 'Proyectos I+D' },
     duracionMeses: 24, ambitoGeografico: { id: 5, nombre: 'Europeo' }, clasificacionProduccion: 'Proyectos competitivos',
     regimenConcurrencia: { id: 2, nombre: 'Concurrencia competitiva' },
     proyectoColaborativo: 'Sí', destinatarios: 'Individual', entidadGestora: '',

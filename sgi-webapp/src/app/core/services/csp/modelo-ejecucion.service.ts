@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { SgiRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http/';
-import { IModeloEjecucion } from '@core/models/csp/modelo-ejecucion';
 import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@env';
@@ -8,21 +7,20 @@ import { of, Observable } from 'rxjs';
 import { IFinalidad } from '@core/models/csp/finalidad';
 import { ITipoPeriodoJustificacion } from '@core/models/csp/tipo-periodo-justificacion';
 import { ITipoPlazosFases } from '@core/models/csp/tipo-plazos-fases';
-import { ITipoHito } from '@core/models/csp/tipos-configuracion';
+import { IModeloEjecucion, ITipoHito } from '@core/models/csp/tipos-configuracion';
 
 
 
 const modelosEjecucion: IModeloEjecucion[] = [
   {
     id: 1, nombre: 'Ayudas y subvenciones'
-  },
+  } as IModeloEjecucion,
   {
     id: 2, nombre: 'Contratos'
-  },
+  } as IModeloEjecucion,
   {
     id: 3, nombre: 'Convenios'
-  }
-
+  } as IModeloEjecucion
 ];
 
 
@@ -78,7 +76,7 @@ const tipoPlazoFase: ITipoPlazosFases[] = [
   providedIn: 'root'
 })
 export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecucion> {
-  private static readonly MAPPING = '/modelo-ejecucion';
+  private static readonly MAPPING = '/modeloejecuciones';
 
   constructor(logger: NGXLogger, protected http: HttpClient) {
     super(
