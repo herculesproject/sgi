@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.eti.model.TipoInvestigacionTutelada;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,10 @@ public class MemoriaRepositoryTest {
 
     Comite comite = entityManager.persistFlushFind(generarMockComite());
     TipoActividad tipoActividad = entityManager.persistAndFlush(generarMockTipoActividad());
-    PeticionEvaluacion peticionEvaluacion = entityManager.persistAndFlush(generarMockPeticionEvaluacion(tipoActividad));
+    TipoInvestigacionTutelada tipoInvestigacionTutelada = entityManager
+        .persistAndFlush(generarMockTipoInvestigacionTutelada());
+    PeticionEvaluacion peticionEvaluacion = entityManager
+        .persistAndFlush(generarMockPeticionEvaluacion(tipoActividad, tipoInvestigacionTutelada));
     TipoMemoria tipoMemoria = entityManager.persistAndFlush(generarMockTipoMemoria());
     TipoEstadoMemoria tipoEstadoMemoria = entityManager.persistAndFlush(generarMockTipoEstadoMemoria());
     EstadoRetrospectiva estadoRetrospectiva = entityManager.persistAndFlush(generarMockEstadoRetrospectiva());
@@ -69,15 +73,26 @@ public class MemoriaRepositoryTest {
   }
 
   /**
+   * Función que devuelve un objeto TipoInvestigacionTutelada
+   * 
+   * @return el objeto TipoInvestigacionTutelada
+   */
+  private TipoInvestigacionTutelada generarMockTipoInvestigacionTutelada() {
+    return new TipoInvestigacionTutelada(1L, "TipoInvestigacionTutelada", Boolean.TRUE);
+  }
+
+  /**
    * Función que devuelve un objeto PeticionEvaluacion
    * 
-   * @param tipoActividad el objeto TipoActividad
+   * @param tipoActividad             el objeto TipoActividad
+   * @param tipoInvestigacionTutelada el objeto TipoInvestigacionTutelada
    * @return PeticionEvaluacion
    */
-  private PeticionEvaluacion generarMockPeticionEvaluacion(TipoActividad tipoActividad) {
+  private PeticionEvaluacion generarMockPeticionEvaluacion(TipoActividad tipoActividad,
+      TipoInvestigacionTutelada tipoInvestigacionTutelada) {
     return new PeticionEvaluacion(null, "Referencia solicitud convocatoria", "Codigo", "PeticionEvaluacion",
-        tipoActividad, "Fuente financiación", LocalDate.now(), LocalDate.now(), "Resumen", "Valor social", "Objetivos",
-        "DiseñoMetodologico", Boolean.FALSE, Boolean.FALSE, "user-001", Boolean.TRUE);
+        tipoActividad, tipoInvestigacionTutelada, "Fuente financiación", LocalDate.now(), LocalDate.now(), "Resumen",
+        "Valor social", "Objetivos", "DiseñoMetodologico", Boolean.FALSE, Boolean.FALSE, "user-001", Boolean.TRUE);
   }
 
   /**

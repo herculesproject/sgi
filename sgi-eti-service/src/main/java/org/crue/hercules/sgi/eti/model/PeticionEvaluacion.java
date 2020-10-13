@@ -58,6 +58,11 @@ public class PeticionEvaluacion extends BaseEntity {
   @JoinColumn(name = "tipo_actividad_id", nullable = true)
   private TipoActividad tipoActividad;
 
+  /** Tipo Investigacion Tutelada */
+  @ManyToOne
+  @JoinColumn(name = "tipo_investigacion_tutelada_id", nullable = true)
+  private TipoInvestigacionTutelada tipoInvestigacionTutelada;
+
   /** Fuente financiacion */
   @Column(name = "fuente_financiacion", length = 250, nullable = false)
   private String fuenteFinanciacion;

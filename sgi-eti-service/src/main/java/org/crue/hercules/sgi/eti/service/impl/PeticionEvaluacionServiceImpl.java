@@ -159,6 +159,7 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
       peticionEvaluacion.setSolicitudConvocatoriaRef(peticionEvaluacionActualizar.getSolicitudConvocatoriaRef());
       peticionEvaluacion.setTieneFondosPropios(peticionEvaluacionActualizar.getTieneFondosPropios());
       peticionEvaluacion.setTipoActividad(peticionEvaluacionActualizar.getTipoActividad());
+      peticionEvaluacion.setTipoInvestigacionTutelada(peticionEvaluacionActualizar.getTipoInvestigacionTutelada());
       peticionEvaluacion.setTitulo(peticionEvaluacionActualizar.getTitulo());
       peticionEvaluacion.setPersonaRef(peticionEvaluacionActualizar.getPersonaRef());
       peticionEvaluacion.setValorSocial(peticionEvaluacionActualizar.getValorSocial());

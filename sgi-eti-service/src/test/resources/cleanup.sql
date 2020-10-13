@@ -15,6 +15,7 @@ DELETE FROM eti.evaluador
 DELETE FROM eti.equipo_trabajo
 DELETE FROM eti.peticion_evaluacion
 DELETE FROM eti.tipo_actividad
+DELETE FROM eti.tipo_investigacion_tutelada
 DELETE FROM eti.tipo_memoria
 DELETE FROM eti.tipo_documento
 DELETE FROM eti.estado_acta

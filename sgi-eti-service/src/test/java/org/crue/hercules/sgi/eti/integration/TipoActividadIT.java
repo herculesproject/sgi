@@ -139,7 +139,7 @@ public class TipoActividadIT {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "1");
-    headers.add("X-Page-Size", "3");
+    headers.add("X-Page-Size", "2");
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH).build(false).toUri();
 
@@ -151,14 +151,13 @@ public class TipoActividadIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoActividad> tipoActividades = response.getBody();
-    Assertions.assertThat(tipoActividades.size()).isEqualTo(2);
+    Assertions.assertThat(tipoActividades.size()).isEqualTo(1);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("3");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("5");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("3");
 
-    // Contiene de nombre='Trabajo Fin de Máster' y 'Trabajo Fin de Grado'
-    Assertions.assertThat(tipoActividades.get(0).getNombre()).isEqualTo("Trabajo Fin de Máster");
-    Assertions.assertThat(tipoActividades.get(1).getNombre()).isEqualTo("Trabajo Fin de Grado");
+    // Contiene de nombre='Investigación tutelada'
+    Assertions.assertThat(tipoActividades.get(0).getNombre()).isEqualTo("Investigación tutelada");
   }
 
   @Sql
@@ -166,8 +165,8 @@ public class TipoActividadIT {
   @Test
   public void findAll_WithSearchQuery_ReturnsFilteredTipoActividadList() throws Exception {
     // when: Búsqueda por nombre like e id equals
-    Long id = 3L;
-    String query = "nombre~Tesis%,id:" + id;
+    Long id = 1L;
+    String query = "nombre~Proyecto%,id:" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH).queryParam("q", query)
         .build(false).toUri();
@@ -183,7 +182,7 @@ public class TipoActividadIT {
     final List<TipoActividad> tipoActividades = response.getBody();
     Assertions.assertThat(tipoActividades.size()).isEqualTo(1);
     Assertions.assertThat(tipoActividades.get(0).getId()).isEqualTo(id);
-    Assertions.assertThat(tipoActividades.get(0).getNombre()).startsWith("Tesis doctoral");
+    Assertions.assertThat(tipoActividades.get(0).getNombre()).startsWith("Proyecto de investigación");
   }
 
   @Sql
@@ -205,25 +204,25 @@ public class TipoActividadIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoActividad> tipoActividades = response.getBody();
-    Assertions.assertThat(tipoActividades.size()).isEqualTo(5);
-    Assertions.assertThat(tipoActividades.get(0).getId()).isEqualTo(4);
-    Assertions.assertThat(tipoActividades.get(0).getNombre()).isEqualTo("Trabajo Fin de Máster");
-    Assertions.assertThat(tipoActividades.get(4).getId()).isEqualTo(1);
-    Assertions.assertThat(tipoActividades.get(4).getNombre()).isEqualTo("Proyecto de investigación");
+    Assertions.assertThat(tipoActividades.size()).isEqualTo(3);
+    Assertions.assertThat(tipoActividades.get(0).getId()).isEqualTo(2);
+    Assertions.assertThat(tipoActividades.get(0).getNombre()).isEqualTo("Práctica docente");
+    Assertions.assertThat(tipoActividades.get(2).getId()).isEqualTo(3);
+    Assertions.assertThat(tipoActividades.get(2).getNombre()).isEqualTo("Investigación tutelada");
   }
 
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void findAll_WithPagingSortingAndFiltering_ReturnsTipoActividadSubList() throws Exception {
-    // when: Obtiene page=3 con pagesize=10
+    // when: Obtiene page=0 con pagesize=2
     HttpHeaders headers = new HttpHeaders();
     headers.add("X-Page", "0");
-    headers.add("X-Page-Size", "4");
+    headers.add("X-Page-Size", "2");
     // when: Ordena por nombre desc
     String sort = "nombre-";
     // when: Filtra por nombre like
-    String filter = "nombre~%Trabajo%";
+    String filter = "nombre~%Proyecto%";
 
     URI uri = UriComponentsBuilder.fromUriString(TIPO_ACTIVIDAD_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -236,15 +235,14 @@ public class TipoActividadIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<TipoActividad> tipoActividades = response.getBody();
-    Assertions.assertThat(tipoActividades.size()).isEqualTo(2);
+    Assertions.assertThat(tipoActividades.size()).isEqualTo(1);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
-    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("4");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("2");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("2");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("1");
 
-    // Contiene nombre='Trabajo Fin de Grado', 'Trabajo Fin de Máster'
-    Assertions.assertThat(tipoActividades.get(0).getNombre()).isEqualTo("Trabajo Fin de Máster");
-    Assertions.assertThat(tipoActividades.get(1).getNombre()).isEqualTo("Trabajo Fin de Grado");
+    // Contiene nombre='Proyecto de investigación'
+    Assertions.assertThat(tipoActividades.get(0).getNombre()).isEqualTo("Proyecto de investigación");
 
   }
 

@@ -503,10 +503,6 @@
     </insert>
   </changeSet>
 
-  <!-- ########################################################## -->
-  <!-- FIN ENUMERATION -->
-  <!-- ########################################################## -->
-
   <changeSet author="master" id="20200601000000-tipo_actividad">
     <insert tableName="tipo_actividad">
       <column name="id" value="1" />
@@ -520,20 +516,32 @@
     </insert>
     <insert tableName="tipo_actividad">
       <column name="id" value="3" />
-      <column name="nombre" value="Tesis doctoral" />
+      <column name="nombre" value="Investigación tutelada" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="tipo_actividad">
-      <column name="id" value="4" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-tipo_investigacion_tutelada">
+    <insert tableName="tipo_investigacion_tutelada">
+      <column name="id" value="1" />
+      <column name="nombre" value="Tesis Doctoral" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_investigacion_tutelada">
+      <column name="id" value="2" />
       <column name="nombre" value="Trabajo Fin de Máster" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="tipo_actividad">
-      <column name="id" value="5" />
+    <insert tableName="tipo_investigacion_tutelada">
+      <column name="id" value="3" />
       <column name="nombre" value="Trabajo Fin de Grado" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>
+
+  <!-- ########################################################## -->
+  <!-- FIN ENUMERATION -->
+  <!-- ########################################################## -->
 
   <changeSet author="master" id="20200601000000-peticion_evaluacion">
     <insert tableName="peticion_evaluacion">

@@ -133,6 +133,18 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-tipo_investigacion_tutelada">
+    <createTable tableName="tipo_investigacion_tutelada">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_investigacion_tutelada_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
   <changeSet author="master" id="20200601000000-tipo_memoria">
     <createTable tableName="tipo_memoria">
       <column name="id" type="BIGINT">
@@ -176,6 +188,7 @@
       <column name="codigo" type="VARCHAR(250)" />
       <column name="titulo" type="VARCHAR(250)" />
       <column name="tipo_actividad_id" type="BIGINT" />
+      <column name="tipo_investigacion_tutelada_id" type="BIGINT" />
       <column name="fuente_financiacion" type="VARCHAR(250)" />
       <column name="fecha_inicio" type="DATE" />
       <column name="fecha_fin" type="DATE" />
@@ -724,6 +737,10 @@
 
   <changeSet author="master" id="20200601000000-peticion_evaluacion_tipo_actividad_FK">
     <addForeignKeyConstraint baseColumnNames="tipo_actividad_id" baseTableName="peticion_evaluacion" constraintName="peticion_evaluacion_tipo_actividad_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_actividad" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-peticion_evaluacion_tipo_investigacion_tutelada_FK">
+    <addForeignKeyConstraint baseColumnNames="tipo_investigacion_tutelada_id" baseTableName="peticion_evaluacion" constraintName="peticion_evaluacion_tipo_investigacion_tutelada_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_investigacion_tutelada" validate="true" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-equipo_trabajo_peticion_evaluacion_FK">
