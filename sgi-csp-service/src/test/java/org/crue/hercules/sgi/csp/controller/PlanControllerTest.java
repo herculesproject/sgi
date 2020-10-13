@@ -10,7 +10,9 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.SecurityConfig;
 import org.crue.hercules.sgi.csp.exceptions.PlanNotFoundException;
 import org.crue.hercules.sgi.csp.model.Plan;
+import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.service.PlanService;
+import org.crue.hercules.sgi.csp.service.ProgramaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -49,6 +51,9 @@ public class PlanControllerTest {
 
   @MockBean
   private PlanService service;
+
+  @MockBean
+  private ProgramaService programaService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = "/planes";
@@ -296,6 +301,89 @@ public class PlanControllerTest {
         andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  public void findAllProgramas_ReturnsPage() throws Exception {
+    // given: Una lista con 37 Programa para el Plan
+    Long idPlan = 1L;
+
+    List<Programa> programas = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      programas.add(generarMockPrograma(i, "Programa" + String.format("%03d", i)));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito.given(programaService.findAllByPlan(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > programas.size() ? programas.size() : toIndex;
+          List<Programa> content = programas.subList(fromIndex, toIndex);
+          Page<Programa> pageResponse = new PageImpl<>(content, pageable, programas.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/programas", idPlan)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los Programa del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<Programa> programasResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<Programa>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      Programa programa = programasResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(programa.getNombre()).isEqualTo("Programa" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  public void findAllProgramas_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de Programa para el Plan
+    Long idPlan = 1L;
+
+    List<Programa> programas = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito.given(programaService.findAllByPlan(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          Page<Programa> pageResponse = new PageImpl<>(programas, pageable, 0);
+          return pageResponse;
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/programas", idPlan)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+  }
+
   /**
    * Función que devuelve un objeto Plan
    * 
@@ -321,6 +409,23 @@ public class PlanControllerTest {
     plan.setActivo(true);
 
     return plan;
+  }
+
+  /**
+   * Función que devuelve un objeto Programa
+   * 
+   * @param id     id del Programa
+   * @param nombre nombre del Programa
+   * @return el objeto Programa
+   */
+  private Programa generarMockPrograma(Long id, String nombre) {
+    Programa programa = new Programa();
+    programa.setId(id);
+    programa.setNombre(nombre);
+    programa.setDescripcion("descripcion-" + id);
+    programa.setActivo(true);
+
+    return programa;
   }
 
 }

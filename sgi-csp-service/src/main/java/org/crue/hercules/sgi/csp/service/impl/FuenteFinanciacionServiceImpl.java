@@ -113,17 +113,25 @@ public class FuenteFinanciacionServiceImpl implements FuenteFinanciacionService 
         tipoAmbitoGeograficoRepository.findById(fuenteFinanciacionActualizar.getTipoAmbitoGeografico().getId())
             .orElseThrow(() -> new TipoAmbitoGeograficoNotFoundException(
                 fuenteFinanciacionActualizar.getTipoAmbitoGeografico().getId())));
-    Assert.isTrue(fuenteFinanciacionActualizar.getTipoAmbitoGeografico().getActivo(),
-        "El TipoAmbitoGeografico debe estar Activo");
 
     fuenteFinanciacionActualizar.setTipoOrigenFuenteFinanciacion(tipoOrigenFuenteFinanciacionRepository
         .findById(fuenteFinanciacionActualizar.getTipoOrigenFuenteFinanciacion().getId())
         .orElseThrow(() -> new TipoOrigenFuenteFinanciacionNotFoundException(
             fuenteFinanciacionActualizar.getTipoOrigenFuenteFinanciacion().getId())));
-    Assert.isTrue(fuenteFinanciacionActualizar.getTipoOrigenFuenteFinanciacion().getActivo(),
-        "El TipoOrigenFuenteFinanciacion debe estar Activo");
 
     return repository.findById(fuenteFinanciacionActualizar.getId()).map(fuenteFinanciacion -> {
+
+      Assert.isTrue(
+          fuenteFinanciacion.getTipoAmbitoGeografico().getId() == fuenteFinanciacionActualizar.getTipoAmbitoGeografico()
+              .getId() || fuenteFinanciacionActualizar.getTipoAmbitoGeografico().getActivo(),
+          "El TipoAmbitoGeografico debe estar Activo");
+
+      Assert.isTrue(
+          fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().getId() == fuenteFinanciacionActualizar
+              .getTipoOrigenFuenteFinanciacion().getId()
+              || fuenteFinanciacionActualizar.getTipoOrigenFuenteFinanciacion().getActivo(),
+          "El TipoOrigenFuenteFinanciacion debe estar Activo");
+
       fuenteFinanciacion.setNombre(fuenteFinanciacionActualizar.getNombre());
       fuenteFinanciacion.setDescripcion(fuenteFinanciacionActualizar.getDescripcion());
       fuenteFinanciacion.setFondoEstructural(fuenteFinanciacionActualizar.getFondoEstructural());

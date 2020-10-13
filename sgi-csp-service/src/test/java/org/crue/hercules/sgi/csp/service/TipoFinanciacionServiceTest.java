@@ -99,7 +99,7 @@ public class TipoFinanciacionServiceTest {
     BDDMockito.given(tipoFinanciacionRepository.save(tipoFinanciacion)).willReturn(tipoFinanciacionServicioActualizado);
 
     // when: Actualizamos el tipo Financiacion
-    TipoFinanciacion tipoFinanciacionActualizado = tipoFinanciacionService.update(tipoFinanciacion);
+    TipoFinanciacion tipoFinanciacionActualizado = tipoFinanciacionService.update(tipoFinanciacionServicioActualizado);
 
     // then: El tipo Financiacion se actualiza correctamente.
     Assertions.assertThat(tipoFinanciacionActualizado.getId()).isEqualTo(1L);

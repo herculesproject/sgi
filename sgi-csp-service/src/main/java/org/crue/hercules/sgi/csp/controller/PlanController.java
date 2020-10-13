@@ -7,7 +7,9 @@ import javax.validation.groups.Default;
 
 import org.crue.hercules.sgi.csp.model.BaseEntity.Update;
 import org.crue.hercules.sgi.csp.model.Plan;
+import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.service.PlanService;
+import org.crue.hercules.sgi.csp.service.ProgramaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -39,13 +41,18 @@ public class PlanController {
   /** Plan service */
   private final PlanService service;
 
+  /** Programa service */
+  private final ProgramaService programaService;
+
   /**
    * Instancia un nuevo PlanController.
    * 
-   * @param service {@link PlanService}
+   * @param service         {@link PlanService}.
+   * @param programaService {@link ProgramaService}.
    */
-  public PlanController(PlanService service) {
+  public PlanController(PlanService service, ProgramaService programaService) {
     this.service = service;
+    this.programaService = programaService;
   }
 
   /**
@@ -129,6 +136,30 @@ public class PlanController {
     log.debug("deleteById(Long id) - start");
     service.disable(id);
     log.debug("deleteById(Long id) - end");
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link Programa} del {@link Plan}.
+   * 
+   * @param id     Identificador de {@link Plan}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/programas")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
+  ResponseEntity<Page<Programa>> findAllProgramas(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllProgramas(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<Programa> page = programaService.findAllByPlan(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllProgramas(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProgramas(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
 }

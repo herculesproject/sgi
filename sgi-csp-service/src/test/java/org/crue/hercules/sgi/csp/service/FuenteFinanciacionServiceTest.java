@@ -136,7 +136,7 @@ public class FuenteFinanciacionServiceTest {
   }
 
   @Test
-  public void create_WithNoExistingTipoAmbitoGeografico_ThrowsIllegalArgumentException() {
+  public void create_WithNoExistingTipoAmbitoGeografico_ThrowsTipoAmbitoGeograficoNotFoundException() {
     // given: Un nuevo FuenteFinanciacion
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(null);
 
@@ -168,7 +168,7 @@ public class FuenteFinanciacionServiceTest {
   }
 
   @Test
-  public void create_WithNoExistingTipoOrigenFuenteFinanciacion_ThrowsIllegalArgumentException() {
+  public void create_WithNoExistingTipoOrigenFuenteFinanciacion_ThrowsTipoOrigenFuenteFinanciacionNotFoundException() {
     // given: Un nuevo FuenteFinanciacion
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(null);
 
@@ -312,7 +312,7 @@ public class FuenteFinanciacionServiceTest {
   }
 
   @Test
-  public void update_WithDisabledTipoAmbitoGeografico_ThrowsIllegalArgumentException() {
+  public void update_WithDisabledTipoAmbitoGeograficoNoEdited_ReturnsFuenteFinanciacion() {
     // given: Un FuenteFinanciacion actualizado
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
     fuenteFinanciacion.getTipoAmbitoGeografico().setActivo(false);
@@ -322,10 +322,49 @@ public class FuenteFinanciacionServiceTest {
     BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(fuenteFinanciacion.getTipoAmbitoGeografico()));
 
+    BDDMockito.given(tipoOrigenFuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion()));
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(fuenteFinanciacion));
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<FuenteFinanciacion>any()))
+        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+
+    // when: Actualizamos el FuenteFinanciacion
+    FuenteFinanciacion fuenteFinanciacionActualizado = service.update(fuenteFinanciacion);
+
+    // then: El FuenteFinanciacion se actualiza correctamente.
+    Assertions.assertThat(fuenteFinanciacionActualizado).as("isNotNull()").isNotNull();
+    Assertions.assertThat(fuenteFinanciacionActualizado.getId()).as("getId()").isEqualTo(fuenteFinanciacion.getId());
+    Assertions.assertThat(fuenteFinanciacionActualizado.getNombre()).as("getNombre()")
+        .isEqualTo(fuenteFinanciacion.getNombre());
+    Assertions.assertThat(fuenteFinanciacionActualizado.getActivo()).as("getActivo()")
+        .isEqualTo(fuenteFinanciacion.getActivo());
+  }
+
+  @Test
+  public void update_WithDisabledTipoAmbitoGeografico_ThrowsIllegalArgumentException() {
+    // given: Un FuenteFinanciacion actualizado
+    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
+
+    FuenteFinanciacion fuenteFinanciacionActualizado = generarMockFuenteFinanciacion(1L);
+    fuenteFinanciacionActualizado.getTipoAmbitoGeografico().setId(2L);
+    fuenteFinanciacionActualizado.getTipoAmbitoGeografico().setActivo(false);
+
+    BDDMockito.given(repository.findByNombre(fuenteFinanciacionActualizado.getNombre())).willReturn(Optional.empty());
+
+    BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(fuenteFinanciacionActualizado.getTipoAmbitoGeografico()));
+
+    BDDMockito.given(tipoOrigenFuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(fuenteFinanciacionActualizado.getTipoOrigenFuenteFinanciacion()));
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(fuenteFinanciacion));
+
     // when: Actualizamos el FuenteFinanciacion
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.update(fuenteFinanciacion)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("El TipoAmbitoGeografico debe estar Activo");
+    Assertions.assertThatThrownBy(() -> service.update(fuenteFinanciacionActualizado))
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("El TipoAmbitoGeografico debe estar Activo");
   }
 
   @Test
@@ -348,7 +387,7 @@ public class FuenteFinanciacionServiceTest {
   }
 
   @Test
-  public void update_WithDisabledTipoOrigenFuenteFinanciacion_ThrowsIllegalArgumentException() {
+  public void update_WithDisabledTipoOrigenFuenteFinanciacionNoEdited_ReturnsFuenteFinanciacion() {
     // given: Un FuenteFinanciacion actualizado
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
     fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().setActivo(false);
@@ -361,10 +400,46 @@ public class FuenteFinanciacionServiceTest {
     BDDMockito.given(tipoOrigenFuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion()));
 
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(fuenteFinanciacion));
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<FuenteFinanciacion>any()))
+        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+
+    // when: Actualizamos el FuenteFinanciacion
+    FuenteFinanciacion fuenteFinanciacionActualizado = service.update(fuenteFinanciacion);
+
+    // then: El FuenteFinanciacion se actualiza correctamente.
+    Assertions.assertThat(fuenteFinanciacionActualizado).as("isNotNull()").isNotNull();
+    Assertions.assertThat(fuenteFinanciacionActualizado.getId()).as("getId()").isEqualTo(fuenteFinanciacion.getId());
+    Assertions.assertThat(fuenteFinanciacionActualizado.getNombre()).as("getNombre()")
+        .isEqualTo(fuenteFinanciacion.getNombre());
+    Assertions.assertThat(fuenteFinanciacionActualizado.getActivo()).as("getActivo()")
+        .isEqualTo(fuenteFinanciacion.getActivo());
+  }
+
+  @Test
+  public void update_WithDisabledTipoOrigenFuenteFinanciacion_ThrowsIllegalArgumentException() {
+    // given: Un FuenteFinanciacion actualizado
+    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
+
+    FuenteFinanciacion fuenteFinanciacionActualizado = generarMockFuenteFinanciacion(1L);
+    fuenteFinanciacionActualizado.getTipoOrigenFuenteFinanciacion().setId(2L);
+    fuenteFinanciacionActualizado.getTipoOrigenFuenteFinanciacion().setActivo(false);
+
+    BDDMockito.given(repository.findByNombre(fuenteFinanciacionActualizado.getNombre())).willReturn(Optional.empty());
+
+    BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(fuenteFinanciacionActualizado.getTipoAmbitoGeografico()));
+
+    BDDMockito.given(tipoOrigenFuenteFinanciacionRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(fuenteFinanciacionActualizado.getTipoOrigenFuenteFinanciacion()));
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(fuenteFinanciacion));
+
     // when: Actualizamos el FuenteFinanciacion
     // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.update(fuenteFinanciacion)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("El TipoOrigenFuenteFinanciacion debe estar Activo");
+    Assertions.assertThatThrownBy(() -> service.update(fuenteFinanciacionActualizado))
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("El TipoOrigenFuenteFinanciacion debe estar Activo");
   }
 
   @Test

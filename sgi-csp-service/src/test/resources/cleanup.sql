@@ -10,6 +10,7 @@ DELETE FROM csp.modelo_tipo_finalidad;
 DELETE FROM csp.modelo_tipo_hito;
 DELETE FROM csp.modelo_unidad;
 DELETE FROM csp.modelo_ejecucion;
+DELETE FROM csp.programa;
 DELETE FROM csp.plan;
 DELETE FROM csp.tipo_ambito_geografico;
 DELETE FROM csp.tipo_documento;
