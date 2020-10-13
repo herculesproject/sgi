@@ -8,6 +8,14 @@
     <createSequence sequenceName="concepto_gasto_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-convocatoria_seq">
+    <createSequence sequenceName="convocatoria_seq" />
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-convocatoria_entidad_gestora_seq">
+    <createSequence sequenceName="convocatoria_entidad_gestora_seq" />
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-fuente_financiacion_seq">
     <createSequence sequenceName="fuente_financiacion_seq" />
   </changeSet>
@@ -87,6 +95,34 @@
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
+  <changeSet author="master" id="20200928000000-convocatoria">
+    <createTable tableName="convocatoria">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="convocatoria_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_pk" />
+      </column>
+      <column name="codigo" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-convocatoria_entidad_gestora">
+    <createTable tableName="convocatoria_entidad_gestora">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="convocatoria_entidad_gestora_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_entidad_gestora_pk" />
+      </column>
+      <column name="convocatoria_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="entidad_ref" type="VARCHAR2(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-modelo_ejecucion">
     <createTable tableName="modelo_ejecucion">
       <column name="id" type="BIGINT" defaultValueSequenceNext="modelo_ejecucion_seq">
@@ -414,6 +450,10 @@
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
   <!-- ########################################################## -->
+  <changeSet author="master" id="20200601000000-convocatoria_entidad_gestora_convocatoria_FK">
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_entidad_gestora" constraintName="convocatoria_entidad_gestora_convocatoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+  </changeSet>
+
   <changeSet author="master" id="20200601000000-fuente_financiacion_tipo_ambito_geografico_FK">
     <addForeignKeyConstraint baseColumnNames="tipo_ambito_geografico_id" baseTableName="fuente_financiacion" constraintName="fuente_financiacion_tipo_ambito_geografico_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_ambito_geografico" validate="true" />
   </changeSet>
@@ -468,6 +508,10 @@
   <!-- ########################################################## -->
   <changeSet author="master" id="20200928000000-concepto_gasto_uk">
     <addUniqueConstraint columnNames="nombre" constraintName="concepto_gasto_uk" tableName="concepto_gasto" />
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-convocatoria_entidad_gestora_uk">
+    <addUniqueConstraint columnNames="convocatoria_id, entidad_ref" constraintName="convocatoria_entidad_gestora_uk" tableName="convocatoria_entidad_gestora" />
   </changeSet>
 
   <changeSet author="master" id="20200928000000-fuente_financiacion_uk">
