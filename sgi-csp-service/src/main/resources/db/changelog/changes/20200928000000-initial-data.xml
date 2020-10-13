@@ -61,6 +61,34 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-listado_area_tematica">
+    <insert tableName="listado_area_tematica">
+      <column name="nombre" value="area_tematica AAA" />
+      <column name="descripcion" value="listado area tematica AAA" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="listado_area_tematica">
+      <column name="nombre" value="area_tematica BBB" />
+      <column name="descripcion" value="listado area tematica BBB" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="listado_area_tematica">
+      <column name="nombre" value="area_tematica CCC" />
+      <column name="descripcion" value="listado area tematica CCC" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="listado_area_tematica">
+      <column name="nombre" value="area_tematica DDD" />
+      <column name="descripcion" value="listado area tematica DDD" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="listado_area_tematica">
+      <column name="nombre" value="area_tematica EEE" />
+      <column name="descripcion" value="listado area tematica EEE" />
+      <column name="activo" value="false" />
+    </insert>
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-modelo_ejecucion">
     <insert tableName="modelo_ejecucion">
       <column name="nombre" value="nombre-001" />
@@ -247,8 +275,8 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_enlace">
-      <column name="nombre" value="tipo_enlace FFF" />
-      <column name="descripcion" value="tipo_enlace FFF" />
+      <column name="nombre" value="tipo_enlace EEE" />
+      <column name="descripcion" value="tipo_enlace EEE" />
       <column name="activo" value="false" />
     </insert>
   </changeSet>

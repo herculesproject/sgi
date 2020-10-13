@@ -20,6 +20,10 @@
     <createSequence sequenceName="fuente_financiacion_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-listado_area_tematica_seq">
+    <createSequence sequenceName="listado_area_tematica_seq" />
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-modelo_ejecucion_seq">
     <createSequence sequenceName="modelo_ejecucion_seq" />
   </changeSet>
@@ -75,10 +79,10 @@
   <changeSet author="master" id="20200928000000-tipo_finalidad_seq">
     <createSequence sequenceName="tipo_finalidad_seq" />
   </changeSet>
+
   <changeSet author="master" id="20200928000000-tipo_fase_seq">
     <createSequence sequenceName="tipo_fase_seq" />
   </changeSet>
-
 
   <changeSet author="master" id="20201008000000-tipo_financiacion_seq">
     <createSequence sequenceName="tipo_financiacion_seq" />
@@ -122,6 +126,21 @@
         <constraints nullable="false" />
       </column>
       <column name="entidad_ref" type="VARCHAR2(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-listado_area_tematica">
+    <createTable tableName="listado_area_tematica">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="listado_area_tematica_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="listado_area_tematica_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR2(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="descripcion" type="VARCHAR2(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>
     </createTable>
@@ -546,6 +565,10 @@
 
   <changeSet author="master" id="20200928000000-fuente_financiacion_uk">
     <addUniqueConstraint columnNames="nombre" constraintName="fuente_financiacion_uk" tableName="fuente_financiacion" />
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-listado_area_tematica_uk">
+    <addUniqueConstraint columnNames="nombre" constraintName="listado_area_tematica_uk" tableName="listado_area_tematica" />
   </changeSet>
 
   <changeSet author="master" id="20200928000000-modelo_ejecucion_uk">
