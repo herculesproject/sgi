@@ -6,4 +6,3 @@ export interface IFinalidad {
   nombre: string;
 
 }
-

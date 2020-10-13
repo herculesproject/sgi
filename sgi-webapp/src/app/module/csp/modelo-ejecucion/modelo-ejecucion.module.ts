@@ -6,10 +6,15 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '@shared/shared.module';
+import { ModeloEjecucionCrearComponent } from './modelo-ejecucion-crear/modelo-ejecucion-crear.component';
+import { ModeloEjecucionDatosGeneralesComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-datos-generales/modelo-ejecucion-datos-generales.component';
+import { ModeloEjecucionResolver } from './modelo-ejecucion.resolver';
 
 @NgModule({
   declarations: [
-    ModeloEjecucionListadoComponent
+    ModeloEjecucionListadoComponent,
+    ModeloEjecucionCrearComponent,
+    ModeloEjecucionDatosGeneralesComponent
   ],
   imports: [
     CommonModule,
@@ -19,6 +24,9 @@ import { SharedModule } from '@shared/shared.module';
     ReactiveFormsModule,
     TranslateModule,
     FormsModule
+  ],
+  providers: [
+    ModeloEjecucionResolver
   ]
 })
 export class ModeloEjecucionModule { }

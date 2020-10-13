@@ -14,7 +14,6 @@ import { SgiRestListResult } from '@sgi/framework/http/types';
 import { startWith, map, delay } from 'rxjs/operators';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { IFinalidad } from '@core/models/csp/finalidad';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { IUnidadGestion } from '@core/models/csp/unidad-gestion';
 import { IAmbitoGeografico } from '@core/models/csp/ambito-geografico';
@@ -26,6 +25,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
 import { ConvocatoriaDatosGeneralesFragment } from './convocatoria-datos-generales.fragment';
 import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
+import { IFinalidad } from '@core/models/csp/finalidad';
 
 
 
