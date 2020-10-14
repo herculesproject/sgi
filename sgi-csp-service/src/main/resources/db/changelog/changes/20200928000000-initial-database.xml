@@ -438,7 +438,7 @@
   <changeSet author="master" id="20200928000000-fuente_financiacion">
     <createTable tableName="fuente_financiacion">
       <column name="id" type="BIGINT" defaultValueSequenceNext="fuente_financiacion_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="fuente_financiacion_seq" />
+        <constraints nullable="false" primaryKey="true" primaryKeyName="fuente_financiacion_pk" />
       </column>
       <column name="nombre" type="VARCHAR(50)">
         <constraints nullable="false" />
@@ -476,7 +476,7 @@
   <changeSet author="master" id="20200928000000-concepto_gasto">
     <createTable tableName="concepto_gasto">
       <column name="id" type="BIGINT" defaultValueSequenceNext="concepto_gasto_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="concepto_gasto_seq" />
+        <constraints nullable="false" primaryKey="true" primaryKeyName="concepto_gasto_pk" />
       </column>
       <column name="nombre" type="VARCHAR(50)">
         <constraints nullable="false" />

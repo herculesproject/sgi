@@ -358,19 +358,19 @@
     <insert tableName="modelo_tipo_documento">
       <column name="tipo_documento_id" valueComputed="(select id from csp.tipo_documento where nombre = 'nombre-001')" />
       <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')" />
-      <column name="modelo_tipo_fase_id" valueComputed="(select t.id from csp.modelo_tipo_fase m join csp.tipo_fase t where t.nombre = 'Fase1' limit 1)"></column>
+      <column name="modelo_tipo_fase_id" valueComputed="(select t.id from csp.modelo_tipo_fase m join csp.tipo_fase t on m.tipo_fase_id = t.id where t.nombre = 'Fase1' limit 1)"></column>
       <column name="activo" value="true" />
     </insert>
     <insert tableName="modelo_tipo_documento">
       <column name="tipo_documento_id" valueComputed="(select id from csp.tipo_documento where nombre = 'nombre-002')" />
       <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')" />
-      <column name="modelo_tipo_fase_id" valueComputed="(select t.id from csp.modelo_tipo_fase m join csp.tipo_fase t where t.nombre = 'Fase1' limit 1)"></column>
+      <column name="modelo_tipo_fase_id" valueComputed="(select t.id from csp.modelo_tipo_fase m join csp.tipo_fase t on m.tipo_fase_id = t.id where t.nombre = 'Fase1' limit 1)"></column>
       <column name="activo" value="true" />
     </insert>
     <insert tableName="modelo_tipo_documento">
       <column name="tipo_documento_id" valueComputed="(select id from csp.tipo_documento where nombre = 'nombre-003')" />
       <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')" />
-      <column name="modelo_tipo_fase_id" valueComputed="(select t.id from csp.modelo_tipo_fase m join csp.tipo_fase t where t.nombre = 'Fase2' limit 1)"></column>
+      <column name="modelo_tipo_fase_id" valueComputed="(select t.id from csp.modelo_tipo_fase m join csp.tipo_fase t on m.tipo_fase_id = t.id where t.nombre = 'Fase2' limit 1)"></column>
       <column name="activo" value="true" />
     </insert>
     <insert tableName="modelo_tipo_documento">
