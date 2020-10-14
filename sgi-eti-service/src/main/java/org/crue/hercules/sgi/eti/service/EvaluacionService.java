@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.service;
 
 import java.util.List;
 
+import org.crue.hercules.sgi.eti.dto.EvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Memoria;
@@ -48,10 +49,10 @@ public interface EvaluacionService {
    * @param idConvocatoriaReunion Id de {@link ConvocatoriaReunion}.
    * @param query                 información del filtro.
    * @param paging                la información de la paginación.
-   * @return la lista de entidades {@link Evaluacion} paginadas.
+   * @return la lista de entidades {@link EvaluacionWithIsEliminable} paginadas.
    */
-  Page<Evaluacion> findAllByConvocatoriaReunionIdAndNoEsRevMinima(Long idConvocatoriaReunion, List<QueryCriteria> query,
-      Pageable paging);
+  Page<EvaluacionWithIsEliminable> findAllByConvocatoriaReunionIdAndNoEsRevMinima(Long idConvocatoriaReunion,
+      List<QueryCriteria> query, Pageable paging);
 
   /**
    * Obtener todas las entidades paginadas {@link Evaluacion} activas para una
@@ -157,7 +158,7 @@ public interface EvaluacionService {
    * @param idConvocatoriaReunion id de la {@link ConvocatoriaReunion}
    * @param idEvaluacion          id de la {@Evaluacion}
    */
-  void deleteMemoria(Long idConvocatoriaReunion, Long idEvaluacion);
+  void deleteEvaluacion(Long idConvocatoriaReunion, Long idEvaluacion);
 
   /**
    * Obtener todas las entidades paginadas {@link Evaluacion} de una

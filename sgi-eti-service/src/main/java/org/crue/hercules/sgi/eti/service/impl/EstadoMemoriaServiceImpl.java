@@ -133,4 +133,17 @@ public class EstadoMemoriaServiceImpl implements EstadoMemoriaService {
     }).orElseThrow(() -> new EstadoMemoriaNotFoundException(estadoMemoriaActualizar.getId()));
   }
 
+  @Override
+  public EstadoMemoria recuperarEstadoAnteriorMemoria(EstadoMemoria estadoMemoria) {
+    log.debug("recuperarEstadoAnteriorMemoria(EstadoMemoria estadoMemoria) - start");
+    // Specification<EstadoMemoria> specByMemoriaId = EstadoMemoriaSpecifications
+    // .byMemoriaId(estadoMemoria.getMemoria().getId());
+    // EstadoMemoria returnValue =
+    // estadoMemoriaRepository.findByMemoriaIdAndIdNotInByOrderByFechaEstadoDescLimitedTo(
+    // estadoMemoria.getMemoria().getId(), estadoMemoria.getId(), 1);
+    // log.debug("recuperarEstadoAnteriorMemoria(EstadoMemoria estadoMemoria) -
+    // end");
+    return null;
+  }
+
 }

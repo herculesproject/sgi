@@ -2,10 +2,14 @@ package org.crue.hercules.sgi.eti.repository.specification;
 
 import java.util.List;
 
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva_;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Memoria_;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion_;
+import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.Retrospectiva_;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria_;
 import org.springframework.data.jpa.domain.Specification;
@@ -37,7 +41,8 @@ public class MemoriaSpecifications {
   public static Specification<Memoria> estadoRetrospectivaIn(List<Long> estados) {
     return (root, query, cb) -> {
       if (estados != null && !estados.isEmpty()) {
-        return root.get(Memoria_.retrospectiva).get(Retrospectiva_.estadoRetrospectiva).get(EstadoRetrospectiva_.id)
+        Join<Memoria, Retrospectiva> joinMemoriaRetrospectiva = root.join(Memoria_.retrospectiva, JoinType.LEFT);
+        return joinMemoriaRetrospectiva.get(Retrospectiva_.estadoRetrospectiva).get(EstadoRetrospectiva_.id)
             .in(estados);
       } else {
         return cb.and();

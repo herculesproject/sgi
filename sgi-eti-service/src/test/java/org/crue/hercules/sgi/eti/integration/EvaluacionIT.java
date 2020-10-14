@@ -138,7 +138,7 @@ public class EvaluacionIT {
     // when: Delete
     long id = 1L;
     final ResponseEntity<Evaluacion> response = restTemplate.exchange("/convocatoriareuniones/1/evaluacion/1",
-        HttpMethod.DELETE, buildRequest(headers, null), Evaluacion.class, id);
+        HttpMethod.DELETE, buildRequest(headers, generarMockEvaluacion(1L, null)), Evaluacion.class, id);
 
     // then: 200
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -841,7 +841,7 @@ public class EvaluacionIT {
 
     Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
         tipoMemoria, new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.FALSE,
-        new Retrospectiva(1L, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), LocalDate.now()), 3,
+        new Retrospectiva(1L, new EstadoRetrospectiva(3L, "En evaluación", Boolean.TRUE), LocalDate.now()), 3,
         Boolean.TRUE);
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);

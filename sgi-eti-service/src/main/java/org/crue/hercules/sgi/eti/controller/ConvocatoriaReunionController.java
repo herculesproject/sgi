@@ -267,10 +267,10 @@ public class ConvocatoriaReunionController {
    */
   @DeleteMapping("/{idConvocatoriaReunion}/evaluacion/{idEvaluacion}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-C', 'ETI-CNV-E')")
-  void deleteMemoria(@PathVariable Long idConvocatoriaReunion, @PathVariable Long idEvaluacion) {
+  void deleteEvaluacion(@PathVariable Long idConvocatoriaReunion, @PathVariable Long idEvaluacion) {
     log.debug("deleteMemoria(Long idConvocatoriaReunion, Long idEvaluacion, Long idMemoria) - start");
 
-    evaluacionService.deleteMemoria(idConvocatoriaReunion, idEvaluacion);
+    evaluacionService.deleteEvaluacion(idConvocatoriaReunion, idEvaluacion);
 
     log.debug("deleteMemoria(Long idConvocatoriaReunion, Long idEvaluacion, Long idMemoria) - end");
 

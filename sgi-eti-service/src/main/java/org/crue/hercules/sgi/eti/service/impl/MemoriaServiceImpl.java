@@ -138,14 +138,12 @@ public class MemoriaServiceImpl implements MemoriaService {
     Specification<Memoria> specEstadoRetrospectiva = MemoriaSpecifications
         .estadoRetrospectivaIn(Arrays.asList(Constantes.ESTADO_RETROSPECTIVA_EN_SECRETARIA));
 
-    // Estado Actual AND idComite y fechaLimite
-    Specification<Memoria> condicion = Specification.where(specEstadoActual).and(specByQuery);
-    // (Estado Actual AND idComite y fechaLimite) OR Estado retrospectiva
-    Specification<Memoria> condicionFinal = Specification.where(condicion).or(specEstadoRetrospectiva);
+    // Estado Actual o estado retrospectiva
+    Specification<Memoria> condicionFinal = Specification.where(specEstadoActual).or(specEstadoRetrospectiva);
 
-    // Memorias Activas AND ((Estado Actual AND idComite y fechaLimite) OR Estado
-    // retrospectiva)
-    Specification<Memoria> specs = Specification.where(specActivos).and(condicionFinal);
+    // Memorias Activas AND ((Estado Actual AND idComite y fechaLimite) and (estado
+    // actual or estado retrospectiva)
+    Specification<Memoria> specs = Specification.where(specActivos).and(condicionFinal).and(specByQuery);
 
     Page<Memoria> returnValue = memoriaRepository.findAll(specs, pageable);
 

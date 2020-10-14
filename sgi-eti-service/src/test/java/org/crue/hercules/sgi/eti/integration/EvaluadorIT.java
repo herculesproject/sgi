@@ -366,13 +366,14 @@ public class EvaluadorIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Evaluador> evaluadores = response.getBody();
-    Assertions.assertThat(evaluadores.size()).isEqualTo(3);
+    Assertions.assertThat(evaluadores.size()).isEqualTo(4);
 
-    // Contiene los evaluadores con Resumen 'Evaluador003', 'Evaluador005' y
-    // 'Evaluador007'
-    Assertions.assertThat(evaluadores.get(0).getResumen()).isEqualTo("Evaluador003");
-    Assertions.assertThat(evaluadores.get(1).getResumen()).isEqualTo("Evaluador005");
-    Assertions.assertThat(evaluadores.get(2).getResumen()).isEqualTo("Evaluador007");
+    // Contiene los evaluadores con Resumen 'Evaluador001', 'Evaluador003',
+    // 'Evaluador005' y 'Evaluador007'
+    Assertions.assertThat(evaluadores.get(0).getResumen()).isEqualTo("Evaluador001");
+    Assertions.assertThat(evaluadores.get(1).getResumen()).isEqualTo("Evaluador003");
+    Assertions.assertThat(evaluadores.get(2).getResumen()).isEqualTo("Evaluador005");
+    Assertions.assertThat(evaluadores.get(3).getResumen()).isEqualTo("Evaluador007");
   }
 
   @Sql
@@ -400,13 +401,13 @@ public class EvaluadorIT {
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Evaluador> evaluadores = response.getBody();
-    Assertions.assertThat(evaluadores.size()).isEqualTo(1);
+    Assertions.assertThat(evaluadores.size()).isEqualTo(2);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");
-    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("3");
+    Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("4");
 
     // Contiene de resumen='Evaluador007'
-    Assertions.assertThat(evaluadores.get(0).getResumen()).isEqualTo("Evaluador007");
+    Assertions.assertThat(evaluadores.get(0).getResumen()).isEqualTo("Evaluador005");
   }
 
   /**

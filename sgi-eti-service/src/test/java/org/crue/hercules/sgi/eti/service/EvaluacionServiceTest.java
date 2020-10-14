@@ -9,11 +9,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.converter.EvaluacionConverter;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
+import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
@@ -28,6 +30,7 @@ import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.ConvocatoriaReunionRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
+import org.crue.hercules.sgi.eti.repository.EstadoRetrospectivaRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
@@ -73,11 +76,17 @@ public class EvaluacionServiceTest {
   @Mock
   private MemoriaRepository memoriaRepository;
 
+  @Mock
+  private EvaluacionConverter evaluacionConverter;
+
+  @Mock
+  private EstadoRetrospectivaRepository estadoRetrospectivaRepository;
+
   @BeforeEach
   public void setUp() throws Exception {
     evaluacionService = new EvaluacionServiceImpl(evaluacionRepository, estadoMemoriaRepository,
-        retrospectivaRepository, memoriaService, comentarioRepository, convocatoriaReunionRepository,
-        memoriaRepository);
+        retrospectivaRepository, memoriaService, comentarioRepository, convocatoriaReunionRepository, memoriaRepository,
+        evaluacionConverter, estadoRetrospectivaRepository);
   }
 
   @Test
@@ -599,18 +608,27 @@ public class EvaluacionServiceTest {
   }
 
   @Test
-  public void deleteMemoria_fecha_anterior() {
+  public void deleteEvaluacion_fecha_anterior() {
 
-    Evaluacion evaluacion = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), 1L, 1L);
+    Evaluacion evaluacion = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), 1L, 2L);
     Memoria memoria = evaluacion.getMemoria();
 
     Optional<Evaluacion> response = Optional.of(evaluacion);
     Optional<Memoria> responseMemo = Optional.of(memoria);
     BDDMockito.given(evaluacionRepository.findById(ArgumentMatchers.anyLong())).willReturn(response);
     BDDMockito.given(memoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(responseMemo);
+    // El mock de memoria es de tipo retrospectiva, si no fuera retrospectiva
+    // descomentar la siguiente línea:
+    // BDDMockito.given(estadoMemoriaRepository.findAllByMemoriaIdOrderByFechaEstadoDesc(ArgumentMatchers.anyLong()))
+    // .willReturn(generarEstadosMemoria(2L));
+    // Comentar esta línea en caso de que el mock de memoria no fuera de tipo
+    // retrospectiva.
+    BDDMockito.given(estadoRetrospectivaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarEstadoRetrospectiva(2L)));
+
     try {
 
-      evaluacionService.deleteMemoria(response.get().getConvocatoriaReunion().getId(), response.get().getId());
+      evaluacionService.deleteEvaluacion(response.get().getConvocatoriaReunion().getId(), response.get().getId());
     } catch (
 
     IllegalArgumentException e) {
@@ -787,6 +805,23 @@ public class EvaluacionServiceTest {
     evaluacion.setActivo(Boolean.TRUE);
 
     return evaluacion;
+  }
+
+  public List<EstadoMemoria> generarEstadosMemoria(Long id) {
+    List<EstadoMemoria> estadosMemoria = new ArrayList<EstadoMemoria>();
+    EstadoMemoria estadoMemoria = new EstadoMemoria();
+    estadoMemoria.setFechaEstado(LocalDateTime.now());
+    estadoMemoria.setId(id);
+    estadoMemoria.setMemoria(new Memoria());
+    estadosMemoria.add(estadoMemoria);
+    return estadosMemoria;
+  }
+
+  public EstadoRetrospectiva generarEstadoRetrospectiva(Long id) {
+    EstadoRetrospectiva estadoRetrospectiva = new EstadoRetrospectiva();
+    estadoRetrospectiva.setActivo(true);
+    estadoRetrospectiva.setId(id);
+    return estadoRetrospectiva;
   }
 
 }

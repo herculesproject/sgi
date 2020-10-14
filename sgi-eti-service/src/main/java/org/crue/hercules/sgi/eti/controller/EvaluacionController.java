@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.eti.dto.EvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.service.ComentarioService;
@@ -110,13 +111,13 @@ public class EvaluacionController {
    */
   @GetMapping("/convocatoriareunionnorevminima/{idConvocatoriaReunion}")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-CNV-C', 'ETI-CNV-E')")
-  ResponseEntity<Page<Evaluacion>> findAllByConvocatoriaReunionIdAndNoEsRevMinima(
+  ResponseEntity<Page<EvaluacionWithIsEliminable>> findAllByConvocatoriaReunionIdAndNoEsRevMinima(
       @PathVariable Long idConvocatoriaReunion, @RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllByConvocatoriaReunionIdAndNoEsRevMinima({}, {}, {}) - start", idConvocatoriaReunion, query,
         paging);
-    Page<Evaluacion> page = service.findAllByConvocatoriaReunionIdAndNoEsRevMinima(idConvocatoriaReunion, query,
-        paging);
+    Page<EvaluacionWithIsEliminable> page = service
+        .findAllByConvocatoriaReunionIdAndNoEsRevMinima(idConvocatoriaReunion, query, paging);
 
     if (page.isEmpty()) {
       log.debug("findAllByConvocatoriaReunionIdAndNoEsRevMinima({}, {}, {}) - end", idConvocatoriaReunion, query,
