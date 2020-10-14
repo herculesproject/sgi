@@ -25,8 +25,8 @@
     </insert>
     <insert tableName="unidad">
       <column name="nombre" value="codigo-003" />
-      <column name="acronimo" value="acronimo-001" />
-      <column name="descripcion" value="descripcion-001" />
+      <column name="acronimo" value="acronimo-003" />
+      <column name="descripcion" value="descripcion-003" />
       <column name="activo" value="false" />
     </insert>
   </changeSet>
