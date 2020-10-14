@@ -12,6 +12,7 @@ import { IModeloTipoEnlace } from '@core/models/csp/modelo-tipo-enlace';
 import { tap } from 'rxjs/operators';
 import { IModeloTipoFinalidad } from '@core/models/csp/modelo-tipo-finalidad';
 import { IModeloTipoFase } from '@core/models/csp/modelo-tipo-fase';
+import { IModeloTipoDocumento } from '@core/models/csp/modelo-tipo-documento';
 
 
 
@@ -189,6 +190,18 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
     this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoFase.name}(id: ${id})`, '-', 'START');
     return this.find<IModeloTipoFase, IModeloTipoFase>(`${this.endpointUrl}/${id}/modelotipofases`, options).pipe(
       tap(() => this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoFase.name}(id: ${id})`, '-', 'END'))
+    );
+  }
+
+  /**
+   * Muestra todos los modelos tipo de documento
+   * @param id modelo de ejecucion
+   * @param options opciones de búsqueda.
+   */
+  findModeloTipoDocumento(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoDocumento>> {
+    this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoDocumento.name}(id: ${id})`, '-', 'START');
+    return this.find<IModeloTipoDocumento, IModeloTipoDocumento>(`${this.endpointUrl}/${id}/modelotipodocumentos`, options).pipe(
+      tap(() => this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoDocumento.name}(id: ${id})`, '-', 'END'))
     );
   }
 

@@ -9,6 +9,7 @@ import { SgiAuthGuard } from '@sgi/framework/auth';
 import { ModeloEjecucionCrearComponent } from './modelo-ejecucion-crear/modelo-ejecucion-crear.component';
 import { ModeloEjecucionEditarComponent } from './modelo-ejecucion-editar/modelo-ejecucion-editar.component';
 import { ModeloEjecucionDatosGeneralesComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-datos-generales/modelo-ejecucion-datos-generales.component';
+import { ModeloEjecucionTipoDocumentoComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-documento/modelo-ejecucion-tipo-documento.component';
 import { ModeloEjecucionTipoEnlaceComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-enlace/modelo-ejecucion-tipo-enlace.component';
 import { ModeloEjecucionTipoFinalidadComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-finalidad/modelo-ejecucion-tipo-finalidad.component';
 import { ModeloEjecucionTipoFaseComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-fase/modelo-ejecucion-tipo-fase.component';
@@ -53,7 +54,6 @@ const routes: SgiRoutes = [
         component: ModeloEjecucionTipoEnlaceComponent,
         canDeactivate: [FragmentGuard]
       },
-      ,
       {
         path: MODELO_EJECUCION_ROUTE_NAMES.TIPO_FINALIDADES,
         component: ModeloEjecucionTipoFinalidadComponent,
@@ -62,6 +62,11 @@ const routes: SgiRoutes = [
       {
         path: MODELO_EJECUCION_ROUTE_NAMES.TIPO_FASES,
         component: ModeloEjecucionTipoFaseComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: MODELO_EJECUCION_ROUTE_NAMES.TIPO_DOCUMENTOS,
+        component: ModeloEjecucionTipoDocumentoComponent,
         canDeactivate: [FragmentGuard]
       },
     ]
@@ -93,7 +98,6 @@ const routes: SgiRoutes = [
         component: ModeloEjecucionTipoEnlaceComponent,
         canDeactivate: [FragmentGuard]
       },
-      ,
       {
         path: MODELO_EJECUCION_ROUTE_NAMES.TIPO_FINALIDADES,
         component: ModeloEjecucionTipoFinalidadComponent,
@@ -102,6 +106,11 @@ const routes: SgiRoutes = [
       {
         path: MODELO_EJECUCION_ROUTE_NAMES.TIPO_FASES,
         component: ModeloEjecucionTipoFaseComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: MODELO_EJECUCION_ROUTE_NAMES.TIPO_DOCUMENTOS,
+        component: ModeloEjecucionTipoDocumentoComponent,
         canDeactivate: [FragmentGuard]
       },
     ]

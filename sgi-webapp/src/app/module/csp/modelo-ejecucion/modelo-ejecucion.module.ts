@@ -16,6 +16,8 @@ import { ModeloEjecucionTipoEnlaceModalComponent } from './modals/modelo-ejecuci
 import { ModeloEjecucionTipoFinalidadModalComponent } from './modals/modelo-ejecucion-tipo-finalidad-modal/modelo-ejecucion-tipo-finalidad-modal.component';
 import { ModeloEjecucionTipoFaseComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-fase/modelo-ejecucion-tipo-fase.component';
 import { ModeloEjecucionTipoFaseModalComponent } from './modals/modelo-ejecucion-tipo-fase-modal/modelo-ejecucion-tipo-fase-modal.component';
+import { ModeloEjecucionTipoDocumentoComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-documento/modelo-ejecucion-tipo-documento.component';
+import { ModeloEjecucionTipoDocumentoModalComponent } from './modals/modelo-ejecucion-tipo-documento-modal/modelo-ejecucion-tipo-documento-modal.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { ModeloEjecucionTipoFaseModalComponent } from './modals/modelo-ejecucion
     ModeloEjecucionTipoFinalidadComponent,
     ModeloEjecucionTipoFinalidadModalComponent,
     ModeloEjecucionTipoFaseModalComponent,
-    ModeloEjecucionTipoFaseComponent
+    ModeloEjecucionTipoFaseComponent,
+    ModeloEjecucionTipoDocumentoComponent,
+    ModeloEjecucionTipoDocumentoModalComponent,
   ],
   imports: [
     CommonModule,
