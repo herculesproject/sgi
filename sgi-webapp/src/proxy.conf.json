@@ -21,6 +21,14 @@
     "secure": false,
     "logLevel": "debug"
   },
+  "/api/usr": {
+    "target": "http://hercules-sgi-usr:8080",
+    "pathRewrite": {
+      "^/api/usr": ""
+    },
+    "secure": false,
+    "logLevel": "debug"
+  },
   "/api/sgp": {
     "target": "http://hercules-sgp-service:8080",
     "pathRewrite": {
