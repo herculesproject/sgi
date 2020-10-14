@@ -54,7 +54,7 @@ export class EvaluadorDatosGeneralesFragment extends FormFragment<IEvaluador> {
       comite: new FormControl({ value: '', disabled: this.isEdit() }, [new NullIdValidador().isValid()]),
       fechaAlta: ['', Validators.required],
       fechaBaja: [''],
-      cargoComite: [null],
+      cargoComite: new FormControl({ value: null }, [new NullIdValidador().isValid()]),
       resumen: ['']
     }, {
       validator: [new DateValidator().isAfter('fechaAlta', 'fechaBaja')]

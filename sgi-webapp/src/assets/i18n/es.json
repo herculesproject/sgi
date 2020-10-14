@@ -612,6 +612,8 @@
   "eti.evaluador.listado.nombreApellidos": "Nombre y apellidos",
   "eti.evaluador.listado.numeroDocumento": "Nº documento",
   "eti.evaluador.listado.titulo": "Evaluadores",
+  "eti.evaluador.listado.eliminar": "¿Desea eliminar el evaluador?",
+  "eti.evaluador.listado.eliminarConfirmado": "Se ha eliminado el evaluador correctamente",
   "eti.gestionEvaluacion.listado.buscador.comite": "Comité",
   "eti.gestionSeguimiento.evaluar.comentarios.cabecera": "Comentarios",
   "eti.gestionSeguimiento.evaluar.documentacion.cabecera": "Documentación",
