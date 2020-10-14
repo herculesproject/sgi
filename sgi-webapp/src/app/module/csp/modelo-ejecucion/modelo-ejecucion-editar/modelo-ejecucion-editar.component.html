@@ -5,14 +5,6 @@
         [title]="'label.datos-generales' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.DATOS_GENERALES)">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item [route]="[MODELO_EJECUCION_ROUTE_NAMES.TIPO_ENLACES]"
-        [title]="'label.tipo-enlaces' | translate"
-        [fragment]="actionService.getFragment(actionService.FRAGMENT.TIPO_ENLACES)">
-      </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item [route]="[MODELO_EJECUCION_ROUTE_NAMES.TIPO_FINALIDADES]"
-        [title]="'label.tipo-finalidades' | translate"
-        [fragment]="actionService.getFragment(actionService.FRAGMENT.TIPO_FINALIDADES)">
-      </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[MODELO_EJECUCION_ROUTE_NAMES.TIPO_FASES]"
         [title]="'label.tipo.fases' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.TIPO_FASES)">
@@ -20,6 +12,14 @@
       <sgi-action-fragment-menu-item [route]="[MODELO_EJECUCION_ROUTE_NAMES.TIPO_DOCUMENTOS]"
         [title]="'label.tipoDocumentos' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.TIPO_DOCUMENTOS)">
+      </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item [route]="[MODELO_EJECUCION_ROUTE_NAMES.TIPO_ENLACES]"
+        [title]="'label.tipo-enlaces' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.TIPO_ENLACES)">
+      </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item [route]="[MODELO_EJECUCION_ROUTE_NAMES.TIPO_FINALIDADES]"
+        [title]="'label.tipo-finalidades' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.TIPO_FINALIDADES)">
       </sgi-action-fragment-menu-item>
     </mat-list>
   </mat-drawer>

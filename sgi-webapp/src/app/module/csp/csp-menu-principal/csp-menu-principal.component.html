@@ -3,10 +3,6 @@
     <mat-icon color="primary" mat-list-icon>assignment_ind</mat-icon>
     <p matLine *ngIf="opened">{{'menu.principal.csp.convocatoria' | translate}}</p>
   </a>
-  <a class="item" mat-list-item [routerLink]="[CSP_ROUTE_NAMES.MODELO_EJECUCION]" [routerLinkActive]="['is-active']">
-    <mat-icon color="primary" mat-list-icon>group_work</mat-icon>
-    <p matLine *ngIf="opened">{{'menu.principal.csp.modelo.ejecucion' | translate}}</p>
-  </a>
   <a class="item" mat-list-item [routerLinkActive]="['is-active']">
     <mat-icon color="primary" mat-list-icon>description</mat-icon>
     <p matLine *ngIf="opened">{{'menu.principal.csp.solicitudes' | translate}}</p>
@@ -52,6 +48,8 @@
           [routerLinkActive]="['is-active']">{{'menu.principal.csp.tipos.enlace' | translate}}</a>
         <a mat-list-item [routerLink]="[CSP_ROUTE_NAMES.TIPO_HITO]"
           [routerLinkActive]="['is-active']">{{'menu.principal.csp.tipo.hito' | translate}}</a>
+        <a mat-list-item [routerLink]="[CSP_ROUTE_NAMES.MODELO_EJECUCION]"
+          [routerLinkActive]="['is-active']">{{'menu.principal.csp.modelo.ejecucion' | translate}}</a>
       </div>
     </mat-expansion-panel>
 
