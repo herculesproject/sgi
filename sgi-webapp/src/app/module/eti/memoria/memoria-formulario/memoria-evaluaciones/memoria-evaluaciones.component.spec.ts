@@ -13,12 +13,20 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { MemoriaActionService } from '../../memoria.action.service';
-
 import { MemoriaEvaluacionesComponent } from './memoria-evaluaciones.component';
+
 
 describe('MemoriaEvaluacionesComponent', () => {
   let component: MemoriaEvaluacionesComponent;
   let fixture: ComponentFixture<MemoriaEvaluacionesComponent>;
+  const snapshotData = {
+    memoria: {
+      peticionEvaluacion: {
+        id: 1
+      } as IPeticionEvaluacion
+    } as IMemoria
+  };
+
   const snapshotData = {
     memoria: {
       peticionEvaluacion: {

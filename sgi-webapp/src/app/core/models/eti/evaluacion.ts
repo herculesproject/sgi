@@ -41,4 +41,7 @@ export interface IEvaluacion {
 
   /** Activo */
   activo: boolean;
+
+  /** Flag eliminable */
+  eliminable: boolean;
 }

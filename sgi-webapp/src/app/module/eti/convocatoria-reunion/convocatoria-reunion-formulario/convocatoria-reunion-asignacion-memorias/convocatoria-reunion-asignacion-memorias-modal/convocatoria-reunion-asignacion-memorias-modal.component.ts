@@ -29,11 +29,11 @@ const MSG_ERROR_CARGAR_EVALUADOR2 = marker('eti.convocatoriaReunion.formulario.a
 const MSG_ERROR_EVALUADOR_REPETIDO = marker('eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador.repetido');
 
 @Component({
-  selector: 'sgi-convocatoria-reunion-asignacion-memorias',
-  templateUrl: './convocatoria-reunion-asignacion-memorias.component.html',
-  styleUrls: ['./convocatoria-reunion-asignacion-memorias.component.scss']
+  selector: 'sgi-convocatoria-reunion-asignacion-memorias-modal',
+  templateUrl: './convocatoria-reunion-asignacion-memorias-modal.component.html',
+  styleUrls: ['./convocatoria-reunion-asignacion-memorias-modal.component.scss']
 })
-export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, OnDestroy {
+export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnInit, OnDestroy {
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
@@ -47,7 +47,7 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
   filteredEvaluadoresEvaluador2: Observable<IEvaluador[]>;
   filteredMemorias: Observable<IMemoria[]>;
 
-  subscriptions: Subscription[];
+  private subscriptions: Subscription[];
 
   idConvocatoria: number;
   isTipoConvocatoriaSeguimiento: boolean;
@@ -58,7 +58,7 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
 
   constructor(
     protected readonly logger: NGXLogger,
-    private readonly dialogRef: MatDialogRef<ConvocatoriaReunionAsignacionMemoriasComponent>,
+    private readonly dialogRef: MatDialogRef<ConvocatoriaReunionAsignacionMemoriasModalComponent>,
     private readonly evaluadorService: EvaluadorService,
     private readonly memoriaService: MemoriaService,
     private readonly PersonafisicaService: PersonaFisicaService,
@@ -89,42 +89,42 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
   }
 
   ngOnInit(): void {
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'ngOnInit()', 'start');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name, 'ngOnInit()', 'start');
 
     this.initFormGroup();
 
     if (this.idConvocatoria) {
-      this.getMemoriasAsignablesConvocatoria();
+      this.loadMemoriasAsignablesConvocatoria();
     } else {
       if (this.isTipoConvocatoriaSeguimiento) {
-        this.getMemoriasAsignablesConvocatoriaSeguimiento();
+        this.loadMemoriasAsignablesConvocatoriaSeguimiento();
       } else {
-        this.getMemoriasAsignablesConvocatoriaOrdExt();
+        this.loadMemoriasAsignablesConvocatoriaOrdExt();
       }
     }
 
-    this.getEvaluadores();
+    this.loadEvaluadores();
 
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'ngOnInit()', 'end');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name, 'ngOnInit()', 'end');
   }
 
   /**
    * Inicializa el formGroup
    */
   private initFormGroup() {
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'initFormGroup()', 'start');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name, 'initFormGroup()', 'start');
     this.formGroup = new FormGroup({
       memoria: new FormControl(this.evaluacion.memoria, [Validators.required]),
       evaluador1: new FormControl(this.evaluacion.evaluador1),
       evaluador2: new FormControl(this.evaluacion.evaluador2),
     });
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'initFormGroup()', 'end');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name, 'initFormGroup()', 'end');
   }
 
   ngOnDestroy(): void {
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'ngOnDestroy()', 'start');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions?.forEach(x => x.unsubscribe());
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'ngOnDestroy()', 'end');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name, 'ngOnDestroy()', 'end');
   }
 
   /**
@@ -132,13 +132,13 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
    *
    */
   createFormGroup(): FormGroup {
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'createFormGroup()', 'start');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name, 'createFormGroup()', 'start');
     const formGroup = new FormGroup({
       memoria: new FormControl(null, [new NullIdValidador().isValid()]),
       evaluador1: new FormControl(null, [Validators.required]),
       evaluador2: new FormControl(null, [Validators.required])
     });
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'createFormGroup()', 'end');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name, 'createFormGroup()', 'end');
     return formGroup;
   }
 
@@ -147,7 +147,7 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
    *
    */
   private buildFilters(): void {
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'buildFilters(filterData)', 'start');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name, 'buildFilters(filterData)', 'start');
     this.filterMemoriasAsignables = [];
 
     if (this.filterData && this.filterData.idComite &&
@@ -177,9 +177,9 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
   /**
    * Recupera un listado de los memorias asignables a la convocatoria.
    */
-  private getMemoriasAsignablesConvocatoria(): void {
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name,
-      'getMemoriasAsignablesConvocatoria()',
+  private loadMemoriasAsignablesConvocatoria(): void {
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name,
+      'loadMemoriasAsignablesConvocatoria()',
       'start');
 
     this.subscriptions.push(this.memoriaService
@@ -206,17 +206,17 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
         }
       ));
 
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name,
-      'getMemoriasAsignablesConvocatoria()',
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name,
+      'loadMemoriasAsignablesConvocatoria()',
       'end');
   }
 
   /**
    * Recupera un listado de las memorias asignables si la convocatoria es de tipo seguimiento.
    */
-  private getMemoriasAsignablesConvocatoriaSeguimiento(): void {
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name,
-      'getMemoriasAsignablesConvocatoriaSeguimiento',
+  private loadMemoriasAsignablesConvocatoriaSeguimiento(): void {
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name,
+      'loadMemoriasAsignablesConvocatoriaSeguimiento',
       'start');
 
     this.subscriptions.push(this.memoriaService
@@ -243,17 +243,17 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
         }
       ));
 
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name,
-      'getMemoriasAsignablesConvocatoriaSeguimiento()',
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name,
+      'loadMemoriasAsignablesConvocatoriaSeguimiento()',
       'end');
   }
 
   /**
    * Recupera un listado de las memorias asignables si la convocatoria es de tipo ordinaria / extraordinaria.
    */
-  private getMemoriasAsignablesConvocatoriaOrdExt(): void {
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name,
-      'getMemoriasAsignablesConvocatoriaOrdExt',
+  private loadMemoriasAsignablesConvocatoriaOrdExt(): void {
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name,
+      'loadMemoriasAsignablesConvocatoriaOrdExt',
       'start');
 
     this.subscriptions.push(this.memoriaService
@@ -280,8 +280,8 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
         }
       ));
 
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name,
-      'getMemoriasAsignablesConvocatoriaOrdExt()',
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name,
+      'loadMemoriasAsignablesConvocatoriaOrdExt()',
       'end');
   }
 
@@ -289,9 +289,9 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
   /**
    * Recupera un listado de los evaluadores que hay en el sistema.
    */
-  private getEvaluadores(): void {
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name,
-      'getEvaluadores()',
+  private loadEvaluadores(): void {
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name,
+      'loadEvaluadores()',
       'start');
 
     const evaluadoresMemoriaSeleccionada$ =
@@ -368,8 +368,8 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
       }
     ));
 
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name,
-      'getEvaluadores()',
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name,
+      'loadEvaluadores()',
       'end');
   }
 
@@ -439,7 +439,7 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
   }
 
   getDatosForm(): IEvaluacion {
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'getDatosFormulario()', 'start');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name, 'getDatosFormulario()', 'start');
     const evaluacion = this.evaluacion;
     const convocatoriaReunion: IConvocatoriaReunion = {
       activo: null,
@@ -466,7 +466,7 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
     this.evaluacion.evaluador1 = FormGroupUtil.getValue(this.formGroup, 'evaluador1');
     this.evaluacion.evaluador2 = FormGroupUtil.getValue(this.formGroup, 'evaluador2');
 
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'getDatosFormulario()', 'end');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name, 'getDatosFormulario()', 'end');
     return this.evaluacion;
   }
 
@@ -474,13 +474,13 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
    * Confirmar asignación
    */
   onAsignarmemoria(): void {
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'onAsignarmemoria()', 'start');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name, 'onAsignarmemoria()', 'start');
 
     const evaluacion: IEvaluacion = this.getDatosForm();
 
     if (evaluacion.evaluador1 === evaluacion.evaluador2) {
       this.snackBarService.showError(MSG_ERROR_EVALUADOR_REPETIDO);
-      this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'onAsignarmemoria() - end');
+      this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name, 'onAsignarmemoria() - end');
       return;
     }
 
@@ -490,13 +490,13 @@ export class ConvocatoriaReunionAsignacionMemoriasComponent implements OnInit, O
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
 
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'onAsignarmemoria()', 'end');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name, 'onAsignarmemoria()', 'end');
   }
 
   onCancel(): void {
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'onCancel()', 'start');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name, 'onCancel()', 'start');
     this.dialogRef.close();
-    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasComponent.name, 'onCancel()', 'end');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasModalComponent.name, 'onCancel()', 'end');
   }
 
 

@@ -58,10 +58,10 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
   filteredTiposConvocatoriaReunion: Observable<TipoConvocatoriaReunion[]>;
 
   convocatoriaReunion$: Observable<IConvocatoriaReunion[]> = of();
-  dialogSubscription: Subscription;
-  convocatoriaReunionDeleteSubscription: Subscription;
-  comitesSubscription: Subscription;
-  tiposConvocatoriaReunionSubscription: Subscription;
+  private dialogSubscription: Subscription;
+  private convocatoriaReunionDeleteSubscription: Subscription;
+  private comitesSubscription: Subscription;
+  private tiposConvocatoriaReunionSubscription: Subscription;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -105,8 +105,8 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
     });
 
     // Recupera los valores de los combos
-    this.getComites();
-    this.getTiposConvocatoriaReunion();
+    this.loadComites();
+    this.loadTiposConvocatoriaReunion();
 
     this.logger.debug(ConvocatoriaReunionListadoComponent.name, 'ngOnInit()', 'end');
   }
@@ -138,9 +138,9 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
   /**
    * Recupera un listado de los comites que hay en el sistema.
    */
-  private getComites(): void {
+  private loadComites(): void {
     this.logger.debug(ConvocatoriaReunionListadoComponent.name,
-      'getComites()',
+      'loadComites()',
       'start');
 
     this.comitesSubscription = this.comiteService.findAll().subscribe(
@@ -155,16 +155,16 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
       });
 
     this.logger.debug(ConvocatoriaReunionListadoComponent.name,
-      'getComites()',
+      'loadComites()',
       'end');
   }
 
   /**
    * Recupera un listado de los tipos de convocatoria reunion que hay en el sistema.
    */
-  private getTiposConvocatoriaReunion(): void {
+  private loadTiposConvocatoriaReunion(): void {
     this.logger.debug(ConvocatoriaReunionListadoComponent.name,
-      'getTiposConvocatoriaReunion()',
+      'loadTiposConvocatoriaReunion()',
       'start');
 
     this.tiposConvocatoriaReunionSubscription = this.tipoConvocatoriaReunionService.findAll().subscribe(
@@ -179,7 +179,7 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
       });
 
     this.logger.debug(ConvocatoriaReunionListadoComponent.name,
-      'getTiposConvocatoriaReunion()',
+      'loadTiposConvocatoriaReunion()',
       'end');
   }
 

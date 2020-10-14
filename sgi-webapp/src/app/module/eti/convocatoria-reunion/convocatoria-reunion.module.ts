@@ -9,10 +9,10 @@ import { ConvocatoriaReunionCrearComponent } from './convocatoria-reunion-crear/
 import { ConvocatoriaReunionDatosGeneralesComponent } from './convocatoria-reunion-formulario/convocatoria-reunion-datos-generales/convocatoria-reunion-datos-generales.component';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ConvocatoriaReunionListadoMemoriasComponent } from './convocatoria-reunion-formulario/convocatoria-reunion-listado-memorias/convocatoria-reunion-listado-memorias.component';
-import { ConvocatoriaReunionAsignacionMemoriasComponent } from './convocatoria-reunion-formulario/convocatoria-reunion-asignacion-memorias/convocatoria-reunion-asignacion-memorias.component';
 import { ConvocatoriaReunionEditarComponent } from './convocatoria-reunion-editar/convocatoria-reunion-editar.component';
 import { ConvocatoriaReunionResolver } from './convocatoria-reunion.resolver';
+import { ConvocatoriaReunionAsignacionMemoriasListadoComponent } from './convocatoria-reunion-formulario/convocatoria-reunion-asignacion-memorias/convocatoria-reunion-asignacion-memorias-listado/convocatoria-reunion-asignacion-memorias-listado.component';
+import { ConvocatoriaReunionAsignacionMemoriasModalComponent } from './convocatoria-reunion-formulario/convocatoria-reunion-asignacion-memorias/convocatoria-reunion-asignacion-memorias-modal/convocatoria-reunion-asignacion-memorias-modal.component';
 
 
 @NgModule({
@@ -20,8 +20,8 @@ import { ConvocatoriaReunionResolver } from './convocatoria-reunion.resolver';
     ConvocatoriaReunionCrearComponent,
     ConvocatoriaReunionListadoComponent,
     ConvocatoriaReunionDatosGeneralesComponent,
-    ConvocatoriaReunionListadoMemoriasComponent,
-    ConvocatoriaReunionAsignacionMemoriasComponent,
+    ConvocatoriaReunionAsignacionMemoriasListadoComponent,
+    ConvocatoriaReunionAsignacionMemoriasModalComponent,
     ConvocatoriaReunionEditarComponent
   ],
   imports: [

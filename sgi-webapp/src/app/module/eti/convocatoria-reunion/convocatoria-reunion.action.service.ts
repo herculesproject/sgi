@@ -6,7 +6,7 @@ import { AsistenteService } from '@core/services/eti/asistente.service';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { ConvocatoriaReunionDatosGeneralesFragment } from './convocatoria-reunion-formulario/convocatoria-reunion-datos-generales/convocatoria-reunion-datos-generales.fragment';
 import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
-import { ConvocatoriaReunionListadoMemoriasFragment } from './convocatoria-reunion-formulario/convocatoria-reunion-listado-memorias/convocatoria-reunion-listado-memorias.fragment';
+import { ConvocatoriaReunionAsignacionMemoriasListadoFragment } from './convocatoria-reunion-formulario/convocatoria-reunion-asignacion-memorias/convocatoria-reunion-asignacion-memorias-listado/convocatoria-reunion-asignacion-memorias-listado.fragment';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { Subject } from 'rxjs';
@@ -29,7 +29,7 @@ export class ConvocatoriaReunionActionService extends ActionService {
 
   convocatoriaReunion: IConvocatoriaReunion;
   private datosGenerales: ConvocatoriaReunionDatosGeneralesFragment;
-  private asignacionMemorias: ConvocatoriaReunionListadoMemoriasFragment;
+  private asignacionMemorias: ConvocatoriaReunionAsignacionMemoriasListadoFragment;
 
   public disableAsignarMemorias: Subject<boolean> = new Subject<boolean>();
   public disableCamposDatosGenerales: Subject<boolean> = new Subject<boolean>();
@@ -55,7 +55,7 @@ export class ConvocatoriaReunionActionService extends ActionService {
       logger,
       fb, this.convocatoriaReunion?.id,
       service, asistenteService, personaFisicaService, evaluadorService);
-    this.asignacionMemorias = new ConvocatoriaReunionListadoMemoriasFragment(
+    this.asignacionMemorias = new ConvocatoriaReunionAsignacionMemoriasListadoFragment(
       logger,
       this.convocatoriaReunion?.id,
       evaluacionService, personaFisicaService, service);

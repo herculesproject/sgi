@@ -30,7 +30,8 @@ export class EvaluacionService extends SgiRestService<number, IEvaluacion>{
         activo: value.activo,
         persona: null,
         evaluador1: value.evaluador1,
-        evaluador2: value.evaluador2
+        evaluador2: value.evaluador2,
+        eliminable: value.eliminable
       };
     }
     fromTarget(value: IEvaluacionSolicitante): IEvaluacion {
@@ -46,7 +47,8 @@ export class EvaluacionService extends SgiRestService<number, IEvaluacion>{
         esRevMinima: value.esRevMinima,
         activo: value.activo,
         evaluador1: value.evaluador1,
-        evaluador2: value.evaluador2
+        evaluador2: value.evaluador2,
+        eliminable: value.eliminable
       };
     }
   }();

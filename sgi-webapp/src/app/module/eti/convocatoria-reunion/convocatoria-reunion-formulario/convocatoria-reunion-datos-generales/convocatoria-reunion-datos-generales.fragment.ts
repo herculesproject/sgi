@@ -68,7 +68,7 @@ export class ConvocatoriaReunionDatosGeneralesFragment extends FormFragment<ICon
     return this.convocatoriaReunionService.findByIdWithDatosGenerales(key).pipe(
       switchMap((value) => {
         this.convocatoriaReunion = value;
-        return this.getConvocantes();
+        return this.loadConvocantes();
       }),
       catchError(() => {
         this.logger.debug(ConvocatoriaReunionDatosGeneralesFragment.name, 'initializer(key: number)', 'end');
@@ -83,7 +83,7 @@ export class ConvocatoriaReunionDatosGeneralesFragment extends FormFragment<ICon
   /**
    * Carga los convocantes de la convocatoria
    */
-  getConvocantes(): Observable<IConvocatoriaReunion> {
+  loadConvocantes(): Observable<IConvocatoriaReunion> {
     const filterComite = {
       field: 'comite.id',
       type: SgiRestFilterType.EQUALS,
@@ -103,7 +103,7 @@ export class ConvocatoriaReunionDatosGeneralesFragment extends FormFragment<ICon
         switchMap((convocantes: IEvaluador[]) => {
           this.evaluadoresComite = convocantes;
           this.convocantes = convocantes;
-          return this.getAsistentes();
+          return this.loadAsistentes();
         }),
         switchMap(() => {
           return of(this.convocatoriaReunion);
@@ -131,7 +131,7 @@ export class ConvocatoriaReunionDatosGeneralesFragment extends FormFragment<ICon
   /**
    * Carga los asistentes que asistieron a la convocatoria dentro del formGroup
    */
-  private getAsistentes(): Observable<SgiRestListResult<IAsistente>> {
+  private loadAsistentes(): Observable<SgiRestListResult<IAsistente>> {
     return this.convocatoriaReunionService.findAsistentes(this.convocatoriaReunion.id).pipe(
       switchMap((asistentes: SgiRestListResult<IAsistente>) => {
         this.asistentesOriginal = asistentes.items;

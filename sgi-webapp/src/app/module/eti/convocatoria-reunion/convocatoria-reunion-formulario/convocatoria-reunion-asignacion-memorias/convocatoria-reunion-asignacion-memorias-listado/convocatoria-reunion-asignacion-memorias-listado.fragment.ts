@@ -11,7 +11,7 @@ import { NGXLogger } from 'ngx-logger';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 
 
-export class ConvocatoriaReunionListadoMemoriasFragment extends Fragment {
+export class ConvocatoriaReunionAsignacionMemoriasListadoFragment extends Fragment {
 
   evaluaciones$: BehaviorSubject<StatusWrapper<IEvaluacion>[]> = new BehaviorSubject<StatusWrapper<IEvaluacion>[]>([]);
   private deleted: StatusWrapper<IEvaluacion>[] = [];
@@ -31,24 +31,24 @@ export class ConvocatoriaReunionListadoMemoriasFragment extends Fragment {
   }
 
   onInitialize(): void {
-    this.logger.debug(ConvocatoriaReunionListadoMemoriasFragment.name, 'onInitialize()', 'start');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoFragment.name, 'onInitialize()', 'start');
     if (this.getKey()) {
       this.loadEvaluaciones(this.getKey() as number);
     }
-    this.logger.debug(ConvocatoriaReunionListadoMemoriasFragment.name, 'onInitialize()', 'end');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoFragment.name, 'onInitialize()', 'end');
   }
 
   setConvocatoriaReunion(value: IConvocatoriaReunion) {
-    this.logger.debug(ConvocatoriaReunionListadoMemoriasFragment.name, 'setConvocatoriaReunion(value: IConvocatoriaReunion)', 'start');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoFragment.name, 'setConvocatoriaReunion(value: IConvocatoriaReunion)', 'start');
     if (!value || value.id !== this.getKey()) {
       Error('Value mistmatch');
     }
     this.convocatoriaReunion = value;
-    this.logger.debug(ConvocatoriaReunionListadoMemoriasFragment.name, 'setConvocatoriaReunion(value: IConvocatoriaReunion)', 'end');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoFragment.name, 'setConvocatoriaReunion(value: IConvocatoriaReunion)', 'end');
   }
 
   saveOrUpdate(): Observable<void> {
-    this.logger.debug(ConvocatoriaReunionListadoMemoriasFragment.name, 'saveOrUpdate()', 'start');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoFragment.name, 'saveOrUpdate()', 'start');
     return merge(
       this.deleteEvaluaciones(),
       this.createEvaluaciones(),
@@ -61,12 +61,12 @@ export class ConvocatoriaReunionListadoMemoriasFragment extends Fragment {
         }
       }
       ),
-      tap(() => this.logger.debug(ConvocatoriaReunionListadoMemoriasFragment.name, 'saveOrUpdate()', 'end'))
+      tap(() => this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoFragment.name, 'saveOrUpdate()', 'end'))
     );
   }
 
   public addEvaluacion(evaluacion: IEvaluacion) {
-    this.logger.debug(ConvocatoriaReunionListadoMemoriasFragment.name, 'addEvaluacion(evaluacion: IEvaluacion)', 'start');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoFragment.name, 'addEvaluacion(evaluacion: IEvaluacion)', 'start');
     const wrapped = new StatusWrapper<IEvaluacion>(evaluacion);
     wrapped.setCreated();
     const current = this.evaluaciones$.value;
@@ -75,11 +75,11 @@ export class ConvocatoriaReunionListadoMemoriasFragment extends Fragment {
     this.setChanges(true);
     // Como no es obligario tener memorias asignadas no aplica.
     // this.setComplete(true);
-    this.logger.debug(ConvocatoriaReunionListadoMemoriasFragment.name, 'addEvaluacion(evaluacion: IEvaluacion)', 'end');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoFragment.name, 'addEvaluacion(evaluacion: IEvaluacion)', 'end');
   }
 
   public deleteEvaluacion(evaluacion: StatusWrapper<IEvaluacion>) {
-    this.logger.debug(ConvocatoriaReunionListadoMemoriasFragment.name, 'deleteEvaluacion(evaluacion: StatusWrapper<IEvaluacion>)', 'start');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoFragment.name, 'deleteEvaluacion(evaluacion: StatusWrapper<IEvaluacion>)', 'start');
     const current = this.evaluaciones$.value;
     const index = current.findIndex((value) => value === evaluacion);
     if (index >= 0) {
@@ -94,11 +94,11 @@ export class ConvocatoriaReunionListadoMemoriasFragment extends Fragment {
     // if (current.length === 0) {
     //   this.setComplete(false);
     // }
-    this.logger.debug(ConvocatoriaReunionListadoMemoriasFragment.name, 'deleteEvaluacion(evaluacion: StatusWrapper<IEvaluacion>)', 'end');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoFragment.name, 'deleteEvaluacion(evaluacion: StatusWrapper<IEvaluacion>)', 'end');
   }
 
   private loadEvaluaciones(idConvocatoria: number): void {
-    this.logger.debug(ConvocatoriaReunionListadoMemoriasFragment.name, 'loadEvaluaciones(idConvocatoria: number)', 'start');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoFragment.name, 'loadEvaluaciones(idConvocatoria: number)', 'start');
     this.service
       .findAllByConvocatoriaReunionIdAndNoEsRevMinima(
         idConvocatoria
@@ -143,25 +143,25 @@ export class ConvocatoriaReunionListadoMemoriasFragment extends Fragment {
         catchError(() => {
           // On error reset pagination values
           // this.snackBarService.showError('eti.convocatoriaReunion.listado.error');
-          this.logger.debug(ConvocatoriaReunionListadoMemoriasFragment.name, 'loadEvaluaciones(idConvocatoria: number)', 'end');
+          this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoFragment.name, 'loadEvaluaciones(idConvocatoria: number)', 'end');
           return of([]);
         })
       ).subscribe(
         (evaluaciones) => {
           this.evaluaciones$.next(evaluaciones.map((ev) => new StatusWrapper<IEvaluacion>(ev)));
-          this.logger.debug(ConvocatoriaReunionListadoMemoriasFragment.name, 'loadEvaluaciones(idConvocatoria: number)', 'end');
+          this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoFragment.name, 'loadEvaluaciones(idConvocatoria: number)', 'end');
         }
       );
   }
 
   private createEvaluaciones(): Observable<void> {
-    this.logger.debug(ConvocatoriaReunionListadoMemoriasFragment.name, 'createEvaluacion()', 'start');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoFragment.name, 'createEvaluacion()', 'start');
     const evaluacionesCreadas = this.evaluaciones$.value.filter((evaluacion) => evaluacion.created);
     if (evaluacionesCreadas.length === 0) {
-      this.logger.debug(ConvocatoriaReunionListadoMemoriasFragment.name, 'createEvaluacion()', 'end');
+      this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoFragment.name, 'createEvaluacion()', 'end');
       return of(void 0);
     }
-    this.logger.debug(ConvocatoriaReunionListadoMemoriasFragment.name, 'createEvaluacion()', 'end');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoFragment.name, 'createEvaluacion()', 'end');
     return from(evaluacionesCreadas).pipe(
       mergeMap((evaluacion) => {
         evaluacion.value.convocatoriaReunion.id = this.getKey() as number;
@@ -177,13 +177,13 @@ export class ConvocatoriaReunionListadoMemoriasFragment extends Fragment {
   }
 
   private updateEvaluaciones(): Observable<void> {
-    this.logger.debug(ConvocatoriaReunionListadoMemoriasFragment.name, 'createEvaluacion()', 'start');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoFragment.name, 'createEvaluacion()', 'start');
     const evaluacionesEditadas = this.evaluaciones$.value.filter((evaluacion) => evaluacion.edited);
     if (evaluacionesEditadas.length === 0) {
-      this.logger.debug(ConvocatoriaReunionListadoMemoriasFragment.name, 'createEvaluacion()', 'end');
+      this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoFragment.name, 'createEvaluacion()', 'end');
       return of(void 0);
     }
-    this.logger.debug(ConvocatoriaReunionListadoMemoriasFragment.name, 'createEvaluacion()', 'end');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoFragment.name, 'createEvaluacion()', 'end');
     return from(evaluacionesEditadas).pipe(
       mergeMap((evaluacion) => {
         evaluacion.value.convocatoriaReunion.id = this.getKey() as number;
@@ -199,9 +199,9 @@ export class ConvocatoriaReunionListadoMemoriasFragment extends Fragment {
   }
 
   private deleteEvaluaciones(): Observable<void> {
-    this.logger.debug(ConvocatoriaReunionListadoMemoriasFragment.name, 'deleteEvaluaciones()', 'start');
+    this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoFragment.name, 'deleteEvaluaciones()', 'start');
     if (this.deleted.length === 0) {
-      this.logger.debug(ConvocatoriaReunionListadoMemoriasFragment.name, 'deleteEvaluaciones()', 'end');
+      this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoFragment.name, 'deleteEvaluaciones()', 'end');
       return of(void 0);
     }
     return from(this.deleted).pipe(

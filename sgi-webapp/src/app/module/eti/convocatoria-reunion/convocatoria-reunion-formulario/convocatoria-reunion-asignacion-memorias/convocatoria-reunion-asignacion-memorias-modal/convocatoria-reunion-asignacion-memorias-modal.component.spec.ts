@@ -13,11 +13,11 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 
-import { ConvocatoriaReunionAsignacionMemoriasComponent } from './convocatoria-reunion-asignacion-memorias.component';
+import { ConvocatoriaReunionAsignacionMemoriasModalComponent } from './convocatoria-reunion-asignacion-memorias-modal.component';
 
-describe('ConvocatoriaReunionAsignacionMemoriasComponent', () => {
-  let component: ConvocatoriaReunionAsignacionMemoriasComponent;
-  let fixture: ComponentFixture<ConvocatoriaReunionAsignacionMemoriasComponent>;
+describe('ConvocatoriaReunionAsignacionMemoriasModalComponent', () => {
+  let component: ConvocatoriaReunionAsignacionMemoriasModalComponent;
+  let fixture: ComponentFixture<ConvocatoriaReunionAsignacionMemoriasModalComponent>;
 
   const dialogData = {
     params: {
@@ -34,7 +34,7 @@ describe('ConvocatoriaReunionAsignacionMemoriasComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ConvocatoriaReunionAsignacionMemoriasComponent],
+      declarations: [ConvocatoriaReunionAsignacionMemoriasModalComponent],
       imports: [
         TestUtils.getIdiomas(),
         MaterialDesignModule,
@@ -59,7 +59,7 @@ describe('ConvocatoriaReunionAsignacionMemoriasComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConvocatoriaReunionAsignacionMemoriasComponent);
+    fixture = TestBed.createComponent(ConvocatoriaReunionAsignacionMemoriasModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

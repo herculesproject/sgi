@@ -41,7 +41,8 @@
             matTooltip="{{'eti.convocatoriaReunion.formulario.asignacionMemorias.editar' | translate}}">
             <mat-icon color="primary">border_color</mat-icon>
           </button>
-          <button mat-button matTooltip="{{'botones.borrar' | translate}}" (click)="borrar(wrapper)">
+          <button *ngIf="wrapper.value.eliminable" mat-button matTooltip="{{'botones.borrar' | translate}}"
+            (click)="borrar(wrapper)">
             <mat-icon color="warn">highlight_off</mat-icon>
           </button>
         </td>

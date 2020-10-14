@@ -9,16 +9,16 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { NGXLogger } from 'ngx-logger';
 
-import { ConvocatoriaReunionActionService } from '../../convocatoria-reunion.action.service';
-import { ConvocatoriaReunionListadoMemoriasComponent } from './convocatoria-reunion-listado-memorias.component';
+import { ConvocatoriaReunionActionService } from '../../../convocatoria-reunion.action.service';
+import { ConvocatoriaReunionAsignacionMemoriasListadoComponent } from './convocatoria-reunion-asignacion-memorias-listado.component';
 
-describe('ConvocatoriaReunionListadoMemoriasComponent', () => {
-  let component: ConvocatoriaReunionListadoMemoriasComponent;
-  let fixture: ComponentFixture<ConvocatoriaReunionListadoMemoriasComponent>;
+describe('ConvocatoriaReunionAsignacionMemoriasListadoComponent', () => {
+  let component: ConvocatoriaReunionAsignacionMemoriasListadoComponent;
+  let fixture: ComponentFixture<ConvocatoriaReunionAsignacionMemoriasListadoComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ConvocatoriaReunionListadoMemoriasComponent],
+      declarations: [ConvocatoriaReunionAsignacionMemoriasListadoComponent],
       imports: [
         TestUtils.getIdiomas(),
         FormsModule,
@@ -39,7 +39,7 @@ describe('ConvocatoriaReunionListadoMemoriasComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConvocatoriaReunionListadoMemoriasComponent);
+    fixture = TestBed.createComponent(ConvocatoriaReunionAsignacionMemoriasListadoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
