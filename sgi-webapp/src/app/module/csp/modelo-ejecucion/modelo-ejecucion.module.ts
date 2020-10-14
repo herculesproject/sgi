@@ -11,7 +11,9 @@ import { ModeloEjecucionDatosGeneralesComponent } from './modelo-ejecucion-formu
 import { ModeloEjecucionResolver } from './modelo-ejecucion.resolver';
 import { ModeloEjecucionEditarComponent } from './modelo-ejecucion-editar/modelo-ejecucion-editar.component';
 import { ModeloEjecucionTipoEnlaceComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-enlace/modelo-ejecucion-tipo-enlace.component';
+import { ModeloEjecucionTipoFinalidadComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-finalidad/modelo-ejecucion-tipo-finalidad.component';
 import { ModeloEjecucionTipoEnlaceModalComponent } from './modals/modelo-ejecucion-tipo-enlace-modal/modelo-ejecucion-tipo-enlace-modal.component';
+import { ModeloEjecucionTipoFinalidadModalComponent } from './modals/modelo-ejecucion-tipo-finalidad-modal/modelo-ejecucion-tipo-finalidad-modal.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,9 @@ import { ModeloEjecucionTipoEnlaceModalComponent } from './modals/modelo-ejecuci
     ModeloEjecucionDatosGeneralesComponent,
     ModeloEjecucionEditarComponent,
     ModeloEjecucionTipoEnlaceComponent,
-    ModeloEjecucionTipoEnlaceModalComponent
+    ModeloEjecucionTipoEnlaceModalComponent,
+    ModeloEjecucionTipoFinalidadComponent,
+    ModeloEjecucionTipoFinalidadModalComponent
   ],
   imports: [
     CommonModule,

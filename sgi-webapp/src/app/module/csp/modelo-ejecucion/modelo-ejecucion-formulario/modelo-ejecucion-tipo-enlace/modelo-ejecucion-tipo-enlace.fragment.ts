@@ -19,7 +19,7 @@ export class ModeloEjecucionTipoEnlaceFragment extends Fragment {
     key: number,
     private modeloEjecucionService: ModeloEjecucionService,
     private modeloTipoEnlaceService: ModeloTipoEnlaceService,
-    private actionService: ModeloEjecucionActionService
+    actionService: ModeloEjecucionActionService
   ) {
     super(key);
     this.logger.debug(ModeloEjecucionTipoEnlaceFragment.name, 'constructor()', 'start');

@@ -6,7 +6,7 @@ import { IModeloTipoEnlace } from '@core/models/csp/modelo-tipo-enlace';
 import { ITipoEnlace } from '@core/models/csp/tipos-configuracion';
 import { TipoEnlaceService } from '@core/services/csp/tipo-enlace.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -36,12 +36,26 @@ export class ModeloEjecucionTipoEnlaceModalComponent extends
 
   ngOnInit(): void {
     super.ngOnInit();
-    // TODO: cambiar consulta y comprobar no mandar más de una vez un tipoEnlace
-    this.tipoEnlaces$ = this.tipoEnlaceService.findAll().pipe(
+    // TODO: cambiar consulta
+    const options = {
+      filters: [{
+        field: 'activo',
+        type: SgiRestFilterType.EQUALS,
+        value: 'true',
+      } as SgiRestFilter],
+    } as SgiRestFindOptions;
+    this.tipoEnlaces$ = this.tipoEnlaceService.findAll(options).pipe(
       switchMap((result: SgiRestListResult<ITipoEnlace>) => {
-        return of(result.items);
+        const list = this.filterExistingTipoEnlace(result);
+        return of(list);
       })
     );
+  }
+
+  private filterExistingTipoEnlace(result: SgiRestListResult<ITipoEnlace>): ITipoEnlace[] {
+    return result.items.filter((tipoEnlace: ITipoEnlace) => {
+      return this.data.tipoEnlaces.find((currentTipo) => currentTipo.id === tipoEnlace.id) ? false : true;
+    });
   }
 
   protected getFormGroup(): FormGroup {

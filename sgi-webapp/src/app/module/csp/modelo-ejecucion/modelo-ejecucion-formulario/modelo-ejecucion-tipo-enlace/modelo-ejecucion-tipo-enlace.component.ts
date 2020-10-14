@@ -13,8 +13,8 @@ import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
-import { ModeloEjecucionActionService } from '../../modelo-ejecucion.action.service';
 import { ModeloEjecucionTipoEnlaceModalComponent } from '../../modals/modelo-ejecucion-tipo-enlace-modal/modelo-ejecucion-tipo-enlace-modal.component';
+import { ModeloEjecucionActionService } from '../../modelo-ejecucion.action.service';
 import { ModeloEjecucionTipoEnlaceFragment } from './modelo-ejecucion-tipo-enlace.fragment';
 import { ITipoEnlace } from '@core/models/csp/tipos-configuracion';
 
@@ -72,6 +72,19 @@ export class ModeloEjecucionTipoEnlaceComponent extends FragmentComponent implem
       }
     );
     this.modelosTipoEnlaces.paginator = this.paginator;
+    this.modelosTipoEnlaces.sortingDataAccessor =
+      (wrapper: StatusWrapper<IModeloTipoEnlace>, property: string) => {
+        switch (property) {
+          case 'nombre':
+            return wrapper.value.tipoEnlace.nombre;
+          case 'descripcion':
+            return wrapper.value.tipoEnlace.descripcion;
+          case 'activo':
+            return wrapper.value.tipoEnlace.activo;
+          default:
+            return wrapper[property];
+        }
+      };
     this.modelosTipoEnlaces.sort = this.sort;
     this.subscriptions.push(subscription);
     this.logger.debug(ModeloEjecucionTipoEnlaceComponent.name, 'ngOnInit()', 'end');
@@ -86,6 +99,7 @@ export class ModeloEjecucionTipoEnlaceComponent extends FragmentComponent implem
   openModal(): void {
     this.logger.debug(ModeloEjecucionTipoEnlaceComponent.name, `${this.openModal.name}()`, 'start');
     const modeloTipoEnlace = { activo: true } as IModeloTipoEnlace;
+
     const tipoEnlaces: ITipoEnlace[] = [];
     this.modelosTipoEnlaces.data.forEach((wrapper: StatusWrapper<IModeloTipoEnlace>) => {
       tipoEnlaces.push(wrapper.value.tipoEnlace);

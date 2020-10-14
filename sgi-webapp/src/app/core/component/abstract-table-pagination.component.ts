@@ -148,7 +148,7 @@ export abstract class AbstractTablePaginationComponent<T> implements OnInit, OnD
         field: this.sort?.active,
       },
       filters: this.filter,
-    };
+    } as SgiRestFindOptions;
     this.logger.debug(AbstractTablePaginationComponent.name, `${this.getFindOptions.name}(${reset})`, 'end');
     return options;
   }

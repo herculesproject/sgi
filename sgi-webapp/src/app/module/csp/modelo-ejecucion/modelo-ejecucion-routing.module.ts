@@ -10,6 +10,7 @@ import { ModeloEjecucionCrearComponent } from './modelo-ejecucion-crear/modelo-e
 import { ModeloEjecucionEditarComponent } from './modelo-ejecucion-editar/modelo-ejecucion-editar.component';
 import { ModeloEjecucionDatosGeneralesComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-datos-generales/modelo-ejecucion-datos-generales.component';
 import { ModeloEjecucionTipoEnlaceComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-enlace/modelo-ejecucion-tipo-enlace.component';
+import { ModeloEjecucionTipoFinalidadComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-finalidad/modelo-ejecucion-tipo-finalidad.component';
 import { ModeloEjecucionListadoComponent } from './modelo-ejecucion-listado/modelo-ejecucion-listado.component';
 import { MODELO_EJECUCION_ROUTE_NAMES } from './modelo-ejecucion-route-names';
 import { ModeloEjecucionResolver } from './modelo-ejecucion.resolver';
@@ -51,6 +52,11 @@ const routes: SgiRoutes = [
         component: ModeloEjecucionTipoEnlaceComponent,
         canDeactivate: [FragmentGuard]
       },
+      {
+        path: MODELO_EJECUCION_ROUTE_NAMES.TIPO_FINALIDADES,
+        component: ModeloEjecucionTipoFinalidadComponent,
+        canDeactivate: [FragmentGuard]
+      },
     ]
   },
   {
@@ -78,6 +84,11 @@ const routes: SgiRoutes = [
       {
         path: MODELO_EJECUCION_ROUTE_NAMES.TIPO_ENLACES,
         component: ModeloEjecucionTipoEnlaceComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: MODELO_EJECUCION_ROUTE_NAMES.TIPO_FINALIDADES,
+        component: ModeloEjecucionTipoFinalidadComponent,
         canDeactivate: [FragmentGuard]
       },
     ]

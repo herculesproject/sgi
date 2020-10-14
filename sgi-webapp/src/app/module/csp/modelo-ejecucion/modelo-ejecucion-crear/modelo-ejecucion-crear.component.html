@@ -6,8 +6,12 @@
         [fragment]="actionService.getFragment(actionService.FRAGMENT.DATOS_GENERALES)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [routerLink]="[MODELO_EJECUCION_ROUTE_NAMES.TIPO_ENLACES]"
-        [title]="'label.tipoEnlaces' | translate"
+        [title]="'label.tipo-enlaces' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.TIPO_ENLACES)">
+      </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item [routerLink]="[MODELO_EJECUCION_ROUTE_NAMES.TIPO_FINALIDADES]"
+        [title]="'label.tipo-finalidades' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.TIPO_FINALIDADES)">
       </sgi-action-fragment-menu-item>
     </mat-list>
   </mat-drawer>
