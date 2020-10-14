@@ -8,6 +8,8 @@ import { IFinalidad } from '@core/models/csp/finalidad';
 import { ITipoPeriodoJustificacion } from '@core/models/csp/tipo-periodo-justificacion';
 import { ITipoPlazosFases } from '@core/models/csp/tipo-plazos-fases';
 import { IModeloEjecucion, ITipoHito } from '@core/models/csp/tipos-configuracion';
+import { IModeloTipoEnlace } from '@core/models/csp/modelo-tipo-enlace';
+import { tap } from 'rxjs/operators';
 
 
 
@@ -160,6 +162,13 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
       total: tipoPlazoFase.length,
       items: tipoPlazoFase
     } as SgiRestListResult<ITipoPlazosFases>);
+  }
+
+  findModeloTipoEnlace(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoEnlace>> {
+    this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoEnlace.name}(id: ${id})`, '-', 'START');
+    return this.find<IModeloTipoEnlace, IModeloTipoEnlace>(`${this.endpointUrl}/${id}/modelotipoenlaces`, options).pipe(
+      tap(() => this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoEnlace.name}(id: ${id})`, '-', 'END'))
+    );
   }
 
 }

@@ -4,17 +4,18 @@ import { FormFragment } from '@core/services/action-service';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { NGXLogger } from 'ngx-logger';
-import { EMPTY, Observable } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { EMPTY, Observable, of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { ModeloEjecucionActionService } from '../../modelo-ejecucion.action.service';
 
 export class ModeloEjecucionDatosGeneralesFragment extends FormFragment<IModeloEjecucion> {
-
-  private modeloEjecucion: IModeloEjecucion;
+  modeloEjecucion: IModeloEjecucion;
 
   constructor(
     private readonly logger: NGXLogger,
     key: number,
     private modeloEjecucionService: ModeloEjecucionService,
+    private actionService: ModeloEjecucionActionService
   ) {
     super(key);
     this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name, 'constructor()', 'start');
@@ -88,7 +89,6 @@ export class ModeloEjecucionDatosGeneralesFragment extends FormFragment<IModeloE
     const observable$ = this.isEdit() ? this.update(modeloEjecucion) : this.create(modeloEjecucion);
     return observable$.pipe(
       map((result: IModeloEjecucion) => {
-        this.modeloEjecucion = result;
         return result.id;
       }),
       tap(() => this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name,
@@ -100,8 +100,11 @@ export class ModeloEjecucionDatosGeneralesFragment extends FormFragment<IModeloE
     this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name,
       `${this.create.name}(modeloEjecucion: ${modeloEjecucion})`, 'start');
     return this.modeloEjecucionService.create(modeloEjecucion).pipe(
-      tap(() => this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name,
-        `${this.create.name}(modeloEjecucion: ${modeloEjecucion})`, 'end'))
+      tap((result: IModeloEjecucion) => {
+        this.modeloEjecucion = result;
+        this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name,
+          `${this.create.name}(modeloEjecucion: ${modeloEjecucion})`, 'end')
+      })
     );
   }
 
@@ -109,8 +112,11 @@ export class ModeloEjecucionDatosGeneralesFragment extends FormFragment<IModeloE
     this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name,
       `${this.update.name}(modeloEjecucion: ${modeloEjecucion})`, 'start');
     return this.modeloEjecucionService.update(modeloEjecucion.id, modeloEjecucion).pipe(
-      tap(() => this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name,
-        `${this.update.name}(modeloEjecucion: ${modeloEjecucion})`, 'end'))
+      tap((result: IModeloEjecucion) => {
+        this.modeloEjecucion = result;
+        this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name,
+          `${this.update.name}(modeloEjecucion: ${modeloEjecucion})`, 'end')
+      })
     );
   }
 }

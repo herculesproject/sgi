@@ -9,6 +9,7 @@ import { SgiAuthGuard } from '@sgi/framework/auth';
 import { ModeloEjecucionCrearComponent } from './modelo-ejecucion-crear/modelo-ejecucion-crear.component';
 import { ModeloEjecucionEditarComponent } from './modelo-ejecucion-editar/modelo-ejecucion-editar.component';
 import { ModeloEjecucionDatosGeneralesComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-datos-generales/modelo-ejecucion-datos-generales.component';
+import { ModeloEjecucionTipoEnlaceComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-enlace/modelo-ejecucion-tipo-enlace.component';
 import { ModeloEjecucionListadoComponent } from './modelo-ejecucion-listado/modelo-ejecucion-listado.component';
 import { MODELO_EJECUCION_ROUTE_NAMES } from './modelo-ejecucion-route-names';
 import { ModeloEjecucionResolver } from './modelo-ejecucion.resolver';
@@ -45,6 +46,11 @@ const routes: SgiRoutes = [
         component: ModeloEjecucionDatosGeneralesComponent,
         canDeactivate: [FragmentGuard]
       },
+      {
+        path: MODELO_EJECUCION_ROUTE_NAMES.TIPO_ENLACES,
+        component: ModeloEjecucionTipoEnlaceComponent,
+        canDeactivate: [FragmentGuard]
+      },
     ]
   },
   {
@@ -67,6 +73,11 @@ const routes: SgiRoutes = [
       {
         path: MODELO_EJECUCION_ROUTE_NAMES.DATOS_GENERALES,
         component: ModeloEjecucionDatosGeneralesComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: MODELO_EJECUCION_ROUTE_NAMES.TIPO_ENLACES,
+        component: ModeloEjecucionTipoEnlaceComponent,
         canDeactivate: [FragmentGuard]
       },
     ]

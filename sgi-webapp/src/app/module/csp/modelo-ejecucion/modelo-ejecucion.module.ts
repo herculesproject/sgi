@@ -10,13 +10,17 @@ import { ModeloEjecucionCrearComponent } from './modelo-ejecucion-crear/modelo-e
 import { ModeloEjecucionDatosGeneralesComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-datos-generales/modelo-ejecucion-datos-generales.component';
 import { ModeloEjecucionResolver } from './modelo-ejecucion.resolver';
 import { ModeloEjecucionEditarComponent } from './modelo-ejecucion-editar/modelo-ejecucion-editar.component';
+import { ModeloEjecucionTipoEnlaceComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-enlace/modelo-ejecucion-tipo-enlace.component';
+import { ModeloEjecucionTipoEnlaceModalComponent } from './modals/modelo-ejecucion-tipo-enlace-modal/modelo-ejecucion-tipo-enlace-modal.component';
 
 @NgModule({
   declarations: [
     ModeloEjecucionListadoComponent,
     ModeloEjecucionCrearComponent,
     ModeloEjecucionDatosGeneralesComponent,
-    ModeloEjecucionEditarComponent
+    ModeloEjecucionEditarComponent,
+    ModeloEjecucionTipoEnlaceComponent,
+    ModeloEjecucionTipoEnlaceModalComponent
   ],
   imports: [
     CommonModule,

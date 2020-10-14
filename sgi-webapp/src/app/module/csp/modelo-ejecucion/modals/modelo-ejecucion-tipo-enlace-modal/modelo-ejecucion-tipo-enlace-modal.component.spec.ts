@@ -3,35 +3,23 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { IMemoria } from '@core/models/eti/memoria';
-import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
+import { IModeloTipoEnlace } from '@core/models/csp/modelo-tipo-enlace';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
-import { MemoriaActionService } from '../../memoria.action.service';
 
-import { MemoriaEvaluacionesComponent } from './memoria-evaluaciones.component';
+import { ModeloEjecucionTipoEnlaceModalComponent } from './modelo-ejecucion-tipo-enlace-modal.component';
 
-
-describe('MemoriaEvaluacionesComponent', () => {
-  let component: MemoriaEvaluacionesComponent;
-  let fixture: ComponentFixture<MemoriaEvaluacionesComponent>;
-  const snapshotData = {
-    memoria: {
-      peticionEvaluacion: {
-        id: 1
-      } as IPeticionEvaluacion
-    } as IMemoria
-  };
+describe('ModeloEjecucionTipoEnlaceModalComponent', () => {
+  let component: ModeloEjecucionTipoEnlaceModalComponent;
+  let fixture: ComponentFixture<ModeloEjecucionTipoEnlaceModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        MemoriaEvaluacionesComponent
+        ModeloEjecucionTipoEnlaceModalComponent
       ],
       imports: [
         BrowserAnimationsModule,
@@ -40,24 +28,20 @@ describe('MemoriaEvaluacionesComponent', () => {
         TestUtils.getIdiomas(),
         RouterTestingModule,
         FormsModule,
-        ReactiveFormsModule,
-        SgiAuthModule
+        ReactiveFormsModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: {} },
-        { provide: MAT_DIALOG_DATA, useValue: {} },
-        { provide: ActivatedRoute, useValue: { snapshot: { data: snapshotData } } },
-        MemoriaActionService,
-        SgiAuthService
-      ],
+        { provide: MatDialogRef, useValue: {} as IModeloTipoEnlace },
+        { provide: MAT_DIALOG_DATA, useValue: {} as IModeloTipoEnlace },
+      ]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MemoriaEvaluacionesComponent);
+    fixture = TestBed.createComponent(ModeloEjecucionTipoEnlaceModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
