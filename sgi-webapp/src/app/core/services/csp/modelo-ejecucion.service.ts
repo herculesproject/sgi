@@ -11,6 +11,7 @@ import { IModeloEjecucion, ITipoHito } from '@core/models/csp/tipos-configuracio
 import { IModeloTipoEnlace } from '@core/models/csp/modelo-tipo-enlace';
 import { tap } from 'rxjs/operators';
 import { IModeloTipoFinalidad } from '@core/models/csp/modelo-tipo-finalidad';
+import { IModeloTipoFase } from '@core/models/csp/modelo-tipo-fase';
 
 
 
@@ -176,6 +177,18 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
     this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoFinalidad.name}(id: ${id})`, '-', 'START');
     return this.find<IModeloTipoFinalidad, IModeloTipoFinalidad>(`${this.endpointUrl}/${id}/modelotipofinalidades`, options).pipe(
       tap(() => this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoFinalidad.name}(id: ${id})`, '-', 'END'))
+    );
+  }
+
+  /**
+   * Muestra todos los modelos tipo de fase
+   * @param id modelo de ejecucion
+   * @param options opciones de búsqueda.
+   */
+  findModeloTipoFase(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoFase>> {
+    this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoFase.name}(id: ${id})`, '-', 'START');
+    return this.find<IModeloTipoFase, IModeloTipoFase>(`${this.endpointUrl}/${id}/modelotipofases`, options).pipe(
+      tap(() => this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoFase.name}(id: ${id})`, '-', 'END'))
     );
   }
 
