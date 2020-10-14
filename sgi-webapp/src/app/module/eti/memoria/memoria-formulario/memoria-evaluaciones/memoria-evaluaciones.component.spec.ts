@@ -27,14 +27,6 @@ describe('MemoriaEvaluacionesComponent', () => {
     } as IMemoria
   };
 
-  const snapshotData = {
-    memoria: {
-      peticionEvaluacion: {
-        id: 1
-      } as IPeticionEvaluacion
-    } as IMemoria
-  };
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [

@@ -9,12 +9,14 @@ import { SharedModule } from '@shared/shared.module';
 import { ModeloEjecucionCrearComponent } from './modelo-ejecucion-crear/modelo-ejecucion-crear.component';
 import { ModeloEjecucionDatosGeneralesComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-datos-generales/modelo-ejecucion-datos-generales.component';
 import { ModeloEjecucionResolver } from './modelo-ejecucion.resolver';
+import { ModeloEjecucionEditarComponent } from './modelo-ejecucion-editar/modelo-ejecucion-editar.component';
 
 @NgModule({
   declarations: [
     ModeloEjecucionListadoComponent,
     ModeloEjecucionCrearComponent,
-    ModeloEjecucionDatosGeneralesComponent
+    ModeloEjecucionDatosGeneralesComponent,
+    ModeloEjecucionEditarComponent
   ],
   imports: [
     CommonModule,

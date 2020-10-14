@@ -37,7 +37,7 @@ const finalidades: IFinalidad[] = [
   },
   {
     id: 4, nombre: 'Infraestructuras'
-  }
+  } as IFinalidad
 
 ];
 

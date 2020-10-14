@@ -7,12 +7,15 @@ import { SgiRoutes } from '@core/route';
 import { ROUTE_NAMES } from '@core/route.names';
 import { SgiAuthGuard } from '@sgi/framework/auth';
 import { ModeloEjecucionCrearComponent } from './modelo-ejecucion-crear/modelo-ejecucion-crear.component';
+import { ModeloEjecucionEditarComponent } from './modelo-ejecucion-editar/modelo-ejecucion-editar.component';
 import { ModeloEjecucionDatosGeneralesComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-datos-generales/modelo-ejecucion-datos-generales.component';
 import { ModeloEjecucionListadoComponent } from './modelo-ejecucion-listado/modelo-ejecucion-listado.component';
 import { MODELO_EJECUCION_ROUTE_NAMES } from './modelo-ejecucion-route-names';
+import { ModeloEjecucionResolver } from './modelo-ejecucion.resolver';
 
 const MSG_LISTADO_TITLE = marker('csp.modelo.ejecucion.listado.titulo');
 const MSG_NEW_TITLE = marker('csp.modelo.ejecucion.crear.titulo');
+const MSG_EDIT_TITLE = marker('csp.modelo.ejecucion.editar.titulo');
 
 const routes: SgiRoutes = [
   {
@@ -44,6 +47,30 @@ const routes: SgiRoutes = [
       },
     ]
   },
+  {
+    path: `:id`,
+    component: ModeloEjecucionEditarComponent,
+    canActivate: [SgiAuthGuard],
+    canDeactivate: [ActionGuard],
+    resolve: {
+      modeloEjecucion: ModeloEjecucionResolver
+    },
+    data: {
+      title: MSG_EDIT_TITLE,
+    },
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: MODELO_EJECUCION_ROUTE_NAMES.DATOS_GENERALES
+      },
+      {
+        path: MODELO_EJECUCION_ROUTE_NAMES.DATOS_GENERALES,
+        component: ModeloEjecucionDatosGeneralesComponent,
+        canDeactivate: [FragmentGuard]
+      },
+    ]
+  }
 ];
 
 

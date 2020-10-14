@@ -47,6 +47,7 @@ export class ModeloEjecucionDatosGeneralesFragment extends FormFragment<IModeloE
       descripcion: modeloEjecucion.descripcion,
       nombre: modeloEjecucion.nombre
     } as IModeloEjecucion;
+    this.modeloEjecucion = modeloEjecucion;
     this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name,
       `${this.buildPatch.name}(modeloEjecucion: ${modeloEjecucion})`, 'end');
     return result;
@@ -78,18 +79,17 @@ export class ModeloEjecucionDatosGeneralesFragment extends FormFragment<IModeloE
       modeloEjecucion.activo = form.activo;
     }
     this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name, `${this.getValue.name}()`, 'end');
-    return this.modeloEjecucion;
+    return modeloEjecucion;
   }
 
   saveOrUpdate(): Observable<number> {
-    this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name,
-      `${this.saveOrUpdate.name}()`, 'start');
-    const datosGenerales = this.getValue();
-    const observable$ = this.isEdit() ? this.update(datosGenerales) : this.create(datosGenerales);
+    this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name, `${this.saveOrUpdate.name}()`, 'start');
+    const modeloEjecucion = this.getValue();
+    const observable$ = this.isEdit() ? this.update(modeloEjecucion) : this.create(modeloEjecucion);
     return observable$.pipe(
-      map((modeloEjecucion: IModeloEjecucion) => {
-        this.modeloEjecucion = modeloEjecucion;
-        return modeloEjecucion.id;
+      map((result: IModeloEjecucion) => {
+        this.modeloEjecucion = result;
+        return result.id;
       }),
       tap(() => this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name,
         `${this.saveOrUpdate.name}()`, 'end'))
