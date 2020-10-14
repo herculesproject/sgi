@@ -4,4 +4,5 @@ export const MODELO_EJECUCION_ROUTE_NAMES = {
   TIPO_FINALIDADES: 'tipo-finalidades',
   TIPO_FASES: 'tipo-fases',
   TIPO_DOCUMENTOS: 'tipo-documentos',
+  TIPO_HITOS: 'tipo-hitos'
 };

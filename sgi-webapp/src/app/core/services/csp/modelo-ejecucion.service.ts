@@ -13,6 +13,7 @@ import { tap } from 'rxjs/operators';
 import { IModeloTipoFinalidad } from '@core/models/csp/modelo-tipo-finalidad';
 import { IModeloTipoFase } from '@core/models/csp/modelo-tipo-fase';
 import { IModeloTipoDocumento } from '@core/models/csp/modelo-tipo-documento';
+import { IModeloTipoHito } from '@core/models/csp/modelo-tipo-hito';
 
 
 
@@ -202,6 +203,13 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
     this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoDocumento.name}(id: ${id})`, '-', 'START');
     return this.find<IModeloTipoDocumento, IModeloTipoDocumento>(`${this.endpointUrl}/${id}/modelotipodocumentos`, options).pipe(
       tap(() => this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoDocumento.name}(id: ${id})`, '-', 'END'))
+    );
+  }
+
+  findModeloTipoHito(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoHito>> {
+    this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoHito.name}(id: ${id})`, '-', 'START');
+    return this.find<IModeloTipoHito, IModeloTipoHito>(`${this.endpointUrl}/${id}/modelotipohitos`, options).pipe(
+      tap(() => this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoHito.name}(id: ${id})`, '-', 'END'))
     );
   }
 

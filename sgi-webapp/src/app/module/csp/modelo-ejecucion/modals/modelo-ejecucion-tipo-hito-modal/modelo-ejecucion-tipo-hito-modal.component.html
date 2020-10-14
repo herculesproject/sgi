@@ -1,0 +1,51 @@
+<div class="modelo-tipo-hito-modal">
+  <header class="modal-header-material">
+    <h3 mat-dialog-title>{{'csp.modelo.tipo.hito.modal.titulo' | translate}}</h3>
+  </header>
+  <main>
+    <form [formGroup]="formGroup">
+      <!-- Tipo de Hito -->
+      <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+          [fxFlexOrder]="fxFlexProperties.order">
+          <mat-form-field fxFill>
+            <mat-label>{{'csp.tipo.hito' | translate}}</mat-label>
+            <mat-select matNativeControl formControlName="tipoHito" required>
+              <mat-option *ngFor="let tipoHito of tipoHitos$ | async" [value]="tipoHito">{{tipoHito.nombre}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="formGroup.controls.tipoHito.errors?.required">
+              {{'csp.tipo.hito.error.requerido' | translate}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Disponibilidad -->
+      <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
+        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+          [fxFlexOrder]="fxFlexProperties.order">
+          <label>{{'csp.modelo.tipo.hito.disponible' | translate}}</label>
+          <div class="checkbox-inline">
+            <mat-checkbox color="primary" class="checkbox" formControlName="checkConvocatoria"
+              (change)="setConvocatoriaActivo($event)">{{'csp.modelo.tipo.hito.convocatoria' | translate}}
+            </mat-checkbox>
+            <mat-checkbox color="primary" class="checkbox" formControlName="checkProyecto"
+              (change)="setProyectoActivo($event)">{{'csp.modelo.tipo.hito.proyecto' | translate}}</mat-checkbox>
+            <mat-checkbox color="primary" class="checkbox" formControlName="checkSolictud"
+              (change)="setSolictudActivo($event)">
+              {{'csp.modelo.tipo.hito.proyecto' | translate}}</mat-checkbox>
+          </div>
+        </div>
+      </div>
+
+
+    </form>
+  </main>
+  <div id="modals-buttons" class="float-right" mat-dialog-actions>
+    <button color="accent" (click)="confirmActivosCheck()" md-button mat-raised-button
+      type="submit">{{'botones.guardar' | translate}}</button>
+    <button class="link-cancelar" mat-button (click)="closeModal()"
+      type="button">{{'botones.cancelar' | translate}}</button>
+  </div>
+</div>

@@ -72,6 +72,19 @@ export class ModeloEjecucionTipoFaseComponent extends FragmentComponent implemen
     );
     this.subscriptions.push(subscription);
     this.modelosTipoFases.paginator = this.paginator;
+    this.modelosTipoFases.sortingDataAccessor =
+      (wrapper: StatusWrapper<IModeloTipoFase>, property: string) => {
+        switch (property) {
+          case 'nombre':
+            return wrapper.value.tipoFase.nombre;
+          case 'descripcion':
+            return wrapper.value.tipoFase.descripcion;
+          case 'activo':
+            return wrapper.value.tipoFase.activo;
+          default:
+            return wrapper[property];
+        }
+      };
     this.modelosTipoFases.sort = this.sort;
     this.logger.debug(ModeloEjecucionTipoFaseComponent.name, 'ngOnInit()', 'end');
   }

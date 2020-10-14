@@ -15,9 +15,15 @@ import { ModeloEjecucionTipoFinalidadComponent } from './modelo-ejecucion-formul
 import { ModeloEjecucionTipoEnlaceModalComponent } from './modals/modelo-ejecucion-tipo-enlace-modal/modelo-ejecucion-tipo-enlace-modal.component';
 import { ModeloEjecucionTipoFinalidadModalComponent } from './modals/modelo-ejecucion-tipo-finalidad-modal/modelo-ejecucion-tipo-finalidad-modal.component';
 import { ModeloEjecucionTipoFaseComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-fase/modelo-ejecucion-tipo-fase.component';
-import { ModeloEjecucionTipoFaseModalComponent } from './modals/modelo-ejecucion-tipo-fase-modal/modelo-ejecucion-tipo-fase-modal.component';
 import { ModeloEjecucionTipoDocumentoComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-documento/modelo-ejecucion-tipo-documento.component';
 import { ModeloEjecucionTipoDocumentoModalComponent } from './modals/modelo-ejecucion-tipo-documento-modal/modelo-ejecucion-tipo-documento-modal.component';
+import { ModeloEjecucionTipoHitoComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-hito/modelo-ejecucion-tipo-hito.component';
+import {
+  ModeloEjecucionTipoFaseModalComponent
+} from './modals/modelo-ejecucion-tipo-fase-modal/modelo-ejecucion-tipo-fase-modal.component';
+import {
+  ModeloEjecucionTipoHitoModalComponent
+} from './modals/modelo-ejecucion-tipo-hito-modal/modelo-ejecucion-tipo-hito-modal.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +39,8 @@ import { ModeloEjecucionTipoDocumentoModalComponent } from './modals/modelo-ejec
     ModeloEjecucionTipoFaseComponent,
     ModeloEjecucionTipoDocumentoComponent,
     ModeloEjecucionTipoDocumentoModalComponent,
+    ModeloEjecucionTipoHitoComponent,
+    ModeloEjecucionTipoHitoModalComponent
   ],
   imports: [
     CommonModule,
