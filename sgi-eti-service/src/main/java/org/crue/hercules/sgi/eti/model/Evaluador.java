@@ -44,7 +44,8 @@ public class Evaluador extends BaseEntity {
 
   /** Cargo Comité */
   @ManyToOne
-  @JoinColumn(name = "cargo_comite_id", nullable = true)
+  @JoinColumn(name = "cargo_comite_id", nullable = false)
+  @NotNull
   private CargoComite cargoComite;
 
   /** Comité */

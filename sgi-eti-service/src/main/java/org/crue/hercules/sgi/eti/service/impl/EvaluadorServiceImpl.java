@@ -1,6 +1,8 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.eti.exceptions.EvaluadorNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
@@ -45,7 +47,92 @@ public class EvaluadorServiceImpl implements EvaluadorService {
     log.debug("Petición a create Evaluador : {} - start", evaluador);
     Assert.isNull(evaluador.getId(), "Evaluador id tiene que ser null para crear un nuevo evaluador");
 
+    // Si el evaluador a crear es presidente se ha de mirar que no coincida el
+    // presidente en el rango de fechas de los presidentes existentes
+    if (evaluador.getCargoComite().getNombre().toLowerCase().equals("presidente")) {
+      Assert.isTrue(isPresidenteInFechasOk(evaluador), "Existen presidentes entre las fechas seleccionadas");
+    } else {
+      // Un evaluador no puede estar en el mismo comité en el mismo rango de fechas
+      Assert.isTrue(isEvaluadorInFechasOk(evaluador),
+          "Existe otro evaluador en el mismo comité entre las fechas seleccionadas");
+    }
+
     return evaluadorRepository.save(evaluador);
+  }
+
+  /**
+   * Evalua si existe otro presidente en el mismo rango de fechas en el mismo
+   * comité
+   * 
+   * @param evaluador el objeto {@Link Evaluador}
+   * @return true or false si el presidente está en el rango de fechas correcto
+   */
+  public Boolean isPresidenteInFechasOk(Evaluador evaluador) {
+    Specification<Evaluador> specActivos = EvaluadorSpecifications.activos();
+    Specification<Evaluador> specPresidentes = EvaluadorSpecifications.presidentes();
+    Specification<Evaluador> specInFechas = EvaluadorSpecifications.inFechas(evaluador.getFechaAlta(),
+        evaluador.getFechaBaja());
+    Specification<Evaluador> specComite = EvaluadorSpecifications.byComite(evaluador.getComite().getComite());
+    Specification<Evaluador> specs = Specification.where(specActivos).and(specPresidentes).and(specInFechas)
+        .and(specComite);
+
+    Specification<Evaluador> specFechaBajaNull = EvaluadorSpecifications.byFechaBajaNull();
+    Specification<Evaluador> specsFechaBajaNull = Specification.where(specActivos).and(specPresidentes)
+        .and(specFechaBajaNull).and(specComite);
+
+    List<Evaluador> evaluadoresFechaBajaNull = evaluadorRepository.findAll(specsFechaBajaNull).stream()
+        .filter(eval -> evaluador.getId() != null ? eval.getId() != evaluador.getId() : true)
+        .filter(
+            eval -> evaluador.getFechaBaja() != null ? eval.getFechaAlta().isBefore(evaluador.getFechaBaja()) : true)
+        .collect(Collectors.toList());
+
+    if (evaluadoresFechaBajaNull.size() == 0) {
+      List<Evaluador> returnValue = evaluadorRepository.findAll(specs).stream()
+          .filter(eval -> evaluador.getId() != null ? eval.getId() != evaluador.getId() : true)
+          .collect(Collectors.toList());
+      // Si existen registros en las fechas en las que opera el nuevo presidente, el
+      // rango de fechas es incorrecto
+      return !(returnValue.size() > 0);
+    } else {
+      return false;
+    }
+
+  }
+
+  /**
+   * Evalua si existe el mismo evaluador en el mismo rango de fechas en el mismo
+   * comité
+   * 
+   * @param evaluador el objeto {@Link Evaluador}
+   * @return true or false si el evaluador cumple con las condiciones
+   */
+  public Boolean isEvaluadorInFechasOk(Evaluador evaluador) {
+    Specification<Evaluador> specActivos = EvaluadorSpecifications.activos();
+    Specification<Evaluador> specInFechas = EvaluadorSpecifications.inFechas(evaluador.getFechaAlta(),
+        evaluador.getFechaBaja());
+    Specification<Evaluador> specPersonaRef = EvaluadorSpecifications.byPersonaRef(evaluador.getPersonaRef());
+    Specification<Evaluador> specComite = EvaluadorSpecifications.byComite(evaluador.getComite().getComite());
+    Specification<Evaluador> specs = Specification.where(specActivos).and(specPersonaRef).and(specInFechas)
+        .and(specComite);
+
+    Specification<Evaluador> specFechaBajaNull = EvaluadorSpecifications.byFechaBajaNull();
+    Specification<Evaluador> specsFechaBajaNull = Specification.where(specActivos).and(specPersonaRef)
+        .and(specFechaBajaNull).and(specComite);
+
+    List<Evaluador> evaluadoresFechaBajaNull = evaluadorRepository.findAll(specsFechaBajaNull).stream()
+        .filter(eval -> evaluador.getId() != null ? eval.getId() != evaluador.getId() : true)
+        .filter(
+            eval -> evaluador.getFechaBaja() != null ? eval.getFechaAlta().isBefore(evaluador.getFechaBaja()) : true)
+        .collect(Collectors.toList());
+
+    if (evaluadoresFechaBajaNull.size() == 0) {
+      List<Evaluador> returnValue = evaluadorRepository.findAll(specs).stream()
+          .filter(eval -> evaluador.getId() != null ? eval.getId() != evaluador.getId() : true)
+          .collect(Collectors.toList());
+      return !(returnValue.size() > 0);
+    } else {
+      return false;
+    }
   }
 
   /**
@@ -122,7 +209,6 @@ public class EvaluadorServiceImpl implements EvaluadorService {
   }
 
   /**
-   * Actualiza los datos del {@link Evaluador}.
    * 
    * @param evaluadorActualizar {@link Evaluador} con los datos actualizados.
    * @return El {@link Evaluador} actualizado.
@@ -137,6 +223,16 @@ public class EvaluadorServiceImpl implements EvaluadorService {
     log.debug("update(Evaluador evaluadorActualizar) - start");
 
     Assert.notNull(evaluadorActualizar.getId(), "Evaluador id no puede ser null para actualizar un evaluador");
+
+    // Si el evaluador a crear es presidente se ha de mirar que no coincida el
+    // presidente en el rango de fechas de los presidentes existentes
+    if (evaluadorActualizar.getCargoComite().getNombre().toLowerCase().equals("presidente")) {
+      Assert.isTrue(isPresidenteInFechasOk(evaluadorActualizar), "Existen presidentes entre las fechas seleccionadas");
+    } else {
+      // Un evaluador no puede estar en el mismo comité en el mismo rango de fechas
+      Assert.isTrue(isEvaluadorInFechasOk(evaluadorActualizar),
+          "Existe otro evaluador en el mismo comité entre las fechas seleccionadas");
+    }
 
     return evaluadorRepository.findById(evaluadorActualizar.getId()).map(evaluador -> {
       evaluador.setCargoComite(evaluadorActualizar.getCargoComite());
