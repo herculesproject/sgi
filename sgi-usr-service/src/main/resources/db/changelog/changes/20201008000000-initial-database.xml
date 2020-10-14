@@ -4,19 +4,45 @@
   <!-- ########################################################## -->
   <!-- SEQUENCE -->
   <!-- ########################################################## -->
-
+  <changeSet author="master" id="20201013000000-unidad_seq">
+    <createSequence sequenceName="unidad_seq" />
+  </changeSet>
 
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
-
+  <changeSet author="master" id="20201013000000-unidad">
+    <createTable tableName="unidad">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="unidad_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="unidad_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="acronimo" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="descripcion" type="VARCHAR(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
 
   <!-- ########################################################## -->
   <!-- UNIQUE CONSTRAINT -->
   <!-- ########################################################## -->
+  <changeSet author="master" id="20201013000000-unidad_uk">
+    <addUniqueConstraint columnNames="nombre" constraintName="unidad_uk" tableName="unidad" />
+  </changeSet>
+
+  <changeSet author="master" id="20201013000000-acronimo_unidad_uk">
+    <addUniqueConstraint columnNames="acronimo" constraintName="acronimo_unidad_uk" tableName="unidad" />
+  </changeSet>
 
   <!-- ########################################################## -->
   <!-- INDEX -->
   <!-- ########################################################## -->
+
 
 </databaseChangeLog>

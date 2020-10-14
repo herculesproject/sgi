@@ -10,4 +10,26 @@
   <!-- FIN ENUMERATION -->
   <!-- ########################################################## -->
 
+  <changeSet author="master" id="20200928000000-unidad">
+    <insert tableName="unidad">
+      <column name="nombre" value="nombre-001" />
+      <column name="acronimo" value="acronimo-001" />
+      <column name="descripcion" value="descripcion-001" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="unidad">
+      <column name="nombre" value="codigo-002" />
+      <column name="acronimo" value="acronimo-002" />
+      <column name="descripcion" value="descripcion-002" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="unidad">
+      <column name="nombre" value="codigo-003" />
+      <column name="acronimo" value="acronimo-001" />
+      <column name="descripcion" value="descripcion-001" />
+      <column name="activo" value="false" />
+    </insert>
+  </changeSet>
+
+
 </databaseChangeLog>
