@@ -8,12 +8,16 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.ComentarioNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.ApartadoFormulario;
+import org.crue.hercules.sgi.eti.model.BloqueFormulario;
 import org.crue.hercules.sgi.eti.model.Comentario;
+import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.TipoComentario;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.service.impl.ComentarioServiceImpl;
@@ -278,9 +282,12 @@ public class ComentarioServiceTest {
 
     BDDMockito.given(evaluacionRepository.findById(12L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
 
+    Comentario comentario = generarMockComentario(null, "Create", 1L);
+    comentario.setEvaluacion(null);
+
     try {
       // when: se quiera añadir comentarios
-      comentarioService.createComentarioGestor(evaluacionId, new Comentario());
+      comentarioService.createComentarioGestor(evaluacionId, comentario);
       Assertions.fail("El id de la evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final EvaluacionNotFoundException e) {
@@ -354,9 +361,12 @@ public class ComentarioServiceTest {
     final Long evaluacionId = 12L;
     final String personaRef = "user-002";
     BDDMockito.given(evaluacionRepository.findById(12L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
+
+    Comentario comentario = generarMockComentario(null, "Create", 1L);
+    comentario.setEvaluacion(null);
     try {
       // when: se quiere añadir comentario
-      comentarioService.createComentarioEvaluador(evaluacionId, new Comentario(), personaRef);
+      comentarioService.createComentarioEvaluador(evaluacionId, comentario, personaRef);
       Assertions.fail("El id de la evaluación no puede ser nulo");
       // then: se debe lanzar una excepción
     } catch (final EvaluacionNotFoundException e) {
@@ -455,6 +465,33 @@ public class ComentarioServiceTest {
 
     final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage()).isEqualTo("El comentario no pertenece a la evaluación recibida.");
+    }
+  }
+
+  @Test
+  public void updateComentarioGestor_BloqueComentariodNotValid() {
+    // given: EL id de la evaluación es válido
+    final Long evaluacionId = 12L;
+
+    try {
+
+      Comentario comentarioActualizado = generarMockComentario(1L, "comentario1 actualizado", 1L);
+
+      comentarioActualizado.getApartadoFormulario().getBloqueFormulario().getFormulario().setId(4L);
+
+      BDDMockito.given(evaluacionRepository.findById(12L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
+
+      // when: se quiera actualizar un comentario cuyo bloque comentario no es apto
+      // para el comité y tipo de evaluación
+
+      comentarioService.updateComentarioGestor(evaluacionId, comentarioActualizado);
+
+      Assertions.fail("El bloque formulario seleccionado no es correcto para el tipo de evaluación.");
+    } catch (
+
+    final IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage())
+          .isEqualTo("El bloque formulario seleccionado no es correcto para el tipo de evaluación.");
     }
   }
 
@@ -789,6 +826,11 @@ public class ComentarioServiceTest {
     final ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
     apartadoFormulario.setId(100L);
 
+    Formulario formulario = new Formulario(1L, "M10", "Formulario M10", Boolean.TRUE);
+
+    BloqueFormulario bloqueFormulario = new BloqueFormulario(1L, formulario, "Bloque Formulario 1", 1, Boolean.TRUE);
+    apartadoFormulario.setBloqueFormulario(bloqueFormulario);
+
     final Evaluacion evaluacion = new Evaluacion();
     evaluacion.setId(200L);
 
@@ -812,10 +854,18 @@ public class ComentarioServiceTest {
     evaluador.setPersonaRef("user-002");
     estadoMemoria.setId(4L);
     memoria.setEstadoActual(estadoMemoria);
+
+    Comite comite = new Comite(1L, "CEISH", Boolean.TRUE);
+    memoria.setComite(comite);
+
     final Evaluacion evaluacion = new Evaluacion();
     evaluacion.setId(id);
     evaluacion.setMemoria(memoria);
     evaluacion.setEvaluador1(evaluador);
+
+    TipoEvaluacion tipoEvaluacion = new TipoEvaluacion(2L, "Memoria", Boolean.TRUE);
+    evaluacion.setTipoEvaluacion(tipoEvaluacion);
+
     return evaluacion;
   }
 

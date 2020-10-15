@@ -10,9 +10,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.config.SecurityConfig;
 import org.crue.hercules.sgi.eti.exceptions.ComiteFormularioNotFoundException;
+import org.crue.hercules.sgi.eti.model.BloqueFormulario;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ComiteFormulario;
 import org.crue.hercules.sgi.eti.model.Formulario;
+import org.crue.hercules.sgi.eti.service.BloqueFormularioService;
 import org.crue.hercules.sgi.eti.service.ComiteFormularioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
@@ -58,6 +60,9 @@ public class ComiteFormularioControllerTest {
 
   @MockBean
   private ComiteFormularioService comiteFormularioService;
+
+  @MockBean
+  private BloqueFormularioService bloqueFormularioService;
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-COMITEFORMULARIO-VER" })
@@ -378,6 +383,94 @@ public class ComiteFormularioControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR", "ETI-EVC-EVALR-INV" })
+  public void findBloqueFormularios_Unlimited_ReturnsFullBloqueFormularioList() throws Exception {
+
+    Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion", Boolean.TRUE);
+
+    // given: One hundred ComiteFormulario
+    List<ComiteFormulario> comiteFormularios = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      comiteFormularios.add(generarMockComiteFormulario(Long.valueOf(i), comite, formulario));
+    }
+
+    BDDMockito.given(
+        comiteFormularioService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(comiteFormularios));
+
+    // when: find unlimited
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(COMITE_FORMULARIO_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Get a page one hundred ComiteFormulario
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR", "ETI-EVC-EVALR-INV" })
+  public void findBloqueFormularios_WithPaging_ReturnsComiteFormularioSubList() throws Exception {
+
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion", Boolean.TRUE);
+
+    // given: One hundred BloqueFormulario
+    List<BloqueFormulario> bloqueFormularios = new ArrayList<BloqueFormulario>();
+    for (int i = 1; i <= 100; i++) {
+      BloqueFormulario bloqueFormulario = new BloqueFormulario(Long.valueOf(i), formulario,
+          "Formulario" + String.format("%03d", i), 1, Boolean.TRUE);
+      bloqueFormularios.add(bloqueFormulario);
+    }
+
+    BDDMockito
+        .given(bloqueFormularioService.findByComiteAndTipoEvaluacion(ArgumentMatchers.anyLong(),
+            ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyLong()))
+        .willAnswer(new Answer<Page<BloqueFormulario>>() {
+          @Override
+          public Page<BloqueFormulario> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<BloqueFormulario> content = bloqueFormularios.subList(fromIndex, toIndex);
+            Page<BloqueFormulario> page = new PageImpl<>(content, pageable, bloqueFormularios.size());
+            return page;
+          }
+        });
+
+    // when: get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/bloque-formularios/{idTipoEvaluacion}",
+                1L, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: the asked bloqueFormularios are returned with the right page
+        // information
+        // in headers
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "100"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10))).andReturn();
+
+    // this uses a TypeReference to inform Jackson about the Lists's generic type
+    List<BloqueFormulario> actual = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<BloqueFormulario>>() {
+        });
+
+    // containing id='31' to '40'
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      BloqueFormulario bloqueFormulario = actual.get(i);
+      Assertions.assertThat(bloqueFormulario.getId()).isEqualTo(j);
+    }
+  }
+
   /**
    * Función que devuelve un objeto ComiteFormulario
    * 
@@ -387,7 +480,7 @@ public class ComiteFormularioControllerTest {
    * @return el objeto ComiteFormulario
    */
 
-  public ComiteFormulario generarMockComiteFormulario(Long id, Comite comite, Formulario formulario) {
+  private ComiteFormulario generarMockComiteFormulario(Long id, Comite comite, Formulario formulario) {
 
     ComiteFormulario comiteFormulario = new ComiteFormulario();
     comiteFormulario.setId(id);

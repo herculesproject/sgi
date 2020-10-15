@@ -1,14 +1,21 @@
 package org.crue.hercules.sgi.eti.service;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.BloqueFormularioNotFoundException;
+import org.crue.hercules.sgi.eti.exceptions.ComiteFormularioNotFoundException;
+import org.crue.hercules.sgi.eti.exceptions.TipoEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.BloqueFormulario;
+import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.ComiteFormulario;
 import org.crue.hercules.sgi.eti.repository.BloqueFormularioRepository;
+import org.crue.hercules.sgi.eti.repository.ComiteFormularioRepository;
+import org.crue.hercules.sgi.eti.repository.TipoEvaluacionRepository;
 import org.crue.hercules.sgi.eti.service.impl.BloqueFormularioServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,11 +41,18 @@ public class BloqueFormularioServiceTest {
   @Mock
   private BloqueFormularioRepository bloqueFormularioRepository;
 
+  @Mock
+  private ComiteFormularioRepository comiteFormularioRepository;
+
+  @Mock
+  private TipoEvaluacionRepository tipoEvaluacionRepository;
+
   private BloqueFormularioService bloqueFormularioService;
 
   @BeforeEach
   public void setUp() throws Exception {
-    bloqueFormularioService = new BloqueFormularioServiceImpl(bloqueFormularioRepository);
+    bloqueFormularioService = new BloqueFormularioServiceImpl(bloqueFormularioRepository, comiteFormularioRepository,
+        tipoEvaluacionRepository);
   }
 
   @Test
@@ -231,6 +245,122 @@ public class BloqueFormularioServiceTest {
     }
   }
 
+  @Test
+  public void findByComite_Success() {
+    // given: El id del comite es valido
+    Long comiteId = 12L;
+    Long tipoEvaluacionId = 1L;
+
+    Comite comite = new Comite(12L, "comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Form M10", Boolean.TRUE);
+    ComiteFormulario comiteFormulario1 = new ComiteFormulario(1L, comite, formulario);
+    ComiteFormulario comiteFormulario2 = new ComiteFormulario(1L, comite, formulario);
+
+    List<ComiteFormulario> responseComiteFormulario = new LinkedList<ComiteFormulario>();
+    responseComiteFormulario.add(comiteFormulario1);
+    responseComiteFormulario.add(comiteFormulario2);
+
+    BDDMockito.given(tipoEvaluacionRepository.existsById(tipoEvaluacionId)).willReturn(Boolean.TRUE);
+
+    BDDMockito
+        .given(comiteFormularioRepository.findByComiteIdAndComiteActivoTrueAndFormularioActivoTrueAndFormularioIdIn(
+            ArgumentMatchers.anyLong(), ArgumentMatchers.anyList(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(responseComiteFormulario));
+
+    List<BloqueFormulario> responseBloqueFormulario = new LinkedList<BloqueFormulario>();
+    responseBloqueFormulario.add(generarMockBloqueFormulario(1L, "Bloque Formulario 1"));
+    responseBloqueFormulario.add(generarMockBloqueFormulario(2L, "Bloque Formulario 2"));
+    responseBloqueFormulario.add(generarMockBloqueFormulario(2L, "Bloque Formulario 3"));
+    responseBloqueFormulario.add(generarMockBloqueFormulario(2L, "Bloque Formulario 4"));
+
+    // página 1 con 2 elementos por página
+    Pageable pageable = PageRequest.of(1, 2);
+    Page<BloqueFormulario> pageResponse = new PageImpl<>(responseBloqueFormulario.subList(2, 3), pageable,
+        responseBloqueFormulario.size());
+
+    BDDMockito.given(bloqueFormularioRepository.findAll(ArgumentMatchers.<Specification<BloqueFormulario>>any(),
+        ArgumentMatchers.<Pageable>any())).willReturn(pageResponse);
+
+    // when: Se buscan los datos paginados
+    Page<BloqueFormulario> result = bloqueFormularioService.findByComiteAndTipoEvaluacion(comiteId, pageable,
+        tipoEvaluacionId);
+
+    // then: Se recuperan los datos correctamente según la paginación solicitada
+    Assertions.assertThat(result).isEqualTo(pageResponse);
+    Assertions.assertThat(result.getContent()).isEqualTo(responseBloqueFormulario.subList(2, 3));
+    Assertions.assertThat(result.getNumber()).isEqualTo(pageable.getPageNumber());
+    Assertions.assertThat(result.getSize()).isEqualTo(pageable.getPageSize());
+    Assertions.assertThat(result.getTotalElements()).isEqualTo(responseBloqueFormulario.size());
+  }
+
+  @Test
+  public void findByComite_IdComiteNull() {
+    // given: EL id del comite y el tipo Evaluación sean null
+    Long comiteId = null;
+    Long tipoEvaluacionId = null;
+    try {
+      // when: se listar sus evaluaciones
+      bloqueFormularioService.findByComiteAndTipoEvaluacion(comiteId, Pageable.unpaged(), tipoEvaluacionId);
+      Assertions
+          .fail("El identificador de comité no puede ser null para recuperar los bloques de formulario asociados.");
+      // then: se debe lanzar una excepción
+    } catch (IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage()).isEqualTo(
+          "El identificador de comité no puede ser null para recuperar los bloques de formulario asociados.");
+    }
+  }
+
+  @Test
+  public void findByComite_IdTipoEvaluacionNull() {
+    // given: EL id del Evaluación sea null
+    Long comiteId = 12L;
+    Long tipoEvaluacionId = null;
+    try {
+      // when: se listar sus evaluaciones
+      bloqueFormularioService.findByComiteAndTipoEvaluacion(comiteId, Pageable.unpaged(), tipoEvaluacionId);
+      Assertions.fail(
+          "El identificador del tipo de Evaluación no puede ser null para recuperar los bloques de formulario asociados.");
+      // then: se debe lanzar una excepción
+    } catch (IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage()).isEqualTo(
+          "El identificador del tipo de Evaluación no puede ser null para recuperar los bloques de formulario asociados.");
+    }
+  }
+
+  @Test
+  public void findByComite_ThrowComiteFormularioNotFoundException() {
+    // given: EL id del Evaluación sea null
+    Long comiteId = 12L;
+    Long tipoEvaluacionId = 1L;
+
+    List<ComiteFormulario> responseComiteFormulario = new LinkedList<ComiteFormulario>();
+
+    BDDMockito.given(tipoEvaluacionRepository.existsById(tipoEvaluacionId)).willReturn(Boolean.TRUE);
+    BDDMockito
+        .given(comiteFormularioRepository.findByComiteIdAndComiteActivoTrueAndFormularioActivoTrueAndFormularioIdIn(
+            ArgumentMatchers.anyLong(), ArgumentMatchers.anyList(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(responseComiteFormulario));
+
+    Assertions
+        .assertThatThrownBy(
+            () -> bloqueFormularioService.findByComiteAndTipoEvaluacion(comiteId, Pageable.unpaged(), tipoEvaluacionId))
+        .isInstanceOf(ComiteFormularioNotFoundException.class);
+  }
+
+  @Test
+  public void findByComite_ThrowTipoEvaluacionNotFoundException() {
+    // given: EL id del Evaluación sea null
+    Long comiteId = 12L;
+    Long tipoEvaluacionId = 1L;
+
+    BDDMockito.given(tipoEvaluacionRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
+
+    Assertions
+        .assertThatThrownBy(
+            () -> bloqueFormularioService.findByComiteAndTipoEvaluacion(comiteId, Pageable.unpaged(), tipoEvaluacionId))
+        .isInstanceOf(TipoEvaluacionNotFoundException.class);
+  }
+
   /**
    * Función que devuelve un objeto BloqueFormulario
    * 
@@ -239,7 +369,7 @@ public class BloqueFormularioServiceTest {
    * @return el objeto BloqueFormulario
    */
 
-  public BloqueFormulario generarMockBloqueFormulario(Long id, String nombre) {
+  private BloqueFormulario generarMockBloqueFormulario(Long id, String nombre) {
 
     Formulario formulario = new Formulario();
     formulario.setId(1L);

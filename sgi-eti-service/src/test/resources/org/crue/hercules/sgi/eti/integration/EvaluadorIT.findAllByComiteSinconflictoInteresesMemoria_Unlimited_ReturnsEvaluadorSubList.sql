@@ -48,9 +48,9 @@ VALUES(1, 1, '2020-07-01');
 
 -- MEMORIA 
 INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, persona_ref, tipo_memoria_id, estado_actual_id, fecha_envio_secretaria, requiere_retrospectiva, retrospectiva_id, version, activo)
- VALUES (100, 'ref-5588', 1, 2, 'Memoria001', 'userref-55697', 1, 1, null, false, 1, 1, true);
+ VALUES (100, 'ref-5588', 1, 2, 'Memoria001', 'userref-55697', 2, 1, null, false, 1, 1, true);
 INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, persona_ref, tipo_memoria_id, estado_actual_id, fecha_envio_secretaria, requiere_retrospectiva, retrospectiva_id, version, activo)
- VALUES (200, 'ref-5588', 1, 2, 'Memoria002', 'userref-55698', 1, 1, null, false, 1, 1, true);
+ VALUES (200, 'ref-5588', 1, 2, 'Memoria002', 'userref-55698', 2, 1, null, false, 1, 1, true);
 
 -- FORMACIÓN ESPECÍFICA 
 INSERT INTO eti.formacion_especifica (id, nombre, activo) VALUES (300, 'FormacionEspecifica001', true);

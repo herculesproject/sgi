@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.ApartadoFormulario;
+import org.crue.hercules.sgi.eti.model.BloqueFormulario;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Comite;
@@ -16,6 +17,7 @@ import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
@@ -580,6 +582,10 @@ public class EvaluacionIT {
     ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
     apartadoFormulario.setId(100L);
 
+    Formulario formulario = new Formulario(1L, "M10", "Formulario M10", Boolean.TRUE);
+    BloqueFormulario bloqueFormulario = new BloqueFormulario(1L, formulario, "Bloque Formulario 1", 1, Boolean.TRUE);
+    apartadoFormulario.setBloqueFormulario(bloqueFormulario);
+
     Comentario comentario = new Comentario();
     comentario.setApartadoFormulario(apartadoFormulario);
     comentario.setTexto("comentario1");
@@ -604,6 +610,10 @@ public class EvaluacionIT {
     Evaluacion evaluacion = generarMockEvaluacion(200L, "eval");
     ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
     apartadoFormulario.setId(100L);
+
+    Formulario formulario = new Formulario(1L, "M10", "Formulario M10", Boolean.TRUE);
+    BloqueFormulario bloqueFormulario = new BloqueFormulario(1L, formulario, "Bloque Formulario 1", 1, Boolean.TRUE);
+    apartadoFormulario.setBloqueFormulario(bloqueFormulario);
 
     Comentario comentario = new Comentario();
     comentario.setApartadoFormulario(apartadoFormulario);
@@ -631,6 +641,10 @@ public class EvaluacionIT {
     ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
     apartadoFormulario.setId(100L);
 
+    Formulario formulario = new Formulario(1L, "M10", "Formulario M10", Boolean.TRUE);
+    BloqueFormulario bloqueFormulario = new BloqueFormulario(1L, formulario, "Bloque Formulario 1", 1, Boolean.TRUE);
+    apartadoFormulario.setBloqueFormulario(bloqueFormulario);
+
     Comentario comentario = new Comentario();
     comentario.setApartadoFormulario(apartadoFormulario);
     comentario.setTexto("comentario1");
@@ -657,6 +671,10 @@ public class EvaluacionIT {
     ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
     apartadoFormulario.setId(100L);
 
+    Formulario formulario = new Formulario(1L, "M10", "Formulario M10", Boolean.TRUE);
+    BloqueFormulario bloqueFormulario = new BloqueFormulario(1L, formulario, "Bloque Formulario 1", 1, Boolean.TRUE);
+    apartadoFormulario.setBloqueFormulario(bloqueFormulario);
+
     Comentario comentario = new Comentario();
     comentario.setApartadoFormulario(apartadoFormulario);
     comentario.setEvaluacion(evaluacion);
@@ -682,6 +700,10 @@ public class EvaluacionIT {
     Evaluacion evaluacion = generarMockEvaluacion(200L, null);
     ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
     apartadoFormulario.setId(100L);
+
+    Formulario formulario = new Formulario(1L, "M10", "Formulario M10", Boolean.TRUE);
+    BloqueFormulario bloqueFormulario = new BloqueFormulario(1L, formulario, "Bloque Formulario 1", 1, Boolean.TRUE);
+    apartadoFormulario.setBloqueFormulario(bloqueFormulario);
 
     TipoComentario tipoComentario = new TipoComentario();
     tipoComentario.setId(1L);
@@ -718,6 +740,10 @@ public class EvaluacionIT {
     Evaluacion evaluacion = generarMockEvaluacion(200L, null);
     ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
     apartadoFormulario.setId(100L);
+
+    Formulario formulario = new Formulario(1L, "M10", "Formulario M10", Boolean.TRUE);
+    BloqueFormulario bloqueFormulario = new BloqueFormulario(1L, formulario, "Bloque Formulario 1", 1, Boolean.TRUE);
+    apartadoFormulario.setBloqueFormulario(bloqueFormulario);
 
     TipoComentario tipoComentario = new TipoComentario();
     tipoComentario.setId(2L);
@@ -785,7 +811,7 @@ public class EvaluacionIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
   }
-  
+
   /**
    * Función que devuelve un objeto Evaluacion
    * 

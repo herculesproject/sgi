@@ -1,6 +1,8 @@
 package org.crue.hercules.sgi.eti.service;
 
 import org.crue.hercules.sgi.eti.model.BloqueFormulario;
+import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 
 import java.util.List;
@@ -58,5 +60,16 @@ public interface BloqueFormularioService {
    * Elimina todos los {@link BloqueFormulario}.
    */
   void deleteAll();
+
+  /**
+   * Recupera los bloques formularios de un comité dependiendo del tipo de
+   * evaluación.
+   * 
+   * @param idComite         Identificador de {@link Comite}
+   * @param idTipoEvaluacion Identificador de {@link TipoEvaluacion}
+   * @param paging           Datos de la paginación.
+   * @return lista paginada {@link BloqueFormulario}
+   */
+  Page<BloqueFormulario> findByComiteAndTipoEvaluacion(Long idComite, Pageable paging, Long idTipoEvaluacion);
 
 }

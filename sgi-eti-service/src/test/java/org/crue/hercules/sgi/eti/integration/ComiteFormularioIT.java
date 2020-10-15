@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.eti.model.BloqueFormulario;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
@@ -263,6 +264,58 @@ public class ComiteFormularioIT {
     Assertions.assertThat(comiteFormularios.get(0).getId()).isEqualTo(1L);
   }
 
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findBloqueFormulariosUnlimited_ReturnsBloqueFormulario() throws Exception {
+
+    // when: find unlimited bloques formulario para comité
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Authorization", String.format("bearer %s",
+        tokenBuilder.buildToken("user", "ETI-EVC-EVAL", "ETI-EVC-EVALR", "ETI-EVC-EVALR-INV")));
+
+    HttpEntity<ComiteFormulario> request = new HttpEntity<>(null, headers);
+
+    final ResponseEntity<List<BloqueFormulario>> response = restTemplate.exchange(
+        COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/bloque-formularios/{idTipoEvaluacion}",
+        HttpMethod.GET, request, new ParameterizedTypeReference<List<BloqueFormulario>>() {
+        }, 1L, 2L);
+
+    // then: Obtiene los bloques formularios de un comité
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<BloqueFormulario> bloquesFormulario = response.getBody();
+    Assertions.assertThat(bloquesFormulario.size()).isEqualTo(2);
+
+    Assertions.assertThat(bloquesFormulario.get(0).getFormulario().getNombre()).isEqualTo("M10");
+    Assertions.assertThat(bloquesFormulario.get(1).getFormulario().getNombre()).isEqualTo("M10");
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findBloqueFormulariosUnlimited_ReturnsNotFound() throws Exception {
+
+    // when: find unlimited bloques formulario para comité
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Authorization", String.format("bearer %s",
+        tokenBuilder.buildToken("user", "ETI-EVC-EVAL", "ETI-EVC-EVALR", "ETI-EVC-EVALR-INV")));
+
+    HttpEntity<ComiteFormulario> request = new HttpEntity<>(null, headers);
+
+    final ResponseEntity<List<BloqueFormulario>> response = restTemplate.exchange(
+        COMITE_FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/bloque-formularios/{idTipoEvaluacion}",
+        HttpMethod.GET, request, new ParameterizedTypeReference<List<BloqueFormulario>>() {
+        }, 1L, 2L);
+
+    // then: No existen bloques formulario para el comité
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+  }
+
   /**
    * Función que devuelve un objeto ComiteFormulario
    * 
@@ -272,7 +325,7 @@ public class ComiteFormularioIT {
    * @return el objeto ComiteFormulario
    */
 
-  public ComiteFormulario generarMockComiteFormulario(Long id, Comite comite, Formulario formulario) {
+  private ComiteFormulario generarMockComiteFormulario(Long id, Comite comite, Formulario formulario) {
 
     ComiteFormulario comiteFormulario = new ComiteFormulario();
     comiteFormulario.setId(id);
