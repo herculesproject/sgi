@@ -72,6 +72,7 @@ public class PlanServiceImpl implements PlanService {
 
     return repository.findById(planActualizar.getId()).map(plan -> {
       plan.setNombre(planActualizar.getNombre());
+      plan.setDescripcion(planActualizar.getDescripcion());
       plan.setActivo(planActualizar.getActivo());
 
       Plan returnValue = repository.save(plan);

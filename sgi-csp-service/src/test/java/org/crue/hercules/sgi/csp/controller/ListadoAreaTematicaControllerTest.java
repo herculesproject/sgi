@@ -10,7 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.SecurityConfig;
 import org.crue.hercules.sgi.csp.exceptions.ListadoAreaTematicaNotFoundException;
+import org.crue.hercules.sgi.csp.model.AreaTematicaArbol;
 import org.crue.hercules.sgi.csp.model.ListadoAreaTematica;
+import org.crue.hercules.sgi.csp.service.AreaTematicaArbolService;
 import org.crue.hercules.sgi.csp.service.ListadoAreaTematicaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
@@ -41,8 +43,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
  */
 
 @WebMvcTest(ListadoAreaTematicaController.class)
-// Since WebMvcTest is only sliced controller layer for the testing, it would
-// not take the security configurations.
 @Import(SecurityConfig.class)
 public class ListadoAreaTematicaControllerTest {
 
@@ -54,6 +54,9 @@ public class ListadoAreaTematicaControllerTest {
 
   @MockBean
   private ListadoAreaTematicaService service;
+
+  @MockBean
+  private AreaTematicaArbolService areaTematicaArbolService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String CONTROLLER_BASE_PATH = "/listadoareatematicas";
@@ -316,6 +319,92 @@ public class ListadoAreaTematicaControllerTest {
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  public void findAllAreaTematicaArboles_ReturnsPage() throws Exception {
+    // given: Una lista con 37 AreaTematicaArbol para el ListadoAreaTematica
+    Long idListadoAreaTematica = 1L;
+
+    List<AreaTematicaArbol> areaTematicaArboles = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      areaTematicaArboles.add(generarMockAreaTematicaArbol(i, "Programa" + String.format("%03d", i)));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(areaTematicaArbolService.findAllByListadoAreaTematica(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > areaTematicaArboles.size() ? areaTematicaArboles.size() : toIndex;
+          List<AreaTematicaArbol> content = areaTematicaArboles.subList(fromIndex, toIndex);
+          Page<AreaTematicaArbol> pageResponse = new PageImpl<>(content, pageable, areaTematicaArboles.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/areatematicaarboles", idListadoAreaTematica)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los Programa del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<AreaTematicaArbol> areaTematicaArbolesResponse = mapper
+        .readValue(requestResult.getResponse().getContentAsString(), new TypeReference<List<AreaTematicaArbol>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      AreaTematicaArbol areaTematicaArbol = areaTematicaArbolesResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(areaTematicaArbol.getNombre()).isEqualTo("Programa" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  public void findAllAreaTematicaArboles_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de AreaTematicaArbol para el ListadoAreaTematica
+    Long idPlan = 1L;
+
+    List<AreaTematicaArbol> areaTematicaArboles = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(areaTematicaArbolService.findAllByListadoAreaTematica(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          Page<AreaTematicaArbol> pageResponse = new PageImpl<>(areaTematicaArboles, pageable, 0);
+          return pageResponse;
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/areatematicaarboles", idPlan)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+  }
+
   /**
    * Función que devuelve un objeto ListadoAreaTematica
    * 
@@ -326,6 +415,23 @@ public class ListadoAreaTematicaControllerTest {
   private ListadoAreaTematica generarMockListadoAreaTematica(Long id, Boolean activo) {
     return ListadoAreaTematica.builder().id(id).nombre("nombre-" + id).descripcion("descripcion-" + id).activo(activo)
         .build();
+  }
+
+  /**
+   * Función que devuelve un objeto AreaTematicaArbol
+   * 
+   * @param id     id del AreaTematicaArbol
+   * @param nombre nombre del AreaTematicaArbol
+   * @return el objeto AreaTematicaArbol
+   */
+  private AreaTematicaArbol generarMockAreaTematicaArbol(Long id, String nombre) {
+    AreaTematicaArbol areaTematicaArbol = new AreaTematicaArbol();
+    areaTematicaArbol.setId(id);
+    areaTematicaArbol.setNombre(nombre);
+    areaTematicaArbol.setAbreviatura("A-" + id);
+    areaTematicaArbol.setActivo(true);
+
+    return areaTematicaArbol;
   }
 
 }

@@ -89,6 +89,37 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-area_tematica_arbol">
+    <insert tableName="area_tematica_arbol">
+      <column name="nombre" value="nombre-001" />
+      <column name="abreviatura" value="A-001" />
+      <column name="listado_area_tematica_id" valueComputed="(select id from csp.listado_area_tematica where nombre = 'area_tematica AAA')" />
+      <column name="area_tematica_arbol_padre_id" value="null" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="area_tematica_arbol">
+      <column name="nombre" value="nombre-002" />
+      <column name="abreviatura" value="A-002" />
+      <column name="listado_area_tematica_id" valueComputed="(select id from csp.listado_area_tematica where nombre = 'area_tematica AAA')" />
+      <column name="area_tematica_arbol_padre_id" valueComputed="(select id from csp.area_tematica_arbol where nombre = 'nombre-001')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="area_tematica_arbol">
+      <column name="nombre" value="nombre-003" />
+      <column name="abreviatura" value="A-003" />
+      <column name="listado_area_tematica_id" valueComputed="(select id from csp.listado_area_tematica where nombre = 'area_tematica AAA')" />
+      <column name="area_tematica_arbol_padre_id" valueComputed="(select id from csp.area_tematica_arbol where nombre = 'nombre-001')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="area_tematica_arbol">
+      <column name="nombre" value="nombre-004" />
+      <column name="abreviatura" value="A-004" />
+      <column name="listado_area_tematica_id" valueComputed="(select id from csp.listado_area_tematica where nombre = 'area_tematica AAA')" />
+      <column name="area_tematica_arbol_padre_id" value="null" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-modelo_ejecucion">
     <insert tableName="modelo_ejecucion">
       <column name="nombre" value="nombre-001" />

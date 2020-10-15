@@ -114,7 +114,7 @@ public class ProgramaIT {
     Programa programa = response.getBody();
     Assertions.assertThat(programa.getId()).as("getId()").isEqualTo(idPrograma);
     Assertions.assertThat(programa.getNombre()).as("getNombre()").isEqualTo("nombre-001");
-    Assertions.assertThat(programa.getDescripcion()).as("getNombre()").isEqualTo("descripcion-001");
+    Assertions.assertThat(programa.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-001");
     Assertions.assertThat(programa.getActivo()).as("getActivo()").isEqualTo(true);
   }
 

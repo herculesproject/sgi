@@ -53,7 +53,8 @@ public class ProgramaServiceTest {
     // given: Un nuevo Programa
     Programa programa = generarMockPrograma(null, "nombre-1", 1L, null);
 
-    BDDMockito.given(repository.findByNombre(programa.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(repository.findByNombreAndPlanId(programa.getNombre(), programa.getPlan().getId()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(planRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(generarMockPlan(1L)));
 
@@ -79,7 +80,8 @@ public class ProgramaServiceTest {
     // given: Un nuevo Programa
     Programa programa = generarMockPrograma(null, "nombre-1", 1L, 1L);
 
-    BDDMockito.given(repository.findByNombre(programa.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(repository.findByNombreAndPlanId(programa.getNombre(), programa.getPlan().getId()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(planRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(generarMockPlan(1L)));
 
@@ -131,12 +133,13 @@ public class ProgramaServiceTest {
     Programa programaNew = generarMockPrograma(null, "nombreRepetido", 1L, null);
     Programa programa = generarMockPrograma(1L, "nombreRepetido", 1L, null);
 
-    BDDMockito.given(repository.findByNombre(programaNew.getNombre())).willReturn(Optional.of(programa));
+    BDDMockito.given(repository.findByNombreAndPlanId(programaNew.getNombre(), programaNew.getPlan().getId()))
+        .willReturn(Optional.of(programa));
 
     // when: Creamos el Programa
     // then: Lanza una excepcion porque hay otro Programa con ese nombre
     Assertions.assertThatThrownBy(() -> service.create(programaNew)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un Programa con el nombre " + programaNew.getNombre());
+        .hasMessage("Ya existe un Programa con el nombre " + programaNew.getNombre() + " en el Plan");
   }
 
   @Test
@@ -144,7 +147,8 @@ public class ProgramaServiceTest {
     // given: Un nuevo Programa con un plan que no existe
     Programa programa = generarMockPrograma(null, "nombreRepetido", 1L, null);
 
-    BDDMockito.given(repository.findByNombre(programa.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(repository.findByNombreAndPlanId(programa.getNombre(), programa.getPlan().getId()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(planRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
@@ -158,7 +162,8 @@ public class ProgramaServiceTest {
     // given: Un nuevo Programa con un padre que no existe
     Programa programa = generarMockPrograma(null, "nombreRepetido", 1L, 1L);
 
-    BDDMockito.given(repository.findByNombre(programa.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(repository.findByNombreAndPlanId(programa.getNombre(), programa.getPlan().getId()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(planRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(generarMockPlan(1L)));
 
@@ -175,9 +180,8 @@ public class ProgramaServiceTest {
     Programa programa = generarMockPrograma(1L);
     Programa programaNombreActualizado = generarMockPrograma(1L, "NombreActualizado", 1L, null);
 
-    BDDMockito.given(repository.findByNombre(programaNombreActualizado.getNombre())).willReturn(Optional.empty());
-
-    BDDMockito.given(planRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(generarMockPlan(1L)));
+    BDDMockito.given(repository.findByNombreAndPlanId(programaNombreActualizado.getNombre(),
+        programaNombreActualizado.getPlan().getId())).willReturn(Optional.empty());
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(programa));
     BDDMockito.given(repository.save(ArgumentMatchers.<Programa>any()))
@@ -202,9 +206,9 @@ public class ProgramaServiceTest {
     Programa programa = generarMockPrograma(2L);
     Programa programaNombreActualizado = generarMockPrograma(2L, "NombreActualizado", 1L, 1L);
 
-    BDDMockito.given(repository.findByNombre(programaNombreActualizado.getNombre())).willReturn(Optional.empty());
-
-    BDDMockito.given(planRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(generarMockPlan(1L)));
+    BDDMockito
+        .given(repository.findByNombreAndPlanId(programaNombreActualizado.getNombre(), programa.getPlan().getId()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(repository.findById(1L)).willReturn(Optional.of(generarMockPrograma(1L)));
     BDDMockito.given(repository.findById(2L)).willReturn(Optional.of(programa));
@@ -234,9 +238,9 @@ public class ProgramaServiceTest {
     Programa programaActivoActualizado = generarMockPrograma(2L, "NombreActualizado", 1L, 1L);
     programaActivoActualizado.setActivo(false);
 
-    BDDMockito.given(repository.findByNombre(programaActivoActualizado.getNombre())).willReturn(Optional.empty());
-
-    BDDMockito.given(planRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(generarMockPlan(1L)));
+    BDDMockito
+        .given(repository.findByNombreAndPlanId(programaActivoActualizado.getNombre(), programa.getPlan().getId()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(repository.findById(1L)).willReturn(Optional.of(generarMockPrograma(1L)));
     BDDMockito.given(repository.findById(2L)).willReturn(Optional.of(programa));
@@ -265,54 +269,27 @@ public class ProgramaServiceTest {
   }
 
   @Test
-  public void update_WithoutPlanId_ThrowsIllegalArgumentException() {
-    // given: Un Programa actualizado con un plan sin id
-    Programa programa = generarMockPrograma(1L, "nombreRepetido", 1L, null);
-    programa.getPlan().setId(null);
-
-    // when: Actualizamos el Programa
-    // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.update(programa)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Plan no puede ser null para crear un Programa");
-  }
-
-  @Test
   public void update_WithDuplicatedNombre_ThrowsIllegalArgumentException() {
     // given: Un Programa actualizado con un nombre que ya existe
     Programa programaActualizado = generarMockPrograma(1L, "nombreRepetido", 1L, null);
     Programa programa = generarMockPrograma(2L, "nombreRepetido", 1L, null);
 
-    BDDMockito.given(repository.findByNombre(programaActualizado.getNombre())).willReturn(Optional.of(programa));
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(programaActualizado));
+
+    BDDMockito.given(repository.findByNombreAndPlanId(programaActualizado.getNombre(), programa.getPlan().getId()))
+        .willReturn(Optional.of(programa));
 
     // when: Actualizamos el Programa
     // then: Lanza una excepcion porque hay otro Programa con ese nombre
     Assertions.assertThatThrownBy(() -> service.update(programaActualizado))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un Programa con el nombre " + programaActualizado.getNombre());
-  }
-
-  @Test
-  public void update_WithNoExistingPlan_ThrowsPlanNotFoundException() {
-    // given: Un Programa actualizado con un plan que no existe
-    Programa programa = generarMockPrograma(1L, "nombreRepetido", 1L, null);
-
-    BDDMockito.given(repository.findByNombre(programa.getNombre())).willReturn(Optional.empty());
-
-    BDDMockito.given(planRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
-
-    // when: Actualizamos el Programa
-    // then: Lanza una excepcion
-    Assertions.assertThatThrownBy(() -> service.update(programa)).isInstanceOf(PlanNotFoundException.class);
+        .hasMessage("Ya existe un Programa con el nombre " + programaActualizado.getNombre() + " en el Plan");
   }
 
   @Test
   public void update_WithNoExistingPadre_ThrowsProgramaNotFoundException() {
     // given: Un Programa actualizado con un padre que no existe
     Programa programa = generarMockPrograma(2L, "nombreRepetido", 1L, 1L);
-
-    BDDMockito.given(repository.findByNombre(programa.getNombre())).willReturn(Optional.empty());
-
-    BDDMockito.given(planRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(generarMockPlan(1L)));
 
     BDDMockito.given(repository.findById(1L)).willReturn(Optional.empty());
 
@@ -326,9 +303,7 @@ public class ProgramaServiceTest {
     // given: Un Programa actualizado con un id que no existe
     Programa programa = generarMockPrograma(1L, "Programa", 1L, null);
 
-    BDDMockito.given(repository.findByNombre(programa.getNombre())).willReturn(Optional.empty());
-
-    BDDMockito.given(planRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(generarMockPlan(1L)));
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
     // when: Actualizamos el Programa
     // then: Lanza una excepcion porque el Programa no existe
@@ -373,60 +348,6 @@ public class ProgramaServiceTest {
     // when: desactivamos el Programa
     // then: Lanza una excepcion porque el Programa no existe
     Assertions.assertThatThrownBy(() -> service.disable(idNoExiste)).isInstanceOf(ProgramaNotFoundException.class);
-  }
-
-  @Test
-  public void update_WithNombreRepetido_ThrowsIllegalArgumentException() {
-    // given: Un nuevo Programa con un nombre que ya existe
-    Programa programaUpdated = generarMockPrograma(1L, "nombreRepetido", 1L, null);
-    Programa programa = generarMockPrograma(2L, "nombreRepetido", 1L, null);
-
-    BDDMockito.given(repository.findByNombre(programaUpdated.getNombre())).willReturn(Optional.of(programa));
-
-    // when: Actualizamos el Programa
-    // then: Lanza una excepcion porque ya existe otro Programa con ese
-    // nombre
-    Assertions.assertThatThrownBy(() -> service.update(programaUpdated)).isInstanceOf(IllegalArgumentException.class);
-  }
-
-  @Test
-  public void findAll_ReturnsPage() {
-    // given: Una lista con 37 Programa
-    List<Programa> programas = new ArrayList<>();
-    for (long i = 1; i <= 37; i++) {
-      programas.add(generarMockPrograma(i, "Programa" + String.format("%03d", i), 1L, null));
-    }
-
-    BDDMockito
-        .given(repository.findAll(ArgumentMatchers.<Specification<Programa>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer(new Answer<Page<Programa>>() {
-          @Override
-          public Page<Programa> answer(InvocationOnMock invocation) throws Throwable {
-            Pageable pageable = invocation.getArgument(1, Pageable.class);
-            int size = pageable.getPageSize();
-            int index = pageable.getPageNumber();
-            int fromIndex = size * index;
-            int toIndex = fromIndex + size;
-            toIndex = toIndex > programas.size() ? programas.size() : toIndex;
-            List<Programa> content = programas.subList(fromIndex, toIndex);
-            Page<Programa> page = new PageImpl<>(content, pageable, programas.size());
-            return page;
-          }
-        });
-
-    // when: Get page=3 with pagesize=10
-    Pageable paging = PageRequest.of(3, 10);
-    Page<Programa> page = service.findAll(null, paging);
-
-    // then: Devuelve la pagina 3 con los Programa del 31 al 37
-    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
-    Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
-    Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
-    Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
-    for (int i = 31; i <= 37; i++) {
-      Programa programa = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
-      Assertions.assertThat(programa.getNombre()).isEqualTo("Programa" + String.format("%03d", i));
-    }
   }
 
   @Test

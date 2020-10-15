@@ -1,0 +1,6 @@
+-- LISTADO AREA TEMATICA
+INSERT INTO csp.listado_area_tematica (id, nombre, descripcion, activo) VALUES (1, 'nombre-001', 'descripcion-001', true);
+INSERT INTO csp.listado_area_tematica (id, nombre, descripcion, activo) VALUES (2, 'nombre-002', 'descripcion-002', true);
+
+-- AREA TEMATICA ARBOL
+INSERT INTO csp.area_tematica_arbol (id, nombre, abreviatura, listado_area_tematica_id, area_tematica_arbol_padre_id, activo) VALUES (9999, 'nombre-001', 'A-1', 1L, null, true);

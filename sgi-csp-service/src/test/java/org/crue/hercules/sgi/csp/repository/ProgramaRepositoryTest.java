@@ -25,7 +25,7 @@ public class ProgramaRepositoryTest {
   private ProgramaRepository repository;
 
   @Test
-  public void findByNombre_ReturnsPrograma() throws Exception {
+  public void findByNombreAndPlanId_ReturnsPrograma() throws Exception {
 
     // given: 2 Programa de los que 1 coincide con el nombre buscado
     Plan plan = new Plan(null, "nombre-1", "descripcion-1", true);
@@ -40,7 +40,7 @@ public class ProgramaRepositoryTest {
     String nombreBuscado = "nombre-1";
 
     // when: se busca el Programa nombre
-    Programa programaEncontrado = repository.findByNombre(nombreBuscado).get();
+    Programa programaEncontrado = repository.findByNombreAndPlanId(nombreBuscado, plan.getId()).get();
 
     // then: Se recupera el Programa con el nombre buscado
     Assertions.assertThat(programaEncontrado.getId()).as("getId").isNotNull();
@@ -51,7 +51,7 @@ public class ProgramaRepositoryTest {
   }
 
   @Test
-  public void findByNombreNoExiste_ReturnsNull() throws Exception {
+  public void findByNombreAndPlanIdNoExiste_ReturnsNull() throws Exception {
 
     // given: 2 Programa que no coinciden con el nombre buscado
     Plan plan = new Plan(null, "nombre-1", "descripcion-1", true);
@@ -66,7 +66,7 @@ public class ProgramaRepositoryTest {
     String nombreBuscado = "nombre-noexiste";
 
     // when: se busca el Programa por nombre
-    Optional<Programa> programaEncontrado = repository.findByNombre(nombreBuscado);
+    Optional<Programa> programaEncontrado = repository.findByNombreAndPlanId(nombreBuscado, plan.getId());
 
     // then: No hay ningun Programa con el nombre buscado
     Assertions.assertThat(programaEncontrado).isEqualTo(Optional.empty());

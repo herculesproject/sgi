@@ -39,15 +39,6 @@ public interface ProgramaService {
   Programa disable(Long id);
 
   /**
-   * Obtener todas las entidades {@link Programa} paginadas y/o filtradas.
-   *
-   * @param pageable la información de la paginación.
-   * @param query    la información del filtro.
-   * @return la lista de entidades {@link Programa} paginadas y/o filtradas.
-   */
-  Page<Programa> findAll(List<QueryCriteria> query, Pageable pageable);
-
-  /**
    * Obtiene {@link Programa} por su id.
    *
    * @param id el id de la entidad {@link Programa}.

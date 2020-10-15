@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.model.AreaTematicaArbol;
 import org.crue.hercules.sgi.csp.model.ListadoAreaTematica;
+import org.crue.hercules.sgi.csp.service.AreaTematicaArbolService;
 import org.crue.hercules.sgi.csp.service.ListadoAreaTematicaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -37,10 +39,13 @@ public class ListadoAreaTematicaController {
   /** ListadoAreaTematica service */
   private final ListadoAreaTematicaService service;
 
-  public ListadoAreaTematicaController(ListadoAreaTematicaService listadoAreaTematicaService) {
-    log.debug("ListadoAreaTematicaController(ListadoAreaTematicaService listadoAreaTematicaService) - start");
+  /** AreaTematicaArbol service */
+  private final AreaTematicaArbolService areaTematicaArbolService;
+
+  public ListadoAreaTematicaController(ListadoAreaTematicaService listadoAreaTematicaService,
+      AreaTematicaArbolService areaTematicaArbolService) {
     this.service = listadoAreaTematicaService;
-    log.debug("ListadoAreaTematicaController(ListadoAreaTematicaService listadoAreaTematicaService) - end");
+    this.areaTematicaArbolService = areaTematicaArbolService;
   }
 
   /**
@@ -129,4 +134,30 @@ public class ListadoAreaTematicaController {
     log.debug("ListadoAreaTematica findById(Long id) - end");
     return returnValue;
   }
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link AreaTematicaArbol} del
+   * {@link ListadoAreaTematica}.
+   * 
+   * @param id     Identificador de {@link ListadoAreaTematica}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/areatematicaarboles")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
+  ResponseEntity<Page<AreaTematicaArbol>> findAllAreaTematicaArboles(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllAreaTematicaArboles(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<AreaTematicaArbol> page = areaTematicaArbolService.findAllByListadoAreaTematica(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllAreaTematicaArboles(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProgramas(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
 }

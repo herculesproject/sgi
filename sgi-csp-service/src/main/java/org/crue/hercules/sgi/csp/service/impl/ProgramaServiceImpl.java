@@ -53,8 +53,8 @@ public class ProgramaServiceImpl implements ProgramaService {
     Assert.isNull(programa.getId(), "Programa id tiene que ser null para crear un nuevo Programa");
     Assert.notNull(programa.getPlan().getId(), "Id Plan no puede ser null para crear un Programa");
 
-    Assert.isTrue(!(repository.findByNombre(programa.getNombre()).isPresent()),
-        "Ya existe un Programa con el nombre " + programa.getNombre());
+    Assert.isTrue(!(repository.findByNombreAndPlanId(programa.getNombre(), programa.getPlan().getId()).isPresent()),
+        "Ya existe un Programa con el nombre " + programa.getNombre() + " en el Plan");
 
     programa.setPlan(planRepository.findById(programa.getPlan().getId())
         .orElseThrow(() -> new PlanNotFoundException(programa.getPlan().getId())));
@@ -88,15 +88,6 @@ public class ProgramaServiceImpl implements ProgramaService {
     log.debug("update(Programa programaActualizar) - start");
 
     Assert.notNull(programaActualizar.getId(), "Programa id no puede ser null para actualizar un Programa");
-    Assert.notNull(programaActualizar.getPlan().getId(), "Id Plan no puede ser null para crear un Programa");
-
-    repository.findByNombre(programaActualizar.getNombre()).ifPresent((tipoDocumentoExistente) -> {
-      Assert.isTrue(programaActualizar.getId() == tipoDocumentoExistente.getId(),
-          "Ya existe un Programa con el nombre " + tipoDocumentoExistente.getNombre());
-    });
-
-    programaActualizar.setPlan(planRepository.findById(programaActualizar.getPlan().getId())
-        .orElseThrow(() -> new PlanNotFoundException(programaActualizar.getPlan().getId())));
 
     if (programaActualizar.getPadre() != null) {
       if (programaActualizar.getPadre().getId() == null) {
@@ -108,7 +99,15 @@ public class ProgramaServiceImpl implements ProgramaService {
     }
 
     return repository.findById(programaActualizar.getId()).map(programa -> {
+      repository.findByNombreAndPlanId(programaActualizar.getNombre(), programa.getPlan().getId())
+          .ifPresent((tipoDocumentoExistente) -> {
+            Assert.isTrue(programaActualizar.getId() == tipoDocumentoExistente.getId(),
+                "Ya existe un Programa con el nombre " + tipoDocumentoExistente.getNombre() + " en el Plan");
+          });
+
       programa.setNombre(programaActualizar.getNombre());
+      programa.setDescripcion(programaActualizar.getDescripcion());
+      programa.setPadre(programaActualizar.getPadre());
       programa.setActivo(programaActualizar.getActivo());
 
       // Si el programa se pone activo=false se hace lo mismo con sus hijos
@@ -171,25 +170,6 @@ public class ProgramaServiceImpl implements ProgramaService {
   }
 
   /**
-   * Obtener todas las entidades {@link Programa} paginadas y/o filtradas.
-   *
-   * @param pageable la información de la paginación.
-   * @param query    la información del filtro.
-   * @return la lista de entidades {@link Programa} paginadas y/o filtradas.
-   */
-  @Override
-  public Page<Programa> findAll(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
-    Specification<Programa> specByQuery = new QuerySpecification<Programa>(query);
-
-    Specification<Programa> specs = Specification.where(specByQuery);
-
-    Page<Programa> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
-    return returnValue;
-  }
-
-  /**
    * Obtiene {@link Programa} por su id.
    *
    * @param id el id de la entidad {@link Programa}.
@@ -215,9 +195,9 @@ public class ProgramaServiceImpl implements ProgramaService {
   public Page<Programa> findAllByPlan(Long idPlan, List<QueryCriteria> query, Pageable pageable) {
     log.debug("findAllByPlan(Long idPlan, List<QueryCriteria> query, Pageable pageable) - start");
     Specification<Programa> specByQuery = new QuerySpecification<Programa>(query);
-    Specification<Programa> specByModeloEjecucion = ProgramaSpecifications.byPlanId(idPlan);
+    Specification<Programa> specByPlanId = ProgramaSpecifications.byPlanId(idPlan);
 
-    Specification<Programa> specs = Specification.where(specByModeloEjecucion).and(specByQuery);
+    Specification<Programa> specs = Specification.where(specByPlanId).and(specByQuery);
 
     Page<Programa> returnValue = repository.findAll(specs, pageable);
     log.debug("findAllByPlan(Long idPlan, List<QueryCriteria> query, Pageable pageable) - end");

@@ -1,4 +1,5 @@
 -- vacia la bd
+DELETE FROM csp.area_tematica_arbol;
 DELETE FROM csp.concepto_gasto;
 DELETE FROM csp.convocatoria_entidad_gestora;
 DELETE FROM csp.convocatoria;
