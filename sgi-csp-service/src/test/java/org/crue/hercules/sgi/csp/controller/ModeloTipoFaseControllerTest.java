@@ -94,9 +94,6 @@ public class ModeloTipoFaseControllerTest {
     // given: Un ModeloTipoFase a modificar
     ModeloTipoFase modeloTipoFase = generarModeloTipoFaseConTipoFaseId(1L);
     String tipoFaseJson = mapper.writeValueAsString(modeloTipoFase);
-    ModeloTipoFase modeloTipoFaseSinModificar = generarModeloTipoFase(1L);
-    BDDMockito.given(modeloTipoFaseService.findById(ArgumentMatchers.<Long>any()))
-        .willReturn(modeloTipoFaseSinModificar);
     BDDMockito.given(modeloTipoFaseService.update(ArgumentMatchers.<ModeloTipoFase>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
     // when: Actualizamos el ModeloTipoFase

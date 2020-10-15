@@ -107,9 +107,7 @@ public class TipoDocumentoControllerTest {
   public void update_ReturnsTipoDocumento() throws Exception {
     // given: Un TipoDocumento a modificar
     String tipoDocumentoJson = "{\"id\": \"1\", \"nombre\": \"nombre-1-modificado\", \"descripcion\": \"descripcion-1\", \"activo\": true }";
-    TipoDocumento tipoDocumentoSinModificar = generarMockTipoDocumento(1L, "nombre-1");
 
-    BDDMockito.given(tipoDocumentoService.findById(ArgumentMatchers.<Long>any())).willReturn(tipoDocumentoSinModificar);
     BDDMockito.given(tipoDocumentoService.update(ArgumentMatchers.<TipoDocumento>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 

@@ -16,6 +16,10 @@
     <createSequence sequenceName="convocatoria_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-convocatoria_area_tematica_seq">
+    <createSequence sequenceName="convocatoria_area_tematica_seq" />
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-convocatoria_entidad_gestora_seq">
     <createSequence sequenceName="convocatoria_entidad_gestora_seq" />
   </changeSet>
@@ -168,6 +172,21 @@
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-convocatoria_area_tematica">
+    <createTable tableName="convocatoria_area_tematica">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="convocatoria_area_tematica_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_area_tematica_pk" />
+      </column>
+      <column name="area_tematica_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="convocatoria_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="observaciones" type="VARCHAR2(2000)" />
     </createTable>
   </changeSet>
 
@@ -524,6 +543,13 @@
     <addForeignKeyConstraint baseColumnNames="area_tematica_arbol_padre_id" baseTableName="area_tematica_arbol" constraintName="area_tematica_arbol_area_tematica_arbol_padre_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="area_tematica_arbol" validate="true" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-convocatoria_area_tematica_convocatoria_FK">
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_area_tematica" constraintName="convocatoria_area_tematica_convocatoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-convocatoria_area_tematica_area_tematica_FK">
+    <addForeignKeyConstraint baseColumnNames="area_tematica_id" baseTableName="convocatoria_area_tematica" constraintName="convocatoria_area_tematica_area_tematica_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="area_tematica_arbol" validate="true" />
+  </changeSet>
+
   <changeSet author="master" id="20200601000000-convocatoria_entidad_gestora_convocatoria_FK">
     <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_entidad_gestora" constraintName="convocatoria_entidad_gestora_convocatoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
   </changeSet>
@@ -589,6 +615,10 @@
   <!-- ########################################################## -->
   <changeSet author="master" id="20200928000000-concepto_gasto_uk">
     <addUniqueConstraint columnNames="nombre" constraintName="concepto_gasto_uk" tableName="concepto_gasto" />
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-convocatoria_area_tematica_uk">
+    <addUniqueConstraint columnNames="convocatoria_id, area_tematica_id" constraintName="convocatoria_area_tematica_uk" tableName="convocatoria_area_tematica" />
   </changeSet>
 
   <changeSet author="master" id="20200928000000-convocatoria_entidad_gestora_uk">

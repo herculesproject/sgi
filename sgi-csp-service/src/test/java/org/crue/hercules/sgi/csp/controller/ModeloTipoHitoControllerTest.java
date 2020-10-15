@@ -109,8 +109,6 @@ public class ModeloTipoHitoControllerTest {
     modeloTipoHito.setSolicitud(Boolean.FALSE);
     modeloTipoHito.setProyecto(Boolean.TRUE);
     modeloTipoHito.setConvocatoria(Boolean.FALSE);
-
-    BDDMockito.given(service.findById(ArgumentMatchers.<Long>any())).willReturn(modeloTipoHitoExistente);
     BDDMockito.given(service.update(ArgumentMatchers.<ModeloTipoHito>any())).willAnswer(new Answer<ModeloTipoHito>() {
       @Override
       public ModeloTipoHito answer(InvocationOnMock invocation) throws Throwable {

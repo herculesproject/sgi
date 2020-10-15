@@ -114,13 +114,6 @@ public class TipoRegimenConcurrenciaControllerTest {
     // given: existing TipoRegimenConcurrencia
     TipoRegimenConcurrencia data = generarMockTipoRegimenConcurrencia(1L, Boolean.TRUE);
 
-    BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer(new Answer<TipoRegimenConcurrencia>() {
-      @Override
-      public TipoRegimenConcurrencia answer(InvocationOnMock invocation) throws Throwable {
-        Long id = invocation.getArgument(0, Long.class);
-        return generarMockTipoRegimenConcurrencia(id, Boolean.FALSE);
-      }
-    });
     BDDMockito.given(service.update(ArgumentMatchers.<TipoRegimenConcurrencia>any()))
         .willAnswer(new Answer<TipoRegimenConcurrencia>() {
           @Override

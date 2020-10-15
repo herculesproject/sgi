@@ -107,7 +107,6 @@ public class TipoAmbitoGeograficoControllerTest {
     TipoAmbitoGeografico tipoAmbitoGeografico = generarMockTipoAmbitoGeografico(1L);
     tipoAmbitoGeografico.setNombre("nuevo-nombre");
 
-    BDDMockito.given(service.findById(ArgumentMatchers.<Long>any())).willReturn(tipoAmbitoGeograficoExistente);
     BDDMockito.given(service.update(ArgumentMatchers.<TipoAmbitoGeografico>any()))
         .willAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
 

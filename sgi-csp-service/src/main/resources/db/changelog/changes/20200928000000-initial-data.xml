@@ -120,6 +120,24 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-convocatoria_area_tematica">
+    <insert tableName="convocatoria_area_tematica">
+      <column name="area_tematica_id" valueComputed="(select id from csp.area_tematica_arbol where nombre = 'nombre-001')"></column>
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
+      <column name="observaciones" value="Observaciones AAA" />
+    </insert>
+    <insert tableName="convocatoria_area_tematica">
+      <column name="area_tematica_id" valueComputed="(select id from csp.area_tematica_arbol where nombre = 'nombre-002')"></column>
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
+      <column name="observaciones" value="Observaciones BBB" />
+    </insert>
+    <insert tableName="convocatoria_area_tematica">
+      <column name="area_tematica_id" valueComputed="(select id from csp.area_tematica_arbol where nombre = 'nombre-003')"></column>
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-003')"></column>
+      <column name="observaciones" value="Observaciones CCC" />
+    </insert>
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-modelo_ejecucion">
     <insert tableName="modelo_ejecucion">
       <column name="nombre" value="nombre-001" />

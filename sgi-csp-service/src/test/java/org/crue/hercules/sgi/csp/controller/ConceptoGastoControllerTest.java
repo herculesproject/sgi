@@ -108,7 +108,6 @@ public class ConceptoGastoControllerTest {
     ConceptoGasto conceptoGasto = generarMockConceptoGasto(1L);
     conceptoGasto.setNombre("nuevo-nombre");
 
-    BDDMockito.given(service.findById(ArgumentMatchers.<Long>any())).willReturn(conceptoGastoExistente);
     BDDMockito.given(service.update(ArgumentMatchers.<ConceptoGasto>any()))
         .willAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
 

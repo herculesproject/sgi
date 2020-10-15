@@ -47,8 +47,7 @@ public class FuenteFinanciacion extends BaseEntity {
   private String nombre;
 
   /** Descripcion */
-  @Column(name = "descripcion", length = 250, nullable = false)
-  @NotEmpty
+  @Column(name = "descripcion", length = 250, nullable = true)
   @Size(max = 250)
   private String descripcion;
 

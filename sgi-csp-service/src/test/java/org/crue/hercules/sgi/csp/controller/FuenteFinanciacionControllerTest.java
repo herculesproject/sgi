@@ -116,7 +116,6 @@ public class FuenteFinanciacionControllerTest {
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
     fuenteFinanciacion.setNombre("nuevo-nombre");
 
-    BDDMockito.given(service.findById(ArgumentMatchers.<Long>any())).willReturn(fuenteFinanciacionExistente);
     BDDMockito.given(service.update(ArgumentMatchers.<FuenteFinanciacion>any()))
         .willAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
 

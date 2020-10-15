@@ -3,7 +3,9 @@ package org.crue.hercules.sgi.csp.controller;
 import java.util.List;
 
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadGestoraService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -29,14 +31,18 @@ public class ConvocatoriaController {
 
   /** ConvocatoriaEntidadGestora service */
   private final ConvocatoriaEntidadGestoraService convocatoriaEntidadGestoraService;
+  /** ConvocatoriaEntidadGestora service */
+  private final ConvocatoriaAreaTematicaService convocatoriaAreaTematicaService;
 
   /**
    * Instancia un nuevo ConvocatoriaController.
    * 
    * @param convocatoriaEntidadGestoraService {@link ConvocatoriaEntidadGestoraService}.
    */
-  public ConvocatoriaController(ConvocatoriaEntidadGestoraService convocatoriaEntidadGestoraService) {
+  public ConvocatoriaController(ConvocatoriaEntidadGestoraService convocatoriaEntidadGestoraService,
+      ConvocatoriaAreaTematicaService convocatoriaAreaTematicaService) {
     this.convocatoriaEntidadGestoraService = convocatoriaEntidadGestoraService;
+    this.convocatoriaAreaTematicaService = convocatoriaAreaTematicaService;
   }
 
   /**
@@ -67,6 +73,37 @@ public class ConvocatoriaController {
     }
 
     log.debug("findAllConvocatoriaEntidadGestora(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * 
+   * CONVOCATORIA AREA TEMATICA
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link ConvocatoriaAreaTematica} de
+   * la {@link Convocatoria}.
+   * 
+   * @param id     Identificador de {@link Convocatoria}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/convocatoriaareatematicas")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CATEM-V')")
+  ResponseEntity<Page<ConvocatoriaAreaTematica>> findAllConvocatoriaAreaTematica(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllConvocatoriaAreaTematica(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<ConvocatoriaAreaTematica> page = convocatoriaAreaTematicaService.findAllByConvocatoria(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllConvocatoriaAreaTematica(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllConvocatoriaAreaTematica(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 }

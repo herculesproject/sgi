@@ -90,9 +90,7 @@ public class TipoFinanciacionControllerTest {
     // given: Un TipoFinanciacion a modificar
     TipoFinanciacion tipoFinanciacion = generarMockTipoFinanciacion(1L);
     String tipoFinanciacionJson = mapper.writeValueAsString(tipoFinanciacion);
-    TipoFinanciacion tipoFinanciacionSinModificar = generarMockTipoFinanciacion(1L);
-    BDDMockito.given(tipoFinanciacionService.findById(ArgumentMatchers.<Long>any()))
-        .willReturn(tipoFinanciacionSinModificar);
+
     BDDMockito.given(tipoFinanciacionService.update(ArgumentMatchers.<TipoFinanciacion>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
     // when: Actualizamos el TipoFinanciacion

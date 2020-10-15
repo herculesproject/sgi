@@ -95,8 +95,7 @@ public class TipoHitoControllerTest {
   public void update_ReturnsTipoHito() throws Exception {
     // given: Un TipoHito a modificar
     String tipoHitoJson = "{\"id\": \"1\", \"nombre\": \"nombre-1-modificado\", \"descripcion\": \"descripcion-1\", \"activo\": true }";
-    TipoHito tipoHitoSinModificar = generarMockTipoHito(1L, "nombre-1");
-    BDDMockito.given(tipoHitoService.findById(ArgumentMatchers.<Long>any())).willReturn(tipoHitoSinModificar);
+
     BDDMockito.given(tipoHitoService.update(ArgumentMatchers.<TipoHito>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
     // when: Actualizamos el TipoHito

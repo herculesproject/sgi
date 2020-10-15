@@ -96,7 +96,6 @@ public class ProgramaControllerTest {
     Programa programa = generarMockPrograma(1L);
     programa.setNombre("nuevo-nombre");
 
-    BDDMockito.given(service.findById(ArgumentMatchers.<Long>any())).willReturn(programaExistente);
     BDDMockito.given(service.update(ArgumentMatchers.<Programa>any()))
         .willAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
 

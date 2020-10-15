@@ -155,26 +155,6 @@ public class ConceptoGastoIT {
         .isEqualTo("nombre-" + String.format("%03d", 1));
   }
 
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  public void findAll_EmptyList_Returns204() throws Exception {
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TDOC-V")));
-    headers.add("X-Page", "0");
-    headers.add("X-Page-Size", "3");
-    String sort = "nombre-";
-    String filter = "descripcion~%00%";
-
-    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
-        .build(false).toUri();
-
-    final ResponseEntity<List<ConceptoGasto>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<ConceptoGasto>>() {
-        });
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-  }
-
   /**
    * Función que devuelve un objeto ConceptoGasto
    * 

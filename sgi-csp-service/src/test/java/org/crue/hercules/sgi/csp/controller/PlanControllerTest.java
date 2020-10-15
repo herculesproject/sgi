@@ -111,7 +111,6 @@ public class PlanControllerTest {
     Plan plan = generarMockPlan(1L);
     plan.setNombre("nuevo-nombre");
 
-    BDDMockito.given(service.findById(ArgumentMatchers.<Long>any())).willReturn(planExistente);
     BDDMockito.given(service.update(ArgumentMatchers.<Plan>any()))
         .willAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
 

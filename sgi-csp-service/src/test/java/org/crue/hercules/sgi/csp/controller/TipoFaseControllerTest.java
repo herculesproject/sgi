@@ -95,8 +95,7 @@ public class TipoFaseControllerTest {
   public void update_ReturnsTipoFase() throws Exception {
     // given: Un TipoFase a modificar
     String tipoFaseJson = "{\"id\": \"1\", \"nombre\": \"nombre-1-modificado\", \"descripcion\": \"descripcion-1\", \"activo\": true }";
-    TipoFase tipoFaseSinModificar = generarMockTipoFase(1L, "nombre-1");
-    BDDMockito.given(tipoFaseService.findById(ArgumentMatchers.<Long>any())).willReturn(tipoFaseSinModificar);
+
     BDDMockito.given(tipoFaseService.update(ArgumentMatchers.<TipoFase>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
     // when: Actualizamos el TipoFase
