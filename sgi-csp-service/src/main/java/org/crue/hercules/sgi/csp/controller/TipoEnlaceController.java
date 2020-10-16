@@ -90,7 +90,7 @@ public class TipoEnlaceController {
   }
 
   /**
-   * Devuelve una lista paginada y filtrada {@link TipoEnlace}.
+   * Devuelve una lista paginada y filtrada {@link TipoEnlace} activos.
    * 
    * @param query  filtro de {@link QueryCriteria}.
    * @param paging {@link Pageable}.
@@ -108,6 +108,29 @@ public class TipoEnlaceController {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link TipoEnlace}.
+   * 
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link TipoEnlace} paginadas y filtradas.
+   */
+  @GetMapping("/todos")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
+  ResponseEntity<Page<TipoEnlace>> findAllTodos(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
+    Page<TipoEnlace> page = service.findAllTodos(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

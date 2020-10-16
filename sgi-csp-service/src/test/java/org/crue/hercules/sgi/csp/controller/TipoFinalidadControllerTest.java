@@ -39,10 +39,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 /**
  * TipoFinalidadControllerTest
  */
-
 @WebMvcTest(TipoFinalidadController.class)
-// Since WebMvcTest is only sliced controller layer for the testing, it would
-// not take the security configurations.
 @Import(SecurityConfig.class)
 public class TipoFinalidadControllerTest {
 
@@ -305,6 +302,82 @@ public class TipoFinalidadControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
             .header("X-Page", "3").header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: returns 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TFIN-V" })
+  public void findAllTodos_WithPaging_ReturnsTipoFinalidadSubList() throws Exception {
+    // given: One hundred TipoFinalidad
+    List<TipoFinalidad> data = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      data.add(generarMockTipoFinalidad(Long.valueOf(i), Boolean.TRUE));
+    }
+
+    BDDMockito
+        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<TipoFinalidad>>() {
+          @Override
+          public Page<TipoFinalidad> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<TipoFinalidad> content = data.subList(fromIndex, toIndex);
+            Page<TipoFinalidad> page = new PageImpl<>(content, pageable, data.size());
+            return page;
+          }
+        });
+
+    // when: get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/todos")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: the asked TipoFinalidad are returned with the right page information in
+        // headers
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "100"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10))).andReturn();
+
+    // this uses a TypeReference to inform Jackson about the Lists's generic type
+    List<TipoFinalidad> actual = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<TipoFinalidad>>() {
+        });
+
+    // containing Nombre='Nombre-31' to 'Nombre-40'
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      TipoFinalidad item = actual.get(i);
+      Assertions.assertThat(item.getNombre()).isEqualTo("nombre-" + j);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TFIN-V" })
+  public void findAllTodos_EmptyList_Returns204() throws Exception {
+    // given: no data TipoFinalidad
+    BDDMockito
+        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<TipoFinalidad>>() {
+          @Override
+          public Page<TipoFinalidad> answer(InvocationOnMock invocation) throws Throwable {
+            Page<TipoFinalidad> page = new PageImpl<>(Collections.emptyList());
+            return page;
+          }
+        });
+
+    // when: get page=3 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/todos")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
+            .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: returns 204
         .andExpect(MockMvcResultMatchers.status().isNoContent());

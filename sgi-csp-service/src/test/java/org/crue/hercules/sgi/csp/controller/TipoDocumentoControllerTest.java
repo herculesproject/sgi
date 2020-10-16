@@ -288,6 +288,88 @@ public class TipoDocumentoControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  public void findAllTodos_ReturnsPage() throws Exception {
+    // given: Una lista con 37 TipoDocumento
+    List<TipoDocumento> tiposDocumento = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      tiposDocumento.add(generarMockTipoDocumento(i, "TipoDocumento" + String.format("%03d", i)));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito.given(tipoDocumentoService.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<TipoDocumento>>() {
+          @Override
+          public Page<TipoDocumento> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > tiposDocumento.size() ? tiposDocumento.size() : toIndex;
+            List<TipoDocumento> content = tiposDocumento.subList(fromIndex, toIndex);
+            Page<TipoDocumento> page = new PageImpl<>(content, pageable, tiposDocumento.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + "/todos")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los TipoDocumento del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<TipoDocumento> tiposDocumentoResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<TipoDocumento>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      TipoDocumento tipoDocumento = tiposDocumentoResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(tipoDocumento.getNombre()).isEqualTo("TipoDocumento" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  public void findAllTodos_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de TipoDocumento
+    List<TipoDocumento> tiposDocumento = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito.given(tipoDocumentoService.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<TipoDocumento>>() {
+          @Override
+          public Page<TipoDocumento> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            Page<TipoDocumento> page = new PageImpl<>(tiposDocumento, pageable, 0);
+            return page;
+          }
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + "/todos")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
   public void findById_ReturnsTipoDocumento() throws Exception {
     // given: Un TipoDocumento con el id buscado
     Long idBuscado = 1L;

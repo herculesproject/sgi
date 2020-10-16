@@ -37,13 +37,23 @@ public interface TipoDocumentoService {
   TipoDocumento disable(Long id);
 
   /**
-   * Obtener todas las entidades {@link TipoDocumento} paginadas y/o filtradas.
+   * Obtener todas las entidades {@link TipoDocumento} activas paginadas y/o
+   * filtradas.
    *
    * @param pageable la información de la paginación.
    * @param query    la información del filtro.
    * @return la lista de entidades {@link TipoDocumento} paginadas y/o filtradas.
    */
   Page<TipoDocumento> findAll(List<QueryCriteria> query, Pageable pageable);
+
+  /**
+   * Obtener todas las entidades {@link TipoDocumento} paginadas y/o filtradas.
+   *
+   * @param pageable la información de la paginación.
+   * @param query    la información del filtro.
+   * @return la lista de entidades {@link TipoDocumento} paginadas y/o filtradas.
+   */
+  Page<TipoDocumento> findAllTodos(List<QueryCriteria> query, Pageable pageable);
 
   /**
    * Obtiene {@link TipoDocumento} por su id.

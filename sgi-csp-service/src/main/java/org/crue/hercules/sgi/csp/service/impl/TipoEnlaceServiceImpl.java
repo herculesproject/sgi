@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.csp.exceptions.TipoEnlaceNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.repository.TipoEnlaceRepository;
+import org.crue.hercules.sgi.csp.repository.specification.TipoEnlaceSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoEnlaceService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -105,7 +106,7 @@ public class TipoEnlaceServiceImpl implements TipoEnlaceService {
   }
 
   /**
-   * Obtiene todas las entidades {@link TipoEnlace} paginadas y filtradas.
+   * Obtiene todas las entidades {@link TipoEnlace} activas paginadas y filtradas.
    *
    * @param query  información del filtro.
    * @param paging información de paginación.
@@ -114,9 +115,29 @@ public class TipoEnlaceServiceImpl implements TipoEnlaceService {
   @Override
   public Page<TipoEnlace> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
+    Specification<TipoEnlace> specByQuery = new QuerySpecification<TipoEnlace>(query);
+    Specification<TipoEnlace> specActivos = TipoEnlaceSpecifications.activos();
+
+    Specification<TipoEnlace> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<TipoEnlace> returnValue = repository.findAll(specs, paging);
+    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene todas las entidades {@link TipoEnlace} paginadas y filtradas.
+   *
+   * @param query  información del filtro.
+   * @param paging información de paginación.
+   * @return el listado de entidades {@link TipoEnlace} paginadas y filtradas.
+   */
+  @Override
+  public Page<TipoEnlace> findAllTodos(List<QueryCriteria> query, Pageable paging) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
     Specification<TipoEnlace> spec = new QuerySpecification<TipoEnlace>(query);
     Page<TipoEnlace> returnValue = repository.findAll(spec, paging);
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
     return returnValue;
   }
 

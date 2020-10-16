@@ -214,6 +214,45 @@ public class TipoDocumentoServiceTest {
   }
 
   @Test
+  public void findAllTodos_ReturnsPage() {
+    // given: Una lista con 37 TipoDocumento
+    List<TipoDocumento> tiposDocumento = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      tiposDocumento.add(generarMockTipoDocumento(i, "TipoDocumento" + String.format("%03d", i)));
+    }
+
+    BDDMockito.given(tipoDocumentoRepository.findAll(ArgumentMatchers.<Specification<TipoDocumento>>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<TipoDocumento>>() {
+          @Override
+          public Page<TipoDocumento> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > tiposDocumento.size() ? tiposDocumento.size() : toIndex;
+            List<TipoDocumento> content = tiposDocumento.subList(fromIndex, toIndex);
+            Page<TipoDocumento> page = new PageImpl<>(content, pageable, tiposDocumento.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<TipoDocumento> page = tipoDocumentoService.findAllTodos(null, paging);
+
+    // then: Devuelve la pagina 3 con los TipoDocumento del 31 al 37
+    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
+    Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
+    Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
+    for (int i = 31; i <= 37; i++) {
+      TipoDocumento tipoDocumento = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
+      Assertions.assertThat(tipoDocumento.getNombre()).isEqualTo("TipoDocumento" + String.format("%03d", i));
+    }
+  }
+
+  @Test
   public void findById_ReturnsTipoDocumento() {
     // given: Un TipoDocumento con el id buscado
     Long idBuscado = 1L;

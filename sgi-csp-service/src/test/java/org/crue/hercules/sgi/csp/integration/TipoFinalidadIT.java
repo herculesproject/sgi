@@ -166,12 +166,14 @@ public class TipoFinalidadIT {
         .isEqualTo("nombre-" + String.format("%03d", 1));
   }
 
+  @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_EmptyList_Returns204() throws Exception {
+  public void findAllTodos_WithPagingSortingAndFiltering_ReturnsTipoFinalidadSubList() throws Exception {
 
-    // given: no data for TipoFinalidad
-    // when: find TipoFinalidad
+    // given: data for TipoFinalidad
+
+    // first page, 3 elements per page sorted by nombre desc
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TFIN-V")));
     headers.add("X-Page", "0");
@@ -179,14 +181,28 @@ public class TipoFinalidadIT {
     String sort = "nombre-";
     String filter = "descripcion~%00%";
 
-    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
-        .build(false).toUri();
-
+    // when: find TipoFinalidad
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
     final ResponseEntity<List<TipoFinalidad>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<TipoFinalidad>>() {
         });
 
-    // then: 204 no content
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    // given: TipoFinalidad data filtered and sorted
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<TipoFinalidad> responseData = response.getBody();
+    Assertions.assertThat(responseData.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(responseData.get(0).getNombre()).as("get(0).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 3));
+    Assertions.assertThat(responseData.get(1).getNombre()).as("get(1).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 2));
+    Assertions.assertThat(responseData.get(2).getNombre()).as("get(2).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 1));
   }
+
 }

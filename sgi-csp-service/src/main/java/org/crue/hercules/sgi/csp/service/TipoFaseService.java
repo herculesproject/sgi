@@ -30,6 +30,16 @@ public interface TipoFaseService {
   TipoFase update(TipoFase tipoFase);
 
   /**
+   * Obtener todas las entidades {@link TipoFase} activas paginadas y/o filtradas.
+   * Obtener todas las entidades {@link TipoFase} paginadas y/o filtradas
+   *
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link TipoFase} paginadas y/o filtradas.
+   */
+  Page<TipoFase> findAll(List<QueryCriteria> query, Pageable pageable);
+
+  /**
    * Obtener todas las entidades {@link TipoFase} paginadas y/o filtradas. Obtener
    * todas las entidades {@link TipoFase} paginadas y/o filtradas
    *
@@ -37,7 +47,7 @@ public interface TipoFaseService {
    * @param pageable la información de la paginación.
    * @return la lista de entidades {@link TipoFase} paginadas y/o filtradas.
    */
-  Page<TipoFase> findAll(List<QueryCriteria> query, Pageable pageable);
+  Page<TipoFase> findAllTodos(List<QueryCriteria> query, Pageable pageable);
 
   /**
    * Obtiene {@link TipoFase} por id.

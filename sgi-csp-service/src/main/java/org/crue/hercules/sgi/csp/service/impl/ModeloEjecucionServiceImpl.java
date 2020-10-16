@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.csp.exceptions.ModeloEjecucionNotFoundException;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.repository.ModeloEjecucionRepository;
+import org.crue.hercules.sgi.csp.repository.specification.ModeloEjecucionSpecifications;
 import org.crue.hercules.sgi.csp.service.ModeloEjecucionService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -108,7 +109,8 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
   }
 
   /**
-   * Obtener todas las entidades {@link ModeloEjecucion} paginadas y/o filtradas.
+   * Obtener todas las entidades {@link ModeloEjecucion} activas paginadas y/o
+   * filtradas.
    *
    * @param pageable la información de la paginación.
    * @param query    la información del filtro.
@@ -118,10 +120,31 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
   @Override
   public Page<ModeloEjecucion> findAll(List<QueryCriteria> query, Pageable pageable) {
     log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
+    Specification<ModeloEjecucion> specByQuery = new QuerySpecification<ModeloEjecucion>(query);
+    Specification<ModeloEjecucion> specActivos = ModeloEjecucionSpecifications.activos();
+
+    Specification<ModeloEjecucion> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<ModeloEjecucion> returnValue = modeloEjecucionRepository.findAll(specs, pageable);
+    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtener todas las entidades {@link ModeloEjecucion} paginadas y/o filtradas.
+   *
+   * @param pageable la información de la paginación.
+   * @param query    la información del filtro.
+   * @return la lista de entidades {@link ModeloEjecucion} paginadas y/o
+   *         filtradas.
+   */
+  @Override
+  public Page<ModeloEjecucion> findAllTodos(List<QueryCriteria> query, Pageable pageable) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - start");
     Specification<ModeloEjecucion> spec = new QuerySpecification<ModeloEjecucion>(query);
 
     Page<ModeloEjecucion> returnValue = modeloEjecucionRepository.findAll(spec, pageable);
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - end");
     return returnValue;
   }
 

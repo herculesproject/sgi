@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.csp.exceptions.TipoDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.repository.TipoDocumentoRepository;
+import org.crue.hercules.sgi.csp.repository.specification.TipoDocumentoSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoDocumentoService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -105,7 +106,8 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
   }
 
   /**
-   * Obtener todas las entidades {@link TipoDocumento} paginadas y/o filtradas.
+   * Obtener todas las entidades {@link TipoDocumento} activas paginadas y/o
+   * filtradas.
    *
    * @param pageable la información de la paginación.
    * @param query    la información del filtro.
@@ -114,10 +116,30 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
   @Override
   public Page<TipoDocumento> findAll(List<QueryCriteria> query, Pageable pageable) {
     log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
+    Specification<TipoDocumento> specByQuery = new QuerySpecification<TipoDocumento>(query);
+    Specification<TipoDocumento> specActivos = TipoDocumentoSpecifications.activos();
+
+    Specification<TipoDocumento> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<TipoDocumento> returnValue = tipoDocumentoRepository.findAll(specs, pageable);
+    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtener todas las entidades {@link TipoDocumento} paginadas y/o filtradas.
+   *
+   * @param pageable la información de la paginación.
+   * @param query    la información del filtro.
+   * @return la lista de entidades {@link TipoDocumento} paginadas y/o filtradas.
+   */
+  @Override
+  public Page<TipoDocumento> findAllTodos(List<QueryCriteria> query, Pageable pageable) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - start");
     Specification<TipoDocumento> spec = new QuerySpecification<TipoDocumento>(query);
 
     Page<TipoDocumento> returnValue = tipoDocumentoRepository.findAll(spec, pageable);
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - end");
     return returnValue;
   }
 

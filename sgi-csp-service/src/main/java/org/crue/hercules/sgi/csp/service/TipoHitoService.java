@@ -39,6 +39,15 @@ public interface TipoHitoService {
   Page<TipoHito> findAll(List<QueryCriteria> query, Pageable pageable);
 
   /**
+   * Obtener todas las entidades {@link TipoHito} activas paginadas y/o filtradas
+   *
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link TipoHito} paginadas y/o filtradas
+   */
+  Page<TipoHito> findAllTodos(List<QueryCriteria> query, Pageable pageable);
+
+  /**
    * Obtiene {@link TipoHito} por id.
    *
    * @param id el id de la entidad {@link TipoHito}.

@@ -30,6 +30,26 @@ public interface ModeloUnidadService {
   ModeloUnidad disable(Long id);
 
   /**
+   * Obtiene los {@link ModeloUnidad} activos.
+   *
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link ModeloUnidad} del
+   *         {@link ModeloEjecucion} paginadas.
+   */
+  Page<ModeloUnidad> findAll(List<QueryCriteria> query, Pageable pageable);
+
+  /**
+   * Obtiene los {@link ModeloUnidad}.
+   *
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link ModeloUnidad} del
+   *         {@link ModeloEjecucion} paginadas.
+   */
+  Page<ModeloUnidad> findAllTodos(List<QueryCriteria> query, Pageable pageable);
+
+  /**
    * Obtiene una entidad {@link ModeloUnidad} por id.
    * 
    * @param id Identificador de la entidad {@link ModeloUnidad}.

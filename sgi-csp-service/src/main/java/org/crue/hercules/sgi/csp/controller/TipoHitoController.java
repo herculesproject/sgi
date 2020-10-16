@@ -39,7 +39,7 @@ public class TipoHitoController {
   }
 
   /**
-   * Devuelve todas las entidades {@link TipoHito} paginadas
+   * Devuelve todas las entidades {@link TipoHito} activos paginadas
    *
    * @param query    la información del filtro.
    * @param pageable la información de la paginación.
@@ -58,6 +58,29 @@ public class TipoHitoController {
     }
 
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve todas las entidades {@link TipoHito} paginadas
+   *
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link TipoHito} paginadas
+   */
+  @GetMapping("/todos")
+  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
+  ResponseEntity<Page<TipoHito>> findAllTodos(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
+    Page<TipoHito> page = tipoHitoService.findAllTodos(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

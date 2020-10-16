@@ -1,13 +1,20 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.SecurityConfig;
 import org.crue.hercules.sgi.csp.exceptions.ModeloEjecucionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ModeloUnidadNotFoundException;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.service.ModeloUnidadService;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
@@ -18,10 +25,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -186,6 +197,170 @@ public class ModeloUnidadControllerTest {
         .andDo(MockMvcResultHandlers.print()).
         // then: HTTP code 404 NotFound pressent
         andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  public void findAll_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ModeloUnidad
+    List<ModeloUnidad> modeloUnidades = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      modeloUnidades.add(generarMockModeloUnidad(i, "Unidad" + String.format("%03d", i)));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ModeloUnidad>>() {
+          @Override
+          public Page<ModeloUnidad> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > modeloUnidades.size() ? modeloUnidades.size() : toIndex;
+            List<ModeloUnidad> content = modeloUnidades.subList(fromIndex, toIndex);
+            Page<ModeloUnidad> page = new PageImpl<>(content, pageable, modeloUnidades.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .header("X-Page", page).header("X-Page-Size", pageSize).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los ModeloUnidad del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<ModeloUnidad> modeloUnidadesResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<ModeloUnidad>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ModeloUnidad modeloUnidad = modeloUnidadesResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(modeloUnidad.getUnidadGestionRef()).isEqualTo("Unidad" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  public void findAll_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de ModeloUnidad
+    List<ModeloUnidad> modeloUnidades = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ModeloUnidad>>() {
+          @Override
+          public Page<ModeloUnidad> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            Page<ModeloUnidad> page = new PageImpl<>(modeloUnidades, pageable, 0);
+            return page;
+          }
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .header("X-Page", page).header("X-Page-Size", pageSize).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  public void findAllTodos_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ModeloUnidad
+    List<ModeloUnidad> modeloUnidades = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      modeloUnidades.add(generarMockModeloUnidad(i, "Unidad" + String.format("%03d", i)));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ModeloUnidad>>() {
+          @Override
+          public Page<ModeloUnidad> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > modeloUnidades.size() ? modeloUnidades.size() : toIndex;
+            List<ModeloUnidad> content = modeloUnidades.subList(fromIndex, toIndex);
+            Page<ModeloUnidad> page = new PageImpl<>(content, pageable, modeloUnidades.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/todos")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los ModeloUnidad del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<ModeloUnidad> modeloUnidadesResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<ModeloUnidad>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ModeloUnidad modeloUnidad = modeloUnidadesResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(modeloUnidad.getUnidadGestionRef()).isEqualTo("Unidad" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  public void findAllTodos_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de ModeloUnidad
+    List<ModeloUnidad> modeloUnidades = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ModeloUnidad>>() {
+          @Override
+          public Page<ModeloUnidad> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            Page<ModeloUnidad> page = new PageImpl<>(modeloUnidades, pageable, 0);
+            return page;
+          }
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/todos")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   /**

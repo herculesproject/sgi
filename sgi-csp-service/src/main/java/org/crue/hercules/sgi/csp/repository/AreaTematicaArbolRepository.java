@@ -31,7 +31,7 @@ public interface AreaTematicaArbolRepository
    * Busca un {@link AreaTematicaArbol} por su nombre en un
    * {@link ListadoAreaTematica}.
    * 
-   * @param nombre
+   * @param nombre                nombre {@link AreaTematicaArbol}.
    * @param idListadoAreaTematica Id del {@link ListadoAreaTematica}.
    * @return un {@link AreaTematicaArbol} si tiene el nombre buscado.
    */

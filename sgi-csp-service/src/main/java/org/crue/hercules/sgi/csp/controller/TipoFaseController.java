@@ -39,7 +39,7 @@ public class TipoFaseController {
   }
 
   /**
-   * Devuelve todas las entidades {@link TipoFase} paginadas
+   * Devuelve todas las entidades {@link TipoFase} activos paginadas
    *
    * @param query    la información del filtro.
    * @param pageable la información de la paginación.
@@ -58,6 +58,29 @@ public class TipoFaseController {
     }
 
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve todas las entidades {@link TipoFase} paginadas
+   *
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link TipoFase} paginadas
+   */
+  @GetMapping("/todos")
+  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-TFAS-V')")
+  ResponseEntity<Page<TipoFase>> findAllTodos(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
+    Page<TipoFase> page = tipoFaseService.findAllTodos(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

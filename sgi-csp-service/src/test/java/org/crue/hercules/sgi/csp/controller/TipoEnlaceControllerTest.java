@@ -335,6 +335,82 @@ public class TipoEnlaceControllerTest {
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TENL-V" })
+  public void findAllTodos_WithPaging_ReturnsTipoEnlaceSubList() throws Exception {
+    // given: One hundred TipoEnlace
+    List<TipoEnlace> data = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      data.add(generarMockTipoEnlace(Long.valueOf(i), Boolean.TRUE));
+    }
+
+    BDDMockito
+        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<TipoEnlace>>() {
+          @Override
+          public Page<TipoEnlace> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<TipoEnlace> content = data.subList(fromIndex, toIndex);
+            Page<TipoEnlace> page = new PageImpl<>(content, pageable, data.size());
+            return page;
+          }
+        });
+
+    // when: get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/todos")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: the asked TipoEnlace are returned with the right page information in
+        // headers
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "100"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10))).andReturn();
+
+    // this uses a TypeReference to inform Jackson about the Lists's generic type
+    List<TipoEnlace> actual = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<TipoEnlace>>() {
+        });
+
+    // containing Nombre='Nombre-31' to 'Nombre-40'
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      TipoEnlace item = actual.get(i);
+      Assertions.assertThat(item.getNombre()).isEqualTo("nombre-" + j);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TENL-V" })
+  public void findAllTodos_EmptyList_Returns204() throws Exception {
+    // given: no data TipoEnlace
+    BDDMockito
+        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<TipoEnlace>>() {
+          @Override
+          public Page<TipoEnlace> answer(InvocationOnMock invocation) throws Throwable {
+            Page<TipoEnlace> page = new PageImpl<>(Collections.emptyList());
+            return page;
+          }
+        });
+
+    // when: get page=3 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/todos")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: returns 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
   /**
    * Función que devuelve un objeto TipoEnlace
    * 

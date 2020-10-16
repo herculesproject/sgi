@@ -324,6 +324,88 @@ public class ModeloEjecucionControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  public void findAllTodos_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ModeloEjecucion
+    List<ModeloEjecucion> modelosEjecucion = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      modelosEjecucion.add(generarMockModeloEjecucion(i, "ModeloEjecucion" + String.format("%03d", i)));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito.given(modeloEjecucionService.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<ModeloEjecucion>>() {
+          @Override
+          public Page<ModeloEjecucion> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > modelosEjecucion.size() ? modelosEjecucion.size() : toIndex;
+            List<ModeloEjecucion> content = modelosEjecucion.subList(fromIndex, toIndex);
+            Page<ModeloEjecucion> page = new PageImpl<>(content, pageable, modelosEjecucion.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(MODELO_EJECUCION_CONTROLLER_BASE_PATH + "/todos")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los ModeloEjecucion del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<ModeloEjecucion> modelosEjecucionResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<ModeloEjecucion>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ModeloEjecucion modeloEjecucion = modelosEjecucionResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(modeloEjecucion.getNombre()).isEqualTo("ModeloEjecucion" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  public void findAllTodos_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de ModeloEjecucion
+    List<ModeloEjecucion> modelosEjecucion = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito.given(modeloEjecucionService.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<ModeloEjecucion>>() {
+          @Override
+          public Page<ModeloEjecucion> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            Page<ModeloEjecucion> page = new PageImpl<>(modelosEjecucion, pageable, 0);
+            return page;
+          }
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(MODELO_EJECUCION_CONTROLLER_BASE_PATH + "/todos")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
   public void findById_ReturnsModeloEjecucion() throws Exception {
     // given: Un ModeloEjecucion con el id buscado
     Long idBuscado = 1L;
@@ -1324,7 +1406,7 @@ public class ModeloEjecucionControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
-  public void findAllUnidades_ReturnsPage() throws Exception {
+  public void findAllModeloUnidades_ReturnsPage() throws Exception {
     // given: Una lista con 37 ModeloUnidad para el ModeloEjecucion
     Long idModeloEjecucion = 1L;
 
@@ -1357,7 +1439,7 @@ public class ModeloEjecucionControllerTest {
     // when: Get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
         .perform(MockMvcRequestBuilders
-            .get(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/unidades", idModeloEjecucion)
+            .get(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelounidades", idModeloEjecucion)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
@@ -1382,7 +1464,7 @@ public class ModeloEjecucionControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
-  public void findAllUnidades_EmptyList_Returns204() throws Exception {
+  public void findAllModeloUnidades_EmptyList_Returns204() throws Exception {
     // given: Una lista vacia de ModeloUnidad del ModeloEjecucion
     Long idModeloEjecucion = 1L;
     List<ModeloUnidad> unidadesModelo = new ArrayList<>();
@@ -1405,7 +1487,7 @@ public class ModeloEjecucionControllerTest {
     // when: Get page=0 with pagesize=10
     mockMvc
         .perform(MockMvcRequestBuilders
-            .get(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/unidades", idModeloEjecucion)
+            .get(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelounidades", idModeloEjecucion)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())

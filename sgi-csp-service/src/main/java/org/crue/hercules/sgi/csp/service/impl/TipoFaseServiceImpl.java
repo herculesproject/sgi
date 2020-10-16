@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.csp.exceptions.TipoFaseNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.repository.TipoFaseRepository;
+import org.crue.hercules.sgi.csp.repository.specification.TipoFaseSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoFaseService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -79,7 +80,7 @@ public class TipoFaseServiceImpl implements TipoFaseService {
   }
 
   /**
-   * Obtener todas las entidades {@link TipoFase} paginadas y/o filtradas.
+   * Obtener todas las entidades {@link TipoFase} activas paginadas y/o filtradas.
    *
    * @param pageable la información de la paginación.
    * @param query    la información del filtro.
@@ -87,13 +88,35 @@ public class TipoFaseServiceImpl implements TipoFaseService {
    */
   @Override
   public Page<TipoFase> findAll(List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAllTipoFase (List<QueryCriteria> query, Pageable pageable) - start");
+    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
+
+    Specification<TipoFase> specByQuery = new QuerySpecification<TipoFase>(query);
+    Specification<TipoFase> specActivos = TipoFaseSpecifications.activos();
+
+    Specification<TipoFase> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<TipoFase> returnValue = tipoFaseRepository.findAll(specs, pageable);
+
+    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtener todas las entidades {@link TipoFase} paginadas y/o filtradas.
+   *
+   * @param pageable la información de la paginación.
+   * @param query    la información del filtro.
+   * @return la lista de entidades {@link TipoFase} paginadas y/o filtradas.
+   */
+  @Override
+  public Page<TipoFase> findAllTodos(List<QueryCriteria> query, Pageable pageable) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - start");
 
     Specification<TipoFase> spec = new QuerySpecification<TipoFase>(query);
 
     Page<TipoFase> returnValue = tipoFaseRepository.findAll(spec, pageable);
 
-    log.debug("findAllTipoFase (List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - end");
     return returnValue;
 
   }

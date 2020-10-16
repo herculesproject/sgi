@@ -96,7 +96,7 @@ public class ModeloEjecucionController {
   }
 
   /**
-   * Devuelve una lista paginada y filtrada {@link ModeloEjecucion}.
+   * Devuelve una lista paginada y filtrada {@link ModeloEjecucion} activos.
    * 
    * @param query  filtro de {@link QueryCriteria}.
    * @param paging pageable.
@@ -114,6 +114,29 @@ public class ModeloEjecucionController {
     }
 
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link ModeloEjecucion}.
+   * 
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/todos")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
+  ResponseEntity<Page<ModeloEjecucion>> findAllTodos(
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
+    Page<ModeloEjecucion> page = modeloEjecucionService.findAllTodos(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -473,9 +496,9 @@ public class ModeloEjecucionController {
    * @param query  filtro de {@link QueryCriteria}.
    * @param paging pageable.
    */
-  @GetMapping("/{id}/unidades")
+  @GetMapping("/{id}/modelounidades")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
-  ResponseEntity<Page<ModeloUnidad>> findAllUnidades(@PathVariable Long id,
+  ResponseEntity<Page<ModeloUnidad>> findAllModeloUnidades(@PathVariable Long id,
       @RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAllUnidades(Long id, List<QueryCriteria> query, Pageable paging) - start");

@@ -1,10 +1,16 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.crue.hercules.sgi.csp.model.ModeloTipoEnlace;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.service.ModeloUnidadService;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,6 +40,50 @@ public class ModeloUnidadController {
     log.debug("ModeloUnidadController(ModeloUnidadService service) - start");
     this.service = service;
     log.debug("ModeloUnidadController(ModeloUnidadService service) - end");
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link ModeloUnidad} activos.
+   * 
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping()
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
+  ResponseEntity<Page<ModeloUnidad>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
+    Page<ModeloUnidad> page = service.findAll(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link ModeloUnidad}.
+   * 
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/todos")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
+  ResponseEntity<Page<ModeloUnidad>> findAllTodos(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
+    Page<ModeloUnidad> page = service.findAllTodos(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
   /**

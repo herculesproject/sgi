@@ -38,13 +38,22 @@ public interface TipoEnlaceService {
   TipoEnlace disable(Long id);
 
   /**
-   * Obtiene todas las entidades {@link TipoEnlace} paginadas y filtradas.
+   * Obtiene todas las entidades {@link TipoEnlace} activas paginadas y filtradas.
    *
    * @param query  información del filtro.
    * @param paging información de paginación.
    * @return el listado de entidades {@link TipoEnlace} paginadas y filtradas.
    */
   Page<TipoEnlace> findAll(List<QueryCriteria> query, Pageable paging);
+
+  /**
+   * Obtiene todas las entidades {@link TipoEnlace} paginadas y filtradas.
+   *
+   * @param query  información del filtro.
+   * @param paging información de paginación.
+   * @return el listado de entidades {@link TipoEnlace} paginadas y filtradas.
+   */
+  Page<TipoEnlace> findAllTodos(List<QueryCriteria> query, Pageable paging);
 
   /**
    * Obtiene una entidad {@link TipoEnlace} por id.

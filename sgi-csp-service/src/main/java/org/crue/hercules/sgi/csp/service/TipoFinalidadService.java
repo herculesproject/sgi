@@ -39,13 +39,23 @@ public interface TipoFinalidadService {
   TipoFinalidad disable(Long id);
 
   /**
-   * Obtiene todas las entidades {@link TipoFinalidad} paginadas y filtradas.
+   * Obtiene todas las entidades {@link TipoFinalidad} activas paginadas y
+   * filtradas.
    *
    * @param query  información del filtro.
    * @param paging información de paginación.
    * @return el listado de entidades {@link TipoFinalidad} paginadas y filtradas.
    */
   Page<TipoFinalidad> findAll(List<QueryCriteria> query, Pageable paging);
+
+  /**
+   * Obtiene todas las entidades {@link TipoFinalidad} paginadas y filtradas.
+   *
+   * @param query  información del filtro.
+   * @param paging información de paginación.
+   * @return el listado de entidades {@link TipoFinalidad} paginadas y filtradas.
+   */
+  Page<TipoFinalidad> findAllTodos(List<QueryCriteria> query, Pageable paging);
 
   /**
    * Obtiene una entidad {@link TipoFinalidad} por id.

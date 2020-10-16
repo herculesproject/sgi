@@ -162,24 +162,38 @@ public class ModeloEjecucionIT {
         .isEqualTo("nombre-" + String.format("%03d", 1));
   }
 
+  @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_EmptyList_Returns204() throws Exception {
+  public void findAllTodos_WithPagingSortingAndFiltering_ReturnsModeloEjecucionSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
-    headers.add("X-Page-Size", "3");
+    headers.add("X-Page-Size", "10");
     String sort = "nombre-";
     String filter = "descripcion~%00%";
 
-    URI uri = UriComponentsBuilder.fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH).queryParam("s", sort)
+    URI uri = UriComponentsBuilder.fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<ModeloEjecucion>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<ModeloEjecucion>>() {
         });
 
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<ModeloEjecucion> modelosEjecucion = response.getBody();
+    Assertions.assertThat(modelosEjecucion.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(modelosEjecucion.get(0).getNombre()).as("get(0).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 3));
+    Assertions.assertThat(modelosEjecucion.get(1).getNombre()).as("get(1).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 2));
+    Assertions.assertThat(modelosEjecucion.get(2).getNombre()).as("get(2).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 1));
   }
 
   /**
@@ -598,7 +612,7 @@ public class ModeloEjecucionIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAllUnidades_WithPagingSortingAndFiltering_ReturnsModeloUnidadSubList() throws Exception {
+  public void findAllModeloUnidades_WithPagingSortingAndFiltering_ReturnsModeloUnidadSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
     headers.add("X-Page", "0");
@@ -609,8 +623,8 @@ public class ModeloEjecucionIT {
     Long idModeloEjecucion = 1L;
 
     URI uri = UriComponentsBuilder
-        .fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/unidades").queryParam("s", sort)
-        .queryParam("q", filter).buildAndExpand(idModeloEjecucion).toUri();
+        .fromUriString(MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/modelounidades")
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(idModeloEjecucion).toUri();
 
     final ResponseEntity<List<ModeloUnidad>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<ModeloUnidad>>() {

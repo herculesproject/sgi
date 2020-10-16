@@ -29,7 +29,6 @@ import org.springframework.data.jpa.domain.Specification;
  * TipoHitoServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-
 public class TipoHitoServiceTest {
 
   @Mock
@@ -182,6 +181,46 @@ public class TipoHitoServiceTest {
     // when: Get page=3 with pagesize=10
     Pageable paging = PageRequest.of(3, 10);
     Page<TipoHito> page = tipoHitoService.findAll(null, paging);
+
+    // then: A Page with ten TipoHitoes are returned containing
+    // descripcion='TipoHito031' to 'TipoHito040'
+    Assertions.assertThat(page.getContent().size()).isEqualTo(10);
+    Assertions.assertThat(page.getNumber()).isEqualTo(3);
+    Assertions.assertThat(page.getSize()).isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      TipoHito tipoHito = page.getContent().get(i);
+      Assertions.assertThat(tipoHito.getNombre()).isEqualTo("TipoHito" + String.format("%03d", j));
+    }
+  }
+
+  @Test
+  public void findAllTodos_WithPaging_ReturnsPage() {
+    // given: One hundred TipoHitos
+    List<TipoHito> tipoHitoList = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      tipoHitoList.add(generarMockTipoHito(Long.valueOf(i), "TipoHito" + String.format("%03d", i)));
+    }
+
+    BDDMockito.given(
+        tipoHitoRepository.findAll(ArgumentMatchers.<Specification<TipoHito>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<TipoHito>>() {
+          @Override
+          public Page<TipoHito> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<TipoHito> content = tipoHitoList.subList(fromIndex, toIndex);
+            Page<TipoHito> page = new PageImpl<>(content, pageable, tipoHitoList.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<TipoHito> page = tipoHitoService.findAllTodos(null, paging);
 
     // then: A Page with ten TipoHitoes are returned containing
     // descripcion='TipoHito031' to 'TipoHito040'

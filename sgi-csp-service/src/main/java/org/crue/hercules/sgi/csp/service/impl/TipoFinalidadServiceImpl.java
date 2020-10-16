@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.csp.exceptions.TipoFinalidadNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.repository.TipoFinalidadRepository;
+import org.crue.hercules.sgi.csp.repository.specification.TipoFinalidadSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoFinalidadService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -105,7 +106,8 @@ public class TipoFinalidadServiceImpl implements TipoFinalidadService {
   }
 
   /**
-   * Obtiene todas las entidades {@link TipoFinalidad} paginadas y filtradas.
+   * Obtiene todas las entidades {@link TipoFinalidad} activas paginadas y
+   * filtradas.
    *
    * @param query  información del filtro.
    * @param paging información de paginación.
@@ -113,6 +115,26 @@ public class TipoFinalidadServiceImpl implements TipoFinalidadService {
    */
   @Override
   public Page<TipoFinalidad> findAll(List<QueryCriteria> query, Pageable paging) {
+    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
+    Specification<TipoFinalidad> specByQuery = new QuerySpecification<TipoFinalidad>(query);
+    Specification<TipoFinalidad> specActivos = TipoFinalidadSpecifications.activos();
+
+    Specification<TipoFinalidad> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<TipoFinalidad> returnValue = repository.findAll(specs, paging);
+    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene todas las entidades {@link TipoFinalidad} paginadas y filtradas.
+   *
+   * @param query  información del filtro.
+   * @param paging información de paginación.
+   * @return el listado de entidades {@link TipoFinalidad} paginadas y filtradas.
+   */
+  @Override
+  public Page<TipoFinalidad> findAllTodos(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
     Specification<TipoFinalidad> spec = new QuerySpecification<TipoFinalidad>(query);
     Page<TipoFinalidad> returnValue = repository.findAll(spec, paging);

@@ -29,7 +29,6 @@ import org.springframework.data.jpa.domain.Specification;
  * TipoFaseServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-
 public class TipoFaseServiceTest {
 
   @Mock
@@ -150,6 +149,46 @@ public class TipoFaseServiceTest {
     // when: Get page=3 with pagesize=10
     Pageable paging = PageRequest.of(3, 10);
     Page<TipoFase> page = tipoFaseService.findAll(null, paging);
+
+    // then: A Page with ten TipoFasees are returned containing
+    // descripcion='TipoFase031' to 'TipoFase040'
+    Assertions.assertThat(page.getContent().size()).isEqualTo(10);
+    Assertions.assertThat(page.getNumber()).isEqualTo(3);
+    Assertions.assertThat(page.getSize()).isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      TipoFase tipoFase = page.getContent().get(i);
+      Assertions.assertThat(tipoFase.getNombre()).isEqualTo("TipoFase" + String.format("%03d", j));
+    }
+  }
+
+  @Test
+  public void findAllTodos_WithPaging_ReturnsPage() {
+    // given: One hundred TipoFases
+    List<TipoFase> tipoFaseList = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      tipoFaseList.add(generarMockTipoFase(Long.valueOf(i), "TipoFase" + String.format("%03d", i)));
+    }
+
+    BDDMockito.given(
+        tipoFaseRepository.findAll(ArgumentMatchers.<Specification<TipoFase>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<TipoFase>>() {
+          @Override
+          public Page<TipoFase> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<TipoFase> content = tipoFaseList.subList(fromIndex, toIndex);
+            Page<TipoFase> page = new PageImpl<>(content, pageable, tipoFaseList.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<TipoFase> page = tipoFaseService.findAllTodos(null, paging);
 
     // then: A Page with ten TipoFasees are returned containing
     // descripcion='TipoFase031' to 'TipoFase040'

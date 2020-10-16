@@ -280,6 +280,47 @@ public class TipoEnlaceServiceTest {
     }
   }
 
+  @Test
+  public void findAllTodos_WithPaging_ReturnsPage() {
+    // given: One hundred TipoEnlace
+    List<TipoEnlace> data = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      data.add(generarMockTipoEnlace(Long.valueOf(i), Boolean.TRUE));
+    }
+
+    BDDMockito
+        .given(repository.findAll(ArgumentMatchers.<Specification<TipoEnlace>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<TipoEnlace>>() {
+          @Override
+          public Page<TipoEnlace> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<TipoEnlace> content = data.subList(fromIndex, toIndex);
+            Page<TipoEnlace> page = new PageImpl<>(content, pageable, data.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<TipoEnlace> page = service.findAllTodos(null, paging);
+
+    // then: A Page with ten TipoEnlace are returned containing
+    // Nombre='nombre-31' to
+    // 'nombre-40'
+    Assertions.assertThat(page.getContent().size()).isEqualTo(10);
+    Assertions.assertThat(page.getNumber()).isEqualTo(3);
+    Assertions.assertThat(page.getSize()).isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      TipoEnlace item = page.getContent().get(i);
+      Assertions.assertThat(item.getNombre()).isEqualTo("nombre-" + j);
+    }
+  }
+
   /**
    * Función que devuelve un objeto TipoEnlace
    * 

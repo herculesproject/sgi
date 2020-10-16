@@ -38,7 +38,8 @@ public interface ModeloEjecucionService {
   ModeloEjecucion disable(Long id);
 
   /**
-   * Obtener todas las entidades {@link ModeloEjecucion} paginadas y/o filtradas.
+   * Obtener todas las entidades {@link ModeloEjecucion} activas paginadas y/o
+   * filtradas.
    *
    * @param pageable la información de la paginación.
    * @param query    la información del filtro.
@@ -46,6 +47,16 @@ public interface ModeloEjecucionService {
    *         filtradas.
    */
   Page<ModeloEjecucion> findAll(List<QueryCriteria> query, Pageable pageable);
+
+  /**
+   * Obtener todas las entidades {@link ModeloEjecucion} paginadas y/o filtradas.
+   *
+   * @param pageable la información de la paginación.
+   * @param query    la información del filtro.
+   * @return la lista de entidades {@link ModeloEjecucion} paginadas y/o
+   *         filtradas.
+   */
+  Page<ModeloEjecucion> findAllTodos(List<QueryCriteria> query, Pageable pageable);
 
   /**
    * Obtiene {@link ModeloEjecucion} por su id.

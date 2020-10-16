@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.csp.exceptions.TipoHitoNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.repository.TipoHitoRepository;
+import org.crue.hercules.sgi.csp.repository.specification.TipoHitoSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoHitoService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -79,7 +80,7 @@ public class TipoHitoServiceImpl implements TipoHitoService {
   }
 
   /**
-   * Obtener todas las entidades {@link TipoHito} paginadas
+   * Obtener todas las entidades {@link TipoHito} activas paginadas
    *
    * @param pageable la información de la paginación.
    * @param query    información del filtro.
@@ -88,13 +89,33 @@ public class TipoHitoServiceImpl implements TipoHitoService {
   @Override
   public Page<TipoHito> findAll(List<QueryCriteria> query, Pageable pageable) {
     log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
+    Specification<TipoHito> specByQuery = new QuerySpecification<TipoHito>(query);
+    Specification<TipoHito> specActivos = TipoHitoSpecifications.activos();
+
+    Specification<TipoHito> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<TipoHito> returnValue = tipoHitoRepository.findAll(specs, pageable);
+
+    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtener todas las entidades {@link TipoHito} paginadas
+   *
+   * @param pageable la información de la paginación.
+   * @param query    información del filtro.
+   * @return la lista de entidades {@link TipoHito} paginadas
+   */
+  @Override
+  public Page<TipoHito> findAllTodos(List<QueryCriteria> query, Pageable pageable) {
+    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
     Specification<TipoHito> spec = new QuerySpecification<TipoHito>(query);
 
     Page<TipoHito> returnValue = tipoHitoRepository.findAll(spec, pageable);
 
     log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
     return returnValue;
-
   }
 
   /**

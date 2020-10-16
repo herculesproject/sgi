@@ -95,6 +95,42 @@ public class ModeloUnidadServiceImpl implements ModeloUnidadService {
   }
 
   /**
+   * Obtiene los {@link ModeloUnidad} activos.
+   *
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link ModeloUnidad} del
+   *         {@link ModeloEjecucion} paginadas.
+   */
+  public Page<ModeloUnidad> findAll(List<QueryCriteria> query, Pageable pageable) {
+    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
+    Specification<ModeloUnidad> specByQuery = new QuerySpecification<ModeloUnidad>(query);
+    Specification<ModeloUnidad> specActivos = ModeloUnidadSpecifications.activos();
+
+    Specification<ModeloUnidad> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<ModeloUnidad> returnValue = modeloUnidadRepository.findAll(specs, pageable);
+    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene los {@link ModeloUnidad}.
+   *
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link ModeloUnidad} del
+   *         {@link ModeloEjecucion} paginadas.
+   */
+  public Page<ModeloUnidad> findAllTodos(List<QueryCriteria> query, Pageable pageable) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - start");
+    Specification<ModeloUnidad> specByQuery = new QuerySpecification<ModeloUnidad>(query);
+    Page<ModeloUnidad> returnValue = modeloUnidadRepository.findAll(specByQuery, pageable);
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
    * Obtiene una entidad {@link ModeloTipoEnlace} por id.
    * 
    * @param id Identificador de la entidad {@link ModeloTipoEnlace}.
