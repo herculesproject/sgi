@@ -9,8 +9,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.config.SecurityConfig;
+import org.crue.hercules.sgi.eti.exceptions.ComiteFormularioNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Formulario;
+import org.crue.hercules.sgi.eti.service.ComiteFormularioService;
 import org.crue.hercules.sgi.eti.service.ComiteService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
@@ -53,6 +56,9 @@ public class ComiteControllerTest {
 
   @MockBean
   private ComiteService comiteService;
+
+  @MockBean
+  private ComiteFormularioService comiteFormularioService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String COMITE_CONTROLLER_BASE_PATH = "/comites";
@@ -377,6 +383,39 @@ public class ComiteControllerTest {
         // then: Obtiene la página
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
+  public void findComiteFormulario() throws Exception {
+    // given: Existe la memoria pero no tiene documentacion
+    Long id = 3L;
+    final String url = new StringBuilder(COMITE_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append("/comite-formulario").toString();
+
+    BDDMockito.given(comiteFormularioService.findComiteFormularioTipoM(ArgumentMatchers.anyLong()))
+        .willReturn(new Formulario(1L, "M10", "Formulario M10", Boolean.TRUE));
+
+    // when: Se buscan todos los datos
+    mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("M10"));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
+  public void findComiteFormulario_Returns404() throws Exception {
+    BDDMockito.given(comiteFormularioService.findComiteFormularioTipoM(ArgumentMatchers.anyLong()))
+        .will((InvocationOnMock invocation) -> {
+          throw new ComiteFormularioNotFoundException(invocation.getArgument(0));
+        });
+
+    final String url = new StringBuilder(COMITE_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
+        .append("/comite-formulario").toString();
+
+    mockMvc.perform(MockMvcRequestBuilders.get(url, 1L).with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
 }

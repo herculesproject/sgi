@@ -42,11 +42,20 @@ public interface CustomMemoriaRepository {
    * 
    * @param idPeticionEvaluacion Identificador {@link PeticionEvaluacion}
    * @param pageable             información de paginación
-   * @return lista de memorias de {@link PeticionEvaluacion}
+   * @param personaRefConsulta   Referencia persona consulta
+   * @return lista de memorias de {@link MemoriaPeticionEvaluacion}
    */
   Page<MemoriaPeticionEvaluacion> findMemoriasEvaluacion(Long idPeticionEvaluacion, Pageable pageable,
       String personaRefConsulta);
 
+  /**
+   * Recupera todas las memorias de una evaluación.
+   * 
+   * @param specs              condiciones de búsqueda
+   * @param pageable           datos paginación
+   * @param personaRefConsulta Referencia persona consulta
+   * @return Lista paginada de {@link MemoriaPeticionEvaluacion}
+   */
   Page<MemoriaPeticionEvaluacion> findAllMemoriasEvaluaciones(Specification<Memoria> specs, Pageable pageable,
       String personaRefConsulta);
 

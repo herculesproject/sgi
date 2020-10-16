@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
+import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.junit.jupiter.api.Test;
@@ -64,6 +65,20 @@ public class MemoriaIT {
     }
 
     HttpEntity<Memoria> request = new HttpEntity<>(entity, headers);
+    return request;
+
+  }
+
+  private HttpEntity<DocumentacionMemoria> buildRequestDocumentacionMemoria(HttpHeaders headers,
+      DocumentacionMemoria entity) throws Exception {
+    headers = (headers != null ? headers : new HttpHeaders());
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    if (!headers.containsKey("Authorization")) {
+      headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user")));
+    }
+
+    HttpEntity<DocumentacionMemoria> request = new HttpEntity<>(entity, headers);
     return request;
 
   }
@@ -549,7 +564,7 @@ public class MemoriaIT {
 
     // when: find unlimited asignables para la memoria
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
 
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-formulario", HttpMethod.GET,
@@ -575,7 +590,7 @@ public class MemoriaIT {
 
     // when: find unlimited asignables para la memoria
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
 
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-formulario", HttpMethod.GET,
@@ -595,7 +610,7 @@ public class MemoriaIT {
 
     // when: find unlimited asignables para la memoria
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
 
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-anual", HttpMethod.GET,
@@ -619,7 +634,7 @@ public class MemoriaIT {
 
     // when: find unlimited asignables para la memoria
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
 
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-anual", HttpMethod.GET,
@@ -639,7 +654,7 @@ public class MemoriaIT {
 
     // when: find unlimited asignables para la memoria
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
 
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-final", HttpMethod.GET,
@@ -663,7 +678,7 @@ public class MemoriaIT {
 
     // when: find unlimited asignables para la memoria
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
 
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-final", HttpMethod.GET,
@@ -683,7 +698,7 @@ public class MemoriaIT {
 
     // when: find unlimited asignables para la memoria
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
 
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-retrospectiva", HttpMethod.GET,
@@ -707,7 +722,7 @@ public class MemoriaIT {
 
     // when: find unlimited asignables para la memoria
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-CNV-C", "ETI-CNV-E")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
 
     final ResponseEntity<List<DocumentacionMemoria>> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-retrospectiva", HttpMethod.GET,
@@ -755,6 +770,36 @@ public class MemoriaIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
+  public void addDocumentacionMemoriaFormulario_ReturnsDcoumentacionMemoria() throws Exception {
+
+    DocumentacionMemoria nuevaDocumentacionMemoria = generarMockDocumentacionMemoria(1L,
+        generarMockMemoria(1L, "001", "Memoria1", 1), generarMockTipoDocumento(1L));
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
+
+    restTemplate.exchange(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-inicial", HttpMethod.POST,
+        buildRequestDocumentacionMemoria(headers, nuevaDocumentacionMemoria), Memoria.class, 1L);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void addDocumentacioSeguimientoFinal_ReturnsDcoumentacionMemoria() throws Exception {
+
+    DocumentacionMemoria nuevaDocumentacionMemoria = generarMockDocumentacionMemoria(1L,
+        generarMockMemoria(1L, "001", "Memoria1", 1), generarMockTipoDocumento(1L));
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
+
+    restTemplate.exchange(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-final", HttpMethod.POST,
+        buildRequestDocumentacionMemoria(headers, nuevaDocumentacionMemoria), Memoria.class, 1L);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
   public void findAllByPersonaRefPeticionEvaluacion_WithPagingSortingAndFiltering_ReturnsMemoriaPeticionEvaluacionSubList()
       throws Exception {
     // when: Obtiene page=3 con pagesize=10
@@ -795,6 +840,36 @@ public class MemoriaIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
+  public void addDocumentacioSeguimientoAnual_ReturnsDcoumentacionMemoria() throws Exception {
+
+    DocumentacionMemoria nuevaDocumentacionMemoria = generarMockDocumentacionMemoria(1L,
+        generarMockMemoria(1L, "001", "Memoria1", 1), generarMockTipoDocumento(1L));
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
+
+    restTemplate.exchange(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-anual", HttpMethod.POST,
+        buildRequestDocumentacionMemoria(headers, nuevaDocumentacionMemoria), Memoria.class, 1L);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void addDocumentacioRetrospectiva_ReturnsDcoumentacionMemoria() throws Exception {
+
+    DocumentacionMemoria nuevaDocumentacionMemoria = generarMockDocumentacionMemoria(1L,
+        generarMockMemoria(1L, "001", "Memoria1", 1), generarMockTipoDocumento(1L));
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
+
+    restTemplate.exchange(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-retrospectiva",
+        HttpMethod.POST, buildRequestDocumentacionMemoria(headers, nuevaDocumentacionMemoria), Memoria.class, 1L);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
   public void getEvaluacionesMemoria_ReturnsEvaluadorSubList() throws Exception {
 
     // given: idMemoria
@@ -818,6 +893,33 @@ public class MemoriaIT {
     Assertions.assertThat(evaluaciones.get(0).getId()).isEqualTo(1L);
     Assertions.assertThat(evaluaciones.get(1).getId()).isEqualTo(2L);
     Assertions.assertThat(evaluaciones.get(2).getId()).isEqualTo(3L);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void replaceDocumentacionMemoria_ReturnsMemoria() throws Exception {
+
+    DocumentacionMemoria replaceDocumentacionMemoria = generarMockDocumentacionMemoria(1L,
+        generarMockMemoria(1L, "001", "Memoria1", 1), generarMockTipoDocumento(1L));
+    replaceDocumentacionMemoria.setAportado(Boolean.FALSE);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
+
+    final ResponseEntity<DocumentacionMemoria> response = restTemplate.exchange(
+        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-inicial/{idDocumentacionMemoria}",
+        HttpMethod.PUT, buildRequestDocumentacionMemoria(headers, replaceDocumentacionMemoria),
+        DocumentacionMemoria.class, 1L, 1L);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    final DocumentacionMemoria documentacionMemoria = response.getBody();
+
+    Assertions.assertThat(replaceDocumentacionMemoria.getId()).isNotNull();
+    Assertions.assertThat(documentacionMemoria.getMemoria().getNumReferencia())
+        .isEqualTo(replaceDocumentacionMemoria.getMemoria().getNumReferencia());
+    Assertions.assertThat(documentacionMemoria.getAportado()).isEqualTo(replaceDocumentacionMemoria.getAportado());
   }
 
   @Sql
@@ -853,6 +955,37 @@ public class MemoriaIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
+  public void deleteDocumentacionSeguimientoAnual_ReturnsMemoria() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
+
+    final ResponseEntity<DocumentacionMemoria> response = restTemplate.exchange(
+        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-anual/{idDocumentacionMemoria}",
+        HttpMethod.DELETE, buildRequestDocumentacionMemoria(headers, null), DocumentacionMemoria.class, 1L, 1L);
+
+    // then: 200
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void deleteDocumentacionSeguimientoFinal_ReturnsMemoria() throws Exception {
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
+
+    final ResponseEntity<DocumentacionMemoria> response = restTemplate.exchange(
+        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-final/{idDocumentacionMemoria}",
+        HttpMethod.DELETE, buildRequestDocumentacionMemoria(headers, null), DocumentacionMemoria.class, 1L, 1L);
+
+    // then: 200
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
   public void getEvaluacionesMemoria_ReturnsEmptyList() throws Exception {
 
     HttpHeaders headers = new HttpHeaders();
@@ -865,7 +998,58 @@ public class MemoriaIT {
 
     // then: La memoria no tiene evaluaciones
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
 
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void deleteDocumentacionRetrospectiva_ReturnsMemoria() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
+
+    final ResponseEntity<DocumentacionMemoria> response = restTemplate.exchange(
+        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-retrospectiva/{idDocumentacionMemoria}",
+        HttpMethod.DELETE, buildRequestDocumentacionMemoria(headers, null), DocumentacionMemoria.class, 1L, 1L);
+
+    // then: 200
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  /**
+   * Función que devuelve un objeto DocumentacionMemoria
+   * 
+   * @param id            id de DocumentacionMemoria
+   * @param memoria       la Memoria de DocumentacionMemoria
+   * @param tipoDocumento el TipoDocumento de DocumentacionMemoria
+   * @return el objeto DocumentacionMemoria
+   */
+
+  private DocumentacionMemoria generarMockDocumentacionMemoria(Long id, Memoria memoria, TipoDocumento tipoDocumento) {
+
+    DocumentacionMemoria documentacionMemoria = new DocumentacionMemoria();
+    documentacionMemoria.setId(id);
+    documentacionMemoria.setMemoria(memoria);
+    documentacionMemoria.setTipoDocumento(tipoDocumento);
+    documentacionMemoria.setDocumentoRef("doc-00" + id);
+    documentacionMemoria.setAportado(Boolean.TRUE);
+
+    return documentacionMemoria;
+  }
+
+  /**
+   * Función que devuelve un objeto TipoDocumento
+   * 
+   * @param id id del TipoDocumento
+   * @return el objeto TipoDocumento
+   */
+
+  private TipoDocumento generarMockTipoDocumento(Long id) {
+
+    TipoDocumento tipoDocumento = new TipoDocumento();
+    tipoDocumento.setId(id);
+    tipoDocumento.setNombre("TipoDocumento" + id);
+
+    return tipoDocumento;
   }
 
   /**

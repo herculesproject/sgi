@@ -50,8 +50,9 @@ public class EvaluadorController {
   /**
    * Instancia un nuevo EvaluadorController. x
    * 
-   * @param evaluadorService  EvaluadorService
-   * @param evaluacionService EvaluacionService
+   * @param evaluadorService        {@link EvaluadorService}
+   * @param evaluacionService       {@link EvaluacionService}
+   * @param conflictoInteresService {@link ConflictoInteresService}
    */
   public EvaluadorController(EvaluadorService evaluadorService, EvaluacionService evaluacionService,
       ConflictoInteresService conflictoInteresService) {

@@ -64,7 +64,8 @@ public interface ConflictoInteresService {
    * Obtiene una lista {@link ConflictoInteres} paginada filtrada por el
    * evaluador.
    *
-   * @param id el id de la entidad {@link Evaluador}.
+   * @param id       el id de la entidad {@link Evaluador}.
+   * @param pageable datos paginación
    * @return la lista paginada de {@link ConflictoInteres}.
    */
   Page<ConflictoInteres> findAllByEvaluadorId(Long id, Pageable pageable);

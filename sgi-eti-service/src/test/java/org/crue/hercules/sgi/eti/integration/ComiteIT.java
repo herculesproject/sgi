@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -49,6 +50,18 @@ public class ComiteIT {
     }
 
     HttpEntity<Comite> request = new HttpEntity<>(entity, headers);
+    return request;
+  }
+
+  private HttpEntity<Formulario> buildRequestFormulario(HttpHeaders headers, Formulario entity) throws Exception {
+    headers = (headers != null ? headers : new HttpHeaders());
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    if (!headers.containsKey("Authorization")) {
+      headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
+    }
+
+    HttpEntity<Formulario> request = new HttpEntity<>(entity, headers);
     return request;
   }
 
@@ -262,6 +275,22 @@ public class ComiteIT {
     Assertions.assertThat(comites.get(1).getComite()).isEqualTo("Comite" + String.format("%03d", 2));
     Assertions.assertThat(comites.get(2).getComite()).isEqualTo("Comite" + String.format("%03d", 1));
 
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findComiteFormulario_ReturnsFormulario() throws Exception {
+    final ResponseEntity<Formulario> response = restTemplate.exchange(
+        COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comite-formulario", HttpMethod.GET,
+        buildRequestFormulario(null, null), Formulario.class, 1L);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    final Formulario formulario = response.getBody();
+
+    Assertions.assertThat(formulario.getId()).isEqualTo(1L);
+    Assertions.assertThat(formulario.getNombre()).isEqualTo("M10");
   }
 
 }

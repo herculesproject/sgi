@@ -132,17 +132,4 @@ public class ComiteServiceImpl implements ComiteService {
     }).orElseThrow(() -> new ComiteNotFoundException(comiteActualizar.getId()));
   }
 
-  /**
-   * Devuelve todos los {@link Comite} paginados que cumplan con el nombre
-   * 
-   * @param comite comité.
-   * @param paging información de la paginación.
-   * @return lista de {@link Comite} paginada y filtrada.
-   */
-  public Page<Comite> findByComiteContaining(String comite, Pageable paging) {
-    log.debug("findByComiteContaining(String nombre, Pageable paging) - start");
-    Page<Comite> returnValue = comiteRepository.findByComiteContaining(comite, paging);
-    log.debug("findByComiteContaining(String nombre, Pageable paging) - end");
-    return returnValue;
-  }
 }

@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.eti.exceptions.DocumentacionMemoriaNotFoundExceptio
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.TipoDocumentoNotFoundException;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
@@ -19,8 +20,6 @@ import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.TipoDocumentoRepository;
 import org.crue.hercules.sgi.eti.repository.specification.DocumentacionMemoriaSpecifications;
 import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -55,7 +54,8 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
   }
 
   /**
-   * Guarda la entidad {@link DocumentacionMemoria}.
+   * Crea {@link DocumentacionMemoria} inicial de una memoria (aquella
+   * documentación que no es de seguimiento anual, final o retrospectiva).
    *
    * @param idMemoria            Id de la {@link Memoria}
    * @param documentacionMemoria la entidad {@link DocumentacionMemoria} a
@@ -63,7 +63,7 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
    * @return la entidad {@link DocumentacionMemoria} persistida.
    */
   @Transactional
-  public DocumentacionMemoria create(Long idMemoria, DocumentacionMemoria documentacionMemoria) {
+  public DocumentacionMemoria createDocumentacionInicial(Long idMemoria, DocumentacionMemoria documentacionMemoria) {
     log.debug("Petición a create DocumentacionMemoria : {} - start", documentacionMemoria);
     Assert.isNull(documentacionMemoria.getId(),
         "DocumentacionMemoria id tiene que ser null para crear un nuevo DocumentacionMemoria");
@@ -73,28 +73,16 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
 
     return memoriaRepository.findByIdAndActivoTrue(idMemoria).map(memoria -> {
 
+      Assert.isTrue(
+          (memoria.getEstadoActual().getId().equals(1L) || memoria.getEstadoActual().getId().equals(2L)
+              || memoria.getEstadoActual().getId().equals(6L) || memoria.getEstadoActual().getId().equals(7L)
+              || memoria.getEstadoActual().getId().equals(8L)),
+          "La memoria no se encuentra en un estado adecuado para añadir documentación.");
+
       documentacionMemoria.setMemoria(memoria);
       return documentacionMemoriaRepository.save(documentacionMemoria);
     }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
 
-  }
-
-  /**
-   * Obtiene todas las entidades {@link DocumentacionMemoria} paginadas y
-   * filtadas.
-   *
-   * @param paging la información de paginación.
-   * @param query  información del filtro.
-   * @return el listado de entidades {@link DocumentacionMemoria} paginadas y
-   *         filtradas.
-   */
-  public Page<DocumentacionMemoria> findAll(List<QueryCriteria> query, Pageable paging) {
-    log.debug("findAllDocumentacionMemoria(List<QueryCriteria> query,Pageable paging) - start");
-    Specification<DocumentacionMemoria> spec = new QuerySpecification<DocumentacionMemoria>(query);
-
-    Page<DocumentacionMemoria> returnValue = documentacionMemoriaRepository.findAll(spec, paging);
-    log.debug("findAllDocumentacionMemoria(List<QueryCriteria> query,Pageable paging) - end");
-    return returnValue;
   }
 
   /**
@@ -116,34 +104,9 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
   }
 
   /**
-   * Elimina una entidad {@link DocumentacionMemoria} por id.
-   *
-   * @param id el id de la entidad {@link DocumentacionMemoria}.
-   */
-  @Transactional
-  public void delete(Long id) throws DocumentacionMemoriaNotFoundException {
-    log.debug("Petición a delete DocumentacionMemoria : {}  - start", id);
-    Assert.notNull(id, "El id de DocumentacionMemoria no puede ser null.");
-    if (!documentacionMemoriaRepository.existsById(id)) {
-      throw new DocumentacionMemoriaNotFoundException(id);
-    }
-    documentacionMemoriaRepository.deleteById(id);
-    log.debug("Petición a delete DocumentacionMemoria : {}  - end", id);
-  }
-
-  /**
-   * Elimina todos los registros {@link DocumentacionMemoria}.
-   */
-  @Transactional
-  public void deleteAll() {
-    log.debug("Petición a deleteAll de DocumentacionMemoria: {} - start");
-    documentacionMemoriaRepository.deleteAll();
-    log.debug("Petición a deleteAll de DocumentacionMemoria: {} - end");
-
-  }
-
-  /**
-   * Actualiza los datos del {@link DocumentacionMemoria}.
+   * Actualiza los datos del {@link DocumentacionMemoria} inicial de una memoria
+   * (aquella documentación que no es de seguimiento anual, final o
+   * retrospectiva).
    * 
    * @param idMemoria                      Id de la {@link Memoria}
    * @param documentacionMemoriaActualizar {@link DocumentacionMemoria} con los
@@ -158,8 +121,9 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
    */
 
   @Transactional
-  public DocumentacionMemoria update(Long idMemoria, final DocumentacionMemoria documentacionMemoriaActualizar) {
-    log.debug("update(DocumentacionMemoria DocumentacionMemoriaActualizar) - start");
+  public DocumentacionMemoria updateDocumentacionInicial(Long idMemoria,
+      final DocumentacionMemoria documentacionMemoriaActualizar) {
+    log.debug("updateDocumentacionInicial(DocumentacionMemoria DocumentacionMemoriaActualizar) - start");
 
     Assert.notNull(documentacionMemoriaActualizar.getId(),
         "DocumentacionMemoria id no puede ser null para actualizar una documentación memoria");
@@ -169,13 +133,22 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
     return documentacionMemoriaRepository
         .findByIdAndMemoriaIdAndMemoriaActivoTrue(documentacionMemoriaActualizar.getId(), idMemoria)
         .map(documentacionMemoria -> {
+
+          Assert.isTrue(
+              (documentacionMemoria.getMemoria().getEstadoActual().getId().equals(1L)
+                  || documentacionMemoria.getMemoria().getEstadoActual().getId().equals(2L)
+                  || documentacionMemoria.getMemoria().getEstadoActual().getId().equals(6L)
+                  || documentacionMemoria.getMemoria().getEstadoActual().getId().equals(7L)
+                  || documentacionMemoria.getMemoria().getEstadoActual().getId().equals(8L)),
+              "La memoria no se encuentra en un estado adecuado para añadir documentación.");
+
           documentacionMemoria.setDocumentoRef(documentacionMemoriaActualizar.getDocumentoRef());
           documentacionMemoria.setMemoria(documentacionMemoriaActualizar.getMemoria());
           documentacionMemoria.setTipoDocumento(documentacionMemoriaActualizar.getTipoDocumento());
           documentacionMemoria.setAportado(documentacionMemoriaActualizar.getAportado());
 
           DocumentacionMemoria returnValue = documentacionMemoriaRepository.save(documentacionMemoria);
-          log.debug("update(DocumentacionMemoria DocumentacionMemoriaActualizar) - end");
+          log.debug("updateDocumentacionInicial(DocumentacionMemoria DocumentacionMemoriaActualizar) - end");
           return returnValue;
         }).orElseThrow(() -> new DocumentacionMemoriaNotFoundException(documentacionMemoriaActualizar.getId()));
   }
@@ -290,8 +263,8 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
    * Obtiene todas las entidades {@link DocumentacionMemoria} asociadas al
    * {@link Formulario} de la {@link Memoria} del tipo Seguimiento Anual.
    * 
-   * @param id       Id de {@link Memoria}.
-   * @param pageable la información de la paginación.
+   * @param idMemoria Id de {@link Memoria}.
+   * @param pageable  la información de la paginación.
    * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
    */
   @Override
@@ -324,8 +297,8 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
    * Obtiene todas las entidades {@link DocumentacionMemoria} asociadas al
    * {@link Formulario} de la {@link Memoria} del tipo Seguimiento Final.
    * 
-   * @param id       Id de {@link Memoria}.
-   * @param pageable la información de la paginación.
+   * @param idMemoria Id de {@link Memoria}.
+   * @param pageable  la información de la paginación.
    * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
    */
   @Override
@@ -358,8 +331,8 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
    * Obtiene todas las entidades {@link DocumentacionMemoria} asociadas al
    * {@link Formulario} de la {@link Memoria} del tipo Retrospectiva.
    * 
-   * @param id       Id de {@link Memoria}.
-   * @param pageable la información de la paginación.
+   * @param idMemoria Id de {@link Memoria}.
+   * @param pageable  la información de la paginación.
    * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
    */
   @Override
@@ -388,6 +361,14 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
 
   }
 
+  /**
+   * Crea un {@link DocumentacionMemoria} del tipo seguimiento anual.
+   * 
+   * @param idMemoria            Id de {@link Memoria}
+   * @param documentacionMemoria {@link DocumentacionMemoria} a crear
+   * @return {@link DocumentacionMemoria} creada
+   */
+  @Transactional
   @Override
   public DocumentacionMemoria createSeguimientoAnual(Long idMemoria, @Valid DocumentacionMemoria documentacionMemoria) {
     log.debug("Petición a create DocumentacionMemoria seguimiento anual : {} - start", documentacionMemoria);
@@ -399,6 +380,9 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
 
     return memoriaRepository.findByIdAndActivoTrue(idMemoria).map(memoria -> {
 
+      Assert.isTrue((memoria.getEstadoActual().getId().equals(9L) || memoria.getEstadoActual().getId().equals(11L)),
+          "La memoria no se encuentra en un estado adecuado para añadir documentación de seguimiento anual");
+
       documentacionMemoria.setMemoria(memoria);
       return tipoDocumentoRepository.findByIdAndActivoTrue(1L).map(tipoDocumento -> {
         documentacionMemoria.setTipoDocumento(tipoDocumento);
@@ -407,4 +391,188 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
 
     }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
   }
+
+  /**
+   * Crea un {@link DocumentacionMemoria} del tipo seguimiento final.
+   * 
+   * @param idMemoria            Id de {@link Memoria}
+   * @param documentacionMemoria {@link DocumentacionMemoria} a crear
+   * @return {@link DocumentacionMemoria} creada
+   */
+  @Transactional
+  @Override
+  public DocumentacionMemoria createSeguimientoFinal(Long idMemoria, @Valid DocumentacionMemoria documentacionMemoria) {
+    log.debug("Petición a create DocumentacionMemoria seguimiento final : {} - start", documentacionMemoria);
+    Assert.isNull(documentacionMemoria.getId(),
+        "DocumentacionMemoria id tiene que ser null para crear un nuevo DocumentacionMemoria");
+
+    Assert.notNull(idMemoria,
+        "El identificador de la memoria no puede ser null para crear un nuevo documento de tipo seguimiento final asociado a esta");
+
+    return memoriaRepository.findByIdAndActivoTrue(idMemoria).map(memoria -> {
+
+      Assert.isTrue(
+          (memoria.getEstadoActual().getId().equals(14L)
+              || memoria.getEstadoActual().getId().equals(16L) | memoria.getEstadoActual().getId().equals(21L)),
+          "La memoria no se encuentra en un estado adecuado para añadir documentación de seguimiento final");
+
+      documentacionMemoria.setMemoria(memoria);
+      return tipoDocumentoRepository.findByIdAndActivoTrue(2L).map(tipoDocumento -> {
+        documentacionMemoria.setTipoDocumento(tipoDocumento);
+        return documentacionMemoriaRepository.save(documentacionMemoria);
+      }).orElseThrow(() -> new TipoDocumentoNotFoundException(1L));
+
+    }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
+  }
+
+  /**
+   * Crea un {@link DocumentacionMemoria} del tipo retrospectiva.
+   * 
+   * @param idMemoria            Id de {@link Memoria}
+   * @param documentacionMemoria {@link DocumentacionMemoria} a crear
+   * @return {@link DocumentacionMemoria} creada
+   */
+  @Transactional
+  @Override
+  public DocumentacionMemoria createRetrospectiva(Long idMemoria, @Valid DocumentacionMemoria documentacionMemoria) {
+    log.debug("Petición a create DocumentacionMemoria retrospectiva : {} - start", documentacionMemoria);
+    Assert.isNull(documentacionMemoria.getId(),
+        "DocumentacionMemoria id tiene que ser null para crear un nuevo DocumentacionMemoria");
+
+    Assert.notNull(idMemoria,
+        "El identificador de la memoria no puede ser null para crear un nuevo documento de tipo retrospectiva asociado a esta");
+
+    return memoriaRepository.findByIdAndActivoTrue(idMemoria).map(memoria -> {
+
+      Assert.notNull(memoria.getRetrospectiva(),
+          "La retrospectiva no puede ser null para crear documentación de tipo retrospectiva");
+
+      Assert.isTrue(
+          (memoria.getRetrospectiva().getEstadoRetrospectiva().getId().equals(1L)
+              || memoria.getRetrospectiva().getEstadoRetrospectiva().getId().equals(2L)),
+          "La retrospectiva no se encuentra en un estado adecuado para crear documentación de tipo retrospectiva");
+
+      documentacionMemoria.setMemoria(memoria);
+      return tipoDocumentoRepository.findByIdAndActivoTrue(3L).map(tipoDocumento -> {
+        documentacionMemoria.setTipoDocumento(tipoDocumento);
+        return documentacionMemoriaRepository.save(documentacionMemoria);
+      }).orElseThrow(() -> new TipoDocumentoNotFoundException(1L));
+
+    }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
+  }
+
+  /**
+   * Elimina {@link DocumentacionMemoria} del tipo seguimiento anual.
+   * 
+   * @param idMemoria              Id {@link Memoria}
+   * @param idDocumentacionMemoria Id {@link DocumentacionMemoria}
+   */
+  @Transactional
+  @Override
+  public void deleteDocumentacionSeguimientoAnual(Long idMemoria, Long idDocumentacionMemoria) {
+    log.debug("deleteDocumentacionSeguimientoAnual(Long idMemoria, Long idDocumentacionMemoria) -- start");
+
+    Assert.notNull(idDocumentacionMemoria,
+        "DocumentacionMemoria id tiene no puede ser null para eliminar uun documento de tipo seguimiento anual");
+
+    Assert.notNull(idMemoria,
+        "El identificador de la memoria no puede ser null para eliminar un documento de tipo seguimiento anual asociado a esta");
+
+    memoriaRepository.findByIdAndActivoTrue(idMemoria).map(memoria -> {
+
+      Assert.isTrue((memoria.getEstadoActual().getId().equals(9L) || memoria.getEstadoActual().getId().equals(11L)),
+          "La memoria no se encuentra en un estado adecuado para eliminar documentación de seguimiento anual");
+
+      documentacionMemoriaRepository.findByIdAndMemoriaIdAndMemoriaActivoTrue(idDocumentacionMemoria, idMemoria)
+          .map(documentacionMemoria -> {
+            Assert.isTrue(documentacionMemoria.getTipoDocumento().getId().equals(1L),
+                "La documentación recuperada no se corresponde con el tipo Seguimiento Anual");
+            documentacionMemoriaRepository.delete(documentacionMemoria);
+            return Optional.empty();
+          }).orElseThrow(() -> new TipoDocumentoNotFoundException(1L));
+
+      return memoria;
+    }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
+
+  }
+
+  /**
+   * Elimina {@link DocumentacionMemoria} del tipo seguimiento final.
+   * 
+   * @param idMemoria              Id {@link Memoria}
+   * @param idDocumentacionMemoria Id {@link DocumentacionMemoria}
+   */
+  @Transactional
+  @Override
+  public void deleteDocumentacionSeguimientoFinal(Long idMemoria, Long idDocumentacionMemoria) {
+    log.debug("deleteDocumentacionSeguimientoFinal(Long idMemoria, Long idDocumentacionMemoria) -- start");
+
+    Assert.notNull(idDocumentacionMemoria,
+        "DocumentacionMemoria id tiene no puede ser null para eliminar uun documento de tipo seguimiento final");
+
+    Assert.notNull(idMemoria,
+        "El identificador de la memoria no puede ser null para eliminar un documento de tipo seguimiento final asociado a esta");
+
+    memoriaRepository.findByIdAndActivoTrue(idMemoria).map(memoria -> {
+
+      Assert.isTrue(
+          (memoria.getEstadoActual().getId().equals(14L) || memoria.getEstadoActual().getId().equals(16L)
+              || memoria.getEstadoActual().getId().equals(21L)),
+          "La memoria no se encuentra en un estado adecuado para eliminar documentación de seguimiento final");
+
+      documentacionMemoriaRepository.findByIdAndMemoriaIdAndMemoriaActivoTrue(idDocumentacionMemoria, idMemoria)
+          .map(documentacionMemoria -> {
+
+            Assert.isTrue(documentacionMemoria.getTipoDocumento().getId().equals(2L),
+                "La documentación recuperada no se corresponde con el tipo Seguimiento Final");
+            documentacionMemoriaRepository.delete(documentacionMemoria);
+            return Optional.empty();
+          }).orElseThrow(() -> new TipoDocumentoNotFoundException(1L));
+
+      return memoria;
+    }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
+
+  }
+
+  /**
+   * Elimina {@link DocumentacionMemoria} del tipo retrospectiva.
+   * 
+   * @param idMemoria              Id {@link Memoria}
+   * @param idDocumentacionMemoria Id {@link DocumentacionMemoria}
+   */
+  @Transactional
+  @Override
+  public void deleteDocumentacionRetrospectiva(Long idMemoria, Long idDocumentacionMemoria) {
+    log.debug("deleteDocumentacionRetrospectiva(Long idMemoria, Long idDocumentacionMemoria) -- start");
+
+    Assert.notNull(idDocumentacionMemoria,
+        "DocumentacionMemoria id tiene no puede ser null para eliminar uun documento de tipo retrospectiva");
+
+    Assert.notNull(idMemoria,
+        "El identificador de la memoria no puede ser null para eliminar un documento de tipo retrospectiva asociado a esta");
+
+    memoriaRepository.findByIdAndActivoTrue(idMemoria).map(memoria -> {
+
+      Assert.notNull(memoria.getRetrospectiva(),
+          "La retrospectiva no puede ser null para eliminar un documento de tipo retrospectiva");
+
+      Assert.isTrue(
+          (memoria.getRetrospectiva().getEstadoRetrospectiva().getId().equals(1L)
+              || memoria.getRetrospectiva().getEstadoRetrospectiva().getId().equals(2L)),
+          "La retrospectiva no se encuentra en un estado adecuado para eliminar documentación de retrospectiva");
+
+      documentacionMemoriaRepository.findByIdAndMemoriaIdAndMemoriaActivoTrue(idDocumentacionMemoria, idMemoria)
+          .map(documentacionMemoria -> {
+
+            Assert.isTrue(documentacionMemoria.getTipoDocumento().getId().equals(3L),
+                "La documentación recuperada no se corresponde con el tipo retrospectiva");
+            documentacionMemoriaRepository.delete(documentacionMemoria);
+            return Optional.empty();
+          }).orElseThrow(() -> new TipoDocumentoNotFoundException(1L));
+
+      return memoria;
+    }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
+
+  }
+
 }

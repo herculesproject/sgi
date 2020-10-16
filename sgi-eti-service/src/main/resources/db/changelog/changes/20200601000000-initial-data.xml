@@ -736,6 +736,10 @@
       <column name="estado_retrospectiva_id" valueComputed="(select id from eti.estado_retrospectiva where nombre='Pendiente')" />
       <column name="fecha_retrospectiva" value="2020-07-25" />
     </insert>
+    <insert tableName="retrospectiva">
+      <column name="estado_retrospectiva_id" valueComputed="(select id from eti.estado_retrospectiva where nombre='Fin evaluación')" />
+      <column name="fecha_retrospectiva" value="2020-07-25" />
+    </insert>
   </changeSet>
 
   <changeSet author="master" id="20200601000000-memoria">
@@ -971,7 +975,7 @@
       <column name="estado_actual_id" value="5" />
       <column name="fecha_envio_secretaria" value="2020-06-09" />
       <column name="requiere_retrospectiva" value="true" />
-      <column name="retrospectiva_id" value="4" />
+      <column name="retrospectiva_id" value="7" />
       <column name="version" value="1" />
       <column name="activo" value="true" />
     </insert>
@@ -1863,23 +1867,40 @@
     </insert>
     <insert tableName="comite_formulario">
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
-      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M20')" />
-    </insert>
-    <insert tableName="comite_formulario">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
-      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
-    </insert>
-    <insert tableName="comite_formulario">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='Seguimiento Anual')" />
     </insert>
     <insert tableName="comite_formulario">
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='Seguimiento Final')" />
     </insert>
+
     <insert tableName="comite_formulario">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M20')" />
+    </insert>
+    <insert tableName="comite_formulario">
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='Seguimiento Anual')" />
+    </insert>
+    <insert tableName="comite_formulario">
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='Seguimiento Final')" />
+    </insert>
+    <insert tableName="comite_formulario">
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
       <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='Retrospectiva')" />
+    </insert>
+    <insert tableName="comite_formulario">
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEIAB')" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
+    </insert>
+    <insert tableName="comite_formulario">
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEIAB')" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='Seguimiento Anual')" />
+    </insert>
+    <insert tableName="comite_formulario">
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEIAB')" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='Seguimiento Final')" />
     </insert>
   </changeSet>
 

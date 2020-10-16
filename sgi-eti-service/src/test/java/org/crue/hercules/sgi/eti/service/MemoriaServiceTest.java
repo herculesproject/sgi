@@ -238,7 +238,7 @@ public class MemoriaServiceTest {
     Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
     for (int i = 0, j = 31; i < 10; i++, j++) {
       MemoriaPeticionEvaluacion memoria = page.getContent().get(i);
-      Assertions.assertThat(memoria.getNumReferencia()).isEqualTo("NumRef-" + String.format("%03d", j));
+      Assertions.assertThat(memoria.getNumReferencia()).isEqualTo("numRef-" + String.format("%03d", j));
     }
   }
 
@@ -428,7 +428,7 @@ public class MemoriaServiceTest {
     Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
     for (int i = 0, j = 31; i < 10; i++, j++) {
       MemoriaPeticionEvaluacion memoria = page.getContent().get(i);
-      Assertions.assertThat(memoria.getNumReferencia()).isEqualTo("NumRef-" + String.format("%03d", j));
+      Assertions.assertThat(memoria.getNumReferencia()).isEqualTo("numRef-" + String.format("%03d", j));
     }
   }
 
@@ -494,7 +494,7 @@ public class MemoriaServiceTest {
     Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
     for (int i = 0, j = 31; i < 10; i++, j++) {
       MemoriaPeticionEvaluacion memoria = page.getContent().get(i);
-      Assertions.assertThat(memoria.getNumReferencia()).isEqualTo("NumRef-" + String.format("%03d", j));
+      Assertions.assertThat(memoria.getNumReferencia()).isEqualTo("numRef-" + String.format("%03d", j));
     }
   }
 
@@ -536,6 +536,8 @@ public class MemoriaServiceTest {
     TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
     tipoEstadoMemoria.setId(id);
     memoria.setEstadoActual(tipoEstadoMemoria);
+    memoria.setTitulo("Memoria" + String.format("%03d", id));
+    memoria.setNumReferencia("numRef-" + String.format("%03d", id));
 
     memoria.setFechaEvaluacion(LocalDateTime.of(2020, 7, 15, 0, 0, 1));
     memoria.setFechaLimite(LocalDate.of(2020, 8, 18));

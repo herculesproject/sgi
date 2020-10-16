@@ -6,11 +6,14 @@ import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
+import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.junit.jupiter.api.Test;
@@ -19,18 +22,18 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 @DataJpaTest
-public class MemoriaRepositoryTest {
+public class DocumentacionMemoriaRepositoryTest {
 
   @Autowired
   private TestEntityManager entityManager;
 
   @Autowired
-  private MemoriaRepository repository;
+  private DocumentacionMemoriaRepository repository;
 
   @Test
-  public void findByIdAndActivoTrue_ReturnsData() throws Exception {
+  public void findByIdAndMemoriaIdAndMemoriaActivoTrue_ReturnsData() throws Exception {
 
-    // given: Datos existentes para la memoria activa
+    // given: Datos existentes mmemoria activa y documentación.
 
     Comite comite = entityManager.persistFlushFind(generarMockComite());
     TipoActividad tipoActividad = entityManager.persistAndFlush(generarMockTipoActividad());
@@ -41,10 +44,14 @@ public class MemoriaRepositoryTest {
     Retrospectiva retrospectiva = entityManager.persistAndFlush(generarMockRetrospectiva(estadoRetrospectiva));
     Memoria memoria = entityManager
         .persistAndFlush(generarMockMemoria(peticionEvaluacion, comite, tipoMemoria, tipoEstadoMemoria, retrospectiva));
+    Formulario formulario = entityManager.persistAndFlush(generarMockFormulario());
+    TipoDocumento tipoDocumento = entityManager.persistAndFlush(generarMockTipoDocumento(formulario));
+    DocumentacionMemoria documenteacionMemoria = entityManager
+        .persistAndFlush(generarMockDocumentacionMemoria(memoria, tipoDocumento));
 
     // when: Se buscan los datos
-    Optional<Memoria> result = repository.findByIdAndActivoTrue(memoria.getId());
-
+    Optional<DocumentacionMemoria> result = repository
+        .findByIdAndMemoriaIdAndMemoriaActivoTrue(documenteacionMemoria.getId(), memoria.getId());
     // then: Se recuperan los datos correctamente
     Assertions.assertThat(result.get()).isNotNull();
 
@@ -131,6 +138,42 @@ public class MemoriaRepositoryTest {
       TipoEstadoMemoria tipoEstadoMemoria, Retrospectiva retrospectiva) {
     return new Memoria(null, "numRef-001", peticionEvaluacion, comite, "Memoria", "user-001", tipoMemoria,
         tipoEstadoMemoria, LocalDate.now(), Boolean.TRUE, retrospectiva, 3, Boolean.TRUE);
+  }
+
+  /**
+   * Función que devuelve un objeto Tipo Documento
+   * 
+   * @param formulario el objeto formulario
+   * @return TipoDocumento
+   */
+  private Formulario generarMockFormulario() {
+    return new Formulario(1L, "M10", "Descripcion1", Boolean.TRUE);
+
+  }
+
+  /**
+   * Función que devuelve un objeto Tipo Documento
+   * 
+   * @param formulario el objeto formulario
+   * @return TipoDocumento
+   */
+  private TipoDocumento generarMockTipoDocumento(Formulario formulario) {
+    return new TipoDocumento(1L, "Seguimiento Anual", formulario, Boolean.TRUE);
+
+  }
+
+  /**
+   * Función que devuelve un objeto Documentacion Memoria
+   * 
+   * @param peticionEvaluacion el objeto PeticionEvaluacion
+   * @param comite             el objeto Comite
+   * @param tipoMemoria        el objeto TipoMemoria
+   * @param tipoEstadoMemoria  el objeto TipoEstadoMemoria
+   * @param retrospectiva      el objeto Retrospectiva
+   * @return Memoria
+   */
+  private DocumentacionMemoria generarMockDocumentacionMemoria(Memoria memoria, TipoDocumento tipoDocumento) {
+    return new DocumentacionMemoria(null, memoria, tipoDocumento, "docRef001", Boolean.TRUE);
   }
 
 }

@@ -44,7 +44,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Component;
 
-import ch.qos.logback.core.subst.Token.Type;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -274,8 +273,8 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
   /**
    * Devuelve todas las memorias con la fecha límite y de evaluación.
    * 
-   * @param idPeticionEvaluacion Identificador {@link PeticionEvaluacion}
-   * @param pageable             información de paginación
+   * @param specs    datos de búsqueda.
+   * @param pageable información de paginación
    * @return lista de memorias de {@link PeticionEvaluacion}
    */
   @Override

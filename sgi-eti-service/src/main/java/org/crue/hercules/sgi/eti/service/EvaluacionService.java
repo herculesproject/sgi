@@ -156,7 +156,7 @@ public interface EvaluacionService {
    * Elimina las memorias asignadas a una convocatoria de reunión
    * 
    * @param idConvocatoriaReunion id de la {@link ConvocatoriaReunion}
-   * @param idEvaluacion          id de la {@Evaluacion}
+   * @param idEvaluacion          id de la {@link Evaluacion}
    */
   void deleteEvaluacion(Long idConvocatoriaReunion, Long idEvaluacion);
 

@@ -1,10 +1,15 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.crue.hercules.sgi.eti.exceptions.ComiteFormularioNotFoundException;
+import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
+import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ComiteFormulario;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.repository.ComiteFormularioRepository;
+import org.crue.hercules.sgi.eti.repository.ComiteRepository;
 import org.crue.hercules.sgi.eti.service.ComiteFormularioService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -25,10 +30,22 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class ComiteFormularioServiceImpl implements ComiteFormularioService {
 
+  /** Comite Formulario Repository */
   private final ComiteFormularioRepository comiteFormularioRepository;
 
-  public ComiteFormularioServiceImpl(ComiteFormularioRepository comiteFormularioRepository) {
+  /** Comite Repository */
+  private final ComiteRepository comiteRepository;
+
+  /**
+   * Instancia un nuevo {@link ComiteFormularioRepository}.
+   * 
+   * @param comiteFormularioRepository {@link ComiteFormularioRepository}
+   * @param comiteRepository           {@link ComiteRepository}
+   */
+  public ComiteFormularioServiceImpl(ComiteFormularioRepository comiteFormularioRepository,
+      ComiteRepository comiteRepository) {
     this.comiteFormularioRepository = comiteFormularioRepository;
+    this.comiteRepository = comiteRepository;
   }
 
   /**
@@ -133,6 +150,36 @@ public class ComiteFormularioServiceImpl implements ComiteFormularioService {
       log.debug("update(ComiteFormulario ComiteFormularioActualizar) - end");
       return returnValue;
     }).orElseThrow(() -> new ComiteFormularioNotFoundException(comiteFormularioActualizar.getId()));
+  }
+
+  /**
+   * Recupera el formulario de tipo M10, M20 o M30 del comité asociado al id
+   * recibido por parámetro.
+   * 
+   * @param idComite Identificador {@link Comite}
+   * @return {@link Formulario}
+   */
+  @Override
+  public Formulario findComiteFormularioTipoM(Long idComite) {
+    log.debug("findComiteFormularioTipoM(Long idComite) - start");
+
+    Assert.notNull(idComite, "Comité id no puede ser null para recuperar un ComiteFormulario asociado a este");
+
+    // Comprueba si existe el comité recibido por parámetro y se encuentra activo.
+    return comiteRepository.findByIdAndActivoTrue(idComite).map(comite -> {
+
+      // Recupera el formulario activo del comité recibido por parámetro y que sea del
+      // tipo 1 -> M10 o 2 -> M20 o 3 -> M30
+      return comiteFormularioRepository
+          .findByComiteIdAndComiteActivoTrueAndFormularioIdInAndFormularioActivoTrue(idComite,
+              Arrays.asList(1L, 2L, 3L))
+          .map(formularioComite -> {
+            log.debug("findComiteFormularioTipoM(Long idComite) - end");
+            return formularioComite.getFormulario();
+          }).orElseThrow(() -> new ComiteFormularioNotFoundException(idComite));
+
+    }).orElseThrow(() -> new ComiteNotFoundException(idComite));
+
   }
 
 }

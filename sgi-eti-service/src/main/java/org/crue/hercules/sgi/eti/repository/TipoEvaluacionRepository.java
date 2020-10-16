@@ -18,8 +18,10 @@ public interface TipoEvaluacionRepository
   /**
    * Obtener lista de {@link TipoEvaluacion} según ids.
    * 
+   * @param ids lista de identificadores.
+   * 
    * @return la lista de entidades {@link TipoEvaluacion}.
    */
-  List<TipoEvaluacion> findByActivoTrueAndIdIn(List<Long> lista);
+  List<TipoEvaluacion> findByActivoTrueAndIdIn(List<Long> ids);
 
 }

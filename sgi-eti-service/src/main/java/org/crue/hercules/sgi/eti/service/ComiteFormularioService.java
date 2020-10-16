@@ -1,7 +1,9 @@
 package org.crue.hercules.sgi.eti.service;
 
 import org.crue.hercules.sgi.eti.exceptions.ComiteFormularioNotFoundException;
+import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ComiteFormulario;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 
 import java.util.List;
@@ -58,5 +60,14 @@ public interface ComiteFormularioService {
    * Elimina todos los {@link ComiteFormulario}.
    */
   void deleteAll();
+
+  /**
+   * Recupera el formulario de tipo M10, M20 o M30 del comité asociado al id
+   * recibido por parámetro.
+   * 
+   * @param idComite Identificador {@link Comite}
+   * @return {@link Formulario}
+   */
+  Formulario findComiteFormularioTipoM(Long idComite);
 
 }

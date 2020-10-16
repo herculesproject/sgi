@@ -6,6 +6,8 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Formulario;
+import org.crue.hercules.sgi.eti.service.ComiteFormularioService;
 import org.crue.hercules.sgi.eti.service.ComiteService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -37,14 +39,19 @@ public class ComiteController {
   /** Comité service */
   private ComiteService service;
 
+  /** Comité formulario service */
+  private ComiteFormularioService comiteFormularioService;
+
   /**
    * Instancia un nuevo ComiteController.
    * 
-   * @param service ComiteService.
+   * @param service                 {@link ComiteService}.
+   * @param comiteFormularioService {@link ComiteFormularioService}
    */
-  public ComiteController(ComiteService service) {
+  public ComiteController(ComiteService service, ComiteFormularioService comiteFormularioService) {
     log.debug("ComiteController(ComiteService service) - start");
     this.service = service;
+    this.comiteFormularioService = comiteFormularioService;
     log.debug("ComiteController(ComiteService service) - end");
   }
 
@@ -127,5 +134,21 @@ public class ComiteController {
     }
     log.debug("findAllComite(List<QueryCriteria> query,Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve el formulario de tipo M10, M20 o M30 del comité asociado al id
+   * recibido por parámetro.
+   * 
+   * @param id Identificador de {@link Comite}.
+   */
+  @GetMapping("/{id}/comite-formulario")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-PEV-ER-INV')")
+  ResponseEntity<Formulario> findComiteFormulario(@PathVariable Long id) {
+    log.debug("findComiteFormulario(Long id) - start");
+    Formulario formulario = comiteFormularioService.findComiteFormularioTipoM(id);
+
+    log.debug("findComiteFormulario(Long id) - end");
+    return new ResponseEntity<>(formulario, HttpStatus.OK);
   }
 }

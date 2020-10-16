@@ -315,8 +315,10 @@ public class EvaluacionController {
   /**
    * Actualiza un {@link Comentario} de tipo "EVALUADOR".
    * 
-   * @param id           Id de {@link Evaluacion}.
-   * @param idComentario Id de {@link Comentario} a actualizar.
+   * @param id            Id de {@link Evaluacion}.
+   * @param idComentario  Id de {@link Comentario} a actualizar.
+   * @param comentario    {@link Comentario} a actualizar.
+   * @param authorization datos autenticación.
    * @return {@link Comentario} actualizado.
    */
   @PutMapping("/{id}/comentario-evaluador/{idComentario}")

@@ -1,15 +1,18 @@
 package org.crue.hercules.sgi.eti.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.ComiteFormularioNotFoundException;
+import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ComiteFormulario;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.repository.ComiteFormularioRepository;
+import org.crue.hercules.sgi.eti.repository.ComiteRepository;
 import org.crue.hercules.sgi.eti.service.impl.ComiteFormularioServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,11 +39,14 @@ public class ComiteFormularioServiceTest {
   @Mock
   private ComiteFormularioRepository comiteFormularioRepository;
 
+  @Mock
+  private ComiteRepository comiteRepository;
+
   private ComiteFormularioService comiteFormularioService;
 
   @BeforeEach
   public void setUp() throws Exception {
-    comiteFormularioService = new ComiteFormularioServiceImpl(comiteFormularioRepository);
+    comiteFormularioService = new ComiteFormularioServiceImpl(comiteFormularioRepository, comiteRepository);
   }
 
   @Test
@@ -270,6 +276,73 @@ public class ComiteFormularioServiceTest {
     }
   }
 
+  @Test
+  public void findComiteFormularioTipoM_IdValid() {
+    // given: EL id del comité es valido
+    Long comiteId = 1L;
+
+    Comite comite = new Comite(comiteId, "Comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion", Boolean.TRUE);
+    ComiteFormulario comiteFormulario = generarMockComiteFormulario(2L, comite, formulario);
+
+    BDDMockito.given(comiteRepository.findByIdAndActivoTrue(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(comite));
+
+    BDDMockito.given(comiteFormularioRepository
+        .findByComiteIdAndComiteActivoTrueAndFormularioIdInAndFormularioActivoTrue(comiteId, Arrays.asList(1L, 2L, 3L)))
+        .willReturn(Optional.of(comiteFormulario));
+
+    Formulario formularioRecuperado = comiteFormularioService.findComiteFormularioTipoM(comiteId);
+
+    // then: Se recuperan los datos correctamente
+    Assertions.assertThat(formularioRecuperado.getId()).isEqualTo(1L);
+
+  }
+
+  @Test
+  public void findComiteFormularioTipoM_ComiteIdNull() {
+    // given: EL id del comité sea null
+    Long comiteId = null;
+    try {
+      // when: se recupera el formulario a partir del comite id
+      comiteFormularioService.findComiteFormularioTipoM(comiteId);
+      Assertions.fail("Comité id no puede ser null para recuperar un ComiteFormulario asociado a este");
+      // then: se debe lanzar una excepción
+    } catch (IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage())
+          .isEqualTo("Comité id no puede ser null para recuperar un ComiteFormulario asociado a este");
+    }
+  }
+
+  @Test
+  public void findComiteFormularioTipo_ThrowsComiteFormularioNotFoundException() throws Exception {
+    // given: EL id del comité es valido
+    Long comiteId = 1L;
+
+    Comite comite = new Comite(comiteId, "Comite1", Boolean.TRUE);
+
+    BDDMockito.given(comiteRepository.findByIdAndActivoTrue(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(comite));
+
+    BDDMockito.given(comiteFormularioRepository
+        .findByComiteIdAndComiteActivoTrueAndFormularioIdInAndFormularioActivoTrue(comiteId, Arrays.asList(1L, 2L, 3L)))
+        .willReturn(Optional.empty());
+
+    Assertions.assertThatThrownBy(() -> comiteFormularioService.findComiteFormularioTipoM(comiteId))
+        .isInstanceOf(ComiteFormularioNotFoundException.class);
+  }
+
+  @Test
+  public void findComiteFormularioTipo_ThrowsComiteNotFoundException() throws Exception {
+    // given: EL id del comité es valido
+    Long comiteId = 1L;
+
+    BDDMockito.given(comiteRepository.findByIdAndActivoTrue(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
+
+    Assertions.assertThatThrownBy(() -> comiteFormularioService.findComiteFormularioTipoM(comiteId))
+        .isInstanceOf(ComiteNotFoundException.class);
+  }
+
   /**
    * Función que devuelve un objeto ComiteFormulario
    * 
@@ -279,7 +352,7 @@ public class ComiteFormularioServiceTest {
    * @return el objeto ComiteFormulario
    */
 
-  public ComiteFormulario generarMockComiteFormulario(Long id, Comite comite, Formulario formulario) {
+  private ComiteFormulario generarMockComiteFormulario(Long id, Comite comite, Formulario formulario) {
 
     ComiteFormulario comiteFormulario = new ComiteFormulario();
     comiteFormulario.setId(id);

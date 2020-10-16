@@ -64,6 +64,7 @@ public interface TipoDocumentoService {
    * 
    * @param query  filtro de {@link QueryCriteria}.
    * @param paging pageable
+   * @return lista paginada de tipos documentos.
    */
   Page<TipoDocumento> findTipoDocumentacionInicial(List<QueryCriteria> query, Pageable paging);
 

@@ -138,7 +138,7 @@ public class MemoriaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-MEMORIA-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER" })
   public void newMemoria_Error_Returns400() throws Exception {
     // given: Una memoria nueva que produce un error al crearse
     String nuevaMemoriaJson = "{\"numReferencia\": \"numRef-5599\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
@@ -198,7 +198,7 @@ public class MemoriaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-MEMORIA-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER" })
   public void removeMemoria_ReturnsOk() throws Exception {
     BDDMockito.given(memoriaService.findById(ArgumentMatchers.anyLong()))
         .willReturn(generarMockMemoria(1L, "numRef-5598", "Memoria1", 1));
@@ -210,25 +210,61 @@ public class MemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
+  public void deleteDocumentacionSeguimientoAnual_ReturnsOk() throws Exception {
+
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .delete(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID
+                + "/documentacion-seguimiento-anual/{idDocumentacionMemoria}", 1L, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
+  public void deleteDocumentacionSeguimientoFinal_ReturnsOk() throws Exception {
+
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .delete(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID
+                + "/documentacion-seguimiento-final/{idDocumentacionMemoria}", 1L, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
+  public void deleteDocumentacionRetrospectiva_ReturnsOk() throws Exception {
+
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .delete(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID
+                + "/documentacion-retrospectiva/{idDocumentacionMemoria}", 1L, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+  }
+
+  @Test
+
   @WithMockUser(username = "user", authorities = { "ETI-PEV-VR-INV", "ETI-PEV-V" })
-  public void findAll_Unlimited_ReturnsFullMemoriaList() throws Exception {
-    // given: One hundred Memoria
-    /*
-     * List<Memoria> memorias = new ArrayList<>(); for (int i = 1; i <= 100; i++) {
-     * memorias.add(generarMockMemoria(Long.valueOf(i), "numRef-55" +
-     * String.valueOf(i), "Memoria" + String.format("%03d", i), i)); }
-     * 
-     * BDDMockito
-     * .given(memoriaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(),
-     * ArgumentMatchers.<Pageable>any())) .willReturn(new PageImpl<>(memorias));
-     * 
-     * // when: find unlimited mockMvc
-     * .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH)
-     * .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.
-     * APPLICATION_JSON)) .andDo(MockMvcResultHandlers.print()) // then: Get a page
-     * one hundred Memoria .andExpect(MockMvcResultMatchers.status().isOk())
-     * .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
-     */
+  public void findAll_Unlimited_ReturnsFullMemoriaList() throws Exception { // given: One hundred Memoria
+
+    List<MemoriaPeticionEvaluacion> memorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      memorias.add(generarMockMemoriaPeticionEvaluacion(Long.valueOf(i)));
+    }
+
+    BDDMockito
+        .given(memoriaService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(memorias));
+
+    // when: find unlimited
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
 
   }
 
@@ -638,7 +674,7 @@ public class MemoriaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
   public void getDocumentacionFormularioEmptyList() throws Exception {
     // given: Existe la memoria pero no tiene documentacion
     Long id = 3L;
@@ -656,7 +692,7 @@ public class MemoriaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
   public void getDocumentacionFormularioValid() throws Exception {
     // given: Datos existentes con memoria
     Long id = 3L;
@@ -695,7 +731,7 @@ public class MemoriaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
   public void getDocumentacionSeguimientoAnualEmptyList() throws Exception {
     // given: Existe la memoria pero no tiene documentacion
     Long id = 3L;
@@ -713,7 +749,7 @@ public class MemoriaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
   public void getDocumentacionSeguimientoAnualValid() throws Exception {
     // given: Datos existentes con memoria
     Long id = 3L;
@@ -752,7 +788,7 @@ public class MemoriaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
   public void getDocumentacionSeguimientoFinalEmptyList() throws Exception {
     // given: Existe la memoria pero no tiene documentacion
     Long id = 3L;
@@ -770,7 +806,7 @@ public class MemoriaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
   public void getDocumentacionSeguimientoFinalValid() throws Exception {
     // given: Datos existentes con memoria
     Long id = 3L;
@@ -809,7 +845,7 @@ public class MemoriaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
   public void getDocumentacionRetrospectivaEmptyList() throws Exception {
     // given: Existe la memoria pero no tiene documentacion
     Long id = 3L;
@@ -827,7 +863,7 @@ public class MemoriaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL", "ETI-EVC-EVALR" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
   public void getDocumentacionRetrospectivaValid() throws Exception {
     // given: Datos existentes con memoria
     Long id = 3L;
@@ -889,6 +925,59 @@ public class MemoriaControllerTest {
         // then: Get a page one hundred Memoria
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
+  public void replaceDocumentacionMemoria_ReturnsMemoria() throws Exception {
+    // given: Una documentación memoria a modificar
+    String replaceDocumentacionMemoriaJson = mapper.writeValueAsString(generarMockDocumentacionMemoria(1L,
+        generarMockMemoria(1L, "001", "memoria1", 1), generarMockTipoDocumento(1L)));
+
+    DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(1L,
+        generarMockMemoria(1L, "001", "memoria1", 1), generarMockTipoDocumento(1L));
+    documentacionMemoria.setAportado(Boolean.FALSE);
+
+    BDDMockito.given(documentacionMemoriaService.updateDocumentacionInicial(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<DocumentacionMemoria>any())).willReturn(documentacionMemoria);
+
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .put(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-inicial/{idDocumentacionMemoria}",
+                1L, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(replaceDocumentacionMemoriaJson))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Modifica la documentación memoria y lo devuelve
+        .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
+        .andExpect(MockMvcResultMatchers.jsonPath("aportado").value(Boolean.FALSE));
+
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
+  public void newDocumentacionMemoriaInicial_ReturnsMemoria() throws Exception {
+    // given: Un documentación memoria nueva
+    String nuevaDocumentacionMemoriaJson = mapper.writeValueAsString(generarMockDocumentacionMemoria(1L,
+        generarMockMemoria(null, "001", "memoria1", 1), generarMockTipoDocumento(1L)));
+
+    DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(1L,
+        generarMockMemoria(1L, "001", "memoria1", 1), generarMockTipoDocumento(1L));
+    documentacionMemoria.setAportado(Boolean.FALSE);
+
+    BDDMockito.given(documentacionMemoriaService.createDocumentacionInicial(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<DocumentacionMemoria>any())).willReturn(documentacionMemoria);
+
+    // when: Creamos una memoria
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.post(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-inicial", 1L)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+                .content(nuevaDocumentacionMemoriaJson))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Crea el nuevo tipo memoria y lo devuelve
+        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("memoria1"));
   }
 
   @Test
@@ -968,21 +1057,82 @@ public class MemoriaControllerTest {
     }
   }
 
-  /**
-   * Función que devuelve un objeto Memoria.
-   * 
-   * @param id            id del memoria.
-   * @param numReferencia número de la referencia de la memoria.
-   * @param titulo        titulo de la memoria.
-   * @param version       version de la memoria.
-   * @return el objeto tipo Memoria
-   */
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
+  public void newDocumentacionMemoriaSeguimientoAnual_ReturnsMemoria() throws Exception {
+    // given: Un documentación memoria nueva
+    String nuevaDocumentacionMemoriaJson = mapper.writeValueAsString(generarMockDocumentacionMemoria(1L,
+        generarMockMemoria(null, "001", "memoria1", 1), generarMockTipoDocumento(1L)));
 
-  private MemoriaPeticionEvaluacion generarMockMemoriaPeticionEvaluacion(Long id, String numReferencia, String titulo) {
+    DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(1L,
+        generarMockMemoria(1L, "001", "memoria1", 1), generarMockTipoDocumento(1L));
+    documentacionMemoria.setAportado(Boolean.FALSE);
 
-    return new MemoriaPeticionEvaluacion(id, numReferencia, titulo, generarMockComite(id, "comite" + id, true),
-        generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDateTime.of(2020, 7, 15, 0, 0, 1),
-        LocalDate.now(), false);
+    BDDMockito.given(documentacionMemoriaService.createSeguimientoAnual(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<DocumentacionMemoria>any())).willReturn(documentacionMemoria);
+
+    // when: Creamos una memoria
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .post(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-anual", 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevaDocumentacionMemoriaJson))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Crea el nuevo tipo memoria y lo devuelve
+        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("memoria1"));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
+  public void newDocumentacionMemoriaSeguimientoFinal_ReturnsMemoria() throws Exception {
+    // given: Un documentación memoria nueva
+    String nuevaDocumentacionMemoriaJson = mapper.writeValueAsString(generarMockDocumentacionMemoria(1L,
+        generarMockMemoria(null, "001", "memoria1", 1), generarMockTipoDocumento(1L)));
+
+    DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(1L,
+        generarMockMemoria(1L, "001", "memoria1", 1), generarMockTipoDocumento(1L));
+    documentacionMemoria.setAportado(Boolean.FALSE);
+
+    BDDMockito.given(documentacionMemoriaService.createSeguimientoFinal(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<DocumentacionMemoria>any())).willReturn(documentacionMemoria);
+
+    // when: Creamos una memoria
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .post(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-seguimiento-final", 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevaDocumentacionMemoriaJson))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Crea el nuevo tipo memoria y lo devuelve
+        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("memoria1"));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
+  public void newDocumentacionMemoriaRetrospectiva_ReturnsMemoria() throws Exception {
+    // given: Un documentación memoria nueva
+    String nuevaDocumentacionMemoriaJson = mapper.writeValueAsString(generarMockDocumentacionMemoria(1L,
+        generarMockMemoria(null, "001", "memoria1", 1), generarMockTipoDocumento(1L)));
+
+    DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(1L,
+        generarMockMemoria(1L, "001", "memoria1", 1), generarMockTipoDocumento(1L));
+    documentacionMemoria.setAportado(Boolean.FALSE);
+
+    BDDMockito.given(documentacionMemoriaService.createRetrospectiva(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<DocumentacionMemoria>any())).willReturn(documentacionMemoria);
+
+    // when: Creamos una memoria
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .post(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-retrospectiva", 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevaDocumentacionMemoriaJson))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Crea el nuevo tipo memoria y lo devuelve
+        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("memoria1"));
   }
 
   /**
@@ -1002,6 +1152,23 @@ public class MemoriaControllerTest {
         generarMockTipoMemoria(1L, "TipoMemoria1", true),
         generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.TRUE,
         generarMockRetrospectiva(1L), version, Boolean.TRUE);
+  }
+
+  /**
+   * Función que devuelve un objeto Memoria.
+   * 
+   * @param id            id del memoria.
+   * @param numReferencia número de la referencia de la memoria.
+   * @param titulo        titulo de la memoria.
+   * @param version       version de la memoria.
+   * @return el objeto tipo Memoria
+   */
+
+  private MemoriaPeticionEvaluacion generarMockMemoriaPeticionEvaluacion(Long id, String numReferencia, String titulo) {
+
+    return new MemoriaPeticionEvaluacion(id, numReferencia, titulo, generarMockComite(id, "comite" + id, true),
+        generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDateTime.of(2020, 7, 15, 0, 0, 1),
+        LocalDate.now(), false);
   }
 
   /**
@@ -1205,7 +1372,7 @@ public class MemoriaControllerTest {
    * @return el objeto DocumentacionMemoria
    */
 
-  public DocumentacionMemoria generarMockDocumentacionMemoria(Long id, Memoria memoria, TipoDocumento tipoDocumento) {
+  private DocumentacionMemoria generarMockDocumentacionMemoria(Long id, Memoria memoria, TipoDocumento tipoDocumento) {
 
     DocumentacionMemoria documentacionMemoria = new DocumentacionMemoria();
     documentacionMemoria.setId(id);
@@ -1231,5 +1398,28 @@ public class MemoriaControllerTest {
     tipoDocumento.setNombre("TipoDocumento" + id);
 
     return tipoDocumento;
+  }
+
+  /**
+   * Crea una memoria de petición evaluación.
+   * 
+   * @param id identificador.
+   */
+  private MemoriaPeticionEvaluacion generarMockMemoriaPeticionEvaluacion(Long id) {
+
+    MemoriaPeticionEvaluacion memoria = new MemoriaPeticionEvaluacion();
+    memoria.setId(id);
+
+    Comite comite = new Comite();
+    comite.setId(id);
+    memoria.setComite(comite);
+
+    TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
+    tipoEstadoMemoria.setId(id);
+    memoria.setEstadoActual(tipoEstadoMemoria);
+
+    memoria.setFechaEvaluacion(LocalDateTime.of(2020, 7, 15, 0, 0, 1));
+    memoria.setFechaLimite(LocalDate.of(2020, 8, 18));
+    return memoria;
   }
 }

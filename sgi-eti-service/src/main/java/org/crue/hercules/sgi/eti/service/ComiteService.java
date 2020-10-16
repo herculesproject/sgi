@@ -58,13 +58,4 @@ public interface ComiteService {
    */
   void deleteAll();
 
-  /**
-   * Obtiene una lista paginada {@link Comite} a partir de su nombre.
-   *
-   * @param comite el nombre de la entidad {@link Comite}.
-   * @param paging pageable
-   * @return el listado paginado {@link Comite}.
-   */
-  public Page<Comite> findByComiteContaining(String comite, Pageable paging);
-
 }

@@ -21,6 +21,6 @@ public interface TipoDocumentoRepository
    * @param id id {link {@link TipoDocumento}
    * @return {@link TipoDocumento}
    */
-  Optional<TipoDocumento> findByIdAndActivoTrue(Long i);
+  Optional<TipoDocumento> findByIdAndActivoTrue(Long id);
 
 }

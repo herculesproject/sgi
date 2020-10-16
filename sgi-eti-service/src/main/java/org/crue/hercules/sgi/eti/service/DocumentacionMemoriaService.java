@@ -1,15 +1,12 @@
 package org.crue.hercules.sgi.eti.service;
 
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
-
-import java.util.List;
 
 import javax.validation.Valid;
 
-import org.crue.hercules.sgi.eti.exceptions.DocumentacionMemoriaNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,36 +14,28 @@ import org.springframework.data.domain.Pageable;
  * Service Interface para gestionar {@link DocumentacionMemoria}.
  */
 public interface DocumentacionMemoriaService {
+
   /**
-   * Guardar {@link DocumentacionMemoria}.
+   * Crea {@link DocumentacionMemoria} inicial de una memoria (aquella
+   * documentación que no es de seguimiento anual, final o retrospectiva).
    * 
    * @param idMemoria            Id de la {@link Memoria}
    * @param DocumentacionMemoria la entidad {@link DocumentacionMemoria} a
    *                             guardar.
    * @return la entidad {@link DocumentacionMemoria} persistida.
    */
-  DocumentacionMemoria create(Long idMemoria, DocumentacionMemoria DocumentacionMemoria);
+  DocumentacionMemoria createDocumentacionInicial(Long idMemoria, DocumentacionMemoria DocumentacionMemoria);
 
   /**
-   * Actualizar {@link DocumentacionMemoria}.
+   * Actualizar {@link DocumentacionMemoria} inicial de una memoria (aquella
+   * documentación que no es de seguimiento anual, final o retrospectiva).
    *
    * @param idMemoria            Id de la {@link Memoria}
    * @param DocumentacionMemoria la entidad {@link DocumentacionMemoria} a
    *                             actualizar.
    * @return la entidad {@link DocumentacionMemoria} persistida.
    */
-  DocumentacionMemoria update(Long idMemoria, DocumentacionMemoria DocumentacionMemoria);
-
-  /**
-   * Obtener todas las entidades {@link DocumentacionMemoria} paginadas y/o
-   * filtradas.
-   *
-   * @param pageable la información de la paginación.
-   * @param query    la información del filtro.
-   * @return la lista de entidades {@link DocumentacionMemoria} paginadas y/o
-   *         filtradas.
-   */
-  Page<DocumentacionMemoria> findAll(List<QueryCriteria> query, Pageable pageable);
+  DocumentacionMemoria updateDocumentacionInicial(Long idMemoria, DocumentacionMemoria DocumentacionMemoria);
 
   /**
    * Obtiene {@link DocumentacionMemoria} por id.
@@ -55,18 +44,6 @@ public interface DocumentacionMemoriaService {
    * @return la entidad {@link DocumentacionMemoria}.
    */
   DocumentacionMemoria findById(Long id);
-
-  /**
-   * Elimina el {@link DocumentacionMemoria} por id.
-   *
-   * @param id el id de la entidad {@link DocumentacionMemoria}.
-   */
-  void delete(Long id) throws DocumentacionMemoriaNotFoundException;
-
-  /**
-   * Elimina todos los {@link DocumentacionMemoria}.
-   */
-  void deleteAll();
 
   /**
    * Obtener todas las entidades paginadas {@link DocumentacionMemoria} para una
@@ -137,4 +114,46 @@ public interface DocumentacionMemoriaService {
    * @return {@link DocumentacionMemoria} creada
    */
   DocumentacionMemoria createSeguimientoAnual(Long idMemoria, @Valid DocumentacionMemoria documentacionMemoria);
+
+  /**
+   * Crea un {@link DocumentacionMemoria} del tipo seguimiento final.
+   * 
+   * @param idMemoria            Id de {@link Memoria}
+   * @param documentacionMemoria {@link DocumentacionMemoria} a crear
+   * @return {@link DocumentacionMemoria} creada
+   */
+  DocumentacionMemoria createSeguimientoFinal(Long idMemoria, @Valid DocumentacionMemoria documentacionMemoria);
+
+  /**
+   * Crea un {@link DocumentacionMemoria} del tipo retrospectiva.
+   * 
+   * @param idMemoria            Id de {@link Memoria}
+   * @param documentacionMemoria {@link DocumentacionMemoria} a crear
+   * @return {@link DocumentacionMemoria} creada
+   */
+  DocumentacionMemoria createRetrospectiva(Long idMemoria, @Valid DocumentacionMemoria documentacionMemoria);
+
+  /**
+   * Elimina {@link DocumentacionMemoria} del tipo seguimiento anual.
+   * 
+   * @param idMemoria              Id {@link Memoria}
+   * @param idDocumentacionMemoria Id {@link DocumentacionMemoria}
+   */
+  void deleteDocumentacionSeguimientoAnual(Long idMemoria, Long idDocumentacionMemoria);
+
+  /**
+   * Elimina {@link DocumentacionMemoria} del tipo seguimiento final.
+   * 
+   * @param idMemoria              Id {@link Memoria}
+   * @param idDocumentacionMemoria Id {@link DocumentacionMemoria}
+   */
+  void deleteDocumentacionSeguimientoFinal(Long idMemoria, Long idDocumentacionMemoria);
+
+  /**
+   * Elimina {@link DocumentacionMemoria} del tipo retrospectiva.
+   * 
+   * @param idMemoria              Id {@link Memoria}
+   * @param idDocumentacionMemoria Id {@link DocumentacionMemoria}
+   */
+  void deleteDocumentacionRetrospectiva(Long idMemoria, Long idDocumentacionMemoria);
 }

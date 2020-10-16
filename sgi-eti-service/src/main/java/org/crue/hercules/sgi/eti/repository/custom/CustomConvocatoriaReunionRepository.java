@@ -28,8 +28,7 @@ public interface CustomConvocatoriaReunionRepository {
   /**
    * Devuelve una lista de convocatorias de reunión que no tengan acta**
    * 
-   * @param query    la información del filtro.**@return la lista de convocatorias
-   *                 de reunión
+   * 
    * @param pageable datos de la paginación
    * @return lista paginada de convocatoria reunión
    */

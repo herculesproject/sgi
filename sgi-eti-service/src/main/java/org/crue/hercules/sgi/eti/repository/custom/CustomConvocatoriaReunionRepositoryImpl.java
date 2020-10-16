@@ -88,7 +88,7 @@ public class CustomConvocatoriaReunionRepositoryImpl implements CustomConvocator
   /**
    * Devuelve una lista de convocatorias de reunión que no tengan acta
    * 
-   * @param query la información de la paginación.
+   * @param pageable la información de la paginación.
    *
    * @return la lista de convocatorias de reunión
    */
