@@ -75,6 +75,7 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
 
 
   estadoMemoria: TipoEstadoMemoria;
+  estadoRetrospectiva: TipoEstadoMemoria;
   formulario: IFormulario;
 
 
@@ -94,6 +95,8 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
 
 
     this.estadoMemoria = actionService.estadoActualMemoria;
+    this.estadoRetrospectiva = actionService.estadoRetrospectiva;
+    this.formulario = actionService.formulario;
   }
 
   ngOnInit(): void {
@@ -117,29 +120,29 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
     this.dataSourceSeguimientoAnual = new MatTableDataSource<StatusWrapper<IDocumentacionMemoria>>();
     this.dataSourceSeguimientoAnual.paginator = this.paginatorSeguimientoAnual;
     this.dataSourceSeguimientoAnual.sort = this.sortSeguimientoAnual;
-    // this.formPart.documentacionesSeguimientoAnual$.subscribe(elements => {
-    // this.dataSourceSeguimientoAnual.data = elements;
-    //this.totalElementosSeguimientoAnual = elements.length;
-    //this.logger.debug(MemoriaDocumentacionComponent.name, 'ngOnInit()', 'end');
-    //});
+    this.formPart.documentacionesSeguimientoAnual$.subscribe(elements => {
+      this.dataSourceSeguimientoAnual.data = elements;
+      this.totalElementosSeguimientoAnual = elements.length;
+      this.logger.debug(MemoriaDocumentacionComponent.name, 'ngOnInit()', 'end');
+    });
 
     this.dataSourceSeguimientoFinal = new MatTableDataSource<StatusWrapper<IDocumentacionMemoria>>();
     this.dataSourceSeguimientoFinal.paginator = this.paginatorSeguimientoFinal;
     this.dataSourceSeguimientoFinal.sort = this.sortSeguimientoFinal;
-    // this.formPart.documentacionesSeguimientoFinal$.subscribe(elements => {
-    //   this.dataSourceSeguimientoFinal.data = elements;
-    //   this.totalElementosSeguimientoFinal = elements.length;
-    //   this.logger.debug(MemoriaDocumentacionComponent.name, 'ngOnInit()', 'end');
-    // });
+    this.formPart.documentacionesSeguimientoFinal$.subscribe(elements => {
+      this.dataSourceSeguimientoFinal.data = elements;
+      this.totalElementosSeguimientoFinal = elements.length;
+      this.logger.debug(MemoriaDocumentacionComponent.name, 'ngOnInit()', 'end');
+    });
 
     this.dataSourceRetrospectiva = new MatTableDataSource<StatusWrapper<IDocumentacionMemoria>>();
     this.dataSourceRetrospectiva.paginator = this.paginatorRetrospectiva;
     this.dataSourceRetrospectiva.sort = this.sortRetrospectiva;
-    // this.formPart.documentacionesRetrospectiva$.subscribe(elements => {
-    //   this.dataSourceRetrospectiva.data = elements;
-    //   this.totalElementosRetrospectiva = elements.length;
-    //   this.logger.debug(MemoriaDocumentacionComponent.name, 'ngOnInit()', 'end');
-    // });
+    this.formPart.documentacionesRetrospectiva$.subscribe(elements => {
+      this.dataSourceRetrospectiva.data = elements;
+      this.totalElementosRetrospectiva = elements.length;
+      this.logger.debug(MemoriaDocumentacionComponent.name, 'ngOnInit()', 'end');
+    });
 
 
 
@@ -149,26 +152,44 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
 
 
 
-  /**
-   * Apertura de modal de añadir documentación memoria
-   */
-  openModalDocumentacionMemoria(): void {
-    this.logger.debug(MemoriaDocumentacionComponent.name, 'openModalDocumentacionMemoria()', 'start');
+
+
+  openModalDocumentacionMemoria(documentacion?: StatusWrapper<IDocumentacionMemoria>): void {
+    this.logger.debug(MemoriaDocumentacionComponent.name, 'openModalDocumentacionSeguimiento()', 'start');
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
       data: this.dataSourceDocumentoMemoria.data,
       autoFocus: false
     };
-    this.matDialog.open(MemoriaDocumentacionMemoriaModalComponent, config);
 
-    this.logger.debug(MemoriaDocumentacionComponent.name, 'openModalDocumentacionMemoria()', 'end');
+    const dialogRef = this.matDialog.open(MemoriaDocumentacionMemoriaModalComponent, config);
+    dialogRef.afterClosed().subscribe(
+      (documentacionInicial: IDocumentacionMemoria) => {
+        if (documentacionInicial) {
+          if (documentacion) {
+            if (!documentacion.created) {
+              documentacion.setEdited();
+            }
+            this.formPart.setChanges(true);
+          } else {
+
+            this.formPart.addDocumentacion(documentacionInicial);
+          }
+        }
+        this.logger.debug(MemoriaDocumentacionComponent.name, 'openModalDocumentacionSeguimiento()', 'end');
+      }
+    );
+
+
+    this.logger.debug(MemoriaDocumentacionComponent.name, 'openModalDocumentacionSeguimiento()', 'end');
 
   }
 
 
 
-  openModalDocumentacionSeguimiento(tipoSeguimiento: string, documentacion?: StatusWrapper<IDocumentacionMemoria>): void {
+
+  openModalDocumentacionSeguimiento(tipoSeguimiento: number, documentacion?: StatusWrapper<IDocumentacionMemoria>): void {
     this.logger.debug(MemoriaDocumentacionComponent.name, 'openModalDocumentacionSeguimiento()', 'start');
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
@@ -187,7 +208,6 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
             }
             this.formPart.setChanges(true);
           } else {
-            // TODO coger estos datos del back
 
             this.formPart.addDocumentacionSeguimiento(documentacionSeguimiento, tipoSeguimiento);
           }
@@ -233,7 +253,7 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
    *
    * @param wrappedDocumentacion documentación a eliminar.
    */
-  deleteDocumentacionSeguimiento(tipoSeguimiento: string, wrappedDocumentacion: StatusWrapper<IDocumentacionMemoria>): void {
+  deleteDocumentacionSeguimiento(tipoSeguimiento: number, wrappedDocumentacion: StatusWrapper<IDocumentacionMemoria>): void {
     this.logger.debug(MemoriaDocumentacionComponent.name,
       'delete(wrappedDocumentacion: StatusWrapper<IDocumentacionMemoria>) - start');
 
@@ -271,5 +291,34 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
     return this.estadoMemoria.id === 1 || this.estadoMemoria.id === 2
       || this.estadoMemoria.id === 6 || this.estadoMemoria.id === 7
       || this.estadoMemoria.id === 8;
+  }
+
+
+  /**
+   * Devuelve si una memoria se encuentra en el estado de añadir documentación seguimiento anual.
+   * FIN DE EVALUACION, COMPLETADA SEGUIMIENTO ANUAL
+   *
+   */
+  hasPermisoUpdateDocumentacionSeguimientoAnual(): boolean {
+    return this.estadoMemoria.id === 9 || this.estadoMemoria.id === 11;
+  }
+
+
+  /**
+   * Devuelve si una memoria se encuentra en el estado de añadir documentación seguimiento final.
+   * FIN DE EVALUACION SEGUIMIENTO ANUAL, COMPLETADA SEGUIMIENTO FINAL, EN ACLARACION SEGUIMIENTO FINAL
+   *
+   */
+  hasPermisoUpdateDocumentacionSeguimientoFinal(): boolean {
+    return this.estadoMemoria.id === 14 || this.estadoMemoria.id === 16 || this.estadoMemoria.id === 21;
+  }
+
+
+  /**
+   * Devuelve si una retrospectiva se encuentra en el estado de añadir documentación retrospectiva
+   * PENDIENTE, COMPLETADA
+   */
+  hasPermisoUpdateDocumentacionRetrospectiva(): boolean {
+    return this.estadoRetrospectiva.id === 1 || this.estadoMemoria.id === 2;
   }
 }

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { IEvaluacionWithNumComentario } from '@core/models/eti/evaluacion-with-num-comentarios';
@@ -6,8 +6,8 @@ import { IMemoria } from '@core/models/eti/memoria';
 import { environment } from '@env';
 import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoriaPeticionEvaluacion';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 
@@ -207,6 +207,22 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
 
   }
 
+  createDocumentacionSeguimientoFinal(id: number, documentacionMemoria: IDocumentacionMemoria): Observable<IDocumentacionMemoria> {
+    this.logger.debug(MemoriaService.name, `createDocumentacionSeguimientoFinal(${id}, ${documentacionMemoria})`, '-', 'start');
+    return this.http.post<IDocumentacionMemoria>(`${this.endpointUrl}/${id}/documentacion-seguimiento-final`, documentacionMemoria).pipe(
+      tap(() => this.logger.debug(MemoriaService.name, `createDocumentacionSeguimientoFinal(${id}, ${documentacionMemoria})`, '-', 'end'))
+    );
+
+  }
+
+  createDocumentacionRetrospectiva(id: number, documentacionMemoria: IDocumentacionMemoria): Observable<IDocumentacionMemoria> {
+    this.logger.debug(MemoriaService.name, `createDocumentacionRetrospectiva(${id}, ${documentacionMemoria})`, '-', 'start');
+    return this.http.post<IDocumentacionMemoria>(`${this.endpointUrl}/${id}/documentacion-retrospectiva`, documentacionMemoria).pipe(
+      tap(() => this.logger.debug(MemoriaService.name, `createDocumentacionRetrospectiva(${id}, ${documentacionMemoria})`, '-', 'end'))
+    );
+
+  }
+
   updateDocumentacion(
     id: number, documentacionMemoria: IDocumentacionMemoria, idDocumentacionMemoria: number): Observable<IDocumentacionMemoria> {
     this.logger.debug(MemoriaService.name, `updateDocumentacion(${id}, ${documentacionMemoria}, ${idDocumentacionMemoria})`, '-', 'start');
@@ -243,5 +259,80 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
         tap(() => this.logger.debug(MemoriaService.name, `findAllByPersonaRefPeticionEvaluacion()`, '-', 'END'))
       );
   }
+
+  /** 
+   * Elimina el documento de tipo seguimiento anual de una memoria.
+   *
+   * @param idMemoria Identifiacdor de la memoria.
+   * @param idDocumentacionMemoria Identificador del documento memoria.
+   *
+   * @returns observable para eliminar documentación de seguimiento anual.
+   */
+  deleteDocumentacionSeguimientoAnual(idMemoria: number, idDocumentacionMemoria: number): Observable<void> {
+    this.logger.debug(MemoriaService.name, `deleteDocumentacionSeguimientoAnual(${idMemoria}, ${idDocumentacionMemoria})`, '-', 'START');
+    return this.http.delete<void>(`${this.endpointUrl}/${idMemoria}/documentacion-seguimiento-anual/${idDocumentacionMemoria}`).pipe(
+      catchError((error: HttpErrorResponse) => {
+        this.logger.error(MemoriaService.name,
+          `deleteDocumentacion(${idMemoria}, ${idDocumentacionMemoria}):`, error);
+        return throwError(error);
+      }),
+
+      tap(_ => {
+        this.logger.debug(MemoriaService.name,
+          `deleteDocumentacionSeguimientoAnual(${idMemoria}, ${idDocumentacionMemoria})`, '-', 'END');
+      })
+    );
+  }
+
+
+
+  /**
+   * Elimina el documento de tipo seguimiento final de una memoria.
+   *
+   * @param idMemoria Identifiacdor de la memoria.
+   * @param idDocumentacionMemoria Identificador del documento memoria.
+   *
+   * @returns observable para eliminar documentación de seguimiento final.
+   */
+  deleteDocumentacionSeguimientoFinal(idMemoria: number, idDocumentacionMemoria: number): Observable<void> {
+    this.logger.debug(MemoriaService.name, `deleteDocumentacionSeguimientoFinal(${idMemoria}, ${idDocumentacionMemoria})`, '-', 'START');
+    return this.http.delete<void>(`${this.endpointUrl}/${idMemoria}/documentacion-seguimiento-final/${idDocumentacionMemoria}`).pipe(
+      catchError((error: HttpErrorResponse) => {
+        this.logger.error(MemoriaService.name,
+          `deleteDocumentacion(${idMemoria}, ${idDocumentacionMemoria}):`, error);
+        return throwError(error);
+      }),
+
+      tap(_ => {
+        this.logger.debug(MemoriaService.name,
+          `deleteDocumentacionSeguimientoFinal(${idMemoria}, ${idDocumentacionMemoria})`, '-', 'END');
+      })
+    );
+  }
+
+  /**
+   * Elimina el documento de tipo retrospectiva de una memoria.
+   *
+   * @param idMemoria Identifiacdor de la memoria.
+   * @param idDocumentacionMemoria Identificador del documento memoria.
+   *
+   * @returns observable para eliminar documentación de retrospectiva.
+   */
+  deleteDocumentacionRetrospectiva(idMemoria: number, idDocumentacionMemoria: number): Observable<void> {
+    this.logger.debug(MemoriaService.name, `deleteDocumentacionRetrospectiva(${idMemoria}, ${idDocumentacionMemoria})`, '-', 'START');
+    return this.http.delete<void>(`${this.endpointUrl}/${idMemoria}/documentacion-retrospectiva/${idDocumentacionMemoria}`).pipe(
+      catchError((error: HttpErrorResponse) => {
+        this.logger.error(MemoriaService.name,
+          `deleteDocumentacionRetrospectiva(${idMemoria}, ${idDocumentacionMemoria}):`, error);
+        return throwError(error);
+      }),
+
+      tap(_ => {
+        this.logger.debug(MemoriaService.name,
+          `deleteDocumentacionRetrospectiva(${idMemoria}, ${idDocumentacionMemoria})`, '-', 'END');
+      })
+    );
+  }
+
 
 }

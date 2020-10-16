@@ -13,10 +13,11 @@ import { PETICION_EVALUACION_ROUTE } from '../peticion-evaluacion/peticion-evalu
 import { MemoriaDocumentacionFragment } from './memoria-formulario/memoria-documentacion/memoria-documentacion.fragment';
 import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { TipoDocumentoService } from '@core/services/eti/tipo-documento.service';
-import { DocumentacionMemoriaService } from '@core/services/eti/documentacion-memoria.service';
 import { NGXLogger } from 'ngx-logger';
 import { MemoriaEvaluacionesFragment } from './memoria-formulario/memoria-evaluaciones/memoria-evaluaciones.fragment';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
+import { ComiteService } from '@core/services/eti/comite.service';
+import { IFormulario } from '@core/models/eti/formulario';
 
 
 const MSG_PETICIONES_EVALUACION = marker('eti.memoria.link.peticionEvaluacion');
@@ -26,6 +27,8 @@ const MSG_PETICIONES_EVALUACION = marker('eti.memoria.link.peticionEvaluacion');
 export class MemoriaActionService extends ActionService {
 
   public estadoActualMemoria: TipoEstadoMemoria;
+  public estadoRetrospectiva: TipoEstadoMemoria;
+  public formulario: IFormulario;
 
   public readonly FRAGMENT = {
     DATOS_GENERALES: 'datosGenerales',
@@ -46,6 +49,7 @@ export class MemoriaActionService extends ActionService {
     private peticionEvaluacionService: PeticionEvaluacionService,
     personaFisicaService: PersonaFisicaService,
     private tipoDocumentoService: TipoDocumentoService,
+    private comiteService: ComiteService,
     protected readonly logger: NGXLogger) {
     super();
     this.memoria = {} as IMemoria;
@@ -55,6 +59,8 @@ export class MemoriaActionService extends ActionService {
       this.addPeticionEvaluacionLink(this.memoria.peticionEvaluacion.id);
       this.readonly = route.snapshot.data.readonly;
       this.estadoActualMemoria = this.memoria.estadoActual;
+      this.estadoRetrospectiva = this.memoria.retrospectiva?.estadoRetrospectiva;
+      this.loadComiteFormulario(this.memoria.comite.id);
     }
     else {
       this.loadPeticionEvaluacion(history.state.idPeticionEvaluacion);
@@ -81,6 +87,18 @@ export class MemoriaActionService extends ActionService {
         map((peticionEvaluacion) => {
           this.memoria.peticionEvaluacion = peticionEvaluacion;
           this.addPeticionEvaluacionLink(id);
+        })
+      ).subscribe();
+    }
+  }
+
+
+  private loadComiteFormulario(id: number): void {
+
+    if (id) {
+      this.comiteService.findComiteFormularioTipoM(id).pipe(
+        map((formulario) => {
+          this.formulario = formulario;
         })
       ).subscribe();
     }

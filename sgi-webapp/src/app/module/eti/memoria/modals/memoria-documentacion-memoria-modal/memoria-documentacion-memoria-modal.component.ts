@@ -146,13 +146,15 @@ export class MemoriaDocumentacionMemoriaModalComponent implements OnInit {
   }
 
 
+
+
   /**
    * Cierra la ventana modal y devuelve el documento aportado.
    *
    */
-  closeModal(): void {
+  closeModal(documentacionMemoria?: IDocumentacionMemoria): void {
     this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'closeModal()', 'start');
-    this.matDialogRef.close(this.documentacionesMemoria);
+    this.matDialogRef.close(documentacionMemoria);
     this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'closeModal()', 'end');
   }
 
@@ -160,8 +162,8 @@ export class MemoriaDocumentacionMemoriaModalComponent implements OnInit {
   save(): void {
     this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'save()', 'start');
     if (FormGroupUtil.valid(this.formGroup)) {
-      this.loadDatosForm();
-      this.closeModal();
+
+      this.closeModal(this.loadDatosForm());
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
@@ -173,24 +175,44 @@ export class MemoriaDocumentacionMemoriaModalComponent implements OnInit {
    *
    * @returns Comentario con los datos del formulario
    */
-  private loadDatosForm(): void {
+  private loadDatosForm(): IDocumentacionMemoria {
     this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'loadDatosForm()', 'start');
+
+    let existDocumentacion = false;
     this.documentacionesMemoria.map(documentacionMemoria => {
+
+
+      console.log(FormGroupUtil.getValue(this.formGroup, 'tipoDocumento').nombre);
       if (documentacionMemoria.value.tipoDocumento.nombre === FormGroupUtil.getValue(this.formGroup, 'tipoDocumento').nombre) {
         documentacionMemoria.value.tipoDocumento = FormGroupUtil.getValue(this.formGroup, 'tipoDocumento');
-        documentacionMemoria.value.aportado = true;
-
         if (documentacionMemoria.value.id) {
           documentacionMemoria.setEdited();
-        } else {
-          documentacionMemoria.setCreated();
         }
+
+        documentacionMemoria.value.aportado = true;
+
+        existDocumentacion = true;
+        return documentacionMemoria.value;
       }
     });
 
-
+    if (!existDocumentacion) {
+      this.documentacionesMemoria = [];
+      const documentacionMemoria: IDocumentacionMemoria = {
+        id: null,
+        aportado: true,
+        tipoDocumento: FormGroupUtil.getValue(this.formGroup, 'tipoDocumento'),
+        documentoRef: 'DocRef001',
+        memoria: null
+      };
+      const wrapperDocumentacion: StatusWrapper<IDocumentacionMemoria> = new StatusWrapper<IDocumentacionMemoria>(documentacionMemoria);
+      wrapperDocumentacion.setCreated();
+      this.documentacionesMemoria.push(wrapperDocumentacion);
+      return documentacionMemoria;
+    }
 
     this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'loadDatosForm()', 'end');
+
   }
 
 }

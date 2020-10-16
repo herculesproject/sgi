@@ -3,6 +3,7 @@ import { IPeticionEvaluacion } from './peticion-evaluacion';
 import { Comite } from './comite';
 import { TipoMemoria } from './tipo-memoria';
 import { TipoEstadoMemoria } from './tipo-estado-memoria';
+import { IRetrospectiva } from './retrospectiva';
 
 export interface IMemoria {
   /** Id */
@@ -42,4 +43,7 @@ export interface IMemoria {
 
   /** Responsable de memoria */
   isResponsable: boolean;
+
+  /** Retrospectiva */
+  retrospectiva: IRetrospectiva;
 }
