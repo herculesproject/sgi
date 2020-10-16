@@ -14,6 +14,7 @@ export class MemoriasListadoFragment extends Fragment {
 
   constructor(key: number, private service: PeticionEvaluacionService) {
     super(key);
+    this.setComplete(true);
   }
 
   onInitialize(): void {

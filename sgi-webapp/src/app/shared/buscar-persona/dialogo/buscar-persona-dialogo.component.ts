@@ -12,6 +12,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { Observable, of, merge } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+
+const MSG_LISTADO_ERROR = marker('eti.evaluador.listado.error');
 
 @Component({
   selector: 'sgi-buscar-persona-dialogo',
@@ -113,7 +116,7 @@ export class BuscarPersonaDialogoComponent implements AfterViewInit {
           // On error reset pagination values
           this.paginator.firstPage();
           this.totalElementos = 0;
-          this.snackBarService.showError('eti.evaluador.listado.error');
+          this.snackBarService.showError(MSG_LISTADO_ERROR);
           this.logger.debug(BuscarPersonaDialogoComponent.name, 'loadTable()', 'end');
           return of([]);
         })

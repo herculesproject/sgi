@@ -1,17 +1,20 @@
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { FormFragment } from '@core/services/action-service';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { Observable, of, EMPTY } from 'rxjs';
+import { Observable, of, EMPTY, BehaviorSubject } from 'rxjs';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { NullIdValidador } from '@core/validators/null-id-validador';
 import { SgiAuthService } from '@sgi/framework/auth/public-api';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { NGXLogger } from 'ngx-logger';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TipoInvestigacionTuteladaService } from '@core/services/eti/tipo-investigacion-tutelada.service';
 
 export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeticionEvaluacion> {
 
   private peticionEvaluacion: IPeticionEvaluacion;
   public readonly: boolean;
+  public isTipoInvestigacionTutelada$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
     private fb: FormBuilder,
@@ -31,15 +34,16 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
 
   protected buildFormGroup(): FormGroup {
     return this.fb.group({
-      titulo: new FormControl({ value: '', disabled: this.isEdit() }, [Validators.required]),
-      tipoActividad: new FormControl({ value: '', disabled: this.readonly }, [new NullIdValidador().isValid()]),
-      financiacion: new FormControl({ value: '', disabled: this.readonly }, [Validators.required]),
-      fechaInicio: new FormControl({ value: '', disabled: this.readonly }, [Validators.required]),
-      fechaFin: new FormControl({ value: '', disabled: this.readonly }, [Validators.required]),
-      resumen: new FormControl({ value: '', disabled: this.readonly }, [Validators.required]),
-      valorSocial: new FormControl({ value: '', disabled: this.readonly }, [Validators.required]),
-      objetivosCientificos: new FormControl({ value: '', disabled: this.readonly }, [Validators.required]),
-      disenioMetodologico: new FormControl({ value: '', disabled: this.readonly }, [Validators.required]),
+      titulo: [{ value: '', disabled: this.isEdit() }, Validators.required],
+      tipoActividad: [{ value: '', disabled: this.readonly }, new NullIdValidador().isValid()],
+      tipoInvestigacionTutelada: [{ value: '', disabled: this.readonly }, []],
+      financiacion: [{ value: '', disabled: this.readonly }, Validators.required],
+      fechaInicio: [{ value: '', disabled: this.readonly }, Validators.required],
+      fechaFin: [{ value: '', disabled: this.readonly }, Validators.required],
+      resumen: [{ value: '', disabled: this.readonly }, Validators.required],
+      valorSocial: [{ value: '', disabled: this.readonly }, Validators.required],
+      objetivosCientificos: [{ value: '', disabled: this.readonly }, Validators.required],
+      disenioMetodologico: [{ value: '', disabled: this.readonly }, Validators.required],
     });
   }
 
@@ -47,6 +51,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
     return this.service.findById(key).pipe(
       switchMap((value: IPeticionEvaluacion) => {
         this.peticionEvaluacion = value;
+        this.isTipoInvestigacionTutelada$.next(this.peticionEvaluacion.tipoInvestigacionTutelada ? true : false);
         return of(value);
       }),
       catchError(() => {
@@ -59,6 +64,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
     return {
       titulo: value.titulo,
       tipoActividad: value.tipoActividad,
+      tipoInvestigacionTutelada: value.tipoInvestigacionTutelada,
       financiacion: value.fuenteFinanciacion,
       fechaInicio: value.fechaInicio,
       fechaFin: value.fechaFin,
@@ -73,6 +79,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
     const form = this.getFormGroup().value;
     this.peticionEvaluacion.titulo = form.titulo;
     this.peticionEvaluacion.tipoActividad = form.tipoActividad;
+    this.peticionEvaluacion.tipoInvestigacionTutelada = form.tipoInvestigacionTutelada;
     this.peticionEvaluacion.fuenteFinanciacion = form.financiacion;
     this.peticionEvaluacion.fechaInicio = form.fechaInicio;
     this.peticionEvaluacion.fechaFin = form.fechaFin;
@@ -82,6 +89,10 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
     this.peticionEvaluacion.disMetodologico = form.disenioMetodologico;
 
     return this.peticionEvaluacion;
+  }
+
+  clearInvestigacionTutelada() {
+    this.getFormGroup().controls.tipoInvestigacionTutelada.reset();
   }
 
   saveOrUpdate(): Observable<number | void> {

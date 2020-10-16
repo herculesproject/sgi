@@ -29,6 +29,7 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
   ) {
     super(key);
     this.selectedIdPeticionEvaluacion = key;
+    this.setComplete(true);
   }
 
   onInitialize(): void {

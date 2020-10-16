@@ -1,20 +1,19 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ActivatedRoute } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
-import { IMemoria } from '@core/models/eti/memoria';
-import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
-import { NGXLogger } from 'ngx-logger';
-import { MemoriaActionService } from '../../memoria.action.service';
-
 import { MemoriaEvaluacionesComponent } from './memoria-evaluaciones.component';
+import { NGXLogger } from 'ngx-logger';
+import TestUtils from '@core/utils/test-utils';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MemoriaActionService } from '../../memoria.action.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute } from '@angular/router';
+import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
+import { IMemoria } from '@core/models/eti/memoria';
 
 
 describe('MemoriaEvaluacionesComponent', () => {

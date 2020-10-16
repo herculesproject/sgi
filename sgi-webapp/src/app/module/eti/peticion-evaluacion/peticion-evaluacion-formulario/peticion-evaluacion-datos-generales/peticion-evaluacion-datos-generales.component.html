@@ -25,12 +25,28 @@
         <mat-label>{{'eti.peticionEvaluacion.tipoActividad' | translate}}</mat-label>
         <input type="text" placeholder="{{'eti.peticionEvaluacion.tipoActividad' | translate}}" arial-label="Number"
           matInput formControlName="tipoActividad" [matAutocomplete]="auto" required>
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="getTipoActividad">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="getTipoActividad"
+          (optionSelected)="selectTipoActividad($event.option.value)">
           <mat-option *ngFor="let tipoActividad of filteredTipoActividad | async" [value]="tipoActividad">
             {{tipoActividad.nombre}}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
+
+      <ng-container *ngIf="isInvestigacionTutelada$.getValue()">
+        <mat-form-field class="input-form">
+          <mat-label>{{'eti.peticionEvaluacion.tipoInvestigacionTutelada' | translate}}</mat-label>
+          <input type="text" placeholder="{{'eti.peticionEvaluacion.tipoInvestigacionTutelada' | translate}}"
+            arial-label="Number" matInput formControlName="tipoInvestigacionTutelada"
+            [matAutocomplete]="autoInvestigacion" [required]="isInvestigacionTutelada$.getValue()">
+          <mat-autocomplete #autoInvestigacion="matAutocomplete" [displayWith]="getTipoInvestigacionTutelada">
+            <mat-option *ngFor="let tipoInvestigacionTutelada of filteredTipoInvestigacionTutelada | async"
+              [value]="tipoInvestigacionTutelada">
+              {{tipoInvestigacionTutelada.nombre}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </ng-container>
 
       <mat-form-field class="input-form">
         <mat-label>{{'eti.peticionEvaluacion.financiacion' | translate}}</mat-label>

@@ -51,7 +51,7 @@ export class TipoEvaluacionService extends SgiRestService<number, TipoEvaluacion
   }
 
   /**
-   * Devuelve el los tipos de evaluación: Seguimiento Anual y Seguimiento final.
+   * Devuelve los tipos de evaluación: Seguimiento Anual y Seguimiento final.
    */
 
   findTipoEvaluacionSeguimientoAnualFinal(): Observable<SgiRestListResult<TipoEvaluacion>> {

@@ -1,5 +1,6 @@
 import { IPersona } from '../sgp/persona';
 import { ITipoActividad } from './tipo-actividad';
+import { ITipoInvestigacionTutelada } from './tipo-investigacion-tutelada';
 
 export interface IPeticionEvaluacion extends IPersona {
 
@@ -17,6 +18,9 @@ export interface IPeticionEvaluacion extends IPersona {
 
   /** Tipo de actividad */
   tipoActividad: ITipoActividad;
+
+  /** Tipo de investigacion tutelada */
+  tipoInvestigacionTutelada: ITipoInvestigacionTutelada;
 
   /** Referencia fuente financiacion */
   fuenteFinanciacion: string;

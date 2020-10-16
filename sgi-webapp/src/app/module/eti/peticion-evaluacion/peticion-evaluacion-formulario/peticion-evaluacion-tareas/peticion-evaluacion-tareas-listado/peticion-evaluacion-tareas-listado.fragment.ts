@@ -30,6 +30,7 @@ export class PeticionEvaluacionTareasFragment extends Fragment {
     private equipoInvestigadorFragment: EquipoInvestigadorListadoFragment,
     private memoriaFragment: MemoriasListadoFragment) {
     super(key);
+    this.setComplete(true);
   }
 
   onInitialize(): void {

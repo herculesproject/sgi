@@ -8,17 +8,22 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { TipoActividadService } from '@core/services/eti/tipo-actividad.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, of, Subject, BehaviorSubject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 import { PeticionEvaluacionActionService } from '../../peticion-evaluacion.action.service';
+import { TipoInvestigacionTuteladaService } from '@core/services/eti/tipo-investigacion-tutelada.service';
+import { ITipoInvestigacionTutelada } from '@core/models/eti/tipo-investigacion-tutelada';
+import { PeticionEvaluacionDatosGeneralesFragment } from './peticion-evaluacion-datos-generales.fragment';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { NullIdValidador } from '@core/validators/null-id-validador';
 
 @Component({
   selector: 'sgi-peticion-evaluacion-datos-generales',
   templateUrl: './peticion-evaluacion-datos-generales.component.html',
   styleUrls: ['./peticion-evaluacion-datos-generales.component.scss']
 })
-export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentComponent<IPeticionEvaluacion> implements OnInit {
+export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentComponent<IPeticionEvaluacion> implements OnInit, OnDestroy {
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
 
   FormGroupUtil = FormGroupUtil;
@@ -26,16 +31,20 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
   fxLayoutProperties: FxLayoutProperties;
   fxFlexPropertiesInline: FxFlexProperties;
 
-  tipoActividades: ITipoActividad[] = [];
-  tipoActividadSuscripcion: Subscription;
-  filteredTipoActividad: Observable<ITipoActividad[]>;
+  private tipoActividades: ITipoActividad[] = [];
+  private tipoInvestigacionTuteladas: ITipoInvestigacionTutelada[] = [];
+  private suscripciones: Subscription[] = [];
 
-  suscripciones: Subscription[] = [];
+  filteredTipoActividad: Observable<ITipoActividad[]>;
+  filteredTipoInvestigacionTutelada: Observable<ITipoInvestigacionTutelada[]>;
+  isInvestigacionTutelada$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  peticionEvaluacionFragment: PeticionEvaluacionDatosGeneralesFragment;
 
 
   constructor(
     protected readonly logger: NGXLogger,
     private readonly tipoActividadService: TipoActividadService,
+    private readonly tipoInvestigacionTuteladaService: TipoInvestigacionTuteladaService,
     private actionService: PeticionEvaluacionActionService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
@@ -55,6 +64,10 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
+
+    this.peticionEvaluacionFragment = this.fragment as PeticionEvaluacionDatosGeneralesFragment;
+    this.isInvestigacionTutelada$ = (this.fragment as PeticionEvaluacionDatosGeneralesFragment).isTipoInvestigacionTutelada$;
+
   }
 
   ngOnInit(): void {
@@ -62,32 +75,44 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
     this.logger.debug(PeticionEvaluacionDatosGeneralesComponent.name, 'ngOnInit()', 'start');
 
     super.ngOnInit();
-
-    this.getTiposActividad();
+    this.loadTiposActividad();
 
     this.logger.debug(PeticionEvaluacionDatosGeneralesComponent.name, 'ngOnInit()', 'end');
 
   }
 
-
   /**
    * Recupera los tipos de actividad
    */
-  getTiposActividad() {
+  loadTiposActividad() {
 
     this.suscripciones.push(this.tipoActividadService.findAll().subscribe(
       (response) => {
         this.tipoActividades = response.items;
-
 
         this.filteredTipoActividad = this.formGroup.controls.tipoActividad.valueChanges
           .pipe(
             startWith(''),
             map(value => this.filterTipoActividad(value))
           );
-
       }));
+  }
 
+  /**
+   * Recupera los tipos de Investigación tutelada.
+   */
+  loadTipoInvestigacionTuteladas() {
+
+    this.suscripciones.push(this.tipoInvestigacionTuteladaService.findAll().subscribe(
+      (response) => {
+        this.tipoInvestigacionTuteladas = response.items;
+
+        this.filteredTipoInvestigacionTutelada = this.formGroup.controls.tipoInvestigacionTutelada.valueChanges
+          .pipe(
+            startWith(''),
+            map(value => this.filterTipoInvestigacionTutelada(value))
+          );
+      }));
   }
 
   /**
@@ -96,10 +121,33 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
    * @returns nombre de un tipo de actividad
    */
   getTipoActividad(tipoActividad?: ITipoActividad): string | undefined {
-
     return tipoActividad?.nombre;
   }
 
+  selectTipoActividad(tipoActividad: ITipoActividad): void {
+
+    if (tipoActividad.id === 3) {
+      this.isInvestigacionTutelada$.next(true);
+      this.formGroup.controls.tipoInvestigacionTutelada.setValidators(new NullIdValidador().isValid());
+      this.formGroup.controls.tipoInvestigacionTutelada.updateValueAndValidity();
+      this.loadTipoInvestigacionTuteladas();
+    } else {
+      this.isInvestigacionTutelada$.next(false);
+      this.peticionEvaluacionFragment.clearInvestigacionTutelada();
+      this.formGroup.controls.tipoInvestigacionTutelada.clearValidators();
+      this.formGroup.controls.tipoInvestigacionTutelada.updateValueAndValidity();
+    }
+  }
+
+  /**
+   * Devuelve el nombre de un tipo de actividad
+   * @param investigacionTutelada tipo actividad
+   * @returns nombre de un tipo de actividad
+   */
+  getTipoInvestigacionTutelada(investigacionTutelada?: ITipoInvestigacionTutelada): string | undefined {
+
+    return investigacionTutelada?.nombre;
+  }
 
   /**
    * Filtro de campo autocompletable tipo actividad.
@@ -118,5 +166,27 @@ export class PeticionEvaluacionDatosGeneralesComponent extends FormFragmentCompo
       (tipoActividad => tipoActividad.nombre.toLowerCase().includes(filterValue));
   }
 
+  /**
+   * Filtro de campo autocompletable tipo investigacion tutelada.
+   * @param value value a filtrar (string o nombre tipo investigacion tutelada).
+   * @returns lista de tipos de investigacion tutelada filtrados.
+   */
+  private filterTipoInvestigacionTutelada(value: string | ITipoInvestigacionTutelada): ITipoInvestigacionTutelada[] {
+    let filterValue: string;
+    if (typeof value === 'string') {
+      filterValue = value.toLowerCase();
+    } else {
+      filterValue = value?.nombre?.toLowerCase();
+    }
+
+    return this.tipoInvestigacionTuteladas.filter
+      (tipoInvestigacionTutelada => tipoInvestigacionTutelada.nombre.toLowerCase().includes(filterValue));
+  }
+
+  ngOnDestroy(): void {
+    this.logger.debug(PeticionEvaluacionDatosGeneralesComponent.name, 'ngOnDestroy()', 'start');
+    this.suscripciones?.forEach(x => x.unsubscribe());
+    this.logger.debug(PeticionEvaluacionDatosGeneralesComponent.name, 'ngOnDestroy()', 'end');
+  }
 
 }
