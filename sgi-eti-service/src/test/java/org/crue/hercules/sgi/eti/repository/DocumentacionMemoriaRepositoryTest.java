@@ -83,8 +83,8 @@ public class DocumentacionMemoriaRepositoryTest {
    */
   private PeticionEvaluacion generarMockPeticionEvaluacion(TipoActividad tipoActividad) {
     return new PeticionEvaluacion(null, "Referencia solicitud convocatoria", "Codigo", "PeticionEvaluacion",
-        tipoActividad, "Fuente financiación", LocalDate.now(), LocalDate.now(), "Resumen", "Valor social", "Objetivos",
-        "DiseñoMetodologico", Boolean.FALSE, Boolean.FALSE, "user-001", Boolean.TRUE);
+        tipoActividad, null, "Fuente financiación", LocalDate.now(), LocalDate.now(), "Resumen", "Valor social",
+        "Objetivos", "DiseñoMetodologico", Boolean.FALSE, Boolean.FALSE, "user-001", Boolean.TRUE);
   }
 
   /**
