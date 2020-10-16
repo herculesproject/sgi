@@ -2,12 +2,13 @@ package org.crue.hercules.sgi.usr.service.impl;
 
 import java.util.List;
 
+import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.usr.exceptions.UnidadNotFoundException;
 import org.crue.hercules.sgi.usr.model.Unidad;
 import org.crue.hercules.sgi.usr.repository.UnidadRepository;
+import org.crue.hercules.sgi.usr.repository.specification.UnidadSpecifications;
 import org.crue.hercules.sgi.usr.service.UnidadService;
-import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
-import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -115,7 +116,7 @@ public class UnidadServiceImpl implements UnidadService {
   }
 
   /**
-   * Obtener todas las entidades {@link Unidad} paginadas y/o filtradas.
+   * Obtener todas las entidades {@link Unidad} activas paginadas y/o filtradas.
    *
    * @param pageable la información de la paginación.
    * @param query    la información del filtro.
@@ -125,8 +126,28 @@ public class UnidadServiceImpl implements UnidadService {
   public Page<Unidad> findAll(List<QueryCriteria> query, Pageable pageable) {
     log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
     Specification<Unidad> specByQuery = new QuerySpecification<Unidad>(query);
-    Page<Unidad> returnValue = repository.findAll(specByQuery, pageable);
+    Specification<Unidad> specActivos = UnidadSpecifications.activos();
+
+    Specification<Unidad> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<Unidad> returnValue = repository.findAll(specs, pageable);
     log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtener todas las entidades {@link Unidad} paginadas y/o filtradas.
+   *
+   * @param pageable la información de la paginación.
+   * @param query    la información del filtro.
+   * @return la lista de entidades {@link Unidad} paginadas y/o filtradas.
+   */
+  @Override
+  public Page<Unidad> findAllTodos(List<QueryCriteria> query, Pageable pageable) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - start");
+    Specification<Unidad> specByQuery = new QuerySpecification<Unidad>(query);
+    Page<Unidad> returnValue = repository.findAll(specByQuery, pageable);
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - end");
     return returnValue;
   }
 

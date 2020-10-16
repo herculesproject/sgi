@@ -154,6 +154,40 @@ public class UnidadIT {
         .isEqualTo("nombre-" + String.format("%03d", 1));
   }
 
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllTodos_WithPagingSortingAndFiltering_ReturnsUnidadSubList() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TDOC-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "nombre-";
+    String filter = "descripcion~%00%";
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
+
+    final ResponseEntity<List<Unidad>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Unidad>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Unidad> unidades = response.getBody();
+    Assertions.assertThat(unidades.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(unidades.get(0).getNombre()).as("get(0).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 3));
+    Assertions.assertThat(unidades.get(1).getNombre()).as("get(1).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 2));
+    Assertions.assertThat(unidades.get(2).getNombre()).as("get(2).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 1));
+  }
+
   /**
    * Función que devuelve un objeto Unidad
    * 

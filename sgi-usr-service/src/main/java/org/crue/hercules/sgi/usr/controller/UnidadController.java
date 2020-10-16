@@ -71,6 +71,28 @@ public class UnidadController {
   }
 
   /**
+   * Devuelve una lista paginada y filtrada {@link Unidad}.
+   * 
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/todos")
+  // @PreAuthorize("hasAuthorityForAnyUO('USR-UNI-V')")
+  ResponseEntity<Page<Unidad>> findAllTodos(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
+    Page<Unidad> page = service.findAllTodos(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
    * Devuelve el {@link Unidad} con el id indicado.
    * 
    * @param id Identificador de {@link Unidad}.
@@ -104,13 +126,12 @@ public class UnidadController {
    * Actualiza el {@link Unidad} con el id indicado.
    * 
    * @param unidad {@link Unidad} a actualizar.
-   * @param id            id {@link Unidad} a actualizar.
+   * @param id     id {@link Unidad} a actualizar.
    * @return {@link Unidad} actualizado.
    */
   @PutMapping("/{id}")
   // @PreAuthorize("hasAuthorityForAnyUO('USR-UNI-E')")
-  Unidad update(@Validated({ Update.class, Default.class }) @RequestBody Unidad unidad,
-      @PathVariable Long id) {
+  Unidad update(@Validated({ Update.class, Default.class }) @RequestBody Unidad unidad, @PathVariable Long id) {
     log.debug("update(Unidad unidad, Long id) - start");
     unidad.setId(id);
     Unidad returnValue = service.update(unidad);

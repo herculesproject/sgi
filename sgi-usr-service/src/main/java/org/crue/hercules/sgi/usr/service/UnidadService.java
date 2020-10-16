@@ -37,13 +37,22 @@ public interface UnidadService {
   Unidad disable(Long id);
 
   /**
-   * Obtener todas las entidades {@link Unidad} paginadas y/o filtradas.
+   * Obtener todas las entidades {@link Unidad} activas paginadas y/o filtradas.
    *
    * @param pageable la información de la paginación.
    * @param query    la información del filtro.
    * @return la lista de entidades {@link Unidad} paginadas y/o filtradas.
    */
   Page<Unidad> findAll(List<QueryCriteria> query, Pageable pageable);
+
+  /**
+   * Obtener todas las entidades {@link Unidad} paginadas y/o filtradas.
+   *
+   * @param pageable la información de la paginación.
+   * @param query    la información del filtro.
+   * @return la lista de entidades {@link Unidad} paginadas y/o filtradas.
+   */
+  Page<Unidad> findAllTodos(List<QueryCriteria> query, Pageable pageable);
 
   /**
    * Obtiene {@link Unidad} por su id.
