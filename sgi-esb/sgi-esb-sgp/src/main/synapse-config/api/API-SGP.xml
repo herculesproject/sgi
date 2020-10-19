@@ -1210,4 +1210,259 @@
             <respond/>
         </faultSequence>
     </resource>
+    <resource methods="GET" url-mapping="/empresaeconomicas">
+        <inSequence>
+            <!--This is generated API skeleton.-->
+            <!--Business Logic Goes Here-->
+            <payloadFactory media-type="json">
+                <format>[
+    {
+        "personaRef": "ent-001",
+        "personaRefPadre": null,
+        "razonSocial": "razon-social-001",
+        "tipoDocumento": "A01000016",
+        "numeroDocumento": "CIF",
+        "direccion": "calle-001, 1, 00001",
+        "tipoEmpresa": "PIME"
+    },
+    {
+        "personaRef": "ent-002",
+        "personaRefPadre": "ent-001",
+        "razonSocial": "razon-social-001 - 002",
+        "tipoDocumento": "A01000016_2",
+        "numeroDocumento": "Código Subentidad",
+        "direccion": "calle-002, 2, 00002",
+        "tipoEmpresa": "PIME"
+    },
+    {
+        "personaRef": "ent-003",
+        "personaRefPadre": "ent-001",
+        "razonSocial": "razon-social-001 - 003",
+        "tipoDocumento": "A01000016_3",
+        "numeroDocumento": "Código Subentidad",
+        "direccion": "calle-003, 3, 00003",
+        "tipoEmpresa": "PIME"
+    },
+    {
+        "personaRef": "ent-004",
+        "personaRefPadre": "ent-003",
+        "razonSocial": "razon-social-001 - 004",
+        "tipoDocumento": "A01000016_3_4",
+        "numeroDocumento": "Código Subentidad",
+        "direccion": "calle-004, 4, 00004",
+        "tipoEmpresa": "PIME"
+    },
+    {
+        "personaRef": "ent-005",
+        "personaRefPadre": null,
+        "razonSocial": "razon-social-005",
+        "tipoDocumento": "S0100005A",
+        "numeroDocumento": "CIF",
+        "direccion": "calle-005, 5, 00005",
+        "tipoEmpresa": "PIME"
+    },
+    {
+        "personaRef": "ent-006",
+        "personaRefPadre": "ent-005",
+        "razonSocial": "razon-social-005 - 006",
+        "tipoDocumento": "S0100005A_6",
+        "numeroDocumento": "CIF",
+        "direccion": "calle-006, 6, 00006",
+        "tipoEmpresa": "PIME"
+    },
+    {
+        "personaRef": "ent-007",
+        "personaRefPadre": "ent-005",
+        "razonSocial": "razon-social-005 - 007",
+        "tipoDocumento": "S0100005A_7",
+        "numeroDocumento": "CIF",
+        "direccion": "calle-007, 7, 00007",
+        "tipoEmpresa": "PIME"
+    },
+    {
+        "personaRef": "ent-008",
+        "personaRefPadre": null,
+        "razonSocial": "razon-social-008",
+        "tipoDocumento": "S0100008X",
+        "numeroDocumento": "CIF",
+        "direccion": "calle-008, 8, 00008",
+        "tipoEmpresa": "PIME"
+    },
+    {
+        "personaRef": "ent-009",
+        "personaRefPadre": null,
+        "razonSocial": "razon-social-009",
+        "tipoDocumento": "S0100009R",
+        "numeroDocumento": "CIF",
+        "direccion": "calle-009, 9, 00009",
+        "tipoEmpresa": "PIME"
+    },
+    {
+        "personaRef": "ent-010",
+        "personaRefPadre": null,
+        "razonSocial": "razon-social-010",
+        "tipoDocumento": "S0100010C",
+        "numeroDocumento": "CIF",
+        "direccion": "calle-010, 10, 00010",
+        "tipoEmpresa": "PIME"
+    }
+]</format>
+                <args/>
+            </payloadFactory>
+            <send>
+                <endpoint key="sgp-service"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <respond/>
+        </outSequence>
+        <faultSequence>
+            <switch source="get-property('ERROR_CODE')">
+                <case regex="101503|101504">
+                    <payloadFactory media-type="json">
+                        <format>[
+    {
+        "personaRef": "ent-001",
+        "personaRefPadre": null,
+        "razonSocial": "razon-social-001",
+        "tipoDocumento": "A01000016",
+        "numeroDocumento": "CIF",
+        "direccion": "calle-001, 1, 00001",
+        "tipoEmpresa": "PIME"
+    },
+    {
+        "personaRef": "ent-002",
+        "personaRefPadre": "ent-001",
+        "razonSocial": "razon-social-001 - 002",
+        "tipoDocumento": "A01000016_2",
+        "numeroDocumento": "Código Subentidad",
+        "direccion": "calle-002, 2, 00002",
+        "tipoEmpresa": "PIME"
+    },
+    {
+        "personaRef": "ent-003",
+        "personaRefPadre": "ent-001",
+        "razonSocial": "razon-social-001 - 003",
+        "tipoDocumento": "A01000016_3",
+        "numeroDocumento": "Código Subentidad",
+        "direccion": "calle-003, 3, 00003",
+        "tipoEmpresa": "PIME"
+    },
+    {
+        "personaRef": "ent-004",
+        "personaRefPadre": "ent-003",
+        "razonSocial": "razon-social-001 - 004",
+        "tipoDocumento": "A01000016_3_4",
+        "numeroDocumento": "Código Subentidad",
+        "direccion": "calle-004, 4, 00004",
+        "tipoEmpresa": "PIME"
+    },
+    {
+        "personaRef": "ent-005",
+        "personaRefPadre": null,
+        "razonSocial": "razon-social-005",
+        "tipoDocumento": "S0100005A",
+        "numeroDocumento": "CIF",
+        "direccion": "calle-005, 5, 00005",
+        "tipoEmpresa": "PIME"
+    },
+    {
+        "personaRef": "ent-006",
+        "personaRefPadre": "ent-005",
+        "razonSocial": "razon-social-005 - 006",
+        "tipoDocumento": "S0100005A_6",
+        "numeroDocumento": "CIF",
+        "direccion": "calle-006, 6, 00006",
+        "tipoEmpresa": "PIME"
+    },
+    {
+        "personaRef": "ent-007",
+        "personaRefPadre": "ent-005",
+        "razonSocial": "razon-social-005 - 007",
+        "tipoDocumento": "S0100005A_7",
+        "numeroDocumento": "CIF",
+        "direccion": "calle-007, 7, 00007",
+        "tipoEmpresa": "PIME"
+    },
+    {
+        "personaRef": "ent-008",
+        "personaRefPadre": null,
+        "razonSocial": "razon-social-008",
+        "tipoDocumento": "S0100008X",
+        "numeroDocumento": "CIF",
+        "direccion": "calle-008, 8, 00008",
+        "tipoEmpresa": "PIME"
+    },
+    {
+        "personaRef": "ent-009",
+        "personaRefPadre": null,
+        "razonSocial": "razon-social-009",
+        "tipoDocumento": "S0100009R",
+        "numeroDocumento": "CIF",
+        "direccion": "calle-009, 9, 00009",
+        "tipoEmpresa": "PIME"
+    },
+    {
+        "personaRef": "ent-010",
+        "personaRefPadre": null,
+        "razonSocial": "razon-social-010",
+        "tipoDocumento": "S0100010C",
+        "numeroDocumento": "CIF",
+        "direccion": "calle-010, 10, 00010",
+        "tipoEmpresa": "PIME"
+    }
+]</format>
+                        <args/>
+                    </payloadFactory>
+                </case>
+                <default/>
+            </switch>
+            <respond/>
+        </faultSequence>
+    </resource>
+    <resource methods="GET" uri-template="/empresaeconomicas/{personaRef}">
+        <inSequence>
+            <!--This is generated API skeleton.-->
+            <property expression="get-property('uri.var.personaRef')" name="personaRef" scope="default" type="STRING"/>
+            <!--Business Logic Goes Here-->
+            <payloadFactory media-type="json">
+                <format>{
+    "personaRef": "ent-001",
+    "personaRefPadre": null,
+    "razonSocial": "razon-social-001",
+    "tipoDocumento": "A01000016",
+    "numeroDocumento": "CIF",
+    "direccion": "calle-001, 1, 00001",
+    "tipoEmpresa": "PIME"
+}</format>
+                <args/>
+            </payloadFactory>
+            <send>
+                <endpoint key="sgp-service"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <respond/>
+        </outSequence>
+        <faultSequence>
+            <switch source="get-property('ERROR_CODE')">
+                <case regex="101503|101504">
+                    <payloadFactory media-type="json">
+                        <format>{
+    "personaRef": "ent-001",
+    "personaRefPadre": null,
+    "razonSocial": "razon-social-001",
+    "tipoDocumento": "A01000016",
+    "numeroDocumento": "CIF",
+    "direccion": "calle-001, 1, 00001",
+    "tipoEmpresa": "PIME"
+}</format>
+                        <args/>
+                    </payloadFactory>
+                </case>
+                <default/>
+            </switch>
+            <respond/>
+        </faultSequence>
+    </resource>
 </api>

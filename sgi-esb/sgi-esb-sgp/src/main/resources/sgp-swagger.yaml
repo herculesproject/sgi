@@ -8,6 +8,106 @@ basePath: /sgp
 schemes:
   - http
 paths:
+  /empresaeconomicas:
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Nº de pagina
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page
+          type: integer
+          x-example: 2
+        - description: Nº de elementos por página
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page-Size
+          type: integer
+          x-example: 10
+        - description: >-
+            Criterios de busqueda. <hr> Lista de criterios de busqueda separada
+            por comas, donde un criterio de busqueda es el nombre de uno de los
+            campos de la entidad buscada seguido de la operación y el valor con
+            el que se hace la comparación. Las operaciones soportadas son: <ul>
+            <li><b>:</b> equals</li> <li><b>!:</b> not equals</li> <li><b>~</b>
+            like</li> <li><b>!~</b> not like</li> <li><b>></b> greather</li>
+            <li><b>>:</b> greather or equal</li> <li><b><</b> lower</li>
+            <li><b><:</b> lower or equal</li></ul>
+          in: query
+          name: q
+          type: string
+          x-example: 'personaRef!~00,personaRefPadre:ent-001'
+        - description: >-
+            Criterios de ordenación de la busqueda. <hr/> Nombre del campo por
+            el que se ordena seguido de +/- para ordenar ascendente o
+            descendentemente.
+          in: query
+          name: s
+          type: string
+          x-example: personaRef-
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Page:
+              description: Nº de página
+              type: integer
+            X-Page-Count:
+              description: Nº de páginas
+              type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              type: integer
+          schema:
+            items:
+              $ref: '#/definitions/EmpresaEconomica'
+            type: array
+        '204':
+          description: >-
+            No hay empresas economicas para los criterios de busqueda
+            utilizados.
+        '400':
+          description: Invalid params
+      tags:
+        - empresaeconomicas
+      description: >-
+        Devuelve la lista paginada con las empresas economicas que cumplen los
+        filtros.
+      operationId: findAllEmpresaEconomica
+      summary: Busca las personas empresas economicas
+  '/empresaeconomicas/{personaRef}':
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Referencia de la empresa economica
+          in: path
+          name: personaRef
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/EmpresaEconomica'
+        '400':
+          description: perosnaRef no valido
+        '404':
+          description: empresa economica no encontrada
+      tags:
+        - empresaeconomicas
+      description: Devuelve la empresa economica correspondiente a personaRef
+      operationId: findEmpresaEconomicaByPersonaRef
+      summary: Busca una empresa economica por su personaRef
   /personas/fisica:
     get:
       produces:
@@ -1045,6 +1145,23 @@ definitions:
       tipoEmail:
         type: string
     type: object
+  EmpresaEconomica:
+    properties:
+      direccion:
+        type: string
+      numeroDocumento:
+        type: string
+      personaRef:
+        type: string
+      personaRefPadre:
+        type: string
+      razonSocial:
+        type: string
+      tipoDocumento:
+        type: string
+      tipoEmpresa:
+        type: string
+    type: object
   Persona:
     properties:
       identificadorLetra:
@@ -1142,6 +1259,11 @@ tags:
       url: 'https://confluence.treelogic.com/display/HERCULES/SGI+-+ESB+-+SGP'
     description: Operaciones con personas jurídicas
     name: personas/juridica
+  - externalDocs:
+      description: Find out more
+      url: 'https://confluence.treelogic.com/display/HERCULES/SGI+-+ESB+-+SGP'
+    description: Operaciones con empresa economica
+    name: empresaeconomicas
 externalDocs:
   description: Find out more about SGP
   url: 'https://confluence.treelogic.com/display/HERCULES/SGI+-+ESB+-+SGP'
