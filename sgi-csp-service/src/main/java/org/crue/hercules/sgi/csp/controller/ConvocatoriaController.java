@@ -5,9 +5,11 @@ import java.util.List;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEnlaceService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadGestoraService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -31,6 +33,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ConvocatoriaController {
 
+  /** ConvocatoriaEntidadConvocante service */
+  private final ConvocatoriaEntidadConvocanteService convocatoriaEntidadConvocanteService;
+
   /** ConvocatoriaEntidadGestora service */
   private final ConvocatoriaEntidadGestoraService convocatoriaEntidadGestoraService;
   /** ConvocatoriaEntidadGestora service */
@@ -42,12 +47,17 @@ public class ConvocatoriaController {
   /**
    * Instancia un nuevo ConvocatoriaController.
    * 
-   * @param convocatoriaEntidadGestoraService {@link ConvocatoriaEntidadGestoraService}.
-   * @param convocatoriaEnlaceService         {@link ConvocatoriaEnlaceService}
+   * @param convocatoriaEntidadGestoraService    {@link ConvocatoriaEntidadGestoraService}.
+   * @param convocatoriaEntidadConvocanteService {@link ConvocatoriaEntidadConvocanteService}.
+   * @param convocatoriaEntidadGestoraService    {@link ConvocatoriaEntidadGestoraService}.
+   * @param convocatoriaAreaTematicaService      {@link ConvocatoriaAreaTematicaService}.
+   * @param convocatoriaEnlaceService            {@link ConvocatoriaEnlaceService}
    */
-  public ConvocatoriaController(ConvocatoriaEntidadGestoraService convocatoriaEntidadGestoraService,
+  public ConvocatoriaController(ConvocatoriaEntidadConvocanteService convocatoriaEntidadConvocanteService,
+      ConvocatoriaEntidadGestoraService convocatoriaEntidadGestoraService,
       ConvocatoriaAreaTematicaService convocatoriaAreaTematicaService,
       ConvocatoriaEnlaceService convocatoriaEnlaceService) {
+    this.convocatoriaEntidadConvocanteService = convocatoriaEntidadConvocanteService;
     this.convocatoriaEntidadGestoraService = convocatoriaEntidadGestoraService;
     this.convocatoriaAreaTematicaService = convocatoriaAreaTematicaService;
     this.convocatoriaEnlaceService = convocatoriaEnlaceService;
@@ -81,6 +91,38 @@ public class ConvocatoriaController {
     }
 
     log.debug("findAllConvocatoriaEnlace(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * 
+   * CONVOCATORIA ENTIDAD CONVOCANTE
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de
+   * {@link ConvocatoriaEntidadConvocante} de la {@link Convocatoria}.
+   * 
+   * @param id     Identificador de {@link Convocatoria}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/convocatoriaentidadconvocantes")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-V')")
+  ResponseEntity<Page<ConvocatoriaEntidadConvocante>> findAllConvocatoriaEntidadConvocantes(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllConvocatoriaEntidadConvocantes(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<ConvocatoriaEntidadConvocante> page = convocatoriaEntidadConvocanteService.findAllByConvocatoria(id, query,
+        paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllConvocatoriaEntidadConvocantes(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllConvocatoriaEntidadConvocantes(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -145,4 +187,5 @@ public class ConvocatoriaController {
     log.debug("findAllConvocatoriaAreaTematica(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
+
 }

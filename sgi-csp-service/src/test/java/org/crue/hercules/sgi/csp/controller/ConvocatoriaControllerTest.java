@@ -12,10 +12,13 @@ import org.crue.hercules.sgi.csp.model.AreaTematicaArbol;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
+import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEnlaceService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadGestoraService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
@@ -54,6 +57,9 @@ public class ConvocatoriaControllerTest {
   private ObjectMapper mapper;
 
   @MockBean
+  private ConvocatoriaEntidadConvocanteService convocatoriaEntidadConvocanteService;
+
+  @MockBean
   private ConvocatoriaEntidadGestoraService convocatoriaEntidadGestoraService;
   @MockBean
   private ConvocatoriaAreaTematicaService convocatoriaAreaTematicaService;
@@ -61,6 +67,7 @@ public class ConvocatoriaControllerTest {
   private ConvocatoriaEnlaceService convocatoriaEnlaceService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_ENTIDAD_CONVOCANTE = "/convocatoriaentidadconvocantes";
   private static final String PATH_ENTIDAD_GESTORA = "/convocatoriaentidadgestoras";
   private static final String PATH_AREA_TEMATICA = "/convocatoriaareatematicas";
   private static final String CONTROLLER_BASE_PATH = "/convocatorias";
@@ -158,6 +165,101 @@ public class ConvocatoriaControllerTest {
             MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ENTIDAD_ENLACES, convocatoriaId)
                 .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page)
                 .header("X-Page-Size", pageSize).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
+   * 
+   * CONVOCATORIA ENTIDAD CONVOCANTE
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void findAllConvocatoriaEntidadConvocantes_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ConvocatoriaEntidadConvocante para la Convocatoria
+    Long convocatoriaId = 1L;
+
+    List<ConvocatoriaEntidadConvocante> convocatoriasEntidadesConvocantes = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      convocatoriasEntidadesConvocantes.add(generarMockConvocatoriaEntidadConvocante(i));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(convocatoriaEntidadConvocanteService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > convocatoriasEntidadesConvocantes.size() ? convocatoriasEntidadesConvocantes.size()
+              : toIndex;
+          List<ConvocatoriaEntidadConvocante> content = convocatoriasEntidadesConvocantes.subList(fromIndex, toIndex);
+          Page<ConvocatoriaEntidadConvocante> pageResponse = new PageImpl<>(content, pageable,
+              convocatoriasEntidadesConvocantes.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ENTIDAD_CONVOCANTE, convocatoriaId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los ConvocatoriaEntidadConvocante del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<ConvocatoriaEntidadConvocante> convocatoriaEntidadConvocantesResponse = mapper.readValue(
+        requestResult.getResponse().getContentAsString(), new TypeReference<List<ConvocatoriaEntidadConvocante>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = convocatoriaEntidadConvocantesResponse
+          .get(i - (page * pageSize) - 1);
+      Assertions.assertThat(convocatoriaEntidadConvocante.getEntidadRef()).isEqualTo("entidad-" + i);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void findAllConvocatoriaEntidadConvocantes_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de ConvocatoriaEntidadConvocante para la Convocatoria
+    Long convocatoriaId = 1L;
+    List<ConvocatoriaEntidadConvocante> convocatoriasEntidadesConvocantes = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(convocatoriaEntidadConvocanteService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          Page<ConvocatoriaEntidadConvocante> pageResponse = new PageImpl<>(convocatoriasEntidadesConvocantes, pageable,
+              0);
+          return pageResponse;
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ENTIDAD_CONVOCANTE, convocatoriaId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Devuelve un 204
         .andExpect(MockMvcResultMatchers.status().isNoContent());
@@ -413,6 +515,28 @@ public class ConvocatoriaControllerTest {
         .convocatoria(Convocatoria.builder().id(convocatoriaId).build())
         .areaTematicaArbol(AreaTematicaArbol.builder().id(areaTematicaId).build())
         .observaciones("observaciones-" + convocatoriaAreaTematicaId).build();
+  }
+
+  /**
+   * Función que devuelve un objeto ConvocatoriaEntidadConvocante
+   * 
+   * @param id id del ConvocatoriaEntidadConvocante
+   * @return el objeto ConvocatoriaEntidadConvocante
+   */
+  private ConvocatoriaEntidadConvocante generarMockConvocatoriaEntidadConvocante(Long id) {
+    Convocatoria convocatoria = new Convocatoria();
+    convocatoria.setId(id);
+
+    Programa programa = new Programa();
+    programa.setId(id);
+
+    ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = new ConvocatoriaEntidadConvocante();
+    convocatoriaEntidadConvocante.setId(id);
+    convocatoriaEntidadConvocante.setConvocatoria(convocatoria);
+    convocatoriaEntidadConvocante.setEntidadRef("entidad-" + (id == null ? 0 : id));
+    convocatoriaEntidadConvocante.setPrograma(programa);
+
+    return convocatoriaEntidadConvocante;
   }
 
 }

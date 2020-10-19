@@ -20,6 +20,10 @@
     <createSequence sequenceName="convocatoria_area_tematica_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-convocatoria_entidad_convocante_seq">
+    <createSequence sequenceName="convocatoria_entidad_convocante_seq" />
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-convocatoria_entidad_gestora_seq">
     <createSequence sequenceName="convocatoria_entidad_gestora_seq" />
   </changeSet>
@@ -125,6 +129,21 @@
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-convocatoria_entidad_convocante">
+    <createTable tableName="convocatoria_entidad_convocante">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="convocatoria_entidad_convocante_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_entidad_convocante_pk" />
+      </column>
+      <column name="convocatoria_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="entidad_ref" type="VARCHAR2(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="programa_id" type="BIGINT" />
     </createTable>
   </changeSet>
 
@@ -566,6 +585,13 @@
   </changeSet>
   <changeSet author="master" id="20200601000000-convocatoria_area_tematica_area_tematica_FK">
     <addForeignKeyConstraint baseColumnNames="area_tematica_id" baseTableName="convocatoria_area_tematica" constraintName="convocatoria_area_tematica_area_tematica_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="area_tematica_arbol" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-convocatoria_entidad_convocante_convocatoria_FK">
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_entidad_convocante" constraintName="convocatoria_entidad_convocante_convocatoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-convocatoria_entidad_convocante_programa_FK">
+    <addForeignKeyConstraint baseColumnNames="programa_id" baseTableName="convocatoria_entidad_convocante" constraintName="convocatoria_entidad_convocante_programa_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="programa" validate="true" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-convocatoria_entidad_gestora_convocatoria_FK">

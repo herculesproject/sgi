@@ -233,6 +233,24 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-convocatoria_entidad_convocante">
+    <insert tableName="convocatoria_entidad_convocante">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
+      <column name="entidad_ref" value="entidad-001" />
+      <column name="programa_id" valueComputed="(select id from csp.programa where nombre = 'nombre-001')"></column>
+    </insert>
+    <insert tableName="convocatoria_entidad_convocante">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
+      <column name="entidad_ref" value="entidad-002" />
+      <column name="programa_id" valueComputed="(select id from csp.programa where nombre = 'nombre-001')"></column>
+    </insert>
+    <insert tableName="convocatoria_entidad_convocante">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-003')"></column>
+      <column name="entidad_ref" value="entidad-003" />
+      <column name="programa_id" valueComputed="(select id from csp.programa where nombre = 'nombre-001')"></column>
+    </insert>
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-tipo_ambito_geografico">
     <insert tableName="tipo_ambito_geografico">
       <column name="nombre" value="nombre-001" />
