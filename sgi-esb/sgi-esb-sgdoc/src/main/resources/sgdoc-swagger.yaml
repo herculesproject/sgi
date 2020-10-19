@@ -1,0 +1,274 @@
+swagger: '2.0'
+info:
+  description: API para la integración con el Sistema de Gestión Documental.
+  title: API-SGDOC
+  version: 1.0.0
+host: 'localhost:8080'
+basePath: /sgdoc
+schemes:
+  - http
+paths:
+  /documentos:
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Nº de pagina
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page
+          type: integer
+          x-example: 2
+        - description: Nº de elementos por página
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page-Size
+          type: integer
+          x-example: 10
+        - description: >-
+            Criterios de busqueda. <hr> Lista de criterios de busqueda separada
+            por comas, donde un criterio de busqueda es el nombre de uno de los
+            campos de la entidad buscada seguido de la operación y el valor con
+            el que se hace la comparación. Las operaciones soportadas son: <ul>
+            <li><b>:</b> equals</li> <li><b>!:</b> not equals</li> <li><b>~</b>
+            like</li> <li><b>!~</b> not like</li> <li><b>></b> greather</li>
+            <li><b>>:</b> greather or equal</li> <li><b><</b> lower</li>
+            <li><b><:</b> lower or equal</li></ul>
+          in: query
+          name: q
+          type: string
+          x-example: 'documentoRef!~d00,autor:Nombre'
+        - description: >-
+            Criterios de ordenación de la busqueda. <hr/> Nombre del campo por
+            el que se ordena seguido de +/- para ordenar ascendente o
+            descendentemente.
+          in: query
+          name: s
+          type: string
+          x-example: documentoRef-
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Page:
+              description: Nº de página
+              type: integer
+            X-Page-Count:
+              description: Nº de páginas
+              type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              type: integer
+          schema:
+            items:
+              $ref: '#/definitions/Documento'
+            type: array
+        '204':
+          description: No hay documentos para los criterios de busqueda utilizados.
+        '400':
+          description: Invalid params
+      tags:
+        - documentos
+      description: >-
+        Devuelve la lista paginada con los documentos que cumplen los
+        filtros.
+      operationId: findAllDocumentos
+      summary: Busca los documentos
+    post:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: Datos del nuevo documento
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/Documento'
+      responses:
+        '201':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Documento'
+        '400':
+          description: DocumentoRef tiene que ser null para crear un nuevo documento
+      tags:
+        - documentos
+      description: Devuelve el documento creado
+      operationId: newDocumento
+      summary: Crea un documento
+  '/documentos/{documentoRef}':
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Referencia del documento
+          in: path
+          name: documentoRef
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Documento'
+        '400':
+          description: documentoRef no valido
+        '404':
+          description: documento no encontrado
+      tags:
+        - documentos
+      description: >-
+        Devuelve los datos del documento correspondiente a
+        documentoRef
+      operationId: findDocumentoByDocumentoRef
+      summary: Busca un documento por su documentoRef
+    put:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - description: Referencia del documento
+          in: path
+          name: documentoRef
+          required: true
+          type: string
+        - description: Datos del documento actualizado
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/Documento'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Documento'
+        '400':
+          description: DocumentoRef no puede ser null para actualizar un documento
+      tags:
+        - documentos
+      description: Devuelve el documento actualizado
+      operationId: updateDocumento
+      summary: Actualiza el documento con el documentoRef
+  '/documentos/bydocumentorefs/{documentoRefs}':
+    get:
+      produces:
+        - application/json
+      parameters:
+        - description: Referencias de los documentos separados por "|"
+          in: path
+          name: documentoRefs
+          required: true
+          type: string
+          x-example: d-001|d-002
+        - description: Nº de pagina
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page
+          type: integer
+          x-example: 2
+        - description: Nº de elementos por página
+          format: int32
+          in: header
+          minimum: 0
+          name: X-Page-Size
+          type: integer
+          x-example: 10
+        - description: >-
+            Criterios de busqueda. <hr> Lista de criterios de busqueda separada
+            por comas, donde un criterio de busqueda es el nombre de uno de los
+            campos de la entidad buscada seguido de la operación y el valor con
+            el que se hace la comparación. Las operaciones soportadas son: <ul>
+            <li><b>:</b> equals</li> <li><b>!:</b> not equals</li> <li><b>~</b>
+            like</li> <li><b>!~</b> not like</li> <li><b>></b> greather</li>
+            <li><b>>:</b> greather or equal</li> <li><b><</b> lower</li>
+            <li><b><:</b> lower or equal</li></ul>
+          in: query
+          name: q
+          type: string
+          x-example: 'documentoRef!~d00,autor:Nombre'
+        - description: >-
+            Criterios de ordenación de la busqueda. <hr/> Nombre del campo por
+            el que se ordena seguido de +/- para ordenar ascendente o
+            descendentemente.
+          in: query
+          name: s
+          type: string
+          x-example: documentoRef-
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Page:
+              description: Nº de página
+              type: integer
+            X-Page-Count:
+              description: Nº de páginas
+              type: integer
+            X-Page-Size:
+              description: Nº de elementos por página
+              type: integer
+            X-Page-Total-Count:
+              description: Nº de elementos en la página
+              type: integer
+            X-Total-Count:
+              description: Nº total de elementos
+              type: integer
+          schema:
+            items:
+              $ref: '#/definitions/Documento'
+            type: array
+        '204':
+          description: No hay doucmentos para los criterios de busqueda utilizados.
+        '400':
+          description: Invalid params
+      tags:
+        - documentos
+      description: >-
+        Devuelve la lista paginada con los documentos que cumplen los
+        filtros.
+      operationId: findAllDocumentosByDocumentoRefs
+      summary: Busca los documentos correspondientes a la lista de documentorefs
+definitions:
+  Documento:
+    properties:
+      documentoRef:
+        type: string
+      nombre:
+        type: string
+      version:
+        type: string
+      archivo:
+        type: string
+        format: binary
+      fechaCreacion:
+        type: string
+      tipo:
+        type: string
+      autorRef:
+        type: string
+    type: object
+tags:
+  - externalDocs:
+      description: Find out more
+      url: 'https://confluence.treelogic.com/display/HERCULES/SGI+-+ESB+-+SGDOC'
+    description: Operaciones con documentos
+    name: documentos
+externalDocs:
+  description: Find out more about SGDOC
+  url: 'https://confluence.treelogic.com/display/HERCULES/SGI+-+ESB+-+SGDOC'
+x-components: {}
+
+
