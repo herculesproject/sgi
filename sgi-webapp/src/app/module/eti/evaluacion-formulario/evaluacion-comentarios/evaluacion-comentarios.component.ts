@@ -14,8 +14,8 @@ import { Subscription, Observable, of } from 'rxjs';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { EvaluacionComentarioFragment } from './evaluacion-comentarios.fragment';
 
-import { ComentarioCrearModalComponent } from '../../comentario/comentario-crear-modal/comentario-crear-modal.component';
-import { ComentarioEditarModalComponent } from '../../comentario/comentario-editar-modal/comentario-editar-modal.component';
+import { ComentarioCrearModalComponent, ComentarioCrearModalData } from '../../comentario/comentario-crear-modal/comentario-crear-modal.component';
+import { ComentarioEditarModalComponent, ComentarioEditarModalData } from '../../comentario/comentario-editar-modal/comentario-editar-modal.component';
 import { EvaluacionFormularioActionService, Gestion } from '../evaluacion-formulario.action.service';
 import { TipoComentario } from '@core/models/eti/tipo-comentario';
 import { TipoComentarioService } from '@core/services/eti/tipo-comentario.service';
@@ -46,7 +46,8 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
     private readonly dialogService: DialogService,
     private tipoComentarioService: TipoComentarioService,
     private matDialog: MatDialog,
-    private actionService: EvaluacionFormularioActionService,
+    private actionService: EvaluacionFormularioActionService
+
   ) {
     super(actionService.FRAGMENT.COMENTARIOS, actionService);
     this.logger.debug(EvaluacionComentariosComponent.name, 'constructor()', 'start');
@@ -94,9 +95,17 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
    */
   openCreateModal(): void {
     this.logger.debug(EvaluacionComentariosComponent.name, 'abrirModalCrear()', 'start');
+
+    const comentarioCrearModalData: ComentarioCrearModalData = {
+      idComite: this.actionService.getEvaluacion().memoria.comite.id,
+      idTipoEvaluacion: this.actionService.getEvaluacion().tipoEvaluacion.id,
+    };
+
     const config = {
       width: GLOBAL_CONSTANTS.maxWidthModal,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal
+      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+      data: comentarioCrearModalData,
+      autoFocus: false
     };
     const dialogRef = this.matDialog.open(ComentarioCrearModalComponent, config);
     dialogRef.afterClosed().subscribe(
@@ -117,10 +126,18 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
   openEditModal(comentario: StatusWrapper<IComentario>): void {
     this.logger.debug(EvaluacionComentariosComponent.name, 'openEditModal()', 'start');
     const wrapperRef = comentario;
+
+    const comentarioEditarModalData: ComentarioEditarModalData = {
+      comentario: wrapperRef.value,
+      idComite: this.actionService.getEvaluacion().memoria.comite.id,
+      idTipoEvaluacion: this.actionService.getEvaluacion().tipoEvaluacion.id,
+    };
+
     const config = {
       width: GLOBAL_CONSTANTS.maxWidthModal,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: wrapperRef.value
+      data: comentarioEditarModalData,
+      autoFocus: false
     };
     const dialogRef = this.matDialog.open(ComentarioEditarModalComponent, config);
     dialogRef.afterClosed().subscribe(

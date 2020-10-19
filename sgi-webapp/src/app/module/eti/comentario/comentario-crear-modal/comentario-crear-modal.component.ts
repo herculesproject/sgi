@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Inject } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IApartadoFormulario } from '@core/models/eti/apartado-formulario';
 import { IBloqueFormulario } from '@core/models/eti/bloque-formulario';
@@ -17,13 +17,18 @@ import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { EvaluacionFormularioActionService } from '../../evaluacion-formulario/evaluacion-formulario.action.service';
 import { ActionService } from '@core/services/action-service';
+import { ComiteFormularioService } from '@core/services/eti/comite-formulario.service';
 
 const MSG_ERROR_BLOQUE = marker('eti.comentario.crear.bloque.error.cargar');
-const MSG_ERROR_TIPO_COMENTARIO = marker('eti.comentario.crear.tipoComentario.error');
 const MSG_ERROR_APARTADO = marker('eti.comentario.crear.apartado.error.cargar');
 const MSG_ERROR_SUBAPARTADO = marker('eti.comentario.crear.subapartado.error.cargar');
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 
+
+export interface ComentarioCrearModalData {
+  idComite: number;
+  idTipoEvaluacion: number;
+}
 @Component({
   templateUrl: './comentario-crear-modal.component.html',
   styleUrls: ['./comentario-crear-modal.component.scss'],
@@ -43,15 +48,15 @@ export class ComentarioCrearModalComponent implements OnInit, OnDestroy {
   apartadosFormulario: IApartadoFormulario[];
   subapartados: IApartadoFormulario[];
   suscripciones: Subscription[];
-  private subscriptions: Subscription[] = [];
 
   constructor(
     private readonly logger: NGXLogger,
+    private readonly comiteFormularioService: ComiteFormularioService,
     private readonly bloqueFormularioService: BloqueFormularioService,
     private readonly apartadoFormularioService: ApartadoFormularioService,
     private readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<ComentarioCrearModalComponent>,
-
+    @Inject(MAT_DIALOG_DATA) public data: ComentarioCrearModalData,
   ) {
     this.logger.debug(ComentarioCrearModalComponent.name, 'constructor()', 'start');
     this.fxLayoutProperties = new FxLayoutProperties();
@@ -73,7 +78,7 @@ export class ComentarioCrearModalComponent implements OnInit, OnDestroy {
       comentario: new FormControl('', [])
     });
     this.initDatosApartados();
-    this.loadAllBloques();
+    this.loadBloquesFormularioComite();
     this.logger.debug(ComentarioCrearModalComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -96,10 +101,11 @@ export class ComentarioCrearModalComponent implements OnInit, OnDestroy {
   /**
    * Carga todos los bloques de la aplicación
    */
-  private loadAllBloques(): void {
+  private loadBloquesFormularioComite(): void {
     this.logger.debug(ComentarioCrearModalComponent.name, 'cargarBloques()', 'start');
+
     this.suscripciones.push(
-      this.bloqueFormularioService.findAll().subscribe(
+      this.comiteFormularioService.findBloqueFormulario(this.data.idComite, this.data.idTipoEvaluacion).subscribe(
         (res: SgiRestListResult<IBloqueFormulario>) => {
           this.bloquesFormulario = res.items;
           this.logger.debug(ComentarioCrearModalComponent.name, 'cargarBloques()', 'end');
@@ -111,6 +117,7 @@ export class ComentarioCrearModalComponent implements OnInit, OnDestroy {
       )
     );
   }
+
 
   /**
    * Carga todos los apartados del bloque seleccionado

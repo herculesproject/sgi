@@ -13,8 +13,8 @@ import { NGXLogger } from 'ngx-logger';
 import { Subscription, Observable } from 'rxjs';
 
 import { SeguimientoComentarioFragment } from './seguimiento-comentarios.fragment';
-import { ComentarioCrearModalComponent } from '../../comentario/comentario-crear-modal/comentario-crear-modal.component';
-import { ComentarioEditarModalComponent } from '../../comentario/comentario-editar-modal/comentario-editar-modal.component';
+import { ComentarioCrearModalComponent, ComentarioCrearModalData } from '../../comentario/comentario-crear-modal/comentario-crear-modal.component';
+import { ComentarioEditarModalComponent, ComentarioEditarModalData } from '../../comentario/comentario-editar-modal/comentario-editar-modal.component';
 import { Gestion, SeguimientoFormularioActionService } from '../seguimiento-formulario.action.service';
 import { TipoComentarioService } from '@core/services/eti/tipo-comentario.service';
 import { TipoComentario } from '@core/models/eti/tipo-comentario';
@@ -92,9 +92,17 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
    */
   openCreateModal(): void {
     this.logger.debug(SeguimientoComentariosComponent.name, 'abrirModalCrear()', 'start');
+
+    const comentarioCrearModalData: ComentarioCrearModalData = {
+      idComite: this.actionService.getEvaluacion().memoria.comite.id,
+      idTipoEvaluacion: this.actionService.getEvaluacion().tipoEvaluacion.id,
+    };
+
     const config = {
       width: GLOBAL_CONSTANTS.maxWidthModal,
-      maxHeight: GLOBAL_CONSTANTS.maxHeightModal
+      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+      data: comentarioCrearModalData,
+      autoFocus: false
     };
     const dialogRef = this.matDialog.open(ComentarioCrearModalComponent, config);
     dialogRef.afterClosed().subscribe(
@@ -115,11 +123,20 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
   openEditModal(comentario: StatusWrapper<IComentario>): void {
     this.logger.debug(SeguimientoComentariosComponent.name, 'openEditModal()', 'start');
     const wrapperRef = comentario;
+
+    const comentarioEditarModalData: ComentarioEditarModalData = {
+      comentario: wrapperRef.value,
+      idComite: this.actionService.getEvaluacion().memoria.comite.id,
+      idTipoEvaluacion: this.actionService.getEvaluacion().tipoEvaluacion.id,
+    };
+
     const config = {
       width: GLOBAL_CONSTANTS.maxWidthModal,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: wrapperRef.value
+      data: comentarioEditarModalData,
+      autoFocus: false
     };
+
     const dialogRef = this.matDialog.open(ComentarioEditarModalComponent, config);
     dialogRef.afterClosed().subscribe(
       (resultado: IComentario) => {
