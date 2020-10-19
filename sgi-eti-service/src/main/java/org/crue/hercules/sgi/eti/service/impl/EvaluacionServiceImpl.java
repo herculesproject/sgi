@@ -9,8 +9,10 @@ import java.util.stream.Collectors;
 import org.crue.hercules.sgi.eti.converter.EvaluacionConverter;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
+import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
+import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
@@ -85,12 +87,12 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    * @param estadoMemoriaRepository       repository para {@link EstadoMemoria}
    * @param retrospectivaRepository       repository para {@link Retrospectiva}
    * @param memoriaService                service para {@link Memoria}
-   * @param comentarioRepository          repository para {@Link Comentario}
+   * @param comentarioRepository          repository para {@link Comentario}
    * @param convocatoriaReunionRepository repository para
-   *                                      {@Link ConvocatoriaReunion}
-   * @param evaluacionConverter           converter para {@Link Evaluacion}
+   *                                      {@link ConvocatoriaReunion}
+   * @param evaluacionConverter           converter para {@link Evaluacion}
    * @param estadoRetrospectivaRepository repository para
-   *                                      {@Link EstadoRetrospectiva}
+   *                                      {@link EstadoRetrospectiva}
    */
   public EvaluacionServiceImpl(EvaluacionRepository evaluacionRepository,
       EstadoMemoriaRepository estadoMemoriaRepository, RetrospectivaRepository retrospectivaRepository,
@@ -128,6 +130,14 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     Assert.isNull(evaluacion.getId(), "Evaluacion id tiene que ser null para crear una nueva evaluacion");
     Assert.notNull(evaluacion.getConvocatoriaReunion().getId(), "La convocatoria de reunión no puede ser nula");
 
+    if (!convocatoriaReunionRepository.existsById(evaluacion.getConvocatoriaReunion().getId())) {
+      throw new ConvocatoriaReunionNotFoundException(evaluacion.getConvocatoriaReunion().getId());
+    }
+
+    if (!memoriaRepository.existsById(evaluacion.getMemoria().getId())) {
+      throw new MemoriaNotFoundException(evaluacion.getMemoria().getId());
+    }
+
     // Si la evaluación es creada mediante la asignación de memorias en
     // ConvocatoriaReunión
     evaluacion.setConvocatoriaReunion(
@@ -141,7 +151,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       estadoMemoriaRepository.save(new EstadoMemoria(null, evaluacionCompleta.getMemoria(),
           evaluacionCompleta.getMemoria().getEstadoActual(), LocalDateTime.now()));
     }
-    evaluacionCompleta.getMemoria().setVersion(evaluacionCompleta.getVersion());
+
     memoriaService.update(evaluacionCompleta.getMemoria());
 
     return evaluacionRepository.save(evaluacionCompleta);
@@ -149,7 +159,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
 
   public Evaluacion rellenarEvaluacionConEstadosMemoria(Evaluacion evaluacion) {
     /** Se setean campos de evaluación */
-    evaluacion.setVersion(evaluacion.getMemoria().getVersion() + 1);
+
     evaluacion.setActivo(true);
     evaluacion.setEsRevMinima(false);
     evaluacion.setFechaDictamen(evaluacion.getConvocatoriaReunion().getFechaEvaluacion().toLocalDate());
@@ -189,6 +199,23 @@ public class EvaluacionServiceImpl implements EvaluacionService {
         // se actualiza estado de la memoria a 'En evaluación'
         evaluacion.getMemoria().getEstadoActual().setId(Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION);
       }
+    }
+
+    if (evaluacion.getTipoEvaluacion().getId().equals(2L)) {
+      evaluacion.setVersion(evaluacion.getMemoria().getVersion() + 1);
+      evaluacion.getMemoria().setVersion(evaluacion.getVersion());
+    } else {
+      evaluacionRepository.findFirstByMemoriaIdOrderByVersionDesc(evaluacion.getMemoria().getId())
+          .map(evaluacionAnterior -> {
+
+            if (evaluacionAnterior != null) {
+              evaluacion.setVersion(evaluacionAnterior.getVersion() + 1);
+            } else {
+              evaluacion.setVersion(1);
+            }
+
+            return evaluacionAnterior;
+          });
     }
     return evaluacion;
   }
@@ -496,7 +523,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    * Elimina las memorias asignadas a una convocatoria de reunión
    * 
    * @param idConvocatoriaReunion id de la {@link ConvocatoriaReunion}
-   * @param idEvaluacion          id de la {@Evaluacion}
+   * @param idEvaluacion          id de la {@link Evaluacion}
    */
   @Override
   @Transactional

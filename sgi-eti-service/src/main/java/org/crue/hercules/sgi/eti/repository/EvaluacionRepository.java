@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
@@ -40,5 +41,13 @@ public interface EvaluacionRepository
    */
   List<Evaluacion> findByActivoTrueAndTipoEvaluacionIdAndEsRevMinimaAndConvocatoriaReunionId(Long idTipoEvaluacion,
       Boolean esRevMinima, Long idConvocatoriaReunion);
+
+  /**
+   * Recupera la última evaluación de una memoria .
+   * 
+   * @param idMemoria identificador de la memoria.
+   * @return evaluación .
+   */
+  Optional<Evaluacion> findFirstByMemoriaIdOrderByVersionDesc(Long idMemoria);
 
 }

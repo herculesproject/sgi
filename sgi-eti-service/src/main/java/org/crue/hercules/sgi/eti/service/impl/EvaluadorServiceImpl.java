@@ -64,7 +64,7 @@ public class EvaluadorServiceImpl implements EvaluadorService {
    * Evalua si existe otro presidente en el mismo rango de fechas en el mismo
    * comité
    * 
-   * @param evaluador el objeto {@Link Evaluador}
+   * @param evaluador el objeto {@link Evaluador}
    * @return true or false si el presidente está en el rango de fechas correcto
    */
   public Boolean isPresidenteInFechasOk(Evaluador evaluador) {
@@ -103,7 +103,7 @@ public class EvaluadorServiceImpl implements EvaluadorService {
    * Evalua si existe el mismo evaluador en el mismo rango de fechas en el mismo
    * comité
    * 
-   * @param evaluador el objeto {@Link Evaluador}
+   * @param evaluador el objeto {@link Evaluador}
    * @return true or false si el evaluador cumple con las condiciones
    */
   public Boolean isEvaluadorInFechasOk(Evaluador evaluador) {

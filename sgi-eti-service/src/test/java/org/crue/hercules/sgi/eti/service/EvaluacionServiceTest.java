@@ -11,7 +11,9 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.converter.EvaluacionConverter;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
+import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
+import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
@@ -118,6 +120,10 @@ public class EvaluacionServiceTest {
 
     Evaluacion evaluacion = generarMockEvaluacion(1L, " New", 1L, 1L);
 
+    BDDMockito.given(convocatoriaReunionRepository.existsById(1L)).willReturn(Boolean.TRUE);
+
+    BDDMockito.given(memoriaRepository.existsById(evaluacion.getMemoria().getId())).willReturn(Boolean.TRUE);
+
     BDDMockito.given(convocatoriaReunionRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(evaluacionNew.getConvocatoriaReunion()));
     BDDMockito.given(evaluacionRepository.save(evaluacionNew)).willReturn(evaluacion);
@@ -141,6 +147,30 @@ public class EvaluacionServiceTest {
     // then: Lanza una excepcion porque la evaluacion ya tiene id
     Assertions.assertThatThrownBy(() -> evaluacionService.create(evaluacionNew))
         .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  public void create_EvaluacionWithId_ThrowsConvocatoriaReunionNotFoundException() {
+    // given: Una nueva evaluacion que ya tiene id
+    Evaluacion evaluacionNew = generarMockEvaluacion(null, " New", 1L, 1L);
+
+    // when: Creamos la evaluacion
+    // then: Lanza una excepcion porque la evaluacion ya tiene id
+    Assertions.assertThatThrownBy(() -> evaluacionService.create(evaluacionNew))
+        .isInstanceOf(ConvocatoriaReunionNotFoundException.class);
+  }
+
+  @Test
+  public void create_EvaluacionWithId_ThrowsMemoriaNotFoundException() {
+    // given: Una nueva evaluacion que ya tiene id
+    Evaluacion evaluacionNew = generarMockEvaluacion(null, " New", 1L, 1L);
+
+    BDDMockito.given(convocatoriaReunionRepository.existsById(1L)).willReturn(Boolean.TRUE);
+
+    // when: Creamos la evaluacion
+    // then: Lanza una excepcion porque la evaluacion ya tiene id
+    Assertions.assertThatThrownBy(() -> evaluacionService.create(evaluacionNew))
+        .isInstanceOf(MemoriaNotFoundException.class);
   }
 
   @Test
