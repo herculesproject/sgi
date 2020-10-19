@@ -24,6 +24,9 @@
     <createSequence sequenceName="convocatoria_entidad_gestora_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20201014000000-convocatoria_enlace_seq">
+    <createSequence sequenceName="convocatoria_enlace_seq" />
+  </changeSet>
   <changeSet author="master" id="20200928000000-fuente_financiacion_seq">
     <createSequence sequenceName="fuente_financiacion_seq" />
   </changeSet>
@@ -187,6 +190,21 @@
         <constraints nullable="false" />
       </column>
       <column name="observaciones" type="VARCHAR2(2000)" />
+    </createTable>
+  </changeSet>
+  <changeSet author="master" id="20201014000000-convocatoria_enlace">
+    <createTable tableName="convocatoria_enlace">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="convocatoria_enlace_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_enlace_pk" />
+      </column>
+      <column name="convocatoria_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="url" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+      <column name="descripcion" type="VARCHAR(250)" />
+      <column name="tipo_enlace_id" type="BIGINT" />
     </createTable>
   </changeSet>
 
@@ -552,6 +570,13 @@
 
   <changeSet author="master" id="20200601000000-convocatoria_entidad_gestora_convocatoria_FK">
     <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_entidad_gestora" constraintName="convocatoria_entidad_gestora_convocatoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20201014000000-convocatoria_enlace_convocatoria_FK">
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_enlace" constraintName="convocatoria_enlace_convocatoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="20201014000000-convocatoria_enlace_tipo_enlace_FK">
+    <addForeignKeyConstraint baseColumnNames="tipo_enlace_id" baseTableName="convocatoria_enlace" constraintName="convocatoria_enlace_tipo_enlace_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_enlace" validate="true" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-fuente_financiacion_tipo_ambito_geografico_FK">

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
@@ -42,6 +43,7 @@ public class ConvocatoriaIT {
   private static final String PATH_ENTIDAD_GESTORA = "/convocatoriaentidadgestoras";
   private static final String PATH_AREA_TEMATICA = "/convocatoriaareatematicas";
   private static final String CONTROLLER_BASE_PATH = "/convocatorias";
+  private static final String PATH_ENTIDAD_ENLACES = "/convocatoriaenlaces";
 
   private HttpEntity<ModeloEjecucion> buildRequest(HttpHeaders headers, ModeloEjecucion entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -139,4 +141,48 @@ public class ConvocatoriaIT {
     Assertions.assertThat(convocatoriasAreasTematicas.get(2).getObservaciones()).as("get(2).getObservaciones()")
         .isEqualTo("observaciones-" + String.format("%03d", 1));
   }
+
+  /**
+   * 
+   * CONVOCATORIA ENLACE
+   * 
+   */
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllConvocatoriaEnlace_WithPagingSortingAndFiltering_ReturnsConvocatoriaEnlaceSubList()
+      throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENL-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "id-";
+    String filter = "descripcion~%-00%";
+
+    Long convocatoriaId = 1L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ENTIDAD_ENLACES)
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(convocatoriaId).toUri();
+
+    final ResponseEntity<List<ConvocatoriaEnlace>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ConvocatoriaEnlace>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<ConvocatoriaEnlace> convocatoriasEnlaces = response.getBody();
+    Assertions.assertThat(convocatoriasEnlaces.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(convocatoriasEnlaces.get(0).getDescripcion()).as("get(0).getDescripcion()")
+        .isEqualTo("descripcion-" + String.format("%03d", 3));
+    Assertions.assertThat(convocatoriasEnlaces.get(1).getDescripcion()).as("get(1).getDescripcion())")
+        .isEqualTo("descripcion-" + String.format("%03d", 2));
+    Assertions.assertThat(convocatoriasEnlaces.get(2).getDescripcion()).as("get(2).getDescripcion()")
+        .isEqualTo("descripcion-" + String.format("%03d", 1));
+  }
+
 }

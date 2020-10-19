@@ -330,6 +330,27 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20201016000000-convocatoria_enlace">
+    <insert tableName="convocatoria_enlace">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
+      <column name="url" value="www.url1.com" />
+      <column name="descripcion" value="descripcion1" />
+      <column name="tipo_enlace_id" valueComputed="(select id from csp.tipo_enlace where nombre = 'tipo_enlace AAA')"></column>
+    </insert>
+    <insert tableName="convocatoria_enlace">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
+      <column name="url" value="www.url2.com" />
+      <column name="descripcion" value="descripcion2" />
+      <column name="tipo_enlace_id" valueComputed="(select id from csp.tipo_enlace where nombre = 'tipo_enlace BBB')"></column>
+    </insert>
+    <insert tableName="convocatoria_enlace">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-003')"></column>
+      <column name="url" value="www.url3.com" />
+      <column name="descripcion" value="descripcion3" />
+      <column name="tipo_enlace_id" valueComputed="(select id from csp.tipo_enlace where nombre = 'tipo_enlace CCC')"></column>
+    </insert>
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-modelo_tipo_enlace">
     <insert tableName="modelo_tipo_enlace">
       <column name="tipo_enlace_id" valueComputed="(select id from csp.tipo_enlace where nombre = 'tipo_enlace AAA')" />
