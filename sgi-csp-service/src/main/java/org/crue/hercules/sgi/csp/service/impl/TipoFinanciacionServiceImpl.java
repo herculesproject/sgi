@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.csp.exceptions.TipoFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
 import org.crue.hercules.sgi.csp.repository.TipoFinanciacionRepository;
+import org.crue.hercules.sgi.csp.repository.specification.TipoFinanciacionSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoFinanciacionService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -84,7 +85,8 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
   }
 
   /**
-   * Obtener todas las entidades {@link TipoFinanciacion} paginadas y/o filtradas
+   * Obtener todas las entidades {@link TipoFinanciacion} activos paginadas y/o
+   * filtradas
    *
    * @param query    la información del filtro.
    * @param pageable la información de la paginación.
@@ -94,13 +96,34 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
   @Override
   public Page<TipoFinanciacion> findAll(List<QueryCriteria> query, Pageable pageable) {
     log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
+    Specification<TipoFinanciacion> specByQuery = new QuerySpecification<TipoFinanciacion>(query);
+    Specification<TipoFinanciacion> specActivos = TipoFinanciacionSpecifications.activos();
+
+    Specification<TipoFinanciacion> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<TipoFinanciacion> returnValue = tipoFinanciacionRepository.findAll(specs, pageable);
+
+    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtener todas las entidades {@link TipoFinanciacion} paginadas y/o filtradas
+   *
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link TipoFinanciacion} paginadas y/o
+   *         filtradas
+   */
+  @Override
+  public Page<TipoFinanciacion> findAllTodos(List<QueryCriteria> query, Pageable pageable) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - start");
     Specification<TipoFinanciacion> spec = new QuerySpecification<TipoFinanciacion>(query);
 
     Page<TipoFinanciacion> returnValue = tipoFinanciacionRepository.findAll(spec, pageable);
 
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - end");
     return returnValue;
-
   }
 
   /**

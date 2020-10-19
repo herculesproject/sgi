@@ -157,6 +157,40 @@ public class TipoFinanciacionIT {
         .isEqualTo("nombre-" + String.format("%03d", 1));
   }
 
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllTodos_WithPagingSortingAndFiltering_ReturnsTipoFinanciacionSubList() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TDOC-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    String sort = "nombre-";
+    String filter = "descripcion~%00%";
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
+
+    final ResponseEntity<List<TipoFinanciacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<TipoFinanciacion>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<TipoFinanciacion> tiposFinanciacion = response.getBody();
+    Assertions.assertThat(tiposFinanciacion.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(tiposFinanciacion.get(0).getNombre()).as("get(0).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 3));
+    Assertions.assertThat(tiposFinanciacion.get(1).getNombre()).as("get(1).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 2));
+    Assertions.assertThat(tiposFinanciacion.get(2).getNombre()).as("get(2).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 1));
+  }
+
   /**
    * Función que devuelve un objeto TipoFinanciacion
    * 

@@ -167,12 +167,14 @@ public class ListadoAreaTematicaIT {
         .isEqualTo("nombre-" + String.format("%03d", 1));
   }
 
+  @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_EmptyList_Returns204() throws Exception {
+  public void findAllTodos_WithPagingSortingAndFiltering_ReturnsListadoAreaTematicaSubList() throws Exception {
 
-    // given: no data for ListadoAreaTematica
-    // when: find ListadoAreaTematica
+    // given: data for ListadoAreaTematica
+
+    // first page, 3 elements per page sorted by nombre desc
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-LATEM-V")));
     headers.add("X-Page", "0");
@@ -180,15 +182,28 @@ public class ListadoAreaTematicaIT {
     String sort = "nombre-";
     String filter = "descripcion~%00%";
 
-    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
-        .build(false).toUri();
-
+    // when: find ListadoAreaTematica
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
     final ResponseEntity<List<ListadoAreaTematica>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<ListadoAreaTematica>>() {
         });
 
-    // then: 204 no content
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    // given: ListadoAreaTematica data filtered and sorted
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<ListadoAreaTematica> responseData = response.getBody();
+    Assertions.assertThat(responseData.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(responseData.get(0).getNombre()).as("get(0).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 3));
+    Assertions.assertThat(responseData.get(1).getNombre()).as("get(1).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 2));
+    Assertions.assertThat(responseData.get(2).getNombre()).as("get(2).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 1));
   }
 
   @Sql
@@ -207,6 +222,44 @@ public class ListadoAreaTematicaIT {
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/areatematicaarboles")
         .queryParam("s", sort).queryParam("q", filter).buildAndExpand(idPlan).toUri();
+
+    final ResponseEntity<List<AreaTematicaArbol>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<AreaTematicaArbol>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<AreaTematicaArbol> areaTematicaArboles = response.getBody();
+    Assertions.assertThat(areaTematicaArboles.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(areaTematicaArboles.get(0).getNombre()).as("get(0).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 3));
+    Assertions.assertThat(areaTematicaArboles.get(1).getNombre()).as("get(1).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 2));
+    Assertions.assertThat(areaTematicaArboles.get(2).getNombre()).as("get(2).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 1));
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllAreaTematicaArbolesTodos_WithPagingSortingAndFiltering_ReturnsAreaTematicaArbolSubList()
+      throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "abreviatura-";
+    String filter = "nombre~%00%";
+
+    Long idPlan = 1L;
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/areatematicaarboles/todos").queryParam("s", sort)
+        .queryParam("q", filter).buildAndExpand(idPlan).toUri();
 
     final ResponseEntity<List<AreaTematicaArbol>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<AreaTematicaArbol>>() {

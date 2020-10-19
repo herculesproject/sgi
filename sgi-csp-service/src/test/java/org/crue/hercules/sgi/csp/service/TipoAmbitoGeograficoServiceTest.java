@@ -236,6 +236,46 @@ public class TipoAmbitoGeograficoServiceTest {
   }
 
   @Test
+  public void findAllTodos_ReturnsPage() {
+    // given: Una lista con 37 TipoAmbitoGeografico
+    List<TipoAmbitoGeografico> tipoAmbitoGeograficos = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      tipoAmbitoGeograficos.add(generarMockTipoAmbitoGeografico(i, "TipoAmbitoGeografico" + String.format("%03d", i)));
+    }
+
+    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<TipoAmbitoGeografico>>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<TipoAmbitoGeografico>>() {
+          @Override
+          public Page<TipoAmbitoGeografico> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > tipoAmbitoGeograficos.size() ? tipoAmbitoGeograficos.size() : toIndex;
+            List<TipoAmbitoGeografico> content = tipoAmbitoGeograficos.subList(fromIndex, toIndex);
+            Page<TipoAmbitoGeografico> page = new PageImpl<>(content, pageable, tipoAmbitoGeograficos.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<TipoAmbitoGeografico> page = service.findAllTodos(null, paging);
+
+    // then: Devuelve la pagina 3 con los TipoAmbitoGeografico del 31 al 37
+    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
+    Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
+    Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
+    for (int i = 31; i <= 37; i++) {
+      TipoAmbitoGeografico tipoAmbitoGeografico = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
+      Assertions.assertThat(tipoAmbitoGeografico.getNombre())
+          .isEqualTo("TipoAmbitoGeografico" + String.format("%03d", i));
+    }
+  }
+
+  @Test
   public void findById_ReturnsTipoAmbitoGeografico() {
     // given: Un TipoAmbitoGeografico con el id buscado
     Long idBuscado = 1L;

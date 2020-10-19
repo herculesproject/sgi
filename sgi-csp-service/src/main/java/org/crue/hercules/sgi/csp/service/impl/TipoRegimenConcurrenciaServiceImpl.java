@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.csp.exceptions.TipoRegimenConcurrenciaNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.repository.TipoRegimenConcurrenciaRepository;
+import org.crue.hercules.sgi.csp.repository.specification.TipoRegimenConcurrenciaSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoRegimenConcurrenciaService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -107,8 +108,8 @@ public class TipoRegimenConcurrenciaServiceImpl implements TipoRegimenConcurrenc
   }
 
   /**
-   * Obtiene todas las entidades {@link TipoRegimenConcurrencia} paginadas y
-   * filtradas.
+   * Obtiene todas las entidades {@link TipoRegimenConcurrencia} activos paginadas
+   * y filtradas.
    *
    * @param query  información del filtro.
    * @param paging información de paginación.
@@ -118,9 +119,30 @@ public class TipoRegimenConcurrenciaServiceImpl implements TipoRegimenConcurrenc
   @Override
   public Page<TipoRegimenConcurrencia> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
+    Specification<TipoRegimenConcurrencia> specByQuery = new QuerySpecification<TipoRegimenConcurrencia>(query);
+    Specification<TipoRegimenConcurrencia> specActivos = TipoRegimenConcurrenciaSpecifications.activos();
+
+    Specification<TipoRegimenConcurrencia> specs = Specification.where(specActivos).and(specByQuery);
+    Page<TipoRegimenConcurrencia> returnValue = repository.findAll(specs, paging);
+    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene todas las entidades {@link TipoRegimenConcurrencia} paginadas y
+   * filtradas.
+   *
+   * @param query  información del filtro.
+   * @param paging información de paginación.
+   * @return el listado de entidades {@link TipoRegimenConcurrencia} paginadas y
+   *         filtradas.
+   */
+  @Override
+  public Page<TipoRegimenConcurrencia> findAllTodos(List<QueryCriteria> query, Pageable paging) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
     Specification<TipoRegimenConcurrencia> spec = new QuerySpecification<TipoRegimenConcurrencia>(query);
     Page<TipoRegimenConcurrencia> returnValue = repository.findAll(spec, paging);
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
     return returnValue;
   }
 

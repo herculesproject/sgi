@@ -17,15 +17,16 @@ public interface ListadoAreaTematicaService {
    * Guarda la entidad {@link ListadoAreaTematica}.
    * 
    * @param listadoAreaTematica la entidad {@link ListadoAreaTematica} a guardar.
-   * @return ListadoAreaTematica la entidad {@link ListadoAreaTematica} persistida.
+   * @return ListadoAreaTematica la entidad {@link ListadoAreaTematica}
+   *         persistida.
    */
   ListadoAreaTematica create(ListadoAreaTematica listadoAreaTematica);
 
   /**
    * Actualiza los datos del {@link ListadoAreaTematica}.
    * 
-   * @param listadoAreaTematicaActualizar {@link ListadoAreaTematica} con los datos
-   *                                actualizados.
+   * @param listadoAreaTematicaActualizar {@link ListadoAreaTematica} con los
+   *                                      datos actualizados.
    * @return ListadoAreaTematica {@link ListadoAreaTematica} actualizado.
    */
   ListadoAreaTematica update(final ListadoAreaTematica listadoAreaTematicaActualizar);
@@ -39,13 +40,26 @@ public interface ListadoAreaTematicaService {
   ListadoAreaTematica disable(Long id);
 
   /**
-   * Obtiene todas las entidades {@link ListadoAreaTematica} paginadas y filtradas.
+   * Obtiene todas las entidades {@link ListadoAreaTematica} activos paginadas y
+   * filtradas.
    *
    * @param query  información del filtro.
    * @param paging información de paginación.
-   * @return el listado de entidades {@link ListadoAreaTematica} paginadas y filtradas.
+   * @return el listado de entidades {@link ListadoAreaTematica} paginadas y
+   *         filtradas.
    */
   Page<ListadoAreaTematica> findAll(List<QueryCriteria> query, Pageable paging);
+
+  /**
+   * Obtiene todas las entidades {@link ListadoAreaTematica} paginadas y
+   * filtradas.
+   *
+   * @param query  información del filtro.
+   * @param paging información de paginación.
+   * @return el listado de entidades {@link ListadoAreaTematica} paginadas y
+   *         filtradas.
+   */
+  Page<ListadoAreaTematica> findAllTodos(List<QueryCriteria> query, Pageable paging);
 
   /**
    * Obtiene una entidad {@link ListadoAreaTematica} por id.

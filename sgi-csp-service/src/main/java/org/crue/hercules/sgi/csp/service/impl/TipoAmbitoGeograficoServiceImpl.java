@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.csp.exceptions.TipoAmbitoGeograficoNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.repository.TipoAmbitoGeograficoRepository;
+import org.crue.hercules.sgi.csp.repository.specification.TipoAmbitoGeograficoSpecifications;
 import org.crue.hercules.sgi.csp.service.TipoAmbitoGeograficoService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -107,8 +108,8 @@ public class TipoAmbitoGeograficoServiceImpl implements TipoAmbitoGeograficoServ
   }
 
   /**
-   * Obtener todas las entidades {@link TipoAmbitoGeografico} paginadas y/o
-   * filtradas.
+   * Obtener todas las entidades {@link TipoAmbitoGeografico} activos paginadas
+   * y/o filtradas.
    *
    * @param pageable la información de la paginación.
    * @param query    la información del filtro.
@@ -119,11 +120,33 @@ public class TipoAmbitoGeograficoServiceImpl implements TipoAmbitoGeograficoServ
   public Page<TipoAmbitoGeografico> findAll(List<QueryCriteria> query, Pageable pageable) {
     log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
     Specification<TipoAmbitoGeografico> specByQuery = new QuerySpecification<TipoAmbitoGeografico>(query);
+    Specification<TipoAmbitoGeografico> specActivos = TipoAmbitoGeograficoSpecifications.activos();
+
+    Specification<TipoAmbitoGeografico> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<TipoAmbitoGeografico> returnValue = repository.findAll(specs, pageable);
+    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtener todas las entidades {@link TipoAmbitoGeografico} paginadas y/o
+   * filtradas.
+   *
+   * @param pageable la información de la paginación.
+   * @param query    la información del filtro.
+   * @return la lista de entidades {@link TipoAmbitoGeografico} paginadas y/o
+   *         filtradas.
+   */
+  @Override
+  public Page<TipoAmbitoGeografico> findAllTodos(List<QueryCriteria> query, Pageable pageable) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - start");
+    Specification<TipoAmbitoGeografico> specByQuery = new QuerySpecification<TipoAmbitoGeografico>(query);
 
     Specification<TipoAmbitoGeografico> specs = Specification.where(specByQuery);
 
     Page<TipoAmbitoGeografico> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - end");
     return returnValue;
   }
 

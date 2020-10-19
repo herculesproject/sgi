@@ -9,6 +9,17 @@ import org.springframework.data.jpa.domain.Specification;
 public class ProgramaSpecifications {
 
   /**
+   * {@link Programa} activos.
+   * 
+   * @return specification para obtener los {@link Programa} activos.
+   */
+  public static Specification<Programa> activos() {
+    return (root, query, cb) -> {
+      return cb.equal(root.get(Programa_.activo), Boolean.TRUE);
+    };
+  }
+
+  /**
    * {@link Programa} del {@link Plan} con el id indicado.
    * 
    * @param id identificador del {@link Plan}.

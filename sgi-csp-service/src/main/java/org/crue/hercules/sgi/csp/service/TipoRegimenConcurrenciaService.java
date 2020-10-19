@@ -41,6 +41,17 @@ public interface TipoRegimenConcurrenciaService {
   TipoRegimenConcurrencia disable(Long id);
 
   /**
+   * Obtiene todas las entidades {@link TipoRegimenConcurrencia} activos paginadas
+   * y filtradas.
+   *
+   * @param query  información del filtro.
+   * @param paging información de paginación.
+   * @return el listado de entidades {@link TipoRegimenConcurrencia} paginadas y
+   *         filtradas.
+   */
+  Page<TipoRegimenConcurrencia> findAll(List<QueryCriteria> query, Pageable paging);
+
+  /**
    * Obtiene todas las entidades {@link TipoRegimenConcurrencia} paginadas y
    * filtradas.
    *
@@ -49,7 +60,7 @@ public interface TipoRegimenConcurrenciaService {
    * @return el listado de entidades {@link TipoRegimenConcurrencia} paginadas y
    *         filtradas.
    */
-  Page<TipoRegimenConcurrencia> findAll(List<QueryCriteria> query, Pageable paging);
+  Page<TipoRegimenConcurrencia> findAllTodos(List<QueryCriteria> query, Pageable paging);
 
   /**
    * Obtiene una entidad {@link TipoRegimenConcurrencia} por id.

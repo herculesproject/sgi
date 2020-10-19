@@ -162,27 +162,40 @@ public class TipoRegimenConcurrenciaIT {
     Assertions.assertThat(responseData.get(2).getNombre()).as("get(2).getNombre())").isEqualTo("nombre-01");
   }
 
+  @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void findAll_EmptyList_Returns204() throws Exception {
+  public void findAllTodos_WithPagingSortingAndFiltering_ReturnsTipoRegimenConcurrenciaSubList() throws Exception {
 
-    // given: no data for TipoRegimenConcurrencia
-    // when: find TipoRegimenConcurrencia
+    // given: data for TipoRegimenConcurrencia
+
+    // first page, 3 elements per page sorted by nombre desc
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ADMIN")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "id-";
-    String filter = "nombre~%00%";
+    String filter = "nombre~%-0%";
 
-    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
-        .build(false).toUri();
-
+    // when: find TipoRegimenConcurrencia
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/todos").queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
     final ResponseEntity<List<TipoRegimenConcurrencia>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<TipoRegimenConcurrencia>>() {
         });
 
-    // then: 204 no content
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    // given: TipoRegimenConcurrencia data filtered and sorted
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<TipoRegimenConcurrencia> responseData = response.getBody();
+    Assertions.assertThat(responseData.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(responseData.get(0).getNombre()).as("get(0).getNombre())").isEqualTo("nombre-03");
+    Assertions.assertThat(responseData.get(1).getNombre()).as("get(1).getNombre())").isEqualTo("nombre-02");
+    Assertions.assertThat(responseData.get(2).getNombre()).as("get(2).getNombre())").isEqualTo("nombre-01");
   }
+
 }

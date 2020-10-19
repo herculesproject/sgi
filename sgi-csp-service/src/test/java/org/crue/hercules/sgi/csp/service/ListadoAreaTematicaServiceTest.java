@@ -285,6 +285,46 @@ public class ListadoAreaTematicaServiceTest {
     }
   }
 
+  @Test
+  public void findAllTodos_WithPaging_ReturnsPage() {
+    // given: One hundred ListadoAreaTematica
+    List<ListadoAreaTematica> listadosAreasTematicas = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      listadosAreasTematicas.add(generarMockListadoAreaTematica(Long.valueOf(i), Boolean.TRUE));
+    }
+
+    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ListadoAreaTematica>>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<ListadoAreaTematica>>() {
+          @Override
+          public Page<ListadoAreaTematica> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<ListadoAreaTematica> content = listadosAreasTematicas.subList(fromIndex, toIndex);
+            Page<ListadoAreaTematica> page = new PageImpl<>(content, pageable, listadosAreasTematicas.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<ListadoAreaTematica> page = service.findAllTodos(null, paging);
+
+    // then: A Page with ten ListadoAreaTematica are returned containing
+    // Nombre='nombre-31' to
+    // 'nombre-40'
+    Assertions.assertThat(page.getContent().size()).isEqualTo(10);
+    Assertions.assertThat(page.getNumber()).isEqualTo(3);
+    Assertions.assertThat(page.getSize()).isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      ListadoAreaTematica item = page.getContent().get(i);
+      Assertions.assertThat(item.getNombre()).isEqualTo("nombre-" + j);
+    }
+  }
+
   /**
    * Función que devuelve un objeto ListadoAreaTematica
    * 

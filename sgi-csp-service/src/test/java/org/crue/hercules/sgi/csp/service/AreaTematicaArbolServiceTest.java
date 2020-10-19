@@ -505,6 +505,47 @@ public class AreaTematicaArbolServiceTest {
     }
   }
 
+  @Test
+  public void findAllTodosByListadoAreaTematica_ReturnsPage() {
+    // given: Una lista con 37 AreaTematicaArbol para el ListadoAreaTematica
+    Long idListadoAreaTematica = 1L;
+    List<AreaTematicaArbol> areaTematicaArboles = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      areaTematicaArboles.add(generarMockAreaTematicaArbol(i));
+    }
+
+    BDDMockito.given(
+        repository.findAll(ArgumentMatchers.<Specification<AreaTematicaArbol>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<AreaTematicaArbol>>() {
+          @Override
+          public Page<AreaTematicaArbol> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > areaTematicaArboles.size() ? areaTematicaArboles.size() : toIndex;
+            List<AreaTematicaArbol> content = areaTematicaArboles.subList(fromIndex, toIndex);
+            Page<AreaTematicaArbol> page = new PageImpl<>(content, pageable, areaTematicaArboles.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<AreaTematicaArbol> page = service.findAllTodosByListadoAreaTematica(idListadoAreaTematica, null, paging);
+
+    // then: Devuelve la pagina 3 con los TipoEnlace del 31 al 37
+    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
+    Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
+    Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
+    for (int i = 31; i <= 37; i++) {
+      AreaTematicaArbol areaTematicaArbol = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
+      Assertions.assertThat(areaTematicaArbol.getNombre()).isEqualTo("nombre-" + i);
+    }
+  }
+
   /**
    * Función que devuelve un objeto ListadoAreaTematica
    * 

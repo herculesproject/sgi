@@ -48,7 +48,8 @@ public interface AreaTematicaArbolService {
   AreaTematicaArbol findById(Long id);
 
   /**
-   * Obtiene los {@link AreaTematicaArbol} para un {@link ListadoAreaTematica}.
+   * Obtiene los {@link AreaTematicaArbol} activos para un
+   * {@link ListadoAreaTematica}.
    *
    * @param idListadoAreaTematica el id de la entidad {@link ListadoAreaTematica}.
    * @param query                 la información del filtro.
@@ -57,6 +58,18 @@ public interface AreaTematicaArbolService {
    *         {@link ListadoAreaTematica} paginadas.
    */
   Page<AreaTematicaArbol> findAllByListadoAreaTematica(Long idListadoAreaTematica, List<QueryCriteria> query,
+      Pageable pageable);
+
+  /**
+   * Obtiene los {@link AreaTematicaArbol} para un {@link ListadoAreaTematica}.
+   *
+   * @param idListadoAreaTematica el id de la entidad {@link ListadoAreaTematica}.
+   * @param query                 la información del filtro.
+   * @param pageable              la información de la paginación.
+   * @return la lista de entidades {@link AreaTematicaArbol} del
+   *         {@link ListadoAreaTematica} paginadas.
+   */
+  Page<AreaTematicaArbol> findAllTodosByListadoAreaTematica(Long idListadoAreaTematica, List<QueryCriteria> query,
       Pageable pageable);
 
 }

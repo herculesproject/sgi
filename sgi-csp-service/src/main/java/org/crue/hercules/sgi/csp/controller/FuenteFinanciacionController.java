@@ -49,7 +49,7 @@ public class FuenteFinanciacionController {
   }
 
   /**
-   * Devuelve una lista paginada y filtrada {@link FuenteFinanciacion}.
+   * Devuelve una lista paginada y filtrada {@link FuenteFinanciacion} activos.
    * 
    * @param query  filtro de {@link QueryCriteria}.
    * @param paging pageable.
@@ -68,6 +68,29 @@ public class FuenteFinanciacionController {
     }
 
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link FuenteFinanciacion}.
+   * 
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/todos")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
+  ResponseEntity<Page<FuenteFinanciacion>> findAllTodos(
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
+    Page<FuenteFinanciacion> page = service.findAllTodos(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

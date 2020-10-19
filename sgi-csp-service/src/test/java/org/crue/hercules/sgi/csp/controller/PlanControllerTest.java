@@ -262,6 +262,84 @@ public class PlanControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  public void findAllTodos_ReturnsPage() throws Exception {
+    // given: Una lista con 37 Plan
+    List<Plan> planes = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      planes.add(generarMockPlan(i, "Plan" + String.format("%03d", i)));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > planes.size() ? planes.size() : toIndex;
+          List<Plan> content = planes.subList(fromIndex, toIndex);
+          Page<Plan> pageResponse = new PageImpl<>(content, pageable, planes.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/todos")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los Plan del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<Plan> planesResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<Plan>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      Plan plan = planesResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(plan.getNombre()).isEqualTo("Plan" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  public void findAllTodos_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de Plan
+    List<Plan> planes = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          Page<Plan> pageResponse = new PageImpl<>(planes, pageable, 0);
+          return pageResponse;
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/todos")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
   @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
   public void findById_WithExistingId_ReturnsPlan() throws Exception {
     // given: existing id
@@ -375,6 +453,91 @@ public class PlanControllerTest {
     // when: Get page=0 with pagesize=10
     mockMvc
         .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/programas", idPlan)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  public void findAllProgramasTodos_ReturnsPage() throws Exception {
+    // given: Una lista con 37 Programa para el Plan
+    Long idPlan = 1L;
+
+    List<Programa> programas = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      programas.add(generarMockPrograma(i, "Programa" + String.format("%03d", i)));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(programaService.findAllTodosByPlan(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > programas.size() ? programas.size() : toIndex;
+          List<Programa> content = programas.subList(fromIndex, toIndex);
+          Page<Programa> pageResponse = new PageImpl<>(content, pageable, programas.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/programas/todos", idPlan)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los Programa del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<Programa> programasResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<Programa>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      Programa programa = programasResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(programa.getNombre()).isEqualTo("Programa" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  public void findAllProgramasTodos_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de Programa para el Plan
+    Long idPlan = 1L;
+
+    List<Programa> programas = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(programaService.findAllTodosByPlan(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          Page<Programa> pageResponse = new PageImpl<>(programas, pageable, 0);
+          return pageResponse;
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/programas/todos", idPlan)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())

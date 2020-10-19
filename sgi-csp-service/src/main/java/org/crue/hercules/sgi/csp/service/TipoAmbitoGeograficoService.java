@@ -39,6 +39,17 @@ public interface TipoAmbitoGeograficoService {
   TipoAmbitoGeografico disable(Long id);
 
   /**
+   * Obtener todas las entidades {@link TipoAmbitoGeografico} activos paginadas
+   * y/o filtradas.
+   *
+   * @param pageable la información de la paginación.
+   * @param query    la información del filtro.
+   * @return la lista de entidades {@link TipoAmbitoGeografico} paginadas y/o
+   *         filtradas.
+   */
+  Page<TipoAmbitoGeografico> findAll(List<QueryCriteria> query, Pageable pageable);
+
+  /**
    * Obtener todas las entidades {@link TipoAmbitoGeografico} paginadas y/o
    * filtradas.
    *
@@ -47,7 +58,7 @@ public interface TipoAmbitoGeograficoService {
    * @return la lista de entidades {@link TipoAmbitoGeografico} paginadas y/o
    *         filtradas.
    */
-  Page<TipoAmbitoGeografico> findAll(List<QueryCriteria> query, Pageable pageable);
+  Page<TipoAmbitoGeografico> findAllTodos(List<QueryCriteria> query, Pageable pageable);
 
   /**
    * Obtiene {@link TipoAmbitoGeografico} por su id.

@@ -208,7 +208,8 @@ public class AreaTematicaArbolServiceImpl implements AreaTematicaArbolService {
   }
 
   /**
-   * Obtiene los {@link AreaTematicaArbol} para un {@link ListadoAreaTematica}.
+   * Obtiene los {@link AreaTematicaArbol} activos para un
+   * {@link ListadoAreaTematica}.
    *
    * @param idListadoAreaTematica el id de la entidad {@link ListadoAreaTematica}.
    * @param query                 la información del filtro.
@@ -224,12 +225,40 @@ public class AreaTematicaArbolServiceImpl implements AreaTematicaArbolService {
     Specification<AreaTematicaArbol> specByQuery = new QuerySpecification<AreaTematicaArbol>(query);
     Specification<AreaTematicaArbol> specByListadoAreaTematicaId = AreaTematicaArbolSpecifications
         .byListadoAreaTematicaId(idListadoAreaTematica);
+    Specification<AreaTematicaArbol> specActivos = AreaTematicaArbolSpecifications.activos();
+
+    Specification<AreaTematicaArbol> specs = Specification.where(specByListadoAreaTematicaId).and(specActivos)
+        .and(specByQuery);
+
+    Page<AreaTematicaArbol> returnValue = repository.findAll(specs, pageable);
+    log.debug(
+        "findAllByListadoAreaTematica(Long idListadoAreaTematica, List<QueryCriteria> query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene los {@link AreaTematicaArbol} para un {@link ListadoAreaTematica}.
+   *
+   * @param idListadoAreaTematica el id de la entidad {@link ListadoAreaTematica}.
+   * @param query                 la información del filtro.
+   * @param pageable              la información de la paginación.
+   * @return la lista de entidades {@link AreaTematicaArbol} del
+   *         {@link ListadoAreaTematica} paginadas.
+   */
+  @Override
+  public Page<AreaTematicaArbol> findAllTodosByListadoAreaTematica(Long idListadoAreaTematica,
+      List<QueryCriteria> query, Pageable pageable) {
+    log.debug(
+        "findAllTodosByListadoAreaTematica(Long idListadoAreaTematica, List<QueryCriteria> query, Pageable pageable) - start");
+    Specification<AreaTematicaArbol> specByQuery = new QuerySpecification<AreaTematicaArbol>(query);
+    Specification<AreaTematicaArbol> specByListadoAreaTematicaId = AreaTematicaArbolSpecifications
+        .byListadoAreaTematicaId(idListadoAreaTematica);
 
     Specification<AreaTematicaArbol> specs = Specification.where(specByListadoAreaTematicaId).and(specByQuery);
 
     Page<AreaTematicaArbol> returnValue = repository.findAll(specs, pageable);
     log.debug(
-        "findAllByListadoAreaTematica(Long idListadoAreaTematica, List<QueryCriteria> query, Pageable pageable) - end");
+        "findAllTodosByListadoAreaTematica(Long idListadoAreaTematica, List<QueryCriteria> query, Pageable pageable) - end");
     return returnValue;
   }
 

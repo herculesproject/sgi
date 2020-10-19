@@ -38,7 +38,7 @@ public interface FuenteFinanciacionService {
   FuenteFinanciacion disable(Long id);
 
   /**
-   * Obtener todas las entidades {@link FuenteFinanciacion} paginadas y/o
+   * Obtener todas las entidades {@link FuenteFinanciacion} activos paginadas y/o
    * filtradas.
    *
    * @param pageable la información de la paginación.
@@ -47,6 +47,17 @@ public interface FuenteFinanciacionService {
    *         filtradas.
    */
   Page<FuenteFinanciacion> findAll(List<QueryCriteria> query, Pageable pageable);
+
+  /**
+   * Obtener todas las entidades {@link FuenteFinanciacion} paginadas y/o
+   * filtradas.
+   *
+   * @param pageable la información de la paginación.
+   * @param query    la información del filtro.
+   * @return la lista de entidades {@link FuenteFinanciacion} paginadas y/o
+   *         filtradas.
+   */
+  Page<FuenteFinanciacion> findAllTodos(List<QueryCriteria> query, Pageable pageable);
 
   /**
    * Obtiene {@link FuenteFinanciacion} por su id.

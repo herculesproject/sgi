@@ -9,6 +9,17 @@ import org.springframework.data.jpa.domain.Specification;
 public class AreaTematicaArbolSpecifications {
 
   /**
+   * {@link AreaTematicaArbol} activos.
+   * 
+   * @return specification para obtener los {@link AreaTematicaArbol} activos.
+   */
+  public static Specification<AreaTematicaArbol> activos() {
+    return (root, query, cb) -> {
+      return cb.equal(root.get(AreaTematicaArbol_.activo), Boolean.TRUE);
+    };
+  }
+
+  /**
    * {@link AreaTematicaArbol} del {@link ListadoAreaTematica} con el id indicado.
    * 
    * @param id identificador del {@link ListadoAreaTematica}.

@@ -29,7 +29,6 @@ import org.springframework.data.jpa.domain.Specification;
  * TipoFinanciacionServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-
 public class TipoFinanciacionServiceTest {
 
   @Mock
@@ -155,6 +154,46 @@ public class TipoFinanciacionServiceTest {
     // when: Get page=3 with pagesize=10
     Pageable paging = PageRequest.of(3, 10);
     Page<TipoFinanciacion> page = tipoFinanciacionService.findAll(null, paging);
+
+    // then: A Page with ten TipoFinanciaciones are returned containing
+    // descripcion='TipoFinanciacion031' to 'TipoFinanciacion040'
+    Assertions.assertThat(page.getContent().size()).isEqualTo(10);
+    Assertions.assertThat(page.getNumber()).isEqualTo(3);
+    Assertions.assertThat(page.getSize()).isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      TipoFinanciacion tipoFinanciacion = page.getContent().get(i);
+      Assertions.assertThat(tipoFinanciacion.getNombre()).isEqualTo("TipoFinanciacion" + String.format("%03d", j));
+    }
+  }
+
+  @Test
+  public void findAllTodos_WithPaging_ReturnsPage() {
+    // given: One hundred TipoFinanciacions
+    List<TipoFinanciacion> tipoFinanciacionList = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      tipoFinanciacionList
+          .add(generarMockTipoFinanciacion(Long.valueOf(i), "TipoFinanciacion" + String.format("%03d", i)));
+    }
+
+    BDDMockito.given(tipoFinanciacionRepository.findAll(ArgumentMatchers.<Specification<TipoFinanciacion>>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<TipoFinanciacion>>() {
+          @Override
+          public Page<TipoFinanciacion> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<TipoFinanciacion> content = tipoFinanciacionList.subList(fromIndex, toIndex);
+            Page<TipoFinanciacion> page = new PageImpl<>(content, pageable, tipoFinanciacionList.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<TipoFinanciacion> page = tipoFinanciacionService.findAllTodos(null, paging);
 
     // then: A Page with ten TipoFinanciaciones are returned containing
     // descripcion='TipoFinanciacion031' to 'TipoFinanciacion040'

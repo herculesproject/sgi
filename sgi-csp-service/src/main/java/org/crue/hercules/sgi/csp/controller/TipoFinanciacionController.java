@@ -39,7 +39,7 @@ public class TipoFinanciacionController {
   }
 
   /**
-   * Devuelve todas las entidades {@link TipoFinanciacion} paginadas
+   * Devuelve todas las entidades {@link TipoFinanciacion} activos paginadas
    *
    * @param query    la información del filtro.
    * @param pageable la información de la paginación.
@@ -57,6 +57,29 @@ public class TipoFinanciacionController {
     }
 
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve todas las entidades {@link TipoFinanciacion} paginadas
+   *
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link TipoFinanciacion} paginadas
+   */
+  @GetMapping("/todos")
+  ResponseEntity<Page<TipoFinanciacion>> findAllTodos(
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
+    Page<TipoFinanciacion> page = tipoFinanciacionService.findAllTodos(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

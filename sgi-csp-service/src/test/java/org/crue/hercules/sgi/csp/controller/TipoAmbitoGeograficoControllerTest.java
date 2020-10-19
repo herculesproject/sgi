@@ -261,6 +261,86 @@ public class TipoAmbitoGeograficoControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  public void findAllTodos_ReturnsPage() throws Exception {
+    // given: Una lista con 37 TipoAmbitoGeografico
+    List<TipoAmbitoGeografico> tipoAmbitoGeograficos = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      tipoAmbitoGeograficos.add(generarMockTipoAmbitoGeografico(i, "TipoAmbitoGeografico" + String.format("%03d", i)));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > tipoAmbitoGeograficos.size() ? tipoAmbitoGeograficos.size() : toIndex;
+          List<TipoAmbitoGeografico> content = tipoAmbitoGeograficos.subList(fromIndex, toIndex);
+          Page<TipoAmbitoGeografico> pageResponse = new PageImpl<>(content, pageable, tipoAmbitoGeograficos.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/todos")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los TipoAmbitoGeografico del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<TipoAmbitoGeografico> tipoAmbitoGeograficosResponse = mapper
+        .readValue(requestResult.getResponse().getContentAsString(), new TypeReference<List<TipoAmbitoGeografico>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      TipoAmbitoGeografico tipoAmbitoGeografico = tipoAmbitoGeograficosResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(tipoAmbitoGeografico.getNombre())
+          .isEqualTo("TipoAmbitoGeografico" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  public void findAllTodos_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de TipoAmbitoGeografico
+    List<TipoAmbitoGeografico> tipoAmbitoGeograficos = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          Page<TipoAmbitoGeografico> pageResponse = new PageImpl<>(tipoAmbitoGeograficos, pageable, 0);
+          return pageResponse;
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/todos")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+  }
+
+  @Test
   @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
   public void findById_WithExistingId_ReturnsTipoAmbitoGeografico() throws Exception {
     // given: existing id

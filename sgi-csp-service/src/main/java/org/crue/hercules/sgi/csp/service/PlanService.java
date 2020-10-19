@@ -37,13 +37,22 @@ public interface PlanService {
   Plan disable(Long id);
 
   /**
-   * Obtener todas las entidades {@link Plan} paginadas y/o filtradas.
+   * Obtener todas las entidades {@link Plan} activos paginadas y/o filtradas.
    *
    * @param pageable la información de la paginación.
    * @param query    la información del filtro.
    * @return la lista de entidades {@link Plan} paginadas y/o filtradas.
    */
   Page<Plan> findAll(List<QueryCriteria> query, Pageable pageable);
+
+  /**
+   * Obtener todas las entidades {@link Plan} paginadas y/o filtradas.
+   *
+   * @param pageable la información de la paginación.
+   * @param query    la información del filtro.
+   * @return la lista de entidades {@link Plan} paginadas y/o filtradas.
+   */
+  Page<Plan> findAllTodos(List<QueryCriteria> query, Pageable pageable);
 
   /**
    * Obtiene {@link Plan} por su id.

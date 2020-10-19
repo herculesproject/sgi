@@ -1,11 +1,20 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.SecurityConfig;
 import org.crue.hercules.sgi.csp.exceptions.TipoFinanciacionNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
+import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.service.TipoFinanciacionService;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
@@ -14,10 +23,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -195,6 +208,148 @@ public class TipoFinanciacionControllerTest {
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(MockMvcResultHandlers.print())
         // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-ADMIN" })
+  public void findAll_WithPaging_ReturnsTipoRegimenConcurrenciaSubList() throws Exception {
+    // given: One hundred TipoRegimenConcurrencia
+    List<TipoFinanciacion> data = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      data.add(generarMockTipoFinanciacion(Long.valueOf(i)));
+    }
+
+    BDDMockito.given(
+        tipoFinanciacionService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          List<TipoFinanciacion> content = data.subList(fromIndex, toIndex);
+          Page<TipoFinanciacion> page = new PageImpl<>(content, pageable, data.size());
+          return page;
+
+        });
+
+    // when: get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(TIPO_FINANCIACION_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: the asked TipoRegimenConcurrencia are returned with the right page
+        // information in
+        // headers
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "100"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10))).andReturn();
+
+    // this uses a TypeReference to inform Jackson about the Lists's generic type
+    List<TipoFinanciacion> actual = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<TipoFinanciacion>>() {
+        });
+
+    // containing Nombre='Nombre-31' to 'Nombre-40'
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      TipoFinanciacion item = actual.get(i);
+      Assertions.assertThat(item.getNombre()).isEqualTo("nombre-" + j);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-ADMIN" })
+  public void findAll_EmptyList_Returns204() throws Exception {
+    // given: no data TipoRegimenConcurrencia
+    BDDMockito.given(
+        tipoFinanciacionService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Page<TipoRegimenConcurrencia> page = new PageImpl<>(Collections.emptyList());
+          return page;
+        });
+
+    // when: get page=3 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(TIPO_FINANCIACION_CONTROLLER_BASE_PATH)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: returns 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-ADMIN" })
+  public void findAllTodos_WithPaging_ReturnsTipoRegimenConcurrenciaSubList() throws Exception {
+    // given: One hundred TipoRegimenConcurrencia
+    List<TipoFinanciacion> data = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      data.add(generarMockTipoFinanciacion(Long.valueOf(i)));
+    }
+
+    BDDMockito.given(tipoFinanciacionService.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          List<TipoFinanciacion> content = data.subList(fromIndex, toIndex);
+          Page<TipoFinanciacion> page = new PageImpl<>(content, pageable, data.size());
+          return page;
+
+        });
+
+    // when: get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(TIPO_FINANCIACION_CONTROLLER_BASE_PATH + "/todos")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: the asked TipoRegimenConcurrencia are returned with the right page
+        // information in
+        // headers
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "100"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10))).andReturn();
+
+    // this uses a TypeReference to inform Jackson about the Lists's generic type
+    List<TipoFinanciacion> actual = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<TipoFinanciacion>>() {
+        });
+
+    // containing Nombre='Nombre-31' to 'Nombre-40'
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      TipoFinanciacion item = actual.get(i);
+      Assertions.assertThat(item.getNombre()).isEqualTo("nombre-" + j);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-ADMIN" })
+  public void findAllTodos_EmptyList_Returns204() throws Exception {
+    // given: no data TipoRegimenConcurrencia
+    BDDMockito.given(tipoFinanciacionService.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(),
+        ArgumentMatchers.<Pageable>any())).willAnswer((InvocationOnMock invocation) -> {
+          Page<TipoRegimenConcurrencia> page = new PageImpl<>(Collections.emptyList());
+          return page;
+        });
+
+    // when: get page=3 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(TIPO_FINANCIACION_CONTROLLER_BASE_PATH + "/todos")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: returns 204
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 

@@ -5,8 +5,7 @@ INSERT INTO csp.listado_area_tematica (id, nombre, descripcion, activo) VALUES (
 -- AREA TEMATICA ARBOL
 INSERT INTO csp.area_tematica_arbol (id, nombre, abreviatura, listado_area_tematica_id, area_tematica_arbol_padre_id, activo)  VALUES (1, 'nombre-001', 'A-1', 1L, null, true);
 INSERT INTO csp.area_tematica_arbol (id, nombre, abreviatura, listado_area_tematica_id, area_tematica_arbol_padre_id, activo)  VALUES (2, 'nombre-002', 'A-2', 1L, 1L, true);
-INSERT INTO csp.area_tematica_arbol (id, nombre, abreviatura, listado_area_tematica_id, area_tematica_arbol_padre_id, activo)  VALUES (3, 'nombre-003', 'A-3', 1L, 1L, true);
-INSERT INTO csp.area_tematica_arbol (id, nombre, abreviatura, listado_area_tematica_id, area_tematica_arbol_padre_id, activo)  VALUES (4, 'nombre-004', 'A-4', 1L, 1L, false);
+INSERT INTO csp.area_tematica_arbol (id, nombre, abreviatura, listado_area_tematica_id, area_tematica_arbol_padre_id, activo)  VALUES (3, 'nombre-003', 'A-3', 1L, 1L, false);
 INSERT INTO csp.area_tematica_arbol (id, nombre, abreviatura, listado_area_tematica_id, area_tematica_arbol_padre_id, activo)  VALUES (11, 'nombre-011', 'A-11', 1L, null, true);
 INSERT INTO csp.area_tematica_arbol (id, nombre, abreviatura, listado_area_tematica_id, area_tematica_arbol_padre_id, activo)  VALUES (12, 'nombre-012', 'A-12', 1L, 11, true);
 INSERT INTO csp.area_tematica_arbol (id, nombre, abreviatura, listado_area_tematica_id, area_tematica_arbol_padre_id, activo)  VALUES (13, 'nombre-013', 'A-13', 1L, 12, true);

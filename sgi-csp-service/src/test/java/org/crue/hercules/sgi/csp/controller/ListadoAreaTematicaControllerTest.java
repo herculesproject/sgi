@@ -41,7 +41,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 /**
  * ListadoAreaTematicaControllerTest
  */
-
 @WebMvcTest(ListadoAreaTematicaController.class)
 @Import(SecurityConfig.class)
 public class ListadoAreaTematicaControllerTest {
@@ -320,6 +319,83 @@ public class ListadoAreaTematicaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-LATEM-V" })
+  public void findAllTodos_WithPaging_ReturnsListadoAreaTematicaSubList() throws Exception {
+    // given: One hundred ListadoAreaTematica
+    List<ListadoAreaTematica> data = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      data.add(generarMockListadoAreaTematica(Long.valueOf(i), Boolean.TRUE));
+    }
+
+    BDDMockito
+        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ListadoAreaTematica>>() {
+          @Override
+          public Page<ListadoAreaTematica> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<ListadoAreaTematica> content = data.subList(fromIndex, toIndex);
+            Page<ListadoAreaTematica> page = new PageImpl<>(content, pageable, data.size());
+            return page;
+          }
+        });
+
+    // when: get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/todos")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: the asked ListadoAreaTematica are returned with the right page
+        // information in
+        // headers
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "100"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10))).andReturn();
+
+    // this uses a TypeReference to inform Jackson about the Lists's generic type
+    List<ListadoAreaTematica> actual = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<ListadoAreaTematica>>() {
+        });
+
+    // containing Nombre='Nombre-31' to 'Nombre-40'
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      ListadoAreaTematica item = actual.get(i);
+      Assertions.assertThat(item.getNombre()).isEqualTo("nombre-" + j);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-LATEM-V" })
+  public void findAllTodos_EmptyList_Returns204() throws Exception {
+    // given: no data ListadoAreaTematica
+    BDDMockito
+        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ListadoAreaTematica>>() {
+          @Override
+          public Page<ListadoAreaTematica> answer(InvocationOnMock invocation) throws Throwable {
+            Page<ListadoAreaTematica> page = new PageImpl<>(Collections.emptyList());
+            return page;
+          }
+        });
+
+    // when: get page=3 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/todos")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: returns 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
   @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
   public void findAllAreaTematicaArboles_ReturnsPage() throws Exception {
     // given: Una lista con 37 AreaTematicaArbol para el ListadoAreaTematica
@@ -402,7 +478,92 @@ public class ListadoAreaTematicaControllerTest {
         .andDo(MockMvcResultHandlers.print())
         // then: Devuelve un 204
         .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  public void findAllAreaTematicaArbolesTodos_ReturnsPage() throws Exception {
+    // given: Una lista con 37 AreaTematicaArbol para el ListadoAreaTematica
+    Long idListadoAreaTematica = 1L;
+
+    List<AreaTematicaArbol> areaTematicaArboles = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      areaTematicaArboles.add(generarMockAreaTematicaArbol(i, "Programa" + String.format("%03d", i)));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(areaTematicaArbolService.findAllTodosByListadoAreaTematica(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > areaTematicaArboles.size() ? areaTematicaArboles.size() : toIndex;
+          List<AreaTematicaArbol> content = areaTematicaArboles.subList(fromIndex, toIndex);
+          Page<AreaTematicaArbol> pageResponse = new PageImpl<>(content, pageable, areaTematicaArboles.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/areatematicaarboles/todos", idListadoAreaTematica)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los Programa del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<AreaTematicaArbol> areaTematicaArbolesResponse = mapper
+        .readValue(requestResult.getResponse().getContentAsString(), new TypeReference<List<AreaTematicaArbol>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      AreaTematicaArbol areaTematicaArbol = areaTematicaArbolesResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(areaTematicaArbol.getNombre()).isEqualTo("Programa" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TDOC-V" })
+  public void findAllAreaTematicaArbolesTodos_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de AreaTematicaArbol para el ListadoAreaTematica
+    Long idPlan = 1L;
+
+    List<AreaTematicaArbol> areaTematicaArboles = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(areaTematicaArbolService.findAllTodosByListadoAreaTematica(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          Page<AreaTematicaArbol> pageResponse = new PageImpl<>(areaTematicaArboles, pageable, 0);
+          return pageResponse;
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/areatematicaarboles/todos", idPlan)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page)
+                .header("X-Page-Size", pageSize).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   /**

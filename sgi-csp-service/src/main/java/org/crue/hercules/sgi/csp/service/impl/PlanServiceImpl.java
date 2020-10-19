@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.csp.exceptions.PlanNotFoundException;
 import org.crue.hercules.sgi.csp.model.Plan;
 import org.crue.hercules.sgi.csp.repository.PlanRepository;
+import org.crue.hercules.sgi.csp.repository.specification.PlanSpecifications;
 import org.crue.hercules.sgi.csp.service.PlanService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -104,7 +105,7 @@ public class PlanServiceImpl implements PlanService {
   }
 
   /**
-   * Obtener todas las entidades {@link Plan} paginadas y/o filtradas.
+   * Obtener todas las entidades {@link Plan} activos paginadas y/o filtradas.
    *
    * @param pageable la información de la paginación.
    * @param query    la información del filtro.
@@ -114,11 +115,31 @@ public class PlanServiceImpl implements PlanService {
   public Page<Plan> findAll(List<QueryCriteria> query, Pageable pageable) {
     log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
     Specification<Plan> specByQuery = new QuerySpecification<Plan>(query);
+    Specification<Plan> specActivos = PlanSpecifications.activos();
+
+    Specification<Plan> specs = Specification.where(specActivos).and(specByQuery);
+
+    Page<Plan> returnValue = repository.findAll(specs, pageable);
+    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtener todas las entidades {@link Plan} paginadas y/o filtradas.
+   *
+   * @param pageable la información de la paginación.
+   * @param query    la información del filtro.
+   * @return la lista de entidades {@link Plan} paginadas y/o filtradas.
+   */
+  @Override
+  public Page<Plan> findAllTodos(List<QueryCriteria> query, Pageable pageable) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - start");
+    Specification<Plan> specByQuery = new QuerySpecification<Plan>(query);
 
     Specification<Plan> specs = Specification.where(specByQuery);
 
     Page<Plan> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - end");
     return returnValue;
   }
 

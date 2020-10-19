@@ -5,6 +5,7 @@ import java.util.List;
 import org.crue.hercules.sgi.csp.exceptions.ListadoAreaTematicaNotFoundException;
 import org.crue.hercules.sgi.csp.model.ListadoAreaTematica;
 import org.crue.hercules.sgi.csp.repository.ListadoAreaTematicaRepository;
+import org.crue.hercules.sgi.csp.repository.specification.ListadoAreaTematicaSpecifications;
 import org.crue.hercules.sgi.csp.service.ListadoAreaTematicaService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -35,7 +36,8 @@ public class ListadoAreaTematicaServiceImpl implements ListadoAreaTematicaServic
    * Guarda la entidad {@link ListadoAreaTematica}.
    * 
    * @param listadoAreaTematica la entidad {@link ListadoAreaTematica} a guardar.
-   * @return ListadoAreaTematica la entidad {@link ListadoAreaTematica} persistida.
+   * @return ListadoAreaTematica la entidad {@link ListadoAreaTematica}
+   *         persistida.
    */
   @Override
   @Transactional
@@ -56,8 +58,9 @@ public class ListadoAreaTematicaServiceImpl implements ListadoAreaTematicaServic
   /**
    * Actualiza los datos del {@link ListadoAreaTematica}.
    * 
-   * @param listadoAreaTematica listadoAreaTematicaActualizar {@link ListadoAreaTematica} con los
-   *                      datos actualizados.
+   * @param listadoAreaTematica listadoAreaTematicaActualizar
+   *                            {@link ListadoAreaTematica} con los datos
+   *                            actualizados.
    * @return {@link ListadoAreaTematica} actualizado.
    */
   @Override
@@ -105,18 +108,41 @@ public class ListadoAreaTematicaServiceImpl implements ListadoAreaTematicaServic
   }
 
   /**
-   * Obtiene todas las entidades {@link ListadoAreaTematica} paginadas y filtradas.
+   * Obtiene todas las entidades {@link ListadoAreaTematica} activos paginadas y
+   * filtradas.
    *
    * @param query  información del filtro.
    * @param paging información de paginación.
-   * @return el listado de entidades {@link ListadoAreaTematica} paginadas y filtradas.
+   * @return el listado de entidades {@link ListadoAreaTematica} paginadas y
+   *         filtradas.
    */
   @Override
   public Page<ListadoAreaTematica> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
+    Specification<ListadoAreaTematica> specByQuery = new QuerySpecification<ListadoAreaTematica>(query);
+    Specification<ListadoAreaTematica> specActivos = ListadoAreaTematicaSpecifications.activos();
+
+    Specification<ListadoAreaTematica> specs = Specification.where(specActivos).and(specByQuery);
+    Page<ListadoAreaTematica> returnValue = repository.findAll(specs, paging);
+    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene todas las entidades {@link ListadoAreaTematica} paginadas y
+   * filtradas.
+   *
+   * @param query  información del filtro.
+   * @param paging información de paginación.
+   * @return el listado de entidades {@link ListadoAreaTematica} paginadas y
+   *         filtradas.
+   */
+  @Override
+  public Page<ListadoAreaTematica> findAllTodos(List<QueryCriteria> query, Pageable paging) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
     Specification<ListadoAreaTematica> spec = new QuerySpecification<ListadoAreaTematica>(query);
     Page<ListadoAreaTematica> returnValue = repository.findAll(spec, paging);
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
     return returnValue;
   }
 
@@ -129,7 +155,8 @@ public class ListadoAreaTematicaServiceImpl implements ListadoAreaTematicaServic
   @Override
   public ListadoAreaTematica findById(Long id) {
     log.debug("findById(Long id) - start");
-    final ListadoAreaTematica returnValue = repository.findById(id).orElseThrow(() -> new ListadoAreaTematicaNotFoundException(id));
+    final ListadoAreaTematica returnValue = repository.findById(id)
+        .orElseThrow(() -> new ListadoAreaTematicaNotFoundException(id));
     log.debug("findById(Long id) - end");
     return returnValue;
   }

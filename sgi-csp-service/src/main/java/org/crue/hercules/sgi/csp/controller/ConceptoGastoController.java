@@ -49,7 +49,7 @@ public class ConceptoGastoController {
   }
 
   /**
-   * Devuelve una lista paginada y filtrada {@link ConceptoGasto}.
+   * Devuelve una lista paginada y filtrada {@link ConceptoGasto} activos.
    * 
    * @param query  filtro de {@link QueryCriteria}.
    * @param paging pageable.
@@ -67,6 +67,29 @@ public class ConceptoGastoController {
     }
 
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link ConceptoGasto}.
+   * 
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/todos")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONGAS-V')")
+  ResponseEntity<Page<ConceptoGasto>> findAllTodos(
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
+    Page<ConceptoGasto> page = service.findAllTodos(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

@@ -169,7 +169,7 @@ public class FuenteFinanciacionServiceImpl implements FuenteFinanciacionService 
   }
 
   /**
-   * Obtener todas las entidades {@link FuenteFinanciacion} paginadas y/o
+   * Obtener todas las entidades {@link FuenteFinanciacion}  activos paginadas y/o
    * filtradas.
    *
    * @param pageable la información de la paginación.
@@ -187,6 +187,27 @@ public class FuenteFinanciacionServiceImpl implements FuenteFinanciacionService 
 
     Page<FuenteFinanciacion> returnValue = repository.findAll(specs, pageable);
     log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtener todas las entidades {@link FuenteFinanciacion} paginadas y/o
+   * filtradas.
+   *
+   * @param pageable la información de la paginación.
+   * @param query    la información del filtro.
+   * @return la lista de entidades {@link FuenteFinanciacion} paginadas y/o
+   *         filtradas.
+   */
+  @Override
+  public Page<FuenteFinanciacion> findAllTodos(List<QueryCriteria> query, Pageable pageable) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - start");
+    Specification<FuenteFinanciacion> specByQuery = new QuerySpecification<FuenteFinanciacion>(query);
+
+    Specification<FuenteFinanciacion> specs = Specification.where(specByQuery);
+
+    Page<FuenteFinanciacion> returnValue = repository.findAll(specs, pageable);
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable pageable) - end");
     return returnValue;
   }
 

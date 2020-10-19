@@ -37,13 +37,23 @@ public interface ConceptoGastoService {
   ConceptoGasto disable(Long id);
 
   /**
-   * Obtener todas las entidades {@link ConceptoGasto} paginadas y/o filtradas.
+   * Obtener todas las entidades {@link ConceptoGasto} activos paginadas y/o
+   * filtradas.
    *
    * @param pageable la información de la paginación.
    * @param query    la información del filtro.
    * @return la lista de entidades {@link ConceptoGasto} paginadas y/o filtradas.
    */
   Page<ConceptoGasto> findAll(List<QueryCriteria> query, Pageable pageable);
+
+  /**
+   * Obtener todas las entidades {@link ConceptoGasto} paginadas y/o filtradas.
+   *
+   * @param pageable la información de la paginación.
+   * @param query    la información del filtro.
+   * @return la lista de entidades {@link ConceptoGasto} paginadas y/o filtradas.
+   */
+  Page<ConceptoGasto> findAllTodos(List<QueryCriteria> query, Pageable pageable);
 
   /**
    * Obtiene {@link ConceptoGasto} por su id.

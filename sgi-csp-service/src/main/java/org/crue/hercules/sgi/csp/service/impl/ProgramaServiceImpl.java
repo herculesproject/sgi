@@ -184,7 +184,7 @@ public class ProgramaServiceImpl implements ProgramaService {
   }
 
   /**
-   * Obtiene los {@link Programa} para un {@link Plan}.
+   * Obtiene los {@link Programa} activos para un {@link Plan}.
    *
    * @param idPlan   el id de la entidad {@link Plan}.
    * @param query    la información del filtro.
@@ -196,11 +196,33 @@ public class ProgramaServiceImpl implements ProgramaService {
     log.debug("findAllByPlan(Long idPlan, List<QueryCriteria> query, Pageable pageable) - start");
     Specification<Programa> specByQuery = new QuerySpecification<Programa>(query);
     Specification<Programa> specByPlanId = ProgramaSpecifications.byPlanId(idPlan);
+    Specification<Programa> specActivos = ProgramaSpecifications.activos();
+
+    Specification<Programa> specs = Specification.where(specByPlanId).and(specActivos).and(specByQuery);
+
+    Page<Programa> returnValue = repository.findAll(specs, pageable);
+    log.debug("findAllByPlan(Long idPlan, List<QueryCriteria> query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene los {@link Programa} para un {@link Plan}.
+   *
+   * @param idPlan   el id de la entidad {@link Plan}.
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Programa} del {@link Plan} paginadas.
+   */
+  @Override
+  public Page<Programa> findAllTodosByPlan(Long idPlan, List<QueryCriteria> query, Pageable pageable) {
+    log.debug("findAllTodosByPlan(Long idPlan, List<QueryCriteria> query, Pageable pageable) - start");
+    Specification<Programa> specByQuery = new QuerySpecification<Programa>(query);
+    Specification<Programa> specByPlanId = ProgramaSpecifications.byPlanId(idPlan);
 
     Specification<Programa> specs = Specification.where(specByPlanId).and(specByQuery);
 
     Page<Programa> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllByPlan(Long idPlan, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllTodosByPlan(Long idPlan, List<QueryCriteria> query, Pageable pageable) - end");
     return returnValue;
   }
 

@@ -56,7 +56,7 @@ public class PlanController {
   }
 
   /**
-   * Devuelve una lista paginada y filtrada {@link Plan}.
+   * Devuelve una lista paginada y filtrada {@link Plan} activos.
    * 
    * @param query  filtro de {@link QueryCriteria}.
    * @param paging pageable.
@@ -74,6 +74,28 @@ public class PlanController {
     }
 
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link Plan}.
+   * 
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/todos")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-V')")
+  ResponseEntity<Page<Plan>> findAllTodos(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
+    Page<Plan> page = service.findAllTodos(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -159,6 +181,30 @@ public class PlanController {
     }
 
     log.debug("findAllProgramas(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link Programa} del {@link Plan}.
+   * 
+   * @param id     Identificador de {@link Plan}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/programas/todos")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
+  ResponseEntity<Page<Programa>> findAllProgramasTodos(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllProgramasTodos(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<Programa> page = programaService.findAllTodosByPlan(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllProgramasTodos(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllProgramasTodos(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

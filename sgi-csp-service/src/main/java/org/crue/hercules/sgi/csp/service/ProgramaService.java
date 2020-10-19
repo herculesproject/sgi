@@ -47,7 +47,7 @@ public interface ProgramaService {
   Programa findById(Long id);
 
   /**
-   * Obtiene los {@link Programa} para un {@link Plan}.
+   * Obtiene los {@link Programa} activos para un {@link Plan}.
    *
    * @param idPlan   el id de la entidad {@link Plan}.
    * @param query    la información del filtro.
@@ -55,5 +55,15 @@ public interface ProgramaService {
    * @return la lista de entidades {@link Programa} del {@link Plan} paginadas.
    */
   Page<Programa> findAllByPlan(Long idPlan, List<QueryCriteria> query, Pageable pageable);
+
+  /**
+   * Obtiene los {@link Programa} para un {@link Plan}.
+   *
+   * @param idPlan   el id de la entidad {@link Plan}.
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Programa} del {@link Plan} paginadas.
+   */
+  Page<Programa> findAllTodosByPlan(Long idPlan, List<QueryCriteria> query, Pageable pageable);
 
 }

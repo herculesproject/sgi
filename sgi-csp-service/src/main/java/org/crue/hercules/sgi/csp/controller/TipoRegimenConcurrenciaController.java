@@ -95,7 +95,8 @@ public class TipoRegimenConcurrenciaController {
   }
 
   /**
-   * Devuelve una lista paginada y filtrada {@link TipoRegimenConcurrencia}.
+   * Devuelve una lista paginada y filtrada {@link TipoRegimenConcurrencia}
+   * activos.
    * 
    * @param query  filtro de {@link QueryCriteria}.
    * @param paging {@link Pageable}.
@@ -115,6 +116,30 @@ public class TipoRegimenConcurrenciaController {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link TipoRegimenConcurrencia}.
+   * 
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link TipoRegimenConcurrencia} paginadas y
+   *         filtradas.
+   */
+  @GetMapping("/todos")
+  // @PreAuthorize("hasAuthorityForAnyUO('SYSADMIN')")
+  ResponseEntity<Page<TipoRegimenConcurrencia>> findAllTodos(
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllTodos(List<QueryCriteria> query,Pageable paging) - start");
+    Page<TipoRegimenConcurrencia> page = service.findAllTodos(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllTodos(List<QueryCriteria> query,Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAllTodos(List<QueryCriteria> query,Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

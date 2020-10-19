@@ -30,7 +30,8 @@ public interface TipoFinanciacionService {
   TipoFinanciacion update(TipoFinanciacion tipoFinanciacion);
 
   /**
-   * Obtener todas las entidades {@link TipoFinanciacion} paginadas y/o filtradas
+   * Obtener todas las entidades {@link TipoFinanciacion} activos paginadas y/o
+   * filtradas
    *
    * @param query    la información del filtro.
    * @param pageable la información de la paginación.
@@ -38,6 +39,16 @@ public interface TipoFinanciacionService {
    *         filtradas
    */
   Page<TipoFinanciacion> findAll(List<QueryCriteria> query, Pageable pageable);
+
+  /**
+   * Obtener todas las entidades {@link TipoFinanciacion} paginadas y/o filtradas
+   *
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link TipoFinanciacion} paginadas y/o
+   *         filtradas
+   */
+  Page<TipoFinanciacion> findAllTodos(List<QueryCriteria> query, Pageable pageable);
 
   /**
    * Obtiene {@link TipoFinanciacion} por id.

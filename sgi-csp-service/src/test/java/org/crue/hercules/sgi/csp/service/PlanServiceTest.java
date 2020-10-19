@@ -221,6 +221,45 @@ public class PlanServiceTest {
   }
 
   @Test
+  public void findAllTodos_ReturnsPage() {
+    // given: Una lista con 37 Plan
+    List<Plan> planes = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      planes.add(generarMockPlan(i, "Plan" + String.format("%03d", i)));
+    }
+
+    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<Plan>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<Plan>>() {
+          @Override
+          public Page<Plan> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > planes.size() ? planes.size() : toIndex;
+            List<Plan> content = planes.subList(fromIndex, toIndex);
+            Page<Plan> page = new PageImpl<>(content, pageable, planes.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<Plan> page = service.findAllTodos(null, paging);
+
+    // then: Devuelve la pagina 3 con los Plan del 31 al 37
+    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
+    Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
+    Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
+    for (int i = 31; i <= 37; i++) {
+      Plan plan = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
+      Assertions.assertThat(plan.getNombre()).isEqualTo("Plan" + String.format("%03d", i));
+    }
+  }
+
+  @Test
   public void findById_ReturnsPlan() {
     // given: Un Plan con el id buscado
     Long idBuscado = 1L;

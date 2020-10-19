@@ -97,7 +97,7 @@ public class ListadoAreaTematicaController {
   }
 
   /**
-   * Devuelve una lista paginada y filtrada {@link ListadoAreaTematica}.
+   * Devuelve una lista paginada y filtrada {@link ListadoAreaTematica} activos.
    * 
    * @param query  filtro de {@link QueryCriteria}.
    * @param paging {@link Pageable}.
@@ -121,6 +121,30 @@ public class ListadoAreaTematicaController {
   }
 
   /**
+   * Devuelve una lista paginada y filtrada {@link ListadoAreaTematica}.
+   * 
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link ListadoAreaTematica} paginadas y
+   *         filtradas.
+   */
+  @GetMapping("/todos")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-LATEM-V')")
+  ResponseEntity<Page<ListadoAreaTematica>> findAllTodos(
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllTodos(List<QueryCriteria> query,Pageable paging) - start");
+    Page<ListadoAreaTematica> page = service.findAllTodos(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllTodos(List<QueryCriteria> query,Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAllTodos(List<QueryCriteria> query,Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
    * Devuelve el {@link ListadoAreaTematica} con el id indicado.
    * 
    * @param id Identificador de {@link ListadoAreaTematica}.
@@ -136,8 +160,8 @@ public class ListadoAreaTematicaController {
   }
 
   /**
-   * Devuelve una lista paginada y filtrada de {@link AreaTematicaArbol} del
-   * {@link ListadoAreaTematica}.
+   * Devuelve una lista paginada y filtrada de {@link AreaTematicaArbol} activos
+   * del {@link ListadoAreaTematica}.
    * 
    * @param id     Identificador de {@link ListadoAreaTematica}.
    * @param query  filtro de {@link QueryCriteria}.
@@ -157,6 +181,31 @@ public class ListadoAreaTematicaController {
     }
 
     log.debug("findAllProgramas(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link AreaTematicaArbol} del
+   * {@link ListadoAreaTematica}.
+   * 
+   * @param id     Identificador de {@link ListadoAreaTematica}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/areatematicaarboles/todos")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-V')")
+  ResponseEntity<Page<AreaTematicaArbol>> findAllAreaTematicaArbolesTodos(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllAreaTematicaArbolesTodos(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<AreaTematicaArbol> page = areaTematicaArbolService.findAllTodosByListadoAreaTematica(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllAreaTematicaArbolesTodos(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllAreaTematicaArbolesTodos(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
