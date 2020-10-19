@@ -10,8 +10,14 @@
     box-shadow: inset 0px 14px 12px -12px map-get($palette-grease, 100);
     background: white;
   }
-  .boton {
+  .boton-group {
     height: 100%;
     padding-left: 32px;
+    button{
+      margin-right: 10px;
+      &.link-cancelar span.underline{
+        text-decoration: underline;
+      }
+    }
   }
 }

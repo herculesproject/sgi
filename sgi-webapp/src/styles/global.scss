@@ -173,7 +173,7 @@ mat-form-field {
 
 // Link cancelar en el footer. Negrita y subrayado
 .link-cancelar {
-  margin-left: 30px;
+  cursor: pointer;
   font-weight: bold;
   color: map-get($custom-colors, black);
 }

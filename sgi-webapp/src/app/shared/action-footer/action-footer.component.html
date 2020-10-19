@@ -1,11 +1,12 @@
 <footer class="separation footer" *ngIf="actionService?.status$ | async as status;">
-  <div class="boton" fxLayout="row" fxLayoutAlign="baseline center">
+  <div class="boton-group" fxLayout="row" fxLayoutAlign="baseline center">
     <button color="accent" class="fixed" aria-label="Center Align" md-button (click)="save()" md-button
       mat-raised-button
       [disabled]="(status.edit && (!status.changes || status.errors)) || (!status.edit && !status.complete)">
       <mat-icon>save</mat-icon> {{texto | translate | uppercase}}
     </button>
-    <a class="link-cancelar" (click)="cancel()">{{'botones.cancelar' | translate}}</a>
+    <button class="link-cancelar" mat-button (click)="cancel()"><span
+        class="underline">{{'botones.cancelar' | translate}}</span></button>
     <span class="mensaje-inline warning" mat-line *ngIf="status.changes && !status.errors">
       <mat-icon aria-hidden="false" class="icons warning-icon">error_outline</mat-icon>
       {{'footer.msg.changes' | translate}}
