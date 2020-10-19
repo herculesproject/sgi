@@ -1,0 +1,19 @@
+version: '2.4'
+services:
+  sgdoc-service:
+    build: .
+    image: sgdoc-service:latest
+    #ports:
+    #  - 8080:8080
+    networks:
+      - sgi-external-network
+    
+  sgdoc-db:
+    extends:
+      file: postgresql.yml
+      service: sgdoc-db
+
+networks:
+  sgi-external-network:
+    # Create or join a network with given name
+    name: sgi-external-network

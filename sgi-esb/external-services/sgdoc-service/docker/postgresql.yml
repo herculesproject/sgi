@@ -1,0 +1,16 @@
+version: '2.4'
+services:
+  sgdoc-db:
+    image: postgres:12
+    #ports:
+    #  - 5432:5432
+    environment:
+      - POSTGRES_USER=sgdoc
+      - POSTGRES_PASSWORD=sgdoc
+      - POSTGRES_DB=sgdoc
+    networks:
+      - sgi-external-network
+networks:
+  sgi-external-network:
+    # Create or join a network with given name
+    name: sgi-external-network
