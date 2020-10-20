@@ -17,7 +17,7 @@ import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { ActaActionService } from '../../acta.action.service';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { IActa } from '@core/models/eti/acta';
-import { FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 
 const MSG_ERROR_INIT = marker('eti.acta.crear.datosGenerales.convocatoriaReunion.error.cargar');
 
@@ -44,7 +44,8 @@ export class ActaDatosGeneralesComponent extends FormFragmentComponent<IActa> im
     protected readonly logger: NGXLogger,
     private readonly convocatoriaReunionService: ConvocatoriaReunionService,
     private readonly snackBarService: SnackBarService,
-    private actionService: ActaActionService
+    private actionService: ActaActionService,
+    public router: Router
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
     this.fxFlexProperties = new FxFlexProperties();

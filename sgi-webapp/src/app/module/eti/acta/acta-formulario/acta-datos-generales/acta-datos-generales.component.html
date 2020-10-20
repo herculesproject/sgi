@@ -8,7 +8,7 @@
         <mat-label>{{'eti.acta.crear.datosGenerales.convocatoriaReunion.titulo' | translate}}</mat-label>
         <input type="text" placeholder="{{'eti.acta.crear.datosGenerales.convocatoriaReunion.titulo' | translate}}"
           arial-label="Number" matInput formControlName="convocatoriaReunion" [matAutocomplete]="auto" required
-          [readonly]="readonly">
+          [readonly]="readonly || fragment.isEdit()">
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="getConvocatoria"
           (optionSelected)="selectConvocatoriaReunion($event.option.value)">
           <mat-option *ngFor="let convocatoria of convocatoriasReunionFitlered | async" [value]="convocatoria">
@@ -37,6 +37,9 @@
         <mat-error *ngIf="formGroup.controls.horaInicio.errors?.noValido">
           {{'eti.acta.crear.datosGenerales.horaInicio.error.noValido' | translate}}
         </mat-error>
+        <mat-error *ngIf="formGroup.controls.horaInicio.errors?.horaIncorrecta">
+          {{'eti.acta.crear.datosGenerales.horaInicio.error.horaIncorrecta' | translate}}
+        </mat-error>
       </mat-form-field>
     </div>
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
@@ -56,6 +59,9 @@
         <mat-error *ngIf="formGroup.controls.minutoInicio.errors?.noValido">
           {{'eti.acta.crear.datosGenerales.minutoInicio.error.noValido' | translate}}
         </mat-error>
+        <mat-error *ngIf="formGroup.controls.minutoInicio.errors?.horaIncorrecta">
+          {{'eti.acta.crear.datosGenerales.minutoInicio.error.horaIncorrecta' | translate}}
+        </mat-error>
       </mat-form-field>
     </div>
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
@@ -73,6 +79,9 @@
         <mat-error *ngIf="formGroup.controls.horaFin.errors?.noValido">
           {{'eti.acta.crear.datosGenerales.horaFin.error.noValido' | translate}}
         </mat-error>
+        <mat-error *ngIf="formGroup.controls.horaFin.errors?.horaIncorrecta">
+          {{'eti.acta.crear.datosGenerales.horaFin.error.horaIncorrecta' | translate}}
+        </mat-error>
       </mat-form-field>
     </div>
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
@@ -89,6 +98,9 @@
         </mat-error>
         <mat-error *ngIf="formGroup.controls.minutoFin.errors?.noValido">
           {{'eti.acta.crear.datosGenerales.minutoFin.error.noValido' | translate}}
+        </mat-error>
+        <mat-error *ngIf="formGroup.controls.minutoFin.errors?.horaIncorrecta">
+          {{'eti.acta.crear.datosGenerales.minutoFin.error.horaIncorrecta' | translate}}
         </mat-error>
       </mat-form-field>
     </div>

@@ -1,5 +1,5 @@
 import { FormFragment } from '@core/services/action-service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { NullIdValidador } from '@core/validators/null-id-validador';
 import { HoraValidador } from '@core/validators/hora-validator';
 import { MinutoValidador } from '@core/validators/minuto-validator';
@@ -7,6 +7,7 @@ import { ActaService } from '@core/services/eti/acta.service';
 import { Observable, of, EMPTY } from 'rxjs';
 import { switchMap, catchError, map } from 'rxjs/operators';
 import { IActa } from '@core/models/eti/acta';
+import { DateGreatValidator } from '@core/validators/date-greater-validator';
 
 export class ActaDatosGeneralesFragment extends FormFragment<IActa> {
 
@@ -20,14 +21,19 @@ export class ActaDatosGeneralesFragment extends FormFragment<IActa> {
   }
 
   protected buildFormGroup(): FormGroup {
-    return this.fb.group({
+    const fb = this.fb.group({
       convocatoriaReunion: ['', new NullIdValidador().isValid()],
       horaInicio: ['', new HoraValidador().isValid()],
       minutoInicio: ['', new MinutoValidador().isValid()],
       horaFin: ['', new HoraValidador().isValid()],
       minutoFin: ['', new MinutoValidador().isValid()],
       resumen: ['', Validators.required]
-    });
+    }, {
+      validator: [DateGreatValidator('horaInicio', 'horaFin', 'minutoInicio', 'minutoFin')]
+    }
+    );
+
+    return fb;
   }
 
   protected initializer(key: number): Observable<IActa> {
