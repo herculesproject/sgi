@@ -9,6 +9,8 @@ import org.crue.hercules.sgi.eti.exceptions.BloqueFormularioNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.ComiteFormularioNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.TipoEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.BloqueFormulario;
+import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.repository.BloqueFormularioRepository;
 import org.crue.hercules.sgi.eti.repository.ComiteFormularioRepository;
 import org.crue.hercules.sgi.eti.repository.TipoEvaluacionRepository;

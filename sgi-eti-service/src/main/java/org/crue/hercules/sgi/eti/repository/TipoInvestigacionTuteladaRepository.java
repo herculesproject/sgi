@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 /**
- * Spring Data JPA repository para {@link TipoActividad}.
+ * Spring Data JPA repository para {@link TipoInvestigacionTutelada}.
  */
 
 @Repository
