@@ -60,13 +60,16 @@ export class TipoEnlaceListadoComponent extends AbstractTablePaginationComponent
   ngOnInit(): void {
     this.logger.debug(TipoEnlaceListadoComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
-    this.onClearFilters();
+    this.formGroup = new FormGroup({
+      nombre: new FormControl(''),
+      activo: new FormControl('true')
+    });
     this.logger.debug(TipoEnlaceListadoComponent.name, 'ngOnInit()', 'end');
   }
 
   protected createObservable(): Observable<SgiRestListResult<ITipoEnlace>> {
     this.logger.debug(TipoEnlaceListadoComponent.name, 'createObservable()', 'start');
-    const observable$ = this.tipoEnlaceService.findAll(this.getFindOptions());
+    const observable$ = this.tipoEnlaceService.findTodos(this.getFindOptions());
     this.logger.debug(TipoEnlaceListadoComponent.name, 'createObservable()', 'end');
     return observable$;
   }
@@ -87,17 +90,17 @@ export class TipoEnlaceListadoComponent extends AbstractTablePaginationComponent
     this.logger.debug(TipoEnlaceListadoComponent.name, `${this.createFilters.name}()`, 'start');
     const filtros = [];
     this.addFiltro(filtros, 'nombre', SgiRestFilterType.LIKE, this.formGroup.controls.nombre.value);
-    this.addFiltro(filtros, 'activo', SgiRestFilterType.EQUALS, this.formGroup.controls.activo.value);
+    if (this.formGroup.controls.activo.value !== 'todos') {
+      this.addFiltro(filtros, 'activo', SgiRestFilterType.EQUALS, this.formGroup.controls.activo.value);
+    }
     this.logger.debug(TipoEnlaceListadoComponent.name, `${this.createFilters.name}()`, 'end');
     return filtros;
   }
 
   onClearFilters() {
     this.logger.debug(TipoEnlaceListadoComponent.name, `${this.onClearFilters.name}()`, 'start');
-    this.formGroup = new FormGroup({
-      nombre: new FormControl(''),
-      activo: new FormControl('true')
-    });
+    this.formGroup.controls.activo.setValue('true');
+    this.formGroup.controls.nombre.setValue('');
     this.onSearch();
     this.logger.debug(TipoEnlaceListadoComponent.name, `${this.onClearFilters.name}()`, 'end');
   }

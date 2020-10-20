@@ -213,4 +213,15 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
     );
   }
 
+  /**
+   * Muestra activos y no activos
+   * @param options opciones de búsqueda.
+   */
+  findTodos(options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloEjecucion>> {
+    this.logger.debug(ModeloEjecucionService.name, `${this.findTodos.name}(`, '-', 'START');
+    return this.find<IModeloEjecucion, IModeloEjecucion>(`${this.endpointUrl}/todos`, options).pipe(
+      tap(() => this.logger.debug(ModeloEjecucionService.name, `${this.findTodos.name}()`, '-', 'END'))
+    );
+  }
+
 }

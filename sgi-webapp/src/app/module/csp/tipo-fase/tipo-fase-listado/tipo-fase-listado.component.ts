@@ -60,13 +60,16 @@ export class TipoFaseListadoComponent extends AbstractTablePaginationComponent<I
   ngOnInit(): void {
     this.logger.debug(TipoFaseListadoComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
-    this.onClearFilters();
+    this.formGroup = new FormGroup({
+      nombre: new FormControl(''),
+      activo: new FormControl('true')
+    });
     this.logger.debug(TipoFaseListadoComponent.name, 'ngOnInit()', 'end');
   }
 
   protected createObservable(): Observable<SgiRestListResult<ITipoFase>> {
     this.logger.debug(TipoFaseListadoComponent.name, `${this.createObservable.name}()`, 'start');
-    const observable$ = this.tipoFaseService.findAll(this.getFindOptions());
+    const observable$ = this.tipoFaseService.findTodos(this.getFindOptions());
     this.logger.debug(TipoFaseListadoComponent.name, `${this.createObservable.name}()`, 'end');
     return observable$;
   }
@@ -87,17 +90,17 @@ export class TipoFaseListadoComponent extends AbstractTablePaginationComponent<I
     this.logger.debug(TipoFaseListadoComponent.name, `${this.createFilters.name}()`, 'start');
     const filtros = [];
     this.addFiltro(filtros, 'nombre', SgiRestFilterType.LIKE, this.formGroup.controls.nombre.value);
-    this.addFiltro(filtros, 'activo', SgiRestFilterType.EQUALS, this.formGroup.controls.activo.value);
+    if (this.formGroup.controls.activo.value !== 'todos') {
+      this.addFiltro(filtros, 'activo', SgiRestFilterType.EQUALS, this.formGroup.controls.activo.value);
+    }
     this.logger.debug(TipoFaseListadoComponent.name, `${this.createFilters.name}()`, 'end');
     return filtros;
   }
 
   onClearFilters() {
     this.logger.debug(TipoFaseListadoComponent.name, `${this.onClearFilters.name}()`, 'start');
-    this.formGroup = new FormGroup({
-      nombre: new FormControl(''),
-      activo: new FormControl('true')
-    });
+    this.formGroup.controls.activo.setValue('true');
+    this.formGroup.controls.nombre.setValue('');
     this.onSearch();
     this.logger.debug(TipoFaseListadoComponent.name, `${this.onClearFilters.name}()`, 'end');
   }

@@ -56,23 +56,24 @@ export class ModeloEjecucionListadoComponent extends AbstractTablePaginationComp
   ngOnInit(): void {
     this.logger.debug(ModeloEjecucionListadoComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
-    this.onClearFilters();
+    this.formGroup = new FormGroup({
+      nombre: new FormControl(''),
+      activo: new FormControl('true')
+    });
     this.logger.debug(ModeloEjecucionListadoComponent.name, 'ngOnInit()', 'end');
   }
 
   onClearFilters() {
     this.logger.debug(ModeloEjecucionListadoComponent.name, `${this.onClearFilters.name}()`, 'start');
-    this.formGroup = new FormGroup({
-      nombre: new FormControl(''),
-      activo: new FormControl('true')
-    });
+    this.formGroup.controls.activo.setValue('true');
+    this.formGroup.controls.nombre.setValue('');
     this.onSearch();
     this.logger.debug(ModeloEjecucionListadoComponent.name, `${this.onClearFilters.name}()`, 'end');
   }
 
   protected createObservable(): Observable<SgiRestListResult<IModeloEjecucion>> {
     this.logger.debug(ModeloEjecucionListadoComponent.name, `${this.createObservable.name}()`, 'start');
-    const observable$ = this.modeloEjecucionService.findAll(this.getFindOptions());
+    const observable$ = this.modeloEjecucionService.findTodos(this.getFindOptions());
     this.logger.debug(ModeloEjecucionListadoComponent.name, `${this.createObservable.name}()`, 'end');
     return observable$;
   }
@@ -93,7 +94,9 @@ export class ModeloEjecucionListadoComponent extends AbstractTablePaginationComp
     this.logger.debug(ModeloEjecucionListadoComponent.name, `${this.createFilters.name}()`, 'start');
     const filtros = [];
     this.addFiltro(filtros, 'nombre', SgiRestFilterType.LIKE, this.formGroup.controls.nombre.value);
-    this.addFiltro(filtros, 'activo', SgiRestFilterType.EQUALS, this.formGroup.controls.activo.value);
+    if (this.formGroup.controls.activo.value !== 'todos') {
+      this.addFiltro(filtros, 'activo', SgiRestFilterType.EQUALS, this.formGroup.controls.activo.value);
+    }
     this.logger.debug(ModeloEjecucionListadoComponent.name, `${this.createFilters.name}()`, 'end');
     return filtros;
   }
