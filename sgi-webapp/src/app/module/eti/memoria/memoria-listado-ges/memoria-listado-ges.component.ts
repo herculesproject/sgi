@@ -2,39 +2,33 @@ import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Observable, of, merge, Subscription, BehaviorSubject } from 'rxjs';
+import { Observable, of, merge, Subscription } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
-
 import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
-import { SgiAuthService } from '@sgi/framework/auth';
-
 import { tap, map, catchError, startWith } from 'rxjs/operators';
-
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoriaPeticionEvaluacion';
 import { Comite } from '@core/models/eti/comite';
 import { IPersona } from '@core/models/sgp/persona';
 import { DialogService } from '@core/services/dialog.service';
 import { ComiteService } from '@core/services/eti/comite.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
-
 import { ROUTE_NAMES } from '@core/route.names';
-
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria.service';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { MatTableDataSource } from '@angular/material/table';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { MEMORIAS_ROUTE } from '../memoria-route-names';
+import { IMemoria } from '@core/models/eti/memoria';
 
 const MSG_BUTTON_SAVE = marker('footer.eti.peticionEvaluacion.crear');
 const TEXT_USER_TITLE = marker('eti.peticionEvaluacion.listado.buscador.solicitante');
 const TEXT_USER_BUTTON = marker('eti.peticionEvaluacion.listado.buscador.buscar.solicitante');
+const MSG_ESTADO_ANTERIOR_OK = marker('eti.memoria.listado.volverEstadoAnterior.ok');
+const MSG_ESTADO_ANTERIOR_ERROR = marker('eti.memoria.listado.volverEstadoAnterior.error');
+const MSG_RECUPERAR_ESTADO = marker('eti.memoria.listado.volverEstadoAnterior.confirmacion');
 
 @Component({
   selector: 'sgi-memoria-listado-ges',
@@ -62,20 +56,14 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
   memorias$: Observable<IMemoriaPeticionEvaluacion[]>;
 
   comiteListado: Comite[];
-  comitesSubscription: Subscription;
   filteredComites: Observable<Comite[]>;
 
   estadoMemoriaListado: TipoEstadoMemoria[];
-  estadosMemoriaSubscription: Subscription;
   filteredEstadosMemoria: Observable<TipoEstadoMemoria[]>;
 
   buscadorFormGroup: FormGroup;
 
-  private dialogServiceSubscription: Subscription;
-  private dialogServiceSubscriptionGetSubscription: Subscription;
-  private peticionEvaluacionServiceDeleteSubscription: Subscription;
-  private memoriaServiceSubscription: Subscription;
-  private personaServiceOneSubscritpion: Subscription;
+  private suscripciones: Subscription[];
 
   textoUsuarioLabel = TEXT_USER_TITLE;
   textoUsuarioInput = TEXT_USER_TITLE;
@@ -89,9 +77,7 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
     private readonly comiteService: ComiteService,
     private readonly tipoEstadoMemoriaService: TipoEstadoMemoriaService,
     private readonly dialogService: DialogService,
-    private readonly sgiAuthService: SgiAuthService,
-    private readonly memoriaService: MemoriaService,
-    private readonly personaFisicaService: PersonaFisicaService
+    private readonly memoriaService: MemoriaService
   ) {
     this.displayedColumns = ['num_referencia', 'comite', 'estado', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
     this.elementosPagina = [5, 10, 25, 100];
@@ -275,7 +261,7 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
       'getComites()',
       'start');
 
-    this.comitesSubscription = this.comiteService.findAll().subscribe(
+    const comitesSubscription = this.comiteService.findAll().subscribe(
       (response) => {
         this.comiteListado = response.items;
 
@@ -285,6 +271,8 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
             map(value => this.filterComite(value))
           );
       });
+
+    this.suscripciones.push(comitesSubscription);
 
     this.logger.debug(MemoriaListadoGesComponent.name,
       'getComites()',
@@ -299,7 +287,7 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
       'getEstadosMemoria()',
       'start');
 
-    this.estadosMemoriaSubscription = this.tipoEstadoMemoriaService.findAll().subscribe(
+    const estadosMemoriaSubscription = this.tipoEstadoMemoriaService.findAll().subscribe(
       (response) => {
         this.estadoMemoriaListado = response.items;
 
@@ -310,11 +298,12 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
           );
       });
 
+    this.suscripciones.push(estadosMemoriaSubscription);
+
     this.logger.debug(MemoriaListadoGesComponent.name,
       'getEstadosMemoria()',
       'end');
   }
-
 
   /**
    * Filtro de campo autocompletable comité.
@@ -372,6 +361,45 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
   }
 
   /**
+   * Se recupera el estado anterior de la memoria
+   * @param memoria la memoria a reestablecer el estado
+   */
+  private recuperarEstadoAnteriorMemoria(memoria: IMemoriaPeticionEvaluacion) {
+    const recuperarEstadoSubscription = this.memoriaService.recuperarEstadoAnterior(memoria.id).pipe(
+      map((response: IMemoria) => {
+        if (response) {
+          // Si todo ha salido bien se recarga la tabla con el cambio de estado actualizado y el aviso correspondiente
+          this.snackBarService.showSuccess(MSG_ESTADO_ANTERIOR_OK);
+          this.loadTable(true);
+        } else {
+          // Si no se puede cambiar de estado se muestra el aviso
+          this.snackBarService.showError(MSG_ESTADO_ANTERIOR_ERROR);
+        }
+      })
+    ).subscribe();
+
+    this.suscripciones.push(recuperarEstadoSubscription);
+  }
+
+  /**
+   * Confirmación para recuperar el estado de la memoria
+   * @param memoria la memoria a reestablecer el estado
+   */
+  public recuperarEstadoAnterior(memoria: IMemoriaPeticionEvaluacion) {
+    const dialogServiceSubscription = this.dialogService.showConfirmation(MSG_RECUPERAR_ESTADO).pipe(
+      map((aceptado: boolean) => {
+        if (aceptado) {
+          this.recuperarEstadoAnteriorMemoria(memoria);
+        }
+        this.logger.debug(MemoriaListadoGesComponent.name,
+          `${this.recuperarEstadoAnterior.name}(${memoria})`, 'end');
+      })
+    ).subscribe();
+
+    this.suscripciones.push(dialogServiceSubscription);
+  }
+
+  /**
    * Clean filters an reload the table
    */
   public onClearFilters() {
@@ -391,13 +419,11 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
       'end');
   }
 
-
   ngOnDestroy(): void {
     this.logger.debug(MemoriaListadoGesComponent.name,
       'ngOnDestroy()',
       'start');
-    this.comitesSubscription?.unsubscribe();
-
+    this.suscripciones.forEach(x => x.unsubscribe());
     this.logger.debug(MemoriaListadoGesComponent.name,
       'ngOnDestroy()',
       'end');

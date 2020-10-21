@@ -55,7 +55,7 @@ export class MemoriasListadoFragment extends Fragment {
     }
   }
 
-  private loadMemorias(idPeticionEvaluacion: number): void {
+  public loadMemorias(idPeticionEvaluacion: number): void {
     this.service
       .findMemorias(
         idPeticionEvaluacion

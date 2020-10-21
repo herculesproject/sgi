@@ -115,9 +115,14 @@
       <th mat-header-cell *matHeaderCellDef> {{'eti.memoria.listado.acciones' | translate}} </th>
       <td mat-cell *matCellDef="let memoria;let i=index;">
         <ng-container>
-          <button mat-button *sgiHasAnyAuthorityForAnyUO="['ETI-MEM-CEST']" [routerLink]="[memoria.id]"
-            matTooltip="{{'eti.memoria.listado.editar' | translate}}">
+          <button mat-button [routerLink]="[memoria.id]" matTooltip="{{'eti.memoria.listado.editar' | translate}}">
             <mat-icon color="primary">border_color</mat-icon>
+          </button>
+          <button *ngIf="memoria.estadoActual.id === 3 || memoria.estadoActual.id === 4 || 
+            memoria.estadoActual.id === 10 || memoria.estadoActual.id === 5" mat-button
+            (click)="recuperarEstadoAnterior(memoria)"
+            matTooltip="{{'eti.memoria.listado.volverEstadoAnterior' | translate}}">
+            <mat-icon color="primary">restore</mat-icon>
           </button>
         </ng-container>
       </td>

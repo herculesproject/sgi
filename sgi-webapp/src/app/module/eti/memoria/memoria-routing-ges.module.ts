@@ -27,7 +27,7 @@ const routes: SgiRoutes = [
     canActivate: [SgiAuthGuard],
     data: {
       title: MSG_LISTADO_TITLE,
-      hasAuthorityForAnyUO: 'ETI-MEM-CEST'
+      hasAuthorityForAnyUO: 'ETI-PEV-V'
     }
   },
   {
@@ -37,7 +37,7 @@ const routes: SgiRoutes = [
     canDeactivate: [ActionGuard],
     data: {
       title: MSG_NEW_TITLE,
-      hasAnyAuthorityForAnyUO: ['ETI-PEV-C-INV', 'ETI-PEV-ER-INV']
+      hasAuthorityForAnyUO: 'ETI-PEV-C'
     },
     children: [
       {
@@ -62,7 +62,7 @@ const routes: SgiRoutes = [
     },
     data: {
       title: MSG_EDIT_TITLE,
-      hasAnyAuthorityForAnyUO: ['ETI-PEV-C-INV', 'ETI-PEV-ER-INV', 'ETI-MEM-CEST'],
+      hasAuthorityForAnyUO: 'ETI-PEV-V',
       readonly: true
     },
     children: [

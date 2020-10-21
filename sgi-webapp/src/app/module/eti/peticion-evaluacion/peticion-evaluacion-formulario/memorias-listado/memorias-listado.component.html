@@ -69,6 +69,15 @@
           (click)="delete(wrapper)">
           <mat-icon color="warn">highlight_off</mat-icon>
         </button>
+
+        <ng-container *sgiHasAuthorityForAnyUO="'ETI-PEV-V'">
+          <button *ngIf="wrapper.value.estadoActual.id === 3 || wrapper.value.estadoActual.id === 4 || 
+                              wrapper.value.estadoActual.id === 10 || wrapper.value.estadoActual.id === 5" mat-button
+            (click)="recuperarEstadoAnterior(wrapper.value)"
+            matTooltip="{{'eti.memoria.listado.volverEstadoAnterior' | translate}}">
+            <mat-icon color="primary">restore</mat-icon>
+          </button>
+        </ng-container>
         <!-- </ng-container> -->
       </td>
     </ng-container>

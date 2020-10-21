@@ -260,7 +260,7 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
       );
   }
 
-  /** 
+  /**
    * Elimina el documento de tipo seguimiento anual de una memoria.
    *
    * @param idMemoria Identifiacdor de la memoria.
@@ -283,8 +283,6 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
       })
     );
   }
-
-
 
   /**
    * Elimina el documento de tipo seguimiento final de una memoria.
@@ -334,5 +332,15 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
     );
   }
 
+  /**
+   * Recupera el estado anterior de la memoria
+   * @param id identificador de la memoria
+   */
+  recuperarEstadoAnterior(id: number): Observable<IMemoria> {
+    this.logger.debug(MemoriaService.name, `recuperarEstadoAnterior(${id})`, '-', 'start');
+    return this.http.get<IMemoria>(`${this.endpointUrl}/${id}/recuperar-estado-anterior`).pipe(
+      tap(() => this.logger.debug(MemoriaService.name, `recuperarEstadoAnterior(${id})`, '-', 'end'))
+    );
+  }
 
 }
