@@ -14,7 +14,7 @@ import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
-import { ModeloEjecucionTipoFaseModalComponent } from '../../modals/modelo-ejecucion-tipo-fase-modal/modelo-ejecucion-tipo-fase-modal.component';
+import { ModeloEjecucionTipoFaseModalComponent, ModeloEjecucionTipoFaseModalData } from '../../modals/modelo-ejecucion-tipo-fase-modal/modelo-ejecucion-tipo-fase-modal.component';
 import { ModeloEjecucionActionService } from '../../modelo-ejecucion.action.service';
 import { ModeloEjecucionTipoFaseFragment } from './modelo-ejecucion-tipo-fase.fragment';
 
@@ -92,10 +92,14 @@ export class ModeloEjecucionTipoFaseComponent extends FragmentComponent implemen
   /**
    * Abre el modal para crear/modificar
    */
-  openModal(): void {
+  openModal(statusWrapper?: StatusWrapper<IModeloTipoFase>): void {
     this.logger.debug(ModeloEjecucionTipoFaseComponent.name, `${this.openModal.name}()`, 'start');
-    const modeloTipoFase = { activo: true, convocatoria: false, solicitud: false, proyecto: false } as IModeloTipoFase;
-
+    const modeloTipoFase = {
+      activo: true,
+      convocatoria: false,
+      solicitud: false,
+      proyecto: false
+    } as IModeloTipoFase;
     const tipoFases: ITipoFase[] = [];
     this.modelosTipoFases.data.forEach((wrapper: StatusWrapper<IModeloTipoFase>) => {
       tipoFases.push(wrapper.value.tipoFase);
@@ -104,13 +108,23 @@ export class ModeloEjecucionTipoFaseComponent extends FragmentComponent implemen
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: { modeloTipoFase, tipoFases }
+      data: {
+        modeloTipoFase: statusWrapper ? statusWrapper.value : modeloTipoFase,
+        tipoFases
+      } as ModeloEjecucionTipoFaseModalData
     };
     const dialogRef = this.matDialog.open(ModeloEjecucionTipoFaseModalComponent, config);
     dialogRef.afterClosed().subscribe(
       (result: IModeloTipoFase) => {
         if (result) {
-          this.formPart.addModeloTipoFase(result);
+          if (statusWrapper) {
+            if (!statusWrapper.created) {
+              statusWrapper.setEdited();
+            }
+            this.formPart.setChanges(true);
+          } else {
+            this.formPart.addModeloTipoFase(result);
+          }
         }
         this.logger.debug(ModeloEjecucionTipoFaseComponent.name, `${this.openModal.name}()`, 'end');
       }

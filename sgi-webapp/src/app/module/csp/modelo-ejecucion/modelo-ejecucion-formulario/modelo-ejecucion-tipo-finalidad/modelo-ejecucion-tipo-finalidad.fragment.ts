@@ -31,9 +31,7 @@ export class ModeloEjecucionTipoFinalidadFragment extends Fragment {
     this.logger.debug(ModeloEjecucionTipoFinalidadFragment.name, `${this.onInitialize.name}()`, 'start');
     if (this.getKey()) {
       this.modeloEjecucionService.findModeloTipoFinalidad(this.getKey() as number).pipe(
-        map((response: SgiRestListResult<IModeloTipoFinalidad>) => {
-          return response.items ? response.items : [];
-        })
+        map((response: SgiRestListResult<IModeloTipoFinalidad>) => response.items)
       ).subscribe(
         (modelosTipoFinalidades: IModeloTipoFinalidad[]) => {
           this.modeloTipoFinalidad$.next(

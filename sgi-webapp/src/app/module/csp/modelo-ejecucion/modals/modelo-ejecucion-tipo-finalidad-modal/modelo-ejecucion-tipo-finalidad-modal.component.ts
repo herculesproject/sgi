@@ -6,10 +6,15 @@ import { IModeloTipoFinalidad } from '@core/models/csp/modelo-tipo-finalidad';
 import { ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
 import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+
+export interface ModeloEjecucionTipoFinalidadModalData {
+  modeloTipoFinalidad: IModeloTipoFinalidad;
+  tipoFinalidades: ITipoFinalidad[];
+}
 
 @Component({
   templateUrl: './modelo-ejecucion-tipo-finalidad-modal.component.html',
@@ -24,10 +29,7 @@ export class ModeloEjecucionTipoFinalidadModalComponent extends
     protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<ModeloEjecucionTipoFinalidadModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {
-      modeloTipoFinalidad: IModeloTipoFinalidad
-      tipoFinalidades: ITipoFinalidad[]
-    },
+    @Inject(MAT_DIALOG_DATA) public data: ModeloEjecucionTipoFinalidadModalData,
     private readonly tipoFinalidadService: TipoFinalidadService
   ) {
     super(logger, snackBarService, matDialogRef, data.modeloTipoFinalidad);
@@ -37,14 +39,7 @@ export class ModeloEjecucionTipoFinalidadModalComponent extends
 
   ngOnInit(): void {
     super.ngOnInit();
-    const options = {
-      filters: [{
-        field: 'activo',
-        type: SgiRestFilterType.EQUALS,
-        value: 'true',
-      } as SgiRestFilter],
-    } as SgiRestFindOptions;
-    this.tipoFinalidad$ = this.tipoFinalidadService.findAll(options).pipe(
+    this.tipoFinalidad$ = this.tipoFinalidadService.findAll().pipe(
       switchMap((result: SgiRestListResult<ITipoFinalidad>) => {
         const list = this.filterExistingTipoFinalidad(result);
         return of(list);

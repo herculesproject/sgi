@@ -5,7 +5,6 @@ import { BaseModalComponent } from '@core/component/base-modal.component';
 import { IModeloTipoFase } from '@core/models/csp/modelo-tipo-fase';
 import { TipoFaseService } from '@core/services/csp/tipo-fase.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { FormGroupUtil } from '@core/utils/form-group-util';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
@@ -13,8 +12,13 @@ import { switchMap } from 'rxjs/operators';
 import { DialogService } from '@core/services/dialog.service';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ITipoFase } from '@core/models/csp/tipos-configuracion';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
-const MSG_CHECK = marker('eti.csp.check.continuar');
+const MSG_CHECK = marker('csp.check.continuar');
+export interface ModeloEjecucionTipoFaseModalData {
+  modeloTipoFase: IModeloTipoFase;
+  tipoFases: ITipoFase[];
+}
 
 @Component({
   selector: 'sgi-modelo-ejecucion-tipo-fase-modal',
@@ -31,11 +35,7 @@ export class ModeloEjecucionTipoFaseModalComponent extends
     protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<ModeloEjecucionTipoFaseModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {
-      modeloTipoFase: IModeloTipoFase
-      tipoFases: ITipoFase[]
-    },
-
+    @Inject(MAT_DIALOG_DATA) public data: ModeloEjecucionTipoFaseModalData,
     private readonly tipoFaseService: TipoFaseService,
     protected readonly dialogService: DialogService
   ) {
@@ -46,13 +46,20 @@ export class ModeloEjecucionTipoFaseModalComponent extends
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.tipoFases$ = this.tipoFaseService.findAll().pipe(
-      switchMap((result: SgiRestListResult<ITipoFase>) => {
-        const list = this.filterExistingTipoFase(result);
-        return of(list);
-      })
-
-    );
+    if (!this.data.modeloTipoFase.tipoFase) {
+      this.tipoFases$ = this.tipoFaseService.findAll().pipe(
+        switchMap((result: SgiRestListResult<ITipoFase>) => {
+          const list = this.filterExistingTipoFase(result);
+          return of(list);
+        })
+      );
+    } else {
+      this.tipoFases$ = this.tipoFaseService.findAll().pipe(
+        switchMap((result: SgiRestListResult<ITipoFase>) => {
+          return of(result.items);
+        })
+      );
+    }
   }
 
   /**
@@ -91,7 +98,7 @@ export class ModeloEjecucionTipoFaseModalComponent extends
    * Activar/desactivar convocatoria
    * @param event evento
    */
-  setConvocatoriaActivo(event) {
+  setConvocatoriaActivo(event: MatCheckboxChange) {
     this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, 'setConvocatoriaActivo(event) - start');
     this.formGroup.controls.checkConvocatoria.setValue(event.checked);
     this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, 'setConvocatoriaActivo(event) - end');
@@ -101,7 +108,7 @@ export class ModeloEjecucionTipoFaseModalComponent extends
    * Activar/desactivar proyecto
    * @param event evento
    */
-  setProyectoActivo(event) {
+  setProyectoActivo(event: MatCheckboxChange) {
     this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, 'setProyectoActivo(event) - start');
     this.formGroup.controls.checkProyecto.setValue(event.checked);
     this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, 'setProyectoActivo(event) - end');
@@ -111,20 +118,20 @@ export class ModeloEjecucionTipoFaseModalComponent extends
    * Miramos si está activado al menos un check y si no lo está
    * mostramos mensaje para que confirme que lo quiere así
    */
-  confirmActivosCheck() {
+  confirmActivosCheck(): void {
     this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, 'alertActivosCheck() - start');
-    if ((this.formGroup.controls.checkProyecto.value === null || this.formGroup.controls.checkProyecto.value === false)
-      && (this.formGroup.controls.checkConvocatoria.value === null || this.formGroup.controls.checkConvocatoria.value === false)) {
-      this.subscriptions.push(this.dialogService.showConfirmation(MSG_CHECK).subscribe((aceptado) => {
-        if (aceptado) {
-          const modeloTipoFase = this.data.modeloTipoFase;
-          modeloTipoFase.convocatoria = true;
-          modeloTipoFase.proyecto = false;
-          this.saveOrUpdate();
-        } else {
-          return false;
-        }
-      }));
+    if (this.formGroup.controls.checkProyecto.value === false
+      && this.formGroup.controls.checkConvocatoria.value === false) {
+      this.subscriptions.push(this.dialogService.showConfirmation(MSG_CHECK).subscribe(
+        (aceptado) => {
+          if (aceptado) {
+            const modeloTipoFase = this.data.modeloTipoFase;
+            modeloTipoFase.convocatoria = true;
+            modeloTipoFase.proyecto = false;
+            this.saveOrUpdate();
+          }
+        })
+      );
     } else {
       this.saveOrUpdate();
     }
@@ -138,4 +145,7 @@ export class ModeloEjecucionTipoFaseModalComponent extends
     this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, 'ngOnDestroy()', 'end');
   }
 
+  equals(o1?: ITipoFase, o2?: ITipoFase): boolean {
+    return o1.id === o2.id;
+  }
 }

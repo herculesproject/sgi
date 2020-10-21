@@ -6,6 +6,6 @@ export interface IModeloTipoDocumento {
   id: number;
   tipoDocumento: ITipoDocumento;
   modeloEjecucion: IModeloEjecucion;
-  tipoFase: IModeloTipoFase;
+  modeloTipoFase: IModeloTipoFase;
   activo: boolean;
 }

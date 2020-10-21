@@ -12,12 +12,10 @@ describe('ComiteFormularioService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule,
-        SgiAuthModule
+        HttpClientTestingModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-        SgiAuthService
+        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() }
       ],
     });
     service = TestBed.inject(ComiteFormularioService);

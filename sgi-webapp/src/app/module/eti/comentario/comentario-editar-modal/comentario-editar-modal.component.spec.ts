@@ -3,7 +3,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { IApartadoFormulario } from '@core/models/eti/apartado-formulario';
+import { IComentario } from '@core/models/eti/comentario';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
@@ -16,7 +19,18 @@ describe('ComentarioActualizarModalComponent', () => {
   let component: ComentarioEditarModalComponent;
   let fixture: ComponentFixture<ComentarioEditarModalComponent>;
 
+  const snapshotData = {
+    comentario: {
+      apartadoFormulario: {
+        id: 1
+      } as IApartadoFormulario,
+    } as IComentario,
+    idComite: 1,
+    idTipoEvaluacion: 1
+  };
+
   beforeEach(async(() => {
+
     TestBed.configureTestingModule({
       declarations: [ComentarioEditarModalComponent],
       imports: [
@@ -31,8 +45,8 @@ describe('ComentarioActualizarModalComponent', () => {
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: {} },
-        { provide: MAT_DIALOG_DATA, useValue: [] },
+        { provide: MatDialogRef, useValue: snapshotData },
+        { provide: MAT_DIALOG_DATA, useValue: snapshotData },
       ],
     })
       .compileComponents();

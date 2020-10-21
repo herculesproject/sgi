@@ -1,6 +1,9 @@
 <div class="modelo-tipo-fase-modal">
   <header class="modal-header-material">
-    <h3 mat-dialog-title>{{'csp.modelo.tipo.fase.modal.titulo' | translate}}</h3>
+    <h3 mat-dialog-title *ngIf="data.modeloTipoFase.tipoFase">
+      {{'csp.modelo.tipo.fase.modal.titulo.actualizar' | translate}}</h3>
+    <h3 mat-dialog-title *ngIf="!data.modeloTipoFase.tipoFase">{{'csp.modelo.tipo.fase.modal.titulo.crear' | translate}}
+    </h3>
   </header>
   <main>
     <form [formGroup]="formGroup">
@@ -10,7 +13,8 @@
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
             <mat-label>{{'csp.tipo.fase' | translate}}</mat-label>
-            <mat-select matNativeControl formControlName="tipoFase" required>
+            <mat-select matNativeControl formControlName="tipoFase" required [disabled]="data.modeloTipoFase.tipoFase"
+              [compareWith]="equals">
               <mat-option *ngFor="let tipoFase of tipoFases$ | async" [value]="tipoFase">{{tipoFase.nombre}}
               </mat-option>
             </mat-select>

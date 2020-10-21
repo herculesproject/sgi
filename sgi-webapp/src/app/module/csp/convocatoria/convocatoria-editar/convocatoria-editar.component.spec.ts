@@ -13,6 +13,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ConvocatoriaActionService } from '../convocatoria.action.service';
 import { NGXLogger } from 'ngx-logger';
 import { SgiAuthModule } from '@sgi/framework/auth';
+import { ActionFragmentLinkItemComponent } from '@shared/action-fragment-link-item/action-fragment-link-item.component';
 
 describe('ConvocatoriaEditarComponent', () => {
   let component: ConvocatoriaEditarComponent;

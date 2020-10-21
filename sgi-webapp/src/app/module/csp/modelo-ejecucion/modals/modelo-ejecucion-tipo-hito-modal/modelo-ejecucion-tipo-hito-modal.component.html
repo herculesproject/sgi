@@ -1,6 +1,9 @@
 <div class="modelo-tipo-hito-modal">
   <header class="modal-header-material">
-    <h3 mat-dialog-title>{{'csp.modelo.tipo.hito.modal.titulo' | translate}}</h3>
+    <h3 mat-dialog-title *ngIf="data.modeloTipoHito.tipoHito">
+      {{'csp.modelo.tipo.hito.modal.titulo.actualizar' | translate}}</h3>
+    <h3 mat-dialog-title *ngIf="!data.modeloTipoHito.tipoHito">{{'csp.modelo.tipo.hito.modal.titulo.crear' | translate}}
+    </h3>
   </header>
   <main>
     <form [formGroup]="formGroup">
@@ -10,7 +13,8 @@
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
             <mat-label>{{'csp.tipo.hito' | translate}}</mat-label>
-            <mat-select matNativeControl formControlName="tipoHito" required>
+            <mat-select matNativeControl formControlName="tipoHito" required [disabled]="data.modeloTipoHito.tipoHito"
+              [compareWith]="equals">
               <mat-option *ngFor="let tipoHito of tipoHitos$ | async" [value]="tipoHito">{{tipoHito.nombre}}
               </mat-option>
             </mat-select>
@@ -28,18 +32,16 @@
           <label>{{'csp.modelo.tipo.hito.disponible' | translate}}</label>
           <div class="checkbox-inline">
             <mat-checkbox color="primary" class="checkbox" formControlName="checkConvocatoria"
-              (change)="setConvocatoriaActivo($event)">{{'csp.modelo.tipo.hito.convocatoria' | translate}}
+              (change)="setConvocatoriaActivo($event)">{{'csp.modelo.tipo.hito.convocatorias' | translate}}
             </mat-checkbox>
             <mat-checkbox color="primary" class="checkbox" formControlName="checkProyecto"
-              (change)="setProyectoActivo($event)">{{'csp.modelo.tipo.hito.proyecto' | translate}}</mat-checkbox>
+              (change)="setProyectoActivo($event)">{{'csp.modelo.tipo.hito.solicitudes' | translate}}</mat-checkbox>
             <mat-checkbox color="primary" class="checkbox" formControlName="checkSolictud"
               (change)="setSolictudActivo($event)">
-              {{'csp.modelo.tipo.hito.proyecto' | translate}}</mat-checkbox>
+              {{'csp.modelo.tipo.hito.proyectos' | translate}}</mat-checkbox>
           </div>
         </div>
       </div>
-
-
     </form>
   </main>
   <div id="modals-buttons" class="float-right" mat-dialog-actions>

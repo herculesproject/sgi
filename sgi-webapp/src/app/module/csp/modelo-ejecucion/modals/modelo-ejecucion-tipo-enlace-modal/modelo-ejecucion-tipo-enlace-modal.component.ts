@@ -11,6 +11,11 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
+export interface ModeloEjecucionTipoEnlaceModalData {
+  modeloTipoEnlace: IModeloTipoEnlace;
+  tipoEnlaces: ITipoEnlace[];
+}
+
 @Component({
   templateUrl: './modelo-ejecucion-tipo-enlace-modal.component.html',
   styleUrls: ['./modelo-ejecucion-tipo-enlace-modal.component.scss']
@@ -23,10 +28,7 @@ export class ModeloEjecucionTipoEnlaceModalComponent extends
     protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<ModeloEjecucionTipoEnlaceModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {
-      modeloTipoEnlace: IModeloTipoEnlace
-      tipoEnlaces: ITipoEnlace[]
-    },
+    @Inject(MAT_DIALOG_DATA) public data: ModeloEjecucionTipoEnlaceModalData,
     private readonly tipoEnlaceService: TipoEnlaceService,
   ) {
     super(logger, snackBarService, matDialogRef, data.modeloTipoEnlace);
@@ -36,15 +38,7 @@ export class ModeloEjecucionTipoEnlaceModalComponent extends
 
   ngOnInit(): void {
     super.ngOnInit();
-    // TODO: cambiar consulta
-    const options = {
-      filters: [{
-        field: 'activo',
-        type: SgiRestFilterType.EQUALS,
-        value: 'true',
-      } as SgiRestFilter],
-    } as SgiRestFindOptions;
-    this.tipoEnlaces$ = this.tipoEnlaceService.findAll(options).pipe(
+    this.tipoEnlaces$ = this.tipoEnlaceService.findAll().pipe(
       switchMap((result: SgiRestListResult<ITipoEnlace>) => {
         const list = this.filterExistingTipoEnlace(result);
         return of(list);
@@ -54,7 +48,7 @@ export class ModeloEjecucionTipoEnlaceModalComponent extends
 
   private filterExistingTipoEnlace(result: SgiRestListResult<ITipoEnlace>): ITipoEnlace[] {
     return result.items.filter((tipoEnlace: ITipoEnlace) => {
-      return this.data.tipoEnlaces.find((currentTipo) => currentTipo.id === tipoEnlace.id) ? false : true;
+      return !this.data.tipoEnlaces.find((currentTipo) => currentTipo.id === tipoEnlace.id);
     });
   }
 

@@ -14,7 +14,7 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
 import { ModeloEjecucionActionService } from '../../modelo-ejecucion.action.service';
-import { ModeloEjecucionTipoFinalidadModalComponent } from '../../modals/modelo-ejecucion-tipo-finalidad-modal/modelo-ejecucion-tipo-finalidad-modal.component';
+import { ModeloEjecucionTipoFinalidadModalComponent, ModeloEjecucionTipoFinalidadModalData } from '../../modals/modelo-ejecucion-tipo-finalidad-modal/modelo-ejecucion-tipo-finalidad-modal.component';
 import { ModeloEjecucionTipoFinalidadFragment } from './modelo-ejecucion-tipo-finalidad.fragment';
 import { ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
 
@@ -108,7 +108,7 @@ export class ModeloEjecucionTipoFinalidadComponent extends FragmentComponent imp
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: { modeloTipoFinalidad, tipoFinalidades }
+      data: { modeloTipoFinalidad, tipoFinalidades } as ModeloEjecucionTipoFinalidadModalData
     };
     const dialogRef = this.matDialog.open(ModeloEjecucionTipoFinalidadModalComponent, config);
     dialogRef.afterClosed().subscribe(

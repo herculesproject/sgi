@@ -9,18 +9,34 @@ import TestUtils from '@core/utils/test-utils';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MemoriaActionService } from '../../memoria.action.service';
+import { Comite } from '@core/models/eti/comite';
+import { IRetrospectiva } from '@core/models/eti/retrospectiva';
+import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
-import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
+import { RouterTestingModule } from '@angular/router/testing';
 import { IMemoria } from '@core/models/eti/memoria';
+import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 
 
 describe('MemoriaEvaluacionesComponent', () => {
   let component: MemoriaEvaluacionesComponent;
   let fixture: ComponentFixture<MemoriaEvaluacionesComponent>;
+
   const snapshotData = {
     memoria: {
+      comite: {
+        id: 1
+      } as Comite,
+      estadoActual: {
+        id: 1
+      } as TipoEstadoMemoria,
+      retrospectiva: {
+        id: 1,
+        estadoRetrospectiva: {
+          id: 1
+        }
+      } as IRetrospectiva,
       peticionEvaluacion: {
         id: 1
       } as IPeticionEvaluacion

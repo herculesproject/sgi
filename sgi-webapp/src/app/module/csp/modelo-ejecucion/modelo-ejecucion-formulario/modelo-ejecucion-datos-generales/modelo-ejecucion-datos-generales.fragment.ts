@@ -30,11 +30,9 @@ export class ModeloEjecucionDatosGeneralesFragment extends FormFragment<IModeloE
       `${this.buildFormGroup.name}()`, 'start');
     const fb = new FormGroup({
       nombre: new FormControl(''),
-      descripcion: new FormControl('')
+      descripcion: new FormControl(''),
+      activo: new FormControl('')
     });
-    if (this.isEdit()) {
-      FormGroupUtil.addFormControl(fb, 'activo', new FormControl(''));
-    }
     this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name,
       `${this.buildFormGroup.name}()`, 'end');
     return fb;
@@ -44,12 +42,10 @@ export class ModeloEjecucionDatosGeneralesFragment extends FormFragment<IModeloE
     this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name,
       `${this.buildPatch.name}(modeloEjecucion: ${modeloEjecucion})`, 'start');
     const result = {
-      id: modeloEjecucion.id,
       activo: modeloEjecucion.activo,
       descripcion: modeloEjecucion.descripcion,
       nombre: modeloEjecucion.nombre
     } as IModeloEjecucion;
-    this.modeloEjecucion = modeloEjecucion;
     this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name,
       `${this.buildPatch.name}(modeloEjecucion: ${modeloEjecucion})`, 'end');
     return result;
@@ -104,7 +100,7 @@ export class ModeloEjecucionDatosGeneralesFragment extends FormFragment<IModeloE
       tap((result: IModeloEjecucion) => {
         this.modeloEjecucion = result;
         this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name,
-          `${this.create.name}(modeloEjecucion: ${modeloEjecucion})`, 'end')
+          `${this.create.name}(modeloEjecucion: ${modeloEjecucion})`, 'end');
       })
     );
   }
@@ -116,7 +112,7 @@ export class ModeloEjecucionDatosGeneralesFragment extends FormFragment<IModeloE
       tap((result: IModeloEjecucion) => {
         this.modeloEjecucion = result;
         this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name,
-          `${this.update.name}(modeloEjecucion: ${modeloEjecucion})`, 'end')
+          `${this.update.name}(modeloEjecucion: ${modeloEjecucion})`, 'end');
       })
     );
   }

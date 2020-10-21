@@ -13,7 +13,7 @@ import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
-import { ModeloEjecucionTipoEnlaceModalComponent } from '../../modals/modelo-ejecucion-tipo-enlace-modal/modelo-ejecucion-tipo-enlace-modal.component';
+import { ModeloEjecucionTipoEnlaceModalComponent, ModeloEjecucionTipoEnlaceModalData } from '../../modals/modelo-ejecucion-tipo-enlace-modal/modelo-ejecucion-tipo-enlace-modal.component';
 import { ModeloEjecucionActionService } from '../../modelo-ejecucion.action.service';
 import { ModeloEjecucionTipoEnlaceFragment } from './modelo-ejecucion-tipo-enlace.fragment';
 import { ITipoEnlace } from '@core/models/csp/tipos-configuracion';
@@ -108,7 +108,7 @@ export class ModeloEjecucionTipoEnlaceComponent extends FragmentComponent implem
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: { modeloTipoEnlace, tipoEnlaces }
+      data: { modeloTipoEnlace, tipoEnlaces } as ModeloEjecucionTipoEnlaceModalData
     };
     const dialogRef = this.matDialog.open(ModeloEjecucionTipoEnlaceModalComponent, config);
     dialogRef.afterClosed().subscribe(

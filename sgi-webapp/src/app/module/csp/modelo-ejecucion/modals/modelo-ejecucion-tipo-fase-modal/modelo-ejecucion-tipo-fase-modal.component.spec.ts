@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { IModeloTipoFase } from '@core/models/csp/modelo-tipo-fase';
 import { ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
@@ -15,6 +16,11 @@ import { ModeloEjecucionTipoFaseModalComponent } from './modelo-ejecucion-tipo-f
 describe('ModeloEjecucionTipoFaseModalComponent', () => {
   let component: ModeloEjecucionTipoFaseModalComponent;
   let fixture: ComponentFixture<ModeloEjecucionTipoFaseModalComponent>;
+
+  const data = {
+    modeloTipoFase: {} as IModeloTipoFase,
+    tipoFases: [] as ITipoFase[]
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -33,8 +39,8 @@ describe('ModeloEjecucionTipoFaseModalComponent', () => {
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: {} as ITipoFase },
-        { provide: MAT_DIALOG_DATA, useValue: {} as ITipoFase },
+        { provide: MatDialogRef, useValue: data },
+        { provide: MAT_DIALOG_DATA, useValue: data },
       ]
     })
       .compileComponents();

@@ -31,9 +31,7 @@ export class ModeloEjecucionTipoEnlaceFragment extends Fragment {
     this.logger.debug(ModeloEjecucionTipoEnlaceFragment.name, `${this.onInitialize.name}()`, 'start');
     if (this.getKey()) {
       this.modeloEjecucionService.findModeloTipoEnlace(this.getKey() as number).pipe(
-        map((response: SgiRestListResult<IModeloTipoEnlace>) => {
-          return response.items ? response.items : [];
-        })
+        map((response: SgiRestListResult<IModeloTipoEnlace>) => response.items)
       ).subscribe(
         (modelosTipoEnlace: IModeloTipoEnlace[]) => {
           this.modeloTipoEnlace$.next(

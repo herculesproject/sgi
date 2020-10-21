@@ -5,8 +5,11 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Comite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
+import { IRetrospectiva } from '@core/models/eti/retrospectiva';
+import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
@@ -22,9 +25,21 @@ describe('MemoriaDocumentacionComponent', () => {
 
   const snapshotData = {
     memoria: {
+      comite: {
+        id: 1
+      } as Comite,
+      estadoActual: {
+        id: 1
+      } as TipoEstadoMemoria,
+      retrospectiva: {
+        id: 1,
+        estadoRetrospectiva: {
+          id: 1
+        }
+      } as IRetrospectiva,
       peticionEvaluacion: {
         id: 1
-      } as IPeticionEvaluacion
+      } as IPeticionEvaluacion,
     } as IMemoria
   };
 

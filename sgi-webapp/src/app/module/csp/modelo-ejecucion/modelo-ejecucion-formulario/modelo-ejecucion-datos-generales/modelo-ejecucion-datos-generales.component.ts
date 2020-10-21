@@ -15,6 +15,7 @@ export class ModeloEjecucionDatosGeneralesComponent extends FormFragmentComponen
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
+  key: number;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -22,6 +23,9 @@ export class ModeloEjecucionDatosGeneralesComponent extends FormFragmentComponen
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
     this.logger.debug(ModeloEjecucionDatosGeneralesComponent.name, 'constructor()', 'start');
+
+    this.key = this.fragment.getKey() as number;
+
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
     this.fxFlexProperties.md = '0 1 calc(100%-10px)';

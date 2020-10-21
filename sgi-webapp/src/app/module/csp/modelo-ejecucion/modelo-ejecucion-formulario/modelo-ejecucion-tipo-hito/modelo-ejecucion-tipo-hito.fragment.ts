@@ -32,9 +32,7 @@ export class ModeloEjecucionTipoHitoFragment extends Fragment {
     this.logger.debug(ModeloEjecucionTipoHitoFragment.name, `${this.onInitialize.name}()`, 'start');
     if (this.getKey()) {
       this.modeloEjecucionService.findModeloTipoHito(this.getKey() as number).pipe(
-        map((response: SgiRestListResult<IModeloTipoHito>) => {
-          return response.items ? response.items : [];
-        })
+        map((response: SgiRestListResult<IModeloTipoHito>) => response.items)
       ).subscribe(
         (modelosTipoHito: IModeloTipoHito[]) => {
           this.modeloTipoHito$.next(
@@ -98,6 +96,27 @@ export class ModeloEjecucionTipoHitoFragment extends Fragment {
       }));
   }
 
+  private updateModeloTipoHitos(): Observable<void> {
+    this.logger.debug(ModeloEjecucionTipoHitoFragment.name, `${this.updateModeloTipoHitos.name}()`, 'start');
+    const editedModelos = this.modeloTipoHito$.value.filter((modeloTipoHito) => modeloTipoHito.edited);
+    if (editedModelos.length === 0) {
+      this.logger.debug(ModeloEjecucionTipoHitoFragment.name, `${this.updateModeloTipoHitos.name}()`, 'end');
+      return of(void 0);
+    }
+    return from(editedModelos).pipe(
+      mergeMap((wrappedTarea) => {
+        return this.modeloTipoHitoService.update(wrappedTarea.value.id, wrappedTarea.value).pipe(
+          map((updatedTarea) => {
+            const index = this.modeloTipoHito$.value.findIndex((currentTarea) => currentTarea === wrappedTarea);
+            this.modeloTipoHito$.value[index] = new StatusWrapper<IModeloTipoHito>(updatedTarea);
+          }),
+          tap(() => this.logger.debug(ModeloEjecucionTipoHitoFragment.name,
+            `${this.updateModeloTipoHitos.name}()`, 'end'))
+        );
+      })
+    );
+  }
+
   private createModeloTipoHitos(): Observable<void> {
     this.logger.debug(ModeloEjecucionTipoHitoFragment.name, `${this.createModeloTipoHitos.name}()`, 'start');
     const createdModelos = this.modeloTipoHito$.value.filter((modeloTipoHito) => modeloTipoHito.created);
@@ -131,6 +150,7 @@ export class ModeloEjecucionTipoHitoFragment extends Fragment {
     this.logger.debug(ModeloEjecucionTipoHitoFragment.name, `${this.saveOrUpdate.name}()`, 'start');
     return merge(
       this.deleteModeloTipoHitos(),
+      this.updateModeloTipoHitos(),
       this.createModeloTipoHitos()
     ).pipe(
       takeLast(1),

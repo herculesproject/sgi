@@ -31,10 +31,7 @@ export class ModeloEjecucionTipoDocumentoFragment extends Fragment {
     this.logger.debug(ModeloEjecucionTipoDocumentoFragment.name, `${this.onInitialize.name}()`, 'start');
     if (this.getKey()) {
       this.modeloEjecucionService.findModeloTipoDocumento(this.getKey() as number).pipe(
-        map((response: SgiRestListResult<IModeloTipoDocumento>) => {
-          console.warn(response.items);
-          return response.items ? response.items : [];
-        })
+        map((response: SgiRestListResult<IModeloTipoDocumento>) => response.items)
       ).subscribe(
         (modelosTipoDocumento: IModeloTipoDocumento[]) => {
           this.modeloTipoDocumento$.next(

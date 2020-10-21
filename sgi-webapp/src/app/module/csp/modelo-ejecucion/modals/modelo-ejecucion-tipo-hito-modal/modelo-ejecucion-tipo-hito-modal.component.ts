@@ -1,5 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
@@ -8,12 +9,17 @@ import { ITipoHito } from '@core/models/csp/tipos-configuracion';
 import { TipoHitoService } from '@core/services/csp/tipo-hito.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-const MSG_CHECK = marker('eti.csp.hito.check.continuar');
+const MSG_CHECK = marker('csp.tipo.hito.check.continuar');
+
+export interface ModeloEjecucionTipoHitoModalData {
+  modeloTipoHito: IModeloTipoHito;
+  tipoHitos: ITipoHito[];
+}
 
 @Component({
   selector: 'sgi-modelo-ejecucion-tipo-hito-modal',
@@ -30,11 +36,7 @@ export class ModeloEjecucionTipoHitoModalComponent extends
     protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<ModeloEjecucionTipoHitoModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {
-      modeloTipoHito: IModeloTipoHito
-      tipoHitos: ITipoHito[]
-    },
-
+    @Inject(MAT_DIALOG_DATA) public data: ModeloEjecucionTipoHitoModalData,
     private readonly tipoHitoService: TipoHitoService,
     protected readonly dialogService: DialogService
   ) {
@@ -45,28 +47,30 @@ export class ModeloEjecucionTipoHitoModalComponent extends
 
   ngOnInit(): void {
     super.ngOnInit();
-    const options = {
-      filters: [{
-        field: 'activo',
-        type: SgiRestFilterType.EQUALS,
-        value: 'true',
-      } as SgiRestFilter],
-    } as SgiRestFindOptions;
-    this.tipoHitos$ = this.tipoHitoService.findAll(options).pipe(
-      switchMap((result: SgiRestListResult<ITipoHito>) => {
-        const list = this.filterExistingTipoFase(result);
-        return of(list);
-      })
-    );
+    if (!this.data.modeloTipoHito.tipoHito) {
+      this.tipoHitos$ = this.tipoHitoService.findTodos().pipe(
+        switchMap((result: SgiRestListResult<ITipoHito>) => {
+          const list = this.filterExistingTipoHito(result);
+          return of(list);
+        })
+      );
+    } else {
+      this.tipoHitos$ = this.tipoHitoService.findTodos().pipe(
+        switchMap((result: SgiRestListResult<ITipoHito>) => {
+          return of(result.items);
+        })
+      );
+    }
   }
 
   /**
-   *  Comprueba que no hay 2 valores en la lista
+   * Comprueba que no hay 2 valores en la lista
+   *
    * @param result resultado
    */
-  private filterExistingTipoFase(result: SgiRestListResult<ITipoHito>): ITipoHito[] {
-    return result.items.filter((tipoFase: ITipoHito) => {
-      return this.data.tipoHitos.find((currentTipo) => currentTipo.id === tipoFase.id) ? false : true;
+  private filterExistingTipoHito(result: SgiRestListResult<ITipoHito>): ITipoHito[] {
+    return result.items.filter((tipoHito: ITipoHito) => {
+      return this.data.tipoHitos.find((currentTipo) => currentTipo.id === tipoHito.id) ? false : true;
     });
   }
 
@@ -97,62 +101,70 @@ export class ModeloEjecucionTipoHitoModalComponent extends
    * Activar/desactivar convocatoria
    * @param event evento
    */
-  setConvocatoriaActivo(event) {
-    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, 'setConvocatoriaActivo(event) - start');
+  setConvocatoriaActivo(event: MatCheckboxChange) {
+    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name,
+      `${this.setConvocatoriaActivo.name}(event: ${event})`, 'start');
     this.formGroup.controls.checkConvocatoria.setValue(event.checked);
-    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, 'setConvocatoriaActivo(event) - end');
+    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name,
+      `${this.setConvocatoriaActivo.name}(event: ${event})`, 'end');
   }
 
   /**
    * Activar/desactivar proyecto
    * @param event evento
    */
-  setProyectoActivo(event) {
-    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, 'setProyectoActivo(event) - start');
+  setProyectoActivo(event: MatCheckboxChange) {
+    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name,
+      `${this.setProyectoActivo.name}(event: ${event})`, 'start');
     this.formGroup.controls.checkProyecto.setValue(event.checked);
-    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, 'setProyectoActivo(event) - end');
+    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name,
+      `${this.setProyectoActivo.name}(event: ${event})`, 'end');
   }
 
   /**
    * Activar/desactivar solictud
    * @param event evento
    */
-  setSolictudActivo(event) {
-    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, 'setSolictudActivo(event) - start');
+  setSolictudActivo(event: MatCheckboxChange) {
+    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name,
+      `${this.setSolictudActivo.name}(event: ${event})`, 'start');
     this.formGroup.controls.checkSolictud.setValue(event.checked);
-    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, 'setSolictudActivo(event) - end');
+    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name,
+      `${this.setSolictudActivo.name}(event: ${event})`, 'end');
   }
 
   /**
    * Miramos si está activado al menos un check y si no lo está
    * mostramos mensaje para que confirme que lo quiere así
    */
-  confirmActivosCheck() {
-    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, 'alertActivosCheck() - start');
-    if ((this.formGroup.controls.checkProyecto.value === null || this.formGroup.controls.checkProyecto.value === false)
-      && (this.formGroup.controls.checkConvocatoria.value === null || this.formGroup.controls.checkConvocatoria.value === false)) {
-      this.subscriptions.push(this.dialogService.showConfirmation(MSG_CHECK).subscribe((aceptado) => {
-        if (aceptado) {
-          const modeloTipoFase = this.data.modeloTipoHito;
-          modeloTipoFase.convocatoria = true;
-          modeloTipoFase.proyecto = false;
-          modeloTipoFase.solicitud = false;
-          this.saveOrUpdate();
-        } else {
-          return false;
+  confirmActivosCheck(): void {
+    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, `${this.confirmActivosCheck.name}()`, 'start');
+    if (this.formGroup.controls.checkProyecto.value === false
+      && this.formGroup.controls.checkConvocatoria.value === false
+      && this.formGroup.controls.checkSolictud.value === false) {
+      this.subscriptions.push(this.dialogService.showConfirmation(MSG_CHECK).subscribe(
+        (aceptado) => {
+          if (aceptado) {
+            this.data.modeloTipoHito.convocatoria = true;
+            this.data.modeloTipoHito.proyecto = false;
+            this.data.modeloTipoHito.solicitud = false;
+            this.saveOrUpdate();
+          }
         }
-      }));
+      ));
     } else {
       this.saveOrUpdate();
     }
-    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, 'alertActivosCheck() - end');
+    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, `${this.confirmActivosCheck.name}()`, 'end');
   }
-
 
   ngOnDestroy() {
     this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, 'ngOnDestroy()', 'start');
-    this.subscriptions?.forEach(x => x.unsubscribe());
+    this.subscriptions.forEach(x => x.unsubscribe());
     this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, 'ngOnDestroy()', 'end');
   }
 
+  equals(o1?: ITipoHito, o2?: ITipoHito): boolean {
+    return o1.id === o2.id;
+  }
 }

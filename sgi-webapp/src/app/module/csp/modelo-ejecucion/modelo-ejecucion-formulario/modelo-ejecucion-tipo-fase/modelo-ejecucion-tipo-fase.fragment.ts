@@ -32,9 +32,7 @@ export class ModeloEjecucionTipoFaseFragment extends Fragment {
     this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `${this.onInitialize.name}()`, 'start');
     if (this.getKey()) {
       this.modeloEjecucionService.findModeloTipoFase(this.getKey() as number).pipe(
-        map((response: SgiRestListResult<IModeloTipoFase>) => {
-          return response.items ? response.items : [];
-        })
+        map((response: SgiRestListResult<IModeloTipoFase>) => response.items)
       ).subscribe(
         (modelosTipoFase: IModeloTipoFase[]) => {
           this.modeloTipoFase$.next(
@@ -104,7 +102,32 @@ export class ModeloEjecucionTipoFaseFragment extends Fragment {
             tap(() => this.logger.debug(ModeloEjecucionTipoFaseFragment.name,
               `${this.deleteModeloTipoFases.name}()`, 'end'))
           );
-      }));
+      })
+    );
+  }
+
+  /**
+   * Actualiza modelo tipos fases
+   */
+  private updatedModeloTipoFases(): Observable<void> {
+    this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `${this.updatedModeloTipoFases.name}()`, 'start');
+    const updatedModelos = this.modeloTipoFase$.value.filter((modeloTipoFase) => modeloTipoFase.edited);
+    if (updatedModelos.length === 0) {
+      this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `${this.updatedModeloTipoFases.name}()`, 'end');
+      return of(void 0);
+    }
+    return from(updatedModelos).pipe(
+      mergeMap((wrappedTarea) => {
+        return this.modeloTipoFaseService.update(wrappedTarea.value.id, wrappedTarea.value).pipe(
+          map((updatedTarea) => {
+            const index = this.modeloTipoFase$.value.findIndex((currentTarea) => currentTarea === wrappedTarea);
+            this.modeloTipoFase$.value[index] = new StatusWrapper<IModeloTipoFase>(updatedTarea);
+          }),
+          tap(() => this.logger.debug(ModeloEjecucionTipoFaseFragment.name,
+            `${this.updatedModeloTipoFases.name}()`, 'end'))
+        );
+      })
+    );
   }
 
   /**
@@ -133,7 +156,8 @@ export class ModeloEjecucionTipoFaseFragment extends Fragment {
           tap(() => this.logger.debug(ModeloEjecucionTipoFaseFragment.name,
             `${this.createModeloTipoFases.name}()`, 'end'))
         );
-      }));
+      })
+    );
   }
 
   /**
@@ -143,6 +167,7 @@ export class ModeloEjecucionTipoFaseFragment extends Fragment {
     this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `${this.saveOrUpdate.name}()`, 'start');
     return merge(
       this.deleteModeloTipoFases(),
+      this.updatedModeloTipoFases(),
       this.createModeloTipoFases()
     ).pipe(
       takeLast(1),

@@ -14,7 +14,7 @@ import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
-import { ModeloEjecucionTipoHitoModalComponent } from '../../modals/modelo-ejecucion-tipo-hito-modal/modelo-ejecucion-tipo-hito-modal.component';
+import { ModeloEjecucionTipoHitoModalComponent, ModeloEjecucionTipoHitoModalData } from '../../modals/modelo-ejecucion-tipo-hito-modal/modelo-ejecucion-tipo-hito-modal.component';
 import { ModeloEjecucionActionService } from '../../modelo-ejecucion.action.service';
 import { ModeloEjecucionTipoHitoFragment } from './modelo-ejecucion-tipo-hito.fragment';
 
@@ -92,10 +92,15 @@ export class ModeloEjecucionTipoHitoComponent extends FragmentComponent implemen
   /**
    * Abre el modal para crear/modificar
    */
-  openModal(): void {
-    this.logger.debug(ModeloEjecucionTipoHitoComponent.name, `${this.openModal.name}()`, 'start');
-    const modeloTipoHito = { activo: true, convocatoria: false, solicitud: false, proyecto: false } as IModeloTipoHito;
-
+  openModal(statusWrapper?: StatusWrapper<IModeloTipoHito>): void {
+    this.logger.debug(ModeloEjecucionTipoHitoComponent.name,
+      `${this.openModal.name}(modeloTipoHito?: ${JSON.stringify(statusWrapper)})`, 'start');
+    const modeloTipoHito = {
+      activo: true,
+      convocatoria: false,
+      solicitud: false,
+      proyecto: false
+    } as IModeloTipoHito;
     const tipoHitos: ITipoHito[] = [];
     this.modelosTipoHitos.data.forEach((wrapper: StatusWrapper<IModeloTipoHito>) => {
       tipoHitos.push(wrapper.value.tipoHito);
@@ -104,15 +109,26 @@ export class ModeloEjecucionTipoHitoComponent extends FragmentComponent implemen
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: { modeloTipoHito, tipoHitos }
+      data: {
+        modeloTipoHito: statusWrapper ? statusWrapper.value : modeloTipoHito,
+        tipoHitos
+      } as ModeloEjecucionTipoHitoModalData
     };
     const dialogRef = this.matDialog.open(ModeloEjecucionTipoHitoModalComponent, config);
     dialogRef.afterClosed().subscribe(
       (result: IModeloTipoHito) => {
         if (result) {
-          this.formPart.addModeloTipoHito(result);
+          if (statusWrapper) {
+            if (!statusWrapper.created) {
+              statusWrapper.setEdited();
+            }
+            this.formPart.setChanges(true);
+          } else {
+            this.formPart.addModeloTipoHito(result);
+          }
         }
-        this.logger.debug(ModeloEjecucionTipoHitoComponent.name, `${this.openModal.name}()`, 'end');
+        this.logger.debug(ModeloEjecucionTipoHitoComponent.name,
+          `${this.openModal.name}(modeloTipoHito?: ${JSON.stringify(statusWrapper)})`, 'end');
       }
     );
   }

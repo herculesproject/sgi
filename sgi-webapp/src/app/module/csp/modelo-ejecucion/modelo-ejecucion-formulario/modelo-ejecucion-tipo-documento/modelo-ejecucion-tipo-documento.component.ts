@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { IModeloTipoDocumento } from '@core/models/csp/modelo-tipo-documento';
-import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
+import { ITipoDocumento, ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { DialogService } from '@core/services/dialog.service';
@@ -14,7 +14,7 @@ import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
-import { ModeloEjecucionTipoDocumentoModalComponent } from '../../modals/modelo-ejecucion-tipo-documento-modal/modelo-ejecucion-tipo-documento-modal.component';
+import { ModeloEjecucionTipoDocumentoModalComponent, ModeloTipoDocumentoModalData } from '../../modals/modelo-ejecucion-tipo-documento-modal/modelo-ejecucion-tipo-documento-modal.component';
 import { ModeloEjecucionActionService } from '../../modelo-ejecucion.action.service';
 import { ModeloEjecucionTipoDocumentoFragment } from './modelo-ejecucion-tipo-documento.fragment';
 
@@ -88,14 +88,23 @@ export class ModeloEjecucionTipoDocumentoComponent extends FragmentComponent imp
     this.logger.debug(ModeloEjecucionTipoDocumentoComponent.name, `${this.openModal.name}()`, 'start');
     const modeloTipoDocumento = { activo: true } as IModeloTipoDocumento;
     const tipoDocumentos: ITipoDocumento[] = [];
+    const tipoFases = new Set<ITipoFase>();
     this.modelosTipoDocumentos.data.forEach((wrapper: StatusWrapper<IModeloTipoDocumento>) => {
       tipoDocumentos.push(wrapper.value.tipoDocumento);
+      if (wrapper.value.modeloTipoFase) {
+        tipoFases.add(wrapper.value.modeloTipoFase.tipoFase);
+      }
     });
-
+    const id = this.formPart.getKey() as number;
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: { modeloTipoDocumento, tipoDocumentos }
+      data: {
+        modeloTipoDocumento,
+        tipoDocumentos,
+        tipoFases: Array.from(tipoFases),
+        id
+      } as ModeloTipoDocumentoModalData
     };
     const dialogRef = this.matDialog.open(ModeloEjecucionTipoDocumentoModalComponent, config);
     dialogRef.afterClosed().subscribe(
