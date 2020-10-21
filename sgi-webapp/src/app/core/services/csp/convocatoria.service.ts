@@ -27,7 +27,7 @@ const convocatorias: IConvocatoria[] = [
     modeloEjecucion: { id: 2, nombre: 'Contratos' } as IModeloEjecucion, finalidad: { id: 3, nombre: 'Servicios Técnicos' },
     duracionMeses: 20, ambitoGeografico: { id: 3, nombre: 'Autonómico' }, clasificacionProduccion: 'Proyectos competitivos',
     regimenConcurrencia: { id: 2, nombre: 'Concurrencia competitiva' },
-    proyectoColaborativo: 'Sí', destinatarios: 'Equipo de proyecto', entidadGestora: '',
+    proyectoColaborativo: 'Sí', destinatarios: 'Equipo de proyecto', entidadGestora: 'ent-001',
     descripcionConvocatoria: 'Plan fondos propios de Universidad', observaciones: ''
   },
   {

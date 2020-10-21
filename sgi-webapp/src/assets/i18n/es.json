@@ -887,5 +887,13 @@
   "seleccionar-modulo.titulo": "Seleccione un módulo",
   "selector-modulo.csp": "Convocatorias, Solicitudes y Proyectos",
   "selector-modulo.etica": "Ética",
-  "selector-modulo.investigador": "Investigador"
+  "selector-modulo.investigador": "Investigador",
+  "sgp.buscadorEmpresaEconomica.direccion": "Dirección",
+  "sgp.buscadorEmpresaEconomica.listado.error": "Error al cargar el listado de empresas económicas",
+  "sgp.buscadorEmpresaEconomica.numeroDocumento": "Nº Documento",
+  "sgp.buscadorEmpresaEconomica.razonSocial": "Nombre/Razón social",
+  "sgp.buscadorEmpresaEconomica.tipo": "Tipo",
+  "sgp.buscadorEmpresaEconomica.tipoDocumento": "Tipo de documento",
+  "sgp.buscadorEmpresaEconomica.tipoEmpresa": "Tipo empresa",
+  "sgp.buscadorEmpresaEconomica.titulo": "Datos de la empresa"
 }

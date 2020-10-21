@@ -227,20 +227,14 @@
       </mat-form-field>
     </div>
 
-    <!-- TODO entidad gestora ¿simular nuevo componente?-->
-
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field class="input-form">
-        <mat-label>{{'csp.convocatoria.entidad.gestora' | translate}}</mat-label>
-        <input matInput formControlName="entidadGestora" type="text" id="entidadGestora"
-          placeholder="{{'csp.convocatoria.entidad.gestora' | translate}}" maxlength="100">
-
-      </mat-form-field>
-      <button color="primary" md-button mat-raised-button>{{'botones.buscar' | translate}}</button>
-
+      <sgi-buscar-empresa-economica [textoLabel]="labelBuscadorEmpresasEconomicas"
+        [textoInput]="labelBuscadorEmpresasEconomicas"
+        [datosEmpresaEconomicaTexto]="datosGeneralesFragment.empresaEconomicaText"
+        (empresaEconomicaSeleccionada)="datosGeneralesFragment.setEmpresaEconomica($event)">
+      </sgi-buscar-empresa-economica>
     </div>
-
 
     <div [fxFlex.sm]="fxFlexPropertiesInline.sm" [fxFlex.md]="fxFlexProperties.md"
       [fxFlex.gt-md]="fxFlexPropertiesInline.gtMd" [fxFlexOrder]="fxFlexPropertiesInline.order">

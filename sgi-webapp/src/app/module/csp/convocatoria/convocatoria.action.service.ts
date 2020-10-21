@@ -17,6 +17,7 @@ import { ConvocatoriaEntidadesConvocantesFragment } from './convocatoria-formula
 import { ConvocatoriaSeguimientoCientificoFragment } from './convocatoria-formulario/convocatoria-seguimiento-cientifico/convocatoria-seguimiento-cientifico.fragment';
 import { ConvocatoriaEnlaceFragment } from './convocatoria-formulario/convocatoria-enlace/convocatoria-enlace.fragment';
 import { ConvocatoriaEntidadesFinanciadorasFragment } from './convocatoria-formulario/convocatoria-entidades-financiadoras/convocatoria-entidades-financiadoras.fragment';
+import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 
 @Injectable()
 export class ConvocatoriaActionService extends ActionService {
@@ -47,14 +48,16 @@ export class ConvocatoriaActionService extends ActionService {
     logger: NGXLogger,
     fb: FormBuilder,
     route: ActivatedRoute,
-    service: ConvocatoriaService) {
+    service: ConvocatoriaService,
+    empresaEconomicaService: EmpresaEconomicaService
+  ) {
     super();
     this.convocatoria = {} as IConvocatoria;
     if (route.snapshot.data.convocatoria) {
       this.convocatoria = route.snapshot.data.convocatoria;
       this.enableEdit();
     }
-    this.datosGenerales = new ConvocatoriaDatosGeneralesFragment(fb, this.convocatoria?.id, service);
+    this.datosGenerales = new ConvocatoriaDatosGeneralesFragment(fb, this.convocatoria?.id, service, empresaEconomicaService);
     this.seguimientoCientifico = new ConvocatoriaSeguimientoCientificoFragment(logger, this.convocatoria?.id, service);
     this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(logger, this.convocatoria?.id, service);
     this.entidadesConvocantes = new ConvocatoriaEntidadesConvocantesFragment(logger, this.convocatoria?.id, service);

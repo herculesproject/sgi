@@ -13,6 +13,8 @@ import { BuscarPersonaComponent } from './buscar-persona/buscar-persona.componen
 import { BuscarPersonaDialogoComponent } from './buscar-persona/dialogo/buscar-persona-dialogo.component';
 import { ActionFragmentMenuItemComponent } from './action-fragment-menu-item/action-fragment-menu-item.component';
 import { ActionFragmentLinkItemComponent } from './action-fragment-link-item/action-fragment-link-item.component';
+import { BuscarEmpresaEconomicaComponent } from './buscar-empresa-economica/buscar-empresa-economica.component';
+import { BuscarEmpresaEconomicaDialogoComponent } from './buscar-empresa-economica/dialogo/buscar-empresa-economica-dialogo.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import { ActionFragmentLinkItemComponent } from './action-fragment-link-item/act
     BuscarPersonaComponent,
     BuscarPersonaDialogoComponent,
     ActionFragmentMenuItemComponent,
-    ActionFragmentLinkItemComponent
+    ActionFragmentLinkItemComponent,
+    BuscarEmpresaEconomicaComponent,
+    BuscarEmpresaEconomicaDialogoComponent
   ],
   imports: [
     CommonModule,
@@ -40,6 +44,8 @@ import { ActionFragmentLinkItemComponent } from './action-fragment-link-item/act
     RootComponent,
     BuscarPersonaComponent,
     BuscarPersonaDialogoComponent,
+    BuscarEmpresaEconomicaComponent,
+    BuscarEmpresaEconomicaDialogoComponent,
     ActionFragmentMenuItemComponent,
     ActionFragmentLinkItemComponent
   ],

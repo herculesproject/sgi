@@ -1,13 +1,13 @@
-import { TestBed } from '@angular/core/testing';
-
-import { ComiteFormularioService } from './comite-formulario.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import TestUtils from '@core/utils/test-utils';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
-import TestUtils from '@core/utils/test-utils';
 
-describe('ComiteFormularioService', () => {
-  let service: ComiteFormularioService;
+import { EmpresaEconomicaService } from './empresa-economica.service';
+
+describe('EmpresaEconomicaService', () => {
+  let service: EmpresaEconomicaService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -20,7 +20,7 @@ describe('ComiteFormularioService', () => {
         SgiAuthService
       ],
     });
-    service = TestBed.inject(ComiteFormularioService);
+    service = TestBed.inject(EmpresaEconomicaService);
   });
 
   it('should be created', () => {

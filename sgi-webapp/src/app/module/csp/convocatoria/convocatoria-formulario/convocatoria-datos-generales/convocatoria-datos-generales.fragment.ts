@@ -7,17 +7,50 @@ import { switchMap, catchError, map } from 'rxjs/operators';
 import { NullIdValidador } from '@core/validators/null-id-validador';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
+import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 
 export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocatoria> {
 
   areasTematicas$: BehaviorSubject<StatusWrapper<IAreaTematica>[]> = new BehaviorSubject<StatusWrapper<IAreaTematica>[]>([]);
 
   private convocatoria: IConvocatoria;
+  private selectedEmpresaEconomica: IEmpresaEconomica;
+  private initialPersonaRef: string;
 
-  constructor(private fb: FormBuilder, key: number, private service: ConvocatoriaService) {
+  constructor(
+    private fb: FormBuilder,
+    key: number,
+    private service: ConvocatoriaService,
+    private empresaEconomicaService: EmpresaEconomicaService
+  ) {
     super(key);
     this.convocatoria = {} as IConvocatoria;
+  }
 
+  setEmpresaEconomica(value: IEmpresaEconomica): void {
+    const id = value?.personaRef;
+    if (this.isEdit()) {
+      this.setChanges(this.initialPersonaRef !== id);
+    } else if (!this.isEdit()) {
+      this.setComplete(value ? true : false);
+      this.setChanges(value ? true : false);
+    }
+
+    this.selectedEmpresaEconomica = value;
+  }
+
+  getPersona(): IEmpresaEconomica {
+    return this.selectedEmpresaEconomica;
+  }
+
+  get empresaEconomicaText(): string {
+    if (this.selectedEmpresaEconomica) {
+      return this.selectedEmpresaEconomica.razonSocial;
+    } else {
+      return '';
+    }
   }
 
   protected buildFormGroup(): FormGroup {
@@ -49,7 +82,8 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       return this.service.findById(key).pipe(
         switchMap((value) => {
           this.convocatoria = value;
-
+          this.loadEmpresaEconomica(value.entidadGestora);
+          this.initialPersonaRef = this.convocatoria.entidadGestora;
           return of(this.convocatoria);
         }),
         catchError(() => {
@@ -58,7 +92,6 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       );
     }
   }
-
 
   loadAreasTematicas(idConvoatoria: number): void {
     this.service.findAreaTematica(idConvoatoria).pipe(
@@ -102,9 +135,10 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   getValue(): IConvocatoria {
     const form = this.getFormGroup().value;
 
+    this.convocatoria.entidadGestora = this.selectedEmpresaEconomica?.personaRef;
+
     return this.convocatoria;
   }
-
 
   saveOrUpdate(): Observable<number> {
     const datosGenerales = this.getValue();
@@ -116,6 +150,15 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       })
     );
   }
+
+  private loadEmpresaEconomica(personaRef: string) {
+    this.empresaEconomicaService
+      .findById(personaRef)
+      .subscribe(
+        (empresaEconomica) => {
+          this.selectedEmpresaEconomica = empresaEconomica;
+        }
+      );
+  }
+
 }
-
-

@@ -17,7 +17,6 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 const MSG_LISTADO_ERROR = marker('eti.evaluador.listado.error');
 
 @Component({
-  selector: 'sgi-buscar-persona-dialogo',
   templateUrl: './buscar-persona-dialogo.component.html',
   styleUrls: ['./buscar-persona-dialogo.component.scss']
 })

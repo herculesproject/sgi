@@ -11,7 +11,7 @@ import { FormGroupUtil } from '@core/utils/form-group-util';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { SgiRestListResult } from '@sgi/framework/http/types';
-import { startWith, map, delay } from 'rxjs/operators';
+import { startWith, map } from 'rxjs/operators';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
@@ -26,10 +26,13 @@ import { IAreaTematica } from '@core/models/csp/area-tematica';
 import { ConvocatoriaDatosGeneralesFragment } from './convocatoria-datos-generales.fragment';
 import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 import { IFinalidad } from '@core/models/csp/finalidad';
+import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 
 
 
 const MSG_ERROR_INIT = marker('csp.convocatoria.datos.generales.error.cargar');
+const LABEL_BUSCADOR_EMPRESAS_ECONOMICAS = marker('csp.convocatoria.entidad.gestora');
+
 
 const clasificacionesProduccionAyuda = marker('csp.convocatoria.clasificacion.produccion.ayudas');
 const clasificacionesProyectoCompetitivo = marker('csp.convocatoria.clasificacion.produccion.proyecto.competitivo');
@@ -53,11 +56,15 @@ const proyectoColaborativoNo = marker('label.no');
 })
 export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<IConvocatoria> implements OnInit {
 
+  labelBuscadorEmpresasEconomicas = LABEL_BUSCADOR_EMPRESAS_ECONOMICAS;
+
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
 
   areasTematicas$: BehaviorSubject<StatusWrapper<IAreaTematica>[]>;
 
   FormGroupUtil = FormGroupUtil;
+
+  datosGeneralesFragment: ConvocatoriaDatosGeneralesFragment;
 
   fxFlexProperties: FxFlexProperties;
   fxFlexPropertiesOne: FxFlexProperties;
@@ -107,6 +114,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     private matDialog: MatDialog) {
 
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
+    this.datosGeneralesFragment = this.fragment as ConvocatoriaDatosGeneralesFragment;
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
