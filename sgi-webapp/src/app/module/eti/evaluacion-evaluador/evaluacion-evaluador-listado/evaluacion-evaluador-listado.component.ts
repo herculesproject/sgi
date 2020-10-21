@@ -87,7 +87,7 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
 
   protected initColumns() {
     this.logger.debug(EvaluacionEvaluadorListadoComponent.name, 'initColumns()', 'start');
-    this.columnas = ['convocatoriaReunion.comite.id', 'tipoEvaluacion', 'convocatoriaReunion.fechaEvaluacion',
+    this.columnas = ['memoria.comite.comite', 'tipoEvaluacion', 'convocatoriaReunion.fechaEvaluacion',
       'memoria.numReferencia', 'solicitante', 'version', 'acciones'];
     this.logger.debug(EvaluacionEvaluadorListadoComponent.name, 'initColumns()', 'end');
   }
@@ -262,7 +262,7 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
   protected createFilters(): SgiRestFilter[] {
     this.logger.debug(EvaluacionEvaluadorListadoComponent.name, `crearFiltros()`, 'start');
     const filtros = [];
-    this.addFiltro(filtros, 'convocatoriaReunion.comite.id', SgiRestFilterType.EQUALS,
+    this.addFiltro(filtros, 'memoria.comite.id', SgiRestFilterType.EQUALS,
       this.formGroup.controls.comite.value.id);
     const inicio = DateUtils.getFechaInicioDia(this.formGroup.controls.fechaEvaluacionInicio.value);
     this.addFiltro(filtros, 'convocatoriaReunion.fechaEvaluacion', SgiRestFilterType.GREATHER_OR_EQUAL,

@@ -79,10 +79,10 @@
   <table mat-table class="mat-elevation-z8 table-unidad" [dataSource]="evaluaciones" matSort matSortActive="id"
     matSortDirection="asc" matSortDisableClear>
     <!-- Comite -->
-    <ng-container matColumnDef="convocatoriaReunion.comite.id">
+    <ng-container matColumnDef="memoria.comite.comite">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.seguimiento.listado.comite' | translate}}
       </th>
-      <td mat-cell *matCellDef="let evaluacion">{{evaluacion.convocatoriaReunion?.comite?.comite}}</td>
+      <td mat-cell *matCellDef="let evaluacion">{{evaluacion.memoria?.comite?.comite}}</td>
     </ng-container>
 
     <!-- Tipo de evaluación -->

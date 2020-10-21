@@ -74,7 +74,7 @@ export class GestionSeguimientoListadoComponent implements OnInit, OnDestroy, Af
     private readonly tipoConvocatoriaReunionService: TipoConvocatoriaReunionService,
     protected readonly personaFisicaService: PersonaFisicaService
   ) {
-    this.displayedColumns = ['convocatoriaReunion.comite.comite', 'tipoEvaluacion', 'fechaDictamen', 'memoria.numReferencia', 'solicitante',
+    this.displayedColumns = ['memoria.comite.comite', 'tipoEvaluacion', 'fechaDictamen', 'memoria.numReferencia', 'solicitante',
       'dictamen.nombre', 'version', 'acciones'];
     this.elementosPagina = [5, 10, 25, 100];
     this.totalElementos = 0;
@@ -206,7 +206,7 @@ export class GestionSeguimientoListadoComponent implements OnInit, OnDestroy, Af
     if (this.buscadorFormGroup.controls.comite.value) {
       this.logger.debug(GestionSeguimientoListadoComponent.name, 'buildFilters()', 'comite');
       const filterComite: SgiRestFilter = {
-        field: 'convocatoriaReunion.comite.id',
+        field: 'memoria.comite.id',
         type: SgiRestFilterType.EQUALS,
         value: this.buscadorFormGroup.controls.comite.value.id,
       };
