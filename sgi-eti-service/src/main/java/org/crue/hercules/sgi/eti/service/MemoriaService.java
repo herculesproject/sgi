@@ -166,4 +166,20 @@ public interface MemoriaService {
   Page<MemoriaPeticionEvaluacion> findAllByPersonaRefPeticionEvaluacion(List<QueryCriteria> query, Pageable paging,
       String personaRef);
 
+  /**
+   * Actualiza la memoria a su estado anterior
+   * 
+   * @param id identificador del objeto {@link Memoria}
+   * @return la {@link Memoria} si se ha podido actualizar el estado
+   */
+  Memoria updateEstadoAnteriorMemoria(Long id);
+
+  /**
+   * Recupera la memoria con su estado anterior seteado ya sea memoria o
+   * retrospectiva
+   * 
+   * @param memoria el objeto {@link Memoria}
+   * @return la memoria o retrospectiva con su estado anterior
+   */
+  Memoria getEstadoAnteriorMemoria(Memoria memoria);
 }

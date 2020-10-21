@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.service;
 
 import org.crue.hercules.sgi.eti.model.InformeFormulario;
+import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 
 import java.util.List;
@@ -59,5 +60,12 @@ public interface InformeFormularioService {
    * Elimina todos los {@link InformeFormulario}.
    */
   void deleteAll();
+
+  /**
+   * Elimina el informe relacionado a una memoria
+   * 
+   * @param idMemoria identificador de la {@link Memoria}
+   */
+  void deleteInformeMemoria(Long idMemoria);
 
 }

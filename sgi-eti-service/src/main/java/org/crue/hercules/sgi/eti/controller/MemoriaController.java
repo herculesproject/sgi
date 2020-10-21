@@ -78,7 +78,7 @@ public class MemoriaController {
    * @param paging pageable
    */
   @GetMapping()
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-VR-INV', 'ETI-PEV-V', 'ETI-MEM-V')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-VR-INV', 'ETI-PEV-V', 'ETI-PEV-E')")
   ResponseEntity<Page<MemoriaPeticionEvaluacion>> findAll(
       @RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
@@ -225,6 +225,7 @@ public class MemoriaController {
    * @return {@link Memoria} correspondiente al id.
    */
   @GetMapping("/{id}")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-VR-INV', 'ETI-PEV-V')")
   Memoria one(@PathVariable Long id) {
     log.debug("Memoria one(Long id) - start");
     Memoria returnValue = service.findById(id);
@@ -293,11 +294,11 @@ public class MemoriaController {
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
-  /*
-   * Obtiene todas las entidades {@link DocumentacionMemoria} asociadas al {@link
-   * Formulario} de la {@link Memoria}.
+  /**
+   * Obtiene todas las entidades {@link DocumentacionMemoria} asociadas al
+   * {@link Formulario} de la {@link Memoria}.
    * 
-   * @param id Id de {@link Memoria}.
+   * @param id       Id de {@link Memoria}.
    * 
    * @param pageable la información de la paginación.
    * 
@@ -458,7 +459,7 @@ public class MemoriaController {
   }
 
   /**
-   * Crea nueva {@link DocumentacionMemoria} de seguimiento anual.
+   * Crea nueva {@link DocumentacionMemoria} de seguimiento anual
    * 
    * @param id                   Identificador de la {@link Memoria}.
    * @param documentacionMemoria {@link DocumentacionMemoria}. que se quiere
@@ -625,6 +626,21 @@ public class MemoriaController {
     log.debug("deleteDocumentacionRetrospectiva(Long id, Long idDocumentacionMemoria) - start");
     documentacionMemoriaService.deleteDocumentacionRetrospectiva(id, idDocumentacionMemoria);
     log.debug("deleteDocumentacionRetrospectiva(Long id, Long idDocumentacionMemoria) - end");
+  }
+
+  /**
+   * Recupera el estado anterior de la {@link Memoria}.
+   * 
+   * @param id Id de {@link Memoria}.
+   * @return la {@link Memoria} si el estado se ha podido actualizar
+   */
+  @GetMapping("/{id}/recuperar-estado-anterior")
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-PEV-V')")
+  ResponseEntity<Memoria> recuperarEstadoAnterior(@PathVariable Long id) {
+    log.debug("recuperarEstadoAnterior(Long id) - start");
+    Memoria estadoReestablecido = service.updateEstadoAnteriorMemoria(id);
+    log.debug("recuperarEstadoAnterior(Long id) - end");
+    return new ResponseEntity<>(estadoReestablecido, HttpStatus.OK);
   }
 
 }

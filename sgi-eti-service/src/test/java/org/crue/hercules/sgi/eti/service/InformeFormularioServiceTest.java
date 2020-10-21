@@ -243,6 +243,24 @@ public class InformeFormularioServiceTest {
     }
   }
 
+  @Test
+  public void deleteInformeMemoria() {
+
+    BDDMockito
+        .given(informeFormularioRepository
+            .findFirstByFormularioMemoriaMemoriaIdOrderByVersionDesc(ArgumentMatchers.anyLong()))
+        .willReturn(generarMockInformeFormulario(1L, "DocumentoFormulario1"));
+
+    BDDMockito.doNothing().when(informeFormularioRepository).delete(ArgumentMatchers.<InformeFormulario>any());
+
+    Assertions.assertThatCode(
+        // when: Delete con id existente
+        () -> informeFormularioService.deleteInformeMemoria(1L))
+        // then: No se lanza ninguna excepción
+        .doesNotThrowAnyException();
+
+  }
+
   /**
    * Función que devuelve un objeto InformeFormulario
    * 

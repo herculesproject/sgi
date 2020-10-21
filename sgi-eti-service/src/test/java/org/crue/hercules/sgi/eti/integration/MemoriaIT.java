@@ -90,7 +90,7 @@ public class MemoriaIT {
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEMORIA-EDITAR", "ETI-MEMORIA-VER")));
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-VR-INV", "ETI-PEV-V")));
 
     final ResponseEntity<Memoria> response = restTemplate.exchange(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.GET, buildRequest(headers, null), Memoria.class, 1L);

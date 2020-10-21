@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.crue.hercules.sgi.eti.converter.EvaluacionConverter;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.dto.EvaluacionWithNumComentario;
@@ -15,7 +13,6 @@ import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
-import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
 import org.crue.hercules.sgi.eti.model.Memoria;
@@ -24,7 +21,6 @@ import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.ConvocatoriaReunionRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
-import org.crue.hercules.sgi.eti.repository.EstadoRetrospectivaRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
@@ -76,9 +72,6 @@ public class EvaluacionServiceImpl implements EvaluacionService {
   /** Evaluacion converter */
   private final EvaluacionConverter evaluacionConverter;
 
-  /** Estado retrospectiva repository */
-  private final EstadoRetrospectivaRepository estadoRetrospectivaRepository;
-
   /**
    * Instancia un nuevo {@link EvaluacionServiceImpl}
    * 
@@ -91,14 +84,12 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    * @param convocatoriaReunionRepository repository para
    *                                      {@link ConvocatoriaReunion}
    * @param evaluacionConverter           converter para {@link Evaluacion}
-   * @param estadoRetrospectivaRepository repository para
-   *                                      {@link EstadoRetrospectiva}
    */
   public EvaluacionServiceImpl(EvaluacionRepository evaluacionRepository,
       EstadoMemoriaRepository estadoMemoriaRepository, RetrospectivaRepository retrospectivaRepository,
       MemoriaService memoriaService, ComentarioRepository comentarioRepository,
       ConvocatoriaReunionRepository convocatoriaReunionRepository, MemoriaRepository memoriaRepository,
-      EvaluacionConverter evaluacionConverter, EstadoRetrospectivaRepository estadoRetrospectivaRepository) {
+      EvaluacionConverter evaluacionConverter) {
 
     this.evaluacionRepository = evaluacionRepository;
     this.estadoMemoriaRepository = estadoMemoriaRepository;
@@ -108,7 +99,6 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     this.comentarioRepository = comentarioRepository;
     this.memoriaRepository = memoriaRepository;
     this.evaluacionConverter = evaluacionConverter;
-    this.estadoRetrospectivaRepository = estadoRetrospectivaRepository;
   }
 
   /**
@@ -526,7 +516,6 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    * @param idEvaluacion          id de la {@link Evaluacion}
    */
   @Override
-  @Transactional
   public void deleteEvaluacion(Long idConvocatoriaReunion, Long idEvaluacion) {
     Memoria memoria = null;
 
@@ -547,7 +536,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     }
 
     // Volvemos al estado anterior de la memoria
-    memoria = getEstadoAnteriorMemoria(memoria);
+    memoria = memoriaService.getEstadoAnteriorMemoria(memoria);
 
     Assert.isTrue(evaluacion.get().getConvocatoriaReunion().getFechaEvaluacion().isAfter(LocalDateTime.now()),
         "La fecha de la convocatoria es anterior a la actual");
@@ -560,42 +549,6 @@ public class EvaluacionServiceImpl implements EvaluacionService {
     memoriaRepository.save(memoria);
     evaluacion.get().setActivo(Boolean.FALSE);
     evaluacionRepository.save(evaluacion.get());
-  }
-
-  /**
-   * Recupera la memoria con su estado anterior seteado ya sea memoria o
-   * retrospectiva
-   * 
-   * @param memoria el objeto {@link Memoria}
-   * @return la memoria o retrospectiva con su estado anterior
-   */
-  public Memoria getEstadoAnteriorMemoria(Memoria memoria) {
-
-    if (memoria.getRetrospectiva() == null) {
-      List<EstadoMemoria> estadosMemoria = estadoMemoriaRepository
-          .findAllByMemoriaIdOrderByFechaEstadoDesc(memoria.getId()).stream()
-          .filter(estadoMemoria -> estadoMemoria.getTipoEstadoMemoria().getId() != memoria.getEstadoActual().getId())
-          .collect(Collectors.toList());
-
-      Assert.isTrue(estadosMemoria.size() > 0, "No se puede recuperar el estado anterior de la memoria");
-
-      EstadoMemoria estadoAnteriorMemoria = estadosMemoria.get(0);
-
-      estadoMemoriaRepository
-          .save(new EstadoMemoria(null, memoria, estadoAnteriorMemoria.getTipoEstadoMemoria(), LocalDateTime.now()));
-      memoria.setEstadoActual(estadoAnteriorMemoria.getTipoEstadoMemoria());
-    } else {
-      // El estado anterior de la retrospectiva es el estado con id anterior al que
-      // tiene actualmente
-      Optional<EstadoRetrospectiva> estadoRetrospectiva = estadoRetrospectivaRepository
-          .findById(memoria.getRetrospectiva().getEstadoRetrospectiva().getId() - 1);
-
-      Assert.isTrue(estadoRetrospectiva.isPresent(), "No se puede recuperar el estado anterior de la retrospectiva");
-      if (estadoRetrospectiva.isPresent()) {
-        memoria.getRetrospectiva().setEstadoRetrospectiva(estadoRetrospectiva.get());
-      }
-    }
-    return memoria;
   }
 
   @Override

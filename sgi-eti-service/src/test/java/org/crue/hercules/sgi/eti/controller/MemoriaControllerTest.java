@@ -91,7 +91,7 @@ public class MemoriaControllerTest {
   private static final String PATH_PARAMETER_EVALUACIONES = "/evaluaciones";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-MEMORIA-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-V", "ETI-PEV-VR-INV" })
   public void getMemoria_WithId_ReturnsMemoria() throws Exception {
     BDDMockito.given(memoriaService.findById(ArgumentMatchers.anyLong()))
         .willReturn((generarMockMemoria(1L, "numRef-5598", "Memoria1", 1)));
@@ -105,7 +105,7 @@ public class MemoriaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-MEMORIA-VER" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-V", "ETI-PEV-VR-INV" })
   public void getMemoria_NotFound_Returns404() throws Exception {
     BDDMockito.given(memoriaService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new MemoriaNotFoundException(invocation.getArgument(0));

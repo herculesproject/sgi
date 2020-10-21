@@ -58,6 +58,4 @@ public interface EstadoMemoriaService {
    */
   void deleteAll();
 
-  EstadoMemoria recuperarEstadoAnteriorMemoria(EstadoMemoria estadoMemoria);
-
 }

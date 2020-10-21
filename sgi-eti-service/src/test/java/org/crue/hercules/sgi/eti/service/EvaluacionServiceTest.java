@@ -32,7 +32,6 @@ import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.ConvocatoriaReunionRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
-import org.crue.hercules.sgi.eti.repository.EstadoRetrospectivaRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.RetrospectivaRepository;
@@ -81,14 +80,11 @@ public class EvaluacionServiceTest {
   @Mock
   private EvaluacionConverter evaluacionConverter;
 
-  @Mock
-  private EstadoRetrospectivaRepository estadoRetrospectivaRepository;
-
   @BeforeEach
   public void setUp() throws Exception {
     evaluacionService = new EvaluacionServiceImpl(evaluacionRepository, estadoMemoriaRepository,
         retrospectivaRepository, memoriaService, comentarioRepository, convocatoriaReunionRepository, memoriaRepository,
-        evaluacionConverter, estadoRetrospectivaRepository);
+        evaluacionConverter);
   }
 
   @Test
@@ -647,14 +643,7 @@ public class EvaluacionServiceTest {
     Optional<Memoria> responseMemo = Optional.of(memoria);
     BDDMockito.given(evaluacionRepository.findById(ArgumentMatchers.anyLong())).willReturn(response);
     BDDMockito.given(memoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(responseMemo);
-    // El mock de memoria es de tipo retrospectiva, si no fuera retrospectiva
-    // descomentar la siguiente línea:
-    // BDDMockito.given(estadoMemoriaRepository.findAllByMemoriaIdOrderByFechaEstadoDesc(ArgumentMatchers.anyLong()))
-    // .willReturn(generarEstadosMemoria(2L));
-    // Comentar esta línea en caso de que el mock de memoria no fuera de tipo
-    // retrospectiva.
-    BDDMockito.given(estadoRetrospectivaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(generarEstadoRetrospectiva(2L)));
+    BDDMockito.given(memoriaService.getEstadoAnteriorMemoria(ArgumentMatchers.<Memoria>any())).willReturn(memoria);
 
     try {
 
@@ -798,7 +787,7 @@ public class EvaluacionServiceTest {
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(1L);
     convocatoriaReunion.setComite(comite);
-    convocatoriaReunion.setFechaEvaluacion(LocalDateTime.now());
+    convocatoriaReunion.setFechaEvaluacion(LocalDateTime.of(2020, 05, 10, 05, 10, 10));
     convocatoriaReunion.setFechaLimite(LocalDate.now());
     convocatoriaReunion.setLugar("Lugar");
     convocatoriaReunion.setOrdenDia("Orden del día convocatoria reunión");

@@ -3,7 +3,6 @@ package org.crue.hercules.sgi.eti.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -11,6 +10,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
@@ -18,7 +18,10 @@ import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
+import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
+import org.crue.hercules.sgi.eti.repository.EstadoRetrospectivaRepository;
+import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.service.impl.MemoriaServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,12 +47,29 @@ public class MemoriaServiceTest {
 
   @Mock
   private MemoriaRepository memoriaRepository;
+
+  @Mock
   private EstadoMemoriaRepository estadoMemoriaRepository;
+
+  @Mock
+  private EstadoRetrospectivaRepository estadoRetrospectivaRepository;
+
+  @Mock
   private MemoriaService memoriaService;
+
+  @Mock
+  private EvaluacionRepository evaluacionRepository;
+
+  @Mock
+  private ComentarioRepository comentarioRepository;
+
+  @Mock
+  private InformeFormularioService informeFormularioService;
 
   @BeforeEach
   public void setUp() throws Exception {
-    memoriaService = new MemoriaServiceImpl(memoriaRepository, estadoMemoriaRepository);
+    memoriaService = new MemoriaServiceImpl(memoriaRepository, estadoMemoriaRepository, estadoRetrospectivaRepository,
+        evaluacionRepository, comentarioRepository, informeFormularioService);
   }
 
   @Test
@@ -498,6 +518,56 @@ public class MemoriaServiceTest {
     }
   }
 
+  @Test
+  public void getEstadoAnteriorMemoria_returnMemoria() {
+    // Descomentar si el mock no es una memoria de tipo retrospectiva
+    // BDDMockito.given(estadoMemoriaRepository.findAllByMemoriaIdOrderByFechaEstadoDesc(ArgumentMatchers.anyLong()))
+    // .willReturn(generarEstadosMemoria(2L));
+    BDDMockito.given(estadoRetrospectivaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarEstadoRetrospectiva(2L)));
+
+    // when: find unlimited asignables para tipo convocatoria seguimiento
+    Memoria returnMemoria = memoriaService
+        .getEstadoAnteriorMemoria(generarMockMemoria(1L, "ref-001", "TituloMemoria", 1));
+
+    Assertions.assertThat(returnMemoria.getId()).isEqualTo(1L);
+    Assertions.assertThat(returnMemoria.getTitulo()).isEqualTo("TituloMemoria");
+  }
+
+  @Test
+  public void updateEstadoAnteriorMemoria_returnsMemoriaNull() {
+
+    Memoria memoria = generarMockMemoria(1L, "numRef-5598", "Memoria1", 1);
+
+    BDDMockito.given(memoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(memoria));
+
+    BDDMockito.given(estadoMemoriaRepository.findAllByMemoriaIdOrderByFechaEstadoDesc(ArgumentMatchers.anyLong()))
+        .willReturn(generarEstadosMemoria(2L));
+    // BDDMockito.given(memoriaRepository.save(ArgumentMatchers.<Memoria>any())).willReturn(memoriaServicioActualizado);
+
+    // when: find unlimited asignables para tipo convocatoria seguimiento
+    Memoria memoriaEstadoActualizado = memoriaService.updateEstadoAnteriorMemoria(1L);
+
+    Assertions.assertThat(memoriaEstadoActualizado).isNull();
+  }
+
+  public List<EstadoMemoria> generarEstadosMemoria(Long id) {
+    List<EstadoMemoria> estadosMemoria = new ArrayList<EstadoMemoria>();
+    EstadoMemoria estadoMemoria = new EstadoMemoria();
+    estadoMemoria.setFechaEstado(LocalDateTime.now());
+    estadoMemoria.setId(id);
+    estadoMemoria.setMemoria(generarMockMemoria(1L, "ref-001", "TituloMemoria", 1));
+    estadosMemoria.add(estadoMemoria);
+    return estadosMemoria;
+  }
+
+  public EstadoRetrospectiva generarEstadoRetrospectiva(Long id) {
+    EstadoRetrospectiva estadoRetrospectiva = new EstadoRetrospectiva();
+    estadoRetrospectiva.setActivo(true);
+    estadoRetrospectiva.setId(id);
+    return estadoRetrospectiva;
+  }
+
   /**
    * Función que devuelve un objeto Memoria.
    * 
@@ -513,7 +583,7 @@ public class MemoriaServiceTest {
     return new Memoria(id, numReferencia, generarMockPeticionEvaluacion(id, titulo + " PeticionEvaluacion" + id),
         generarMockComite(id, "comite" + id, true), titulo, "user-00" + id,
         generarMockTipoMemoria(1L, "TipoMemoria1", true),
-        generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.TRUE,
+        generarMockTipoEstadoMemoria(3L, "En secretaría", Boolean.TRUE), LocalDate.now(), Boolean.TRUE,
         generarMockRetrospectiva(1L), version, Boolean.TRUE);
   }
 

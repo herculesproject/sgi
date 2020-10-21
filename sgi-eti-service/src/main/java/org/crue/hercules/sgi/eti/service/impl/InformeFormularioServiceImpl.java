@@ -138,4 +138,14 @@ public class InformeFormularioServiceImpl implements InformeFormularioService {
     }).orElseThrow(() -> new InformeFormularioNotFoundException(informeFormularioActualizar.getId()));
   }
 
+  @Override
+  public void deleteInformeMemoria(Long idMemoria) {
+    InformeFormulario informe = informeFormularioRepository
+        .findFirstByFormularioMemoriaMemoriaIdOrderByVersionDesc(idMemoria);
+
+    if (informe != null) {
+      informeFormularioRepository.delete(informe);
+    }
+
+  }
 }

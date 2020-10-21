@@ -3,17 +3,25 @@ package org.crue.hercules.sgi.eti.service.impl;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
+import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
+import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
+import org.crue.hercules.sgi.eti.repository.EstadoRetrospectivaRepository;
+import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.MemoriaSpecifications;
+import org.crue.hercules.sgi.eti.service.InformeFormularioService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
@@ -38,11 +46,27 @@ public class MemoriaServiceImpl implements MemoriaService {
   /** Estado Memoria Repository. */
   private final EstadoMemoriaRepository estadoMemoriaRepository;
 
+  /** Estado Retrospectiva repository */
+  private final EstadoRetrospectivaRepository estadoRetrospectivaRepository;
+
   private final MemoriaRepository memoriaRepository;
 
-  public MemoriaServiceImpl(MemoriaRepository memoriaRepository, EstadoMemoriaRepository estadoMemoriaRepository) {
+  private final ComentarioRepository comentarioRepository;
+
+  // ** Evaluacion repository */
+  private final EvaluacionRepository evaluacionRepository;
+
+  private final InformeFormularioService informeFormularioService;
+
+  public MemoriaServiceImpl(MemoriaRepository memoriaRepository, EstadoMemoriaRepository estadoMemoriaRepository,
+      EstadoRetrospectivaRepository estadoRetrospectivaRepository, EvaluacionRepository evaluacionRepository,
+      ComentarioRepository comentarioRepository, InformeFormularioService informeFormularioService) {
     this.memoriaRepository = memoriaRepository;
     this.estadoMemoriaRepository = estadoMemoriaRepository;
+    this.estadoRetrospectivaRepository = estadoRetrospectivaRepository;
+    this.evaluacionRepository = evaluacionRepository;
+    this.comentarioRepository = comentarioRepository;
+    this.informeFormularioService = informeFormularioService;
   }
 
   /**
@@ -359,6 +383,126 @@ public class MemoriaServiceImpl implements MemoriaService {
     Page<MemoriaPeticionEvaluacion> returnValue = memoriaRepository.findAllMemoriasEvaluaciones(specs, paging,
         personaRef);
     return returnValue;
+  }
+
+  /**
+   * Actualiza el estado de la memoria a su estado anterior
+   * 
+   * @param id identificador del objeto {@link Memoria}
+   * @return la {@link Memoria} si se ha podido actualizar el estado
+   */
+  @Transactional
+  @Override
+  public Memoria updateEstadoAnteriorMemoria(Long id) {
+
+    Optional<Memoria> returnMemoria = memoriaRepository.findById(id);
+    Memoria memoria = null;
+    if (returnMemoria.isPresent()) {
+      memoria = returnMemoria.get();
+      if (memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA
+          || memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_REVISION_MINIMA
+          || memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_ARCHIVADO
+          || memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION) {
+
+        try {
+          // Si la memoria se cambió al estado anterior estando en evaluación, se
+          // eliminará la evaluación.
+          if (memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION) {
+            Evaluacion evaluacion = evaluacionRepository.findByMemoriaIdAndVersion(memoria.getId(),
+                memoria.getVersion());
+
+            Assert.isTrue(evaluacion.getConvocatoriaReunion().getFechaEvaluacion().isAfter(LocalDateTime.now()),
+                "La fecha de la convocatoria es anterior a la actual");
+
+            Assert.isNull(evaluacion.getDictamen(), "No se pueden eliminar memorias que ya contengan un dictamen");
+
+            Assert.isTrue(comentarioRepository.countByEvaluacionId(evaluacion.getId()) == 0L,
+                "No se puede eliminar una memoria que tenga comentarios asociados");
+
+            evaluacion.setActivo(Boolean.FALSE);
+            evaluacionRepository.save(evaluacion);
+          }
+
+          if (memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA
+              || memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_REVISION_MINIMA) {
+            // se eliminan los informes en caso de que las memorias tengan alguno asociado
+            informeFormularioService.deleteInformeMemoria(memoria.getId());
+          }
+
+          // Se retrocede el estado de la memoria, no se hace nada con el estado de la
+          // retrospectiva
+          memoria = this.getEstadoAnteriorMemoria(memoria, false);
+          // Se actualiza la memoria con el estado anterior
+          return memoriaRepository.save(memoria);
+        } catch (Exception e) {
+          log.error("No se ha podido recuperar el estado anterior de la memoria", e);
+          return null;
+        }
+
+      } else {
+        Assert.isTrue(
+            memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA
+                || memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_REVISION_MINIMA
+                || memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_ARCHIVADO
+                || memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_EVALUACION,
+            "El estado actual de la memoria no es el correcto para recuperar el estado anterior");
+        return null;
+      }
+
+    } else {
+      throw new MemoriaNotFoundException(id);
+    }
+  }
+
+  /**
+   * Recupera la memoria con su estado anterior seteado ya sea memoria o
+   * retrospectiva
+   * 
+   * @param memoria el objeto {@link Memoria}
+   * @return la memoria o retrospectiva con su estado anterior
+   */
+  @Override
+  public Memoria getEstadoAnteriorMemoria(Memoria memoria) {
+
+    return this.getEstadoAnteriorMemoria(memoria, true);
+  }
+
+  /**
+   * Recupera la memoria con su estado anterior seteado ya sea memoria o
+   * retrospectiva
+   * 
+   * @param memoria                    el objeto {@link Memoria}
+   * @param cambiarEstadoRetrospectiva si se desea cambiar o no el estado de la
+   *                                   retrospectiva
+   * @return la memoria o retrospectiva con su estado anterior
+   */
+  public Memoria getEstadoAnteriorMemoria(Memoria memoria, Boolean cambiarEstadoRetrospectiva) {
+
+    if (memoria.getRetrospectiva() == null || !cambiarEstadoRetrospectiva) {
+      List<EstadoMemoria> estadosMemoria = estadoMemoriaRepository
+          .findAllByMemoriaIdOrderByFechaEstadoDesc(memoria.getId()).stream()
+          .filter(estadoMemoria -> estadoMemoria.getTipoEstadoMemoria().getId() != memoria.getEstadoActual().getId())
+          .collect(Collectors.toList());
+
+      Assert.isTrue(estadosMemoria.size() > 0, "No se puede recuperar el estado anterior de la memoria");
+
+      EstadoMemoria estadoAnteriorMemoria = estadosMemoria.get(0);
+
+      estadoMemoriaRepository
+          .save(new EstadoMemoria(null, memoria, estadoAnteriorMemoria.getTipoEstadoMemoria(), LocalDateTime.now()));
+      memoria.setEstadoActual(estadoAnteriorMemoria.getTipoEstadoMemoria());
+    } else {
+      // El estado anterior de la retrospectiva es el estado con id anterior al que
+      // tiene actualmente
+      Optional<EstadoRetrospectiva> estadoRetrospectiva = estadoRetrospectivaRepository
+          .findById(memoria.getRetrospectiva().getEstadoRetrospectiva().getId() - 1);
+
+      Assert.isTrue(estadoRetrospectiva.isPresent(), "No se puede recuperar el estado anterior de la retrospectiva");
+      if (estadoRetrospectiva.isPresent()) {
+        memoria.getRetrospectiva().setEstadoRetrospectiva(estadoRetrospectiva.get());
+      }
+    }
+    return memoria;
   }
 
 }

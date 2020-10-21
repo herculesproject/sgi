@@ -1016,7 +1016,7 @@
     </insert>
     <insert tableName="estado_memoria">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria2')" />
-      <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='Favorable Pendiente de Modificaciones Mínimas')" />
+      <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='Completada')" />
       <column name="fecha_estado" value="2020-06-20 12:40:20" />
     </insert>
     <insert tableName="estado_memoria">
@@ -1026,7 +1026,7 @@
     </insert>
     <insert tableName="estado_memoria">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria3')" />
-      <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='Favorable Pendiente de Modificaciones Mínimas')" />
+      <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='Completada')" />
       <column name="fecha_estado" value="2020-06-20 12:40:20" />
     </insert>
     <insert tableName="estado_memoria">
@@ -1035,9 +1035,24 @@
       <column name="fecha_estado" value="2020-06-21 10:20:45" />
     </insert>
     <insert tableName="estado_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria4')" />
+      <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='Completada')" />
+      <column name="fecha_estado" value="2020-06-15 10:20:45" />
+    </insert>
+    <insert tableName="estado_memoria">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria20')" />
       <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='En evaluación seguimiento final')" />
       <column name="fecha_estado" value="2020-06-20 12:40:20" />
+    </insert>
+    <insert tableName="estado_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria13')" />
+      <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='En secretaría revisión mínima')" />
+      <column name="fecha_estado" value="2020-06-30 10:20:45" />
+    </insert>
+    <insert tableName="estado_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria13')" />
+      <column name="tipo_estado_memoria_id" valueComputed="(select id from eti.tipo_estado_memoria where nombre='Completada')" />
+      <column name="fecha_estado" value="2020-06-15 10:20:45" />
     </insert>
   </changeSet>
 
