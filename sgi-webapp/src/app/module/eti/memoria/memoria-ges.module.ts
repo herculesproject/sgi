@@ -9,12 +9,6 @@ import { MemoriaResolver } from './memoria.resolver';
 import { MemoriaRoutingGesModule } from './memoria-routing-ges.module';
 import { MemoriaCrearGuard } from './memoria-crear/memoria-crear.guard';
 import { MemoriaListadoGesComponent } from './memoria-listado-ges/memoria-listado-ges.component';
-import { MemoriaEditarComponent } from './memoria-editar/memoria-editar.component';
-import { MemoriaDatosGeneralesComponent } from './memoria-formulario/memoria-datos-generales/memoria-datos-generales.component';
-import { MemoriaDocumentacionComponent } from './memoria-formulario/memoria-documentacion/memoria-documentacion.component';
-import { MemoriaDocumentacionMemoriaModalComponent } from './modals/memoria-documentacion-memoria-modal/memoria-documentacion-memoria-modal.component';
-import { MemoriaCrearComponent } from './memoria-crear/memoria-crear.component';
-import { MemoriaDocumentacionSeguimientosModalComponent } from './modals/memoria-documentacion-seguimientos-modal/memoria-documentacion-seguimientos-modal.component';
 
 
 @NgModule({
@@ -29,7 +23,7 @@ import { MemoriaDocumentacionSeguimientosModalComponent } from './modals/memoria
     MaterialDesignModule,
     FormsModule,
     ReactiveFormsModule,
-    SgiAuthModule
+    SgiAuthModule,
   ],
   providers: [
     MemoriaResolver,

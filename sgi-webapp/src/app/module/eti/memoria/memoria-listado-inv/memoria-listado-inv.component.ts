@@ -4,15 +4,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Observable, of, merge, Subscription, BehaviorSubject } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
-
 import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
 import { SgiAuthService } from '@sgi/framework/auth';
-
 import { tap, map, catchError, startWith } from 'rxjs/operators';
-
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoriaPeticionEvaluacion';
 import { Comite } from '@core/models/eti/comite';
 import { IPersona } from '@core/models/sgp/persona';
@@ -20,14 +16,11 @@ import { DialogService } from '@core/services/dialog.service';
 import { ComiteService } from '@core/services/eti/comite.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
-
 import { ROUTE_NAMES } from '@core/route.names';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria.service';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { MatTableDataSource } from '@angular/material/table';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { MEMORIAS_ROUTE } from '../memoria-route-names';
 
@@ -58,24 +51,15 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
-
   memorias$: Observable<IMemoriaPeticionEvaluacion[]>;
 
   comiteListado: Comite[];
-  comitesSubscription: Subscription;
   filteredComites: Observable<Comite[]>;
 
   estadoMemoriaListado: TipoEstadoMemoria[];
-  estadosMemoriaSubscription: Subscription;
   filteredEstadosMemoria: Observable<TipoEstadoMemoria[]>;
 
   buscadorFormGroup: FormGroup;
-
-  private dialogServiceSubscription: Subscription;
-  private dialogServiceSubscriptionGetSubscription: Subscription;
-  private peticionEvaluacionServiceDeleteSubscription: Subscription;
-  private memoriaServiceSubscription: Subscription;
-  private personaServiceOneSubscritpion: Subscription;
 
   textoUsuarioLabel = TEXT_USER_TITLE;
   textoUsuarioInput = TEXT_USER_TITLE;
@@ -83,15 +67,13 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
   personaRef: string;
   datosSolicitante: string;
 
+  private suscripciones: Subscription[] = [];
+
   constructor(
     private readonly logger: NGXLogger,
-    private readonly snackBarService: SnackBarService,
     private readonly comiteService: ComiteService,
     private readonly tipoEstadoMemoriaService: TipoEstadoMemoriaService,
-    private readonly dialogService: DialogService,
-    private readonly sgiAuthService: SgiAuthService,
     private readonly memoriaService: MemoriaService,
-    private readonly personaFisicaService: PersonaFisicaService,
   ) {
     this.displayedColumns = ['numReferencia', 'comite', 'estadoActual', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
     this.elementosPagina = [5, 10, 25, 100];
@@ -275,7 +257,7 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
       'getComites()',
       'start');
 
-    this.comitesSubscription = this.comiteService.findAll().subscribe(
+    const comitesSubscription = this.comiteService.findAll().subscribe(
       (response) => {
         this.comiteListado = response.items;
 
@@ -285,6 +267,8 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
             map(value => this.filterComite(value))
           );
       });
+
+    this.suscripciones.push(comitesSubscription);
 
     this.logger.debug(MemoriaListadoInvComponent.name,
       'getComites()',
@@ -299,7 +283,7 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
       'getEstadosMemoria()',
       'start');
 
-    this.estadosMemoriaSubscription = this.tipoEstadoMemoriaService.findAll().subscribe(
+    const estadosMemoriaSubscription = this.tipoEstadoMemoriaService.findAll().subscribe(
       (response) => {
         this.estadoMemoriaListado = response.items;
 
@@ -309,6 +293,8 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
             map(value => this.filterEstadoMemoria(value))
           );
       });
+
+    this.suscripciones.push(estadosMemoriaSubscription);
 
     this.logger.debug(MemoriaListadoInvComponent.name,
       'getEstadosMemoria()',
@@ -396,8 +382,7 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
     this.logger.debug(MemoriaListadoInvComponent.name,
       'ngOnDestroy()',
       'start');
-    this.comitesSubscription?.unsubscribe();
-
+    this.suscripciones.forEach(x => x.unsubscribe());
     this.logger.debug(MemoriaListadoInvComponent.name,
       'ngOnDestroy()',
       'end');

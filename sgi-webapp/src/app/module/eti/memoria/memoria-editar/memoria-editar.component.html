@@ -16,6 +16,12 @@
         [fragment]="actionService.getFragment(actionService.FRAGMENT.EVALUACIONES)">
       </sgi-action-fragment-menu-item>
 
+      <sgi-action-fragment-menu-item [route]="[MEMORIA_ROUTE_NAMES.INFORMES]"
+        [title]="'eti.memoria.informes.title' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.INFORMES)">
+      </sgi-action-fragment-menu-item>
+
+
     </mat-list>
     <mat-list class="enlaces-menu" *ngIf="actionService.getActionLinks().length">
       <sgi-action-fragment-link-item *ngFor="let action of actionService.getActionLinks()"

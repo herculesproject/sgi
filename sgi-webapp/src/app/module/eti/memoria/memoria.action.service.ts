@@ -15,10 +15,9 @@ import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { TipoDocumentoService } from '@core/services/eti/tipo-documento.service';
 import { NGXLogger } from 'ngx-logger';
 import { MemoriaEvaluacionesFragment } from './memoria-formulario/memoria-evaluaciones/memoria-evaluaciones.fragment';
-import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { ComiteService } from '@core/services/eti/comite.service';
 import { IFormulario } from '@core/models/eti/formulario';
-
+import { MemoriaInformesFragment } from './memoria-formulario/memoria-informes/memoria-informes.fragment';
 
 const MSG_PETICIONES_EVALUACION = marker('eti.memoria.link.peticionEvaluacion');
 
@@ -33,7 +32,8 @@ export class MemoriaActionService extends ActionService {
   public readonly FRAGMENT = {
     DATOS_GENERALES: 'datosGenerales',
     DOCUMENTACION: 'documentacion',
-    EVALUACIONES: 'evaluaciones'
+    EVALUACIONES: 'evaluaciones',
+    INFORMES: 'informes'
   };
 
   private memoria: IMemoria;
@@ -41,6 +41,7 @@ export class MemoriaActionService extends ActionService {
   public readonly: boolean;
   private documentacion: MemoriaDocumentacionFragment;
   private evaluaciones: MemoriaEvaluacionesFragment;
+  private informes: MemoriaInformesFragment;
 
   constructor(
     fb: FormBuilder,
@@ -68,10 +69,11 @@ export class MemoriaActionService extends ActionService {
     this.datosGenerales = new MemoriaDatosGeneralesFragment(fb, this.readonly, this.memoria?.id, service, personaFisicaService);
     this.documentacion = new MemoriaDocumentacionFragment(logger, this.memoria?.id, service, tipoDocumentoService);
     this.evaluaciones = new MemoriaEvaluacionesFragment(logger, this.memoria?.id, service);
-
+    this.informes = new MemoriaInformesFragment(logger, this.memoria?.id, service);
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.DOCUMENTACION, this.documentacion);
     this.addFragment(this.FRAGMENT.EVALUACIONES, this.evaluaciones);
+    this.addFragment(this.FRAGMENT.INFORMES, this.informes);
   }
 
   private addPeticionEvaluacionLink(idPeticionEvaluacion: number): void {
@@ -91,7 +93,6 @@ export class MemoriaActionService extends ActionService {
       ).subscribe();
     }
   }
-
 
   private loadComiteFormulario(id: number): void {
 

@@ -15,6 +15,7 @@ import { MemoriaCrearGuard } from './memoria-crear/memoria-crear.guard';
 import { MemoriaListadoGesComponent } from './memoria-listado-ges/memoria-listado-ges.component';
 import { MemoriaDocumentacionComponent } from './memoria-formulario/memoria-documentacion/memoria-documentacion.component';
 import { MemoriaEvaluacionesComponent } from './memoria-formulario/memoria-evaluaciones/memoria-evaluaciones.component';
+import { MemoriaInformesComponent } from './memoria-formulario/memoria-informes/memoria-informes.component';
 
 const MSG_LISTADO_TITLE = marker('eti.memoria.listado.titulo');
 const MSG_NEW_TITLE = marker('eti.memoria.crear.titulo');
@@ -29,28 +30,6 @@ const routes: SgiRoutes = [
       title: MSG_LISTADO_TITLE,
       hasAuthorityForAnyUO: 'ETI-PEV-V'
     }
-  },
-  {
-    path: ROUTE_NAMES.NEW,
-    component: MemoriaCrearComponent,
-    canActivate: [SgiAuthGuard, MemoriaCrearGuard],
-    canDeactivate: [ActionGuard],
-    data: {
-      title: MSG_NEW_TITLE,
-      hasAuthorityForAnyUO: 'ETI-PEV-C'
-    },
-    children: [
-      {
-        path: '',
-        pathMatch: 'full',
-        redirectTo: MEMORIA_ROUTE_NAMES.DATOS_GENERALES
-      },
-      {
-        path: MEMORIA_ROUTE_NAMES.DATOS_GENERALES,
-        component: MemoriaDatosGeneralesComponent,
-        canDeactivate: [FragmentGuard]
-      }
-    ]
   },
   {
     path: `:id`,
@@ -79,6 +58,16 @@ const routes: SgiRoutes = [
       {
         path: MEMORIA_ROUTE_NAMES.DOCUMENTACION,
         component: MemoriaDocumentacionComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: MEMORIA_ROUTE_NAMES.EVALUACIONES,
+        component: MemoriaEvaluacionesComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: MEMORIA_ROUTE_NAMES.INFORMES,
+        component: MemoriaInformesComponent,
         canDeactivate: [FragmentGuard]
       }
     ]

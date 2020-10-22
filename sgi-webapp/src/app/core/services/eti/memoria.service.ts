@@ -10,6 +10,7 @@ import { Observable, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoriaPeticionEvaluacion';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
+import { IInformeFormulario } from '@core/models/eti/memoriaInforme';
 
 @Injectable({
   providedIn: 'root'
@@ -257,6 +258,21 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
     return this.find<IMemoriaPeticionEvaluacion, IMemoriaPeticionEvaluacion>(
       `${this.endpointUrl}/persona/peticion-evaluacion`, options).pipe(
         tap(() => this.logger.debug(MemoriaService.name, `findAllByPersonaRefPeticionEvaluacion()`, '-', 'END'))
+      )
+  }
+
+  /**
+   *  Devuelve los informes enviados a secretaría para su evaluación
+   * @param id identificador de la memoria
+   * @return listado de informes.
+   */
+  findInformesSecretaria(id: number): Observable<SgiRestListResult<IInformeFormulario>> {
+    this.logger.debug(MemoriaService.name, `findInformesSecretaria()`, '-', 'start');
+    return this.find<IInformeFormulario, IInformeFormulario>(`${this.endpointUrl}/${id}/informes`)
+      .pipe(
+        tap(() => {
+          this.logger.debug(MemoriaService.name, `findInformesSecretaria()`, '-', 'end');
+        })
       );
   }
 

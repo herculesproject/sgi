@@ -13,10 +13,10 @@ import { MemoriaCrearGuard } from './memoria-crear/memoria-crear.guard';
 import { MemoriaDocumentacionComponent } from './memoria-formulario/memoria-documentacion/memoria-documentacion.component';
 import { MemoriaDocumentacionMemoriaModalComponent } from './modals/memoria-documentacion-memoria-modal/memoria-documentacion-memoria-modal.component';
 import { MemoriaDocumentacionSeguimientosModalComponent } from './modals/memoria-documentacion-seguimientos-modal/memoria-documentacion-seguimientos-modal.component';
-import { MemoriaListadoGesComponent } from './memoria-listado-ges/memoria-listado-ges.component';
 import { MemoriaCrearComponent } from './memoria-crear/memoria-crear.component';
 import { MemoriaEvaluacionesComponent } from './memoria-formulario/memoria-evaluaciones/memoria-evaluaciones.component';
 import { MemoriaListadoInvComponent } from './memoria-listado-inv/memoria-listado-inv.component';
+import { MemoriaInformesComponent } from './memoria-formulario/memoria-informes/memoria-informes.component';
 
 
 @NgModule({
@@ -28,7 +28,8 @@ import { MemoriaListadoInvComponent } from './memoria-listado-inv/memoria-listad
     MemoriaDocumentacionComponent,
     MemoriaDocumentacionMemoriaModalComponent,
     MemoriaDocumentacionSeguimientosModalComponent,
-    MemoriaEvaluacionesComponent
+    MemoriaEvaluacionesComponent,
+    MemoriaInformesComponent
   ],
   imports: [
     SharedModule,

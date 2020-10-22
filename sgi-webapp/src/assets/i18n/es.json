@@ -684,6 +684,8 @@
   "eti.memoria.evaluaciones.listado.tipo": "Tipo",
   "eti.memoria.evaluaciones.listado.version": "Nº de versión",
   "eti.memoria.evaluaciones.title": "Evaluaciones",
+  "eti.memoria.informes.title": "Informes",
+  "eti.memoria.informes.listado.nombre": "Informe memoria",
   "eti.memoria.link.peticionEvaluacion": "Petición de Evaluación",
   "eti.memoria.listado.acciones": "Acciones",
   "eti.memoria.listado.buscador.comite": "Comité",

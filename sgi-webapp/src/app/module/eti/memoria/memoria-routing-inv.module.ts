@@ -16,6 +16,7 @@ import { MemoriaListadoGesComponent } from './memoria-listado-ges/memoria-listad
 import { MemoriaDocumentacionComponent } from './memoria-formulario/memoria-documentacion/memoria-documentacion.component';
 import { MemoriaEvaluacionesComponent } from './memoria-formulario/memoria-evaluaciones/memoria-evaluaciones.component';
 import { MemoriaListadoInvComponent } from './memoria-listado-inv/memoria-listado-inv.component';
+import { MemoriaInformesComponent } from './memoria-formulario/memoria-informes/memoria-informes.component';
 
 const MSG_LISTADO_TITLE = marker('eti.memoria.listado.titulo');
 const MSG_NEW_TITLE = marker('eti.memoria.crear.titulo');
@@ -86,6 +87,11 @@ const routes: SgiRoutes = [
       {
         path: MEMORIA_ROUTE_NAMES.EVALUACIONES,
         component: MemoriaEvaluacionesComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: MEMORIA_ROUTE_NAMES.INFORMES,
+        component: MemoriaInformesComponent,
         canDeactivate: [FragmentGuard]
       }
     ]
