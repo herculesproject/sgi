@@ -131,7 +131,6 @@ public class ActaServiceImpl implements ActaService {
     final Acta acta = actaRepository.findById(id).orElseThrow(() -> new ActaNotFoundException(id));
     log.debug("Acta findById (Acta acta)  - end", id);
     return acta;
-
   }
 
   /**

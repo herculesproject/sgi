@@ -68,4 +68,14 @@ public interface InformeFormularioService {
    */
   void deleteInformeMemoria(Long idMemoria);
 
+  /**
+   * Devuelve un listado paginado de {@link InformeFormulario} filtrado por la
+   * {@link Memoria}
+   * 
+   * @param id       identificador de la {@link Memoria}
+   * @param pageable paginación
+   * @return el listado paginado de {@link InformeFormulario}
+   */
+  Page<InformeFormulario> findByMemoria(Long id, Pageable pageable);
+
 }

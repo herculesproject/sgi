@@ -10,10 +10,12 @@ import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Formulario;
+import org.crue.hercules.sgi.eti.model.InformeFormulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
+import org.crue.hercules.sgi.eti.service.InformeFormularioService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -53,6 +55,8 @@ public class MemoriaController {
   /** DocumentacionMemoria service */
   private final DocumentacionMemoriaService documentacionMemoriaService;
 
+  private final InformeFormularioService informeFormularioService;
+
   /**
    * Instancia un nuevo MemoriaController.
    * 
@@ -61,12 +65,13 @@ public class MemoriaController {
    * @param documentacionMemoriaService documentacionMemoriaService
    */
   public MemoriaController(MemoriaService service, EvaluacionService evaluacionService,
-      DocumentacionMemoriaService documentacionMemoriaService) {
+      DocumentacionMemoriaService documentacionMemoriaService, InformeFormularioService informeFormularioService) {
     log.debug(
         "MemoriaController(MemoriaService service, EvaluacionService evaluacionService, DocumentacionMemoriaService documentacionMemoriaService) - start");
     this.service = service;
     this.evaluacionService = evaluacionService;
     this.documentacionMemoriaService = documentacionMemoriaService;
+    this.informeFormularioService = informeFormularioService;
     log.debug(
         "MemoriaController(MemoriaService service, EvaluacionService evaluacionService, DocumentacionMemoriaService documentacionMemoriaService) - end");
   }
@@ -566,6 +571,31 @@ public class MemoriaController {
   }
 
   /**
+   * * Devuelve una lista paginada y filtrada de {@link InformeFormulario}
+   * filtradas por la memoria correspondiente
+   * 
+   * @param id       identificador de la {@link Memoria}
+   * @param pageable paginación
+   * @return listado paginado de {@link InformeFormulario}
+   */
+  @GetMapping("/{id}/informes")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-ER-INV', 'ETI-PEV-V')")
+  public ResponseEntity<Page<InformeFormulario>> getInformesFormulario(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable pageable) {
+
+    Page<InformeFormulario> page = informeFormularioService.findByMemoria(id, pageable);
+
+    if (page.isEmpty()) {
+      log.debug("getInformesFormulario(Long id, Pageable pageable) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("getInformesFormulario(Long id, Pageable pageable) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+
+  }
+
+  /**
    * Obtener todas las entidades {@link Evaluacion} activas para una determinada
    * {@link Memoria}.
    *
@@ -574,7 +604,7 @@ public class MemoriaController {
    * @return la lista de entidades {@link Evaluacion} paginadas.
    */
   @GetMapping("/{id}/evaluaciones")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-ER-INV')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-ER-INV', 'ETI-PEV-V')")
   ResponseEntity<Page<Evaluacion>> getEvaluacionesMemoria(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable pageable) {
     log.debug("getEvaluacionesMemoria(Long id, Pageable pageable) - start");

@@ -21,6 +21,8 @@ import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.FormularioMemoria;
+import org.crue.hercules.sgi.eti.model.InformeFormulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
@@ -32,6 +34,7 @@ import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
+import org.crue.hercules.sgi.eti.service.InformeFormularioService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
@@ -77,6 +80,9 @@ public class MemoriaControllerTest {
 
   @MockBean
   private EvaluacionService evaluacionService;
+
+  @MockBean
+  private InformeFormularioService informeFormularioService;
 
   @MockBean
   private DocumentacionMemoriaService documentacionMemoriaService;
@@ -1421,5 +1427,22 @@ public class MemoriaControllerTest {
     memoria.setFechaEvaluacion(LocalDateTime.of(2020, 7, 15, 0, 0, 1));
     memoria.setFechaLimite(LocalDate.of(2020, 8, 18));
     return memoria;
+  }
+
+  public InformeFormulario generarMockInforme(Long id, FormularioMemoria formularioMemoria) {
+
+    InformeFormulario informe = new InformeFormulario();
+    informe.setId(id);
+    informe.setDocumentoRef("TipoDocumento" + id);
+    informe.setFormularioMemoria(formularioMemoria);
+
+    return informe;
+  }
+
+  public FormularioMemoria generarMockFormularioMemoria(Long id, Memoria memoria) {
+    FormularioMemoria formularioMemoria = new FormularioMemoria();
+    formularioMemoria.setId(id);
+    formularioMemoria.setMemoria(memoria);
+    return formularioMemoria;
   }
 }

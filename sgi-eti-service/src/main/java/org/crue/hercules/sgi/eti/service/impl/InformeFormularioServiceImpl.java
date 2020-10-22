@@ -53,6 +53,7 @@ public class InformeFormularioServiceImpl implements InformeFormularioService {
    * @return el listado de entidades {@link InformeFormulario} paginadas y
    *         filtradas.
    */
+  @Override
   public Page<InformeFormulario> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
     Specification<InformeFormulario> spec = new QuerySpecification<InformeFormulario>(query);
@@ -138,6 +139,14 @@ public class InformeFormularioServiceImpl implements InformeFormularioService {
     }).orElseThrow(() -> new InformeFormularioNotFoundException(informeFormularioActualizar.getId()));
   }
 
+  /**
+   * Devuelve un listado paginado de {@link InformeFormulario} filtrado por la
+   * {@link Memoria}
+   * 
+   * @param id       identificador de la {@link Memoria}
+   * @param pageable paginación
+   * @return el listado paginado de {@link InformeFormulario}
+   */
   @Override
   public void deleteInformeMemoria(Long idMemoria) {
     InformeFormulario informe = informeFormularioRepository
@@ -148,4 +157,20 @@ public class InformeFormularioServiceImpl implements InformeFormularioService {
     }
 
   }
+
+  /**
+   * Devuelve un listado paginado de {@link InformeFormulario} filtrado por la
+   * {@link Memoria}
+   * 
+   * @param id       identificador de la {@link Memoria}
+   * @param pageable paginación
+   * @return el listado paginado de {@link InformeFormulario}
+   */
+  @Override
+  public Page<InformeFormulario> findByMemoria(Long id, Pageable pageable) {
+    Assert.notNull(id, "Memoria id no puede ser null para actualizar un informeFormulario");
+    Page<InformeFormulario> returnValue = informeFormularioRepository.findByMemoria(id, pageable);
+    return returnValue;
+  }
+
 }
