@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { IModeloTipoFase } from '@core/models/csp/modelo-tipo-fase';
@@ -10,11 +10,10 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { DialogService } from '@core/services/dialog.service';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { requiredChecked } from '@core/validators/checkbox-validator';
 
-const MSG_CHECK = marker('csp.check.continuar');
 export interface ModeloEjecucionTipoFaseModalData {
   modeloTipoFase: IModeloTipoFase;
   tipoFases: ITipoFase[];
@@ -75,9 +74,10 @@ export class ModeloEjecucionTipoFaseModalComponent extends
   protected getDatosForm(): IModeloTipoFase {
     this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, `${this.getDatosForm.name}()`, 'start');
     const modeloTipoFase = this.data.modeloTipoFase;
+    const disponible = this.formGroup.controls.disponible as FormGroup;
     modeloTipoFase.tipoFase = this.formGroup.get('tipoFase').value;
-    modeloTipoFase.convocatoria = this.formGroup.get('checkConvocatoria').value;
-    modeloTipoFase.proyecto = this.formGroup.get('checkProyecto').value;
+    modeloTipoFase.convocatoria = disponible.get('convocatoria').value;
+    modeloTipoFase.proyecto = disponible.get('proyecto').value;
     modeloTipoFase.solicitud = false;
     this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, `${this.getDatosForm.name}()`, 'end');
     return modeloTipoFase;
@@ -86,58 +86,15 @@ export class ModeloEjecucionTipoFaseModalComponent extends
   protected getFormGroup(): FormGroup {
     this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, `${this.getFormGroup.name}()`, 'start');
     const formGroup = new FormGroup({
-      tipoFase: new FormControl(this.data.modeloTipoFase?.tipoFase),
-      checkConvocatoria: new FormControl(this.data.modeloTipoFase?.convocatoria),
-      checkProyecto: new FormControl(this.data.modeloTipoFase?.proyecto)
+      tipoFase: new FormControl(this.data.modeloTipoFase?.tipoFase, Validators.required),
+      disponible: new FormGroup({
+        convocatoria: new FormControl(this.data.modeloTipoFase?.convocatoria),
+        proyecto: new FormControl(this.data.modeloTipoFase?.proyecto)
+      }, [requiredChecked(1)]),
     });
     this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, `${this.getFormGroup.name}()`, 'end');
     return formGroup;
   }
-
-  /**
-   * Activar/desactivar convocatoria
-   * @param event evento
-   */
-  setConvocatoriaActivo(event: MatCheckboxChange) {
-    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, 'setConvocatoriaActivo(event) - start');
-    this.formGroup.controls.checkConvocatoria.setValue(event.checked);
-    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, 'setConvocatoriaActivo(event) - end');
-  }
-
-  /**
-   * Activar/desactivar proyecto
-   * @param event evento
-   */
-  setProyectoActivo(event: MatCheckboxChange) {
-    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, 'setProyectoActivo(event) - start');
-    this.formGroup.controls.checkProyecto.setValue(event.checked);
-    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, 'setProyectoActivo(event) - end');
-  }
-
-  /**
-   * Miramos si está activado al menos un check y si no lo está
-   * mostramos mensaje para que confirme que lo quiere así
-   */
-  confirmActivosCheck(): void {
-    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, 'alertActivosCheck() - start');
-    if (this.formGroup.controls.checkProyecto.value === false
-      && this.formGroup.controls.checkConvocatoria.value === false) {
-      this.subscriptions.push(this.dialogService.showConfirmation(MSG_CHECK).subscribe(
-        (aceptado) => {
-          if (aceptado) {
-            const modeloTipoFase = this.data.modeloTipoFase;
-            modeloTipoFase.convocatoria = true;
-            modeloTipoFase.proyecto = false;
-            this.saveOrUpdate();
-          }
-        })
-      );
-    } else {
-      this.saveOrUpdate();
-    }
-    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, 'alertActivosCheck() - end');
-  }
-
 
   ngOnDestroy() {
     this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, 'ngOnDestroy()', 'start');

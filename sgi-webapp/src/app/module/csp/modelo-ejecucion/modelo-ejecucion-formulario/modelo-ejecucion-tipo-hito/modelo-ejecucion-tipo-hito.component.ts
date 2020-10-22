@@ -29,7 +29,7 @@ export class ModeloEjecucionTipoHitoComponent extends FragmentComponent implemen
   private formPart: ModeloEjecucionTipoHitoFragment;
   private subscriptions = [] as Subscription[];
 
-  columns = ['nombre', 'descripcion', 'acciones'];
+  columns = ['nombre', 'descripcion', 'convocatorias', 'solicitudes', 'proyectos', 'acciones'];
   numPage = [5, 10, 25, 100];
   totalElements = 0;
 

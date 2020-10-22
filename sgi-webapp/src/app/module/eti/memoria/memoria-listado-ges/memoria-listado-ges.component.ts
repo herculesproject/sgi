@@ -63,7 +63,7 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
 
   buscadorFormGroup: FormGroup;
 
-  private suscripciones: Subscription[];
+  private suscripciones: Subscription[] = [];
 
   textoUsuarioLabel = TEXT_USER_TITLE;
   textoUsuarioInput = TEXT_USER_TITLE;

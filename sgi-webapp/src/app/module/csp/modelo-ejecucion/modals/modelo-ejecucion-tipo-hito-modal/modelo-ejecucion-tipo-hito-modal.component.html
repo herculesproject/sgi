@@ -30,22 +30,24 @@
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
           <label>{{'csp.modelo.tipo.hito.disponible' | translate}}</label>
-          <div class="checkbox-inline">
-            <mat-checkbox color="primary" class="checkbox" formControlName="checkConvocatoria"
-              (change)="setConvocatoriaActivo($event)">{{'csp.modelo.tipo.hito.convocatorias' | translate}}
+          <div class="checkbox-inline" formGroupName="disponible">
+            <mat-checkbox color="primary" class="checkbox" formControlName="convocatoria">
+              {{'csp.modelo.tipo.hito.convocatorias' | translate}}
             </mat-checkbox>
-            <mat-checkbox color="primary" class="checkbox" formControlName="checkProyecto"
-              (change)="setProyectoActivo($event)">{{'csp.modelo.tipo.hito.solicitudes' | translate}}</mat-checkbox>
-            <mat-checkbox color="primary" class="checkbox" formControlName="checkSolictud"
-              (change)="setSolictudActivo($event)">
+            <mat-checkbox color="primary" class="checkbox" formControlName="proyecto">
+              {{'csp.modelo.tipo.hito.solicitudes' | translate}}</mat-checkbox>
+            <mat-checkbox color="primary" class="checkbox" formControlName="solicitud">
               {{'csp.modelo.tipo.hito.proyectos' | translate}}</mat-checkbox>
+            <mat-error *ngIf="formGroup.controls.disponible.errors?.requiredChecked">
+              {{'csp.tipo.fase.checkbox.error.requerido' | translate}}
+            </mat-error>
           </div>
         </div>
       </div>
     </form>
   </main>
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
-    <button color="accent" (click)="confirmActivosCheck()" md-button mat-raised-button
+    <button color="accent" (click)="saveOrUpdate()" md-button mat-raised-button
       type="submit">{{'botones.guardar' | translate}}</button>
     <button class="link-cancelar" mat-button (click)="closeModal()"
       type="button">{{'botones.cancelar' | translate}}</button>
