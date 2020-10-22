@@ -125,6 +125,8 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
    * @param id Identificador de la {@link Convocatoria}.
    * @return Convocatoria {@link Convocatoria} actualizada.
    */
+  @Override
+  @Transactional
   public Convocatoria registrar(final Long id) {
     log.debug("registrar(Long id) - start");
 

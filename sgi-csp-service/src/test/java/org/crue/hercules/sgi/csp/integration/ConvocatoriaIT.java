@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
@@ -52,10 +53,11 @@ public class ConvocatoriaIT {
   private static final String PATH_PARAMETER_REGISTRAR = "/registrar";
   private static final String PATH_PARAMETER_TODOS = "/todos";
   private static final String CONTROLLER_BASE_PATH = "/convocatorias";
-  private static final String PATH_ENTIDAD_GESTORA = "/convocatoriaentidadgestoras";
   private static final String PATH_AREA_TEMATICA = "/convocatoriaareatematicas";
   private static final String PATH_ENTIDAD_ENLACES = "/convocatoriaenlaces";
   private static final String PATH_ENTIDAD_CONVOCANTE = "/convocatoriaentidadconvocantes";
+  private static final String PATH_ENTIDAD_FINANCIADORA = "/convocatoriaentidadfinanciadoras";
+  private static final String PATH_ENTIDAD_GESTORA = "/convocatoriaentidadgestoras";
 
   private HttpEntity<Convocatoria> buildRequest(HttpHeaders headers, Convocatoria entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -375,6 +377,49 @@ public class ConvocatoriaIT {
     Assertions.assertThat(convocatoriaEntidadConvocantes.get(1).getEntidadRef()).as("get(1).getEntidadRef())")
         .isEqualTo("entidad-" + String.format("%03d", 2));
     Assertions.assertThat(convocatoriaEntidadConvocantes.get(2).getEntidadRef()).as("get(2).getEntidadRef()")
+        .isEqualTo("entidad-" + String.format("%03d", 1));
+  }
+
+  /**
+   * 
+   * CONVOCATORIA ENTIDAD FINANCIADORA
+   * 
+   */
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllConvocatoriaEntidadFinanciadora_WithPagingSortingAndFiltering_ReturnsConvocatoriaEntidadFinanciadoraSubList()
+      throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENTGES-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "id-";
+    String filter = "entidadRef~%-0%";
+
+    Long convocatoriaId = 1L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ENTIDAD_FINANCIADORA)
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(convocatoriaId).toUri();
+
+    final ResponseEntity<List<ConvocatoriaEntidadFinanciadora>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ConvocatoriaEntidadFinanciadora>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<ConvocatoriaEntidadFinanciadora> convocatoriaEntidadFinanciadoras = response.getBody();
+    Assertions.assertThat(convocatoriaEntidadFinanciadoras.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(convocatoriaEntidadFinanciadoras.get(0).getEntidadRef()).as("get(0).getEntidadRef()")
+        .isEqualTo("entidad-" + String.format("%03d", 3));
+    Assertions.assertThat(convocatoriaEntidadFinanciadoras.get(1).getEntidadRef()).as("get(1).getEntidadRef())")
+        .isEqualTo("entidad-" + String.format("%03d", 2));
+    Assertions.assertThat(convocatoriaEntidadFinanciadoras.get(2).getEntidadRef()).as("get(2).getEntidadRef()")
         .isEqualTo("entidad-" + String.format("%03d", 1));
   }
 

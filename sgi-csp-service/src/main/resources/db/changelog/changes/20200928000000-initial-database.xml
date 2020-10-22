@@ -24,6 +24,10 @@
     <createSequence sequenceName="convocatoria_entidad_convocante_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-convocatoria_entidad_financiadora_seq">
+    <createSequence sequenceName="convocatoria_entidad_financiadora_seq" />
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-convocatoria_entidad_gestora_seq">
     <createSequence sequenceName="convocatoria_entidad_gestora_seq" />
   </changeSet>
@@ -222,6 +226,23 @@
         <constraints nullable="false" />
       </column>
       <column name="programa_id" type="BIGINT" />
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-convocatoria_entidad_financiadora">
+    <createTable tableName="convocatoria_entidad_financiadora">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="convocatoria_entidad_financiadora_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_entidad_financiadora_pk" />
+      </column>
+      <column name="convocatoria_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="entidad_ref" type="VARCHAR2(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="fuente_financiacion_id" type="BIGINT" />
+      <column name="tipo_financiacion_id" type="BIGINT" />
+      <column name="porcentaje_financiacion" type="INTEGER" />
     </createTable>
   </changeSet>
 
@@ -615,6 +636,16 @@
   </changeSet>
   <changeSet author="master" id="20200601000000-convocatoria_entidad_convocante_programa_FK">
     <addForeignKeyConstraint baseColumnNames="programa_id" baseTableName="convocatoria_entidad_convocante" constraintName="convocatoria_entidad_convocante_programa_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="programa" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-convocatoria_entidad_financiadora_convocatoria_FK">
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_entidad_financiadora" constraintName="convocatoria_entidad_financiadora_convocatoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-convocatoria_entidad_financiadora_fuente_financiacion_FK">
+    <addForeignKeyConstraint baseColumnNames="fuente_financiacion_id" baseTableName="convocatoria_entidad_financiadora" constraintName="convocatoria_entidad_financiadora_fuente_financiacion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="fuente_financiacion" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-convocatoria_entidad_financiadora_tipo_financiacion_FK">
+    <addForeignKeyConstraint baseColumnNames="tipo_financiacion_id" baseTableName="convocatoria_entidad_financiadora" constraintName="convocatoria_entidad_financiadora_tipo_financiacion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_financiacion" validate="true" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-convocatoria_entidad_gestora_convocatoria_FK">

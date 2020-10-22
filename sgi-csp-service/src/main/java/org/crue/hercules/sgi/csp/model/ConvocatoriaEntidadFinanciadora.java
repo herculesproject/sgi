@@ -1,0 +1,69 @@
+package org.crue.hercules.sgi.csp.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "convocatoria_entidad_financiadora")
+@Data
+@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+@AllArgsConstructor
+public class ConvocatoriaEntidadFinanciadora extends BaseEntity {
+
+  /**
+   * Serial version
+   */
+  private static final long serialVersionUID = 1L;
+
+  /** Id. */
+  @Id
+  @Column(name = "id", nullable = false)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "convocatoria_entidad_financiadora_seq")
+  @SequenceGenerator(name = "convocatoria_entidad_financiadora_seq", sequenceName = "convocatoria_entidad_financiadora_seq", allocationSize = 1)
+  private Long id;
+
+  /** Convocatoria */
+  @ManyToOne
+  @JoinColumn(name = "convocatoria_id", nullable = false)
+  @NotNull
+  private Convocatoria convocatoria;
+
+  /** Nombre. */
+  @Column(name = "entidad_ref", length = 50, nullable = false)
+  @NotEmpty
+  @Size(max = 50)
+  private String entidadRef;
+
+  /** FuenteFinanciacion */
+  @ManyToOne
+  @JoinColumn(name = "fuente_financiacion_id", nullable = true)
+  private FuenteFinanciacion fuenteFinanciacion;
+
+  /** TipoFinanciacion */
+  @ManyToOne
+  @JoinColumn(name = "tipo_financiacion_id", nullable = true)
+  private TipoFinanciacion tipoFinanciacion;
+
+  /** PorcentajeFinanciacion */
+  @Column(name = "porcentaje_financiacion", nullable = true)
+  @Min(0)
+  private Integer porcentajeFinanciacion;
+
+}

@@ -3,6 +3,7 @@ DELETE FROM csp.concepto_gasto;
 DELETE FROM csp.convocatoria_area_tematica;
 DELETE FROM csp.area_tematica_arbol;
 DELETE FROM csp.convocatoria_entidad_convocante;
+DELETE FROM csp.convocatoria_entidad_financiadora;
 DELETE FROM csp.convocatoria_entidad_gestora;
 DELETE FROM csp.convocatoria_enlace;
 DELETE FROM csp.convocatoria;

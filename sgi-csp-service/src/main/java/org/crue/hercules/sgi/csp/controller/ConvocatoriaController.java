@@ -8,10 +8,12 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEnlaceService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadGestoraService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -45,6 +47,9 @@ public class ConvocatoriaController {
   /** ConvocatoriaService service */
   private final ConvocatoriaService service;
 
+  /** ConvocatoriaEntidadFinanciadora service */
+  private final ConvocatoriaEntidadFinanciadoraService convocatoriaEntidadFinanciadoraService;
+
   /** ConvocatoriaEntidadGestora service */
   private final ConvocatoriaEntidadGestoraService convocatoriaEntidadGestoraService;
 
@@ -60,22 +65,25 @@ public class ConvocatoriaController {
   /**
    * Instancia un nuevo ConvocatoriaController.
    * 
-   * @param convocatoriaService                  {@link ConvocatoriaService}.
-   * @param convocatoriaEntidadGestoraService    {@link ConvocatoriaEntidadGestoraService}.
-   * @param convocatoriaAreaTematicaService      {@link ConvocatoriaAreaTematicaService}.
-   * @param convocatoriaEnlaceService            {@link ConvocatoriaEnlaceService}
-   * @param convocatoriaEntidadConvocanteService {@link ConvocatoriaEntidadConvocanteService}.
+   * @param convocatoriaService                    {@link ConvocatoriaService}.
+   * @param convocatoriaAreaTematicaService        {@link ConvocatoriaAreaTematicaService}.
+   * @param convocatoriaEnlaceService              {@link ConvocatoriaEnlaceService}.
+   * @param convocatoriaEntidadConvocanteService   {@link ConvocatoriaEntidadConvocanteService}.
+   * @param convocatoriaEntidadFinanciadoraService {@link ConvocatoriaEntidadFinanciadoraService}.
+   * @param convocatoriaEntidadGestoraService      {@link ConvocatoriaEntidadGestoraService}.
    */
   public ConvocatoriaController(ConvocatoriaService convocatoriaService,
-      ConvocatoriaEntidadGestoraService convocatoriaEntidadGestoraService,
       ConvocatoriaAreaTematicaService convocatoriaAreaTematicaService,
       ConvocatoriaEnlaceService convocatoriaEnlaceService,
-      ConvocatoriaEntidadConvocanteService convocatoriaEntidadConvocanteService) {
+      ConvocatoriaEntidadConvocanteService convocatoriaEntidadConvocanteService,
+      ConvocatoriaEntidadFinanciadoraService convocatoriaEntidadFinanciadoraService,
+      ConvocatoriaEntidadGestoraService convocatoriaEntidadGestoraService) {
     this.service = convocatoriaService;
-    this.convocatoriaEntidadGestoraService = convocatoriaEntidadGestoraService;
     this.convocatoriaAreaTematicaService = convocatoriaAreaTematicaService;
     this.convocatoriaEnlaceService = convocatoriaEnlaceService;
     this.convocatoriaEntidadConvocanteService = convocatoriaEntidadConvocanteService;
+    this.convocatoriaEntidadFinanciadoraService = convocatoriaEntidadFinanciadoraService;
+    this.convocatoriaEntidadGestoraService = convocatoriaEntidadGestoraService;
   }
 
   /**
@@ -114,7 +122,7 @@ public class ConvocatoriaController {
    * Registra la {@link Convocatoria} con id indicado.
    * 
    * @param id Identificador de {@link Convocatoria}.
-   * @return
+   * @return {@link Convocatoria} actualizado.
    */
   @PatchMapping("/{id}/registrar")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-E')")
@@ -196,6 +204,38 @@ public class ConvocatoriaController {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     log.debug("findAllTodos(List<QueryCriteria> query,Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * 
+   * CONVOCATORIA ENTIDAD FINANCIADORA
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de
+   * {@link ConvocatoriaEntidadFinanciadora} de la {@link Convocatoria}.
+   * 
+   * @param id     Identificador de {@link Convocatoria}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/convocatoriaentidadfinanciadoras")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CATEM-V')")
+  ResponseEntity<Page<ConvocatoriaEntidadFinanciadora>> findAllConvocatoriaEntidadFinanciadora(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllConvocatoriaEntidadFinanciadora(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<ConvocatoriaEntidadFinanciadora> page = convocatoriaEntidadFinanciadoraService.findAllByConvocatoria(id, query,
+        paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllConvocatoriaEntidadFinanciadora(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllConvocatoriaEntidadFinanciadora(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

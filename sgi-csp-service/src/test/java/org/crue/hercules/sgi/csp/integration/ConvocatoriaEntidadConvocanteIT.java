@@ -26,7 +26,6 @@ import org.springframework.test.context.jdbc.Sql;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(initializers = { Oauth2WireMockInitializer.class })
-
 public class ConvocatoriaEntidadConvocanteIT {
 
   @Autowired

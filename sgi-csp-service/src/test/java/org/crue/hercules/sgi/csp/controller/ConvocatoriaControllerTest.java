@@ -18,17 +18,21 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
-import org.crue.hercules.sgi.csp.model.Programa;
-import org.crue.hercules.sgi.csp.model.TipoEnlace;
+import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
+import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
+import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEnlaceService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadGestoraService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -71,7 +75,11 @@ public class ConvocatoriaControllerTest {
   @MockBean
   private ConvocatoriaService service;
   @MockBean
+  private ConvocatoriaEntidadFinanciadoraService convocatoriaEntidadFinanciadoraService;
+
+  @MockBean
   private ConvocatoriaEntidadGestoraService convocatoriaEntidadGestoraService;
+
   @MockBean
   private ConvocatoriaAreaTematicaService convocatoriaAreaTematicaService;
   @MockBean
@@ -83,10 +91,11 @@ public class ConvocatoriaControllerTest {
   private static final String PATH_PARAMETER_REGISTRAR = "/registrar";
   private static final String PATH_PARAMETER_TODOS = "/todos";
   private static final String CONTROLLER_BASE_PATH = "/convocatorias";
-  private static final String PATH_ENTIDAD_GESTORA = "/convocatoriaentidadgestoras";
   private static final String PATH_AREA_TEMATICA = "/convocatoriaareatematicas";
   private static final String PATH_ENTIDAD_ENLACES = "/convocatoriaenlaces";
   private static final String PATH_ENTIDAD_CONVOCANTE = "/convocatoriaentidadconvocantes";
+  private static final String PATH_ENTIDAD_FINANCIADORA = "/convocatoriaentidadfinanciadoras";
+  private static final String PATH_ENTIDAD_GESTORA = "/convocatoriaentidadgestoras";
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
@@ -649,7 +658,104 @@ public class ConvocatoriaControllerTest {
 
   /**
    * 
-   * CONVOCATORIA ENLACE
+   * CONVOCATORIA ENTIDAD FINANCIADORA
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void findAllConvocatoriaEntidadFinanciadora_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ConvocatoriaEntidadFinanciadora para la Convocatoria
+    Long convocatoriaId = 1L;
+
+    List<ConvocatoriaEntidadFinanciadora> convocatoriaEntidadFinanciadoras = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      convocatoriaEntidadFinanciadoras.add(generarMockConvocatoriaEntidadFinanciadora(i));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(convocatoriaEntidadFinanciadoraService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > convocatoriaEntidadFinanciadoras.size() ? convocatoriaEntidadFinanciadoras.size()
+              : toIndex;
+          List<ConvocatoriaEntidadFinanciadora> content = convocatoriaEntidadFinanciadoras.subList(fromIndex, toIndex);
+          Page<ConvocatoriaEntidadFinanciadora> pageResponse = new PageImpl<>(content, pageable,
+              convocatoriaEntidadFinanciadoras.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ENTIDAD_FINANCIADORA, convocatoriaId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los ConvocatoriaEntidadFinanciadora del 31 al
+        // 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<ConvocatoriaEntidadFinanciadora> convocatoriaEntidadFinanciadorasResponse = mapper.readValue(
+        requestResult.getResponse().getContentAsString(), new TypeReference<List<ConvocatoriaEntidadFinanciadora>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = convocatoriaEntidadFinanciadorasResponse
+          .get(i - (page * pageSize) - 1);
+      Assertions.assertThat(convocatoriaEntidadFinanciadora.getEntidadRef()).isEqualTo("entidad-" + i);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void findAllConvocatoriaEntidadFinanciadora_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de ConvocatoriaEntidadFinanciadora para la
+    // Convocatoria
+    Long convocatoriaId = 1L;
+    List<ConvocatoriaEntidadFinanciadora> convocatoriaEntidadFinanciadoras = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(convocatoriaEntidadFinanciadoraService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          Page<ConvocatoriaEntidadFinanciadora> pageResponse = new PageImpl<>(convocatoriaEntidadFinanciadoras,
+              pageable, 0);
+          return pageResponse;
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ENTIDAD_FINANCIADORA, convocatoriaId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
+   * 
+   * CONVOCATORIA ENTIDAD ENLACE
    * 
    */
 
@@ -1042,4 +1148,37 @@ public class ConvocatoriaControllerTest {
 
     return convocatoriaEnlace;
   }
+
+  /**
+   * Función que devuelve un objeto ConvocatoriaEntidadFinanciadora
+   * 
+   * @param id id del ConvocatoriaEntidadFinanciadora
+   * @return el objeto ConvocatoriaEntidadFinanciadora
+   */
+  private ConvocatoriaEntidadFinanciadora generarMockConvocatoriaEntidadFinanciadora(Long id) {
+    Convocatoria convocatoria = new Convocatoria();
+    convocatoria.setId(id == null ? 1 : id);
+
+    FuenteFinanciacion fuenteFinanciacion = new FuenteFinanciacion();
+    fuenteFinanciacion.setId(id == null ? 1 : id);
+    fuenteFinanciacion.setActivo(true);
+
+    TipoFinanciacion tipoFinanciacion = new TipoFinanciacion();
+    tipoFinanciacion.setId(id == null ? 1 : id);
+    tipoFinanciacion.setActivo(true);
+
+    Programa programa = new Programa();
+    programa.setId(id);
+
+    ConvocatoriaEntidadFinanciadora convocatoriaEntidadFinanciadora = new ConvocatoriaEntidadFinanciadora();
+    convocatoriaEntidadFinanciadora.setId(id);
+    convocatoriaEntidadFinanciadora.setConvocatoria(convocatoria);
+    convocatoriaEntidadFinanciadora.setEntidadRef("entidad-" + (id == null ? 0 : id));
+    convocatoriaEntidadFinanciadora.setFuenteFinanciacion(fuenteFinanciacion);
+    convocatoriaEntidadFinanciadora.setTipoFinanciacion(tipoFinanciacion);
+    convocatoriaEntidadFinanciadora.setPorcentajeFinanciacion(50);
+
+    return convocatoriaEntidadFinanciadora;
+  }
+
 }
