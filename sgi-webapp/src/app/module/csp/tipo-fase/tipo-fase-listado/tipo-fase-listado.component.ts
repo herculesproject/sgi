@@ -12,7 +12,8 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, Subscription } from 'rxjs';
+import { EMPTY, Observable, of, Subscription } from 'rxjs';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 import { TipoFaseModalComponent } from '../tipo-fase-modal/tipo-fase-modal.component';
 
 const MSG_ERROR = marker('csp.tipo.fase.listado.error');
@@ -23,6 +24,9 @@ const MSG_UPDATE = marker('csp.tipo.fase.actualizar');
 const MSG_DEACTIVATE = marker('csp.tipo.fase.desactivar');
 const MSG_SUCCESS_DEACTIVATE = marker('csp.tipo.fase.desactivar.correcto');
 const MSG_ERROR_DEACTIVATE = marker('csp.tipo.fase.desactivar.error');
+const MSG_REACTIVE = marker('csp.tipo.fase.reactivar');
+const MSG_SUCCESS_REACTIVE = marker('csp.tipo.fase.reactivar.correcto');
+const MSG_ERROR_REACTIVE = marker('csp.tipo.fase.reactivar.error');
 
 @Component({
   selector: 'sgi-tipo-fase-listado',
@@ -64,6 +68,7 @@ export class TipoFaseListadoComponent extends AbstractTablePaginationComponent<I
       nombre: new FormControl(''),
       activo: new FormControl('true')
     });
+    this.filter = this.createFilters();
     this.logger.debug(TipoFaseListadoComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -157,26 +162,63 @@ export class TipoFaseListadoComponent extends AbstractTablePaginationComponent<I
    * Desactivamos registro de tipo fase
    * @param tipoFase tipo de fase
    */
-  disableTipoFase(tipoFase: ITipoFase): void {
-    this.logger.debug(TipoFaseListadoComponent.name, `${this.disableTipoFase.name}()`, 'start');
-    const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE).subscribe(
-      (accept) => {
+  deactivateTipoFase(tipoFase: ITipoFase): void {
+    this.logger.debug(TipoFaseListadoComponent.name, `${this.deactivateTipoFase.name}()`, 'start');
+    const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE)
+      .pipe(switchMap((accept) => {
         if (accept) {
-          const deleteSubcription = this.tipoFaseService.deleteById(tipoFase.id).subscribe(
-            () => {
-              this.snackBarService.showSuccess(MSG_SUCCESS_DEACTIVATE);
-              this.loadTable();
-              this.logger.debug(TipoFaseListadoComponent.name, `${this.disableTipoFase.name}()`, 'end');
-            },
-            () => {
-              this.snackBarService.showError(MSG_ERROR_DEACTIVATE);
-              this.logger.error(TipoFaseListadoComponent.name, `${this.disableTipoFase.name}()`, 'error');
-            }
-          );
-          this.suscripciones.push(deleteSubcription);
+          return this.tipoFaseService.deleteById(tipoFase.id);
+        } else {
+          return of();
         }
-      }
-    );
+      })).subscribe(
+        () => {
+          this.snackBarService.showSuccess(MSG_SUCCESS_DEACTIVATE);
+          this.loadTable();
+          this.logger.debug(TipoFaseListadoComponent.name,
+            `${this.deactivateTipoFase.name}(tipoFase: ${tipoFase})`, 'end');
+        },
+        () => {
+          this.snackBarService.showError(MSG_ERROR_DEACTIVATE);
+          this.logger.debug(TipoFaseListadoComponent.name,
+            `${this.deactivateTipoFase.name}(tipoFase: ${tipoFase})`, 'end');
+        }
+      );
     this.suscripciones.push(subcription);
   }
+
+
+  /**
+   * Activamos un tipo finalidad desactivado
+   * @param tipoFase tipo finalidad
+   */
+  activateTipoFase(tipoFase: ITipoFase): void {
+    this.logger.debug(TipoFaseListadoComponent.name,
+      `${this.activateTipoFase.name}(tipoFase: ${tipoFase})`, 'start');
+
+    const subcription = this.dialogService.showConfirmation(MSG_REACTIVE)
+      .pipe(switchMap((accept) => {
+        if (accept) {
+          tipoFase.activo = true;
+          return this.tipoFaseService.update(tipoFase.id, tipoFase);
+        } else {
+          return of();
+        }
+      })).subscribe(
+        () => {
+          this.snackBarService.showSuccess(MSG_SUCCESS_REACTIVE);
+          this.loadTable();
+          this.logger.debug(TipoFaseListadoComponent.name,
+            `${this.activateTipoFase.name}(tipoFase: ${tipoFase})`, 'end');
+        },
+        () => {
+          tipoFase.activo = false;
+          this.snackBarService.showError(MSG_ERROR_REACTIVE);
+          this.logger.debug(TipoFaseListadoComponent.name,
+            `${this.activateTipoFase.name}(tipoFase: ${tipoFase})`, 'end');
+        }
+      );
+    this.suscripciones.push(subcription);
+  }
+
 }

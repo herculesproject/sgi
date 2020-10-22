@@ -12,8 +12,9 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { SgiRestListResult, SgiRestFilter, SgiRestFilterType } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 import { TipoFinalidadModalComponent } from '../tipo-finalidad-modal/tipo-finalidad-modal.component';
 
 const MSG_ERROR = marker('csp.tipo.finalidad.listado.error');
@@ -24,6 +25,9 @@ const MSG_UPDATE = marker('csp.tipo.finalidad.actualizar');
 const MSG_DEACTIVATE = marker('csp.tipo.finalidad.desactivar');
 const MSG_SUCCESS_DEACTIVATE = marker('csp.tipo.finalidad.desactivar.correcto');
 const MSG_ERROR_DEACTIVATE = marker('csp.tipo.finalidad.desactivar.error');
+const MSG_REACTIVE = marker('csp.tipo.finalidad.reactivar');
+const MSG_SUCCESS_REACTIVE = marker('csp.tipo.finalidad.reactivar.correcto');
+const MSG_ERROR_REACTIVE = marker('csp.tipo.finalidad.reactivar.error');
 
 @Component({
   selector: 'sgi-tipo-finalidad-listado',
@@ -65,6 +69,7 @@ export class TipoFinalidadListadoComponent extends AbstractTablePaginationCompon
       nombre: new FormControl(''),
       activo: new FormControl('true')
     });
+    this.filter = this.createFilters();
     this.logger.debug(TipoFinalidadListadoComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -158,29 +163,67 @@ export class TipoFinalidadListadoComponent extends AbstractTablePaginationCompon
     );
   }
 
-  disableTipoFinalidad(tipoFinalidad: ITipoFinalidad): void {
+  /**
+   * Desactivamos un tipo finalidad
+   * @param tipoFinalidad tipo finalidad
+   */
+  deactivateTipoFinalidad(tipoFinalidad: ITipoFinalidad): void {
     this.logger.debug(TipoFinalidadListadoComponent.name,
-      `${this.disableTipoFinalidad.name}(tipoFinalidad: ${tipoFinalidad})`, 'start');
-    const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE).subscribe(
-      (accept) => {
+      `${this.deactivateTipoFinalidad.name}(tipoFinalidad: ${tipoFinalidad})`, 'start');
+    const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE)
+      .pipe(switchMap((accept) => {
         if (accept) {
-          const deleteSubcription = this.tipoFinalidadService.deleteById(tipoFinalidad.id).subscribe(
-            () => {
-              this.snackBarService.showSuccess(MSG_SUCCESS_DEACTIVATE);
-              this.loadTable();
-              this.logger.debug(TipoFinalidadListadoComponent.name,
-                `${this.disableTipoFinalidad.name}(tipoFinalidad: ${tipoFinalidad})`, 'end');
-            },
-            () => {
-              this.snackBarService.showError(MSG_ERROR_DEACTIVATE);
-              this.logger.error(TipoFinalidadListadoComponent.name,
-                `${this.disableTipoFinalidad.name}(tipoFinalidad: ${tipoFinalidad})`, 'error');
-            }
-          );
-          this.suscripciones.push(deleteSubcription);
+          return this.tipoFinalidadService.deleteById(tipoFinalidad.id);
+        } else {
+          return of();
         }
-      }
-    );
+      })).subscribe(
+        () => {
+          this.snackBarService.showSuccess(MSG_SUCCESS_DEACTIVATE);
+          this.loadTable();
+          this.logger.debug(TipoFinalidadListadoComponent.name,
+            `${this.deactivateTipoFinalidad.name}(tipoFinalidad: ${tipoFinalidad})`, 'end');
+        },
+        () => {
+          this.snackBarService.showError(MSG_ERROR_DEACTIVATE);
+          this.logger.debug(TipoFinalidadListadoComponent.name,
+            `${this.deactivateTipoFinalidad.name}(tipoFinalidad: ${tipoFinalidad})`, 'end');
+        }
+      );
     this.suscripciones.push(subcription);
   }
+
+  /**
+   * Activamos un tipo finalidad desactivado
+   * @param tipoFinalidad tipo finalidad
+   */
+  activateTipoFinalidad(tipoFinalidad: ITipoFinalidad): void {
+    this.logger.debug(TipoFinalidadListadoComponent.name,
+      `${this.activateTipoFinalidad.name}(tipoFinalidad: ${tipoFinalidad})`, 'start');
+
+    const subcription = this.dialogService.showConfirmation(MSG_REACTIVE)
+      .pipe(switchMap((accept) => {
+        if (accept) {
+          tipoFinalidad.activo = true;
+          return this.tipoFinalidadService.update(tipoFinalidad.id, tipoFinalidad);
+        } else {
+          return of();
+        }
+      })).subscribe(
+        () => {
+          this.snackBarService.showSuccess(MSG_SUCCESS_REACTIVE);
+          this.loadTable();
+          this.logger.debug(TipoFinalidadListadoComponent.name,
+            `${this.activateTipoFinalidad.name}(tipoFinalidad: ${tipoFinalidad})`, 'end');
+        },
+        () => {
+          tipoFinalidad.activo = false;
+          this.snackBarService.showError(MSG_ERROR_REACTIVE);
+          this.logger.debug(TipoFinalidadListadoComponent.name,
+            `${this.activateTipoFinalidad.name}(tipoFinalidad: ${tipoFinalidad})`, 'end');
+        }
+      );
+    this.suscripciones.push(subcription);
+  }
+
 }

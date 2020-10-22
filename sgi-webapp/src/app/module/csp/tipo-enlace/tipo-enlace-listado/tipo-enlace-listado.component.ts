@@ -12,7 +12,8 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { SgiRestListResult, SgiRestFilter, SgiRestFilterType } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, Subscription } from 'rxjs';
+import { EMPTY, Observable, of, Subscription } from 'rxjs';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 import { TipoEnlaceModalComponent } from '../tipo-enlace-modal/tipo-enlace-modal.component';
 
 const MSG_ERROR = marker('csp.tipo.enlace.listado.error');
@@ -23,6 +24,9 @@ const MSG_UPDATE = marker('csp.tipo.enlace.actualizar');
 const MSG_DEACTIVATE = marker('csp.tipo.enlace.desactivar');
 const MSG_SUCCESS_DEACTIVATE = marker('csp.tipo.enlace.desactivar.correcto');
 const MSG_ERROR_DEACTIVATE = marker('csp.tipo.enlace.desactivar.error');
+const MSG_REACTIVE = marker('csp.tipo.enlace.reactivar');
+const MSG_SUCCESS_REACTIVE = marker('csp.tipo.enlace.reactivar.correcto');
+const MSG_ERROR_REACTIVE = marker('csp.tipo.enlace.reactivar.error');
 
 @Component({
   selector: 'sgi-tipo-enlace-listado',
@@ -64,6 +68,7 @@ export class TipoEnlaceListadoComponent extends AbstractTablePaginationComponent
       nombre: new FormControl(''),
       activo: new FormControl('true')
     });
+    this.filter = this.createFilters();
     this.logger.debug(TipoEnlaceListadoComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -157,27 +162,65 @@ export class TipoEnlaceListadoComponent extends AbstractTablePaginationComponent
    * Dar de baja un registro de tipo enlace
    * @param tipoEnlace  Tipo de enlace
    */
-  disableTipoEnlace(tipoEnlace: ITipoEnlace): void {
-    this.logger.debug(TipoEnlaceListadoComponent.name, `${this.disableTipoEnlace.name}()`, 'start');
-    const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE).subscribe(
-      (accept) => {
+  deactivateTipoEnlace(tipoEnlace: ITipoEnlace): void {
+    this.logger.debug(TipoEnlaceListadoComponent.name, `${this.deactivateTipoEnlace.name}()`, 'start');
+    this.logger.debug(TipoEnlaceListadoComponent.name,
+      `${this.deactivateTipoEnlace.name}(tipoEnlace: ${tipoEnlace})`, 'start');
+    const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE)
+      .pipe(switchMap((accept) => {
         if (accept) {
-          const deleteSubcription = this.tipoEnlaceService.deleteById(tipoEnlace.id).subscribe(
-            () => {
-              this.snackBarService.showSuccess(MSG_SUCCESS_DEACTIVATE);
-              this.loadTable();
-              this.logger.debug(TipoEnlaceListadoComponent.name, `${this.disableTipoEnlace.name}()`, 'end');
-            },
-            () => {
-              this.snackBarService.showError(MSG_ERROR_DEACTIVATE);
-              this.logger.error(TipoEnlaceListadoComponent.name, `${this.disableTipoEnlace.name}()`, 'error');
-            }
-          );
-          this.suscripciones.push(deleteSubcription);
+          return this.tipoEnlaceService.deleteById(tipoEnlace.id);
+        } else {
+          return of();
         }
-      }
-    );
+      })).subscribe(
+        () => {
+          this.snackBarService.showSuccess(MSG_SUCCESS_DEACTIVATE);
+          this.loadTable();
+          this.logger.debug(TipoEnlaceListadoComponent.name,
+            `${this.deactivateTipoEnlace.name}(tipoEnlace: ${tipoEnlace})`, 'end');
+        },
+        () => {
+          this.snackBarService.showError(MSG_ERROR_DEACTIVATE);
+          this.logger.debug(TipoEnlaceListadoComponent.name,
+            `${this.deactivateTipoEnlace.name}(tipoEnlace: ${tipoEnlace})`, 'end');
+        }
+      );
     this.suscripciones.push(subcription);
   }
+
+  /**
+   * Activamos un tipo enlace desactivado
+   * @param tipoEnlace tipo enlace
+   */
+  activateTipoEnlace(tipoEnlace: ITipoEnlace): void {
+    this.logger.debug(TipoEnlaceListadoComponent.name,
+      `${this.activateTipoEnlace.name}(tipoEnlace: ${tipoEnlace})`, 'start');
+
+    const subcription = this.dialogService.showConfirmation(MSG_REACTIVE)
+      .pipe(switchMap((accept) => {
+        if (accept) {
+          tipoEnlace.activo = true;
+          return this.tipoEnlaceService.update(tipoEnlace.id, tipoEnlace);
+        } else {
+          return of();
+        }
+      })).subscribe(
+        () => {
+          this.snackBarService.showSuccess(MSG_SUCCESS_REACTIVE);
+          this.loadTable();
+          this.logger.debug(TipoEnlaceListadoComponent.name,
+            `${this.activateTipoEnlace.name}(tipoEnlace: ${tipoEnlace})`, 'end');
+        },
+        () => {
+          tipoEnlace.activo = false;
+          this.snackBarService.showError(MSG_ERROR_REACTIVE);
+          this.logger.debug(TipoEnlaceListadoComponent.name,
+            `${this.activateTipoEnlace.name}(tipoEnlace: ${tipoEnlace})`, 'end');
+        }
+      );
+    this.suscripciones.push(subcription);
+  }
+
 
 }

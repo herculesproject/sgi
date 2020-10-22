@@ -68,8 +68,13 @@
         <button mat-button matTooltip="{{'botones.evaluar' | translate}}" (click)="openModal(tipoFase)">
           <mat-icon color="primary">border_color</mat-icon>
         </button>
-        <button mat-button matTooltip="{{'botones.borrar' | translate}}" (click)="disableTipoFase(tipoFase)">
+        <button *ngIf="tipoFase.activo === true" mat-button matTooltip="{{'botones.borrar' | translate}}"
+          (click)="deactivateTipoFase(tipoFase)">
           <mat-icon color="warn">highlight_off</mat-icon>
+        </button>
+        <button *ngIf="tipoFase.activo === false" mat-button matTooltip="{{'botones.reactivar' | translate}}"
+          (click)="activateTipoFase(tipoFase)">
+          <mat-icon color="accent">add_circle_outline</mat-icon>
         </button>
       </td>
     </ng-container>

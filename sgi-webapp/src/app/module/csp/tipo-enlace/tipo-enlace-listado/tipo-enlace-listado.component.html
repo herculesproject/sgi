@@ -68,8 +68,13 @@
         <button mat-button matTooltip="{{'botones.evaluar' | translate}}" (click)="openModal(tipoEnlace)">
           <mat-icon color="primary">border_color</mat-icon>
         </button>
-        <button mat-button matTooltip="{{'botones.borrar' | translate}}" (click)="disableTipoEnlace(tipoEnlace)">
+        <button *ngIf="tipoEnlace.activo === true" mat-button matTooltip="{{'botones.borrar' | translate}}"
+          (click)="deactivateTipoEnlace(tipoEnlace)">
           <mat-icon color="warn">highlight_off</mat-icon>
+        </button>
+        <button *ngIf="tipoEnlace.activo === false" mat-button matTooltip="{{'botones.reactivar' | translate}}"
+          (click)="activateTipoEnlace(tipoEnlace)">
+          <mat-icon color="accent">add_circle_outline</mat-icon>
         </button>
       </td>
     </ng-container>

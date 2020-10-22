@@ -67,7 +67,7 @@
         <button mat-button matTooltip="{{'botones.editar' | translate}}" [routerLink]="[modeloEjecucion.id]">
           <mat-icon color="primary">border_color</mat-icon>
         </button>
-        <button mat-button matTooltip="{{'botones.desactivar' | translate}}"
+        <button *ngIf="modeloEjecucion.activo === true" mat-button matTooltip="{{'botones.desactivar' | translate}}"
           (click)="disableModeloEjecucion(modeloEjecucion)">
           <mat-icon color="warn">highlight_off</mat-icon>
         </button>

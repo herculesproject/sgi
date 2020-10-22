@@ -67,9 +67,13 @@
         <button mat-button matTooltip="{{'botones.editar' | translate}}" (click)="openModal(tipoDocumento)">
           <mat-icon color="primary">border_color</mat-icon>
         </button>
-        <button mat-button matTooltip="{{'botones.desactivar' | translate}}"
-          (click)="disableTipoDocumento(tipoDocumento)">
+        <button *ngIf="tipoDocumento.activo === true" mat-button matTooltip="{{'botones.desactivar' | translate}}"
+          (click)="deactivateTipoDocumento(tipoDocumento)">
           <mat-icon color="warn">highlight_off</mat-icon>
+        </button>
+        <button *ngIf="tipoDocumento.activo === false" mat-button matTooltip="{{'botones.reactivar' | translate}}"
+          (click)="activateTipoDocumento(tipoDocumento)">
+          <mat-icon color="accent">add_circle_outline</mat-icon>
         </button>
       </td>
     </ng-container>

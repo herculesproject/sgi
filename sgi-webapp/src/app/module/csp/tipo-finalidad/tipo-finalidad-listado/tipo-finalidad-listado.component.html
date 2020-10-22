@@ -67,9 +67,13 @@
         <button mat-button matTooltip="{{'botones.editar' | translate}}" (click)="openModal(tipoFinalidad)">
           <mat-icon color="primary">border_color</mat-icon>
         </button>
-        <button mat-button matTooltip="{{'botones.desactivar' | translate}}"
-          (click)="disableTipoFinalidad(tipoFinalidad)">
+        <button *ngIf="tipoFinalidad.activo === true" mat-button matTooltip="{{'botones.desactivar' | translate}}"
+          (click)="deactivateTipoFinalidad(tipoFinalidad)">
           <mat-icon color="warn">highlight_off</mat-icon>
+        </button>
+        <button *ngIf="tipoFinalidad.activo === false" mat-button matTooltip="{{'botones.reactivar' | translate}}"
+          (click)="activateTipoFinalidad(tipoFinalidad)">
+          <mat-icon color="accent">add_circle_outline</mat-icon>
         </button>
       </td>
     </ng-container>

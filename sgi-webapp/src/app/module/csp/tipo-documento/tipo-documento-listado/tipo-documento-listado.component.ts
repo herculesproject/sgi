@@ -12,7 +12,8 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, Subscription } from 'rxjs';
+import { EMPTY, Observable, of, Subscription } from 'rxjs';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 import { TipoDocumentoModalComponent } from '../tipo-documento-modal/tipo-documento-modal.component';
 
 const MSG_ERROR = marker('csp.tipo.documento.listado.error');
@@ -23,6 +24,9 @@ const MSG_UPDATE = marker('csp.tipo.documento.actualizar');
 const MSG_DEACTIVATE = marker('csp.tipo.documento.desactivar');
 const MSG_SUCCESS_DEACTIVATE = marker('csp.tipo.documento.desactivar.correcto');
 const MSG_ERROR_DEACTIVATE = marker('csp.tipo.documento.desactivar.error');
+const MSG_REACTIVE = marker('csp.tipo.documento.reactivar');
+const MSG_SUCCESS_REACTIVE = marker('csp.tipo.documento.reactivar.correcto');
+const MSG_ERROR_REACTIVE = marker('csp.tipo.documento.reactivar.error');
 
 @Component({
   selector: 'sgi-tipo-documento-listado',
@@ -64,6 +68,7 @@ export class TipoDocumentoListadoComponent extends AbstractTablePaginationCompon
       nombre: new FormControl(''),
       activo: new FormControl('true')
     });
+    this.filter = this.createFilters();
     this.logger.debug(TipoDocumentoListadoComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -157,29 +162,69 @@ export class TipoDocumentoListadoComponent extends AbstractTablePaginationCompon
     );
   }
 
-  disableTipoDocumento(tipoDocumento: ITipoDocumento): void {
+  /**
+   * Desactivar tipo documento
+   * @param tipoDocumento tipo documento
+   */
+  deactivateTipoDocumento(tipoDocumento: ITipoDocumento): void {
     this.logger.debug(TipoDocumentoListadoComponent.name,
-      `${this.disableTipoDocumento.name}(tipoDocumento: ${tipoDocumento})`, 'start');
-    const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE).subscribe(
-      (accept) => {
+      `${this.deactivateTipoDocumento.name}(tipoDocumento: ${tipoDocumento})`, 'start');
+    const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE)
+      .pipe(switchMap((accept) => {
         if (accept) {
-          const deleteSubcription = this.tipoDocumentoService.deleteById(tipoDocumento.id).subscribe(
-            () => {
-              this.snackBarService.showSuccess(MSG_SUCCESS_DEACTIVATE);
-              this.loadTable();
-              this.logger.debug(TipoDocumentoListadoComponent.name,
-                `${this.disableTipoDocumento.name}(tipoDocumento: ${tipoDocumento})`, 'end');
-            },
-            () => {
-              this.snackBarService.showError(MSG_ERROR_DEACTIVATE);
-              this.logger.error(TipoDocumentoListadoComponent.name,
-                `${this.disableTipoDocumento.name}(tipoDocumento: ${tipoDocumento})`, 'error');
-            }
-          );
-          this.suscripciones.push(deleteSubcription);
+          return this.tipoDocumentoService.deleteById(tipoDocumento.id);
+        } else {
+          return of();
         }
-      }
-    );
+      })).subscribe(
+        () => {
+          this.snackBarService.showSuccess(MSG_SUCCESS_DEACTIVATE);
+          this.loadTable();
+          this.logger.debug(TipoDocumentoListadoComponent.name,
+            `${this.deactivateTipoDocumento.name}(tipoDocumento: ${tipoDocumento})`, 'end');
+        },
+        () => {
+          this.snackBarService.showError(MSG_ERROR_DEACTIVATE);
+          this.logger.debug(TipoDocumentoListadoComponent.name,
+            `${this.deactivateTipoDocumento.name}(tipoDocumento: ${tipoDocumento})`, 'end');
+        }
+      );
     this.suscripciones.push(subcription);
   }
+
+  /**
+   * Activamos un tipo documento desactivado
+   * @param tipoDocumento tipo documento
+   */
+  activateTipoDocumento(tipoDocumento: ITipoDocumento): void {
+    this.logger.debug(TipoDocumentoListadoComponent.name,
+      `${this.activateTipoDocumento.name}(tipoDocumento: ${tipoDocumento})`, 'start');
+
+    const subcription = this.dialogService.showConfirmation(MSG_REACTIVE)
+      .pipe(switchMap((accept) => {
+        if (accept) {
+          tipoDocumento.activo = true;
+          return this.tipoDocumentoService.update(tipoDocumento.id, tipoDocumento);
+        } else {
+          return of();
+        }
+      })).subscribe(
+        () => {
+          this.snackBarService.showSuccess(MSG_SUCCESS_REACTIVE);
+          this.loadTable();
+          this.logger.debug(TipoDocumentoListadoComponent.name,
+            `${this.activateTipoDocumento.name}(tipoDocumento: ${tipoDocumento})`, 'end');
+        },
+        () => {
+          tipoDocumento.activo = false;
+          this.snackBarService.showError(MSG_ERROR_REACTIVE);
+          this.logger.debug(TipoDocumentoListadoComponent.name,
+            `${this.activateTipoDocumento.name}(tipoDocumento: ${tipoDocumento})`, 'end');
+        }
+      );
+    this.suscripciones.push(subcription);
+  }
+
 }
+
+
