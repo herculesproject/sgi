@@ -2,6 +2,8 @@ package org.crue.hercules.sgi.csp.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
@@ -11,16 +13,23 @@ import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEnlaceService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadGestoraService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
@@ -33,96 +42,160 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ConvocatoriaController {
 
-  /** ConvocatoriaEntidadConvocante service */
-  private final ConvocatoriaEntidadConvocanteService convocatoriaEntidadConvocanteService;
+  /** ConvocatoriaService service */
+  private final ConvocatoriaService service;
 
   /** ConvocatoriaEntidadGestora service */
   private final ConvocatoriaEntidadGestoraService convocatoriaEntidadGestoraService;
+
   /** ConvocatoriaEntidadGestora service */
   private final ConvocatoriaAreaTematicaService convocatoriaAreaTematicaService;
 
   /** ConvocatoriaEntlace service */
   private final ConvocatoriaEnlaceService convocatoriaEnlaceService;
 
+  /** ConvocatoriaEntidadConvocante service */
+  private final ConvocatoriaEntidadConvocanteService convocatoriaEntidadConvocanteService;
+
   /**
    * Instancia un nuevo ConvocatoriaController.
    * 
-   * @param convocatoriaEntidadGestoraService    {@link ConvocatoriaEntidadGestoraService}.
-   * @param convocatoriaEntidadConvocanteService {@link ConvocatoriaEntidadConvocanteService}.
+   * @param convocatoriaService                  {@link ConvocatoriaService}.
    * @param convocatoriaEntidadGestoraService    {@link ConvocatoriaEntidadGestoraService}.
    * @param convocatoriaAreaTematicaService      {@link ConvocatoriaAreaTematicaService}.
    * @param convocatoriaEnlaceService            {@link ConvocatoriaEnlaceService}
+   * @param convocatoriaEntidadConvocanteService {@link ConvocatoriaEntidadConvocanteService}.
    */
-  public ConvocatoriaController(ConvocatoriaEntidadConvocanteService convocatoriaEntidadConvocanteService,
+  public ConvocatoriaController(ConvocatoriaService convocatoriaService,
       ConvocatoriaEntidadGestoraService convocatoriaEntidadGestoraService,
       ConvocatoriaAreaTematicaService convocatoriaAreaTematicaService,
-      ConvocatoriaEnlaceService convocatoriaEnlaceService) {
-    this.convocatoriaEntidadConvocanteService = convocatoriaEntidadConvocanteService;
+      ConvocatoriaEnlaceService convocatoriaEnlaceService,
+      ConvocatoriaEntidadConvocanteService convocatoriaEntidadConvocanteService) {
+    this.service = convocatoriaService;
     this.convocatoriaEntidadGestoraService = convocatoriaEntidadGestoraService;
     this.convocatoriaAreaTematicaService = convocatoriaAreaTematicaService;
     this.convocatoriaEnlaceService = convocatoriaEnlaceService;
+    this.convocatoriaEntidadConvocanteService = convocatoriaEntidadConvocanteService;
   }
 
   /**
+   * Crea nuevo {@link Convocatoria}.
    * 
-   * CONVOCATORIA ENLACE
-   * 
+   * @param convocatoria {@link Convocatoria}. que se quiere crear.
+   * @return Nuevo {@link Convocatoria} creado.
    */
+  @PostMapping
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-C')")
+  public ResponseEntity<Convocatoria> create(@Valid @RequestBody Convocatoria convocatoria) {
+    log.debug("create(Convocatoria convocatoria) - start");
+    Convocatoria returnValue = service.create(convocatoria);
+    log.debug("create(Convocatoria convocatoria) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
+  }
 
   /**
-   * Devuelve una lista paginada y filtrada de {@link ConvocatoriaEnlace} de la
-   * {@link Convocatoria}.
+   * Actualiza {@link Convocatoria}.
    * 
-   * @param id     Identificador de {@link Convocatoria}.
-   * @param query  filtro de {@link QueryCriteria}.
-   * @param paging pageable.
+   * @param convocatoria {@link Convocatoria} a actualizar.
+   * @param id           Identificador {@link Convocatoria} a actualizar.
+   * @return Convocatoria {@link Convocatoria} actualizado
    */
-  @GetMapping("/{id}/convocatoriaenlaces")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-V')")
-  ResponseEntity<Page<ConvocatoriaEnlace>> findAllConvocatoriaEnlace(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  @PutMapping("/{id}")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-E')")
+  public Convocatoria update(@Valid @RequestBody Convocatoria convocatoria, @PathVariable Long id) {
+    log.debug("update(Convocatoria convocatoria, Long id) - start");
+    convocatoria.setId(id);
+    Convocatoria returnValue = service.update(convocatoria);
+    log.debug("update(Convocatoria convocatoria, Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Registra la {@link Convocatoria} con id indicado.
+   * 
+   * @param id Identificador de {@link Convocatoria}.
+   * @return
+   */
+  @PatchMapping("/{id}/registrar")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-E')")
+  public Convocatoria registrar(@PathVariable Long id) {
+    log.debug("registrar(Long id) - start");
+    Convocatoria returnValue = service.registrar(id);
+    log.debug("registrar(Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Desactiva {@link Convocatoria} con id indicado.
+   * 
+   * @param id Identificador de {@link Convocatoria}.
+   */
+  @DeleteMapping("/{id}")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-B')")
+  @ResponseStatus(value = HttpStatus.NO_CONTENT)
+  public void deleteById(@PathVariable Long id) {
+    log.debug("deleteById(Long id) - start");
+    service.disable(id);
+    log.debug("deleteById(Long id) - end");
+  }
+
+  /**
+   * Devuelve el {@link Convocatoria} con el id indicado.
+   * 
+   * @param id Identificador de {@link Convocatoria}.
+   * @return Convocatoria {@link Convocatoria} correspondiente al id
+   */
+  @GetMapping("/{id}")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  Convocatoria findById(@PathVariable Long id) {
+    log.debug("Convocatoria findById(Long id) - start");
+    Convocatoria returnValue = service.findById(id);
+    log.debug("Convocatoria findById(Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link Convocatoria} activas.
+   * 
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link Convocatoria} activas paginadas y
+   *         filtradas.
+   */
+  @GetMapping()
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-V')")
+  ResponseEntity<Page<Convocatoria>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllConvocatoriaEnlace(Long id, List<QueryCriteria> query, Pageable paging) - start");
-    Page<ConvocatoriaEnlace> page = convocatoriaEnlaceService.findAllByConvocatoria(id, query, paging);
+    log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
+    Page<Convocatoria> page = service.findAll(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllConvocatoriaEnlace(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-    log.debug("findAllConvocatoriaEnlace(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
   /**
+   * Devuelve una lista paginada y filtrada {@link Convocatoria}.
    * 
-   * CONVOCATORIA ENTIDAD CONVOCANTE
-   * 
-   */
-
-  /**
-   * Devuelve una lista paginada y filtrada de
-   * {@link ConvocatoriaEntidadConvocante} de la {@link Convocatoria}.
-   * 
-   * @param id     Identificador de {@link Convocatoria}.
    * @param query  filtro de {@link QueryCriteria}.
-   * @param paging pageable.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
    */
-  @GetMapping("/{id}/convocatoriaentidadconvocantes")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-V')")
-  ResponseEntity<Page<ConvocatoriaEntidadConvocante>> findAllConvocatoriaEntidadConvocantes(@PathVariable Long id,
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+  @GetMapping("/todos")
+  // @PreAuthorize("hasAuthorityForAnyUO('SYSADMIN')")
+  ResponseEntity<Page<Convocatoria>> findAllTodos(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
-    log.debug("findAllConvocatoriaEntidadConvocantes(Long id, List<QueryCriteria> query, Pageable paging) - start");
-    Page<ConvocatoriaEntidadConvocante> page = convocatoriaEntidadConvocanteService.findAllByConvocatoria(id, query,
-        paging);
+    log.debug("findAllTodos(List<QueryCriteria> query,Pageable paging) - start");
+    Page<Convocatoria> page = service.findAllTodos(query, paging);
 
     if (page.isEmpty()) {
-      log.debug("findAllConvocatoriaEntidadConvocantes(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      log.debug("findAllTodos(List<QueryCriteria> query,Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-    log.debug("findAllConvocatoriaEntidadConvocantes(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllTodos(List<QueryCriteria> query,Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -185,6 +258,69 @@ public class ConvocatoriaController {
     }
 
     log.debug("findAllConvocatoriaAreaTematica(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * 
+   * CONVOCATORIA ENLACE
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link ConvocatoriaEnlace} de la
+   * {@link Convocatoria}.
+   * 
+   * @param id     Identificador de {@link Convocatoria}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/convocatoriaenlaces")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-V')")
+  ResponseEntity<Page<ConvocatoriaEnlace>> findAllConvocatoriaEnlace(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllConvocatoriaEnlace(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<ConvocatoriaEnlace> page = convocatoriaEnlaceService.findAllByConvocatoria(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllConvocatoriaEnlace(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllConvocatoriaEnlace(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * 
+   * CONVOCATORIA ENTIDAD CONVOCANTE
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de
+   * {@link ConvocatoriaEntidadConvocante} de la {@link Convocatoria}.
+   * 
+   * @param id     Identificador de {@link Convocatoria}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/convocatoriaentidadconvocantes")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-V')")
+  ResponseEntity<Page<ConvocatoriaEntidadConvocante>> findAllConvocatoriaEntidadConvocantes(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllConvocatoriaEntidadConvocantes(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<ConvocatoriaEntidadConvocante> page = convocatoriaEntidadConvocanteService.findAllByConvocatoria(id, query,
+        paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllConvocatoriaEntidadConvocantes(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllConvocatoriaEntidadConvocantes(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

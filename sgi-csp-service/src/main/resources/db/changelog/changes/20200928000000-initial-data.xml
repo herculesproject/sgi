@@ -2,7 +2,7 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
   <!-- ########################################################## -->
-  <!-- ENUMERATION -->
+  <!-- START FIXED DATA -->
   <!-- ########################################################## -->
 
   <changeSet author="master" id="20200928000000-tipo_origen_fuente_financiacion">
@@ -28,38 +28,9 @@
   </changeSet>
 
   <!-- ########################################################## -->
-  <!-- FIN ENUMERATION -->
+  <!-- END FIXED DATA -->
   <!-- ########################################################## -->
 
-  <changeSet author="master" id="20200928000000-convocatoria">
-    <insert tableName="convocatoria">
-      <column name="codigo" value="codigo-001" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="convocatoria">
-      <column name="codigo" value="codigo-002" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="convocatoria">
-      <column name="codigo" value="codigo-003" />
-      <column name="activo" value="true" />
-    </insert>
-  </changeSet>
-
-  <changeSet author="master" id="20200928000000-convocatoria_entidad_gestora">
-    <insert tableName="convocatoria_entidad_gestora">
-      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
-      <column name="entidad_ref" value="entidad-001" />
-    </insert>
-    <insert tableName="convocatoria_entidad_gestora">
-      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
-      <column name="entidad_ref" value="entidad-002" />
-    </insert>
-    <insert tableName="convocatoria_entidad_gestora">
-      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-003')"></column>
-      <column name="entidad_ref" value="entidad-003" />
-    </insert>
-  </changeSet>
 
   <changeSet author="master" id="20200928000000-listado_area_tematica">
     <insert tableName="listado_area_tematica">
@@ -120,24 +91,6 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-convocatoria_area_tematica">
-    <insert tableName="convocatoria_area_tematica">
-      <column name="area_tematica_id" valueComputed="(select id from csp.area_tematica_arbol where nombre = 'nombre-001')"></column>
-      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
-      <column name="observaciones" value="Observaciones AAA" />
-    </insert>
-    <insert tableName="convocatoria_area_tematica">
-      <column name="area_tematica_id" valueComputed="(select id from csp.area_tematica_arbol where nombre = 'nombre-002')"></column>
-      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
-      <column name="observaciones" value="Observaciones BBB" />
-    </insert>
-    <insert tableName="convocatoria_area_tematica">
-      <column name="area_tematica_id" valueComputed="(select id from csp.area_tematica_arbol where nombre = 'nombre-003')"></column>
-      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-003')"></column>
-      <column name="observaciones" value="Observaciones CCC" />
-    </insert>
-  </changeSet>
-
   <changeSet author="master" id="20200928000000-modelo_ejecucion">
     <insert tableName="modelo_ejecucion">
       <column name="nombre" value="nombre-001" />
@@ -164,12 +117,12 @@
     </insert>
     <insert tableName="modelo_unidad">
       <column name="unidad_gestion_ref" value="unidad-002" />
-      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')"></column>
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-002')"></column>
       <column name="activo" value="false" />
     </insert>
     <insert tableName="modelo_unidad">
       <column name="unidad_gestion_ref" value="unidad-003" />
-      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')"></column>
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-003')"></column>
       <column name="activo" value="true" />
     </insert>
     <insert tableName="modelo_unidad">
@@ -178,8 +131,8 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="modelo_unidad">
-      <column name="unidad_gestion_ref" value="unidad-004" />
-      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-002')"></column>
+      <column name="unidad_gestion_ref" value="unidad-2" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')"></column>
       <column name="activo" value="true" />
     </insert>
   </changeSet>
@@ -230,24 +183,6 @@
       <column name="plan_id" valueComputed="(select id from csp.plan where nombre = 'nombre-001')" />
       <column name="programa_padre_id" value="null" />
       <column name="activo" value="true" />
-    </insert>
-  </changeSet>
-
-  <changeSet author="master" id="20200928000000-convocatoria_entidad_convocante">
-    <insert tableName="convocatoria_entidad_convocante">
-      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
-      <column name="entidad_ref" value="entidad-001" />
-      <column name="programa_id" valueComputed="(select id from csp.programa where nombre = 'nombre-001')"></column>
-    </insert>
-    <insert tableName="convocatoria_entidad_convocante">
-      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
-      <column name="entidad_ref" value="entidad-002" />
-      <column name="programa_id" valueComputed="(select id from csp.programa where nombre = 'nombre-001')"></column>
-    </insert>
-    <insert tableName="convocatoria_entidad_convocante">
-      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-003')"></column>
-      <column name="entidad_ref" value="entidad-003" />
-      <column name="programa_id" valueComputed="(select id from csp.programa where nombre = 'nombre-001')"></column>
     </insert>
   </changeSet>
 
@@ -345,27 +280,6 @@
       <column name="nombre" value="tipo_enlace EEE" />
       <column name="descripcion" value="tipo_enlace EEE" />
       <column name="activo" value="false" />
-    </insert>
-  </changeSet>
-
-  <changeSet author="master" id="20201016000000-convocatoria_enlace">
-    <insert tableName="convocatoria_enlace">
-      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
-      <column name="url" value="www.url1.com" />
-      <column name="descripcion" value="descripcion1" />
-      <column name="tipo_enlace_id" valueComputed="(select id from csp.tipo_enlace where nombre = 'tipo_enlace AAA')"></column>
-    </insert>
-    <insert tableName="convocatoria_enlace">
-      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
-      <column name="url" value="www.url2.com" />
-      <column name="descripcion" value="descripcion2" />
-      <column name="tipo_enlace_id" valueComputed="(select id from csp.tipo_enlace where nombre = 'tipo_enlace BBB')"></column>
-    </insert>
-    <insert tableName="convocatoria_enlace">
-      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-003')"></column>
-      <column name="url" value="www.url3.com" />
-      <column name="descripcion" value="descripcion3" />
-      <column name="tipo_enlace_id" valueComputed="(select id from csp.tipo_enlace where nombre = 'tipo_enlace CCC')"></column>
     </insert>
   </changeSet>
 
@@ -622,5 +536,149 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-convocatoria">
+    <insert tableName="convocatoria">
+      <column name="unidad_gestion_ref" value="unidad-001" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')" />
+      <column name="codigo" value="codigo-001" />
+      <column name="anio" value="2020" />
+      <column name="titulo" value="titulo-001" />
+      <column name="objeto" value="objeto-001" />
+      <column name="observaciones" value="observaciones-001" />
+      <column name="tipo_finalidad_id" valueComputed="(select t.id from csp.modelo_tipo_finalidad m join csp.tipo_finalidad t on m.tipo_finalidad_id = t.id where t.nombre like '% AAA' limit 1)" />
+      <column name="tipo_regimen_concurrencia_id" valueComputed="(select id from csp.tipo_regimen_concurrencia where nombre = 'Concesión directa')" />
+      <column name="destinatarios" value="Individual" />
+      <column name="colaborativos" value="false" />
+      <column name="estado_actual" value="Registrada" />
+      <column name="duracion" value="12" />
+      <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'nombre-001')" />
+      <column name="clasificacion_cvn" value="Ayudas y becas" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="convocatoria">
+      <column name="unidad_gestion_ref" value="unidad-002" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-002')" />
+      <column name="codigo" value="codigo-002" />
+      <column name="anio" value="2020" />
+      <column name="titulo" value="titulo-002" />
+      <column name="objeto" value="objeto-002" />
+      <column name="observaciones" value="observaciones-002" />
+      <column name="tipo_finalidad_id" valueComputed="(select t.id from csp.modelo_tipo_finalidad m join csp.tipo_finalidad t on m.tipo_finalidad_id = t.id where t.nombre like '% BBB' limit 1)" />
+      <column name="tipo_regimen_concurrencia_id" valueComputed="(select id from csp.tipo_regimen_concurrencia where nombre = 'Concesión directa')" />
+      <column name="destinatarios" value="Equipo de proyecto" />
+      <column name="colaborativos" value="true" />
+      <column name="estado_actual" value="Registrada" />
+      <column name="duracion" value="12" />
+      <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'nombre-002')" />
+      <column name="clasificacion_cvn" value="Contratos, convenios, proyectos no competitivos" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="convocatoria">
+      <column name="unidad_gestion_ref" value="unidad-003" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-003')" />
+      <column name="codigo" value="codigo-003" />
+      <column name="anio" value="2020" />
+      <column name="titulo" value="titulo-003" />
+      <column name="objeto" value="objeto-003" />
+      <column name="observaciones" value="observaciones-003" />
+      <column name="tipo_finalidad_id" valueComputed="(select t.id from csp.modelo_tipo_finalidad m join csp.tipo_finalidad t on m.tipo_finalidad_id = t.id where t.nombre like '% CCC' limit 1)" />
+      <column name="tipo_regimen_concurrencia_id" valueComputed="(select id from csp.tipo_regimen_concurrencia where nombre = 'Concurrencia competitiva')" />
+      <column name="destinatarios" value="Grupo de investigación" />
+      <column name="colaborativos" value="true" />
+      <column name="estado_actual" value="Borrador" />
+      <column name="duracion" value="24" />
+      <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'nombre-003')" />
+      <column name="clasificacion_cvn" value="Proyectos competitivos" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="convocatoria">
+      <column name="unidad_gestion_ref" value="unidad-001" />
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')" />
+      <column name="codigo" value="codigo-004" />
+      <column name="anio" value="2021" />
+      <column name="titulo" value="titulo-004" />
+      <column name="objeto" value="objeto-004" />
+      <column name="observaciones" value="observaciones-004" />
+      <column name="tipo_finalidad_id" valueComputed="(select t.id from csp.modelo_tipo_finalidad m join csp.tipo_finalidad t on m.tipo_finalidad_id = t.id where t.nombre like '% DDD' limit 1)" />
+      <column name="destinatarios" value="Individual" />
+      <column name="colaborativos" value="true" />
+      <column name="estado_actual" value="Borrador" />
+      <column name="duracion" value="24" />
+      <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'nombre-002')" />
+      <column name="activo" value="false" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-convocatoria_area_tematica">
+    <insert tableName="convocatoria_area_tematica">
+      <column name="area_tematica_id" valueComputed="(select id from csp.area_tematica_arbol where nombre = 'nombre-001')"></column>
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
+      <column name="observaciones" value="Observaciones AAA" />
+    </insert>
+    <insert tableName="convocatoria_area_tematica">
+      <column name="area_tematica_id" valueComputed="(select id from csp.area_tematica_arbol where nombre = 'nombre-002')"></column>
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
+      <column name="observaciones" value="Observaciones BBB" />
+    </insert>
+    <insert tableName="convocatoria_area_tematica">
+      <column name="area_tematica_id" valueComputed="(select id from csp.area_tematica_arbol where nombre = 'nombre-003')"></column>
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-003')"></column>
+      <column name="observaciones" value="Observaciones CCC" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20201016000000-convocatoria_enlace">
+    <insert tableName="convocatoria_enlace">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
+      <column name="url" value="www.url1.com" />
+      <column name="descripcion" value="descripcion1" />
+      <column name="tipo_enlace_id" valueComputed="(select id from csp.tipo_enlace where nombre = 'tipo_enlace AAA')"></column>
+    </insert>
+    <insert tableName="convocatoria_enlace">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
+      <column name="url" value="www.url2.com" />
+      <column name="descripcion" value="descripcion2" />
+      <column name="tipo_enlace_id" valueComputed="(select id from csp.tipo_enlace where nombre = 'tipo_enlace BBB')"></column>
+    </insert>
+    <insert tableName="convocatoria_enlace">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-003')"></column>
+      <column name="url" value="www.url3.com" />
+      <column name="descripcion" value="descripcion3" />
+      <column name="tipo_enlace_id" valueComputed="(select id from csp.tipo_enlace where nombre = 'tipo_enlace CCC')"></column>
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-convocatoria_entidad_convocante">
+    <insert tableName="convocatoria_entidad_convocante">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
+      <column name="entidad_ref" value="entidad-001" />
+      <column name="programa_id" valueComputed="(select id from csp.programa where nombre = 'nombre-001')"></column>
+    </insert>
+    <insert tableName="convocatoria_entidad_convocante">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
+      <column name="entidad_ref" value="entidad-002" />
+      <column name="programa_id" valueComputed="(select id from csp.programa where nombre = 'nombre-001')"></column>
+    </insert>
+    <insert tableName="convocatoria_entidad_convocante">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-003')"></column>
+      <column name="entidad_ref" value="entidad-003" />
+      <column name="programa_id" valueComputed="(select id from csp.programa where nombre = 'nombre-001')"></column>
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-convocatoria_entidad_gestora">
+    <insert tableName="convocatoria_entidad_gestora">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
+      <column name="entidad_ref" value="entidad-001" />
+    </insert>
+    <insert tableName="convocatoria_entidad_gestora">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
+      <column name="entidad_ref" value="entidad-002" />
+    </insert>
+    <insert tableName="convocatoria_entidad_gestora">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-003')"></column>
+      <column name="entidad_ref" value="entidad-003" />
+    </insert>
+  </changeSet>
 
 </databaseChangeLog>

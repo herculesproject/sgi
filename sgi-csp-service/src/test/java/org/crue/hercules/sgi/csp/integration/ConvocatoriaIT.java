@@ -5,11 +5,19 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.ClasificacionCVNEnum;
+import org.crue.hercules.sgi.csp.enums.TipoDestinatarioEnum;
+import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
+import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
+import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
+import org.crue.hercules.sgi.csp.model.TipoFinalidad;
+import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
 import org.junit.jupiter.api.Test;
@@ -41,21 +49,290 @@ public class ConvocatoriaIT {
   private TokenBuilder tokenBuilder;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String PATH_ENTIDAD_CONVOCANTE = "/convocatoriaentidadconvocantes";
+  private static final String PATH_PARAMETER_REGISTRAR = "/registrar";
+  private static final String PATH_PARAMETER_TODOS = "/todos";
+  private static final String CONTROLLER_BASE_PATH = "/convocatorias";
   private static final String PATH_ENTIDAD_GESTORA = "/convocatoriaentidadgestoras";
   private static final String PATH_AREA_TEMATICA = "/convocatoriaareatematicas";
-  private static final String CONTROLLER_BASE_PATH = "/convocatorias";
   private static final String PATH_ENTIDAD_ENLACES = "/convocatoriaenlaces";
+  private static final String PATH_ENTIDAD_CONVOCANTE = "/convocatoriaentidadconvocantes";
 
-  private HttpEntity<ModeloEjecucion> buildRequest(HttpHeaders headers, ModeloEjecucion entity) throws Exception {
+  private HttpEntity<Convocatoria> buildRequest(HttpHeaders headers, Convocatoria entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENTGES-V", "CSP-CATEM-V")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "SYSADMIN", "CSP-TFAS-B",
+        "CSP-TFAS-C", "CSP-TFAS-E", "CSP-TFAS-V", "CSP-CENTGES-V", "CSP-CATEM-V")));
 
-    HttpEntity<ModeloEjecucion> request = new HttpEntity<>(entity, headers);
+    HttpEntity<Convocatoria> request = new HttpEntity<>(entity, headers);
     return request;
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void create_ReturnsConvocatoria() throws Exception {
+
+    // given: new Convocatoria
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setId(null);
+
+    // when: create Convocatoria
+    final ResponseEntity<Convocatoria> response = restTemplate.exchange(CONTROLLER_BASE_PATH, HttpMethod.POST,
+        buildRequest(null, convocatoria), Convocatoria.class);
+
+    // then: new Convocatoria is created
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    Convocatoria responseData = response.getBody();
+    Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
+    Assertions.assertThat(responseData.getUnidadGestionRef()).as("getUnidadGestionRef()")
+        .isEqualTo(convocatoria.getUnidadGestionRef());
+    Assertions.assertThat(responseData.getModeloEjecucion().getId()).as("getModeloEjecucion().getId()")
+        .isEqualTo(convocatoria.getModeloEjecucion().getId());
+    Assertions.assertThat(responseData.getCodigo()).as("getCodigo()").isEqualTo(convocatoria.getCodigo());
+    Assertions.assertThat(responseData.getAnio()).as("getAnio()").isEqualTo(convocatoria.getAnio());
+    Assertions.assertThat(responseData.getTitulo()).as("getTitulo()").isEqualTo(convocatoria.getTitulo());
+    Assertions.assertThat(responseData.getObjeto()).as("getObjeto()").isEqualTo(convocatoria.getObjeto());
+    Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
+        .isEqualTo(convocatoria.getObservaciones());
+    Assertions.assertThat(responseData.getFinalidad().getId()).as("getFinalidad().getId()")
+        .isEqualTo(convocatoria.getFinalidad().getId());
+    Assertions.assertThat(responseData.getRegimenConcurrencia().getId()).as("getRegimenConcurrencia().getId()")
+        .isEqualTo(convocatoria.getRegimenConcurrencia().getId());
+    Assertions.assertThat(responseData.getDestinatarios()).as("getDestinatarios()")
+        .isEqualTo(convocatoria.getDestinatarios());
+    Assertions.assertThat(responseData.getColaborativos()).as("getColaborativos()")
+        .isEqualTo(convocatoria.getColaborativos());
+    Assertions.assertThat(responseData.getEstadoActual()).as("getEstadoActual()")
+        .isEqualTo(TipoEstadoConvocatoriaEnum.BORRADOR);
+    Assertions.assertThat(responseData.getDuracion()).as("getDuracion()").isEqualTo(convocatoria.getDuracion());
+    Assertions.assertThat(responseData.getAmbitoGeografico().getId()).as("getAmbitoGeografico().getId()")
+        .isEqualTo(convocatoria.getAmbitoGeografico().getId());
+    Assertions.assertThat(responseData.getClasificacionCVN()).as("getClasificacionCVN()")
+        .isEqualTo(convocatoria.getClasificacionCVN());
+    Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void update_ReturnsConvocatoria() throws Exception {
+
+    // given: existing Convocatoria to be updated
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setCodigo("codigo-modificado");
+    convocatoria.setTitulo("titulo-modificado");
+    convocatoria.setObservaciones("observaciones-modifcadas");
+
+    // when: update Convocatoria
+    final ResponseEntity<Convocatoria> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.PUT, buildRequest(null, convocatoria), Convocatoria.class, convocatoria.getId());
+
+    // then: Convocatoria is updated
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Convocatoria responseData = response.getBody();
+    Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(convocatoria.getId());
+    Assertions.assertThat(responseData.getUnidadGestionRef()).as("getUnidadGestionRef()")
+        .isEqualTo(convocatoria.getUnidadGestionRef());
+    Assertions.assertThat(responseData.getModeloEjecucion().getId()).as("getModeloEjecucion().getId()")
+        .isEqualTo(convocatoria.getModeloEjecucion().getId());
+    Assertions.assertThat(responseData.getCodigo()).as("getCodigo()").isEqualTo(convocatoria.getCodigo());
+    Assertions.assertThat(responseData.getAnio()).as("getAnio()").isEqualTo(convocatoria.getAnio());
+    Assertions.assertThat(responseData.getTitulo()).as("getTitulo()").isEqualTo(convocatoria.getTitulo());
+    Assertions.assertThat(responseData.getObjeto()).as("getObjeto()").isEqualTo(convocatoria.getObjeto());
+    Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
+        .isEqualTo(convocatoria.getObservaciones());
+    Assertions.assertThat(responseData.getFinalidad().getId()).as("getFinalidad().getId()")
+        .isEqualTo(convocatoria.getFinalidad().getId());
+    Assertions.assertThat(responseData.getRegimenConcurrencia().getId()).as("getRegimenConcurrencia().getId()")
+        .isEqualTo(convocatoria.getRegimenConcurrencia().getId());
+    Assertions.assertThat(responseData.getDestinatarios()).as("getDestinatarios()")
+        .isEqualTo(convocatoria.getDestinatarios());
+    Assertions.assertThat(responseData.getColaborativos()).as("getColaborativos()")
+        .isEqualTo(convocatoria.getColaborativos());
+    Assertions.assertThat(responseData.getEstadoActual()).as("getEstadoActual()")
+        .isEqualTo(convocatoria.getEstadoActual());
+    Assertions.assertThat(responseData.getDuracion()).as("getDuracion()").isEqualTo(convocatoria.getDuracion());
+    Assertions.assertThat(responseData.getAmbitoGeografico().getId()).as("getAmbitoGeografico().getId()")
+        .isEqualTo(convocatoria.getAmbitoGeografico().getId());
+    Assertions.assertThat(responseData.getClasificacionCVN()).as("getClasificacionCVN()")
+        .isEqualTo(convocatoria.getClasificacionCVN());
+    Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(convocatoria.getActivo());
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void registrar_ReturnsConvocatoria() throws Exception {
+    // given: existing Convocatoria id to registrar
+    Long convocatoriaId = 1L;
+
+    // when: registrar Convocatoria
+    final ResponseEntity<Convocatoria> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REGISTRAR, HttpMethod.PATCH, buildRequest(null, null),
+        Convocatoria.class, convocatoriaId);
+
+    // then: Convocatoria is updated
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Convocatoria convocatoriaRegistrada = response.getBody();
+    Assertions.assertThat(convocatoriaRegistrada.getId()).as("getId()").isEqualTo(convocatoriaId);
+    Assertions.assertThat(convocatoriaRegistrada.getEstadoActual()).as("getEstadoActual()")
+        .isEqualTo(TipoEstadoConvocatoriaEnum.REGISTRADA);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void delete_Return204() throws Exception {
+    // given: existing Convocatoria to be disabled
+    Long id = 1L;
+
+    // when: disable Convocatoria
+    final ResponseEntity<Convocatoria> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.DELETE, buildRequest(null, null), Convocatoria.class, id);
+
+    // then: Convocatoria is disabled
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findById_ReturnsConvocatoria() throws Exception {
+    Long id = 1L;
+
+    final ResponseEntity<Convocatoria> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
+        HttpMethod.GET, buildRequest(null, null), Convocatoria.class, id);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    Convocatoria responseData = response.getBody();
+    Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(id);
+
+    Assertions.assertThat(responseData.getUnidadGestionRef()).as("getUnidadGestionRef()").isEqualTo("unidad-001");
+    Assertions.assertThat(responseData.getModeloEjecucion().getId()).as("getModeloEjecucion().getId()").isEqualTo(1L);
+    Assertions.assertThat(responseData.getCodigo()).as("getCodigo()").isEqualTo("codigo-001");
+    Assertions.assertThat(responseData.getAnio()).as("getAnio()").isEqualTo(2020);
+    Assertions.assertThat(responseData.getTitulo()).as("getTitulo()").isEqualTo("titulo-001");
+    Assertions.assertThat(responseData.getObjeto()).as("getObjeto()").isEqualTo("objeto-001");
+    Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()").isEqualTo("observaciones-001");
+    Assertions.assertThat(responseData.getFinalidad().getId()).as("getFinalidad().getId()").isEqualTo(1L);
+    Assertions.assertThat(responseData.getRegimenConcurrencia().getId()).as("getRegimenConcurrencia().getId()")
+        .isEqualTo(1L);
+    Assertions.assertThat(responseData.getDestinatarios()).as("getDestinatarios()")
+        .isEqualTo(TipoDestinatarioEnum.INDIVIDUAL);
+    Assertions.assertThat(responseData.getColaborativos()).as("getColaborativos()").isEqualTo(Boolean.TRUE);
+    Assertions.assertThat(responseData.getEstadoActual()).as("getEstadoActual()")
+        .isEqualTo(TipoEstadoConvocatoriaEnum.REGISTRADA);
+    Assertions.assertThat(responseData.getDuracion()).as("getDuracion()").isEqualTo(12);
+    Assertions.assertThat(responseData.getAmbitoGeografico().getId()).as("getAmbitoGeografico().getId()").isEqualTo(1L);
+    Assertions.assertThat(responseData.getClasificacionCVN()).as("getClasificacionCVN()")
+        .isEqualTo(ClasificacionCVNEnum.AYUDAS);
+    Assertions.assertThat(responseData.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAll_WithPagingSortingAndFiltering_ReturnsConvocatoriaSubList() throws Exception {
+
+    // given: data for Convocatoria
+
+    // first page, 3 elements per page sorted by nombre desc
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    String sort = "codigo-";
+    String filter = "titulo~%00%";
+
+    // when: find Convocatoria
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
+        .build(false).toUri();
+    final ResponseEntity<List<Convocatoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Convocatoria>>() {
+        });
+
+    // given: Convocatoria data filtered and sorted
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Convocatoria> responseData = response.getBody();
+    Assertions.assertThat(responseData.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(responseData.get(0).getCodigo()).as("get(0).getCodigo())")
+        .isEqualTo("codigo-" + String.format("%03d", 3));
+    Assertions.assertThat(responseData.get(1).getCodigo()).as("get(1).getCodigo())")
+        .isEqualTo("codigo-" + String.format("%03d", 2));
+    Assertions.assertThat(responseData.get(2).getCodigo()).as("get(2).getCodigo())")
+        .isEqualTo("codigo-" + String.format("%03d", 1));
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllTodos_WithPagingSortingAndFiltering_ReturnsConvocatoriaSubList() throws Exception {
+
+    // given: data for Convocatoria
+
+    // first page, 3 elements per page sorted by nombre desc
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    String sort = "codigo-";
+    String filter = "titulo~%00%";
+
+    // when: find Convocatoria
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_TODOS).queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
+    final ResponseEntity<List<Convocatoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Convocatoria>>() {
+        });
+
+    // given: Convocatoria data filtered and sorted
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Convocatoria> responseData = response.getBody();
+    Assertions.assertThat(responseData.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(responseData.get(0).getCodigo()).as("get(0).getCodigo())")
+        .isEqualTo("codigo-" + String.format("%03d", 6));
+    Assertions.assertThat(responseData.get(1).getCodigo()).as("get(1).getCodigo())")
+        .isEqualTo("codigo-" + String.format("%03d", 2));
+    Assertions.assertThat(responseData.get(2).getCodigo()).as("get(2).getCodigo())")
+        .isEqualTo("codigo-" + String.format("%03d", 1));
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllTodos_EmptyList_Returns204() throws Exception {
+
+    // given: no data for Convocatoria
+    // when: find Convocatoria
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    String sort = "codigo-";
+    String filter = "titulo~%00%";
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_TODOS).queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
+
+    final ResponseEntity<List<Convocatoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Convocatoria>>() {
+        });
+
+    // then: 204 no content
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
   }
 
   /**
@@ -228,6 +505,86 @@ public class ConvocatoriaIT {
         .isEqualTo("descripcion-" + String.format("%03d", 2));
     Assertions.assertThat(convocatoriasEnlaces.get(2).getDescripcion()).as("get(2).getDescripcion()")
         .isEqualTo("descripcion-" + String.format("%03d", 1));
+  }
+
+  /**
+   * 
+   * MOCK
+   * 
+   */
+
+  /**
+   * Función que genera Convocatoria
+   * 
+   * @param convocatoriaId
+   * @param unidadGestionId
+   * @param modeloEjecucionId
+   * @param modeloTipoFinalidadId
+   * @param tipoRegimenConcurrenciaId
+   * @param tipoAmbitoGeogragicoId
+   * @param activo
+   * @return la convocatoria
+   */
+  private Convocatoria generarMockConvocatoria(Long convocatoriaId, Long unidadGestionId, Long modeloEjecucionId,
+      Long modeloTipoFinalidadId, Long tipoRegimenConcurrenciaId, Long tipoAmbitoGeogragicoId, Boolean activo) {
+
+    ModeloEjecucion modeloEjecucion = (modeloEjecucionId == null) ? null
+        : ModeloEjecucion.builder()//
+            .id(modeloEjecucionId)//
+            .nombre("nombreModeloEjecucion-" + String.format("%03d", modeloEjecucionId))//
+            .activo(Boolean.TRUE)//
+            .build();
+
+    TipoFinalidad tipoFinalidad = (modeloTipoFinalidadId == null) ? null
+        : TipoFinalidad.builder()//
+            .id(modeloTipoFinalidadId)//
+            .nombre("nombreTipoFinalidad-" + String.format("%03d", modeloTipoFinalidadId))//
+            .activo(Boolean.TRUE)//
+            .build();
+
+    ModeloTipoFinalidad modeloTipoFinalidad = (modeloTipoFinalidadId == null) ? null
+        : ModeloTipoFinalidad.builder()//
+            .id(modeloTipoFinalidadId)//
+            .modeloEjecucion(modeloEjecucion)//
+            .tipoFinalidad(tipoFinalidad)//
+            .activo(Boolean.TRUE)//
+            .build();
+
+    TipoRegimenConcurrencia tipoRegimenConcurrencia = (tipoRegimenConcurrenciaId == null) ? null
+        : TipoRegimenConcurrencia.builder()//
+            .id(tipoRegimenConcurrenciaId)//
+            .nombre("nombreTipoRegimenConcurrencia-" + String.format("%03d", tipoRegimenConcurrenciaId))//
+            .activo(Boolean.TRUE)//
+            .build();
+
+    TipoAmbitoGeografico tipoAmbitoGeografico = (tipoAmbitoGeogragicoId == null) ? null
+        : TipoAmbitoGeografico.builder()//
+            .id(tipoAmbitoGeogragicoId)//
+            .nombre("nombreTipoAmbitoGeografico-" + String.format("%03d", tipoAmbitoGeogragicoId))//
+            .activo(Boolean.TRUE)//
+            .build();
+
+    Convocatoria convocatoria = Convocatoria.builder()//
+        .id(convocatoriaId)//
+        .unidadGestionRef((unidadGestionId == null) ? null : "unidad-" + String.format("%03d", unidadGestionId))//
+        .modeloEjecucion(modeloEjecucion)//
+        .codigo("codigo-" + String.format("%03d", convocatoriaId))//
+        .anio(2020)//
+        .titulo("titulo-" + String.format("%03d", convocatoriaId))//
+        .objeto("objeto-" + String.format("%03d", convocatoriaId))//
+        .observaciones("observaciones-" + String.format("%03d", convocatoriaId))//
+        .finalidad((modeloTipoFinalidad == null) ? null : modeloTipoFinalidad.getTipoFinalidad())//
+        .regimenConcurrencia(tipoRegimenConcurrencia)//
+        .destinatarios(TipoDestinatarioEnum.INDIVIDUAL)//
+        .colaborativos(Boolean.TRUE)//
+        .estadoActual(TipoEstadoConvocatoriaEnum.REGISTRADA)//
+        .duracion(12)//
+        .ambitoGeografico(tipoAmbitoGeografico)//
+        .clasificacionCVN(ClasificacionCVNEnum.AYUDAS)//
+        .activo(activo)//
+        .build();
+
+    return convocatoria;
   }
 
 }

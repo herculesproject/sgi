@@ -144,5 +144,4 @@ public class TipoHitoController {
     tipoHitoService.disable(id);
     log.debug("deleteById(Long id) - start");
   }
-
 }

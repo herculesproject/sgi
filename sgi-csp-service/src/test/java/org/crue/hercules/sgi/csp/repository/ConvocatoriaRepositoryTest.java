@@ -7,7 +7,6 @@ import org.crue.hercules.sgi.csp.enums.ClasificacionCVNEnum;
 import org.crue.hercules.sgi.csp.enums.TipoDestinatarioEnum;
 import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
@@ -19,60 +18,64 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 @DataJpaTest
-public class ConvocatoriaEntidadGestoraRepositoryTest {
+public class ConvocatoriaRepositoryTest {
 
   @Autowired
   private TestEntityManager entityManager;
 
   @Autowired
-  private ConvocatoriaEntidadGestoraRepository repository;
+  private ConvocatoriaRepository repository;
 
   @Test
-  public void findByConvocatoriaIdIdAndEntidadRef_ReturnsConvocatoriaEntidadGestora() throws Exception {
-    // given: data ConvocatoriaEntidadGestora to find by Convocatoria and
-    // EntidadRef
-    ConvocatoriaEntidadGestora convocatoriaEntidadGestora1 = generarConvocatoriaEntidadGestora("-001");
-    generarConvocatoriaEntidadGestora("-002");
+  public void findByCodigo_ReturnsConvocatoria() throws Exception {
+    // given: data Convocatoria with codigo to find
+    Convocatoria convocatoria = generarMockConvocatoria("-001");
 
-    Long convocatoriaIdBuscado = convocatoriaEntidadGestora1.getConvocatoria().getId();
-    String entidadRefBuscado = convocatoriaEntidadGestora1.getEntidadRef();
+    // when: find given codigo
+    Convocatoria dataFound = repository.findByCodigo(convocatoria.getCodigo()).get();
 
-    // when: find by by Convocatoria and EntidadRef
-    ConvocatoriaEntidadGestora dataFound = repository
-        .findByConvocatoriaIdAndEntidadRef(convocatoriaIdBuscado, entidadRefBuscado).get();
-
-    // then: ConvocatoriaEntidadGestora is found
+    // then: Convocatoria with given codigo is found
     Assertions.assertThat(dataFound).isNotNull();
-    Assertions.assertThat(dataFound.getId()).isEqualTo(convocatoriaEntidadGestora1.getId());
-    Assertions.assertThat(dataFound.getConvocatoria().getId())
-        .isEqualTo(convocatoriaEntidadGestora1.getConvocatoria().getId());
-    Assertions.assertThat(dataFound.getEntidadRef()).isEqualTo(convocatoriaEntidadGestora1.getEntidadRef());
+    Assertions.assertThat(dataFound.getId()).isEqualTo(convocatoria.getId());
+    Assertions.assertThat(dataFound.getUnidadGestionRef()).isEqualTo(convocatoria.getUnidadGestionRef());
+    Assertions.assertThat(dataFound.getModeloEjecucion().getId()).isEqualTo(convocatoria.getModeloEjecucion().getId());
+    Assertions.assertThat(dataFound.getCodigo()).isEqualTo(convocatoria.getCodigo());
+    Assertions.assertThat(dataFound.getAnio()).isEqualTo(convocatoria.getAnio());
+    Assertions.assertThat(dataFound.getTitulo()).isEqualTo(convocatoria.getTitulo());
+    Assertions.assertThat(dataFound.getObjeto()).isEqualTo(convocatoria.getObjeto());
+    Assertions.assertThat(dataFound.getObservaciones()).isEqualTo(convocatoria.getObservaciones());
+    Assertions.assertThat(dataFound.getFinalidad().getId()).isEqualTo(convocatoria.getFinalidad().getId());
+    Assertions.assertThat(dataFound.getRegimenConcurrencia().getId())
+        .isEqualTo(convocatoria.getRegimenConcurrencia().getId());
+    Assertions.assertThat(dataFound.getDestinatarios()).isEqualTo(convocatoria.getDestinatarios());
+    Assertions.assertThat(dataFound.getColaborativos()).isEqualTo(convocatoria.getColaborativos());
+    Assertions.assertThat(dataFound.getEstadoActual()).isEqualTo(convocatoria.getEstadoActual());
+    Assertions.assertThat(dataFound.getDuracion()).isEqualTo(convocatoria.getDuracion());
+    Assertions.assertThat(dataFound.getAmbitoGeografico().getId())
+        .isEqualTo(convocatoria.getAmbitoGeografico().getId());
+    Assertions.assertThat(dataFound.getClasificacionCVN()).isEqualTo(convocatoria.getClasificacionCVN());
+    Assertions.assertThat(dataFound.getActivo()).isEqualTo(convocatoria.getActivo());
   }
 
   @Test
-  public void findByModeloEjecucionIdAndTipoFinalidadId_ReturnsNull() throws Exception {
-    // given: data ConvocatoriaEntidadGestora to find by Convocatoria and EntidadRef
-    ConvocatoriaEntidadGestora convocatoriaEntidadGestora1 = generarConvocatoriaEntidadGestora("-001");
-    ConvocatoriaEntidadGestora convocatoriaEntidadGestora2 = generarConvocatoriaEntidadGestora("-002");
+  public void findByCodigo_ReturnsNull() throws Exception {
+    // given: codigo to find
+    String codigo = "codigo-001";
 
-    Long convocatoriaIdBuscado = convocatoriaEntidadGestora1.getConvocatoria().getId();
-    String entidadRefBuscado = convocatoriaEntidadGestora2.getEntidadRef();
+    // when: find given codigo
+    Optional<Convocatoria> dataFound = repository.findByCodigo(codigo);
 
-    // when: find by by Convocatoria and EntidadRef
-    Optional<ConvocatoriaEntidadGestora> dataFound = repository.findByConvocatoriaIdAndEntidadRef(convocatoriaIdBuscado,
-        entidadRefBuscado);
-
-    // then: ConvocatoriaEntidadGestora is not found
+    // then: Convocatoria with given codigo is not found
     Assertions.assertThat(dataFound).isEqualTo(Optional.empty());
   }
 
   /**
-   * Función que genera ConvocatoriaEntidadGestora
+   * Función que genera Convocatoria
    * 
    * @param suffix
-   * @return el objeto ConvocatoriaEntidadGestora
+   * @return el objeto Convocatoria
    */
-  private ConvocatoriaEntidadGestora generarConvocatoriaEntidadGestora(String suffix) {
+  private Convocatoria generarMockConvocatoria(String suffix) {
 
     ModeloEjecucion modeloEjecucion = ModeloEjecucion.builder()//
         .nombre("nombreModeloEjecucion" + suffix)//
@@ -122,12 +125,6 @@ public class ConvocatoriaEntidadGestoraRepositoryTest {
         .ambitoGeografico(tipoAmbitoGeografico)//
         .clasificacionCVN(ClasificacionCVNEnum.AYUDAS).activo(Boolean.TRUE)//
         .build();
-    entityManager.persistAndFlush(convocatoria);
-
-    ConvocatoriaEntidadGestora convocatoriaEntidadGestora = ConvocatoriaEntidadGestora.builder()//
-        .convocatoria(convocatoria)//
-        .entidadRef("entidad" + suffix)//
-        .build();
-    return entityManager.persistAndFlush(convocatoriaEntidadGestora);
+    return entityManager.persistAndFlush(convocatoria);
   }
 }

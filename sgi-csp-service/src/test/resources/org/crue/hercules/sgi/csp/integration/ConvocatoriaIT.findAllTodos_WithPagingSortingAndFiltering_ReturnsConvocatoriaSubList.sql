@@ -29,13 +29,15 @@ VALUES(1, 'unidad-001', 1, 'codigo-001', 2020, 'titulo-001', 'objeto-001', 'obse
 INSERT INTO csp.convocatoria
 (id, unidad_gestion_ref, modelo_ejecucion_id, codigo, anio, titulo, objeto, observaciones, tipo_finalidad_id, tipo_regimen_concurrencia_id, destinatarios, colaborativos, estado_actual, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
 VALUES(2, 'unidad-002', 1, 'codigo-002', 2020, 'titulo-002', 'objeto-002', 'observaciones-002', 1, 1, 'Equipo de proyecto', true, 'Borrador', 12, 1, 'Proyectos competitivos', true);
-
--- CONVOCATORIA ENTIDAD GESTORA
-INSERT INTO csp.convocatoria_entidad_gestora (id,  convocatoria_id, entidad_ref) VALUES (1, 1, 'entidad-001');
-INSERT INTO csp.convocatoria_entidad_gestora (id,  convocatoria_id, entidad_ref) VALUES (2, 1, 'entidad-002');
-INSERT INTO csp.convocatoria_entidad_gestora (id,  convocatoria_id, entidad_ref) VALUES (3, 1, 'entidad-003');
-INSERT INTO csp.convocatoria_entidad_gestora (id,  convocatoria_id, entidad_ref) VALUES (4, 1, 'entidad-4');
-INSERT INTO csp.convocatoria_entidad_gestora (id,  convocatoria_id, entidad_ref) VALUES (5, 2, 'entidad-001');
-INSERT INTO csp.convocatoria_entidad_gestora (id,  convocatoria_id, entidad_ref) VALUES (6, 2, 'entidad-002');
-INSERT INTO csp.convocatoria_entidad_gestora (id,  convocatoria_id, entidad_ref) VALUES (7, 2, 'entidad-003');
-INSERT INTO csp.convocatoria_entidad_gestora (id,  convocatoria_id, entidad_ref) VALUES (8, 2, 'entidad-004');
+INSERT INTO csp.convocatoria
+(id, unidad_gestion_ref, modelo_ejecucion_id, codigo, anio, titulo, objeto, observaciones, tipo_finalidad_id, tipo_regimen_concurrencia_id, destinatarios, colaborativos, estado_actual, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
+VALUES(3, 'unidad-003', 1, 'codigo-003', 2020, 'titulo-3', 'objeto-003', 'observaciones-003', 1, 1, 'Equipo de proyecto', true, 'Borrador', 12, 1, 'Proyectos competitivos', true);
+INSERT INTO csp.convocatoria
+(id, unidad_gestion_ref, modelo_ejecucion_id, codigo, anio, titulo, objeto, observaciones, tipo_finalidad_id, tipo_regimen_concurrencia_id, destinatarios, colaborativos, estado_actual, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
+VALUES(4, 'unidad-004', 1, 'codigo-004', 2020, 'titulo-4', 'objeto-004', 'observaciones-004', 1, 1, 'Equipo de proyecto', true, 'Borrador', 12, 1, 'Proyectos competitivos', true);
+INSERT INTO csp.convocatoria
+(id, unidad_gestion_ref, modelo_ejecucion_id, codigo, anio, titulo, objeto, observaciones, tipo_finalidad_id, tipo_regimen_concurrencia_id, destinatarios, colaborativos, estado_actual, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
+VALUES(5, 'unidad-005', 1, 'codigo-005', 2020, 'titulo-5', 'objeto-005', 'observaciones-005', 1, 1, 'Equipo de proyecto', true, 'Borrador', 12, 1, 'Proyectos competitivos', true);
+INSERT INTO csp.convocatoria
+(id, unidad_gestion_ref, modelo_ejecucion_id, codigo, anio, titulo, objeto, observaciones, tipo_finalidad_id, tipo_regimen_concurrencia_id, destinatarios, colaborativos, estado_actual, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
+VALUES(6, 'unidad-006', 1, 'codigo-006', 2020, 'titulo-006', 'objeto-006', 'observaciones-006', 1, 1, 'Equipo de proyecto', true, 'Borrador', 12, 1, 'Proyectos competitivos', false);

@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.repository;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.junit.jupiter.api.Test;
@@ -24,9 +25,11 @@ public class ConvocatoriaEntidadConvocanteRepositoryTest {
 
     // given: 2 ConvocatoriaEntidadConvocante de los que 1 coincide con el
     // ConvocatoriaId y EntidadRef buscado
-    Convocatoria convocatoria1 = new Convocatoria(null, "codigo-1", Boolean.TRUE);
+    Convocatoria convocatoria1 = Convocatoria.builder().codigo("codigo-1")
+        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).build();
     entityManager.persistAndFlush(convocatoria1);
-    Convocatoria convocatoria2 = new Convocatoria(null, "codigo-2", Boolean.TRUE);
+    Convocatoria convocatoria2 = Convocatoria.builder().codigo("codigo-2")
+        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).build();
     entityManager.persistAndFlush(convocatoria2);
 
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante1 = new ConvocatoriaEntidadConvocante(null,
@@ -57,9 +60,11 @@ public class ConvocatoriaEntidadConvocanteRepositoryTest {
   public void findByModeloEjecucionIdAndTipoFinalidadId_ReturnsNull() throws Exception {
     // given: 2 ConvocatoriaEntidadConvocante que no coincide con el ConvocatoriaId
     // y EntidadRef buscado
-    Convocatoria convocatoria1 = new Convocatoria(null, "codigo-1", Boolean.TRUE);
+    Convocatoria convocatoria1 = Convocatoria.builder().codigo("codigo-1")
+        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).build();
     entityManager.persistAndFlush(convocatoria1);
-    Convocatoria convocatoria2 = new Convocatoria(null, "codigo-2", Boolean.TRUE);
+    Convocatoria convocatoria2 = Convocatoria.builder().codigo("codigo-2")
+        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).build();
     entityManager.persistAndFlush(convocatoria2);
 
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante1 = new ConvocatoriaEntidadConvocante(null,

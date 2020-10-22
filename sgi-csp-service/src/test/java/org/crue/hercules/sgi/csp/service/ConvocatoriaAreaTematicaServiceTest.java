@@ -320,9 +320,9 @@ public class ConvocatoriaAreaTematicaServiceTest {
   public void findAllByConvocatoria_ReturnsPage() {
     // given: Una lista con 37 ConvocatoriaAreaTematica para la Convocatoria
     Long convocatoriaId = 1L;
-    List<ConvocatoriaAreaTematica> convocatoriasEntidadesGestoras = new ArrayList<>();
+    List<ConvocatoriaAreaTematica> convocatoriasAreasTematicas = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
-      convocatoriasEntidadesGestoras.add(generarConvocatoriaAreaTematica(i, convocatoriaId, i));
+      convocatoriasAreasTematicas.add(generarConvocatoriaAreaTematica(i, convocatoriaId, i));
     }
 
     BDDMockito
@@ -336,10 +336,9 @@ public class ConvocatoriaAreaTematicaServiceTest {
             int index = pageable.getPageNumber();
             int fromIndex = size * index;
             int toIndex = fromIndex + size;
-            toIndex = toIndex > convocatoriasEntidadesGestoras.size() ? convocatoriasEntidadesGestoras.size() : toIndex;
-            List<ConvocatoriaAreaTematica> content = convocatoriasEntidadesGestoras.subList(fromIndex, toIndex);
-            Page<ConvocatoriaAreaTematica> page = new PageImpl<>(content, pageable,
-                convocatoriasEntidadesGestoras.size());
+            toIndex = toIndex > convocatoriasAreasTematicas.size() ? convocatoriasAreasTematicas.size() : toIndex;
+            List<ConvocatoriaAreaTematica> content = convocatoriasAreasTematicas.subList(fromIndex, toIndex);
+            Page<ConvocatoriaAreaTematica> page = new PageImpl<>(content, pageable, convocatoriasAreasTematicas.size());
             return page;
           }
         });

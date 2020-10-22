@@ -39,6 +39,9 @@
     <createSequence sequenceName="listado_area_tematica_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-modelo_tipo_documento_seq">
+    <createSequence sequenceName="modelo_tipo_documento_seq" />
+  </changeSet>
   <changeSet author="master" id="20200928000000-modelo_ejecucion_seq">
     <createSequence sequenceName="modelo_ejecucion_seq" />
   </changeSet>
@@ -51,9 +54,6 @@
     <createSequence sequenceName="modelo_tipo_fase_seq" />
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-modelo_tipo_documento_seq">
-    <createSequence sequenceName="modelo_tipo_documento_seq" />
-  </changeSet>
 
   <changeSet author="master" id="20200928000000-modelo_tipo_finalidad_seq">
     <createSequence sequenceName="modelo_tipo_finalidad_seq" />
@@ -95,10 +95,6 @@
     <createSequence sequenceName="tipo_finalidad_seq" />
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-tipo_fase_seq">
-    <createSequence sequenceName="tipo_fase_seq" />
-  </changeSet>
-
   <changeSet author="master" id="20201008000000-tipo_financiacion_seq">
     <createSequence sequenceName="tipo_financiacion_seq" />
   </changeSet>
@@ -118,17 +114,99 @@
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
+
+  <changeSet author="master" id="20201007000000-area_tematica_arbol">
+    <createTable tableName="area_tematica_arbol">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="area_tematica_arbol_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="area_tematica_arbol_pk" />
+      </column>
+      <column name="abreviatura" type="VARCHAR(5)">
+        <constraints nullable="false" />
+      </column>
+      <column name="nombre" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="listado_area_tematica_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="area_tematica_arbol_padre_id" type="BIGINT" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-concepto_gasto">
+    <createTable tableName="concepto_gasto">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="concepto_gasto_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="concepto_gasto_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="descripcion" type="VARCHAR(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-convocatoria">
     <createTable tableName="convocatoria">
       <column name="id" type="BIGINT" defaultValueSequenceNext="convocatoria_seq">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_pk" />
       </column>
-      <column name="codigo" type="VARCHAR(50)">
+      <column name="unidad_gestion_ref" type="VARCHAR2(50)" />
+      <column name="modelo_ejecucion_id" type="BIGINT" />
+      <column name="codigo" type="VARCHAR(50)" />
+      <column name="anio" type="INT" />
+      <column name="titulo" type="VARCHAR(250)" />
+      <column name="objeto" type="VARCHAR(2000)" />
+      <column name="observaciones" type="VARCHAR(2000)" />
+      <column name="tipo_finalidad_id" type="BIGINT" />
+      <column name="tipo_regimen_concurrencia_id" type="BIGINT" />
+      <column name="destinatarios" type="VARCHAR(50)" />
+      <column name="colaborativos" type="BOOLEAN" defaultValueBoolean="true" />
+      <column name="estado_actual" type="VARCHAR(50)">
         <constraints nullable="false" />
       </column>
+      <column name="duracion" type="INT" />
+      <column name="tipo_ambito_geografico_id" type="BIGINT" />
+      <column name="clasificacion_cvn" type="VARCHAR(50)" />
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-convocatoria_area_tematica">
+    <createTable tableName="convocatoria_area_tematica">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="convocatoria_area_tematica_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_area_tematica_pk" />
+      </column>
+      <column name="area_tematica_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="convocatoria_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="observaciones" type="VARCHAR2(2000)" />
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20201014000000-convocatoria_enlace">
+    <createTable tableName="convocatoria_enlace">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="convocatoria_enlace_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_enlace_pk" />
+      </column>
+      <column name="convocatoria_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="url" type="VARCHAR(250)">
+        <constraints nullable="false" />
+      </column>
+      <column name="descripcion" type="VARCHAR(250)" />
+      <column name="tipo_enlace_id" type="BIGINT" />
     </createTable>
   </changeSet>
 
@@ -161,6 +239,30 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-fuente_financiacion">
+    <createTable tableName="fuente_financiacion">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="fuente_financiacion_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="fuente_financiacion_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="descripcion" type="VARCHAR(250)" />
+      <column name="fondo_estructural" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+      <column name="tipo_ambito_geografico_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="tipo_origen_fuente_financiacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-listado_area_tematica">
     <createTable tableName="listado_area_tematica">
       <column name="id" type="BIGINT" defaultValueSequenceNext="listado_area_tematica_seq">
@@ -170,177 +272,6 @@
         <constraints nullable="false" />
       </column>
       <column name="descripcion" type="VARCHAR2(250)" />
-      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
-        <constraints nullable="false" />
-      </column>
-    </createTable>
-  </changeSet>
-
-  <changeSet author="master" id="20201007000000-area_tematica_arbol">
-    <createTable tableName="area_tematica_arbol">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="area_tematica_arbol_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="area_tematica_arbol_pk" />
-      </column>
-      <column name="abreviatura" type="VARCHAR(5)">
-        <constraints nullable="false" />
-      </column>
-      <column name="nombre" type="VARCHAR(50)">
-        <constraints nullable="false" />
-      </column>
-      <column name="listado_area_tematica_id" type="BIGINT">
-        <constraints nullable="false" />
-      </column>
-      <column name="area_tematica_arbol_padre_id" type="BIGINT" />
-      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
-        <constraints nullable="false" />
-      </column>
-    </createTable>
-  </changeSet>
-
-  <changeSet author="master" id="20200928000000-convocatoria_area_tematica">
-    <createTable tableName="convocatoria_area_tematica">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="convocatoria_area_tematica_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_area_tematica_pk" />
-      </column>
-      <column name="area_tematica_id" type="BIGINT">
-        <constraints nullable="false" />
-      </column>
-      <column name="convocatoria_id" type="BIGINT">
-        <constraints nullable="false" />
-      </column>
-      <column name="observaciones" type="VARCHAR2(2000)" />
-    </createTable>
-  </changeSet>
-  <changeSet author="master" id="20201014000000-convocatoria_enlace">
-    <createTable tableName="convocatoria_enlace">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="convocatoria_enlace_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_enlace_pk" />
-      </column>
-      <column name="convocatoria_id" type="BIGINT">
-        <constraints nullable="false" />
-      </column>
-      <column name="url" type="VARCHAR(250)">
-        <constraints nullable="false" />
-      </column>
-      <column name="descripcion" type="VARCHAR(250)" />
-      <column name="tipo_enlace_id" type="BIGINT" />
-    </createTable>
-  </changeSet>
-
-  <changeSet author="master" id="20200928000000-modelo_ejecucion">
-    <createTable tableName="modelo_ejecucion">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="modelo_ejecucion_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_ejecucion_pk" />
-      </column>
-      <column name="nombre" type="VARCHAR(50)">
-        <constraints nullable="false" />
-      </column>
-      <column name="descripcion" type="VARCHAR(250)" />
-      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
-        <constraints nullable="false" />
-      </column>
-    </createTable>
-  </changeSet>
-
-  <changeSet author="master" id="20200928000000-tipo_ambito_geografico">
-    <createTable tableName="tipo_ambito_geografico">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_ambito_geografico_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_ambito_geografico_pk" />
-      </column>
-      <column name="nombre" type="VARCHAR(50)">
-        <constraints nullable="false" />
-      </column>
-      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
-        <constraints nullable="false" />
-      </column>
-    </createTable>
-  </changeSet>
-
-  <changeSet author="master" id="20200928000000-tipo_documento">
-    <createTable tableName="tipo_documento">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_documento_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_documento_pk" />
-      </column>
-      <column name="nombre" type="VARCHAR(50)">
-        <constraints nullable="false" />
-      </column>
-      <column name="descripcion" type="VARCHAR(250)" />
-      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
-        <constraints nullable="false" />
-      </column>
-    </createTable>
-  </changeSet>
-
-  <changeSet author="master" id="20200928000000-tipo_enlace">
-    <createTable tableName="tipo_enlace">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_enlace_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_enlace_pk" />
-      </column>
-      <column name="nombre" type="VARCHAR2(50)">
-        <constraints nullable="false" />
-      </column>
-      <column name="descripcion" type="VARCHAR2(250)" />
-      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
-        <constraints nullable="false" />
-      </column>
-    </createTable>
-  </changeSet>
-
-  <changeSet author="master" id="20200928000000-tipo_fase">
-    <createTable tableName="tipo_fase">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_fase_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_fase_pk" />
-      </column>
-      <column name="nombre" type="VARCHAR2(50)">
-        <constraints nullable="false" />
-      </column>
-      <column name="descripcion" type="VARCHAR2(250)" />
-      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
-        <constraints nullable="false" />
-      </column>
-    </createTable>
-  </changeSet>
-
-  <changeSet author="master" id="20200928000000-tipo_finalidad">
-    <createTable tableName="tipo_finalidad">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_finalidad_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_finalidad_pk" />
-      </column>
-      <column name="nombre" type="VARCHAR2(50)">
-        <constraints nullable="false" />
-      </column>
-      <column name="descripcion" type="VARCHAR2(250)" />
-      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
-        <constraints nullable="false" />
-      </column>
-    </createTable>
-  </changeSet>
-
-  <changeSet author="master" id="20201088000000-tipo_financiacion">
-    <createTable tableName="tipo_financiacion">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_financiacion_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_financiacion_pk" />
-      </column>
-      <column name="nombre" type="VARCHAR2(50)">
-        <constraints nullable="false" />
-      </column>
-      <column name="descripcion" type="VARCHAR2(250)" />
-      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
-        <constraints nullable="false" />
-      </column>
-    </createTable>
-  </changeSet>
-
-
-  <changeSet author="master" id="20200928000000-tipo_hito">
-    <createTable tableName="tipo_hito">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_hito_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_hito_pk" />
-      </column>
-      <column name="nombre" type="VARCHAR(50)">
-        <constraints nullable="false" />
-      </column>
-      <column name="descripcion" type="VARCHAR(250)" />
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>
@@ -402,6 +333,21 @@
         <constraints nullable="false" />
       </column>
       <column name="modelo_tipo_fase_id" type="BIGINT" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-modelo_ejecucion">
+    <createTable tableName="modelo_ejecucion">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="modelo_ejecucion_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_ejecucion_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="descripcion" type="VARCHAR(250)" />
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>
@@ -502,10 +448,10 @@
     </createTable>
   </changeSet>
 
-  <changeSet author="master" id="20201007000000-tipo_origen_fuente_financiacion">
-    <createTable tableName="tipo_origen_fuente_financiacion">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_origen_fuente_financiacion_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_origen_fuente_financiacion_pk" />
+  <changeSet author="master" id="20200928000000-tipo_ambito_geografico">
+    <createTable tableName="tipo_ambito_geografico">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_ambito_geografico_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_ambito_geografico_pk" />
       </column>
       <column name="nombre" type="VARCHAR(50)">
         <constraints nullable="false" />
@@ -516,22 +462,102 @@
     </createTable>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-fuente_financiacion">
-    <createTable tableName="fuente_financiacion">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="fuente_financiacion_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="fuente_financiacion_pk" />
+  <changeSet author="master" id="20200928000000-tipo_documento">
+    <createTable tableName="tipo_documento">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_documento_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_documento_pk" />
       </column>
       <column name="nombre" type="VARCHAR(50)">
         <constraints nullable="false" />
       </column>
       <column name="descripcion" type="VARCHAR(250)" />
-      <column name="fondo_estructural" type="BOOLEAN" defaultValueBoolean="true">
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>
-      <column name="tipo_ambito_geografico_id" type="BIGINT">
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-tipo_enlace">
+    <createTable tableName="tipo_enlace">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_enlace_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_enlace_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR2(50)">
         <constraints nullable="false" />
       </column>
-      <column name="tipo_origen_fuente_financiacion_id" type="BIGINT">
+      <column name="descripcion" type="VARCHAR2(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-tipo_fase">
+    <createTable tableName="tipo_fase">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_fase_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_fase_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR2(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="descripcion" type="VARCHAR2(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-tipo_finalidad">
+    <createTable tableName="tipo_finalidad">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_finalidad_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_finalidad_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR2(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="descripcion" type="VARCHAR2(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20201088000000-tipo_financiacion">
+    <createTable tableName="tipo_financiacion">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_financiacion_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_financiacion_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR2(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="descripcion" type="VARCHAR2(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-tipo_hito">
+    <createTable tableName="tipo_hito">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_hito_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_hito_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="descripcion" type="VARCHAR(250)" />
+      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20201007000000-tipo_origen_fuente_financiacion">
+    <createTable tableName="tipo_origen_fuente_financiacion">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="tipo_origen_fuente_financiacion_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_origen_fuente_financiacion_pk" />
+      </column>
+      <column name="nombre" type="VARCHAR(50)">
         <constraints nullable="false" />
       </column>
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
@@ -554,25 +580,22 @@
     </createTable>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-concepto_gasto">
-    <createTable tableName="concepto_gasto">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="concepto_gasto_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="concepto_gasto_pk" />
-      </column>
-      <column name="nombre" type="VARCHAR(50)">
-        <constraints nullable="false" />
-      </column>
-      <column name="descripcion" type="VARCHAR(250)" />
-      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
-        <constraints nullable="false" />
-      </column>
-    </createTable>
-  </changeSet>
-
-
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
   <!-- ########################################################## -->
+  <changeSet author="master" id="20200601000000-convocatoria_modelo_ejecucion_FK">
+    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="convocatoria" constraintName="convocatoria_modelo_ejecucion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-convocatoria_tipo_finalidad_FK">
+    <addForeignKeyConstraint baseColumnNames="tipo_finalidad_id" baseTableName="convocatoria" constraintName="convocatoria_tipo_finalidad_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_finalidad" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-convocatoria_tipo_regimen_concurrencia_FK">
+    <addForeignKeyConstraint baseColumnNames="tipo_regimen_concurrencia_id" baseTableName="convocatoria" constraintName="convocatoria_tipo_regimen_concurrencia_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_regimen_concurrencia" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-convocatoria_tipo_ambito_geografico_FK">
+    <addForeignKeyConstraint baseColumnNames="tipo_ambito_geografico_id" baseTableName="convocatoria" constraintName="convocatoria_tipo_ambito_geografico_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_ambito_geografico" validate="true" />
+  </changeSet>
+
   <changeSet author="master" id="20200601000000-area_tematica_arbol_listado_area_tematica_FK">
     <addForeignKeyConstraint baseColumnNames="listado_area_tematica_id" baseTableName="area_tematica_arbol" constraintName="area_tematica_arbol_listado_area_tematica_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="listado_area_tematica" validate="true" />
   </changeSet>
