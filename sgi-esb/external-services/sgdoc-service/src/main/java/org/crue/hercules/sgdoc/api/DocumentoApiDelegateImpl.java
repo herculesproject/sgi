@@ -9,7 +9,6 @@ import org.crue.hercules.sgdoc.mapper.DocumentoMapper;
 import org.crue.hercules.sgdoc.model.DocumentoEntity;
 import org.crue.hercules.sgdoc.openapi.api.DocumentosApiDelegate;
 import org.crue.hercules.sgdoc.openapi.model.Documento;
-import org.crue.hercules.sgdoc.openapi.model.DocumentoListado;
 import org.crue.hercules.sgdoc.service.DocumentoService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.core.io.ByteArrayResource;
@@ -47,7 +46,7 @@ public class DocumentoApiDelegateImpl implements DocumentosApiDelegate {
   }
 
   @Override
-  public ResponseEntity<DocumentoListado> newDocumento(MultipartFile archivo) {
+  public ResponseEntity<Documento> newDocumento(MultipartFile archivo) {
     log.debug("newDocumento({}) - start", archivo);
     DocumentoEntity documentoEntity = new DocumentoEntity();
     documentoEntity.setNombre(archivo.getOriginalFilename());
@@ -62,7 +61,7 @@ public class DocumentoApiDelegateImpl implements DocumentosApiDelegate {
     String[] contentType = (archivo.getContentType().split(";"));
     documentoEntity.setTipo(contentType[0]);
     DocumentoEntity documentoEntityCreada = documentoService.create(documentoEntity);
-    DocumentoListado documentoCreado = documentoMapper.documentoEntityToDocumentoListado(documentoEntityCreada);
+    Documento documentoCreado = documentoMapper.documentoEntityToDocumento(documentoEntityCreada);
 
     log.debug("newDocumento({}) - end", archivo);
 
@@ -93,7 +92,7 @@ public class DocumentoApiDelegateImpl implements DocumentosApiDelegate {
   }
 
   @Override
-  public ResponseEntity<List<DocumentoListado>> findAllDocumentosByDocumentoRefs(String documentoRefs, Integer xPage,
+  public ResponseEntity<List<Documento>> findAllDocumentosByDocumentoRefs(String documentoRefs, Integer xPage,
       Integer xPageSize, String q, String s) {
     log.debug("findAllDocumentosByDocumentoRefs({}, {}, {}, {}) - start", xPage, xPageSize, q, s);
 
@@ -104,8 +103,8 @@ public class DocumentoApiDelegateImpl implements DocumentosApiDelegate {
 
     Page<DocumentoEntity> page = documentoService.findByDocumentoRefs(documentoRefsList, query, paging);
 
-    List<DocumentoListado> documentos = page.getContent().stream()
-        .map(documentoEntity -> documentoMapper.documentoEntityToDocumentoListado(documentoEntity))
+    List<Documento> documentos = page.getContent().stream()
+        .map(documentoEntity -> documentoMapper.documentoEntityToDocumento(documentoEntity))
         .collect(Collectors.toList());
 
     HttpHeaders headers = apiUtils.getPaginationHeaders(page);
@@ -120,8 +119,7 @@ public class DocumentoApiDelegateImpl implements DocumentosApiDelegate {
   }
 
   @Override
-  public ResponseEntity<List<DocumentoListado>> findAllDocumentos(Integer xPage, Integer xPageSize, String q,
-      String s) {
+  public ResponseEntity<List<Documento>> findAllDocumentos(Integer xPage, Integer xPageSize, String q, String s) {
     log.debug("findAllDocumentos({}, {}, {}, {}) - start", xPage, xPageSize, q, s);
 
     List<QueryCriteria> query = apiUtils.getQueryCriteria(q);
@@ -129,8 +127,8 @@ public class DocumentoApiDelegateImpl implements DocumentosApiDelegate {
 
     Page<DocumentoEntity> page = documentoService.findAll(query, paging);
 
-    List<DocumentoListado> documentos = page.getContent().stream()
-        .map(documentoEntity -> documentoMapper.documentoEntityToDocumentoListado(documentoEntity))
+    List<Documento> documentos = page.getContent().stream()
+        .map(documentoEntity -> documentoMapper.documentoEntityToDocumento(documentoEntity))
         .collect(Collectors.toList());
 
     HttpHeaders headers = apiUtils.getPaginationHeaders(page);
@@ -142,6 +140,14 @@ public class DocumentoApiDelegateImpl implements DocumentosApiDelegate {
     }
 
     return new ResponseEntity<>(documentos, headers, HttpStatus.OK);
+  }
+
+  @Override
+  public ResponseEntity<Void> deleteDocumentoByDocumentoRef(String documentoRef) {
+    log.debug("deleteDocumentoByDocumentoRef({}) - end", documentoRef);
+    documentoService.delete(documentoRef);
+    log.debug("deleteDocumentoByDocumentoRef({}) - end", documentoRef);
+    return null;
   }
 
 }

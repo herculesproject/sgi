@@ -2,7 +2,6 @@ package org.crue.hercules.sgdoc.mapper;
 
 import org.crue.hercules.sgdoc.model.DocumentoEntity;
 import org.crue.hercules.sgdoc.openapi.model.Documento;
-import org.crue.hercules.sgdoc.openapi.model.DocumentoListado;
 import org.mapstruct.Mapper;
 
 /**
@@ -27,13 +26,5 @@ public interface DocumentoMapper {
    * @return el DocumentoEntity correspondiente.
    */
   DocumentoEntity documentoToDocumentoEntity(Documento documento);
-
-    /**
-   * Transforma un {@link DocumentoEntity} en un {@link DocumentoListado}.
-   * 
-   * @param documentoEntity un {@link DocumentoEntity}.
-   * @return el DocumentoListado correspondiente.
-   */
-  DocumentoListado documentoEntityToDocumentoListado(DocumentoEntity documentoEntity);  
 
 }

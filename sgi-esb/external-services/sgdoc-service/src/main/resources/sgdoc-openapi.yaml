@@ -24,7 +24,7 @@ paths:
         "201":
           description: successful operation
           schema:
-            $ref: "#/definitions/DocumentoListado"
+            $ref: "#/definitions/Documento"
         "400":
           description: Archivo no valido
       tags:
@@ -92,7 +92,7 @@ paths:
               type: integer
           schema:
             items:
-              $ref: "#/definitions/DocumentoListado"
+              $ref: "#/definitions/Documento"
             type: array
         "204":
           description: No hay documentos para los criterios de busqueda utilizados.
@@ -131,6 +131,28 @@ paths:
         documentoRef. Incluye el archivo.
       operationId: findDocumentoByDocumentoRef
       summary: Busca un documento por su documentoRef. Contiene el archivo del documento.
+    delete:
+      produces:
+        - application/json
+      parameters:
+        - description: Referencia del documento
+          in: path
+          name: documentoRef
+          required: true
+          type: string
+      responses:
+        "204":
+          description: successful operation
+        "400":
+          description: documentoRef no valido
+        "404":
+          description: documento no encontrado
+      tags:
+        - documentos
+      description: >-
+        Elimina el documento correspondiente a documentoRef
+      operationId: deleteDocumentoByDocumentoRef
+      summary: Elimina el documento correspondiente a documentoRef.
   "/documentos/{documentoRef}/archivo":
     get:
       parameters:
@@ -224,7 +246,7 @@ paths:
               type: integer
           schema:
             items:
-              $ref: "#/definitions/DocumentoListado"
+              $ref: "#/definitions/Documento"
             type: array
         "204":
           description: No hay documentos para los criterios de busqueda utilizados.
@@ -239,24 +261,6 @@ paths:
       summary: Busca los documentos correspondientes a la lista de documentorefs
 definitions:
   Documento:
-    properties:
-      documentoRef:
-        type: string
-      nombre:
-        type: string
-      version:
-        type: integer
-      archivo:
-        type: string
-        format: byte
-      fechaCreacion:
-        type: string
-      tipo:
-        type: string
-      autorRef:
-        type: string
-    type: object
-  DocumentoListado:
     properties:
       documentoRef:
         type: string
