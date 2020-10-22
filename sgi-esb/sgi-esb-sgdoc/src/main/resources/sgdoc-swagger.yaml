@@ -1,14 +1,37 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
   description: API para la integración con el Sistema de Gestión Documental.
   title: API-SGDOC
   version: 1.0.0
-host: 'localhost:8080'
+host: "localhost:8080"
 basePath: /sgdoc
 schemes:
   - http
 paths:
   /documentos:
+    post:
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: formData
+          name: archivo
+          type: file
+          required: true
+          description: El archivo del documento.
+      responses:
+        "201":
+          description: successful operation
+          schema:
+            $ref: "#/definitions/Documento"
+        "400":
+          description: Archivo no valido
+      tags:
+        - documentos
+      description: Devuelve el documento creado a partir del archivo
+      operationId: newDocumento
+      summary: Crea un documento a partir de un archivo
     get:
       produces:
         - application/json
@@ -39,7 +62,7 @@ paths:
           in: query
           name: q
           type: string
-          x-example: 'documentoRef!~d00,autor:Nombre'
+          x-example: "documentoRef!~d00,autorRef:Nombre"
         - description: >-
             Criterios de ordenación de la busqueda. <hr/> Nombre del campo por
             el que se ordena seguido de +/- para ordenar ascendente o
@@ -49,7 +72,7 @@ paths:
           type: string
           x-example: documentoRef-
       responses:
-        '200':
+        "200":
           description: successful operation
           headers:
             X-Page:
@@ -69,44 +92,20 @@ paths:
               type: integer
           schema:
             items:
-              $ref: '#/definitions/Documento'
+              $ref: "#/definitions/Documento"
             type: array
-        '204':
+        "204":
           description: No hay documentos para los criterios de busqueda utilizados.
-        '400':
+        "400":
           description: Invalid params
       tags:
         - documentos
       description: >-
-        Devuelve la lista paginada con los documentos que cumplen los
+        Devuelve la lista paginada con los documentos (sin incluir el archivo) que cumplen los
         filtros.
       operationId: findAllDocumentos
-      summary: Busca los documentos
-    post:
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - description: Datos del nuevo documento
-          in: body
-          name: body
-          required: true
-          schema:
-            $ref: '#/definitions/Documento'
-      responses:
-        '201':
-          description: successful operation
-          schema:
-            $ref: '#/definitions/Documento'
-        '400':
-          description: DocumentoRef tiene que ser null para crear un nuevo documento
-      tags:
-        - documentos
-      description: Devuelve el documento creado
-      operationId: newDocumento
-      summary: Crea un documento
-  '/documentos/{documentoRef}':
+      summary: Busca los documentos bajo los criterios de busqueda. El documento no incluye el archivo.
+  "/documentos/{documentoRef}":
     get:
       produces:
         - application/json
@@ -117,24 +116,22 @@ paths:
           required: true
           type: string
       responses:
-        '200':
+        "200":
           description: successful operation
           schema:
-            $ref: '#/definitions/Documento'
-        '400':
+            $ref: "#/definitions/Documento"
+        "400":
           description: documentoRef no valido
-        '404':
+        "404":
           description: documento no encontrado
       tags:
         - documentos
       description: >-
         Devuelve los datos del documento correspondiente a
-        documentoRef
+        documentoRef. Incluye el archivo.
       operationId: findDocumentoByDocumentoRef
-      summary: Busca un documento por su documentoRef
-    put:
-      consumes:
-        - application/json
+      summary: Busca un documento por su documentoRef. Contiene el archivo del documento.
+    delete:
       produces:
         - application/json
       parameters:
@@ -143,25 +140,46 @@ paths:
           name: documentoRef
           required: true
           type: string
-        - description: Datos del documento actualizado
-          in: body
-          name: body
-          required: true
-          schema:
-            $ref: '#/definitions/Documento'
       responses:
-        '200':
+        "204":
           description: successful operation
-          schema:
-            $ref: '#/definitions/Documento'
-        '400':
-          description: DocumentoRef no puede ser null para actualizar un documento
+        "400":
+          description: documentoRef no valido
+        "404":
+          description: documento no encontrado
       tags:
         - documentos
-      description: Devuelve el documento actualizado
-      operationId: updateDocumento
-      summary: Actualiza el documento con el documentoRef
-  '/documentos/bydocumentorefs/{documentoRefs}':
+      description: >-
+        Elimina el documento correspondiente a documentoRef
+      operationId: deleteDocumentoByDocumentoRef
+      summary: Elimina el documento correspondiente a documentoRef.
+  "/documentos/{documentoRef}/archivo":
+    get:
+      parameters:
+        - description: Referencia del documento
+          in: path
+          name: documentoRef
+          required: true
+          type: string
+      produces:
+        - application/octet-stream
+      responses:
+        "200":
+          description: El archivo
+          schema:
+            type: file
+        "400":
+          description: documentoRef no valido
+        "404":
+          description: documento no encontrado
+      tags:
+        - documentos
+      description: >-
+        Devuelve el archivo del documento correspondiente a
+        documentoRef
+      operationId: findDocumentoArchivoByDocumentoRef
+      summary: Busca un archivo de documento por su documentoRef
+  "/documentos/bydocumentorefs/{documentoRefs}":
     get:
       produces:
         - application/json
@@ -198,7 +216,7 @@ paths:
           in: query
           name: q
           type: string
-          x-example: 'documentoRef!~d00,autor:Nombre'
+          x-example: "documentoRef!~d00,autor:Nombre"
         - description: >-
             Criterios de ordenación de la busqueda. <hr/> Nombre del campo por
             el que se ordena seguido de +/- para ordenar ascendente o
@@ -208,7 +226,7 @@ paths:
           type: string
           x-example: documentoRef-
       responses:
-        '200':
+        "200":
           description: successful operation
           headers:
             X-Page:
@@ -228,11 +246,11 @@ paths:
               type: integer
           schema:
             items:
-              $ref: '#/definitions/Documento'
+              $ref: "#/definitions/Documento"
             type: array
-        '204':
-          description: No hay doucmentos para los criterios de busqueda utilizados.
-        '400':
+        "204":
+          description: No hay documentos para los criterios de busqueda utilizados.
+        "400":
           description: Invalid params
       tags:
         - documentos
@@ -249,10 +267,7 @@ definitions:
       nombre:
         type: string
       version:
-        type: string
-      archivo:
-        type: string
-        format: binary
+        type: integer
       fechaCreacion:
         type: string
       tipo:
@@ -263,12 +278,10 @@ definitions:
 tags:
   - externalDocs:
       description: Find out more
-      url: 'https://confluence.treelogic.com/display/HERCULES/SGI+-+ESB+-+SGDOC'
+      url: "https://confluence.treelogic.com/display/HERCULES/SGI+-+ESB+-+SGDOC"
     description: Operaciones con documentos
     name: documentos
 externalDocs:
   description: Find out more about SGDOC
-  url: 'https://confluence.treelogic.com/display/HERCULES/SGI+-+ESB+-+SGDOC'
+  url: "https://confluence.treelogic.com/display/HERCULES/SGI+-+ESB+-+SGDOC"
 x-components: {}
-
-
