@@ -9,14 +9,14 @@ import TestUtils from '@core/utils/test-utils';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MemoriaActionService } from '../../memoria.action.service';
-import { Comite } from '@core/models/eti/comite';
-import { IRetrospectiva } from '@core/models/eti/retrospectiva';
-import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
+import { Comite } from '@core/models/eti/comite';
+import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
+import { IRetrospectiva } from '@core/models/eti/retrospectiva';
 
 
 describe('MemoriaEvaluacionesComponent', () => {

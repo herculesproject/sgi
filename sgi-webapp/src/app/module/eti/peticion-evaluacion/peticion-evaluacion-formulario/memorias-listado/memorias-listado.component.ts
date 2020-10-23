@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { NGXLogger } from 'ngx-logger';
@@ -6,7 +6,7 @@ import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service'
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { IMemoria } from '@core/models/eti/memoria';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable, of, BehaviorSubject } from 'rxjs';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogService } from '@core/services/dialog.service';
@@ -18,11 +18,16 @@ import { PeticionEvaluacionActionService } from '../../peticion-evaluacion.actio
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoriaPeticionEvaluacion';
 import { MEMORIAS_ROUTE } from '../../../memoria/memoria-route-names';
 import { map } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 const MSG_CONFIRM_DELETE = marker('eti.peticionEvaluacion.formulario.memorias.listado.eliminar');
 const MSG_ESTADO_ANTERIOR_OK = marker('eti.memoria.listado.volverEstadoAnterior.ok');
 const MSG_ESTADO_ANTERIOR_ERROR = marker('eti.memoria.listado.volverEstadoAnterior.error');
 const MSG_RECUPERAR_ESTADO = marker('eti.memoria.listado.volverEstadoAnterior.confirmacion');
+
+const MSG_SUCCESS_ENVIAR_SECRETARIA = marker('eti.peticionEvaluacion.formulario.memorias.listado.enviarSecretaria.correcto');
+const MSG_ERROR_ENVIAR_SECRETARIA = marker('eti.peticionEvaluacion.formulario.memorias.listado.enviarSecretaria.error');
+const MSG_CONFIRM_ENVIAR_SECRETARIA = marker('eti.peticionEvaluacion.formulario.memorias.listado.enviarSecretaria.confirmar');
 
 @Component({
   selector: 'sgi-memorias-listado',
@@ -35,8 +40,8 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  displayedColumns: string[];
-
+  displayedColumns: string[] = ['numReferencia', 'comite.id', 'estadoActual.id', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
+  disableEnviarSecretaria = true;
 
   datasource: MatTableDataSource<StatusWrapper<IMemoria>> = new MatTableDataSource<StatusWrapper<IMemoria>>();
 
@@ -50,21 +55,23 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
     protected readonly personaFisicaService: PersonaFisicaService,
     protected readonly peticionEvaluacionService: PeticionEvaluacionService,
     protected readonly snackBarService: SnackBarService,
-    actionService: PeticionEvaluacionActionService,
+    private actionService: PeticionEvaluacionActionService
   ) {
     super(actionService.FRAGMENT.MEMORIAS, actionService);
     this.listadoFragment = this.fragment as MemoriasListadoFragment;
-
-    this.displayedColumns = ['numReferencia', 'comite.id', 'estadoActual.id', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
   }
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.listadoFragment.memorias$.subscribe((memorias) => {
+    this.subscriptions.push(this.listadoFragment.memorias$.subscribe((memorias) => {
       this.datasource.data = memorias;
-    });
-  }
+    }));
 
+    this.subscriptions.push(this.actionService.status$.subscribe((status) => {
+      this.disableEnviarSecretaria = status.changes;
+    }
+    ));
+  }
 
   /**
    * Elimina la memoria.
@@ -74,15 +81,13 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
   delete(wrappedMemoria: StatusWrapper<IMemoriaPeticionEvaluacion>): void {
     this.logger.debug(MemoriasListadoComponent.name, 'delete(memoria: StatusWrapper<IMemoria>) - start');
 
-    const dialogSubscription = this.dialogService.showConfirmation(
+    this.subscriptions.push(this.dialogService.showConfirmation(
       MSG_CONFIRM_DELETE
     ).subscribe((aceptado) => {
       if (aceptado) {
         this.listadoFragment.deleteMemoria(wrappedMemoria);
       }
-    });
-
-    this.subscriptions.push(dialogSubscription);
+    }));
 
     this.logger.debug(MemoriasListadoComponent.name, 'delete(memoria: StatusWrapper<IMemoria>) - end');
   }
@@ -122,6 +127,44 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
           `${this.recuperarEstadoAnterior.name}(${memoria})`, 'end');
       })
     );
+  }
+
+  hasPermisoEnviarSecretaria(estadoMemoriaId: number): boolean {
+
+    // Si el estado es 'Completada', 'Favorable pendiente de modificaciones mínima',
+    // 'Pendiente de correcciones', 'No procede evaluar', 'Completada seguimiento anual',
+    // 'Completada seguimiento final' o 'En aclaracion seguimiento final' se muestra el botón de enviar.
+    if (estadoMemoriaId === 2 || estadoMemoriaId === 6 || estadoMemoriaId === 7
+      || estadoMemoriaId === 8 || estadoMemoriaId === 11 || estadoMemoriaId === 16
+      || estadoMemoriaId === 21) {
+      return true;
+    } else {
+      return false;
+    }
+
+  }
+
+  enviarSecretaria(memoria: IMemoriaPeticionEvaluacion) {
+    this.logger.debug(MemoriasListadoComponent.name, 'enviarSecretaria(memoria: IMemoriaPeticionEvaluacion) - start');
+
+    this.dialogService.showConfirmation(MSG_CONFIRM_ENVIAR_SECRETARIA)
+      .pipe(switchMap((aceptado) => {
+        if (aceptado) {
+          return this.memoriaService.enviarSecretaria(memoria.id);
+        }
+        return of();
+      })).subscribe(
+        () => {
+          this.listadoFragment.loadMemorias(this.listadoFragment.getKey() as number);
+          this.snackBarService.showSuccess(MSG_SUCCESS_ENVIAR_SECRETARIA);
+        },
+        () => {
+          this.snackBarService.showError(MSG_ERROR_ENVIAR_SECRETARIA);
+        }
+      );
+
+    this.logger.debug(MemoriasListadoComponent.name, 'enviarSecretaria(memoria: IMemoriaPeticionEvaluacion) - end');
+
   }
 
   ngOnDestroy(): void {

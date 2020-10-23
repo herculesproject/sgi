@@ -5,8 +5,8 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { Observable, of, merge, Subscription, BehaviorSubject } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
-import { SgiAuthService } from '@sgi/framework/auth';
-import { tap, map, catchError, startWith } from 'rxjs/operators';
+import { tap, map, catchError, startWith, switchMap } from 'rxjs/operators';
+
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoriaPeticionEvaluacion';
@@ -23,11 +23,15 @@ import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { MEMORIAS_ROUTE } from '../memoria-route-names';
-
+import { ActionStatus } from '@core/services/action-service';
 
 const MSG_BUTTON_SAVE = marker('footer.eti.peticionEvaluacion.crear');
 const TEXT_USER_TITLE = marker('eti.peticionEvaluacion.listado.buscador.solicitante');
 const TEXT_USER_BUTTON = marker('eti.peticionEvaluacion.listado.buscador.buscar.solicitante');
+const MSG_SUCCESS_ENVIAR_SECRETARIA = marker('eti.memorias.formulario.memorias.listado.enviarSecretaria.correcto');
+const MSG_ERROR_ENVIAR_SECRETARIA = marker('eti.memorias.formulario.memorias.listado.enviarSecretaria.error');
+const MSG_CONFIRM_ENVIAR_SECRETARIA = marker('eti.memorias.formulario.memorias.listado.enviarSecretaria.confirmar');
+
 
 @Component({
   selector: 'sgi-memoria-listado-inv',
@@ -61,6 +65,8 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
 
   buscadorFormGroup: FormGroup;
 
+  private subscriptions: Subscription[] = [];
+
   textoUsuarioLabel = TEXT_USER_TITLE;
   textoUsuarioInput = TEXT_USER_TITLE;
   textoUsuarioButton = TEXT_USER_BUTTON;
@@ -74,6 +80,8 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
     private readonly comiteService: ComiteService,
     private readonly tipoEstadoMemoriaService: TipoEstadoMemoriaService,
     private readonly memoriaService: MemoriaService,
+    protected readonly snackBarService: SnackBarService,
+    protected readonly dialogService: DialogService,
   ) {
     this.displayedColumns = ['numReferencia', 'comite', 'estadoActual', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
     this.elementosPagina = [5, 10, 25, 100];
@@ -257,7 +265,7 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
       'getComites()',
       'start');
 
-    const comitesSubscription = this.comiteService.findAll().subscribe(
+    this.subscriptions.push(this.comiteService.findAll().subscribe(
       (response) => {
         this.comiteListado = response.items;
 
@@ -266,9 +274,7 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
             startWith(''),
             map(value => this.filterComite(value))
           );
-      });
-
-    this.suscripciones.push(comitesSubscription);
+      }));
 
     this.logger.debug(MemoriaListadoInvComponent.name,
       'getComites()',
@@ -377,12 +383,49 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
       'end');
   }
 
+  hasPermisoEnviarSecretaria(estadoMemoriaId: number): boolean {
+
+    // Si el estado es 'Completada', 'Favorable pendiente de modificaciones mínima',
+    // 'Pendiente de correcciones', 'No procede evaluar', 'Completada seguimiento anual',
+    // 'Completada seguimiento final' o 'En aclaracion seguimiento final' se muestra el botón de enviar.
+    if (estadoMemoriaId === 2 || estadoMemoriaId === 6 || estadoMemoriaId === 7
+      || estadoMemoriaId === 8 || estadoMemoriaId === 11 || estadoMemoriaId === 16
+      || estadoMemoriaId === 21) {
+      return true;
+    } else {
+      return false;
+    }
+
+  }
+
+  enviarSecretaria(memoria: IMemoriaPeticionEvaluacion) {
+    this.logger.debug(MemoriaListadoInvComponent.name, 'enviarSecretaria(memoria: IMemoriaPeticionEvaluacion) - start');
+
+    this.dialogService.showConfirmation(MSG_CONFIRM_ENVIAR_SECRETARIA)
+      .pipe(switchMap((aceptado) => {
+        if (aceptado) {
+          return this.memoriaService.enviarSecretaria(memoria.id);
+        }
+        return of();
+      })).subscribe(
+        () => {
+          this.loadTable();
+          this.snackBarService.showSuccess(MSG_SUCCESS_ENVIAR_SECRETARIA);
+        },
+        () => {
+          this.snackBarService.showError(MSG_ERROR_ENVIAR_SECRETARIA);
+        }
+      );
+
+    this.logger.debug(MemoriaListadoInvComponent.name, 'enviarSecretaria(memoria: IMemoriaPeticionEvaluacion) - end');
+
+  }
 
   ngOnDestroy(): void {
     this.logger.debug(MemoriaListadoInvComponent.name,
       'ngOnDestroy()',
       'start');
-    this.suscripciones.forEach(x => x.unsubscribe());
+    this.subscriptions?.forEach(x => x.unsubscribe());
     this.logger.debug(MemoriaListadoInvComponent.name,
       'ngOnDestroy()',
       'end');

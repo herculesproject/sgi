@@ -359,4 +359,16 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
     );
   }
 
+  /**
+   * Se cambia el estado de la memoria a Enviar Secretaría o Enviar Secretaría Revisión Mínima
+   *
+   * @param memoriaId id memoria.
+   */
+  enviarSecretaria(memoriaId: number): Observable<void> {
+    this.logger.debug(MemoriaService.name, `enviarSecretaria(${memoriaId})`, '-', 'start');
+    return this.http.put<void>(`${this.endpointUrl}/${memoriaId}/enviar-secretaria`, null).pipe(
+      tap(() => this.logger.debug(MemoriaService.name, `enviarSecretaria(${memoriaId})`, '-', 'end'))
+    );
+  }
+
 }

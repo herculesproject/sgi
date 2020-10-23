@@ -16,8 +16,8 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { MemoriaActionService } from '../../memoria.action.service';
-
 import { MemoriaDocumentacionComponent } from './memoria-documentacion.component';
+
 
 describe('MemoriaDocumentacionComponent', () => {
   let component: MemoriaDocumentacionComponent;
@@ -39,7 +39,7 @@ describe('MemoriaDocumentacionComponent', () => {
       } as IRetrospectiva,
       peticionEvaluacion: {
         id: 1
-      } as IPeticionEvaluacion,
+      } as IPeticionEvaluacion
     } as IMemoria
   };
 

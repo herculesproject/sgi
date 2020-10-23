@@ -121,15 +121,10 @@
           <button mat-button [routerLink]="[memoria.id]" matTooltip="{{'eti.memoria.listado.eliminar' | translate}}">
             <mat-icon color="warn">highlight_off</mat-icon>
           </button>
-          <ng-container *ngIf="!memoria.requiereRetrospectiva && !memoria.responsable">
-            <button mat-button [routerLink]="[memoria.id]" matTooltip="{{'eti.memoria.listado.enviar' | translate}}">
+          <ng-container *ngIf="hasPermisoEnviarSecretaria(memoria.estadoActual.id) && !memoria.responsable">
+            <button mat-button *sgiHasAnyAuthorityForAnyUO="['ETI-PEV-C-INV', 'ETI-PEV-ER-INV']"
+              (click)="enviarSecretaria(memoria)" matTooltip="{{'eti.memoria.listado.enviar' | translate}}">
               <mat-icon color="primary">send</mat-icon>
-            </button>
-          </ng-container>
-          <ng-container *ngIf="memoria.requiereRetrospectiva && !memoria.responsable">
-            <button mat-button [routerLink]="[memoria.id]"
-              matTooltip="{{'eti.memoria.listado.enviarRetrospectiva' | translate}}">
-              <mat-icon>send</mat-icon>
             </button>
           </ng-container>
         </ng-container>
