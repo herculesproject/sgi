@@ -39,10 +39,13 @@
               placeholder="{{'csp.convocatoria.enlace.modal.tipoEnlace' | translate}}"
               [matAutocomplete]="autoTipoEnlace">
             <mat-autocomplete #autoTipoEnlace="matAutocomplete" [displayWith]="getNombreTipoEnlace">
-              <mat-option *ngFor="let tipoEnlace of tiposEnlaces" [value]="tipoEnlace">
-                {{tipoEnlace}}
+              <mat-option *ngFor="let tipoEnlace of tiposEnlace$ | async" [value]="tipoEnlace">
+                {{tipoEnlace.nombre}}
               </mat-option>
             </mat-autocomplete>
+            <mat-error *ngIf="formGroup.controls.tipoEnlace.errors?.invalid">
+              {{'csp.convocatoria.enlace.modal.error.invalido' | translate}}
+            </mat-error>
           </mat-form-field>
         </div>
       </div>

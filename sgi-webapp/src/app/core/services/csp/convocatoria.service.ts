@@ -12,7 +12,7 @@ import { tap } from 'rxjs/operators';
 import { IHito } from '@core/models/csp/hito';
 import { IEntidadConvocante } from '@core/models/csp/entidad-convocante';
 import { DateUtils } from '@core/utils/date-utils';
-import { IEnlace } from '@core/models/csp/enlace';
+import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
 import { IEntidadFinanciadora } from '@core/models/csp/entidad-financiadora';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
 import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
@@ -152,16 +152,6 @@ const entidadesFinanciadoras: IEntidadFinanciadora[] = [
   } as IEntidadFinanciadora,
 ];
 
-const enlaces: IEnlace[] = [
-  {
-    id: 1, url: 'www.boe.es', descripcion: 'Publicación BOE', tipoEnlace: 'BOE', activo: true
-  },
-  {
-    id: 2, url: 'www.solicitamineco.es', descripcion: 'URL de convocatoria', tipoEnlace: 'Publicación convocatoria', activo: true
-  }
-
-];
-
 
 const areasTematicas: IAreaTematica[] = [
   {
@@ -224,28 +214,19 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
       );
   }
 
-
-
   /**
-   * Recupera listado mock de enlaces.
+   * Recupera listado de enlaces.
    * @param id convocatoria
    * @param options opciones de búsqueda.
    */
-  getEnlaces(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IEnlace>> {
-    this.logger.debug(ConvocatoriaService.name, `getEnlaces(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
-    // return this.find<IEntidadesConvocantes, IEntidadesConvocantes>(`${this.endpointUrl}/${id}/comentarios`, options)
-    const list = {
-      page: null,
-      total: enlaces.length,
-      items: enlaces
-    } as SgiRestListResult<IEnlace>;
-    return of(list)
+  getEnlaces(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaEnlace>> {
+    this.logger.debug(ConvocatoriaService.name, `getEnlaces(${id}, ${options})`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${id}/convocatoriaenlaces`;
+    return this.find<IConvocatoriaEnlace, IConvocatoriaEnlace>(endpointUrl, options)
       .pipe(
-        tap(() => this.logger.debug(ConvocatoriaService.name,
-          `getEnlaces(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+        tap(() => this.logger.debug(ConvocatoriaService.name, `getEnlaces(${id}, ${options})`, '-', 'end'))
       );
   }
-
 
   /**
    * Recupera listado mock de plazos y fases.

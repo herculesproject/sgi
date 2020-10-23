@@ -18,6 +18,7 @@ import { ConvocatoriaSeguimientoCientificoFragment } from './convocatoria-formul
 import { ConvocatoriaEnlaceFragment } from './convocatoria-formulario/convocatoria-enlace/convocatoria-enlace.fragment';
 import { ConvocatoriaEntidadesFinanciadorasFragment } from './convocatoria-formulario/convocatoria-entidades-financiadoras/convocatoria-entidades-financiadoras.fragment';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { ConvocatoriaEnlaceService } from '@core/services/csp/convocatoria-enlace.service';
 
 @Injectable()
 export class ConvocatoriaActionService extends ActionService {
@@ -49,8 +50,8 @@ export class ConvocatoriaActionService extends ActionService {
     fb: FormBuilder,
     route: ActivatedRoute,
     service: ConvocatoriaService,
-    empresaEconomicaService: EmpresaEconomicaService
-  ) {
+    empresaEconomicaService: EmpresaEconomicaService,
+    convocatoria: ConvocatoriaEnlaceService) {
     super();
     this.convocatoria = {} as IConvocatoria;
     if (route.snapshot.data.convocatoria) {
@@ -64,7 +65,7 @@ export class ConvocatoriaActionService extends ActionService {
     this.plazosFases = new ConvocatoriaPlazosFasesFragment(logger, this.convocatoria?.id, service);
     this.hitos = new ConvocatoriaHitosFragment(this.convocatoria?.id, service);
     this.entidadesFinanciadorasFragment = new ConvocatoriaEntidadesFinanciadorasFragment(logger, this.convocatoria?.id, service);
-    this.enlaces = new ConvocatoriaEnlaceFragment(logger, this.convocatoria?.id, service);
+    this.enlaces = new ConvocatoriaEnlaceFragment(logger, this.convocatoria?.id, service, convocatoria);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.SEGUIMIENTO_CIENTIFICO, this.seguimientoCientifico);

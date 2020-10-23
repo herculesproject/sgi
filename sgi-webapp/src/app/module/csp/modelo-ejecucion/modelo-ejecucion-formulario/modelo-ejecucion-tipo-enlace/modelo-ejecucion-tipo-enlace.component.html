@@ -18,7 +18,7 @@
 
     <!-- Activo -->
     <ng-container matColumnDef="activo">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.tipo.enlace.activo' | translate}}
+      <th mat-header-cell *matHeaderCellDef> {{'csp.tipo.enlace.activo' | translate}}
       </th>
       <td mat-cell *matCellDef="let wrapper">{{(wrapper.value.activo ? 'label.si' : 'label.no') | translate}}
       </td>

@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { IEnlace } from '@core/models/csp/enlace';
+import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
@@ -33,8 +33,8 @@ describe('ConvocatoriaEnlaceModalComponent', () => {
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: {} as IEnlace },
-        { provide: MAT_DIALOG_DATA, useValue: {} as IEnlace },
+        { provide: MatDialogRef, useValue: {} as IConvocatoriaEnlace },
+        { provide: MAT_DIALOG_DATA, useValue: {} as IConvocatoriaEnlace },
       ]
     })
       .compileComponents();

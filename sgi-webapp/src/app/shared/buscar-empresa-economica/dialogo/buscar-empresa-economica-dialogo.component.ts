@@ -108,7 +108,7 @@ export class BuscarEmpresaEconomicaDialogoComponent implements AfterViewInit {
           this.paginator.firstPage();
           this.totalElementos = 0;
           this.snackBarService.showError(MSG_LISTADO_ERROR);
-          this.logger.error(BuscarEmpresaEconomicaDialogoComponent.name, 'buscarEmpresasEconomicas()', 'end');
+          this.logger.error(BuscarEmpresaEconomicaDialogoComponent.name, 'buscarEmpresasEconomicas()', 'error');
           return of([]);
         })
       );
