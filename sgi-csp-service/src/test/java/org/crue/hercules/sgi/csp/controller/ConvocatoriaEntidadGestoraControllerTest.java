@@ -49,7 +49,7 @@ public class ConvocatoriaEntidadGestoraControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CENTGES-C" })
-  public void create_ReturnsTipoFinalidad() throws Exception {
+  public void create_ReturnsConvocatoriaEntidadGestora() throws Exception {
     // given: new ConvocatoriaEntidadGestora
     ConvocatoriaEntidadGestora convocatoriaEntidadGestora = generarConvocatoriaEntidadGestora(null, 1L, "entidad-001");
 

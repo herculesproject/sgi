@@ -429,30 +429,6 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-convocatoria_entidad_financiadora">
-    <insert tableName="convocatoria_entidad_financiadora">
-      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
-      <column name="entidad_ref" value="entidad-001" />
-      <column name="fuente_financiacion_id" valueComputed="(select id from csp.fuente_financiacion where nombre = 'nombre-001')"></column>
-      <column name="tipo_financiacion_id" valueComputed="(select id from csp.tipo_financiacion where nombre = 'nombreTipoFinanciacion1')"></column>
-      <column name="porcentaje_financiacion" value="10" />
-    </insert>
-    <insert tableName="convocatoria_entidad_financiadora">
-      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
-      <column name="entidad_ref" value="entidad-002" />
-      <column name="fuente_financiacion_id" valueComputed="(select id from csp.fuente_financiacion where nombre = 'nombre-002')"></column>
-      <column name="tipo_financiacion_id" valueComputed="(select id from csp.tipo_financiacion where nombre = 'nombreTipoFinanciacion1')"></column>
-      <column name="porcentaje_financiacion" value="50" />
-    </insert>
-    <insert tableName="convocatoria_entidad_financiadora">
-      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-003')"></column>
-      <column name="entidad_ref" value="entidad-003" />
-      <column name="fuente_financiacion_id" valueComputed="(select id from csp.fuente_financiacion where nombre = 'nombre-003')"></column>
-      <column name="tipo_financiacion_id" valueComputed="(select id from csp.tipo_financiacion where nombre = 'nombreTipoFinanciacion2')"></column>
-      <column name="porcentaje_financiacion" value="30" />
-    </insert>
-  </changeSet>
-
   <changeSet author="master" id="20200928000000-modelo_tipo_finalidad">
     <insert tableName="modelo_tipo_finalidad">
       <column name="tipo_finalidad_id" valueComputed="(select id from csp.tipo_enlace where nombre like '% AAA')" />
@@ -690,6 +666,30 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-convocatoria_entidad_financiadora">
+    <insert tableName="convocatoria_entidad_financiadora">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
+      <column name="entidad_ref" value="entidad-001" />
+      <column name="fuente_financiacion_id" valueComputed="(select id from csp.fuente_financiacion where nombre = 'nombre-001')"></column>
+      <column name="tipo_financiacion_id" valueComputed="(select id from csp.tipo_financiacion where nombre = 'nombreTipoFinanciacion1')"></column>
+      <column name="porcentaje_financiacion" value="10" />
+    </insert>
+    <insert tableName="convocatoria_entidad_financiadora">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
+      <column name="entidad_ref" value="entidad-002" />
+      <column name="fuente_financiacion_id" valueComputed="(select id from csp.fuente_financiacion where nombre = 'nombre-002')"></column>
+      <column name="tipo_financiacion_id" valueComputed="(select id from csp.tipo_financiacion where nombre = 'nombreTipoFinanciacion1')"></column>
+      <column name="porcentaje_financiacion" value="50" />
+    </insert>
+    <insert tableName="convocatoria_entidad_financiadora">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-003')"></column>
+      <column name="entidad_ref" value="entidad-003" />
+      <column name="fuente_financiacion_id" valueComputed="(select id from csp.fuente_financiacion where nombre = 'nombre-003')"></column>
+      <column name="tipo_financiacion_id" valueComputed="(select id from csp.tipo_financiacion where nombre = 'nombreTipoFinanciacion2')"></column>
+      <column name="porcentaje_financiacion" value="30" />
+    </insert>
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-convocatoria_entidad_gestora">
     <insert tableName="convocatoria_entidad_gestora">
       <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
@@ -705,4 +705,30 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20201018000000-convocatoria_fase">
+    <insert tableName="convocatoria_fase">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
+      <column name="tipo_fase_id" valueComputed="(select id from csp.tipo_fase where nombre = 'Fase1')"></column>
+      <column name="fecha_inicio" value="2020-10-12" />
+      <column name="fecha_fin" value="2020-10-15" />
+      <column name="observaciones" value="observaciones1" />
+
+    </insert>
+    <insert tableName="convocatoria_fase">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
+      <column name="tipo_fase_id" valueComputed="(select id from csp.tipo_fase where nombre = 'Fase2')"></column>
+      <column name="fecha_inicio" value="2020-10-16" />
+      <column name="fecha_fin" value="2020-10-20" />
+      <column name="observaciones" value="observaciones2" />
+
+    </insert>
+    <insert tableName="convocatoria_fase">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-003')"></column>
+      <column name="tipo_fase_id" valueComputed="(select id from csp.tipo_fase where nombre = 'Fase3')"></column>
+      <column name="fecha_inicio" value="2020-10-23" />
+      <column name="fecha_fin" value="2020-10-30" />
+      <column name="observaciones" value="observaciones3" />
+
+    </insert>
+  </changeSet>
 </databaseChangeLog>

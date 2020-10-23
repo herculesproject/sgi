@@ -53,6 +53,8 @@ public class ConvocatoriaEnlaceServiceTest {
         .willReturn(Optional.of(convocatoriaEnlace.getConvocatoria()));
     BDDMockito.given(tipoEnlaceRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEnlace.getTipoEnlace()));
+    BDDMockito.given(repository.findByConvocatoriaIdAndUrl(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(repository.save(convocatoriaEnlace)).will((InvocationOnMock invocation) -> {
       ConvocatoriaEnlace convocatoriaEnlaceCreado = invocation.getArgument(0);
@@ -97,7 +99,7 @@ public class ConvocatoriaEnlaceServiceTest {
   }
 
   @Test
-  public void create_WithouConvocatoria_ThrowsIllegalArgumentException() {
+  public void create_WithoutConvocatoria_ThrowsIllegalArgumentException() {
     // given: Un nuevo ConvocatoriaEnlace sin convocatoria
     ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(null);
     convocatoriaEnlace.getConvocatoria().setId(null);
@@ -135,6 +137,25 @@ public class ConvocatoriaEnlaceServiceTest {
   }
 
   @Test
+  public void create_WithUrlDuplicada_ThrowsIllegalArgumentException() {
+    // given: Un nuevo ConvocatoriaEnlace con el enlace inactivo
+    ConvocatoriaEnlace convocatoriaEnlace1 = generarMockConvocatoriaEnlace(3L);
+    convocatoriaEnlace1.setUrl("www.duplicada.com");
+    ConvocatoriaEnlace convocatoriaEnlace2 = generarMockConvocatoriaEnlace(null);
+    convocatoriaEnlace1.setUrl("www.duplicada.com");
+
+    BDDMockito.given(tipoEnlaceRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(convocatoriaEnlace1.getTipoEnlace()));
+    BDDMockito.given(repository.findByConvocatoriaIdAndUrl(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
+        .willReturn(Optional.of(convocatoriaEnlace1));
+
+    // when: Creamos el ConvocatoriaEnlace
+    // then: Lanza una excepcion porque la url es duplicada
+    Assertions.assertThatThrownBy(() -> service.create(convocatoriaEnlace2))
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Ya existe esa url para esta Convocatoria");
+  }
+
+  @Test
   public void update_ReturnsConvocatoriaEnlace() {
     // given: Un nuevo ConvocatoriaEnlace con el nombre actualizado
     ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L);
@@ -147,6 +168,8 @@ public class ConvocatoriaEnlaceServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaEnlace));
     BDDMockito.given(repository.save(ArgumentMatchers.<ConvocatoriaEnlace>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+    BDDMockito.given(repository.findByConvocatoriaIdAndUrl(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
+        .willReturn(Optional.empty());
 
     // when: Actualizamos el ConvocatoriaEnlace
     ConvocatoriaEnlace convocatoriaEnlaceActualizado = service.update(convocatoriaEnlaceDescripcionActualizada);
@@ -179,7 +202,7 @@ public class ConvocatoriaEnlaceServiceTest {
   }
 
   @Test
-  public void update_Withouturl_ThrowsIllegalArgumentException() {
+  public void update_WithoutUrl_ThrowsIllegalArgumentException() {
     // given: Un ConvocatoriaEnlace actualizado con sin url
     ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L);
     convocatoriaEnlace.setUrl(null);
@@ -194,21 +217,22 @@ public class ConvocatoriaEnlaceServiceTest {
   public void update_WithTipoEnlaceInactivo_ThrowsIllegalArgumentException() {
     // given: Una nueva ConvocatoriaActualizada sin url
     ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L);
-  
+
     ConvocatoriaEnlace convocatoriaEnlaceActualizado = generarMockConvocatoriaEnlace(1L);
     convocatoriaEnlaceActualizado.getTipoEnlace().setActivo(false);
     convocatoriaEnlaceActualizado.getTipoEnlace().setId(2L);
 
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaEnlace));
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaEnlace));
 
     BDDMockito.given(tipoEnlaceRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(convocatoriaEnlaceActualizado.getTipoEnlace()));
+    BDDMockito.given(repository.findByConvocatoriaIdAndUrl(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
+        .willReturn(Optional.empty());
 
     // when: Creamos el ConvocatoriaEnlace
     // then: Lanza una excepcion porque la url es null
-    Assertions.assertThatThrownBy(() -> service.update(convocatoriaEnlaceActualizado)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("El TipoEnlace debe estar activo");
+    Assertions.assertThatThrownBy(() -> service.update(convocatoriaEnlaceActualizado))
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("El TipoEnlace debe estar activo");
   }
 
   @Test
@@ -222,7 +246,7 @@ public class ConvocatoriaEnlaceServiceTest {
     Assertions.assertThatThrownBy(() -> service.update(convocatoriaEnlaceActualizar))
         .isInstanceOf(TipoEnlaceNotFoundException.class).hasMessage("TipoEnlace 1 does not exist.");
   }
-  
+
   @Test
   public void update_WithoutTipoEnlace_ReturnsConvocatoriaEnlace() {
     // given: Un nuevo ConvocatoriaEnlace con el nombre actualizado
@@ -234,6 +258,8 @@ public class ConvocatoriaEnlaceServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaEnlace));
     BDDMockito.given(repository.save(ArgumentMatchers.<ConvocatoriaEnlace>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+    BDDMockito.given(repository.findByConvocatoriaIdAndUrl(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
+        .willReturn(Optional.empty());
 
     // when: Actualizamos el ConvocatoriaEnlace
     ConvocatoriaEnlace convocatoriaEnlaceActualizado = service.update(convocatoriaEnlaceDescripcionActualizada);
@@ -247,6 +273,24 @@ public class ConvocatoriaEnlaceServiceTest {
     Assertions.assertThat(convocatoriaEnlaceActualizado.getUrl()).as("getUrl()").isEqualTo(convocatoriaEnlace.getUrl());
     Assertions.assertThat(convocatoriaEnlaceActualizado.getConvocatoria()).as("getConvocatoria()")
         .isEqualTo(convocatoriaEnlace.getConvocatoria());
+  }
+
+  @Test
+  public void update_WithDuplicatedUrl_ThrowsIllegalArgumentException() {
+    // given: a ConvocatoriaEnlace con la url duplicada
+    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L);
+    ConvocatoriaEnlace convocatoriaEnlaceExistente = generarMockConvocatoriaEnlace(2L);
+
+    BDDMockito.given(tipoEnlaceRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(convocatoriaEnlace.getTipoEnlace()));
+    BDDMockito.given(repository.findByConvocatoriaIdAndUrl(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
+        .willReturn(Optional.of(convocatoriaEnlaceExistente));
+
+    Assertions.assertThatThrownBy(
+        // when: update ConvocatoriaEnlace
+        () -> service.update(convocatoriaEnlace))
+        // then: Lanza una excepcion porque la url es duplicada
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Ya existe esa url para esta Convocatoria");
   }
 
   @Test

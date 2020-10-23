@@ -10,11 +10,13 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEnlaceService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadGestoraService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaFaseService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -55,8 +57,10 @@ public class ConvocatoriaController {
 
   /** ConvocatoriaEntidadGestora service */
   private final ConvocatoriaAreaTematicaService convocatoriaAreaTematicaService;
+  /** ConvocatoriaFase service */
+  private final ConvocatoriaFaseService convocatoriaFaseService;
 
-  /** ConvocatoriaEntlace service */
+  /** ConvocatoriaEnlace service */
   private final ConvocatoriaEnlaceService convocatoriaEnlaceService;
 
   /** ConvocatoriaEntidadConvocante service */
@@ -71,23 +75,27 @@ public class ConvocatoriaController {
    * @param convocatoriaEntidadConvocanteService   {@link ConvocatoriaEntidadConvocanteService}.
    * @param convocatoriaEntidadFinanciadoraService {@link ConvocatoriaEntidadFinanciadoraService}.
    * @param convocatoriaEntidadGestoraService      {@link ConvocatoriaEntidadGestoraService}.
+   * @param convocatoriaFaseService                {@link ConvocatoriaFaseService}
+   * 
    */
   public ConvocatoriaController(ConvocatoriaService convocatoriaService,
       ConvocatoriaAreaTematicaService convocatoriaAreaTematicaService,
       ConvocatoriaEnlaceService convocatoriaEnlaceService,
       ConvocatoriaEntidadConvocanteService convocatoriaEntidadConvocanteService,
       ConvocatoriaEntidadFinanciadoraService convocatoriaEntidadFinanciadoraService,
-      ConvocatoriaEntidadGestoraService convocatoriaEntidadGestoraService) {
+      ConvocatoriaEntidadGestoraService convocatoriaEntidadGestoraService,
+      ConvocatoriaFaseService convocatoriaFaseService) {
     this.service = convocatoriaService;
     this.convocatoriaAreaTematicaService = convocatoriaAreaTematicaService;
     this.convocatoriaEnlaceService = convocatoriaEnlaceService;
     this.convocatoriaEntidadConvocanteService = convocatoriaEntidadConvocanteService;
     this.convocatoriaEntidadFinanciadoraService = convocatoriaEntidadFinanciadoraService;
     this.convocatoriaEntidadGestoraService = convocatoriaEntidadGestoraService;
+    this.convocatoriaFaseService = convocatoriaFaseService;
   }
 
   /**
-   * Crea nuevo {@link Convocatoria}.
+   * Crea nuevo {@link Convocatoria}
    * 
    * @param convocatoria {@link Convocatoria}. que se quiere crear.
    * @return Nuevo {@link Convocatoria} creado.
@@ -237,6 +245,7 @@ public class ConvocatoriaController {
 
     log.debug("findAllConvocatoriaEntidadFinanciadora(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
+
   }
 
   /**
@@ -267,6 +276,37 @@ public class ConvocatoriaController {
     }
 
     log.debug("findAllConvocatoriaEntidadGestora(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * 
+   * CONVOCATORIA FASE
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link ConvocatoriaFase} de la
+   * {@link Convocatoria}.
+   * 
+   * @param id     Identificador de {@link Convocatoria}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/convocatoriafases")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CFAS-V')")
+  ResponseEntity<Page<ConvocatoriaFase>> findAllConvocatoriaFases(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllConvocatoriaFase(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<ConvocatoriaFase> page = convocatoriaFaseService.findAllByConvocatoria(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllConvocatoriaFase(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllConvocatoriaFase(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

@@ -72,12 +72,12 @@ public class ConvocatoriaEnlaceServiceImpl implements ConvocatoriaEnlaceService 
         convocatoriaEnlace.setTipoEnlace(null);
       }
     }
+    Assert.isTrue(!repository
+        .findByConvocatoriaIdAndUrl(convocatoriaEnlace.getConvocatoria().getId(), convocatoriaEnlace.getUrl())
+        .isPresent(), "Ya existe esa url para esta Convocatoria");
 
     convocatoriaEnlace.setConvocatoria(convocatoriaRepository.findById(convocatoriaEnlace.getConvocatoria().getId())
         .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaEnlace.getConvocatoria().getId())));
-
-    convocatoriaEnlace.setTipoEnlace(tipoEnlaceRepository.findById(convocatoriaEnlace.getTipoEnlace().getId())
-        .orElseThrow(() -> new TipoEnlaceNotFoundException(convocatoriaEnlace.getTipoEnlace().getId())));
 
     ConvocatoriaEnlace returnValue = repository.save(convocatoriaEnlace);
 
@@ -116,6 +116,9 @@ public class ConvocatoriaEnlaceServiceImpl implements ConvocatoriaEnlaceService 
         convocatoriaEnlaceActualizar.setTipoEnlace(null);
       }
     }
+    Assert.isTrue(!repository.findByConvocatoriaIdAndUrl(convocatoriaEnlaceActualizar.getConvocatoria().getId(),
+        convocatoriaEnlaceActualizar.getUrl()).isPresent(), "Ya existe esa url para esta Convocatoria");
+
     return repository.findById(convocatoriaEnlaceActualizar.getId()).map(convocatoriaEnlace -> {
       if (convocatoriaEnlaceActualizar.getTipoEnlace() != null) {
         Assert.isTrue(convocatoriaEnlace.getTipoEnlace().getId() == convocatoriaEnlaceActualizar.getTipoEnlace().getId()

@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,12 +30,15 @@ import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
+import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEnlaceService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadGestoraService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaFaseService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -86,6 +90,8 @@ public class ConvocatoriaControllerTest {
   private ConvocatoriaEnlaceService convocatoriaEnlaceService;
   @MockBean
   private ConvocatoriaEntidadConvocanteService convocatoriaEntidadConvocanteService;
+  @MockBean
+  private ConvocatoriaFaseService convocatoriaFaseService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_REGISTRAR = "/registrar";
@@ -96,6 +102,7 @@ public class ConvocatoriaControllerTest {
   private static final String PATH_ENTIDAD_CONVOCANTE = "/convocatoriaentidadconvocantes";
   private static final String PATH_ENTIDAD_FINANCIADORA = "/convocatoriaentidadfinanciadoras";
   private static final String PATH_ENTIDAD_GESTORA = "/convocatoriaentidadgestoras";
+  private static final String PATH_FASE = "/convocatoriafases";
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
@@ -556,6 +563,122 @@ public class ConvocatoriaControllerTest {
         .andDo(MockMvcResultHandlers.print())
         // then: Devuelve un 204
         .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
+   * 
+   * CONVOCATORIA FASE
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CFAS-V" })
+  public void findAllConvocatoriaFase_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ConvocatoriaFase para la Convocatoria
+    Long convocatoriaId = 1L;
+
+    List<ConvocatoriaFase> convocatoriasFases = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      convocatoriasFases.add(generarMockConvocatoriaFase(i));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(convocatoriaFaseService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ConvocatoriaFase>>() {
+          @Override
+          public Page<ConvocatoriaFase> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(2, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > convocatoriasFases.size() ? convocatoriasFases.size() : toIndex;
+            List<ConvocatoriaFase> content = convocatoriasFases.subList(fromIndex, toIndex);
+            Page<ConvocatoriaFase> page = new PageImpl<>(content, pageable, convocatoriasFases.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_FASE, convocatoriaId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los ConvocatoriaFase del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<ConvocatoriaFase> convocatoriaFaseResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<ConvocatoriaFase>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ConvocatoriaFase convocatoriaFase = convocatoriaFaseResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(convocatoriaFase.getObservaciones()).isEqualTo("observaciones" + i);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void findAllConvocatoriaFase_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de ConvocatoriaFase para la Convocatoria
+    Long convocatoriaId = 1L;
+    List<ConvocatoriaFase> convocatoriasFases = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(convocatoriaFaseService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ConvocatoriaFase>>() {
+          @Override
+          public Page<ConvocatoriaFase> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(2, Pageable.class);
+            Page<ConvocatoriaFase> page = new PageImpl<>(convocatoriasFases, pageable, 0);
+            return page;
+          }
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_FASE, convocatoriaId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
+   * Función que devuelve un objeto ConvocatoriaFase
+   * 
+   * @param id     id del ConvocatoriaFase
+   * @param nombre nombre del ConvocatoriaFase
+   * @return el objeto ConvocatoriaFase
+   */
+  private ConvocatoriaFase generarMockConvocatoriaFase(Long id) {
+
+    ConvocatoriaFase convocatoriaFase = new ConvocatoriaFase();
+    convocatoriaFase.setId(id);
+    convocatoriaFase.setConvocatoria(Convocatoria.builder().id(id).activo(Boolean.TRUE).codigo("codigo" + id).build());
+    convocatoriaFase.setFechaInicio(LocalDate.now());
+    convocatoriaFase.setFechaFin(LocalDate.now().plusDays(1L));
+    convocatoriaFase.setTipoFase(
+        TipoFase.builder().nombre("tipoFase" + id).descripcion("descripcionFase" + id).activo(Boolean.TRUE).build());
+    convocatoriaFase.setObservaciones("observaciones" + id);
+
+    return convocatoriaFase;
   }
 
   /**

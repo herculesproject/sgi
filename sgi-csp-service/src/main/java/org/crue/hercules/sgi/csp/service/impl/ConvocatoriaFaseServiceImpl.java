@@ -1,0 +1,229 @@
+package org.crue.hercules.sgi.csp.service.impl;
+
+import java.util.List;
+
+import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaFaseNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.TipoFaseNotFoundException;
+import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
+import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaFaseRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
+import org.crue.hercules.sgi.csp.repository.TipoFaseRepository;
+import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaFaseSpecifications;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaFaseService;
+import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * Service Implementation para gestion {@link ConvocatoriaFase}.
+ */
+@Service
+@Slf4j
+@Transactional(readOnly = true)
+public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
+
+  private final ConvocatoriaFaseRepository repository;
+  private final ConvocatoriaRepository convocatoriaRepository;
+  private final TipoFaseRepository tipoFaseRepository;
+
+  public ConvocatoriaFaseServiceImpl(ConvocatoriaFaseRepository repository,
+      ConvocatoriaRepository convocatoriaRepository, TipoFaseRepository tipoFaseRepository) {
+    this.repository = repository;
+    this.convocatoriaRepository = convocatoriaRepository;
+    this.tipoFaseRepository = tipoFaseRepository;
+  }
+
+  /**
+   * Guarda la entidad {@link ConvocatoriaFase}.
+   * 
+   * @param convocatoriaFase la entidad {@link ConvocatoriaFase} a guardar.
+   * @return ConvocatoriaFase la entidad {@link ConvocatoriaFase} persistida.
+   */
+  @Override
+  @Transactional
+  public ConvocatoriaFase create(ConvocatoriaFase convocatoriaFase) {
+    log.debug("create(ConvocatoriaFase convocatoriaFase) - start");
+
+    Assert.isNull(convocatoriaFase.getId(), "Id tiene que ser null para crear ConvocatoriaFase");
+
+    Assert.notNull(convocatoriaFase.getConvocatoria().getId(),
+        "Id Convocatoria no puede ser null para crear ConvocatoriaFase");
+
+    Assert.notNull(convocatoriaFase.getTipoFase().getId(), "Id Fase no puede ser null para crear ConvocatoriaFase");
+
+    Assert.notNull(convocatoriaFase.getFechaInicio(),
+        "La fecha de inicio no puede ser null para crear ConvocatoriaFase");
+
+    Assert.notNull(convocatoriaFase.getFechaFin(), "La fecha de fin no puede ser null para crear ConvocatoriaFase");
+
+    Assert.isTrue(convocatoriaFase.getFechaFin().compareTo(convocatoriaFase.getFechaInicio()) >= 0,
+        "La fecha de fecha de fin debe ser posterior a la fecha de inicio");
+
+    convocatoriaFase.setConvocatoria(convocatoriaRepository.findById(convocatoriaFase.getConvocatoria().getId())
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaFase.getConvocatoria().getId())));
+
+    convocatoriaFase.setTipoFase(tipoFaseRepository.findById(convocatoriaFase.getTipoFase().getId())
+        .orElseThrow(() -> new TipoFaseNotFoundException(convocatoriaFase.getTipoFase().getId())));
+    Assert.isTrue(convocatoriaFase.getTipoFase().getActivo(), "El TipoFase debe estar activo");
+    Assert.isTrue(!existsConvocatoriaFaseConFechasSolapadas(convocatoriaFase),
+        "Ya existe una convocatoria en ese rango de fechas");
+
+    ConvocatoriaFase returnValue = repository.save(convocatoriaFase);
+
+    log.debug("create(ConvocatoriaFase convocatoriaFase) - end");
+    return returnValue;
+  }
+
+  /**
+   * Actualiza la entidad {@link ConvocatoriaFase}.
+   * 
+   * @param convocatoriaFaseActualizar la entidad {@link ConvocatoriaFase} a
+   *                                   guardar.
+   * @return ConvocatoriaFase la entidad {@link ConvocatoriaFase} persistida.
+   */
+  @Override
+  @Transactional
+  public ConvocatoriaFase update(ConvocatoriaFase convocatoriaFaseActualizar) {
+    log.debug("update(ConvocatoriaFase convocatoriaFaseActualizar) - start");
+
+    Assert.notNull(convocatoriaFaseActualizar.getId(),
+        "ConvocatoriaFase id no puede ser null para actualizar un ConvocatoriaFase");
+
+    Assert.notNull(convocatoriaFaseActualizar.getConvocatoria().getId(),
+        "Id Convocatoria no puede ser null para actualizar ConvocatoriaFase");
+
+    Assert.notNull(convocatoriaFaseActualizar.getTipoFase().getId(),
+        "Id Fase no puede ser null para actualizar ConvocatoriaFase");
+
+    Assert.notNull(convocatoriaFaseActualizar.getFechaInicio(),
+        "La fecha de inicio no puede ser null para actualizar ConvocatoriaFase");
+    Assert.notNull(convocatoriaFaseActualizar.getFechaFin(),
+        "La fecha de fin no puede ser null para crear ConvocatoriaFase");
+
+    Assert.isTrue(convocatoriaFaseActualizar.getFechaFin().compareTo(convocatoriaFaseActualizar.getFechaInicio()) >= 0,
+        "La fecha de fecha de fin debe ser posterior a la fecha de inicio");
+
+    convocatoriaFaseActualizar.setTipoFase(tipoFaseRepository.findById(convocatoriaFaseActualizar.getTipoFase().getId())
+        .orElseThrow(() -> new TipoFaseNotFoundException(convocatoriaFaseActualizar.getTipoFase().getId())));
+
+    return repository.findById(convocatoriaFaseActualizar.getId()).map(convocatoriaFase -> {
+      if (convocatoriaFaseActualizar.getTipoFase() != null) {
+        Assert.isTrue(convocatoriaFase.getTipoFase().getId() == convocatoriaFaseActualizar.getTipoFase().getId()
+            || convocatoriaFaseActualizar.getTipoFase().getActivo(), "El TipoFase debe estar activo");
+      }
+      Assert.isTrue(!existsConvocatoriaFaseConFechasSolapadas(convocatoriaFaseActualizar),
+          "Ya existe una convocatoria en ese rango de fechas");
+
+      convocatoriaFase.setFechaInicio(convocatoriaFaseActualizar.getFechaInicio());
+      convocatoriaFase.setFechaFin(convocatoriaFaseActualizar.getFechaFin());
+      convocatoriaFase.setTipoFase(convocatoriaFaseActualizar.getTipoFase());
+      convocatoriaFase.setObservaciones(convocatoriaFaseActualizar.getObservaciones());
+
+      ConvocatoriaFase returnValue = repository.save(convocatoriaFase);
+      log.debug("update(ConvocatoriaFase convocatoriaFaseActualizar) - end");
+      return returnValue;
+    }).orElseThrow(() -> new ConvocatoriaFaseNotFoundException(convocatoriaFaseActualizar.getId()));
+
+  }
+
+  /**
+   * Elimina la {@link ConvocatoriaFase}.
+   *
+   * @param id Id del {@link ConvocatoriaFase}.
+   */
+  @Override
+  @Transactional
+  public void delete(Long id) {
+    log.debug("delete(Long id) - start");
+
+    Assert.notNull(id, "ConvocatoriaFase id no puede ser null para eliminar un ConvocatoriaFase");
+    if (!repository.existsById(id)) {
+      throw new ConvocatoriaFaseNotFoundException(id);
+    }
+
+    repository.deleteById(id);
+    log.debug("delete(Long id) - end");
+  }
+
+  /**
+   * Obtiene {@link ConvocatoriaFase} por su id.
+   *
+   * @param id el id de la entidad {@link ConvocatoriaFase}.
+   * @return la entidad {@link ConvocatoriaFase}.
+   */
+  @Override
+  public ConvocatoriaFase findById(Long id) {
+    log.debug("findById(Long id)  - start");
+    final ConvocatoriaFase returnValue = repository.findById(id)
+        .orElseThrow(() -> new ConvocatoriaFaseNotFoundException(id));
+    log.debug("findById(Long id)  - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene las {@link ConvocatoriaFase} para una {@link Convocatoria}.
+   *
+   * @param convocatoriaId el id de la {@link Convocatoria}.
+   * @param query          la información del filtro.
+   * @param pageable       la información de la paginación.
+   * @return la lista de entidades {@link ConvocatoriaFase} de la
+   *         {@link Convocatoria} paginadas.
+   */
+  @Override
+  public Page<ConvocatoriaFase> findAllByConvocatoria(Long convocatoriaId, List<QueryCriteria> query,
+      Pageable pageable) {
+    log.debug("findAllByConvocatoria(Long idConvocatoria, List<QueryCriteria> query, Pageable pageable) - start");
+    Specification<ConvocatoriaFase> specByQuery = new QuerySpecification<ConvocatoriaFase>(query);
+    Specification<ConvocatoriaFase> specByConvocatoria = ConvocatoriaFaseSpecifications
+        .byConvocatoriaId(convocatoriaId);
+
+    Specification<ConvocatoriaFase> specs = Specification.where(specByConvocatoria).and(specByQuery);
+
+    Page<ConvocatoriaFase> returnValue = repository.findAll(specs, pageable);
+    log.debug("findAllByConvocatoria(Long idConvocatoria, List<QueryCriteria> query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Comprueba que existen {@link ConvocatoriaFase} para una {@link Convocatoria}
+   * con el mismo {@link TipoFase} y con las fechas solapadas
+   *
+   * @param convocatoriaFase {@link Convocatoria} a comprobar.
+   * 
+   * @return true si exite la coincidencia
+   */
+
+  private Boolean existsConvocatoriaFaseConFechasSolapadas(ConvocatoriaFase convocatoriaFase) {
+
+    log.debug("existsConvocatoriaFaseConFechasSolapadas(ConvocatoriaFase convocatoriaFase) - start");
+    Specification<ConvocatoriaFase> specByRangoFechaSolapados = ConvocatoriaFaseSpecifications
+        .byRangoFechaSolapados(convocatoriaFase.getFechaInicio(), convocatoriaFase.getFechaFin());
+    Specification<ConvocatoriaFase> specByConvocatoria = ConvocatoriaFaseSpecifications
+        .byConvocatoriaId(convocatoriaFase.getConvocatoria().getId());
+    Specification<ConvocatoriaFase> specByTipoFase = ConvocatoriaFaseSpecifications
+        .byTipoFaseId(convocatoriaFase.getTipoFase().getId());
+    Specification<ConvocatoriaFase> specByIdNotEqual = ConvocatoriaFaseSpecifications
+        .byIdNotEqual(convocatoriaFase.getId());
+
+    Specification<ConvocatoriaFase> specs = Specification.where(specByConvocatoria).and(specByRangoFechaSolapados)
+        .and(specByTipoFase).and(specByIdNotEqual);
+
+    Page<ConvocatoriaFase> convocatoriaFases = repository.findAll(specs, Pageable.unpaged());
+
+    Boolean returnValue = !convocatoriaFases.isEmpty();
+    log.debug("existsConvocatoriaFaseConFechasSolapadas(ConvocatoriaFase convocatoriaFase) - end");
+
+    return returnValue;
+
+  }
+}
