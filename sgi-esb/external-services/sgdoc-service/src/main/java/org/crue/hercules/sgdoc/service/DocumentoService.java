@@ -53,12 +53,11 @@ public class DocumentoService {
   /**
    * Actualiza los datos de la {@link DocumentoEntity}.
    *
-   * @param documentoActualizar la entidad {@link DocumentoEntity} con los
-   *                                datos actualizados.
+   * @param documentoActualizar la entidad {@link DocumentoEntity} con los datos
+   *                            actualizados.
    * @return la entidad {@link DocumentoEntity} persistida.
-   * @throws NotFoundException        Si no existe ningún
-   *                                  {@link DocumentoEntity} con ese
-   *                                  documentoRef.
+   * @throws NotFoundException        Si no existe ningún {@link DocumentoEntity}
+   *                                  con ese documentoRef.
    * @throws IllegalArgumentException Si el {@link DocumentoEntity} no tiene
    *                                  documentoRef.
    */
@@ -79,6 +78,26 @@ public class DocumentoService {
       log.debug("update(Documento documentoActualizar) - end");
       return returnValue;
     }).orElseThrow(() -> new NotFoundException(documentoActualizar.getDocumentoRef()));
+  }
+
+  /**
+   * Guarda la entidad {@link DocumentoEntity}.
+   *
+   * @param documento la entidad {@link DocumentoEntity} a guardar.
+   * @return la entidad {@link DocumentoEntity} persistida.
+   */
+  @Transactional
+  public void delete(String documentoRef) {
+    log.debug("delete(String documentoRef) - start");
+
+    Assert.notNull(documentoRef, "documentoRef no puede ser null para eliminar un Documento");
+
+    if (!repository.existsById(documentoRef)) {
+      throw new NotFoundException(documentoRef);
+    }
+
+    repository.deleteById(documentoRef);
+    log.debug("delete(String documentoRef) - end");
   }
 
   public Page<DocumentoEntity> findAll(List<QueryCriteria> query, Pageable paging) {
