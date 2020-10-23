@@ -95,6 +95,7 @@ public class MemoriaControllerTest {
   private static final String PATH_PARAMETER_BY_DOCUMENTACION = "/documentaciones";
   private static final String PATH_PARAMETER_PERSONA_PETICION_EVALUACION = "/persona/peticion-evaluacion";
   private static final String PATH_PARAMETER_EVALUACIONES = "/evaluaciones";
+  private static final String PATH_PARAMETER_ENVIAR_SECRETARIA = "/enviar-secretaria";
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-V", "ETI-PEV-VR-INV" })
@@ -1139,6 +1140,17 @@ public class MemoriaControllerTest {
         // then: Crea el nuevo tipo memoria y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("memoria.titulo").value("memoria1"));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
+  public void enviarSecretaria_WithId() throws Exception {
+
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .put(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_ENVIAR_SECRETARIA, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
   /**

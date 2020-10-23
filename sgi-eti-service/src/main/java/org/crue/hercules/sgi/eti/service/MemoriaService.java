@@ -182,4 +182,13 @@ public interface MemoriaService {
    * @return la memoria o retrospectiva con su estado anterior
    */
   Memoria getEstadoAnteriorMemoria(Memoria memoria);
+
+  /**
+   * 
+   * Actualiza el estado de la {@link Memoria} a Enviar Secretaria
+   * 
+   * @param id         del estado de la memoria nuevo.
+   * @param personaRef Usuario logueado.
+   */
+  void enviarSecretaria(long id, String personaRef);
 }

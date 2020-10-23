@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
+import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
@@ -26,6 +28,7 @@ import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -503,6 +506,93 @@ public class MemoriaServiceImpl implements MemoriaService {
       }
     }
     return memoria;
+  }
+
+  /**
+   * 
+   * Actualiza el estado de la {@link Memoria} a Enviar Secretaria
+   * 
+   * @param idMemoria de la memoria.
+   */
+  @Transactional
+  @Override
+  public void enviarSecretaria(long idMemoria, String personaRef) {
+    log.debug("enviarSecretaria(Long id) - start");
+    Assert.notNull(idMemoria, "Memoria id no puede ser null para actualizar la memoria");
+
+    memoriaRepository.findById(idMemoria).map(memoria -> {
+      Assert.isTrue(
+          memoria.getEstadoActual().getId() == 2L || memoria.getEstadoActual().getId() == 6L
+              || memoria.getEstadoActual().getId() == 7L || memoria.getEstadoActual().getId() == 8L
+              || memoria.getEstadoActual().getId() == 11L || memoria.getEstadoActual().getId() == 16L
+              || memoria.getEstadoActual().getId() == 21L,
+          "La memoria no está en un estado correcto para pasar al estado 'En secretaría'");
+
+      Assert.isTrue(memoria.getPeticionEvaluacion().getPersonaRef().equals(personaRef),
+          "El usuario no es el propietario de la petición evaluación.");
+
+      boolean crearEvaluacion = false;
+
+      // Si el estado es 'Completada', 'Pendiente de correcciones' o 'No procede
+      // evaluar' se cambia el estado de la memoria a 'En secretaría'
+      if (memoria.getEstadoActual().getId() == 2L || memoria.getEstadoActual().getId() == 7L
+          || memoria.getEstadoActual().getId() == 8L) {
+        updateEstadoMemoria(memoria, 3L);
+      }
+
+      // Si el estado es 'Favorable pendiente de modificaciones mínimas'
+      // se cambia el estado de la memoria a 'En secretaría revisión mínima'
+      if (memoria.getEstadoActual().getId() == 6L) {
+        crearEvaluacion = true;
+        updateEstadoMemoria(memoria, 4L);
+      }
+
+      // Si el estado es 'Completada seguimiento anual'
+      // se cambia el estado de la memoria a 'En secretaría seguimiento anual'
+      if (memoria.getEstadoActual().getId() == 11L) {
+        updateEstadoMemoria(memoria, 12L);
+      }
+
+      // Si el estado es 'Completada seguimiento final'
+      // se cambia el estado de la memoria a 'En secretaría seguimiento final'
+      if (memoria.getEstadoActual().getId() == 16L) {
+        updateEstadoMemoria(memoria, 17L);
+      }
+
+      // Si el estado es 'En aclaración seguimiento final'
+      // se cambia el estado de la memoria a 'En secretaría seguimiento final
+      // aclaraciones'
+      if (memoria.getEstadoActual().getId() == 21L) {
+        crearEvaluacion = true;
+        updateEstadoMemoria(memoria, 18L);
+      }
+
+      if (crearEvaluacion) {
+        evaluacionRepository.findFirstByMemoriaIdOrderByVersionDesc(memoria.getId()).map(evaluacion -> {
+          Evaluacion evaluacionNueva = new Evaluacion();
+          BeanUtils.copyProperties(evaluacion, evaluacionNueva);
+          evaluacionNueva.setId(null);
+          evaluacionNueva.setVersion(memoria.getVersion() + 1);
+          evaluacionNueva.setEsRevMinima(true);
+          evaluacionRepository.save(evaluacionNueva);
+
+          return evaluacionNueva;
+        }).orElseThrow(() -> new EvaluacionNotFoundException(idMemoria));
+
+        memoria.setVersion(memoria.getVersion() + 1);
+      }
+
+      memoria.setFechaEnvioSecretaria(LocalDate.now());
+      memoriaRepository.save(memoria);
+
+      return memoria;
+    }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
+
+    // FALTA: crear un fichero en formato pdf con los datos del proyecto y con los
+    // datos del formulario y subirlo al gestor documental y que el sistema guarde
+    // en informes el identificador del documento.
+
+    log.debug("enviarSecretaria(Long id) - end");
   }
 
 }

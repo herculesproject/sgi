@@ -673,4 +673,19 @@ public class MemoriaController {
     return new ResponseEntity<>(estadoReestablecido, HttpStatus.OK);
   }
 
+  /**
+   * Se cambia el estado de la memoria a Enviar Secretaría o Enviar Secretaría
+   * Revisión Mínima
+   *
+   * @param id Id de {@link Memoria}.
+   */
+  @PutMapping("/{id}/enviar-secretaria")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-ER-INV')")
+  void enviarSecretaria(@PathVariable Long id, Authentication authentication) {
+    log.debug("enviarSecretaria(Long id) - start");
+    String personaRef = authentication.getName();
+    service.enviarSecretaria(id, personaRef);
+    log.debug("enviarSecretaria(Long id) - end");
+  }
+
 }

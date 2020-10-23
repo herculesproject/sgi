@@ -1052,6 +1052,39 @@ public class MemoriaIT {
     return tipoDocumento;
   }
 
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void enviarSecretaria_Success() throws Exception {
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user-001", "ETI-PEV-ER-INV")));
+
+    // when: Enviar secretaria con id existente
+    long id = 1L;
+    final ResponseEntity<Memoria> response = restTemplate.exchange(
+        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/enviar-secretaria", HttpMethod.PUT,
+        buildRequest(headers, null), Memoria.class, id);
+
+    // then: 200
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void enviarSecretaria_DoNotGetMemoria() throws Exception {
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user-001", "ETI-PEV-ER-INV")));
+
+    final ResponseEntity<Memoria> response = restTemplate.exchange(
+        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/enviar-secretaria", HttpMethod.PUT,
+        buildRequest(headers, null), Memoria.class, 3L);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+  }
+
   /**
    * Función que devuelve un objeto Memoria.
    * 

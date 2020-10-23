@@ -44,10 +44,10 @@ public interface EvaluacionRepository
       Boolean esRevMinima, Long idConvocatoriaReunion);
 
   /**
-   * Recupera la última evaluación de una memoria .
+   * Recupera la última evaluación de una memoria.
    * 
    * @param idMemoria identificador de la memoria.
-   * @return evaluación .
+   * @return evaluación.
    */
   Optional<Evaluacion> findFirstByMemoriaIdOrderByVersionDesc(Long idMemoria);
 
