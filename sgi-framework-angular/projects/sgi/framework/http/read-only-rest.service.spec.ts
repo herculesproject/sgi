@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { SgiRestService } from './rest.service';
+import { SgiReadOnlyRestService } from './read-only-rest.service';
 import { NGXLogger } from 'ngx-logger';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { SgiRestFindOptions, SgiRestSortDirection, SgiRestFilterType } from './types';
@@ -15,13 +15,13 @@ interface DummyData {
   age: number;
 }
 
-class FakeService extends SgiRestService<number, DummyData> {
+class FakeService extends SgiReadOnlyRestService<number, DummyData> {
   constructor(logger: NGXLogger, http: HttpClient) {
     super(FakeService.name, logger, fakeEndpoint, http);
   }
 }
 
-describe('SgiRestService', () => {
+describe('SgiReadOnlyRestService', () => {
 
   // existing entities
   const dummyEntityList: DummyData[] = [
@@ -33,11 +33,6 @@ describe('SgiRestService', () => {
   const NOT_FOUND = {
     status: 404,
     statusText: 'Not Found'
-  };
-  // No Content response
-  const NO_CONTENT = {
-    status: 204,
-    statusText: 'No Content'
   };
 
 
@@ -54,129 +49,6 @@ describe('SgiRestService', () => {
   afterEach(() => {
     // then: verify that there are not pending http calls
     httpMock.verify();
-  });
-
-  it('create() should POST and return data', () => {
-    // given: a new Entity
-    const newEntity: DummyData = { name: 'Erik' } as DummyData;
-    // when: create method called
-    service.create(newEntity).subscribe((res) => {
-      // then: a new entity is created with the given name
-      expect(res.name).toEqual('Erik');
-    });
-
-    // then: the right backend API is called
-    const req = httpMock.expectOne(fakeEndpoint, 'POST to API');
-    // then: the right HTTP method is used to call the backend API
-    expect(req.request.method).toBe('POST');
-
-    // “fire” the request with the mocked result
-    req.flush({ id: 99, name: 'Erik' });
-  });
-
-  it('update() should PUT and return data', () => {
-    // given: an existing Entity
-    const existingEntity = dummyEntityList[0];
-    // when: entity udpated and update method called
-    const updatedEntity = Object.assign({}, existingEntity);
-    updatedEntity.name = 'Erik';
-    service.update(existingEntity.id, updatedEntity).subscribe((res) => {
-      // then: the entity is updated with the given values
-      expect(res).toEqual(updatedEntity);
-    });
-
-    // then: the right backend API is called
-    const req = httpMock.expectOne(`${fakeEndpoint}/${existingEntity.id}`, 'PUT to API');
-    // then: the right HTTP method is used to call the backend API
-    expect(req.request.method).toBe('PUT');
-
-    // “fire” the request with the mocked result
-    req.flush(updatedEntity);
-  });
-
-  it('update() non existing entity should throw error', () => {
-    // given: a non existing Entity
-    const nonExistingEntity = {
-      id: 99,
-      name: 'George',
-      surname: 'Michael',
-      age: 50
-    };
-    // when: update method called
-    service.update(nonExistingEntity.id, nonExistingEntity).subscribe(
-      () => {
-        fail('Expected error');
-      },
-      (error: HttpErrorResponse) => {
-        // then: a 404 status should be returned
-        expect(error.status).toEqual(NOT_FOUND.status);
-      }
-    );
-
-    // then: the right backend API is called
-    const req = httpMock.expectOne(`${fakeEndpoint}/${nonExistingEntity.id}`, 'PUT to API');
-    // then: the right HTTP method is used to call the backend API
-    expect(req.request.method).toBe('PUT');
-
-    // "fire" the request with not found result
-    req.flush(null, NOT_FOUND);
-  });
-
-  it('deleteById() should DELETE exiting entity', () => {
-    // given: existing entity id
-    const id = 1;
-    // when: delete method called with given id
-    service.deleteById(id).subscribe((res) => {
-      // then: the entity is deleted and nothing returned
-      expect(res).toEqual(undefined);
-    });
-
-    // then: the right backend API is called
-    const req = httpMock.expectOne(`${fakeEndpoint}/${id}`, 'DELETE to API');
-    // then: the right HTTP method is used to call the backend API
-    expect(req.request.method).toBe('DELETE');
-
-    // "fire" the request with the modcked result
-    req.flush('', NO_CONTENT);
-  });
-
-  it('deleteById() not existing entity should throw error', () => {
-    // given: no existing entity id
-    const id = 99;
-    // when: delete method called with given id
-    service.deleteById(id).subscribe(
-      () => {
-        fail('Expected error');
-      },
-      (error) => {
-        // then: a 404 status should be returned
-        expect(error.status).toEqual(NOT_FOUND.status);
-      }
-    );
-
-    // then: the right backend API is called
-    const req = httpMock.expectOne(`${fakeEndpoint}/${id}`, 'DELETE to API');
-    // then: the right HTTP method is used to call the backend API
-    expect(req.request.method).toBe('DELETE');
-
-    // "fire" the request with not found result
-    req.flush('', NOT_FOUND);
-  });
-
-  it('deleteAll() should DELETE all entities', () => {
-    // when: delete method called with given id
-    service.deleteAll().subscribe((res) => {
-      // then: the entity is deleted and nothing returned
-      expect(res).toEqual(undefined);
-    });
-
-    // then: the right backend API is called
-    const req = httpMock.expectOne(`${fakeEndpoint}`, 'DELETE to API');
-    // then: the right HTTP method is used to call the backend API
-    expect(req.request.method).toBe('DELETE');
-
-    // "fire" the request with the modcked result
-    req.flush('', NO_CONTENT);
   });
 
   it('findById() should return data', () => {
