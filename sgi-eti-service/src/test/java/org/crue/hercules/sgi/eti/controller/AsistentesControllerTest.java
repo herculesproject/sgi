@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.service.AsistentesService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -383,7 +384,8 @@ public class AsistentesControllerTest {
     cargoComite.setNombre("CargoComite1");
     cargoComite.setActivo(Boolean.TRUE);
 
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite1", formulario, Boolean.TRUE);
 
     Evaluador evaluador = new Evaluador();
     evaluador.setId(id);
@@ -407,7 +409,8 @@ public class AsistentesControllerTest {
    */
   private ConvocatoriaReunion getMockConvocatoriaReunion(Long id, Long comiteId) {
 
-    Comite comite = new Comite(comiteId, "Comite" + comiteId, Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(comiteId, "Comite" + comiteId, formulario, Boolean.TRUE);
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
 

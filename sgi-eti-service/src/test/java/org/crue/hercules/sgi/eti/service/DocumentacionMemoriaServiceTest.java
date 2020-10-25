@@ -131,7 +131,7 @@ public class DocumentacionMemoriaServiceTest {
   }
 
   @Test
-  public void findDocumentacionFormularioMemoriaIdValid() {
+  public void findDocumentacionMemoriaIdValid() {
     // given: EL id de la memoria es valido
     Long memoriaId = 12L;
     Memoria memoria = generarMockMemoria(memoriaId, "Titulo", 1L);
@@ -153,8 +153,7 @@ public class DocumentacionMemoriaServiceTest {
         ArgumentMatchers.<Pageable>any())).willReturn(pageResponse);
 
     // when: Se buscan los datos paginados
-    Page<DocumentacionMemoria> result = documentacionMemoriaService.findDocumentacionFormularioMemoria(memoriaId,
-        pageable);
+    Page<DocumentacionMemoria> result = documentacionMemoriaService.findDocumentacionMemoria(memoriaId, pageable);
 
     // then: Se recuperan los datos correctamente según la paginación solicitada
     Assertions.assertThat(result).isEqualTo(pageResponse);
@@ -165,12 +164,12 @@ public class DocumentacionMemoriaServiceTest {
   }
 
   @Test
-  public void findDocumentacionFormularioMemoriaIdNotValid() {
+  public void findDocumentacionMemoriaIdNotValid() {
     // given: EL id de la memoria sea null
     Long memoriaId = null;
     try {
       // when: se listar sus evaluaciones
-      documentacionMemoriaService.findDocumentacionFormularioMemoria(memoriaId, Pageable.unpaged());
+      documentacionMemoriaService.findDocumentacionMemoria(memoriaId, Pageable.unpaged());
       Assertions.fail("El id de la memoria no puede ser nulo para mostrar su documentación");
       // then: se debe lanzar una excepción
     } catch (IllegalArgumentException e) {

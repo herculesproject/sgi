@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Comite;
-
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -24,7 +24,8 @@ public class ComiteRepositoryTest {
 
     // given: Datos existentes para el comité activo
 
-    Comite comite = entityManager.persistFlushFind(generarMockComite());
+    Formulario formulario = entityManager.persistFlushFind(generarMockFormulario());
+    Comite comite = entityManager.persistFlushFind(generarMockComite(formulario));
 
     // when: Se buscan los datos
     Optional<Comite> result = repository.findByIdAndActivoTrue(comite.getId());
@@ -35,12 +36,23 @@ public class ComiteRepositoryTest {
   }
 
   /**
+   * Función que devuelve un objeto Formulario
+   * 
+   * @return el objeto Formulario
+   */
+  public Formulario generarMockFormulario() {
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    return formulario;
+  }
+
+  /**
    * Función que devuelve un objeto Comite
    * 
+   * @param formulario el formulario
    * @return el objeto Comite
    */
-  private Comite generarMockComite() {
-    return new Comite(null, "Comite1", Boolean.TRUE);
+  public Comite generarMockComite(Formulario formulario) {
+    return new Comite(null, "Comite1", formulario, Boolean.TRUE);
   }
 
 }

@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
@@ -46,7 +47,8 @@ public class EvaluacionRepositoryTest {
 
     // given: Datos existentes con convocatoriaReunionId = 1
 
-    Comite comite = entityManager.persistFlushFind(generarMockComite());
+    Formulario formulario = entityManager.persistFlushFind(generarMockFormulario());
+    Comite comite = entityManager.persistFlushFind(generarMockComite(formulario));
     TipoConvocatoriaReunion tipoConvocatoriaReunion = entityManager
         .persistFlushFind(generarMockTipoConvocatoriaReunion());
     ConvocatoriaReunion c1 = entityManager
@@ -102,7 +104,8 @@ public class EvaluacionRepositoryTest {
 
     // given: Sin datos existentes con convocatoriaReunionId = 2
 
-    Comite comite = entityManager.persistFlushFind(generarMockComite());
+    Formulario formulario = entityManager.persistFlushFind(generarMockFormulario());
+    Comite comite = entityManager.persistFlushFind(generarMockComite(formulario));
     TipoConvocatoriaReunion tipoConvocatoriaReunion = entityManager
         .persistFlushFind(generarMockTipoConvocatoriaReunion());
     ConvocatoriaReunion c1 = entityManager
@@ -186,7 +189,8 @@ public class EvaluacionRepositoryTest {
     // given: Datos existentes con convocatoriaReunionId = 1, tipoEvaluacionId= 1,
     // esRevMinima = true y activa.
 
-    Comite comite = entityManager.persistFlushFind(generarMockComite());
+    Formulario formulario = entityManager.persistFlushFind(generarMockFormulario());
+    Comite comite = entityManager.persistFlushFind(generarMockComite(formulario));
     TipoConvocatoriaReunion tipoConvocatoriaReunion = entityManager
         .persistFlushFind(generarMockTipoConvocatoriaReunion());
     ConvocatoriaReunion c1 = entityManager
@@ -239,7 +243,8 @@ public class EvaluacionRepositoryTest {
     // given: Sin datos con convocatoriaReunionId = 1, tipoEvaluacionId= 1,
     // esRevMinima = true y activa.
 
-    Comite comite = entityManager.persistFlushFind(generarMockComite());
+    Formulario formulario = entityManager.persistFlushFind(generarMockFormulario());
+    Comite comite = entityManager.persistFlushFind(generarMockComite(formulario));
     TipoConvocatoriaReunion tipoConvocatoriaReunion = entityManager
         .persistFlushFind(generarMockTipoConvocatoriaReunion());
     ConvocatoriaReunion c1 = entityManager
@@ -289,7 +294,8 @@ public class EvaluacionRepositoryTest {
 
     // given: Datos con Memoria = 1 y Evaluacion activa.
 
-    Comite comite = entityManager.persistFlushFind(generarMockComite());
+    Formulario formulario = entityManager.persistFlushFind(generarMockFormulario());
+    Comite comite = entityManager.persistFlushFind(generarMockComite(formulario));
     TipoConvocatoriaReunion tipoConvocatoriaReunion = entityManager
         .persistFlushFind(generarMockTipoConvocatoriaReunion());
     ConvocatoriaReunion c1 = entityManager
@@ -333,7 +339,8 @@ public class EvaluacionRepositoryTest {
 
     // given: Datos con Memoria = 1 y Evaluacion activa.
 
-    Comite comite = entityManager.persistFlushFind(generarMockComite());
+    Formulario formulario = entityManager.persistFlushFind(generarMockFormulario());
+    Comite comite = entityManager.persistFlushFind(generarMockComite(formulario));
     TipoConvocatoriaReunion tipoConvocatoriaReunion = entityManager
         .persistFlushFind(generarMockTipoConvocatoriaReunion());
     ConvocatoriaReunion c1 = entityManager
@@ -370,12 +377,23 @@ public class EvaluacionRepositoryTest {
   }
 
   /**
+   * Función que devuelve un objeto Formulario
+   * 
+   * @return el objeto Formulario
+   */
+  public Formulario generarMockFormulario() {
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    return formulario;
+  }
+
+  /**
    * Función que devuelve un objeto Comite
    * 
+   * @param formulario el formulario
    * @return el objeto Comite
    */
-  public Comite generarMockComite() {
-    return new Comite(null, "Comite1", Boolean.TRUE);
+  public Comite generarMockComite(Formulario formulario) {
+    return new Comite(null, "Comite1", formulario, Boolean.TRUE);
   }
 
   /**

@@ -1,21 +1,22 @@
 package org.crue.hercules.sgi.eti.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
-import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
+import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
@@ -70,7 +71,7 @@ public class MemoriaServiceTest {
   private ComentarioRepository comentarioRepository;
 
   @Mock
-  private InformeFormularioService informeFormularioService;
+  private InformeService informeFormularioService;
 
   @BeforeEach
   public void setUp() throws Exception {
@@ -689,7 +690,8 @@ public class MemoriaServiceTest {
    * @param activo indicador de activo.
    */
   private Comite generarMockComite(Long id, String comite, Boolean activo) {
-    return new Comite(id, comite, activo);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    return new Comite(id, comite, formulario, activo);
 
   }
 
@@ -794,7 +796,8 @@ public class MemoriaServiceTest {
     peticionEvaluacion.setValorSocial("Valor social");
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite1", formulario, Boolean.TRUE);
 
     TipoMemoria tipoMemoria = new TipoMemoria();
     tipoMemoria.setId(1L);

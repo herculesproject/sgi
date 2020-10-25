@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.eti.model.Acta;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.EstadoActa;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.TipoEstadoActa;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
@@ -367,9 +368,11 @@ public class ActaIT {
    * @return el objeto Acta
    */
   public Acta generarMockActa(Long id, Integer numero) {
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
     Comite comite = new Comite();
     comite.setId(1L);
     comite.setComite("CEEA");
+    comite.setFormulario(formulario);
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
     ConvocatoriaReunion convocatoriaReunion = new ConvocatoriaReunion();
     convocatoriaReunion.setId(100L);

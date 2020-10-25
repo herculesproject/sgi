@@ -244,7 +244,6 @@ public class FormularioServiceTest {
     formulario.setId(id);
     formulario.setNombre(nombre);
     formulario.setDescripcion(descripcion);
-    formulario.setActivo(Boolean.TRUE);
 
     return formulario;
   }

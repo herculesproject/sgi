@@ -23,7 +23,7 @@ import org.crue.hercules.sgi.eti.repository.EstadoRetrospectivaRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.MemoriaSpecifications;
-import org.crue.hercules.sgi.eti.service.InformeFormularioService;
+import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.eti.util.Constantes;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
@@ -59,11 +59,11 @@ public class MemoriaServiceImpl implements MemoriaService {
   // ** Evaluacion repository */
   private final EvaluacionRepository evaluacionRepository;
 
-  private final InformeFormularioService informeFormularioService;
+  private final InformeService informeFormularioService;
 
   public MemoriaServiceImpl(MemoriaRepository memoriaRepository, EstadoMemoriaRepository estadoMemoriaRepository,
       EstadoRetrospectivaRepository estadoRetrospectivaRepository, EvaluacionRepository evaluacionRepository,
-      ComentarioRepository comentarioRepository, InformeFormularioService informeFormularioService) {
+      ComentarioRepository comentarioRepository, InformeService informeFormularioService) {
     this.memoriaRepository = memoriaRepository;
     this.estadoMemoriaRepository = estadoMemoriaRepository;
     this.estadoRetrospectivaRepository = estadoRetrospectivaRepository;

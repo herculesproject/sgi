@@ -72,73 +72,6 @@ public class FormularioIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void addFormulario_ReturnsFormulario() throws Exception {
-
-    Formulario nuevoFormulario = new Formulario();
-    nuevoFormulario.setId(1L);
-    nuevoFormulario.setNombre("M10");
-    nuevoFormulario.setActivo(Boolean.TRUE);
-
-    final ResponseEntity<Formulario> response = restTemplate.exchange(FORMULARIO_CONTROLLER_BASE_PATH, HttpMethod.POST,
-        buildRequest(null, nuevoFormulario), Formulario.class);
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-    Assertions.assertThat(response.getBody()).isEqualTo(nuevoFormulario);
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  public void removeFormulario_Success() throws Exception {
-
-    // when: Delete con id existente
-    long id = 1L;
-    final ResponseEntity<Formulario> response = restTemplate.exchange(
-        FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null),
-        Formulario.class, id);
-
-    // then: 200
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  public void removeFormulario_DoNotGetFormulario() throws Exception {
-
-    final ResponseEntity<Formulario> response = restTemplate.exchange(
-        FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null),
-        Formulario.class, 1L);
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  public void replaceFormulario_ReturnsFormulario() throws Exception {
-
-    Formulario replaceFormulario = generarMockFormulario(1L, "M10", "Descripcion");
-
-    final ResponseEntity<Formulario> response = restTemplate.exchange(
-        FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT, buildRequest(null, replaceFormulario),
-        Formulario.class, 1L);
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-    final Formulario formulario = response.getBody();
-
-    Assertions.assertThat(formulario.getId()).isNotNull();
-    Assertions.assertThat(formulario.getNombre()).isEqualTo(replaceFormulario.getNombre());
-    Assertions.assertThat(formulario.getDescripcion()).isEqualTo(replaceFormulario.getDescripcion());
-    Assertions.assertThat(formulario.getActivo()).isEqualTo(replaceFormulario.getActivo());
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
   public void findAll_WithPaging_ReturnsFormularioSubList() throws Exception {
     // when: Obtiene la page=3 con pagesize=10
     HttpHeaders headers = new HttpHeaders();
@@ -268,7 +201,6 @@ public class FormularioIT {
     formulario.setId(id);
     formulario.setNombre(nombre);
     formulario.setDescripcion(descripcion);
-    formulario.setActivo(Boolean.TRUE);
 
     return formulario;
   }

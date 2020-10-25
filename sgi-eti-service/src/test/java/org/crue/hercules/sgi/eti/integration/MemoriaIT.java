@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
@@ -18,6 +19,8 @@ import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,14 +30,11 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
-import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Test de integracion de Memoria.
@@ -1146,7 +1146,8 @@ public class MemoriaIT {
    * @param activo indicador de activo.
    */
   private Comite generarMockComite(Long id, String comite, Boolean activo) {
-    return new Comite(id, comite, activo);
+    Formulario formulario = new Formulario(id, "M" + id + "0", "Descripcion");
+    return new Comite(id, comite, formulario, activo);
 
   }
 

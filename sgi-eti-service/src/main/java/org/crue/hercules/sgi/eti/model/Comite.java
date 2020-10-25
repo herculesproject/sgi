@@ -5,8 +5,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,6 +38,12 @@ public class Comite extends BaseEntity {
   /** Comité */
   @Column(name = "comite", length = 50, nullable = false)
   private String comite;
+
+  /** Formulario */
+  @OneToOne
+  @JoinColumn(name = "formulario_id", nullable = false)
+  @NotNull
+  private Formulario formulario;
 
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)

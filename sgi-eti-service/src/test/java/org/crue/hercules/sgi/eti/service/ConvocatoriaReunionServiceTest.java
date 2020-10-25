@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
 import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.repository.ConvocatoriaReunionRepository;
 import org.crue.hercules.sgi.eti.service.impl.ConvocatoriaReunionServiceImpl;
@@ -316,7 +317,8 @@ public class ConvocatoriaReunionServiceTest {
    */
   private ConvocatoriaReunion getMockData(Long id, Long comiteId, Long tipoId) {
 
-    Comite comite = new Comite(comiteId, "Comite" + comiteId, Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(comiteId, "Comite" + comiteId, formulario, Boolean.TRUE);
 
     String tipo_txt = (tipoId == 1L) ? "Ordinaria" : (tipoId == 2L) ? "Extraordinaria" : "Seguimiento";
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(tipoId, tipo_txt, Boolean.TRUE);

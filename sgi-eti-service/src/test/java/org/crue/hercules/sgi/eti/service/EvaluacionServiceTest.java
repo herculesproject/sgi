@@ -21,6 +21,7 @@ import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
@@ -765,7 +766,8 @@ public class EvaluacionServiceTest {
     peticionEvaluacion.setValorSocial("Valor social");
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite1", formulario, Boolean.TRUE);
 
     TipoMemoria tipoMemoria = new TipoMemoria();
     tipoMemoria.setId(1L);

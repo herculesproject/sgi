@@ -1,0 +1,22 @@
+package org.crue.hercules.sgi.eti.repository;
+
+import org.crue.hercules.sgi.eti.model.Respuesta;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
+
+/**
+ * Spring Data JPA repository para {@link Respuesta}.
+ */
+@Repository
+public interface RespuestaRepository extends JpaRepository<Respuesta, Long>, JpaSpecificationExecutor<Respuesta> {
+
+  /**
+   * Obtiene la Respuesta asociada a un Memoria y Apartado
+   * 
+   * @param id         Identidficador del Memoria
+   * @param idApartado Identificaro del Apartado
+   * @return Respuesta
+   */
+  Respuesta findByMemoriaIdAndApartadoId(Long id, Long idApartado);
+}

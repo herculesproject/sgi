@@ -61,7 +61,6 @@ public class TipoDocumentoIT {
     formulario.setId(1L);
     formulario.setNombre("M10");
     formulario.setDescripcion("Formulario M10");
-    formulario.setActivo(Boolean.TRUE);
 
     final ResponseEntity<TipoDocumento> response = restTemplate.exchange(
         TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.GET, buildRequest(null, null),
@@ -129,7 +128,6 @@ public class TipoDocumentoIT {
     formulario.setId(1L);
     formulario.setNombre("M10");
     formulario.setDescripcion("Formulario M10");
-    formulario.setActivo(Boolean.TRUE);
 
     TipoDocumento replaceTipoDocumento = generarMockTipoDocumento(1L, "TipoDocumento1");
 
@@ -281,7 +279,6 @@ public class TipoDocumentoIT {
     formulario.setId(1L);
     formulario.setNombre("M10");
     formulario.setDescripcion("Formulario M10");
-    formulario.setActivo(Boolean.TRUE);
 
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId(id);

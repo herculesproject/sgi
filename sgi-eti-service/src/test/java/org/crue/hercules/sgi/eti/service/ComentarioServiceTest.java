@@ -7,8 +7,8 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.ComentarioNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
-import org.crue.hercules.sgi.eti.model.ApartadoFormulario;
-import org.crue.hercules.sgi.eti.model.BloqueFormulario;
+import org.crue.hercules.sgi.eti.model.Apartado;
+import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
@@ -62,8 +62,8 @@ public class ComentarioServiceTest {
     final Comentario comentario = comentarioService.findById(1L);
 
     Assertions.assertThat(comentario.getId()).as("id").isEqualTo(1L);
-    Assertions.assertThat(comentario.getApartadoFormulario()).as("apartadoFormulario").isNotNull();
-    Assertions.assertThat(comentario.getApartadoFormulario().getId()).as("apartadoFormulario.id").isEqualTo(100L);
+    Assertions.assertThat(comentario.getApartado()).as("apartado").isNotNull();
+    Assertions.assertThat(comentario.getApartado().getId()).as("apartado.id").isEqualTo(100L);
     Assertions.assertThat(comentario.getEvaluacion()).as("evaluacion").isNotNull();
     Assertions.assertThat(comentario.getEvaluacion().getId()).as("evaluacion.id").isEqualTo(200L);
     Assertions.assertThat(comentario.getTipoComentario()).as("tipoComentario").isNotNull();
@@ -477,7 +477,7 @@ public class ComentarioServiceTest {
 
       Comentario comentarioActualizado = generarMockComentario(1L, "comentario1 actualizado", 1L);
 
-      comentarioActualizado.getApartadoFormulario().getBloqueFormulario().getFormulario().setId(4L);
+      comentarioActualizado.getApartado().getBloque().getFormulario().setId(4L);
 
       BDDMockito.given(evaluacionRepository.findById(12L)).willReturn(Optional.of(generarMockEvaluacion(evaluacionId)));
 
@@ -486,12 +486,12 @@ public class ComentarioServiceTest {
 
       comentarioService.updateComentarioGestor(evaluacionId, comentarioActualizado);
 
-      Assertions.fail("El bloque formulario seleccionado no es correcto para el tipo de evaluación.");
+      Assertions.fail("El bloque seleccionado no es correcto para el tipo de evaluación.");
     } catch (
 
     final IllegalArgumentException e) {
       Assertions.assertThat(e.getMessage())
-          .isEqualTo("El bloque formulario seleccionado no es correcto para el tipo de evaluación.");
+          .isEqualTo("El bloque seleccionado no es correcto para el tipo de evaluación.");
     }
   }
 
@@ -823,13 +823,13 @@ public class ComentarioServiceTest {
    * @return el objeto Comentario
    */
   public Comentario generarMockComentario(final Long id, final String texto, Long tipoComentarioId) {
-    final ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
-    apartadoFormulario.setId(100L);
+    final Apartado apartado = new Apartado();
+    apartado.setId(100L);
 
-    Formulario formulario = new Formulario(1L, "M10", "Formulario M10", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
 
-    BloqueFormulario bloqueFormulario = new BloqueFormulario(1L, formulario, "Bloque Formulario 1", 1, Boolean.TRUE);
-    apartadoFormulario.setBloqueFormulario(bloqueFormulario);
+    Bloque Bloque = new Bloque(1L, formulario, "Bloque 1", 1);
+    apartado.setBloque(Bloque);
 
     final Evaluacion evaluacion = new Evaluacion();
     evaluacion.setId(200L);
@@ -839,7 +839,7 @@ public class ComentarioServiceTest {
 
     final Comentario comentario = new Comentario();
     comentario.setId(id);
-    comentario.setApartadoFormulario(apartadoFormulario);
+    comentario.setApartado(apartado);
     comentario.setEvaluacion(evaluacion);
     comentario.setTipoComentario(tipoComentario);
     comentario.setTexto(texto);
@@ -855,7 +855,8 @@ public class ComentarioServiceTest {
     estadoMemoria.setId(4L);
     memoria.setEstadoActual(estadoMemoria);
 
-    Comite comite = new Comite(1L, "CEISH", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "CEISH", formulario, Boolean.TRUE);
     memoria.setComite(comite);
 
     final Evaluacion evaluacion = new Evaluacion();

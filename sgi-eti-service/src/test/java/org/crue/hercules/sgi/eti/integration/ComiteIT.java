@@ -7,6 +7,8 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Formulario;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
+import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,14 +18,11 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
-import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Test de integracion de Comite.
@@ -84,10 +83,12 @@ public class ComiteIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void addComite_ReturnsComite() throws Exception {
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
 
     Comite nuevoComite = new Comite();
     nuevoComite.setComite("Comite1");
     nuevoComite.setActivo(Boolean.TRUE);
+    nuevoComite.setFormulario(formulario);
 
     ResponseEntity<Comite> response = restTemplate.exchange(COMITE_CONTROLLER_BASE_PATH, HttpMethod.POST,
         buildRequest(null, nuevoComite), Comite.class);
@@ -134,6 +135,7 @@ public class ComiteIT {
 
     Comite replaceComite = new Comite();
     replaceComite.setComite("Comite2");
+    replaceComite.setFormulario(new Formulario(2L, "M20", "Descripcion"));
     replaceComite.setActivo(Boolean.TRUE);
 
     final ResponseEntity<Comite> response = restTemplate.exchange(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
@@ -275,22 +277,6 @@ public class ComiteIT {
     Assertions.assertThat(comites.get(1).getComite()).isEqualTo("Comite" + String.format("%03d", 2));
     Assertions.assertThat(comites.get(2).getComite()).isEqualTo("Comite" + String.format("%03d", 1));
 
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  public void findComiteFormulario_ReturnsFormulario() throws Exception {
-    final ResponseEntity<Formulario> response = restTemplate.exchange(
-        COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/comite-formulario", HttpMethod.GET,
-        buildRequestFormulario(null, null), Formulario.class, 1L);
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-    final Formulario formulario = response.getBody();
-
-    Assertions.assertThat(formulario.getId()).isEqualTo(1L);
-    Assertions.assertThat(formulario.getNombre()).isEqualTo("M10");
   }
 
 }

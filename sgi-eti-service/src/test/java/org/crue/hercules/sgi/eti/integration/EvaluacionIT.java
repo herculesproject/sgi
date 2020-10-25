@@ -7,8 +7,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.eti.model.ApartadoFormulario;
-import org.crue.hercules.sgi.eti.model.BloqueFormulario;
+import org.crue.hercules.sgi.eti.model.Apartado;
+import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Comite;
@@ -579,15 +579,19 @@ public class EvaluacionIT {
   @Test
   public void addComentarioGestor_ReturnsComentario() throws Exception {
 
-    ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
-    apartadoFormulario.setId(100L);
+    Apartado apartado = new Apartado();
+    apartado.setId(100L);
 
-    Formulario formulario = new Formulario(1L, "M10", "Formulario M10", Boolean.TRUE);
-    BloqueFormulario bloqueFormulario = new BloqueFormulario(1L, formulario, "Bloque Formulario 1", 1, Boolean.TRUE);
-    apartadoFormulario.setBloqueFormulario(bloqueFormulario);
+    Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
+    Bloque Bloque = new Bloque(1L, formulario, "Bloque 1", 1);
+    apartado.setBloque(Bloque);
+
+    Memoria memoria = new Memoria();
+    memoria.setId(1L);
 
     Comentario comentario = new Comentario();
-    comentario.setApartadoFormulario(apartadoFormulario);
+    comentario.setApartado(apartado);
+    comentario.setMemoria(memoria);
     comentario.setTexto("comentario1");
 
     // Authorization
@@ -608,15 +612,15 @@ public class EvaluacionIT {
   public void addComentarioEvaluador_ReturnsError400() throws Exception {
 
     Evaluacion evaluacion = generarMockEvaluacion(200L, "eval");
-    ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
-    apartadoFormulario.setId(100L);
+    Apartado apartado = new Apartado();
+    apartado.setId(100L);
 
-    Formulario formulario = new Formulario(1L, "M10", "Formulario M10", Boolean.TRUE);
-    BloqueFormulario bloqueFormulario = new BloqueFormulario(1L, formulario, "Bloque Formulario 1", 1, Boolean.TRUE);
-    apartadoFormulario.setBloqueFormulario(bloqueFormulario);
+    Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
+    Bloque Bloque = new Bloque(1L, formulario, "Bloque 1", 1);
+    apartado.setBloque(Bloque);
 
     Comentario comentario = new Comentario();
-    comentario.setApartadoFormulario(apartadoFormulario);
+    comentario.setApartado(apartado);
     comentario.setEvaluacion(evaluacion);
     comentario.setTexto("comentario1");
 
@@ -638,15 +642,19 @@ public class EvaluacionIT {
   @Test
   public void addComentarioEvaluador_ReturnsComentario() throws Exception {
 
-    ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
-    apartadoFormulario.setId(100L);
+    Apartado apartado = new Apartado();
+    apartado.setId(100L);
 
-    Formulario formulario = new Formulario(1L, "M10", "Formulario M10", Boolean.TRUE);
-    BloqueFormulario bloqueFormulario = new BloqueFormulario(1L, formulario, "Bloque Formulario 1", 1, Boolean.TRUE);
-    apartadoFormulario.setBloqueFormulario(bloqueFormulario);
+    Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
+    Bloque Bloque = new Bloque(1L, formulario, "Bloque 1", 1);
+    apartado.setBloque(Bloque);
+
+    Memoria memoria = new Memoria();
+    memoria.setId(1L);
 
     Comentario comentario = new Comentario();
-    comentario.setApartadoFormulario(apartadoFormulario);
+    comentario.setApartado(apartado);
+    comentario.setMemoria(memoria);
     comentario.setTexto("comentario1");
 
     // Authorization
@@ -668,15 +676,15 @@ public class EvaluacionIT {
   public void addComentarioGestor_ReturnsError400() throws Exception {
 
     Evaluacion evaluacion = generarMockEvaluacion(200L, "eval");
-    ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
-    apartadoFormulario.setId(100L);
+    Apartado apartado = new Apartado();
+    apartado.setId(100L);
 
-    Formulario formulario = new Formulario(1L, "M10", "Formulario M10", Boolean.TRUE);
-    BloqueFormulario bloqueFormulario = new BloqueFormulario(1L, formulario, "Bloque Formulario 1", 1, Boolean.TRUE);
-    apartadoFormulario.setBloqueFormulario(bloqueFormulario);
+    Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
+    Bloque Bloque = new Bloque(1L, formulario, "Bloque 1", 1);
+    apartado.setBloque(Bloque);
 
     Comentario comentario = new Comentario();
-    comentario.setApartadoFormulario(apartadoFormulario);
+    comentario.setApartado(apartado);
     comentario.setEvaluacion(evaluacion);
     comentario.setTexto("comentario1");
 
@@ -698,19 +706,19 @@ public class EvaluacionIT {
   public void replaceComentarioGestor_ReturnsComentario() throws Exception {
 
     Evaluacion evaluacion = generarMockEvaluacion(200L, null);
-    ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
-    apartadoFormulario.setId(100L);
+    Apartado apartado = new Apartado();
+    apartado.setId(100L);
 
-    Formulario formulario = new Formulario(1L, "M10", "Formulario M10", Boolean.TRUE);
-    BloqueFormulario bloqueFormulario = new BloqueFormulario(1L, formulario, "Bloque Formulario 1", 1, Boolean.TRUE);
-    apartadoFormulario.setBloqueFormulario(bloqueFormulario);
+    Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
+    Bloque Bloque = new Bloque(1L, formulario, "Bloque 1", 1);
+    apartado.setBloque(Bloque);
 
     TipoComentario tipoComentario = new TipoComentario();
     tipoComentario.setId(1L);
 
     Comentario comentarioReplace = new Comentario();
     comentarioReplace.setId(1L);
-    comentarioReplace.setApartadoFormulario(apartadoFormulario);
+    comentarioReplace.setApartado(apartado);
     comentarioReplace.setEvaluacion(evaluacion);
     comentarioReplace.setTipoComentario(tipoComentario);
     comentarioReplace.setTexto("Actualizado");
@@ -738,19 +746,19 @@ public class EvaluacionIT {
   public void replaceComentarioEvaluador_ReturnsComentario() throws Exception {
 
     Evaluacion evaluacion = generarMockEvaluacion(200L, null);
-    ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
-    apartadoFormulario.setId(100L);
+    Apartado apartado = new Apartado();
+    apartado.setId(100L);
 
-    Formulario formulario = new Formulario(1L, "M10", "Formulario M10", Boolean.TRUE);
-    BloqueFormulario bloqueFormulario = new BloqueFormulario(1L, formulario, "Bloque Formulario 1", 1, Boolean.TRUE);
-    apartadoFormulario.setBloqueFormulario(bloqueFormulario);
+    Formulario formulario = new Formulario(1L, "M10", "Formulario M10");
+    Bloque Bloque = new Bloque(1L, formulario, "Bloque 1", 1);
+    apartado.setBloque(Bloque);
 
     TipoComentario tipoComentario = new TipoComentario();
     tipoComentario.setId(2L);
 
     Comentario comentarioReplace = new Comentario();
     comentarioReplace.setId(1L);
-    comentarioReplace.setApartadoFormulario(apartadoFormulario);
+    comentarioReplace.setApartado(apartado);
     comentarioReplace.setEvaluacion(evaluacion);
     comentarioReplace.setTipoComentario(tipoComentario);
     comentarioReplace.setTexto("Actualizado");
@@ -858,7 +866,8 @@ public class EvaluacionIT {
     peticionEvaluacion.setValorSocial("Valor social");
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite1", formulario, Boolean.TRUE);
 
     TipoMemoria tipoMemoria = new TipoMemoria();
     tipoMemoria.setId(1L);

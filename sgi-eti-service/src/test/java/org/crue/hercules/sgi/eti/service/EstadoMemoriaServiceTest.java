@@ -1,17 +1,17 @@
 package org.crue.hercules.sgi.eti.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.EstadoMemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
@@ -322,7 +322,8 @@ public class EstadoMemoriaServiceTest {
    * @return nuevo comite.
    */
   private Comite generarMockComite(Long id, String comite, Boolean activo) {
-    return new Comite(id, comite, activo);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    return new Comite(id, comite, formulario, activo);
 
   }
 

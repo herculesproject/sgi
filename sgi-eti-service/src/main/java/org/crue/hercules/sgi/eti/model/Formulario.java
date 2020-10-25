@@ -40,8 +40,4 @@ public class Formulario extends BaseEntity {
   @Column(name = "descripcion", length = 250, nullable = false)
   private String descripcion;
 
-  /** Activo */
-  @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)
-  private Boolean activo;
-
 }

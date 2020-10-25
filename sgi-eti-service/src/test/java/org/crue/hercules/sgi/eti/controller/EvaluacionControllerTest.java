@@ -15,7 +15,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.config.SecurityConfig;
 import org.crue.hercules.sgi.eti.exceptions.ComentarioNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
-import org.crue.hercules.sgi.eti.model.ApartadoFormulario;
+import org.crue.hercules.sgi.eti.model.Apartado;
 import org.crue.hercules.sgi.eti.model.Comentario;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
@@ -23,6 +23,7 @@ import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
@@ -499,7 +500,7 @@ public class EvaluacionControllerTest {
     Comentario comentario = generarMockComentario(300L, "Comentario1", 1L);
 
     // given: Un listado de comentarios
-    String nuevoComentarioJson = "{\"apartadoFormulario\": {\"id\": 100},  \"texto\": \"Comentario1\"}";
+    String nuevoComentarioJson = "{\"apartado\": {\"id\": 100},  \"texto\": \"Comentario1\"}";
 
     BDDMockito
         .given(comentarioService.createComentarioGestor(ArgumentMatchers.anyLong(), ArgumentMatchers.<Comentario>any()))
@@ -508,8 +509,7 @@ public class EvaluacionControllerTest {
     // when: Creamos el listado comentario
     MvcResult result = mockMvc
         .perform(MockMvcRequestBuilders.post(url, id).with(SecurityMockMvcRequestPostProcessors.csrf())
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(nuevoComentarioJson))
+            .contentType(MediaType.APPLICATION_JSON).content(nuevoComentarioJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea los comentario y los devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
@@ -552,7 +552,7 @@ public class EvaluacionControllerTest {
     Comentario comentario = generarMockComentario(300L, "Comentario1", 1L);
 
     // given: Un listado de comentarios
-    String nuevoComentarioJson = "{\"apartadoFormulario\": {\"id\": 100},  \"texto\": \"Comentario1\"}";
+    String nuevoComentarioJson = "{\"apartado\": {\"id\": 100},  \"texto\": \"Comentario1\"}";
 
     BDDMockito.given(comentarioService.createComentarioEvaluador(ArgumentMatchers.anyLong(),
         ArgumentMatchers.<Comentario>any(), ArgumentMatchers.anyString())).willReturn(comentario);
@@ -602,7 +602,7 @@ public class EvaluacionControllerTest {
     Comentario comentario = generarMockComentario(1L, "Comentario Replace", 1L);
 
     // given: Comentarios para actualizar
-    String replaceComentarioJson = "{\"id\": 1, \"apartadoFormulario\": {\"id\": 100}, \"evaluacion\": {\"id\": 200}, \"tipoComentario\": {\"id\": 1}, \"texto\": \"Comentario\"}";
+    String replaceComentarioJson = "{\"id\": 1, \"apartado\": {\"id\": 100}, \"evaluacion\": {\"id\": 200}, \"tipoComentario\": {\"id\": 1}, \"texto\": \"Comentario\"}";
 
     BDDMockito
         .given(comentarioService.updateComentarioGestor(ArgumentMatchers.anyLong(), ArgumentMatchers.<Comentario>any()))
@@ -621,7 +621,7 @@ public class EvaluacionControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-EVC-EVAL" })
   public void updateComentarioGestor_NotFound() throws Exception {
     // given: Un comentario a modificar
-    String replaceComentarioJson = "{\"id\": 1, \"apartadoFormulario\": {\"id\": 100}, \"evaluacion\": {\"id\": 200}, \"tipoComentario\": {\"id\": 1}, \"texto\": \"Comentario\"}";
+    String replaceComentarioJson = "{\"id\": 1, \"apartado\": {\"id\": 100}, \"evaluacion\": {\"id\": 200}, \"tipoComentario\": {\"id\": 1}, \"texto\": \"Comentario\"}";
 
     BDDMockito
         .given(comentarioService.updateComentarioGestor(ArgumentMatchers.anyLong(), ArgumentMatchers.<Comentario>any()))
@@ -817,7 +817,8 @@ public class EvaluacionControllerTest {
     peticionEvaluacion.setValorSocial("Valor social");
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite1", formulario, Boolean.TRUE);
 
     TipoMemoria tipoMemoria = new TipoMemoria();
     tipoMemoria.setId(1L);
@@ -881,8 +882,8 @@ public class EvaluacionControllerTest {
    * @return el objeto Comentario
    */
   private Comentario generarMockComentario(Long id, String texto, Long tipoComentarioId) {
-    ApartadoFormulario apartadoFormulario = new ApartadoFormulario();
-    apartadoFormulario.setId(100L);
+    Apartado apartado = new Apartado();
+    apartado.setId(100L);
 
     Evaluacion evaluacion = new Evaluacion();
     evaluacion.setId(200L);
@@ -892,7 +893,7 @@ public class EvaluacionControllerTest {
 
     Comentario comentario = new Comentario();
     comentario.setId(id);
-    comentario.setApartadoFormulario(apartadoFormulario);
+    comentario.setApartado(apartado);
     comentario.setEvaluacion(evaluacion);
     comentario.setTipoComentario(tipoComentario);
     comentario.setTexto(texto);

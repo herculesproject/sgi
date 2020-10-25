@@ -2,9 +2,9 @@ package org.crue.hercules.sgi.eti.controller;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
+import org.crue.hercules.sgi.eti.model.Bloque;
 import org.crue.hercules.sgi.eti.model.Formulario;
+import org.crue.hercules.sgi.eti.service.BloqueService;
 import org.crue.hercules.sgi.eti.service.FormularioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -12,15 +12,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -32,16 +30,21 @@ import lombok.extern.slf4j.Slf4j;
 public class FormularioController {
 
   /** Formulario service */
-  private final FormularioService service;
+  private final FormularioService formularioService;
+
+  /** Bloque service */
+  private final BloqueService bloqueService;
 
   /**
    * Instancia un nuevo FormularioController.
    * 
-   * @param service FormularioService
+   * @param formularioService FormularioService
+   * @param bloqueService     BloqueService
    */
-  public FormularioController(FormularioService service) {
+  public FormularioController(FormularioService formularioService, BloqueService bloqueService) {
     log.debug("FormularioController(FormularioService service) - start");
-    this.service = service;
+    this.formularioService = formularioService;
+    this.bloqueService = bloqueService;
     log.debug("FormularioController(FormularioService service) - end");
   }
 
@@ -55,7 +58,7 @@ public class FormularioController {
   ResponseEntity<Page<Formulario>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
-    Page<Formulario> page = service.findAll(query, paging);
+    Page<Formulario> page = formularioService.findAll(query, paging);
 
     if (page.isEmpty()) {
       log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
@@ -63,36 +66,6 @@ public class FormularioController {
     }
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
-  }
-
-  /**
-   * Crea nuevo {@link Formulario}.
-   * 
-   * @param nuevoFormulario {@link Formulario}. que se quiere crear.
-   * @return Nuevo {@link Formulario} creado.
-   */
-  @PostMapping
-  public ResponseEntity<Formulario> newFormulario(@Valid @RequestBody Formulario nuevoFormulario) {
-    log.debug("newFormulario(Formulario nuevoFormulario) - start");
-    Formulario returnValue = service.create(nuevoFormulario);
-    log.debug("newFormulario(Formulario nuevoFormulario) - end");
-    return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
-  }
-
-  /**
-   * Actualiza {@link Formulario}.
-   * 
-   * @param updatedFormulario {@link Formulario} a actualizar.
-   * @param id                id {@link Formulario} a actualizar.
-   * @return {@link Formulario} actualizado.
-   */
-  @PutMapping("/{id}")
-  Formulario replaceFormulario(@Valid @RequestBody Formulario updatedFormulario, @PathVariable Long id) {
-    log.debug("replaceFormulario(Formulario updatedFormulario, Long id) - start");
-    updatedFormulario.setId(id);
-    Formulario returnValue = service.update(updatedFormulario);
-    log.debug("replaceFormulario(Formulario updatedFormulario, Long id) - end");
-    return returnValue;
   }
 
   /**
@@ -104,23 +77,20 @@ public class FormularioController {
   @GetMapping("/{id}")
   Formulario one(@PathVariable Long id) {
     log.debug("Formulario one(Long id) - start");
-    Formulario returnValue = service.findById(id);
+    Formulario returnValue = formularioService.findById(id);
     log.debug("Formulario one(Long id) - end");
     return returnValue;
   }
 
-  /**
-   * Elimina {@link Formulario} con id indicado.
-   * 
-   * @param id Identificador de {@link Formulario}.
-   */
-  @DeleteMapping("/{id}")
-  void delete(@PathVariable Long id) {
-    log.debug("delete(Long id) - start");
-    Formulario formulario = this.one(id);
-    formulario.setActivo(Boolean.FALSE);
-    service.update(formulario);
-    log.debug("delete(Long id) - end");
+  @GetMapping("/{id}/bloques")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-EVC-EVALR', 'ETI-PEV-C-INV', 'ETI-PEV-ER-INV')")
+  ResponseEntity<Page<Bloque>> getBloques(@PathVariable Long id, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("getBloques(Long id, Pageable paging - start");
+    Page<Bloque> page = bloqueService.findByFormularioId(id, paging);
+    log.debug("getBloques(Long id, Pageable paging - end");
+    if (page.isEmpty()) {
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    return new ResponseEntity<>(page, HttpStatus.OK);
   }
-
 }

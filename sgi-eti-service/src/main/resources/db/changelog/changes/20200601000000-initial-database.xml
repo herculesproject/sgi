@@ -37,8 +37,8 @@
     <createSequence sequenceName="acta_seq" />
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-informe_formulario_seq">
-    <createSequence sequenceName="informe_formulario_seq" />
+  <changeSet author="master" id="20200601000000-informe_seq">
+    <createSequence sequenceName="informe_seq" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-documentacion_memoria_seq">
@@ -53,8 +53,8 @@
     <createSequence sequenceName="convocatoria_reunion_seq" />
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-bloque_formulario_seq">
-    <createSequence sequenceName="bloque_formulario_seq" />
+  <changeSet author="master" id="20200601000000-bloque_seq">
+    <createSequence sequenceName="bloque_seq" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-asistentes_seq">
@@ -65,32 +65,20 @@
     <createSequence sequenceName="comentario_seq" />
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-apartado_formulario_seq">
-    <createSequence sequenceName="apartado_formulario_seq" />
+  <changeSet author="master" id="20200601000000-apartado_seq">
+    <createSequence sequenceName="apartado_seq" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-evaluacion_seq">
     <createSequence sequenceName="evaluacion_seq" />
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-comite_formulario_seq">
-    <createSequence sequenceName="comite_formulario_seq" />
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-formulario_memoria_seq">
-    <createSequence sequenceName="formulario_memoria_seq" />
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-componente_formulario_seq">
-    <createSequence sequenceName="componente_formulario_seq" />
-  </changeSet>
-
   <changeSet author="master" id="20200601000000-configuracion_seq">
     <createSequence sequenceName="configuracion_seq" />
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-respuesta_formulario_seq">
-    <createSequence sequenceName="respuesta_formulario_seq" />
+  <changeSet author="master" id="20200601000000-respuesta_seq">
+    <createSequence sequenceName="respuesta_seq" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-retrospectiva_seq">
@@ -115,6 +103,9 @@
         <constraints nullable="false" primaryKey="true" primaryKeyName="comite_pk" />
       </column>
       <column name="comite" type="VARCHAR(50)" />
+      <column name="formulario_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>
@@ -390,12 +381,12 @@
     </createTable>
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-informe_formulario">
-    <createTable tableName="informe_formulario">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="informe_formulario_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="informe_formulario_pk" />
+  <changeSet author="master" id="20200601000000-informe">
+    <createTable tableName="informe">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="informe_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="informe_pk" />
       </column>
-      <column name="formulario_memoria_id" type="BIGINT" />
+      <column name="memoria_id" type="BIGINT" />
       <column name="documento_ref" type="VARCHAR(250)" />
       <column name="version" type="INT" />
     </createTable>
@@ -529,17 +520,14 @@
     </createTable>
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-bloque_formulario">
-    <createTable tableName="bloque_formulario">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="bloque_formulario_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="bloque_formulario_pk" />
+  <changeSet author="master" id="20200601000000-bloque">
+    <createTable tableName="bloque">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="bloque_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="bloque_pk" />
       </column>
       <column name="nombre" type="VARCHAR(250)" />
       <column name="formulario_id" type="BIGINT" />
       <column name="orden" type="INT" />
-      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
-        <constraints nullable="false" />
-      </column>
     </createTable>
   </changeSet>
 
@@ -581,60 +569,22 @@
     </createTable>
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-formulario_memoria">
-    <createTable tableName="formulario_memoria">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="formulario_memoria_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="formulario_memoria_pk" />
+  <changeSet author="master" id="20200601000000-apartado">
+    <createTable tableName="apartado">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="apartado_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="apartado_pk" />
       </column>
-      <column name="memoria_id" type="BIGINT">
-        <constraints nullable="false" />
-      </column>
-      <column name="formulario_id" type="BIGINT">
-        <constraints nullable="false" />
-      </column>
-      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
-        <constraints nullable="false" />
-      </column>
-    </createTable>
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-comite_formulario">
-    <createTable tableName="comite_formulario">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="comite_formulario_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="comite_formulario_pk" />
-      </column>
-      <column name="comite_id" type="BIGINT" />
-      <column name="formulario_id" type="BIGINT" />
-    </createTable>
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-componente_formulario">
-    <createTable tableName="componente_formulario">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="componente_formulario_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="componente_formulario_pk" />
-      </column>
-      <column name="esquema" type="VARCHAR(250)">
-        <constraints nullable="false" />
-      </column>
-    </createTable>
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-apartado_formulario">
-    <createTable tableName="apartado_formulario">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="apartado_formulario_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="apartado_formulario_pk" />
-      </column>
-      <column name="bloque_formulario_id" type="BIGINT">
+      <column name="bloque_id" type="BIGINT">
         <constraints nullable="false" />
       </column>
       <column name="nombre" type="VARCHAR(250)">
         <constraints nullable="false" />
       </column>
-      <column name="apartado_formulario_padre_id" type="BIGINT" />
+      <column name="padre_id" type="BIGINT" />
       <column name="orden" type="INT">
         <constraints nullable="false" />
       </column>
-      <column name="componente_formulario_id" type="BIGINT">
+      <column name="esquema" type="VARCHAR(5000)">
         <constraints nullable="false" />
       </column>
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
@@ -659,7 +609,10 @@
       <column name="id" type="BIGINT" defaultValueSequenceNext="comentario_seq">
         <constraints nullable="false" primaryKey="true" primaryKeyName="comentario_pk" />
       </column>
-      <column name="apartado_formulario_id" type="BIGINT">
+      <column name="memoria_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="apartado_id" type="BIGINT">
         <constraints nullable="false" />
       </column>
       <column name="evaluacion_id" type="BIGINT">
@@ -672,14 +625,18 @@
     </createTable>
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-respuesta_formulario">
-    <createTable tableName="respuesta_formulario">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="respuesta_formulario_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="respuesta_formulario_pk" />
+  <changeSet author="master" id="20200601000000-respuesta">
+    <createTable tableName="respuesta">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="respuesta_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="respuesta_pk" />
       </column>
-      <column name="formulario_memoria_id" type="BIGINT" />
-      <column name="componente_formulario_id" type="BIGINT" />
-      <column name="valor" type="VARCHAR(50)">
+      <column name="memoria_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="apartado_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="valor" type="VARCHAR(5000)">
         <constraints nullable="false" />
       </column>
     </createTable>
@@ -801,8 +758,8 @@
   </changeSet>
 
 
-  <changeSet author="master" id="20200601000000-informe_formulario_formulario_memoria_FK">
-    <addForeignKeyConstraint baseColumnNames="formulario_memoria_id" baseTableName="informe_formulario" constraintName="informe_formulario_formulario_memoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="formulario_memoria" validate="true" />
+  <changeSet author="master" id="20200601000000-informe_memoria_FK">
+    <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="informe" constraintName="informe_memoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="memoria" validate="true" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-documentacion_memoria_memoria_FK">
@@ -833,8 +790,8 @@
     <addForeignKeyConstraint baseColumnNames="convocatoria_reunion_id" baseTableName="acta" constraintName="acta_convocatoria_reunion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="convocatoria_reunion" validate="true" />
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-bloque_formulario_formulario_FK">
-    <addForeignKeyConstraint baseColumnNames="formulario_id" baseTableName="bloque_formulario" constraintName="bloque_formulario_formulario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="formulario" validate="true" />
+  <changeSet author="master" id="20200601000000-bloque_formulario_FK">
+    <addForeignKeyConstraint baseColumnNames="formulario_id" baseTableName="bloque" constraintName="bloque_formulario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="formulario" validate="true" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-asistentes_evaluador_FK">
@@ -869,36 +826,24 @@
     <addForeignKeyConstraint baseColumnNames="evaluador2_id" baseTableName="evaluacion" constraintName="evaluacion_evaluador2_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="evaluador" validate="true" />
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-comite_formulario_comite_FK">
-    <addForeignKeyConstraint baseColumnNames="comite_id" baseTableName="comite_formulario" constraintName="comite_formulario_comite_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="comite" validate="true" />
+  <changeSet author="master" id="20200601000000-comite_formulario_FK">
+    <addForeignKeyConstraint baseColumnNames="formulario_id" baseTableName="comite" constraintName="comite_formulario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="formulario" validate="true" />
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-comite_formulario_formulario_FK">
-    <addForeignKeyConstraint baseColumnNames="formulario_id" baseTableName="comite_formulario" constraintName="comite_formulario_formulario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="formulario" validate="true" />
+  <changeSet author="master" id="20200601000000-apartado_bloque_FK">
+    <addForeignKeyConstraint baseColumnNames="bloque_id" baseTableName="apartado" constraintName="apartado_bloque_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="bloque" validate="true" />
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-formulario_memoria_memoria_FK">
-    <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="formulario_memoria" constraintName="formulario_memoria_memoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="memoria" validate="true" />
+  <changeSet author="master" id="20200601000000-apartado_apartado_FK">
+    <addForeignKeyConstraint baseColumnNames="padre_id" baseTableName="apartado" constraintName="apartado_apartado_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="apartado" validate="true" />
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-formulario_memoria_formulario_FK">
-    <addForeignKeyConstraint baseColumnNames="formulario_id" baseTableName="formulario_memoria" constraintName="formulario_memoria_formulario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="formulario" validate="true" />
+  <changeSet author="master" id="20200601000000-respuesta__apartado_FK">
+    <addForeignKeyConstraint baseColumnNames="apartado_id" baseTableName="respuesta" constraintName="respuesta_apartado_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="apartado" validate="true" />
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-apartado_formulario_bloque_formulario_FK">
-    <addForeignKeyConstraint baseColumnNames="bloque_formulario_id" baseTableName="apartado_formulario" constraintName="apartado_formulario_bloque_formulario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="bloque_formulario" validate="true" />
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-apartado_formulario_apartado_formulario_FK">
-    <addForeignKeyConstraint baseColumnNames="apartado_formulario_padre_id" baseTableName="apartado_formulario" constraintName="apartado_formulario_apartado_formulario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="apartado_formulario" validate="true" />
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-apartado_formulario_componente_formulario_FK">
-    <addForeignKeyConstraint baseColumnNames="componente_formulario_id" baseTableName="apartado_formulario" constraintName="apartado_formulario_componente_formulario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="componente_formulario" validate="true" />
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-comentario_apartado_formulario_FK">
-    <addForeignKeyConstraint baseColumnNames="apartado_formulario_id" baseTableName="comentario" constraintName="comentario_apartado_formulario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="apartado_formulario" validate="true" />
+  <changeSet author="master" id="20200601000000-comentario_apartado_FK">
+    <addForeignKeyConstraint baseColumnNames="apartado_id" baseTableName="comentario" constraintName="comentario_apartado_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="apartado" validate="true" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-comentario_evaluacion_FK">
@@ -909,12 +854,12 @@
     <addForeignKeyConstraint baseColumnNames="tipo_comentario_id" baseTableName="comentario" constraintName="comentario_tipo_comentario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_comentario" validate="true" />
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-respuesta_formulario_formulario_memoria_FK">
-    <addForeignKeyConstraint baseColumnNames="formulario_memoria_id" baseTableName="respuesta_formulario" constraintName="respuesta_formulario_formulario_memoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="formulario_memoria" validate="true" />
+  <changeSet author="master" id="20200601000000-respuesta_memoria_FK">
+    <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="respuesta" constraintName="respuesta_memoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="memoria" validate="true" />
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-respuesta_formulario_componente_formulario_FK">
-    <addForeignKeyConstraint baseColumnNames="componente_formulario_id" baseTableName="respuesta_formulario" constraintName="respuesta_formulario_componente_formulario_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="componente_formulario" validate="true" />
+  <changeSet author="master" id="20200601000000-respuesta__apartado_FK">
+    <addForeignKeyConstraint baseColumnNames="apartado_id" baseTableName="respuesta" constraintName="respuesta_apartado_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="apartado" validate="true" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-acta_tipo_estado_acta_FK">

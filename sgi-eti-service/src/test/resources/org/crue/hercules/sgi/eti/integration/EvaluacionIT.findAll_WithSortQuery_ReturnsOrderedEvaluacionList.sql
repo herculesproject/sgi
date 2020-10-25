@@ -1,5 +1,8 @@
--- COMITÉ
-INSERT INTO eti.comite (id, comite, activo) VALUES (1, 'Comite2', true);
+-- FORMULARIO 
+INSERT INTO eti.formulario (id, nombre, descripcion) VALUES (1, 'M10', 'Descripcion');
+
+-- COMITE
+INSERT INTO eti.comite (id, comite, formulario_id, activo) VALUES (1, 'Comite2', 1, true);
 
 -- TIPO ACTIVIDAD 
 INSERT INTO eti.tipo_actividad (id, nombre, activo) VALUES (1, 'TipoActividad1', true);

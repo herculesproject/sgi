@@ -1,25 +1,20 @@
 -- FORMULARIO
 INSERT INTO ETI.FORMULARIO
-(ID, NOMBRE, DESCRIPCION, ACTIVO)
-VALUES(1, 'M10', 'Descripcion1', true);
+(ID, NOMBRE, DESCRIPCION)
+VALUES(1, 'M10', 'Descripcion1');
 
--- BLOQUE FORMULARIO
-INSERT INTO ETI.BLOQUE_FORMULARIO
-(ID, NOMBRE, FORMULARIO_ID, ORDEN, ACTIVO)
-VALUES(1, 'BloqueFormulario1', 1, 1, true);
-
--- COMPONENTE FORMULARIO
-INSERT INTO ETI.COMPONENTE_FORMULARIO
-(ID, ESQUEMA)
-VALUES(1, 'EsquemaComponenteFormulario1');
+-- BLOQUE
+INSERT INTO ETI.BLOQUE
+(ID, NOMBRE, FORMULARIO_ID, ORDEN)
+VALUES(1, 'Bloque1', 1, 1);
 
 -- APARTADO FORMULARIO
-INSERT INTO ETI.APARTADO_FORMULARIO
-(ID, BLOQUE_FORMULARIO_ID, NOMBRE, APARTADO_FORMULARIO_PADRE_ID, ORDEN, COMPONENTE_FORMULARIO_ID, ACTIVO)
-VALUES(100, 1, 'ApartadoFormulario01', NULL, 1, 1, true);
+INSERT INTO ETI.APARTADO
+(ID, BLOQUE_ID, NOMBRE, PADRE_ID, ORDEN, ESQUEMA, ACTIVO)
+VALUES(100, 1, 'Apartado01', NULL, 1, '{"nombre":"EsquemaApartado01"}', true);
 
--- COMITÉ
-INSERT INTO eti.comite (id, comite, activo) VALUES (1, 'Comite2', true);
+-- COMITE
+INSERT INTO eti.comite (id, comite, formulario_id, activo) VALUES (1, 'Comite2', 1, true);
 
 -- TIPO ACTIVIDAD 
 INSERT INTO eti.tipo_actividad (id, nombre, activo) VALUES (1, 'TipoActividad1', true);
@@ -85,7 +80,7 @@ INSERT INTO eti.evaluacion(id, memoria_id, convocatoria_reunion_id, tipo_evaluac
 INSERT INTO eti.tipo_comentario (id, nombre, activo) VALUES (2, 'EVALUADOR', true);
 
 -- COMENTARIO
-INSERT INTO eti.comentario (id, apartado_formulario_id, evaluacion_id, tipo_comentario_id, texto)
-  VALUES (1, 100, 200, 2, 'Comentario1');
-INSERT INTO eti.comentario (id, apartado_formulario_id, evaluacion_id, tipo_comentario_id, texto)
-  VALUES (2, 100, 200, 2, 'Comentario2');
+INSERT INTO eti.comentario (id, memoria_id, apartado_id, evaluacion_id, tipo_comentario_id, texto)
+  VALUES (1, 1, 100, 200, 2, 'Comentario1');
+INSERT INTO eti.comentario (id, memoria_id, apartado_id, evaluacion_id, tipo_comentario_id, texto)
+  VALUES (2, 1, 100, 200, 2, 'Comentario2');

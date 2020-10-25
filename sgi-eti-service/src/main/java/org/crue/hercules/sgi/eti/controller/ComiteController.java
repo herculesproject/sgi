@@ -6,8 +6,6 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
-import org.crue.hercules.sgi.eti.model.Formulario;
-import org.crue.hercules.sgi.eti.service.ComiteFormularioService;
 import org.crue.hercules.sgi.eti.service.ComiteService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -26,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -39,19 +38,14 @@ public class ComiteController {
   /** Comité service */
   private ComiteService service;
 
-  /** Comité formulario service */
-  private ComiteFormularioService comiteFormularioService;
-
   /**
    * Instancia un nuevo ComiteController.
    * 
-   * @param service                 {@link ComiteService}.
-   * @param comiteFormularioService {@link ComiteFormularioService}
+   * @param service {@link ComiteService}.
    */
-  public ComiteController(ComiteService service, ComiteFormularioService comiteFormularioService) {
+  public ComiteController(ComiteService service) {
     log.debug("ComiteController(ComiteService service) - start");
     this.service = service;
-    this.comiteFormularioService = comiteFormularioService;
     log.debug("ComiteController(ComiteService service) - end");
   }
 
@@ -136,19 +130,4 @@ public class ComiteController {
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
-  /**
-   * Devuelve el formulario de tipo M10, M20 o M30 del comité asociado al id
-   * recibido por parámetro.
-   * 
-   * @param id Identificador de {@link Comite}.
-   */
-  @GetMapping("/{id}/comite-formulario")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-PEV-ER-INV')")
-  ResponseEntity<Formulario> findComiteFormulario(@PathVariable Long id) {
-    log.debug("findComiteFormulario(Long id) - start");
-    Formulario formulario = comiteFormularioService.findComiteFormularioTipoM(id);
-
-    log.debug("findComiteFormulario(Long id) - end");
-    return new ResponseEntity<>(formulario, HttpStatus.OK);
-  }
 }

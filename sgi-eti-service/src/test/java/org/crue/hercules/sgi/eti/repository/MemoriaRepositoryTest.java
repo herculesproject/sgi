@@ -1,12 +1,12 @@
 package org.crue.hercules.sgi.eti.repository;
 
 import java.time.LocalDate;
-
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
@@ -33,7 +33,8 @@ public class MemoriaRepositoryTest {
 
     // given: Datos existentes para la memoria activa
 
-    Comite comite = entityManager.persistFlushFind(generarMockComite());
+    Formulario formulario = entityManager.persistFlushFind(generarMockFormulario());
+    Comite comite = entityManager.persistFlushFind(generarMockComite(formulario));
     TipoActividad tipoActividad = entityManager.persistAndFlush(generarMockTipoActividad());
     TipoInvestigacionTutelada tipoInvestigacionTutelada = entityManager
         .persistAndFlush(generarMockTipoInvestigacionTutelada());
@@ -55,12 +56,23 @@ public class MemoriaRepositoryTest {
   }
 
   /**
+   * Función que devuelve un objeto Formulario
+   * 
+   * @return el objeto Formulario
+   */
+  public Formulario generarMockFormulario() {
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    return formulario;
+  }
+
+  /**
    * Función que devuelve un objeto Comite
    * 
+   * @param formulario el formulario
    * @return el objeto Comite
    */
-  private Comite generarMockComite() {
-    return new Comite(null, "Comite1", Boolean.TRUE);
+  public Comite generarMockComite(Formulario formulario) {
+    return new Comite(null, "Comite1", formulario, Boolean.TRUE);
   }
 
   /**

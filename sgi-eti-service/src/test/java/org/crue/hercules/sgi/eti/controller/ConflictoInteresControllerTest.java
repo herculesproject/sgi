@@ -1,13 +1,16 @@
 package org.crue.hercules.sgi.eti.controller;
 
 import java.time.LocalDate;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.crue.hercules.sgi.eti.config.SecurityConfig;
 import org.crue.hercules.sgi.eti.exceptions.ConflictoInteresNotFoundException;
 import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConflictoInteres;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.service.ConflictoInteresService;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -159,7 +162,8 @@ public class ConflictoInteresControllerTest {
     cargoComite.setNombre("CargoComite1");
     cargoComite.setActivo(Boolean.TRUE);
 
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite1", formulario, Boolean.TRUE);
 
     Evaluador evaluador = new Evaluador();
     evaluador.setId(id);

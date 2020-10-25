@@ -36,11 +36,16 @@ public class Comentario extends BaseEntity {
   @SequenceGenerator(name = "comentario_seq", sequenceName = "comentario_seq", allocationSize = 1)
   private Long id;
 
+  /** Formulario Memoria */
+  @ManyToOne
+  @JoinColumn(name = "memoria_id", nullable = false)
+  private Memoria memoria;
+
   /** Apartado Formulario */
   @ManyToOne
-  @JoinColumn(name = "apartado_formulario_id", nullable = false)
+  @JoinColumn(name = "apartado_id", nullable = false)
   @NotNull
-  private ApartadoFormulario apartadoFormulario;
+  private Apartado apartado;
 
   /** Evaluacion */
   @ManyToOne

@@ -21,8 +21,8 @@ import org.crue.hercules.sgi.eti.model.Dictamen;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
-import org.crue.hercules.sgi.eti.model.FormularioMemoria;
-import org.crue.hercules.sgi.eti.model.InformeFormulario;
+import org.crue.hercules.sgi.eti.model.Formulario;
+import org.crue.hercules.sgi.eti.model.Informe;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
@@ -34,7 +34,7 @@ import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.service.DocumentacionMemoriaService;
 import org.crue.hercules.sgi.eti.service.EvaluacionService;
-import org.crue.hercules.sgi.eti.service.InformeFormularioService;
+import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
@@ -82,7 +82,7 @@ public class MemoriaControllerTest {
   private EvaluacionService evaluacionService;
 
   @MockBean
-  private InformeFormularioService informeFormularioService;
+  private InformeService informeFormularioService;
 
   @MockBean
   private DocumentacionMemoriaService documentacionMemoriaService;
@@ -688,7 +688,7 @@ public class MemoriaControllerTest {
     final String url = new StringBuilder(MEMORIA_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
         .append("/documentacion-formulario").toString();
 
-    BDDMockito.given(documentacionMemoriaService.findDocumentacionFormularioMemoria(ArgumentMatchers.anyLong(),
+    BDDMockito.given(documentacionMemoriaService.findDocumentacionMemoria(ArgumentMatchers.anyLong(),
         ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(Collections.emptyList()));
 
     // when: Se buscan todos los datos
@@ -716,7 +716,7 @@ public class MemoriaControllerTest {
       documentacionMemorias.add(documentacionMemoria);
     }
 
-    BDDMockito.given(documentacionMemoriaService.findDocumentacionFormularioMemoria(ArgumentMatchers.anyLong(),
+    BDDMockito.given(documentacionMemoriaService.findDocumentacionMemoria(ArgumentMatchers.anyLong(),
         ArgumentMatchers.<Pageable>any())).willAnswer(new Answer<Page<DocumentacionMemoria>>() {
           @Override
           public Page<DocumentacionMemoria> answer(InvocationOnMock invocation) throws Throwable {
@@ -1231,7 +1231,8 @@ public class MemoriaControllerTest {
    * @param activo indicador de activo.
    */
   private Comite generarMockComite(Long id, String comite, Boolean activo) {
-    return new Comite(id, comite, activo);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    return new Comite(id, comite, formulario, activo);
 
   }
 
@@ -1333,7 +1334,8 @@ public class MemoriaControllerTest {
     peticionEvaluacion.setValorSocial("Valor social");
     peticionEvaluacion.setActivo(Boolean.TRUE);
 
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite1", formulario, Boolean.TRUE);
 
     TipoMemoria tipoMemoria = new TipoMemoria();
     tipoMemoria.setId(1L);
@@ -1441,20 +1443,14 @@ public class MemoriaControllerTest {
     return memoria;
   }
 
-  public InformeFormulario generarMockInforme(Long id, FormularioMemoria formularioMemoria) {
+  public Informe generarMockInforme(Long id, Memoria memoria) {
 
-    InformeFormulario informe = new InformeFormulario();
+    Informe informe = new Informe();
     informe.setId(id);
     informe.setDocumentoRef("TipoDocumento" + id);
-    informe.setFormularioMemoria(formularioMemoria);
+    informe.setMemoria(memoria);
 
     return informe;
   }
 
-  public FormularioMemoria generarMockFormularioMemoria(Long id, Memoria memoria) {
-    FormularioMemoria formularioMemoria = new FormularioMemoria();
-    formularioMemoria.setId(id);
-    formularioMemoria.setMemoria(memoria);
-    return formularioMemoria;
-  }
 }

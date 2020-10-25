@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.TipoMemoriaComiteNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoriaComite;
 import org.crue.hercules.sgi.eti.repository.TipoMemoriaComiteRepository;
@@ -46,7 +47,8 @@ public class TipoMemoriaComiteServiceTest {
   @Test
   public void find_WithId_ReturnsTipoMemoriaComite() {
 
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite1", formulario, Boolean.TRUE);
     TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria1", Boolean.TRUE);
 
     BDDMockito.given(tipoMemoriaComiteRepository.findById(1L))
@@ -70,7 +72,8 @@ public class TipoMemoriaComiteServiceTest {
 
   @Test
   public void create_ReturnsTipoMemoriaComite() {
-    Comite comite = new Comite(null, "Comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(null, "Comite1", formulario, Boolean.TRUE);
     TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria1", Boolean.TRUE);
 
     // given: Un nuevo TipoMemoriaComite
@@ -92,7 +95,8 @@ public class TipoMemoriaComiteServiceTest {
 
   @Test
   public void create_TipoMemoriaComiteWithId_ThrowsIllegalArgumentException() {
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite1", formulario, Boolean.TRUE);
     TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria1", Boolean.TRUE);
 
     // given: Un nuevo tipo de Memoria Comite que ya tiene id
@@ -106,7 +110,8 @@ public class TipoMemoriaComiteServiceTest {
   @Test
   public void update_ReturnsTipoMemoriaComite() {
 
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite1", formulario, Boolean.TRUE);
     TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria1", Boolean.TRUE);
     TipoMemoria tipoMemoria2 = new TipoMemoria(1L, "TipoMemoria1", Boolean.TRUE);
 
@@ -130,7 +135,8 @@ public class TipoMemoriaComiteServiceTest {
 
   @Test
   public void update_ThrowsTipoMemoriaComiteNotFoundException() {
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite1", formulario, Boolean.TRUE);
     TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria1", Boolean.TRUE);
 
     // given: Un nuevo tipo Memoria Comite a actualizar
@@ -145,7 +151,8 @@ public class TipoMemoriaComiteServiceTest {
   @Test
   public void update_WithoutId_ThrowsIllegalArgumentException() {
 
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite1", formulario, Boolean.TRUE);
     TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria1", Boolean.TRUE);
 
     // given: Un TipoMemoriaComite que venga sin id
@@ -196,7 +203,8 @@ public class TipoMemoriaComiteServiceTest {
   @Test
   public void findAll_Unlimited_ReturnsFullTipoMemoriaComiteList() {
 
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite1", formulario, Boolean.TRUE);
     TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria1", Boolean.TRUE);
 
     // given: One hundred TipoMemoriaComite
@@ -221,7 +229,8 @@ public class TipoMemoriaComiteServiceTest {
   @Test
   public void findAll_WithPaging_ReturnsPage() {
 
-    Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite", formulario, Boolean.TRUE);
     TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria", Boolean.TRUE);
 
     // given: One hundred TipoMemoriaComites

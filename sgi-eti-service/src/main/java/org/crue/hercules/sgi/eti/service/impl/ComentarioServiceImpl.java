@@ -53,7 +53,7 @@ public class ComentarioServiceImpl implements ComentarioService {
 
       validarTipoEvaluacionAndFormulario(evaluacion.getTipoEvaluacion().getId(),
           evaluacion.getMemoria().getComite().getComite(),
-          comentario.getApartadoFormulario().getBloqueFormulario().getFormulario().getId());
+          comentario.getApartado().getBloque().getFormulario().getId());
 
       Assert.isTrue(
           evaluacion.getMemoria().getEstadoActual().getId().equals(4L)
@@ -91,7 +91,7 @@ public class ComentarioServiceImpl implements ComentarioService {
 
       validarTipoEvaluacionAndFormulario(evaluacion.getTipoEvaluacion().getId(),
           evaluacion.getMemoria().getComite().getComite(),
-          comentario.getApartadoFormulario().getBloqueFormulario().getFormulario().getId());
+          comentario.getApartado().getBloque().getFormulario().getId());
 
       Assert.isTrue(
           (evaluacion.getEvaluador1().getPersonaRef()).equals(personaRef)
@@ -206,7 +206,7 @@ public class ComentarioServiceImpl implements ComentarioService {
 
       validarTipoEvaluacionAndFormulario(evaluacion.getTipoEvaluacion().getId(),
           evaluacion.getMemoria().getComite().getComite(),
-          comentarioActualizar.getApartadoFormulario().getBloqueFormulario().getFormulario().getId());
+          comentarioActualizar.getApartado().getBloque().getFormulario().getId());
 
       Assert.isTrue(
           evaluacion.getMemoria().getEstadoActual().getId().equals(4L)
@@ -247,7 +247,7 @@ public class ComentarioServiceImpl implements ComentarioService {
 
       validarTipoEvaluacionAndFormulario(evaluacion.getTipoEvaluacion().getId(),
           evaluacion.getMemoria().getComite().getComite(),
-          comentarioActualizar.getApartadoFormulario().getBloqueFormulario().getFormulario().getId());
+          comentarioActualizar.getApartado().getBloque().getFormulario().getId());
 
       Assert.isTrue(
           (evaluacion.getEvaluador1().getPersonaRef()).equals(personaRef)
@@ -363,7 +363,7 @@ public class ComentarioServiceImpl implements ComentarioService {
       Assert.isTrue(comentario.getEvaluacion().getId().equals(evaluacionId),
           "El comentario no pertenece a la evaluación recibida.");
 
-      comentario.setApartadoFormulario(comentarioActualizar.getApartadoFormulario());
+      comentario.setApartado(comentarioActualizar.getApartado());
       comentario.setEvaluacion(comentarioActualizar.getEvaluacion());
       comentario.setTipoComentario(comentarioActualizar.getTipoComentario());
       comentario.setTexto(comentarioActualizar.getTexto());
@@ -411,8 +411,7 @@ public class ComentarioServiceImpl implements ComentarioService {
         // Tipo Evaluación Retrospectiva
 
         // El id formulario debe ser del tipo 6 - > Retrospectiva
-        Assert.isTrue(idFormulario.equals(6L),
-            "El bloque formulario seleccionado no es correcto para el tipo de evaluación.");
+        Assert.isTrue(idFormulario.equals(6L), "El bloque seleccionado no es correcto para el tipo de evaluación.");
         break;
       }
       case 2: {
@@ -422,7 +421,7 @@ public class ComentarioServiceImpl implements ComentarioService {
         Assert.isTrue(
             (idFormulario.equals(1L) && comite.equals("CEISH")) || (idFormulario.equals(2L) && comite.equals("CEEA"))
                 || (idFormulario.equals(3L) && comite.equals("CEIAB")),
-            "El bloque formulario seleccionado no es correcto para el tipo de evaluación.");
+            "El bloque seleccionado no es correcto para el tipo de evaluación.");
 
         break;
       }
@@ -430,15 +429,13 @@ public class ComentarioServiceImpl implements ComentarioService {
         // Tipo Evaluación Seguimiento Anual
 
         // El id formulario debe ser del tipo 4 - > Seguimiento Anual
-        Assert.isTrue(idFormulario.equals(4L),
-            "El bloque formulario seleccionado no es correcto para el tipo de evaluación.");
+        Assert.isTrue(idFormulario.equals(4L), "El bloque seleccionado no es correcto para el tipo de evaluación.");
         break;
       }
       case 4: {
         // Tipo Evaluación Seguimiento Final
         // El id formulario debe ser del tipo 5 - > Seguimiento Final
-        Assert.isTrue(idFormulario.equals(5L),
-            "El bloque formulario seleccionado no es correcto para el tipo de evaluación.");
+        Assert.isTrue(idFormulario.equals(5L), "El bloque seleccionado no es correcto para el tipo de evaluación.");
       }
     }
   }

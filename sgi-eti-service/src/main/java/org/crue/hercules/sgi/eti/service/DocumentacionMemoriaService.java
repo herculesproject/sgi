@@ -74,7 +74,7 @@ public interface DocumentacionMemoriaService {
    * @param pageable  la información de la paginación.
    * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
    */
-  Page<DocumentacionMemoria> findDocumentacionFormularioMemoria(Long idMemoria, Pageable pageable);
+  Page<DocumentacionMemoria> findDocumentacionMemoria(Long idMemoria, Pageable pageable);
 
   /**
    * Obtiene todas las entidades {@link DocumentacionMemoria} asociadas al

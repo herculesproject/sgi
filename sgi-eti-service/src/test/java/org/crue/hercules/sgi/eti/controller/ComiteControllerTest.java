@@ -9,11 +9,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.config.SecurityConfig;
-import org.crue.hercules.sgi.eti.exceptions.ComiteFormularioNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Formulario;
-import org.crue.hercules.sgi.eti.service.ComiteFormularioService;
 import org.crue.hercules.sgi.eti.service.ComiteService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
@@ -57,9 +55,6 @@ public class ComiteControllerTest {
   @MockBean
   private ComiteService comiteService;
 
-  @MockBean
-  private ComiteFormularioService comiteFormularioService;
-
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String COMITE_CONTROLLER_BASE_PATH = "/comites";
 
@@ -70,8 +65,10 @@ public class ComiteControllerTest {
 
     List<Comite> comiteLista = new ArrayList<>();
 
-    comiteLista.add(new Comite(1L, "Comite1", Boolean.TRUE));
-    comiteLista.add(new Comite(2L, "Comite2", Boolean.TRUE));
+    Formulario formulario1 = new Formulario(1L, "M10", "Descripcion");
+    comiteLista.add(new Comite(1L, "Comite1", formulario1, Boolean.TRUE));
+    Formulario formulario2 = new Formulario(2L, "M20", "Descripcion");
+    comiteLista.add(new Comite(2L, "Comite2", formulario2, Boolean.TRUE));
 
     BDDMockito
         .given(comiteService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
@@ -112,8 +109,9 @@ public class ComiteControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-COMITE-VER" })
   public void getComite_WithId_ReturnsComite() throws Exception {
 
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
     BDDMockito.given(comiteService.findById(ArgumentMatchers.anyLong()))
-        .willReturn((new Comite(1L, "Comite1", Boolean.TRUE)));
+        .willReturn((new Comite(1L, "Comite1", formulario, Boolean.TRUE)));
 
     mockMvc
         .perform(MockMvcRequestBuilders.get(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
@@ -142,10 +140,11 @@ public class ComiteControllerTest {
   public void addComite_ReturnsComite() throws Exception {
 
     // given: Un Comite nuevo
-    String nuevoComiteJson = "{\"comite\": \"Comite1\"}";
+    String nuevoComiteJson = "{\"comite\": \"Comite1\",\"formulario\": {\"id\": 1,\"nombre\": \"M10\",\"descripcion\": \"Descripcion\"}}";
 
     Comite comite = new Comite();
     comite.setId(1L);
+    comite.setFormulario(new Formulario(1L, "M10", "Descripcion"));
     comite.setComite("Comite1");
 
     BDDMockito.given(comiteService.create(ArgumentMatchers.<Comite>any())).willReturn(comite);
@@ -186,10 +185,11 @@ public class ComiteControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-COMITE-EDITAR" })
   public void replaceComite_ReturnsComite() throws Exception {
     // given: Un Comite a modificar
-    String replaceComiteJson = "{\"comite\": \"Comite1\"}";
+    String replaceComiteJson = "{\"comite\": \"Comite1\",\"formulario\": {\"id\": 1,\"nombre\": \"M10\",\"descripcion\": \"Descripcion\"}}";
 
     Comite comite = new Comite();
     comite.setId(1L);
+    comite.setFormulario(new Formulario(1L, "M10", "Descripcion"));
     comite.setComite("Replace Comite1");
 
     BDDMockito.given(comiteService.update(ArgumentMatchers.<Comite>any())).willReturn(comite);
@@ -209,10 +209,11 @@ public class ComiteControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-COMITE-EDITAR" })
   public void replaceComite_NotFound() throws Exception {
     // given: Un Comite a modificar
-    String replaceComiteJson = "{\"id\": \"1\",\"comite\": \"Comite1\"}";
+    String replaceComiteJson = "{\"id\": \"1\",\"comite\": \"Comite1\",\"formulario\": {\"id\": 1,\"nombre\": \"M10\",\"descripcion\": \"Descripcion\"}}";
 
     Comite comite = new Comite();
     comite.setId(1L);
+    comite.setFormulario(new Formulario(1L, "M10", "Descripcion"));
     comite.setComite("Replace Comite1");
 
     BDDMockito.given(comiteService.update(ArgumentMatchers.<Comite>any())).will((InvocationOnMock invocation) -> {
@@ -231,8 +232,9 @@ public class ComiteControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-COMITE-EDITAR" })
   public void deleteComite() throws Exception {
 
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
     BDDMockito.given(comiteService.findById(ArgumentMatchers.anyLong()))
-        .willReturn(new Comite(1L, "Comite1", Boolean.TRUE));
+        .willReturn(new Comite(1L, "Comite1", formulario, Boolean.TRUE));
 
     mockMvc
         .perform(MockMvcRequestBuilders.delete(COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
@@ -248,7 +250,8 @@ public class ComiteControllerTest {
     // given: Cien Comite
     List<Comite> comiteList = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      comiteList.add(new Comite(Long.valueOf(i), "Comite" + String.format("%03d", i), Boolean.TRUE));
+      Formulario formulario = new Formulario(Long.valueOf(i), "M" + i, "Descripcion");
+      comiteList.add(new Comite(Long.valueOf(i), "Comite" + String.format("%03d", i), formulario, Boolean.TRUE));
     }
 
     BDDMockito
@@ -302,8 +305,10 @@ public class ComiteControllerTest {
     // given: Dos Comite y una query
 
     List<Comite> comiteList = new ArrayList<>();
-    comiteList.add(new Comite(1L, "Comite1", Boolean.TRUE));
-    comiteList.add(new Comite(2L, "Comite2", Boolean.TRUE));
+    Formulario formulario1 = new Formulario(1L, "M10", "Descripcion");
+    comiteList.add(new Comite(1L, "Comite1", formulario1, Boolean.TRUE));
+    Formulario formulario2 = new Formulario(1L, "M20", "Descripcion");
+    comiteList.add(new Comite(2L, "Comite2", formulario2, Boolean.TRUE));
 
     String query = "comite~Comite%";
 
@@ -383,39 +388,6 @@ public class ComiteControllerTest {
         // then: Obtiene la página
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)));
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
-  public void findComiteFormulario() throws Exception {
-    // given: Existe la memoria pero no tiene documentacion
-    Long id = 3L;
-    final String url = new StringBuilder(COMITE_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
-        .append("/comite-formulario").toString();
-
-    BDDMockito.given(comiteFormularioService.findComiteFormularioTipoM(ArgumentMatchers.anyLong()))
-        .willReturn(new Formulario(1L, "M10", "Formulario M10", Boolean.TRUE));
-
-    // when: Se buscan todos los datos
-    mockMvc.perform(MockMvcRequestBuilders.get(url, id).with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("M10"));
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
-  public void findComiteFormulario_Returns404() throws Exception {
-    BDDMockito.given(comiteFormularioService.findComiteFormularioTipoM(ArgumentMatchers.anyLong()))
-        .will((InvocationOnMock invocation) -> {
-          throw new ComiteFormularioNotFoundException(invocation.getArgument(0));
-        });
-
-    final String url = new StringBuilder(COMITE_CONTROLLER_BASE_PATH).append(PATH_PARAMETER_ID)
-        .append("/comite-formulario").toString();
-
-    mockMvc.perform(MockMvcRequestBuilders.get(url, 1L).with(SecurityMockMvcRequestPostProcessors.csrf()))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
 }

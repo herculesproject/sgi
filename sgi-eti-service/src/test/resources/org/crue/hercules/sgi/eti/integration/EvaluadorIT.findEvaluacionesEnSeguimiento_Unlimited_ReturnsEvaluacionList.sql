@@ -1,8 +1,8 @@
--- Comite
-INSERT INTO ETI.COMITE
-  (ID,COMITE,ACTIVO)
-VALUES
-  (2, 'CEEA', true);
+-- FORMULARIO 
+INSERT INTO eti.formulario (id, nombre, descripcion) VALUES (2, 'M20', 'Descripcion');
+
+-- COMITE
+INSERT INTO eti.comite (id, comite, formulario_id, activo) VALUES (2, 'CEEA', 2, true);
 
 -- Tipo Memoria
 INSERT INTO ETI.TIPO_MEMORIA

@@ -12,9 +12,9 @@ import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.TipoDocumentoNotFoundException;
 import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.Formulario;
-import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.repository.DocumentacionMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.TipoDocumentoRepository;
@@ -232,28 +232,24 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
    * @return la lista de entidades {@link DocumentacionMemoria} paginadas.
    */
   @Override
-  public Page<DocumentacionMemoria> findDocumentacionFormularioMemoria(Long idMemoria, Pageable pageable) {
-    log.debug("findDocumentacionFormularioMemoria(Long idMemoria, Pageable pageable) - start");
+  public Page<DocumentacionMemoria> findDocumentacionMemoria(Long idMemoria, Pageable pageable) {
+    log.debug("findDocumentacionMemoria(Long idMemoria, Pageable pageable) - start");
     Assert.isTrue(idMemoria != null, "El id de la memoria no puede ser nulo para mostrar su documentación");
 
     return memoriaRepository.findByIdAndActivoTrue(idMemoria).map(memoria -> {
 
       Specification<DocumentacionMemoria> specMemoriaId = DocumentacionMemoriaSpecifications.memoriaId(idMemoria);
 
-      Specification<DocumentacionMemoria> specFormularioActivo = DocumentacionMemoriaSpecifications
-          .tipoDocumentoFormularioActivo();
-
       // Aquellos que no son del tipo 1: Seguimiento Anual, 2: Seguimiento Final y 3:
       // Retrospectiva
       Specification<DocumentacionMemoria> specTipoDocumentoNotIn = DocumentacionMemoriaSpecifications
           .tipoDocumentoNotIn(Arrays.asList(1L, 2L, 3L));
 
-      Specification<DocumentacionMemoria> specs = Specification.where(specMemoriaId).and(specFormularioActivo)
-          .and(specTipoDocumentoNotIn);
+      Specification<DocumentacionMemoria> specs = Specification.where(specMemoriaId).and(specTipoDocumentoNotIn);
 
       Page<DocumentacionMemoria> returnValue = documentacionMemoriaRepository.findAll(specs, pageable);
 
-      log.debug("findDocumentacionFormularioMemoria(Long idMemoria, Pageable pageable) - end");
+      log.debug("findDocumentacionMemoria(Long idMemoria, Pageable pageable) - end");
       return returnValue;
     }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
 
@@ -276,14 +272,10 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
 
       Specification<DocumentacionMemoria> specMemoriaId = DocumentacionMemoriaSpecifications.memoriaId(idMemoria);
 
-      Specification<DocumentacionMemoria> specFormularioActivo = DocumentacionMemoriaSpecifications
-          .tipoDocumentoFormularioActivo();
-
       // Aquellos que no son del tipo 1: Seguimiento Anual
       Specification<DocumentacionMemoria> specTipoDocumento = DocumentacionMemoriaSpecifications.tipoDocumento(1L);
 
-      Specification<DocumentacionMemoria> specs = Specification.where(specMemoriaId).and(specFormularioActivo)
-          .and(specTipoDocumento);
+      Specification<DocumentacionMemoria> specs = Specification.where(specMemoriaId).and(specTipoDocumento);
 
       Page<DocumentacionMemoria> returnValue = documentacionMemoriaRepository.findAll(specs, pageable);
 
@@ -310,14 +302,10 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
 
       Specification<DocumentacionMemoria> specMemoriaId = DocumentacionMemoriaSpecifications.memoriaId(idMemoria);
 
-      Specification<DocumentacionMemoria> specFormularioActivo = DocumentacionMemoriaSpecifications
-          .tipoDocumentoFormularioActivo();
-
       // Aquellos que no son del tipo 2: Seguimiento Final
       Specification<DocumentacionMemoria> specTipoDocumento = DocumentacionMemoriaSpecifications.tipoDocumento(2L);
 
-      Specification<DocumentacionMemoria> specs = Specification.where(specMemoriaId).and(specFormularioActivo)
-          .and(specTipoDocumento);
+      Specification<DocumentacionMemoria> specs = Specification.where(specMemoriaId).and(specTipoDocumento);
 
       Page<DocumentacionMemoria> returnValue = documentacionMemoriaRepository.findAll(specs, pageable);
 
@@ -344,14 +332,10 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
 
       Specification<DocumentacionMemoria> specMemoriaId = DocumentacionMemoriaSpecifications.memoriaId(idMemoria);
 
-      Specification<DocumentacionMemoria> specFormularioActivo = DocumentacionMemoriaSpecifications
-          .tipoDocumentoFormularioActivo();
-
       // Aquellos que no son del tipo 3: Retrospectiva
       Specification<DocumentacionMemoria> specTipoDocumento = DocumentacionMemoriaSpecifications.tipoDocumento(3L);
 
-      Specification<DocumentacionMemoria> specs = Specification.where(specMemoriaId).and(specFormularioActivo)
-          .and(specTipoDocumento);
+      Specification<DocumentacionMemoria> specs = Specification.where(specMemoriaId).and(specTipoDocumento);
 
       Page<DocumentacionMemoria> returnValue = documentacionMemoriaRepository.findAll(specs, pageable);
 

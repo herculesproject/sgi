@@ -69,7 +69,6 @@ public class TipoDocumentoServiceTest {
     formulario.setId(1L);
     formulario.setNombre("M10");
     formulario.setDescripcion("Formulario M10");
-    formulario.setActivo(Boolean.TRUE);
 
     // given: Un nuevo TipoDocumento
     TipoDocumento tipoDocumentoNew = generarMockTipoDocumento(1L, "TipoDocumentoNew");
@@ -107,7 +106,6 @@ public class TipoDocumentoServiceTest {
     formulario.setId(1L);
     formulario.setNombre("M10");
     formulario.setDescripcion("Formulario M10");
-    formulario.setActivo(Boolean.TRUE);
 
     // given: Un nuevo tipo Documento con el servicio actualizado
     TipoDocumento tipoDocumento = generarMockTipoDocumento(1L, "TipoDocumento1");
@@ -257,7 +255,6 @@ public class TipoDocumentoServiceTest {
     formulario.setId(1L);
     formulario.setNombre("M10");
     formulario.setDescripcion("Formulario M10");
-    formulario.setActivo(Boolean.TRUE);
 
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId(id);

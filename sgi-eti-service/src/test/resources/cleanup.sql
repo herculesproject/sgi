@@ -1,12 +1,12 @@
 -- vacia la bd
-DELETE FROM eti.respuesta_formulario
+DELETE FROM eti.respuesta
 DELETE FROM eti.documentacion_memoria
 DELETE FROM eti.tarea
-DELETE FROM eti.informe_formulario
+DELETE FROM eti.informe
 DELETE FROM eti.estado_memoria
 DELETE FROM eti.comentario
 DELETE FROM eti.evaluacion
-DELETE FROM eti.formulario_memoria
+DELETE FROM eti.memoria
 DELETE FROM eti.memoria
 DELETE FROM eti.tipo_memoria_comite
 DELETE FROM eti.asistentes
@@ -23,10 +23,8 @@ DELETE FROM eti.acta
 DELETE FROM eti.tipo_estado_acta
 DELETE FROM eti.convocatoria_reunion
 DELETE FROM eti.tipo_convocatoria_reunion
-DELETE FROM eti.apartado_formulario
-DELETE FROM eti.componente_formulario
-DELETE FROM eti.bloque_formulario
-DELETE FROM eti.comite_formulario
+DELETE FROM eti.apartado
+DELETE FROM eti.bloque
 DELETE FROM eti.comite
 DELETE FROM eti.tipo_estado_memoria
 DELETE FROM eti.formacion_especifica
@@ -34,7 +32,6 @@ DELETE FROM eti.cargo_comite
 DELETE FROM eti.dictamen
 DELETE FROM eti.tipo_comentario
 DELETE FROM eti.formulario
-DELETE FROM eti.componente_formulario
 DELETE FROM eti.configuracion
 DELETE FROM eti.tipo_evaluacion
 DELETE FROM eti.retrospectiva

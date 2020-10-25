@@ -58,14 +58,14 @@ public class EstadoRetrospectivaControllerTest {
   private EstadoRetrospectivaService service;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH = "/estadoretrospectivas";
+  private static final String ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH = "/estadoretrospectivas";
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-ESTADORETROSPECTIVA-EDITAR" })
   public void create_ReturnsEstadoRetrospectiva() throws Exception {
 
     // given: Nueva entidad sin Id
-    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
 
     EstadoRetrospectiva response = getMockData(1L);
     String nuevoEstadoRetrospectivaJson = mapper.writeValueAsString(response);
@@ -89,7 +89,7 @@ public class EstadoRetrospectivaControllerTest {
   public void create_WithId_Returns400() throws Exception {
 
     // given: Nueva entidad con Id
-    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
     String nuevoEstadoRetrospectivaJson = mapper.writeValueAsString(getMockData(1L));
 
     BDDMockito.given(service.create(ArgumentMatchers.<EstadoRetrospectiva>any()))
@@ -109,7 +109,7 @@ public class EstadoRetrospectivaControllerTest {
 
     // given: Entidad existente que se va a actualizar
     EstadoRetrospectiva response = getMockData(1L);
-    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH)//
+    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)//
         .append(PATH_PARAMETER_ID)//
         .toString();
     String replaceEstadoRetrospectivaJson = mapper.writeValueAsString(response);
@@ -134,7 +134,7 @@ public class EstadoRetrospectivaControllerTest {
 
     // given: Entidad a actualizar que no existe
     EstadoRetrospectiva response = getMockData(1L);
-    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH)//
+    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)//
         .append(PATH_PARAMETER_ID)//
         .toString();
     String replaceEstadoRetrospectivaJson = mapper.writeValueAsString(response);
@@ -159,7 +159,7 @@ public class EstadoRetrospectivaControllerTest {
 
     // given: Entidad existente
     EstadoRetrospectiva response = getMockData(1L);
-    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH)//
+    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)//
         .append(PATH_PARAMETER_ID)//
         .toString();
 
@@ -180,7 +180,7 @@ public class EstadoRetrospectivaControllerTest {
 
     // given: Id de una entidad que no existe
     EstadoRetrospectiva EstadoRetrospectiva = getMockData(1L);
-    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH)//
+    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)//
         .append(PATH_PARAMETER_ID)//
         .toString();
 
@@ -203,7 +203,7 @@ public class EstadoRetrospectivaControllerTest {
 
     // given: Entidad con un determinado Id
     EstadoRetrospectiva response = getMockData(1L);
-    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH)//
+    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)//
         .append(PATH_PARAMETER_ID)//
         .toString();
 
@@ -228,7 +228,7 @@ public class EstadoRetrospectivaControllerTest {
     // given: No existe entidad con el id indicado
     EstadoRetrospectiva response = getMockData(1L);
 
-    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH)//
+    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH)//
         .append(PATH_PARAMETER_ID)//
         .toString();
 
@@ -250,7 +250,7 @@ public class EstadoRetrospectivaControllerTest {
   public void findAll_Unlimited_ReturnsFullEstadoRetrospectivaList() throws Exception {
 
     // given: Datos existentes
-    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
 
     List<EstadoRetrospectiva> response = new LinkedList<EstadoRetrospectiva>();
     response.add(getMockData(1L));
@@ -279,7 +279,7 @@ public class EstadoRetrospectivaControllerTest {
   public void findAll_Unlimited_Returns204() throws Exception {
 
     // given: No hay datos
-    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
 
     BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willReturn(new PageImpl<>(Collections.emptyList()));
@@ -295,7 +295,7 @@ public class EstadoRetrospectivaControllerTest {
   public void findAll_WithPaging_ReturnsEstadoRetrospectivaSubList() throws Exception {
 
     // given: Datos existentes
-    String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH).toString();
+    String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
 
     List<EstadoRetrospectiva> response = new LinkedList<>();
     response.add(getMockData(1L));
@@ -333,7 +333,7 @@ public class EstadoRetrospectivaControllerTest {
   public void findAll_WithPaging_Returns204() throws Exception {
 
     // given: Datos existentes
-    String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH).toString();
+    String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
 
     List<EstadoRetrospectiva> response = new LinkedList<EstadoRetrospectiva>();
     Pageable pageable = PageRequest.of(1, 2);
@@ -364,7 +364,7 @@ public class EstadoRetrospectivaControllerTest {
     response.add(getMockData(4L));
     response.add(getMockData(5L));
 
-    final String url = new StringBuilder(COMPONENTE_FORMULARIO_CONTROLLER_BASE_PATH).toString();
+    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
 
     // search
     String query = "nombre~NombreEstadoRetrospectiva0%,id:3";

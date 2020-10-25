@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,8 @@ public class AsistentesRepositoryTest {
 
     // given: Datos existentes con convocatoriaReunionId = 1
 
-    Comite comite = entityManager.persistFlushFind(generarMockComite());
+    Formulario formulario = entityManager.persistFlushFind(generarMockFormulario());
+    Comite comite = entityManager.persistFlushFind(generarMockComite(formulario));
     CargoComite cargoComite = entityManager.persistAndFlush(generarMockCargoComite());
     TipoConvocatoriaReunion tipoConvocatoriaReunion = entityManager
         .persistFlushFind(generarMockTipoConvocatoriaReunion());
@@ -71,7 +73,8 @@ public class AsistentesRepositoryTest {
 
     // given: Sin datos existentes con convocatoriaReunionId = 2
 
-    Comite comite = entityManager.persistFlushFind(generarMockComite());
+    Formulario formulario = entityManager.persistFlushFind(generarMockFormulario());
+    Comite comite = entityManager.persistFlushFind(generarMockComite(formulario));
     CargoComite cargoComite = entityManager.persistAndFlush(generarMockCargoComite());
     TipoConvocatoriaReunion tipoConvocatoriaReunion = entityManager
         .persistFlushFind(generarMockTipoConvocatoriaReunion());
@@ -103,12 +106,23 @@ public class AsistentesRepositoryTest {
   }
 
   /**
+   * Función que devuelve un objeto Formulario
+   * 
+   * @return el objeto Formulario
+   */
+  public Formulario generarMockFormulario() {
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    return formulario;
+  }
+
+  /**
    * Función que devuelve un objeto Comite
    * 
+   * @param formulario el formulario
    * @return el objeto Comite
    */
-  public Comite generarMockComite() {
-    return new Comite(null, "Comite1", Boolean.TRUE);
+  public Comite generarMockComite(Formulario formulario) {
+    return new Comite(null, "Comite1", formulario, Boolean.TRUE);
   }
 
   /**

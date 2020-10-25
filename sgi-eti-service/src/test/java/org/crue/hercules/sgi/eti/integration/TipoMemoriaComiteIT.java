@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoriaComite;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
@@ -58,7 +59,8 @@ public class TipoMemoriaComiteIT {
   @Test
   public void getTipoMemoriaComite_WithId_ReturnsTipoMemoriaComite() throws Exception {
 
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite1", formulario, Boolean.TRUE);
     TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria1", Boolean.TRUE);
 
     final ResponseEntity<TipoMemoriaComite> response = restTemplate.exchange(
@@ -79,7 +81,8 @@ public class TipoMemoriaComiteIT {
   @Test
   public void addTipoMemoriaComite_ReturnsTipoMemoriaComite() throws Exception {
 
-    Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite", formulario, Boolean.TRUE);
     TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria", Boolean.TRUE);
 
     TipoMemoriaComite nuevoTipoMemoriaComite = generarMockTipoMemoriaComite(null, comite, tipoMemoria);
@@ -126,7 +129,8 @@ public class TipoMemoriaComiteIT {
   @Test
   public void replaceTipoMemoriaComite_ReturnsTipoMemoriaComite() throws Exception {
 
-    Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite", formulario, Boolean.TRUE);
     TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria", Boolean.TRUE);
 
     TipoMemoriaComite replaceTipoMemoriaComite = generarMockTipoMemoriaComite(1L, comite, tipoMemoria);

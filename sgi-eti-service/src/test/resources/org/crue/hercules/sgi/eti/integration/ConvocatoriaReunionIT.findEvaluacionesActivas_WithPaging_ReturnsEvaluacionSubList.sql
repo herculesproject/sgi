@@ -10,20 +10,15 @@ INSERT INTO eti.tipo_actividad
 VALUES
   (1, 'TipoActividad1', true);
 
--- COMITE
-INSERT INTO eti.comite
-  (id, comite, activo)
-VALUES
-  (1, 'Comite1', true);
-INSERT INTO eti.comite
-  (id, comite, activo)
-VALUES
-  (2, 'Comite2', true);
-INSERT INTO eti.comite
-  (id, comite, activo)
-VALUES
-  (3, 'Comite3', true);
+-- FORMULARIO 
+INSERT INTO eti.formulario (id, nombre, descripcion) VALUES (1, 'M10', 'Descripcion');
+INSERT INTO eti.formulario (id, nombre, descripcion) VALUES (2, 'M20', 'Descripcion');
+INSERT INTO eti.formulario (id, nombre, descripcion) VALUES (3, 'M30', 'Descripcion');
 
+-- COMITE
+INSERT INTO eti.comite (id, comite, formulario_id, activo) VALUES (1, 'Comite1', 1, true);
+INSERT INTO eti.comite (id, comite, formulario_id, activo) VALUES (2, 'Comite2', 2, true);
+INSERT INTO eti.comite (id, comite, formulario_id, activo) VALUES (3, 'Comite3', 3, true);
 
 --PETICION EVALUACION
 INSERT INTO eti.peticion_evaluacion (id, titulo, codigo, solicitud_convocatoria_ref, tipo_actividad_id, fuente_financiacion, fecha_inicio, fecha_fin, resumen, valor_social, objetivos, dis_metodologico, externo, tiene_fondos_propios, persona_ref, activo)

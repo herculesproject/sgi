@@ -11,6 +11,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.config.SecurityConfig;
 import org.crue.hercules.sgi.eti.exceptions.FormularioNotFoundException;
 import org.crue.hercules.sgi.eti.model.Formulario;
+import org.crue.hercules.sgi.eti.service.BloqueService;
 import org.crue.hercules.sgi.eti.service.FormularioService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
@@ -54,6 +55,9 @@ public class FormularioControllerTest {
   @MockBean
   private FormularioService formularioService;
 
+  @MockBean
+  private BloqueService bloqueService;
+
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String FORMULARIO_CONTROLLER_BASE_PATH = "/formularios";
 
@@ -83,123 +87,6 @@ public class FormularioControllerTest {
         .perform(MockMvcRequestBuilders.get(FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()))
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-FORMULARIO-EDITAR" })
-  public void newFormulario_ReturnsFormulario() throws Exception {
-    // given: Un Formulario nuevo
-    String nuevoFormularioJson = "{\"nombre\": \"Formulario1\", \"descripcion\": \"Descripcion1\", \"activo\": \"true\"}";
-
-    Formulario formulario = generarMockFormulario(1L, "Formulario1", "Descripcion1");
-
-    BDDMockito.given(formularioService.create(ArgumentMatchers.<Formulario>any())).willReturn(formulario);
-
-    // when: Creamos un Formulario
-    mockMvc
-        .perform(MockMvcRequestBuilders.post(FORMULARIO_CONTROLLER_BASE_PATH)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(nuevoFormularioJson))
-        .andDo(MockMvcResultHandlers.print())
-        // then: Crea el nuevo Formulario y lo devuelve
-        .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("Formulario1"))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value("Descripcion1"));
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-FORMULARIO-EDITAR" })
-  public void newFormulario_Error_Returns400() throws Exception {
-    // given: Un Formulario nuevo que produce un error al crearse
-    String nuevoFormularioJson = "{\"nombre\": \"Formulario1\", \"descripcion\": \"Descripcion1\", \"activo\": \"true\"}";
-
-    BDDMockito.given(formularioService.create(ArgumentMatchers.<Formulario>any()))
-        .willThrow(new IllegalArgumentException());
-
-    // when: Creamos un Formulario
-    mockMvc
-        .perform(MockMvcRequestBuilders.post(FORMULARIO_CONTROLLER_BASE_PATH)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(nuevoFormularioJson))
-        .andDo(MockMvcResultHandlers.print())
-        // then: Devueve un error 400
-        .andExpect(MockMvcResultMatchers.status().isBadRequest());
-
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-FORMULARIO-EDITAR" })
-  public void replaceFormulario_ReturnsFormulario() throws Exception {
-    // given: Un Formulario a modificar
-    String replaceFormularioJson = "{\"id\": 1, \"nombre\": \"Formulario1\", \"descripcion\": \"Descripcion1\", \"activo\": \"true\"}";
-
-    Formulario formulario = generarMockFormulario(1L, "Replace Formulario1", "Replace Descripcion1");
-
-    BDDMockito.given(formularioService.update(ArgumentMatchers.<Formulario>any())).willReturn(formulario);
-
-    mockMvc
-        .perform(MockMvcRequestBuilders.put(FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(replaceFormularioJson))
-        .andDo(MockMvcResultHandlers.print())
-        // then: Modifica el Formulario y lo devuelve
-        .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("Replace Formulario1"))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value("Replace Descripcion1"));
-
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-FORMULARIO-EDITAR" })
-  public void replaceFormulario_NotFound() throws Exception {
-    // given: Un Formulario a modificar
-    String replaceFormularioJson = "{\"id\": 1, \"nombre\": \"Formulario1\", \"descripcion\": \"Descripcion1\", \"activo\": \"true\"}";
-
-    BDDMockito.given(formularioService.update(ArgumentMatchers.<Formulario>any()))
-        .will((InvocationOnMock invocation) -> {
-          throw new FormularioNotFoundException(((Formulario) invocation.getArgument(0)).getId());
-        });
-    mockMvc
-        .perform(MockMvcRequestBuilders.put(FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(replaceFormularioJson))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNotFound());
-
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-FORMULARIO-EDITAR" })
-  public void removeFormulario_ReturnsOk() throws Exception {
-    BDDMockito.given(formularioService.findById(ArgumentMatchers.anyLong()))
-        .willReturn(generarMockFormulario(1L, "Formulario1", "Descripcion1"));
-
-    mockMvc
-        .perform(MockMvcRequestBuilders.delete(FORMULARIO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-FORMULARIO-VER" })
-  public void findAll_Unlimited_ReturnsFullFormularioList() throws Exception {
-    // given: One hundred Formulario
-    List<Formulario> formularios = new ArrayList<>();
-    for (int i = 1; i <= 100; i++) {
-      formularios.add(generarMockFormulario(Long.valueOf(i), "Formulario" + String.format("%03d", i), "Descripcion"));
-    }
-
-    BDDMockito
-        .given(formularioService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willReturn(new PageImpl<>(formularios));
-
-    // when: find unlimited
-    mockMvc
-        .perform(MockMvcRequestBuilders.get(FORMULARIO_CONTROLLER_BASE_PATH)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        // then: Get a page one hundred Formulario
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
   }
 
   @Test
@@ -357,7 +244,6 @@ public class FormularioControllerTest {
     formulario.setId(id);
     formulario.setNombre(nombre);
     formulario.setDescripcion(descripcion);
-    formulario.setActivo(Boolean.TRUE);
 
     return formulario;
   }

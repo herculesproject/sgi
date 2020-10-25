@@ -5,7 +5,6 @@ import java.util.List;
 import org.crue.hercules.sgi.eti.exceptions.FormularioNotFoundException;
 import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.repository.FormularioRepository;
-import org.crue.hercules.sgi.eti.repository.specification.FormularioSpecifications;
 import org.crue.hercules.sgi.eti.service.FormularioService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -55,9 +54,8 @@ public class FormularioServiceImpl implements FormularioService {
   public Page<Formulario> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAllFormulario(List<QueryCriteria> query,Pageable paging) - start");
     Specification<Formulario> specByQuery = new QuerySpecification<Formulario>(query);
-    Specification<Formulario> specActivos = FormularioSpecifications.activos();
 
-    Specification<Formulario> specs = Specification.where(specActivos).and(specByQuery);
+    Specification<Formulario> specs = Specification.where(specByQuery);
 
     Page<Formulario> returnValue = formularioRepository.findAll(specs, paging);
     log.debug("findAllFormulario(List<QueryCriteria> query,Pageable paging) - end");
@@ -127,7 +125,6 @@ public class FormularioServiceImpl implements FormularioService {
     return formularioRepository.findById(formularioActualizar.getId()).map(formulario -> {
       formulario.setNombre(formularioActualizar.getNombre());
       formulario.setDescripcion(formularioActualizar.getDescripcion());
-      formulario.setActivo(formularioActualizar.getActivo());
 
       Formulario returnValue = formularioRepository.save(formulario);
       log.debug("update(Formulario FormularioActualizar) - end");

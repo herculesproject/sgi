@@ -8,8 +8,11 @@ VALUES(1, 'PeticionEvaluacion1', 'Codigo', 'Ref solicitud convocatoria', 1, 'Fue
 -- EQUIPO TRABAJO
 INSERT INTO eti.equipo_trabajo (id, peticion_evaluacion_id, persona_ref) VALUES (100, 1, 'user-1');
 
--- COMITÉ
-INSERT INTO eti.comite (id, comite, activo) VALUES (2, 'Comite2', true);
+-- FORMULARIO 
+INSERT INTO eti.formulario (id, nombre, descripcion) VALUES (2, 'M20', 'Descripcion');
+
+-- COMITE
+INSERT INTO eti.comite (id, comite, formulario_id, activo) VALUES (2, 'Comite2', 2, true);
 
 -- TIPO MEMORIA 
 INSERT INTO eti.tipo_memoria (id, nombre, activo) VALUES (1, 'TipoMemoria1', true);

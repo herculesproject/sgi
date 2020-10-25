@@ -273,14 +273,15 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
   /**
    * Devuelve todas las memorias con la fecha límite y de evaluación.
    * 
-   * @param specs    datos de búsqueda.
-   * @param pageable información de paginación
+   * @param specs              datos de búsqueda.
+   * @param pageable           información de paginación
+   * @param personaRefConsulta responsable
    * @return lista de memorias de {@link PeticionEvaluacion}
    */
   @Override
   public Page<MemoriaPeticionEvaluacion> findAllMemoriasEvaluaciones(Specification<Memoria> specs, Pageable pageable,
       String personaRefConsulta) {
-    log.debug("findMemoriasEvaluacion( Pageable pageable) - start");
+    log.debug("findAllMemoriasEvaluaciones( Pageable pageable) - start");
 
     // Crete query
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -311,7 +312,7 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     Page<MemoriaPeticionEvaluacion> returnValue = new PageImpl<MemoriaPeticionEvaluacion>(result, pageable,
         result.size());
 
-    log.debug("findMemoriasEvaluacion( Pageable pageable) - end");
+    log.debug("findAllMemoriasEvaluaciones( Pageable pageable) - end");
     return returnValue;
   }
 

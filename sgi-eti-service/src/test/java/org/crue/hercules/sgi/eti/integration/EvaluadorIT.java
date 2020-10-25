@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.eti.model.CargoComite;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Evaluador;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
 import org.junit.jupiter.api.Test;
@@ -83,7 +84,7 @@ public class EvaluadorIT {
 
     Evaluador nuevoEvaluador = new Evaluador();
     nuevoEvaluador.setResumen("Evaluador1");
-    nuevoEvaluador.setComite(new Comite(2L, "Comite2", Boolean.TRUE));
+    nuevoEvaluador.setComite(new Comite(2L, "Comite2", new Formulario(2L, "M20", "Descripcion"), Boolean.TRUE));
     nuevoEvaluador.setCargoComite(new CargoComite(2L, "CargoComite2", Boolean.TRUE));
     nuevoEvaluador.setActivo(Boolean.TRUE);
 
@@ -423,7 +424,8 @@ public class EvaluadorIT {
     cargoComite.setNombre("CargoComite1");
     cargoComite.setActivo(Boolean.TRUE);
 
-    Comite comite = new Comite(1L, "Comite1", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite1", formulario, Boolean.TRUE);
 
     Evaluador evaluador = new Evaluador();
     evaluador.setId(id);

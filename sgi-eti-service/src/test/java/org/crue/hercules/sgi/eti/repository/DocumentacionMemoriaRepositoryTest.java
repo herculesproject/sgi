@@ -35,7 +35,8 @@ public class DocumentacionMemoriaRepositoryTest {
 
     // given: Datos existentes mmemoria activa y documentación.
 
-    Comite comite = entityManager.persistFlushFind(generarMockComite());
+    Formulario formulario = entityManager.persistFlushFind(generarMockFormulario());
+    Comite comite = entityManager.persistFlushFind(generarMockComite(formulario));
     TipoActividad tipoActividad = entityManager.persistAndFlush(generarMockTipoActividad());
     PeticionEvaluacion peticionEvaluacion = entityManager.persistAndFlush(generarMockPeticionEvaluacion(tipoActividad));
     TipoMemoria tipoMemoria = entityManager.persistAndFlush(generarMockTipoMemoria());
@@ -44,7 +45,6 @@ public class DocumentacionMemoriaRepositoryTest {
     Retrospectiva retrospectiva = entityManager.persistAndFlush(generarMockRetrospectiva(estadoRetrospectiva));
     Memoria memoria = entityManager
         .persistAndFlush(generarMockMemoria(peticionEvaluacion, comite, tipoMemoria, tipoEstadoMemoria, retrospectiva));
-    Formulario formulario = entityManager.persistAndFlush(generarMockFormulario());
     TipoDocumento tipoDocumento = entityManager.persistAndFlush(generarMockTipoDocumento(formulario));
     DocumentacionMemoria documenteacionMemoria = entityManager
         .persistAndFlush(generarMockDocumentacionMemoria(memoria, tipoDocumento));
@@ -60,10 +60,11 @@ public class DocumentacionMemoriaRepositoryTest {
   /**
    * Función que devuelve un objeto Comite
    * 
+   * @param formulario el formulario
    * @return el objeto Comite
    */
-  private Comite generarMockComite() {
-    return new Comite(null, "Comite1", Boolean.TRUE);
+  public Comite generarMockComite(Formulario formulario) {
+    return new Comite(null, "Comite1", formulario, Boolean.TRUE);
   }
 
   /**
@@ -147,7 +148,7 @@ public class DocumentacionMemoriaRepositoryTest {
    * @return TipoDocumento
    */
   private Formulario generarMockFormulario() {
-    return new Formulario(1L, "M10", "Descripcion1", Boolean.TRUE);
+    return new Formulario(1L, "M10", "Descripcion1");
 
   }
 

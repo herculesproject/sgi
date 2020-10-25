@@ -359,7 +359,6 @@ public class TipoDocumentoControllerTest {
     formulario.setId(1L);
     formulario.setNombre("M10");
     formulario.setDescripcion("Formulario M10");
-    formulario.setActivo(Boolean.TRUE);
 
     TipoDocumento tipoDocumento = new TipoDocumento();
     tipoDocumento.setId(id);

@@ -11,6 +11,7 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.config.SecurityConfig;
 import org.crue.hercules.sgi.eti.exceptions.TipoMemoriaComiteNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Formulario;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoriaComite;
 import org.crue.hercules.sgi.eti.service.TipoMemoriaComiteService;
@@ -62,7 +63,8 @@ public class TipoMemoriaComiteControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIACOMITE-VER" })
   public void getTipoMemoriaComite_WithId_ReturnsTipoMemoriaComite() throws Exception {
 
-    Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite", formulario, Boolean.TRUE);
     TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria", Boolean.TRUE);
 
     BDDMockito.given(tipoMemoriaComiteService.findById(ArgumentMatchers.anyLong()))
@@ -95,7 +97,8 @@ public class TipoMemoriaComiteControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIACOMITE-EDITAR" })
   public void newTipoMemoriaComite_ReturnsTipoMemoriaComite() throws Exception {
 
-    Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite", formulario, Boolean.TRUE);
     TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria", Boolean.TRUE);
 
     // given: Un tipo memoria comite nuevo
@@ -141,7 +144,8 @@ public class TipoMemoriaComiteControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIACOMITE-EDITAR" })
   public void replaceTipoMemoriaComite_ReturnsTipoMemoriaComite() throws Exception {
 
-    Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite", formulario, Boolean.TRUE);
     TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria", Boolean.TRUE);
 
     // given: Un tipo memoria comite a modificar
@@ -185,7 +189,8 @@ public class TipoMemoriaComiteControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIACOMITE-EDITAR" })
   public void removeTipoMemoriaComite_ReturnsOk() throws Exception {
 
-    Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite", formulario, Boolean.TRUE);
     TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria", Boolean.TRUE);
 
     BDDMockito.given(tipoMemoriaComiteService.findById(ArgumentMatchers.anyLong()))
@@ -201,7 +206,8 @@ public class TipoMemoriaComiteControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIACOMITE-VER" })
   public void findAll_Unlimited_ReturnsFullTipoMemoriaComiteList() throws Exception {
 
-    Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite", formulario, Boolean.TRUE);
     TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria", Boolean.TRUE);
 
     // given: One hundred TipoMemoriaComite
@@ -228,7 +234,8 @@ public class TipoMemoriaComiteControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIACOMITE-VER" })
   public void findAll_WithPaging_ReturnsTipoMemoriaComiteSubList() throws Exception {
 
-    Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite", formulario, Boolean.TRUE);
     TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria", Boolean.TRUE);
 
     // given: One hundred TipoMemoriaComite
@@ -286,7 +293,8 @@ public class TipoMemoriaComiteControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-TIPOMEMORIACOMITE-VER" })
   public void findAll_WithSearchQuery_ReturnsFilteredTipoMemoriaComiteList() throws Exception {
 
-    Comite comite = new Comite(1L, "Comite", Boolean.TRUE);
+    Formulario formulario = new Formulario(1L, "M10", "Descripcion");
+    Comite comite = new Comite(1L, "Comite", formulario, Boolean.TRUE);
     TipoMemoria tipoMemoria = new TipoMemoria(1L, "TipoMemoria", Boolean.TRUE);
 
     // given: One hundred TipoMemoriaComite and a search query
