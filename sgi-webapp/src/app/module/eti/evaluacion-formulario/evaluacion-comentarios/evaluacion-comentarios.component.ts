@@ -14,8 +14,8 @@ import { Subscription, Observable, of } from 'rxjs';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { EvaluacionComentarioFragment } from './evaluacion-comentarios.fragment';
 
-import { ComentarioCrearModalComponent, ComentarioCrearModalData } from '../../comentario/comentario-crear-modal/comentario-crear-modal.component';
-import { ComentarioEditarModalComponent, ComentarioEditarModalData } from '../../comentario/comentario-editar-modal/comentario-editar-modal.component';
+import { ComentarioCrearModalComponent } from '../../comentario/comentario-crear-modal/comentario-crear-modal.component';
+import { ComentarioEditarModalComponent } from '../../comentario/comentario-editar-modal/comentario-editar-modal.component';
 import { EvaluacionFormularioActionService, Gestion } from '../evaluacion-formulario.action.service';
 import { TipoComentario } from '@core/models/eti/tipo-comentario';
 import { TipoComentarioService } from '@core/services/eti/tipo-comentario.service';
@@ -53,8 +53,8 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
     this.logger.debug(EvaluacionComentariosComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as EvaluacionComentarioFragment;
     this.elementosPagina = [5, 10, 25, 100];
-    this.columnas = ['apartadoFormulario.bloqueFormulario', 'apartadoFormulario.apartadoFormularioPadre',
-      'apartadoFormulario', 'texto', 'acciones'];
+    this.columnas = ['apartado.bloque', 'apartado.padre',
+      'apartado', 'texto', 'acciones'];
     this.logger.debug(EvaluacionComentariosComponent.name, 'constructor()', 'end');
   }
 
@@ -75,18 +75,18 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
     this.logger.debug(EvaluacionComentariosComponent.name, 'ngOnDestroy()', 'end');
   }
 
-  getApartadoFormularioNombre(comentario: IComentario): string {
-    this.logger.debug(EvaluacionComentariosComponent.name, `getApartadoFormularioNombre(comentario: ${comentario})`, 'start');
-    const nombre = comentario.apartadoFormulario?.apartadoFormularioPadre ?
-      comentario.apartadoFormulario?.apartadoFormularioPadre?.nombre : comentario.apartadoFormulario?.nombre;
-    this.logger.debug(EvaluacionComentariosComponent.name, `getApartadoFormularioNombre(comentario: ${comentario})`, 'start');
+  getApartadoNombre(comentario: IComentario): string {
+    this.logger.debug(EvaluacionComentariosComponent.name, `getApartadoNombre(comentario: ${comentario})`, 'start');
+    const nombre = comentario.apartado?.padre ?
+      comentario.apartado?.padre?.nombre : comentario.apartado?.nombre;
+    this.logger.debug(EvaluacionComentariosComponent.name, `getApartadoNombre(comentario: ${comentario})`, 'start');
     return nombre;
   }
 
-  getSubApartadoFormularioNombre(comentario: IComentario): string {
-    this.logger.debug(EvaluacionComentariosComponent.name, `getSubApartadoFormularioNombre(comentario: ${comentario})`, 'start');
-    const nombre = comentario.apartadoFormulario?.apartadoFormularioPadre ? comentario.apartadoFormulario?.nombre : '';
-    this.logger.debug(EvaluacionComentariosComponent.name, `getSubApartadoFormularioNombre(comentario: ${comentario})`, 'end');
+  getSubApartadoNombre(comentario: IComentario): string {
+    this.logger.debug(EvaluacionComentariosComponent.name, `getSubApartadoNombre(comentario: ${comentario})`, 'start');
+    const nombre = comentario.apartado?.padre ? comentario.apartado?.nombre : '';
+    this.logger.debug(EvaluacionComentariosComponent.name, `getSubApartadoNombre(comentario: ${comentario})`, 'end');
     return nombre;
   }
 
@@ -96,15 +96,10 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
   openCreateModal(): void {
     this.logger.debug(EvaluacionComentariosComponent.name, 'abrirModalCrear()', 'start');
 
-    const comentarioCrearModalData: ComentarioCrearModalData = {
-      idComite: this.actionService.getEvaluacion().memoria.comite.id,
-      idTipoEvaluacion: this.actionService.getEvaluacion().tipoEvaluacion.id,
-    };
-
     const config = {
       width: GLOBAL_CONSTANTS.maxWidthModal,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: comentarioCrearModalData,
+      data: this.actionService.getEvaluacion(),
       autoFocus: false
     };
     const dialogRef = this.matDialog.open(ComentarioCrearModalComponent, config);
@@ -127,16 +122,10 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
     this.logger.debug(EvaluacionComentariosComponent.name, 'openEditModal()', 'start');
     const wrapperRef = comentario;
 
-    const comentarioEditarModalData: ComentarioEditarModalData = {
-      comentario: wrapperRef.value,
-      idComite: this.actionService.getEvaluacion().memoria.comite.id,
-      idTipoEvaluacion: this.actionService.getEvaluacion().tipoEvaluacion.id,
-    };
-
     const config = {
       width: GLOBAL_CONSTANTS.maxWidthModal,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: comentarioEditarModalData,
+      data: wrapperRef.value,
       autoFocus: false
     };
     const dialogRef = this.matDialog.open(ComentarioEditarModalComponent, config);

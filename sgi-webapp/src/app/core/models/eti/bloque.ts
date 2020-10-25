@@ -1,6 +1,6 @@
 import { IFormulario } from './formulario';
 
-export interface IBloqueFormulario {
+export interface IBloque {
   /** Id */
   id: number;
 
@@ -12,7 +12,4 @@ export interface IBloqueFormulario {
 
   /** Orden */
   orden: number;
-
-  /** Activo */
-  activo: boolean;
 }

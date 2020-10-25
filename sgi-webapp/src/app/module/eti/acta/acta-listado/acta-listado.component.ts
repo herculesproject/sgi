@@ -12,7 +12,7 @@ import { tap, map, catchError, startWith, switchMap } from 'rxjs/operators';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 
-import { Comite } from '@core/models/eti/comite';
+import { IComite } from '@core/models/eti/comite';
 import { TipoEstadoActa } from '@core/models/eti/tipo-estado-acta';
 
 import { ComiteService } from '@core/services/eti/comite.service';
@@ -53,9 +53,9 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
 
   actas$: Observable<IActaEvaluaciones[]> = of();
 
-  comiteListado: Comite[];
+  comiteListado: IComite[];
   comitesSubscription: Subscription;
-  filteredComites: Observable<Comite[]>;
+  filteredComites: Observable<IComite[]>;
 
   tipoEstadoActaListado: TipoEstadoActa[];
   tipoEstadoActaSubscription: Subscription;
@@ -254,7 +254,7 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
    * @param comite comité
    * returns nombre comité
    */
-  getComite(comite: Comite): string {
+  getComite(comite: IComite): string {
 
     return comite?.comite;
 
@@ -325,7 +325,7 @@ export class ActaListadoComponent implements AfterViewInit, OnInit, OnDestroy {
    * @param value value a filtrar (string o nombre comité).
    * @returns lista de comités filtrados.
    */
-  private _filterComite(value: string | Comite): Comite[] {
+  private _filterComite(value: string | IComite): IComite[] {
     let filterValue: string;
     if (typeof value === 'string') {
       filterValue = value.toLowerCase();

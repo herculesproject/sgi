@@ -15,6 +15,7 @@ import { MemoriaCrearGuard } from './memoria-crear/memoria-crear.guard';
 import { MemoriaListadoGesComponent } from './memoria-listado-ges/memoria-listado-ges.component';
 import { MemoriaDocumentacionComponent } from './memoria-formulario/memoria-documentacion/memoria-documentacion.component';
 import { MemoriaEvaluacionesComponent } from './memoria-formulario/memoria-evaluaciones/memoria-evaluaciones.component';
+import { MemoriaFormularioComponent } from './memoria-formulario/memoria-formulario/memoria-formulario.component';
 import { MemoriaListadoInvComponent } from './memoria-listado-inv/memoria-listado-inv.component';
 import { MemoriaInformesComponent } from './memoria-formulario/memoria-informes/memoria-informes.component';
 
@@ -77,8 +78,12 @@ const routes: SgiRoutes = [
         path: MEMORIA_ROUTE_NAMES.DATOS_GENERALES,
         component: MemoriaDatosGeneralesComponent,
         canDeactivate: [FragmentGuard]
-      }
-      ,
+      },
+      {
+        path: MEMORIA_ROUTE_NAMES.FORMULARIO,
+        component: MemoriaFormularioComponent,
+        canDeactivate: [FragmentGuard]
+      },
       {
         path: MEMORIA_ROUTE_NAMES.DOCUMENTACION,
         component: MemoriaDocumentacionComponent,

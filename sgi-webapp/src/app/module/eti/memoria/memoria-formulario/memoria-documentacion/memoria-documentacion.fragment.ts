@@ -1,13 +1,10 @@
 import { Fragment } from '@core/services/action-service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
-import { Observable, BehaviorSubject, of, from, merge, fromEvent } from 'rxjs';
+import { Observable, BehaviorSubject, of, from, merge } from 'rxjs';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { map, mergeMap, endWith, tap, takeLast } from 'rxjs/operators';
-import { TipoDocumentoService } from '@core/services/eti/tipo-documento.service';
 import { NGXLogger } from 'ngx-logger';
-import { SgiRestListResult } from '@sgi/framework/http/types';
-import { ITipoDocumento } from '@core/models/eti/tipo-documento';
 
 export class MemoriaDocumentacionFragment extends Fragment {
 
@@ -28,8 +25,7 @@ export class MemoriaDocumentacionFragment extends Fragment {
   constructor(
     private logger: NGXLogger,
     key: number,
-    private service: MemoriaService,
-    private readonly tipoDocumentoService: TipoDocumentoService
+    private service: MemoriaService
   ) {
     super(key);
   }

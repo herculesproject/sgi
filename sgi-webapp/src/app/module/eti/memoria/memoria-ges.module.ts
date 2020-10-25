@@ -9,7 +9,7 @@ import { MemoriaResolver } from './memoria.resolver';
 import { MemoriaRoutingGesModule } from './memoria-routing-ges.module';
 import { MemoriaCrearGuard } from './memoria-crear/memoria-crear.guard';
 import { MemoriaListadoGesComponent } from './memoria-listado-ges/memoria-listado-ges.component';
-
+import { FormlyFormsModule } from '@formly-forms/formly-forms.module';
 
 @NgModule({
   declarations: [
@@ -24,6 +24,7 @@ import { MemoriaListadoGesComponent } from './memoria-listado-ges/memoria-listad
     FormsModule,
     ReactiveFormsModule,
     SgiAuthModule,
+    FormlyFormsModule
   ],
   providers: [
     MemoriaResolver,

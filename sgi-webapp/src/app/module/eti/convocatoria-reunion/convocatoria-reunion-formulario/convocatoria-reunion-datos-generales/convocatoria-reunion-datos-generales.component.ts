@@ -1,5 +1,5 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { Comite } from '@core/models/eti/comite';
+import { IComite } from '@core/models/eti/comite';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
@@ -39,10 +39,10 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
   fxFlexPropertiesInline: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  comites: Comite[];
+  comites: IComite[];
   tiposConvocatoriaReunion: TipoConvocatoriaReunion[];
 
-  filteredComites: Observable<Comite[]>;
+  filteredComites: Observable<IComite[]>;
   filteredTiposConvocatoriaReunion: Observable<TipoConvocatoriaReunion[]>;
 
   formFragment: ConvocatoriaReunionDatosGeneralesFragment;
@@ -119,7 +119,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
     const comitesSelectSubscription = this.comiteService
       .findAll()
       .subscribe(
-        (response: SgiRestListResult<Comite>) => {
+        (response: SgiRestListResult<IComite>) => {
           this.comites = response.items;
 
           this.filteredComites = this.formGroup.controls.comite.valueChanges
@@ -182,7 +182,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
 
     const convocantesSelectSubscription =
       this.formGroup.controls.comite.valueChanges.pipe(
-        switchMap((comite: Comite | string) => {
+        switchMap((comite: IComite | string) => {
           if (typeof comite === 'string' || !comite.id) {
             return of([]);
           }
@@ -206,7 +206,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
       'end');
   }
 
-  private getConvocantes(comite: Comite): Observable<IEvaluador[]> {
+  private getConvocantes(comite: IComite): Observable<IEvaluador[]> {
     const filterComite = {
       field: 'comite.id',
       type: SgiRestFilterType.EQUALS,
@@ -279,7 +279,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
    * @param value value a filtrar (string o Comite.
    * @returns lista de comites filtrada.
    */
-  private filterComite(value: string | Comite): Comite[] {
+  private filterComite(value: string | IComite): IComite[] {
     if (!value) {
       return this.comites;
     }
@@ -323,7 +323,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
    *
    * @returns nombre del comite
    */
-  getComite(comite: Comite): string {
+  getComite(comite: IComite): string {
     return comite?.comite;
   }
 

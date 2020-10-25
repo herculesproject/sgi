@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { IApartadoFormulario } from '@core/models/eti/apartado-formulario';
+import { IApartado } from '@core/models/eti/apartado';
 import { IComentario } from '@core/models/eti/comentario';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
@@ -21,9 +21,9 @@ describe('ComentarioActualizarModalComponent', () => {
 
   const snapshotData = {
     comentario: {
-      apartadoFormulario: {
+      apartado: {
         id: 1
-      } as IApartadoFormulario,
+      } as IApartado,
     } as IComentario,
     idComite: 1,
     idTipoEvaluacion: 1

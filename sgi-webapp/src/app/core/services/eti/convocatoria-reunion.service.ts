@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IAsistente } from '@core/models/eti/asistente';
-import { Comite } from '@core/models/eti/comite';
+import { IComite } from '@core/models/eti/comite';
 import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
@@ -18,7 +18,7 @@ interface IConvocatoriaReunionService {
   /** ID */
   id: number;
   /** Comite */
-  comite: Comite;
+  comite: IComite;
   /** Tipo Convocatoria Reunion */
   tipoConvocatoriaReunion: TipoConvocatoriaReunion;
   /** Fecha evaluación */

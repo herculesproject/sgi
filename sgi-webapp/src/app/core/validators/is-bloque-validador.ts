@@ -3,7 +3,7 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 /**
  * Validador para comprobar si es un bloque de un formulario
  */
-export class IsBloqueFormulario {
+export class IsBloque {
   static isValid(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (typeof control.value === 'string' && control.value.toString().length === 0) {
@@ -16,13 +16,12 @@ export class IsBloqueFormulario {
     };
   }
 
-  private static checkInterfaceType(bloqueFormulario: any): boolean {
-    return bloqueFormulario &&
-      bloqueFormulario.hasOwnProperty('id') &&
-      bloqueFormulario.hasOwnProperty('formulario') &&
-      bloqueFormulario.hasOwnProperty('nombre') &&
-      bloqueFormulario.hasOwnProperty('orden') &&
-      bloqueFormulario.hasOwnProperty('activo');
+  private static checkInterfaceType(bloque: any): boolean {
+    return bloque &&
+      bloque.hasOwnProperty('id') &&
+      bloque.hasOwnProperty('formulario') &&
+      bloque.hasOwnProperty('nombre') &&
+      bloque.hasOwnProperty('orden');
   }
 }
 

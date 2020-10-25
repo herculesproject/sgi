@@ -17,6 +17,12 @@
       ],
       "@block/*": [
         "src/app/block/*"
+      ],
+      "@components/*": [
+        "src/app/components/*"
+      ],
+      "@formly-forms/*": [
+        "src/app/formly-forms/*"
       ]
     },
     "outDir": "./dist/out-tsc",

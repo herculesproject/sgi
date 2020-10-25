@@ -6,13 +6,11 @@ import { Observable } from 'rxjs';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 
-import { FormGroupUtil } from '@core/utils/form-group-util';
-
 import { ComiteService } from '@core/services/eti/comite.service';
 import { CargoComiteService } from '@core/services/eti/cargo-comite.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { IEvaluador } from '@core/models/eti/evaluador';
-import { Comite } from '@core/models/eti/comite';
+import { IComite } from '@core/models/eti/comite';
 import { CargoComite } from '@core/models/eti/cargo-comite';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { startWith, map } from 'rxjs/operators';
@@ -35,10 +33,10 @@ export class EvaluadorDatosGeneralesComponent extends FormFragmentComponent<IEva
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  comites: Comite[] = [];
+  comites: IComite[] = [];
   cargosComite: CargoComite[] = [];
   evaluador: IEvaluador;
-  filteredComites: Observable<Comite[]>;
+  filteredComites: Observable<IComite[]>;
   filteredCargosComite: Observable<CargoComite[]>;
 
   textoUsuarioLabel = TEXT_USER_TITLE;
@@ -122,7 +120,7 @@ export class EvaluadorDatosGeneralesComponent extends FormFragmentComponent<IEva
    * @param comite comités
    * returns nombre comité
    */
-  getComite(comite: Comite): string {
+  getComite(comite: IComite): string {
     return comite?.comite;
   }
 
@@ -140,7 +138,7 @@ export class EvaluadorDatosGeneralesComponent extends FormFragmentComponent<IEva
    * @param value value a filtrar (string o nombre comité).
    * @returns lista de comités filtrados.
    */
-  private filterComite(value: string | Comite): Comite[] {
+  private filterComite(value: string | IComite): IComite[] {
     let filterValue: string;
     if (typeof value === 'string') {
       filterValue = value.toLowerCase();

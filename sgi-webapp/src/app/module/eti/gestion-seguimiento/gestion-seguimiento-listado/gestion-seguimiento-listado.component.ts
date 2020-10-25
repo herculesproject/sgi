@@ -6,7 +6,7 @@ import { ComiteService } from '@core/services/eti/comite.service';
 import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocatoria-reunion.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Comite } from '@core/models/eti/comite';
+import { IComite } from '@core/models/eti/comite';
 import { Subscription, Observable, merge, zip, of } from 'rxjs';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
 import { tap, startWith, map, switchMap, catchError } from 'rxjs/operators';
@@ -56,12 +56,12 @@ export class GestionSeguimientoListadoComponent implements OnInit, OnDestroy, Af
   datosUsuarioSolicitante: string;
   personaRefSolicitante: string;
 
-  private comiteListado: Comite[];
+  private comiteListado: IComite[];
   private tipoEvaluacionListado: TipoEvaluacion[];
   private tipoConvocatoriaReunionListado: TipoConvocatoriaReunion[];
   private suscripciones: Subscription[] = [];
 
-  filteredComites: Observable<Comite[]>;
+  filteredComites: Observable<IComite[]>;
   filteredTipoEvaluacion: Observable<TipoEvaluacion[]>;
   filteredTipoConvocatoriaReunion: Observable<TipoConvocatoriaReunion[]>;
 
@@ -295,7 +295,7 @@ export class GestionSeguimientoListadoComponent implements OnInit, OnDestroy, Af
    * @param comite comité
    * returns nombre comité
    */
-  getComite(comite: Comite): string {
+  getComite(comite: IComite): string {
 
     return comite?.comite;
 
@@ -403,7 +403,7 @@ export class GestionSeguimientoListadoComponent implements OnInit, OnDestroy, Af
    * @param value value a filtrar (string o nombre comité).
    * @returns lista de comités filtrados.
    */
-  private filterComite(value: string | Comite): Comite[] {
+  private filterComite(value: string | IComite): IComite[] {
     let filterValue: string;
     if (typeof value === 'string') {
       filterValue = value.toLowerCase();

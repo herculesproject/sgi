@@ -10,7 +10,7 @@ import { Observable, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoriaPeticionEvaluacion';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
-import { IInformeFormulario } from '@core/models/eti/memoriaInforme';
+import { IInforme } from '@core/models/eti/informe';
 
 @Injectable({
   providedIn: 'root'
@@ -266,9 +266,9 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
    * @param id identificador de la memoria
    * @return listado de informes.
    */
-  findInformesSecretaria(id: number): Observable<SgiRestListResult<IInformeFormulario>> {
+  findInformesSecretaria(id: number): Observable<SgiRestListResult<IInforme>> {
     this.logger.debug(MemoriaService.name, `findInformesSecretaria()`, '-', 'start');
-    return this.find<IInformeFormulario, IInformeFormulario>(`${this.endpointUrl}/${id}/informes`)
+    return this.find<IInforme, IInforme>(`${this.endpointUrl}/${id}/informes`)
       .pipe(
         tap(() => {
           this.logger.debug(MemoriaService.name, `findInformesSecretaria()`, '-', 'end');
@@ -370,5 +370,4 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
       tap(() => this.logger.debug(MemoriaService.name, `enviarSecretaria(${memoriaId})`, '-', 'end'))
     );
   }
-
 }

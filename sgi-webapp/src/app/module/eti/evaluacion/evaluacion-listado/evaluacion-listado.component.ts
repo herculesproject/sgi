@@ -10,7 +10,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Observable, Subscription, of, merge, zip } from 'rxjs';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
-import { Comite } from '@core/models/eti/comite';
+import { IComite } from '@core/models/eti/comite';
 import { tap, map, switchMap, catchError, startWith } from 'rxjs/operators';
 import { DateUtils } from '@core/utils/date-utils';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -47,12 +47,12 @@ export class EvaluacionListadoComponent implements OnInit, OnDestroy, AfterViewI
 
   evaluaciones$: Observable<IEvaluacionSolicitante[]> = of();
 
-  private comiteListado: Comite[];
+  private comiteListado: IComite[];
   private tipoEvaluacionListado: TipoEvaluacion[];
   private tipoConvocatoriaReunionListado: TipoConvocatoriaReunion[];
   private suscripciones: Subscription[] = [];
 
-  filteredComites: Observable<Comite[]>;
+  filteredComites: Observable<IComite[]>;
   filteredTipoEvaluacion: Observable<TipoEvaluacion[]>;
   filteredTipoConvocatoriaReunion: Observable<TipoConvocatoriaReunion[]>;
   buscadorFormGroup: FormGroup;
@@ -295,7 +295,7 @@ export class EvaluacionListadoComponent implements OnInit, OnDestroy, AfterViewI
    * @param comite comité
    * returns nombre comité
    */
-  getComite(comite: Comite): string {
+  getComite(comite: IComite): string {
 
     return comite?.comite;
 
@@ -404,7 +404,7 @@ export class EvaluacionListadoComponent implements OnInit, OnDestroy, AfterViewI
    * @param value value a filtrar (string o nombre comité).
    * @returns lista de comités filtrados.
    */
-  private filterComite(value: string | Comite): Comite[] {
+  private filterComite(value: string | IComite): IComite[] {
     let filterValue: string;
     if (typeof value === 'string') {
       filterValue = value.toLowerCase();

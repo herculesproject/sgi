@@ -6,8 +6,8 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { IMemoria } from '@core/models/eti/memoria';
-import { Comite } from '@core/models/eti/comite';
-import { startWith, map } from 'rxjs/operators';
+import { IComite } from '@core/models/eti/comite';
+import { startWith, map, tap } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MemoriaDatosGeneralesFragment } from './memoria-datos-generales.fragment';
@@ -33,10 +33,10 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
   fxFlexProperties: FxFlexProperties;
   fxFlexPropertiesInline: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
-  comites: Comite[] = [];
+  comites: IComite[] = [];
   tiposMemoria: TipoMemoria[] = [];
 
-  filteredComites: Observable<Comite[]>;
+  filteredComites: Observable<IComite[]>;
   filteredTipoMemorias: Observable<TipoEstadoMemoria[]>;
 
   datosGeneralesFragment: MemoriaDatosGeneralesFragment;
@@ -51,7 +51,7 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
     private readonly comiteService: ComiteService,
     private readonly snackBarService: SnackBarService,
     private readonly tipoEstadoMemoriaService: TipoEstadoMemoriaService,
-    actionService: MemoriaActionService
+    private actionService: MemoriaActionService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
     this.datosGeneralesFragment = this.fragment as MemoriaDatosGeneralesFragment;
@@ -110,6 +110,11 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
         this.filteredComites = this.formGroup.controls.comite.valueChanges
           .pipe(
             startWith(''),
+            tap((value) => {
+              if (typeof value !== 'string') {
+                this.actionService.setComite(value);
+              }
+            }),
             map(value => this.filterComite(value))
           );
       },
@@ -125,7 +130,7 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
    * @param value value a filtrar (string o nombre comité).
    * @returns lista de comités filtrados.
    */
-  private filterComite(value: string | Comite): Comite[] {
+  private filterComite(value: string | IComite): IComite[] {
     let filterValue: string;
     if (typeof value === 'string') {
       filterValue = value.toLowerCase();
@@ -155,7 +160,7 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
    * @param comite comités
    * returns nombre comité
    */
-  getComite(comite: Comite): string {
+  getComite(comite: IComite): string {
     return comite?.comite;
   }
 

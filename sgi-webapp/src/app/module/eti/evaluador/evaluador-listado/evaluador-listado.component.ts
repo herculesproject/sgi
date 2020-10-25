@@ -12,7 +12,7 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 
 import { IEvaluador } from '@core/models/eti/evaluador';
-import { Comite } from '@core/models/eti/comite';
+import { IComite } from '@core/models/eti/comite';
 import { IPersona } from '@core/models/sgp/persona';
 import { DialogService } from '@core/services/dialog.service';
 import { ComiteService } from '@core/services/eti/comite.service';
@@ -54,9 +54,9 @@ export class EvaluadorListadoComponent implements AfterViewInit, OnInit, OnDestr
 
   evaluadores$: Observable<IEvaluador[]> = of();
 
-  comiteListado: Comite[];
+  comiteListado: IComite[];
   comitesSubscription: Subscription;
-  filteredComites: Observable<Comite[]>;
+  filteredComites: Observable<IComite[]>;
 
   buscadorFormGroup: FormGroup;
 
@@ -237,7 +237,7 @@ export class EvaluadorListadoComponent implements AfterViewInit, OnInit, OnDestr
    * @param comite comités
    * returns nombre comité
    */
-  getComite(comite: Comite): string {
+  getComite(comite: IComite): string {
 
     return comite?.comite;
 
@@ -353,7 +353,7 @@ export class EvaluadorListadoComponent implements AfterViewInit, OnInit, OnDestr
    * @param value value a filtrar (string o nombre comité).
    * @returns lista de comités filtrados.
    */
-  private filterComite(value: string | Comite): Comite[] {
+  private filterComite(value: string | IComite): IComite[] {
     let filterValue: string;
     if (typeof value === 'string') {
       filterValue = value.toLowerCase();

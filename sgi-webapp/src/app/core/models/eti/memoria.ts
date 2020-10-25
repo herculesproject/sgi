@@ -1,6 +1,6 @@
 
 import { IPeticionEvaluacion } from './peticion-evaluacion';
-import { Comite } from './comite';
+import { IComite } from './comite';
 import { TipoMemoria } from './tipo-memoria';
 import { TipoEstadoMemoria } from './tipo-estado-memoria';
 import { IRetrospectiva } from './retrospectiva';
@@ -15,7 +15,7 @@ export interface IMemoria {
   peticionEvaluacion: IPeticionEvaluacion;
 
   /** Comité */
-  comite: Comite;
+  comite: IComite;
 
   /** Título */
   titulo: string;
@@ -31,9 +31,6 @@ export interface IMemoria {
 
   /** Indicador require retrospectiva */
   requiereRetrospectiva: boolean;
-
-  /** Fecha retrospectiva. */
-  fechaRetrospectiva: Date;
 
   /** Version */
   version: number;

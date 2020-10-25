@@ -13,8 +13,8 @@ import { NGXLogger } from 'ngx-logger';
 import { Subscription, Observable } from 'rxjs';
 
 import { SeguimientoComentarioFragment } from './seguimiento-comentarios.fragment';
-import { ComentarioCrearModalComponent, ComentarioCrearModalData } from '../../comentario/comentario-crear-modal/comentario-crear-modal.component';
-import { ComentarioEditarModalComponent, ComentarioEditarModalData } from '../../comentario/comentario-editar-modal/comentario-editar-modal.component';
+import { ComentarioCrearModalComponent } from '../../comentario/comentario-crear-modal/comentario-crear-modal.component';
+import { ComentarioEditarModalComponent } from '../../comentario/comentario-editar-modal/comentario-editar-modal.component';
 import { Gestion, SeguimientoFormularioActionService } from '../seguimiento-formulario.action.service';
 import { TipoComentarioService } from '@core/services/eti/tipo-comentario.service';
 import { TipoComentario } from '@core/models/eti/tipo-comentario';
@@ -50,8 +50,8 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
     this.dataSource = new MatTableDataSource<StatusWrapper<IComentario>>();
     this.formPart = this.fragment as SeguimientoComentarioFragment;
     this.elementosPagina = [5, 10, 25, 100];
-    this.columnas = ['apartadoFormulario.bloqueFormulario', 'apartadoFormulario.apartadoFormularioPadre',
-      'apartadoFormulario', 'texto', 'acciones'];
+    this.columnas = ['apartado.bloque', 'apartado.padre',
+      'apartado', 'texto', 'acciones'];
     this.logger.debug(SeguimientoComentariosComponent.name, 'constructor()', 'end');
   }
 
@@ -72,18 +72,18 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
     this.logger.debug(SeguimientoComentariosComponent.name, 'ngOnDestroy()', 'end');
   }
 
-  getApartadoFormularioNombre(comentario: IComentario): string {
-    this.logger.debug(SeguimientoComentariosComponent.name, `getApartadoFormularioNombre(comentario: ${comentario})`, 'start');
-    const nombre = comentario.apartadoFormulario?.apartadoFormularioPadre ?
-      comentario.apartadoFormulario?.apartadoFormularioPadre?.nombre : comentario.apartadoFormulario?.nombre;
-    this.logger.debug(SeguimientoComentariosComponent.name, `getApartadoFormularioNombre(comentario: ${comentario})`, 'start');
+  getApartadoNombre(comentario: IComentario): string {
+    this.logger.debug(SeguimientoComentariosComponent.name, `getApartadoNombre(comentario: ${comentario})`, 'start');
+    const nombre = comentario.apartado?.padre ?
+      comentario.apartado?.padre?.nombre : comentario.apartado?.nombre;
+    this.logger.debug(SeguimientoComentariosComponent.name, `getApartadoNombre(comentario: ${comentario})`, 'start');
     return nombre;
   }
 
-  getSubApartadoFormularioNombre(comentario: IComentario): string {
-    this.logger.debug(SeguimientoComentariosComponent.name, `getSubApartadoFormularioNombre(comentario: ${comentario})`, 'start');
-    const nombre = comentario.apartadoFormulario?.apartadoFormularioPadre ? comentario.apartadoFormulario?.nombre : '';
-    this.logger.debug(SeguimientoComentariosComponent.name, `getSubApartadoFormularioNombre(comentario: ${comentario})`, 'end');
+  getSubApartadoNombre(comentario: IComentario): string {
+    this.logger.debug(SeguimientoComentariosComponent.name, `getSubApartadoNombre(comentario: ${comentario})`, 'start');
+    const nombre = comentario.apartado?.padre ? comentario.apartado?.nombre : '';
+    this.logger.debug(SeguimientoComentariosComponent.name, `getSubApartadoNombre(comentario: ${comentario})`, 'end');
     return nombre;
   }
 
@@ -93,15 +93,10 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
   openCreateModal(): void {
     this.logger.debug(SeguimientoComentariosComponent.name, 'abrirModalCrear()', 'start');
 
-    const comentarioCrearModalData: ComentarioCrearModalData = {
-      idComite: this.actionService.getEvaluacion().memoria.comite.id,
-      idTipoEvaluacion: this.actionService.getEvaluacion().tipoEvaluacion.id,
-    };
-
     const config = {
       width: GLOBAL_CONSTANTS.maxWidthModal,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: comentarioCrearModalData,
+      data: this.actionService.getEvaluacion(),
       autoFocus: false
     };
     const dialogRef = this.matDialog.open(ComentarioCrearModalComponent, config);
@@ -124,16 +119,10 @@ export class SeguimientoComentariosComponent extends FragmentComponent implement
     this.logger.debug(SeguimientoComentariosComponent.name, 'openEditModal()', 'start');
     const wrapperRef = comentario;
 
-    const comentarioEditarModalData: ComentarioEditarModalData = {
-      comentario: wrapperRef.value,
-      idComite: this.actionService.getEvaluacion().memoria.comite.id,
-      idTipoEvaluacion: this.actionService.getEvaluacion().tipoEvaluacion.id,
-    };
-
     const config = {
       width: GLOBAL_CONSTANTS.maxWidthModal,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: comentarioEditarModalData,
+      data: wrapperRef.value,
       autoFocus: false
     };
 

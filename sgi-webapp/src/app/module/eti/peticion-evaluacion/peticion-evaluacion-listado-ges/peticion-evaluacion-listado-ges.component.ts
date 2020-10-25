@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { Comite } from '@core/models/eti/comite';
+import { IComite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
@@ -56,9 +56,9 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
   peticionesEvaluacion$: Observable<IPeticionEvaluacion[]> = of();
   memorias$: Observable<IMemoria[]> = of();
 
-  comiteListado: Comite[];
+  comiteListado: IComite[];
   comitesSubscription: Subscription;
-  filteredComites: Observable<Comite[]>;
+  filteredComites: Observable<IComite[]>;
 
   estadoMemoriaListado: TipoEstadoMemoria[];
   estadosMemoriaSubscription: Subscription;
@@ -371,9 +371,9 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
    * @param comite comités
    * returns nombre comité
    */
-  getComite(comite: Comite): string {
+  getComite(comite: IComite): string {
 
-    return comite ?.comite;
+    return comite?.comite;
 
   }
 
@@ -385,7 +385,7 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
    */
   getEstadoMemoria(tipoEstadoMemoria: TipoEstadoMemoria): string {
 
-    return tipoEstadoMemoria ?.nombre;
+    return tipoEstadoMemoria?.nombre;
 
   }
 
@@ -443,7 +443,7 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
    * @param value value a filtrar (string o nombre comité).
    * @returns lista de comités filtrados.
    */
-  private filterComite(value: string | Comite): Comite[] {
+  private filterComite(value: string | IComite): IComite[] {
     let filterValue: string;
     if (value === null) {
       value = '';
@@ -483,7 +483,7 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
    * @param personaRef referencia del persona seleccionado
    */
   public setUsuario(solicitante: IPersona) {
-    this.personaRef = solicitante ?.personaRef;
+    this.personaRef = solicitante?.personaRef;
   }
 
   /**
@@ -518,7 +518,7 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
     this.logger.debug(PeticionEvaluacionListadoGesComponent.name,
       'ngOnDestroy()',
       'start');
-    this.comitesSubscription ?.unsubscribe();
+    this.comitesSubscription?.unsubscribe();
 
     this.logger.debug(PeticionEvaluacionListadoGesComponent.name,
       'ngOnDestroy()',

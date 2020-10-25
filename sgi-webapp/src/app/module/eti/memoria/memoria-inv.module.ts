@@ -17,6 +17,8 @@ import { MemoriaCrearComponent } from './memoria-crear/memoria-crear.component';
 import { MemoriaEvaluacionesComponent } from './memoria-formulario/memoria-evaluaciones/memoria-evaluaciones.component';
 import { MemoriaListadoInvComponent } from './memoria-listado-inv/memoria-listado-inv.component';
 import { MemoriaInformesComponent } from './memoria-formulario/memoria-informes/memoria-informes.component';
+import { FormlyFormsModule } from '@formly-forms/formly-forms.module';
+import { MemoriaFormularioComponent } from './memoria-formulario/memoria-formulario/memoria-formulario.component';
 
 
 @NgModule({
@@ -24,6 +26,7 @@ import { MemoriaInformesComponent } from './memoria-formulario/memoria-informes/
     MemoriaListadoInvComponent,
     MemoriaCrearComponent,
     MemoriaDatosGeneralesComponent,
+    MemoriaFormularioComponent,
     MemoriaEditarComponent,
     MemoriaDocumentacionComponent,
     MemoriaDocumentacionMemoriaModalComponent,
@@ -39,7 +42,8 @@ import { MemoriaInformesComponent } from './memoria-formulario/memoria-informes/
     MaterialDesignModule,
     FormsModule,
     ReactiveFormsModule,
-    SgiAuthModule
+    SgiAuthModule,
+    FormlyFormsModule
   ],
   providers: [
     MemoriaResolver,

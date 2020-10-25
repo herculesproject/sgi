@@ -2,7 +2,6 @@ import { IActa } from './acta';
 import { TipoEstadoActa } from './tipo-estado-acta';
 
 export interface IEstadoActa {
-
   /** ID */
   id: number;
   /** Acta */

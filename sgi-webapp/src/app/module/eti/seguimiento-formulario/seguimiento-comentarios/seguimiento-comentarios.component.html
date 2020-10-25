@@ -4,22 +4,22 @@
   <div>
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 table-unidad">
       <!-- Bloque Column -->
-      <ng-container matColumnDef="apartadoFormulario.bloqueFormulario">
+      <ng-container matColumnDef="apartado.bloque">
         <th mat-header-cell *matHeaderCellDef>{{'eti.comentario.listado.bloque' | translate}}</th>
-        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.apartadoFormulario?.bloqueFormulario.nombre}}
+        <td mat-cell *matCellDef="let wrapper"> {{wrapper.value.apartado?.bloque.nombre}}
         </td>
       </ng-container>
 
       <!-- Apartado Column -->
-      <ng-container matColumnDef="apartadoFormulario.apartadoFormularioPadre">
+      <ng-container matColumnDef="apartado.padre">
         <th mat-header-cell *matHeaderCellDef>{{'eti.comentario.listado.apartado' | translate}}</th>
-        <td mat-cell *matCellDef="let wrapper">{{getApartadoFormularioNombre(wrapper.value)}} </td>
+        <td mat-cell *matCellDef="let wrapper">{{getApartadoNombre(wrapper.value)}} </td>
       </ng-container>
 
       <!-- Subapartado Column -->
-      <ng-container matColumnDef="apartadoFormulario">
+      <ng-container matColumnDef="apartado">
         <th mat-header-cell *matHeaderCellDef>{{'eti.comentario.listado.subapartado' | translate}}</th>
-        <td mat-cell *matCellDef="let wrapper">{{getSubApartadoFormularioNombre(wrapper.value)}}
+        <td mat-cell *matCellDef="let wrapper">{{getSubApartadoNombre(wrapper.value)}}
         </td>
       </ng-container>
 

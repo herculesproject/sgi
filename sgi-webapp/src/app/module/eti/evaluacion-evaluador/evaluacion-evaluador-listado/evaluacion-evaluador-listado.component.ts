@@ -1,7 +1,7 @@
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Comite } from '@core/models/eti/comite';
+import { IComite } from '@core/models/eti/comite';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
 import { IPersona } from '@core/models/sgp/persona';
@@ -35,8 +35,8 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
   evaluaciones: IEvaluacion[];
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
-  comiteListado: Comite[];
-  comitesFiltrados: Observable<Comite[]>;
+  comiteListado: IComite[];
+  comitesFiltrados: Observable<IComite[]>;
   tipoEvaluacionListado: TipoEvaluacion[];
   tipoEvaluacionFiltrados: Observable<TipoEvaluacion[]>;
   tiposConvocatoriaReunion: TipoConvocatoriaReunion[];
@@ -141,7 +141,7 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
     this.logger.debug(EvaluacionEvaluadorListadoComponent.name, 'getComites()', 'start');
     this.suscripciones.push(
       this.comiteService.findAll().subscribe(
-        (res: SgiRestListResult<Comite>) => {
+        (res: SgiRestListResult<IComite>) => {
           if (res) {
             this.comiteListado = res.items;
             this.comitesFiltrados = this.formGroup.controls.comite.valueChanges
@@ -202,11 +202,11 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
    * @param filtro valor a filtrar (string o nombre comité).
    * @return lista de comités filtrados.
    */
-  private filterComites(filtro: string | Comite): Comite[] {
+  private filterComites(filtro: string | IComite): IComite[] {
     const valorLog = filtro instanceof String ? filtro : JSON.stringify(filtro);
     this.logger.debug(EvaluacionEvaluadorListadoComponent.name, `filtrarComites(${valorLog})`, 'start');
     const result = this.comiteListado.filter(
-      (comite: Comite) => comite.comite.toLowerCase().includes(
+      (comite: IComite) => comite.comite.toLowerCase().includes(
         typeof filtro === 'string' ? filtro.toLowerCase() : filtro.comite.toLowerCase()
       )
     );
@@ -237,7 +237,7 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
    * @param comite comité
    * @returns nombre comité
    */
-  getNombreComite(comite: Comite): string {
+  getNombreComite(comite: IComite): string {
     return comite?.comite;
   }
 

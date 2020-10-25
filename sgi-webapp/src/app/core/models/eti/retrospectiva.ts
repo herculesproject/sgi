@@ -1,18 +1,11 @@
-
-import { IPeticionEvaluacion } from './peticion-evaluacion';
-import { Comite } from './comite';
-import { TipoMemoria } from './tipo-memoria';
-import { TipoEstadoMemoria } from './tipo-estado-memoria';
+import { IEstadoRetrospectiva } from './estado-retrospectiva';
 
 export interface IRetrospectiva {
-  /** Id */
+
+  /** ID */
   id: number;
-
-  /** Fecha retrospectiva. */
+  /** estadoRetrospectiva */
+  estadoRetrospectiva: IEstadoRetrospectiva;
+  /** fechaRetrospectiva */
   fechaRetrospectiva: Date;
-
-
-  /** Estado Retrospectiva. */
-  estadoRetrospectiva: TipoEstadoMemoria;
-
 }

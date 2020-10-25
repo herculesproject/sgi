@@ -5,7 +5,10 @@
         [title]="'eti.memoria.datosGenerales.title' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.DATOS_GENERALES)">
       </sgi-action-fragment-menu-item>
-
+      <sgi-action-fragment-menu-item [route]="[MEMORIA_ROUTE_NAMES.FORMULARIO]"
+        [title]="'eti.memoria.formulario.title' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.FORMULARIO)">
+      </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[MEMORIA_ROUTE_NAMES.DOCUMENTACION]"
         [title]="'eti.memoria.documentacion.title' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.DOCUMENTACION)">

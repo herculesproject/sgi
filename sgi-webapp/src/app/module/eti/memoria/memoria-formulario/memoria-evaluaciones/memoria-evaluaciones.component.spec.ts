@@ -14,7 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
-import { Comite } from '@core/models/eti/comite';
+import { IComite } from '@core/models/eti/comite';
 import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { IRetrospectiva } from '@core/models/eti/retrospectiva';
 
@@ -27,7 +27,7 @@ describe('MemoriaEvaluacionesComponent', () => {
     memoria: {
       comite: {
         id: 1
-      } as Comite,
+      } as IComite,
       estadoActual: {
         id: 1
       } as TipoEstadoMemoria,

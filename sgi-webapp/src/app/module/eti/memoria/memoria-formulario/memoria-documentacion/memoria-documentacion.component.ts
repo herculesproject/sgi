@@ -17,8 +17,9 @@ import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { MemoriaDocumentacionMemoriaModalComponent } from '../../modals/memoria-documentacion-memoria-modal/memoria-documentacion-memoria-modal.component';
 import { DialogService } from '@core/services/dialog.service';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { IFormulario } from '@core/models/eti/formulario';
 import { MemoriaDocumentacionSeguimientosModalComponent } from '../../modals/memoria-documentacion-seguimientos-modal/memoria-documentacion-seguimientos-modal.component';
+import { IComite } from '@core/models/eti/comite';
+import { IEstadoRetrospectiva } from '@core/models/eti/estado-retrospectiva';
 
 const MSG_CONFIRM_DELETE = marker('eti.memoria.documentacion.listado.eliminar');
 
@@ -73,16 +74,22 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
   documentacionesSeguimientoFinal$: BehaviorSubject<StatusWrapper<IDocumentacionMemoria>[]>;
   documentacionesRetrospectiva$: BehaviorSubject<StatusWrapper<IDocumentacionMemoria>[]>;
 
+  get comite(): IComite {
+    return this.actionService.getComite();
+  }
 
-  estadoMemoria: TipoEstadoMemoria;
-  estadoRetrospectiva: TipoEstadoMemoria;
-  formulario: IFormulario;
+  get estadoMemoria(): TipoEstadoMemoria {
+    return this.actionService.getEstadoMemoria();
+  }
 
+  get estadoRetrospectiva(): IEstadoRetrospectiva {
+    return this.actionService.getRetrospectiva()?.estadoRetrospectiva;
+  }
 
   constructor(
     protected readonly dialogService: DialogService, protected readonly logger: NGXLogger,
     protected matDialog: MatDialog,
-    actionService: MemoriaActionService) {
+    private actionService: MemoriaActionService) {
 
     super(actionService.FRAGMENT.DOCUMENTACION, actionService);
 
@@ -92,11 +99,6 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
     this.documentacionesSeguimientoAnual$ = (this.fragment as MemoriaDocumentacionFragment).documentacionesSeguimientoAnual$;
     this.documentacionesSeguimientoFinal$ = (this.fragment as MemoriaDocumentacionFragment).documentacionesSeguimientoFinal$;
     this.documentacionesRetrospectiva$ = (this.fragment as MemoriaDocumentacionFragment).documentacionesRetrospectiva$;
-
-
-    this.estadoMemoria = actionService.estadoActualMemoria;
-    this.estadoRetrospectiva = actionService.estadoRetrospectiva;
-    this.formulario = actionService.formulario;
   }
 
   ngOnInit(): void {

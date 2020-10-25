@@ -9,13 +9,11 @@ import { SgiAuthGuard } from '@sgi/framework/auth';
 import { MemoriaEditarComponent } from './memoria-editar/memoria-editar.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ROUTE_NAMES } from '@core/route.names';
-import { MemoriaCrearComponent } from './memoria-crear/memoria-crear.component';
-import { MemoriaCrearGuard } from './memoria-crear/memoria-crear.guard';
 import { MemoriaListadoGesComponent } from './memoria-listado-ges/memoria-listado-ges.component';
 import { MemoriaDocumentacionComponent } from './memoria-formulario/memoria-documentacion/memoria-documentacion.component';
 import { MemoriaEvaluacionesComponent } from './memoria-formulario/memoria-evaluaciones/memoria-evaluaciones.component';
 import { MemoriaInformesComponent } from './memoria-formulario/memoria-informes/memoria-informes.component';
+import { MemoriaFormularioComponent } from './memoria-formulario/memoria-formulario/memoria-formulario.component';
 
 const MSG_LISTADO_TITLE = marker('eti.memoria.listado.titulo');
 const MSG_NEW_TITLE = marker('eti.memoria.crear.titulo');
@@ -53,6 +51,11 @@ const routes: SgiRoutes = [
       {
         path: MEMORIA_ROUTE_NAMES.DATOS_GENERALES,
         component: MemoriaDatosGeneralesComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: MEMORIA_ROUTE_NAMES.FORMULARIO,
+        component: MemoriaFormularioComponent,
         canDeactivate: [FragmentGuard]
       },
       {

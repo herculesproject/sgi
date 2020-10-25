@@ -5,10 +5,10 @@ import TestUtils from '@core/utils/test-utils';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 
-import { ApartadoFormularioService } from './apartado-formulario.service';
+import { ApartadoService } from './apartado.service';
 
-describe('ApartadoFormularioService', () => {
-  let service: ApartadoFormularioService;
+describe('ApartadoService', () => {
+  let service: ApartadoService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -22,7 +22,7 @@ describe('ApartadoFormularioService', () => {
         SgiAuthService
       ],
     });
-    service = TestBed.inject(ApartadoFormularioService);
+    service = TestBed.inject(ApartadoService);
   });
 
   it('should be created', () => {

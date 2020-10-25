@@ -1,6 +1,6 @@
 import { IPersona } from '../sgp/persona';
 import { CargoComite } from './cargo-comite';
-import { Comite } from './comite';
+import { IComite } from './comite';
 
 export interface IEvaluador extends IPersona {
 
@@ -8,7 +8,7 @@ export interface IEvaluador extends IPersona {
   id: number;
 
   /** Comité */
-  comite: Comite;
+  comite: IComite;
 
   /** Cargo comité */
   cargoComite: CargoComite;

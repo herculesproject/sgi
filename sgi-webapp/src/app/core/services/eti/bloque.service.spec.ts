@@ -4,10 +4,10 @@ import TestUtils from '@core/utils/test-utils';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 
-import { BloqueFormularioService } from './bloque-formulario.service';
+import { BloqueService } from './bloque.service';
 
-describe('BloqueFormularioService', () => {
-  let service: BloqueFormularioService;
+describe('BloqueService', () => {
+  let service: BloqueService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -19,7 +19,7 @@ describe('BloqueFormularioService', () => {
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
       ],
     });
-    service = TestBed.inject(BloqueFormularioService);
+    service = TestBed.inject(BloqueService);
   });
 
   it('should be created', () => {

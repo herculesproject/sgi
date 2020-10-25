@@ -1,4 +1,4 @@
-import { Comite } from './comite';
+import { IComite } from './comite';
 import { TipoConvocatoriaReunion } from './tipo-convocatoria-reunion';
 import { IAsistente } from './asistente';
 
@@ -8,7 +8,7 @@ export interface IConvocatoriaReunion {
   id: number;
 
   /** Comite */
-  comite: Comite;
+  comite: IComite;
 
   /** Tipo Convocatoria Reunion */
   tipoConvocatoriaReunion: TipoConvocatoriaReunion;

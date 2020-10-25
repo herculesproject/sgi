@@ -4,7 +4,7 @@
       <th mat-header-cell *matHeaderCellDef> {{'eti.memoria.informes.listado.nombre' | translate}}
       </th>
       <td mat-cell *matCellDef="let wrapper">
-        {{wrapper.value.formularioMemoria.memoria.numReferencia}}_v{{wrapper.value.formularioMemoria.memoria.version}}
+        {{wrapper.value.formulario.memoria.numReferencia}}_v{{wrapper.value.formulario.memoria.version}}
       </td>
     </ng-container>
     <ng-container matColumnDef="acciones">

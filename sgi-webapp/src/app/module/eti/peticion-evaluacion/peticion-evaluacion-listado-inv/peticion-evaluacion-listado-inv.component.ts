@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { Comite } from '@core/models/eti/comite';
+import { IComite } from '@core/models/eti/comite';
 import { IMemoria } from '@core/models/eti/memoria';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -48,9 +48,9 @@ export class PeticionEvaluacionListadoInvComponent implements AfterViewInit, OnI
   peticionesEvaluacion$: Observable<IPeticionEvaluacion[]> = of();
   memorias$: Observable<IMemoria[]> = of();
 
-  comiteListado: Comite[];
+  comiteListado: IComite[];
   comitesSubscription: Subscription;
-  filteredComites: Observable<Comite[]>;
+  filteredComites: Observable<IComite[]>;
 
   buscadorFormGroup: FormGroup;
 
@@ -343,7 +343,7 @@ export class PeticionEvaluacionListadoInvComponent implements AfterViewInit, OnI
    * @param comite comités
    * returns nombre comité
    */
-  getComite(comite: Comite): string {
+  getComite(comite: IComite): string {
 
     return comite?.comite;
 
@@ -379,7 +379,7 @@ export class PeticionEvaluacionListadoInvComponent implements AfterViewInit, OnI
    * @param value value a filtrar (string o nombre comité).
    * @returns lista de comités filtrados.
    */
-  private filterComite(value: string | Comite): Comite[] {
+  private filterComite(value: string | IComite): IComite[] {
     let filterValue: string;
     if (typeof value === 'string') {
       filterValue = value.toLowerCase();

@@ -31,6 +31,7 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTreeModule } from '@angular/material/tree';
+import { MatStepperModule } from '@angular/material/stepper';
 
 @NgModule({
   exports: [
@@ -64,7 +65,8 @@ import { MatTreeModule } from '@angular/material/tree';
     MatMomentDateModule,
     MatRadioModule,
     FlexLayoutModule,
-    MatTreeModule
+    MatTreeModule,
+    MatStepperModule
   ]
 })
 export class MaterialDesignModule { }

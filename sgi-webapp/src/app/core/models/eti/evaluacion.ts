@@ -1,4 +1,4 @@
-import { Comite } from './comite';
+import { IComite } from './comite';
 import { IConvocatoriaReunion } from './convocatoria-reunion';
 import { IMemoria } from './memoria';
 import { IDictamen } from './dictamen';
@@ -13,7 +13,7 @@ export interface IEvaluacion {
   memoria: IMemoria;
 
   /** Comite */
-  comite: Comite;
+  comite: IComite;
 
   /** Convocatoria reunión */
   convocatoriaReunion: IConvocatoriaReunion;

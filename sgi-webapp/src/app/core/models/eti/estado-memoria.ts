@@ -1,8 +1,8 @@
+
 import { IMemoria } from './memoria';
 import { TipoEstadoMemoria } from './tipo-estado-memoria';
 
-export class EstadoMemoria {
-
+export interface EstadoMemoria {
   /** ID */
   id: number;
   /** Memoria */
@@ -11,11 +11,4 @@ export class EstadoMemoria {
   tipoEstadoMemoria: TipoEstadoMemoria;
   /** Fecha Estado */
   fechaEstado: Date;
-
-  constructor(memoria: IMemoria, tipoEstadoMemoria: TipoEstadoMemoria, fechaEstado: Date) {
-    this.tipoEstadoMemoria = tipoEstadoMemoria;
-    this.fechaEstado = fechaEstado;
-    this.memoria = memoria;
-  }
-
 }

@@ -1,13 +1,17 @@
-import { IApartadoFormulario } from './apartado-formulario';
+import { IApartado } from './apartado';
 import { IEvaluacion } from './evaluacion';
+import { IMemoria } from './memoria';
 import { TipoComentario } from './tipo-comentario';
 
 export interface IComentario {
   /** Id */
   id: number;
 
+  /** Memoria */
+  memoria: IMemoria;
+
   /** Apartado del formulario */
-  apartadoFormulario: IApartadoFormulario;
+  apartado: IApartado;
 
   /** Evaluación */
   evaluacion: IEvaluacion;

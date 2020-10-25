@@ -15,7 +15,7 @@ import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { FormGroupUtil } from '@core/utils/form-group-util';
-import { Comite } from '@core/models/eti/comite';
+import { IComite } from '@core/models/eti/comite';
 import { ComiteService } from '@core/services/eti/comite.service';
 import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocatoria-reunion.service';
 import { TipoConvocatoriaReunion } from '@core/models/eti/tipo-convocatoria-reunion';
@@ -51,8 +51,8 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
-  comiteListado: Comite[];
-  filteredComites: Observable<Comite[]>;
+  comiteListado: IComite[];
+  filteredComites: Observable<IComite[]>;
 
   tipoConvocatoriaReunionListado: TipoConvocatoriaReunion[];
   filteredTiposConvocatoriaReunion: Observable<TipoConvocatoriaReunion[]>;
@@ -189,7 +189,7 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
    *
    * @returns nombre del comite
    */
-  getComite(comite: Comite): string {
+  getComite(comite: IComite): string {
     return comite?.comite;
   }
 
@@ -209,7 +209,7 @@ export class ConvocatoriaReunionListadoComponent implements OnInit, AfterViewIni
    * @param value value a filtrar (string o Comite.
    * @returns lista de comites filtrada.
    */
-  private _filterComite(value: string | Comite): Comite[] {
+  private _filterComite(value: string | IComite): IComite[] {
     if (!value) {
       return this.comiteListado;
     }

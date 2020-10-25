@@ -7,37 +7,37 @@
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
         <mat-form-field appearance="fill" fxFill>
           <mat-label>{{'eti.comentario.editar.bloque.titulo' | translate}}</mat-label>
-          <input matInput formControlName="bloqueFormulario" type="text" id="bloqueFormulario"
+          <input matInput formControlName="bloque" type="text" id="bloque"
             placeholder="{{'eti.comentario.editar.bloque.titulo' | translate}}" required
             [matAutocomplete]="autocompleteBloque" (ngModelChange)="loadApartados()">
-          <mat-autocomplete #autocompleteBloque="matAutocomplete" [displayWith]="getNombreBloqueFormulario">
-            <mat-option *ngFor="let bloque of bloquesFormulario" [value]="bloque">
+          <mat-autocomplete #autocompleteBloque="matAutocomplete" [displayWith]="getNombreBloque">
+            <mat-option *ngFor="let bloque of bloques" [value]="bloque">
               {{bloque.nombre}}
             </mat-option>
           </mat-autocomplete>
-          <mat-error *ngIf="formGroup.controls.bloqueFormulario.errors?.required">
+          <mat-error *ngIf="formGroup.controls.bloque.errors?.required">
             {{'eti.comentario.editar.bloque.error.requerido' | translate}}
           </mat-error>
-          <mat-error *ngIf="formGroup.controls.bloqueFormulario.errors?.invalid">
+          <mat-error *ngIf="formGroup.controls.bloque.errors?.invalid">
             {{'eti.comentario.crear.bloque.error.invalido' | translate}}
           </mat-error>
         </mat-form-field>
       </div>
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
-        <mat-form-field appearance="fill" fxFill *ngIf="apartadosFormulario?.length > 0">
+        <mat-form-field appearance="fill" fxFill *ngIf="apartados?.length > 0">
           <mat-label>{{'eti.comentario.editar.apartado.titulo' | translate}}</mat-label>
-          <input matInput formControlName="apartadoFormulario" type="text" id="apartadoFormulario"
+          <input matInput formControlName="apartado" type="text" id="apartado"
             placeholder="{{'eti.comentario.editar.apartado.titulo' | translate}}" required
             [matAutocomplete]="autocompleteApartado" (ngModelChange)="loadHijos()">
-          <mat-autocomplete #autocompleteApartado="matAutocomplete" [displayWith]="getNombreApartadoFormulario">
-            <mat-option *ngFor="let apartadoFormulario of apartadosFormulario" [value]="apartadoFormulario">
-              {{apartadoFormulario.nombre}}
+          <mat-autocomplete #autocompleteApartado="matAutocomplete" [displayWith]="getNombreApartado">
+            <mat-option *ngFor="let apartado of apartados" [value]="apartado">
+              {{apartado.nombre}}
             </mat-option>
           </mat-autocomplete>
-          <mat-error *ngIf="formGroup.controls.apartadoFormulario.errors?.required">
+          <mat-error *ngIf="formGroup.controls.apartado.errors?.required">
             {{'eti.comentario.editar.apartado.error.requerido' | translate}}
           </mat-error>
-          <mat-error *ngIf="formGroup.controls.apartadoFormulario.errors?.invalid">
+          <mat-error *ngIf="formGroup.controls.apartado.errors?.invalid">
             {{'eti.comentario.crear.apartado.error.invalido' | translate}}
           </mat-error>
         </mat-form-field>
@@ -49,7 +49,7 @@
           <input matInput formControlName="subapartado" type="text" id="subapartado"
             placeholder="{{'eti.comentario.editar.subapartado.titulo' | translate}}"
             [matAutocomplete]="autocompleteSubApartado">
-          <mat-autocomplete #autocompleteSubApartado="matAutocomplete" [displayWith]="getNombreApartadoFormulario">
+          <mat-autocomplete #autocompleteSubApartado="matAutocomplete" [displayWith]="getNombreApartado">
             <mat-option *ngFor="let subapartado of subapartados" [value]="subapartado">
               {{subapartado.nombre}}
             </mat-option>

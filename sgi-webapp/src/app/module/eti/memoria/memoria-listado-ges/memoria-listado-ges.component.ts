@@ -9,7 +9,7 @@ import { tap, map, catchError, startWith } from 'rxjs/operators';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoriaPeticionEvaluacion';
-import { Comite } from '@core/models/eti/comite';
+import { IComite } from '@core/models/eti/comite';
 import { IPersona } from '@core/models/sgp/persona';
 import { DialogService } from '@core/services/dialog.service';
 import { ComiteService } from '@core/services/eti/comite.service';
@@ -55,8 +55,8 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
 
   memorias$: Observable<IMemoriaPeticionEvaluacion[]>;
 
-  comiteListado: Comite[];
-  filteredComites: Observable<Comite[]>;
+  comiteListado: IComite[];
+  filteredComites: Observable<IComite[]>;
 
   estadoMemoriaListado: TipoEstadoMemoria[];
   filteredEstadosMemoria: Observable<TipoEstadoMemoria[]>;
@@ -235,7 +235,7 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
    * @param comite comités
    * returns nombre comité
    */
-  getComite(comite: Comite): string {
+  getComite(comite: IComite): string {
 
     return comite?.comite;
 
@@ -310,7 +310,7 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
    * @param value value a filtrar (string o nombre comité).
    * @returns lista de comités filtrados.
    */
-  private filterComite(value: string | Comite): Comite[] {
+  private filterComite(value: string | IComite): IComite[] {
     let filterValue: string;
     if (value === null) {
       value = '';

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
-import { Comite } from '@core/models/eti/comite';
+import { IComite } from '@core/models/eti/comite';
 import { IEvaluacionSolicitante } from '@core/models/eti/evaluacion-solicitante';
 import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -30,8 +30,8 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
   evaluaciones: IEvaluacionSolicitante[];
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
-  comiteListado: Comite[];
-  comitesFiltrados: Observable<Comite[]>;
+  comiteListado: IComite[];
+  comitesFiltrados: Observable<IComite[]>;
   tipoEvaluacionListado: TipoEvaluacion[];
   tipoEvaluacionFiltrados: Observable<TipoEvaluacion[]>;
 
@@ -152,7 +152,7 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
     this.logger.debug(SeguimientoListadoComponent.name, 'loadComites()', 'start');
     this.suscripciones.push(
       this.comiteService.findAll().subscribe(
-        (res: SgiRestListResult<Comite>) => {
+        (res: SgiRestListResult<IComite>) => {
           if (res) {
             this.comiteListado = res.items;
             this.comitesFiltrados = this.formGroup.controls.comite.valueChanges
@@ -197,11 +197,11 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
    * @param filtro valor a filtrar (string o nombre comité).
    * @return lista de comités filtrados.
    */
-  private filterComites(filtro: string | Comite): Comite[] {
+  private filterComites(filtro: string | IComite): IComite[] {
     const valorLog = filtro instanceof String ? filtro : JSON.stringify(filtro);
     this.logger.debug(SeguimientoListadoComponent.name, `filterComites(${valorLog})`, 'start');
     const result = this.comiteListado.filter(
-      (comite: Comite) => comite.comite.toLowerCase().includes(
+      (comite: IComite) => comite.comite.toLowerCase().includes(
         typeof filtro === 'string' ? filtro.toLowerCase() : filtro.comite.toLowerCase()
       )
     );
@@ -232,7 +232,7 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
    * @param comite comité
    * @returns nombre comité
    */
-  getNombreComite(comite: Comite): string {
+  getNombreComite(comite: IComite): string {
     return comite?.comite;
   }
 

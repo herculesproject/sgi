@@ -5,7 +5,6 @@
         [title]="'eti.memoria.datosGenerales.title' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.DATOS_GENERALES)">
       </sgi-action-fragment-menu-item>
-
     </mat-list>
     <mat-list class="enlaces-menu" *ngIf="actionService.getActionLinks().length">
       <sgi-action-fragment-link-item *ngFor="let action of actionService.getActionLinks()"

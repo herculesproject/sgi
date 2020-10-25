@@ -11,34 +11,36 @@ import { map } from 'rxjs/operators';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { PETICION_EVALUACION_ROUTE } from '../peticion-evaluacion/peticion-evaluacion-route-names';
 import { MemoriaDocumentacionFragment } from './memoria-formulario/memoria-documentacion/memoria-documentacion.fragment';
-import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
-import { TipoDocumentoService } from '@core/services/eti/tipo-documento.service';
 import { NGXLogger } from 'ngx-logger';
 import { MemoriaEvaluacionesFragment } from './memoria-formulario/memoria-evaluaciones/memoria-evaluaciones.fragment';
-import { ComiteService } from '@core/services/eti/comite.service';
-import { IFormulario } from '@core/models/eti/formulario';
+import { MemoriaFormularioFragment } from './memoria-formulario/memoria-formulario/memoria-formulario.fragment';
 import { MemoriaInformesFragment } from './memoria-formulario/memoria-informes/memoria-informes.fragment';
+import { FormularioService } from '@core/services/eti/formulario.service';
+import { BloqueService } from '@core/services/eti/bloque.service';
+import { RespuestaService } from '@core/services/eti/respuesta.service';
+import { IComite } from '@core/models/eti/comite';
+import { ApartadoService } from '@core/services/eti/apartado.service';
+import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
+import { IRetrospectiva } from '@core/models/eti/retrospectiva';
 
 const MSG_PETICIONES_EVALUACION = marker('eti.memoria.link.peticionEvaluacion');
-
 
 @Injectable()
 export class MemoriaActionService extends ActionService {
 
-  public estadoActualMemoria: TipoEstadoMemoria;
-  public estadoRetrospectiva: TipoEstadoMemoria;
-  public formulario: IFormulario;
-
   public readonly FRAGMENT = {
     DATOS_GENERALES: 'datosGenerales',
+    FORMULARIO: 'formulario',
     DOCUMENTACION: 'documentacion',
     EVALUACIONES: 'evaluaciones',
     INFORMES: 'informes'
   };
 
   private memoria: IMemoria;
-  private datosGenerales: MemoriaDatosGeneralesFragment;
   public readonly: boolean;
+
+  private datosGenerales: MemoriaDatosGeneralesFragment;
+  private formularios: MemoriaFormularioFragment;
   private documentacion: MemoriaDocumentacionFragment;
   private evaluaciones: MemoriaEvaluacionesFragment;
   private informes: MemoriaInformesFragment;
@@ -49,9 +51,12 @@ export class MemoriaActionService extends ActionService {
     service: MemoriaService,
     private peticionEvaluacionService: PeticionEvaluacionService,
     personaFisicaService: PersonaFisicaService,
-    private tipoDocumentoService: TipoDocumentoService,
-    private comiteService: ComiteService,
-    protected readonly logger: NGXLogger) {
+    protected readonly logger: NGXLogger,
+    formularioService: FormularioService,
+    bloqueService: BloqueService,
+    apartadoService: ApartadoService,
+    respuestaService: RespuestaService
+  ) {
     super();
     this.memoria = {} as IMemoria;
     if (route.snapshot.data.memoria) {
@@ -59,21 +64,24 @@ export class MemoriaActionService extends ActionService {
       this.enableEdit();
       this.addPeticionEvaluacionLink(this.memoria.peticionEvaluacion.id);
       this.readonly = route.snapshot.data.readonly;
-      this.estadoActualMemoria = this.memoria.estadoActual;
-      this.estadoRetrospectiva = this.memoria.retrospectiva?.estadoRetrospectiva;
-      this.loadComiteFormulario(this.memoria.comite.id);
     }
     else {
       this.loadPeticionEvaluacion(history.state.idPeticionEvaluacion);
     }
     this.datosGenerales = new MemoriaDatosGeneralesFragment(fb, this.readonly, this.memoria?.id, service, personaFisicaService);
-    this.documentacion = new MemoriaDocumentacionFragment(logger, this.memoria?.id, service, tipoDocumentoService);
+    this.formularios = new MemoriaFormularioFragment(logger, this.memoria?.id, this.memoria?.comite, formularioService, bloqueService, apartadoService, respuestaService);
+    this.documentacion = new MemoriaDocumentacionFragment(logger, this.memoria?.id, service);
     this.evaluaciones = new MemoriaEvaluacionesFragment(logger, this.memoria?.id, service);
     this.informes = new MemoriaInformesFragment(logger, this.memoria?.id, service);
+
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
-    this.addFragment(this.FRAGMENT.DOCUMENTACION, this.documentacion);
-    this.addFragment(this.FRAGMENT.EVALUACIONES, this.evaluaciones);
-    this.addFragment(this.FRAGMENT.INFORMES, this.informes);
+    if (this.isEdit()) {
+      this.formularios.setPeticionEvaluacion(this.memoria.peticionEvaluacion);
+      this.addFragment(this.FRAGMENT.FORMULARIO, this.formularios);
+      this.addFragment(this.FRAGMENT.DOCUMENTACION, this.documentacion);
+      this.addFragment(this.FRAGMENT.EVALUACIONES, this.evaluaciones);
+      this.addFragment(this.FRAGMENT.INFORMES, this.informes);
+    }
   }
 
   private addPeticionEvaluacionLink(idPeticionEvaluacion: number): void {
@@ -88,20 +96,29 @@ export class MemoriaActionService extends ActionService {
       this.peticionEvaluacionService.findById(id).pipe(
         map((peticionEvaluacion) => {
           this.memoria.peticionEvaluacion = peticionEvaluacion;
+          this.formularios.setPeticionEvaluacion(peticionEvaluacion);
           this.addPeticionEvaluacionLink(id);
         })
       ).subscribe();
     }
   }
 
-  private loadComiteFormulario(id: number): void {
-
-    if (id) {
-      this.comiteService.findComiteFormularioTipoM(id).pipe(
-        map((formulario) => {
-          this.formulario = formulario;
-        })
-      ).subscribe();
-    }
+  public getComite(): IComite {
+    return this.memoria.comite;
   }
+
+  public getEstadoMemoria(): TipoEstadoMemoria {
+    return this.memoria.estadoActual;
+  }
+
+  public getRetrospectiva(): IRetrospectiva {
+    return this.memoria.retrospectiva;
+  }
+
+  public setComite(comite: IComite): void {
+    this.memoria.comite = comite;
+    this.formularios.setComite(comite);
+  }
+
+
 }
