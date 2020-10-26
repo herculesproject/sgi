@@ -13,11 +13,10 @@ import { startWith, map } from 'rxjs/operators';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree';
 import { IEntidadConvocante } from '@core/models/csp/entidad-convocante';
-import { IPrograma } from '@core/models/csp/programa';
 import { IObjectTree } from '@core/models/csp/object-tree';
 import { ProgramaService } from '@core/services/csp/programa.service';
-import { IPlan } from '@core/models/csp/plan';
 import { PlanService } from '@core/services/csp/plan.service';
+import { IPlan } from '@core/models/csp/tipos-configuracion';
 
 const MSG_ERROR_INIT = marker('csp.convocatoria.entidad.convocante.error.cargar');
 
@@ -110,7 +109,7 @@ export class ConvocatoriaEntidadConvocanteaModalComponent implements OnInit {
   loadPlanes() {
     this.logger.debug(ConvocatoriaEntidadConvocanteaModalComponent.name, 'loadPlanes()', 'start');
     this.suscripciones.push(
-      this.planService.findPlanes().subscribe(
+      this.planService.findTodos().subscribe(
         (res: SgiRestListResult<IPlan>) => {
           this.planFiltered = res.items;
 

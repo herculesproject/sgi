@@ -23,3 +23,6 @@ export interface ITipoFase extends TipoConfiguracion {
 
 export interface ITipoEnlace extends TipoConfiguracion {
 }
+
+export interface IPlan extends TipoConfiguracion {
+}

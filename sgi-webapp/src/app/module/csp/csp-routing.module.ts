@@ -15,6 +15,7 @@ const MSG_TIPO_HITO_TITLE = marker('menu.principal.csp.tipo.hito');
 const MSG_TIPO_FINALIDAD_TITLE = marker('menu.principal.csp.tipo.finalidad');
 const MSG_TIPO_DOCUMENTO_TITLE = marker('menu.principal.csp.tipo.documento');
 const MSG_MODELO_EJECUCION_TITLE = marker('menu.principal.csp.modelo.ejecucion');
+const MSG_PLAN_INVESTIGACION_TITLE = marker('menu.principal.csp.plan.investigacion');
 
 const routes: SgiRoutes = [
   {
@@ -108,6 +109,17 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_CONVOCATORIA_TITLE,
+        }
+      },
+      {
+        path: CSP_ROUTE_NAMES.PLANES_INVESTIGACION,
+        loadChildren: () =>
+          import('./plan-investigacion/plan-investigacion.module').then(
+            (m) => m.PlanInvestigacionModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_PLAN_INVESTIGACION_TITLE,
         }
       },
       { path: '**', component: null }

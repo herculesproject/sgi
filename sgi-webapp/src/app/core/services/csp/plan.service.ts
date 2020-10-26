@@ -2,32 +2,17 @@ import { Injectable } from '@angular/core';
 import { SgiRestService, SgiRestListResult, SgiRestFindOptions } from '@sgi/framework/http/';
 import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
-import { IPlan } from '@core/models/csp/plan';
 import { environment } from '@env';
 import { Observable, of } from 'rxjs';
-
-
-
-
-
-
-const planes: IPlan[] = [
-  {
-    id: 1, nombre: 'Plan Nacional 2020 - 2023'
-  },
-  {
-    id: 2, nombre: 'Plan propio'
-  },
-
-
-];
+import { tap } from 'rxjs/operators';
+import { IPlan } from '@core/models/csp/tipos-configuracion';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlanService extends SgiRestService<number, IPlan> {
 
-  private static readonly MAPPING = '/plan';
+  private static readonly MAPPING = '/planes';
 
   constructor(logger: NGXLogger, protected http: HttpClient) {
     super(
@@ -38,19 +23,15 @@ export class PlanService extends SgiRestService<number, IPlan> {
     );
   }
 
-
   /**
-   * Recupera listado mock de planes.
+   * Muestra activos y no activos
    * @param options opciones de búsqueda.
-   * @returns listado de modelos de planes.
    */
-  findPlanes(options?: SgiRestFindOptions): Observable<SgiRestListResult<IPlan>> {
-    this.logger.debug(PlanService.name, `findPlanes(${options ? JSON.stringify(options) : ''})`, '-', 'START');
-
-    return of({
-      page: null,
-      total: planes.length,
-      items: planes
-    } as SgiRestListResult<IPlan>);
+  findTodos(options?: SgiRestFindOptions): Observable<SgiRestListResult<IPlan>> {
+    this.logger.debug(PlanService.name, `${this.findTodos.name}(`, '-', 'START');
+    return this.find<IPlan, IPlan>(`${this.endpointUrl}/todos`, options).pipe(
+      tap(() => this.logger.debug(PlanService.name, `${this.findTodos.name}()`, '-', 'END'))
+    );
   }
+
 }
