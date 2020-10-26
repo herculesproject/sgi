@@ -662,7 +662,7 @@ public class EvaluacionServiceTest {
 
     // given: Datos existentes con memoriaId = 1
     Memoria memoria = new Memoria(1L, "numRef-001", null, null, "Memoria", "user-001", null, null, LocalDate.now(),
-        Boolean.TRUE, null, 3, Boolean.TRUE);
+        Boolean.TRUE, null, 3, "CodOrganoCompetente", Boolean.TRUE);
 
     Long memoriaId = 1L;
     List<Evaluacion> response = new LinkedList<Evaluacion>();
@@ -688,7 +688,7 @@ public class EvaluacionServiceTest {
   public void findAllByMemoriaId_ReturnEmptyPage() {
 
     Memoria memoria = new Memoria(1L, "numRef-001", null, null, "Memoria", "user-001", null, null, LocalDate.now(),
-        Boolean.TRUE, null, 3, Boolean.TRUE);
+        Boolean.TRUE, null, 3, "CodOrganoCompetente", Boolean.TRUE);
     // given: No hay datos con memoriaId = 1
     Long memoriaId = 1L;
 
@@ -782,7 +782,7 @@ public class EvaluacionServiceTest {
 
     Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
         tipoMemoria, tipoEstadoMemoria, LocalDate.now(), Boolean.TRUE,
-        new Retrospectiva(id, estadoRetrospectiva, LocalDate.now()), 3, Boolean.TRUE);
+        new Retrospectiva(id, estadoRetrospectiva, LocalDate.now()), 3, "CodOrganoCompetente", Boolean.TRUE);
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
 

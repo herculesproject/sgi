@@ -52,18 +52,6 @@ public class ComiteIT {
     return request;
   }
 
-  private HttpEntity<Formulario> buildRequestFormulario(HttpHeaders headers, Formulario entity) throws Exception {
-    headers = (headers != null ? headers : new HttpHeaders());
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    if (!headers.containsKey("Authorization")) {
-      headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
-    }
-
-    HttpEntity<Formulario> request = new HttpEntity<>(entity, headers);
-    return request;
-  }
-
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test

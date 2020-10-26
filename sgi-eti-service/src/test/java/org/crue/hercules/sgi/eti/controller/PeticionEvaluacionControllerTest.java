@@ -369,7 +369,7 @@ public class PeticionEvaluacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-CR", "ETI-PEV-ER", "ETI-PEV-VR-INV", "ETI-PEV-C-INV",
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-CR", "ETI-PEV-ER-INV", "ETI-PEV-VR-INV", "ETI-PEV-C-INV",
       "ETI-PEV-ER-INV" })
   public void findEquipoInvestigador_ReturnsEquipoTrabajoSubList() throws Exception {
     // given: 10 EquipoTrabajos por PeticionEvaluacion

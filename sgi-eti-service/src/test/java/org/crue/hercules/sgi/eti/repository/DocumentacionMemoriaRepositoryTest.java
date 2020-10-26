@@ -138,7 +138,7 @@ public class DocumentacionMemoriaRepositoryTest {
   private Memoria generarMockMemoria(PeticionEvaluacion peticionEvaluacion, Comite comite, TipoMemoria tipoMemoria,
       TipoEstadoMemoria tipoEstadoMemoria, Retrospectiva retrospectiva) {
     return new Memoria(null, "numRef-001", peticionEvaluacion, comite, "Memoria", "user-001", tipoMemoria,
-        tipoEstadoMemoria, LocalDate.now(), Boolean.TRUE, retrospectiva, 3, Boolean.TRUE);
+        tipoEstadoMemoria, LocalDate.now(), Boolean.TRUE, retrospectiva, 3, "CodOrganoCompetente", Boolean.TRUE);
   }
 
   /**

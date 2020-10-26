@@ -297,7 +297,7 @@ public class InformeServiceTest {
     Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria1", "user-001", tipoMemoria,
         new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.FALSE,
         new Retrospectiva(id, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), LocalDate.now()), 3,
-        Boolean.TRUE);
+        "codOrganoCompetente", Boolean.TRUE);
 
     Informe informe = new Informe();
     informe.setId(id);

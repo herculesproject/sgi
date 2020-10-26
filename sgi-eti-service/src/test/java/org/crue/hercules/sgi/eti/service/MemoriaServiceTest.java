@@ -617,8 +617,8 @@ public class MemoriaServiceTest {
     return new Memoria(id, numReferencia, generarMockPeticionEvaluacion(id, titulo + " PeticionEvaluacion" + id),
         generarMockComite(id, "comite" + id, true), titulo, "user-00" + id,
         generarMockTipoMemoria(1L, "TipoMemoria1", true),
-        generarMockTipoEstadoMemoria(idTipoEstadoMemoria, "En secretaría", Boolean.TRUE), LocalDate.now(), Boolean.TRUE,
-        generarMockRetrospectiva(1L), version, Boolean.TRUE);
+        generarMockTipoEstadoMemoria(idTipoEstadoMemoria, "Estado", Boolean.TRUE), LocalDate.now(), Boolean.TRUE,
+        generarMockRetrospectiva(1L), version, "CodOrganoCompetente", Boolean.TRUE);
   }
 
   /**
@@ -810,9 +810,7 @@ public class MemoriaServiceTest {
     EstadoRetrospectiva estadoRetrospectiva = new EstadoRetrospectiva();
     estadoRetrospectiva.setId(idEstadoRetrospectiva);
 
-    Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
-        tipoMemoria, tipoEstadoMemoria, LocalDate.now(), Boolean.TRUE,
-        new Retrospectiva(id, estadoRetrospectiva, LocalDate.now()), 3, Boolean.TRUE);
+    Memoria memoria = generarMockMemoria(1L, "numRef-001", "Memoria" + sufijoStr, version, idTipoEstadoMemoria);
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
 

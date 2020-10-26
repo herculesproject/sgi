@@ -318,6 +318,7 @@
       </column>
       <column name="retrospectiva_id" type="BIGINT" />
       <column name="version" type="INT" />
+      <column name="cod_organo_competente" type="VARCHAR(250)" />
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>

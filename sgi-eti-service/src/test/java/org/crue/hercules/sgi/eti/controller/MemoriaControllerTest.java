@@ -145,7 +145,7 @@ public class MemoriaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
   public void newMemoria_Error_Returns400() throws Exception {
     // given: Una memoria nueva que produce un error al crearse
     String nuevaMemoriaJson = "{\"numReferencia\": \"numRef-5599\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
@@ -166,7 +166,7 @@ public class MemoriaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
   public void replaceMemoria_ReturnsMemoria() throws Exception {
     // given: Una memoria a modificar
     String replaceMemoriaJson = mapper.writeValueAsString(generarMockMemoria(1L, "numRef-5599", "Memoria1", 1));
@@ -188,7 +188,7 @@ public class MemoriaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
   public void replaceMemoria_NotFound() throws Exception {
     // given: Una memoria a modificar
     String replaceMemoriaJson = mapper.writeValueAsString(generarMockMemoria(1L, "numRef-5599", "Memoria1", 1));
@@ -205,7 +205,7 @@ public class MemoriaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
   public void removeMemoria_ReturnsOk() throws Exception {
     BDDMockito.given(memoriaService.findById(ArgumentMatchers.anyLong()))
         .willReturn(generarMockMemoria(1L, "numRef-5598", "Memoria1", 1));
@@ -1169,7 +1169,7 @@ public class MemoriaControllerTest {
         generarMockComite(id, "comite" + id, true), titulo, "user-00" + id,
         generarMockTipoMemoria(1L, "TipoMemoria1", true),
         generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.TRUE,
-        generarMockRetrospectiva(1L), version, Boolean.TRUE);
+        generarMockRetrospectiva(1L), version, "CodOrganoCompetente", Boolean.TRUE);
   }
 
   /**
@@ -1345,7 +1345,7 @@ public class MemoriaControllerTest {
     Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
         tipoMemoria, new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.FALSE,
         new Retrospectiva(id, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), LocalDate.now()), 3,
-        Boolean.TRUE);
+        "CodOrganoCompetente", Boolean.TRUE);
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
 

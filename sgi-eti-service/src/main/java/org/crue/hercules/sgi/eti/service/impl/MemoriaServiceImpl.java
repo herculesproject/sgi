@@ -278,6 +278,7 @@ public class MemoriaServiceImpl implements MemoriaService {
       memoria.setRequiereRetrospectiva(memoriaActualizar.getRequiereRetrospectiva());
       memoria.setRetrospectiva(memoriaActualizar.getRetrospectiva());
       memoria.setVersion(memoriaActualizar.getVersion());
+      memoria.setCodOrganoCompetente(memoriaActualizar.getCodOrganoCompetente());
       memoria.setActivo(memoriaActualizar.getActivo());
 
       Memoria returnValue = memoriaRepository.save(memoria);

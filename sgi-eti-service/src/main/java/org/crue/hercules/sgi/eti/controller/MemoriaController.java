@@ -216,7 +216,7 @@ public class MemoriaController {
    * @return {@link Memoria} actualizada.
    */
   @PutMapping("/{id}")
-  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-ER')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-ER-INV')")
   Memoria replaceMemoria(@Valid @RequestBody Memoria updatedMemoria, @PathVariable Long id) {
     log.debug("replaceMemoria(Memoria updatedMemoria, Long id) - start");
     updatedMemoria.setId(id);

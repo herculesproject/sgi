@@ -769,6 +769,7 @@
       <column name="fecha_envio_secretaria" value="2020-08-09" />
       <column name="requiere_retrospectiva" value="false" />
       <column name="version" value="1" />
+      <column name="cod_organo_competente" value="CodOrganoCompetente" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
@@ -782,6 +783,7 @@
       <column name="fecha_envio_secretaria" value="2020-06-09" />
       <column name="requiere_retrospectiva" value="false" />
       <column name="version" value="5" />
+      <column name="cod_organo_competente" value="CodOrganoCompetente" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
@@ -795,6 +797,7 @@
       <column name="fecha_envio_secretaria" value="2020-06-09" />
       <column name="requiere_retrospectiva" value="false" />
       <column name="version" value="2" />
+      <column name="cod_organo_competente" value="CodOrganoCompetente" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
@@ -835,6 +838,7 @@
       <column name="requiere_retrospectiva" value="true" />
       <column name="retrospectiva_id" value="4" />
       <column name="version" value="2" />
+      <column name="cod_organo_competente" value="CodOrganoCompetente" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
@@ -936,6 +940,7 @@
       <column name="requiere_retrospectiva" value="true" />
       <column name="retrospectiva_id" value="4" />
       <column name="version" value="1" />
+      <column name="cod_organo_competente" value="CodOrganoCompetente" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
@@ -950,6 +955,7 @@
       <column name="requiere_retrospectiva" value="true" />
       <column name="retrospectiva_id" value="4" />
       <column name="version" value="1" />
+      <column name="cod_organo_competente" value="CodOrganoCompetente" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
@@ -978,6 +984,7 @@
       <column name="requiere_retrospectiva" value="true" />
       <column name="retrospectiva_id" value="4" />
       <column name="version" value="3" />
+      <column name="cod_organo_competente" value="CodOrganoCompetente" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
@@ -992,6 +999,7 @@
       <column name="requiere_retrospectiva" value="true" />
       <column name="retrospectiva_id" value="7" />
       <column name="version" value="1" />
+      <column name="cod_organo_competente" value="CodOrganoCompetente" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
@@ -1006,6 +1014,7 @@
       <column name="requiere_retrospectiva" value="true" />
       <column name="retrospectiva_id" value="4" />
       <column name="version" value="1" />
+      <column name="cod_organo_competente" value="CodOrganoCompetente" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>
