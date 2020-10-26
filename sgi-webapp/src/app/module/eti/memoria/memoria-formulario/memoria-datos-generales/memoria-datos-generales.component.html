@@ -1,7 +1,6 @@
-<!-- Evaluador datos generales -->
+<!-- Memoria datos generales -->
 <section>
   <h2>{{'eti.memoria.datosGenerales.title' | translate}}</h2>
-
   <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
     [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
     <!-- Comité -->
@@ -9,7 +8,7 @@
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field>
         <mat-label>{{'eti.memoria.datosGenerales.comite.titulo' | translate}}</mat-label>
-        <input type="text" [placeholder]="'eti.evaluador.datosGenerales.comite.titulo' | translate" arial-label="Number"
+        <input type="text" [placeholder]="'eti.memoria.datosGenerales.comite.titulo' | translate" arial-label="Number"
           matInput formControlName="comite" [matAutocomplete]="autocompleteComite">
         <mat-autocomplete #autocompleteComite="matAutocomplete" [displayWith]="getComite">
           <mat-option *ngFor="let c of filteredComites | async" [value]="c">
@@ -17,49 +16,66 @@
           </mat-option>
         </mat-autocomplete>
         <mat-error *ngIf="formGroup.controls.comite.errors?.vacio">
-          {{'eti.evaluador.datosGenerales.comite.error.vacio' | translate}}
+          {{'eti.memoria.datosGenerales.comite.error.vacio' | translate}}
         </mat-error>
       </mat-form-field>
     </div>
 
-
-    <!-- Tipo de memoria -->
+    <!-- Tipo de Memoria -->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field>
         <mat-label>{{'eti.memoria.datosGenerales.tipoMemoria.titulo' | translate}}</mat-label>
-        <input type="text" [placeholder]="'eti.evaluador.datosGenerales.tipoMemoria.titulo' | translate"
-          arial-label="Number" matInput formControlName="tipoEstadoMemoria" [matAutocomplete]="autocompleteTipoMemoria">
-        <mat-autocomplete #autocompleteTipoMemoria="matAutocomplete" [displayWith]="getTipoEstadoMemoria">
+        <input type="text" [placeholder]="'eti.memoria.datosGenerales.tipoMemoria.titulo' | translate"
+          arial-label="Number" matInput formControlName="tipoMemoria" [matAutocomplete]="autocompleteTipoMemoria">
+        <mat-autocomplete #autocompleteTipoMemoria="matAutocomplete" [displayWith]="getTipoMemoria">
           <mat-option *ngFor="let t of filteredTipoMemorias | async" [value]="t">
             {{t.nombre}}
           </mat-option>
         </mat-autocomplete>
-        <mat-error *ngIf="formGroup.controls.tipoEstadoMemoria.errors?.vacio">
-          {{'eti.evaluador.datosGenerales.tipoEstadoMemoria.error.vacio' | translate}}
+        <mat-error *ngIf="formGroup.controls.tipoMemoria.errors?.vacio">
+          {{'eti.memoria.datosGenerales.tipoMemoria.error.vacio' | translate}}
         </mat-error>
       </mat-form-field>
     </div>
-
 
     <!-- Título -->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
       <mat-form-field>
         <mat-label>{{'eti.memoria.datosGenerales.titulo.titulo' | translate}}</mat-label>
-        <input type="text" [placeholder]="'eti.evaluador.datosGenerales.titulo.titulo' | translate" arial-label="Number"
+        <input type="text" [placeholder]="'eti.memoria.datosGenerales.titulo.titulo' | translate" arial-label="Number"
           matInput formControlName="titulo">
       </mat-form-field>
     </div>
 
-
-    <!--Persona-->
-    <div class="buscador" [ngClass]="{'disabled':  fragment.isEdit()}">
-      <sgi-buscar-persona [textoLabel]="textoUsuarioLabel" [textoInput]="textoUsuarioInput"
-        [textoButton]="textoUsuarioButton"
-        [datosUsuarioTexto]="this.datosGeneralesFragment.getFormGroup().controls.personaRef.value"
-        (usuarioSeleccionado)="this.datosGeneralesFragment.setPersona($event)">
-      </sgi-buscar-persona>
+    <!-- Persona equipo trabajo -->
+    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field fxFill>
+        <mat-label>{{'eti.memoria.datosGenerales.responsable' | translate}}</mat-label>
+        <input type="text" [placeholder]="'eti.memoria.datosGenerales.responsable' | translate" arial-label="Number"
+          matInput formControlName="personaResponsable" [matAutocomplete]="autocompletePersonaResponsable">
+        <mat-autocomplete #autocompletePersonaResponsable="matAutocomplete" [displayWith]="getPersonaResponsable">
+          <mat-option *ngFor="let personaRes of datosGeneralesFragment.personasResponsable$ | async"
+            [value]="personaRes">
+            {{personaRes.nombre}} {{personaRes.primerApellido}} {{personaRes.segundoApellido}}
+            ({{personaRes.identificadorNumero}}{{personaRes.identificadorLetra}})
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
     </div>
+
+    <!-- Código órgano competente -->
+    <div *ngIf="datosGeneralesFragment.getFormGroup().controls.comite.value.comite  == 'CEEA'"
+      [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
+      [fxFlexOrder]="fxFlexProperties.order">
+      <mat-form-field>
+        <mat-label>{{'eti.memoria.datosGenerales.codigo.organo.competente.titulo' | translate}}</mat-label>
+        <input type="text" [placeholder]="'eti.memoria.datosGenerales.codigo.organo.competente.titulo' | translate"
+          arial-label="Number" matInput formControlName="codOrganoCompetente">
+      </mat-form-field>
+    </div>
+
   </form>
 </section>

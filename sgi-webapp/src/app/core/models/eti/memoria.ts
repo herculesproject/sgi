@@ -43,4 +43,7 @@ export interface IMemoria {
 
   /** Retrospectiva */
   retrospectiva: IRetrospectiva;
+
+  /** Código organo */
+  codOrganoCompetente: string;
 }

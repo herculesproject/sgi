@@ -13,11 +13,9 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MemoriaDatosGeneralesFragment } from './memoria-datos-generales.fragment';
 import { MemoriaActionService } from '../../memoria.action.service';
 import { TipoMemoria } from '@core/models/eti/tipo-memoria';
-import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria.service';
 import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { IPersona } from '@core/models/sgp/persona';
-
-
+import { TipoMemoriaService } from '@core/services/eti/tipo-memoria.service';
 
 const MSG_ERROR_INIT_ = marker('eti.memoria.datosGenerales.error.init');
 const TEXT_USER_TITLE = marker('eti.memoria.datosGenerales.buscador.solicitante');
@@ -37,7 +35,7 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
   tiposMemoria: TipoMemoria[] = [];
 
   filteredComites: Observable<IComite[]>;
-  filteredTipoMemorias: Observable<TipoEstadoMemoria[]>;
+  filteredTipoMemorias: Observable<TipoMemoria[]>;
 
   datosGeneralesFragment: MemoriaDatosGeneralesFragment;
   textoUsuarioLabel = TEXT_USER_TITLE;
@@ -50,7 +48,7 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
     protected readonly logger: NGXLogger,
     private readonly comiteService: ComiteService,
     private readonly snackBarService: SnackBarService,
-    private readonly tipoEstadoMemoriaService: TipoEstadoMemoriaService,
+    private readonly tipoMemoriaService: TipoMemoriaService,
     private actionService: MemoriaActionService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
@@ -60,7 +58,7 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
     this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
     this.fxFlexProperties.md = '0 1 calc(50%-10px)';
     this.fxFlexProperties.gtMd = '0 1 calc(22%-10px)';
-    this.fxFlexProperties.order = '2';
+    this.fxFlexProperties.order = '1';
 
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.gap = '20px';
@@ -71,23 +69,17 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
   ngOnInit(): void {
     super.ngOnInit();
     this.logger.debug(MemoriaDatosGeneralesComponent.name, 'ngOnInit()', 'start');
-
     this.loadComites();
     this.loadTipoMemorias();
-
     this.logger.debug(MemoriaDatosGeneralesComponent.name, 'ngOnInit()', 'end');
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
-  }
-
   loadTipoMemorias() {
-    this.subscriptions.push(this.tipoEstadoMemoriaService.findAll().subscribe(
+    this.subscriptions.push(this.tipoMemoriaService.findAll().subscribe(
       (res) => {
         this.tiposMemoria = res.items;
         this.logger.debug(MemoriaDatosGeneralesComponent.name, 'loadTipoMemorias()', 'start');
-        this.filteredTipoMemorias = this.formGroup.controls.tipoEstadoMemoria.valueChanges
+        this.filteredTipoMemorias = this.formGroup.controls.tipoMemoria.valueChanges
           .pipe(
             startWith(''),
             map(value => {
@@ -115,7 +107,9 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
                 this.actionService.setComite(value);
               }
             }),
-            map(value => this.filterComite(value))
+            map(value => {
+              return this.filterComite(value);
+            })
           );
       },
       () => {
@@ -152,7 +146,7 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
     }
 
     return this.tiposMemoria.filter
-      (tipoEstadoMemoria => tipoEstadoMemoria.nombre.toLowerCase().includes(filterValue));
+      (tipoMemoria => tipoMemoria.nombre.toLowerCase().includes(filterValue));
   }
 
   /**
@@ -164,17 +158,28 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
     return comite?.comite;
   }
 
-  getTipoEstadoMemoria(tipoEstadoMemoria: TipoEstadoMemoria): string {
-    return tipoEstadoMemoria?.nombre;
-  }
-
-  getPersonaRef(persona: IPersona): string {
-    return persona.personaRef;
+  getTipoMemoria(tipoMemoria: TipoMemoria): string {
+    return tipoMemoria?.nombre;
   }
 
   getTitulo(titulo: string): string {
     return titulo;
   }
 
-}
+  getPersonaResponsable(persona: IPersona): string {
+    if (persona) {
+      return persona?.nombre + ' ' + persona?.primerApellido + ' ' +
+        persona?.segundoApellido + '(' + persona?.identificadorNumero + persona?.identificadorLetra + ')';
+    }
+  }
 
+  getPersonaRef(persona: IPersona): string {
+    return persona.personaRef;
+  }
+
+  ngOnDestroy(): void {
+    this.logger.debug(MemoriaDatosGeneralesComponent.name, 'ngOnDestroy()', 'start');
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.logger.debug(MemoriaDatosGeneralesComponent.name, 'ngOnDestroy()', 'end');
+  }
+}

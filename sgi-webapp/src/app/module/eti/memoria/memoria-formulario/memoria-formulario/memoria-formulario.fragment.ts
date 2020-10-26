@@ -118,6 +118,9 @@ export class MemoriaFormularioFragment extends Fragment {
         respuestas.push(...this.getRespuestas(question));
       });
     });
+    if (respuestas.length === 0) {
+      return of(void 0);
+    }
     return merge(
       this.updateRespuestas(respuestas.filter((respuesta) => respuesta.id !== undefined)),
       this.createRespuestas(respuestas.filter((respuesta) => respuesta.id === undefined)),

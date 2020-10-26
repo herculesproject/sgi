@@ -8,8 +8,8 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { MemoriaActionService } from '../../memoria.action.service';
-import { MemoriaInformesComponent } from './memoria-informes.component';
-import { IComite } from '@core/models/eti/comite';
+import { MemoriaDatosGeneralesComponent } from './memoria-datos-generales.component';
+import { Comite } from '@core/models/eti/comite';
 import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { IRetrospectiva } from '@core/models/eti/retrospectiva';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
@@ -17,15 +17,15 @@ import { IMemoria } from '@core/models/eti/memoria';
 import { ActivatedRoute } from '@angular/router';
 
 
-describe('MemoriaInformesComponent', () => {
-  let component: MemoriaInformesComponent;
-  let fixture: ComponentFixture<MemoriaInformesComponent>;
+describe('MemoriaDatosGeneralesComponent', () => {
+  let component: MemoriaDatosGeneralesComponent;
+  let fixture: ComponentFixture<MemoriaDatosGeneralesComponent>;
 
   const snapshotData = {
     memoria: {
       comite: {
         id: 1
-      } as IComite,
+      } as Comite,
       estadoActual: {
         id: 1
       } as TipoEstadoMemoria,
@@ -43,7 +43,7 @@ describe('MemoriaInformesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [MemoriaInformesComponent],
+      declarations: [MemoriaDatosGeneralesComponent],
       imports: [
         HttpClientTestingModule,
         FormsModule,
@@ -65,7 +65,7 @@ describe('MemoriaInformesComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MemoriaInformesComponent);
+    fixture = TestBed.createComponent(MemoriaDatosGeneralesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

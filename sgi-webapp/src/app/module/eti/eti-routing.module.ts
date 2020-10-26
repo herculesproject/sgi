@@ -108,7 +108,7 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_MEMORIAS_TITLE,
-          hasAnyAuthorityForAnyUO: ['ETI-MEM-CEST']
+          hasAuthorityForAnyUO: 'ETI-PEV-V'
         }
       },
       {
