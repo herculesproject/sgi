@@ -36,7 +36,7 @@ public class ConvocatoriaEnlaceRepositoryTest {
     ConvocatoriaEnlace convocatoriaEnlace2 = generarConvocatoriaEnlace("-002");
     entityManager.persistAndFlush(convocatoriaEnlace2);
 
-    Long convocatoriaIdBuscado = convocatoriaEnlace1.getId();
+    Long convocatoriaIdBuscado = convocatoriaEnlace1.getConvocatoria().getId();
     String urlBuscada = "www.url1.com";
 
     // when: find by by Convocatoria and url

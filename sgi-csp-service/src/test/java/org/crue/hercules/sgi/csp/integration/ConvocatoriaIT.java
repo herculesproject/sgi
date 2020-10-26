@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
@@ -59,7 +60,8 @@ public class ConvocatoriaIT {
   private static final String PATH_ENTIDAD_CONVOCANTE = "/convocatoriaentidadconvocantes";
   private static final String PATH_ENTIDAD_FINANCIADORA = "/convocatoriaentidadfinanciadoras";
   private static final String PATH_ENTIDAD_GESTORA = "/convocatoriaentidadgestoras";
-  private static final String PATH_ENTIDAD_FASES = "/convocatoriafases";
+  private static final String PATH_FASES = "/convocatoriafases";
+  private static final String PATH_HITOS = "/convocatoriahitos";
 
   private HttpEntity<Convocatoria> buildRequest(HttpHeaders headers, Convocatoria entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -572,7 +574,7 @@ public class ConvocatoriaIT {
 
     Long convocatoriaId = 1L;
 
-    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ENTIDAD_FASES)
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_FASES)
         .queryParam("s", sort).queryParam("q", filter).buildAndExpand(convocatoriaId).toUri();
 
     final ResponseEntity<List<ConvocatoriaFase>> response = restTemplate.exchange(uri, HttpMethod.GET,
@@ -582,17 +584,54 @@ public class ConvocatoriaIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<ConvocatoriaFase> convocatoriasFases = response.getBody();
     Assertions.assertThat(convocatoriasFases.size()).isEqualTo(3);
-    HttpHeaders responseHeaders = response.getHeaders();
-    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
-    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
-    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
-
     Assertions.assertThat(convocatoriasFases.get(0).getObservaciones()).as("get(0).getObservaciones()")
         .isEqualTo("observaciones-" + String.format("%03d", 3));
     Assertions.assertThat(convocatoriasFases.get(1).getObservaciones()).as("get(1).getObservaciones())")
         .isEqualTo("observaciones-" + String.format("%03d", 2));
     Assertions.assertThat(convocatoriasFases.get(2).getObservaciones()).as("get(2).getObservaciones())")
         .isEqualTo("observaciones-" + String.format("%03d", 1));
+
+  }
+
+  /*
+   * CONVOCATORIA HITO
+   * 
+   */
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllConvocatoriaHito_WithPagingSortingAndFiltering_ReturnsConvocatoriaHitoSubList() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CHIT-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "id-";
+    String filter = "comentario~%-00%";
+
+    Long convocatoriaId = 1L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_HITOS)
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(convocatoriaId).toUri();
+
+    final ResponseEntity<List<ConvocatoriaHito>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ConvocatoriaHito>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    final List<ConvocatoriaHito> convocatoriasHitos = response.getBody();
+    Assertions.assertThat(convocatoriasHitos.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+    Assertions.assertThat(convocatoriasHitos.get(0).getComentario()).as("get(0).getComentario()")
+        .isEqualTo("comentario-" + String.format("%03d", 3));
+    Assertions.assertThat(convocatoriasHitos.get(1).getComentario()).as("get(1).getComentario())")
+        .isEqualTo("comentario-" + String.format("%03d", 2));
+    Assertions.assertThat(convocatoriasHitos.get(2).getComentario()).as("get(2).getComentario()")
+        .isEqualTo("comentario-" + String.format("%03d", 1));
+
   }
 
   /**
@@ -672,5 +711,6 @@ public class ConvocatoriaIT {
         .build();
 
     return convocatoria;
+
   }
 }

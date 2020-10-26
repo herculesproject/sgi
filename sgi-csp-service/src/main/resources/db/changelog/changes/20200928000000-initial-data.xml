@@ -731,4 +731,28 @@
 
     </insert>
   </changeSet>
+  <changeSet author="master" id="20201022000000-convocatoria_hito">
+    <insert tableName="convocatoria_hito">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
+      <column name="tipo_hito_id" valueComputed="(select id from csp.tipo_hito where nombre = 'Hito1')"></column>
+      <column name="fecha" value="2021-10-22" />
+      <column name="comentario" value="comentario1" />
+      <column name="genera_aviso" value="true" />
+    </insert>
+    <insert tableName="convocatoria_hito">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
+      <column name="tipo_hito_id" valueComputed="(select id from csp.tipo_hito where nombre = 'Hito2')"></column>
+      <column name="fecha" value="2021-10-23" />
+      <column name="comentario" value="comentario2" />
+      <column name="genera_aviso" value="true" />
+    </insert>
+    <insert tableName="convocatoria_hito">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-003')"></column>
+      <column name="tipo_hito_id" valueComputed="(select id from csp.tipo_hito where nombre = 'Hito3')"></column>
+      <column name="fecha" value="2021-10-24" />
+      <column name="comentario" value="comentario3" />
+      <column name="genera_aviso" value="true" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>
