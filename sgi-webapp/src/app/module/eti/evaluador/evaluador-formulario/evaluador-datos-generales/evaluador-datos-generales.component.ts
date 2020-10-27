@@ -32,6 +32,7 @@ const MSG_ERROR_INIT_ = marker('eti.evaluador.datosGenerales.error.init');
 export class EvaluadorDatosGeneralesComponent extends FormFragmentComponent<IEvaluador> implements OnInit {
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
+  fxFlexPropertiesInline: FxFlexProperties;
 
   comites: IComite[] = [];
   cargosComite: CargoComite[] = [];
@@ -69,6 +70,12 @@ export class EvaluadorDatosGeneralesComponent extends FormFragmentComponent<IEva
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
     this.isEditForm = this.datosGeneralesFragment.isEdit();
+
+    this.fxFlexPropertiesInline = new FxFlexProperties();
+    this.fxFlexPropertiesInline.sm = '0 1 calc(100%-10px)';
+    this.fxFlexPropertiesInline.md = '0 1 calc(100%-10px)';
+    this.fxFlexPropertiesInline.gtMd = '0 1 calc(100%-10px)';
+    this.fxFlexPropertiesInline.order = '3';
   }
 
   ngOnInit() {

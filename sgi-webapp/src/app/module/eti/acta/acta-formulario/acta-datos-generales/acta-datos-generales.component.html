@@ -108,9 +108,10 @@
       [fxFlex.gt-md]="fxFlexPropertiesInline.gtMd" [fxFlexOrder]="fxFlexPropertiesInline.order">
       <mat-form-field>
         <mat-label>{{'eti.acta.crear.datosGenerales.resumen.titulo' | translate}}</mat-label>
-        <textarea matInput formControlName="resumen" id="resumen"
-          placeholder="{{'eti.acta.crear.datosGenerales.resumen.titulo' | translate}}" required
-          [readonly]="readonly"></textarea>
+        <textarea #resumen matInput formControlName="resumen" id="resumen"
+          placeholder="{{'eti.acta.crear.datosGenerales.resumen.titulo' | translate}}" required [readonly]="readonly"
+          maxlength="8000"></textarea>
+        <mat-hint>{{resumen.value.length}} / 8000</mat-hint>
         <mat-error *ngIf="formGroup.controls.minutoFin.errors?.required">
           {{'eti.acta.crear.datosGenerales.resumen.error.required' | translate}}
         </mat-error>

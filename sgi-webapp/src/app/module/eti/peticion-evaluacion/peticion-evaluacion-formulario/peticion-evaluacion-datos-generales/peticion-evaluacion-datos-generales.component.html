@@ -90,9 +90,10 @@
       [fxFlex.gt-md]="fxFlexPropertiesInline.gtMd" [fxFlexOrder]="fxFlexPropertiesInline.order">
       <mat-form-field fxFill>
         <mat-label>{{'eti.peticionEvaluacion.resumen' | translate}}</mat-label>
-        <textarea matInput formControlName="resumen" type="text" id="resumen"
-          placeholder="{{'eti.peticionEvaluacion.resumen' | translate}}" required>
-                </textarea>
+        <textarea #resumen matInput formControlName="resumen" type="text" id="resumen"
+          placeholder="{{'eti.peticionEvaluacion.resumen' | translate}}" maxlength="8000" required>
+        </textarea>
+        <mat-hint>{{resumen.value.length}} / 8000</mat-hint>
         <mat-error
           *ngIf="FormGroupUtil.checkError(formGroup, 'resumen') && (formGroup.get('resumen').errors.vacio || formGroup.get('resumen').errors.required)">
           {{'eti.peticionEvaluacion.resumen.vacio' | translate}}

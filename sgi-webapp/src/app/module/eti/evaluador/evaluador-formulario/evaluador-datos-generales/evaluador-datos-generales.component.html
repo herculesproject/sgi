@@ -72,13 +72,13 @@
     </div>
 
     <!-- Resumen -->
-    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-      [fxFlexOrder]="fxFlexProperties.order">
+    <div [fxFlex.sm]="fxFlexPropertiesInline.sm" [fxFlex.md]="fxFlexPropertiesInline.md"
+      [fxFlex.gt-md]="fxFlexPropertiesInline.gtMd" [fxFlexOrder]="fxFlexPropertiesInline.order">
       <mat-form-field>
         <mat-label>{{'eti.evaluador.datosGenerales.resumen.titulo' | translate}}</mat-label>
-        <textarea #nombre matInput formControlName="resumen" type="textarea" id="resumen"
-          placeholder="{{'eti.evaluador.datosGenerales.resumen.titulo' | translate}}" maxlength="2000"></textarea>
-        <mat-hint>{{nombre.value.length}} / 2000</mat-hint>
+        <textarea #resumen matInput formControlName="resumen" id="resumen"
+          placeholder="{{'eti.evaluador.datosGenerales.resumen.titulo' | translate}}" maxlength="8000"></textarea>
+        <mat-hint>{{resumen.value.length}} / 8000</mat-hint>
         <mat-error *ngIf="formGroup.controls.resumen.errors?.required">
           {{'eti.evaluador.datosGenerales.resumen.error.requerido' | translate}}
         </mat-error>
