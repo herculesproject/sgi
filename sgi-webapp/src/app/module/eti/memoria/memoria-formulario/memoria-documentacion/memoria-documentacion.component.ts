@@ -4,9 +4,9 @@ import { NGXLogger } from 'ngx-logger';
 import { MatDialog } from '@angular/material/dialog';
 import { MemoriaActionService } from '../../memoria.action.service';
 import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription, of } from 'rxjs';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { MemoriaDocumentacionFragment } from './memoria-documentacion.fragment';
+import { MemoriaDocumentacionFragment, TIPO_DOCUMENTACION } from './memoria-documentacion.fragment';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { MatTableDataSource } from '@angular/material/table';
@@ -20,6 +20,9 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MemoriaDocumentacionSeguimientosModalComponent } from '../../modals/memoria-documentacion-seguimientos-modal/memoria-documentacion-seguimientos-modal.component';
 import { IComite } from '@core/models/eti/comite';
 import { IEstadoRetrospectiva } from '@core/models/eti/estado-retrospectiva';
+import { DocumentoService } from '@core/services/sgdoc/documento.service';
+import { switchMap, map } from 'rxjs/operators';
+import { IDocumento } from '@core/models/sgdoc/documento';
 
 const MSG_CONFIRM_DELETE = marker('eti.memoria.documentacion.listado.eliminar');
 
@@ -53,19 +56,15 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  totalElementosDocumentoMemoria: number = 0;
   displayedColumnsDocumentoMemoria: string[] = ['documentoRef', 'tipoDocumento.nombre', 'aportado', 'acciones'];
   elementosPaginaDocumentoMemoria: number[] = [5, 10, 25, 100];
 
-  totalElementosSeguimientoAnual: number = 0;
   displayedColumnsSeguimientoAnual: string[] = ['documentoRef', 'acciones'];
   elementosPaginaSeguimientoAnual: number[] = [5, 10, 25, 100];
 
-  totalElementosSeguimientoFinal: number = 0;
   displayedColumnsSeguimientoFinal: string[] = ['documentoRef', 'acciones'];
   elementosPaginaSeguimientoFinal: number[] = [5, 10, 25, 100];
 
-  totalElementosRetrospectiva: number = 0;
   displayedColumnsRetrospectiva: string[] = ['documentoRef', 'acciones'];
   elementosPaginaRetrospectiva: number[] = [5, 10, 25, 100];
 
@@ -89,7 +88,8 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
   constructor(
     protected readonly dialogService: DialogService, protected readonly logger: NGXLogger,
     protected matDialog: MatDialog,
-    private actionService: MemoriaActionService) {
+    private actionService: MemoriaActionService,
+    protected readonly documentoService: DocumentoService) {
 
     super(actionService.FRAGMENT.DOCUMENTACION, actionService);
 
@@ -112,7 +112,6 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
     this.dataSourceDocumentoMemoria.sort = this.sortDocumentacionMemoria;
     this.formPart.documentacionesMemoria$.subscribe(elements => {
       this.dataSourceDocumentoMemoria.data = elements;
-      this.totalElementosDocumentoMemoria = elements.length;
 
 
       this.logger.debug(MemoriaDocumentacionComponent.name, 'ngOnInit()', 'end');
@@ -124,7 +123,6 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
     this.dataSourceSeguimientoAnual.sort = this.sortSeguimientoAnual;
     this.formPart.documentacionesSeguimientoAnual$.subscribe(elements => {
       this.dataSourceSeguimientoAnual.data = elements;
-      this.totalElementosSeguimientoAnual = elements.length;
       this.logger.debug(MemoriaDocumentacionComponent.name, 'ngOnInit()', 'end');
     });
 
@@ -133,7 +131,6 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
     this.dataSourceSeguimientoFinal.sort = this.sortSeguimientoFinal;
     this.formPart.documentacionesSeguimientoFinal$.subscribe(elements => {
       this.dataSourceSeguimientoFinal.data = elements;
-      this.totalElementosSeguimientoFinal = elements.length;
       this.logger.debug(MemoriaDocumentacionComponent.name, 'ngOnInit()', 'end');
     });
 
@@ -142,7 +139,6 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
     this.dataSourceRetrospectiva.sort = this.sortRetrospectiva;
     this.formPart.documentacionesRetrospectiva$.subscribe(elements => {
       this.dataSourceRetrospectiva.data = elements;
-      this.totalElementosRetrospectiva = elements.length;
       this.logger.debug(MemoriaDocumentacionComponent.name, 'ngOnInit()', 'end');
     });
 
@@ -154,10 +150,8 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
 
 
 
-
-
-  openModalDocumentacionMemoria(documentacion?: StatusWrapper<IDocumentacionMemoria>): void {
-    this.logger.debug(MemoriaDocumentacionComponent.name, 'openModalDocumentacionSeguimiento()', 'start');
+  openModalDocumentacionMemoria(): void {
+    this.logger.debug(MemoriaDocumentacionComponent.name, 'openModalDocumentacionMemoria()', 'start');
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
@@ -167,24 +161,19 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
 
     const dialogRef = this.matDialog.open(MemoriaDocumentacionMemoriaModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (documentacionInicial: IDocumentacionMemoria) => {
+      (documentacionInicial: StatusWrapper<IDocumentacionMemoria>) => {
         if (documentacionInicial) {
-          if (documentacion) {
-            if (!documentacion.created) {
-              documentacion.setEdited();
-            }
-            this.formPart.setChanges(true);
-          } else {
-
-            this.formPart.addDocumentacion(documentacionInicial);
+          this.formPart.setChanges(true);
+          if (documentacionInicial.created) {
+            this.formPart.addDocumentacion(documentacionInicial.value);
           }
+
         }
-        this.logger.debug(MemoriaDocumentacionComponent.name, 'openModalDocumentacionSeguimiento()', 'end');
       }
     );
 
 
-    this.logger.debug(MemoriaDocumentacionComponent.name, 'openModalDocumentacionSeguimiento()', 'end');
+    this.logger.debug(MemoriaDocumentacionComponent.name, 'openModalDocumentacionMemoria()', 'end');
 
   }
 
@@ -202,57 +191,26 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
 
     const dialogRef = this.matDialog.open(MemoriaDocumentacionSeguimientosModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (documentacionSeguimiento: IDocumentacionMemoria) => {
+      (documentacionSeguimiento: StatusWrapper<IDocumentacionMemoria>) => {
         if (documentacionSeguimiento) {
-          if (documentacion) {
-            if (!documentacion.created) {
-              documentacion.setEdited();
-            }
-            this.formPart.setChanges(true);
-          } else {
-
-            this.formPart.addDocumentacionSeguimiento(documentacionSeguimiento, tipoSeguimiento);
+          this.formPart.setChanges(true);
+          if (documentacionSeguimiento.created) {
+            this.formPart.addDocumentacionSeguimiento(documentacionSeguimiento.value, tipoSeguimiento);
           }
+
         }
-        this.logger.debug(MemoriaDocumentacionComponent.name, 'openModalDocumentacionSeguimiento()', 'end');
       }
     );
-
-
     this.logger.debug(MemoriaDocumentacionComponent.name, 'openModalDocumentacionSeguimiento()', 'end');
 
-  }
 
-
-
-  /**
-   * Elimina la documentación.
-   *
-   * @param wrappedDocumentacion documentación a eliminar.
-   */
-  deleteDocumentacionInicial(wrappedDocumentacion: StatusWrapper<IDocumentacionMemoria>): void {
-    this.logger.debug(MemoriaDocumentacionComponent.name,
-      'delete(wrappedDocumentacion: StatusWrapper<IDocumentacionMemoria>) - start');
-
-    const dialogSubscription = this.dialogService.showConfirmation(
-      MSG_CONFIRM_DELETE
-    ).subscribe((aceptado) => {
-      if (aceptado) {
-        wrappedDocumentacion.value.aportado = false;
-        wrappedDocumentacion.setEdited();
-      }
-    });
-
-    this.subscriptions.push(dialogSubscription);
-
-    this.logger.debug(MemoriaDocumentacionComponent.name,
-      'delete(wrappedDocumentacion: StatusWrapper<IDocumentacionMemoria>) - end');
   }
 
 
   /**
    * Elimina la documentación.
    *
+   * @param tipoSeguimiento Tipo del seguimiento.
    * @param wrappedDocumentacion documentación a eliminar.
    */
   deleteDocumentacionSeguimiento(tipoSeguimiento: number, wrappedDocumentacion: StatusWrapper<IDocumentacionMemoria>): void {
@@ -261,14 +219,20 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
 
     const dialogSubscription = this.dialogService.showConfirmation(
       MSG_CONFIRM_DELETE
-    ).subscribe((aceptado) => {
-      if (aceptado) {
+    ).pipe(switchMap((accept) => {
+      if (accept) {
+        return of(this.formPart.deletedDocumentacionSeguimiento(tipoSeguimiento, wrappedDocumentacion));
+
+      }
+      return of();
+    })).subscribe(
+      () => {
         wrappedDocumentacion.value.aportado = false;
         wrappedDocumentacion.setEdited();
       }
-    });
+    );
 
-    this.formPart.deletedDocumentacionSeguimiento(tipoSeguimiento, wrappedDocumentacion);
+
 
     this.subscriptions.push(dialogSubscription);
 
@@ -321,6 +285,65 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
    * PENDIENTE, COMPLETADA
    */
   hasPermisoUpdateDocumentacionRetrospectiva(): boolean {
-    return this.estadoRetrospectiva.id === 1 || this.estadoMemoria.id === 2;
+    return this.estadoRetrospectiva.id === 1 || this.estadoRetrospectiva.id === 2;
   }
+
+  /**
+   * Visualiza el documento seleccionado.
+   * @param documentoRef Referencia del documento.
+   */
+  visualizarDocumento(documentoRef: string) {
+
+    this.logger.debug(MemoriaDocumentacionComponent.name,
+      'visualizarDocumento(documentoRef: string) - start');
+    const documento: IDocumento = {} as IDocumento;
+    this.documentoService.getInfoFichero(documentoRef).pipe(
+      switchMap((documentoInfo: IDocumento) => {
+        documento.nombre = documentoInfo.nombre;
+        documento.tipo = documentoInfo.tipo;
+
+        return this.documentoService.downloadFichero(documentoRef);
+      })
+    ).subscribe(response => {
+
+      this.downLoadFile(response, documento.nombre, documento.tipo);
+
+      this.logger.debug(MemoriaDocumentacionComponent.name,
+        'visualizarDocumento(documentoRef: string) - end');
+
+    });
+  }
+
+  /**
+   * Descarga de fichero.
+   * @param data array buffer datos.
+   * @param type tipo.
+   */
+  private downLoadFile(data: any, nombreFichero: string, type: string) {
+    this.logger.debug(MemoriaDocumentacionComponent.name, 'downLoadFile() - start');
+    const blob = new Blob([data], { type });
+
+    if (window.navigator.msSaveOrOpenBlob) {
+      window.navigator.msSaveOrOpenBlob(blob, nombreFichero);
+    } else {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.setAttribute('style', 'display: none');
+      a.href = url;
+      a.download = nombreFichero;
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.remove();
+    }
+
+    this.logger.debug(MemoriaDocumentacionComponent.name, 'downLoadFile() - end');
+  }
+
+
+  public get documentacionTipo(): typeof TIPO_DOCUMENTACION {
+    return TIPO_DOCUMENTACION;
+  }
+
+
 }

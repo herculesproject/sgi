@@ -5,6 +5,14 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { map, mergeMap, endWith, tap, takeLast } from 'rxjs/operators';
 import { NGXLogger } from 'ngx-logger';
+import { DocumentoService } from '@core/services/sgdoc/documento.service';
+
+export enum TIPO_DOCUMENTACION {
+  INICIAL = 0,
+  SEGUIMIENTO_ANUAL = 1,
+  SEGUIMIENTO_FINAL = 2,
+  RETROSPECTIVA = 4
+}
 
 export class MemoriaDocumentacionFragment extends Fragment {
 
@@ -17,7 +25,7 @@ export class MemoriaDocumentacionFragment extends Fragment {
   documentacionesRetrospectiva$:
     BehaviorSubject<StatusWrapper<IDocumentacionMemoria>[]> = new BehaviorSubject<StatusWrapper<IDocumentacionMemoria>[]>([]);
 
-
+  private deletedDocumentacionInicial: StatusWrapper<IDocumentacionMemoria>[] = [];
   private deletedDocumentacionSeguimientoAnual: StatusWrapper<IDocumentacionMemoria>[] = [];
   private deletedDocumentacionSeguimientoFinal: StatusWrapper<IDocumentacionMemoria>[] = [];
   private deletedDocumentacionRetrospectiva: StatusWrapper<IDocumentacionMemoria>[] = [];
@@ -25,7 +33,8 @@ export class MemoriaDocumentacionFragment extends Fragment {
   constructor(
     private logger: NGXLogger,
     key: number,
-    private service: MemoriaService
+    private service: MemoriaService,
+    private documentoService: DocumentoService
   ) {
     super(key);
   }
@@ -56,8 +65,6 @@ export class MemoriaDocumentacionFragment extends Fragment {
           }
         })
       ).subscribe((documentacionMemoria) => {
-        this.setChanges(true);
-        this.setComplete(true);
 
         this.documentacionesMemoria$.next(documentacionMemoria);
       });
@@ -77,8 +84,6 @@ export class MemoriaDocumentacionFragment extends Fragment {
           }
         })
       ).subscribe((documentacionMemoria) => {
-        this.setChanges(true);
-        this.setComplete(true);
 
         this.documentacionesSeguimientoAnual$.next(documentacionMemoria);
       });
@@ -97,8 +102,7 @@ export class MemoriaDocumentacionFragment extends Fragment {
           }
         })
       ).subscribe((documentacionMemoria) => {
-        this.setChanges(true);
-        this.setComplete(true);
+
 
         this.documentacionesSeguimientoFinal$.next(documentacionMemoria);
       });
@@ -117,8 +121,6 @@ export class MemoriaDocumentacionFragment extends Fragment {
           }
         })
       ).subscribe((documentacionMemoria) => {
-        this.setChanges(true);
-        this.setComplete(true);
 
         this.documentacionesRetrospectiva$.next(documentacionMemoria);
       });
@@ -129,6 +131,7 @@ export class MemoriaDocumentacionFragment extends Fragment {
     return merge(
       this.updateDocumentacionInicial(),
       this.createDocumentacionInicial(),
+      this.deleteDocumentacionInicial(),
       this.createDocumentacionSeguimientoAnual(),
       this.deleteDocumentacionSeguimientoAnual(),
       this.createDocumentacionSeguimientoFinal(),
@@ -140,6 +143,7 @@ export class MemoriaDocumentacionFragment extends Fragment {
       tap(() => this.setChanges(false))
     );
   }
+
 
   /**
    * Actualiza la documentación inicial de una memoria.
@@ -167,6 +171,36 @@ export class MemoriaDocumentacionFragment extends Fragment {
 
   }
 
+
+  /**
+   * Elimina la documentación inicial de una memoria.
+   */
+  private deleteDocumentacionInicial(): Observable<void> {
+    this.logger.debug(MemoriaDocumentacionFragment.name, 'deleteDocumentacionInicial()', 'start');
+    if (this.deletedDocumentacionInicial.length === 0) {
+      this.logger.debug(MemoriaDocumentacionFragment.name, 'deleteDocumentacionInicial()', 'end');
+      return of(void 0);
+    }
+    return from(this.deletedDocumentacionInicial).pipe(
+      mergeMap((wrappedDocumentacion) => {
+        return this.documentoService.eliminarFichero(wrappedDocumentacion.value.documentoRef).pipe(
+          map(() => {
+            this.service
+              .deleteDocumentacionInicial(wrappedDocumentacion.value.memoria.id, wrappedDocumentacion.value.id)
+              .pipe(
+                tap(_ => {
+                  this.deletedDocumentacionInicial =
+                    this.deletedDocumentacionInicial.filter(deletedDocumentacionInicial =>
+                      deletedDocumentacionInicial.value.id !== wrappedDocumentacion.value.id);
+                })
+              );
+          })
+        );
+
+      }));
+
+  }
+
   /**
    * Crea la documentación inicial de una memoria.
    */
@@ -188,6 +222,7 @@ export class MemoriaDocumentacionFragment extends Fragment {
       }),
       endWith()
     );
+
   }
 
   /**
@@ -198,7 +233,6 @@ export class MemoriaDocumentacionFragment extends Fragment {
     if (documentacionCreada.length === 0) {
       return of(void 0);
     }
-
     return from(documentacionCreada).pipe(
       mergeMap((wrappedDocumentacion) => {
 
@@ -212,6 +246,7 @@ export class MemoriaDocumentacionFragment extends Fragment {
       }),
       endWith()
     );
+
   }
 
   /**
@@ -247,7 +282,6 @@ export class MemoriaDocumentacionFragment extends Fragment {
     if (documentacionCreada.length === 0) {
       return of(void 0);
     }
-
     return from(documentacionCreada).pipe(
       mergeMap((wrappedDocumentacion) => {
 
@@ -371,15 +405,15 @@ export class MemoriaDocumentacionFragment extends Fragment {
     const wrapped = new StatusWrapper<IDocumentacionMemoria>(documentacion);
     wrapped.setCreated();
 
-    if (tipoDocumentacion === 1) {
+    if (tipoDocumentacion === TIPO_DOCUMENTACION.SEGUIMIENTO_ANUAL) {
       const current = this.documentacionesSeguimientoAnual$.value;
       current.push(wrapped);
       this.documentacionesSeguimientoAnual$.next(current);
-    } else if (tipoDocumentacion === 2) {
+    } else if (tipoDocumentacion === TIPO_DOCUMENTACION.SEGUIMIENTO_FINAL) {
       const current = this.documentacionesSeguimientoFinal$.value;
       current.push(wrapped);
       this.documentacionesSeguimientoFinal$.next(current);
-    } else if (tipoDocumentacion === 3) {
+    } else if (tipoDocumentacion === TIPO_DOCUMENTACION.RETROSPECTIVA) {
       const current = this.documentacionesRetrospectiva$.value;
       current.push(wrapped);
       this.documentacionesRetrospectiva$.next(current);
@@ -394,6 +428,10 @@ export class MemoriaDocumentacionFragment extends Fragment {
 
   /**
    * Elimina documentación del tipo recibido por parámentro de la lista correspondiente.
+   * 0: Documentación inicial
+   * 1: Seguimiento Anual
+   * 2: Seguimiento Final
+   * 3: Retrospectiva
    *
    * @param tipoDocumentacion tipo de la documentación a eliminar.
    * @param wrapperDocumentacion documentación a eliminar.
@@ -402,12 +440,14 @@ export class MemoriaDocumentacionFragment extends Fragment {
     this.logger.debug(MemoriaDocumentacionFragment.name, 'deletedDocumentacionSeguimiento(tipoSeguimiento: string, wrapperDocumentacion: StatusWrapper<IDocumentacionMemoria>)', 'start');
 
     let current: StatusWrapper<IDocumentacionMemoria>[];
-    if (tipoDocumentacion === 1) {
+    if (tipoDocumentacion === TIPO_DOCUMENTACION.INICIAL) {
+      current = this.documentacionesMemoria$.value;
+    } else if (tipoDocumentacion === TIPO_DOCUMENTACION.SEGUIMIENTO_ANUAL) {
       current = this.documentacionesSeguimientoAnual$.value;
-    } else if (tipoDocumentacion === 2) {
+    } else if (tipoDocumentacion === TIPO_DOCUMENTACION.SEGUIMIENTO_FINAL) {
       current = this.documentacionesSeguimientoFinal$.value;
     }
-    else if (tipoDocumentacion === 3) {
+    else if (tipoDocumentacion === TIPO_DOCUMENTACION.RETROSPECTIVA) {
       current = this.documentacionesRetrospectiva$.value;
     }
 
@@ -415,23 +455,24 @@ export class MemoriaDocumentacionFragment extends Fragment {
     if (index >= 0) {
       if (!wrapperDocumentacion.created) {
         current[index].setDeleted();
-        if (tipoDocumentacion === 1) {
+        if (tipoDocumentacion === TIPO_DOCUMENTACION.INICIAL) {
+          this.deletedDocumentacionInicial.push(current[index]);
+        } else if (tipoDocumentacion === TIPO_DOCUMENTACION.SEGUIMIENTO_ANUAL) {
           this.deletedDocumentacionSeguimientoAnual.push(current[index]);
-        } else if (tipoDocumentacion === 2) {
+        } else if (tipoDocumentacion === TIPO_DOCUMENTACION.SEGUIMIENTO_FINAL) {
           this.deletedDocumentacionSeguimientoFinal.push(current[index]);
-        }
-        else if (tipoDocumentacion === 3) {
+        } else if (tipoDocumentacion === TIPO_DOCUMENTACION.RETROSPECTIVA) {
           this.deletedDocumentacionRetrospectiva.push(current[index]);
         }
 
         current.splice(index, 1);
-
-        if (tipoDocumentacion === 1) {
+        if (tipoDocumentacion === TIPO_DOCUMENTACION.INICIAL) {
+          this.documentacionesMemoria$.next(current);
+        } else if (tipoDocumentacion === TIPO_DOCUMENTACION.SEGUIMIENTO_ANUAL) {
           this.documentacionesSeguimientoAnual$.next(current);
-        } else if (tipoDocumentacion === 2) {
+        } else if (tipoDocumentacion === TIPO_DOCUMENTACION.SEGUIMIENTO_FINAL) {
           this.documentacionesSeguimientoFinal$.next(current);
-        }
-        else if (tipoDocumentacion === 3) {
+        } else if (tipoDocumentacion === TIPO_DOCUMENTACION.RETROSPECTIVA) {
           this.documentacionesRetrospectiva$.next(current);
         }
         this.setChanges(true);

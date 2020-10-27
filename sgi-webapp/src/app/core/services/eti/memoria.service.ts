@@ -224,6 +224,30 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
 
   }
 
+  /**
+   * Elimina el documento inicial de una memoria.
+   *
+   * @param idMemoria Identifiacdor de la memoria.
+   * @param idDocumentacionMemoria Identificador del documento memoria.
+   *
+   * @returns observable para eliminar documentación de seguimiento anual.
+   */
+  deleteDocumentacionInicial(idMemoria: number, idDocumentacionMemoria: number): Observable<void> {
+    this.logger.debug(MemoriaService.name, `deleteDocumentacionInicial(${idMemoria}, ${idDocumentacionMemoria})`, '-', 'START');
+    return this.http.delete<void>(`${this.endpointUrl}/${idMemoria}/documentacion-inicial/${idDocumentacionMemoria}`).pipe(
+      catchError((error: HttpErrorResponse) => {
+        this.logger.error(MemoriaService.name,
+          `deleteDocumentacionInicial(${idMemoria}, ${idDocumentacionMemoria}):`, error);
+        return throwError(error);
+      }),
+
+      tap(_ => {
+        this.logger.debug(MemoriaService.name,
+          `deleteDocumentacionInicial(${idMemoria}, ${idDocumentacionMemoria})`, '-', 'END');
+      })
+    );
+  }
+
   updateDocumentacion(
     id: number, documentacionMemoria: IDocumentacionMemoria, idDocumentacionMemoria: number): Observable<IDocumentacionMemoria> {
     this.logger.debug(MemoriaService.name, `updateDocumentacion(${id}, ${documentacionMemoria}, ${idDocumentacionMemoria})`, '-', 'start');
@@ -233,6 +257,7 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
           this.logger.debug(MemoriaService.name, `updateDocumentacion(${id}, ${documentacionMemoria}, ${idDocumentacionMemoria})`, '-', 'end'))
       );
   }
+
 
   /**
    * Devuelve todos las evaluaciones de una memoria id.
@@ -289,7 +314,7 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
     return this.http.delete<void>(`${this.endpointUrl}/${idMemoria}/documentacion-seguimiento-anual/${idDocumentacionMemoria}`).pipe(
       catchError((error: HttpErrorResponse) => {
         this.logger.error(MemoriaService.name,
-          `deleteDocumentacion(${idMemoria}, ${idDocumentacionMemoria}):`, error);
+          `deleteDocumentacionSeguimientoAnual(${idMemoria}, ${idDocumentacionMemoria}):`, error);
         return throwError(error);
       }),
 
@@ -313,7 +338,7 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
     return this.http.delete<void>(`${this.endpointUrl}/${idMemoria}/documentacion-seguimiento-final/${idDocumentacionMemoria}`).pipe(
       catchError((error: HttpErrorResponse) => {
         this.logger.error(MemoriaService.name,
-          `deleteDocumentacion(${idMemoria}, ${idDocumentacionMemoria}):`, error);
+          `deleteDocumentacionSeguimientoFinal(${idMemoria}, ${idDocumentacionMemoria}):`, error);
         return throwError(error);
       }),
 

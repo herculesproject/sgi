@@ -16,4 +16,7 @@ export interface IDocumentacionMemoria {
 
   /** Aportado */
   aportado: boolean;
+
+  /** Fichero */
+  fichero: File;
 }

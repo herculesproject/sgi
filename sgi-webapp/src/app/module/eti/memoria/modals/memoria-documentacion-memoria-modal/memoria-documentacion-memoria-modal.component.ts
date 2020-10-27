@@ -5,18 +5,21 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { ITipoDocumento } from '@core/models/eti/tipo-documento';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { NullIdValidador } from '@core/validators/null-id-validador';
 import { TipoDocumentoService } from '@core/services/eti/tipo-documento.service';
 import { SgiRestListResult } from '@sgi/framework/http/types';
-import { startWith, map } from 'rxjs/operators';
+import { startWith, map, catchError } from 'rxjs/operators';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { StatusWrapper } from '@core/utils/status-wrapper';
+import { DocumentoService } from '@core/services/sgdoc/documento.service';
+import { IDocumento } from '@core/models/sgdoc/documento';
 
+const MSG_ERROR_APORTAR_DOCUMENTACION = marker('eti.memoria.documentacion.error.aportar');
 const MSG_ERROR_INIT = marker('eti.memoria.documentacion.error.cargar');
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 
@@ -28,7 +31,6 @@ export class MemoriaDocumentacionMemoriaModalComponent implements OnInit {
 
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
 
-  FormGroupUtil = FormGroupUtil;
   formGroup: FormGroup;
 
   fxFlexProperties: FxFlexProperties;
@@ -46,6 +48,7 @@ export class MemoriaDocumentacionMemoriaModalComponent implements OnInit {
     public readonly matDialogRef: MatDialogRef<MemoriaDocumentacionMemoriaModalComponent>,
     private readonly snackBarService: SnackBarService,
     private readonly tipoDocumentoService: TipoDocumentoService,
+    private readonly documentoService: DocumentoService,
     @Inject(MAT_DIALOG_DATA) public documentacionesMemoria: StatusWrapper<IDocumentacionMemoria>[]) {
 
     this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'constructor()', 'start');
@@ -93,7 +96,8 @@ export class MemoriaDocumentacionMemoriaModalComponent implements OnInit {
     this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'initFormGroup()', 'start');
     this.formGroup = new FormGroup({
       tipoDocumento: new FormControl(null, [new NullIdValidador().isValid()]),
-      nombreDocumento: new FormControl(null)
+      nombreDocumento: new FormControl(null),
+      fileUpload: new FormControl(null),
     });
     this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'initFormGroup()', 'end');
   }
@@ -152,7 +156,7 @@ export class MemoriaDocumentacionMemoriaModalComponent implements OnInit {
    * Cierra la ventana modal y devuelve el documento aportado.
    *
    */
-  closeModal(documentacionMemoria?: IDocumentacionMemoria): void {
+  closeModal(documentacionMemoria?: StatusWrapper<IDocumentacionMemoria>): void {
     this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'closeModal()', 'start');
     this.matDialogRef.close(documentacionMemoria);
     this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'closeModal()', 'end');
@@ -163,56 +167,82 @@ export class MemoriaDocumentacionMemoriaModalComponent implements OnInit {
     this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'save()', 'start');
     if (FormGroupUtil.valid(this.formGroup)) {
 
-      this.closeModal(this.loadDatosForm());
+      let existDocumentacion = false;
+      let documentacionMemoria: IDocumentacionMemoria = {} as IDocumentacionMemoria;
+
+      this.documentoService.uploadFichero(this.formGroup.controls.fileUpload.value).pipe(
+        map((documentoSgdoc: IDocumento) => {
+
+          return documentoSgdoc.documentoRef;
+
+        }),
+        catchError(() => {
+          this.snackBarService.showError(MSG_ERROR_APORTAR_DOCUMENTACION);
+          return of();
+        })).subscribe((documentoRefGenerado: string) => {
+          this.documentacionesMemoria.map(documentacionMemoriaListado => {
+
+
+            if (documentacionMemoriaListado.value.tipoDocumento.nombre === this.formGroup.controls.tipoDocumento.value.nombre
+              && !documentacionMemoriaListado.value.aportado) {
+              documentacionMemoriaListado.value.documentoRef = documentoRefGenerado;
+              documentacionMemoriaListado.value.tipoDocumento = this.formGroup.controls.tipoDocumento.value;
+
+              if (documentacionMemoriaListado.value.id) {
+                documentacionMemoriaListado.setEdited();
+              }
+              documentacionMemoriaListado.value.aportado = true;
+              existDocumentacion = true;
+
+              this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'save()', 'end');
+              this.closeModal(documentacionMemoriaListado);
+            }
+
+
+            if (!existDocumentacion) {
+
+              this.documentacionesMemoria = [];
+              documentacionMemoria = {
+                id: null,
+                aportado: true,
+                tipoDocumento: this.formGroup.controls.tipoDocumento.value,
+                documentoRef: documentoRefGenerado,
+                memoria: null,
+                fichero: this.formGroup.controls.fileUpload.value
+              };
+
+
+              const wrapperDocumentacion: StatusWrapper<IDocumentacionMemoria> =
+                new StatusWrapper<IDocumentacionMemoria>(documentacionMemoria);
+              wrapperDocumentacion.setCreated();
+              this.documentacionesMemoria.push(wrapperDocumentacion);
+              this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'save()', 'end');
+              this.closeModal(wrapperDocumentacion);
+
+            }
+
+          });
+
+        });
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
-    this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'save()', 'end');
+
   }
 
+
+
   /**
-   * Método para actualizar la entidad con los datos de un formGroup
-   *
-   * @returns Comentario con los datos del formulario
+   * Rellena el campo del formulario con el fichero seleccionado.
    */
-  private loadDatosForm(): IDocumentacionMemoria {
-    this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'loadDatosForm()', 'start');
-
-    let existDocumentacion = false;
-    this.documentacionesMemoria.map(documentacionMemoria => {
-
-
-      console.log(FormGroupUtil.getValue(this.formGroup, 'tipoDocumento').nombre);
-      if (documentacionMemoria.value.tipoDocumento.nombre === FormGroupUtil.getValue(this.formGroup, 'tipoDocumento').nombre) {
-        documentacionMemoria.value.tipoDocumento = FormGroupUtil.getValue(this.formGroup, 'tipoDocumento');
-        if (documentacionMemoria.value.id) {
-          documentacionMemoria.setEdited();
-        }
-
-        documentacionMemoria.value.aportado = true;
-
-        existDocumentacion = true;
-        return documentacionMemoria.value;
-      }
-    });
-
-    if (!existDocumentacion) {
-      this.documentacionesMemoria = [];
-      const documentacionMemoria: IDocumentacionMemoria = {
-        id: null,
-        aportado: true,
-        tipoDocumento: FormGroupUtil.getValue(this.formGroup, 'tipoDocumento'),
-        documentoRef: 'DocRef001',
-        memoria: null
-      };
-      const wrapperDocumentacion: StatusWrapper<IDocumentacionMemoria> = new StatusWrapper<IDocumentacionMemoria>(documentacionMemoria);
-      wrapperDocumentacion.setCreated();
-      this.documentacionesMemoria.push(wrapperDocumentacion);
-      return documentacionMemoria;
+  onDocumentoSelect(event) {
+    this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'onDocumentoSelect()', 'start');
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.formGroup.get('fileUpload').setValue(file);
     }
 
-    this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'loadDatosForm()', 'end');
-
+    this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'onDocumentoSelect()', 'end');
   }
 
 }
