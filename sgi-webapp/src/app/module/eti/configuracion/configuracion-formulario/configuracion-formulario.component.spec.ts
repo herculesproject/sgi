@@ -1,55 +1,39 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FlexModule } from '@angular/flex-layout';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterTestingModule } from '@angular/router/testing';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
-import { BuscarPersonaComponent } from '@shared/buscar-persona/buscar-persona.component';
-import { SharedModule } from '@shared/shared.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import TestUtils from '@core/utils/test-utils';
+import { RouterTestingModule } from '@angular/router/testing';
 import { NGXLogger } from 'ngx-logger';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { SharedModule } from '@shared/shared.module';
+import { ConfiguracionFormularioComponent } from './configuracion-formulario.component';
 
-import { ConfiguracionActionService } from '../../configuracion.action.service';
-import { ConfiguracionDatosGeneralesComponent } from './configuracion-datos-generales.component';
-
-
-describe('ConfiguracionDatosGenerealesComponent', () => {
-  let component: ConfiguracionDatosGeneralesComponent;
-  let fixture: ComponentFixture<ConfiguracionDatosGeneralesComponent>;
+describe('ConfiguracionFormularioComponent', () => {
+  let component: ConfiguracionFormularioComponent;
+  let fixture: ComponentFixture<ConfiguracionFormularioComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        ConfiguracionDatosGeneralesComponent,
-        BuscarPersonaComponent
-      ],
+      declarations: [ConfiguracionFormularioComponent],
       imports: [
-        RouterTestingModule,
-        TestUtils.getIdiomas(),
-        MaterialDesignModule,
         BrowserAnimationsModule,
+        MaterialDesignModule,
         HttpClientTestingModule,
-        FlexModule,
-        SharedModule,
-        FormsModule,
-        ReactiveFormsModule,
-        SgiAuthModule
+        TestUtils.getIdiomas(),
+        RouterTestingModule,
+        SharedModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        ConfiguracionActionService,
-        SgiAuthService
       ],
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConfiguracionDatosGeneralesComponent);
+    fixture = TestBed.createComponent(ConfiguracionFormularioComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -12,6 +12,10 @@ import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 
 import { ComentarioCrearModalComponent } from './comentario-crear-modal.component';
+import { IApartado } from '@core/models/eti/apartado';
+import { TipoEvaluacion } from '@core/models/eti/tipo-evaluacion';
+import { IEvaluacion } from '@core/models/eti/evaluacion';
+import { IComite } from '@core/models/eti/comite';
 
 describe('ComentarioCrearModalComponent', () => {
   let component: ComentarioCrearModalComponent;
@@ -19,8 +23,17 @@ describe('ComentarioCrearModalComponent', () => {
 
   beforeEach(async(() => {
 
-    // Mock MAT_DIALOG
-    const matDialogData = {} as IComentario;
+    const snapshotData = {
+      tipoEvaluacion: {
+        id: 1
+      } as TipoEvaluacion,
+      memoria: {
+        id: 1,
+        comite: {
+          id: 1
+        } as IComite,
+      }
+    };
 
     TestBed.configureTestingModule({
       declarations: [ComentarioCrearModalComponent],
@@ -37,8 +50,8 @@ describe('ComentarioCrearModalComponent', () => {
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: {} },
-        { provide: MAT_DIALOG_DATA, useValue: matDialogData },
+        { provide: MatDialogRef, useValue: snapshotData },
+        { provide: MAT_DIALOG_DATA, useValue: snapshotData },
         SgiAuthService
       ],
     })

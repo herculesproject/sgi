@@ -8,6 +8,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { NGXLogger } from 'ngx-logger';
 import { PeticionEvaluacionActionService } from '../../peticion-evaluacion.action.service';
 import { PeticionEvaluacionDatosGeneralesComponent } from './peticion-evaluacion-datos-generales.component';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 
 describe('PeticionEvaluacionDatosGeneralesComponent', () => {
@@ -28,7 +29,8 @@ describe('PeticionEvaluacionDatosGeneralesComponent', () => {
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-        PeticionEvaluacionActionService]
+        PeticionEvaluacionActionService,
+        SgiAuthService]
     })
       .compileComponents();
   }));

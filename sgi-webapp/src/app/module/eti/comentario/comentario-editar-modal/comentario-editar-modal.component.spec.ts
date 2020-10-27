@@ -14,8 +14,11 @@ import { SgiAuthModule } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 
 import { ComentarioEditarModalComponent } from './comentario-editar-modal.component';
+import { TipoEvaluacion } from '@core/models/eti/tipo-evaluacion';
+import { IEvaluacion } from '@core/models/eti/evaluacion';
+import { IComite } from '@core/models/eti/comite';
 
-describe('ComentarioActualizarModalComponent', () => {
+describe('ComentarioEditarModalComponent', () => {
   let component: ComentarioEditarModalComponent;
   let fixture: ComponentFixture<ComentarioEditarModalComponent>;
 
@@ -25,8 +28,18 @@ describe('ComentarioActualizarModalComponent', () => {
         id: 1
       } as IApartado,
     } as IComentario,
-    idComite: 1,
-    idTipoEvaluacion: 1
+    evaluacion: {
+      id: 1,
+      tipoEvaluacion: {
+        id: 1
+      } as TipoEvaluacion
+    } as IEvaluacion,
+    memoria: {
+      id: 1,
+      comite: {
+        id: 1
+      } as IComite,
+    }
   };
 
   beforeEach(async(() => {
