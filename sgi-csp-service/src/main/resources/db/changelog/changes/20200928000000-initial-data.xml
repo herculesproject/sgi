@@ -137,50 +137,28 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-plan">
-    <insert tableName="plan">
-      <column name="nombre" value="nombre-001" />
-      <column name="descripcion" value="descripcion-001" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="plan">
-      <column name="nombre" value="nombre-002" />
-      <column name="descripcion" value="descripcion-002" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="plan">
-      <column name="nombre" value="nombre-003" />
-      <column name="descripcion" value="descripcion-003" />
-      <column name="activo" value="false" />
-    </insert>
-  </changeSet>
-
   <changeSet author="master" id="20200928000000-programa">
     <insert tableName="programa">
       <column name="nombre" value="nombre-001" />
       <column name="descripcion" value="descripcion-001" />
-      <column name="plan_id" valueComputed="(select id from csp.plan where nombre = 'nombre-001')" />
       <column name="programa_padre_id" value="null" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
       <column name="nombre" value="nombre-002" />
       <column name="descripcion" value="descripcion-002" />
-      <column name="plan_id" valueComputed="(select id from csp.plan where nombre = 'nombre-001')" />
       <column name="programa_padre_id" valueComputed="(select id from csp.programa where nombre = 'nombre-001')" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
       <column name="nombre" value="nombre-003" />
       <column name="descripcion" value="descripcion-003" />
-      <column name="plan_id" valueComputed="(select id from csp.plan where nombre = 'nombre-001')" />
       <column name="programa_padre_id" valueComputed="(select id from csp.programa where nombre = 'nombre-001')" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="programa">
       <column name="nombre" value="nombre-004" />
       <column name="descripcion" value="descripcion-004" />
-      <column name="plan_id" valueComputed="(select id from csp.plan where nombre = 'nombre-001')" />
       <column name="programa_padre_id" value="null" />
       <column name="activo" value="true" />
     </insert>

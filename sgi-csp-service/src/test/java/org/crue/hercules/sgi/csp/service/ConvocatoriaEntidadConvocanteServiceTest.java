@@ -192,7 +192,7 @@ public class ConvocatoriaEntidadConvocanteServiceTest {
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L);
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocanteProgramaActualizado = generarMockConvocatoriaEntidadConvocante(
         1L);
-    convocatoriaEntidadConvocanteProgramaActualizado.setPrograma(new Programa(2L, null, null, null, null, null));
+    convocatoriaEntidadConvocanteProgramaActualizado.setPrograma(new Programa(2L, null, null, null, null));
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(convocatoriaEntidadConvocante));

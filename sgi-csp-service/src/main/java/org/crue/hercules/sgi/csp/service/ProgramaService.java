@@ -2,7 +2,6 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.util.List;
 
-import org.crue.hercules.sgi.csp.model.Plan;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
@@ -47,23 +46,41 @@ public interface ProgramaService {
   Programa findById(Long id);
 
   /**
-   * Obtiene los {@link Programa} activos para un {@link Plan}.
+   * Obtiene los {@link Programa} activos.
    *
-   * @param idPlan   el id de la entidad {@link Plan}.
    * @param query    la información del filtro.
    * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link Programa} del {@link Plan} paginadas.
+   * @return la lista de entidades {@link Programa} paginadas.
    */
-  Page<Programa> findAllByPlan(Long idPlan, List<QueryCriteria> query, Pageable pageable);
+  Page<Programa> findAll(List<QueryCriteria> query, Pageable pageable);
 
   /**
-   * Obtiene los {@link Programa} para un {@link Plan}.
+   * Obtiene los planes activos (los {@link Programa} con padre null).
    *
-   * @param idPlan   el id de la entidad {@link Plan}.
    * @param query    la información del filtro.
    * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link Programa} del {@link Plan} paginadas.
+   * @return la lista de entidades {@link Programa} paginadas.
    */
-  Page<Programa> findAllTodosByPlan(Long idPlan, List<QueryCriteria> query, Pageable pageable);
+  Page<Programa> findAllPlan(List<QueryCriteria> query, Pageable pageable);
+
+  /**
+   * Obtiene los planes (los {@link Programa} con padre null).
+   *
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Programa} paginadas.
+   */
+  Page<Programa> findAllTodosPlan(List<QueryCriteria> query, Pageable pageable);
+
+  /**
+   * Obtiene los {@link Programa} hijos directos del {@link Programa} con el id
+   * indicado.
+   *
+   * @param programaId el id de la entidad {@link Programa}.
+   * @param query      la información del filtro.
+   * @param pageable   la información de la paginación.
+   * @return la lista de entidades {@link Programa} paginadas.
+   */
+  Page<Programa> findAllHijosPrograma(Long programaId, List<QueryCriteria> query, Pageable pageable);
 
 }

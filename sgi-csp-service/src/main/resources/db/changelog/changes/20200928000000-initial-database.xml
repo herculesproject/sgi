@@ -80,10 +80,6 @@
     <createSequence sequenceName="modelo_unidad_seq" />
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-plan_seq">
-    <createSequence sequenceName="plan_seq" />
-  </changeSet>
-
   <changeSet author="master" id="20200928000000-programa_seq">
     <createSequence sequenceName="programa_seq" />
   </changeSet>
@@ -485,21 +481,6 @@
     </createTable>
   </changeSet>
 
-  <changeSet author="master" id="20201007000000-plan">
-    <createTable tableName="plan">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="plan_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="plan_pk" />
-      </column>
-      <column name="nombre" type="VARCHAR(50)">
-        <constraints nullable="false" />
-      </column>
-      <column name="descripcion" type="VARCHAR(250)" />
-      <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
-        <constraints nullable="false" />
-      </column>
-    </createTable>
-  </changeSet>
-
   <changeSet author="master" id="20201007000000-programa">
     <createTable tableName="programa">
       <column name="id" type="BIGINT" defaultValueSequenceNext="programa_seq">
@@ -509,9 +490,6 @@
         <constraints nullable="false" />
       </column>
       <column name="descripcion" type="VARCHAR(250)" />
-      <column name="plan_id" type="BIGINT">
-        <constraints nullable="false" />
-      </column>
       <column name="programa_padre_id" type="BIGINT" />
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
@@ -772,9 +750,6 @@
     <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_unidad" constraintName="modelo_unidad_modelo_ejecucion_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
   </changeSet>
 
-  <changeSet author="master" id="20200601000000-programa_plan_FK">
-    <addForeignKeyConstraint baseColumnNames="plan_id" baseTableName="programa" constraintName="programa_plan_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="plan" validate="true" />
-  </changeSet>
   <changeSet author="master" id="20200601000000-programa_programa_padre_FK">
     <addForeignKeyConstraint baseColumnNames="programa_padre_id" baseTableName="programa" constraintName="programa_programa_padre_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="programa" validate="true" />
   </changeSet>
@@ -828,10 +803,6 @@
 
   <changeSet author="master" id="20200928000000-modelo_unidad_uk">
     <addUniqueConstraint columnNames="modelo_ejecucion_id, unidad_gestion_ref" constraintName="modelo_unidad_uk" tableName="modelo_unidad" />
-  </changeSet>
-
-  <changeSet author="master" id="20200928000000-plan_uk">
-    <addUniqueConstraint columnNames="nombre" constraintName="plan_uk" tableName="plan" />
   </changeSet>
 
   <changeSet author="master" id="20200928000000-tipo_ambito_geografico_uk">

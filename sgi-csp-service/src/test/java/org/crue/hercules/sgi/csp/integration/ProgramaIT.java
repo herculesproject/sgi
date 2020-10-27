@@ -1,9 +1,10 @@
 package org.crue.hercules.sgi.csp.integration;
 
+import java.net.URI;
 import java.util.Collections;
+import java.util.List;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.Plan;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -19,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Test de integracion de Programa.
@@ -51,7 +54,7 @@ public class ProgramaIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void create_ReturnsPrograma() throws Exception {
-    Programa programa = generarMockPrograma(null, "nombre-002", 1L, 9999L);
+    Programa programa = generarMockPrograma(null, "nombre-002", 9999L);
 
     final ResponseEntity<Programa> response = restTemplate.exchange(CONTROLLER_BASE_PATH, HttpMethod.POST,
         buildRequest(null, programa), Programa.class);
@@ -62,8 +65,6 @@ public class ProgramaIT {
     Assertions.assertThat(programaCreado.getId()).as("getId()").isNotNull();
     Assertions.assertThat(programaCreado.getNombre()).as("getNombre()").isEqualTo(programa.getNombre());
     Assertions.assertThat(programaCreado.getDescripcion()).as("getDescripcion()").isEqualTo(programa.getDescripcion());
-    Assertions.assertThat(programaCreado.getPlan().getId()).as("getPlan().getId()")
-        .isEqualTo(programa.getPlan().getId());
     Assertions.assertThat(programaCreado.getPadre().getId()).as("getPadre().getId()")
         .isEqualTo(programa.getPadre().getId());
     Assertions.assertThat(programaCreado.getActivo()).as("getActivo()").isEqualTo(true);
@@ -74,7 +75,7 @@ public class ProgramaIT {
   @Test
   public void update_ReturnsPrograma() throws Exception {
     Long idPrograma = 2L;
-    Programa programa = generarMockPrograma(idPrograma, "nombre-actualizado", 1L, 1L);
+    Programa programa = generarMockPrograma(idPrograma, "nombre-actualizado", 1L);
 
     final ResponseEntity<Programa> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
         HttpMethod.PUT, buildRequest(null, programa), Programa.class, idPrograma);
@@ -118,31 +119,142 @@ public class ProgramaIT {
     Assertions.assertThat(programa.getActivo()).as("getActivo()").isEqualTo(true);
   }
 
-  /**
-   * Función que devuelve un objeto Plan
-   * 
-   * @param id id del Plan
-   * @return el objeto Plan
-   */
-  private Plan generarMockPlan(Long id) {
-    return generarMockPlan(id, "nombre-" + String.format("%03d", id));
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAll_WithPagingSortingAndFiltering_ReturnsProgramaSubList() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TDOC-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "nombre-";
+    String filter = "descripcion~%00%";
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH).queryParam("s", sort).queryParam("q", filter)
+        .build(false).toUri();
+
+    final ResponseEntity<List<Programa>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Programa>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Programa> programas = response.getBody();
+    Assertions.assertThat(programas.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(programas.get(0).getNombre()).as("get(0).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 3));
+    Assertions.assertThat(programas.get(1).getNombre()).as("get(1).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 2));
+    Assertions.assertThat(programas.get(2).getNombre()).as("get(2).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 1));
   }
 
-  /**
-   * Función que devuelve un objeto Plan
-   * 
-   * @param id     id del Plan
-   * @param nombre nombre del Plan
-   * @return el objeto Plan
-   */
-  private Plan generarMockPlan(Long id, String nombre) {
-    Plan plan = new Plan();
-    plan.setId(id);
-    plan.setNombre(nombre);
-    plan.setDescripcion("descripcion-" + String.format("%03d", id));
-    plan.setActivo(true);
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllPlan_WithPagingSortingAndFiltering_ReturnsProgramaSubList() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TDOC-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "nombre-";
+    String filter = "descripcion~%00%";
 
-    return plan;
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/plan").queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
+
+    final ResponseEntity<List<Programa>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Programa>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Programa> programas = response.getBody();
+    Assertions.assertThat(programas.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(programas.get(0).getNombre()).as("get(0).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 3));
+    Assertions.assertThat(programas.get(1).getNombre()).as("get(1).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 2));
+    Assertions.assertThat(programas.get(2).getNombre()).as("get(2).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 1));
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllTodosPlan_WithPagingSortingAndFiltering_ReturnsProgramaSubList() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TDOC-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "nombre-";
+    String filter = "descripcion~%00%";
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + "/plan/todos").queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
+
+    final ResponseEntity<List<Programa>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Programa>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Programa> programas = response.getBody();
+    Assertions.assertThat(programas.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(programas.get(0).getNombre()).as("get(0).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 3));
+    Assertions.assertThat(programas.get(1).getNombre()).as("get(1).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 2));
+    Assertions.assertThat(programas.get(2).getNombre()).as("get(2).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 1));
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllHijosPrograma_WithPagingSortingAndFiltering_ReturnsProgramaSubList() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-ME-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "nombre-";
+    String filter = "descripcion~%00%";
+
+    Long programaId = 1L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/hijos")
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(programaId).toUri();
+
+    final ResponseEntity<List<Programa>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Programa>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Programa> programas = response.getBody();
+    Assertions.assertThat(programas.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(programas.get(0).getNombre()).as("get(0).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 4));
+    Assertions.assertThat(programas.get(1).getNombre()).as("get(1).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 3));
+    Assertions.assertThat(programas.get(2).getNombre()).as("get(2).getNombre())")
+        .isEqualTo("nombre-" + String.format("%03d", 2));
   }
 
   /**
@@ -152,7 +264,7 @@ public class ProgramaIT {
    * @return el objeto Programa
    */
   private Programa generarMockPrograma(Long id) {
-    return generarMockPrograma(id, "nombre-" + String.format("%03d", id), id, null);
+    return generarMockPrograma(id, "nombre-" + String.format("%03d", id), null);
   }
 
   /**
@@ -160,16 +272,15 @@ public class ProgramaIT {
    * 
    * @param id              id del Programa
    * @param nombre          nombre del Programa
-   * @param idPlan          id del plan
    * @param idProgramaPadre id del Programa padre
    * @return el objeto Programa
    */
-  private Programa generarMockPrograma(Long id, String nombre, Long idPlan, Long idProgramaPadre) {
+  private Programa generarMockPrograma(Long id, String nombre, Long idProgramaPadre) {
     Programa programa = new Programa();
     programa.setId(id);
     programa.setNombre(nombre);
     programa.setDescripcion("descripcion-" + String.format("%03d", id));
-    programa.setPlan(generarMockPlan(idPlan));
+
     if (idProgramaPadre != null) {
       programa.setPadre(generarMockPrograma(idProgramaPadre));
     }

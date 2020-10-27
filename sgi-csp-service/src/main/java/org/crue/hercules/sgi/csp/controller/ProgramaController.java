@@ -1,11 +1,18 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.groups.Default;
 
 import org.crue.hercules.sgi.csp.model.BaseEntity.Update;
 import org.crue.hercules.sgi.csp.model.Programa;
+import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.service.ProgramaService;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -16,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -100,6 +108,102 @@ public class ProgramaController {
     log.debug("deleteById(Long id) - start");
     service.disable(id);
     log.debug("deleteById(Long id) - end");
+  }
+
+  /**
+   * Devuelve todas las entidades {@link Programa} activos paginadas
+   *
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link TipoHito} paginadas
+   */
+  @GetMapping()
+  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
+  ResponseEntity<Page<Programa>> findAll(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
+    Page<Programa> page = service.findAll(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve todas las entidades {@link Programa} activos con padre null (los
+   * planes) paginadas
+   *
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link TipoHito} paginadas
+   */
+  @GetMapping("/plan")
+  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
+  ResponseEntity<Page<Programa>> findAllPlan(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllPlan(List<QueryCriteria> query, Pageable paging) - start");
+    Page<Programa> page = service.findAllPlan(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllPlan(List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllPlan(List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve todas las entidades {@link Programa} con padre null (los planes)
+   * paginadas
+   *
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link TipoHito} paginadas
+   */
+  @GetMapping("/plan/todos")
+  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
+  ResponseEntity<Page<Programa>> findAllTodosPlan(@RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllTodosPlan(List<QueryCriteria> query, Pageable paging) - start");
+    Page<Programa> page = service.findAllTodosPlan(query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllTodosPlan(List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllTodosPlan(List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve todas las entidades {@link Programa} hijos directos del
+   * {@link Programa} con el id indicado paginadas
+   *
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link TipoHito} paginadas
+   */
+  @GetMapping("/{id}/hijos")
+  // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
+  ResponseEntity<Page<Programa>> findAllHijosPrograma(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllHijosPrograma(List<QueryCriteria> query, Pageable paging) - start");
+    Page<Programa> page = service.findAllHijosPrograma(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllHijosPrograma(List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllHijosPrograma(List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
 }

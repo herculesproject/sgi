@@ -104,7 +104,7 @@ public class ConvocatoriaEntidadConvocanteControllerTest {
     // given: Existing ConvocatoriaEntidadConvocante to be updated
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocanteExistente = generarMockConvocatoriaEntidadConvocante(1L);
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante = generarMockConvocatoriaEntidadConvocante(1L);
-    convocatoriaEntidadConvocante.setPrograma(new Programa(2L, null, null, null, null, null));
+    convocatoriaEntidadConvocante.setPrograma(new Programa(2L, null, null, null, null));
 
     BDDMockito.given(service.findById(ArgumentMatchers.<Long>any())).willReturn(convocatoriaEntidadConvocanteExistente);
     BDDMockito.given(service.update(ArgumentMatchers.<ConvocatoriaEntidadConvocante>any()))

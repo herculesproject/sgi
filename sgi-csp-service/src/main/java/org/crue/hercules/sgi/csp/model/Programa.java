@@ -49,12 +49,6 @@ public class Programa extends BaseEntity {
   @Size(max = 250)
   private String descripcion;
 
-  /** Plan. */
-  @ManyToOne
-  @JoinColumn(name = "plan_id", nullable = false)
-  @NotNull
-  private Plan plan;
-
   /** Programa padre. */
   @ManyToOne
   @JoinColumn(name = "programa_padre_id", nullable = true)

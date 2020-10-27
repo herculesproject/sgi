@@ -4,11 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.crue.hercules.sgi.csp.exceptions.PlanNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProgramaNotFoundException;
-import org.crue.hercules.sgi.csp.model.Plan;
 import org.crue.hercules.sgi.csp.model.Programa;
-import org.crue.hercules.sgi.csp.repository.PlanRepository;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ProgramaSpecifications;
 import org.crue.hercules.sgi.csp.service.ProgramaService;
@@ -32,11 +29,9 @@ import lombok.extern.slf4j.Slf4j;
 public class ProgramaServiceImpl implements ProgramaService {
 
   private final ProgramaRepository repository;
-  private final PlanRepository planRepository;
 
-  public ProgramaServiceImpl(ProgramaRepository programaRepository, PlanRepository planRepository) {
+  public ProgramaServiceImpl(ProgramaRepository programaRepository) {
     this.repository = programaRepository;
-    this.planRepository = planRepository;
   }
 
   /**
@@ -51,13 +46,6 @@ public class ProgramaServiceImpl implements ProgramaService {
     log.debug("create(Programa programa) - start");
 
     Assert.isNull(programa.getId(), "Programa id tiene que ser null para crear un nuevo Programa");
-    Assert.notNull(programa.getPlan().getId(), "Id Plan no puede ser null para crear un Programa");
-
-    Assert.isTrue(!(repository.findByNombreAndPlanId(programa.getNombre(), programa.getPlan().getId()).isPresent()),
-        "Ya existe un Programa con el nombre " + programa.getNombre() + " en el Plan");
-
-    programa.setPlan(planRepository.findById(programa.getPlan().getId())
-        .orElseThrow(() -> new PlanNotFoundException(programa.getPlan().getId())));
 
     if (programa.getPadre() != null) {
       if (programa.getPadre().getId() == null) {
@@ -68,7 +56,15 @@ public class ProgramaServiceImpl implements ProgramaService {
       }
     }
 
+    if (programa.getPadre() == null) {
+      Assert.isTrue(!existPlanWithNombre(programa.getNombre(), null), "Ya existe un plan con el mismo nombre");
+    } else {
+      Assert.isTrue(!existProgramaNombre(programa.getPadre().getId(), programa.getNombre(), null),
+          "Ya existe un programa con el mismo nombre en el plan");
+    }
+
     programa.setActivo(true);
+
     Programa returnValue = repository.save(programa);
 
     log.debug("create(Programa programa) - end");
@@ -99,32 +95,21 @@ public class ProgramaServiceImpl implements ProgramaService {
     }
 
     return repository.findById(programaActualizar.getId()).map(programa -> {
-      repository.findByNombreAndPlanId(programaActualizar.getNombre(), programa.getPlan().getId())
-          .ifPresent((tipoDocumentoExistente) -> {
-            Assert.isTrue(programaActualizar.getId() == tipoDocumentoExistente.getId(),
-                "Ya existe un Programa con el nombre " + tipoDocumentoExistente.getNombre() + " en el Plan");
-          });
+      if (programa.getPadre() == null) {
+        Assert.isTrue(!existPlanWithNombre(programaActualizar.getNombre(), programaActualizar.getId()),
+            "Ya existe un plan con el mismo nombre");
+      } else {
+        Assert.isTrue(!existProgramaNombre(programaActualizar.getPadre().getId(), programaActualizar.getNombre(),
+            programa.getId()), "Ya existe un programa con el mismo nombre en el plan");
+      }
 
       programa.setNombre(programaActualizar.getNombre());
       programa.setDescripcion(programaActualizar.getDescripcion());
       programa.setPadre(programaActualizar.getPadre());
-      programa.setActivo(programaActualizar.getActivo());
 
-      // Si el programa se pone activo=false se hace lo mismo con sus hijos
-      if (!programaActualizar.getActivo()) {
-        List<Programa> programasHijos = repository.findByPadreIdIn(Arrays.asList(programa.getId()));
-
-        while (!programasHijos.isEmpty()) {
-          programasHijos.stream().map(programaHijo -> {
-            programaHijo.setActivo(false);
-            return programaHijo;
-          }).collect(Collectors.toList());
-
-          repository.saveAll(programasHijos);
-
-          programasHijos = repository
-              .findByPadreIdIn(programasHijos.stream().map(Programa::getId).collect(Collectors.toList()));
-        }
+      // Solo se puede reactivar si es un plan (programa sin padre)
+      if (programaActualizar.getActivo() && programaActualizar.getPadre() == null) {
+        programa.setActivo(programaActualizar.getActivo());
       }
 
       Programa returnValue = repository.save(programa);
@@ -148,21 +133,6 @@ public class ProgramaServiceImpl implements ProgramaService {
 
     return repository.findById(id).map(programa -> {
       programa.setActivo(false);
-
-      List<Programa> programasHijos = repository.findByPadreIdIn(Arrays.asList(programa.getId()));
-
-      while (!programasHijos.isEmpty()) {
-        programasHijos.stream().map(programaHijo -> {
-          programaHijo.setActivo(false);
-          return programaHijo;
-        }).collect(Collectors.toList());
-
-        repository.saveAll(programasHijos);
-
-        programasHijos = repository
-            .findByPadreIdIn(programasHijos.stream().map(Programa::getId).collect(Collectors.toList()));
-      }
-
       Programa returnValue = repository.save(programa);
       log.debug("disable(Long id) - end");
       return returnValue;
@@ -184,46 +154,147 @@ public class ProgramaServiceImpl implements ProgramaService {
   }
 
   /**
-   * Obtiene los {@link Programa} activos para un {@link Plan}.
+   * Obtiene los {@link Programa} activos.
    *
-   * @param idPlan   el id de la entidad {@link Plan}.
    * @param query    la información del filtro.
    * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link Programa} del {@link Plan} paginadas.
+   * @return la lista de entidades {@link Programa} paginadas.
    */
   @Override
-  public Page<Programa> findAllByPlan(Long idPlan, List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAllByPlan(Long idPlan, List<QueryCriteria> query, Pageable pageable) - start");
+  public Page<Programa> findAll(List<QueryCriteria> query, Pageable pageable) {
+    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - start");
     Specification<Programa> specByQuery = new QuerySpecification<Programa>(query);
-    Specification<Programa> specByPlanId = ProgramaSpecifications.byPlanId(idPlan);
     Specification<Programa> specActivos = ProgramaSpecifications.activos();
 
-    Specification<Programa> specs = Specification.where(specByPlanId).and(specActivos).and(specByQuery);
+    Specification<Programa> specs = Specification.where(specActivos).and(specByQuery);
 
     Page<Programa> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllByPlan(Long idPlan, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAll(List<QueryCriteria> query, Pageable pageable) - end");
     return returnValue;
   }
 
   /**
-   * Obtiene los {@link Programa} para un {@link Plan}.
+   * Obtiene los planes activos (los {@link Programa} con padre null).
    *
-   * @param idPlan   el id de la entidad {@link Plan}.
    * @param query    la información del filtro.
    * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link Programa} del {@link Plan} paginadas.
+   * @return la lista de entidades {@link Programa} paginadas.
    */
   @Override
-  public Page<Programa> findAllTodosByPlan(Long idPlan, List<QueryCriteria> query, Pageable pageable) {
-    log.debug("findAllTodosByPlan(Long idPlan, List<QueryCriteria> query, Pageable pageable) - start");
+  public Page<Programa> findAllPlan(List<QueryCriteria> query, Pageable pageable) {
+    log.debug("findAllPlan(List<QueryCriteria> query, Pageable pageable) - start");
     Specification<Programa> specByQuery = new QuerySpecification<Programa>(query);
-    Specification<Programa> specByPlanId = ProgramaSpecifications.byPlanId(idPlan);
+    Specification<Programa> specActivos = ProgramaSpecifications.activos();
+    Specification<Programa> specPlanes = ProgramaSpecifications.planes();
 
-    Specification<Programa> specs = Specification.where(specByPlanId).and(specByQuery);
+    Specification<Programa> specs = Specification.where(specPlanes).and(specActivos).and(specByQuery);
 
     Page<Programa> returnValue = repository.findAll(specs, pageable);
-    log.debug("findAllTodosByPlan(Long idPlan, List<QueryCriteria> query, Pageable pageable) - end");
+    log.debug("findAllPlan(List<QueryCriteria> query, Pageable pageable) - end");
     return returnValue;
+  }
+
+  /**
+   * Obtiene los planes (los {@link Programa} con padre null).
+   *
+   * @param query    la información del filtro.
+   * @param pageable la información de la paginación.
+   * @return la lista de entidades {@link Programa} paginadas.
+   */
+  @Override
+  public Page<Programa> findAllTodosPlan(List<QueryCriteria> query, Pageable pageable) {
+    log.debug("findAllTodosPlan(List<QueryCriteria> query, Pageable pageable) - start");
+    Specification<Programa> specByQuery = new QuerySpecification<Programa>(query);
+    Specification<Programa> specPlanes = ProgramaSpecifications.planes();
+
+    Specification<Programa> specs = Specification.where(specPlanes).and(specByQuery);
+
+    Page<Programa> returnValue = repository.findAll(specs, pageable);
+    log.debug("findAllTodosPlan(List<QueryCriteria> query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene los {@link Programa} hijos directos del {@link Programa} con el id
+   * indicado.
+   *
+   * @param programaId el id de la entidad {@link Programa}.
+   * @param query      la información del filtro.
+   * @param pageable   la información de la paginación.
+   * @return la lista de entidades {@link Programa} paginadas.
+   */
+  @Override
+  public Page<Programa> findAllHijosPrograma(Long programaId, List<QueryCriteria> query, Pageable pageable) {
+    log.debug("findAllHijosPrograma(Long programaId, List<QueryCriteria> query, Pageable pageable) - start");
+    Specification<Programa> specByQuery = new QuerySpecification<Programa>(query);
+    Specification<Programa> specHijos = ProgramaSpecifications.hijos(programaId);
+
+    Specification<Programa> specs = Specification.where(specHijos).and(specByQuery);
+
+    Page<Programa> returnValue = repository.findAll(specs, pageable);
+    log.debug("findAllHijosPrograma(Long programaId, List<QueryCriteria> query, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
+   * Comprueba si existe algun plan ({@link Programa} con padre null) con el
+   * nombre indicado.
+   *
+   * @param nombre            nombre del plan.
+   * @param programaIdExcluir Identificador del {@link Programa} que se excluye de
+   *                          la busqueda.
+   * @return true si existe algun plan con ese nombre.
+   */
+
+  private boolean existPlanWithNombre(String nombre, Long programaIdExcluir) {
+    log.debug("existPlanWithNombre(String nombre, Long programaIdExcluir) - start");
+    Specification<Programa> specPlanesByNombre = ProgramaSpecifications.planesByNombre(nombre, programaIdExcluir);
+
+    boolean returnValue = !repository.findAll(specPlanesByNombre, Pageable.unpaged()).isEmpty();
+
+    log.debug("existPlanWithNombre(String nombre, Long programaIdExcluir) - end");
+    return returnValue;
+  }
+
+  /**
+   * Comprueba si existe {@link Programa} con el nombre indicado en el arbol del
+   * programa indicado.
+   *
+   * @param programaId        Identificador del {@link Programa}.
+   * @param nombre            nombre del programa.
+   * @param programaIdExcluir Identificador del {@link Programa} que se excluye de
+   *                          la busqueda.
+   * @return true si existe algun {@link Programa} con ese nombre.
+   */
+
+  private boolean existProgramaNombre(Long programaId, String nombre, Long programaIdExcluir) {
+    log.debug("existProgramaNombre(Long programaId, String nombre, Long programaIdExcluir) - start");
+
+    // Busca el programa raiz
+    Programa programaRaiz = repository.findById(programaId).map(programa -> {
+      return programa;
+    }).orElseThrow(() -> new ProgramaNotFoundException(programaId));
+
+    while (programaRaiz.getPadre() != null) {
+      programaRaiz = repository.findById(programaRaiz.getPadre().getId()).get();
+    }
+
+    // Busca el nombre desde el nodo raiz nivel a nivel
+    boolean nombreEncontrado = false;
+
+    List<Programa> programasHijos = repository.findByPadreIdInAndActivoIsTrue(Arrays.asList(programaRaiz.getId()));
+    nombreEncontrado = programasHijos.stream()
+        .anyMatch(programa -> programa.getNombre().equals(nombre) && programa.getId() != programaIdExcluir);
+
+    while (!nombreEncontrado && !programasHijos.isEmpty()) {
+      programasHijos = repository
+          .findByPadreIdInAndActivoIsTrue(programasHijos.stream().map(Programa::getId).collect(Collectors.toList()));
+      nombreEncontrado = programasHijos.stream()
+          .anyMatch(programa -> programa.getNombre().equals(nombre) && programa.getId() != programaIdExcluir);
+    }
+
+    log.debug("existProgramaNombre(Long programaId, String nombre, Long programaIdExcluir) - end");
+    return nombreEncontrado;
   }
 
 }
