@@ -599,9 +599,12 @@
       <column name="id" type="BIGINT" defaultValueSequenceNext="configuracion_seq">
         <constraints nullable="false" primaryKey="true" primaryKeyName="configuracion_pk" />
       </column>
-      <column name="clave" type="VARCHAR(250)" />
-      <column name="valor" type="VARCHAR(250)" />
-      <column name="descripcion" type="VARCHAR(2000)" />
+      <column name="meses_archivada_inactivo" type="INT" />
+      <column name="dias_archivada_pendiente_correcciones" type="INT" />
+      <column name="dias_limite_evaluador" type="INT" />
+      <column name="meses_aviso_proyecto_ceea" type="INT" />
+      <column name="meses_aviso_proyecto_ceish" type="INT" />
+      <column name="meses_aviso_proyecto_ceiab" type="INT" />
     </createTable>
   </changeSet>
 
@@ -882,6 +885,25 @@
   <!-- ########################################################## -->
   <!-- UNIQUE CONSTRAINT -->
   <!-- ########################################################## -->
+
+  <changeSet author="master" id="20200601000000-configuracion_meses_archivada_inactivo_unique">
+    <addUniqueConstraint tableName="configuracion" columnNames="meses_archivada_inactivo" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-configuracion_dias_archivada_pendiente_correcciones_unique">
+    <addUniqueConstraint tableName="configuracion" columnNames="dias_archivada_pendiente_correcciones" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-configuracion_dias_limite_evaluador_unique">
+    <addUniqueConstraint tableName="configuracion" columnNames="dias_limite_evaluador" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-meses_aviso_proyecto_ceea_unique">
+    <addUniqueConstraint tableName="configuracion" columnNames="meses_aviso_proyecto_ceea" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-meses_aviso_proyecto_ceish_unique">
+    <addUniqueConstraint tableName="configuracion" columnNames="meses_aviso_proyecto_ceish" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-meses_aviso_proyecto_ceiab_unique">
+    <addUniqueConstraint tableName="configuracion" columnNames="meses_aviso_proyecto_ceiab" />
+  </changeSet>
 
   <!-- ########################################################## -->
   <!-- INDEX -->

@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -36,16 +38,34 @@ public class Configuracion extends BaseEntity {
   @SequenceGenerator(name = "configuracion_seq", sequenceName = "configuracion_seq", allocationSize = 1)
   private Long id;
 
-  /** Clave. */
-  @Column(name = "clave", length = 250, nullable = false)
-  private String clave;
+  /** mesesArchivadaInactivo. */
+  @Column(name = "meses_archivada_inactivo", nullable = false, unique = true)
+  @NotNull
+  private Integer mesesArchivadaInactivo;
 
-  /** Valor. */
-  @Column(name = "valor", length = 250, nullable = false)
-  private String valor;
+  /** diasArchivadaPendienteCorrecciones. */
+  @Column(name = "dias_archivada_pendiente_correcciones", nullable = false, unique = true)
+  @NotNull
+  private Integer diasArchivadaPendienteCorrecciones;
 
-  /** Descripcion. */
-  @Column(name = "descripcion", length = 2000, nullable = false)
-  private String descripcion;
+  /** diasLimiteEvaluador. */
+  @Column(name = "dias_limite_evaluador", nullable = false, unique = true)
+  @NotNull
+  private Integer diasLimiteEvaluador;
+
+  /** mesesAvisoProyectoCEEA. */
+  @Column(name = "meses_aviso_proyecto_ceea", nullable = false, unique = true)
+  @NotNull
+  private Integer mesesAvisoProyectoCEEA;
+
+  /** mesesAvisoProyectoCEISH. */
+  @Column(name = "meses_aviso_proyecto_ceish", nullable = false, unique = true)
+  @NotNull
+  private Integer mesesAvisoProyectoCEISH;
+
+  /** mesesAvisoProyectoCEIAB. */
+  @Column(name = "meses_aviso_proyecto_ceiab", nullable = false, unique = true)
+  @NotNull
+  private Integer mesesAvisoProyectoCEIAB;
 
 }

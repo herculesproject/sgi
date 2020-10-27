@@ -74,7 +74,7 @@ public class ComiteServiceImpl implements ComiteService {
    */
   public Comite findById(final Long id) throws ComiteNotFoundException {
     log.debug("Petición a get Comite : {}  - start", id);
-    final Comite comite = comiteRepository.findById(id).orElseThrow(() -> new ComiteNotFoundException(id));
+    Comite comite = comiteRepository.findById(id).orElseThrow(() -> new ComiteNotFoundException(id));
     log.debug("Petición a get Comite : {}  - end", id);
     return comite;
 
