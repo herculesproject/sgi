@@ -9,7 +9,7 @@ import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 import { MemoriaActionService } from '../../memoria.action.service';
 import { MemoriaDatosGeneralesComponent } from './memoria-datos-generales.component';
-import { Comite } from '@core/models/eti/comite';
+import { IComite } from '@core/models/eti/comite';
 import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { IRetrospectiva } from '@core/models/eti/retrospectiva';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
@@ -25,7 +25,7 @@ describe('MemoriaDatosGeneralesComponent', () => {
     memoria: {
       comite: {
         id: 1
-      } as Comite,
+      } as IComite,
       estadoActual: {
         id: 1
       } as TipoEstadoMemoria,

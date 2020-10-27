@@ -258,7 +258,7 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
     return this.find<IMemoriaPeticionEvaluacion, IMemoriaPeticionEvaluacion>(
       `${this.endpointUrl}/persona/peticion-evaluacion`, options).pipe(
         tap(() => this.logger.debug(MemoriaService.name, `findAllByPersonaRefPeticionEvaluacion()`, '-', 'END'))
-      )
+      );
   }
 
   /**
@@ -370,4 +370,17 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
       tap(() => this.logger.debug(MemoriaService.name, `enviarSecretaria(${memoriaId})`, '-', 'end'))
     );
   }
+
+  /**
+   * Se cambia el estado de la Retrospectiva a 'En secretaría'
+   *
+   * @param memoriaId id memoria.
+   */
+  enviarSecretariaRetrospectiva(memoriaId: number): Observable<void> {
+    this.logger.debug(MemoriaService.name, `enviarSecretariaRetrospectiva(${memoriaId})`, '-', 'start');
+    return this.http.put<void>(`${this.endpointUrl}/${memoriaId}/enviar-secretaria-retrospectiva`, null).pipe(
+      tap(() => this.logger.debug(MemoriaService.name, `enviarSecretariaRetrospectiva(${memoriaId})`, '-', 'end'))
+    );
+  }
+
 }

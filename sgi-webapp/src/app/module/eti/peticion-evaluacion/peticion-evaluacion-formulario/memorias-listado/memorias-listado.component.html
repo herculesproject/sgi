@@ -86,6 +86,13 @@
             <mat-icon color="primary">send</mat-icon>
           </button>
         </ng-container>
+        <ng-container *ngIf="hasPermisoEnviarSecretariaRetrospectiva(wrapper.value)">
+          <button mat-button *sgiHasAnyAuthorityForAnyUO="['ETI-PEV-C-INV', 'ETI-PEV-ER-INV']"
+            (click)="enviarSecretariaRetrospectiva(wrapper.value)" [disabled]="disableEnviarSecretaria"
+            matTooltip="{{'eti.peticionEvaluacion.formulario.memoria.listado.enviarSecretariaRetrospectiva' | translate}}">
+            <mat-icon color="primary">assignment</mat-icon>
+          </button>
+        </ng-container>
         <!-- </ng-container> -->
       </td>
     </ng-container>

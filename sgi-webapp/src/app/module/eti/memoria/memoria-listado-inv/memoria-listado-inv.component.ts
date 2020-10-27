@@ -23,7 +23,7 @@ import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { MEMORIAS_ROUTE } from '../memoria-route-names';
-import { ActionStatus } from '@core/services/action-service';
+import { IMemoria } from '@core/models/eti/memoria';
 
 const MSG_BUTTON_SAVE = marker('footer.eti.peticionEvaluacion.crear');
 const TEXT_USER_TITLE = marker('eti.peticionEvaluacion.listado.buscador.solicitante');
@@ -31,6 +31,10 @@ const TEXT_USER_BUTTON = marker('eti.peticionEvaluacion.listado.buscador.buscar.
 const MSG_SUCCESS_ENVIAR_SECRETARIA = marker('eti.memorias.formulario.memorias.listado.enviarSecretaria.correcto');
 const MSG_ERROR_ENVIAR_SECRETARIA = marker('eti.memorias.formulario.memorias.listado.enviarSecretaria.error');
 const MSG_CONFIRM_ENVIAR_SECRETARIA = marker('eti.memorias.formulario.memorias.listado.enviarSecretaria.confirmar');
+const MSG_SUCCESS_ENVIAR_SECRETARIA_RETROSPECTIVA = marker(
+  'eti.memorias.formulario.memorias.listado.enviarSecretariaRetrospectiva.correcto');
+const MSG_ERROR_ENVIAR_SECRETARIA_RETROSPECTIVA = marker('eti.memorias.formulario.memorias.listado.enviarSecretariaRetrospectiva.error');
+const MSG_CONFIRM_ENVIAR_SECRETARIA_RETROSPECTIVA = marker('eti.memorias.formulario.memorias.listado.enviarSecretariaRetrospectiva.confirmar');
 
 
 @Component({
@@ -383,14 +387,14 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
       'end');
   }
 
-  hasPermisoEnviarSecretaria(estadoMemoriaId: number): boolean {
+  hasPermisoEnviarSecretaria(estadoMemoriaId: number, responsable: boolean): boolean {
 
     // Si el estado es 'Completada', 'Favorable pendiente de modificaciones mínima',
     // 'Pendiente de correcciones', 'No procede evaluar', 'Completada seguimiento anual',
     // 'Completada seguimiento final' o 'En aclaracion seguimiento final' se muestra el botón de enviar.
-    if (estadoMemoriaId === 2 || estadoMemoriaId === 6 || estadoMemoriaId === 7
+    if ((estadoMemoriaId === 2 || estadoMemoriaId === 6 || estadoMemoriaId === 7
       || estadoMemoriaId === 8 || estadoMemoriaId === 11 || estadoMemoriaId === 16
-      || estadoMemoriaId === 21) {
+      || estadoMemoriaId === 21) && !responsable) {
       return true;
     } else {
       return false;
@@ -419,6 +423,41 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
 
     this.logger.debug(MemoriaListadoInvComponent.name, 'enviarSecretaria(memoria: IMemoriaPeticionEvaluacion) - end');
 
+  }
+
+  hasPermisoEnviarSecretariaRetrospectiva(memoria: IMemoria, responsable: boolean): boolean {
+
+    // Si el estado es 'Completada', es de tipo CEEA y requiere retrospectiva se muestra el botón de enviar.
+    // Si la retrospectiva ya está 'En secretaría' no se muestra el botón.
+    if (memoria.estadoActual.id === 2 && memoria.comite.comite === 'CEEA' && memoria.requiereRetrospectiva
+      && memoria.retrospectiva.estadoRetrospectiva.id !== 3 && !responsable) {
+      return true;
+    } else {
+      return false;
+    }
+
+  }
+
+  enviarSecretariaRetrospectiva(memoria: IMemoriaPeticionEvaluacion) {
+    this.logger.debug(MemoriaListadoInvComponent.name, 'enviarSecretariaRetrospectiva(memoria: IMemoriaPeticionEvaluacion) - start');
+
+    this.dialogService.showConfirmation(MSG_CONFIRM_ENVIAR_SECRETARIA_RETROSPECTIVA)
+      .pipe(switchMap((aceptado) => {
+        if (aceptado) {
+          return this.memoriaService.enviarSecretariaRetrospectiva(memoria.id);
+        }
+        return of();
+      })).subscribe(
+        () => {
+          this.loadTable();
+          this.snackBarService.showSuccess(MSG_SUCCESS_ENVIAR_SECRETARIA_RETROSPECTIVA);
+        },
+        () => {
+          this.snackBarService.showError(MSG_ERROR_ENVIAR_SECRETARIA_RETROSPECTIVA);
+        }
+      );
+
+    this.logger.debug(MemoriaListadoInvComponent.name, 'enviarSecretariaRetrospectiva(memoria: IMemoriaPeticionEvaluacion) - end');
   }
 
   ngOnDestroy(): void {

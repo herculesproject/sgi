@@ -28,6 +28,9 @@ const MSG_RECUPERAR_ESTADO = marker('eti.memoria.listado.volverEstadoAnterior.co
 const MSG_SUCCESS_ENVIAR_SECRETARIA = marker('eti.peticionEvaluacion.formulario.memorias.listado.enviarSecretaria.correcto');
 const MSG_ERROR_ENVIAR_SECRETARIA = marker('eti.peticionEvaluacion.formulario.memorias.listado.enviarSecretaria.error');
 const MSG_CONFIRM_ENVIAR_SECRETARIA = marker('eti.peticionEvaluacion.formulario.memorias.listado.enviarSecretaria.confirmar');
+const MSG_SUCCESS_ENVIAR_SECRETARIA_RETROSPECTIVA = marker('eti.peticionEvaluacion.formulario.memorias.listado.enviarSecretariaRetrospectiva.correcto');
+const MSG_ERROR_ENVIAR_SECRETARIA_RETROSPECTIVA = marker('eti.peticionEvaluacion.formulario.memorias.listado.enviarSecretariaRetrospectiva.error');
+const MSG_CONFIRM_ENVIAR_SECRETARIA_RETROSPECTIVA = marker('eti.peticionEvaluacion.formulario.memorias.listado.enviarSecretariaRetrospectiva.confirmar');
 
 @Component({
   selector: 'sgi-memorias-listado',
@@ -164,7 +167,41 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
       );
 
     this.logger.debug(MemoriasListadoComponent.name, 'enviarSecretaria(memoria: IMemoriaPeticionEvaluacion) - end');
+  }
 
+  hasPermisoEnviarSecretariaRetrospectiva(memoria: IMemoria): boolean {
+
+    // Si el estado es 'Completada', es de tipo CEEA y requiere retrospectiva se muestra el botón de enviar.
+    // Si la retrospectiva ya está 'En secretaría' no se muestra el botón.
+    if (memoria.estadoActual.id === 2 && memoria.comite.comite === 'CEEA' && memoria.requiereRetrospectiva
+      && memoria.retrospectiva.estadoRetrospectiva.id !== 3) {
+      return true;
+    } else {
+      return false;
+    }
+
+  }
+
+  enviarSecretariaRetrospectiva(memoria: IMemoriaPeticionEvaluacion) {
+    this.logger.debug(MemoriasListadoComponent.name, 'enviarSecretariaRetrospectiva(memoria: IMemoriaPeticionEvaluacion) - start');
+
+    this.dialogService.showConfirmation(MSG_CONFIRM_ENVIAR_SECRETARIA_RETROSPECTIVA)
+      .pipe(switchMap((aceptado) => {
+        if (aceptado) {
+          return this.memoriaService.enviarSecretariaRetrospectiva(memoria.id);
+        }
+        return of();
+      })).subscribe(
+        () => {
+          this.listadoFragment.loadMemorias(this.listadoFragment.getKey() as number);
+          this.snackBarService.showSuccess(MSG_SUCCESS_ENVIAR_SECRETARIA_RETROSPECTIVA);
+        },
+        () => {
+          this.snackBarService.showError(MSG_ERROR_ENVIAR_SECRETARIA_RETROSPECTIVA);
+        }
+      );
+
+    this.logger.debug(MemoriasListadoComponent.name, 'enviarSecretariaRetrospectiva(memoria: IMemoriaPeticionEvaluacion) - end');
   }
 
   ngOnDestroy(): void {
