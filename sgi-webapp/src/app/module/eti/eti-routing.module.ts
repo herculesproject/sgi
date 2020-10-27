@@ -18,6 +18,7 @@ const MSG_MEMORIAS_TITLE = marker('menu.principal.eti.memoria');
 const MSG_SEGUIMIENTOS_TITLE = marker('menu.principal.eti.seguimientos');
 const MSG_PETICIONES_EVALUACION_TITLE = marker('menu.principal.eti.peticionesEvaluacion');
 const MSG_GESTION_SEGUIMIENTO_TITLE = marker('menu.principal.eti.gestionSeguimiento');
+const MSG_CONFIGURACION_TITLE = marker('menu.principal.eti.configuracion');
 
 const routes: SgiRoutes = [
   {
@@ -145,6 +146,17 @@ const routes: SgiRoutes = [
         data: {
           title: MSG_PETICIONES_EVALUACION_TITLE,
           hasAnyAuthorityForAnyUO: ['ETI-PEV-V']
+        }
+      }, {
+        path: ETI_ROUTE_NAMES.CONFIGURACIONES,
+        loadChildren: () =>
+          import('./configuracion/configuracion.module').then(
+            (m) => m.ConfiguracionModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_CONFIGURACION_TITLE,
+          hasAnyAuthorityForAnyUO: ['ETI-CNF-E']
         }
       },
       { path: '**', component: null }

@@ -21,6 +21,8 @@ import { IEvaluacionSolicitante } from '@core/models/eti/evaluacion-solicitante'
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { TipoEvaluacion } from '@core/models/eti/tipo-evaluacion';
 import { TipoEvaluacionService } from '@core/services/eti/tipo-evaluacion.service';
+import { IConfiguracion } from '@core/models/eti/configuracion';
+import { ConfiguracionService } from '@core/services/eti/configuracion.service';
 
 const MSG_ERROR = marker('eti.evaluacion.listado.error');
 const MSG_ERROR_LOAD_TIPOS_CONVOCATORIA = marker('eti.evaluacion.listado.buscador.tipoConvocatoria.error');
@@ -41,6 +43,8 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
   tipoEvaluacionFiltrados: Observable<TipoEvaluacion[]>;
   tiposConvocatoriaReunion: TipoConvocatoriaReunion[];
 
+  private numLimiteDiasEvaluar = null;
+
   constructor(
     protected readonly logger: NGXLogger,
     private readonly evaluadorService: EvaluadorService,
@@ -48,7 +52,8 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
     private readonly comiteService: ComiteService,
     private readonly tipoEvaluacionService: TipoEvaluacionService,
     private readonly tipoConvocatoriaReunionService: TipoConvocatoriaReunionService,
-    protected readonly snackBarService: SnackBarService
+    protected readonly snackBarService: SnackBarService,
+    private readonly configuracionService: ConfiguracionService
   ) {
     super(logger, snackBarService, MSG_ERROR);
 
@@ -75,6 +80,7 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
       tipoConvocatoria: new FormControl(''),
       tipoEvaluacion: new FormControl('')
     });
+    this.loadNumDiasLimiteEvaluar();
     this.loadComites();
     this.loadTipoEvaluacion();
     this.loadConvocatorias();
@@ -278,5 +284,37 @@ export class EvaluacionEvaluadorListadoComponent extends AbstractTablePagination
       this.formGroup.controls.tipoEvaluacion.value.id);
     this.logger.debug(EvaluacionEvaluadorListadoComponent.name, `crearFiltros()`, 'end');
     return filtros;
+  }
+
+  /**
+   * Comprueba si se puede evaluar la evaluación
+   * @param evaluacion la evaluación a evaluar
+   * @return si es posible evaluar
+   */
+  public isPosibleEvaluar(evaluacion: IEvaluacionSolicitante): boolean {
+    const fechaLimite = new Date();
+    fechaLimite.setDate(fechaLimite.getDate() + Number(this.numLimiteDiasEvaluar));
+
+    // Solo se comprueba la fecha si el estado actual de la memoria es "En Evaluación", si no se debe permitir siempre la evaluación
+    if (evaluacion.memoria.estadoActual.id !== 5 ||
+      (evaluacion.memoria.estadoActual.id === 5 && fechaLimite < DateUtils.fechaToDate(evaluacion.convocatoriaReunion.fechaEvaluacion))) {
+      return true;
+    }
+
+    return false;
+
+  }
+
+  /**
+   * Carga la variable de configuración diasLimiteEvaluador
+   */
+  private loadNumDiasLimiteEvaluar() {
+    const configSusbscription = this.configuracionService.getConfiguracion().subscribe(
+      (configuracion: IConfiguracion) => {
+        this.numLimiteDiasEvaluar = configuracion.diasLimiteEvaluador;
+      }
+    );
+
+    this.suscripciones.push(configSusbscription);
   }
 }
