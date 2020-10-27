@@ -96,6 +96,7 @@ public class MemoriaControllerTest {
   private static final String PATH_PARAMETER_PERSONA_PETICION_EVALUACION = "/persona/peticion-evaluacion";
   private static final String PATH_PARAMETER_EVALUACIONES = "/evaluaciones";
   private static final String PATH_PARAMETER_ENVIAR_SECRETARIA = "/enviar-secretaria";
+  private static final String PATH_PARAMETER_ENVIAR_SECRETARIA_RETROSPECTIVA = "/enviar-secretaria-retrospectiva";
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-V", "ETI-PEV-VR-INV" })
@@ -1153,6 +1154,17 @@ public class MemoriaControllerTest {
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
+  public void enviarSecretariaRetrospectiva_WithId() throws Exception {
+
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .put(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_ENVIAR_SECRETARIA_RETROSPECTIVA, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+  }
+
   /**
    * Función que devuelve un objeto Memoria.
    * 
@@ -1185,8 +1197,8 @@ public class MemoriaControllerTest {
   private MemoriaPeticionEvaluacion generarMockMemoriaPeticionEvaluacion(Long id, String numReferencia, String titulo) {
 
     return new MemoriaPeticionEvaluacion(id, numReferencia, titulo, generarMockComite(id, "comite" + id, true),
-        generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDateTime.of(2020, 7, 15, 0, 0, 1),
-        LocalDate.now(), false);
+        generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), false, null,
+        LocalDateTime.of(2020, 7, 15, 0, 0, 1), LocalDate.now(), false);
   }
 
   /**

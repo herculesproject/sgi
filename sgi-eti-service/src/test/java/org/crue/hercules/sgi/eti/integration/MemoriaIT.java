@@ -69,6 +69,20 @@ public class MemoriaIT {
 
   }
 
+  private HttpEntity<MemoriaPeticionEvaluacion> buildRequestMemoriaPeticionEvaluacion(HttpHeaders headers,
+      MemoriaPeticionEvaluacion entity) throws Exception {
+    headers = (headers != null ? headers : new HttpHeaders());
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    if (!headers.containsKey("Authorization")) {
+      headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user")));
+    }
+
+    HttpEntity<MemoriaPeticionEvaluacion> request = new HttpEntity<>(entity, headers);
+    return request;
+
+  }
+
   private HttpEntity<DocumentacionMemoria> buildRequestDocumentacionMemoria(HttpHeaders headers,
       DocumentacionMemoria entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -188,14 +202,15 @@ public class MemoriaIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    final ResponseEntity<List<Memoria>> response = restTemplate.exchange(MEMORIA_CONTROLLER_BASE_PATH, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<Memoria>>() {
+    final ResponseEntity<List<MemoriaPeticionEvaluacion>> response = restTemplate.exchange(MEMORIA_CONTROLLER_BASE_PATH,
+        HttpMethod.GET, buildRequestMemoriaPeticionEvaluacion(headers, null),
+        new ParameterizedTypeReference<List<MemoriaPeticionEvaluacion>>() {
         });
 
     // then: Respuesta OK, Memorias retorna la información de la página
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<Memoria> tipoMemorias = response.getBody();
+    final List<MemoriaPeticionEvaluacion> tipoMemorias = response.getBody();
     Assertions.assertThat(tipoMemorias.size()).isEqualTo(3);
     Assertions.assertThat(response.getHeaders().getFirst("X-Page")).isEqualTo("1");
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
@@ -223,14 +238,15 @@ public class MemoriaIT {
     headers.set("Authorization",
         String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-VR-INV", "ETI-PEV-V")));
 
-    final ResponseEntity<List<Memoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<Memoria>>() {
+    final ResponseEntity<List<MemoriaPeticionEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequestMemoriaPeticionEvaluacion(headers, null),
+        new ParameterizedTypeReference<List<MemoriaPeticionEvaluacion>>() {
         });
 
     // then: Respuesta OK, Memorias retorna la información de la página
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<Memoria> tipoMemorias = response.getBody();
+    final List<MemoriaPeticionEvaluacion> tipoMemorias = response.getBody();
     Assertions.assertThat(tipoMemorias.size()).isEqualTo(1);
     Assertions.assertThat(tipoMemorias.get(0).getId()).isEqualTo(id);
     Assertions.assertThat(tipoMemorias.get(0).getTitulo()).startsWith("Memoria");
@@ -251,17 +267,18 @@ public class MemoriaIT {
     headers.set("Authorization",
         String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-VR-INV", "ETI-PEV-V")));
 
-    final ResponseEntity<List<Memoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<Memoria>>() {
+    final ResponseEntity<List<MemoriaPeticionEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequestMemoriaPeticionEvaluacion(headers, null),
+        new ParameterizedTypeReference<List<MemoriaPeticionEvaluacion>>() {
         });
 
     // then: Respuesta OK, Memorias retorna la información de la página
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<Memoria> tipoMemorias = response.getBody();
+    final List<MemoriaPeticionEvaluacion> tipoMemorias = response.getBody();
     Assertions.assertThat(tipoMemorias.size()).isEqualTo(8);
     for (int i = 0; i < 8; i++) {
-      Memoria tipoMemoria = tipoMemorias.get(i);
+      MemoriaPeticionEvaluacion tipoMemoria = tipoMemorias.get(i);
       Assertions.assertThat(tipoMemoria.getId()).isEqualTo(8 - i);
       Assertions.assertThat(tipoMemoria.getTitulo()).isEqualTo("Memoria" + String.format("%03d", 8 - i));
     }
@@ -285,14 +302,15 @@ public class MemoriaIT {
     URI uri = UriComponentsBuilder.fromUriString(MEMORIA_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
-    final ResponseEntity<List<Memoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
-        buildRequest(headers, null), new ParameterizedTypeReference<List<Memoria>>() {
+    final ResponseEntity<List<MemoriaPeticionEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequestMemoriaPeticionEvaluacion(headers, null),
+        new ParameterizedTypeReference<List<MemoriaPeticionEvaluacion>>() {
         });
 
     // then: Respuesta OK, Memorias retorna la información de la página
     // correcta en el header
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    final List<Memoria> tipoMemorias = response.getBody();
+    final List<MemoriaPeticionEvaluacion> tipoMemorias = response.getBody();
     Assertions.assertThat(tipoMemorias.size()).isEqualTo(3);
     HttpHeaders responseHeaders = response.getHeaders();
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
@@ -1080,6 +1098,39 @@ public class MemoriaIT {
 
     final ResponseEntity<Memoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/enviar-secretaria", HttpMethod.PUT,
+        buildRequest(headers, null), Memoria.class, 3L);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void enviarSecretariaRetrospectiva_Success() throws Exception {
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user-001", "ETI-PEV-ER-INV")));
+
+    // when: Enviar secretaria con id existente
+    long id = 1L;
+    final ResponseEntity<Memoria> response = restTemplate.exchange(
+        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/enviar-secretaria-retrospectiva", HttpMethod.PUT,
+        buildRequest(headers, null), Memoria.class, id);
+
+    // then: 200
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void enviarSecretariaRetrospectiva_DoNotGetMemoria() throws Exception {
+    // Authorization
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user-001", "ETI-PEV-ER-INV")));
+
+    final ResponseEntity<Memoria> response = restTemplate.exchange(
+        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/enviar-secretaria-retrospectiva", HttpMethod.PUT,
         buildRequest(headers, null), Memoria.class, 3L);
 
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);

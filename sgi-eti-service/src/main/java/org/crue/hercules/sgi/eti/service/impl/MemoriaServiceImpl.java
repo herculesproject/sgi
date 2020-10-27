@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
+import org.crue.hercules.sgi.eti.exceptions.EstadoRetrospectivaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
@@ -510,14 +511,14 @@ public class MemoriaServiceImpl implements MemoriaService {
   }
 
   /**
-   * 
-   * Actualiza el estado de la {@link Memoria} a Enviar Secretaria
+   * Actualiza el estado de la {@link Memoria} a 'En Secretaria' o 'En Secretaría
+   * Revisión Mínima'
    * 
    * @param idMemoria de la memoria.
    */
   @Transactional
   @Override
-  public void enviarSecretaria(long idMemoria, String personaRef) {
+  public void enviarSecretaria(Long idMemoria, String personaRef) {
     log.debug("enviarSecretaria(Long id) - start");
     Assert.notNull(idMemoria, "Memoria id no puede ser null para actualizar la memoria");
 
@@ -594,6 +595,46 @@ public class MemoriaServiceImpl implements MemoriaService {
     // en informes el identificador del documento.
 
     log.debug("enviarSecretaria(Long id) - end");
+  }
+
+  /**
+   * 
+   * Actualiza el estado de la Retrospectiva de {@link Memoria} a 'En Secretaria'
+   * 
+   * @param idMemoria de la memoria.
+   */
+  @Transactional
+  @Override
+  public void enviarSecretariaRetrospectiva(Long idMemoria, String personaRef) {
+    log.debug("enviarSecretariaRetrospectiva(Long id) - start");
+    Assert.notNull(idMemoria, "Memoria id no puede ser null para actualizar la memoria");
+
+    memoriaRepository.findById(idMemoria).map(memoria -> {
+      // Si el estado es 'Completada', Requiere retrospectiva y el comité es CEEA
+      Assert.isTrue(
+          (memoria.getEstadoActual().getId() == 2L && memoria.getRequiereRetrospectiva()
+              && memoria.getComite().getComite().equals("CEEA")),
+          "La memoria no está en un estado correcto para pasar al estado 'En secretaría'");
+
+      Assert.isTrue(memoria.getPeticionEvaluacion().getPersonaRef().equals(personaRef),
+          "El usuario no es el propietario de la petición evaluación.");
+
+      estadoRetrospectivaRepository.findById(3L).map(estadoRetrospectiva -> {
+
+        memoria.getRetrospectiva().setEstadoRetrospectiva(estadoRetrospectiva);
+        memoriaRepository.save(memoria);
+        return estadoRetrospectiva;
+
+      }).orElseThrow(() -> new EstadoRetrospectivaNotFoundException(3L));
+
+      return memoria;
+    }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
+
+    // FALTA: crear un fichero en formato pdf con los datos del proyecto y con los
+    // datos del formulario y subirlo al gestor documental y que el sistema guarde
+    // en informes el identificador del documento.
+
+    log.debug("enviarSecretariaRetrospectiva(Long id) - end");
   }
 
 }

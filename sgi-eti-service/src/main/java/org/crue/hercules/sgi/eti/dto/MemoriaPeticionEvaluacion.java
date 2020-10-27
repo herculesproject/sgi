@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 
 import lombok.AllArgsConstructor;
@@ -31,10 +32,28 @@ public class MemoriaPeticionEvaluacion implements Serializable {
 
   private TipoEstadoMemoria estadoActual;
 
+  private boolean requiereRetrospectiva;
+
+  private Retrospectiva retrospectiva;
+
   private LocalDateTime fechaEvaluacion;
 
   private LocalDate fechaLimite;
 
   private boolean isResponsable;
+
+  public MemoriaPeticionEvaluacion(Long id, String numReferencia, String titulo, Comite comite,
+      TipoEstadoMemoria estadoActual, LocalDateTime fechaEvaluacion, LocalDate fechaLimite, boolean isResponsable) {
+
+    this.id = id;
+    this.numReferencia = numReferencia;
+    this.titulo = titulo;
+    this.comite = comite;
+    this.estadoActual = estadoActual;
+    this.fechaEvaluacion = fechaEvaluacion;
+    this.fechaLimite = fechaLimite;
+    this.isResponsable = isResponsable;
+
+  }
 
 }

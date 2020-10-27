@@ -676,8 +676,8 @@ public class MemoriaController {
   }
 
   /**
-   * Se cambia el estado de la memoria a Enviar Secretaría o Enviar Secretaría
-   * Revisión Mínima
+   * Se cambia el estado de la memoria a 'En Secretaría' o 'En Secretaría Revisión
+   * Mínima'
    *
    * @param id Id de {@link Memoria}.
    */
@@ -689,4 +689,19 @@ public class MemoriaController {
     service.enviarSecretaria(id, personaRef);
     log.debug("enviarSecretaria(Long id) - end");
   }
+
+  /**
+   * Se cambia la retrospectiva de la memoria al estado 'En secretaría'
+   *
+   * @param id Id de {@link Memoria}.
+   */
+  @PutMapping("/{id}/enviar-secretaria-retrospectiva")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-ER-INV')")
+  void enviarSecretariaRetrospectiva(@PathVariable Long id, Authentication authentication) {
+    log.debug("enviarSecretariaRetrospectiva(Long id) - start");
+    String personaRef = authentication.getName();
+    service.enviarSecretariaRetrospectiva(id, personaRef);
+    log.debug("enviarSecretariaRetrospectiva(Long id) - end");
+  }
+
 }

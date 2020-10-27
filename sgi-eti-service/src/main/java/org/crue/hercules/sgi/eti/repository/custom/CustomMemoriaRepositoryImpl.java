@@ -198,8 +198,9 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     Root<Memoria> root = cq.from(Memoria.class);
 
     cq.multiselect(root.get(Memoria_.id), root.get(Memoria_.numReferencia), root.get(Memoria_.titulo),
-        root.get(Memoria_.comite), root.get(Memoria_.estadoActual),
-        getFechaEvaluacion(root, cb, cq).alias("fechaEvaluacion"), getFechaLimite(root, cb, cq).alias("fechaLimite"),
+        root.get(Memoria_.comite), root.get(Memoria_.estadoActual), root.get(Memoria_.requiereRetrospectiva),
+        root.get(Memoria_.retrospectiva), getFechaEvaluacion(root, cb, cq).alias("fechaEvaluacion"),
+        getFechaLimite(root, cb, cq).alias("fechaLimite"),
         cb.equal(root.get(Memoria_.personaRef), personaRefConsulta != null ? personaRefConsulta : "")
             .alias("isResponsable"));
 

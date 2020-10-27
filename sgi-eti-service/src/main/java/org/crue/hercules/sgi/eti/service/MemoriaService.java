@@ -185,10 +185,20 @@ public interface MemoriaService {
 
   /**
    * 
-   * Actualiza el estado de la {@link Memoria} a Enviar Secretaria
+   * Actualiza el estado de la {@link Memoria} a 'En Secretaria' o 'En Secretaría
+   * Revisión Mínima'
    * 
    * @param id         del estado de la memoria nuevo.
    * @param personaRef Usuario logueado.
    */
-  void enviarSecretaria(long id, String personaRef);
+  void enviarSecretaria(Long id, String personaRef);
+
+  /**
+   * 
+   * Actualiza el estado de la Retrospectiva de {@link Memoria} a 'En Secretaria'
+   * 
+   * @param id         Identificador de la {@link Memoria}.
+   * @param personaRef Referencia de la persona logueada.
+   */
+  void enviarSecretariaRetrospectiva(Long id, String personaRef);
 }
