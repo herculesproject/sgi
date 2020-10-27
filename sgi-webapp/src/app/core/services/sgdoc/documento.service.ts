@@ -2,11 +2,10 @@ import { Injectable } from '@angular/core';
 import { SgiRestService } from '@sgi/framework/http/';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { NGXLogger } from 'ngx-logger';
-import { HttpClient, HttpHeaders, HttpResponse, } from '@angular/common/http';
-
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '@env';
 import { Observable, of, EMPTY } from 'rxjs';
-import { tap, switchMap, catchError, map } from 'rxjs/operators';
+import { tap, switchMap, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
