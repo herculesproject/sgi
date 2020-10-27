@@ -1162,6 +1162,111 @@ public class DocumentacionMemoriaServiceTest {
 
   }
 
+  @Test
+  public void deleteDocumentacionInicial_DocumentacionMemoriaIdNull() {
+
+    try {
+
+      // when: borramos con id documentación memoria a null
+      documentacionMemoriaService.deleteDocumentacionInicial(1L, null);
+      Assertions.fail("DocumentacionMemoria id tiene no puede ser null para eliminar uun documento de tipo inicial");
+    } catch (
+
+    final IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage())
+          .isEqualTo("DocumentacionMemoria id tiene no puede ser null para eliminar uun documento de tipo inicial");
+    }
+
+  }
+
+  @Test
+  public void deleteDocumentacionInicial_MemoriaIdNull() {
+    try {
+
+      // when: Se elimina la documentación enviando id memoria a null
+      documentacionMemoriaService.deleteDocumentacionInicial(null, 1L);
+      Assertions.fail(
+          "El identificador de la memoria no puede ser null para eliminar un documento de tipo inicial asociado a esta");
+    } catch (
+
+    final IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage()).isEqualTo(
+          "El identificador de la memoria no puede ser null para eliminar un documento de tipo inicial asociado a esta");
+    }
+
+  }
+
+  @Test
+  public void deleteDocumentacionInicial_throwMemoriaNotFound() {
+
+    BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.empty());
+
+    Assertions.assertThatThrownBy(() -> documentacionMemoriaService.deleteDocumentacionSeguimientoAnual(1L, 1L))
+        .isInstanceOf(MemoriaNotFoundException.class);
+
+  }
+
+  @Test
+  public void deleteDocumentacionInicial_throwTipoDocumentoNotFound() {
+    // given: memoria
+    Memoria memoria = generarMockMemoria(1L, "Memoria1", 9L);
+
+    BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.of(memoria));
+
+    BDDMockito.given(documentacionMemoriaRepository.findByIdAndMemoriaIdAndMemoriaActivoTrue(1L, 1L))
+        .willReturn(Optional.empty());
+    Assertions.assertThatThrownBy(() -> documentacionMemoriaService.deleteDocumentacionSeguimientoAnual(1L, 1L))
+        .isInstanceOf(TipoDocumentoNotFoundException.class);
+
+  }
+
+  @Test
+  public void deleteDocumentacionInicial_estadoMemoriaFail() {
+    // given: memoria en estado inadecuado
+    Memoria memoria = generarMockMemoria(1L, "Memoria1", 4L);
+
+    BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.of(memoria));
+
+    try {
+
+      // when: se elimina la documentación
+      documentacionMemoriaService.deleteDocumentacionInicial(1L, 1L);
+      Assertions.fail("La memoria no se encuentra en un estado adecuado para eliminar documentación inicial");
+    } catch (
+
+    final IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage())
+          .isEqualTo("La memoria no se encuentra en un estado adecuado para eliminar documentación inicial");
+    }
+
+  }
+
+  @Test
+  public void deleteDocumentacionInicial_tipoDocumentoFail() {
+    // given:memoria y documentacion con tipo documento erróneo
+    Memoria memoria = generarMockMemoria(1L, "Memoria1", 1L);
+
+    DocumentacionMemoria documentacionMemoria = generarMockDocumentacionMemoria(1L, memoria,
+        generarMockTipoDocumento(1L));
+
+    BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.of(memoria));
+    BDDMockito.given(documentacionMemoriaRepository.findByIdAndMemoriaIdAndMemoriaActivoTrue(1L, 1L))
+        .willReturn(Optional.of(documentacionMemoria));
+    try {
+
+      // when: Se elimina la documentación
+      documentacionMemoriaService.deleteDocumentacionInicial(1L, 1L);
+      Assertions
+          .fail("La documentación recuperada no se corresponde con los tipos correspondientes a documentación inicial");
+    } catch (
+
+    final IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage()).isEqualTo(
+          "La documentación recuperada no se corresponde con los tipos correspondientes a documentación inicial");
+    }
+
+  }
+
   /**
    * Función que devuelve un objeto DocumentacionMemoria
    * 

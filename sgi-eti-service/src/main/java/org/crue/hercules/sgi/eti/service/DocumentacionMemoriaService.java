@@ -156,4 +156,12 @@ public interface DocumentacionMemoriaService {
    * @param idDocumentacionMemoria Id {@link DocumentacionMemoria}
    */
   void deleteDocumentacionRetrospectiva(Long idMemoria, Long idDocumentacionMemoria);
+
+  /**
+   * Elimina {@link DocumentacionMemoria} inicial.
+   * 
+   * @param idMemoria              Id {@link Memoria}
+   * @param idDocumentacionMemoria Id {@link DocumentacionMemoria}
+   */
+  void deleteDocumentacionInicial(Long idMemoria, Long idDocumentacionMemoria);
 }

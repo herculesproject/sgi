@@ -756,6 +756,33 @@ public class MemoriaIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
+  public void replaceDocumentacionMemoria_ReturnsMemoria() throws Exception {
+
+    DocumentacionMemoria replaceDocumentacionMemoria = generarMockDocumentacionMemoria(1L,
+        generarMockMemoria(1L, "001", "Memoria1", 1), generarMockTipoDocumento(1L));
+    replaceDocumentacionMemoria.setAportado(Boolean.FALSE);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
+
+    final ResponseEntity<DocumentacionMemoria> response = restTemplate.exchange(
+        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-inicial/{idDocumentacionMemoria}",
+        HttpMethod.PUT, buildRequestDocumentacionMemoria(headers, replaceDocumentacionMemoria),
+        DocumentacionMemoria.class, 1L, 1L);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    final DocumentacionMemoria documentacionMemoria = response.getBody();
+
+    Assertions.assertThat(replaceDocumentacionMemoria.getId()).isNotNull();
+    Assertions.assertThat(documentacionMemoria.getMemoria().getNumReferencia())
+        .isEqualTo(replaceDocumentacionMemoria.getMemoria().getNumReferencia());
+    Assertions.assertThat(documentacionMemoria.getAportado()).isEqualTo(replaceDocumentacionMemoria.getAportado());
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
   public void findAllByPersonaRefPeticionEvaluacion_WithSortQuery_ReturnsOrderedMemoriaPeticionEvaluacionList()
       throws Exception {
     // when: Ordenación por titulo desc
@@ -916,33 +943,6 @@ public class MemoriaIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void replaceDocumentacionMemoria_ReturnsMemoria() throws Exception {
-
-    DocumentacionMemoria replaceDocumentacionMemoria = generarMockDocumentacionMemoria(1L,
-        generarMockMemoria(1L, "001", "Memoria1", 1), generarMockTipoDocumento(1L));
-    replaceDocumentacionMemoria.setAportado(Boolean.FALSE);
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
-
-    final ResponseEntity<DocumentacionMemoria> response = restTemplate.exchange(
-        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-inicial/{idDocumentacionMemoria}",
-        HttpMethod.PUT, buildRequestDocumentacionMemoria(headers, replaceDocumentacionMemoria),
-        DocumentacionMemoria.class, 1L, 1L);
-
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-    final DocumentacionMemoria documentacionMemoria = response.getBody();
-
-    Assertions.assertThat(replaceDocumentacionMemoria.getId()).isNotNull();
-    Assertions.assertThat(documentacionMemoria.getMemoria().getNumReferencia())
-        .isEqualTo(replaceDocumentacionMemoria.getMemoria().getNumReferencia());
-    Assertions.assertThat(documentacionMemoria.getAportado()).isEqualTo(replaceDocumentacionMemoria.getAportado());
-  }
-
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
   public void findAllByPersonaRefPeticionEvaluacion_WithSearchQuery_ReturnsFilteredMemoriaPeticionEvaluacionList()
       throws Exception {
     // when: Búsqueda por titulo like e id equals
@@ -1027,6 +1027,21 @@ public class MemoriaIT {
 
     final ResponseEntity<DocumentacionMemoria> response = restTemplate.exchange(
         MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-retrospectiva/{idDocumentacionMemoria}",
+        HttpMethod.DELETE, buildRequestDocumentacionMemoria(headers, null), DocumentacionMemoria.class, 1L, 1L);
+
+    // then: 200
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void deleteDocumentacionInicial_ReturnsMemoria() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-ER-INV")));
+
+    final ResponseEntity<DocumentacionMemoria> response = restTemplate.exchange(
+        MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/documentacion-inicial/{idDocumentacionMemoria}",
         HttpMethod.DELETE, buildRequestDocumentacionMemoria(headers, null), DocumentacionMemoria.class, 1L, 1L);
 
     // then: 200

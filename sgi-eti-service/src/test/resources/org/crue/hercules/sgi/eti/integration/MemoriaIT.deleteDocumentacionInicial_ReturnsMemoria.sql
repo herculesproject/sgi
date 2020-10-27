@@ -1,8 +1,8 @@
 -- FORMULARIO 
-INSERT INTO eti.formulario (id, nombre, descripcion, activo) VALUES (1, 'M10', 'Formulario M10', true);
+INSERT INTO eti.formulario (id, nombre, descripcion) VALUES (1, 'M10', 'Descripcion');
 
--- COMITÉ
-INSERT INTO eti.comite (id, comite, activo, formulario_id) VALUES (1, 'Comite1', true, 1);
+-- COMITE
+INSERT INTO eti.comite (id, comite, formulario_id, activo) VALUES (1, 'Comite1', 1, true);
 
 -- TIPO ACTIVIDAD 
 INSERT INTO eti.tipo_actividad (id, nombre, activo) VALUES (1, 'TipoActividad1', true);
@@ -44,30 +44,9 @@ VALUES(1, 1, '2020-07-01');
 -- MEMORIA 
 INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, persona_ref, tipo_memoria_id, estado_actual_id, fecha_envio_secretaria, requiere_retrospectiva, retrospectiva_id, version, activo)
  VALUES (1, 'ref-5588', 1, 1, 'Memoria1', 'userref-55698', 1, 1, null, false, 1, 1, true);
-INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, persona_ref, tipo_memoria_id, estado_actual_id, fecha_envio_secretaria, requiere_retrospectiva, retrospectiva_id, version, activo)
- VALUES (2, 'ref-5588', 2, 1, 'Memoria2', 'userref-55698', 1, 1, null, false, 1, 1, true);
-INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, persona_ref, tipo_memoria_id, estado_actual_id, fecha_envio_secretaria, requiere_retrospectiva, retrospectiva_id, version, activo)
- VALUES (3, 'ref-5588', 3, 1, 'Memoria3', 'userref-55698', 1, 1, null, false, 1, 1, true);
-INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, persona_ref, tipo_memoria_id, estado_actual_id, fecha_envio_secretaria, requiere_retrospectiva, retrospectiva_id, version, activo)
- VALUES (4, 'ref-5588', 4, 1, 'Memoria4', 'userref-55698', 1, 1, null, false, 1, 1, true);
-INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, persona_ref, tipo_memoria_id, estado_actual_id, fecha_envio_secretaria, requiere_retrospectiva, retrospectiva_id, version, activo)
- VALUES (5, 'ref-5588', 5, 1, 'Memoria5', 'userref-55698', 1, 1, null, false, 1, 1, true);
-INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, persona_ref, tipo_memoria_id, estado_actual_id, fecha_envio_secretaria, requiere_retrospectiva, retrospectiva_id, version, activo)
- VALUES (6, 'ref-5588', 6, 1, 'Memoria6', 'userref-55698', 1, 1, null, false, 1, 1, true);
-INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, persona_ref, tipo_memoria_id, estado_actual_id, fecha_envio_secretaria, requiere_retrospectiva, retrospectiva_id, version, activo)
- VALUES (7, 'ref-5588', 7, 1, 'Memoria7', 'userref-55698', 1, 1, null, false, 1, 1, true);
-INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, persona_ref, tipo_memoria_id, estado_actual_id, fecha_envio_secretaria, requiere_retrospectiva, retrospectiva_id, version, activo)
- VALUES (8, 'ref-5588', 8, 1, 'Memoria8', 'userref-55698', 1, 1, null, false, 1, 1, true);
 
  -- TIPO DOCUMENTO 
-INSERT INTO eti.tipo_documento (id, nombre, formulario_id, activo) VALUES (1, 'TipoDocumento1', 1, true);
+INSERT INTO eti.tipo_documento (id, nombre, formulario_id, activo) VALUES (4, 'Documento de consentimiento', 1, true);
 
 -- DOCUMENTACIÓN MEMORIA
-INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref, aportado) VALUES (1, 1, 1, 'doc-001', true);
-INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref, aportado) VALUES (2, 2, 1, 'doc-002', true);
-INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref, aportado) VALUES (3, 3, 1, 'doc-003', true);
-INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref, aportado) VALUES (4, 4, 1, 'doc-004', true);
-INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref, aportado) VALUES (5, 5, 1, 'doc-005', true);
-INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref, aportado) VALUES (6, 6, 1, 'doc-006', true);
-INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref, aportado) VALUES (7, 7, 1, 'doc-007', true);
-INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref, aportado) VALUES (8, 8, 1, 'doc-008', true);
+INSERT INTO eti.documentacion_memoria (id, memoria_id, tipo_documento_id, documento_ref, aportado) VALUES (1, 1, 4, 'doc-001', true);

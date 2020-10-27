@@ -1233,7 +1233,7 @@
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria4')" />
       <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where nombre='Documento de consentimiento')" />
       <column name="documento_ref" value="DocumentoRef4" />
-      <column name="aportado" value="true" />
+      <column name="aportado" value="false" />
     </insert>
     <insert tableName="documentacion_memoria">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria5')" />
@@ -1340,6 +1340,12 @@
     <insert tableName="documentacion_memoria">
       <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria300')" />
       <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where id=14)" />
+      <column name="documento_ref" value="DocumentoRef14" />
+      <column name="aportado" value="false" />
+    </insert>
+    <insert tableName="documentacion_memoria">
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where titulo='Memoria8')" />
+      <column name="tipo_documento_id" valueComputed="(select id from eti.tipo_documento where id=4)" />
       <column name="documento_ref" value="DocumentoRef14" />
       <column name="aportado" value="false" />
     </insert>

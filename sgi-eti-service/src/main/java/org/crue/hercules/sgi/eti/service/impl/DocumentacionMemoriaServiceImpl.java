@@ -559,4 +559,46 @@ public class DocumentacionMemoriaServiceImpl implements DocumentacionMemoriaServ
 
   }
 
+  /**
+   * Elimina {@link DocumentacionMemoria} inicial.
+   * 
+   * @param idMemoria              Id {@link Memoria}
+   * @param idDocumentacionMemoria Id {@link DocumentacionMemoria}
+   */
+  @Transactional
+  @Override
+  public void deleteDocumentacionInicial(Long idMemoria, Long idDocumentacionMemoria) {
+    log.debug("deleteDocumentacionInicial(Long idMemoria, Long idDocumentacionMemoria) -- start");
+
+    Assert.notNull(idDocumentacionMemoria,
+        "DocumentacionMemoria id tiene no puede ser null para eliminar uun documento de tipo inicial");
+
+    Assert.notNull(idMemoria,
+        "El identificador de la memoria no puede ser null para eliminar un documento de tipo inicial asociado a esta");
+
+    memoriaRepository.findByIdAndActivoTrue(idMemoria).map(memoria -> {
+
+      Assert.isTrue(
+          (memoria.getEstadoActual().getId().equals(1L) || memoria.getEstadoActual().getId().equals(2L)
+              || memoria.getEstadoActual().getId().equals(6L) || memoria.getEstadoActual().getId().equals(7L)
+              || memoria.getEstadoActual().getId().equals(8L)),
+          "La memoria no se encuentra en un estado adecuado para eliminar documentación inicial");
+
+      documentacionMemoriaRepository.findByIdAndMemoriaIdAndMemoriaActivoTrue(idDocumentacionMemoria, idMemoria)
+          .map(documentacionMemoria -> {
+
+            Assert.isTrue(
+                !documentacionMemoria.getTipoDocumento().getId().equals(1L)
+                    && !documentacionMemoria.getTipoDocumento().getId().equals(2L)
+                    && !documentacionMemoria.getTipoDocumento().getId().equals(3L),
+                "La documentación recuperada no se corresponde con los tipos correspondientes a documentación inicial");
+            documentacionMemoriaRepository.delete(documentacionMemoria);
+            return Optional.empty();
+          }).orElseThrow(() -> new TipoDocumentoNotFoundException(1L));
+
+      return memoria;
+    }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
+
+  }
+
 }

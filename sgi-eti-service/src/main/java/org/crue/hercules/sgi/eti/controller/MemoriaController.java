@@ -704,4 +704,18 @@ public class MemoriaController {
     log.debug("enviarSecretariaRetrospectiva(Long id) - end");
   }
 
+  /**
+   * Elimina la {@link DocumentacionMemoria} del tipo retrospectiva.
+   * 
+   * @param id                     Id {@link Memoria}.
+   * @param idDocumentacionMemoria id {@link DocumentacionMemoria} a eliminar.
+   */
+  @PreAuthorize("hasAuthorityForAnyUO('ETI-PEV-ER-INV')")
+  @DeleteMapping("/{id}/documentacion-inicial/{idDocumentacionMemoria}")
+  void deleteDocumentacionInicial(@PathVariable Long id, @PathVariable Long idDocumentacionMemoria) {
+    log.debug("deleteDocumentacionRetrospectiva(Long id, Long idDocumentacionMemoria) - start");
+    documentacionMemoriaService.deleteDocumentacionInicial(id, idDocumentacionMemoria);
+    log.debug("deleteDocumentacionRetrospectiva(Long id, Long idDocumentacionMemoria) - end");
+  }
+
 }

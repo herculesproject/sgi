@@ -254,6 +254,19 @@ public class MemoriaControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
+  public void deleteDocumentacionInicial_ReturnsOk() throws Exception {
+
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders
+                .delete(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID
+                    + "/documentacion-inicial/{idDocumentacionMemoria}", 1L, 1L)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+  }
+
+  @Test
 
   @WithMockUser(username = "user", authorities = { "ETI-PEV-VR-INV", "ETI-PEV-V" })
   public void findAll_Unlimited_ReturnsFullMemoriaList() throws Exception { // given: One hundred Memoria
