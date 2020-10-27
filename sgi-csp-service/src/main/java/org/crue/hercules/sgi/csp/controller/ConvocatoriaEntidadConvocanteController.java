@@ -1,14 +1,11 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import javax.validation.Valid;
-import javax.validation.groups.Default;
 
-import org.crue.hercules.sgi.csp.model.BaseEntity.Update;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -85,9 +82,7 @@ public class ConvocatoriaEntidadConvocanteController {
    */
   @PutMapping("/{id}")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-E')")
-  ConvocatoriaEntidadConvocante update(
-      @Validated({ Update.class,
-          Default.class }) @RequestBody ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante,
+  ConvocatoriaEntidadConvocante update(@Valid @RequestBody ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante,
       @PathVariable Long id) {
     log.debug("update(ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante, Long id) - start");
     convocatoriaEntidadConvocante.setId(id);

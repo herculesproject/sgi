@@ -12,6 +12,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEnlaceService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
@@ -20,6 +21,7 @@ import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadGestoraService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaFaseService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaHitoService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -70,18 +72,21 @@ public class ConvocatoriaController {
   /** ConvocatoriaHitoservice */
   private final ConvocatoriaHitoService convocatoriaHitoService;
 
+  /** ConvocatoriaPeriodoJustificacion service */
+  private final ConvocatoriaPeriodoJustificacionService convocatoriaPeriodoJustificacionService;
+
   /**
    * Instancia un nuevo ConvocatoriaController.
    * 
-   * @param convocatoriaService                    {@link ConvocatoriaService}.
-   * @param convocatoriaAreaTematicaService        {@link ConvocatoriaAreaTematicaService}.
-   * @param convocatoriaEnlaceService              {@link ConvocatoriaEnlaceService}.
-   * @param convocatoriaEntidadConvocanteService   {@link ConvocatoriaEntidadConvocanteService}.
-   * @param convocatoriaEntidadFinanciadoraService {@link ConvocatoriaEntidadFinanciadoraService}.
-   * @param convocatoriaEntidadGestoraService      {@link ConvocatoriaEntidadGestoraService}.
-   * @param convocatoriaFaseService                {@link ConvocatoriaFaseService}
-   * @param convocatoriaHitoService                {@link ConvocatoriaHitoService}
-   * 
+   * @param convocatoriaService                     {@link ConvocatoriaService}.
+   * @param convocatoriaAreaTematicaService         {@link ConvocatoriaAreaTematicaService}.
+   * @param convocatoriaEnlaceService               {@link ConvocatoriaEnlaceService}.
+   * @param convocatoriaEntidadConvocanteService    {@link ConvocatoriaEntidadConvocanteService}.
+   * @param convocatoriaEntidadFinanciadoraService  {@link ConvocatoriaEntidadFinanciadoraService}.
+   * @param convocatoriaEntidadGestoraService       {@link ConvocatoriaEntidadGestoraService}.
+   * @param convocatoriaFaseService                 {@link ConvocatoriaFaseService}
+   * @param convocatoriaHitoService                 {@link ConvocatoriaHitoService}
+   * @param convocatoriaPeriodoJustificacionService {@link ConvocatoriaPeriodoJustificacionService}.
    */
   public ConvocatoriaController(ConvocatoriaService convocatoriaService,
       ConvocatoriaAreaTematicaService convocatoriaAreaTematicaService,
@@ -89,7 +94,8 @@ public class ConvocatoriaController {
       ConvocatoriaEntidadConvocanteService convocatoriaEntidadConvocanteService,
       ConvocatoriaEntidadFinanciadoraService convocatoriaEntidadFinanciadoraService,
       ConvocatoriaEntidadGestoraService convocatoriaEntidadGestoraService,
-      ConvocatoriaFaseService convocatoriaFaseService, ConvocatoriaHitoService convocatoriaHitoService) {
+      ConvocatoriaFaseService convocatoriaFaseService, ConvocatoriaHitoService convocatoriaHitoService,
+      ConvocatoriaPeriodoJustificacionService convocatoriaPeriodoJustificacionService) {
     this.service = convocatoriaService;
     this.convocatoriaAreaTematicaService = convocatoriaAreaTematicaService;
     this.convocatoriaEnlaceService = convocatoriaEnlaceService;
@@ -98,6 +104,7 @@ public class ConvocatoriaController {
     this.convocatoriaEntidadGestoraService = convocatoriaEntidadGestoraService;
     this.convocatoriaFaseService = convocatoriaFaseService;
     this.convocatoriaHitoService = convocatoriaHitoService;
+    this.convocatoriaPeriodoJustificacionService = convocatoriaPeriodoJustificacionService;
   }
 
   /**
@@ -438,6 +445,38 @@ public class ConvocatoriaController {
     }
 
     log.debug("findAllConvocatoriaEntidadConvocantes(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * 
+   * CONVOCATORIA PERIODO JUSTIFICACION
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de
+   * {@link ConvocatoriaPeriodoJustificacion} de la {@link Convocatoria}.
+   * 
+   * @param id     Identificador de {@link Convocatoria}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/convocatoriaperiodojustificaciones")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CATEM-V')")
+  ResponseEntity<Page<ConvocatoriaPeriodoJustificacion>> findAllConvocatoriaPeriodoJustificacion(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllConvocatoriaPeriodoJustificacion(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<ConvocatoriaPeriodoJustificacion> page = convocatoriaPeriodoJustificacionService.findAllByConvocatoria(id,
+        query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllConvocatoriaPeriodoJustificacion(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllConvocatoriaPeriodoJustificacion(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

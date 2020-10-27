@@ -11,12 +11,14 @@ import org.crue.hercules.sgi.csp.enums.TipoDestinatarioEnum;
 import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoFinalidadRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
@@ -44,6 +46,10 @@ public class ConvocatoriaServiceTest {
 
   @Mock
   private ConvocatoriaRepository repository;
+
+  @Mock
+  private ConvocatoriaPeriodoJustificacionRepository convocatoriaPeriodoJustificacionRepository;
+
   @Mock
   private ModeloUnidadRepository modeloUnidadRepository;
   @Mock
@@ -57,8 +63,9 @@ public class ConvocatoriaServiceTest {
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new ConvocatoriaServiceImpl(repository, modeloUnidadRepository, modeloTipoFinalidadRepository,
-        tipoRegimenConcurrenciaRepository, tipoAmbitoGeograficoRepository);
+    service = new ConvocatoriaServiceImpl(repository, convocatoriaPeriodoJustificacionRepository,
+        modeloUnidadRepository, modeloTipoFinalidadRepository, tipoRegimenConcurrenciaRepository,
+        tipoAmbitoGeograficoRepository);
   }
 
   @Test
@@ -1441,6 +1448,49 @@ public class ConvocatoriaServiceTest {
         // then: throw exception as updated TipoAmbitoGeografico is disabled
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("AmbitoGeografico '%s' no está activo", convocatoria.getAmbitoGeografico().getNombre());
+  }
+
+  @Test
+  public void update_WithDuracionLowerConvocatoriaPeriodoJustificacionMesFinal_ThrowsIllegalArgumentException() {
+    // given: a Convocatoria with updated TipoAmbitoGeografico disabled
+    Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 2L, Boolean.TRUE);
+    convocatoria.setDuracion(2);
+
+    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = new ConvocatoriaPeriodoJustificacion();
+    convocatoriaPeriodoJustificacion.setId(1L);
+    convocatoriaPeriodoJustificacion.setMesFinal(100);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
+
+    BDDMockito
+        .given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+            ArgumentMatchers.anyString()))
+        .willReturn(Optional.of(generarMockModeloUnidad(1L, convocatoria.getModeloEjecucion(),
+            convocatoria.getUnidadGestionRef(), Boolean.TRUE)));
+
+    BDDMockito
+        .given(modeloTipoFinalidadRepository.findByModeloEjecucionIdAndTipoFinalidadId(ArgumentMatchers.anyLong(),
+            ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockModeloTipoFinalidad(convocatoria, Boolean.TRUE)));
+
+    BDDMockito.given(tipoRegimenConcurrenciaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(convocatoria.getRegimenConcurrencia()));
+
+    BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(convocatoria.getAmbitoGeografico()));
+
+    BDDMockito
+        .given(convocatoriaPeriodoJustificacionRepository
+            .findFirstByConvocatoriaIdOrderByNumPeriodoDesc(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(convocatoriaPeriodoJustificacion));
+
+    Assertions.assertThatThrownBy(
+        // when: update Convocatoria
+        () -> service.update(convocatoria))
+        // then: throw exception as duracion no valid
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Hay ConvocatoriaPeriodoJustificacion con mesFinal inferior a la nueva duracion");
   }
 
   @Test

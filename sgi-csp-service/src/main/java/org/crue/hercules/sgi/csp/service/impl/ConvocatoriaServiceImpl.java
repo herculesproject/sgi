@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoFinalidadRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
@@ -38,16 +39,19 @@ import lombok.extern.slf4j.Slf4j;
 public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
   private final ConvocatoriaRepository repository;
+  private final ConvocatoriaPeriodoJustificacionRepository convocatoriaPeriodoJustificacionRepository;
   private final ModeloUnidadRepository modeloUnidadRepository;
   private final ModeloTipoFinalidadRepository modeloTipoFinalidadRepository;
   private final TipoRegimenConcurrenciaRepository tipoRegimenConcurrenciaRepository;
   private final TipoAmbitoGeograficoRepository tipoAmbitoGeograficoRepository;
 
-  public ConvocatoriaServiceImpl(ConvocatoriaRepository repository, ModeloUnidadRepository modeloUnidadRepository,
-      ModeloTipoFinalidadRepository modeloTipoFinalidadRepository,
+  public ConvocatoriaServiceImpl(ConvocatoriaRepository repository,
+      ConvocatoriaPeriodoJustificacionRepository convocatoriaPeriodoJustificacionRepository,
+      ModeloUnidadRepository modeloUnidadRepository, ModeloTipoFinalidadRepository modeloTipoFinalidadRepository,
       TipoRegimenConcurrenciaRepository tipoRegimenConcurrenciaRepository,
       TipoAmbitoGeograficoRepository tipoAmbitoGeograficoRepository) {
     this.repository = repository;
+    this.convocatoriaPeriodoJustificacionRepository = convocatoriaPeriodoJustificacionRepository;
     this.modeloUnidadRepository = modeloUnidadRepository;
     this.modeloTipoFinalidadRepository = modeloTipoFinalidadRepository;
     this.tipoRegimenConcurrenciaRepository = tipoRegimenConcurrenciaRepository;
@@ -353,6 +357,20 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
             "AmbitoGeografico '" + tipoAmbitoGeografico.get().getNombre() + "' no está activo");
       }
       datosConvocatoria.setAmbitoGeografico(tipoAmbitoGeografico.get());
+    }
+
+    if (datosConvocatoria.getId() != null) {
+      // Comprueba que la duracion no sea menor que el ultimo mes del ultimo
+      // ConvocatoriaPeriodoJustificacion de la convocatoria
+      if (datosConvocatoria.getDuracion() != null && datosConvocatoria.getDuracion() != datosOriginales.getDuracion()) {
+        convocatoriaPeriodoJustificacionRepository
+            .findFirstByConvocatoriaIdOrderByNumPeriodoDesc(datosConvocatoria.getId())
+            .ifPresent(convocatoriaPeriodoJustificacion -> {
+              Assert.isTrue(convocatoriaPeriodoJustificacion.getMesFinal() <= datosConvocatoria.getDuracion(),
+                  "Hay ConvocatoriaPeriodoJustificacion con mesFinal inferior a la nueva duracion");
+            });
+      }
+
     }
 
     log.debug("validarDatosConvocatoria(Convocatoria datosConvocatoria, Convocatoria datosOriginales) - end");

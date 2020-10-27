@@ -7,7 +7,6 @@ import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ProgramaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEntidadConvocanteRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.ProgramaRepository;
@@ -174,12 +173,13 @@ public class ConvocatoriaEntidadConvocanteServiceImpl implements ConvocatoriaEnt
   }
 
   /**
-   * Obtiene las {@link ConvocatoriaEntidadGestora} para una {@link Convocatoria}.
+   * Obtiene las {@link ConvocatoriaEntidadConvocante} para una
+   * {@link Convocatoria}.
    *
    * @param idConvocatoria el id de la {@link Convocatoria}.
    * @param query          la información del filtro.
    * @param pageable       la información de la paginación.
-   * @return la lista de entidades {@link ConvocatoriaEntidadGestora} de la
+   * @return la lista de entidades {@link ConvocatoriaEntidadConvocante} de la
    *         {@link Convocatoria} paginadas.
    */
   public Page<ConvocatoriaEntidadConvocante> findAllByConvocatoria(Long idConvocatoria, List<QueryCriteria> query,

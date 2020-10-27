@@ -13,6 +13,7 @@ import org.crue.hercules.sgi.csp.config.SecurityConfig;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVNEnum;
 import org.crue.hercules.sgi.csp.enums.TipoDestinatarioEnum;
 import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
+import org.crue.hercules.sgi.csp.enums.TipoJustificacionEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.AreaTematicaArbol;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -21,6 +22,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
@@ -39,6 +41,7 @@ import org.crue.hercules.sgi.csp.service.ConvocatoriaEnlaceService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadGestoraService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaFaseService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaHitoService;
@@ -98,6 +101,9 @@ public class ConvocatoriaControllerTest {
   @MockBean
   private ConvocatoriaHitoService convocatoriaHitoService;
 
+  @MockBean
+  private ConvocatoriaPeriodoJustificacionService convocatoriaPeriodoJustificacionService;
+
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_REGISTRAR = "/registrar";
   private static final String PATH_PARAMETER_TODOS = "/todos";
@@ -109,6 +115,7 @@ public class ConvocatoriaControllerTest {
   private static final String PATH_ENTIDAD_GESTORA = "/convocatoriaentidadgestoras";
   private static final String PATH_FASE = "/convocatoriafases";
   private static final String PATH_HITO = "/convocatoriahitos";
+  private static final String PATH_PERIODO_JUSTIFICACION = "/convocatoriaperiodojustificaciones";
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
@@ -1026,6 +1033,103 @@ public class ConvocatoriaControllerTest {
 
   /**
    * 
+   * CONVOCATORIA PERIODO JUSTIFICACION
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void findAllConvocatoriaPeriodoJustificacion_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ConvocatoriaEntidadConvocante para la Convocatoria
+    Long convocatoriaId = 1L;
+
+    List<ConvocatoriaPeriodoJustificacion> convocatoriasPeriodoJustificaciones = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      convocatoriasPeriodoJustificaciones.add(generarMockConvocatoriaPeriodoJustificacion(i));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(convocatoriaPeriodoJustificacionService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > convocatoriasPeriodoJustificaciones.size() ? convocatoriasPeriodoJustificaciones.size()
+              : toIndex;
+          List<ConvocatoriaPeriodoJustificacion> content = convocatoriasPeriodoJustificaciones.subList(fromIndex,
+              toIndex);
+          Page<ConvocatoriaPeriodoJustificacion> pageResponse = new PageImpl<>(content, pageable,
+              convocatoriasPeriodoJustificaciones.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PERIODO_JUSTIFICACION, convocatoriaId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los ConvocatoriaEntidadConvocante del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<ConvocatoriaPeriodoJustificacion> convocatoriasPeriodoJustificacionesResponse = mapper.readValue(
+        requestResult.getResponse().getContentAsString(), new TypeReference<List<ConvocatoriaPeriodoJustificacion>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = convocatoriasPeriodoJustificacionesResponse
+          .get(i - (page * pageSize) - 1);
+      Assertions.assertThat(convocatoriaPeriodoJustificacion.getObservaciones()).isEqualTo("observaciones-" + i);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void findAllConvocatoriaPeriodoJustificacion_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de ConvocatoriaPeriodoJustificacion para la
+    // Convocatoria
+    Long convocatoriaId = 1L;
+    List<ConvocatoriaPeriodoJustificacion> convocatoriasPeriodoJustificaciones = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(convocatoriaPeriodoJustificacionService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          Page<ConvocatoriaPeriodoJustificacion> pageResponse = new PageImpl<>(convocatoriasPeriodoJustificaciones,
+              pageable, 0);
+          return pageResponse;
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PERIODO_JUSTIFICACION, convocatoriaId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
+   * 
    * MOCKS
    * 
    */
@@ -1429,6 +1533,30 @@ public class ConvocatoriaControllerTest {
     convocatoriaEntidadFinanciadora.setPorcentajeFinanciacion(50);
 
     return convocatoriaEntidadFinanciadora;
+  }
+
+  /**
+   * Función que devuelve un objeto ConvocatoriaPeriodoJustificacion
+   * 
+   * @param id id del ConvocatoriaPeriodoJustificacion
+   * @return el objeto ConvocatoriaPeriodoJustificacion
+   */
+  private ConvocatoriaPeriodoJustificacion generarMockConvocatoriaPeriodoJustificacion(Long id) {
+    Convocatoria convocatoria = new Convocatoria();
+    convocatoria.setId(id == null ? 1 : id);
+
+    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = new ConvocatoriaPeriodoJustificacion();
+    convocatoriaPeriodoJustificacion.setId(id);
+    convocatoriaPeriodoJustificacion.setConvocatoria(convocatoria);
+    convocatoriaPeriodoJustificacion.setNumPeriodo(1);
+    convocatoriaPeriodoJustificacion.setMesInicial(1);
+    convocatoriaPeriodoJustificacion.setMesFinal(2);
+    convocatoriaPeriodoJustificacion.setFechaInicioPresentacion(LocalDate.of(2020, 10, 10));
+    convocatoriaPeriodoJustificacion.setFechaFinPresentacion(LocalDate.of(2020, 11, 20));
+    convocatoriaPeriodoJustificacion.setObservaciones("observaciones-" + id);
+    convocatoriaPeriodoJustificacion.setTipoJustificacion(TipoJustificacionEnum.PERIODICA);
+
+    return convocatoriaPeriodoJustificacion;
   }
 
 }

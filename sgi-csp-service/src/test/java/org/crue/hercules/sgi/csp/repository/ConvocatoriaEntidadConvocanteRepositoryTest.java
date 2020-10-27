@@ -57,7 +57,7 @@ public class ConvocatoriaEntidadConvocanteRepositoryTest {
   }
 
   @Test
-  public void findByModeloEjecucionIdAndTipoFinalidadId_ReturnsNull() throws Exception {
+  public void findByConvocatoriaIdIdAndEntidadRef_ReturnsNull() throws Exception {
     // given: 2 ConvocatoriaEntidadConvocante que no coincide con el ConvocatoriaId
     // y EntidadRef buscado
     Convocatoria convocatoria1 = Convocatoria.builder().codigo("codigo-1")

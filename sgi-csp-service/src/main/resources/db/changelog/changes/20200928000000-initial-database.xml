@@ -32,6 +32,10 @@
     <createSequence sequenceName="convocatoria_entidad_gestora_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-convocatoria_periodo_justificacion_seq">
+    <createSequence sequenceName="convocatoria_periodo_justificacion_seq" />
+  </changeSet>
+
   <changeSet author="master" id="20201014000000-convocatoria_enlace_seq">
     <createSequence sequenceName="convocatoria_enlace_seq" />
   </changeSet>
@@ -301,6 +305,32 @@
         <constraints nullable="false" />
       </column>
       <column name="entidad_ref" type="VARCHAR2(50)">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-convocatoria_periodo_justificacion">
+    <createTable tableName="convocatoria_periodo_justificacion">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="convocatoria_periodo_justificacion_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_periodo_justificacion_pk" />
+      </column>
+      <column name="convocatoria_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="num_periodo" type="INTEGER">
+        <constraints nullable="false" />
+      </column>
+      <column name="mes_inicial" type="INTEGER">
+        <constraints nullable="false" />
+      </column>
+      <column name="mes_final" type="INTEGER">
+        <constraints nullable="false" />
+      </column>
+      <column name="fecha_inicio_presentacion" type="DATE" />
+      <column name="fecha_fin_presentacion" type="DATE" />
+      <column name="observaciones" type="VARCHAR2(2000)" />
+      <column name="tipo_justificacion" type="VARCHAR(10)">
         <constraints nullable="false" />
       </column>
     </createTable>

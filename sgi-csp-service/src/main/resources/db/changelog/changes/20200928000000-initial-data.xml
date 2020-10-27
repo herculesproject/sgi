@@ -31,7 +31,6 @@
   <!-- END FIXED DATA -->
   <!-- ########################################################## -->
 
-
   <changeSet author="master" id="20200928000000-listado_area_tematica">
     <insert tableName="listado_area_tematica">
       <column name="nombre" value="area_tematica AAA" />
@@ -730,6 +729,39 @@
       <column name="fecha" value="2021-10-24" />
       <column name="comentario" value="comentario3" />
       <column name="genera_aviso" value="true" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-convocatoria_periodo_justificacion">
+    <insert tableName="convocatoria_periodo_justificacion">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
+      <column name="num_periodo" value="1" />
+      <column name="mes_inicial" value="2" />
+      <column name="mes_final" value="3" />
+      <column name="fecha_inicio_presentacion" value="2021-02-12" />
+      <column name="fecha_fin_presentacion" value="2021-03-12" />
+      <column name="observaciones" value="observaciones 1" />
+      <column name="tipo_justificacion" value="periodica" />
+    </insert>
+    <insert tableName="convocatoria_periodo_justificacion">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
+      <column name="num_periodo" value="2" />
+      <column name="mes_inicial" value="4" />
+      <column name="mes_final" value="6" />
+      <column name="fecha_inicio_presentacion" value="2021-05-04" />
+      <column name="fecha_fin_presentacion" value="2021-05-22" />
+      <column name="observaciones" value="observaciones 2" />
+      <column name="tipo_justificacion" value="final" />
+    </insert>
+    <insert tableName="convocatoria_periodo_justificacion">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
+      <column name="num_periodo" value="1" />
+      <column name="mes_inicial" value="40" />
+      <column name="mes_final" value="56" />
+      <column name="fecha_inicio_presentacion" value="2021-02-14" />
+      <column name="fecha_fin_presentacion" value="2021-03-25" />
+      <column name="observaciones" value="observaciones 2" />
+      <column name="tipo_justificacion" value="final" />
     </insert>
   </changeSet>
 
