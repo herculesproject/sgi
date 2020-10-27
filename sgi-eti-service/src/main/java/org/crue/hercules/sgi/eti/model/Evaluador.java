@@ -63,7 +63,7 @@ public class Evaluador extends BaseEntity {
   private LocalDate fechaBaja;
 
   /** Resumen */
-  @Column(name = "resumen", length = 2000, nullable = false)
+  @Column(name = "resumen", length = 8000, nullable = false)
   private String resumen;
 
   /** Referencia persona */

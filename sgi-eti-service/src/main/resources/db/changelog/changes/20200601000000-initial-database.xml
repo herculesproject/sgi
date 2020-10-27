@@ -183,7 +183,7 @@
       <column name="fuente_financiacion" type="VARCHAR(250)" />
       <column name="fecha_inicio" type="DATE" />
       <column name="fecha_fin" type="DATE" />
-      <column name="resumen" type="VARCHAR(2000)" />
+      <column name="resumen" type="VARCHAR(8000)" />
       <column name="valor_social" type="VARCHAR(2000)" />
       <column name="objetivos" type="VARCHAR(2000)" />
       <column name="dis_metodologico" type="VARCHAR(2000)" />
@@ -334,7 +334,7 @@
       <column name="cargo_comite_id" type="BIGINT" />
       <column name="fecha_alta" type="DATE" />
       <column name="fecha_baja" type="DATE" />
-      <column name="resumen" type="VARCHAR(2000)" />
+      <column name="resumen" type="VARCHAR(8000)" />
       <column name="persona_ref" type="VARCHAR(250)" />
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
@@ -505,7 +505,7 @@
       <column name="minuto_fin" type="INT">
         <constraints nullable="false" />
       </column>
-      <column name="resumen" type="VARCHAR(2000)">
+      <column name="resumen" type="VARCHAR(8000)">
         <constraints nullable="false" />
       </column>
       <column name="numero" type="INT">

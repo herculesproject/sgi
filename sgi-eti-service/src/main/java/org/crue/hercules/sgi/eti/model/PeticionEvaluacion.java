@@ -76,7 +76,7 @@ public class PeticionEvaluacion extends BaseEntity {
   private LocalDate fechaFin;
 
   /** Resumen */
-  @Column(name = "resumen", length = 2000, nullable = false)
+  @Column(name = "resumen", length = 8000, nullable = false)
   private String resumen;
 
   /** Valor social */
