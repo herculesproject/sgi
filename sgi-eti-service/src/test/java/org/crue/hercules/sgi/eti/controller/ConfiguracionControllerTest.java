@@ -1,6 +1,5 @@
 package org.crue.hercules.sgi.eti.controller;
 
-import org.crue.hercules.sgi.eti.config.SecurityConfig;
 import org.crue.hercules.sgi.eti.exceptions.ConfiguracionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Configuracion;
 import org.crue.hercules.sgi.eti.service.ConfiguracionService;
@@ -8,14 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.invocation.InvocationOnMock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -24,13 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
  * ConfiguracionControllerTest
  */
 @WebMvcTest(ConfiguracionController.class)
-// Since WebMvcTest is only sliced controller layer for the testing, it would
-// not take the security configurations.
-@Import(SecurityConfig.class)
-public class ConfiguracionControllerTest {
-
-  @Autowired
-  private MockMvc mockMvc;
+public class ConfiguracionControllerTest extends BaseControllerTest {
 
   @MockBean
   private ConfiguracionService configuracionService;
