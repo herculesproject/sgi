@@ -15,7 +15,10 @@ const MSG_ERROR = marker('csp.plan.investigacion.editar.error');
 @Component({
   selector: 'sgi-plan-investigacion-editar',
   templateUrl: './plan-investigacion-editar.component.html',
-  styleUrls: ['./plan-investigacion-editar.component.scss']
+  styleUrls: ['./plan-investigacion-editar.component.scss'],
+  viewProviders: [
+    PlanInvestigacionActionService
+  ]
 })
 export class PlanInvestigacionEditarComponent extends ActionComponent {
 

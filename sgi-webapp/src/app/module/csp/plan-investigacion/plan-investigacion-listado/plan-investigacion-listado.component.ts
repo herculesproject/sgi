@@ -167,4 +167,5 @@ export class PlanInvestigacionListadoComponent extends AbstractTablePaginationCo
       );
     this.suscripciones.push(suscription);
   }
+
 }
