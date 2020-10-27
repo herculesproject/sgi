@@ -2298,17 +2298,6 @@
       </column>
       <column name="activo" value="true" />
     </insert>
-  </changeSet>
-
-  <changeSet author="master" id="20200601000000-configuracion">
-    <insert tableName="configuracion">
-      <column name="meses_archivada_inactivo" value="6" />
-      <column name="dias_archivada_pendiente_correcciones" value="45" />
-      <column name="dias_limite_evaluador" value="3" />
-      <column name="meses_aviso_proyecto_ceea" value="2" />
-      <column name="meses_aviso_proyecto_ceish" value="1" />
-      <column name="meses_aviso_proyecto_ceiab" value="1" />
-    </insert>
 
     <!-- 4.6.2  Beneficio formativo para el estudiante -->
     <insert tableName="apartado">
