@@ -20,6 +20,6 @@ public interface TipoFinanciacionRepository
    * @param nombre Nombre del {@link TipoFinanciacion}.
    * @return un {@link TipoFinanciacion} si tiene el nombre buscado.
    */
-  Optional<TipoFinanciacion> findByNombre(String nombre);
+  Optional<TipoFinanciacion> findByNombreAndActivoIsTrue(String nombre);
 
 }

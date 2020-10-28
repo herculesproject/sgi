@@ -461,6 +461,8 @@ public class FuenteFinanciacionServiceTest {
     fuenteFinanciacion.setActivo(false);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(fuenteFinanciacion));
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
+        .willReturn(Optional.empty());
     BDDMockito.given(repository.save(ArgumentMatchers.<FuenteFinanciacion>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
@@ -478,7 +480,7 @@ public class FuenteFinanciacionServiceTest {
   }
 
   @Test
-  public void enable_WithDuplicatedNombre_ReturnsFuenteFinanciacion() {
+  public void enable_WithDuplicatedNombre_ThrowsIllegalArgumentException() {
     // given: Un FuenteFinanciacion inactivo con un nombre que ya existe activo
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L, "nombreRepetido");
     fuenteFinanciacion.setActivo(false);

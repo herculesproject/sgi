@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.invocation.InvocationOnMock;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -47,10 +48,12 @@ public class TipoFinanciacionControllerTest {
   @Autowired
   private ObjectMapper mapper;
   @MockBean
-  private TipoFinanciacionService tipoFinanciacionService;
+  private TipoFinanciacionService service;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
-  private static final String TIPO_FINANCIACION_CONTROLLER_BASE_PATH = "/tipofinanciaciones";
+  private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
+  private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
+  private static final String CONTROLLER_BASE_PATH = "/tipofinanciaciones";
 
   @Test
   @WithMockUser(username = "user")
@@ -60,17 +63,15 @@ public class TipoFinanciacionControllerTest {
 
     String tipoFinanciacionJson = mapper.writeValueAsString(tipoFinanciacion);
 
-    BDDMockito.given(tipoFinanciacionService.create(ArgumentMatchers.<TipoFinanciacion>any()))
-        .will((InvocationOnMock invocation) -> {
-          TipoFinanciacion tipoFinanciacionCreado = invocation.getArgument(0);
-          tipoFinanciacionCreado.setId(1L);
-          return tipoFinanciacionCreado;
-        });
+    BDDMockito.given(service.create(ArgumentMatchers.<TipoFinanciacion>any())).will((InvocationOnMock invocation) -> {
+      TipoFinanciacion tipoFinanciacionCreado = invocation.getArgument(0);
+      tipoFinanciacionCreado.setId(1L);
+      return tipoFinanciacionCreado;
+    });
     // when: Creamos un TipoFinanciacion
     mockMvc
-        .perform(MockMvcRequestBuilders.post(TIPO_FINANCIACION_CONTROLLER_BASE_PATH)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(tipoFinanciacionJson))
+        .perform(MockMvcRequestBuilders.post(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON).content(tipoFinanciacionJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Crea el nuevo ModeleoTipoFinanciacion y lo devuelve
         .andExpect(MockMvcResultMatchers.status().isCreated())
@@ -85,13 +86,12 @@ public class TipoFinanciacionControllerTest {
     TipoFinanciacion tipoFinanciacion = generarMockTipoFinanciacion(1L);
 
     String tipoFinanciacionJson = mapper.writeValueAsString(tipoFinanciacion);
-    BDDMockito.given(tipoFinanciacionService.create(ArgumentMatchers.<TipoFinanciacion>any()))
+    BDDMockito.given(service.create(ArgumentMatchers.<TipoFinanciacion>any()))
         .willThrow(new IllegalArgumentException());
     // when: Creamos un TipoFinanciacion
     mockMvc
-        .perform(MockMvcRequestBuilders.post(TIPO_FINANCIACION_CONTROLLER_BASE_PATH)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .content(tipoFinanciacionJson))
+        .perform(MockMvcRequestBuilders.post(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON).content(tipoFinanciacionJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -104,11 +104,11 @@ public class TipoFinanciacionControllerTest {
     TipoFinanciacion tipoFinanciacion = generarMockTipoFinanciacion(1L);
     String tipoFinanciacionJson = mapper.writeValueAsString(tipoFinanciacion);
 
-    BDDMockito.given(tipoFinanciacionService.update(ArgumentMatchers.<TipoFinanciacion>any()))
+    BDDMockito.given(service.update(ArgumentMatchers.<TipoFinanciacion>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
     // when: Actualizamos el TipoFinanciacion
     mockMvc
-        .perform(MockMvcRequestBuilders.put(TIPO_FINANCIACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(tipoFinanciacionJson))
         .andDo(MockMvcResultHandlers.print())
@@ -123,14 +123,13 @@ public class TipoFinanciacionControllerTest {
     // given: Un TipoFinanciacion a modificar
     TipoFinanciacion tipoFinanciacion = generarMockTipoFinanciacion(1L);
     String replaceTipoFinanciacionJson = mapper.writeValueAsString(tipoFinanciacion);
-    BDDMockito.given(tipoFinanciacionService.update(ArgumentMatchers.<TipoFinanciacion>any()))
-        .will((InvocationOnMock invocation) -> {
-          throw new TipoFinanciacionNotFoundException(((TipoFinanciacion) invocation.getArgument(0)).getId());
-        });
+    BDDMockito.given(service.update(ArgumentMatchers.<TipoFinanciacion>any())).will((InvocationOnMock invocation) -> {
+      throw new TipoFinanciacionNotFoundException(((TipoFinanciacion) invocation.getArgument(0)).getId());
+    });
 
     // when: Actualizamos el TipoFinanciacion
     mockMvc
-        .perform(MockMvcRequestBuilders.put(TIPO_FINANCIACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(replaceTipoFinanciacionJson))
         // then: No encuentra el TipoFinanciacion y devuelve un 404
@@ -144,10 +143,10 @@ public class TipoFinanciacionControllerTest {
     TipoFinanciacion tipoFinanciacion = generarMockTipoFinanciacion(1L);
     tipoFinanciacion.setActivo(false);
     String replaceTipoFinanciacionJson = mapper.writeValueAsString(tipoFinanciacion);
-    BDDMockito.given(tipoFinanciacionService.update(tipoFinanciacion)).willThrow(new IllegalArgumentException());
+    BDDMockito.given(service.update(tipoFinanciacion)).willThrow(new IllegalArgumentException());
     // when: Actualizamos el TipoFinanciacion
     mockMvc
-        .perform(MockMvcRequestBuilders.put(TIPO_FINANCIACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .content(replaceTipoFinanciacionJson))
         // then: No encuentra el TipoFinanciacion y devuelve un 404
@@ -161,11 +160,11 @@ public class TipoFinanciacionControllerTest {
     // given: Entidad con un determinado Id
     TipoFinanciacion tipoFinanciacion = generarMockTipoFinanciacion(1L);
 
-    BDDMockito.given(tipoFinanciacionService.findById(tipoFinanciacion.getId())).willReturn(tipoFinanciacion);
+    BDDMockito.given(service.findById(tipoFinanciacion.getId())).willReturn(tipoFinanciacion);
 
     // when: Se busca la entidad por ese Id
     mockMvc
-        .perform(MockMvcRequestBuilders.get(TIPO_FINANCIACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Se recupera la entidad con el Id
@@ -179,14 +178,13 @@ public class TipoFinanciacionControllerTest {
   @WithMockUser(username = "user")
   public void findById_WithNoExistingId_Returns404() throws Exception {
 
-    BDDMockito.given(tipoFinanciacionService.findById(ArgumentMatchers.anyLong()))
-        .will((InvocationOnMock invocation) -> {
-          throw new TipoFinanciacionNotFoundException(invocation.getArgument(0));
-        });
+    BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
+      throw new TipoFinanciacionNotFoundException(invocation.getArgument(0));
+    });
 
     // when: Se busca entidad con ese id
     mockMvc
-        .perform(MockMvcRequestBuilders.get(TIPO_FINANCIACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Se produce error porque no encuentra la entidad con ese Id
@@ -194,21 +192,92 @@ public class TipoFinanciacionControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user")
-  public void disableById_Returns204() throws Exception {
-    // given: TipoFinanciacion con el id buscado
-    Long idBuscado = 1L;
+  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  public void reactivar_WithExistingId_ReturnTipoFinanciacion() throws Exception {
+    // given: existing id
     TipoFinanciacion tipoFinanciacion = generarMockTipoFinanciacion(1L);
+    tipoFinanciacion.setActivo(false);
 
-    BDDMockito.given(tipoFinanciacionService.disable(ArgumentMatchers.<Long>any())).willReturn(tipoFinanciacion);
+    BDDMockito.given(service.disable(ArgumentMatchers.<Long>any())).willAnswer((InvocationOnMock invocation) -> {
+      TipoFinanciacion tipoFinanciacionDisabled = new TipoFinanciacion();
+      BeanUtils.copyProperties(tipoFinanciacion, tipoFinanciacionDisabled);
+      tipoFinanciacionDisabled.setActivo(true);
+      return tipoFinanciacionDisabled;
+    });
 
-    // when: Eliminamos el TipoFinanciacion por su id
+    // when: reactivar by id
     mockMvc
-        .perform(MockMvcRequestBuilders.delete(TIPO_FINANCIACION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, idBuscado)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .perform(MockMvcRequestBuilders
+            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, tipoFinanciacion.getId())
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
-        // then: Devuelve un 204
-        .andExpect(MockMvcResultMatchers.status().isNoContent());
+        // then: TipoFinanciacion is updated
+        .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(tipoFinanciacion.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(tipoFinanciacion.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  public void reactivar_NoExistingId_Return404() throws Exception {
+    // given: non existing id
+    Long id = 1L;
+
+    BDDMockito.willThrow(new TipoFinanciacionNotFoundException(id)).given(service).enable(ArgumentMatchers.<Long>any());
+
+    // when: reactivar by non existing id
+    mockMvc
+        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: 404 error
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  public void desactivar_WithExistingId_ReturnTipoFinanciacion() throws Exception {
+    // given: existing id
+    TipoFinanciacion tipoFinanciacion = generarMockTipoFinanciacion(1L);
+    BDDMockito.given(service.disable(ArgumentMatchers.<Long>any())).willAnswer((InvocationOnMock invocation) -> {
+      TipoFinanciacion tipoFinanciacionDisabled = new TipoFinanciacion();
+      BeanUtils.copyProperties(tipoFinanciacion, tipoFinanciacionDisabled);
+      tipoFinanciacionDisabled.setActivo(false);
+      return tipoFinanciacionDisabled;
+    });
+
+    // when: desactivar by id
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, tipoFinanciacion.getId())
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: TipoFinanciacion is updated
+        .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(tipoFinanciacion.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(tipoFinanciacion.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(false));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  public void desactivar_NoExistingId_Return404() throws Exception {
+    // given: non existing id
+    Long id = 1L;
+
+    BDDMockito.willThrow(new TipoFinanciacionNotFoundException(id)).given(service)
+        .disable(ArgumentMatchers.<Long>any());
+
+    // when: desactivar by non existing id
+    mockMvc
+        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: 404 error
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test
@@ -220,8 +289,7 @@ public class TipoFinanciacionControllerTest {
       data.add(generarMockTipoFinanciacion(Long.valueOf(i)));
     }
 
-    BDDMockito.given(
-        tipoFinanciacionService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           int size = pageable.getPageSize();
@@ -236,9 +304,8 @@ public class TipoFinanciacionControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(TIPO_FINANCIACION_CONTROLLER_BASE_PATH)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
-            .accept(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .header("X-Page", "3").header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: the asked TipoRegimenConcurrencia are returned with the right page
         // information in
@@ -266,8 +333,7 @@ public class TipoFinanciacionControllerTest {
   @WithMockUser(username = "user", authorities = { "CSP-ADMIN" })
   public void findAll_EmptyList_Returns204() throws Exception {
     // given: no data TipoRegimenConcurrencia
-    BDDMockito.given(
-        tipoFinanciacionService.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Page<TipoRegimenConcurrencia> page = new PageImpl<>(Collections.emptyList());
           return page;
@@ -275,9 +341,8 @@ public class TipoFinanciacionControllerTest {
 
     // when: get page=3 with pagesize=10
     mockMvc
-        .perform(MockMvcRequestBuilders.get(TIPO_FINANCIACION_CONTROLLER_BASE_PATH)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
-            .accept(MediaType.APPLICATION_JSON))
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .header("X-Page", "3").header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: returns 204
         .andExpect(MockMvcResultMatchers.status().isNoContent());
@@ -292,8 +357,9 @@ public class TipoFinanciacionControllerTest {
       data.add(generarMockTipoFinanciacion(Long.valueOf(i)));
     }
 
-    BDDMockito.given(tipoFinanciacionService.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(),
-        ArgumentMatchers.<Pageable>any())).willAnswer((InvocationOnMock invocation) -> {
+    BDDMockito
+        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           int size = pageable.getPageSize();
           int index = pageable.getPageNumber();
@@ -307,7 +373,7 @@ public class TipoFinanciacionControllerTest {
 
     // when: get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(TIPO_FINANCIACION_CONTROLLER_BASE_PATH + "/todos")
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/todos")
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
@@ -337,15 +403,16 @@ public class TipoFinanciacionControllerTest {
   @WithMockUser(username = "user", authorities = { "CSP-ADMIN" })
   public void findAllTodos_EmptyList_Returns204() throws Exception {
     // given: no data TipoRegimenConcurrencia
-    BDDMockito.given(tipoFinanciacionService.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(),
-        ArgumentMatchers.<Pageable>any())).willAnswer((InvocationOnMock invocation) -> {
+    BDDMockito
+        .given(service.findAllTodos(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
           Page<TipoRegimenConcurrencia> page = new PageImpl<>(Collections.emptyList());
           return page;
         });
 
     // when: get page=3 with pagesize=10
     mockMvc
-        .perform(MockMvcRequestBuilders.get(TIPO_FINANCIACION_CONTROLLER_BASE_PATH + "/todos")
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/todos")
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())

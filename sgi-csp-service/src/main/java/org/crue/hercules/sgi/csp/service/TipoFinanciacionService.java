@@ -59,7 +59,15 @@ public interface TipoFinanciacionService {
   TipoFinanciacion findById(Long id);
 
   /**
-   * Elimina el {@link TipoFinanciacion} por id.
+   * Reactiva el {@link TipoFinanciacion}.
+   *
+   * @param id Id del {@link TipoFinanciacion}.
+   * @return la entidad {@link TipoFinanciacion} persistida.
+   */
+  TipoFinanciacion enable(Long id);
+
+  /**
+   * Desactiva el {@link TipoFinanciacion}.
    *
    * @param id el id de la entidad {@link TipoFinanciacion}.
    * @return la entidad {@link TipoFinanciacion} actualizadas.

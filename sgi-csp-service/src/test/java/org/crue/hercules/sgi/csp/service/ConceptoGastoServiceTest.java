@@ -149,6 +149,7 @@ public class ConceptoGastoServiceTest {
     conceptoGasto.setActivo(false);
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(conceptoGasto));
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(conceptoGasto.getNombre())).willReturn(Optional.empty());
     BDDMockito.given(repository.save(ArgumentMatchers.<ConceptoGasto>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
@@ -163,7 +164,7 @@ public class ConceptoGastoServiceTest {
   }
 
   @Test
-  public void enable_WithDuplicatedNombre_ReturnsConceptoGasto() {
+  public void enable_WithDuplicatedNombre_ThrowsIllegalArgumentException() {
     // given: Un ConceptoGasto inactivo con un nombre que ya existe activo
     ConceptoGasto conceptoGasto = generarMockConceptoGasto(1L, "nombreRepetido");
     conceptoGasto.setActivo(false);

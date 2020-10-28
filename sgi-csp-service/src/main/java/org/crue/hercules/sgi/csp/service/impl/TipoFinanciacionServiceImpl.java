@@ -43,7 +43,7 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
 
     Assert.isNull(tipoFinanciacion.getId(),
         "tipoFinanciacion id tiene que ser null para crear un nuevo tipoFinanciacion");
-    Assert.isTrue(!(tipoFinanciacionRepository.findByNombre(tipoFinanciacion.getNombre()).isPresent()),
+    Assert.isTrue(!(tipoFinanciacionRepository.findByNombreAndActivoIsTrue(tipoFinanciacion.getNombre()).isPresent()),
         "Ya existe TipoFinanciacion con el nombre " + tipoFinanciacion.getNombre());
 
     tipoFinanciacion.setActivo(Boolean.TRUE);
@@ -67,7 +67,7 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
     log.debug("update(TipoFinanciacion tipoFinanciacionActualizar) - start");
 
     Assert.notNull(tipoFinanciacionActualizar.getId(), "TipoFinanciacion id no puede ser null para actualizar");
-    tipoFinanciacionRepository.findByNombre(tipoFinanciacionActualizar.getNombre())
+    tipoFinanciacionRepository.findByNombreAndActivoIsTrue(tipoFinanciacionActualizar.getNombre())
         .ifPresent((tipoFinanciacionExistente) -> {
           Assert.isTrue(tipoFinanciacionActualizar.getId() == tipoFinanciacionExistente.getId(),
               "Ya existe un TipoFinanciacion con el nombre " + tipoFinanciacionExistente.getNombre());
@@ -76,7 +76,7 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
     return tipoFinanciacionRepository.findById(tipoFinanciacionActualizar.getId()).map(tipoFinanciacion -> {
       tipoFinanciacion.setNombre(tipoFinanciacionActualizar.getNombre());
       tipoFinanciacion.setDescripcion(tipoFinanciacionActualizar.getDescripcion());
-      tipoFinanciacion.setActivo(tipoFinanciacionActualizar.getActivo());
+
       TipoFinanciacion returnValue = tipoFinanciacionRepository.save(tipoFinanciacion);
       log.debug("update(TipoFinanciacion tipoFinanciacionActualizar) - end");
       return returnValue;
@@ -143,7 +143,39 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
   }
 
   /**
-   * Elimina el {@link TipoFinanciacion} por id.
+   * Reactiva el {@link TipoFinanciacion}.
+   *
+   * @param id Id del {@link TipoFinanciacion}.
+   * @return la entidad {@link TipoFinanciacion} persistida.
+   */
+  @Override
+  public TipoFinanciacion enable(Long id) {
+    log.debug("enable(Long id) - start");
+
+    Assert.notNull(id, "TipoFinanciacion id no puede ser null para reactivar un TipoFinanciacion");
+
+    return tipoFinanciacionRepository.findById(id).map(tipoFinanciacion -> {
+      if (tipoFinanciacion.getActivo()) {
+        // Si esta activo no se hace nada
+        return tipoFinanciacion;
+      }
+
+      tipoFinanciacionRepository.findByNombreAndActivoIsTrue(tipoFinanciacion.getNombre())
+          .ifPresent((tipoFinanciacionExistente) -> {
+            Assert.isTrue(tipoFinanciacion.getId() == tipoFinanciacionExistente.getId(),
+                "Ya existe un TipoFinanciacion con el nombre " + tipoFinanciacion.getNombre());
+          });
+
+      tipoFinanciacion.setActivo(true);
+
+      TipoFinanciacion returnValue = tipoFinanciacionRepository.save(tipoFinanciacion);
+      log.debug("enable(Long id) - end");
+      return returnValue;
+    }).orElseThrow(() -> new TipoFinanciacionNotFoundException(id));
+  }
+
+  /**
+   * Desactiva el {@link TipoFinanciacion}.
    *
    * @param id el id de la entidad {@link TipoFinanciacion}.
    * @return la entidad {@link TipoFinanciacion} actualizadas.
@@ -152,9 +184,14 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
   @Transactional
   public TipoFinanciacion disable(Long id) throws TipoFinanciacionNotFoundException {
     log.debug("disable(Long id) - start");
-    Assert.notNull(id, "El id no puede ser nulo");
+    Assert.notNull(id, "TipoFinanciacion id no puede ser null para reactivar un TipoFinanciacion");
 
     return tipoFinanciacionRepository.findById(id).map(tipoFinanciacion -> {
+      if (!tipoFinanciacion.getActivo()) {
+        // Si no esta activo no se hace nada
+        return tipoFinanciacion;
+      }
+
       tipoFinanciacion.setActivo(false);
 
       TipoFinanciacion returnValue = tipoFinanciacionRepository.save(tipoFinanciacion);
