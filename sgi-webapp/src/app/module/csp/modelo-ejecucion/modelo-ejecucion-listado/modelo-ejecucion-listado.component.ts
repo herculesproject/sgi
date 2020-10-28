@@ -11,13 +11,17 @@ import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiRestListResult, SgiRestFilter, SgiRestFilterType } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 const MSG_ERROR = marker('csp.modelo.ejecucion.listado.error');
 const MSG_BUTTON_NEW = marker('footer.csp.modelo.ejecucion.crear');
 const MSG_DEACTIVATE = marker('csp.modelo.ejecucion.desactivar');
 const MSG_SUCCESS_DEACTIVATE = marker('csp.modelo.ejecucion.desactivar.correcto');
 const MSG_ERROR_DEACTIVATE = marker('csp.modelo.ejecucion.desactivar.error');
+const MSG_REACTIVE = marker('csp.modelo.ejecucion.reactivar');
+const MSG_SUCCESS_REACTIVE = marker('csp.modelo.ejecucion.reactivar.correcto');
+const MSG_ERROR_REACTIVE = marker('csp.modelo.ejecucion.reactivar.error');
 
 @Component({
   selector: 'sgi-modelo-ejecucion-listado',
@@ -60,6 +64,7 @@ export class ModeloEjecucionListadoComponent extends AbstractTablePaginationComp
       nombre: new FormControl(''),
       activo: new FormControl('true')
     });
+    this.filter = this.createFilters();
     this.logger.debug(ModeloEjecucionListadoComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -101,26 +106,67 @@ export class ModeloEjecucionListadoComponent extends AbstractTablePaginationComp
     return filtros;
   }
 
-  disableModeloEjecucion(modeloEjecucion: IModeloEjecucion): void {
-    this.logger.debug(ModeloEjecucionListadoComponent.name, `${this.disableModeloEjecucion.name}()`, 'start');
-    const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE).subscribe(
-      (accept) => {
+  /**
+   * Desactivamos un modelo ejecucion activado
+   * @param modeloEjecucion modelo ejecucion
+   */
+  deactivateModeloEjecucion(modeloEjecucion: IModeloEjecucion): void {
+    this.logger.debug(ModeloEjecucionListadoComponent.name, `${this.deactivateModeloEjecucion.name}()`, 'start');
+    const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE)
+      .pipe(switchMap((accept) => {
         if (accept) {
-          const deleteSubcription = this.modeloEjecucionService.deleteById(modeloEjecucion.id).subscribe(
-            () => {
-              this.snackBarService.showSuccess(MSG_SUCCESS_DEACTIVATE);
-              this.loadTable();
-              this.logger.debug(ModeloEjecucionListadoComponent.name, `${this.disableModeloEjecucion.name}()`, 'end');
-            },
-            () => {
-              this.snackBarService.showError(MSG_ERROR_DEACTIVATE);
-              this.logger.error(ModeloEjecucionListadoComponent.name, `${this.disableModeloEjecucion.name}()`, 'error');
-            }
-          );
-          this.suscripciones.push(deleteSubcription);
+          return this.modeloEjecucionService.deleteById(modeloEjecucion.id);
+        } else {
+          return of();
         }
-      }
-    );
+      })).subscribe(
+        () => {
+          this.snackBarService.showSuccess(MSG_SUCCESS_DEACTIVATE);
+          this.loadTable();
+          this.logger.debug(ModeloEjecucionListadoComponent.name,
+            `${this.deactivateModeloEjecucion.name}(modeloEjecucion: ${modeloEjecucion})`, 'end');
+        },
+        () => {
+          this.snackBarService.showError(MSG_ERROR_DEACTIVATE);
+          this.logger.debug(ModeloEjecucionListadoComponent.name,
+            `${this.deactivateModeloEjecucion.name}(modeloEjecucion: ${modeloEjecucion})`, 'end');
+        }
+      );
     this.suscripciones.push(subcription);
   }
+
+
+  /**
+   * Activamos un modelo ejecucion desactivado
+   * @param tipoDocumento modelo ejecucion
+   */
+  activateModeloEjecucion(modeloEjecucion: IModeloEjecucion): void {
+    this.logger.debug(ModeloEjecucionListadoComponent.name,
+      `${this.activateModeloEjecucion.name}(modeloEjecucion: ${modeloEjecucion})`, 'start');
+
+    const subcription = this.dialogService.showConfirmation(MSG_REACTIVE)
+      .pipe(switchMap((accept) => {
+        if (accept) {
+          modeloEjecucion.activo = true;
+          return this.modeloEjecucionService.update(modeloEjecucion.id, modeloEjecucion);
+        } else {
+          return of();
+        }
+      })).subscribe(
+        () => {
+          this.snackBarService.showSuccess(MSG_SUCCESS_REACTIVE);
+          this.loadTable();
+          this.logger.debug(ModeloEjecucionListadoComponent.name,
+            `${this.activateModeloEjecucion.name}(modeloEjecucion: ${modeloEjecucion})`, 'end');
+        },
+        () => {
+          modeloEjecucion.activo = false;
+          this.snackBarService.showError(MSG_ERROR_REACTIVE);
+          this.logger.debug(ModeloEjecucionListadoComponent.name,
+            `${this.activateModeloEjecucion.name}(modeloEjecucion: ${modeloEjecucion})`, 'end');
+        }
+      );
+    this.suscripciones.push(subcription);
+  }
+
 }

@@ -110,8 +110,8 @@ export class PlanInvestigacionListadoComponent extends AbstractTablePaginationCo
    * Desactivar plan
    * @param plan plan
    */
-  desactivePlan(plan: IPlan): void {
-    this.logger.debug(PlanInvestigacionListadoComponent.name, `${this.desactivePlan.name}()`, 'start');
+  deactivatePlan(plan: IPlan): void {
+    this.logger.debug(PlanInvestigacionListadoComponent.name, `${this.deactivatePlan.name}()`, 'start');
     const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE).pipe(
       switchMap((accept) => {
         if (accept) {
@@ -124,12 +124,12 @@ export class PlanInvestigacionListadoComponent extends AbstractTablePaginationCo
           this.snackBarService.showSuccess(MSG_SUCCESS_DEACTIVATE);
           this.loadTable();
           this.logger.debug(PlanInvestigacionListadoComponent.name,
-            `${this.desactivePlan.name}(plan: ${plan})`, 'end');
+            `${this.deactivatePlan.name}(plan: ${plan})`, 'end');
         },
         () => {
           this.snackBarService.showError(MSG_ERROR_DEACTIVATE);
           this.logger.error(PlanInvestigacionListadoComponent.name,
-            `${this.desactivePlan.name}(plan: ${plan})`, 'error');
+            `${this.deactivatePlan.name}(plan: ${plan})`, 'error');
         }
       );
     this.suscripciones.push(subcription);
