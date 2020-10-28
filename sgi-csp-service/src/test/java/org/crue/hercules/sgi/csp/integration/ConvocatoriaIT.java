@@ -17,6 +17,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
@@ -64,13 +65,14 @@ public class ConvocatoriaIT {
   private static final String PATH_FASES = "/convocatoriafases";
   private static final String PATH_HITOS = "/convocatoriahitos";
   private static final String PATH_PERIODO_JUSTIFICACION = "/convocatoriaperiodojustificaciones";
+  private static final String PATH_PERIODO_SEGUIMIENTO_CIENTIFICO = "/convocatoriaperiodoseguimientocientificos";
 
   private HttpEntity<Convocatoria> buildRequest(HttpHeaders headers, Convocatoria entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "SYSADMIN", "CSP-TFAS-B",
-        "CSP-TFAS-C", "CSP-TFAS-E", "CSP-TFAS-V", "CSP-CENTGES-V", "CSP-CATEM-V")));
+        "CSP-TFAS-C", "CSP-TFAS-E", "CSP-TFAS-V", "CSP-CENTGES-V", "CSP-CATEM-V", "CSP-CENL-V")));
 
     HttpEntity<Convocatoria> request = new HttpEntity<>(entity, headers);
     return request;
@@ -677,6 +679,52 @@ public class ConvocatoriaIT {
         .isEqualTo("observaciones-" + String.format("%03d", 2));
     Assertions.assertThat(convocatoriaPeriodoJustificaciones.get(2).getObservaciones()).as("get(2).getObservaciones()")
         .isEqualTo("observaciones-" + String.format("%03d", 1));
+  }
+
+  /*
+   *
+   * CONVOCATORIA PERIODO SEGUIMIENTO CIENTIFICO
+   * 
+   */
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllConvocatoriaPeriodoSeguimientoCientifico_WithPagingSortingAndFiltering_ReturnsConvocatoriaPeriodoSeguimientoCientificoSubList()
+      throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CPSCI-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "numPeriodo-";
+    String filter = "observaciones~%-00%";
+
+    Long convocatoriaId = 1L;
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PERIODO_SEGUIMIENTO_CIENTIFICO)
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(convocatoriaId).toUri();
+
+    final ResponseEntity<List<ConvocatoriaPeriodoSeguimientoCientifico>> response = restTemplate.exchange(uri,
+        HttpMethod.GET, buildRequest(headers, null),
+        new ParameterizedTypeReference<List<ConvocatoriaPeriodoSeguimientoCientifico>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<ConvocatoriaPeriodoSeguimientoCientifico> convocatoriaPeriodoSeguimientoCientificoes = response
+        .getBody();
+    Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificoes.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificoes.get(0).getObservaciones())
+        .as("get(0).getObservaciones()").isEqualTo("observaciones-" + String.format("%03d", 3));
+    Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificoes.get(1).getObservaciones())
+        .as("get(1).getObservaciones())").isEqualTo("observaciones-" + String.format("%03d", 2));
+    Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificoes.get(2).getObservaciones())
+        .as("get(2).getObservaciones()").isEqualTo("observaciones-" + String.format("%03d", 1));
   }
 
   /**

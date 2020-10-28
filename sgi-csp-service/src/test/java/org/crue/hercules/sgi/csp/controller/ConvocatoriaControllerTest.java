@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.controller;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -34,6 +35,7 @@ import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
@@ -45,6 +47,7 @@ import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaFaseService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaHitoService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoSeguimientoCientificoService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -78,7 +81,6 @@ public class ConvocatoriaControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
-
   @Autowired
   private ObjectMapper mapper;
 
@@ -86,10 +88,8 @@ public class ConvocatoriaControllerTest {
   private ConvocatoriaService service;
   @MockBean
   private ConvocatoriaEntidadFinanciadoraService convocatoriaEntidadFinanciadoraService;
-
   @MockBean
   private ConvocatoriaEntidadGestoraService convocatoriaEntidadGestoraService;
-
   @MockBean
   private ConvocatoriaAreaTematicaService convocatoriaAreaTematicaService;
   @MockBean
@@ -100,6 +100,8 @@ public class ConvocatoriaControllerTest {
   private ConvocatoriaFaseService convocatoriaFaseService;
   @MockBean
   private ConvocatoriaHitoService convocatoriaHitoService;
+  @MockBean
+  private ConvocatoriaPeriodoSeguimientoCientificoService convocatoriaPeriodoSeguimientoCientificoService;
 
   @MockBean
   private ConvocatoriaPeriodoJustificacionService convocatoriaPeriodoJustificacionService;
@@ -116,6 +118,7 @@ public class ConvocatoriaControllerTest {
   private static final String PATH_FASE = "/convocatoriafases";
   private static final String PATH_HITO = "/convocatoriahitos";
   private static final String PATH_PERIODO_JUSTIFICACION = "/convocatoriaperiodojustificaciones";
+  private static final String PATH_PERIODO_SEGUIMIENTO_CIENTIFICO = "/convocatoriaperiodoseguimientocientificos";
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
@@ -1121,6 +1124,116 @@ public class ConvocatoriaControllerTest {
     mockMvc
         .perform(MockMvcRequestBuilders
             .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PERIODO_JUSTIFICACION, convocatoriaId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
+   * 
+   * CONVOCATORIA PERIODO SEGUIMIENTO CIENTIFICO
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CPSCI-V" })
+  public void findAllConvocatoriaPeriodoSeguimientoCientifico_ReturnsPage() throws Exception {
+    // given: Una lista con 100 ConvocatoriaPeriodoSeguimientoCientifico para la
+    // Convocatoria
+
+    Long convocatoriaId = 1L;
+    List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientifico = new LinkedList<ConvocatoriaPeriodoSeguimientoCientifico>();
+    Convocatoria convocatoria = Convocatoria.builder().id(Long.valueOf(1L)).build();
+    for (int i = 1, j = 2; i <= 100; i++, j += 2) {
+      listaConvocatoriaPeriodoSeguimientoCientifico.add(ConvocatoriaPeriodoSeguimientoCientifico//
+          .builder()//
+          .id(Long.valueOf(i))//
+          .convocatoria(convocatoria)//
+          .numPeriodo(i - 1)//
+          .mesInicial((i * 2) - 1)//
+          .mesFinal(j * 1)//
+          .observaciones("observaciones-" + i)//
+          .build());
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(convocatoriaPeriodoSeguimientoCientificoService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > listaConvocatoriaPeriodoSeguimientoCientifico.size()
+              ? listaConvocatoriaPeriodoSeguimientoCientifico.size()
+              : toIndex;
+          List<ConvocatoriaPeriodoSeguimientoCientifico> content = listaConvocatoriaPeriodoSeguimientoCientifico
+              .subList(fromIndex, toIndex);
+          Page<ConvocatoriaPeriodoSeguimientoCientifico> pageResponse = new PageImpl<>(content, pageable,
+              listaConvocatoriaPeriodoSeguimientoCientifico.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PERIODO_SEGUIMIENTO_CIENTIFICO, convocatoriaId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los ConvocatoriaEntidadConvocante del 31 al 40
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "100"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10))).andReturn();
+
+    List<ConvocatoriaPeriodoSeguimientoCientifico> convocatoriaPeriodoSeguimientoCientificoResponse = mapper.readValue(
+        requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<ConvocatoriaPeriodoSeguimientoCientifico>>() {
+        });
+
+    for (int i = 31; i <= 10; i++) {
+      ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = convocatoriaPeriodoSeguimientoCientificoResponse
+          .get(i - (page * pageSize) - 1);
+      Assertions.assertThat(convocatoriaPeriodoSeguimientoCientifico.getObservaciones())
+          .isEqualTo("observaciones-" + i);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CPSCI-V" })
+  public void findAllConvocatoriaPeriodoSeguimientoCientifico_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de ConvocatoriaPeriodoSeguimientoCientifico para la
+    // Convocatoria
+    Long convocatoriaId = 1L;
+    List<ConvocatoriaPeriodoSeguimientoCientifico> convocatoriasPeriodoSeguimientoCientifico = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(convocatoriaPeriodoSeguimientoCientificoService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          Page<ConvocatoriaPeriodoSeguimientoCientifico> pageResponse = new PageImpl<>(
+              convocatoriasPeriodoSeguimientoCientifico, pageable, 0);
+          return pageResponse;
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PERIODO_SEGUIMIENTO_CIENTIFICO, convocatoriaId)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())

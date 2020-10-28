@@ -45,7 +45,7 @@ public class ConvocatoriaEntidadFinanciadora extends BaseEntity {
   @NotNull
   private Convocatoria convocatoria;
 
-  /** Nombre. */
+  /** Entidad Financiadora */
   @Column(name = "entidad_ref", length = 50, nullable = false)
   @NotEmpty
   @Size(max = 50)

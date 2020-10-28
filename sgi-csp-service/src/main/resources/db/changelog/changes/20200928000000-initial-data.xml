@@ -527,7 +527,7 @@
       <column name="destinatarios" value="Individual" />
       <column name="colaborativos" value="false" />
       <column name="estado_actual" value="Registrada" />
-      <column name="duracion" value="12" />
+      <column name="duracion" value="24" />
       <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'nombre-001')" />
       <column name="clasificacion_cvn" value="Ayudas y becas" />
       <column name="activo" value="true" />
@@ -689,7 +689,6 @@
       <column name="fecha_inicio" value="2020-10-12" />
       <column name="fecha_fin" value="2020-10-15" />
       <column name="observaciones" value="observaciones1" />
-
     </insert>
     <insert tableName="convocatoria_fase">
       <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
@@ -697,7 +696,6 @@
       <column name="fecha_inicio" value="2020-10-16" />
       <column name="fecha_fin" value="2020-10-20" />
       <column name="observaciones" value="observaciones2" />
-
     </insert>
     <insert tableName="convocatoria_fase">
       <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-003')"></column>
@@ -705,9 +703,9 @@
       <column name="fecha_inicio" value="2020-10-23" />
       <column name="fecha_fin" value="2020-10-30" />
       <column name="observaciones" value="observaciones3" />
-
     </insert>
   </changeSet>
+
   <changeSet author="master" id="20201022000000-convocatoria_hito">
     <insert tableName="convocatoria_hito">
       <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
@@ -762,6 +760,54 @@
       <column name="fecha_fin_presentacion" value="2021-03-25" />
       <column name="observaciones" value="observaciones 2" />
       <column name="tipo_justificacion" value="final" />
+    </insert>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-convocatoria_periodo_seguimiento_cientifico">
+    <insert tableName="convocatoria_periodo_seguimiento_cientifico">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
+      <column name="num_periodo" value="1" />
+      <column name="mes_inicial" value="1" />
+      <column name="mes_final" value="6" />
+      <column name="fecha_inicio_presentacion" value="2020-01-01" />
+      <column name="fecha_fin_presentacion" value="2020-06-30" />
+      <column name="observaciones" value="Observaciones meses 1-6" />
+    </insert>
+    <insert tableName="convocatoria_periodo_seguimiento_cientifico">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
+      <column name="num_periodo" value="2" />
+      <column name="mes_inicial" value="7" />
+      <column name="mes_final" value="12" />
+      <column name="fecha_inicio_presentacion" value="2020-07-01" />
+      <column name="fecha_fin_presentacion" value="2020-12-30" />
+      <column name="observaciones" value="Observaciones meses 7-12" />
+    </insert>
+    <insert tableName="convocatoria_periodo_seguimiento_cientifico">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
+      <column name="num_periodo" value="3" />
+      <column name="mes_inicial" value="13" />
+      <column name="mes_final" value="18" />
+      <column name="fecha_inicio_presentacion" value="2021-01-01" />
+      <column name="fecha_fin_presentacion" value="2021-06-30" />
+      <column name="observaciones" value="Observaciones meses 13-18" />
+    </insert>
+    <insert tableName="convocatoria_periodo_seguimiento_cientifico">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
+      <column name="num_periodo" value="1" />
+      <column name="mes_inicial" value="1" />
+      <column name="mes_final" value="3" />
+      <column name="fecha_inicio_presentacion" value="2019-12-01" />
+      <column name="fecha_fin_presentacion" value="2020-03-30" />
+      <column name="observaciones" value="Observaciones meses 1-3" />
+    </insert>
+    <insert tableName="convocatoria_periodo_seguimiento_cientifico">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
+      <column name="num_periodo" value="2" />
+      <column name="mes_inicial" value="4" />
+      <column name="mes_final" value="6" />
+      <column name="fecha_inicio_presentacion" value="2020-03-01" />
+      <column name="fecha_fin_presentacion" value="2020-04-30" />
+      <column name="observaciones" value="Observaciones meses 4-6" />
     </insert>
   </changeSet>
 

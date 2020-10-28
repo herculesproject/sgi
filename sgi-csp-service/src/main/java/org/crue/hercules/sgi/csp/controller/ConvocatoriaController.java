@@ -13,12 +13,14 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEnlaceService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadGestoraService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaFaseService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoSeguimientoCientificoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaHitoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService;
@@ -61,6 +63,7 @@ public class ConvocatoriaController {
 
   /** ConvocatoriaEntidadGestora service */
   private final ConvocatoriaAreaTematicaService convocatoriaAreaTematicaService;
+
   /** ConvocatoriaFase service */
   private final ConvocatoriaFaseService convocatoriaFaseService;
 
@@ -69,24 +72,29 @@ public class ConvocatoriaController {
 
   /** ConvocatoriaEntidadConvocante service */
   private final ConvocatoriaEntidadConvocanteService convocatoriaEntidadConvocanteService;
+
   /** ConvocatoriaHitoservice */
   private final ConvocatoriaHitoService convocatoriaHitoService;
 
   /** ConvocatoriaPeriodoJustificacion service */
   private final ConvocatoriaPeriodoJustificacionService convocatoriaPeriodoJustificacionService;
 
+  /** ConvocatoriaPeriodoSeguimientoCientifico service */
+  private final ConvocatoriaPeriodoSeguimientoCientificoService convocatoriaPeriodoSeguimientoCientificoService;
+
   /**
    * Instancia un nuevo ConvocatoriaController.
    * 
-   * @param convocatoriaService                     {@link ConvocatoriaService}.
-   * @param convocatoriaAreaTematicaService         {@link ConvocatoriaAreaTematicaService}.
-   * @param convocatoriaEnlaceService               {@link ConvocatoriaEnlaceService}.
-   * @param convocatoriaEntidadConvocanteService    {@link ConvocatoriaEntidadConvocanteService}.
-   * @param convocatoriaEntidadFinanciadoraService  {@link ConvocatoriaEntidadFinanciadoraService}.
-   * @param convocatoriaEntidadGestoraService       {@link ConvocatoriaEntidadGestoraService}.
-   * @param convocatoriaFaseService                 {@link ConvocatoriaFaseService}
-   * @param convocatoriaHitoService                 {@link ConvocatoriaHitoService}
-   * @param convocatoriaPeriodoJustificacionService {@link ConvocatoriaPeriodoJustificacionService}.
+   * @param convocatoriaService                             {@link ConvocatoriaService}.
+   * @param convocatoriaAreaTematicaService                 {@link ConvocatoriaAreaTematicaService}.
+   * @param convocatoriaEnlaceService                       {@link ConvocatoriaEnlaceService}.
+   * @param convocatoriaEntidadConvocanteService            {@link ConvocatoriaEntidadConvocanteService}.
+   * @param convocatoriaEntidadFinanciadoraService          {@link ConvocatoriaEntidadFinanciadoraService}.
+   * @param convocatoriaEntidadGestoraService               {@link ConvocatoriaEntidadGestoraService}.
+   * @param convocatoriaFaseService                         {@link ConvocatoriaFaseService}
+   * @param convocatoriaHitoService                         {@link ConvocatoriaHitoService}
+   * @param convocatoriaPeriodoJustificacionService         {@link ConvocatoriaPeriodoJustificacionService}.
+   * @param convocatoriaPeriodoSeguimientoCientificoService {@link convocatoriaPeriodoSeguimientoCientificoService}
    */
   public ConvocatoriaController(ConvocatoriaService convocatoriaService,
       ConvocatoriaAreaTematicaService convocatoriaAreaTematicaService,
@@ -95,7 +103,8 @@ public class ConvocatoriaController {
       ConvocatoriaEntidadFinanciadoraService convocatoriaEntidadFinanciadoraService,
       ConvocatoriaEntidadGestoraService convocatoriaEntidadGestoraService,
       ConvocatoriaFaseService convocatoriaFaseService, ConvocatoriaHitoService convocatoriaHitoService,
-      ConvocatoriaPeriodoJustificacionService convocatoriaPeriodoJustificacionService) {
+      ConvocatoriaPeriodoJustificacionService convocatoriaPeriodoJustificacionService,
+      ConvocatoriaPeriodoSeguimientoCientificoService convocatoriaPeriodoSeguimientoCientificoService) {
     this.service = convocatoriaService;
     this.convocatoriaAreaTematicaService = convocatoriaAreaTematicaService;
     this.convocatoriaEnlaceService = convocatoriaEnlaceService;
@@ -105,6 +114,7 @@ public class ConvocatoriaController {
     this.convocatoriaFaseService = convocatoriaFaseService;
     this.convocatoriaHitoService = convocatoriaHitoService;
     this.convocatoriaPeriodoJustificacionService = convocatoriaPeriodoJustificacionService;
+    this.convocatoriaPeriodoSeguimientoCientificoService = convocatoriaPeriodoSeguimientoCientificoService;
   }
 
   /**
@@ -477,6 +487,41 @@ public class ConvocatoriaController {
     }
 
     log.debug("findAllConvocatoriaPeriodoJustificacion(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * 
+   * CONVOCATORIA PERIODO SEGUIMIENTO CIENTIFICO
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de
+   * {@link convocatoriaPeriodoSeguimientoCientifico} de la {@link Convocatoria}.
+   * 
+   * @param id     Identificador de {@link Convocatoria}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/convocatoriaperiodoseguimientocientificos")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CPSCI-V')")
+  ResponseEntity<Page<ConvocatoriaPeriodoSeguimientoCientifico>> findAllConvocatoriaPeriodoSeguimientoCientifico(
+      @PathVariable Long id, @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug(
+        "findAllConvocatoriaPeriodoSeguimientoCientifico(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<ConvocatoriaPeriodoSeguimientoCientifico> page = convocatoriaPeriodoSeguimientoCientificoService
+        .findAllByConvocatoria(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug(
+          "findAllConvocatoriaPeriodoSeguimientoCientifico(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug(
+        "findAllConvocatoriaPeriodoSeguimientoCientifico(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

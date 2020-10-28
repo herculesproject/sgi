@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +13,7 @@ import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
@@ -19,6 +21,7 @@ import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoJustificacionRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoSeguimientoCientificoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoFinalidadRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
@@ -58,6 +61,8 @@ public class ConvocatoriaServiceTest {
   private TipoRegimenConcurrenciaRepository tipoRegimenConcurrenciaRepository;
   @Mock
   private TipoAmbitoGeograficoRepository tipoAmbitoGeograficoRepository;
+  @Mock
+  private ConvocatoriaPeriodoSeguimientoCientificoRepository convocatoriaPeriodoSeguimientoCientificoRepository;
 
   private ConvocatoriaService service;
 
@@ -65,7 +70,7 @@ public class ConvocatoriaServiceTest {
   public void setUp() throws Exception {
     service = new ConvocatoriaServiceImpl(repository, convocatoriaPeriodoJustificacionRepository,
         modeloUnidadRepository, modeloTipoFinalidadRepository, tipoRegimenConcurrenciaRepository,
-        tipoAmbitoGeograficoRepository);
+        tipoAmbitoGeograficoRepository, convocatoriaPeriodoSeguimientoCientificoRepository);
   }
 
   @Test
@@ -1491,6 +1496,58 @@ public class ConvocatoriaServiceTest {
         // then: throw exception as duracion no valid
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Hay ConvocatoriaPeriodoJustificacion con mesFinal inferior a la nueva duracion");
+  }
+
+  @Test
+  public void update_WithDuracionLowerConvocatoriaPeriodoSeguimientoCientifico_ThrowsIllegalArgumentException() {
+    // given: a Periodos from MesInicial 3 to MesFinal 12 and Convocatoria with
+    // duracion < 12
+    Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 2L, Boolean.TRUE);
+    convocatoria.setDuracion(2);
+
+    List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientifico = new LinkedList<ConvocatoriaPeriodoSeguimientoCientifico>();
+    for (int i = 2, j = 4; i <= 6; i++, j += 2) {
+      listaConvocatoriaPeriodoSeguimientoCientifico.add(ConvocatoriaPeriodoSeguimientoCientifico//
+          .builder()//
+          .id(Long.valueOf(i - 1))//
+          .convocatoria(convocatoriaExistente)//
+          .numPeriodo(i - 1)//
+          .mesInicial((i * 2) - 1)//
+          .mesFinal(j * 1)//
+          .build());
+    }
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
+
+    BDDMockito
+        .given(modeloUnidadRepository.findByModeloEjecucionIdAndUnidadGestionRef(ArgumentMatchers.anyLong(),
+            ArgumentMatchers.anyString()))
+        .willReturn(Optional.of(generarMockModeloUnidad(1L, convocatoria.getModeloEjecucion(),
+            convocatoria.getUnidadGestionRef(), Boolean.TRUE)));
+
+    BDDMockito
+        .given(modeloTipoFinalidadRepository.findByModeloEjecucionIdAndTipoFinalidadId(ArgumentMatchers.anyLong(),
+            ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockModeloTipoFinalidad(convocatoria, Boolean.TRUE)));
+
+    BDDMockito.given(tipoRegimenConcurrenciaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(convocatoria.getRegimenConcurrencia()));
+
+    BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(convocatoria.getAmbitoGeografico()));
+
+    BDDMockito
+        .given(convocatoriaPeriodoSeguimientoCientificoRepository
+            .findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong()))
+        .willReturn(listaConvocatoriaPeriodoSeguimientoCientifico);
+
+    Assertions.assertThatThrownBy(
+        // when: update Convocatoria
+        () -> service.update(convocatoria))
+        // then: throw exception as duracion no valid
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Existen periodos de seguimiento científico con una duración en meses superior a la indicada");
   }
 
   @Test

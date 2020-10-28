@@ -39,8 +39,13 @@
   <changeSet author="master" id="20201014000000-convocatoria_enlace_seq">
     <createSequence sequenceName="convocatoria_enlace_seq" />
   </changeSet>
+
   <changeSet author="master" id="20200928000000-convocatoria_fase_seq">
     <createSequence sequenceName="convocatoria_fase_seq" />
+  </changeSet>
+
+  <changeSet author="master" id="20201014000000-convocatoria_periodo_seguimiento_cientifico_seq">
+    <createSequence sequenceName="convocatoria_periodo_seguimiento_cientifico_seq" />
   </changeSet>
 
   <changeSet author="master" id="20200928000000-fuente_financiacion_seq">
@@ -161,27 +166,6 @@
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>
-    </createTable>
-  </changeSet>
-
-  <changeSet author="master" id="20201016000000-convocatoria_fase">
-    <createTable tableName="convocatoria_fase">
-      <column name="id" type="BIGINT" defaultValueSequenceNext="convocatoria_fase_seq">
-        <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_fase_pk" />
-      </column>
-      <column name="convocatoria_id" type="BIGINT">
-        <constraints nullable="false" />
-      </column>
-      <column name="tipo_fase_id" type="BIGINT">
-        <constraints nullable="false" />
-      </column>
-      <column name="fecha_inicio" type="DATE">
-        <constraints nullable="false" />
-      </column>
-      <column name="fecha_fin" type="DATE">
-        <constraints nullable="false" />
-      </column>
-      <column name="observaciones" type="VARCHAR2(2000)" />
     </createTable>
   </changeSet>
 
@@ -310,6 +294,27 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20201016000000-convocatoria_fase">
+    <createTable tableName="convocatoria_fase">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="convocatoria_fase_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_fase_pk" />
+      </column>
+      <column name="convocatoria_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="tipo_fase_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="fecha_inicio" type="DATE">
+        <constraints nullable="false" />
+      </column>
+      <column name="fecha_fin" type="DATE">
+        <constraints nullable="false" />
+      </column>
+      <column name="observaciones" type="VARCHAR2(2000)" />
+    </createTable>
+  </changeSet>
+
   <changeSet author="master" id="20200928000000-convocatoria_periodo_justificacion">
     <createTable tableName="convocatoria_periodo_justificacion">
       <column name="id" type="BIGINT" defaultValueSequenceNext="convocatoria_periodo_justificacion_seq">
@@ -333,6 +338,29 @@
       <column name="tipo_justificacion" type="VARCHAR(10)">
         <constraints nullable="false" />
       </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-convocatoria_periodo_seguimiento_cientifico">
+    <createTable tableName="convocatoria_periodo_seguimiento_cientifico">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="convocatoria_periodo_seguimiento_cientifico_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_periodo_seguimiento_cientifico_pk" />
+      </column>
+      <column name="convocatoria_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="num_periodo" type="Int">
+        <constraints nullable="false" />
+      </column>
+      <column name="mes_inicial" type="Int">
+        <constraints nullable="false" />
+      </column>
+      <column name="mes_final" type="Int">
+        <constraints nullable="false" />
+      </column>
+      <column name="fecha_inicio_presentacion" type="DATE" />
+      <column name="fecha_fin_presentacion" type="DATE" />
+      <column name="observaciones" type="VARCHAR(2000)" />
     </createTable>
   </changeSet>
 
@@ -730,6 +758,9 @@
     <addForeignKeyConstraint baseColumnNames="tipo_hito_id" baseTableName="convocatoria_hito" constraintName="convocatoria_hito_tipo_hito_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_hito" validate="true" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-convocatoria_periodo_seguimiento_cientifico_convocatoria_FK">
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_periodo_seguimiento_cientifico" constraintName="convocatoria_periodo_seguimiento_cientifico_convocatoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+  </changeSet>
 
   <changeSet author="master" id="20200601000000-fuente_financiacion_tipo_ambito_geografico_FK">
     <addForeignKeyConstraint baseColumnNames="tipo_ambito_geografico_id" baseTableName="fuente_financiacion" constraintName="fuente_financiacion_tipo_ambito_geografico_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="tipo_ambito_geografico" validate="true" />

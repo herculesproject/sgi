@@ -7,11 +7,13 @@ import java.util.Optional;
 import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoJustificacionRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoSeguimientoCientificoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoFinalidadRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloUnidadRepository;
@@ -44,18 +46,21 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
   private final ModeloTipoFinalidadRepository modeloTipoFinalidadRepository;
   private final TipoRegimenConcurrenciaRepository tipoRegimenConcurrenciaRepository;
   private final TipoAmbitoGeograficoRepository tipoAmbitoGeograficoRepository;
+  private final ConvocatoriaPeriodoSeguimientoCientificoRepository convocatoriaPeriodoSeguimientoCientificoRepository;
 
   public ConvocatoriaServiceImpl(ConvocatoriaRepository repository,
       ConvocatoriaPeriodoJustificacionRepository convocatoriaPeriodoJustificacionRepository,
       ModeloUnidadRepository modeloUnidadRepository, ModeloTipoFinalidadRepository modeloTipoFinalidadRepository,
       TipoRegimenConcurrenciaRepository tipoRegimenConcurrenciaRepository,
-      TipoAmbitoGeograficoRepository tipoAmbitoGeograficoRepository) {
+      TipoAmbitoGeograficoRepository tipoAmbitoGeograficoRepository,
+      ConvocatoriaPeriodoSeguimientoCientificoRepository convocatoriaPeriodoSeguimientoCientificoRepository) {
     this.repository = repository;
     this.convocatoriaPeriodoJustificacionRepository = convocatoriaPeriodoJustificacionRepository;
     this.modeloUnidadRepository = modeloUnidadRepository;
     this.modeloTipoFinalidadRepository = modeloTipoFinalidadRepository;
     this.tipoRegimenConcurrenciaRepository = tipoRegimenConcurrenciaRepository;
     this.tipoAmbitoGeograficoRepository = tipoAmbitoGeograficoRepository;
+    this.convocatoriaPeriodoSeguimientoCientificoRepository = convocatoriaPeriodoSeguimientoCientificoRepository;
   }
 
   /**
@@ -370,7 +375,20 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
                   "Hay ConvocatoriaPeriodoJustificacion con mesFinal inferior a la nueva duracion");
             });
       }
+    }
 
+    // Duración mayor que el mayor mes del Periodo Seguimiento Cientifico
+    if (datosOriginales != null && datosConvocatoria.getDuracion() != null
+        && (datosConvocatoria.getDuracion() != datosOriginales.getDuracion())) {
+      List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientificos = convocatoriaPeriodoSeguimientoCientificoRepository
+          .findAllByConvocatoriaIdOrderByMesInicial(datosConvocatoria.getId());
+      if (!listaConvocatoriaPeriodoSeguimientoCientificos.isEmpty()) {
+        Assert.isTrue(
+            listaConvocatoriaPeriodoSeguimientoCientificos
+                .get(listaConvocatoriaPeriodoSeguimientoCientificos.size() - 1)
+                .getMesFinal() < datosConvocatoria.getDuracion(),
+            "Existen periodos de seguimiento científico con una duración en meses superior a la indicada");
+      }
     }
 
     log.debug("validarDatosConvocatoria(Convocatoria datosConvocatoria, Convocatoria datosOriginales) - end");
