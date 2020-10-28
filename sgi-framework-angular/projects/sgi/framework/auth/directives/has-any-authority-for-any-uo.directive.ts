@@ -1,7 +1,6 @@
 import { Directive, Input, TemplateRef, ViewContainerRef, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { SgiAuthService } from '../auth.service';
-import { hasAnyAuthorityForAnyUO } from '../auth.authority';
 
 /**
  * Structural directive to hide elements if the user NOT have at lest one of the established authorities.
@@ -18,7 +17,6 @@ export class HasAnyAuthorityForAnyUODirective implements OnInit, OnDestroy {
   private rendered = false;
   @Input('sgiHasAnyAuthorityForAnyUO')
   private authorities: string[];
-  private userAuthorities: string[];
   private subscription: Subscription;
 
   constructor(
@@ -40,7 +38,6 @@ export class HasAnyAuthorityForAnyUODirective implements OnInit, OnDestroy {
       }
     });
     this.subscription = this.authService.authStatus$.subscribe((status) => {
-      this.userAuthorities = status.authorities;
       this.updateView();
     });
   }
@@ -63,7 +60,7 @@ export class HasAnyAuthorityForAnyUODirective implements OnInit, OnDestroy {
   }
 
   private checkAuthority(): boolean {
-    return hasAnyAuthorityForAnyUO(this.userAuthorities, this.authorities);
+    return this.authService.hasAnyAuthorityForAnyUO(this.authorities);
   }
 
 }

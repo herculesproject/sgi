@@ -17,4 +17,3 @@ export * from './directives/has-authority.directive';
 export * from './directives/if-authenticated.directive';
 export * from './directives/has-module-access.directive';
 export * from './directives/has-any-module-access.directive';
-export { hasModuleAccess, hasAnyModuleAccess } from './auth.authority';

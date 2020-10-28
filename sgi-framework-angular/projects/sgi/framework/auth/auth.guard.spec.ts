@@ -16,10 +16,10 @@ describe('CanAuthenticationGuard', () => {
 
     } as SgiAuthRoute
   } as ActivatedRouteSnapshot;
-  let routeStateMock: any = { snapshot: {}, url: '/cookies' };
+  const routeStateMock: any = { snapshot: {}, url: '/cookies' };
 
   beforeEach(() => {
-    const authServiceSpy = jasmine.createSpyObj('AuthService', ['isAuthenticated', 'login', 'getAuthorities']);
+    const authServiceSpy = jasmine.createSpyObj('AuthService', ['isAuthenticated', 'login', 'hasAuthority', 'hasAnyAuthority', 'hasAuthorityForAnyUO', 'hasAnyAuthorityForAnyUO']);
     TestBed.configureTestingModule({
       imports: [LoggerTestingModule],
       providers: [
@@ -97,7 +97,7 @@ describe('CanAuthenticationGuard', () => {
   it('should return false if authenticated with auth route hasAuthority', () => {
     // AuthService responses
     authService.isAuthenticated.and.returnValue(true);
-    authService.getAuthorities.and.returnValue(['ONE', 'TWO', 'THREE']);
+    authService.hasAuthority.and.returnValue(false);
 
     // Route data
     routeMock.routeConfig.data = {
@@ -117,7 +117,7 @@ describe('CanAuthenticationGuard', () => {
   it('should return true if authenticated with auth route hasAuthority', () => {
     // AuthService responses
     authService.isAuthenticated.and.returnValue(true);
-    authService.getAuthorities.and.returnValue(['ONE', 'TWO', 'THREE']);
+    authService.hasAuthority.and.returnValue(true);
 
     // Route data
     routeMock.routeConfig.data = {
@@ -137,7 +137,7 @@ describe('CanAuthenticationGuard', () => {
   it('should return false if authenticated with auth route hasAnyAuthority', () => {
     // AuthService responses
     authService.isAuthenticated.and.returnValue(true);
-    authService.getAuthorities.and.returnValue(['ONE', 'TWO', 'THREE']);
+    authService.hasAnyAuthority.and.returnValue(false);
 
     // Route data
     routeMock.routeConfig.data = {
@@ -157,7 +157,7 @@ describe('CanAuthenticationGuard', () => {
   it('should return true if authenticated with auth route hasAnyAuthority', () => {
     // AuthService responses
     authService.isAuthenticated.and.returnValue(true);
-    authService.getAuthorities.and.returnValue(['ONE', 'TWO', 'THREE']);
+    authService.hasAnyAuthority.and.returnValue(true);
 
     // Route data
     routeMock.routeConfig.data = {
@@ -177,7 +177,7 @@ describe('CanAuthenticationGuard', () => {
   it('should return false if authenticated with auth route hasAuthorityForAnyUO', () => {
     // AuthService responses
     authService.isAuthenticated.and.returnValue(true);
-    authService.getAuthorities.and.returnValue(['ONE', 'TWO', 'THREE', 'ONE_UO', 'FOUR_UO']);
+    authService.hasAuthorityForAnyUO.and.returnValue(false);
 
     // Route data
     routeMock.routeConfig.data = {
@@ -197,7 +197,7 @@ describe('CanAuthenticationGuard', () => {
   it('should return true if authenticated with auth route hasAuthorityForAnyUO', () => {
     // AuthService responses
     authService.isAuthenticated.and.returnValue(true);
-    authService.getAuthorities.and.returnValue(['ONE', 'TWO', 'THREE', 'ONE_UO', 'FOUR_UO']);
+    authService.hasAuthorityForAnyUO.and.returnValue(true);
 
     // Route data
     routeMock.routeConfig.data = {
@@ -217,7 +217,7 @@ describe('CanAuthenticationGuard', () => {
   it('should return false if authenticated with auth route hasAnyAuthorityForAnyUO', () => {
     // AuthService responses
     authService.isAuthenticated.and.returnValue(true);
-    authService.getAuthorities.and.returnValue(['ONE', 'TWO', 'THREE', 'ONE_UO', 'FOUR_UO', 'ONE_UO2']);
+    authService.hasAnyAuthorityForAnyUO.and.returnValue(false);
 
     // Route data
     routeMock.routeConfig.data = {
@@ -237,7 +237,7 @@ describe('CanAuthenticationGuard', () => {
   it('should return true if authenticated with auth route hasAnyAuthorityForAnyUO', () => {
     // AuthService responses
     authService.isAuthenticated.and.returnValue(true);
-    authService.getAuthorities.and.returnValue(['ONE', 'TWO', 'THREE', 'ONE_UO', 'FOUR_UO', 'ONE_UO2']);
+    authService.hasAnyAuthorityForAnyUO.and.returnValue(true);
 
     // Route data
     routeMock.routeConfig.data = {
@@ -257,7 +257,6 @@ describe('CanAuthenticationGuard', () => {
   it('should return false if authenticated with mixed auth data attributes', () => {
     // AuthService responses
     authService.isAuthenticated.and.returnValue(true);
-    authService.getAuthorities.and.returnValue(['ONE', 'TWO', 'THREE', 'ONE_UO', 'FOUR_UO', 'ONE_UO2']);
 
     // Route data
     routeMock.routeConfig.data = {

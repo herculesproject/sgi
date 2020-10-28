@@ -48,10 +48,6 @@ export class AuthInMemoryService extends SgiAuthService {
     return of();
   }
 
-  getAuthorities(): string[] {
-    return this.authorities;
-  }
-
   private getAuthStatus(): IAuthStatus {
     return {
       isAuthenticated: this.authenticated,

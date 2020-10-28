@@ -116,16 +116,16 @@ export class SgiAuthGuard implements CanActivate {
     switch (guardMode) {
       case GuardMode.hasAuthority:
         this.validateAuthority(data.hasAuthority);
-        return of(hasAuthority(this.authService.getAuthorities(), data.hasAuthority));
+        return of(this.authService.hasAuthority(data.hasAuthority));
       case GuardMode.hasAnyAuthority:
         this.validateAuthorities(data.hasAnyAuthority);
-        return of(hasAnyAuthority(this.authService.getAuthorities(), data.hasAnyAuthority));
+        return of(this.authService.hasAnyAuthority(data.hasAnyAuthority));
       case GuardMode.hasAuthorityForAnyUO:
         this.validateAuthority(data.hasAuthorityForAnyUO, false);
-        return of(hasAuthorityForAnyUO(this.authService.getAuthorities(), data.hasAuthorityForAnyUO));
+        return of(this.authService.hasAuthorityForAnyUO(data.hasAuthorityForAnyUO));
       case GuardMode.hasAnyAuthorityForAnyUO:
         this.validateAuthorities(data.hasAnyAuthorityForAnyUO, false);
-        return of(hasAnyAuthorityForAnyUO(this.authService.getAuthorities(), data.hasAnyAuthorityForAnyUO));
+        return of(this.authService.hasAnyAuthorityForAnyUO(data.hasAnyAuthorityForAnyUO));
       default:
         return of(true);
     }

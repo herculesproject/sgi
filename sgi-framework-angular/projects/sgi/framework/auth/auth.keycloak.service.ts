@@ -143,10 +143,6 @@ export class AuthKeycloakService extends SgiAuthService {
     };
   }
 
-  public isAuthenticated(): boolean {
-    return this.keycloak.authenticated;
-  }
-
   private refreshToken(): Observable<boolean> {
     this.logger.debug(`refreshToken() - START`);
     return from(this.keycloak.updateToken(5)).pipe(tap(() => this.logger.debug(`refreshToken() - END`)));
@@ -169,13 +165,6 @@ export class AuthKeycloakService extends SgiAuthService {
       );
     }
     return of(this.keycloak.token).pipe(tap(() => this.logger.debug(`getToken() - END`)));
-  }
-
-  getAuthorities(): string[] {
-    if (this.keycloak.realmAccess) {
-      return this.keycloak.realmAccess.roles;
-    }
-    return [];
   }
 
   private publishAuthStatus(status: IAuthStatus) {

@@ -1,7 +1,6 @@
 import { Directive, Input, TemplateRef, ViewContainerRef, OnInit, OnDestroy } from '@angular/core';
 import { SgiAuthService } from '../auth.service';
 import { Subscription } from 'rxjs';
-import { hasAuthorityForAnyUO } from '../auth.authority';
 
 /**
  * Structural directive to hide elements if the user NOT have the established authority.
@@ -18,7 +17,6 @@ export class HasAuthorityForAnyUODirective implements OnInit, OnDestroy {
   private rendered = false;
   @Input('sgiHasAuthorityForAnyUO')
   private authority: string;
-  private userAuthorities: string[];
   private subscription: Subscription;
 
   constructor(
@@ -35,7 +33,6 @@ export class HasAuthorityForAnyUODirective implements OnInit, OnDestroy {
       throw Error('Authority cannot contain an underscore');
     }
     this.subscription = this.authService.authStatus$.subscribe((status) => {
-      this.userAuthorities = status.authorities;
       this.updateView();
     });
   }
@@ -58,6 +55,6 @@ export class HasAuthorityForAnyUODirective implements OnInit, OnDestroy {
   }
 
   private checkAuthority(): boolean {
-    return hasAuthorityForAnyUO(this.userAuthorities, this.authority);
+    return this.authService.hasAuthorityForAnyUO(this.authority);
   }
 }

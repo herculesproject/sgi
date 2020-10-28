@@ -3,6 +3,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 import { SgiAuthConfig } from './auth.config';
 import { HttpRequest } from '@angular/common/http';
+import { hasAnyAuthority, hasAnyAuthorityForAnyUO, hasAnyModuleAccess, hasAuthority, hasAuthorityForAnyUO, hasModuleAccess } from './auth.authority';
 
 export interface IAuthService {
   /**
@@ -38,9 +39,35 @@ export interface IAuthService {
    */
   logout(redirectUri?: string): Observable<void>;
   /**
-   * Returns the authorities of the current user
+   * Returns true if the current authenticated user has any of the provided authorities
+   * @param authorities Authorities to check
    */
-  getAuthorities(): string[];
+  hasAnyAuthority(authorities: string[]): boolean;
+  /**
+   * Returns true if the current authenticated user has the provided authority
+   * @param authority Authority to check
+   */
+  hasAuthority(authority: string): boolean;
+  /**
+   * Returns true if the current authenticated user has any of the provided authorities, ignoring the UO suffix.
+   * @param authorities Authorities to check
+   */
+  hasAnyAuthorityForAnyUO(authorities: string[]): boolean;
+  /**
+   * Returns true if the current authenticated user has the provided authority, ignoring the UO suffix
+   * @param authority Authority to check
+   */
+  hasAuthorityForAnyUO(authority: string): boolean;
+  /**
+   * Returns true if the current authenticated user has access to the provided module code
+   * @param module Module code to check
+   */
+  hasModuleAccess(module: string): boolean;
+  /**
+   * Returns true if the current authenticated user has access to any of the provided module codes
+   * @param modules Module codes to check
+   */
+  hasAnyModuleAccess(modules: string[]): boolean;
 }
 
 /**
@@ -78,16 +105,82 @@ export abstract class SgiAuthService implements IAuthService {
 
   readonly authStatus$ = new BehaviorSubject<IAuthStatus>(defaultAuthStatus);
 
+  protected get currentStatus(): IAuthStatus {
+    return this.authStatus$.value;
+  }
+
   protected protectedResources: RegExp[] = [];
 
   constructor(protected logger: NGXLogger) { }
 
   abstract init(authConfig: SgiAuthConfig): Observable<boolean>;
   abstract getToken(): Observable<string>;
-  abstract isAuthenticated(): boolean;
+
+  public isAuthenticated(): boolean {
+    return this.currentStatus.isAuthenticated;
+  }
   abstract login(redirectUri?: string): Observable<void>;
   abstract logout(redirectUri?: string): Observable<void>;
-  abstract getAuthorities(): string[];
+
+  public hasAnyAuthority(authorities: string[]): boolean {
+    if (!this.isAuthenticated() || !authorities || !authorities.length) {
+      return false;
+    }
+    if (!this.currentStatus.authorities || !this.currentStatus.authorities.length) {
+      return false;
+    }
+    return hasAnyAuthority(this.currentStatus.authorities, authorities);
+  }
+
+  public hasAuthority(authority: string): boolean {
+    if (!this.isAuthenticated() || !authority) {
+      return false;
+    }
+    if (!this.currentStatus.authorities || !this.currentStatus.authorities.length) {
+      return false;
+    }
+    return hasAuthority(this.authStatus$.value.authorities, authority);
+  }
+
+  public hasAnyAuthorityForAnyUO(authorities: string[]): boolean {
+    if (!this.isAuthenticated() || !authorities || !authorities.length) {
+      return false;
+    }
+    if (!this.currentStatus.authorities || !this.currentStatus.authorities.length) {
+      return false;
+    }
+    return hasAnyAuthorityForAnyUO(this.currentStatus.authorities, authorities);
+  }
+
+  public hasAuthorityForAnyUO(authority: string): boolean {
+    if (!this.isAuthenticated() || !authority) {
+      return false;
+    }
+    if (!this.currentStatus.authorities || !this.currentStatus.authorities.length) {
+      return false;
+    }
+    return hasAuthorityForAnyUO(this.currentStatus.authorities, authority);
+  }
+
+  public hasModuleAccess(module: string): boolean {
+    if (!this.isAuthenticated() || !module) {
+      return false;
+    }
+    if (!this.currentStatus.modules || !this.currentStatus.modules.length) {
+      return false;
+    }
+    return hasModuleAccess(this.currentStatus.modules, module);
+  }
+
+  public hasAnyModuleAccess(modules: string[]): boolean {
+    if (!this.isAuthenticated() || !modules || !modules.length) {
+      return false;
+    }
+    if (!this.currentStatus.modules || !this.currentStatus.modules.length) {
+      return false;
+    }
+    return hasAnyModuleAccess(this.currentStatus.modules, modules);
+  }
 
   public isProtectedRequest(request: HttpRequest<any>): boolean {
     return this.protectedResources.findIndex((regex) => regex.test(request.url)) !== -1;

@@ -1,7 +1,6 @@
 import { Directive, Input, TemplateRef, ViewContainerRef, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { SgiAuthService } from '../auth.service';
-import { hasAnyModuleAccess } from '../auth.authority';
 
 /**
  * Structural directive to hide elements if the user NOT have at lest one authority to any of the provided modules.
@@ -14,7 +13,6 @@ export class HasAnyModuleAccessDirective implements OnInit, OnDestroy {
   private rendered = false;
   @Input('sgiHasAnyModuleAccess')
   private moduleNames: string[];
-  private userModules: string[];
   private subscription: Subscription;
 
   constructor(
@@ -33,7 +31,6 @@ export class HasAnyModuleAccessDirective implements OnInit, OnDestroy {
       }
     });
     this.subscription = this.authService.authStatus$.subscribe((status) => {
-      this.userModules = status.modules;
       this.updateView();
     });
   }
@@ -56,7 +53,7 @@ export class HasAnyModuleAccessDirective implements OnInit, OnDestroy {
   }
 
   private checkAuthority(): boolean {
-    return hasAnyModuleAccess(this.userModules, this.moduleNames);
+    return this.authService.hasAnyModuleAccess(this.moduleNames);
   }
 
 }
