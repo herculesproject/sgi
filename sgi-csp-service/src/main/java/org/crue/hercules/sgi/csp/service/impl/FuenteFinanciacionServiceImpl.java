@@ -61,7 +61,7 @@ public class FuenteFinanciacionServiceImpl implements FuenteFinanciacionService 
     Assert.notNull(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().getId(),
         "Id TipoOrigenFuenteFinanciacion no puede ser null para crear un FuenteFinanciacion");
 
-    Assert.isTrue(!(repository.findByNombre(fuenteFinanciacion.getNombre()).isPresent()),
+    Assert.isTrue(!(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()).isPresent()),
         "Ya existe un FuenteFinanciacion con el nombre " + fuenteFinanciacion.getNombre());
 
     fuenteFinanciacion.setTipoAmbitoGeografico(
@@ -104,10 +104,11 @@ public class FuenteFinanciacionServiceImpl implements FuenteFinanciacionService 
     Assert.notNull(fuenteFinanciacionActualizar.getTipoOrigenFuenteFinanciacion().getId(),
         "Id TipoOrigenFuenteFinanciacion no puede ser null para crear un FuenteFinanciacion");
 
-    repository.findByNombre(fuenteFinanciacionActualizar.getNombre()).ifPresent((fuenteFinanciacionExistente) -> {
-      Assert.isTrue(fuenteFinanciacionActualizar.getId() == fuenteFinanciacionExistente.getId(),
-          "Ya existe un FuenteFinanciacion con el nombre " + fuenteFinanciacionExistente.getNombre());
-    });
+    repository.findByNombreAndActivoIsTrue(fuenteFinanciacionActualizar.getNombre())
+        .ifPresent((fuenteFinanciacionExistente) -> {
+          Assert.isTrue(fuenteFinanciacionActualizar.getId() == fuenteFinanciacionExistente.getId(),
+              "Ya existe un FuenteFinanciacion con el nombre " + fuenteFinanciacionExistente.getNombre());
+        });
 
     fuenteFinanciacionActualizar.setTipoAmbitoGeografico(
         tipoAmbitoGeograficoRepository.findById(fuenteFinanciacionActualizar.getTipoAmbitoGeografico().getId())
@@ -138,12 +139,43 @@ public class FuenteFinanciacionServiceImpl implements FuenteFinanciacionService 
       fuenteFinanciacion.setTipoAmbitoGeografico(fuenteFinanciacionActualizar.getTipoAmbitoGeografico());
       fuenteFinanciacion
           .setTipoOrigenFuenteFinanciacion(fuenteFinanciacionActualizar.getTipoOrigenFuenteFinanciacion());
-      fuenteFinanciacion.setActivo(fuenteFinanciacionActualizar.getActivo());
 
       FuenteFinanciacion returnValue = repository.save(fuenteFinanciacion);
       log.debug("update(FuenteFinanciacion fuenteFinanciacionActualizar) - end");
       return returnValue;
     }).orElseThrow(() -> new FuenteFinanciacionNotFoundException(fuenteFinanciacionActualizar.getId()));
+  }
+
+  /**
+   * Reactiva el {@link FuenteFinanciacion}.
+   *
+   * @param id Id del {@link FuenteFinanciacion}.
+   * @return la entidad {@link FuenteFinanciacion} persistida.
+   */
+  @Override
+  public FuenteFinanciacion enable(Long id) {
+    log.debug("enable(Long id) - start");
+
+    Assert.notNull(id, "FuenteFinanciacion id no puede ser null para reactivar un FuenteFinanciacion");
+
+    return repository.findById(id).map(fuenteFinanciacion -> {
+      if (fuenteFinanciacion.getActivo()) {
+        // Si esta activo no se hace nada
+        return fuenteFinanciacion;
+      }
+
+      repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre())
+          .ifPresent((fuenteFinanciacionExistente) -> {
+            Assert.isTrue(fuenteFinanciacion.getId() == fuenteFinanciacionExistente.getId(),
+                "Ya existe un FuenteFinanciacion con el nombre " + fuenteFinanciacion.getNombre());
+          });
+
+      fuenteFinanciacion.setActivo(true);
+
+      FuenteFinanciacion returnValue = repository.save(fuenteFinanciacion);
+      log.debug("enable(Long id) - end");
+      return returnValue;
+    }).orElseThrow(() -> new FuenteFinanciacionNotFoundException(id));
   }
 
   /**
@@ -160,6 +192,11 @@ public class FuenteFinanciacionServiceImpl implements FuenteFinanciacionService 
     Assert.notNull(id, "FuenteFinanciacion id no puede ser null para desactivar un FuenteFinanciacion");
 
     return repository.findById(id).map(fuenteFinanciacion -> {
+      if (!fuenteFinanciacion.getActivo()) {
+        // Si no esta activo no se hace nada
+        return fuenteFinanciacion;
+      }
+
       fuenteFinanciacion.setActivo(false);
 
       FuenteFinanciacion returnValue = repository.save(fuenteFinanciacion);
@@ -169,7 +206,7 @@ public class FuenteFinanciacionServiceImpl implements FuenteFinanciacionService 
   }
 
   /**
-   * Obtener todas las entidades {@link FuenteFinanciacion}  activos paginadas y/o
+   * Obtener todas las entidades {@link FuenteFinanciacion} activos paginadas y/o
    * filtradas.
    *
    * @param pageable la información de la paginación.

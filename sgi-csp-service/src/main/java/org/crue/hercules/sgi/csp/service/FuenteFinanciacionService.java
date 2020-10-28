@@ -30,6 +30,14 @@ public interface FuenteFinanciacionService {
   FuenteFinanciacion update(FuenteFinanciacion fuenteFinanciacionActualizar);
 
   /**
+   * Reactiva el {@link FuenteFinanciacion}.
+   *
+   * @param id Id del {@link FuenteFinanciacion}.
+   * @return la entidad {@link FuenteFinanciacion} persistida.
+   */
+  FuenteFinanciacion enable(Long id);
+
+  /**
    * Desactiva el {@link FuenteFinanciacion}.
    *
    * @param id Id del {@link FuenteFinanciacion}.

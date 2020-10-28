@@ -24,7 +24,7 @@ public class FuenteFinanciacionRepositoryTest {
   private FuenteFinanciacionRepository repository;
 
   @Test
-  public void findByNombre_ReturnsFuenteFinanciacion() throws Exception {
+  public void findByNombreAndActivoIsTrue_ReturnsFuenteFinanciacion() throws Exception {
     // given: 2 FuenteFinanciacion de los que 1 coincide con el nombre buscado
     TipoAmbitoGeografico tipoAmbitoGeografico = new TipoAmbitoGeografico(null, "nombre-1", true);
     entityManager.persistAndFlush(tipoAmbitoGeografico);
@@ -44,7 +44,7 @@ public class FuenteFinanciacionRepositoryTest {
     String nombreBuscado = "nombre-1";
 
     // when: se busca el FuenteFinanciacion nombre
-    FuenteFinanciacion fuenteFinanciacionEncontrado = repository.findByNombre(nombreBuscado).get();
+    FuenteFinanciacion fuenteFinanciacionEncontrado = repository.findByNombreAndActivoIsTrue(nombreBuscado).get();
 
     // then: Se recupera el FuenteFinanciacion con el nombre buscado
     Assertions.assertThat(fuenteFinanciacionEncontrado.getId()).as("getId").isNotNull();
@@ -64,7 +64,7 @@ public class FuenteFinanciacionRepositoryTest {
   }
 
   @Test
-  public void findByNombreNoExiste_ReturnsNull() throws Exception {
+  public void findByNombreAndActivoIsTrue_WithNombreNoExiste_ReturnsNull() throws Exception {
     // given: 2 FuenteFinanciacion que no coinciden con el nombre buscado
     TipoAmbitoGeografico tipoAmbitoGeografico = new TipoAmbitoGeografico(null, "nombre-1", true);
     entityManager.persistAndFlush(tipoAmbitoGeografico);
@@ -84,7 +84,7 @@ public class FuenteFinanciacionRepositoryTest {
     String nombreBuscado = "nombre-noexiste";
 
     // when: se busca el FuenteFinanciacion por nombre
-    Optional<FuenteFinanciacion> fuenteFinanciacionEncontrado = repository.findByNombre(nombreBuscado);
+    Optional<FuenteFinanciacion> fuenteFinanciacionEncontrado = repository.findByNombreAndActivoIsTrue(nombreBuscado);
 
     // then: No hay ningun FuenteFinanciacion con el nombre buscado
     Assertions.assertThat(fuenteFinanciacionEncontrado).isEqualTo(Optional.empty());

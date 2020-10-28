@@ -58,7 +58,8 @@ public class FuenteFinanciacionServiceTest {
     // given: Un nuevo FuenteFinanciacion
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(null);
 
-    BDDMockito.given(repository.findByNombre(fuenteFinanciacion.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(fuenteFinanciacion.getTipoAmbitoGeografico()));
@@ -125,7 +126,7 @@ public class FuenteFinanciacionServiceTest {
     FuenteFinanciacion fuenteFinanciacionNew = generarMockFuenteFinanciacion(null, "nombreRepetido");
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L, "nombreRepetido");
 
-    BDDMockito.given(repository.findByNombre(fuenteFinanciacionNew.getNombre()))
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacionNew.getNombre()))
         .willReturn(Optional.of(fuenteFinanciacion));
 
     // when: Creamos el FuenteFinanciacion
@@ -140,7 +141,8 @@ public class FuenteFinanciacionServiceTest {
     // given: Un nuevo FuenteFinanciacion
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(null);
 
-    BDDMockito.given(repository.findByNombre(fuenteFinanciacion.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
@@ -156,7 +158,8 @@ public class FuenteFinanciacionServiceTest {
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(null);
     fuenteFinanciacion.getTipoAmbitoGeografico().setActivo(false);
 
-    BDDMockito.given(repository.findByNombre(fuenteFinanciacion.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(fuenteFinanciacion.getTipoAmbitoGeografico()));
@@ -172,7 +175,8 @@ public class FuenteFinanciacionServiceTest {
     // given: Un nuevo FuenteFinanciacion
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(null);
 
-    BDDMockito.given(repository.findByNombre(fuenteFinanciacion.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(fuenteFinanciacion.getTipoAmbitoGeografico()));
@@ -192,7 +196,8 @@ public class FuenteFinanciacionServiceTest {
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(null);
     fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().setActivo(false);
 
-    BDDMockito.given(repository.findByNombre(fuenteFinanciacion.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(fuenteFinanciacion.getTipoAmbitoGeografico()));
@@ -212,7 +217,7 @@ public class FuenteFinanciacionServiceTest {
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
     FuenteFinanciacion fuenteFinanciacionNombreActualizado = generarMockFuenteFinanciacion(1L, "NombreActualizado");
 
-    BDDMockito.given(repository.findByNombre(fuenteFinanciacionNombreActualizado.getNombre()))
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacionNombreActualizado.getNombre()))
         .willReturn(Optional.empty());
 
     BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
@@ -242,7 +247,8 @@ public class FuenteFinanciacionServiceTest {
     // given: Un FuenteFinanciacion actualizado con un id que no existe
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L, "FuenteFinanciacion");
 
-    BDDMockito.given(repository.findByNombre(fuenteFinanciacion.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(fuenteFinanciacion.getTipoAmbitoGeografico()));
@@ -262,7 +268,7 @@ public class FuenteFinanciacionServiceTest {
     FuenteFinanciacion fuenteFinanciacionActualizado = generarMockFuenteFinanciacion(1L, "nombreRepetido");
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(2L, "nombreRepetido");
 
-    BDDMockito.given(repository.findByNombre(fuenteFinanciacionActualizado.getNombre()))
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacionActualizado.getNombre()))
         .willReturn(Optional.of(fuenteFinanciacion));
 
     // when: Actualizamos el FuenteFinanciacion
@@ -301,7 +307,8 @@ public class FuenteFinanciacionServiceTest {
     // given: Un FuenteFinanciacion actualizado
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
 
-    BDDMockito.given(repository.findByNombre(fuenteFinanciacion.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
@@ -317,7 +324,8 @@ public class FuenteFinanciacionServiceTest {
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
     fuenteFinanciacion.getTipoAmbitoGeografico().setActivo(false);
 
-    BDDMockito.given(repository.findByNombre(fuenteFinanciacion.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(fuenteFinanciacion.getTipoAmbitoGeografico()));
@@ -351,7 +359,8 @@ public class FuenteFinanciacionServiceTest {
     fuenteFinanciacionActualizado.getTipoAmbitoGeografico().setId(2L);
     fuenteFinanciacionActualizado.getTipoAmbitoGeografico().setActivo(false);
 
-    BDDMockito.given(repository.findByNombre(fuenteFinanciacionActualizado.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacionActualizado.getNombre()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(fuenteFinanciacionActualizado.getTipoAmbitoGeografico()));
@@ -372,7 +381,8 @@ public class FuenteFinanciacionServiceTest {
     // given: Un FuenteFinanciacion actualizado
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
 
-    BDDMockito.given(repository.findByNombre(fuenteFinanciacion.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(fuenteFinanciacion.getTipoAmbitoGeografico()));
@@ -392,7 +402,8 @@ public class FuenteFinanciacionServiceTest {
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
     fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().setActivo(false);
 
-    BDDMockito.given(repository.findByNombre(fuenteFinanciacion.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(fuenteFinanciacion.getTipoAmbitoGeografico()));
@@ -426,7 +437,8 @@ public class FuenteFinanciacionServiceTest {
     fuenteFinanciacionActualizado.getTipoOrigenFuenteFinanciacion().setId(2L);
     fuenteFinanciacionActualizado.getTipoOrigenFuenteFinanciacion().setActivo(false);
 
-    BDDMockito.given(repository.findByNombre(fuenteFinanciacionActualizado.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacionActualizado.getNombre()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(tipoAmbitoGeograficoRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(fuenteFinanciacionActualizado.getTipoAmbitoGeografico()));
@@ -440,6 +452,56 @@ public class FuenteFinanciacionServiceTest {
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.update(fuenteFinanciacionActualizado))
         .isInstanceOf(IllegalArgumentException.class).hasMessage("El TipoOrigenFuenteFinanciacion debe estar Activo");
+  }
+
+  @Test
+  public void enable_ReturnsFuenteFinanciacion() {
+    // given: Un nuevo FuenteFinanciacion inactivo
+    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
+    fuenteFinanciacion.setActivo(false);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(fuenteFinanciacion));
+    BDDMockito.given(repository.save(ArgumentMatchers.<FuenteFinanciacion>any()))
+        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+
+    // when: Activamos el FuenteFinanciacion
+    FuenteFinanciacion fuenteFinanciacionActualizado = service.enable(fuenteFinanciacion.getId());
+
+    // then: El FuenteFinanciacion se activa correctamente.
+    Assertions.assertThat(fuenteFinanciacionActualizado).as("isNotNull()").isNotNull();
+    Assertions.assertThat(fuenteFinanciacionActualizado.getId()).as("getId()").isEqualTo(fuenteFinanciacion.getId());
+    Assertions.assertThat(fuenteFinanciacionActualizado.getNombre()).as("getNombre()")
+        .isEqualTo(fuenteFinanciacion.getNombre());
+    Assertions.assertThat(fuenteFinanciacionActualizado.getDescripcion()).as("getDescripcion()")
+        .isEqualTo(fuenteFinanciacion.getDescripcion());
+    Assertions.assertThat(fuenteFinanciacionActualizado.getActivo()).as("getActivo()").isEqualTo(true);
+  }
+
+  @Test
+  public void enable_WithDuplicatedNombre_ReturnsFuenteFinanciacion() {
+    // given: Un FuenteFinanciacion inactivo con un nombre que ya existe activo
+    FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L, "nombreRepetido");
+    fuenteFinanciacion.setActivo(false);
+    FuenteFinanciacion fuenteFinanciacionRepetido = generarMockFuenteFinanciacion(2L, "nombreRepetido");
+
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacion.getNombre()))
+        .willReturn(Optional.of(fuenteFinanciacionRepetido));
+
+    // when: Activamos el FuenteFinanciacion
+    // then: Lanza una excepcion porque hay otro FuenteFinanciacion con ese nombre
+    Assertions.assertThatThrownBy(() -> service.update(fuenteFinanciacion)).isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Ya existe un FuenteFinanciacion con el nombre %s", fuenteFinanciacion.getNombre());
+  }
+
+  @Test
+  public void enable_WithIdNotExist_ThrowsFuenteFinanciacionNotFoundException() {
+    // given: Un id de un FuenteFinanciacion que no existe
+    Long idNoExiste = 1L;
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
+    // when: activamos el FuenteFinanciacion
+    // then: Lanza una excepcion porque el FuenteFinanciacion no existe
+    Assertions.assertThatThrownBy(() -> service.enable(idNoExiste))
+        .isInstanceOf(FuenteFinanciacionNotFoundException.class);
   }
 
   @Test
@@ -480,7 +542,7 @@ public class FuenteFinanciacionServiceTest {
     FuenteFinanciacion fuenteFinanciacionUpdated = generarMockFuenteFinanciacion(1L, "nombreRepetido");
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(2L, "nombreRepetido");
 
-    BDDMockito.given(repository.findByNombre(fuenteFinanciacionUpdated.getNombre()))
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(fuenteFinanciacionUpdated.getNombre()))
         .willReturn(Optional.of(fuenteFinanciacion));
 
     // when: Actualizamos el FuenteFinanciacion

@@ -39,6 +39,8 @@ public class FuenteFinanciacionIT {
   private TokenBuilder tokenBuilder;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
+  private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
   private static final String CONTROLLER_BASE_PATH = "/fuentefinanciaciones";
 
   private HttpEntity<FuenteFinanciacion> buildRequest(HttpHeaders headers, FuenteFinanciacion entity) throws Exception {
@@ -112,13 +114,51 @@ public class FuenteFinanciacionIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void delete_Return204() throws Exception {
+  public void desactivar_ReturnFuenteFinanciacion() throws Exception {
     Long idFuenteFinanciacion = 1L;
 
-    final ResponseEntity<FuenteFinanciacion> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.DELETE, buildRequest(null, null), FuenteFinanciacion.class, idFuenteFinanciacion);
+    final ResponseEntity<FuenteFinanciacion> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null), FuenteFinanciacion.class, idFuenteFinanciacion);
 
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    FuenteFinanciacion fuenteFinanciacion = response.getBody();
+    Assertions.assertThat(fuenteFinanciacion.getId()).as("getId()").isNotNull();
+    Assertions.assertThat(fuenteFinanciacion.getNombre()).as("getNombre()").isEqualTo("nombre-001");
+    Assertions.assertThat(fuenteFinanciacion.getDescripcion()).as("descripcion-001")
+        .isEqualTo(fuenteFinanciacion.getDescripcion());
+    Assertions.assertThat(fuenteFinanciacion.getFondoEstructural()).as("getFondoEstructural()").isEqualTo(true);
+    Assertions.assertThat(fuenteFinanciacion.getTipoAmbitoGeografico().getId()).as("getTipoAmbitoGeografico().getId()")
+        .isEqualTo(1L);
+    Assertions.assertThat(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().getId())
+        .as("getTipoOrigenFuenteFinanciacion().getId()").isEqualTo(1L);
+    Assertions.assertThat(fuenteFinanciacion.getActivo()).as("getActivo()").isEqualTo(false);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void reactivar_ReturnFuenteFinanciacion() throws Exception {
+    Long idFuenteFinanciacion = 1L;
+
+    final ResponseEntity<FuenteFinanciacion> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, HttpMethod.PATCH, buildRequest(null, null),
+        FuenteFinanciacion.class, idFuenteFinanciacion);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    FuenteFinanciacion fuenteFinanciacion = response.getBody();
+    Assertions.assertThat(fuenteFinanciacion.getId()).as("getId()").isNotNull();
+    Assertions.assertThat(fuenteFinanciacion.getNombre()).as("getNombre()").isEqualTo("nombre-001");
+    Assertions.assertThat(fuenteFinanciacion.getDescripcion()).as("descripcion-001")
+        .isEqualTo(fuenteFinanciacion.getDescripcion());
+    Assertions.assertThat(fuenteFinanciacion.getFondoEstructural()).as("getFondoEstructural()").isEqualTo(true);
+    Assertions.assertThat(fuenteFinanciacion.getTipoAmbitoGeografico().getId()).as("getTipoAmbitoGeografico().getId()")
+        .isEqualTo(1L);
+    Assertions.assertThat(fuenteFinanciacion.getTipoOrigenFuenteFinanciacion().getId())
+        .as("getTipoOrigenFuenteFinanciacion().getId()").isEqualTo(1L);
+    Assertions.assertThat(fuenteFinanciacion.getActivo()).as("getActivo()").isEqualTo(true);
   }
 
   @Sql
