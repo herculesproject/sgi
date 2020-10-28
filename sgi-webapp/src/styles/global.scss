@@ -117,46 +117,8 @@ mat-form-field {
 /**/
 
 /**/
-/** MENSAJES INLINE footer */
-/**/
-
-.mensaje-inline {
-  margin-left: 30px;
-  padding: 7px 25px 7px 7px;
-  font-size: mat-font-size($custom-typography, subheading-1);
-  &.warning {
-    background-color: mat-contrast($custom-colors, warning);
-    border-radius: 16px;
-    font-weight: 600;
-    .warning-icon {
-      color: map-get($custom-colors, warning);
-      vertical-align: middle;
-    }
-  }
-  &.danger {
-    background-color: mat-contrast($custom-colors, danger);
-    border-radius: 16px;
-    font-weight: 600;
-    .danger-icon {
-      color: map-get($custom-colors, danger);
-      vertical-align: middle;
-    }
-  }
-}
-
-/**/
-/** FIN MENSAJES INLINE footer */
-/**/
-
-/**/
 /** BOTONES */
 /**/
-.mat-raised-button.mat-accent,
-.mat-raised-button.mat-primary {
-  &.fixed {
-    width: 270px;
-  }
-}
 
 // Botones disabled
 .mat-raised-button.mat-accent[disabled] {

@@ -15,12 +15,14 @@ import { ActionFragmentMenuItemComponent } from './action-fragment-menu-item/act
 import { ActionFragmentLinkItemComponent } from './action-fragment-link-item/action-fragment-link-item.component';
 import { BuscarEmpresaEconomicaComponent } from './buscar-empresa-economica/buscar-empresa-economica.component';
 import { BuscarEmpresaEconomicaDialogoComponent } from './buscar-empresa-economica/dialogo/buscar-empresa-economica-dialogo.component';
+import { ActionFooterButtonComponent } from './action-footer-button/action-footer-button.component';
 
 @NgModule({
   declarations: [
     BreadcrumbComponent,
     FooterCrearComponent,
     ActionFooterComponent,
+    ActionFooterButtonComponent,
     RootComponent,
     BuscarPersonaComponent,
     BuscarPersonaDialogoComponent,
@@ -41,6 +43,7 @@ import { BuscarEmpresaEconomicaDialogoComponent } from './buscar-empresa-economi
     BreadcrumbComponent,
     FooterCrearComponent,
     ActionFooterComponent,
+    ActionFooterButtonComponent,
     RootComponent,
     BuscarPersonaComponent,
     BuscarPersonaDialogoComponent,

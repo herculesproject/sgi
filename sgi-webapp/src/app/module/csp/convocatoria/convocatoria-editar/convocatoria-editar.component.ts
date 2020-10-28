@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { NGXLogger } from 'ngx-logger';
@@ -15,6 +15,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 
 
 const MSG_BUTTON_EDIT = marker('botones.guardar');
+const MSG_BUTTON_REGISTRAR = marker('csp.convocatoria.registrar');
 const MSG_SUCCESS = marker('csp.convocatoria.editar.correcto');
 const MSG_ERROR = marker('csp.convocatoria.editar.error');
 
@@ -23,16 +24,17 @@ const MSG_ERROR = marker('csp.convocatoria.editar.error');
   selector: 'sgi-convocatoria-editar',
   templateUrl: './convocatoria-editar.component.html',
   styleUrls: ['./convocatoria-editar.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   providers: [
-    ConvocatoriaActionService,
-
+    ConvocatoriaActionService
   ]
 })
-export class ConvocatoriaEditarComponent extends ActionComponent {
+export class ConvocatoriaEditarComponent extends ActionComponent implements OnInit {
   CONVOCATORIA_ROUTE_NAMES = CONVOCATORIA_ROUTE_NAMES;
 
   textoCrear = MSG_BUTTON_EDIT;
+  textoRegistrar = MSG_BUTTON_REGISTRAR;
+
+  disableRegistrar = false;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -43,6 +45,15 @@ export class ConvocatoriaEditarComponent extends ActionComponent {
     dialogService: DialogService) {
 
     super(router, route, actionService, dialogService);
+  }
+
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.subscriptions.push(this.actionService.status$.subscribe(
+      status => {
+        this.disableRegistrar = status.changes || status.errors;
+      }
+    ));
   }
 
   saveOrUpdate(): void {
@@ -59,5 +70,8 @@ export class ConvocatoriaEditarComponent extends ActionComponent {
   }
 
 
+  registrar(): void {
+    //TODO: Implementar
+  }
 
 }
