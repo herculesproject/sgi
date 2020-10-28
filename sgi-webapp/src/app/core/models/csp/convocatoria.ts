@@ -1,8 +1,7 @@
-import { IUnidadGestion } from './unidad-gestion';
-import { IFinalidad } from './finalidad';
-import { IAmbitoGeografico } from './ambito-geografico';
-import { IRegimenConcurrencia } from './regimen-concurrencia';
-import { IModeloEjecucion } from './tipos-configuracion';
+import { IUnidadGestion } from '../usr/unidad-gestion';
+import { ITipoAmbitoGeografico } from './tipo-ambito-geografico';
+import { ITipoRegimenConcurrencia } from './tipo-regimen-concurrencia';
+import { IModeloEjecucion, ITipoFinalidad } from './tipos-configuracion';
 
 export interface IConvocatoria {
   /** Id */
@@ -48,19 +47,19 @@ export interface IConvocatoria {
   modeloEjecucion: IModeloEjecucion;
 
   /** Finalidad */
-  finalidad: IFinalidad;
+  finalidad: ITipoFinalidad;
 
   /** Duración meses */
   duracionMeses: number;
 
   /** Ámbito geográfico */
-  ambitoGeografico: IAmbitoGeografico;
+  tipoAmbitoGeografico: ITipoAmbitoGeografico;
 
   /** Clasificación Producción */
   clasificacionProduccion: string;
 
   /** Régimen concurrencia */
-  regimenConcurrencia: IRegimenConcurrencia;
+  tipoRegimenConcurrencia: ITipoRegimenConcurrencia;
 
   /** Proyecto Colaborativo */
   proyectoColaborativo: string;

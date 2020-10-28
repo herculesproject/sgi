@@ -1,26 +1,25 @@
-import { HttpClientModule } from '@angular/common/http';
-import { TestBed } from '@angular/core/testing';
-
-import { ConvocatoriaService } from './convocatoria.service';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NGXLogger } from 'ngx-logger';
-import TestUtils from '@core/utils/test-utils';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import TestUtils from '@core/utils/test-utils';
+import { NGXLogger } from 'ngx-logger';
 
-describe('ConvocatoriaService', () => {
-  let service: ConvocatoriaService;
+import { TipoFinanciacionService } from './tipo-financiacion.service';
+
+describe('TipoFinanciacionService', () => {
+  let service: TipoFinanciacionService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        BrowserAnimationsModule,
         HttpClientTestingModule,
+        BrowserAnimationsModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
       ],
     });
-    service = TestBed.inject(ConvocatoriaService);
+    service = TestBed.inject(TipoFinanciacionService);
   });
 
   it('should be created', () => {

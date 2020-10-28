@@ -11,24 +11,23 @@ import { Observable, of, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { DialogService } from '@core/services/dialog.service';
 import { ITipoFase } from '@core/models/csp/tipos-configuracion';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { requiredChecked } from '@core/validators/checkbox-validator';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 
+const MSG_CHECK = marker('csp.check.continuar');
 export interface ModeloEjecucionTipoFaseModalData {
   modeloTipoFase: IModeloTipoFase;
   tipoFases: ITipoFase[];
 }
 
 @Component({
-  selector: 'sgi-modelo-ejecucion-tipo-fase-modal',
   templateUrl: './modelo-ejecucion-tipo-fase-modal.component.html',
   styleUrls: ['./modelo-ejecucion-tipo-fase-modal.component.scss']
 })
 export class ModeloEjecucionTipoFaseModalComponent extends
-  BaseModalComponent<IModeloTipoFase, ModeloEjecucionTipoFaseModalComponent> implements OnInit, OnDestroy {
+  BaseModalComponent<IModeloTipoFase, ModeloEjecucionTipoFaseModalComponent> implements OnInit {
 
   tipoFases$: Observable<ITipoFase[]>;
-  private subscriptions: Subscription[] = [];
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -94,12 +93,6 @@ export class ModeloEjecucionTipoFaseModalComponent extends
     });
     this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, `${this.getFormGroup.name}()`, 'end');
     return formGroup;
-  }
-
-  ngOnDestroy() {
-    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, 'ngOnDestroy()', 'start');
-    this.subscriptions?.forEach(x => x.unsubscribe());
-    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, 'ngOnDestroy()', 'end');
   }
 
   equals(o1?: ITipoFase, o2?: ITipoFase): boolean {

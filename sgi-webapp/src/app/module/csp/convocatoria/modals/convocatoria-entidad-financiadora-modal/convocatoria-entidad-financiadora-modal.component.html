@@ -1,9 +1,13 @@
 <div class="convocatoria-entidad-financiadora-modal">
   <header class="modal-header-material">
-    <h3 mat-dialog-title>{{'csp.convocatoria.entidades-financiadoras.modal.titulo' | translate}}</h3>
+    <h3 mat-dialog-title *ngIf="!data.entidad.id">
+      {{'csp.convocatoria.entidades-financiadoras.modal.titulo.añadir' | translate}}</h3>
+    <h3 mat-dialog-title *ngIf="data.entidad.id">
+      {{'csp.convocatoria.entidades-financiadoras.modal.titulo.editar' | translate}}</h3>
   </header>
   <main>
     <form [formGroup]="formGroup">
+      <!-- Empresa económica -->
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
@@ -11,18 +15,20 @@
             <div class="fields-wrapper">
               <mat-form-field fxFill>
                 <mat-label>{{'csp.convocatoria.entidades-financiadoras.modal.nombre' | translate}}</mat-label>
-                <input matInput formControlName="nombre" type="text" id="nombre"
+                <input matInput type="text" id="nombreEmpresa" formControlName="nombreEmpresa" readonly
                   placeholder="{{'csp.convocatoria.entidades-financiadoras.modal.nombre' | translate}}" required>
-                <mat-error *ngIf="formGroup.controls.nombre.errors?.required">
+                <mat-error *ngIf="formGroup.controls.nombreEmpresa.errors?.required">
                   {{'csp.convocatoria.entidades-financiadoras.modal.nombre.error.requerido' | translate}}
                 </mat-error>
               </mat-form-field>
             </div>
-            <button color="primary" md-button mat-raised-button>{{'botones.buscar' | translate}}</button>
+            <button color="primary" md-button mat-raised-button cdkFocusInitial [disabled]="data.empresa.personaRef"
+              (click)="selectEmpresaEconomica()">{{'botones.buscar' | translate}}</button>
           </div>
         </div>
       </div>
 
+      <!-- Fuente de financiación -->
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
@@ -32,14 +38,15 @@
               placeholder="{{'csp.convocatoria.entidades-financiadoras.modal.fuenteFinanciacion' | translate}}"
               [matAutocomplete]="autoFuenteFinanciacion">
             <mat-autocomplete #autoFuenteFinanciacion="matAutocomplete" [displayWith]="getNombreFuenteFinanciacion">
-              <mat-option *ngFor="let fuenteFinanciacion of fuentesFinanciacion" [value]="fuenteFinanciacion">
-                {{fuenteFinanciacion}}
+              <mat-option *ngFor="let fuenteFinanciacion of fuentesFinanciacion$ | async" [value]="fuenteFinanciacion">
+                {{fuenteFinanciacion.nombre}}
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
         </div>
       </div>
 
+      <!-- Tipo de financiación -->
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
@@ -49,14 +56,15 @@
               placeholder="{{'csp.convocatoria.entidades-financiadoras.modal.tipoFinanciacion' | translate}}"
               [matAutocomplete]="autoTipoFinanciacion">
             <mat-autocomplete #autoTipoFinanciacion="matAutocomplete" [displayWith]="getNombreTipoFinanciacion">
-              <mat-option *ngFor="let tipoFinanciacion of tiposFinanciacion" [value]="tipoFinanciacion">
-                {{tipoFinanciacion}}
+              <mat-option *ngFor="let tipoFinanciacion of tiposFinanciacion$ | async" [value]="tipoFinanciacion">
+                {{tipoFinanciacion.nombre}}
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
         </div>
       </div>
 
+      <!-- Porcentaje de financiación -->
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">

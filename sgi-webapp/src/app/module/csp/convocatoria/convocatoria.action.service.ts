@@ -18,6 +18,7 @@ import { ConvocatoriaSeguimientoCientificoFragment } from './convocatoria-formul
 import { ConvocatoriaEnlaceFragment } from './convocatoria-formulario/convocatoria-enlace/convocatoria-enlace.fragment';
 import { ConvocatoriaEntidadesFinanciadorasFragment } from './convocatoria-formulario/convocatoria-entidades-financiadoras/convocatoria-entidades-financiadoras.fragment';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { ConvocatoriaEntidadFinanciadoraService } from '@core/services/csp/convocatoria-entidad-financiadora.service';
 import { ConvocatoriaEnlaceService } from '@core/services/csp/convocatoria-enlace.service';
 
 @Injectable()
@@ -49,23 +50,26 @@ export class ConvocatoriaActionService extends ActionService {
     logger: NGXLogger,
     fb: FormBuilder,
     route: ActivatedRoute,
-    service: ConvocatoriaService,
+    convocatoriaService: ConvocatoriaService,
+    convocatoriaEnlaceService: ConvocatoriaEnlaceService,
     empresaEconomicaService: EmpresaEconomicaService,
-    convocatoria: ConvocatoriaEnlaceService) {
+    convocatoriaEntidadFinanciadoraService: ConvocatoriaEntidadFinanciadoraService
+  ) {
     super();
     this.convocatoria = {} as IConvocatoria;
     if (route.snapshot.data.convocatoria) {
       this.convocatoria = route.snapshot.data.convocatoria;
       this.enableEdit();
     }
-    this.datosGenerales = new ConvocatoriaDatosGeneralesFragment(fb, this.convocatoria?.id, service, empresaEconomicaService);
-    this.seguimientoCientifico = new ConvocatoriaSeguimientoCientificoFragment(logger, this.convocatoria?.id, service);
-    this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(logger, this.convocatoria?.id, service);
-    this.entidadesConvocantes = new ConvocatoriaEntidadesConvocantesFragment(logger, this.convocatoria?.id, service);
-    this.plazosFases = new ConvocatoriaPlazosFasesFragment(logger, this.convocatoria?.id, service);
-    this.hitos = new ConvocatoriaHitosFragment(this.convocatoria?.id, service);
-    this.entidadesFinanciadorasFragment = new ConvocatoriaEntidadesFinanciadorasFragment(logger, this.convocatoria?.id, service);
-    this.enlaces = new ConvocatoriaEnlaceFragment(logger, this.convocatoria?.id, service, convocatoria);
+    this.datosGenerales = new ConvocatoriaDatosGeneralesFragment(fb, this.convocatoria?.id, convocatoriaService, empresaEconomicaService);
+    this.seguimientoCientifico = new ConvocatoriaSeguimientoCientificoFragment(logger, this.convocatoria?.id, convocatoriaService);
+    this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(logger, this.convocatoria?.id, convocatoriaService);
+    this.entidadesConvocantes = new ConvocatoriaEntidadesConvocantesFragment(logger, this.convocatoria?.id, convocatoriaService);
+    this.plazosFases = new ConvocatoriaPlazosFasesFragment(logger, this.convocatoria?.id, convocatoriaService);
+    this.hitos = new ConvocatoriaHitosFragment(this.convocatoria?.id, convocatoriaService);
+    this.entidadesFinanciadorasFragment = new ConvocatoriaEntidadesFinanciadorasFragment(
+      logger, this.convocatoria?.id, convocatoriaService, convocatoriaEntidadFinanciadoraService);
+    this.enlaces = new ConvocatoriaEnlaceFragment(logger, this.convocatoria?.id, convocatoriaService, convocatoriaEnlaceService);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.SEGUIMIENTO_CIENTIFICO, this.seguimientoCientifico);

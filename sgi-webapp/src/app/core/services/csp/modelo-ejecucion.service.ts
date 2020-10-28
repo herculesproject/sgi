@@ -4,48 +4,15 @@ import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@env';
 import { of, Observable } from 'rxjs';
-import { IFinalidad } from '@core/models/csp/finalidad';
 import { ITipoPeriodoJustificacion } from '@core/models/csp/tipo-periodo-justificacion';
 import { ITipoPlazosFases } from '@core/models/csp/tipo-plazos-fases';
-import { IModeloEjecucion, ITipoHito } from '@core/models/csp/tipos-configuracion';
+import { IModeloEjecucion, ITipoFinalidad, ITipoHito } from '@core/models/csp/tipos-configuracion';
 import { IModeloTipoEnlace } from '@core/models/csp/modelo-tipo-enlace';
 import { tap } from 'rxjs/operators';
 import { IModeloTipoFinalidad } from '@core/models/csp/modelo-tipo-finalidad';
 import { IModeloTipoFase } from '@core/models/csp/modelo-tipo-fase';
 import { IModeloTipoDocumento } from '@core/models/csp/modelo-tipo-documento';
 import { IModeloTipoHito } from '@core/models/csp/modelo-tipo-hito';
-
-
-
-const modelosEjecucion: IModeloEjecucion[] = [
-  {
-    id: 1, nombre: 'Ayudas y subvenciones'
-  } as IModeloEjecucion,
-  {
-    id: 2, nombre: 'Contratos'
-  } as IModeloEjecucion,
-  {
-    id: 3, nombre: 'Convenios'
-  } as IModeloEjecucion
-];
-
-
-
-const finalidades: IFinalidad[] = [
-  {
-    id: 1, nombre: 'Proyectos I+D'
-  },
-  {
-    id: 2, nombre: 'Contratación RRHH'
-  },
-  {
-    id: 3, nombre: 'Servicios Técnicos'
-  },
-  {
-    id: 4, nombre: 'Infraestructuras'
-  } as IFinalidad
-
-];
 
 
 const tiposHito: ITipoHito[] = [
@@ -91,38 +58,6 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
       `${environment.serviceServers.csp}${ModeloEjecucionService.MAPPING}`,
       http
     );
-  }
-
-
-  /**
-   * Recupera listado mock de modelos de ejecución.
-   * @param options opciones de búsqueda.
-   * @returns listado de modelos de ejecución.
-   */
-  findModelosEjecucion(options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloEjecucion>> {
-    this.logger.debug(ModeloEjecucionService.name, `findUnidadesGestion(${options ? JSON.stringify(options) : ''})`, '-', 'START');
-
-    return of({
-      page: null,
-      total: modelosEjecucion.length,
-      items: modelosEjecucion
-    } as SgiRestListResult<IModeloEjecucion>);
-  }
-
-
-  /**
-   * Recupera listado mock de finalidades de un modelo de ejecución.
-   * @param idModeloEjecucion Identificador del modelo de ejecución.
-   * @returns listado de finalidades.
-   */
-  findFinalidades(idModeloEjecucion: number): Observable<SgiRestListResult<IFinalidad>> {
-    this.logger.debug(ModeloEjecucionService.name, `findFinalidades(idModeloEjecucion)`, '-', 'START');
-
-    return of({
-      page: null,
-      total: finalidades.length,
-      items: finalidades
-    } as SgiRestListResult<IFinalidad>);
   }
 
 

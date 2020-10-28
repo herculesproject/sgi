@@ -15,44 +15,47 @@ const TEXT_USER_BUTTON = marker('botones.buscar');
 })
 export class BuscarEmpresaEconomicaComponent implements OnChanges {
 
-  datosEmpresaEconomica: string;
-  empresaEconomica: IEmpresaEconomica = {} as IEmpresaEconomica;
+  datosEmpresaEconomica = '';
+  empresaEconomica = {} as IEmpresaEconomica;
 
   @Input() textoLabel = TEXT_USER_TITLE;
   @Input() textoInput = TEXT_USER_TITLE;
   @Input() textoButton = TEXT_USER_BUTTON;
   @Input() datosEmpresaEconomicaTexto: string;
 
-  @Output()
-  empresaEconomicaSeleccionada: EventEmitter<IEmpresaEconomica> = new EventEmitter();
+  @Output() empresaEconomicaSeleccionada = new EventEmitter<IEmpresaEconomica>();
 
   constructor(public dialog: MatDialog, private readonly logger: NGXLogger) { }
 
-
   ngOnChanges(changes: SimpleChanges) {
+    this.logger.debug(BuscarEmpresaEconomicaComponent.name, 'ngOnChanges(changes: SimpleChanges)', 'start');
     if (changes.datosEmpresaEconomicaTexto) {
       this.datosEmpresaEconomica = this.datosEmpresaEconomicaTexto;
     }
+    this.logger.debug(BuscarEmpresaEconomicaComponent.name, 'ngOnChanges(changes: SimpleChanges)', 'end');
   }
 
   formularioBuscarEmpresaEconomica(): void {
+    this.logger.debug(BuscarEmpresaEconomicaComponent.name, `${this.formularioBuscarEmpresaEconomica.name}()`, 'start');
     const dialogRef = this.dialog.open(BuscarEmpresaEconomicaDialogoComponent, {
       width: '1000px',
       data: this.empresaEconomica
     });
-
     dialogRef.afterClosed().subscribe((empresaEconomica: IEmpresaEconomica) => {
       if (empresaEconomica) {
         this.datosEmpresaEconomica = empresaEconomica.razonSocial;
         this.selectEmpresaEconomica(empresaEconomica);
       }
     });
+    this.logger.debug(BuscarEmpresaEconomicaComponent.name, `${this.formularioBuscarEmpresaEconomica.name}()`, 'end');
   }
 
   selectEmpresaEconomica(empresaEconomica: IEmpresaEconomica) {
-    this.logger.debug(BuscarEmpresaEconomicaComponent.name, 'selectEmpresaEconomica(empresaEconomica: IEmpresaEconomica)', 'start');
+    this.logger.debug(BuscarEmpresaEconomicaComponent.name,
+      `${this.formularioBuscarEmpresaEconomica.name}(empresaEconomica: ${empresaEconomica})`, 'start');
     this.empresaEconomicaSeleccionada.emit(empresaEconomica);
-    this.logger.debug(BuscarEmpresaEconomicaComponent.name, 'selectEmpresaEconomica(empresaEconomica: IEmpresaEconomica)', 'end');
+    this.logger.debug(BuscarEmpresaEconomicaComponent.name,
+      `${this.formularioBuscarEmpresaEconomica.name}(empresaEconomica: ${empresaEconomica})`, 'end');
   }
 
 }

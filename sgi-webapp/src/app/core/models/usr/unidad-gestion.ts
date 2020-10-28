@@ -1,8 +1,7 @@
 export interface IUnidadGestion {
-  /** Id */
   id: number;
-
-  /** Nombre  */
   nombre: string;
-
+  acronimo: string;
+  descripcion: string;
+  activo: boolean;
 }

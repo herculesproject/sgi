@@ -1,15 +1,18 @@
-import { AbstractControl, ValidatorFn } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 /**
  * Validador para comprobar si tiene relleno el id
  */
 export class NullIdValidador {
   isValid(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: boolean } | null => {
-      if (!control.value || !control.value.id) {
-        return { vacio: true };
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (typeof control.value === 'string' && control.value.toString().length === 0) {
+        return { required: true };
       }
-      return null;
+      if (control.value && control.value.id) {
+        return null;
+      }
+      return { vacio: true } as ValidationErrors;
     };
   }
 }

@@ -26,3 +26,6 @@ export interface ITipoEnlace extends TipoConfiguracion {
 
 export interface IPlan extends TipoConfiguracion {
 }
+
+export interface ITipoFinanciacion extends TipoConfiguracion {
+}

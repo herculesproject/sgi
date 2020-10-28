@@ -2,33 +2,34 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { NGXLogger } from 'ngx-logger';
-import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { FormGroupUtil } from '@core/utils/form-group-util';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
 import { SgiRestListResult } from '@sgi/framework/http/types';
 import { startWith, map } from 'rxjs/operators';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
-import { IUnidadGestion } from '@core/models/csp/unidad-gestion';
-import { IAmbitoGeografico } from '@core/models/csp/ambito-geografico';
-import { AmbitoGeograficoService } from '@core/services/csp/ambito-geografico.service';
-import { IRegimenConcurrencia } from '@core/models/csp/regimen-concurrencia';
-import { RegimenConcurrenciaService } from '@core/services/csp/regimen-concurrencia.service';
+import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
+import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
+import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
+import { ITipoRegimenConcurrencia } from '@core/models/csp/tipo-regimen-concurrencia';
+import { TipoRegimenConcurrenciaService } from '@core/services/csp/tipo-regimen-concurrencia.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { MatDialog } from '@angular/material/dialog';
-import { IAreaTematica } from '@core/models/csp/area-tematica';
+import { IAreaTematicaArbol } from '@core/models/csp/area-tematica-arbol';
 import { ConvocatoriaDatosGeneralesFragment } from './convocatoria-datos-generales.fragment';
-import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
-import { IFinalidad } from '@core/models/csp/finalidad';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
-
-
+import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
+import { IModeloTipoFinalidad } from '@core/models/csp/modelo-tipo-finalidad';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
+import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
+import { MatDialog } from '@angular/material/dialog';
+import { ConvocatoriaAreaTematicaModalComponent } from '../../modals/convocatoria-area-tematica-modal/convocatoria-area-tematica-modal.component';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
 const MSG_ERROR_INIT = marker('csp.convocatoria.datos.generales.error.cargar');
 const LABEL_BUSCADOR_EMPRESAS_ECONOMICAS = marker('csp.convocatoria.entidad.gestora');
@@ -55,16 +56,12 @@ const proyectoColaborativoNo = marker('label.no');
   styleUrls: ['./convocatoria-datos-generales.component.scss']
 })
 export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<IConvocatoria> implements OnInit {
-
-  labelBuscadorEmpresasEconomicas = LABEL_BUSCADOR_EMPRESAS_ECONOMICAS;
+  formPart: ConvocatoriaDatosGeneralesFragment;
+  label = LABEL_BUSCADOR_EMPRESAS_ECONOMICAS;
 
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
 
-  areasTematicas$: BehaviorSubject<StatusWrapper<IAreaTematica>[]>;
-
-  FormGroupUtil = FormGroupUtil;
-
-  datosGeneralesFragment: ConvocatoriaDatosGeneralesFragment;
+  areasTematicas$: BehaviorSubject<StatusWrapper<IAreaTematicaArbol>[]>;
 
   fxFlexProperties: FxFlexProperties;
   fxFlexPropertiesOne: FxFlexProperties;
@@ -72,49 +69,55 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
   fxFlexPropertiesInline: FxFlexProperties;
   fxFlexPropertiesEntidad: FxFlexProperties;
 
-  ambitoGeograficoFiltered: IAmbitoGeografico[];
-  ambitosGeograficos: Observable<IAmbitoGeografico[]>;
+  private tipoAmbitoGeograficoFiltered = [] as ITipoAmbitoGeografico[];
+  tipoAmbitosGeograficos$: Observable<ITipoAmbitoGeografico[]>;
 
-  finalidadFiltered: IFinalidad[];
-  finalidades: Observable<IFinalidad[]>;
+  private finalidadFiltered = [] as ITipoFinalidad[];
+  finalidades$: Observable<ITipoFinalidad[]>;
 
-  modelosEjecucionFiltered: IModeloEjecucion[];
-  modelosEjecucion: Observable<IModeloEjecucion[]>;
+  private modelosEjecucionFiltered = [] as IModeloEjecucion[];
+  modelosEjecucion$: Observable<IModeloEjecucion[]>;
 
-  regimenConcurrenciaFiltered: IRegimenConcurrencia[];
-  regimenesConcurrencia: Observable<IRegimenConcurrencia[]>;
+  private tipoRegimenConcurrenciaFiltered = [] as ITipoRegimenConcurrencia[];
+  tipoRegimenesConcurrencia$: Observable<ITipoRegimenConcurrencia[]>;
 
-  unidadGestionFiltered: IUnidadGestion[];
-  unidadesGestion: Observable<IUnidadGestion[]>;
+  private unidadGestionFiltered = [] as IUnidadGestion[];
+  unidadesGestion$: Observable<IUnidadGestion[]>;
 
-  suscripciones: Subscription[] = [];
+  private suscripciones = [] as Subscription[];
 
+  convocatoriaAreaTematicas = new MatTableDataSource<StatusWrapper<IConvocatoriaAreaTematica>>();
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  columns = ['listadoAreas', 'areaTematica', 'observaciones', 'acciones'];
+  numPage = [5, 10, 25, 50];
 
-  clasificacionesProduccion: string[] =
-    [clasificacionesProduccionAyuda, clasificacionesProyectoCompetitivo, clasificacionesProyectoNoCompetitivo,
-      clasificacionesProyectoEstancias];
-  destinatarios: string[] = [destinatarioIndividual, destinatarioEquipoProyecto, destinatarioGrupoInvestigacion];
-  estados: string[] = [estadoBorrador, estadoRegistrada];
-  proyectosColaborativo: string[] = [proyectoColaborativoSi, proyectoColaborativoNo];
-
-  totalElementos: number;
-  displayedColumns: string[];
-  elementosPagina: number[];
-
+  clasificacionesProduccion = [
+    clasificacionesProduccionAyuda, clasificacionesProyectoCompetitivo,
+    clasificacionesProyectoNoCompetitivo, clasificacionesProyectoEstancias
+  ];
+  destinatarios = [
+    destinatarioIndividual,
+    destinatarioEquipoProyecto,
+    destinatarioGrupoInvestigacion
+  ];
+  estados = [estadoBorrador, estadoRegistrada];
+  proyectosColaborativo = [proyectoColaborativoSi, proyectoColaborativoNo];
 
   constructor(
     protected readonly logger: NGXLogger,
-    private readonly convocatoriaService: ConvocatoriaService,
+    protected actionService: ConvocatoriaActionService,
     private readonly snackBarService: SnackBarService,
-    private actionService: ConvocatoriaActionService,
     private modeloEjecucionService: ModeloEjecucionService,
     private unidadGestionService: UnidadGestionService,
-    private regimenConcurrenciaService: RegimenConcurrenciaService,
-    private ambitoGeograficoService: AmbitoGeograficoService,
-    private matDialog: MatDialog) {
+    private regimenConcurrenciaService: TipoRegimenConcurrenciaService,
+    private tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
+    private matDialog: MatDialog
+  ) {
 
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
-    this.datosGeneralesFragment = this.fragment as ConvocatoriaDatosGeneralesFragment;
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'constructor()', 'start');
+    this.formPart = this.fragment as ConvocatoriaDatosGeneralesFragment;
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
@@ -145,150 +148,148 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
 
-    this.areasTematicas$ = (this.fragment as ConvocatoriaDatosGeneralesFragment).areasTematicas$;
-
-
-    this.displayedColumns = ['listadoAreas', 'areaTematica', 'observaciones', 'acciones'];
-
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'constructor()', 'end');
   }
-
 
   ngOnInit() {
-    super.ngOnInit();
     this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'ngOnInit()', 'start');
-
-    // Carga de combos
-    this.loadModelosEjecucion();
-    this.loadFinalidades();
+    super.ngOnInit();
     this.loadUnidadesGestion();
-    this.loadRegimenesConcurrencia();
+    this.loadTipoRegimenConcurrencia();
     this.loadAmbitosGeograficos();
+    this.loadAreaTematicas();
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'ngOnInit()', 'end');
   }
 
-
-  loadUnidadesGestion() {
-
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'loadUnidadesGestion()', 'start');
+  private loadUnidadesGestion() {
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadUnidadesGestion.name}()`, 'start');
     this.suscripciones.push(
-      this.unidadGestionService.findUnidadesGestion().subscribe(
-        (res: SgiRestListResult<IModeloEjecucion>) => {
+      // TODO Debería filtrar por el rol
+      this.unidadGestionService.findAll().subscribe(
+        res => {
           this.unidadGestionFiltered = res.items;
-          this.unidadesGestion = this.formGroup.controls.unidadGestion.valueChanges
+          this.unidadesGestion$ = this.formGroup.controls.unidadGestion.valueChanges
             .pipe(
-
               startWith(''),
               map(value => this.filtroUnidadGestion(value))
             );
-          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'loadUnidadesGestion()', 'end');
+          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadUnidadesGestion.name}()`, 'end');
         },
         () => {
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'loadUnidadesGestion()', 'end');
+          this.logger.error(ConvocatoriaDatosGeneralesComponent.name, `${this.loadUnidadesGestion.name}()`, 'error');
         }
       )
     );
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'loadUnidadesGestion()', 'end');
   }
 
-
   loadModelosEjecucion() {
-
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'loadModelosEjecucion()', 'start');
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadModelosEjecucion.name}()`, 'start');
+    this.formGroup.get('modeloEjecucion').setValue('');
     this.suscripciones.push(
-      this.modeloEjecucionService.findModelosEjecucion().subscribe(
-        (res: SgiRestListResult<IModeloEjecucion>) => {
+      // TODO Cambiar endpoint para que filtre con la unidad de gestión
+      this.modeloEjecucionService.findAll().subscribe(
+        res => {
           this.modelosEjecucionFiltered = res.items;
-          this.modelosEjecucion = this.formGroup.controls.modeloEjecucion.valueChanges
+          this.modelosEjecucion$ = this.formGroup.controls.modeloEjecucion.valueChanges
             .pipe(
-
               startWith(''),
               map(value => this.filtroModeloEjecucion(value))
             );
-          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'loadModelosEjecucion()', 'end');
+          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadModelosEjecucion.name}()`, 'end');
         },
         () => {
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'loadModelosEjecucion()', 'end');
+          this.logger.error(ConvocatoriaDatosGeneralesComponent.name, `${this.loadModelosEjecucion.name}()`, 'error');
         }
       )
     );
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'loadModelosEjecucion()', 'end');
   }
-
 
   loadFinalidades() {
-
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'loadFinalidades()', 'start');
-
-    this.suscripciones.push(
-      this.modeloEjecucionService.findFinalidades(1).subscribe(
-        (res: SgiRestListResult<IModeloEjecucion>) => {
-          this.finalidadFiltered = res.items;
-          this.finalidades = this.formGroup.controls.finalidad.valueChanges
-            .pipe(
-
-              startWith(''),
-              map(value => this.filtroFinalidades(value))
-            );
-          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'loadFinalidades()', 'end');
-        },
-        () => {
-          this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'loadFinalidades()', 'end');
-        }
-      )
-    );
-
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'loadFinalidades()', 'end');
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadFinalidades.name}()`, 'start');
+    this.formGroup.get('finalidad').setValue('');
+    const modeloEjecucion = this.formGroup.get('modeloEjecucion').value;
+    if (modeloEjecucion) {
+      const id = modeloEjecucion.id;
+      if (id && !isNaN(id)) {
+        this.suscripciones.push(
+          this.modeloEjecucionService.findModeloTipoFinalidad(id).pipe(
+            map(res => {
+              const tipoFinalidades = res.items.map(modeloTipoFinalidad => modeloTipoFinalidad.tipoFinalidad);
+              return tipoFinalidades;
+            })
+          ).subscribe(
+            tipoFinalidades => {
+              this.finalidadFiltered = tipoFinalidades;
+              this.finalidades$ = this.formGroup.controls.finalidad.valueChanges
+                .pipe(
+                  startWith(''),
+                  map(value => this.filtroFinalidades(value))
+                );
+              this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadFinalidades.name}()`, 'end');
+            },
+            () => {
+              this.snackBarService.showError(MSG_ERROR_INIT);
+              this.logger.error(ConvocatoriaDatosGeneralesComponent.name, `${this.loadFinalidades.name}()`, 'error');
+            }
+          )
+        );
+      }
+    }
   }
 
-
-  loadRegimenesConcurrencia() {
-
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'loadRegimenesConcurrencia()', 'start');
+  private loadTipoRegimenConcurrencia() {
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadTipoRegimenConcurrencia.name}()`, 'start');
     this.suscripciones.push(
-      this.regimenConcurrenciaService.findRegimenConcurrencia().subscribe(
-        (res: SgiRestListResult<IRegimenConcurrencia>) => {
-          this.regimenConcurrenciaFiltered = res.items;
-          this.regimenesConcurrencia = this.formGroup.controls.regimenConcurrencia.valueChanges
+      this.regimenConcurrenciaService.findAll().subscribe(
+        res => {
+          this.tipoRegimenConcurrenciaFiltered = res.items;
+          this.tipoRegimenesConcurrencia$ = this.formGroup.controls.tipoRegimenConcurrencia.valueChanges
             .pipe(
-
               startWith(''),
               map(value => this.filtroRegimenConcurrencia(value))
             );
-          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'loadRegimenesConcurrencia()', 'end');
+          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadTipoRegimenConcurrencia.name}()`, 'end');
         },
         () => {
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'loadRegimenesConcurrencia()', 'end');
+          this.logger.error(ConvocatoriaDatosGeneralesComponent.name, `${this.loadTipoRegimenConcurrencia.name}()`, 'error');
         }
       )
     );
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'loadRegimenesConcurrencia()', 'end');
   }
 
-
-  loadAmbitosGeograficos() {
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'loadAmbitosGeograficos()', 'start');
+  private loadAmbitosGeograficos() {
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadAmbitosGeograficos.name}()`, 'start');
     this.suscripciones.push(
-      this.ambitoGeograficoService.findAmbitoGeografico().subscribe(
-        (res: SgiRestListResult<IAmbitoGeografico>) => {
-          this.ambitoGeograficoFiltered = res.items;
-          this.ambitosGeograficos = this.formGroup.controls.ambitoGeografico.valueChanges
+      this.tipoAmbitoGeograficoService.findAll().subscribe(
+        res => {
+          this.tipoAmbitoGeograficoFiltered = res.items;
+          this.tipoAmbitosGeograficos$ = this.formGroup.controls.tipoAmbitoGeografico.valueChanges
             .pipe(
-
               startWith(''),
-              map(value => this.filtroAmbitoGeografico(value))
+              map(value => this.filtroTipoAmbitoGeografico(value))
             );
-          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'loadAmbitosGeograficos()', 'end');
+          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadAmbitosGeograficos.name}()`, 'end');
         },
         () => {
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'loadAmbitosGeograficos()', 'end');
+          this.logger.error(ConvocatoriaDatosGeneralesComponent.name, `${this.loadAmbitosGeograficos.name}()`, 'error');
         }
       )
     );
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'loadAmbitosGeograficos()', 'end');
+  }
+
+  private loadAreaTematicas() {
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadAreaTematicas.name}()`, 'start');
+    const subscription = this.formPart.convocatoriaAreaTematicas$.subscribe(
+      wrappers => this.convocatoriaAreaTematicas.data = wrappers
+    );
+    this.convocatoriaAreaTematicas.paginator = this.paginator;
+    this.convocatoriaAreaTematicas.sort = this.sort;
+    this.suscripciones.push(subscription);
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadAreaTematicas.name}()`, 'end');
   }
 
 
@@ -301,39 +302,34 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     return typeof modeloEjecucion === 'string' ? modeloEjecucion : modeloEjecucion?.nombre;
   }
 
-
   /**
    * Filtra la lista devuelta por el servicio
    *
    * @param value del input para autocompletar
    */
-  filtroModeloEjecucion(value: string): IModeloEjecucion[] {
+  private filtroModeloEjecucion(value: string): IModeloEjecucion[] {
     const filterValue = value.toString().toLowerCase();
     return this.modelosEjecucionFiltered.filter(modeloEjecucion => modeloEjecucion.nombre.toLowerCase().includes(filterValue));
   }
-
-
 
   /**
    * Devuelve el nombre de una finalidad.
    * @param finalidad finalidad.
    * @returns nombre de una finalidad.
    */
-  getFinalidad(finalidad?: IFinalidad): string | undefined {
+  getFinalidad(finalidad?: ITipoFinalidad): string | undefined {
     return typeof finalidad === 'string' ? finalidad : finalidad?.nombre;
   }
-
 
   /**
    * Filtra la lista devuelta por el servicio
    *
    * @param value del input para autocompletar
    */
-  filtroFinalidades(value: string): IFinalidad[] {
+  private filtroFinalidades(value: string): ITipoFinalidad[] {
     const filterValue = value.toString().toLowerCase();
     return this.finalidadFiltered.filter(finalidad => finalidad.nombre.toLowerCase().includes(filterValue));
   }
-
 
   /**
    * Devuelve el nombre de una gestión unidad.
@@ -344,49 +340,45 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     return typeof unidadGestion === 'string' ? unidadGestion : unidadGestion?.nombre;
   }
 
-
   /**
    * Filtra la lista devuelta por el servicio
    *
    * @param value del input para autocompletar
    */
-  filtroUnidadGestion(value: string): IUnidadGestion[] {
+  private filtroUnidadGestion(value: string): IUnidadGestion[] {
     const filterValue = value.toString().toLowerCase();
     return this.unidadGestionFiltered.filter(unidadGestion => unidadGestion.nombre.toLowerCase().includes(filterValue));
   }
-
-
 
   /**
    * Devuelve el nombre de un régimen ocurrencia.
    * @param regimenConcurrencia régimen ocurrencia.
    * @returns nombre de un régimen ocurrencia..
    */
-  getRegimenConcurrencia(regimenConcurrencia?: IRegimenConcurrencia): string | undefined {
+  getTipoRegimenConcurrencia(regimenConcurrencia?: ITipoRegimenConcurrencia): string | undefined {
     return typeof regimenConcurrencia === 'string' ? regimenConcurrencia : regimenConcurrencia?.nombre;
   }
-
 
   /**
    * Filtra la lista devuelta por el servicio
    *
    * @param value del input para autocompletar
    */
-  filtroRegimenConcurrencia(value: string): IRegimenConcurrencia[] {
+  private filtroRegimenConcurrencia(value: string): ITipoRegimenConcurrencia[] {
     const filterValue = value.toString().toLowerCase();
-    return this.regimenConcurrenciaFiltered.filter(regimenConcurrencia => regimenConcurrencia.nombre.toLowerCase().includes(filterValue));
+    return this.tipoRegimenConcurrenciaFiltered.filter(
+      regimenConcurrencia => regimenConcurrencia.nombre.toLowerCase().includes(filterValue)
+    );
   }
-
 
   /**
    * Devuelve el nombre de un ámbito geográfico.
-   * @param ambitoGeografico ámbito geográfico.
+   * @param tipoAmbitoGeografico ámbito geográfico.
    * @returns nombre de un ámbito geográfico.
    */
-  getAmbitoGeografico(ambitoGeografico?: IAmbitoGeografico): string | undefined {
-    return typeof ambitoGeografico === 'string' ? ambitoGeografico : ambitoGeografico?.nombre;
+  getTipoAmbitoGeografico(tipoAmbitoGeografico?: ITipoAmbitoGeografico): string | undefined {
+    return typeof tipoAmbitoGeografico === 'string' ? tipoAmbitoGeografico : tipoAmbitoGeografico?.nombre;
   }
-
 
   /**
    * Devuelve el nombre de una clasificación proudcción.
@@ -424,19 +416,34 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     return proyectoColaborativo;
   }
 
-
-
   /**
    * Filtra la lista devuelta por el servicio
    *
    * @param value del input para autocompletar
    */
-  filtroAmbitoGeografico(value: string): IAmbitoGeografico[] {
+  private filtroTipoAmbitoGeografico(value: string): ITipoAmbitoGeografico[] {
     const filterValue = value.toString().toLowerCase();
-    return this.ambitoGeograficoFiltered.filter(ambitoGeografico => ambitoGeografico.nombre.toLowerCase().includes(filterValue));
+    return this.tipoAmbitoGeograficoFiltered.filter(
+      ambitoGeografico => ambitoGeografico.nombre.toLowerCase().includes(filterValue)
+    );
   }
 
-
-
-
+  openModal(): void {
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.openModal.name}()`, 'start');
+    const areaTematica = { activo: true } as IAreaTematicaArbol;
+    const config = {
+      width: GLOBAL_CONSTANTS.widthModalCSP,
+      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+      data: { areaTematica }
+    };
+    // const dialogRef = this.matDialog.open(ConvocatoriaAreaTematicaModalComponent, config);
+    // dialogRef.afterClosed().subscribe(
+    //   (result: IConvocatoriaAreaTematica) => {
+    //     if (result) {
+    //       // this.formPart.addModeloTipoDocumento(result);
+    //     }
+    //     this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.openModal.name}()`, 'end');
+    //   }
+    // );
+  }
 }

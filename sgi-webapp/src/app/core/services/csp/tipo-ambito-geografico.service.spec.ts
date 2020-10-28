@@ -1,26 +1,25 @@
-import { HttpClientModule } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 
-import { ConvocatoriaService } from './convocatoria.service';
+import { TipoAmbitoGeograficoService } from './tipo-ambito-geografico.service';
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NGXLogger } from 'ngx-logger';
 import TestUtils from '@core/utils/test-utils';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('ConvocatoriaService', () => {
-  let service: ConvocatoriaService;
+describe('TipoAmbitoGeograficoService', () => {
+  let service: TipoAmbitoGeograficoService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        BrowserAnimationsModule,
-        HttpClientTestingModule,
+        HttpClientModule,
+        BrowserAnimationsModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
       ],
     });
-    service = TestBed.inject(ConvocatoriaService);
+    service = TestBed.inject(TipoAmbitoGeograficoService);
   });
 
   it('should be created', () => {

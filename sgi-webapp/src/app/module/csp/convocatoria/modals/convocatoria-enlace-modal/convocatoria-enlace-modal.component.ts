@@ -9,7 +9,7 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { TipoEnlaceService } from '@core/services/csp/tipo-enlace.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
-import { IsTipoEnlace } from '@core/validators/is-tipo-enlace-validador';
+import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
@@ -56,7 +56,7 @@ export class ConvocatoriaEnlaceModalComponent implements OnInit, OnDestroy {
     this.formGroup = new FormGroup({
       url: new FormControl(this.enlace?.url),
       descripcion: new FormControl(this.enlace?.tipoEnlace?.descripcion),
-      tipoEnlace: new FormControl(this.enlace?.tipoEnlace, [IsTipoEnlace.isValid()]),
+      tipoEnlace: new FormControl(this.enlace?.tipoEnlace, [IsEntityValidator.isValid()]),
     });
     this.loadTiposEnlaces();
     this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'ngOnInit()', 'end');

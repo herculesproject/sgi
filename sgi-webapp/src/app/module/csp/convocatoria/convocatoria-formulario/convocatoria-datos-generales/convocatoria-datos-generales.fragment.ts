@@ -1,19 +1,20 @@
 import { FormFragment } from '@core/services/action-service';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable, of, EMPTY, BehaviorSubject } from 'rxjs';
 import { switchMap, catchError, map } from 'rxjs/operators';
 import { NullIdValidador } from '@core/validators/null-id-validador';
-import { IAreaTematica } from '@core/models/csp/area-tematica';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
+import { SgiRestListResult } from '@sgi/framework/http';
 
 export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocatoria> {
 
-  areasTematicas$: BehaviorSubject<StatusWrapper<IAreaTematica>[]> = new BehaviorSubject<StatusWrapper<IAreaTematica>[]>([]);
+  convocatoriaAreaTematicas$ = new BehaviorSubject<StatusWrapper<IConvocatoriaAreaTematica>[]>([]);
 
   private convocatoria: IConvocatoria;
   private selectedEmpresaEconomica: IEmpresaEconomica;
@@ -34,8 +35,8 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
     if (this.isEdit()) {
       this.setChanges(this.initialPersonaRef !== id);
     } else if (!this.isEdit()) {
-      this.setComplete(value ? true : false);
-      this.setChanges(value ? true : false);
+      this.setComplete(!!value);
+      this.setChanges(!!value);
     }
 
     this.selectedEmpresaEconomica = value;
@@ -55,28 +56,26 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
 
   protected buildFormGroup(): FormGroup {
     return this.fb.group({
-      referencia: ['', Validators.required],
-      estado: ['', Validators.required],
-      unidadGestion: ['', new NullIdValidador().isValid()],
-      anio: ['', Validators.required],
-      titulo: ['', Validators.required],
-      modeloEjecucion: ['', new NullIdValidador().isValid()],
-      finalidad: ['', new NullIdValidador().isValid()],
+      referencia: [''],
+      estado: [''],
+      unidadGestion: ['', IsEntityValidator.isValid()],
+      anio: [''],
+      titulo: [''],
+      modeloEjecucion: ['', IsEntityValidator.isValid()],
+      finalidad: ['', IsEntityValidator.isValid()],
       duracionMeses: [''],
-      ambitoGeografico: ['', new NullIdValidador().isValid()],
+      tipoAmbitoGeografico: ['', new NullIdValidador().isValid()],
       clasificacionProduccion: [''],
-      regimenConcurrencia: [''],
+      tipoRegimenConcurrencia: [''],
       proyectoColaborativo: [''],
       destinatarios: [''],
       entidadGestora: [''],
       descripcionConvocatoria: [''],
       observaciones: [''],
-
     });
   }
 
   protected initializer(key: number): Observable<IConvocatoria> {
-
     if (this.getKey()) {
       this.loadAreasTematicas(this.getKey() as number);
       return this.service.findById(key).pipe(
@@ -93,20 +92,15 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
     }
   }
 
-  loadAreasTematicas(idConvoatoria: number): void {
-    this.service.findAreaTematica(idConvoatoria).pipe(
-      map((response) => {
-        if (response.items) {
-
-          return response.items.map((areaTematica) => new StatusWrapper<IAreaTematica>(areaTematica));
-        }
-        else {
-          return [];
-        }
-      })
-    ).subscribe((areasTematicas) => {
-
-      this.areasTematicas$.next(areasTematicas);
+  loadAreasTematicas(id: number): void {
+    this.service.findAreaTematicas(id).pipe(
+      map((response: SgiRestListResult<IConvocatoriaAreaTematica>) => response.items)
+    ).subscribe((areasTematicas: IConvocatoriaAreaTematica[]) => {
+      this.convocatoriaAreaTematicas$.next(
+        areasTematicas.map(areaTematica =>
+          new StatusWrapper<IConvocatoriaAreaTematica>(areaTematica)
+        )
+      );
     });
   }
 
@@ -121,9 +115,9 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       modeloEjecucion: value.modeloEjecucion,
       finalidad: value.finalidad,
       duracionMeses: value.duracionMeses,
-      ambitoGeografico: value.ambitoGeografico,
+      tipoAmbitoGeografico: value.tipoAmbitoGeografico,
       clasificacionProduccion: value.clasificacionProduccion,
-      regimenConcurrencia: value.regimenConcurrencia,
+      tipoRegimenConcurrencia: value.tipoRegimenConcurrencia,
       proyectoColaborativo: value.proyectoColaborativo,
       destinatarios: value.destinatarios,
       entidadGestora: value.entidadGestora,

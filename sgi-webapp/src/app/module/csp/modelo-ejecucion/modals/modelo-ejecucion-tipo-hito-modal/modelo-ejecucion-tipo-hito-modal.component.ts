@@ -1,6 +1,5 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { IModeloTipoHito } from '@core/models/csp/modelo-tipo-hito';
@@ -11,7 +10,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { requiredChecked } from '@core/validators/checkbox-validator';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 export interface ModeloEjecucionTipoHitoModalData {
@@ -25,10 +24,8 @@ export interface ModeloEjecucionTipoHitoModalData {
   styleUrls: ['./modelo-ejecucion-tipo-hito-modal.component.scss']
 })
 export class ModeloEjecucionTipoHitoModalComponent extends
-  BaseModalComponent<IModeloTipoHito, ModeloEjecucionTipoHitoModalComponent> implements OnInit, OnDestroy {
-
+  BaseModalComponent<IModeloTipoHito, ModeloEjecucionTipoHitoModalComponent> implements OnInit {
   tipoHitos$: Observable<ITipoHito[]>;
-  private subscriptions: Subscription[] = [];
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -68,7 +65,7 @@ export class ModeloEjecucionTipoHitoModalComponent extends
    */
   private filterExistingTipoHito(result: SgiRestListResult<ITipoHito>): ITipoHito[] {
     return result.items.filter((tipoHito: ITipoHito) => {
-      return this.data.tipoHitos.find((currentTipo) => currentTipo.id === tipoHito.id) ? false : true;
+      return !this.data.tipoHitos.find((currentTipo) => currentTipo.id === tipoHito.id);
     });
   }
 
@@ -96,12 +93,6 @@ export class ModeloEjecucionTipoHitoModalComponent extends
     });
     this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, `${this.getFormGroup.name}()`, 'end');
     return formGroup;
-  }
-
-  ngOnDestroy() {
-    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, 'ngOnDestroy()', 'start');
-    this.subscriptions.forEach(x => x.unsubscribe());
-    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, 'ngOnDestroy()', 'end');
   }
 
   equals(o1?: ITipoHito, o2?: ITipoHito): boolean {

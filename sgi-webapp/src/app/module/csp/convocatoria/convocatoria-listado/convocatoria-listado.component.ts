@@ -1,14 +1,12 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { SgiRestFilter, SgiRestSortDirection } from '@sgi/framework/http/';
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
+import { SgiRestFilter, SgiRestFilterType, SgiRestListResult, SgiRestSortDirection } from '@sgi/framework/http/';
 import { NGXLogger } from 'ngx-logger';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Observable, of, merge } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { map, catchError, tap, delay, startWith } from 'rxjs/operators';
+import { delay } from 'rxjs/operators';
 
 import { ROUTE_NAMES } from '@core/route.names';
 
@@ -16,6 +14,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 
 const MSG_BUTTON_NEW = marker('footer.csp.convocatoria.crear');
 const MSG_ERROR = marker('csp.convocatoria.listado.error');
@@ -25,32 +24,20 @@ const MSG_ERROR = marker('csp.convocatoria.listado.error');
   templateUrl: './convocatoria-listado.component.html',
   styleUrls: ['./convocatoria-listado.component.scss']
 })
-export class ConvocatoriaListadoComponent implements AfterViewInit, OnInit {
-
+export class ConvocatoriaListadoComponent extends AbstractTablePaginationComponent<IConvocatoria> implements OnInit {
   ROUTE_NAMES = ROUTE_NAMES;
-
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
-
-  convocatorias$: Observable<IConvocatoria[]> = of();
-
-  displayedColumns: string[];
-  elementosPagina: number[];
-  totalElementos: number;
-  filter: SgiRestFilter[];
-
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-
+  convocatorias$: Observable<IConvocatoria[]>;
   buscadorFormGroup: FormGroup;
-
   textoCrear = MSG_BUTTON_NEW;
 
   constructor(
-    private readonly logger: NGXLogger,
-    private readonly snackBarService: SnackBarService,
+    protected readonly logger: NGXLogger,
+    protected readonly snackBarService: SnackBarService,
     private readonly convocatoriaService: ConvocatoriaService) {
-
+    super(logger, snackBarService, MSG_ERROR);
+    this.logger.debug(ConvocatoriaListadoComponent.name, 'constructor()', 'start');
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -61,112 +48,52 @@ export class ConvocatoriaListadoComponent implements AfterViewInit, OnInit {
     this.fxLayoutProperties.gap = '20px';
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
-
-    this.displayedColumns = ['referencia', 'titulo', 'fechaInicioSolicitud', 'fechaFinSolicitud',
-      'estadoConvocante', 'planInvestigacion', 'entidadFinanciadora', 'fuenteFinanciacion', 'activo', 'acciones'];
+    this.logger.debug(ConvocatoriaListadoComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
     this.logger.debug(ConvocatoriaListadoComponent.name, 'ngOnInit()', 'start');
-
+    super.ngOnInit();
     this.buscadorFormGroup = new FormGroup({
-      titulo: new FormControl('', []),
-      referencia: new FormControl('', []),
-
+      titulo: new FormControl(''),
+      referencia: new FormControl(''),
     });
-
     this.logger.debug(ConvocatoriaListadoComponent.name, 'ngOnInit()', 'end');
   }
 
-  ngAfterViewInit(): void {
-
-    // Merge events that trigger load table data
-    merge(
-      // Link pageChange event to fire new request
-      this.paginator.page,
-      // Link sortChange event to fire new request
-      this.sort.sortChange
-    )
-      .pipe(
-
-        tap(() => {
-          // Load table
-          this.loadTable();
-        }),
-      )
-      .subscribe();
-    this.loadTable();
-
+  protected createObservable(): Observable<SgiRestListResult<IConvocatoria>> {
+    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.createObservable.name}()`, 'start');
+    const observable$ = this.convocatoriaService.findConvocatoria(this.getFindOptions()).pipe(
+      delay(1)
+    );
+    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.createObservable.name}()`, 'end');
+    return observable$;
   }
 
-
-  private loadTable(reset?: boolean) {
-    this.logger.debug(ConvocatoriaListadoComponent.name, 'loadTable()', 'start');
-    // Do the request with paginator/sort/filter values
-    this.convocatorias$ = this.convocatoriaService
-      .findConvocatoria({
-        page: {
-          index: reset ? 0 : this.paginator.pageIndex,
-          size: this.paginator.pageSize
-        },
-        sort: {
-          direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
-          field: this.sort.active
-        },
-        filters: this.buildFilters()
-      })
-      .pipe(
-        // TODO eliminar delay cuando se realice llamada al back.
-        delay(0),
-        map((response) => {
-          // Map response total
-          this.totalElementos = response.total;
-          // Reset pagination to first page
-          if (reset) {
-            this.paginator.pageIndex = 0;
-          }
-          this.logger.debug(ConvocatoriaListadoComponent.name, 'loadTable()', 'end');
-          // Return the values
-          return response.items;
-        }),
-        catchError(() => {
-          // On error reset pagination values
-          this.paginator.firstPage();
-          this.totalElementos = 0;
-          this.snackBarService.showError(MSG_ERROR);
-          this.logger.debug(ConvocatoriaListadoComponent.name, 'loadTable()', 'end');
-          return of([]);
-        })
-      );
+  protected initColumns(): void {
+    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.initColumns.name}()`, 'start');
+    this.columnas = [
+      'referencia', 'titulo', 'fechaInicioSolicitud', 'fechaFinSolicitud',
+      'estadoConvocante', 'planInvestigacion', 'entidadFinanciadora', 'fuenteFinanciacion',
+      'activo', 'acciones'
+    ];
+    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.initColumns.name}()`, 'end');
   }
 
-  private buildFilters(): SgiRestFilter[] {
-    this.logger.debug(ConvocatoriaListadoComponent.name, 'buildFilters()', 'start');
-
-    this.filter = [];
-
-
-    this.logger.debug(ConvocatoriaListadoComponent.name, 'buildFilters()', 'end');
-    return this.filter;
+  protected loadTable(reset?: boolean): void {
+    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadTable.name}(${reset})`, 'start');
+    this.convocatorias$ = this.getObservableLoadTable(reset);
+    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadTable.name}(${reset})`, 'end');
   }
 
-
-
-  /**
-   * Clean filters an reload the table
-   */
-  public onClearFilters() {
-
-    this.logger.debug(ConvocatoriaListadoComponent.name,
-      'onClearFilters()',
-      'start');
-    this.filter = [];
-    this.buscadorFormGroup.reset();
-
-
-    this.logger.debug(ConvocatoriaListadoComponent.name,
-      'onClearFilters()',
-      'end');
+  protected createFilters(): SgiRestFilter[] {
+    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.createFilters.name}()`, 'start');
+    const filtros = [];
+    this.addFiltro(filtros, 'titulo', SgiRestFilterType.LIKE, this.formGroup.controls.comite.value.id);
+    this.addFiltro(filtros, 'referencia', SgiRestFilterType.LIKE,
+      this.formGroup.controls.memoriaNumReferencia.value);
+    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.createFilters.name}()`, 'end');
+    return filtros;
   }
 
 }

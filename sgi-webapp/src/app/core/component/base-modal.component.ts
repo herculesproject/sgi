@@ -1,4 +1,4 @@
-import { Inject, OnInit } from '@angular/core';
+import {Inject, OnDestroy, OnInit} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -7,13 +7,15 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { NGXLogger } from 'ngx-logger';
+import {Subscription} from "rxjs";
 
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 
-export abstract class BaseModalComponent<T, U> implements OnInit {
+export abstract class BaseModalComponent<T, U> implements OnInit, OnDestroy {
   formGroup: FormGroup;
   fxLayoutProperties: FxLayoutProperties;
   fxFlexProperties: FxFlexProperties;
+  protected subscriptions: Subscription[] = [];
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -72,4 +74,10 @@ export abstract class BaseModalComponent<T, U> implements OnInit {
    * Initialize the formGroup that the modal will use
    */
   protected abstract getFormGroup(): FormGroup;
+
+  ngOnDestroy(): void {
+    this.logger.debug(BaseModalComponent.name, 'ngOnDestroy()', 'start');
+    this.subscriptions?.forEach(x => x.unsubscribe());
+    this.logger.debug(BaseModalComponent.name, 'ngOnDestroy()', 'end');
+  }
 }

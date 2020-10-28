@@ -67,5 +67,4 @@ export class EmpresaEconomicaService extends SgiMutableRestService<string, IEmpr
     super(EmpresaEconomicaService.name, logger,
       `${environment.serviceServers.sgp}${EmpresaEconomicaService.MAPPING}`, http, EmpresaEconomicaService.CONVERTER);
   }
-
 }

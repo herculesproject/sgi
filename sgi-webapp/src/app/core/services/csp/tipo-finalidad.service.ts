@@ -22,9 +22,9 @@ export class TipoFinalidadService extends SgiRestService<number, ITipoFinalidad>
     );
   }
 
-
   /**
    * Muestra activos y no activos
+   *
    * @param options opciones de búsqueda.
    */
   findTodos(options?: SgiRestFindOptions): Observable<SgiRestListResult<ITipoFinalidad>> {
@@ -33,5 +33,4 @@ export class TipoFinalidadService extends SgiRestService<number, ITipoFinalidad>
       tap(() => this.logger.debug(TipoFinalidadService.name, `${this.findTodos.name}()`, '-', 'END'))
     );
   }
-
 }
