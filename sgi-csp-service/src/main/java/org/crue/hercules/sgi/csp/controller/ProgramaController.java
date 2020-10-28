@@ -7,7 +7,6 @@ import javax.validation.groups.Default;
 
 import org.crue.hercules.sgi.csp.model.BaseEntity.Update;
 import org.crue.hercules.sgi.csp.model.Programa;
-import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.service.ProgramaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -16,15 +15,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
@@ -97,17 +95,33 @@ public class ProgramaController {
   }
 
   /**
+   * Reactiva el {@link Programa} con id indicado.
+   * 
+   * @param id Identificador de {@link Programa}.
+   * @return {@link Programa} actualizado.
+   */
+  @PatchMapping("/{id}/reactivar")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONGAS-R')")
+  Programa reactivar(@PathVariable Long id) {
+    log.debug("reactivar(Long id) - start");
+    Programa returnValue = service.enable(id);
+    log.debug("reactivar(Long id) - end");
+    return returnValue;
+  }
+
+  /**
    * Desactiva el {@link Programa} con id indicado.
    * 
    * @param id Identificador de {@link Programa}.
+   * @return {@link Programa} actualizado.
    */
-  @DeleteMapping("/{id}")
+  @PatchMapping("/{id}/desactivar")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-B')")
-  @ResponseStatus(value = HttpStatus.NO_CONTENT)
-  void deleteById(@PathVariable Long id) {
-    log.debug("deleteById(Long id) - start");
-    service.disable(id);
-    log.debug("deleteById(Long id) - end");
+  Programa desactivar(@PathVariable Long id) {
+    log.debug("desactivar(Long id) - start");
+    Programa returnValue = service.disable(id);
+    log.debug("desactivar(Long id) - end");
+    return returnValue;
   }
 
   /**
@@ -115,7 +129,7 @@ public class ProgramaController {
    *
    * @param query    la información del filtro.
    * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link TipoHito} paginadas
+   * @return la lista de entidades {@link Programa} paginadas
    */
   @GetMapping()
   // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
@@ -139,7 +153,7 @@ public class ProgramaController {
    *
    * @param query    la información del filtro.
    * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link TipoHito} paginadas
+   * @return la lista de entidades {@link Programa} paginadas
    */
   @GetMapping("/plan")
   // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
@@ -163,7 +177,7 @@ public class ProgramaController {
    *
    * @param query    la información del filtro.
    * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link TipoHito} paginadas
+   * @return la lista de entidades {@link Programa} paginadas
    */
   @GetMapping("/plan/todos")
   // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")
@@ -187,7 +201,7 @@ public class ProgramaController {
    *
    * @param query    la información del filtro.
    * @param pageable la información de la paginación.
-   * @return la lista de entidades {@link TipoHito} paginadas
+   * @return la lista de entidades {@link Programa} paginadas
    */
   @GetMapping("/{id}/hijos")
   // @PreAuthorize("hasAuthorityForAnyUO ('CSP-THIT-V')")

@@ -282,6 +282,67 @@ public class ProgramaServiceTest {
   }
 
   @Test
+  public void enable_ReturnsPrograma() {
+    // given: Un nuevo Programa inactivo
+    Programa programa = generarMockPrograma(1L);
+    programa.setActivo(false);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(programa));
+    BDDMockito
+        .given(repository.findAll(ArgumentMatchers.<Specification<Programa>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          Page<Programa> page = new PageImpl<>(new ArrayList<>(), pageable, 0);
+          return page;
+        });
+    BDDMockito.given(repository.save(ArgumentMatchers.<Programa>any()))
+        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+
+    // when: Activamos el Programa
+    Programa programaActualizado = service.enable(programa.getId());
+
+    // then: El FuenteFinanciacion se activa correctamente.
+    Assertions.assertThat(programaActualizado).as("isNotNull()").isNotNull();
+    Assertions.assertThat(programaActualizado.getId()).as("getId()").isEqualTo(programa.getId());
+    Assertions.assertThat(programaActualizado.getNombre()).as("getNombre()").isEqualTo(programa.getNombre());
+    Assertions.assertThat(programaActualizado.getDescripcion()).as("getDescripcion()")
+        .isEqualTo(programa.getDescripcion());
+    Assertions.assertThat(programaActualizado.getActivo()).as("getActivo()").isEqualTo(true);
+  }
+
+  @Test
+  public void enable_PlanWithDuplicatedNombre_ThrowsIllegalArgumentException() {
+    // given: Un Programa inactivo con un nombre que ya existe activo
+    Programa programa = generarMockPrograma(1L, "nombreRepetido", null);
+    programa.setActivo(false);
+    Programa programaRepetido = generarMockPrograma(2L, "nombreRepetido", null);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(programa));
+    BDDMockito
+        .given(repository.findAll(ArgumentMatchers.<Specification<Programa>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          Page<Programa> page = new PageImpl<>(Arrays.asList(programaRepetido), pageable, 0);
+          return page;
+        });
+
+    // when: Activamos el Programa
+    // then: Lanza una excepcion porque hay otro Programa con ese nombre
+    Assertions.assertThatThrownBy(() -> service.update(programa)).isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Ya existe un plan con el mismo nombre");
+  }
+
+  @Test
+  public void enable_WithIdNotExist_ThrowsTipoFinanciacionNotFoundException() {
+    // given: Un id de un Programa que no existe
+    Long idNoExiste = 1L;
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
+    // when: activamos el Programa
+    // then: Lanza una excepcion porque el Programa no existe
+    Assertions.assertThatThrownBy(() -> service.enable(idNoExiste)).isInstanceOf(ProgramaNotFoundException.class);
+  }
+
+  @Test
   public void disable_ReturnsPrograma() {
     // given: Un nuevo Programa activo
     Programa programa = generarMockPrograma(1L);

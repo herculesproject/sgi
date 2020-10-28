@@ -37,6 +37,8 @@ public class ProgramaIT {
   private TokenBuilder tokenBuilder;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
+  private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
   private static final String CONTROLLER_BASE_PATH = "/programas";
 
   private HttpEntity<Programa> buildRequest(HttpHeaders headers, Programa entity) throws Exception {
@@ -93,13 +95,39 @@ public class ProgramaIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void delete_Return204() throws Exception {
+  public void desactivar_ReturnPrograma() throws Exception {
     Long idPrograma = 1L;
 
-    final ResponseEntity<Programa> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.DELETE, buildRequest(null, null), Programa.class, idPrograma);
+    final ResponseEntity<Programa> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null), Programa.class, idPrograma);
 
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    Programa programa = response.getBody();
+    Assertions.assertThat(programa.getId()).as("getId()").isNotNull();
+    Assertions.assertThat(programa.getNombre()).as("getNombre()").isEqualTo("nombre-001");
+    Assertions.assertThat(programa.getDescripcion()).as("descripcion-001").isEqualTo(programa.getDescripcion());
+    Assertions.assertThat(programa.getActivo()).as("getActivo()").isEqualTo(false);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void reactivar_ReturnPrograma() throws Exception {
+    Long idPrograma = 1L;
+
+    final ResponseEntity<Programa> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, HttpMethod.PATCH, buildRequest(null, null),
+        Programa.class, idPrograma);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    Programa programa = response.getBody();
+    Assertions.assertThat(programa.getId()).as("getId()").isNotNull();
+    Assertions.assertThat(programa.getNombre()).as("getNombre()").isEqualTo("nombre-001");
+    Assertions.assertThat(programa.getDescripcion()).as("descripcion-001");
+    Assertions.assertThat(programa.getActivo()).as("getActivo()").isEqualTo(true);
   }
 
   @Sql

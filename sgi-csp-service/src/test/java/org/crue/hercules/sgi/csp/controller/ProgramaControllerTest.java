@@ -51,6 +51,8 @@ public class ProgramaControllerTest {
   private ProgramaService service;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
+  private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
   private static final String CONTROLLER_BASE_PATH = "/programas";
 
   @Test
@@ -144,7 +146,52 @@ public class ProgramaControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
-  public void delete_WithExistingId_Return204() throws Exception {
+  public void reactivar_WithExistingId_ReturnPrograma() throws Exception {
+    // given: existing id
+    Programa programa = generarMockPrograma(1L);
+    programa.setActivo(false);
+
+    BDDMockito.given(service.disable(ArgumentMatchers.<Long>any())).willAnswer((InvocationOnMock invocation) -> {
+      Programa programaDisabled = new Programa();
+      BeanUtils.copyProperties(programa, programaDisabled);
+      programaDisabled.setActivo(true);
+      return programaDisabled;
+    });
+
+    // when: reactivar by id
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, programa.getId())
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Programa is updated
+        .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(programa.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(programa.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  public void reactivar_NoExistingId_Return404() throws Exception {
+    // given: non existing id
+    Long id = 1L;
+
+    BDDMockito.willThrow(new ProgramaNotFoundException(id)).given(service).enable(ArgumentMatchers.<Long>any());
+
+    // when: reactivar by non existing id
+    mockMvc
+        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: 404 error
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  public void desactivar_WithExistingId_ReturnTipoFinanciacion() throws Exception {
     // given: existing id
     Programa programa = generarMockPrograma(1L);
     BDDMockito.given(service.disable(ArgumentMatchers.<Long>any())).willAnswer((InvocationOnMock invocation) -> {
@@ -154,26 +201,30 @@ public class ProgramaControllerTest {
       return programaDisabled;
     });
 
-    // when: delete by id
+    // when: desactivar by id
     mockMvc
-        .perform(MockMvcRequestBuilders.delete(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, programa.getId())
+        .perform(MockMvcRequestBuilders
+            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, programa.getId())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
-        // then: 204
-        .andExpect(MockMvcResultMatchers.status().isNoContent());
+        // then: Programa is updated
+        .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(programa.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(programa.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(false));
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
-  public void delete_NoExistingId_Return404() throws Exception {
+  public void desactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
 
     BDDMockito.willThrow(new ProgramaNotFoundException(id)).given(service).disable(ArgumentMatchers.<Long>any());
 
-    // when: delete by non existing id
+    // when: desactivar by non existing id
     mockMvc
-        .perform(MockMvcRequestBuilders.delete(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
+        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())

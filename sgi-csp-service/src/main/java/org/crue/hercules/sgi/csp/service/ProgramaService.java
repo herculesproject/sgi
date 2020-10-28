@@ -30,7 +30,15 @@ public interface ProgramaService {
   Programa update(Programa programaActualizar);
 
   /**
-   * Desactiva el {@link Programa} y todos sus hijos en cascada.
+   * Reactiva el {@link Programa}.
+   *
+   * @param id Id del {@link Programa}.
+   * @return la entidad {@link Programa} persistida.
+   */
+  Programa enable(Long id);
+
+  /**
+   * Desactiva el {@link Programa}.
    *
    * @param id Id del {@link Programa}.
    * @return la entidad {@link Programa} persistida.

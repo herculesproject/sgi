@@ -107,11 +107,6 @@ public class ProgramaServiceImpl implements ProgramaService {
       programa.setDescripcion(programaActualizar.getDescripcion());
       programa.setPadre(programaActualizar.getPadre());
 
-      // Solo se puede reactivar si es un plan (programa sin padre)
-      if (programaActualizar.getActivo() && programaActualizar.getPadre() == null) {
-        programa.setActivo(programaActualizar.getActivo());
-      }
-
       Programa returnValue = repository.save(programa);
       log.debug("update(Programa programaActualizar) - end");
       return returnValue;
@@ -119,7 +114,41 @@ public class ProgramaServiceImpl implements ProgramaService {
   }
 
   /**
-   * Desactiva el {@link Programa} y todos sus hijos en cascada.
+   * Reactiva el {@link Programa}.
+   *
+   * @param id Id del {@link Programa}.
+   * @return la entidad {@link Programa} persistida.
+   */
+  @Override
+  public Programa enable(Long id) {
+    log.debug("enable(Long id) - start");
+
+    Assert.notNull(id, "Programa id no puede ser null para reactivar un Programa");
+
+    return repository.findById(id).map(programa -> {
+      if (programa.getActivo()) {
+        // Si esta activo no se hace nada
+        return programa;
+      }
+
+      if (programa.getPadre() == null) {
+        Assert.isTrue(!existPlanWithNombre(programa.getNombre(), programa.getId()),
+            "Ya existe un plan con el mismo nombre");
+      } else {
+        Assert.isTrue(!existProgramaNombre(programa.getPadre().getId(), programa.getNombre(), programa.getId()),
+            "Ya existe un programa con el mismo nombre en el plan");
+      }
+
+      programa.setActivo(true);
+
+      Programa returnValue = repository.save(programa);
+      log.debug("enable(Long id) - end");
+      return returnValue;
+    }).orElseThrow(() -> new ProgramaNotFoundException(id));
+  }
+
+  /**
+   * Desactiva el {@link Programa}.
    *
    * @param id Id del {@link Programa}.
    * @return la entidad {@link Programa} persistida.
@@ -132,6 +161,11 @@ public class ProgramaServiceImpl implements ProgramaService {
     Assert.notNull(id, "Programa id no puede ser null para desactivar un Programa");
 
     return repository.findById(id).map(programa -> {
+      if (!programa.getActivo()) {
+        // Si no esta activo no se hace nada
+        return programa;
+      }
+
       programa.setActivo(false);
       Programa returnValue = repository.save(programa);
       log.debug("disable(Long id) - end");
@@ -245,7 +279,6 @@ public class ProgramaServiceImpl implements ProgramaService {
    *                          la busqueda.
    * @return true si existe algun plan con ese nombre.
    */
-
   private boolean existPlanWithNombre(String nombre, Long programaIdExcluir) {
     log.debug("existPlanWithNombre(String nombre, Long programaIdExcluir) - start");
     Specification<Programa> specPlanesByNombre = ProgramaSpecifications.planesByNombre(nombre, programaIdExcluir);
@@ -266,7 +299,6 @@ public class ProgramaServiceImpl implements ProgramaService {
    *                          la busqueda.
    * @return true si existe algun {@link Programa} con ese nombre.
    */
-
   private boolean existProgramaNombre(Long programaId, String nombre, Long programaIdExcluir) {
     log.debug("existProgramaNombre(Long programaId, String nombre, Long programaIdExcluir) - start");
 
