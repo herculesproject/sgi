@@ -1,30 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<api context="/sgp" name="API-SGDOC" version="1.0.0" version-type="context" xmlns="http://ws.apache.org/ns/synapse">
+<api context="/sgdoc" name="API-SGDOC" version="1.0.0" version-type="context" xmlns="http://ws.apache.org/ns/synapse">
     <resource methods="POST GET" url-mapping="/documentos">
         <inSequence>
             <!--This is generated API skeleton.-->
             <!--Business Logic Goes Here-->
-            <payloadFactory media-type="json">
-                <format>[
-    {
-        "documentoRef": "doc-001",
-        "nombre": "2000-01-01",
-        "version": "1",
-        "fechaCreacion": "2000-01-01",
-        "tipo": "application/pdf",
-        "autorRef":"user-001"
-    },
-    {
-        "documentoRef": "doc-002",
-        "nombre": "2000-01-01",
-        "version": "1",
-        "fechaCreacion": "2000-01-01",
-        "tipo": "application/pdf",
-        "autorRef":"user-001"
-    }
-]</format>
-                <args/>
-            </payloadFactory>
             <send>
                 <endpoint key="sgdoc-service"/>
             </send>
@@ -89,7 +68,7 @@
                 <args/>
             </payloadFactory>
             <send>
-                <endpoint key="sgp-service"/>
+                <endpoint key="sgdoc-service"/>
             </send>
         </inSequence>
         <outSequence>
@@ -142,7 +121,7 @@
                 <args/>
             </payloadFactory>
             <send>
-                <endpoint key="sgp-service"/>
+                <endpoint key="sgdoc-service"/>
             </send>
         </inSequence>
         <outSequence>
@@ -168,13 +147,29 @@
             <respond/>
         </faultSequence>
     </resource>
+    <resource methods="GET" uri-template="/documentos/{documentoRef}/archivo">
+        <inSequence>
+            <!--This is generated API skeleton.-->
+            <property expression="get-property('uri.var.documentoRef')" name="documentoRef" scope="default" type="STRING"/>
+            <!--Business Logic Goes Here-->
+            <send>
+                <endpoint key="sgdoc-service"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <respond/>
+        </outSequence>
+        <faultSequence>
+            <respond/>
+        </faultSequence>
+    </resource>
     <resource methods="DELETE" uri-template="/documentos/{documentoRef}">
         <inSequence>
             <!--This is generated API skeleton.-->
             <property expression="get-property('uri.var.documentoRef')" name="documentoRef" scope="default" type="STRING"/>
             <!--Business Logic Goes Here-->
             <send>
-                <endpoint key="sgp-service"/>
+                <endpoint key="sgdoc-service"/>
             </send>
         </inSequence>
         <outSequence>
