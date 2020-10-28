@@ -45,7 +45,7 @@ public class ConceptoGastoServiceTest {
     // given: Un nuevo ConceptoGasto
     ConceptoGasto conceptoGasto = generarMockConceptoGasto(null);
 
-    BDDMockito.given(repository.findByNombre(conceptoGasto.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(conceptoGasto.getNombre())).willReturn(Optional.empty());
 
     BDDMockito.given(repository.save(conceptoGasto)).will((InvocationOnMock invocation) -> {
       ConceptoGasto conceptoGastoCreado = invocation.getArgument(0);
@@ -80,7 +80,8 @@ public class ConceptoGastoServiceTest {
     ConceptoGasto conceptoGastoNew = generarMockConceptoGasto(null, "nombreRepetido");
     ConceptoGasto conceptoGasto = generarMockConceptoGasto(1L, "nombreRepetido");
 
-    BDDMockito.given(repository.findByNombre(conceptoGastoNew.getNombre())).willReturn(Optional.of(conceptoGasto));
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(conceptoGastoNew.getNombre()))
+        .willReturn(Optional.of(conceptoGasto));
 
     // when: Creamos el ConceptoGasto
     // then: Lanza una excepcion porque hay otro ConceptoGasto con ese nombre
@@ -94,7 +95,8 @@ public class ConceptoGastoServiceTest {
     ConceptoGasto conceptoGasto = generarMockConceptoGasto(1L);
     ConceptoGasto conceptoGastoNombreActualizado = generarMockConceptoGasto(1L, "NombreActualizado");
 
-    BDDMockito.given(repository.findByNombre(conceptoGastoNombreActualizado.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(conceptoGastoNombreActualizado.getNombre()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(conceptoGasto));
     BDDMockito.given(repository.save(ArgumentMatchers.<ConceptoGasto>any()))
@@ -116,7 +118,7 @@ public class ConceptoGastoServiceTest {
     // given: Un ConceptoGasto actualizado con un id que no existe
     ConceptoGasto conceptoGasto = generarMockConceptoGasto(1L, "ConceptoGasto");
 
-    BDDMockito.given(repository.findByNombre(conceptoGasto.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(conceptoGasto.getNombre())).willReturn(Optional.empty());
 
     // when: Actualizamos el ConceptoGasto
     // then: Lanza una excepcion porque el ConceptoGasto no existe
@@ -130,7 +132,7 @@ public class ConceptoGastoServiceTest {
     ConceptoGasto conceptoGastoActualizado = generarMockConceptoGasto(1L, "nombreRepetido");
     ConceptoGasto conceptoGasto = generarMockConceptoGasto(2L, "nombreRepetido");
 
-    BDDMockito.given(repository.findByNombre(conceptoGastoActualizado.getNombre()))
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(conceptoGastoActualizado.getNombre()))
         .willReturn(Optional.of(conceptoGasto));
 
     // when: Actualizamos el ConceptoGasto
@@ -138,6 +140,52 @@ public class ConceptoGastoServiceTest {
     Assertions.assertThatThrownBy(() -> service.update(conceptoGastoActualizado))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Ya existe un ConceptoGasto con el nombre " + conceptoGastoActualizado.getNombre());
+  }
+
+  @Test
+  public void enable_ReturnsConceptoGasto() {
+    // given: Un ConceptoGasto inactivo
+    ConceptoGasto conceptoGasto = generarMockConceptoGasto(1L);
+    conceptoGasto.setActivo(false);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(conceptoGasto));
+    BDDMockito.given(repository.save(ArgumentMatchers.<ConceptoGasto>any()))
+        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+
+    // when: Activamos el ConceptoGasto
+    ConceptoGasto conceptoGastoActualizado = service.enable(conceptoGasto.getId());
+
+    // then: El ConceptoGasto se activa correctamente.
+    Assertions.assertThat(conceptoGastoActualizado).as("isNotNull()").isNotNull();
+    Assertions.assertThat(conceptoGastoActualizado.getId()).as("getId()").isEqualTo(1L);
+    Assertions.assertThat(conceptoGastoActualizado.getNombre()).as("getNombre()").isEqualTo(conceptoGasto.getNombre());
+    Assertions.assertThat(conceptoGastoActualizado.getActivo()).as("getActivo()").isEqualTo(true);
+  }
+
+  @Test
+  public void enable_WithDuplicatedNombre_ReturnsConceptoGasto() {
+    // given: Un ConceptoGasto inactivo con un nombre que ya existe activo
+    ConceptoGasto conceptoGasto = generarMockConceptoGasto(1L, "nombreRepetido");
+    conceptoGasto.setActivo(false);
+    ConceptoGasto conceptoGastoRepetido = generarMockConceptoGasto(2L, "nombreRepetido");
+
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(conceptoGasto.getNombre()))
+        .willReturn(Optional.of(conceptoGastoRepetido));
+
+    // when: Activamos el ConceptoGasto
+    // then: Lanza una excepcion porque hay otro ConceptoGasto con ese nombre
+    Assertions.assertThatThrownBy(() -> service.update(conceptoGasto)).isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Ya existe un ConceptoGasto con el nombre %s", conceptoGasto.getNombre());
+  }
+
+  @Test
+  public void enable_WithIdNotExist_ThrowsConceptoGastoNotFoundException() {
+    // given: Un id de un ConceptoGasto que no existe
+    Long idNoExiste = 1L;
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
+    // when: Activamos el ConceptoGasto
+    // then: Lanza una excepcion porque el ConceptoGasto no existe
+    Assertions.assertThatThrownBy(() -> service.enable(idNoExiste)).isInstanceOf(ConceptoGastoNotFoundException.class);
   }
 
   @Test
@@ -176,7 +224,8 @@ public class ConceptoGastoServiceTest {
     ConceptoGasto conceptoGastoUpdated = generarMockConceptoGasto(1L, "nombreRepetido");
     ConceptoGasto conceptoGasto = generarMockConceptoGasto(2L, "nombreRepetido");
 
-    BDDMockito.given(repository.findByNombre(conceptoGastoUpdated.getNombre())).willReturn(Optional.of(conceptoGasto));
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(conceptoGastoUpdated.getNombre()))
+        .willReturn(Optional.of(conceptoGasto));
 
     // when: Actualizamos el ConceptoGasto
     // then: Lanza una excepcion porque ya existe otro ConceptoGasto con ese

@@ -51,6 +51,8 @@ public class ConceptoGastoControllerTest {
   private ConceptoGastoService service;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
+  private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
   private static final String CONTROLLER_BASE_PATH = "/conceptogastos";
 
   @Test
@@ -144,8 +146,55 @@ public class ConceptoGastoControllerTest {
   }
 
   @Test
+  @WithMockUser(username = "user", authorities = { "CSP-ME-R" })
+  public void reactivar_ReturnsConvocatoria() throws Exception {
+    // given: existing ConceptoGasto disabled
+    ConceptoGasto conceptoGasto = generarMockConceptoGasto(1L);
+    conceptoGasto.setActivo(false);
+
+    BDDMockito.given(service.enable(ArgumentMatchers.<Long>any())).will((InvocationOnMock invocation) -> {
+      ConceptoGasto conceptoGastoEnabled = new ConceptoGasto();
+      BeanUtils.copyProperties(conceptoGasto, conceptoGastoEnabled);
+      conceptoGastoEnabled.setActivo(true);
+      return conceptoGastoEnabled;
+    });
+
+    // when: registrar ConceptoGasto
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, conceptoGasto.getId())
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: ConceptoGasto enabled
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(conceptoGasto.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(conceptoGasto.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(conceptoGasto.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-ME-R" })
+  public void reactivar_NoExistingId_Return404() throws Exception {
+    // given: non existing id
+    Long id = 1L;
+
+    BDDMockito.willThrow(new ConceptoGastoNotFoundException(id)).given(service).disable(ArgumentMatchers.<Long>any());
+
+    // when: reactivar by non existing id
+    mockMvc
+        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: 404 error
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
   @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
-  public void delete_WithExistingId_Return204() throws Exception {
+  public void desactivar_WithExistingId_ReturnConceptoGasto() throws Exception {
     // given: existing id
     ConceptoGasto conceptoGasto = generarMockConceptoGasto(1L);
     BDDMockito.given(service.disable(ArgumentMatchers.<Long>any())).willAnswer((InvocationOnMock invocation) -> {
@@ -155,26 +204,31 @@ public class ConceptoGastoControllerTest {
       return conceptoGastoDisabled;
     });
 
-    // when: delete by id
+    // when: desactivar ConceptoGasto
     mockMvc
-        .perform(MockMvcRequestBuilders.delete(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, conceptoGasto.getId())
+        .perform(MockMvcRequestBuilders
+            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, conceptoGasto.getId())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
-        // then: 204
-        .andExpect(MockMvcResultMatchers.status().isNoContent());
+        // then: ConceptoGasto disabled
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(conceptoGasto.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(conceptoGasto.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(conceptoGasto.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(false));
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
-  public void delete_NoExistingId_Return404() throws Exception {
+  public void desactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
 
     BDDMockito.willThrow(new ConceptoGastoNotFoundException(id)).given(service).disable(ArgumentMatchers.<Long>any());
 
-    // when: delete by non existing id
+    // when: desactivar by non existing id
     mockMvc
-        .perform(MockMvcRequestBuilders.delete(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
+        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())

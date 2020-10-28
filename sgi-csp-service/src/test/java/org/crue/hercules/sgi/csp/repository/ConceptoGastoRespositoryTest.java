@@ -22,7 +22,7 @@ public class ConceptoGastoRespositoryTest {
   private ConceptoGastoRepository repository;
 
   @Test
-  public void findByNombre_ReturnsConceptoGasto() throws Exception {
+  public void findByNombreAndActivoIsTrue_ReturnsConceptoGasto() throws Exception {
     // given: 2 ConceptoGasto de los que 1 coincide con el nombre buscado
     ConceptoGasto conceptoGasto1 = new ConceptoGasto(null, "nombre-1", "descripcion-1", true);
     entityManager.persistAndFlush(conceptoGasto1);
@@ -33,7 +33,7 @@ public class ConceptoGastoRespositoryTest {
     String nombreBuscado = "nombre-1";
 
     // when: se busca el ConceptoGasto nombre
-    ConceptoGasto conceptoGastoEncontrado = repository.findByNombre(nombreBuscado).get();
+    ConceptoGasto conceptoGastoEncontrado = repository.findByNombreAndActivoIsTrue(nombreBuscado).get();
 
     // then: Se recupera el ConceptoGasto con el nombre buscado
     Assertions.assertThat(conceptoGastoEncontrado.getId()).as("getId").isNotNull();
@@ -44,7 +44,7 @@ public class ConceptoGastoRespositoryTest {
   }
 
   @Test
-  public void findByNombreNoExiste_ReturnsNull() throws Exception {
+  public void findByNombreAndActivoIsTrue_NoExiste_ReturnsNull() throws Exception {
     // given: 2 ConceptoGasto que no coinciden con el nombre buscado
     ConceptoGasto conceptoGasto1 = new ConceptoGasto(null, "nombre-1", "descripcion-1", true);
     entityManager.persistAndFlush(conceptoGasto1);
@@ -55,7 +55,7 @@ public class ConceptoGastoRespositoryTest {
     String nombreBuscado = "nombre-noexiste";
 
     // when: se busca el ConceptoGasto por nombre
-    Optional<ConceptoGasto> conceptoGastoEncontrado = repository.findByNombre(nombreBuscado);
+    Optional<ConceptoGasto> conceptoGastoEncontrado = repository.findByNombreAndActivoIsTrue(nombreBuscado);
 
     // then: No hay ningun ConceptoGasto con el nombre buscado
     Assertions.assertThat(conceptoGastoEncontrado).isEqualTo(Optional.empty());

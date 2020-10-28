@@ -15,11 +15,11 @@ public interface ConceptoGastoRepository
     extends JpaRepository<ConceptoGasto, Long>, JpaSpecificationExecutor<ConceptoGasto> {
 
   /**
-   * Obtiene la entidad {@link ConceptoGasto} con el nombre indicado
+   * Obtiene la entidad {@link ConceptoGasto} activa con el nombre indicado
    *
    * @param nombre el nombre de {@link ConceptoGasto}.
    * @return el {@link ConceptoGasto} con el nombre indicado
    */
-  Optional<ConceptoGasto> findByNombre(String nombre);
+  Optional<ConceptoGasto> findByNombreAndActivoIsTrue(String nombre);
 
 }

@@ -29,6 +29,14 @@ public interface ConceptoGastoService {
   ConceptoGasto update(ConceptoGasto conceptoGastoActualizar);
 
   /**
+   * Reactiva el {@link ConceptoGasto}.
+   *
+   * @param id Id del {@link ConceptoGasto}.
+   * @return la entidad {@link ConceptoGasto} persistida.
+   */
+  ConceptoGasto enable(Long id);
+
+  /**
    * Desactiva el {@link ConceptoGasto}.
    *
    * @param id Id del {@link ConceptoGasto}.

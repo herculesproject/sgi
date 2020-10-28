@@ -28,7 +28,6 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(initializers = { Oauth2WireMockInitializer.class })
-
 public class ConceptoGastoIT {
 
   @Autowired
@@ -38,6 +37,8 @@ public class ConceptoGastoIT {
   private TokenBuilder tokenBuilder;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
+  private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
   private static final String CONTROLLER_BASE_PATH = "/conceptogastos";
 
   private HttpEntity<ConceptoGasto> buildRequest(HttpHeaders headers, ConceptoGasto entity) throws Exception {
@@ -93,13 +94,41 @@ public class ConceptoGastoIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void delete_Return204() throws Exception {
+  public void desactivar_ReturnConceptoGasto() throws Exception {
     Long idConceptoGasto = 1L;
 
-    final ResponseEntity<ConceptoGasto> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.DELETE, buildRequest(null, null), ConceptoGasto.class, idConceptoGasto);
+    final ResponseEntity<ConceptoGasto> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null), ConceptoGasto.class, idConceptoGasto);
 
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    ConceptoGasto conceptoGasto = response.getBody();
+    Assertions.assertThat(conceptoGasto.getId()).as("getId()").isNotNull();
+    Assertions.assertThat(conceptoGasto.getNombre()).as("getNombre()").isEqualTo("nombre-001");
+    Assertions.assertThat(conceptoGasto.getDescripcion()).as("descripcion-001")
+        .isEqualTo(conceptoGasto.getDescripcion());
+    Assertions.assertThat(conceptoGasto.getActivo()).as("getActivo()").isEqualTo(false);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void reactivar_ReturnConceptoGasto() throws Exception {
+    Long idConceptoGasto = 1L;
+
+    final ResponseEntity<ConceptoGasto> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, HttpMethod.PATCH, buildRequest(null, null),
+        ConceptoGasto.class, idConceptoGasto);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    ConceptoGasto conceptoGasto = response.getBody();
+    Assertions.assertThat(conceptoGasto.getId()).as("getId()").isNotNull();
+    Assertions.assertThat(conceptoGasto.getNombre()).as("getNombre()").isEqualTo("nombre-001");
+    Assertions.assertThat(conceptoGasto.getDescripcion()).as("descripcion-001")
+        .isEqualTo(conceptoGasto.getDescripcion());
+    Assertions.assertThat(conceptoGasto.getActivo()).as("getActivo()").isEqualTo(true);
   }
 
   @Sql
