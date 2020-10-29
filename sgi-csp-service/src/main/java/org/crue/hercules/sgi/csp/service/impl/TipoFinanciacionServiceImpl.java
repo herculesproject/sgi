@@ -149,6 +149,7 @@ public class TipoFinanciacionServiceImpl implements TipoFinanciacionService {
    * @return la entidad {@link TipoFinanciacion} persistida.
    */
   @Override
+  @Transactional
   public TipoFinanciacion enable(Long id) {
     log.debug("enable(Long id) - start");
 

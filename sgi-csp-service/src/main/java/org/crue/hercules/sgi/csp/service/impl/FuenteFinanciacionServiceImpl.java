@@ -153,6 +153,7 @@ public class FuenteFinanciacionServiceImpl implements FuenteFinanciacionService 
    * @return la entidad {@link FuenteFinanciacion} persistida.
    */
   @Override
+  @Transactional
   public FuenteFinanciacion enable(Long id) {
     log.debug("enable(Long id) - start");
 

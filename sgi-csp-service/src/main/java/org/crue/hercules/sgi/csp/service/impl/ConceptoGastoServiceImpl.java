@@ -92,6 +92,7 @@ public class ConceptoGastoServiceImpl implements ConceptoGastoService {
    * @return la entidad {@link ConceptoGasto} persistida.
    */
   @Override
+  @Transactional
   public ConceptoGasto enable(Long id) {
     log.debug("enable(Long id) - start");
 

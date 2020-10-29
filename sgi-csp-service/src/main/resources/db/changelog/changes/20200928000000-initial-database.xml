@@ -818,20 +818,12 @@
   <!-- ########################################################## -->
   <!-- UNIQUE CONSTRAINT -->
   <!-- ########################################################## -->
-  <changeSet author="master" id="20200928000000-concepto_gasto_uk">
-    <addUniqueConstraint columnNames="nombre" constraintName="concepto_gasto_uk" tableName="concepto_gasto" />
-  </changeSet>
-
   <changeSet author="master" id="20200928000000-convocatoria_area_tematica_uk">
     <addUniqueConstraint columnNames="convocatoria_id, area_tematica_id" constraintName="convocatoria_area_tematica_uk" tableName="convocatoria_area_tematica" />
   </changeSet>
 
   <changeSet author="master" id="20200928000000-convocatoria_entidad_gestora_uk">
     <addUniqueConstraint columnNames="convocatoria_id, entidad_ref" constraintName="convocatoria_entidad_gestora_uk" tableName="convocatoria_entidad_gestora" />
-  </changeSet>
-
-  <changeSet author="master" id="20200928000000-fuente_financiacion_uk">
-    <addUniqueConstraint columnNames="nombre" constraintName="fuente_financiacion_uk" tableName="fuente_financiacion" />
   </changeSet>
 
   <changeSet author="master" id="20200928000000-listado_area_tematica_uk">
@@ -884,10 +876,6 @@
 
   <changeSet author="master" id="20200928000000-tipo_finalidad_uk">
     <addUniqueConstraint columnNames="nombre" constraintName="tipo_finalidad_uk" tableName="tipo_finalidad" />
-  </changeSet>
-
-  <changeSet author="master" id="20201008000000-tipo_financiacion_uk">
-    <addUniqueConstraint columnNames="nombre" constraintName="tipo_financiacion_uk" tableName="tipo_financiacion" />
   </changeSet>
 
   <changeSet author="master" id="20200928000000-tipo_hito_uk">
