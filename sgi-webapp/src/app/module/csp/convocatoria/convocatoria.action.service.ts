@@ -20,6 +20,7 @@ import { ConvocatoriaEntidadesFinanciadorasFragment } from './convocatoria-formu
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
 import { ConvocatoriaEntidadFinanciadoraService } from '@core/services/csp/convocatoria-entidad-financiadora.service';
 import { ConvocatoriaEnlaceService } from '@core/services/csp/convocatoria-enlace.service';
+import { ConvocatoriaHitoService } from '@core/services/csp/convocatoria-hito.service';
 
 @Injectable()
 export class ConvocatoriaActionService extends ActionService {
@@ -53,8 +54,9 @@ export class ConvocatoriaActionService extends ActionService {
     convocatoriaService: ConvocatoriaService,
     convocatoriaEnlaceService: ConvocatoriaEnlaceService,
     empresaEconomicaService: EmpresaEconomicaService,
-    convocatoriaEntidadFinanciadoraService: ConvocatoriaEntidadFinanciadoraService
-  ) {
+    convocatoriaEntidadFinanciadoraService: ConvocatoriaEntidadFinanciadoraService,
+    convocatoria: ConvocatoriaEnlaceService,
+    convocatoriaHitoService: ConvocatoriaHitoService) {
     super();
     this.convocatoria = {} as IConvocatoria;
     if (route.snapshot.data.convocatoria) {
@@ -66,7 +68,7 @@ export class ConvocatoriaActionService extends ActionService {
     this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(logger, this.convocatoria?.id, convocatoriaService);
     this.entidadesConvocantes = new ConvocatoriaEntidadesConvocantesFragment(logger, this.convocatoria?.id, convocatoriaService);
     this.plazosFases = new ConvocatoriaPlazosFasesFragment(logger, this.convocatoria?.id, convocatoriaService);
-    this.hitos = new ConvocatoriaHitosFragment(this.convocatoria?.id, convocatoriaService);
+    this.hitos = new ConvocatoriaHitosFragment(logger, this.convocatoria?.id, convocatoriaService, convocatoriaHitoService);
     this.entidadesFinanciadorasFragment = new ConvocatoriaEntidadesFinanciadorasFragment(
       logger, this.convocatoria?.id, convocatoriaService, convocatoriaEntidadFinanciadoraService);
     this.enlaces = new ConvocatoriaEnlaceFragment(logger, this.convocatoria?.id, convocatoriaService, convocatoriaEnlaceService);

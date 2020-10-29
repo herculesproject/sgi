@@ -1,11 +1,12 @@
+import { IConvocatoria } from './convocatoria';
 import { ITipoHito } from './tipos-configuracion';
 
-export interface IHito {
+export interface IConvocatoriaHito {
   /** Id */
   id: number;
 
   /** Fecha inicio  */
-  fechaInicio: Date;
+  fecha: Date;
 
   /** Tipo de hito */
   tipoHito: ITipoHito;
@@ -13,7 +14,10 @@ export interface IHito {
   /** Comentario */
   comentario: string;
 
+  /** convocatoria */
+  convocatoria: IConvocatoria;
+
   /** Aviso */
-  aviso: boolean;
+  generaAviso: boolean;
 
 }

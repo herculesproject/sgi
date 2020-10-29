@@ -13,7 +13,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogComponent } from '@block/dialog/dialog.component';
 import { HeaderComponent } from '@block/header/header.component';
-import { IHito } from '@core/models/csp/hito';
+import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
 
 
 describe('ConvocatoriaHitosModalComponent', () => {
@@ -25,7 +25,7 @@ describe('ConvocatoriaHitosModalComponent', () => {
       close: jasmine.createSpy('close'),
     };
     // Mock MAT_DIALOG
-    const matDialogData = {} as IHito;
+    const matDialogData = {} as IConvocatoriaHito;
 
     TestBed.configureTestingModule({
       declarations: [

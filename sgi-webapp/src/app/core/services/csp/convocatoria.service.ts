@@ -9,7 +9,6 @@ import { of, Observable } from 'rxjs';
 import { IPlazosFases } from '@core/models/csp/plazos-fases';
 import { ISeguimientoCientifico } from '@core/models/csp/seguimiento-cientifico';
 import { tap } from 'rxjs/operators';
-import { IHito } from '@core/models/csp/hito';
 import { IEntidadConvocante } from '@core/models/csp/entidad-convocante';
 import { DateUtils } from '@core/utils/date-utils';
 import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
@@ -19,6 +18,8 @@ import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
 import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
+import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
+
 
 const convocatorias: IConvocatoria[] = [
   {
@@ -70,21 +71,6 @@ const periodosJustificacion: IPeriodoJustificacion[] = [
     fechaInicio: new Date(), fechaFin: new Date(), observaciones: 'Segundo periodo de justificación', activo: true
 
   }];
-
-const hitos: IHito[] = [
-  {
-    id: 1, fechaInicio: new Date(), tipoHito: {
-      id: 1, nombre: 'Resolución interna',
-      descripcion: '', activo: false
-    }, comentario: '', aviso: true
-  },
-  {
-    id: 1, fechaInicio: new Date(), tipoHito: {
-      id: 2, nombre: 'Resolución definitiva',
-      descripcion: '', activo: false
-    }, comentario: '', aviso: false
-  }
-];
 
 const plazosFases: IPlazosFases[] = [
   {
@@ -233,13 +219,13 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
    * @param idConvocatoria Identificador de la convocatoria.
    * @returns Listado de hitos.
    */
-  findHitosConvocatoria(idConvocatoria: number): Observable<SgiRestListResult<IHito>> {
-    this.logger.debug(ConvocatoriaService.name, `findHitosConvocatoria(idConvocatoria)`, '-', 'START');
-    return of({
-      page: null,
-      total: hitos.length,
-      items: hitos
-    } as SgiRestListResult<IHito>);
+  findHitosConvocatoria(idConvocatoria: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaHito>> {
+    this.logger.debug(ConvocatoriaService.name, `findHitosConvocatoria(${idConvocatoria}, ${options})`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${idConvocatoria}/convocatoriahitos`;
+    return this.find<IConvocatoriaHito, IConvocatoriaHito>(endpointUrl, options)
+      .pipe(
+        tap(() => this.logger.debug(ConvocatoriaService.name, `findHitosConvocatoria(${idConvocatoria}, ${options})`, '-', 'end'))
+      );
   }
 
   /**

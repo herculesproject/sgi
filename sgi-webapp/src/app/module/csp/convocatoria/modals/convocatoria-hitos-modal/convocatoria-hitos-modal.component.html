@@ -22,7 +22,9 @@
             <mat-error *ngIf="formGroup.controls.tipoHito.errors?.required">
               {{'csp.convocatoria.hitos.tipo.hito.error.vacio' | translate}}
             </mat-error>
-
+            <mat-error *ngIf="formGroup.controls.tipoHito.errors?.invalid">
+              {{'csp.convocatoria.hito.modal.error.invalido' | translate}}
+            </mat-error>
           </mat-form-field>
 
         </div>
@@ -39,7 +41,7 @@
             <input matInput [matDatepicker]="pickerFechaInicio" formControlName="fechaInicio" required>
             <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
             <mat-datepicker #pickerFechaInicio></mat-datepicker>
-            <mat-error *ngIf="formGroup.controls.tipoHito.errors?.required">
+            <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
               {{'csp.convocatoria.hitos.fecha.inicio.error.vacio' | translate}}
             </mat-error>
           </mat-form-field>
@@ -64,7 +66,7 @@
       </div>
 
       <div [fxLayout]="fxLayoutProperties.layout" class="checkbox">
-        <mat-checkbox color="primary" formControlName="aviso" type="text" id="aviso">
+        <mat-checkbox color="primary" formControlName="aviso" id="aviso">
           {{'csp.convocatoria.hitos.aviso' | translate}}</mat-checkbox>
       </div>
 
@@ -72,7 +74,9 @@
   </main>
 
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
-    <button color="accent" md-button mat-raised-button type="submit">Guardar</button>
-    <button class="link-cancelar" mat-button (click)="closeModal()" type="button">Cancelar</button>
+    <button color="accent" (click)="saveOrUpdate()" md-button mat-raised-button
+      type="submit">{{'botones.guardar' | translate}}</button>
+    <button class="link-cancelar" mat-button (click)="closeModal()"
+      type="button">{{'botones.cancelar' | translate}}</button>
   </div>
 </div>
