@@ -180,11 +180,11 @@ public class ConceptoGastoControllerTest {
     // given: non existing id
     Long id = 1L;
 
-    BDDMockito.willThrow(new ConceptoGastoNotFoundException(id)).given(service).disable(ArgumentMatchers.<Long>any());
+    BDDMockito.willThrow(new ConceptoGastoNotFoundException(id)).given(service).enable(ArgumentMatchers.<Long>any());
 
     // when: reactivar by non existing id
     mockMvc
-        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, id)
+        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())

@@ -198,7 +198,7 @@ public class TipoFinanciacionControllerTest {
     TipoFinanciacion tipoFinanciacion = generarMockTipoFinanciacion(1L);
     tipoFinanciacion.setActivo(false);
 
-    BDDMockito.given(service.disable(ArgumentMatchers.<Long>any())).willAnswer((InvocationOnMock invocation) -> {
+    BDDMockito.given(service.enable(ArgumentMatchers.<Long>any())).willAnswer((InvocationOnMock invocation) -> {
       TipoFinanciacion tipoFinanciacionDisabled = new TipoFinanciacion();
       BeanUtils.copyProperties(tipoFinanciacion, tipoFinanciacionDisabled);
       tipoFinanciacionDisabled.setActivo(true);
@@ -208,7 +208,7 @@ public class TipoFinanciacionControllerTest {
     // when: reactivar by id
     mockMvc
         .perform(MockMvcRequestBuilders
-            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, tipoFinanciacion.getId())
+            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, tipoFinanciacion.getId())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: TipoFinanciacion is updated

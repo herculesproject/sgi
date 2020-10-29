@@ -62,8 +62,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoIT {
         .convocatoria(convocatoria)//
         .mesInicial(1)//
         .mesFinal(2)//
-        .fechaInicio(LocalDate.of(2020, 1, 1))//
-        .fechaFin(LocalDate.of(2020, 2, 1))//
+        .fechaInicioPresentacion(LocalDate.of(2020, 1, 1))//
+        .fechaFinPresentacion(LocalDate.of(2020, 2, 1))//
         .observaciones("observaciones")//
         .build();
 
@@ -83,10 +83,10 @@ public class ConvocatoriaPeriodoSeguimientoCientificoIT {
         .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getMesInicial());
     Assertions.assertThat(responseData.getMesFinal()).as("getMesFinal()")
         .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getMesFinal());
-    Assertions.assertThat(responseData.getFechaInicio()).as("getFechaInicio()")
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaInicio());
-    Assertions.assertThat(responseData.getFechaFin()).as("getFechaFin()")
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaFin());
+    Assertions.assertThat(responseData.getFechaInicioPresentacion()).as("getFechaInicioPresentacion()")
+        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaInicioPresentacion());
+    Assertions.assertThat(responseData.getFechaFinPresentacion()).as("getFechaFinPresentacion()")
+        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaFinPresentacion());
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
         .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getObservaciones());
   }
@@ -104,8 +104,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoIT {
         .numPeriodo(1)//
         .mesInicial(10)//
         .mesFinal(11)//
-        .fechaInicio(LocalDate.of(2020, 10, 1))//
-        .fechaFin(LocalDate.of(2020, 11, 1))//
+        .fechaInicioPresentacion(LocalDate.of(2020, 10, 1))//
+        .fechaFinPresentacion(LocalDate.of(2020, 11, 1))//
         .observaciones("observaciones")//
         .build();
 
@@ -128,10 +128,10 @@ public class ConvocatoriaPeriodoSeguimientoCientificoIT {
         .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getMesInicial());
     Assertions.assertThat(responseData.getMesFinal()).as("getMesFinal()")
         .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getMesFinal());
-    Assertions.assertThat(responseData.getFechaInicio()).as("getFechaInicio()")
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaInicio());
-    Assertions.assertThat(responseData.getFechaFin()).as("getFechaFin()")
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaFin());
+    Assertions.assertThat(responseData.getFechaInicioPresentacion()).as("getFechaInicioPresentacion()")
+        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaInicioPresentacion());
+    Assertions.assertThat(responseData.getFechaFinPresentacion()).as("getFechaFinPresentacion()")
+        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaFinPresentacion());
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
         .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getObservaciones());
   }
@@ -170,8 +170,10 @@ public class ConvocatoriaPeriodoSeguimientoCientificoIT {
     Assertions.assertThat(responseData.getNumPeriodo()).as("getNumPeriodo()").isEqualTo(1);
     Assertions.assertThat(responseData.getMesInicial()).as("getMesInicial()").isEqualTo(1);
     Assertions.assertThat(responseData.getMesFinal()).as("getMesFinal()").isEqualTo(2);
-    Assertions.assertThat(responseData.getFechaInicio()).as("getFechaInicio()").isEqualTo("2020-01-01");
-    Assertions.assertThat(responseData.getFechaFin()).as("getFechaFin()").isEqualTo("2020-02-01");
+    Assertions.assertThat(responseData.getFechaInicioPresentacion()).as("getFechaInicioPresentacion()")
+        .isEqualTo("2020-01-01");
+    Assertions.assertThat(responseData.getFechaFinPresentacion()).as("getFechaFinPresentacion()")
+        .isEqualTo("2020-02-01");
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
         .isEqualTo("observaciones-meses-01-02");
   }

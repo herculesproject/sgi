@@ -8,9 +8,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.config.SecurityConfig;
-import org.crue.hercules.sgi.csp.exceptions.ProgramaNotFoundException;
-import org.crue.hercules.sgi.csp.model.Programa;
-import org.crue.hercules.sgi.csp.service.ProgramaService;
+import org.crue.hercules.sgi.csp.exceptions.AreaTematicaNotFoundException;
+import org.crue.hercules.sgi.csp.model.AreaTematica;
+import org.crue.hercules.sgi.csp.service.AreaTematicaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -35,11 +35,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
- * ProgramaControllerTest
+ * AreaTematicaControllerTest
  */
-@WebMvcTest(ProgramaController.class)
+@WebMvcTest(AreaTematicaController.class)
 @Import(SecurityConfig.class)
-public class ProgramaControllerTest {
+public class AreaTematicaControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
@@ -48,138 +48,145 @@ public class ProgramaControllerTest {
   private ObjectMapper mapper;
 
   @MockBean
-  private ProgramaService service;
+  private AreaTematicaService service;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PARAMETER_GRUPO = "/grupo";
+  private static final String PATH_PARAMETER_HIJOS = "/hijos";
+  private static final String PATH_PARAMETER_TODOS = "/todos";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
   private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
-  private static final String CONTROLLER_BASE_PATH = "/programas";
+  private static final String CONTROLLER_BASE_PATH = "/areatematicas";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-C" })
-  public void create_ReturnsModeloPrograma() throws Exception {
-    // given: new Programa
-    Programa programa = generarMockPrograma(1L);
+  @WithMockUser(username = "user", authorities = { "CSP-ARTM-C" })
+  public void create_ReturnsModeloAreaTematica() throws Exception {
+    // given: new AreaTematica
+    AreaTematica areaTematica = generarMockAreaTematica(1L);
 
-    BDDMockito.given(service.create(ArgumentMatchers.<Programa>any())).willAnswer((InvocationOnMock invocation) -> {
-      Programa newPrograma = new Programa();
-      BeanUtils.copyProperties(invocation.getArgument(0), newPrograma);
-      newPrograma.setId(1L);
-      return newPrograma;
+    BDDMockito.given(service.create(ArgumentMatchers.<AreaTematica>any())).willAnswer((InvocationOnMock invocation) -> {
+      AreaTematica newAreaTematica = new AreaTematica();
+      BeanUtils.copyProperties(invocation.getArgument(0), newAreaTematica);
+      newAreaTematica.setId(1L);
+      return newAreaTematica;
     });
 
-    // when: create Programa
+    // when: create AreaTematica
     mockMvc
         .perform(MockMvcRequestBuilders.post(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(programa)))
+            .content(mapper.writeValueAsString(areaTematica)))
         .andDo(MockMvcResultHandlers.print())
-        // then: new Programa is created
+        // then: new AreaTematica is created
         .andExpect(MockMvcResultMatchers.status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(programa.getNombre()))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(programa.getDescripcion()))
-        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(programa.getActivo()));
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(areaTematica.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(areaTematica.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("padre").isEmpty())
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(areaTematica.getActivo()));
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-C" })
+  @WithMockUser(username = "user", authorities = { "CSP-ARTM-C" })
   public void create_WithId_Returns400() throws Exception {
-    // given: a Programa with id filled
-    Programa programa = generarMockPrograma(1L);
+    // given: a AreaTematica with id filled
+    AreaTematica areaTematica = generarMockAreaTematica(1L);
 
-    BDDMockito.given(service.create(ArgumentMatchers.<Programa>any())).willThrow(new IllegalArgumentException());
+    BDDMockito.given(service.create(ArgumentMatchers.<AreaTematica>any())).willThrow(new IllegalArgumentException());
 
-    // when: create Programa
+    // when: create AreaTematica
     mockMvc
         .perform(MockMvcRequestBuilders.post(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
             .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(programa)))
+            .content(mapper.writeValueAsString(areaTematica)))
         .andDo(MockMvcResultHandlers.print())
         // then: 400 error
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
-  public void update_ReturnsPrograma() throws Exception {
-    // given: Existing Programa to be updated
-    Programa programaExistente = generarMockPrograma(1L);
-    Programa programa = generarMockPrograma(1L);
-    programa.setNombre("nuevo-nombre");
+  @WithMockUser(username = "user", authorities = { "CSP-ARTM-E" })
+  public void update_ReturnsAreaTematica() throws Exception {
+    // given: Existing AreaTematica to be updated
+    AreaTematica areaTematicaExistente = generarMockAreaTematica(1L);
+    AreaTematica areaTematica = generarMockAreaTematica(1L);
+    areaTematica.setNombre("nuevo-nombre");
 
-    BDDMockito.given(service.update(ArgumentMatchers.<Programa>any()))
+    BDDMockito.given(service.update(ArgumentMatchers.<AreaTematica>any()))
         .willAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
 
-    // when: update Programa
+    // when: update AreaTematica
     mockMvc
-        .perform(MockMvcRequestBuilders.put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, programaExistente.getId())
+        .perform(MockMvcRequestBuilders.put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, areaTematicaExistente.getId())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(programa)))
+            .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(areaTematica)))
         .andDo(MockMvcResultHandlers.print())
-        // then: Programa is updated
+        // then: AreaTematica is updated
         .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("id").value(programaExistente.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(programa.getNombre()))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(programa.getDescripcion()))
-        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(programaExistente.getActivo()));
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(areaTematicaExistente.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(areaTematica.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(areaTematica.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("padre").isEmpty())
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(areaTematicaExistente.getActivo()));
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
+  @WithMockUser(username = "user", authorities = { "CSP-ARTM-E" })
   public void update_WithNoExistingId_Returns404() throws Exception {
     // given: No existing Id
     Long id = 1L;
-    Programa programa = generarMockPrograma(1L);
+    AreaTematica areaTematica = generarMockAreaTematica(1L);
 
-    BDDMockito.willThrow(new ProgramaNotFoundException(id)).given(service).update(ArgumentMatchers.<Programa>any());
+    BDDMockito.willThrow(new AreaTematicaNotFoundException(id)).given(service)
+        .update(ArgumentMatchers.<AreaTematica>any());
 
-    // when: update Programa
+    // when: update AreaTematica
     mockMvc
         .perform(MockMvcRequestBuilders.put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(programa)))
+            .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(areaTematica)))
         .andDo(MockMvcResultHandlers.print())
         // then: 404 error
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
-  public void reactivar_WithExistingId_ReturnPrograma() throws Exception {
+  @WithMockUser(username = "user", authorities = { "CSP-ARTM-X" })
+  public void reactivar_WithExistingId_ReturnAreaTematica() throws Exception {
     // given: existing id
-    Programa programa = generarMockPrograma(1L);
-    programa.setActivo(false);
-
+    AreaTematica areaTematica = generarMockAreaTematica(1L);
+    areaTematica.setActivo(Boolean.FALSE);
     BDDMockito.given(service.enable(ArgumentMatchers.<Long>any())).willAnswer((InvocationOnMock invocation) -> {
-      Programa programaDisabled = new Programa();
-      BeanUtils.copyProperties(programa, programaDisabled);
-      programaDisabled.setActivo(true);
-      return programaDisabled;
+      AreaTematica areaTematicaEnabled = new AreaTematica();
+      BeanUtils.copyProperties(areaTematica, areaTematicaEnabled);
+      areaTematicaEnabled.setActivo(Boolean.TRUE);
+      return areaTematicaEnabled;
     });
 
-    // when: reactivar by id
+    // when: enable by id
     mockMvc
         .perform(MockMvcRequestBuilders
-            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, programa.getId())
+            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, areaTematica.getId())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
-        // then: Programa is updated
-        .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(programa.getNombre()))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(programa.getDescripcion()))
-        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true));
+        // then: return enabled AreaTematica
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(areaTematica.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(areaTematica.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(areaTematica.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("padre").isEmpty())
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.TRUE));
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-ARTM-X" })
   public void reactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
 
-    BDDMockito.willThrow(new ProgramaNotFoundException(id)).given(service).enable(ArgumentMatchers.<Long>any());
+    BDDMockito.willThrow(new AreaTematicaNotFoundException(id)).given(service).enable(ArgumentMatchers.<Long>any());
 
-    // when: reactivar by non existing id
+    // when: enable by non existing id
     mockMvc
         .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
@@ -190,39 +197,41 @@ public class ProgramaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
-  public void desactivar_WithExistingId_ReturnTipoFinanciacion() throws Exception {
+  @WithMockUser(username = "user", authorities = { "CSP-ARTM-B" })
+  public void desactivar_WithExistingId_ReturnAreaTematica() throws Exception {
     // given: existing id
-    Programa programa = generarMockPrograma(1L);
+    AreaTematica areaTematica = generarMockAreaTematica(1L);
     BDDMockito.given(service.disable(ArgumentMatchers.<Long>any())).willAnswer((InvocationOnMock invocation) -> {
-      Programa programaDisabled = new Programa();
-      BeanUtils.copyProperties(programa, programaDisabled);
-      programaDisabled.setActivo(false);
-      return programaDisabled;
+      AreaTematica areaTematicaDisabled = new AreaTematica();
+      BeanUtils.copyProperties(areaTematica, areaTematicaDisabled);
+      areaTematicaDisabled.setActivo(false);
+      return areaTematicaDisabled;
     });
 
-    // when: desactivar by id
+    // when: disable by id
     mockMvc
         .perform(MockMvcRequestBuilders
-            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, programa.getId())
+            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, areaTematica.getId())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
-        // then: Programa is updated
-        .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(programa.getNombre()))
-        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(programa.getDescripcion()))
-        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(false));
+        // then: return disabled AreaTematica
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(areaTematica.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(areaTematica.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(areaTematica.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("padre").isEmpty())
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.FALSE));
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-B" })
+  @WithMockUser(username = "user", authorities = { "CSP-ARTM-B" })
   public void desactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
 
-    BDDMockito.willThrow(new ProgramaNotFoundException(id)).given(service).disable(ArgumentMatchers.<Long>any());
+    BDDMockito.willThrow(new AreaTematicaNotFoundException(id)).given(service).disable(ArgumentMatchers.<Long>any());
 
-    // when: desactivar by non existing id
+    // when: disable by non existing id
     mockMvc
         .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
@@ -233,11 +242,11 @@ public class ProgramaControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
-  public void findById_WithExistingId_ReturnsPrograma() throws Exception {
+  @WithMockUser(username = "user", authorities = { "CSP-ARTM-V" })
+  public void findById_WithExistingId_ReturnsAreaTematica() throws Exception {
     // given: existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).willAnswer((InvocationOnMock invocation) -> {
-      return generarMockPrograma(invocation.getArgument(0));
+      return generarMockAreaTematica(invocation.getArgument(0));
     });
 
     // when: find by existing id
@@ -247,19 +256,20 @@ public class ProgramaControllerTest {
         .andDo(MockMvcResultHandlers.print())
         // then: response is OK
         .andExpect(MockMvcResultMatchers.status().isOk())
-        // and the requested Programa is resturned as JSON object
+        // and the requested AreaTematica is resturned as JSON object
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
         .andExpect(MockMvcResultMatchers.jsonPath("nombre").value("nombre-1"))
         .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value("descripcion-1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("padre").isEmpty())
         .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true));
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-ME-V" })
+  @WithMockUser(username = "user", authorities = { "CSP-ARTM-V" })
   public void findById_WithNoExistingId_Returns404() throws Exception {
     // given: no existing id
     BDDMockito.given(service.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
-      throw new ProgramaNotFoundException(1L);
+      throw new AreaTematicaNotFoundException(1L);
     });
 
     // when: find by non existing id
@@ -274,10 +284,10 @@ public class ProgramaControllerTest {
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
   public void findAll_ReturnsPage() throws Exception {
-    // given: Una lista con 37 Programa
-    List<Programa> programas = new ArrayList<>();
+    // given: Una lista con 37 AreaTematica
+    List<AreaTematica> areasTematicas = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
-      programas.add(generarMockPrograma(i, "Programa" + String.format("%03d", i), null));
+      areasTematicas.add(generarMockAreaTematica(i, "AreaTematica" + String.format("%03d", i), null));
     }
     Integer page = 3;
     Integer pageSize = 10;
@@ -288,9 +298,9 @@ public class ProgramaControllerTest {
           int index = pageable.getPageNumber();
           int fromIndex = size * index;
           int toIndex = fromIndex + size;
-          toIndex = toIndex > programas.size() ? programas.size() : toIndex;
-          List<Programa> content = programas.subList(fromIndex, toIndex);
-          Page<Programa> pageResponse = new PageImpl<>(content, pageable, programas.size());
+          toIndex = toIndex > areasTematicas.size() ? areasTematicas.size() : toIndex;
+          List<AreaTematica> content = areasTematicas.subList(fromIndex, toIndex);
+          Page<AreaTematica> pageResponse = new PageImpl<>(content, pageable, areasTematicas.size());
           return pageResponse;
         });
 
@@ -307,26 +317,26 @@ public class ProgramaControllerTest {
         .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
         .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
-    List<Programa> tiposFaseResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
-        new TypeReference<List<Programa>>() {
+    List<AreaTematica> tiposFaseResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<AreaTematica>>() {
         });
     for (int i = 31; i <= 37; i++) {
-      Programa programa = tiposFaseResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(programa.getNombre()).isEqualTo("Programa" + String.format("%03d", i));
+      AreaTematica areaTematica = tiposFaseResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(areaTematica.getNombre()).isEqualTo("AreaTematica" + String.format("%03d", i));
     }
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
   public void findAll_EmptyList_Returns204() throws Exception {
-    // given: Una lista vacia de Programa
-    List<Programa> programas = new ArrayList<>();
+    // given: Una lista vacia de AreaTematica
+    List<AreaTematica> areasTematicas = new ArrayList<>();
     Integer page = 0;
     Integer pageSize = 10;
     BDDMockito.given(service.findAll(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<Programa> pageResponse = new PageImpl<>(programas, pageable, 0);
+          Page<AreaTematica> pageResponse = new PageImpl<>(areasTematicas, pageable, 0);
           return pageResponse;
         });
     // when: Get page=0 with pagesize=10
@@ -340,100 +350,31 @@ public class ProgramaControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
-  public void findAllPlan_ReturnsPage() throws Exception {
-    // given: Una lista con 37 Programa
-    List<Programa> programas = new ArrayList<>();
+  public void findAllGrupo_ReturnsPage() throws Exception {
+    // given: Una lista con 37 AreaTematica
+    List<AreaTematica> areasTematicas = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
-      programas.add(generarMockPrograma(i, "Programa" + String.format("%03d", i), null));
-    }
-    Integer page = 3;
-    Integer pageSize = 10;
-    BDDMockito.given(service.findAllPlan(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer((InvocationOnMock invocation) -> {
-          Pageable pageable = invocation.getArgument(1, Pageable.class);
-          int size = pageable.getPageSize();
-          int index = pageable.getPageNumber();
-          int fromIndex = size * index;
-          int toIndex = fromIndex + size;
-          toIndex = toIndex > programas.size() ? programas.size() : toIndex;
-          List<Programa> content = programas.subList(fromIndex, toIndex);
-          Page<Programa> pageResponse = new PageImpl<>(content, pageable, programas.size());
-          return pageResponse;
-        });
-
-    // when: Get page=3 with pagesize=10
-    MvcResult requestResult = mockMvc
-        .perform(
-            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/plan").with(SecurityMockMvcRequestPostProcessors.csrf())
-                .header("X-Page", page).header("X-Page-Size", pageSize).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        // then: Devuelve la pagina 3 con los TipoFase del 31 al 37
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
-        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
-    List<Programa> tiposFaseResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
-        new TypeReference<List<Programa>>() {
-        });
-    for (int i = 31; i <= 37; i++) {
-      Programa programa = tiposFaseResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(programa.getNombre()).isEqualTo("Programa" + String.format("%03d", i));
-    }
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
-  public void findAllPlan_EmptyList_Returns204() throws Exception {
-    // given: Una lista vacia de Programa
-    List<Programa> programas = new ArrayList<>();
-    Integer page = 0;
-    Integer pageSize = 10;
-    BDDMockito.given(service.findAllPlan(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
-        .willAnswer((InvocationOnMock invocation) -> {
-          Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<Programa> pageResponse = new PageImpl<>(programas, pageable, 0);
-          return pageResponse;
-        });
-    // when: Get page=0 with pagesize=10
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/plan").with(SecurityMockMvcRequestPostProcessors.csrf())
-                .header("X-Page", page).header("X-Page-Size", pageSize).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        // then: Devuelve un 204
-        .andExpect(MockMvcResultMatchers.status().isNoContent());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
-  public void findAllTodosPlan_ReturnsPage() throws Exception {
-    // given: Una lista con 37 Programa
-    List<Programa> programas = new ArrayList<>();
-    for (long i = 1; i <= 37; i++) {
-      programas.add(generarMockPrograma(i, "Programa" + String.format("%03d", i), null));
+      areasTematicas.add(generarMockAreaTematica(i, "AreaTematica" + String.format("%03d", i), null));
     }
     Integer page = 3;
     Integer pageSize = 10;
     BDDMockito
-        .given(service.findAllTodosPlan(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .given(service.findAllGrupo(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
           int size = pageable.getPageSize();
           int index = pageable.getPageNumber();
           int fromIndex = size * index;
           int toIndex = fromIndex + size;
-          toIndex = toIndex > programas.size() ? programas.size() : toIndex;
-          List<Programa> content = programas.subList(fromIndex, toIndex);
-          Page<Programa> pageResponse = new PageImpl<>(content, pageable, programas.size());
+          toIndex = toIndex > areasTematicas.size() ? areasTematicas.size() : toIndex;
+          List<AreaTematica> content = areasTematicas.subList(fromIndex, toIndex);
+          Page<AreaTematica> pageResponse = new PageImpl<>(content, pageable, areasTematicas.size());
           return pageResponse;
         });
 
     // when: Get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/plan/todos")
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_GRUPO)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
@@ -445,32 +386,103 @@ public class ProgramaControllerTest {
         .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
         .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
-    List<Programa> tiposFaseResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
-        new TypeReference<List<Programa>>() {
+    List<AreaTematica> tiposFaseResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<AreaTematica>>() {
         });
     for (int i = 31; i <= 37; i++) {
-      Programa programa = tiposFaseResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(programa.getNombre()).isEqualTo("Programa" + String.format("%03d", i));
+      AreaTematica areaTematica = tiposFaseResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(areaTematica.getNombre()).isEqualTo("AreaTematica" + String.format("%03d", i));
     }
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
-  public void findAllTodosPlan_EmptyList_Returns204() throws Exception {
-    // given: Una lista vacia de Programa
-    List<Programa> programas = new ArrayList<>();
+  public void findAllGrupo_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de AreaTematica
+    List<AreaTematica> AreaTematicas = new ArrayList<>();
     Integer page = 0;
     Integer pageSize = 10;
     BDDMockito
-        .given(service.findAllTodosPlan(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .given(service.findAllGrupo(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<Programa> pageResponse = new PageImpl<>(programas, pageable, 0);
+          Page<AreaTematica> pageResponse = new PageImpl<>(AreaTematicas, pageable, 0);
           return pageResponse;
         });
     // when: Get page=0 with pagesize=10
     mockMvc
-        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/plan/todos")
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_GRUPO)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  public void findAllTodosGrupo_ReturnsPage() throws Exception {
+    // given: Una lista con 37 AreaTematica
+    List<AreaTematica> areasTematicas = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      areasTematicas.add(generarMockAreaTematica(i, "AreaTematica" + String.format("%03d", i), null));
+    }
+    Integer page = 3;
+    Integer pageSize = 10;
+    BDDMockito
+        .given(service.findAllTodosGrupo(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > areasTematicas.size() ? areasTematicas.size() : toIndex;
+          List<AreaTematica> content = areasTematicas.subList(fromIndex, toIndex);
+          Page<AreaTematica> pageResponse = new PageImpl<>(content, pageable, areasTematicas.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_GRUPO + PATH_PARAMETER_TODOS)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los TipoFase del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+    List<AreaTematica> tiposFaseResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<AreaTematica>>() {
+        });
+    for (int i = 31; i <= 37; i++) {
+      AreaTematica areaTematica = tiposFaseResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(areaTematica.getNombre()).isEqualTo("AreaTematica" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  public void findAllTodosGrupo_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de AreaTematica
+    List<AreaTematica> areasTematicas = new ArrayList<>();
+    Integer page = 0;
+    Integer pageSize = 10;
+    BDDMockito
+        .given(service.findAllTodosGrupo(ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          Page<AreaTematica> pageResponse = new PageImpl<>(areasTematicas, pageable, 0);
+          return pageResponse;
+        });
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_GRUPO + PATH_PARAMETER_TODOS)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
@@ -480,37 +492,39 @@ public class ProgramaControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
-  public void findAllHijosPrograma_ReturnsPage() throws Exception {
+  public void findAllHijosAreaTematica_ReturnsPage() throws Exception {
     // given: Una lista con 37 ConvocatoriaEntidadConvocante para la Convocatoria
     Long convocatoriaId = 1L;
 
-    List<Programa> programas = new ArrayList<>();
+    List<AreaTematica> areasTematicas = new ArrayList<>();
     for (long i = 1; i <= 37; i++) {
-      programas.add(generarMockPrograma(i, "Programa" + String.format("%03d", i), null));
+      areasTematicas.add(generarMockAreaTematica(i, "AreaTematica" + String.format("%03d", i), null));
     }
 
     Integer page = 3;
     Integer pageSize = 10;
 
-    BDDMockito.given(service.findAllHijosPrograma(ArgumentMatchers.<Long>any(),
-        ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito
+        .given(service.findAllHijosAreaTematica(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
           int size = pageable.getPageSize();
           int index = pageable.getPageNumber();
           int fromIndex = size * index;
           int toIndex = fromIndex + size;
-          toIndex = toIndex > programas.size() ? programas.size() : toIndex;
-          List<Programa> content = programas.subList(fromIndex, toIndex);
-          Page<Programa> pageResponse = new PageImpl<>(content, pageable, programas.size());
+          toIndex = toIndex > areasTematicas.size() ? areasTematicas.size() : toIndex;
+          List<AreaTematica> content = areasTematicas.subList(fromIndex, toIndex);
+          Page<AreaTematica> pageResponse = new PageImpl<>(content, pageable, areasTematicas.size());
           return pageResponse;
         });
 
     // when: Get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/hijos", convocatoriaId)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
-            .accept(MediaType.APPLICATION_JSON))
+        .perform(
+            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_HIJOS, convocatoriaId)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page)
+                .header("X-Page-Size", pageSize).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Devuelve la pagina 3 con los ConvocatoriaEntidadConvocante del 31 al 37
         .andExpect(MockMvcResultMatchers.status().isOk())
@@ -521,74 +535,76 @@ public class ProgramaControllerTest {
         .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
 
-    List<Programa> programasResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
-        new TypeReference<List<Programa>>() {
+    List<AreaTematica> AreaTematicasResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<AreaTematica>>() {
         });
 
     for (int i = 31; i <= 37; i++) {
-      Programa programa = programasResponse.get(i - (page * pageSize) - 1);
-      Assertions.assertThat(programa.getNombre()).isEqualTo("Programa" + String.format("%03d", i));
+      AreaTematica areaTematica = AreaTematicasResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(areaTematica.getNombre()).isEqualTo("AreaTematica" + String.format("%03d", i));
     }
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
-  public void findAllHijosPrograma_EmptyList_Returns204() throws Exception {
-    // given: Una lista vacia de Programa
-    Long programaId = 1L;
-    List<Programa> programas = new ArrayList<>();
+  public void findAllHijosAreaTematica_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de AreaTematica
+    Long AreaTematicaId = 1L;
+    List<AreaTematica> areasTematicas = new ArrayList<>();
 
     Integer page = 0;
     Integer pageSize = 10;
 
-    BDDMockito.given(service.findAllHijosPrograma(ArgumentMatchers.<Long>any(),
-        ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+    BDDMockito
+        .given(service.findAllHijosAreaTematica(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
         .willAnswer((InvocationOnMock invocation) -> {
           Pageable pageable = invocation.getArgument(2, Pageable.class);
-          Page<Programa> pageResponse = new PageImpl<>(programas, pageable, 0);
+          Page<AreaTematica> pageResponse = new PageImpl<>(areasTematicas, pageable, 0);
           return pageResponse;
         });
 
     // when: Get page=0 with pagesize=10
     mockMvc
-        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/hijos", programaId)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
-            .accept(MediaType.APPLICATION_JSON))
+        .perform(
+            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_HIJOS, AreaTematicaId)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page)
+                .header("X-Page-Size", pageSize).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: Devuelve un 204
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
   /**
-   * Función que devuelve un objeto Programa
+   * Función que devuelve un objeto AreaTematica
    * 
-   * @param id id del Programa
-   * @return el objeto Programa
+   * @param id id del AreaTematica
+   * @return el objeto AreaTematica
    */
-  private Programa generarMockPrograma(Long id) {
-    return generarMockPrograma(id, "nombre-" + id, null);
+  private AreaTematica generarMockAreaTematica(Long id) {
+    return generarMockAreaTematica(id, "nombre-" + id, null);
   }
 
   /**
-   * Función que devuelve un objeto Programa
+   * Función que devuelve un objeto AreaTematica
    * 
-   * @param id              id del Programa
-   * @param nombre          nombre del Programa
-   * @param idProgramaPadre id del Programa padre
-   * @return el objeto Programa
+   * @param id                  id del AreaTematica
+   * @param nombre              nombre del AreaTematica
+   * @param idAreaTematicaPadre id del AreaTematica padre
+   * @return el objeto AreaTematica
    */
-  private Programa generarMockPrograma(Long id, String nombre, Long idProgramaPadre) {
-    Programa programa = new Programa();
-    programa.setId(id);
-    programa.setNombre(nombre);
-    programa.setDescripcion("descripcion-" + id);
+  private AreaTematica generarMockAreaTematica(Long id, String nombre, Long idAreaTematicaPadre) {
+    AreaTematica areaTematica = new AreaTematica();
+    areaTematica.setId(id);
+    areaTematica.setNombre(nombre);
+    areaTematica.setDescripcion("descripcion-" + id);
 
-    if (idProgramaPadre != null) {
-      programa.setPadre(generarMockPrograma(idProgramaPadre));
+    if (idAreaTematicaPadre != null) {
+      areaTematica.setPadre(generarMockAreaTematica(idAreaTematicaPadre));
     }
-    programa.setActivo(true);
+    areaTematica.setActivo(true);
 
-    return programa;
+    return areaTematica;
   }
 
 }

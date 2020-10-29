@@ -31,62 +31,42 @@
   <!-- END FIXED DATA -->
   <!-- ########################################################## -->
 
-  <changeSet author="master" id="20200928000000-listado_area_tematica">
-    <insert tableName="listado_area_tematica">
+  <changeSet author="master" id="20200928000000-area_tematica">
+    <insert tableName="area_tematica">
       <column name="nombre" value="area_tematica AAA" />
-      <column name="descripcion" value="listado area tematica AAA" />
+      <column name="descripcion" value="descripcion area tematica AAA" />
+      <column name="area_tematica_padre_id" value="null" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="listado_area_tematica">
+    <insert tableName="area_tematica">
+      <column name="nombre" value="A-001" />
+      <column name="descripcion" value="area tematica A-001" />
+      <column name="area_tematica_padre_id" valueComputed="(select id from csp.area_tematica where nombre = 'area_tematica AAA')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="area_tematica">
+      <column name="nombre" value="A-011" />
+      <column name="descripcion" value="area tematica A-011" />
+      <column name="area_tematica_padre_id" valueComputed="(select id from csp.area_tematica where nombre = 'A-001')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="area_tematica">
       <column name="nombre" value="area_tematica BBB" />
-      <column name="descripcion" value="listado area tematica BBB" />
+      <column name="descripcion" value="descripcion area tematica BBB" />
+      <column name="area_tematica_padre_id" value="null" />
       <column name="activo" value="true" />
     </insert>
-    <insert tableName="listado_area_tematica">
+    <insert tableName="area_tematica">
+      <column name="nombre" value="B-001" />
+      <column name="descripcion" value="area tematica B-001" />
+      <column name="area_tematica_padre_id" valueComputed="(select id from csp.area_tematica where nombre = 'area_tematica BBB')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="area_tematica">
       <column name="nombre" value="area_tematica CCC" />
-      <column name="descripcion" value="listado area tematica CCC" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="listado_area_tematica">
-      <column name="nombre" value="area_tematica DDD" />
-      <column name="descripcion" value="listado area tematica DDD" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="listado_area_tematica">
-      <column name="nombre" value="area_tematica EEE" />
-      <column name="descripcion" value="listado area tematica EEE" />
+      <column name="descripcion" value="descripcion area tematica CCC" />
+      <column name="area_tematica_padre_id" value="null" />
       <column name="activo" value="false" />
-    </insert>
-  </changeSet>
-
-  <changeSet author="master" id="20200928000000-area_tematica_arbol">
-    <insert tableName="area_tematica_arbol">
-      <column name="nombre" value="nombre-001" />
-      <column name="abreviatura" value="A-001" />
-      <column name="listado_area_tematica_id" valueComputed="(select id from csp.listado_area_tematica where nombre = 'area_tematica AAA')" />
-      <column name="area_tematica_arbol_padre_id" value="null" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="area_tematica_arbol">
-      <column name="nombre" value="nombre-002" />
-      <column name="abreviatura" value="A-002" />
-      <column name="listado_area_tematica_id" valueComputed="(select id from csp.listado_area_tematica where nombre = 'area_tematica AAA')" />
-      <column name="area_tematica_arbol_padre_id" valueComputed="(select id from csp.area_tematica_arbol where nombre = 'nombre-001')" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="area_tematica_arbol">
-      <column name="nombre" value="nombre-003" />
-      <column name="abreviatura" value="A-003" />
-      <column name="listado_area_tematica_id" valueComputed="(select id from csp.listado_area_tematica where nombre = 'area_tematica AAA')" />
-      <column name="area_tematica_arbol_padre_id" valueComputed="(select id from csp.area_tematica_arbol where nombre = 'nombre-001')" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="area_tematica_arbol">
-      <column name="nombre" value="nombre-004" />
-      <column name="abreviatura" value="A-004" />
-      <column name="listado_area_tematica_id" valueComputed="(select id from csp.listado_area_tematica where nombre = 'area_tematica AAA')" />
-      <column name="area_tematica_arbol_padre_id" value="null" />
-      <column name="activo" value="true" />
     </insert>
   </changeSet>
 
@@ -588,17 +568,17 @@
 
   <changeSet author="master" id="20200928000000-convocatoria_area_tematica">
     <insert tableName="convocatoria_area_tematica">
-      <column name="area_tematica_id" valueComputed="(select id from csp.area_tematica_arbol where nombre = 'nombre-001')"></column>
+      <column name="area_tematica_id" valueComputed="(select id from csp.area_tematica where nombre = 'area_tematica AAA')"></column>
       <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
       <column name="observaciones" value="Observaciones AAA" />
     </insert>
     <insert tableName="convocatoria_area_tematica">
-      <column name="area_tematica_id" valueComputed="(select id from csp.area_tematica_arbol where nombre = 'nombre-002')"></column>
+      <column name="area_tematica_id" valueComputed="(select id from csp.area_tematica where nombre = 'area_tematica BBB')"></column>
       <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
       <column name="observaciones" value="Observaciones BBB" />
     </insert>
     <insert tableName="convocatoria_area_tematica">
-      <column name="area_tematica_id" valueComputed="(select id from csp.area_tematica_arbol where nombre = 'nombre-003')"></column>
+      <column name="area_tematica_id" valueComputed="(select id from csp.area_tematica where nombre = 'area_tematica CCC')"></column>
       <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-003')"></column>
       <column name="observaciones" value="Observaciones CCC" />
     </insert>

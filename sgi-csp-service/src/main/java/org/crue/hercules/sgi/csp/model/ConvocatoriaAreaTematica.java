@@ -39,11 +39,11 @@ public class ConvocatoriaAreaTematica extends BaseEntity {
   @SequenceGenerator(name = "convocatoria_area_tematica_seq", sequenceName = "convocatoria_area_tematica_seq", allocationSize = 1)
   private Long id;
 
-  /** AreaTematicaArbol */
+  /** AreaTematica */
   @ManyToOne
   @JoinColumn(name = "area_tematica_id", nullable = false)
   @NotNull
-  private AreaTematicaArbol areaTematicaArbol;
+  private AreaTematica areaTematica;
 
   /** Convocatoria */
   @ManyToOne

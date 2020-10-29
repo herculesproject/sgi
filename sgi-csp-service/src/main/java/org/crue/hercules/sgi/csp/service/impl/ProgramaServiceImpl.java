@@ -120,6 +120,7 @@ public class ProgramaServiceImpl implements ProgramaService {
    * @return la entidad {@link Programa} persistida.
    */
   @Override
+  @Transactional
   public Programa enable(Long id) {
     log.debug("enable(Long id) - start");
 

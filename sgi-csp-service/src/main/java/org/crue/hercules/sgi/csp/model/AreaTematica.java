@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
@@ -17,13 +19,13 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "listado_area_tematica")
+@Table(name = "area_tematica")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ListadoAreaTematica extends BaseEntity {
+public class AreaTematica extends BaseEntity {
 
   /**
    * Serial version
@@ -33,20 +35,27 @@ public class ListadoAreaTematica extends BaseEntity {
   /** Id */
   @Id
   @Column(name = "id", nullable = false)
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "listado_area_tematica_seq")
-  @SequenceGenerator(name = "listado_area_tematica_seq", sequenceName = "listado_area_tematica_seq", allocationSize = 1)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "area_tematica_seq")
+  @SequenceGenerator(name = "area_tematica_seq", sequenceName = "area_tematica_seq", allocationSize = 1)
   private Long id;
 
   /** Nombre */
+  /** Si tiene padre equivale a abreviatura requerido size 5 y único */
   @Column(name = "nombre", length = 50, nullable = false)
   @NotEmpty
   @Size(max = 50)
   private String nombre;
 
   /** Descripción */
-  @Column(name = "descripcion", length = 250)
+  /** Si tiene padre equivale a nombre requerido size 50 y único */
+  @Column(name = "descripcion", length = 250, nullable = true)
   @Size(max = 250)
   private String descripcion;
+
+  /** Area Tematica padre. */
+  @ManyToOne
+  @JoinColumn(name = "area_tematica_padre_id", nullable = true)
+  private AreaTematica padre;
 
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)

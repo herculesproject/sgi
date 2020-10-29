@@ -177,7 +177,10 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceImpl
    * Comprueba y valida y reordena los periodos retornando una lista con los datos
    * {@link ConvocatoriaPeriodoSeguimientoCientifico} que deben ser guardados.
    * 
-   * @param datosConvocatoriaPeriodoSeguimientoCientifico
+   * @param datosConvocatoriaPeriodoSeguimientoCientifico datos de la
+   *                                                      {@link ConvocatoriaPeriodoSeguimientoCientifico}
+   * @param datosOriginales                               datos originales de la
+   *                                                      {@link ConvocatoriaPeriodoSeguimientoCientifico}
    * @return lista de {@link ConvocatoriaPeriodoSeguimientoCientifico} con los
    *         datos validados y listos para ser guardados.
    */
@@ -199,11 +202,11 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceImpl
             "El mes inicial debe ser anterior al mes final");
 
     // Fecha Inicio < Fecha Fin
-    if (datosConvocatoriaPeriodoSeguimientoCientifico.getFechaInicio() != null
-        && datosConvocatoriaPeriodoSeguimientoCientifico.getFechaFin() != null) {
+    if (datosConvocatoriaPeriodoSeguimientoCientifico.getFechaInicioPresentacion() != null
+        && datosConvocatoriaPeriodoSeguimientoCientifico.getFechaFinPresentacion() != null) {
       Assert.isTrue(
-          datosConvocatoriaPeriodoSeguimientoCientifico.getFechaInicio()
-              .isBefore(datosConvocatoriaPeriodoSeguimientoCientifico.getFechaFin()),
+          datosConvocatoriaPeriodoSeguimientoCientifico.getFechaInicioPresentacion()
+              .isBefore(datosConvocatoriaPeriodoSeguimientoCientifico.getFechaFinPresentacion()),
           "La fecha de inicio debe ser anterior a la fecha de fin");
     }
 
@@ -259,8 +262,12 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceImpl
    * Reasigna la secuencia con el número del periodo según el orden del mes
    * inicial a todos los periodos de seguimiento de la convocatoria
    * 
-   * @param listaConvocatoriaPeriodoSeguimientoCientifico
-   * @return lista con los númmeros de periodo actualizados
+   * @param listaConvocatoriaPeriodoSeguimientoCientifico lista con los
+   *                                                      {@link ConvocatoriaPeriodoSeguimientoCientifico}
+   *                                                      que necesitan ser
+   *                                                      recalculados
+   * @return lista de {@link ConvocatoriaPeriodoSeguimientoCientifico} con los
+   *         periodos recalculados.
    */
   private List<ConvocatoriaPeriodoSeguimientoCientifico> recalcularSecuenciaNumPeriodo(
       List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientifico) {

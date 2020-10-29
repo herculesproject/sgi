@@ -16,7 +16,7 @@ import org.crue.hercules.sgi.csp.enums.TipoDestinatarioEnum;
 import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.enums.TipoJustificacionEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
-import org.crue.hercules.sgi.csp.model.AreaTematicaArbol;
+import org.crue.hercules.sgi.csp.model.AreaTematica;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
@@ -1544,7 +1544,7 @@ public class ConvocatoriaControllerTest {
 
     return ConvocatoriaAreaTematica.builder().id(convocatoriaAreaTematicaId)
         .convocatoria(Convocatoria.builder().id(convocatoriaId).build())
-        .areaTematicaArbol(AreaTematicaArbol.builder().id(areaTematicaId).build())
+        .areaTematica(AreaTematica.builder().id(areaTematicaId).build())
         .observaciones("observaciones-" + convocatoriaAreaTematicaId).build();
   }
 

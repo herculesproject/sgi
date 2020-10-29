@@ -18,13 +18,11 @@ INSERT INTO csp.convocatoria
 (id, unidad_gestion_ref, modelo_ejecucion_id, codigo, anio, titulo, objeto, observaciones, tipo_finalidad_id, tipo_regimen_concurrencia_id, destinatarios, colaborativos, estado_actual, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
 VALUES(1, 'unidad-001', 1, 'codigo-001', 2020, 'titulo-001', 'objeto-001', 'observaciones-001', 1, 1, 'Individual', true, 'Registrada', 12, 1, 'Ayudas y becas', true);
 
--- LISTADO AREA TEMATICA
-INSERT INTO csp.listado_area_tematica (id, nombre, descripcion, activo) VALUES (1, 'nombre-001', 'descripcion-001', true);
-
--- AREA TEMATICA ARBOL
-INSERT INTO csp.area_tematica_arbol (id, nombre, abreviatura, listado_area_tematica_id, area_tematica_arbol_padre_id, activo)  VALUES (1, 'nombre-001', 'A-1', 1L, null, true);
-INSERT INTO csp.area_tematica_arbol (id, nombre, abreviatura, listado_area_tematica_id, area_tematica_arbol_padre_id, activo)  VALUES (2, 'nombre-002', 'A-2', 1L, 1L, true);
-INSERT INTO csp.area_tematica_arbol (id, nombre, abreviatura, listado_area_tematica_id, area_tematica_arbol_padre_id, activo)  VALUES (3, 'nombre-003', 'A-3', 1L, null, true);
+-- AREA TEMATICA
+INSERT INTO csp.area_tematica (id, nombre, descripcion, area_tematica_padre_id, activo) VALUES (1, 'nombre-001', 'descripcion-001', null, true);
+INSERT INTO csp.area_tematica (id, nombre, descripcion, area_tematica_padre_id, activo) VALUES (2, 'A-1', 'nombre-A-1', 1, true);
+INSERT INTO csp.area_tematica (id, nombre, descripcion, area_tematica_padre_id, activo) VALUES (3, 'nombre-002', 'descripcion-002', null, true);
+INSERT INTO csp.area_tematica (id, nombre, descripcion, area_tematica_padre_id, activo) VALUES (4, 'A-2', 'nombre-A-2', 2, true);
 
 -- CONVOCATORIA AREA TEMATICA
 INSERT INTO csp.convocatoria_area_tematica (id, convocatoria_id, area_tematica_id, observaciones) VALUES (1, 1, 2, 'observaciones-001');

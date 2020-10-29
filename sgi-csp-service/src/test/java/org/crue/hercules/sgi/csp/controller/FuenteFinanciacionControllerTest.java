@@ -168,7 +168,7 @@ public class FuenteFinanciacionControllerTest {
     FuenteFinanciacion fuenteFinanciacion = generarMockFuenteFinanciacion(1L);
     fuenteFinanciacion.setActivo(false);
 
-    BDDMockito.given(service.disable(ArgumentMatchers.<Long>any())).willAnswer((InvocationOnMock invocation) -> {
+    BDDMockito.given(service.enable(ArgumentMatchers.<Long>any())).willAnswer((InvocationOnMock invocation) -> {
       FuenteFinanciacion fuenteFinanciacionDisabled = new FuenteFinanciacion();
       BeanUtils.copyProperties(fuenteFinanciacion, fuenteFinanciacionDisabled);
       fuenteFinanciacionDisabled.setActivo(true);
@@ -178,7 +178,7 @@ public class FuenteFinanciacionControllerTest {
     // when: reactivar by id
     mockMvc
         .perform(MockMvcRequestBuilders
-            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, fuenteFinanciacion.getId())
+            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, fuenteFinanciacion.getId())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
         // then: FuenteFinanciacion is updated

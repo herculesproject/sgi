@@ -6,10 +6,9 @@ import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVNEnum;
 import org.crue.hercules.sgi.csp.enums.TipoDestinatarioEnum;
 import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
-import org.crue.hercules.sgi.csp.model.AreaTematicaArbol;
+import org.crue.hercules.sgi.csp.model.AreaTematica;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
-import org.crue.hercules.sgi.csp.model.ListadoAreaTematica;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
@@ -30,43 +29,43 @@ public class ConvocatoriaAreaTematicaRepositoryTest {
   private ConvocatoriaAreaTematicaRepository repository;
 
   @Test
-  public void findByConvocatoriaIdAndAreaTematicaArbolId_ReturnsConvocatoriaAreaTematica() throws Exception {
+  public void findByConvocatoriaIdAndAreaTematicaId_ReturnsConvocatoriaAreaTematica() throws Exception {
 
     // given: data ConvocatoriaAreaTematica to find by Convocatoria and
-    // AreaTematicaArbolId
+    // AreaTematicaId
     ConvocatoriaAreaTematica convocatoriaAreaTematica1 = generarConvocatoriaAreaTematica("-001");
     generarConvocatoriaAreaTematica("-002");
 
     Long convocatoriaIdBuscado = convocatoriaAreaTematica1.getConvocatoria().getId();
-    Long areaTematicaArbolIdBuscado = convocatoriaAreaTematica1.getAreaTematicaArbol().getId();
+    Long areaTematicaIdBuscado = convocatoriaAreaTematica1.getAreaTematica().getId();
 
-    // when: find by Convocatoria and AreaTematicaArbolId
+    // when: find by Convocatoria and AreaTematicaId
     ConvocatoriaAreaTematica dataFound = repository
-        .findByConvocatoriaIdAndAreaTematicaArbolId(convocatoriaIdBuscado, areaTematicaArbolIdBuscado).get();
+        .findByConvocatoriaIdAndAreaTematicaId(convocatoriaIdBuscado, areaTematicaIdBuscado).get();
 
     // then: ConvocatoriaAreaTematica is found
     Assertions.assertThat(dataFound).isNotNull();
     Assertions.assertThat(dataFound.getId()).isEqualTo(convocatoriaAreaTematica1.getId());
     Assertions.assertThat(dataFound.getConvocatoria().getId())
         .isEqualTo(convocatoriaAreaTematica1.getConvocatoria().getId());
-    Assertions.assertThat(dataFound.getAreaTematicaArbol().getId())
-        .isEqualTo(convocatoriaAreaTematica1.getAreaTematicaArbol().getId());
+    Assertions.assertThat(dataFound.getAreaTematica().getId())
+        .isEqualTo(convocatoriaAreaTematica1.getAreaTematica().getId());
   }
 
   @Test
-  public void findByConvocatoriaIdAndAreaTematicaArbolId_ReturnsNull() throws Exception {
+  public void findByConvocatoriaIdAndAreaTematicaId_ReturnsNull() throws Exception {
     // given: data ConvocatoriaAreaTematica to find by Convocatoria and
-    // AreaTematicaArbolId
+    // AreaTematicaId
 
     ConvocatoriaAreaTematica convocatoriaAreaTematica1 = generarConvocatoriaAreaTematica("-001");
     ConvocatoriaAreaTematica convocatoriaAreaTematica2 = generarConvocatoriaAreaTematica("-002");
 
     Long convocatoriaIdBuscado = convocatoriaAreaTematica1.getConvocatoria().getId();
-    Long areaTematicaArbolIdBuscado = convocatoriaAreaTematica2.getAreaTematicaArbol().getId();
+    Long areaTematicaIdBuscado = convocatoriaAreaTematica2.getAreaTematica().getId();
 
-    // when: find by by Convocatoria and AreaTematicaArbolId
+    // when: find by by Convocatoria and AreaTematicaId
     Optional<ConvocatoriaAreaTematica> dataFound = repository
-        .findByConvocatoriaIdAndAreaTematicaArbolId(convocatoriaIdBuscado, areaTematicaArbolIdBuscado);
+        .findByConvocatoriaIdAndAreaTematicaId(convocatoriaIdBuscado, areaTematicaIdBuscado);
 
     // then: ConvocatoriaAreaTematica is not found
     Assertions.assertThat(dataFound).isEqualTo(Optional.empty());
@@ -130,25 +129,24 @@ public class ConvocatoriaAreaTematicaRepositoryTest {
         .build();
     entityManager.persistAndFlush(convocatoria);
 
-    ListadoAreaTematica listadoAreaTematica = ListadoAreaTematica.builder()//
-        .nombre("nombreListadoAreaTematica" + suffix)//
-        .descripcion("descripcionListadoAreaTematica" + suffix)//
+    AreaTematica areaTematicaPadre = AreaTematica.builder()//
+        .nombre("nombreAreaTematica" + suffix)//
+        .descripcion("descripcionAreaTematica" + suffix)//
         .activo(Boolean.TRUE)//
         .build();
-    entityManager.persistAndFlush(listadoAreaTematica);
+    entityManager.persistAndFlush(areaTematicaPadre);
 
-    AreaTematicaArbol areaTematicaArbol = AreaTematicaArbol.builder()//
-        .abreviatura(suffix)//
-        .nombre("nombreAreaTematicaArbol" + suffix).activo(Boolean.TRUE)//
-        .padre(null)//
-        .listadoAreaTematica(listadoAreaTematica)//
+    AreaTematica areaTematica = AreaTematica.builder()//
+        .nombre(suffix)//
+        .descripcion("areaTematica" + suffix)//
+        .padre(areaTematicaPadre)//
         .activo(Boolean.TRUE)//
         .build();
-    entityManager.persistAndFlush(areaTematicaArbol);
+    entityManager.persistAndFlush(areaTematica);
 
     ConvocatoriaAreaTematica convocatoriaAreaTematica = ConvocatoriaAreaTematica.builder()//
         .convocatoria(convocatoria)//
-        .areaTematicaArbol(areaTematicaArbol)//
+        .areaTematica(areaTematica)//
         .observaciones("observaciones" + suffix)//
         .build();
     return entityManager.persistAndFlush(convocatoriaAreaTematica);

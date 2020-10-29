@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.exceptions.AreaTematicaArbolNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.AreaTematicaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaAreaTematicaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
-import org.crue.hercules.sgi.csp.model.AreaTematicaArbol;
+import org.crue.hercules.sgi.csp.model.AreaTematica;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
-import org.crue.hercules.sgi.csp.repository.AreaTematicaArbolRepository;
+import org.crue.hercules.sgi.csp.repository.AreaTematicaRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.service.impl.ConvocatoriaAreaTematicaServiceImpl;
@@ -39,14 +39,14 @@ public class ConvocatoriaAreaTematicaServiceTest {
   @Mock
   private ConvocatoriaRepository convocatoriaRepository;
   @Mock
-  private AreaTematicaArbolRepository areaTematicaArbolRepository;
+  private AreaTematicaRepository areaTematicaRepository;
 
   private ConvocatoriaAreaTematicaService service;
 
   @BeforeEach
   public void setUp() throws Exception {
     service = new ConvocatoriaAreaTematicaServiceImpl(convocatoriaAreaTematicaRepository, convocatoriaRepository,
-        areaTematicaArbolRepository);
+        areaTematicaRepository);
   }
 
   @Test
@@ -56,10 +56,10 @@ public class ConvocatoriaAreaTematicaServiceTest {
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(newConvocatoriaAreaTematica.getConvocatoria()));
-    BDDMockito.given(areaTematicaArbolRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newConvocatoriaAreaTematica.getAreaTematicaArbol()));
+    BDDMockito.given(areaTematicaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(newConvocatoriaAreaTematica.getAreaTematica()));
     BDDMockito.given(convocatoriaAreaTematicaRepository
-        .findByConvocatoriaIdAndAreaTematicaArbolId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong()))
+        .findByConvocatoriaIdAndAreaTematicaId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong()))
         .willReturn(Optional.empty());
 
     BDDMockito.given(convocatoriaAreaTematicaRepository.save(ArgumentMatchers.<ConvocatoriaAreaTematica>any()))
@@ -82,8 +82,8 @@ public class ConvocatoriaAreaTematicaServiceTest {
     Assertions.assertThat(createdConvocatoriaAreaTematica.getId()).isNotNull();
     Assertions.assertThat(createdConvocatoriaAreaTematica.getConvocatoria().getId())
         .isEqualTo(newConvocatoriaAreaTematica.getConvocatoria().getId());
-    Assertions.assertThat(createdConvocatoriaAreaTematica.getAreaTematicaArbol().getId())
-        .isEqualTo(newConvocatoriaAreaTematica.getAreaTematicaArbol().getId());
+    Assertions.assertThat(createdConvocatoriaAreaTematica.getAreaTematica().getId())
+        .isEqualTo(newConvocatoriaAreaTematica.getAreaTematica().getId());
     Assertions.assertThat(createdConvocatoriaAreaTematica.getObservaciones())
         .isEqualTo(newConvocatoriaAreaTematica.getObservaciones());
   }
@@ -120,7 +120,7 @@ public class ConvocatoriaAreaTematicaServiceTest {
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaAreaTematica
         () -> service.create(newConvocatoriaAreaTematica))
-        // then: throw exception as AreaTematicaArbol is null
+        // then: throw exception as AreaTematica is null
         .isInstanceOf(IllegalArgumentException.class);
   }
 
@@ -145,17 +145,17 @@ public class ConvocatoriaAreaTematicaServiceTest {
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(newConvocatoriaAreaTematica.getConvocatoria()));
-    BDDMockito.given(areaTematicaArbolRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
+    BDDMockito.given(areaTematicaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
     Assertions.assertThatThrownBy(
         // when: create ConvocatoriaAreaTematica
         () -> service.create(newConvocatoriaAreaTematica))
-        // then: throw exception as AreaTematicaArbol is not found
-        .isInstanceOf(AreaTematicaArbolNotFoundException.class);
+        // then: throw exception as AreaTematica is not found
+        .isInstanceOf(AreaTematicaNotFoundException.class);
   }
 
   @Test
-  public void create_WithDuplicatedConvocatoriaIdAndAreaTematicaArbolId_ThrowsIllegalArgumentException() {
+  public void create_WithDuplicatedConvocatoriaIdAndAreaTematicaId_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaAreaTematica assigned with same
     // Convocatoria And EntidadRef
     ConvocatoriaAreaTematica newConvocatoriaAreaTematica = generarConvocatoriaAreaTematica(null, 1L, 1L);
@@ -163,10 +163,10 @@ public class ConvocatoriaAreaTematicaServiceTest {
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(newConvocatoriaAreaTematica.getConvocatoria()));
-    BDDMockito.given(areaTematicaArbolRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(newConvocatoriaAreaTematica.getAreaTematicaArbol()));
+    BDDMockito.given(areaTematicaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(newConvocatoriaAreaTematica.getAreaTematica()));
     BDDMockito.given(convocatoriaAreaTematicaRepository
-        .findByConvocatoriaIdAndAreaTematicaArbolId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong()))
+        .findByConvocatoriaIdAndAreaTematicaId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(ConvocatoriaAreaTematicaExistente));
 
     Assertions.assertThatThrownBy(
@@ -204,8 +204,8 @@ public class ConvocatoriaAreaTematicaServiceTest {
     Assertions.assertThat(updated.getId()).isEqualTo(convocatoriaAreaTematica.getId());
     Assertions.assertThat(updated.getConvocatoria().getId())
         .isEqualTo(convocatoriaAreaTematica.getConvocatoria().getId());
-    Assertions.assertThat(updated.getAreaTematicaArbol().getId())
-        .isEqualTo(convocatoriaAreaTematica.getAreaTematicaArbol().getId());
+    Assertions.assertThat(updated.getAreaTematica().getId())
+        .isEqualTo(convocatoriaAreaTematica.getAreaTematica().getId());
     Assertions.assertThat(updated.getObservaciones()).isEqualTo("observaciones-modificadas");
   }
 
@@ -296,8 +296,8 @@ public class ConvocatoriaAreaTematicaServiceTest {
     Assertions.assertThat(convocatoriaAreaTematica.getId()).isEqualTo(convocatoriaAreaTematica.getId());
     Assertions.assertThat(convocatoriaAreaTematica.getConvocatoria().getId())
         .isEqualTo(convocatoriaAreaTematica.getConvocatoria().getId());
-    Assertions.assertThat(convocatoriaAreaTematica.getAreaTematicaArbol().getId())
-        .isEqualTo(convocatoriaAreaTematica.getAreaTematicaArbol().getId());
+    Assertions.assertThat(convocatoriaAreaTematica.getAreaTematica().getId())
+        .isEqualTo(convocatoriaAreaTematica.getAreaTematica().getId());
     Assertions.assertThat(convocatoriaAreaTematica.getObservaciones())
         .isEqualTo(convocatoriaAreaTematica.getObservaciones());
   }
@@ -357,7 +357,7 @@ public class ConvocatoriaAreaTematicaServiceTest {
           .get(i - (page.getSize() * page.getNumber()) - 1);
       Assertions.assertThat(ConvocatoriaAreaTematica.getId()).isEqualTo(Long.valueOf(i));
       Assertions.assertThat(ConvocatoriaAreaTematica.getConvocatoria().getId()).isEqualTo(convocatoriaId);
-      Assertions.assertThat(ConvocatoriaAreaTematica.getAreaTematicaArbol().getId()).isEqualTo(i);
+      Assertions.assertThat(ConvocatoriaAreaTematica.getAreaTematica().getId()).isEqualTo(i);
       Assertions.assertThat(ConvocatoriaAreaTematica.getObservaciones()).isEqualTo("observaciones-" + i);
     }
   }
@@ -375,7 +375,7 @@ public class ConvocatoriaAreaTematicaServiceTest {
 
     return ConvocatoriaAreaTematica.builder().id(convocatoriaAreaTematicaId)
         .convocatoria(Convocatoria.builder().id(convocatoriaId).build())
-        .areaTematicaArbol(AreaTematicaArbol.builder().id(areaTematicaId).build())
+        .areaTematica(AreaTematica.builder().id(areaTematicaId).build())
         .observaciones("observaciones-" + convocatoriaAreaTematicaId).build();
   }
 }

@@ -124,6 +124,7 @@ public class ConceptoGastoServiceImpl implements ConceptoGastoService {
    * @return la entidad {@link ConceptoGasto} persistida.
    */
   @Override
+  @Transactional
   public ConceptoGasto disable(Long id) {
     log.debug("disable(Long id) - start");
 

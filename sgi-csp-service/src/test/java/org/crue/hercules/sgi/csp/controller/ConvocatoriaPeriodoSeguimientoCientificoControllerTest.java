@@ -56,8 +56,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest {
         .convocatoria(convocatoria)//
         .mesInicial(1)//
         .mesFinal(2)//
-        .fechaInicio(LocalDate.of(2020, 1, 1))//
-        .fechaFin(LocalDate.of(2020, 2, 1))//
+        .fechaInicioPresentacion(LocalDate.of(2020, 1, 1))//
+        .fechaFinPresentacion(LocalDate.of(2020, 2, 1))//
         .observaciones("observaciones")//
         .build();
 
@@ -91,9 +91,10 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest {
             .value(convocatoriaPeriodoSeguimientoCientifico.getMesInicial()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("mesFinal").value(convocatoriaPeriodoSeguimientoCientifico.getMesFinal()))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-01-01"))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-02-01")).andExpect(MockMvcResultMatchers
-            .jsonPath("observaciones").value(convocatoriaPeriodoSeguimientoCientifico.getObservaciones()));
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicioPresentacion").value("2020-01-01"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaFinPresentacion").value("2020-02-01"))
+        .andExpect(MockMvcResultMatchers.jsonPath("observaciones")
+            .value(convocatoriaPeriodoSeguimientoCientifico.getObservaciones()));
   }
 
   @Test
@@ -107,8 +108,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest {
         .convocatoria(convocatoria)//
         .mesInicial(1)//
         .mesFinal(2)//
-        .fechaInicio(LocalDate.of(2020, 1, 1))//
-        .fechaFin(LocalDate.of(2020, 2, 1))//
+        .fechaInicioPresentacion(LocalDate.of(2020, 1, 1))//
+        .fechaFinPresentacion(LocalDate.of(2020, 2, 1))//
         .observaciones("observaciones")//
         .build();
 
@@ -137,8 +138,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest {
         .numPeriodo(1)//
         .mesInicial(1)//
         .mesFinal(2)//
-        .fechaInicio(LocalDate.of(2020, 1, 1))//
-        .fechaFin(LocalDate.of(2020, 2, 1))//
+        .fechaInicioPresentacion(LocalDate.of(2020, 1, 1))//
+        .fechaFinPresentacion(LocalDate.of(2020, 2, 1))//
         .observaciones("observaciones")//
         .build();
     ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico//
@@ -148,8 +149,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest {
         .numPeriodo(2)//
         .mesInicial(3)//
         .mesFinal(4)//
-        .fechaInicio(convocatoriaPeriodoSeguimientoCientificoExistente.getFechaInicio())//
-        .fechaFin(convocatoriaPeriodoSeguimientoCientificoExistente.getFechaFin())//
+        .fechaInicioPresentacion(convocatoriaPeriodoSeguimientoCientificoExistente.getFechaInicioPresentacion())//
+        .fechaFinPresentacion(convocatoriaPeriodoSeguimientoCientificoExistente.getFechaFinPresentacion())//
         .observaciones("observaciones-modificadas")//
         .build();
 
@@ -175,8 +176,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("numPeriodo").value(2))
         .andExpect(MockMvcResultMatchers.jsonPath("mesInicial").value(3))
         .andExpect(MockMvcResultMatchers.jsonPath("mesFinal").value(4))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicio").value("2020-01-01"))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaFin").value("2020-02-01"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicioPresentacion").value("2020-01-01"))
+        .andExpect(MockMvcResultMatchers.jsonPath("fechaFinPresentacion").value("2020-02-01"))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value("observaciones-modificadas"));
   }
 
@@ -192,8 +193,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest {
         .numPeriodo(1)//
         .mesInicial(1)//
         .mesFinal(2)//
-        .fechaInicio(LocalDate.of(2020, 1, 1))//
-        .fechaFin(LocalDate.of(2020, 2, 1))//
+        .fechaInicioPresentacion(LocalDate.of(2020, 1, 1))//
+        .fechaFinPresentacion(LocalDate.of(2020, 2, 1))//
         .observaciones("observaciones")//
         .build();
 

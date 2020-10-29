@@ -67,11 +67,11 @@ public class ConvocatoriaPeriodoSeguimientoCientifico extends BaseEntity {
 
   /** Fecha Inicio Presentacion */
   @Column(name = "fecha_inicio_presentacion", nullable = true)
-  private LocalDate fechaInicio;
+  private LocalDate fechaInicioPresentacion;
 
   /** Fecha Fin Presentacion */
   @Column(name = "fecha_fin_presentacion", nullable = true)
-  private LocalDate fechaFin;
+  private LocalDate fechaFinPresentacion;
 
   /** Observaciones */
   @Column(name = "observaciones", length = 2000, nullable = true)

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.crue.hercules.sgi.csp.config.SecurityConfig;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaAreaTematicaNotFoundException;
-import org.crue.hercules.sgi.csp.model.AreaTematicaArbol;
+import org.crue.hercules.sgi.csp.model.AreaTematica;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
@@ -77,8 +77,8 @@ public class ConvocatoriaAreaTematicaControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
         .andExpect(
             MockMvcResultMatchers.jsonPath("convocatoria.id").value(convocatoriaAreaTematica.getConvocatoria().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("areaTematicaArbol.id")
-            .value(convocatoriaAreaTematica.getAreaTematicaArbol().getId()))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("areaTematica.id").value(convocatoriaAreaTematica.getAreaTematica().getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value(convocatoriaAreaTematica.getObservaciones()));
   }
 
@@ -129,8 +129,8 @@ public class ConvocatoriaAreaTematicaControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("id").value(updatedConvocatoriaAreaTematica.getId()))
         .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id")
             .value(updatedConvocatoriaAreaTematica.getConvocatoria().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("areaTematicaArbol.id")
-            .value(updatedConvocatoriaAreaTematica.getAreaTematicaArbol().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("areaTematica.id")
+            .value(updatedConvocatoriaAreaTematica.getAreaTematica().getId()))
         .andExpect(
             MockMvcResultMatchers.jsonPath("observaciones").value(updatedConvocatoriaAreaTematica.getObservaciones()));
   }
@@ -246,7 +246,7 @@ public class ConvocatoriaAreaTematicaControllerTest {
 
     return ConvocatoriaAreaTematica.builder().id(convocatoriaAreaTematicaId)
         .convocatoria(Convocatoria.builder().id(convocatoriaId).build())
-        .areaTematicaArbol(AreaTematicaArbol.builder().id(areaTematicaId).build())
+        .areaTematica(AreaTematica.builder().id(areaTematicaId).build())
         .observaciones("observaciones-" + convocatoriaAreaTematicaId).build();
   }
 

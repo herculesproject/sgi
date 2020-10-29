@@ -2,7 +2,7 @@ package org.crue.hercules.sgi.csp.repository;
 
 import java.util.Optional;
 
-import org.crue.hercules.sgi.csp.model.AreaTematicaArbol;
+import org.crue.hercules.sgi.csp.model.AreaTematica;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,12 +13,11 @@ public interface ConvocatoriaAreaTematicaRepository
 
   /**
    * Busca un {@link ConvocatoriaAreaTematica} por su {@link Convocatoria} y
-   * {@link AreaTematicaArbol}.
+   * {@link AreaTematica}.
    * 
-   * @param convocatoriaId      Id de la {@link Convocatoria}
-   * @param areaTematicaArbolId Id de la {@link AreaTematicaArbol}
+   * @param convocatoriaId Id de la {@link Convocatoria}
+   * @param areaTematicaId Id de la {@link AreaTematica}
    * @return una {@link ConvocatoriaAreaTematica}
    */
-  Optional<ConvocatoriaAreaTematica> findByConvocatoriaIdAndAreaTematicaArbolId(Long convocatoriaId,
-      Long areaTematicaArbolId);
+  Optional<ConvocatoriaAreaTematica> findByConvocatoriaIdAndAreaTematicaId(Long convocatoriaId, Long areaTematicaId);
 }

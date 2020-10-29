@@ -3,7 +3,7 @@ package org.crue.hercules.sgi.csp.integration;
 import java.util.Collections;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.model.AreaTematicaArbol;
+import org.crue.hercules.sgi.csp.model.AreaTematica;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
@@ -68,8 +68,8 @@ public class ConvocatoriaAreaTematicaIT {
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
     Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()")
         .isEqualTo(newConvocatoriaAreaTematica.getConvocatoria().getId());
-    Assertions.assertThat(responseData.getAreaTematicaArbol().getId()).as("getAreaTematicaArbol().getId()")
-        .isEqualTo(newConvocatoriaAreaTematica.getAreaTematicaArbol().getId());
+    Assertions.assertThat(responseData.getAreaTematica().getId()).as("getAreaTematica().getId()")
+        .isEqualTo(newConvocatoriaAreaTematica.getAreaTematica().getId());
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones().getId()")
         .isEqualTo(newConvocatoriaAreaTematica.getObservaciones());
   }
@@ -95,8 +95,8 @@ public class ConvocatoriaAreaTematicaIT {
     Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
     Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()")
         .isEqualTo(convocatoriaAreaTematicaExistente.getConvocatoria().getId());
-    Assertions.assertThat(responseData.getAreaTematicaArbol().getId()).as("getAreaTematicaArbol().getId()")
-        .isEqualTo(convocatoriaAreaTematicaExistente.getAreaTematicaArbol().getId());
+    Assertions.assertThat(responseData.getAreaTematica().getId()).as("getAreaTematica().getId()")
+        .isEqualTo(convocatoriaAreaTematicaExistente.getAreaTematica().getId());
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
         .isEqualTo(convocatoriaAreaTematica.getObservaciones());
   }
@@ -132,8 +132,7 @@ public class ConvocatoriaAreaTematicaIT {
     ConvocatoriaAreaTematica responseData = response.getBody();
     Assertions.assertThat(responseData.getId()).as("getId()").isEqualTo(id);
     Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()").isEqualTo(1L);
-    Assertions.assertThat(responseData.getAreaTematicaArbol().getId()).as("getAreaTematicaArbol().getId()")
-        .isEqualTo(2L);
+    Assertions.assertThat(responseData.getAreaTematica().getId()).as("getAreaTematica().getId()").isEqualTo(2L);
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()").isEqualTo("observaciones-001");
   }
 
@@ -150,7 +149,7 @@ public class ConvocatoriaAreaTematicaIT {
 
     return ConvocatoriaAreaTematica.builder().id(convocatoriaAreaTematicaId)
         .convocatoria(Convocatoria.builder().id(convocatoriaId).build())
-        .areaTematicaArbol(AreaTematicaArbol.builder().id(areaTematicaId).build())
+        .areaTematica(AreaTematica.builder().id(areaTematicaId).build())
         .observaciones("observaciones-" + convocatoriaAreaTematicaId).build();
   }
 }

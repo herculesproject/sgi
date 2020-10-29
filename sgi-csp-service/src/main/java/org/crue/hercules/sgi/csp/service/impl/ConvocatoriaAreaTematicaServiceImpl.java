@@ -2,12 +2,12 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.List;
 
-import org.crue.hercules.sgi.csp.exceptions.AreaTematicaArbolNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.AreaTematicaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaAreaTematicaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
-import org.crue.hercules.sgi.csp.repository.AreaTematicaArbolRepository;
+import org.crue.hercules.sgi.csp.repository.AreaTematicaRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaAreaTematicaRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaAreaTematicaSpecifications;
@@ -33,13 +33,13 @@ public class ConvocatoriaAreaTematicaServiceImpl implements ConvocatoriaAreaTema
 
   private final ConvocatoriaAreaTematicaRepository repository;
   private final ConvocatoriaRepository convocatoriaRepository;
-  private final AreaTematicaArbolRepository areaTematicaArbolRepository;
+  private final AreaTematicaRepository areaTematicaRepository;
 
   public ConvocatoriaAreaTematicaServiceImpl(ConvocatoriaAreaTematicaRepository repository,
-      ConvocatoriaRepository convocatoriaRepository, AreaTematicaArbolRepository areaTematicaArbolRepository) {
+      ConvocatoriaRepository convocatoriaRepository, AreaTematicaRepository areaTematicaRepository) {
     this.repository = repository;
     this.convocatoriaRepository = convocatoriaRepository;
-    this.areaTematicaArbolRepository = areaTematicaArbolRepository;
+    this.areaTematicaRepository = areaTematicaRepository;
   }
 
   /**
@@ -60,21 +60,21 @@ public class ConvocatoriaAreaTematicaServiceImpl implements ConvocatoriaAreaTema
     Assert.notNull(convocatoriaAreaTematica.getConvocatoria().getId(),
         "Id Convocatoria no puede ser null para crear ConvocatoriaAreaTematica");
 
-    Assert.notNull(convocatoriaAreaTematica.getAreaTematicaArbol().getId(),
-        "Id AreaTematicaArbol no puede ser null para crear ConvocatoriaAreaTematica");
+    Assert.notNull(convocatoriaAreaTematica.getAreaTematica().getId(),
+        "Id AreaTematica no puede ser null para crear ConvocatoriaAreaTematica");
 
     convocatoriaAreaTematica
         .setConvocatoria(convocatoriaRepository.findById(convocatoriaAreaTematica.getConvocatoria().getId())
             .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaAreaTematica.getConvocatoria().getId())));
 
-    convocatoriaAreaTematica.setAreaTematicaArbol(
-        areaTematicaArbolRepository.findById(convocatoriaAreaTematica.getAreaTematicaArbol().getId()).orElseThrow(
-            () -> new AreaTematicaArbolNotFoundException(convocatoriaAreaTematica.getAreaTematicaArbol().getId())));
+    convocatoriaAreaTematica
+        .setAreaTematica(areaTematicaRepository.findById(convocatoriaAreaTematica.getAreaTematica().getId())
+            .orElseThrow(() -> new AreaTematicaNotFoundException(convocatoriaAreaTematica.getAreaTematica().getId())));
 
     Assert.isTrue(
-        !repository.findByConvocatoriaIdAndAreaTematicaArbolId(convocatoriaAreaTematica.getConvocatoria().getId(),
-            convocatoriaAreaTematica.getAreaTematicaArbol().getId()).isPresent(),
-        "Ya existe una asociación activa para esa Convocatoria y AreaTematicaArbol");
+        !repository.findByConvocatoriaIdAndAreaTematicaId(convocatoriaAreaTematica.getConvocatoria().getId(),
+            convocatoriaAreaTematica.getAreaTematica().getId()).isPresent(),
+        "Ya existe una asociación activa para esa Convocatoria y AreaTematica");
 
     ConvocatoriaAreaTematica returnValue = repository.save(convocatoriaAreaTematica);
 

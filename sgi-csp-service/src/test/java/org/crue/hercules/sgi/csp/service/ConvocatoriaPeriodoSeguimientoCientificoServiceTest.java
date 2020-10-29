@@ -64,8 +64,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest {
         .convocatoria(convocatoria)//
         .mesInicial(1)//
         .mesFinal(2)//
-        .fechaInicio(LocalDate.of(2020, 1, 1))//
-        .fechaFin(LocalDate.of(2020, 2, 1))//
+        .fechaInicioPresentacion(LocalDate.of(2020, 1, 1))//
+        .fechaFinPresentacion(LocalDate.of(2020, 2, 1))//
         .observaciones("observaciones")//
         .build();
 
@@ -90,9 +90,10 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest {
     Assertions.assertThat(created.getNumPeriodo()).isEqualTo(1);
     Assertions.assertThat(created.getMesInicial()).isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getMesInicial());
     Assertions.assertThat(created.getMesFinal()).isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getMesFinal());
-    Assertions.assertThat(created.getFechaInicio())
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaInicio());
-    Assertions.assertThat(created.getFechaFin()).isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaFin());
+    Assertions.assertThat(created.getFechaInicioPresentacion())
+        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaInicioPresentacion());
+    Assertions.assertThat(created.getFechaFinPresentacion())
+        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaFinPresentacion());
     Assertions.assertThat(created.getObservaciones())
         .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getObservaciones());
   }
@@ -149,8 +150,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest {
         .convocatoria(convocatoria)//
         .mesInicial(1)//
         .mesFinal(2)//
-        .fechaInicio(LocalDate.of(2020, 2, 1))//
-        .fechaFin(LocalDate.of(2020, 1, 1))//
+        .fechaInicioPresentacion(LocalDate.of(2020, 2, 1))//
+        .fechaFinPresentacion(LocalDate.of(2020, 1, 1))//
         .build();
 
     Assertions.assertThatThrownBy(
@@ -367,8 +368,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest {
         .convocatoria(convocatoria)//
         .mesInicial(14)//
         .mesFinal(15)//
-        .fechaInicio(LocalDate.of(2020, 1, 1))//
-        .fechaFin(LocalDate.of(2020, 2, 1))//
+        .fechaInicioPresentacion(LocalDate.of(2020, 1, 1))//
+        .fechaFinPresentacion(LocalDate.of(2020, 2, 1))//
         .observaciones("observaciones")//
         .build();
 
@@ -395,9 +396,10 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest {
     Assertions.assertThat(updated.getNumPeriodo()).isEqualTo(5);
     Assertions.assertThat(updated.getMesInicial()).isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getMesInicial());
     Assertions.assertThat(updated.getMesFinal()).isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getMesFinal());
-    Assertions.assertThat(updated.getFechaInicio())
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaInicio());
-    Assertions.assertThat(updated.getFechaFin()).isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaFin());
+    Assertions.assertThat(updated.getFechaInicioPresentacion())
+        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaInicioPresentacion());
+    Assertions.assertThat(updated.getFechaFinPresentacion())
+        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaFinPresentacion());
     Assertions.assertThat(updated.getObservaciones())
         .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getObservaciones());
   }
@@ -476,8 +478,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest {
         .convocatoria(convocatoria)//
         .mesInicial(1)//
         .mesFinal(2)//
-        .fechaInicio(LocalDate.of(2020, 2, 1))//
-        .fechaFin(LocalDate.of(2020, 1, 1))//
+        .fechaInicioPresentacion(LocalDate.of(2020, 2, 1))//
+        .fechaFinPresentacion(LocalDate.of(2020, 1, 1))//
         .build();
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
@@ -753,8 +755,8 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest {
         .convocatoria(convocatoria)//
         .mesInicial(1)//
         .mesFinal(2)//
-        .fechaInicio(LocalDate.of(2020, 2, 1))//
-        .fechaFin(LocalDate.of(2020, 1, 1))//
+        .fechaInicioPresentacion(LocalDate.of(2020, 2, 1))//
+        .fechaFinPresentacion(LocalDate.of(2020, 1, 1))//
         .build();
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
@@ -772,8 +774,10 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest {
     Assertions.assertThat(data.getNumPeriodo()).isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getNumPeriodo());
     Assertions.assertThat(data.getMesInicial()).isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getMesInicial());
     Assertions.assertThat(data.getMesFinal()).isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getMesFinal());
-    Assertions.assertThat(data.getFechaInicio()).isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaInicio());
-    Assertions.assertThat(data.getFechaFin()).isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaFin());
+    Assertions.assertThat(data.getFechaInicioPresentacion())
+        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaInicioPresentacion());
+    Assertions.assertThat(data.getFechaFinPresentacion())
+        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaFinPresentacion());
     Assertions.assertThat(data.getObservaciones())
         .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getObservaciones());
 
