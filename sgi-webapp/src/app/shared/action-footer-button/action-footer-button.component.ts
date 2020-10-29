@@ -1,3 +1,5 @@
+import { EventEmitter } from '@angular/core';
+import { Output } from '@angular/core';
 import { Component, Input } from '@angular/core';
 
 @Component({
@@ -10,9 +12,14 @@ export class ActionFooterButtonComponent {
   @Input() text: string;
   @Input() color = 'accent';
   @Input() disabled = false;
+  @Output() buttonClick = new EventEmitter<void>();
 
   constructor(
   ) {
 
+  }
+
+  doClick() {
+    this.buttonClick.emit();
   }
 }
