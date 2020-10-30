@@ -12,19 +12,22 @@
         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
           <li class="mat-tree-node">
             <button mat-icon-button disabled></button>
-            <mat-checkbox class="checkbox" color="primary" [checked]="node === checkedNode"
+            <mat-checkbox *ngIf="viewMode === 'new'" class="checkbox" color="primary" [checked]="node === checkedNode"
               (change)="onCheckNode(node, $event)">
               {{node.programa.value.nombre}}
             </mat-checkbox>
-            <button mat-icon-button *ngIf="node !== viewingNode" (click)="showNodeDetails(node)">
+            <button mat-icon-button *ngIf="(viewMode !== 'new' && node !== viewingNode)"
+              (click)="showNodeDetails(node)">
               <mat-icon color="primary" class="mat-icon-rtl-mirror">
                 {{ 'visibility'}}
               </mat-icon>
+              {{node.programa.value.nombre}}
             </button>
-            <button mat-icon-button *ngIf="node === viewingNode" (click)="hideNodeDetails()">
+            <button mat-icon-button *ngIf="(viewMode !== 'new' && node === viewingNode)" (click)="hideNodeDetails()">
               <mat-icon color="primary" class="mat-icon-rtl-mirror">
                 {{ 'visibility_off'}}
               </mat-icon>
+              {{node.programa.value.nombre}}
             </button>
           </li>
         </mat-tree-node>
@@ -36,19 +39,22 @@
                   {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
                 </mat-icon>
               </button>
-              <mat-checkbox class="checkbox" color="primary" [checked]="node === checkedNode"
+              <mat-checkbox *ngIf="viewMode === 'new'" class="checkbox" color="primary" [checked]="node === checkedNode"
                 (change)="onCheckNode(node, $event)">
                 {{node.programa.value.nombre}}
               </mat-checkbox>
-              <button mat-icon-button *ngIf="node !== viewingNode" (click)="showNodeDetails(node)">
+              <button mat-icon-button *ngIf="(viewMode !== 'new' && node !== viewingNode)"
+                (click)="showNodeDetails(node)">
                 <mat-icon color="primary" class="mat-icon-rtl-mirror">
                   {{ 'visibility'}}
                 </mat-icon>
+                {{node.programa.value.nombre}}
               </button>
-              <button mat-icon-button *ngIf="node === viewingNode" (click)="hideNodeDetails()">
+              <button mat-icon-button *ngIf="(viewMode !== 'new' && node === viewingNode)" (click)="hideNodeDetails()">
                 <mat-icon color="primary" class="mat-icon-rtl-mirror">
                   {{ 'visibility_off'}}
                 </mat-icon>
+                {{node.programa.value.nombre}}
               </button>
             </div>
             <ul [class.arbol-invisible]="!treeControl.isExpanded(node)">

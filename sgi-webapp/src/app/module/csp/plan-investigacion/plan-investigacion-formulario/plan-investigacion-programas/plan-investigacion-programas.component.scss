@@ -7,8 +7,8 @@
       border: 1px solid map-get($palette-grease, 100);
       min-height: 275px;
       .mat-tree-node{
-        .checkbox{
-          margin-right: 10px;
+        button {
+          font-weight: 400;
         }
       }
       .arbol-invisible {
@@ -19,9 +19,6 @@
         margin-top: 0;
         margin-bottom: 0;
         list-style-type: none;
-      }
-      .seleccion{
-        font-weight: bold;
       }
     }
     .visualizacion{

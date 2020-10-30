@@ -1,4 +1,3 @@
-import { ThrowStmt } from '@angular/compiler';
 import { IPrograma } from '@core/models/csp/programa';
 import { Fragment } from '@core/services/action-service';
 import { ProgramaService } from '@core/services/csp/programa.service';

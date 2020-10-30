@@ -225,7 +225,12 @@ export class PlanInvestigacionProgramasComponent extends FragmentComponent imple
     if (!node.programa.created) {
       node.programa.setEdited();
     }
-    node.parent.sortChildsByName();
+    if (node.parent) {
+      node.parent.sortChildsByName();
+    }
+    else {
+      this.formPart.publishNodes();
+    }
     this.refreshTree(this.formPart.programas$.value);
     this.formPart.setChanges(true);
     this.switchToView();
@@ -242,7 +247,6 @@ export class PlanInvestigacionProgramasComponent extends FragmentComponent imple
           if (aceptado) {
             if (this.viewingNode.parent) {
               this.viewingNode.parent.removeChild(this.viewingNode);
-              this.viewingNode.parent.sortChildsByName();
               this.refreshTree(this.formPart.programas$.value);
             }
             else {
