@@ -4,17 +4,25 @@ import { ActionFooterComponent } from './action-footer.component';
 import TestUtils from '@core/utils/test-utils';
 import { NGXLogger } from 'ngx-logger';
 import { MaterialDesignModule } from '@material/material-design.module';
+import { ActionStatus, IActionService } from '@core/services/action-service';
+import { BehaviorSubject } from 'rxjs';
 
 describe('ActionFooterComponent', () => {
   let component: ActionFooterComponent;
   let fixture: ComponentFixture<ActionFooterComponent>;
+
+  const behaviorSubject = new BehaviorSubject<ActionStatus>(
+    { changes: false, complete: false, errors: false, edit: false });
+  const mockActionService = {
+    status$: behaviorSubject
+  } as IActionService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ActionFooterComponent],
       imports: [
         TestUtils.getIdiomas(),
-        MaterialDesignModule
+        MaterialDesignModule,
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
@@ -26,6 +34,7 @@ describe('ActionFooterComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ActionFooterComponent);
     component = fixture.componentInstance;
+    component.actionService = mockActionService;
     fixture.detectChanges();
   });
 

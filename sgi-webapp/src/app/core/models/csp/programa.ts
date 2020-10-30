@@ -5,5 +5,12 @@ export interface IPrograma {
   /** Nombre  */
   nombre: string;
 
-}
+  /** descripcion  */
+  descripcion: string;
 
+  /** padre  */
+  padre: IPrograma;
+
+  /** activo  */
+  activo: boolean;
+}

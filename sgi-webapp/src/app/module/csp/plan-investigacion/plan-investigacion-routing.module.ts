@@ -9,6 +9,7 @@ import { SgiAuthGuard } from '@sgi/framework/auth';
 import { PlanInvestigacionCrearComponent } from './plan-investigacion-crear/plan-investigacion-crear.component';
 import { PlanInvestigacionEditarComponent } from './plan-investigacion-editar/plan-investigacion-editar.component';
 import { PlanInvestigacionDatosGeneralesComponent } from './plan-investigacion-formulario/plan-investigacion-datos-generales/plan-investigacion-datos-generales.component';
+import { PlanInvestigacionProgramasComponent } from './plan-investigacion-formulario/plan-investigacion-programas/plan-investigacion-programas.component';
 import { PlanInvestigacionListadoComponent } from './plan-investigacion-listado/plan-investigacion-listado.component';
 import { PLAN_INVESTIGACION_ROUTE_NAMES } from './plan-investigacion-route-names';
 import { PlanInvestigacionResolver } from './plan-investigacion.resolver';
@@ -44,7 +45,12 @@ const routes: SgiRoutes = [
         path: PLAN_INVESTIGACION_ROUTE_NAMES.DATOS_GENERALES,
         component: PlanInvestigacionDatosGeneralesComponent,
         canDeactivate: [FragmentGuard]
-      }
+      },
+      {
+        path: PLAN_INVESTIGACION_ROUTE_NAMES.PROGRAMAS,
+        component: PlanInvestigacionProgramasComponent,
+        canDeactivate: [FragmentGuard]
+      },
     ]
   },
   {
@@ -67,6 +73,11 @@ const routes: SgiRoutes = [
       {
         path: PLAN_INVESTIGACION_ROUTE_NAMES.DATOS_GENERALES,
         component: PlanInvestigacionDatosGeneralesComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: PLAN_INVESTIGACION_ROUTE_NAMES.PROGRAMAS,
+        component: PlanInvestigacionProgramasComponent,
         canDeactivate: [FragmentGuard]
       },
     ]

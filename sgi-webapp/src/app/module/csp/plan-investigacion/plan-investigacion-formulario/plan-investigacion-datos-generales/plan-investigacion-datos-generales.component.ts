@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormFragmentComponent } from '@core/component/fragment.component';
-import { IPlan } from '@core/models/csp/tipos-configuracion';
+import { IPrograma } from '@core/models/csp/programa';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { NGXLogger } from 'ngx-logger';
@@ -11,7 +11,7 @@ import { PlanInvestigacionActionService } from '../../plan-investigacion.action.
   templateUrl: './plan-investigacion-datos-generales.component.html',
   styleUrls: ['./plan-investigacion-datos-generales.component.scss']
 })
-export class PlanInvestigacionDatosGeneralesComponent extends FormFragmentComponent<IPlan> {
+export class PlanInvestigacionDatosGeneralesComponent extends FormFragmentComponent<IPrograma> {
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;

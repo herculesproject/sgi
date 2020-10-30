@@ -3,44 +3,16 @@ import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@env';
 import { SgiRestService, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http/';
-import { Observable, of } from 'rxjs';
-import { IObjectTree } from '@core/models/csp/object-tree';
 import { IPrograma } from '@core/models/csp/programa';
-
-
-
-const programasTree: IObjectTree[] = [
-  {
-    nombre: 'Plan nacional 2020-2023',
-    children: [
-      {
-        nombre: 'Programa 1',
-        children: [
-          { nombre: 'Modalidad K' }
-        ]
-      },
-      { nombre: 'Programa 2' },
-    ]
-  }, {
-    nombre: 'Plan Propio',
-    children: [
-      {
-        nombre: 'Programa ayudas propias',
-        children: [
-          { nombre: 'Predoctorales' }
-        ]
-      }
-
-    ]
-  },
-];
+import { Observable, of } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProgramaService extends SgiRestService<number, IPrograma> {
 
-  private static readonly MAPPING = '/programa';
+  private static readonly MAPPING = '/programas';
 
   constructor(logger: NGXLogger, protected http: HttpClient) {
     super(
@@ -51,13 +23,31 @@ export class ProgramaService extends SgiRestService<number, IPrograma> {
     );
   }
 
+  findAllPlan(options?: SgiRestFindOptions): Observable<SgiRestListResult<IPrograma>> {
+    this.logger.debug(ProgramaService.name, `${this.findAllPlan.name}(`, '-', 'start');
+    return this.find<IPrograma, IPrograma>(`${this.endpointUrl}/plan`, options).pipe(
+      tap(() => this.logger.debug(ProgramaService.name, `${this.findAllPlan.name}()`, '-', 'end'))
+    );
+  }
 
-  findProgramasTree(): Observable<SgiRestListResult<IObjectTree>> {
-    this.logger.debug(ProgramaService.name, `findProgramasTree()`, '-', 'START');
-    return of({
-      page: null,
-      total: programasTree.length,
-      items: programasTree
-    } as SgiRestListResult<IObjectTree>);
+  findAllHijosPrograma(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IPrograma>> {
+    this.logger.debug(ProgramaService.name, `${this.findAllHijosPrograma.name}(`, '-', 'start');
+    return this.find<IPrograma, IPrograma>(`${this.endpointUrl}/${id}/hijos`, options).pipe(
+      tap(() => this.logger.debug(ProgramaService.name, `${this.findAllHijosPrograma.name}()`, '-', 'end'))
+    );
+  }
+
+  deactivate(id: number): Observable<void> {
+    this.logger.debug(ProgramaService.name, `${this.deactivate.name}(`, '-', 'start');
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/desactivar`, undefined).pipe(
+      tap(() => this.logger.debug(ProgramaService.name, `${this.deactivate.name}()`, '-', 'end'))
+    );
+  }
+
+  activate(id: number): Observable<void> {
+    this.logger.debug(ProgramaService.name, `${this.activate.name}(`, '-', 'start');
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/reactivar`, undefined).pipe(
+      tap(() => this.logger.debug(ProgramaService.name, `${this.activate.name}()`, '-', 'end'))
+    );
   }
 }

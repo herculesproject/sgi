@@ -33,21 +33,16 @@
           <mat-label>{{'csp.convocatoria.entidades-convocantes.plan' | translate}}</mat-label>
           <input type="text" placeholder="{{'csp.convocatoria.entidades-convocantes.plan' | translate}}"
             arial-label="Number" matInput formControlName="plan" [matAutocomplete]="auto">
-          <mat-autocomplete #auto="matAutocomplete" [displayWith]="getPlan">
-
-            <mat-option *ngFor="let plan of planes | async" [value]="plan">
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let plan of []" [value]="plan">
               {{ plan.nombre}}
             </mat-option>
           </mat-autocomplete>
-
         </mat-form-field>
       </div>
 
-
       <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
         [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
-
-
         <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
           [fxFlexOrder]="fxFlexProperties.order">
 

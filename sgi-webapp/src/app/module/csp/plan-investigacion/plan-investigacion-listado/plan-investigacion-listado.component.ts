@@ -2,17 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
-import { IPlan } from '@core/models/csp/tipos-configuracion';
+import { IPrograma } from '@core/models/csp/programa';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
-import { PlanService } from '@core/services/csp/plan.service';
+import { ProgramaService } from '@core/services/csp/programa.service';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
-import { catchError, switchMap, tap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 const MSG_ERROR = marker('csp.plan.investigacion.listado.error');
 const MSG_BUTTON_NEW = marker('footer.csp.plan.investigacion.crear');
@@ -28,18 +28,18 @@ const MSG_ERROR_REACTIVE = marker('csp.plan.investigacion.reactivar.error');
   templateUrl: './plan-investigacion-listado.component.html',
   styleUrls: ['./plan-investigacion-listado.component.scss']
 })
-export class PlanInvestigacionListadoComponent extends AbstractTablePaginationComponent<IPlan> implements OnInit {
+export class PlanInvestigacionListadoComponent extends AbstractTablePaginationComponent<IPrograma> implements OnInit {
   ROUTE_NAMES = ROUTE_NAMES;
   textoCrear = MSG_BUTTON_NEW;
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
-  plan$: Observable<IPlan[]>;
+  programas$: Observable<IPrograma[]>;
 
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
-    private readonly planService: PlanService,
+    private readonly programaService: ProgramaService,
     private readonly dialogService: DialogService
   ) {
     super(logger, snackBarService, MSG_ERROR);
@@ -76,9 +76,9 @@ export class PlanInvestigacionListadoComponent extends AbstractTablePaginationCo
     this.logger.debug(PlanInvestigacionListadoComponent.name, `${this.onClearFilters.name}()`, 'end');
   }
 
-  protected createObservable(): Observable<SgiRestListResult<IPlan>> {
+  protected createObservable(): Observable<SgiRestListResult<IPrograma>> {
     this.logger.debug(PlanInvestigacionListadoComponent.name, `${this.createObservable.name}()`, 'start');
-    const observable$ = this.planService.findTodos(this.getFindOptions());
+    const observable$ = this.programaService.findAllPlan(this.getFindOptions());
     this.logger.debug(PlanInvestigacionListadoComponent.name, `${this.createObservable.name}()`, 'end');
     return observable$;
   }
@@ -91,7 +91,7 @@ export class PlanInvestigacionListadoComponent extends AbstractTablePaginationCo
 
   protected loadTable(reset?: boolean): void {
     this.logger.debug(PlanInvestigacionListadoComponent.name, `${this.loadTable.name}(${reset})`, 'start');
-    this.plan$ = this.getObservableLoadTable(reset);
+    this.programas$ = this.getObservableLoadTable(reset);
     this.logger.debug(PlanInvestigacionListadoComponent.name, `${this.loadTable.name}(${reset})`, 'end');
   }
 
@@ -110,26 +110,25 @@ export class PlanInvestigacionListadoComponent extends AbstractTablePaginationCo
    * Desactivar plan
    * @param plan plan
    */
-  deactivatePlan(plan: IPlan): void {
-    this.logger.debug(PlanInvestigacionListadoComponent.name, `${this.deactivatePlan.name}()`, 'start');
+  desactivePlan(plan: IPrograma): void {
+    this.logger.debug(PlanInvestigacionListadoComponent.name, `${this.desactivePlan.name}()`, 'start');
     const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE).pipe(
       switchMap((accept) => {
         if (accept) {
-          return this.planService.deleteById(plan.id);
-        } else {
-          return of();
+          return this.programaService.deactivate(plan.id);
         }
+        return of();
       })).subscribe(
         () => {
           this.snackBarService.showSuccess(MSG_SUCCESS_DEACTIVATE);
           this.loadTable();
           this.logger.debug(PlanInvestigacionListadoComponent.name,
-            `${this.deactivatePlan.name}(plan: ${plan})`, 'end');
+            `${this.desactivePlan.name}(plan: ${plan})`, 'end');
         },
         () => {
           this.snackBarService.showError(MSG_ERROR_DEACTIVATE);
           this.logger.error(PlanInvestigacionListadoComponent.name,
-            `${this.deactivatePlan.name}(plan: ${plan})`, 'error');
+            `${this.desactivePlan.name}(plan: ${plan})`, 'error');
         }
       );
     this.suscripciones.push(subcription);
@@ -139,7 +138,7 @@ export class PlanInvestigacionListadoComponent extends AbstractTablePaginationCo
    * Activamos un plan desactivado
    * @param plan plan
    */
-  activePlan(plan: IPlan): void {
+  activePlan(plan: IPrograma): void {
     this.logger.debug(PlanInvestigacionListadoComponent.name,
       `${this.activePlan.name}(plan: ${plan})`, 'start');
 
@@ -147,7 +146,7 @@ export class PlanInvestigacionListadoComponent extends AbstractTablePaginationCo
       switchMap((accept) => {
         if (accept) {
           plan.activo = true;
-          return this.planService.update(plan.id, plan);
+          return this.programaService.activate(plan.id);
         } else {
           return of();
         }

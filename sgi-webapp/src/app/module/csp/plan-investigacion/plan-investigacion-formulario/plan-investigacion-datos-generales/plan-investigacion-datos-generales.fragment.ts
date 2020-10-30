@@ -1,27 +1,24 @@
 import { FormControl, FormGroup } from '@angular/forms';
-import { IPlan } from '@core/models/csp/tipos-configuracion';
+import { IPrograma } from '@core/models/csp/programa';
 import { FormFragment } from '@core/services/action-service';
-import { PlanService } from '@core/services/csp/plan.service';
-import { FormGroupUtil } from '@core/utils/form-group-util';
+import { ProgramaService } from '@core/services/csp/programa.service';
 import { NGXLogger } from 'ngx-logger';
 import { EMPTY, Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { PlanInvestigacionActionService } from '../../plan-investigacion.action.service';
 
-export class PlanInvestigacionDatosGeneralesFragment extends FormFragment<IPlan> {
+export class PlanInvestigacionDatosGeneralesFragment extends FormFragment<IPrograma> {
 
-  private plan: IPlan;
+  programas: IPrograma;
 
   constructor(
     private readonly logger: NGXLogger,
     key: number,
-    private planService: PlanService,
-    private actionService: PlanInvestigacionActionService
+    private planService: ProgramaService
   ) {
     super(key);
     this.logger.debug(PlanInvestigacionDatosGeneralesFragment.name, 'constructor()', 'start');
-    this.plan = {} as IPlan;
-    this.plan.activo = true;
+    this.programas = {} as IPrograma;
+    this.programas.activo = true;
     this.logger.debug(PlanInvestigacionDatosGeneralesFragment.name, 'constructor()', 'end');
   }
 
@@ -38,22 +35,22 @@ export class PlanInvestigacionDatosGeneralesFragment extends FormFragment<IPlan>
     return fb;
   }
 
-  protected buildPatch(planes: IPlan): { [key: string]: any; } {
+  protected buildPatch(programa: IPrograma): { [key: string]: any; } {
     this.logger.debug(PlanInvestigacionDatosGeneralesFragment.name,
-      `${this.buildPatch.name}(planes: ${planes})`, 'start');
+      `${this.buildPatch.name}(programa: ${programa})`, 'start');
     const result = {
-      id: planes.id,
-      activo: planes.activo,
-      descripcion: planes.descripcion,
-      nombre: planes.nombre
-    } as IPlan;
-    this.plan = planes;
+      id: programa.id,
+      activo: programa.activo,
+      descripcion: programa.descripcion,
+      nombre: programa.nombre
+    } as IPrograma;
+    this.programas = programa;
     this.logger.debug(PlanInvestigacionDatosGeneralesFragment.name,
-      `${this.buildPatch.name}(planes: ${planes})`, 'end');
+      `${this.buildPatch.name}(programa: ${programa})`, 'end');
     return result;
   }
 
-  protected initializer(key: number): Observable<IPlan> {
+  protected initializer(key: number): Observable<IPrograma> {
     this.logger.debug(PlanInvestigacionDatosGeneralesFragment.name,
       `${this.initializer.name}(key: ${key})`, 'start');
     return this.planService.findById(key).pipe(
@@ -69,23 +66,23 @@ export class PlanInvestigacionDatosGeneralesFragment extends FormFragment<IPlan>
     );
   }
 
-  getValue(): IPlan {
+  getValue(): IPrograma {
     this.logger.debug(PlanInvestigacionDatosGeneralesFragment.name, `${this.getValue.name}()`, 'start');
     const form = this.getFormGroup().value;
-    const planes = this.plan;
-    planes.nombre = form.nombre;
-    planes.descripcion = form.descripcion;
-    planes.activo = form.activo;
+    const programa = this.programas;
+    programa.nombre = form.nombre;
+    programa.descripcion = form.descripcion;
+    programa.activo = form.activo;
     this.logger.debug(PlanInvestigacionDatosGeneralesFragment.name, `${this.getValue.name}()`, 'end');
-    return planes;
+    return programa;
   }
 
   saveOrUpdate(): Observable<number> {
     this.logger.debug(PlanInvestigacionDatosGeneralesFragment.name, `${this.saveOrUpdate.name}()`, 'start');
-    const planes = this.getValue();
-    const observable$ = this.isEdit() ? this.update(planes) : this.create(planes);
+    const programas = this.getValue();
+    const observable$ = this.isEdit() ? this.update(programas) : this.create(programas);
     return observable$.pipe(
-      map((result: IPlan) => {
+      map((result: IPrograma) => {
         return result.id;
       }),
       tap(() => this.logger.debug(PlanInvestigacionDatosGeneralesFragment.name,
@@ -93,26 +90,26 @@ export class PlanInvestigacionDatosGeneralesFragment extends FormFragment<IPlan>
     );
   }
 
-  private create(planes: IPlan): Observable<IPlan> {
+  private create(programa: IPrograma): Observable<IPrograma> {
     this.logger.debug(PlanInvestigacionDatosGeneralesFragment.name,
-      `${this.create.name}(planes: ${planes})`, 'start');
-    return this.planService.create(planes).pipe(
-      tap((result: IPlan) => {
-        this.plan = result;
+      `${this.create.name}(programa: ${programa})`, 'start');
+    return this.planService.create(programa).pipe(
+      tap((result: IPrograma) => {
+        this.programas = result;
         this.logger.debug(PlanInvestigacionDatosGeneralesFragment.name,
-          `${this.create.name}(planes: ${planes})`, 'end');
+          `${this.create.name}(programa: ${programa})`, 'end');
       })
     );
   }
 
-  private update(planes: IPlan): Observable<IPlan> {
+  private update(programa: IPrograma): Observable<IPrograma> {
     this.logger.debug(PlanInvestigacionDatosGeneralesFragment.name,
-      `${this.update.name}(planes: ${planes})`, 'start');
-    return this.planService.update(planes.id, planes).pipe(
-      tap((result: IPlan) => {
-        this.plan = result;
+      `${this.update.name}(programa: ${programa})`, 'start');
+    return this.planService.update(programa.id, programa).pipe(
+      tap((result: IPrograma) => {
+        this.programas = result;
         this.logger.debug(PlanInvestigacionDatosGeneralesFragment.name,
-          `${this.update.name}(planes: ${planes})`, 'end');
+          `${this.update.name}(programa: ${programa})`, 'end');
       })
     );
   }

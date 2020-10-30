@@ -138,11 +138,17 @@ mat-form-field {
   cursor: pointer;
   font-weight: bold;
   color: map-get($custom-colors, black);
+  .underline{
+    text-decoration: underline;
+  }
 }
 
 .separation-button {
   padding-top: 15px;
   padding-bottom: 15px;
+  button{
+    margin-right: 10px;
+  }
   // Boton verde terciario
   .mat-three {
     background-color: map-get($custom-colors, three-buton);
@@ -152,6 +158,20 @@ mat-form-field {
     text-align: left;
     padding-right: 35px;
     min-width: 150px;
+  }
+  // Boton danger
+  .mat-danger {
+    background-color: map-get($palette-warn, 100);
+    color: map-get($palette-grease, 900);
+    font-size: mat-font-size($custom-typography, body-1);
+    border-radius: 20px;
+    text-align: left;
+    padding-right: 35px;
+    min-width: 150px;
+    mat-icon{
+      color: map-get($palette-warn, 500);
+      font-weight: bold;
+    }
   }
   // Boton primario con border y posibilidad icono
   .mat-four {

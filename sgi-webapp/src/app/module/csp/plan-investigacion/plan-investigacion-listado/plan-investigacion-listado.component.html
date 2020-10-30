@@ -36,43 +36,43 @@
   <!-- FIN Buscador de planes de investigación -->
 
   <!-- Listado de planes de investigación -->
-  <table mat-table class="mat-elevation-z8 table-unidad" [dataSource]="plan$ | async" matSort matSortActive="id"
+  <table mat-table class="mat-elevation-z8 table-unidad" [dataSource]="programas$ | async" matSort matSortActive="id"
     matSortDirection="asc" matSortDisableClear>
     <!-- Nombre -->
     <ng-container matColumnDef="nombre">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.plan.investigacion.nombre' | translate}}
       </th>
-      <td mat-cell *matCellDef="let plan">{{plan.nombre}}</td>
+      <td mat-cell *matCellDef="let programa">{{programa.nombre}}</td>
     </ng-container>
 
     <!-- Descripción -->
     <ng-container matColumnDef="descripcion">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.plan.investigacion.descripcion' | translate}}
       </th>
-      <td mat-cell *matCellDef="let plan">{{plan.descripcion}}</td>
+      <td mat-cell *matCellDef="let programa">{{programa.descripcion}}</td>
     </ng-container>
 
     <!-- Activo -->
     <ng-container matColumnDef="activo">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.plan.investigacion.activo' | translate}}
       </th>
-      <td mat-cell *matCellDef="let plan">{{(plan.activo ? 'label.si' : 'label.no') | translate}}
+      <td mat-cell *matCellDef="let programa">{{(programa.activo ? 'label.si' : 'label.no') | translate}}
       </td>
     </ng-container>
 
     <!-- Acciones -->
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> {{'columna.acciones' | translate}} </th>
-      <td mat-cell *matCellDef="let plan">
-        <button *ngIf="plan.activo === true" mat-button matTooltip="{{'botones.editar' | translate}}"
-          [routerLink]="[plan.id]">
+      <td mat-cell *matCellDef="let programa">
+        <button *ngIf="programa.activo === true" mat-button matTooltip="{{'botones.editar' | translate}}"
+          [routerLink]="[programa.id]">
           <mat-icon color="primary">border_color</mat-icon>
         </button>
-        <button *ngIf="plan.activo === true" mat-button matTooltip="{{'botones.desactivar' | translate}}"
-          (click)="deactivatePlan(plan)">
+        <button *ngIf="programa.activo === true" mat-button matTooltip="{{'botones.desactivar' | translate}}"
+          (click)="desactivePlan(programa)">
           <mat-icon color="warn">highlight_off</mat-icon>
         </button>
-        <button *ngIf="plan.activo === false" (click)="activePlan(plan)" mat-button
+        <button *ngIf="programa.activo === false" (click)="activePlan(programa)" mat-button
           matTooltip="{{'botones.reactivar' | translate}}">
           <mat-icon color="accent">add_circle_outline</mat-icon>
         </button>

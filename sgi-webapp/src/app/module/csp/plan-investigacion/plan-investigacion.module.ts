@@ -10,13 +10,15 @@ import { PlanInvestigacionCrearComponent } from './plan-investigacion-crear/plan
 import { PlanInvestigacionEditarComponent } from './plan-investigacion-editar/plan-investigacion-editar.component';
 import { PlanInvestigacionListadoComponent } from './plan-investigacion-listado/plan-investigacion-listado.component';
 import { PlanInvestigacionDatosGeneralesComponent } from './plan-investigacion-formulario/plan-investigacion-datos-generales/plan-investigacion-datos-generales.component';
+import { PlanInvestigacionProgramasComponent } from './plan-investigacion-formulario/plan-investigacion-programas/plan-investigacion-programas.component';
 
 @NgModule({
   declarations: [
     PlanInvestigacionCrearComponent,
     PlanInvestigacionEditarComponent,
     PlanInvestigacionListadoComponent,
-    PlanInvestigacionDatosGeneralesComponent],
+    PlanInvestigacionDatosGeneralesComponent,
+    PlanInvestigacionProgramasComponent],
   imports: [
     CommonModule,
     SharedModule,

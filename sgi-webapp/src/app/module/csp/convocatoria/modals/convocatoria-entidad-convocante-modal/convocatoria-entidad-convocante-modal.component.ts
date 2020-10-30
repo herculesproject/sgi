@@ -6,7 +6,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { Subscription, Observable, of } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { SgiRestListResult } from '@sgi/framework/http/types';
 import { startWith, map } from 'rxjs/operators';
 
@@ -15,8 +15,6 @@ import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree'
 import { IEntidadConvocante } from '@core/models/csp/entidad-convocante';
 import { IObjectTree } from '@core/models/csp/object-tree';
 import { ProgramaService } from '@core/services/csp/programa.service';
-import { PlanService } from '@core/services/csp/plan.service';
-import { IPlan } from '@core/models/csp/tipos-configuracion';
 
 const MSG_ERROR_INIT = marker('csp.convocatoria.entidad.convocante.error.cargar');
 
@@ -59,17 +57,12 @@ export class ConvocatoriaEntidadConvocanteaModalComponent implements OnInit {
 
   suscripciones: Subscription[] = [];
 
-  planFiltered: IPlan[];
-  planes: Observable<IPlan[]>;
-
-
   constructor(
     private readonly logger: NGXLogger,
     public readonly matDialogRef: MatDialogRef<ConvocatoriaEntidadConvocanteaModalComponent>,
     @Inject(MAT_DIALOG_DATA) public entidadConvocante: IEntidadConvocante,
     private readonly snackBarService: SnackBarService,
-    private readonly programaService: ProgramaService,
-    private readonly planService: PlanService) {
+    private readonly programaService: ProgramaService) {
 
     this.logger.debug(ConvocatoriaEntidadConvocanteaModalComponent.name, 'constructor()', 'start');
     this.fxFlexProperties = new FxFlexProperties();
@@ -95,41 +88,10 @@ export class ConvocatoriaEntidadConvocanteaModalComponent implements OnInit {
 
     this.initFormGroup();
 
-    this.loadPlanes();
-
     this.loadProgramas();
 
     this.logger.debug(ConvocatoriaEntidadConvocanteaModalComponent.name, 'ngOnInit()', 'end');
   }
-
-
-  /**
-   * Carga los datos de áreas temáticas.
-   */
-  loadPlanes() {
-    this.logger.debug(ConvocatoriaEntidadConvocanteaModalComponent.name, 'loadPlanes()', 'start');
-    this.suscripciones.push(
-      this.planService.findTodos().subscribe(
-        (res: SgiRestListResult<IPlan>) => {
-          this.planFiltered = res.items;
-
-          this.planes = this.formGroup.controls.plan.valueChanges
-            .pipe(
-
-              startWith(''),
-              map(value => this.filtroPlan(value))
-            );
-          this.logger.debug(ConvocatoriaEntidadConvocanteaModalComponent.name, 'loadPlanes()', 'end');
-        },
-        () => {
-          this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.debug(ConvocatoriaEntidadConvocanteaModalComponent.name, 'loadPlanes()', 'end');
-        }
-      )
-    );
-    this.logger.debug(ConvocatoriaEntidadConvocanteaModalComponent.name, 'loadPlanes()', 'end');
-  }
-
 
   /**
    * Carga los datos de programas
@@ -137,7 +99,7 @@ export class ConvocatoriaEntidadConvocanteaModalComponent implements OnInit {
   loadProgramas() {
     this.logger.debug(ConvocatoriaEntidadConvocanteaModalComponent.name, 'loadProgramas()', 'start');
     this.suscripciones.push(
-      this.programaService.findProgramasTree().subscribe(
+      this.programaService.findAll().subscribe(
         (res: SgiRestListResult<IObjectTree>) => {
           this.dataSource.data = res.items;
 
@@ -163,32 +125,8 @@ export class ConvocatoriaEntidadConvocanteaModalComponent implements OnInit {
       plan: new FormControl(this.entidadConvocante?.plan),
       item: new FormControl(this.entidadConvocante?.itemPrograma)
     });
-
-
     this.logger.debug(ConvocatoriaEntidadConvocanteaModalComponent.name, 'initFormGroup()', 'end');
   }
-
-
-  /**
-   * Devuelve el nombre de un plan.
-   * @param plan plan.
-   * @returns nombre de un plan.
-   */
-  getPlan(plan?: IPlan): string | undefined {
-    return typeof plan === 'string' ? plan : plan?.nombre;
-  }
-
-  /**
-   * Filtra la lista devuelta por el servicio.
-   *
-   * @param value del input para autocompletar
-   */
-  filtroPlan(value: string): IPlan[] {
-    const filterValue = value.toString().toLowerCase();
-    return this.planFiltered.filter(plan => plan.nombre.toLowerCase().includes(filterValue));
-  }
-
-
 
   /**
    * Cierra la ventana modal y devuelve la entidad convocante modificado o creado.
