@@ -53,6 +53,8 @@
           [routerLinkActive]="['is-active']">{{'menu.principal.csp.modelo.ejecucion' | translate}}</a>
         <a mat-list-item *sgiHasAuthorityForAnyUO="'CSP-PI-C'" [routerLink]="[CSP_ROUTE_NAMES.PLANES_INVESTIGACION]"
           [routerLinkActive]="['is-active']">{{'menu.principal.csp.planes.investigacion' | translate}}</a>
+        <a mat-list-item [routerLink]="[CSP_ROUTE_NAMES.CONCEPTO_GASTO]"
+          [routerLinkActive]="['is-active']">{{'menu.principal.csp.concepto.gasto' | translate}}</a>
       </div>
     </mat-expansion-panel>
 

@@ -6,5 +6,6 @@ export const CSP_ROUTE_NAMES = {
   TIPO_HITO: 'tipo-hitos',
   TIPO_FASE: 'tipo-fases',
   MODELO_EJECUCION: 'modelo-ejecuciones',
-  PLANES_INVESTIGACION: 'planes-investigacion'
+  PLANES_INVESTIGACION: 'planes-investigacion',
+  CONCEPTO_GASTO: 'concepto-gasto'
 };

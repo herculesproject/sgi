@@ -16,6 +16,7 @@ const MSG_TIPO_FINALIDAD_TITLE = marker('menu.principal.csp.tipo.finalidad');
 const MSG_TIPO_DOCUMENTO_TITLE = marker('menu.principal.csp.tipo.documento');
 const MSG_MODELO_EJECUCION_TITLE = marker('menu.principal.csp.modelo.ejecucion');
 const MSG_PLAN_INVESTIGACION_TITLE = marker('menu.principal.csp.plan.investigacion');
+const MSG_GESTION_CONCEPTO_GASTO_TITLE = marker('menu.principal.csp.concepto.gasto');
 
 const routes: SgiRoutes = [
   {
@@ -119,7 +120,19 @@ const routes: SgiRoutes = [
           ),
         canActivate: [SgiAuthGuard],
         data: {
-          title: MSG_PLAN_INVESTIGACION_TITLE,
+          title: MSG_PLAN_INVESTIGACION_TITLE
+
+        }
+      },
+      {
+        path: CSP_ROUTE_NAMES.CONCEPTO_GASTO,
+        loadChildren: () =>
+          import('./concepto-gasto/concepto-gasto.module').then(
+            (m) => m.ConceptoGastoModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_GESTION_CONCEPTO_GASTO_TITLE,
         }
       },
       { path: '**', component: null }
