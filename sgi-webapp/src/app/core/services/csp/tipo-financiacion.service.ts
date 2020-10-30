@@ -5,7 +5,7 @@ import { environment } from '@env';
 import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -33,4 +33,30 @@ export class TipoFinanciacionService extends SgiRestService<number, ITipoFinanci
       tap(() => this.logger.debug(TipoFinanciacionService.name, `${this.findTodos.name}()`, '-', 'END'))
     );
   }
+
+
+  /**
+   * Desactiva un tipo de financiacion
+   * @param options opciones de búsqueda.
+   */
+  desactivar(id: number): Observable<void> {
+    this.logger.debug(TipoFinanciacionService.name, `${this.desactivar.name}(${id}`, '-', 'start');
+    return this.http.patch(`${this.endpointUrl}/${id}/desactivar`, { id }).pipe(
+      map(() => this.logger.debug(TipoFinanciacionService.name, `${this.desactivar.name}(${id}`, '-', 'end'))
+    );
+  }
+
+  /**
+   * Reactivar fuentes de financiación
+   * @param options opciones de búsqueda.
+   */
+  reactivar(id: number): Observable<void> {
+    this.logger.debug(TipoFinanciacionService.name, `${this.reactivar.name}(${id}`, '-', 'start');
+    return this.http.patch(`${this.endpointUrl}/${id}/reactivar`, { id }).pipe(
+      map(() => this.logger.debug(TipoFinanciacionService.name, `${this.reactivar.name}(${id}`, '-', 'end'))
+    );
+  }
+
+
 }
+

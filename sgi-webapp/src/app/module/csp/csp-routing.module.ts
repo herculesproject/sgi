@@ -17,6 +17,8 @@ const MSG_TIPO_DOCUMENTO_TITLE = marker('menu.principal.csp.tipo.documento');
 const MSG_MODELO_EJECUCION_TITLE = marker('menu.principal.csp.modelo.ejecucion');
 const MSG_PLAN_INVESTIGACION_TITLE = marker('menu.principal.csp.plan.investigacion');
 const MSG_GESTION_CONCEPTO_GASTO_TITLE = marker('menu.principal.csp.concepto.gasto');
+const MSG_TIPO_FINANCIACION_TITLE = marker('menu.principal.csp.tipo.financiacion');
+
 
 const routes: SgiRoutes = [
   {
@@ -133,6 +135,17 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_GESTION_CONCEPTO_GASTO_TITLE,
+        }
+      },
+      {
+        path: CSP_ROUTE_NAMES.TIPO_FINANCIACION,
+        loadChildren: () =>
+          import('./tipo-financiacion/tipo-financiacion.module').then(
+            (m) => m.TipoFinanciacionModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_TIPO_FINANCIACION_TITLE,
         }
       },
       { path: '**', component: null }
