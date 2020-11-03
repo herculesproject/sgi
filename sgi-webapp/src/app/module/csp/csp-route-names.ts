@@ -1,5 +1,6 @@
 export const CSP_ROUTE_NAMES = {
   CONVOCATORIA: 'convocatoria',
+  FUENTE_FINANCIACION: 'fuente-financiacion',
   TIPO_DOCUMENTO: 'tipo-documentos',
   TIPO_FINALIDAD: 'tipo-finalidades',
   TIPO_ENLACE: 'tipo-enlaces',

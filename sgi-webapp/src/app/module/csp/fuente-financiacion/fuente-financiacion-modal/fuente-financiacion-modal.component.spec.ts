@@ -4,38 +4,23 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ITipoEnlace } from '@core/models/csp/tipos-configuracion';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { NGXLogger } from 'ngx-logger';
 
-import { ComentarioCrearModalComponent } from './comentario-crear-modal.component';
-import { IComite } from '@core/models/eti/comite';
-import { TipoEvaluacion } from '@core/models/eti/tipo-evaluacion';
-import { ActivatedRoute } from '@angular/router';
-import { FormularioService } from '@core/services/eti/formulario.service';
+import { FuenteFinanciacionModalComponent } from './fuente-financiacion-modal.component';
 
-describe('ComentarioCrearModalComponent', () => {
-  let component: ComentarioCrearModalComponent;
-  let fixture: ComponentFixture<ComentarioCrearModalComponent>;
+describe('FuenteFinanciacionModalComponent', () => {
+  let component: FuenteFinanciacionModalComponent;
+  let fixture: ComponentFixture<FuenteFinanciacionModalComponent>;
 
   beforeEach(async(() => {
-
-    const snapshotData = {
-      tipoEvaluacion: {
-        id: 1
-      } as TipoEvaluacion,
-      memoria: {
-        id: 1,
-        comite: {
-          id: 1
-        } as IComite,
-      }
-    };
-
     TestBed.configureTestingModule({
-      declarations: [ComentarioCrearModalComponent],
+      declarations: [
+        FuenteFinanciacionModalComponent
+      ],
       imports: [
         BrowserAnimationsModule,
         MaterialDesignModule,
@@ -43,24 +28,20 @@ describe('ComentarioCrearModalComponent', () => {
         TestUtils.getIdiomas(),
         RouterTestingModule,
         FormsModule,
-        ReactiveFormsModule,
-        SgiAuthModule
+        ReactiveFormsModule
       ],
       providers: [
         { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: snapshotData },
-        { provide: MAT_DIALOG_DATA, useValue: snapshotData },
-        { provide: ActivatedRoute, useValue: { snapshot: { data: snapshotData } } },
-        FormularioService,
-        SgiAuthService
-      ],
+        { provide: MatDialogRef, useValue: {} as ITipoEnlace },
+        { provide: MAT_DIALOG_DATA, useValue: {} as ITipoEnlace },
+      ]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ComentarioCrearModalComponent);
+    fixture = TestBed.createComponent(FuenteFinanciacionModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

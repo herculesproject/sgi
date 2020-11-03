@@ -26,6 +26,7 @@ describe('MemoriaDocumentacionComponent', () => {
   let fixture: ComponentFixture<MemoriaDocumentacionComponent>;
 
   const snapshotData = {
+    id: 1,
     memoria: {
       tipoMemoria: {
         id: 1

@@ -16,6 +16,7 @@ import { ComentarioEditarModalComponent } from './comentario-editar-modal.compon
 import { TipoEvaluacion } from '@core/models/eti/tipo-evaluacion';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 import { IComite } from '@core/models/eti/comite';
+import { ActivatedRoute } from '@angular/router';
 
 describe('ComentarioEditarModalComponent', () => {
   let component: ComentarioEditarModalComponent;
@@ -59,6 +60,7 @@ describe('ComentarioEditarModalComponent', () => {
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
         { provide: MatDialogRef, useValue: snapshotData },
         { provide: MAT_DIALOG_DATA, useValue: snapshotData },
+        { provide: ActivatedRoute, useValue: { snapshot: { data: snapshotData } } },
       ],
     })
       .compileComponents();
