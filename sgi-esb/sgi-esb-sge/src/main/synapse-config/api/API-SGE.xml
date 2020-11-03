@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/sge" name="API-SGE" publishSwagger="/_system/governance/swagger_files/sge-swagger.yaml" version="1.0.0" version-type="context" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET" url-mapping="/codigoeconomicos/gastos">
+        <inSequence>
+            <!--This is generated API skeleton.-->
+            <!--Business Logic Goes Here-->
+            <payloadFactory media-type="json">
+                <format>[
+    {
+        "codigoEconomicoRef": "cod-eco-011",
+        "codigo": "gasto-001",
+        "fechaInicio": "2020-10-01",
+        "fechaFin": "2020-11-01"
+    },
+    {
+        "codigoEconomicoRef": "cod-eco-012",
+        "codigo": "gasto-002",
+        "fechaInicio": "2020-11-01",
+        "fechaFin": "2020-12-01"
+    },
+    {
+        "codigoEconomicoRef": "cod-eco-013",
+        "codigo": "gasto-003",
+        "fechaInicio": "2020-12-01",
+        "fechaFin": "2020-12-01"
+    },
+    {
+        "codigoEconomicoRef": "cod-eco-014",
+        "codigo": "gasto-004",
+        "fechaInicio": "2020-12-01",
+        "fechaFin": "2021-12-01"
+    },
+    {
+        "codigoEconomicoRef": "cod-eco-015",
+        "codigo": "gasto-005",
+        "fechaInicio": "2020-12-15",
+        "fechaFin": "2021-12-15"
+    }
+]</format>
+                <args/>
+            </payloadFactory>
+            <send>
+                <endpoint key="sge-service"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <respond/>
+        </outSequence>
+        <faultSequence>
+            <switch source="get-property('ERROR_CODE')">
+                <case regex="101503|101504">
+                    <payloadFactory media-type="json">
+                        <format>[
+    {
+        "codigoEconomicoRef": "cod-eco-011",
+        "codigo": "gasto-001",
+        "fechaInicio": "2020-10-01",
+        "fechaFin": "2020-11-01"
+    },
+    {
+        "codigoEconomicoRef": "cod-eco-012",
+        "codigo": "gasto-002",
+        "fechaInicio": "2020-11-01",
+        "fechaFin": "2020-12-01"
+    },
+    {
+        "codigoEconomicoRef": "cod-eco-013",
+        "codigo": "gasto-003",
+        "fechaInicio": "2020-12-01",
+        "fechaFin": "2020-12-01"
+    },
+    {
+        "codigoEconomicoRef": "cod-eco-014",
+        "codigo": "gasto-004",
+        "fechaInicio": "2020-12-01",
+        "fechaFin": "2021-12-01"
+    },
+    {
+        "codigoEconomicoRef": "cod-eco-015",
+        "codigo": "gasto-005",
+        "fechaInicio": "2020-12-15",
+        "fechaFin": "2021-12-15"
+    }
+]</format>
+                        <args/>
+                    </payloadFactory>
+                </case>
+                <default/>
+            </switch>
+            <respond/>
+        </faultSequence>
+    </resource>
+    <resource methods="GET" url-mapping="/codigoeconomicos/ingresos">
+        <inSequence>
+            <!--This is generated API skeleton.-->
+            <!--Business Logic Goes Here-->
+            <payloadFactory media-type="json">
+                <format>[
+    {
+        "codigoEconomicoRef": "cod-eco-001",
+        "codigo": "ingreso-001",
+        "fechaInicio": "2020-10-01",
+        "fechaFin": "2020-11-01"
+    },
+    {
+        "codigoEconomicoRef": "cod-eco-002",
+        "codigo": "ingreso-002",
+        "fechaInicio": "2020-11-01",
+        "fechaFin": "2020-12-01"
+    },
+    {
+        "codigoEconomicoRef": "cod-eco-003",
+        "codigo": "ingreso-003",
+        "fechaInicio": "2020-12-01",
+        "fechaFin": "2020-12-01"
+    },
+    {
+        "codigoEconomicoRef": "cod-eco-004",
+        "codigo": "ingreso-004",
+        "fechaInicio": "2020-12-01",
+        "fechaFin": "2021-12-01"
+    },
+    {
+        "codigoEconomicoRef": "cod-eco-005",
+        "codigo": "ingreso-005",
+        "fechaInicio": "2020-12-15",
+        "fechaFin": "2021-12-15"
+    }
+]</format>
+                <args/>
+            </payloadFactory>
+            <send>
+                <endpoint key="sge-service"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <respond/>
+        </outSequence>
+        <faultSequence>
+            <switch source="get-property('ERROR_CODE')">
+                <case regex="101503|101504">
+                    <payloadFactory media-type="json">
+                        <format>[
+    {
+        "codigoEconomicoRef": "cod-eco-001",
+        "codigo": "ingreso-001",
+        "fechaInicio": "2020-10-01",
+        "fechaFin": "2020-11-01"
+    },
+    {
+        "codigoEconomicoRef": "cod-eco-002",
+        "codigo": "ingreso-002",
+        "fechaInicio": "2020-11-01",
+        "fechaFin": "2020-12-01"
+    },
+    {
+        "codigoEconomicoRef": "cod-eco-003",
+        "codigo": "ingreso-003",
+        "fechaInicio": "2020-12-01",
+        "fechaFin": "2020-12-01"
+    },
+    {
+        "codigoEconomicoRef": "cod-eco-004",
+        "codigo": "ingreso-004",
+        "fechaInicio": "2020-12-01",
+        "fechaFin": "2021-12-01"
+    },
+    {
+        "codigoEconomicoRef": "cod-eco-005",
+        "codigo": "ingreso-005",
+        "fechaInicio": "2020-12-15",
+        "fechaFin": "2021-12-15"
+    }
+]</format>
+                        <args/>
+                    </payloadFactory>
+                </case>
+                <default/>
+            </switch>
+            <respond/>
+        </faultSequence>
+    </resource>
+    <resource methods="GET" uri-template="/codigoeconomicos/{id}">
+        <inSequence>
+            <!--This is generated API skeleton.-->
+            <property expression="get-property('uri.var.id')" name="id" scope="default" type="STRING"/>
+            <!--Business Logic Goes Here-->
+            <payloadFactory media-type="json">
+                <format>{
+    "codigoEconomicoRef": "cod-eco-001",
+    "codigo": "ingreso-001",
+    "fechaInicio": "2020-10-01",
+    "fechaFin": "2020-11-01"
+}</format>
+                <args/>
+            </payloadFactory>
+            <send>
+                <endpoint key="sge-service"/>
+            </send>
+        </inSequence>
+        <outSequence>
+            <respond/>
+        </outSequence>
+        <faultSequence>
+            <switch source="get-property('ERROR_CODE')">
+                <case regex="101503|101504">
+                    <payloadFactory media-type="json">
+                        <format>{
+    "codigoEconomicoRef": "cod-eco-001",
+    "codigo": "ingreso-001",
+    "fechaInicio": "2020-10-01",
+    "fechaFin": "2020-11-01"
+}</format>
+                        <args/>
+                    </payloadFactory>
+                </case>
+                <default/>
+            </switch>
+            <respond/>
+        </faultSequence>
+    </resource>
+</api>
