@@ -122,8 +122,10 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
       } else {
         // nombre(back) ==> abreviatura(front)
         // descripcion(back) ==> nombre(front)
-        Assert.isTrue(areaTematica.getPadre().getActivo(),
-            "AreaTematica padre '" + areaTematica.getPadre().getNombre() + "' está desactivada");
+        if (areaTematica.getPadre().getId() != areaTematicaActualizar.getPadre().getId()) {
+          Assert.isTrue(areaTematicaActualizar.getPadre().getActivo(),
+              "AreaTematica padre '" + areaTematicaActualizar.getPadre().getNombre() + "' está desactivada");
+        }
 
         Assert.isTrue(areaTematicaActualizar.getNombre().length() <= 5,
             "Se ha superado la longitud máxima permitida para la abreviatura de AreaTematica (5)");
@@ -205,9 +207,6 @@ public class AreaTematicaServiceImpl implements AreaTematicaService {
         // Si no esta activo no se hace nada
         return areaTematica;
       }
-
-      Assert.isTrue(areaTematica.getPadre() == null,
-          "Solo se puede desactivar si es un grupo (AreaTematica sin padre)");
 
       areaTematica.setActivo(false);
       AreaTematica returnValue = repository.save(areaTematica);

@@ -330,18 +330,19 @@ public class AreaTematicaServiceTest {
   public void update_AreaTematicaWithPadreDisabled_ThrowsIllegalArgumentException() {
     // given: AreaTematica modificada cuyo padre está desactivado
     // nombre(back) ==> abreviatura(front)
-    AreaTematica areaTematicaActualizado = generarMockAreaTematica(3L, "A-003", "descripcion-3", 1L);
-    AreaTematica areaTematica = generarMockAreaTematica(1L, "nombrePadre", "descripcionPadre", null);
-    areaTematica.setActivo(Boolean.FALSE);
+    AreaTematica areaTematicaOriginal = generarMockAreaTematica(3L, "A-003", "descripcion-3", 1L);
+    AreaTematica areaTematicaPadreActualizado = generarMockAreaTematica(2L, "nombrePadre2", "descripcionPadre2", null);
+    AreaTematica areaTematicaActualizado = generarMockAreaTematica(3L, "A-003", "descripcion-3", 2L);
+    areaTematicaPadreActualizado.setActivo(Boolean.FALSE);
 
-    BDDMockito.given(repository.findById(3L)).willReturn(Optional.of(areaTematicaActualizado));
-    BDDMockito.given(repository.findById(1L)).willReturn(Optional.of(areaTematica));
+    BDDMockito.given(repository.findById(2L)).willReturn(Optional.of(areaTematicaPadreActualizado));
+    BDDMockito.given(repository.findById(3L)).willReturn(Optional.of(areaTematicaOriginal));
 
     // when: Actualizamos el AreaTematica
     // then: Lanza una excepcion porque el padre no está activo
     Assertions.assertThatThrownBy(() -> service.update(areaTematicaActualizado))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("AreaTematica padre '%s' está desactivada", areaTematica.getNombre());
+        .hasMessage("AreaTematica padre '%s' está desactivada", areaTematicaPadreActualizado.getNombre());
   }
 
   @Test
@@ -565,18 +566,6 @@ public class AreaTematicaServiceTest {
     // when: desactivamos el AreaTematica
     // then: Lanza una excepcion porque el AreaTematica no existe
     Assertions.assertThatThrownBy(() -> service.disable(idNoExiste)).isInstanceOf(AreaTematicaNotFoundException.class);
-  }
-
-  @Test
-  public void disable_WithPadreNotNull_ThrowsIllegalArgumentException() {
-    // given: Un id de un AreaTematica activa que tiene padre (no es grupo)
-    AreaTematica areaTematica = generarMockAreaTematica(2L, "A-002", "descripcion-002", 1L);
-    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(areaTematica));
-    // when: desactivamos el AreaTematica
-    // then: Lanza una excepcion porque el AreaTematica tiene padre (no es grupo)
-    Assertions.assertThatThrownBy(() -> service.disable(areaTematica.getId()))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Solo se puede desactivar si es un grupo (AreaTematica sin padre)");
   }
 
   @Test
