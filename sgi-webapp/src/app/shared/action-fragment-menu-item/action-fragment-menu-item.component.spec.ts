@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ActionFragmentMenuItemComponent } from './action-fragment-menu-item.component';
 import TestUtils from '@core/utils/test-utils';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -13,12 +13,10 @@ describe('ActionFragmentMenuItemComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        LoggerTestingModule,
         TestUtils.getIdiomas(),
         MaterialDesignModule,
         RouterTestingModule
-      ],
-      providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
       ],
       declarations: [ActionFragmentMenuItemComponent]
     })

@@ -1,9 +1,8 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import TestUtils from '@core/utils/test-utils';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
-import { NGXLogger } from 'ngx-logger';
 
 import { EvaluadorService } from './evaluador.service';
 
@@ -15,10 +14,10 @@ describe('EvaluadorService', () => {
       imports: [
         HttpClientTestingModule,
         RouterTestingModule,
+        LoggerTestingModule,
         SgiAuthModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         SgiAuthService
       ],
     });

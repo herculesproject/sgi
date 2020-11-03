@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { SeguimientoDocumentacionComponent } from './seguimiento-documentacion.component';
 import { DocumentacionMemoriaListadoMemoriaComponent } from '../../documentacion-memoria/documentacion-memoria-listado-memoria/documentacion-memoria-listado-memoria.component';
@@ -29,12 +29,12 @@ describe('SeguimientoDocumentacionComponent', () => {
         BrowserAnimationsModule,
         MaterialDesignModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         TestUtils.getIdiomas(),
         RouterTestingModule,
         SgiAuthModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SeguimientoFormularioActionService, useClass: SeguimientoEvaluarActionService },
         SgiAuthService
       ]

@@ -8,7 +8,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FlexModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 
@@ -24,13 +24,13 @@ describe('ConvocatoriaPlazosFasesComponent', () => {
         MaterialDesignModule,
         BrowserAnimationsModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         FlexModule,
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule,
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
         ConvocatoriaActionService
       ],

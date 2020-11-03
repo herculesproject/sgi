@@ -6,11 +6,12 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import TestUtils from '@core/utils/test-utils';
-import { NGXLogger } from 'ngx-logger';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@shared/shared.module';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 describe('PeticionEvaluacionListadoInvComponent', () => {
   let component: PeticionEvaluacionListadoInvComponent;
@@ -22,18 +23,16 @@ describe('PeticionEvaluacionListadoInvComponent', () => {
         RouterTestingModule,
         MaterialDesignModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         BrowserAnimationsModule,
         TestUtils.getIdiomas(),
+        FlexLayoutModule,
         FormsModule,
         ReactiveFormsModule,
-        SharedModule,
-        SgiAuthModule
+        SharedModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-        { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: SgiAuthService, useValue: TestUtils.getSgiAuthServiceSpy() },
-        SgiAuthService
+        { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() }
       ],
       declarations: [PeticionEvaluacionListadoInvComponent]
     })

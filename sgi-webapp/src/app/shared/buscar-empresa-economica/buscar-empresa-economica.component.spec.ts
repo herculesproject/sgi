@@ -8,7 +8,7 @@ import { HeaderComponent } from '@block/header/header.component';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { BuscarEmpresaEconomicaComponent } from './buscar-empresa-economica.component';
 
@@ -30,6 +30,7 @@ describe('BuscarPersonaComponent', () => {
         RouterTestingModule,
         MaterialDesignModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         MatDialogModule,
         TestUtils.getIdiomas(),
         FormsModule,
@@ -41,7 +42,6 @@ describe('BuscarPersonaComponent', () => {
           provide: MatDialogRef,
           useValue: mockDialogRef,
         },
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: MAT_DIALOG_DATA, useValue: matDialogData },
         SgiAuthService
       ],

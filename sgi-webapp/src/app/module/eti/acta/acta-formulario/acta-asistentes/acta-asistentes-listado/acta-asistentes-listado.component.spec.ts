@@ -7,7 +7,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { ActaActionService } from '../../../acta.action.service';
 import { ActaAsistentesListadoComponent } from './acta-asistentes-listado.component';
@@ -27,6 +27,7 @@ describe('ActaAsistentesListadoComponent', () => {
         MaterialDesignModule,
         BrowserAnimationsModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         FlexModule,
         FormsModule,
         ReactiveFormsModule,
@@ -34,7 +35,6 @@ describe('ActaAsistentesListadoComponent', () => {
         SgiAuthModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: FormBuilder, useValue: formBuilder },
         ActaActionService,
         SgiAuthService

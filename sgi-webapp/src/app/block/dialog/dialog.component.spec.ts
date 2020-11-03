@@ -10,7 +10,7 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import TestUtils from '@core/utils/test-utils';
 import { HeaderComponent } from '@block/header/header.component';
 
@@ -19,12 +19,6 @@ describe('DialogComponent', () => {
   let fixture: ComponentFixture<DialogComponent>;
 
   beforeEach(async(() => {
-    // Mock logger
-    const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(
-      NGXLogger.name,
-      TestUtils.getOwnMethodNames(NGXLogger.prototype)
-    );
-
     const mockDialogRef = {
       close: jasmine.createSpy('close'),
     };
@@ -38,6 +32,7 @@ describe('DialogComponent', () => {
         RouterTestingModule,
         MaterialDesignModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         TestUtils.getIdiomas(),
         MatDialogModule,
       ],
@@ -46,7 +41,6 @@ describe('DialogComponent', () => {
           provide: MatDialogRef,
           useValue: mockDialogRef,
         },
-        { provide: NGXLogger, useValue: loggerSpy },
         { provide: MAT_DIALOG_DATA, useValue: matDialogData },
       ],
       declarations: [DialogComponent, HeaderComponent],

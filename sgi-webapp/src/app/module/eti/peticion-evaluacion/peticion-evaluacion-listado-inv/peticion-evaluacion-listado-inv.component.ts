@@ -14,7 +14,6 @@ import { ComiteService } from '@core/services/eti/comite.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of, Subscription } from 'rxjs';
@@ -66,7 +65,6 @@ export class PeticionEvaluacionListadoInvComponent implements AfterViewInit, OnI
     private readonly snackBarService: SnackBarService,
     private readonly comiteService: ComiteService,
     private readonly dialogService: DialogService,
-    private readonly sgiAuthService: SgiAuthService,
     private readonly memoriaService: MemoriaService
   ) {
     this.displayedColumns = ['codigo', 'titulo', 'fuenteFinanciacion', 'fechaInicio', 'fechaFin', 'acciones'];

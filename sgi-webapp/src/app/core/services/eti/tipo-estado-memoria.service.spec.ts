@@ -1,7 +1,6 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import TestUtils from '@core/utils/test-utils';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { TipoEstadoMemoriaService } from './tipo-estado-memoria.service';
 
@@ -11,11 +10,9 @@ describe('TipoEstadoMemoriaService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
-      ],
-      providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-      ],
+        HttpClientTestingModule,
+        LoggerTestingModule
+      ]
     });
     service = TestBed.inject(TipoEstadoMemoriaService);
   });

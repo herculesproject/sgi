@@ -5,7 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { PeticionEvaluacionActionService } from '../../peticion-evaluacion.action.service';
 import { MemoriasListadoComponent } from './memorias-listado.component';
@@ -20,6 +20,7 @@ describe('MemoriasListadoComponent', () => {
       imports: [
         MaterialDesignModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule,
@@ -27,7 +28,6 @@ describe('MemoriasListadoComponent', () => {
         TestUtils.getIdiomas()
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         PeticionEvaluacionActionService,
         SgiAuthService
       ]

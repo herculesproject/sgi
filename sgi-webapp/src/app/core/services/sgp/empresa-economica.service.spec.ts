@@ -1,8 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import TestUtils from '@core/utils/test-utils';
-import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { EmpresaEconomicaService } from './empresa-economica.service';
 
@@ -12,11 +10,9 @@ describe('EmpresaEconomicaService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule
-      ],
-      providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() }
-      ],
+        HttpClientTestingModule,
+        LoggerTestingModule
+      ]
     });
     service = TestBed.inject(EmpresaEconomicaService);
   });

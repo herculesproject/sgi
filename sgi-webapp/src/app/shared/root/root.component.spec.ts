@@ -4,7 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { RootComponent } from './root.component';
@@ -24,11 +24,9 @@ describe('RootComponent', () => {
         BrowserAnimationsModule,
         MaterialDesignModule,
         RouterTestingModule,
-        HttpClientTestingModule
-      ],
-      providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-      ],
+        HttpClientTestingModule,
+        LoggerTestingModule
+      ]
     })
       .compileComponents();
   }));

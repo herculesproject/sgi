@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SelectorModuloComponent } from './selector-modulo.component';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -22,10 +22,10 @@ describe('SelectorModuloComponent', () => {
         RouterTestingModule,
         FormsModule,
         ReactiveFormsModule,
+        LoggerTestingModule,
         SgiAuthModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: MatDialogRef, useValue: {} },
         SgiAuthService
       ]

@@ -6,9 +6,16 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import TestUtils from '@core/utils/test-utils';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiAuthService } from '@sgi/framework/auth';
+import { ComiteService } from '@core/services/eti/comite.service';
+import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria.service';
+import { MemoriaService } from '@core/services/eti/memoria.service';
+import { DialogService } from '@core/services/dialog.service';
+import { SharedModule } from '@shared/shared.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('MemoriaListadoGesComponent', () => {
   let component: MemoriaListadoGesComponent;
@@ -22,13 +29,15 @@ describe('MemoriaListadoGesComponent', () => {
         RouterTestingModule,
         MaterialDesignModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         BrowserAnimationsModule,
-        TestUtils.getIdiomas()
+        TestUtils.getIdiomas(),
+        FlexLayoutModule,
+        FormsModule,
+        ReactiveFormsModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-        { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: SgiAuthService, useValue: TestUtils.getSgiAuthServiceSpy() }
+        { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() }
       ],
       declarations: [MemoriaListadoGesComponent]
     })

@@ -9,7 +9,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { BuscarPersonaComponent } from '@shared/buscar-persona/buscar-persona.component';
 import { SharedModule } from '@shared/shared.module';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { EvaluadorListadoComponent } from './evaluador-listado.component';
 
@@ -27,6 +27,7 @@ describe('EvaluadorListadoComponent', () => {
         RouterTestingModule,
         MaterialDesignModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         BrowserAnimationsModule,
         TestUtils.getIdiomas(),
         FormsModule,
@@ -35,7 +36,6 @@ describe('EvaluadorListadoComponent', () => {
         SgiAuthModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
         SgiAuthService
       ],

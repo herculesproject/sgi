@@ -1,10 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 
 import { TipoAmbitoGeograficoService } from './tipo-ambito-geografico.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NGXLogger } from 'ngx-logger';
-import TestUtils from '@core/utils/test-utils';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('TipoAmbitoGeograficoService', () => {
   let service: TipoAmbitoGeograficoService;
@@ -12,12 +11,10 @@ describe('TipoAmbitoGeograficoService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
-        BrowserAnimationsModule
-      ],
-      providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-      ],
+        HttpClientTestingModule,
+        BrowserAnimationsModule,
+        LoggerTestingModule
+      ]
     });
     service = TestBed.inject(TipoAmbitoGeograficoService);
   });

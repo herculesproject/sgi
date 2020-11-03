@@ -1,5 +1,6 @@
 import { NgxLoggerLevel, LoggerConfig } from 'ngx-logger';
 import { SgiAuthMode, SgiAuthConfig } from '@sgi/framework/auth';
+import { version } from '../../package.json';
 
 export const environment = {
   production: true,
@@ -30,5 +31,6 @@ export const environment = {
       /\/api\/csp.*/i,
       /\/api\/usr.*/i
     ]
-  } as SgiAuthConfig
+  } as SgiAuthConfig,
+  version
 };

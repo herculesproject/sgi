@@ -1,9 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { HttpClientModule } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import TestUtils from '@core/utils/test-utils';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { TipoFinanciacionService } from './tipo-financiacion.service';
 
@@ -14,12 +12,9 @@ describe('TipoFinanciacionService', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
-        HttpClientModule,
-        BrowserAnimationsModule
-      ],
-      providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-      ],
+        BrowserAnimationsModule,
+        LoggerTestingModule
+      ]
     });
     service = TestBed.inject(TipoFinanciacionService);
   });

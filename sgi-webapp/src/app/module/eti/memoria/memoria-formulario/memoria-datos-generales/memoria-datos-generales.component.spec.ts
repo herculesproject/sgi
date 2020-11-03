@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { MemoriaActionService } from '../../memoria.action.service';
 import { MemoriaDatosGeneralesComponent } from './memoria-datos-generales.component';
 import { IComite } from '@core/models/eti/comite';
@@ -46,6 +46,7 @@ describe('MemoriaDatosGeneralesComponent', () => {
       declarations: [MemoriaDatosGeneralesComponent],
       imports: [
         HttpClientTestingModule,
+        LoggerTestingModule,
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule,
@@ -55,7 +56,7 @@ describe('MemoriaDatosGeneralesComponent', () => {
         BrowserAnimationsModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+
         { provide: ActivatedRoute, useValue: { snapshot: { data: snapshotData } } },
         MemoriaActionService,
         SgiAuthService

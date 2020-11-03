@@ -8,7 +8,7 @@ import { HeaderComponent } from '@block/header/header.component';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule } from '@sgi/framework/auth';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { BuscarPersonaDialogoComponent } from './buscar-persona-dialogo.component';
 
@@ -30,6 +30,7 @@ describe('BuscarPersonaDialogoComponent', () => {
         RouterTestingModule,
         MaterialDesignModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         MatDialogModule,
         TestUtils.getIdiomas(),
         FormsModule,
@@ -40,7 +41,6 @@ describe('BuscarPersonaDialogoComponent', () => {
           provide: MatDialogRef,
           useValue: mockDialogRef,
         },
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: MAT_DIALOG_DATA, useValue: matDialogData },
       ],
       declarations: [BuscarPersonaDialogoComponent, HeaderComponent],

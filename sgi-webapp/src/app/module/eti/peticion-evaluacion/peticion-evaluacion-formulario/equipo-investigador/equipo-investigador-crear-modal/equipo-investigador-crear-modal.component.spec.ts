@@ -8,7 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FlexModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { MatDialogRef } from '@angular/material/dialog';
 import { SharedModule } from '@shared/shared.module';
 
@@ -25,12 +25,12 @@ describe('EquipoInvestigadorCrearModalComponent', () => {
         MaterialDesignModule,
         BrowserAnimationsModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         FlexModule,
         ReactiveFormsModule,
         SharedModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: MatDialogRef, useValue: {} }
       ]
     })

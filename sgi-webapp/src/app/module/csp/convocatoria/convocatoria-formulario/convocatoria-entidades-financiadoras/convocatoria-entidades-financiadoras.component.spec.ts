@@ -4,10 +4,9 @@ import { FlexModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 
 import { ConvocatoriaEntidadesFinanciadorasComponent } from './convocatoria-entidades-financiadoras.component';
@@ -26,13 +25,13 @@ describe('ConvocatoriaEntidadesFinanciadorasComponent', () => {
         MaterialDesignModule,
         BrowserAnimationsModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         FlexModule,
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule,
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         ConvocatoriaActionService
       ],
     })

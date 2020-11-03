@@ -7,7 +7,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { EvaluadorActionService } from '../../../evaluador.action.service';
 import { EvaluadorConflictosInteresListadoComponent } from './evaluador-conflictos-interes-listado.component';
@@ -27,6 +27,7 @@ describe('EvaluadorConflictosInteresListadoComponent', () => {
         MaterialDesignModule,
         BrowserAnimationsModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         FlexModule,
         FormsModule,
         ReactiveFormsModule,
@@ -34,7 +35,6 @@ describe('EvaluadorConflictosInteresListadoComponent', () => {
         SgiAuthModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: FormBuilder, useValue: formBuilder },
         EvaluadorActionService,
         SgiAuthService

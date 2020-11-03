@@ -8,7 +8,7 @@ import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { TipoDocumentoModalComponent } from './tipo-documento-modal.component';
 
@@ -25,13 +25,13 @@ describe('TipoDocumentoModalComponent', () => {
         BrowserAnimationsModule,
         MaterialDesignModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         TestUtils.getIdiomas(),
         RouterTestingModule,
         FormsModule,
         ReactiveFormsModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
         { provide: MatDialogRef, useValue: {} as ITipoDocumento },
         { provide: MAT_DIALOG_DATA, useValue: {} as ITipoDocumento },

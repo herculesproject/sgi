@@ -9,7 +9,7 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { GestionSeguimientoListadoComponent } from './gestion-seguimiento-listado.component';
 
@@ -24,6 +24,7 @@ describe('GestionSeguimientoListadoComponent', () => {
         RouterTestingModule,
         MaterialDesignModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         BrowserAnimationsModule,
         TestUtils.getIdiomas(),
         FlexLayoutModule,
@@ -32,7 +33,6 @@ describe('GestionSeguimientoListadoComponent', () => {
         SharedModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
         SgiAuthService
       ],

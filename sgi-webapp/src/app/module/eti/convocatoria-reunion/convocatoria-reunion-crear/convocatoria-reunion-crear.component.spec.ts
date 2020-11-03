@@ -8,7 +8,7 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { SharedModule } from '@shared/shared.module';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import {
   ConvocatoriaReunionDatosGeneralesComponent,
@@ -30,14 +30,12 @@ describe('ConvocatoriaReunionCrearComponent', () => {
         MaterialDesignModule,
         BrowserAnimationsModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         FlexModule,
         ReactiveFormsModule,
         RouterTestingModule.withRoutes([]),
         SharedModule,
         SgiAuthModule
-      ],
-      providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
       ]
     })
       .compileComponents();

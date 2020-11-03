@@ -4,7 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { EvaluacionDocumentacionComponent } from './evaluacion-documentacion.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -27,13 +27,13 @@ describe('EvaluacionDocumentacionComponent', () => {
         BrowserAnimationsModule,
         MaterialDesignModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         TestUtils.getIdiomas(),
         RouterTestingModule,
         FormsModule,
         ReactiveFormsModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
         { provide: EvaluacionFormularioActionService, useClass: EvaluacionEvaluadorActionService }
       ],

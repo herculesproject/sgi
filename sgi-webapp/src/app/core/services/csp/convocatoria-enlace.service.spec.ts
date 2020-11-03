@@ -1,9 +1,8 @@
-import { HttpClientModule } from '@angular/common/http';
+import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import TestUtils from '@core/utils/test-utils';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { ConvocatoriaEnlaceService } from './convocatoria-enlace.service';
 
@@ -13,13 +12,11 @@ describe('ConvocatoriaEnlaceService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
+        HttpClientTestingModule,
         BrowserAnimationsModule,
         HttpClientTestingModule,
-      ],
-      providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-      ],
+        LoggerTestingModule
+      ]
     });
     service = TestBed.inject(ConvocatoriaEnlaceService);
   });

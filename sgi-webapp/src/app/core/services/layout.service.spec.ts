@@ -1,24 +1,21 @@
 import { TestBed } from '@angular/core/testing';
 
 import { LayoutService } from './layout.service';
-import { NGXLogger } from 'ngx-logger';
-import TestUtils from '@core/utils/test-utils';
-import { HttpClientModule } from '@angular/common/http';
+import { LoggerTestingModule } from 'ngx-logger/testing';
+
 import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('LayoutService', () => {
   let service: LayoutService;
 
   beforeEach(() => {
-    // Mock logger
-    const loggerSpy: jasmine.SpyObj<NGXLogger> = jasmine.createSpyObj(
-      NGXLogger.name,
-      TestUtils.getOwnMethodNames(NGXLogger.prototype)
-    );
-
     TestBed.configureTestingModule({
-      imports: [HttpClientModule, RouterTestingModule],
-      providers: [{ provide: NGXLogger, useValue: loggerSpy }],
+      imports: [
+        HttpClientTestingModule,
+        RouterTestingModule,
+        LoggerTestingModule
+      ]
     });
     service = TestBed.inject(LayoutService);
   });

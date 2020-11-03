@@ -10,7 +10,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule } from '@sgi/framework/auth';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { ComentarioEditarModalComponent } from './comentario-editar-modal.component';
 import { TipoEvaluacion } from '@core/models/eti/tipo-evaluacion';
@@ -50,13 +50,13 @@ describe('ComentarioEditarModalComponent', () => {
         BrowserAnimationsModule,
         MaterialDesignModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         TestUtils.getIdiomas(),
         RouterTestingModule,
         ReactiveFormsModule,
         SgiAuthModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
         { provide: MatDialogRef, useValue: snapshotData },
         { provide: MAT_DIALOG_DATA, useValue: snapshotData },

@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { NavbarComponent } from '../navbar/navbar.component';
 import { HeaderComponent } from './header.component';
@@ -24,13 +24,13 @@ describe('HeaderComponent', () => {
         MaterialDesignModule,
         RouterTestingModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         TestUtils.getIdiomas(),
         FormsModule,
         ReactiveFormsModule,
         SgiAuthModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         SgiAuthService
       ]
     }).compileComponents();

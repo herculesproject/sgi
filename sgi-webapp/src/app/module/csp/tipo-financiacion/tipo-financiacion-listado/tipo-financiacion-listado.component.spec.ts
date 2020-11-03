@@ -7,7 +7,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { TipoFinanciacionListadoComponent } from './tipo-financiacion-listado.component';
 
 describe('TipoFinanciacionConvocatoriaListadoComponent', () => {
@@ -23,6 +23,7 @@ describe('TipoFinanciacionConvocatoriaListadoComponent', () => {
         RouterTestingModule,
         MaterialDesignModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         BrowserAnimationsModule,
         TestUtils.getIdiomas(),
         FlexLayoutModule,
@@ -30,7 +31,6 @@ describe('TipoFinanciacionConvocatoriaListadoComponent', () => {
         ReactiveFormsModule,
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
       ]
     })

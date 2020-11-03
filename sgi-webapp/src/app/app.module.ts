@@ -1,5 +1,5 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { NgModule, LOCALE_ID } from '@angular/core';
+import { NgModule, LOCALE_ID, APP_INITIALIZER } from '@angular/core';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -22,9 +22,16 @@ import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { CoreModule } from '@angular/flex-layout';
 import { HomeComponent } from './home/home.component';
+import { ConfigService } from './core/services/config.service';
 
 // Load supported locales
 registerLocaleData(localeEs);
+
+const appInitializerFn = (appConfig: ConfigService) => {
+  return () => {
+    return appConfig.loadAppConfig();
+  };
+};
 
 @NgModule({
   declarations: [
@@ -53,6 +60,13 @@ registerLocaleData(localeEs);
     SgiAuthModule.forRoot()
   ],
   providers: [
+    ConfigService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: appInitializerFn,
+      multi: true,
+      deps: [ConfigService]
+    },
     {
       provide: MatPaginatorIntl,
       useClass: AppMatPaginatorIntl,

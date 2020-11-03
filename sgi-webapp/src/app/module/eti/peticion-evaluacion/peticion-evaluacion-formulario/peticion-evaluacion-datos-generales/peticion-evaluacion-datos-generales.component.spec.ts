@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { PeticionEvaluacionActionService } from '../../peticion-evaluacion.action.service';
 import { PeticionEvaluacionDatosGeneralesComponent } from './peticion-evaluacion-datos-generales.component';
 import { SgiAuthService } from '@sgi/framework/auth';
@@ -20,6 +20,7 @@ describe('PeticionEvaluacionDatosGeneralesComponent', () => {
       declarations: [PeticionEvaluacionDatosGeneralesComponent],
       imports: [
         HttpClientTestingModule,
+        LoggerTestingModule,
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule,
@@ -28,7 +29,6 @@ describe('PeticionEvaluacionDatosGeneralesComponent', () => {
         BrowserAnimationsModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         PeticionEvaluacionActionService,
         SgiAuthService]
     })

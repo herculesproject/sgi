@@ -1,9 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 
 import { TipoTareaService } from './tipo-tarea.service';
-import { HttpClientModule } from '@angular/common/http';
-import { NGXLogger } from 'ngx-logger';
-import TestUtils from '@core/utils/test-utils';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('TipoTareaService', () => {
   let service: TipoTareaService;
@@ -11,11 +10,9 @@ describe('TipoTareaService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
-      ],
-      providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-      ],
+        HttpClientTestingModule,
+        LoggerTestingModule
+      ]
     });
     service = TestBed.inject(TipoTareaService);
   });

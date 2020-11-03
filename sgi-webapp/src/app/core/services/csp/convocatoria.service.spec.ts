@@ -1,10 +1,9 @@
-import { HttpClientModule } from '@angular/common/http';
+
 import { TestBed } from '@angular/core/testing';
 
 import { ConvocatoriaService } from './convocatoria.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NGXLogger } from 'ngx-logger';
-import TestUtils from '@core/utils/test-utils';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ConvocatoriaService', () => {
@@ -15,10 +14,8 @@ describe('ConvocatoriaService', () => {
       imports: [
         BrowserAnimationsModule,
         HttpClientTestingModule,
-      ],
-      providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-      ],
+        LoggerTestingModule
+      ]
     });
     service = TestBed.inject(ConvocatoriaService);
   });

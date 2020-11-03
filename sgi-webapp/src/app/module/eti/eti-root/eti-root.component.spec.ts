@@ -7,7 +7,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { BreadcrumbComponent } from '@shared/breadcrumb/breadcrumb.component';
 import { RootComponent } from '@shared/root/root.component';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { EtiMenuPrincipalComponent } from '../eti-menu-principal/eti-menu-principal.component';
 import { EtiRootComponent } from './eti-root.component';
@@ -26,6 +26,7 @@ describe('EtiRootComponent', () => {
       ],
       imports: [
         BrowserAnimationsModule,
+        LoggerTestingModule,
         TestUtils.getIdiomas(),
         MaterialDesignModule,
         RouterTestingModule.withRoutes([]),
@@ -34,7 +35,6 @@ describe('EtiRootComponent', () => {
         ReactiveFormsModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         SgiAuthService
       ],
     })

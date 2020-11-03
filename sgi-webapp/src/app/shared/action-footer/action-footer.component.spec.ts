@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ActionFooterComponent } from './action-footer.component';
 import TestUtils from '@core/utils/test-utils';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { ActionStatus, IActionService } from '@core/services/action-service';
 import { BehaviorSubject } from 'rxjs';
@@ -21,12 +21,10 @@ describe('ActionFooterComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ActionFooterComponent],
       imports: [
+        LoggerTestingModule,
         TestUtils.getIdiomas(),
         MaterialDesignModule,
-      ],
-      providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-      ],
+      ]
     })
       .compileComponents();
   }));

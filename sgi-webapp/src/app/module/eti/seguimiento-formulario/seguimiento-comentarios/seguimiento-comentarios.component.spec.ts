@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { SeguimientoComentariosComponent } from './seguimiento-comentarios.component';
 import { SeguimientoEvaluarActionService } from '../../seguimiento/seguimiento-evaluar.action.service';
@@ -25,12 +25,13 @@ describe('SeguimientoComentariosComponent', () => {
         BrowserAnimationsModule,
         MaterialDesignModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         TestUtils.getIdiomas(),
         RouterTestingModule,
         SgiAuthModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
+
         { provide: SeguimientoFormularioActionService, useClass: SeguimientoEvaluarActionService },
         SgiAuthService
       ]

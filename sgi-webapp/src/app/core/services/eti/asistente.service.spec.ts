@@ -1,8 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import TestUtils from '@core/utils/test-utils';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { AsistenteService } from './asistente.service';
 
@@ -13,10 +12,10 @@ describe('AsistenteService', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
+        LoggerTestingModule,
         SgiAuthModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         SgiAuthService
       ],
     });

@@ -8,7 +8,7 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { ActionFooterComponent } from '@shared/action-footer/action-footer.component';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import {
   ActaAsistentesListadoComponent,
@@ -35,14 +35,12 @@ describe('ActaEditarComponent', () => {
         MaterialDesignModule,
         BrowserAnimationsModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         FlexModule,
         ReactiveFormsModule,
         RouterTestingModule.withRoutes([]),
         SgiAuthModule
-      ],
-      providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-      ],
+      ]
     })
       .compileComponents();
   }));

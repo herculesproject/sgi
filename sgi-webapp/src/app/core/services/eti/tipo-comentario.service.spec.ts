@@ -2,9 +2,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import TestUtils from '@core/utils/test-utils';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { SgiAuthModule } from '@sgi/framework/auth';
-import { NGXLogger } from 'ngx-logger';
 
 import { TipoComentarioService } from './tipo-comentario.service';
 
@@ -17,11 +16,9 @@ describe('TipoComentarioService', () => {
         HttpClientTestingModule,
         RouterTestingModule,
         FormsModule,
+        LoggerTestingModule,
         SgiAuthModule
-      ],
-      providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-      ],
+      ]
     });
     service = TestBed.inject(TipoComentarioService);
   });

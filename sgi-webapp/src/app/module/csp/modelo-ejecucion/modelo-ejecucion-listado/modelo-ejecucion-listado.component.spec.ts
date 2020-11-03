@@ -8,7 +8,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { FooterCrearComponent } from '@shared/footers/footer-crear/footer-crear.component';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { ModeloEjecucionListadoComponent } from './modelo-ejecucion-listado.component';
 
@@ -26,6 +26,7 @@ describe('ModeloEjecucionListadoComponent', () => {
         RouterTestingModule,
         MaterialDesignModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         BrowserAnimationsModule,
         TestUtils.getIdiomas(),
         FlexLayoutModule,
@@ -33,7 +34,6 @@ describe('ModeloEjecucionListadoComponent', () => {
         ReactiveFormsModule,
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
       ]
     })

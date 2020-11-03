@@ -1,8 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { FormacionEspecificaService } from './formacion-especifica.service';
-import { HttpClientModule } from '@angular/common/http';
-import { NGXLogger } from 'ngx-logger';
-import TestUtils from '@core/utils/test-utils';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 describe('FormacionEspecificaService', () => {
   let service: FormacionEspecificaService;
@@ -10,11 +9,9 @@ describe('FormacionEspecificaService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
-      ],
-      providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-      ],
+        HttpClientTestingModule,
+        LoggerTestingModule
+      ]
     });
     service = TestBed.inject(FormacionEspecificaService);
   });

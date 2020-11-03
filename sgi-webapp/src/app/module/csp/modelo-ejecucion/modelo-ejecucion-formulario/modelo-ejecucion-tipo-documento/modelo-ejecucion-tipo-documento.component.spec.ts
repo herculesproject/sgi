@@ -8,7 +8,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { ModeloEjecucionActionService } from '../../modelo-ejecucion.action.service';
 
 import { ModeloEjecucionTipoDocumentoComponent } from './modelo-ejecucion-tipo-documento.component';
@@ -27,6 +27,7 @@ describe('ModeloEjecucionTipoDocumentoComponent', () => {
         MaterialDesignModule,
         BrowserAnimationsModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         FlexModule,
         FormsModule,
         ReactiveFormsModule,
@@ -34,7 +35,6 @@ describe('ModeloEjecucionTipoDocumentoComponent', () => {
         SgiAuthModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
         ModeloEjecucionActionService,
         SgiAuthService

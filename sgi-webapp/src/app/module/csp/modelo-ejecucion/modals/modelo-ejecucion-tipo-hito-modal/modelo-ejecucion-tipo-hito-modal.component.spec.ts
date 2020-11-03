@@ -9,7 +9,7 @@ import { ITipoHito } from '@core/models/csp/tipos-configuracion';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { ModeloEjecucionTipoHitoModalComponent } from './modelo-ejecucion-tipo-hito-modal.component';
 
@@ -31,13 +31,13 @@ describe('ModeloEjecucionTipoHitoModalComponent', () => {
         BrowserAnimationsModule,
         MaterialDesignModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         TestUtils.getIdiomas(),
         RouterTestingModule,
         FormsModule,
         ReactiveFormsModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
         { provide: MatDialogRef, useValue: data },
         { provide: MAT_DIALOG_DATA, useValue: data }

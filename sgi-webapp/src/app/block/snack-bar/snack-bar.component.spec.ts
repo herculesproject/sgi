@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule } from '@sgi/framework/auth';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { SnackBarComponent } from './snack-bar.component';
 
@@ -25,10 +25,10 @@ describe('SnackBarComponent', () => {
         MaterialDesignModule,
         HttpClientTestingModule,
         TestUtils.getIdiomas(),
+        LoggerTestingModule,
         SgiAuthModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: MAT_SNACK_BAR_DATA, useValue: matSnackBarData }
       ],
       declarations: [SnackBarComponent]

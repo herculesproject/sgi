@@ -1,8 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import TestUtils from '@core/utils/test-utils';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
-import { NGXLogger } from 'ngx-logger';
 
 import { HomeComponent } from './home.component';
 
@@ -15,10 +14,10 @@ describe('HomeComponent', () => {
       declarations: [HomeComponent],
       imports: [
         RouterTestingModule,
+        LoggerTestingModule,
         SgiAuthModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         SgiAuthService
       ]
     }).compileComponents();

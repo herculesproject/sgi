@@ -1,8 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import TestUtils from '@core/utils/test-utils';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { SgiAuthModule } from '@sgi/framework/auth';
-import { NGXLogger } from 'ngx-logger';
 
 import { TipoDocumentoService } from './tipo-documento.service';
 
@@ -13,11 +12,9 @@ describe('TipoDocumentoService', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
+        LoggerTestingModule,
         SgiAuthModule
-      ],
-      providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-      ],
+      ]
     });
     service = TestBed.inject(TipoDocumentoService);
   });

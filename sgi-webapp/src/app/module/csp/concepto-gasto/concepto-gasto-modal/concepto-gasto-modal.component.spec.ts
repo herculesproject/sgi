@@ -1,14 +1,30 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { IConceptoGasto } from '@core/models/csp/tipos-configuracion';
+import TestUtils from '@core/utils/test-utils';
+import { MaterialDesignModule } from '@material/material-design.module';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { ConceptoGastoModalComponent } from './concepto-gasto-modal.component';
 
-describe('GestionConceptosGastoModalComponent', () => {
+describe('ConceptoGastoModalComponent', () => {
   let component: ConceptoGastoModalComponent;
   let fixture: ComponentFixture<ConceptoGastoModalComponent>;
 
   beforeEach(async(() => {
+    const mockDialogRef = {
+      close: jasmine.createSpy('close'),
+    };
     TestBed.configureTestingModule({
-      declarations: [ConceptoGastoModalComponent]
+      imports: [
+        LoggerTestingModule,
+        MaterialDesignModule,
+        BrowserAnimationsModule,
+        TestUtils.getIdiomas()
+      ],
+      declarations: [ConceptoGastoModalComponent],
+      providers: [{ provide: MatDialogRef, useValue: mockDialogRef },
+      { provide: MAT_DIALOG_DATA, useValue: {} as IConceptoGasto }]
     })
       .compileComponents();
   }));

@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 
 import { ConvocatoriaEntidadesConvocantesComponent } from './convocatoria-entidades-convocantes.component';
@@ -21,6 +21,7 @@ describe('ConvocatoriaEntidadesConvocantesComponent', () => {
       ],
       imports: [
         HttpClientTestingModule,
+        LoggerTestingModule,
         FormsModule,
         ReactiveFormsModule,
         TestUtils.getIdiomas(),
@@ -29,7 +30,6 @@ describe('ConvocatoriaEntidadesConvocantesComponent', () => {
         BrowserAnimationsModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         ConvocatoriaActionService
       ]
     }).compileComponents();

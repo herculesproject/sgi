@@ -1,4 +1,3 @@
-import { NGXLogger } from 'ngx-logger';
 import { TranslateTestingModule } from 'ngx-translate-testing';
 
 import { SnackBarService } from '@core/services/snack-bar.service';
@@ -74,32 +73,12 @@ export default class TestUtils {
   }
 
   /**
-   * Devuelve el mock del logger
-   */
-  static getLoggerSpy(): jasmine.SpyObj<NGXLogger> {
-    return jasmine.createSpyObj(
-      NGXLogger.name,
-      TestUtils.getOwnMethodNames(NGXLogger.prototype)
-    );
-  }
-
-  /**
    * Devuelve el mock del snackBarService
    */
   static getSnackBarServiceSpy(): jasmine.SpyObj<SnackBarService> {
     return jasmine.createSpyObj(
       SnackBarService.name,
       TestUtils.getOwnMethodNames(SnackBarService.prototype)
-    );
-  }
-
-  /**
-   * Devuelve el mock del sgiAuthService
-   */
-  static getSgiAuthServiceSpy(): jasmine.SpyObj<SgiAuthService> {
-    return jasmine.createSpyObj(
-      SgiAuthService.name,
-      TestUtils.getOwnMethodNames(SgiAuthService.prototype)
     );
   }
 }

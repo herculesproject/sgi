@@ -6,7 +6,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import TestUtils from '@core/utils/test-utils';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -25,6 +25,7 @@ describe('PeticionEvaluacionTareasModalComponent', () => {
         MaterialDesignModule,
         BrowserAnimationsModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         FlexModule,
         FormsModule,
         ReactiveFormsModule,
@@ -33,7 +34,6 @@ describe('PeticionEvaluacionTareasModalComponent', () => {
         SharedModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
         {
           provide: MatDialogRef, useValue: {}

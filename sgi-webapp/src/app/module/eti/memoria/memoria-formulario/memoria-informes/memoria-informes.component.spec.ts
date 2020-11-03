@@ -1,12 +1,11 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MemoriaInformesComponent } from './memoria-informes.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import TestUtils from '@core/utils/test-utils';
-import { RouterTestingModule } from '@angular/router/testing';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NGXLogger } from 'ngx-logger';
 import { MemoriaActionService } from '../../memoria.action.service';
 import { IComite } from '@core/models/eti/comite';
 import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
@@ -16,6 +15,7 @@ import { IMemoria } from '@core/models/eti/memoria';
 import { ActivatedRoute } from '@angular/router';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('MemoriaInformesComponent', () => {
   let component: MemoriaInformesComponent;
@@ -49,13 +49,13 @@ describe('MemoriaInformesComponent', () => {
         BrowserAnimationsModule,
         MaterialDesignModule,
         HttpClientTestingModule,
-        TestUtils.getIdiomas(),
+        LoggerTestingModule,
         RouterTestingModule,
+        TestUtils.getIdiomas(),
         FormsModule,
         ReactiveFormsModule,
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: {} },

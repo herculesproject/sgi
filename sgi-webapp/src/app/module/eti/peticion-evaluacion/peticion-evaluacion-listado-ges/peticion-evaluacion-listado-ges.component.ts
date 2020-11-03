@@ -11,14 +11,12 @@ import { IPersona } from '@core/models/sgp/persona';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
-import { DialogService } from '@core/services/dialog.service';
 import { ComiteService } from '@core/services/eti/comite.service';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiAuthService } from '@sgi/framework/auth';
 import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of, Subscription } from 'rxjs';
@@ -84,8 +82,6 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
     private readonly snackBarService: SnackBarService,
     private readonly comiteService: ComiteService,
     private readonly tipoEstadoMemoriaService: TipoEstadoMemoriaService,
-    private readonly dialogService: DialogService,
-    private readonly sgiAuthService: SgiAuthService,
     private readonly memoriaService: MemoriaService,
     private readonly personaFisicaService: PersonaFisicaService
   ) {

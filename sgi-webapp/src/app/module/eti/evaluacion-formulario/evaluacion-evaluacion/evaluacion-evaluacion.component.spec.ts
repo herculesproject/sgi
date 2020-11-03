@@ -6,7 +6,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import TestUtils from '@core/utils/test-utils';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EvaluacionListadoAnteriorMemoriaComponent } from '../evaluacion-listado-anterior-memoria/evaluacion-listado-anterior-memoria.component';
@@ -30,6 +30,7 @@ describe('EvaluacionEvaluacionComponent', () => {
         MaterialDesignModule,
         BrowserAnimationsModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         FlexModule,
         FormsModule,
         ReactiveFormsModule,
@@ -37,7 +38,6 @@ describe('EvaluacionEvaluacionComponent', () => {
         SgiAuthModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
         { provide: EvaluacionFormularioActionService, useClass: EvaluacionActionService },
         SgiAuthService

@@ -3,10 +3,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { EvaluacionComentariosComponent } from './evaluacion-comentarios.component';
 import { EvaluacionActionService } from '../../evaluacion/evaluacion.action.service';
@@ -23,6 +22,7 @@ describe('EvaluacionComentariosComponent', () => {
       ],
       imports: [
         HttpClientTestingModule,
+        LoggerTestingModule,
         FormsModule,
         ReactiveFormsModule,
         TestUtils.getIdiomas(),
@@ -31,7 +31,6 @@ describe('EvaluacionComentariosComponent', () => {
         BrowserAnimationsModule
       ],
       providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
         { provide: EvaluacionFormularioActionService, useClass: EvaluacionActionService }
       ],
     })

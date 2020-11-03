@@ -9,7 +9,7 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { BuscarPersonaComponent } from '@shared/buscar-persona/buscar-persona.component';
 import { ActionFooterComponent } from '@shared/action-footer/action-footer.component';
 import { SharedModule } from '@shared/shared.module';
-import { NGXLogger } from 'ngx-logger';
+import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import {
   EvaluadorDatosGeneralesComponent,
@@ -33,15 +33,13 @@ describe('EvaluadorEditarComponent', () => {
         MaterialDesignModule,
         BrowserAnimationsModule,
         HttpClientTestingModule,
+        LoggerTestingModule,
         FlexModule,
         ReactiveFormsModule,
         RouterTestingModule.withRoutes([]),
         SharedModule,
         RouterTestingModule
-      ],
-      providers: [
-        { provide: NGXLogger, useValue: TestUtils.getLoggerSpy() },
-      ],
+      ]
     })
       .compileComponents();
   }));
