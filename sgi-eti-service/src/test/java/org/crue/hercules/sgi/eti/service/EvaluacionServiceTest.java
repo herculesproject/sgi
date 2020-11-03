@@ -321,8 +321,8 @@ public class EvaluacionServiceTest {
     response.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), 1L, 1L));
     response.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3), 1L, 1L));
 
-    BDDMockito.given(evaluacionRepository.findAllByActivoTrueAndConvocatoriaReunionId(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(response));
+    BDDMockito.given(evaluacionRepository.findAllByActivoTrueAndConvocatoriaReunionIdAndEsRevMinimaFalse(
+        ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(response));
 
     // when: Se buscan todos las datos
     Page<Evaluacion> result = evaluacionService.findAllActivasByConvocatoriaReunionId(convocatoriaReunionId,
@@ -340,8 +340,10 @@ public class EvaluacionServiceTest {
 
     // given: No hay datos con convocatoriaReunionId = 1
     Long convocatoriaReunionId = 1L;
-    BDDMockito.given(evaluacionRepository.findAllByActivoTrueAndConvocatoriaReunionId(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(Collections.emptyList()));
+    BDDMockito
+        .given(evaluacionRepository.findAllByActivoTrueAndConvocatoriaReunionIdAndEsRevMinimaFalse(
+            ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(Collections.emptyList()));
 
     // when: Se buscan todos las datos
     Page<Evaluacion> result = evaluacionService.findAllActivasByConvocatoriaReunionId(convocatoriaReunionId,
@@ -365,8 +367,8 @@ public class EvaluacionServiceTest {
     Pageable pageable = PageRequest.of(1, 2);
     Page<Evaluacion> pageResponse = new PageImpl<>(response.subList(2, 3), pageable, response.size());
 
-    BDDMockito.given(evaluacionRepository.findAllByActivoTrueAndConvocatoriaReunionId(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.<Pageable>any())).willReturn(pageResponse);
+    BDDMockito.given(evaluacionRepository.findAllByActivoTrueAndConvocatoriaReunionIdAndEsRevMinimaFalse(
+        ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any())).willReturn(pageResponse);
 
     // when: Se buscan los datos paginados
     Page<Evaluacion> result = evaluacionService.findAllActivasByConvocatoriaReunionId(convocatoriaReunionId, pageable);
@@ -389,8 +391,8 @@ public class EvaluacionServiceTest {
     Pageable pageable = PageRequest.of(1, 2);
     Page<Evaluacion> pageResponse = new PageImpl<>(response, pageable, response.size());
 
-    BDDMockito.given(evaluacionRepository.findAllByActivoTrueAndConvocatoriaReunionId(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.<Pageable>any())).willReturn(pageResponse);
+    BDDMockito.given(evaluacionRepository.findAllByActivoTrueAndConvocatoriaReunionIdAndEsRevMinimaFalse(
+        ArgumentMatchers.anyLong(), ArgumentMatchers.<Pageable>any())).willReturn(pageResponse);
 
     // when: Se buscan los datos paginados
     Page<Evaluacion> result = evaluacionService.findAllActivasByConvocatoriaReunionId(convocatoriaReunionId, pageable);

@@ -269,7 +269,8 @@ public class EvaluacionServiceImpl implements EvaluacionService {
    */
   public Page<Evaluacion> findAllActivasByConvocatoriaReunionId(Long id, Pageable pageable) {
     log.debug("findAllActivasByConvocatoriaReunionId(Long id, Pageable pageable) - start");
-    Page<Evaluacion> returnValue = evaluacionRepository.findAllByActivoTrueAndConvocatoriaReunionId(id, pageable);
+    Page<Evaluacion> returnValue = evaluacionRepository
+        .findAllByActivoTrueAndConvocatoriaReunionIdAndEsRevMinimaFalse(id, pageable);
     log.debug("findAllActivasByConvocatoriaReunionId(Long id, Pageable pageable) - end");
     return returnValue;
   }

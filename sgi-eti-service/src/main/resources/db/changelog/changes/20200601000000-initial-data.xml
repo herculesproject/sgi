@@ -1600,7 +1600,7 @@
       <column name="evaluador1_id" valueComputed="(select id from eti.evaluador where persona_ref='user-001')" />
       <column name="evaluador2_id" valueComputed="(select id from eti.evaluador where persona_ref='user-002')" />
       <column name="fecha_dictamen" value="2020-07-09" />
-      <column name="es_rev_minima" value="true" />
+      <column name="es_rev_minima" value="false" />
       <column name="version" value="1" />
       <column name="activo" value="true" />
     </insert>

@@ -90,7 +90,8 @@ public class EvaluacionRepositoryTest {
     Page<Evaluacion> pageResponse = new PageImpl<>(response.subList(2, 3), pageable, response.size());
 
     // when: Se buscan los datos paginados
-    Page<Evaluacion> result = repository.findAllByActivoTrueAndConvocatoriaReunionId(c1.getId(), pageable);
+    Page<Evaluacion> result = repository.findAllByActivoTrueAndConvocatoriaReunionIdAndEsRevMinimaFalse(c1.getId(),
+        pageable);
 
     // then: Se recuperan los datos correctamente según la paginación solicitada
     Assertions.assertThat(result.getNumber()).isEqualTo(pageResponse.getNumber());
@@ -147,7 +148,8 @@ public class EvaluacionRepositoryTest {
     Page<Evaluacion> pageResponse = new PageImpl<>(response, pageable, response.size());
 
     // when: Se buscan los datos paginados
-    Page<Evaluacion> result = repository.findAllByActivoTrueAndConvocatoriaReunionId(c2.getId(), pageable);
+    Page<Evaluacion> result = repository.findAllByActivoTrueAndConvocatoriaReunionIdAndEsRevMinimaFalse(c2.getId(),
+        pageable);
 
     // then: Se recuperan los datos correctamente según la paginación solicitada
     Assertions.assertThat(result.getNumber()).isEqualTo(pageResponse.getNumber());

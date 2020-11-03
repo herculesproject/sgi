@@ -22,13 +22,13 @@ public interface EvaluacionRepository
 
   /**
    * Obtener todas las entidades paginadas {@link Evaluacion} activas para una
-   * determinada {@link ConvocatoriaReunion}.
+   * determinada {@link ConvocatoriaReunion} que no sean de revisión mínima.
    *
    * @param id       Id de {@link ConvocatoriaReunion}.
    * @param pageable la información de la paginación.
    * @return la lista de entidades {@link Evaluacion} paginadas.
    */
-  Page<Evaluacion> findAllByActivoTrueAndConvocatoriaReunionId(Long id, Pageable pageable);
+  Page<Evaluacion> findAllByActivoTrueAndConvocatoriaReunionIdAndEsRevMinimaFalse(Long id, Pageable pageable);
 
   /**
    * Recupera aquellas evaluaciones activas que sean o no revisión mínima según el

@@ -502,9 +502,15 @@ public class ConvocatoriaReunionIT {
         .append("/evaluaciones-activas").toString();
 
     List<Evaluacion> result = new ArrayList<>();
-    result.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1)));
-    result.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3)));
-    result.add(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5)));
+    Evaluacion evaluacion1 = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1));
+    evaluacion1.setEsRevMinima(Boolean.FALSE);
+    result.add(evaluacion1);
+    Evaluacion evaluacion2 = generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3));
+    evaluacion2.setEsRevMinima(Boolean.FALSE);
+    result.add(evaluacion2);
+    Evaluacion evaluacion3 = generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5));
+    evaluacion3.setEsRevMinima(Boolean.FALSE);
+    result.add(evaluacion3);
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-ACT-C", "ETI-ACT-E")));
@@ -530,9 +536,15 @@ public class ConvocatoriaReunionIT {
         .append("/evaluaciones-activas").toString();
 
     List<Evaluacion> result = new LinkedList<>();
-    result.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1)));
-    result.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3)));
-    result.add(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5)));
+    Evaluacion evaluacion1 = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1));
+    evaluacion1.setEsRevMinima(Boolean.FALSE);
+    result.add(evaluacion1);
+    Evaluacion evaluacion2 = generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3));
+    evaluacion2.setEsRevMinima(Boolean.FALSE);
+    result.add(evaluacion2);
+    Evaluacion evaluacion3 = generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5));
+    evaluacion3.setEsRevMinima(Boolean.FALSE);
+    result.add(evaluacion3);
 
     // página 1 con 2 elementos por página
     HttpHeaders headers = new HttpHeaders();
@@ -577,9 +589,15 @@ public class ConvocatoriaReunionIT {
         .toString();
 
     List<Evaluacion> result = new ArrayList<>();
-    result.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), convocatoriaReunionId));
-    result.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3), convocatoriaReunionId));
-    result.add(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5), convocatoriaReunionId));
+    Evaluacion evaluacion1 = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), convocatoriaReunionId);
+    evaluacion1.setEsRevMinima(Boolean.FALSE);
+    result.add(evaluacion1);
+    Evaluacion evaluacion2 = generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3), convocatoriaReunionId);
+    evaluacion2.setEsRevMinima(Boolean.FALSE);
+    result.add(evaluacion2);
+    Evaluacion evaluacion3 = generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5), convocatoriaReunionId);
+    evaluacion3.setEsRevMinima(Boolean.FALSE);
+    result.add(evaluacion3);
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-EVC-V")));
@@ -605,9 +623,15 @@ public class ConvocatoriaReunionIT {
         .toString();
 
     List<Evaluacion> result = new LinkedList<>();
-    result.add(generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), convocatoriaReunionId));
-    result.add(generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3), convocatoriaReunionId));
-    result.add(generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5), convocatoriaReunionId));
+    Evaluacion evaluacion1 = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), convocatoriaReunionId);
+    evaluacion1.setEsRevMinima(Boolean.FALSE);
+    result.add(evaluacion1);
+    Evaluacion evaluacion2 = generarMockEvaluacion(Long.valueOf(3), String.format("%03d", 3), convocatoriaReunionId);
+    evaluacion2.setEsRevMinima(Boolean.FALSE);
+    result.add(evaluacion2);
+    Evaluacion evaluacion3 = generarMockEvaluacion(Long.valueOf(5), String.format("%03d", 5), convocatoriaReunionId);
+    evaluacion3.setEsRevMinima(Boolean.FALSE);
+    result.add(evaluacion3);
 
     // página 1 con 2 elementos por página
     HttpHeaders headers = new HttpHeaders();
