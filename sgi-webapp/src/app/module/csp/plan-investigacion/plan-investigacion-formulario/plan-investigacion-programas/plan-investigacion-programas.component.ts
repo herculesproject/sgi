@@ -116,9 +116,8 @@ export class PlanInvestigacionProgramasComponent extends FragmentComponent imple
   switchToNew() {
     this.logger.debug(PlanInvestigacionProgramasComponent.name, `${this.switchToNew.name}()`, 'start');
     const newNode = new NodePrograma(new StatusWrapper<IPrograma>({
-      padre: this.checkedNode ? this.checkedNode.programa.value : { id: this.formPart.getKey() } as IPrograma
+      padre: {} as IPrograma
     } as IPrograma));
-    newNode.parent = this.checkedNode;
     this.viewMode = VIEW_MODE.NEW;
     this.viewingNode = newNode;
     this.loadDetails(this.viewingNode);

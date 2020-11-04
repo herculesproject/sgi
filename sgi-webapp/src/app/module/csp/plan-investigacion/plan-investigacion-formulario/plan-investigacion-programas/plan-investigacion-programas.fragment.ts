@@ -27,6 +27,8 @@ export class NodePrograma implements INodePrograma {
   }
 
   addChild(child: NodePrograma) {
+    child.parent = this;
+    child.programa.value.padre = this.programa.value;
     this._childs.push(child);
     this.sortChildsByName();
   }
