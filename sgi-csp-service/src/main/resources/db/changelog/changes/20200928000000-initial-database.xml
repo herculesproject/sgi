@@ -125,6 +125,10 @@
     <createSequence sequenceName="tipo_regimen_concurrencia_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-requisito_ip_seq">
+    <createSequence sequenceName="requisito_ip_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -663,6 +667,29 @@
     </createTable>
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-requisito_ip">
+    <createTable tableName="requisito_ip">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="requisito_ip_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="requisito_ip_pk" />
+      </column>
+      <column name="anio" type="INT" />
+      <column name="convocatoria_id" type="BIGINT" />
+      <column name="num_maximo_ip" type="INT" />
+      <column name="nivel_academico_ref" type="VARCHAR(50)" />
+      <column name="anios_nivel_academico" type="INT" />
+      <column name="edad_maxima" type="INT" />
+      <column name="sexo" type="VARCHAR(50)" />
+      <column name="vinculacion_universidad" type="BOOLEAN" />
+      <column name="modalidad_contrato_ref" type="VARCHAR(50)" />
+      <column name="anios_vinculacion" type="INT" />
+      <column name="num_minimo_competitivos" type="INT" />
+      <column name="num_minimo_no_competitivos" type="INT" />
+      <column name="num_maximo_competitivos_activos" type="INT" />
+      <column name="num_maximo_no_competitivos_activos" type="INT" />
+      <column name="otros_requisitos" type="VARCHAR(250)" />
+    </createTable>
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
   <!-- ########################################################## -->
@@ -788,6 +815,10 @@
     <addForeignKeyConstraint baseColumnNames="programa_padre_id" baseTableName="programa" constraintName="programa_programa_padre_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="programa" validate="true" />
   </changeSet>
 
+  <changeSet author="master" id="20200601000000-requisito_ip_convocatoria_FK">
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="requisito_ip" constraintName="requisito_ip_convocatoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- UNIQUE CONSTRAINT -->
   <!-- ########################################################## -->
@@ -857,6 +888,10 @@
 
   <changeSet author="master" id="20200928000000-tipo_regimen_concurrencia_uk">
     <addUniqueConstraint columnNames="nombre" constraintName="tipo_regimen_concurrencia_uk" tableName="tipo_regimen_concurrencia" />
+  </changeSet>
+
+  <changeSet author="master" id="20200928000000-requisito_ip_uk">
+    <addUniqueConstraint columnNames="convocatoria_id" constraintName="requisito_ip_uk" tableName="requisito_ip" />
   </changeSet>
 
   <!-- ########################################################## -->

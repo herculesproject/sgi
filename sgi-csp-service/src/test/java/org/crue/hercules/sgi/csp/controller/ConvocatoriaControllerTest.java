@@ -102,7 +102,6 @@ public class ConvocatoriaControllerTest {
   private ConvocatoriaHitoService convocatoriaHitoService;
   @MockBean
   private ConvocatoriaPeriodoSeguimientoCientificoService convocatoriaPeriodoSeguimientoCientificoService;
-
   @MockBean
   private ConvocatoriaPeriodoJustificacionService convocatoriaPeriodoJustificacionService;
 

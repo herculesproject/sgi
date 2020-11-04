@@ -94,7 +94,7 @@ public class ConvocatoriaController {
    * @param convocatoriaFaseService                         {@link ConvocatoriaFaseService}
    * @param convocatoriaHitoService                         {@link ConvocatoriaHitoService}
    * @param convocatoriaPeriodoJustificacionService         {@link ConvocatoriaPeriodoJustificacionService}.
-   * @param convocatoriaPeriodoSeguimientoCientificoService {@link convocatoriaPeriodoSeguimientoCientificoService}
+   * @param convocatoriaPeriodoSeguimientoCientificoService {@link ConvocatoriaPeriodoSeguimientoCientificoService}
    */
   public ConvocatoriaController(ConvocatoriaService convocatoriaService,
       ConvocatoriaAreaTematicaService convocatoriaAreaTematicaService,

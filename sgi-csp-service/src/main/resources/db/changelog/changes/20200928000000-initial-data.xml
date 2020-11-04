@@ -791,4 +791,71 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20201022000000-requisito_ip">
+    <insert tableName="requisito_ip">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')" />
+      <column name="num_maximo_ip" value="8" />
+      <column name="nivel_academico_ref" value="na-001" />
+      <column name="anios_nivel_academico" value="4" />
+      <column name="edad_maxima" value="48" />
+      <column name="sexo" value="Hombre" />
+      <column name="vinculacion_universidad" value="false" />
+      <column name="modalidad_contrato_ref" value="mc-001" />
+      <column name="anios_vinculacion" value="10" />
+      <column name="num_minimo_competitivos" value="11" />
+      <column name="num_minimo_no_competitivos" value="5" />
+      <column name="num_maximo_competitivos_activos" value="10" />
+      <column name="num_maximo_no_competitivos_activos" value="3" />
+      <column name="otros_requisitos" value="otros" />
+    </insert>
+    <insert tableName="requisito_ip">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')" />
+      <column name="num_maximo_ip" value="8" />
+      <column name="nivel_academico_ref" value="na-002" />
+      <column name="anios_nivel_academico" value="4" />
+      <column name="edad_maxima" value="48" />
+      <column name="sexo" value="Mujer" />
+      <column name="vinculacion_universidad" value="false" />
+      <column name="modalidad_contrato_ref" value="mc-002" />
+      <column name="anios_vinculacion" value="10" />
+      <column name="num_minimo_competitivos" value="11" />
+      <column name="num_minimo_no_competitivos" value="5" />
+      <column name="num_maximo_competitivos_activos" value="10" />
+      <column name="num_maximo_no_competitivos_activos" value="3" />
+      <column name="otros_requisitos" value="otros" />
+    </insert>
+    <insert tableName="requisito_ip">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-003')" />
+      <column name="num_maximo_ip" value="8" />
+      <column name="nivel_academico_ref" value="na-003" />
+      <column name="anios_nivel_academico" value="4" />
+      <column name="edad_maxima" value="52" />
+      <column name="sexo" value="Hombre" />
+      <column name="vinculacion_universidad" value="false" />
+      <column name="modalidad_contrato_ref" value="mc-003" />
+      <column name="anios_vinculacion" value="10" />
+      <column name="num_minimo_competitivos" value="11" />
+      <column name="num_minimo_no_competitivos" value="20" />
+      <column name="num_maximo_competitivos_activos" value="10" />
+      <column name="num_maximo_no_competitivos_activos" value="3" />
+      <column name="otros_requisitos" value="otros requisitos" />
+    </insert>
+    <insert tableName="requisito_ip">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-004')" />
+      <column name="num_maximo_ip" value="8" />
+      <column name="nivel_academico_ref" value="na-004" />
+      <column name="anios_nivel_academico" value="2" />
+      <column name="edad_maxima" value="70" />
+      <column name="sexo" value="Mujer" />
+      <column name="vinculacion_universidad" value="false" />
+      <column name="modalidad_contrato_ref" value="mc-004" />
+      <column name="anios_vinculacion" value="15" />
+      <column name="num_minimo_competitivos" value="11" />
+      <column name="num_minimo_no_competitivos" value="5" />
+      <column name="num_maximo_competitivos_activos" value="10" />
+      <column name="num_maximo_no_competitivos_activos" value="3" />
+      <column name="otros_requisitos" value="otros" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>
