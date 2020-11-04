@@ -20,7 +20,6 @@ import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-
 import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
 import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
 
-
 const convocatorias: IConvocatoria[] = [
   {
     id: 1, referencia: 'REF001', titulo: 'Ayudas plan propio', fechaInicioSolicitud: new Date(),

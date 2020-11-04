@@ -6,5 +6,6 @@ export const CONVOCATORIA_ROUTE_NAMES = {
   ENTIDADES_CONVOCANTES: 'entidades-convocantes',
   ENTIDADES_FINANCIADORAS: 'entidades-financiadoras',
   SEGUIMIENTO_CIENTIFICO: 'seguimiento-cientifico',
-  ENLACES: 'enlaces'
+  ENLACES: 'enlaces',
+  REQUISITOS_IP: 'requisitos-ip'
 };

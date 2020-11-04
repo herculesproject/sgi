@@ -23,6 +23,7 @@ import { ConvocatoriaHitosComponent } from './convocatoria-formulario/convocator
 import { ConvocatoriaEntidadesConvocantesComponent } from './convocatoria-formulario/convocatoria-entidades-convocantes/convocatoria-entidades-convocantes.component';
 import { ConvocatoriaEntidadesFinanciadorasComponent } from './convocatoria-formulario/convocatoria-entidades-financiadoras/convocatoria-entidades-financiadoras.component';
 import { ConvocatoriaEnlaceComponent } from './convocatoria-formulario/convocatoria-enlace/convocatoria-enlace.component';
+import { ConvocatoriaRequisitosIPComponent } from './convocatoria-formulario/convocatoria-requisitos-ip/convocatoria-requisitos-ip.component';
 
 
 const MSG_EDIT_TITLE = marker('csp.convocatoria.editar.titulo');
@@ -91,6 +92,11 @@ const routes: SgiRoutes = [
         component: ConvocatoriaEnlaceComponent,
         canDeactivate: [FragmentGuard]
       },
+      {
+        path: CONVOCATORIA_ROUTE_NAMES.REQUISITOS_IP,
+        component: ConvocatoriaRequisitosIPComponent,
+        canDeactivate: [FragmentGuard]
+      },
     ]
   },
   {
@@ -146,6 +152,11 @@ const routes: SgiRoutes = [
       {
         path: CONVOCATORIA_ROUTE_NAMES.SEGUIMIENTO_CIENTIFICO,
         component: ConvocatoriaSeguimientoCientificoComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: CONVOCATORIA_ROUTE_NAMES.REQUISITOS_IP,
+        component: ConvocatoriaRequisitosIPComponent,
         canDeactivate: [FragmentGuard]
       },
     ]

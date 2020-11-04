@@ -36,7 +36,9 @@
 
       <sgi-action-fragment-menu-item class="demo" [title]="'csp.convocatoria.documentos' | translate">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item class="demo" [title]="'csp.convocatoria.requisitos.ip' | translate">
+      <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.REQUISITOS_IP]"
+        [title]="'csp.convocatoria.requisitos-ip' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.REQUISITOS_IP)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item class="demo" [title]="'csp.convocatoria.requisitos.equipo' | translate">
       </sgi-action-fragment-menu-item>
