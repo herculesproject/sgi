@@ -20,7 +20,7 @@ public interface RequisitoIPService {
    * Actualizar {@link RequisitoIP}.
    *
    * @param requisitoIPActualizar la entidad {@link RequisitoIP} a actualizar.
-   * @param idConvocatoria        identificador de la {@Convocatoria} a
+   * @param idConvocatoria        identificador de la {@link Convocatoria} a
    *                              actualizar.
    * @return la entidad {@link RequisitoIP} persistida.
    */
