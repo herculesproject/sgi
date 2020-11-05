@@ -1,9 +1,12 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
@@ -19,6 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
@@ -44,705 +48,230 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest {
   }
 
   @Test
-  public void create_ReturnsConvocatoriaPeriodoSeguimientoCientifico() {
-    // given: Existing Periodos from MesInicial 3 to MesFinal 12
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(24).build();
-    List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientifico = new LinkedList<ConvocatoriaPeriodoSeguimientoCientifico>();
-    for (int i = 2, j = 4; i <= 6; i++, j += 2) {
-      listaConvocatoriaPeriodoSeguimientoCientifico.add(ConvocatoriaPeriodoSeguimientoCientifico//
-          .builder()//
-          .id(Long.valueOf(i - 1))//
-          .convocatoria(convocatoria)//
-          .numPeriodo(i - 1)//
-          .mesInicial((i * 2) - 1)//
-          .mesFinal(j * 1)//
-          .build());
-    }
-    // given: new ConvocatoriaPeriodoSeguimientoCientifico
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico//
-        .builder()//
-        .convocatoria(convocatoria)//
-        .mesInicial(1)//
-        .mesFinal(2)//
-        .fechaInicioPresentacion(LocalDate.of(2020, 1, 1))//
-        .fechaFinPresentacion(LocalDate.of(2020, 2, 1))//
-        .observaciones("observaciones")//
-        .build();
+  public void updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria_ReturnsConvocatoriaPeriodoSeguimientoCientificoList() {
+    // given: una lista con uno de los ConvocatoriaPeriodoSeguimientoCientifico
+    // actualizado, otro nuevo y sin el otros existente
+    Long convocatoriaId = 1L;
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
+    List<ConvocatoriaPeriodoSeguimientoCientifico> peridosJustificiacionExistentes = new ArrayList<>();
+    peridosJustificiacionExistentes.add(generarMockConvocatoriaPeriodoSeguimientoCientifico(2L, 5, 10, 1L));
+    peridosJustificiacionExistentes.add(generarMockConvocatoriaPeriodoSeguimientoCientifico(4L, 11, 15, 1L));
+    peridosJustificiacionExistentes.add(generarMockConvocatoriaPeriodoSeguimientoCientifico(5L, 20, 25, 1L));
+
+    ConvocatoriaPeriodoSeguimientoCientifico newConvocatoriaPeriodoSeguimientoCientifico = generarMockConvocatoriaPeriodoSeguimientoCientifico(
+        null, 1, 10, 1L);
+    ConvocatoriaPeriodoSeguimientoCientifico updatedConvocatoriaPeriodoSeguimientoCientifico = generarMockConvocatoriaPeriodoSeguimientoCientifico(
+        4L, 11, 19, 1L);
+
+    List<ConvocatoriaPeriodoSeguimientoCientifico> peridosJustificiacionActualizar = new ArrayList<>();
+    peridosJustificiacionActualizar.add(newConvocatoriaPeriodoSeguimientoCientifico);
+    peridosJustificiacionActualizar.add(updatedConvocatoriaPeriodoSeguimientoCientifico);
+
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
 
     BDDMockito.given(repository.findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong()))
-        .willReturn(listaConvocatoriaPeriodoSeguimientoCientifico);
+        .willReturn(peridosJustificiacionExistentes);
+
+    BDDMockito.doNothing().when(repository)
+        .deleteAll(ArgumentMatchers.<ConvocatoriaPeriodoSeguimientoCientifico>anyList());
 
     BDDMockito.given(repository.saveAll(ArgumentMatchers.<ConvocatoriaPeriodoSeguimientoCientifico>anyList()))
         .will((InvocationOnMock invocation) -> {
-          convocatoriaPeriodoSeguimientoCientifico.setId(1L);
-          convocatoriaPeriodoSeguimientoCientifico.setNumPeriodo(1);
-          return invocation.getArgument(0);
+          List<ConvocatoriaPeriodoSeguimientoCientifico> periodoSeguimientoCientificos = invocation.getArgument(0);
+          return periodoSeguimientoCientificos.stream().map(periodoSeguimientoCientifico -> {
+            if (periodoSeguimientoCientifico.getId() == null) {
+              periodoSeguimientoCientifico.setId(6L);
+            }
+            periodoSeguimientoCientifico.getConvocatoria().setId(convocatoriaId);
+            return periodoSeguimientoCientifico;
+          }).collect(Collectors.toList());
         });
 
-    // when: create ConvocatoriaPeriodoSeguimientoCientifico
-    ConvocatoriaPeriodoSeguimientoCientifico created = service.create(convocatoriaPeriodoSeguimientoCientifico);
+    // when: updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria
+    List<ConvocatoriaPeriodoSeguimientoCientifico> periodosSeguimientoCientificoActualizados = service
+        .updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria(convocatoriaId, peridosJustificiacionActualizar);
 
-    // then: new ConvocatoriaPeriodoSeguimientoCientifico is created
-    Assertions.assertThat(created).isNotNull();
-    Assertions.assertThat(created.getId()).isNotNull();
-    Assertions.assertThat(created.getNumPeriodo()).isEqualTo(1);
-    Assertions.assertThat(created.getMesInicial()).isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getMesInicial());
-    Assertions.assertThat(created.getMesFinal()).isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getMesFinal());
-    Assertions.assertThat(created.getFechaInicioPresentacion())
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaInicioPresentacion());
-    Assertions.assertThat(created.getFechaFinPresentacion())
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaFinPresentacion());
-    Assertions.assertThat(created.getObservaciones())
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getObservaciones());
+    // then: Se crea el nuevo ConvocatoriaPeriodoSeguimientoCientifico, se actualiza
+    // el existe y se elimina el otro
+    Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(0).getId()).as("get(0).getId()").isEqualTo(6L);
+    Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(0).getConvocatoria().getId())
+        .as("get(0).getConvocatoria().getId()").isEqualTo(convocatoriaId);
+    Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(0).getMesInicial()).as("get(0).getMesInicial()")
+        .isEqualTo(newConvocatoriaPeriodoSeguimientoCientifico.getMesInicial());
+    Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(0).getMesFinal()).as("get(0).getMesFinal()")
+        .isEqualTo(newConvocatoriaPeriodoSeguimientoCientifico.getMesFinal());
+    Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(0).getFechaInicioPresentacion())
+        .as("get(0).getFechaInicioPresentacion()")
+        .isEqualTo(newConvocatoriaPeriodoSeguimientoCientifico.getFechaInicioPresentacion());
+    Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(0).getFechaFinPresentacion())
+        .as("get(0).getFechaFinPresentacion()")
+        .isEqualTo(newConvocatoriaPeriodoSeguimientoCientifico.getFechaFinPresentacion());
+    Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(0).getNumPeriodo()).as("get(0).getNumPeriodo()")
+        .isEqualTo(1);
+    Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(0).getObservaciones())
+        .as("get(0).getObservaciones()").isEqualTo(newConvocatoriaPeriodoSeguimientoCientifico.getObservaciones());
+
+    Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(1).getId()).as("get(1).getId()")
+        .isEqualTo(updatedConvocatoriaPeriodoSeguimientoCientifico.getId());
+    Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(1).getConvocatoria().getId())
+        .as("get(1).getConvocatoria().getId()").isEqualTo(convocatoriaId);
+    Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(1).getMesInicial()).as("get(1).getMesInicial()")
+        .isEqualTo(updatedConvocatoriaPeriodoSeguimientoCientifico.getMesInicial());
+    Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(1).getMesFinal()).as("get(1).getMesFinal()")
+        .isEqualTo(updatedConvocatoriaPeriodoSeguimientoCientifico.getMesFinal());
+    Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(1).getFechaInicioPresentacion())
+        .as("get(1).getFechaInicioPresentacion()")
+        .isEqualTo(updatedConvocatoriaPeriodoSeguimientoCientifico.getFechaInicioPresentacion());
+    Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(1).getFechaFinPresentacion())
+        .as("get(1).getFechaFinPresentacion()")
+        .isEqualTo(updatedConvocatoriaPeriodoSeguimientoCientifico.getFechaFinPresentacion());
+    Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(1).getNumPeriodo()).as("get(1).getNumPeriodo()")
+        .isEqualTo(2);
+    Assertions.assertThat(periodosSeguimientoCientificoActualizados.get(1).getObservaciones())
+        .as("get(1).getObservaciones()").isEqualTo(updatedConvocatoriaPeriodoSeguimientoCientifico.getObservaciones());
+
+    Mockito.verify(repository, Mockito.times(1))
+        .deleteAll(ArgumentMatchers.<ConvocatoriaPeriodoSeguimientoCientifico>anyList());
+    Mockito.verify(repository, Mockito.times(1))
+        .saveAll(ArgumentMatchers.<ConvocatoriaPeriodoSeguimientoCientifico>anyList());
   }
 
   @Test
-  public void create_WithId_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoSeguimientoCientifico with id filled
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().id(1L).build();
-
-    Assertions.assertThatThrownBy(
-        // when: create ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.create(convocatoriaPeriodoSeguimientoCientifico))
-        // then: throw exception as id can't be provided
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id tiene que ser null para crear ConvocatoriaPeriodoSeguimientoCientifico");
-  }
-
-  @Test
-  public void create_WithoutConvocatoria_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoSeguimientoCientifico without convocatoria
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().build();
-
-    Assertions.assertThatThrownBy(
-        // when: create ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.create(convocatoriaPeriodoSeguimientoCientifico))
-        // then: throw exception as Convocatoria is not provided
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Convocatoria no puede ser null en ConvocatoriaPeriodoSeguimientoCientifico");
-  }
-
-  @Test
-  public void create_WithMesFinalLowerThanMesInicial_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoSeguimientoCientifico with MesInicial >= MesFinal
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(24).build();
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().convocatoria(convocatoria).mesInicial(2).mesFinal(1).build();
-
-    Assertions.assertThatThrownBy(
-        // when: create ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.create(convocatoriaPeriodoSeguimientoCientifico))
-        // then: throw exception as mesInicial is >= mesFinal
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El mes inicial debe ser anterior al mes final");
-  }
-
-  @Test
-  public void create_WithFechaFinBeforeFechaInicio_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoSeguimientoCientifico with FechaInicio >=
-    // FechaFin
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(24).build();
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico//
-        .builder()//
-        .convocatoria(convocatoria)//
-        .mesInicial(1)//
-        .mesFinal(2)//
-        .fechaInicioPresentacion(LocalDate.of(2020, 2, 1))//
-        .fechaFinPresentacion(LocalDate.of(2020, 1, 1))//
-        .build();
-
-    Assertions.assertThatThrownBy(
-        // when: create ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.create(convocatoriaPeriodoSeguimientoCientifico))
-        // then: throw exception as FechaInicio is >= FechaFin
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La fecha de inicio debe ser anterior a la fecha de fin");
-  }
-
-  @Test
-  public void create_WithNoExistingConvocatoria_ThrowsNotFoundException() {
-    // given: a ConvocatoriaPeriodoSeguimientoCientifico with no existing
-    // Convocatoria
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(24).build();
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().convocatoria(convocatoria).mesInicial(1).mesFinal(2).build();
+  public void updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria_WithNoExistingConvocatoria_ThrowsConvocatoriaNotFoundException() {
+    // given: a ConvocatoriaEntidadGestora with non existing Convocatoria
+    Long convocatoriaId = 1L;
+    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = generarMockConvocatoriaPeriodoSeguimientoCientifico(
+        1L);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
     Assertions.assertThatThrownBy(
-        // when: create ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.create(convocatoriaPeriodoSeguimientoCientifico))
-        // then: throw exception as convocatoria is not found
+        // when: update ConvocatoriaEntidadGestora
+        () -> service.updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria(convocatoriaId,
+            Arrays.asList(convocatoriaPeriodoSeguimientoCientifico)))
+        // then: throw exception as Convocatoria is not found
         .isInstanceOf(ConvocatoriaNotFoundException.class);
   }
 
   @Test
-  public void create_WithMesFinalGreaterThanDuracionConvocatoria_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoSeguimientoCientifico with MesFinal >
-    // duracion Convocatoria
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(12).build();
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().convocatoria(convocatoria).mesInicial(1).mesFinal(24).build();
+  public void updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria_WithIdNotExist_ThrowsConvocatoriaPeriodoSeguimientoCientificoNotFoundException() {
+    // given: Un ConvocatoriaPeriodoSeguimientoCientifico a actualizar con un id que
+    // no existe
+    Long convocatoriaId = 1L;
+    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = generarMockConvocatoriaPeriodoSeguimientoCientifico(
+        1L);
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-
-    Assertions.assertThatThrownBy(
-        // when: create ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.create(convocatoriaPeriodoSeguimientoCientifico))
-        // then: throw exception as Periodo > duracion Convocatoria
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La duración en meses de la convocatoria es inferior al periodo");
-  }
-
-  @Test
-  public void create_WithoutDuracionConvocatoria_NotThrowAnyException() {
-    // given: a ConvocatoriaPeriodoSeguimientoCientifico with MesFinal >
-    // duracion Convocatoria
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).build();
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().convocatoria(convocatoria).mesInicial(1).mesFinal(24).build();
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-
-    BDDMockito.given(repository.saveAll(ArgumentMatchers.<ConvocatoriaPeriodoSeguimientoCientifico>anyList()))
-        .will((InvocationOnMock invocation) -> {
-          convocatoriaPeriodoSeguimientoCientifico.setId(1L);
-          convocatoriaPeriodoSeguimientoCientifico.setNumPeriodo(1);
-          return invocation.getArgument(0);
-        });
-
-    Assertions.assertThatCode(
-        // when: create ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.create(convocatoriaPeriodoSeguimientoCientifico))
-        // then: no exception is thrown
-        .doesNotThrowAnyException();
-  }
-
-  @Test
-  public void create_OverlapsExisting_Case1_ThrowsIllegalArgumentException() {
-    // given: Existing Periodos from MesInicial 3 to MesFinal 12
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(24).build();
-    List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientifico = new LinkedList<ConvocatoriaPeriodoSeguimientoCientifico>();
-    for (int i = 2, j = 4; i <= 6; i++, j += 2) {
-      listaConvocatoriaPeriodoSeguimientoCientifico.add(ConvocatoriaPeriodoSeguimientoCientifico//
-          .builder()//
-          .id(Long.valueOf(i - 1))//
-          .convocatoria(convocatoria)//
-          .numPeriodo(i - 1)//
-          .mesInicial((i * 2) - 1)//
-          .mesFinal(j * 1)//
-          .build());
-    }
-    // given: a ConvocatoriaPeriodoSeguimientoCientifico (MesInicial 1 a MesFinal 3)
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().convocatoria(convocatoria).mesInicial(1).mesFinal(3).build();
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
 
     BDDMockito.given(repository.findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong()))
-        .willReturn(listaConvocatoriaPeriodoSeguimientoCientifico);
+        .willReturn(new ArrayList<>());
 
-    Assertions.assertThatThrownBy(
-        // when: create ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.create(convocatoriaPeriodoSeguimientoCientifico))
-        // then: throw exception as convocatoria is not found
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El periodo se solapa con otro existente");
-  }
-
-  @Test
-  public void create_OverlapsExisting_Case2_ThrowsIllegalArgumentException() {
-    // given: Existing Periodos from MesInicial 3 to MesFinal 12
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(24).build();
-    List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientifico = new LinkedList<ConvocatoriaPeriodoSeguimientoCientifico>();
-    for (int i = 2, j = 4; i <= 6; i++, j += 2) {
-      listaConvocatoriaPeriodoSeguimientoCientifico.add(ConvocatoriaPeriodoSeguimientoCientifico//
-          .builder()//
-          .id(Long.valueOf(i - 1))//
-          .convocatoria(convocatoria)//
-          .numPeriodo(i - 1)//
-          .mesInicial((i * 2) - 1)//
-          .mesFinal(j * 1)//
-          .build());
-    }
-    // given: a ConvocatoriaPeriodoSeguimientoCientifico (MesInicial 5 a MesFinal 6)
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().convocatoria(convocatoria).mesInicial(5).mesFinal(6).build();
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-
-    BDDMockito.given(repository.findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong()))
-        .willReturn(listaConvocatoriaPeriodoSeguimientoCientifico);
-
-    Assertions.assertThatThrownBy(
-        // when: create ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.create(convocatoriaPeriodoSeguimientoCientifico))
-        // then: throw exception as convocatoria is not found
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El periodo se solapa con otro existente");
-  }
-
-  @Test
-  public void create_OverlapsExisting_Case3_ThrowsIllegalArgumentException() {
-    // given: Existing Periodos from MesInicial 3 to MesFinal 12
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(24).build();
-    List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientifico = new LinkedList<ConvocatoriaPeriodoSeguimientoCientifico>();
-    for (int i = 2, j = 4; i <= 6; i++, j += 2) {
-      listaConvocatoriaPeriodoSeguimientoCientifico.add(ConvocatoriaPeriodoSeguimientoCientifico//
-          .builder()//
-          .id(Long.valueOf(i - 1))//
-          .convocatoria(convocatoria)//
-          .numPeriodo(i - 1)//
-          .mesInicial((i * 2) - 1)//
-          .mesFinal(j * 1)//
-          .build());
-    }
-    // given:ConvocatoriaPeriodoSeguimientoCientifico (MesInicial 12 a MesFinal 13)
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().convocatoria(convocatoria).mesInicial(12).mesFinal(13).build();
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-
-    BDDMockito.given(repository.findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong()))
-        .willReturn(listaConvocatoriaPeriodoSeguimientoCientifico);
-
-    Assertions.assertThatThrownBy(
-        // when: create ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.create(convocatoriaPeriodoSeguimientoCientifico))
-        // then: throw exception as convocatoria is not found
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El periodo se solapa con otro existente");
-  }
-
-  @Test
-  public void create_OverlapsExisting_Case4_ThrowsIllegalArgumentException() {
-    // given: Existing Periodos from MesInicial 3 to MesFinal 12
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(24).build();
-    List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientifico = new LinkedList<ConvocatoriaPeriodoSeguimientoCientifico>();
-    for (int i = 2, j = 4; i <= 6; i++, j += 2) {
-      listaConvocatoriaPeriodoSeguimientoCientifico.add(ConvocatoriaPeriodoSeguimientoCientifico//
-          .builder()//
-          .id(Long.valueOf(i - 1))//
-          .convocatoria(convocatoria)//
-          .numPeriodo(i - 1)//
-          .mesInicial((i * 2) - 1)//
-          .mesFinal(j * 1)//
-          .build());
-    }
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().convocatoria(convocatoria).mesInicial(1).mesFinal(13).build();
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-
-    BDDMockito.given(repository.findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong()))
-        .willReturn(listaConvocatoriaPeriodoSeguimientoCientifico);
-
-    Assertions.assertThatThrownBy(
-        // when: create ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.create(convocatoriaPeriodoSeguimientoCientifico))
-        // then: throw exception as convocatoria is not found
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El periodo se solapa con otro existente");
-  }
-
-  @Test
-  public void update_WithExistingId_ReturnsConvocatoriaPeriodoSeguimientoCientifico() {
-    // given: Existing Periodos from MesInicial 3 to MesFinal 12
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(24).build();
-    List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientifico = new LinkedList<ConvocatoriaPeriodoSeguimientoCientifico>();
-    for (int i = 2, j = 4; i <= 6; i++, j += 2) {
-      listaConvocatoriaPeriodoSeguimientoCientifico.add(ConvocatoriaPeriodoSeguimientoCientifico//
-          .builder()//
-          .id(Long.valueOf(i - 1))//
-          .convocatoria(convocatoria)//
-          .numPeriodo(i - 1)//
-          .mesInicial((i * 2) - 1)//
-          .mesFinal(j * 1)//
-          .build());
-    }
-    // given: updated ConvocatoriaPeriodoSeguimientoCientifico with id=1 (MesInicial
-    // 14 a
-    // MesFinal 15)
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder()//
-        .id(1L)//
-        .convocatoria(convocatoria)//
-        .mesInicial(14)//
-        .mesFinal(15)//
-        .fechaInicioPresentacion(LocalDate.of(2020, 1, 1))//
-        .fechaFinPresentacion(LocalDate.of(2020, 2, 1))//
-        .observaciones("observaciones")//
-        .build();
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoSeguimientoCientifico));
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-
-    BDDMockito.given(repository.findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong()))
-        .willReturn(listaConvocatoriaPeriodoSeguimientoCientifico);
-
-    BDDMockito.given(repository.saveAll(ArgumentMatchers.<ConvocatoriaPeriodoSeguimientoCientifico>anyList()))
-        .will((InvocationOnMock invocation) -> {
-          convocatoriaPeriodoSeguimientoCientifico.setNumPeriodo(5);
-          return invocation.getArgument(0);
-        });
-
-    // when: update ConvocatoriaPeriodoSeguimientoCientifico
-    ConvocatoriaPeriodoSeguimientoCientifico updated = service.update(convocatoriaPeriodoSeguimientoCientifico);
-
-    // then: ConvocatoriaPeriodoSeguimientoCientifico is updated
-    Assertions.assertThat(updated).isNotNull();
-    Assertions.assertThat(updated.getId()).isEqualTo(convocatoria.getId());
-    Assertions.assertThat(updated.getNumPeriodo()).isEqualTo(5);
-    Assertions.assertThat(updated.getMesInicial()).isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getMesInicial());
-    Assertions.assertThat(updated.getMesFinal()).isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getMesFinal());
-    Assertions.assertThat(updated.getFechaInicioPresentacion())
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaInicioPresentacion());
-    Assertions.assertThat(updated.getFechaFinPresentacion())
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaFinPresentacion());
-    Assertions.assertThat(updated.getObservaciones())
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getObservaciones());
-  }
-
-  @Test
-  public void update_WithoutId_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoSeguimientoCientifico without id filled
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().build();
-
-    Assertions.assertThatThrownBy(
-        // when: update ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.update(convocatoriaPeriodoSeguimientoCientifico))
-        // then: throw exception as id must be provided
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessageContaining("Id no puede ser null para actualizar ConvocatoriaPeriodoSeguimientoCientifico");
-  }
-
-  @Test
-  public void update_WithNoExistingId_ThrowsNotFoundException() throws Exception {
-    // given: no existing id
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().id(1L).build();
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
-
-    Assertions.assertThatThrownBy(
-        // when: update non existing ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.update(convocatoriaPeriodoSeguimientoCientifico))
-        // then: NotFoundException is thrown
+    // when:updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria
+    // then: Lanza una excepcion porque el ConvocatoriaPeriodoSeguimientoCientifico
+    // no existe
+    Assertions
+        .assertThatThrownBy(() -> service.updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria(convocatoriaId,
+            Arrays.asList(convocatoriaPeriodoSeguimientoCientifico)))
         .isInstanceOf(ConvocatoriaPeriodoSeguimientoCientificoNotFoundException.class);
   }
 
   @Test
-  public void update_WithoutConvocatoria_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoSeguimientoCientifico without convocatoria
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().id(1L).build();
+  public void updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria_WithMesFinalLowerThanMesInicial_ThrowsIllegalArgumentException() {
+    // given: a ConvocatoriaPeriodoSeguimientoCientifico with mesFinal lower than
+    // mesInicial
+    Long convocatoriaId = 1L;
+    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = generarMockConvocatoriaPeriodoSeguimientoCientifico(
+        1L);
+    convocatoriaPeriodoSeguimientoCientifico.setMesInicial(convocatoriaPeriodoSeguimientoCientifico.getMesFinal() + 1);
 
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoSeguimientoCientifico));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
+
+    BDDMockito.given(repository.findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong()))
+        .willReturn(Arrays.asList(convocatoriaPeriodoSeguimientoCientifico));
 
     Assertions.assertThatThrownBy(
-        // when: update ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.update(convocatoriaPeriodoSeguimientoCientifico))
-        // then: throw exception as Convocatoria is not provided
+        // when: updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria
+        () -> service.updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria(convocatoriaId,
+            Arrays.asList(convocatoriaPeriodoSeguimientoCientifico)))
+        // then: throw exception
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("El mes final tiene que ser posterior al mes inicial");
+  }
+
+  @Test
+  public void updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria_WithFechaFinBeforeFechaInicio_ThrowsIllegalArgumentException() {
+    // given: a ConvocatoriaPeriodoSeguimientoCientifico with FechaFinPresentacion
+    // before FechaInicioPresentacion
+    Long convocatoriaId = 1L;
+    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = generarMockConvocatoriaPeriodoSeguimientoCientifico(
+        1L);
+    convocatoriaPeriodoSeguimientoCientifico
+        .setFechaInicioPresentacion(convocatoriaPeriodoSeguimientoCientifico.getFechaFinPresentacion().plusDays(1));
+
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
+
+    BDDMockito.given(repository.findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong()))
+        .willReturn(Arrays.asList(convocatoriaPeriodoSeguimientoCientifico));
+
+    Assertions.assertThatThrownBy(
+        // when: updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria
+        () -> service.updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria(convocatoriaId,
+            Arrays.asList(convocatoriaPeriodoSeguimientoCientifico)))
+        // then: throw exception
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Convocatoria no puede ser null en ConvocatoriaPeriodoSeguimientoCientifico");
+        .hasMessage("La fecha de fin tiene que ser posterior a la fecha de inicio");
   }
 
   @Test
-  public void update_WithMesFinalLowerThanMesInicial_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoSeguimientoCientifico with MesInicial >= MesFinal
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(24).build();
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().id(1L).convocatoria(convocatoria).mesInicial(2).mesFinal(1).build();
+  public void updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria_WithMesFinalGreaterThanDuracionConvocatoria_ThrowsIllegalArgumentException() {
+    // given: a ConvocatoriaPeriodoSeguimientoCientifico with mesFinal greater than
+    // duracion convocatoria
+    Long convocatoriaId = 1L;
+    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = generarMockConvocatoriaPeriodoSeguimientoCientifico(
+        1L);
 
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoSeguimientoCientifico));
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    convocatoria.setDuracion(convocatoriaPeriodoSeguimientoCientifico.getMesFinal() - 1);
 
-    Assertions.assertThatThrownBy(
-        // when: update ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.update(convocatoriaPeriodoSeguimientoCientifico))
-        // then: throw exception as mesInicial is >= mesFinal
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El mes inicial debe ser anterior al mes final");
-  }
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
 
-  @Test
-  public void update_WithFechaFinBeforeFechaInicio_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoSeguimientoCientifico with FechaInicio >=
-    // FechaFin
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(24).build();
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico//
-        .builder()//
-        .id(1L)//
-        .convocatoria(convocatoria)//
-        .mesInicial(1)//
-        .mesFinal(2)//
-        .fechaInicioPresentacion(LocalDate.of(2020, 2, 1))//
-        .fechaFinPresentacion(LocalDate.of(2020, 1, 1))//
-        .build();
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoSeguimientoCientifico));
+    BDDMockito.given(repository.findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong()))
+        .willReturn(Arrays.asList(convocatoriaPeriodoSeguimientoCientifico));
 
     Assertions.assertThatThrownBy(
-        // when: update ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.update(convocatoriaPeriodoSeguimientoCientifico))
-        // then: throw exception as FechaInicio is >= FechaFin
+        // when: updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria
+        () -> service.updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria(convocatoriaId,
+            Arrays.asList(convocatoriaPeriodoSeguimientoCientifico)))
+        // then: throw exception
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La fecha de inicio debe ser anterior a la fecha de fin");
+        .hasMessage("El mes final no puede ser superior a la duración en meses indicada en la Convocatoria");
   }
 
   @Test
-  public void update_WithNoExistingConvocatoria_ThrowsNotFoundException() {
-    // given: a ConvocatoriaPeriodoSeguimientoCientifico with no existing
-    // Convocatoria
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(24).build();
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().id(1L).convocatoria(convocatoria).mesInicial(1).mesFinal(2).build();
+  public void updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria_WithMesSolapado_ThrowsIllegalArgumentException() {
+    // given: a ConvocatoriaPeriodoSeguimientoCientifico with mesFinal greater than
+    // duracion convocatoria
+    Long convocatoriaId = 1L;
+    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico1 = generarMockConvocatoriaPeriodoSeguimientoCientifico(
+        1L, 1, 10, 1L);
+    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico2 = generarMockConvocatoriaPeriodoSeguimientoCientifico(
+        2L, 8, 15, 1L);
 
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoSeguimientoCientifico));
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
+    BDDMockito.given(repository.findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong())).willReturn(
+        Arrays.asList(convocatoriaPeriodoSeguimientoCientifico1, convocatoriaPeriodoSeguimientoCientifico2));
 
     Assertions.assertThatThrownBy(
-        // when: update ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.update(convocatoriaPeriodoSeguimientoCientifico))
-        // then: throw exception as convocatoria is not found
-        .isInstanceOf(ConvocatoriaNotFoundException.class);
-  }
-
-  @Test
-  public void update_WithMesFinalGreaterThanDuracionConvocatoria_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoSeguimientoCientifico with MesFinal >
-    // duracion Convocatoria
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(12).build();
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().id(1L).convocatoria(convocatoria).mesInicial(1).mesFinal(24).build();
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoSeguimientoCientifico));
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-
-    Assertions.assertThatThrownBy(
-        // when: update ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.update(convocatoriaPeriodoSeguimientoCientifico))
-        // then: throw exception as Periodo > duracion Convocatoria
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La duración en meses de la convocatoria es inferior al periodo");
-  }
-
-  @Test
-  public void update_WithoutDuracionConvocatoria_NotThrowAnyException() {
-    // given: a ConvocatoriaPeriodoSeguimientoCientifico with MesFinal >
-    // duracion Convocatoria
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).build();
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().id(1L).convocatoria(convocatoria).mesInicial(1).mesFinal(24).build();
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoSeguimientoCientifico));
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-
-    BDDMockito.given(repository.saveAll(ArgumentMatchers.<ConvocatoriaPeriodoSeguimientoCientifico>anyList()))
-        .will((InvocationOnMock invocation) -> {
-          convocatoriaPeriodoSeguimientoCientifico.setId(1L);
-          convocatoriaPeriodoSeguimientoCientifico.setNumPeriodo(1);
-          return invocation.getArgument(0);
-        });
-
-    Assertions.assertThatCode(
-        // when: update ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.update(convocatoriaPeriodoSeguimientoCientifico))
-        // then: throw exception as Periodo > duracion Convocatoria
-        .doesNotThrowAnyException();
-  }
-
-  @Test
-  public void update_OverlapsExisting_Case1_ThrowsIllegalArgumentException() {
-    // given: Existing Periodos from MesInicial 3 to MesFinal 12
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(24).build();
-    List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientifico = new LinkedList<ConvocatoriaPeriodoSeguimientoCientifico>();
-    for (int i = 2, j = 4; i <= 6; i++, j += 2) {
-      listaConvocatoriaPeriodoSeguimientoCientifico.add(ConvocatoriaPeriodoSeguimientoCientifico//
-          .builder()//
-          .id(Long.valueOf(i - 1))//
-          .convocatoria(convocatoria)//
-          .numPeriodo(i - 1)//
-          .mesInicial((i * 2) - 1)//
-          .mesFinal(j * 1)//
-          .build());
-    }
-    // given: updated ConvocatoriaPeriodoSeguimientoCientifico (MesInicial 1 a
-    // MesFinal 5)
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().id(1L).convocatoria(convocatoria).mesInicial(1).mesFinal(5).build();
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoSeguimientoCientifico));
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-
-    BDDMockito.given(repository.findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong()))
-        .willReturn(listaConvocatoriaPeriodoSeguimientoCientifico);
-
-    Assertions.assertThatThrownBy(
-        // when: update ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.update(convocatoriaPeriodoSeguimientoCientifico))
-        // then: throw exception as convocatoria is not found
+        // when: updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria
+        () -> service.updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria(convocatoriaId,
+            Arrays.asList(convocatoriaPeriodoSeguimientoCientifico1, convocatoriaPeriodoSeguimientoCientifico2)))
+        // then: throw exception
         .isInstanceOf(IllegalArgumentException.class).hasMessage("El periodo se solapa con otro existente");
-  }
-
-  @Test
-  public void update_OverlapsExisting_Case2_ThrowsIllegalArgumentException() {
-    // given: Existing Periodos from MesInicial 3 to MesFinal 12
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(24).build();
-    List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientifico = new LinkedList<ConvocatoriaPeriodoSeguimientoCientifico>();
-    for (int i = 2, j = 4; i <= 6; i++, j += 2) {
-      listaConvocatoriaPeriodoSeguimientoCientifico.add(ConvocatoriaPeriodoSeguimientoCientifico//
-          .builder()//
-          .id(Long.valueOf(i - 1))//
-          .convocatoria(convocatoria)//
-          .numPeriodo(i - 1)//
-          .mesInicial((i * 2) - 1)//
-          .mesFinal(j * 1)//
-          .build());
-    }
-    // given: a ConvocatoriaPeriodoSeguimientoCientifico (MesInicial 5 a MesFinal 6)
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().id(1L).convocatoria(convocatoria).mesInicial(5).mesFinal(6).build();
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoSeguimientoCientifico));
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-
-    BDDMockito.given(repository.findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong()))
-        .willReturn(listaConvocatoriaPeriodoSeguimientoCientifico);
-
-    Assertions.assertThatThrownBy(
-        // when: update ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.update(convocatoriaPeriodoSeguimientoCientifico))
-        // then: throw exception as convocatoria is not found
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El periodo se solapa con otro existente");
-  }
-
-  @Test
-  public void update_OverlapsExisting_Case3_ThrowsIllegalArgumentException() {
-    // given: Existing Periodos from MesInicial 3 to MesFinal 12
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(24).build();
-    List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientifico = new LinkedList<ConvocatoriaPeriodoSeguimientoCientifico>();
-    for (int i = 2, j = 4; i <= 6; i++, j += 2) {
-      listaConvocatoriaPeriodoSeguimientoCientifico.add(ConvocatoriaPeriodoSeguimientoCientifico//
-          .builder()//
-          .id(Long.valueOf(i - 1))//
-          .convocatoria(convocatoria)//
-          .numPeriodo(i - 1)//
-          .mesInicial((i * 2) - 1)//
-          .mesFinal(j * 1)//
-          .build());
-    }
-    // given:ConvocatoriaPeriodoSeguimientoCientifico (MesInicial 12 a MesFinal 13)
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().id(1L).convocatoria(convocatoria).mesInicial(12).mesFinal(13).build();
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoSeguimientoCientifico));
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-
-    BDDMockito.given(repository.findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong()))
-        .willReturn(listaConvocatoriaPeriodoSeguimientoCientifico);
-
-    Assertions.assertThatThrownBy(
-        // when: update ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.update(convocatoriaPeriodoSeguimientoCientifico))
-        // then: throw exception as convocatoria is not found
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El periodo se solapa con otro existente");
-  }
-
-  @Test
-  public void update_OverlapsExisting_Case4_ThrowsIllegalArgumentException() {
-    // given: Existing Periodos from MesInicial 3 to MesFinal 12
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(24).build();
-    List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientifico = new LinkedList<ConvocatoriaPeriodoSeguimientoCientifico>();
-    for (int i = 2, j = 4; i <= 6; i++, j += 2) {
-      listaConvocatoriaPeriodoSeguimientoCientifico.add(ConvocatoriaPeriodoSeguimientoCientifico//
-          .builder()//
-          .id(Long.valueOf(i - 1))//
-          .convocatoria(convocatoria)//
-          .numPeriodo(i - 1)//
-          .mesInicial((i * 2) - 1)//
-          .mesFinal(j * 1)//
-          .build());
-    }
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().id(1L).convocatoria(convocatoria).mesInicial(1).mesFinal(13).build();
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoSeguimientoCientifico));
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
-
-    BDDMockito.given(repository.findAllByConvocatoriaIdOrderByMesInicial(ArgumentMatchers.anyLong()))
-        .willReturn(listaConvocatoriaPeriodoSeguimientoCientifico);
-
-    Assertions.assertThatThrownBy(
-        // when: update ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.update(convocatoriaPeriodoSeguimientoCientifico))
-        // then: throw exception as convocatoria is not found
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El periodo se solapa con otro existente");
-  }
-
-  @Test
-  public void delete_WithExistingId_NotThrowAnyException() {
-    // given: existing ConvocatoriaPeriodoSeguimientoCientifico
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).build();
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().id(1L).convocatoria(convocatoria).build();
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoSeguimientoCientifico));
-
-    BDDMockito.doNothing().when(repository).deleteById(ArgumentMatchers.anyLong());
-
-    Assertions.assertThatCode(
-        // when: delete by existing id
-        () -> service.delete(convocatoriaPeriodoSeguimientoCientifico.getId()))
-        // then: no exception is thrown
-        .doesNotThrowAnyException();
-  }
-
-  @Test
-  public void delete_WithoutId_ThrowsNotFoundException() throws Exception {
-    // given: no id
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().build();
-
-    Assertions.assertThatThrownBy(
-        // when: update non existing ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.delete(convocatoriaPeriodoSeguimientoCientifico.getId()))
-        // then: NotFoundException is thrown
-        .isInstanceOf(IllegalArgumentException.class).hasMessageContaining(
-            "ConvocatoriaPeriodoSeguimientoCientifico id no puede ser null para eliminar un ConvocatoriaPeriodoSeguimientoCientifico");
-  }
-
-  @Test
-  public void delete_WithNoExistingId_ThrowsNotFoundException() throws Exception {
-    // given: no existing id
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico
-        .builder().id(1L).build();
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
-
-    Assertions.assertThatThrownBy(
-        // when: update non existing ConvocatoriaPeriodoSeguimientoCientifico
-        () -> service.delete(convocatoriaPeriodoSeguimientoCientifico.getId()))
-        // then: NotFoundException is thrown
-        .isInstanceOf(ConvocatoriaPeriodoSeguimientoCientificoNotFoundException.class);
   }
 
   @Test
@@ -848,4 +377,56 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceTest {
       Assertions.assertThat(item.getId()).isEqualTo(Long.valueOf(i));
     }
   }
+
+  /**
+   * Función que devuelve un objeto ConvocatoriaPeriodoSeguimientoCientifico
+   * 
+   * @param id id del ConvocatoriaPeriodoSeguimientoCientifico
+   * @return el objeto ConvocatoriaPeriodoSeguimientoCientifico
+   */
+  private ConvocatoriaPeriodoSeguimientoCientifico generarMockConvocatoriaPeriodoSeguimientoCientifico(Long id) {
+    return generarMockConvocatoriaPeriodoSeguimientoCientifico(id, 1, 2, id);
+  }
+
+  /**
+   * Función que devuelve un objeto ConvocatoriaPeriodoSeguimientoCientifico
+   * 
+   * @param id             id del ConvocatoriaPeriodoSeguimientoCientifico
+   * @param mesInicial     Mes inicial
+   * @param mesFinal       Mes final
+   * @param tipo           Tipo SeguimientoCientifico
+   * @param convocatoriaId Id Convocatoria
+   * @return el objeto ConvocatoriaPeriodoSeguimientoCientifico
+   */
+  private ConvocatoriaPeriodoSeguimientoCientifico generarMockConvocatoriaPeriodoSeguimientoCientifico(Long id,
+      Integer mesInicial, Integer mesFinal, Long convocatoriaId) {
+    Convocatoria convocatoria = new Convocatoria();
+    convocatoria.setId(convocatoriaId == null ? 1 : convocatoriaId);
+
+    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = new ConvocatoriaPeriodoSeguimientoCientifico();
+    convocatoriaPeriodoSeguimientoCientifico.setId(id);
+    convocatoriaPeriodoSeguimientoCientifico.setConvocatoria(convocatoria);
+    convocatoriaPeriodoSeguimientoCientifico.setNumPeriodo(1);
+    convocatoriaPeriodoSeguimientoCientifico.setMesInicial(mesInicial);
+    convocatoriaPeriodoSeguimientoCientifico.setMesFinal(mesFinal);
+    convocatoriaPeriodoSeguimientoCientifico.setFechaInicioPresentacion(LocalDate.of(2020, 10, 10));
+    convocatoriaPeriodoSeguimientoCientifico.setFechaFinPresentacion(LocalDate.of(2020, 11, 20));
+    convocatoriaPeriodoSeguimientoCientifico.setObservaciones("observaciones-" + id);
+
+    return convocatoriaPeriodoSeguimientoCientifico;
+  }
+
+  /**
+   * Función que devuelve un objeto Convocatoria
+   * 
+   * @param id id del Convocatoria
+   * @return el objeto Convocatoria
+   */
+  private Convocatoria generarMockConvocatoria(Long id) {
+    Convocatoria convocatoria = new Convocatoria();
+    convocatoria.setId(id == null ? 1 : id);
+
+    return convocatoria;
+  }
+
 }

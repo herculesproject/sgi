@@ -1,19 +1,19 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoSeguimientoCientificoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
@@ -40,59 +40,32 @@ public class ConvocatoriaPeriodoSeguimientoCientificoController {
   }
 
   /**
-   * Crea nuevo {@link ConvocatoriaPeriodoSeguimientoCientifico}.
+   * Actualiza el listado de {@link ConvocatoriaPeriodoSeguimientoCientifico} de
+   * la {@link Convocatoria} con el listado
+   * convocatoriaPeriodoSeguimientoCientificos añadiendo, editando o eliminando
+   * los elementos segun proceda.
    * 
-   * @param convocatoriaPeriodoSeguimientoCientifico {@link ConvocatoriaPeriodoSeguimientoCientifico}.
-   *                                                 que se quiere crear.
-   * @return Nuevo {@link ConvocatoriaPeriodoSeguimientoCientifico} creado.
+   * @param convocatoriaId                            Id de la
+   *                                                  {@link Convocatoria}.
+   * @param convocatoriaPeriodoSeguimientoCientificos lista con los nuevos
+   *                                                  {@link ConvocatoriaPeriodoSeguimientoCientifico}
+   *                                                  a guardar.
+   * @return Lista actualizada con los
+   *         {@link ConvocatoriaPeriodoSeguimientoCientifico}.
    */
-  @PostMapping
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CPSCI-C')")
-  public ResponseEntity<ConvocatoriaPeriodoSeguimientoCientifico> create(
-      @Valid @RequestBody ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico) {
-    log.debug("create(ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico) - start");
-    ConvocatoriaPeriodoSeguimientoCientifico returnValue = service.create(convocatoriaPeriodoSeguimientoCientifico);
-    log.debug("create(ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico) - end");
+  @PatchMapping("/{convocatoriaId}")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-C')")
+  public ResponseEntity<List<ConvocatoriaPeriodoSeguimientoCientifico>> updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria(
+      @PathVariable Long convocatoriaId,
+      @Valid @RequestBody List<ConvocatoriaPeriodoSeguimientoCientifico> convocatoriaPeriodoSeguimientoCientificos) {
+    log.debug(
+        "updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria(List<ConvocatoriaPeriodoSeguimientoCientifico> convocatoriaPeriodoSeguimientoCientificoes, convocatoriaId) - start");
+    List<ConvocatoriaPeriodoSeguimientoCientifico> returnValue = service
+        .updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria(convocatoriaId,
+            convocatoriaPeriodoSeguimientoCientificos);
+    log.debug(
+        "updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria(List<ConvocatoriaPeriodoSeguimientoCientifico> convocatoriaPeriodoSeguimientoCientificoes, convocatoriaId) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
-  }
-
-  /**
-   * Actualiza {@link ConvocatoriaPeriodoSeguimientoCientifico}.
-   * 
-   * @param convocatoriaPeriodoSeguimientoCientifico {@link ConvocatoriaPeriodoSeguimientoCientifico}
-   *                                                 a actualizar.
-   * @param id                                       Identificador
-   *                                                 {@link ConvocatoriaPeriodoSeguimientoCientifico}
-   *                                                 a actualizar.
-   * @return ConvocatoriaPeriodoSeguimientoCientifico
-   *         {@link ConvocatoriaPeriodoSeguimientoCientifico} actualizado
-   */
-  @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CPSCI-E')")
-  public ConvocatoriaPeriodoSeguimientoCientifico update(
-      @Valid @RequestBody ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico,
-      @PathVariable Long id) {
-    log.debug(
-        "update(ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico, Long id) - start");
-    convocatoriaPeriodoSeguimientoCientifico.setId(id);
-    ConvocatoriaPeriodoSeguimientoCientifico returnValue = service.update(convocatoriaPeriodoSeguimientoCientifico);
-    log.debug(
-        "update(ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico, Long id) - end");
-    return returnValue;
-  }
-
-  /**
-   * Elimina {@link ConvocatoriaPeriodoSeguimientoCientifico} con id indicado.
-   * 
-   * @param id Identificador de {@link ConvocatoriaPeriodoSeguimientoCientifico}.
-   */
-  @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CPSCI-B')")
-  @ResponseStatus(value = HttpStatus.NO_CONTENT)
-  void deleteById(@PathVariable Long id) {
-    log.debug("deleteById(Long id) - start");
-    service.delete(id);
-    log.debug("deleteById(Long id) - end");
   }
 
   /**
@@ -112,4 +85,5 @@ public class ConvocatoriaPeriodoSeguimientoCientificoController {
     log.debug("ConvocatoriaPeriodoSeguimientoCientifico findById(Long id) - end");
     return returnValue;
   }
+
 }

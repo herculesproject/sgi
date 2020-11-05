@@ -1,17 +1,20 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaPeriodoSeguimientoCientificoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoSeguimientoCientificoService;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.springframework.beans.BeanUtils;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -34,216 +37,94 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest extends Base
   private static final String CONTROLLER_BASE_PATH = "/convocatoriaperiodoseguimientocientificos";
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CPSCI-C" })
-  public void create_ReturnsConvocatoriaPeriodoSeguimientoCientifico() throws Exception {
-    // given: new ConvocatoriaPeriodoSeguimientoCientifico
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(24).build();
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico//
-        .builder()//
-        .convocatoria(convocatoria)//
-        .mesInicial(1)//
-        .mesFinal(2)//
-        .fechaInicioPresentacion(LocalDate.of(2020, 1, 1))//
-        .fechaFinPresentacion(LocalDate.of(2020, 2, 1))//
-        .observaciones("observaciones")//
-        .build();
+  @WithMockUser(username = "user", authorities = { "CSP-ME-C" })
+  public void updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria_ReturnsConvocatoriaPeriodoSeguimientoCientificoList()
+      throws Exception {
+    // given: una lista con uno de los ConvocatoriaPeriodoSeguimientoCientifico
+    // actualizado,
+    // otro nuevo y sin los otros 3 periodos existentes
+    Long convocatoriaId = 1L;
+    ConvocatoriaPeriodoSeguimientoCientifico newConvocatoriaPeriodoSeguimientoCientifico = generarMockConvocatoriaPeriodoSeguimientoCientifico(
+        null, 27, 30, 1L);
+    ConvocatoriaPeriodoSeguimientoCientifico updatedConvocatoriaPeriodoSeguimientoCientifico = generarMockConvocatoriaPeriodoSeguimientoCientifico(
+        4L, 24, 26, 1L);
 
-    BDDMockito.given(service.create(ArgumentMatchers.<ConvocatoriaPeriodoSeguimientoCientifico>any()))
-        .willAnswer(new Answer<ConvocatoriaPeriodoSeguimientoCientifico>() {
-          @Override
-          public ConvocatoriaPeriodoSeguimientoCientifico answer(InvocationOnMock invocation) throws Throwable {
-            ConvocatoriaPeriodoSeguimientoCientifico givenData = invocation.getArgument(0,
-                ConvocatoriaPeriodoSeguimientoCientifico.class);
-            ConvocatoriaPeriodoSeguimientoCientifico newData = new ConvocatoriaPeriodoSeguimientoCientifico();
-            BeanUtils.copyProperties(givenData, newData);
-            newData.setId(1L);
-            newData.setNumPeriodo(1);
-            return newData;
-          }
+    List<ConvocatoriaPeriodoSeguimientoCientifico> convocatoriaPeriodoSeguimientoCientificos = Arrays
+        .asList(updatedConvocatoriaPeriodoSeguimientoCientifico, newConvocatoriaPeriodoSeguimientoCientifico);
+
+    BDDMockito
+        .given(service.updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria(ArgumentMatchers.anyLong(),
+            ArgumentMatchers.<ConvocatoriaPeriodoSeguimientoCientifico>anyList()))
+        .will((InvocationOnMock invocation) -> {
+          List<ConvocatoriaPeriodoSeguimientoCientifico> periodoSeguimientoCientificos = invocation.getArgument(1);
+          return periodoSeguimientoCientificos.stream().map(periodoSeguimientoCientifico -> {
+            if (periodoSeguimientoCientifico.getId() == null) {
+              periodoSeguimientoCientifico.setId(5L);
+            }
+            periodoSeguimientoCientifico.getConvocatoria().setId(convocatoriaId);
+            return periodoSeguimientoCientifico;
+          }).collect(Collectors.toList());
         });
 
-    // when: create ConvocatoriaPeriodoSeguimientoCientifico
+    // when: updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria
     mockMvc
-        .perform(MockMvcRequestBuilders.post(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
-            .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(convocatoriaPeriodoSeguimientoCientifico)))
+        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, convocatoriaId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .content(mapper.writeValueAsString(convocatoriaPeriodoSeguimientoCientificos)))
         .andDo(MockMvcResultHandlers.print())
-        // then: new ConvocatoriaPeriodoSeguimientoCientifico is created
+        // then: Se crea el nuevo ConvocatoriaPeriodoSeguimientoCientifico, se actualiza
+        // el
+        // existe y se eliminan el resto
         .andExpect(MockMvcResultMatchers.status().isCreated())
-        .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id")
-            .value(convocatoriaPeriodoSeguimientoCientifico.getConvocatoria().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("numPeriodo").value(1))
-        .andExpect(MockMvcResultMatchers.jsonPath("mesInicial")
-            .value(convocatoriaPeriodoSeguimientoCientifico.getMesInicial()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)))
         .andExpect(
-            MockMvcResultMatchers.jsonPath("mesFinal").value(convocatoriaPeriodoSeguimientoCientifico.getMesFinal()))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicioPresentacion").value("2020-01-01"))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaFinPresentacion").value("2020-02-01"))
-        .andExpect(MockMvcResultMatchers.jsonPath("observaciones")
-            .value(convocatoriaPeriodoSeguimientoCientifico.getObservaciones()));
+            MockMvcResultMatchers.jsonPath("$[0].id").value(convocatoriaPeriodoSeguimientoCientificos.get(0).getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].convocatoria.id").value(convocatoriaId))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].numPeriodo")
+            .value(convocatoriaPeriodoSeguimientoCientificos.get(0).getNumPeriodo()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].mesInicial")
+            .value(convocatoriaPeriodoSeguimientoCientificos.get(0).getMesInicial()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].mesFinal")
+            .value(convocatoriaPeriodoSeguimientoCientificos.get(0).getMesFinal()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaInicioPresentacion").value("2020-10-10"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].fechaFinPresentacion").value("2020-11-20"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].observaciones")
+            .value(convocatoriaPeriodoSeguimientoCientificos.get(0).getObservaciones()))
+
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(5))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].convocatoria.id").value(convocatoriaId))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].numPeriodo")
+            .value(convocatoriaPeriodoSeguimientoCientificos.get(1).getNumPeriodo()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].mesInicial")
+            .value(convocatoriaPeriodoSeguimientoCientificos.get(1).getMesInicial()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].mesFinal")
+            .value(convocatoriaPeriodoSeguimientoCientificos.get(1).getMesFinal()))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].fechaInicioPresentacion").value("2020-10-10"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].fechaFinPresentacion").value("2020-11-20"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].observaciones")
+            .value(convocatoriaPeriodoSeguimientoCientificos.get(1).getObservaciones()));
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CPSCI-C" })
-  public void create_WithId_Returns400() throws Exception {
-    // given: a ConvocatoriaPeriodoSeguimientoCientifico with id filled
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(24).build();
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico//
-        .builder()//
-        .id(1L)//
-        .convocatoria(convocatoria)//
-        .mesInicial(1)//
-        .mesFinal(2)//
-        .fechaInicioPresentacion(LocalDate.of(2020, 1, 1))//
-        .fechaFinPresentacion(LocalDate.of(2020, 2, 1))//
-        .observaciones("observaciones")//
-        .build();
+  @WithMockUser(username = "user", authorities = { "CSP-ME-E" })
+  public void updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria_WithNoExistingId_Returns404()
+      throws Exception {
+    // given: No existing Id
+    Long id = 1L;
+    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = generarMockConvocatoriaPeriodoSeguimientoCientifico(
+        1L);
 
-    BDDMockito.given(service.create(ArgumentMatchers.<ConvocatoriaPeriodoSeguimientoCientifico>any()))
-        .willThrow(new IllegalArgumentException());
+    BDDMockito.willThrow(new ConvocatoriaPeriodoSeguimientoCientificoNotFoundException(id)).given(service)
+        .updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria(ArgumentMatchers.anyLong(),
+            ArgumentMatchers.<ConvocatoriaPeriodoSeguimientoCientifico>anyList());
 
-    // when: create ConvocatoriaPeriodoSeguimientoCientifico
+    // when: updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria
     mockMvc
-        .perform(MockMvcRequestBuilders.post(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
-            .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(convocatoriaPeriodoSeguimientoCientifico)))
-        .andDo(MockMvcResultHandlers.print())
-        // then: 400 error
-        .andExpect(MockMvcResultMatchers.status().isBadRequest());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CPSCI-E" })
-  public void update_WithExistingId_ReturnsConvocatoriaPeriodoSeguimientoCientifico() throws Exception {
-    // given: existing ConvocatoriaPeriodoSeguimientoCientifico
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(24).build();
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientificoExistente = ConvocatoriaPeriodoSeguimientoCientifico//
-        .builder()//
-        .id(1L)//
-        .convocatoria(convocatoria)//
-        .numPeriodo(1)//
-        .mesInicial(1)//
-        .mesFinal(2)//
-        .fechaInicioPresentacion(LocalDate.of(2020, 1, 1))//
-        .fechaFinPresentacion(LocalDate.of(2020, 2, 1))//
-        .observaciones("observaciones")//
-        .build();
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico//
-        .builder()//
-        .id(convocatoriaPeriodoSeguimientoCientificoExistente.getId())//
-        .convocatoria(convocatoriaPeriodoSeguimientoCientificoExistente.getConvocatoria())//
-        .numPeriodo(2)//
-        .mesInicial(3)//
-        .mesFinal(4)//
-        .fechaInicioPresentacion(convocatoriaPeriodoSeguimientoCientificoExistente.getFechaInicioPresentacion())//
-        .fechaFinPresentacion(convocatoriaPeriodoSeguimientoCientificoExistente.getFechaFinPresentacion())//
-        .observaciones("observaciones-modificadas")//
-        .build();
-
-    BDDMockito.given(service.findById(ArgumentMatchers.anyLong()))
-        .willReturn(convocatoriaPeriodoSeguimientoCientificoExistente);
-    BDDMockito.given(service.update(ArgumentMatchers.<ConvocatoriaPeriodoSeguimientoCientifico>any()))
-        .willReturn(convocatoriaPeriodoSeguimientoCientifico);
-
-    // when: update ConvocatoriaPeriodoSeguimientoCientifico
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, convocatoriaPeriodoSeguimientoCientificoExistente.getId())
+        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(convocatoriaPeriodoSeguimientoCientificoExistente)))
-        .andDo(MockMvcResultHandlers.print())
-        // then: ConvocatoriaPeriodoSeguimientoCientifico is updated
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(
-            MockMvcResultMatchers.jsonPath("id").value(convocatoriaPeriodoSeguimientoCientificoExistente.getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id")
-            .value(convocatoriaPeriodoSeguimientoCientificoExistente.getConvocatoria().getId()))
-        .andExpect(MockMvcResultMatchers.jsonPath("numPeriodo").value(2))
-        .andExpect(MockMvcResultMatchers.jsonPath("mesInicial").value(3))
-        .andExpect(MockMvcResultMatchers.jsonPath("mesFinal").value(4))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaInicioPresentacion").value("2020-01-01"))
-        .andExpect(MockMvcResultMatchers.jsonPath("fechaFinPresentacion").value("2020-02-01"))
-        .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value("observaciones-modificadas"));
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CPSCI-E" })
-  public void update_WithNoExistingId_Returns404() throws Exception {
-    // given: a ConvocatoriaPeriodoSeguimientoCientifico with non existing id
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(24).build();
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientificoExistente = ConvocatoriaPeriodoSeguimientoCientifico//
-        .builder()//
-        .id(1L)//
-        .convocatoria(convocatoria)//
-        .numPeriodo(1)//
-        .mesInicial(1)//
-        .mesFinal(2)//
-        .fechaInicioPresentacion(LocalDate.of(2020, 1, 1))//
-        .fechaFinPresentacion(LocalDate.of(2020, 2, 1))//
-        .observaciones("observaciones")//
-        .build();
-
-    BDDMockito
-        .willThrow(new ConvocatoriaPeriodoSeguimientoCientificoNotFoundException(
-            convocatoriaPeriodoSeguimientoCientificoExistente.getId()))
-        .given(service).findById(ArgumentMatchers.<Long>any());
-    BDDMockito.given(service.update(ArgumentMatchers.<ConvocatoriaPeriodoSeguimientoCientifico>any()))
-        .willThrow(new ConvocatoriaPeriodoSeguimientoCientificoNotFoundException(
-            convocatoriaPeriodoSeguimientoCientificoExistente.getId()));
-
-    // when: update ConvocatoriaPeriodoSeguimientoCientifico
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, convocatoriaPeriodoSeguimientoCientificoExistente.getId())
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(convocatoriaPeriodoSeguimientoCientificoExistente)))
-        .andDo(MockMvcResultHandlers.print())
-        // then: 404 error
-        .andExpect(MockMvcResultMatchers.status().isNotFound());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CPSCI-B" })
-  public void delete_WithExistingId_Return204() throws Exception {
-    // given: existing id
-    Long convocatoriaPeriodoSeguimientoCientificoId = 1L;
-
-    BDDMockito.doNothing().when(service).delete(ArgumentMatchers.anyLong());
-
-    // when: delete by id
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .delete(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, convocatoriaPeriodoSeguimientoCientificoId)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        // then: 204
-        .andExpect(MockMvcResultMatchers.status().isNoContent());
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "CSP-CPSCI-B" })
-  public void delete_NoExistingId_Return404() throws Exception {
-    // given: non existing id
-    Long convocatoriaPeriodoSeguimientoCientificoId = 1L;
-
-    BDDMockito
-        .willThrow(
-            new ConvocatoriaPeriodoSeguimientoCientificoNotFoundException(convocatoriaPeriodoSeguimientoCientificoId))
-        .given(service).findById(ArgumentMatchers.<Long>any());
-    BDDMockito
-        .willThrow(
-            new ConvocatoriaPeriodoSeguimientoCientificoNotFoundException(convocatoriaPeriodoSeguimientoCientificoId))
-        .given(service).delete(ArgumentMatchers.<Long>any());
-
-    // when: delete by non existing id
-    mockMvc
-        .perform(MockMvcRequestBuilders
-            .delete(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, convocatoriaPeriodoSeguimientoCientificoId)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON))
+            .content(mapper.writeValueAsString(Arrays.asList(convocatoriaPeriodoSeguimientoCientifico))))
         .andDo(MockMvcResultHandlers.print())
         // then: 404 error
         .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -296,4 +177,43 @@ public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest extends Base
         // then: HTTP code 404 NotFound pressent
         andExpect(MockMvcResultMatchers.status().isNotFound());
   }
+
+  /**
+   * Función que devuelve un objeto ConvocatoriaPeriodoSeguimientoCientifico
+   * 
+   * @param id id del ConvocatoriaPeriodoSeguimientoCientifico
+   * @return el objeto ConvocatoriaPeriodoSeguimientoCientifico
+   */
+  private ConvocatoriaPeriodoSeguimientoCientifico generarMockConvocatoriaPeriodoSeguimientoCientifico(Long id) {
+    return generarMockConvocatoriaPeriodoSeguimientoCientifico(id, 1, 2, id);
+  }
+
+  /**
+   * Función que devuelve un objeto ConvocatoriaPeriodoSeguimientoCientifico
+   * 
+   * @param id             id del ConvocatoriaPeriodoSeguimientoCientifico
+   * @param mesInicial     Mes inicial
+   * @param mesFinal       Mes final
+   * @param tipo           Tipo SeguimientoCientifico
+   * @param convocatoriaId Id Convocatoria
+   * @return el objeto ConvocatoriaPeriodoSeguimientoCientifico
+   */
+  private ConvocatoriaPeriodoSeguimientoCientifico generarMockConvocatoriaPeriodoSeguimientoCientifico(Long id,
+      Integer mesInicial, Integer mesFinal, Long convocatoriaId) {
+    Convocatoria convocatoria = new Convocatoria();
+    convocatoria.setId(convocatoriaId == null ? 1 : convocatoriaId);
+
+    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = new ConvocatoriaPeriodoSeguimientoCientifico();
+    convocatoriaPeriodoSeguimientoCientifico.setId(id);
+    convocatoriaPeriodoSeguimientoCientifico.setConvocatoria(convocatoria);
+    convocatoriaPeriodoSeguimientoCientifico.setNumPeriodo(1);
+    convocatoriaPeriodoSeguimientoCientifico.setMesInicial(mesInicial);
+    convocatoriaPeriodoSeguimientoCientifico.setMesFinal(mesFinal);
+    convocatoriaPeriodoSeguimientoCientifico.setFechaInicioPresentacion(LocalDate.of(2020, 10, 10));
+    convocatoriaPeriodoSeguimientoCientifico.setFechaFinPresentacion(LocalDate.of(2020, 11, 20));
+    convocatoriaPeriodoSeguimientoCientifico.setObservaciones("observaciones-" + id);
+
+    return convocatoriaPeriodoSeguimientoCientifico;
+  }
+
 }

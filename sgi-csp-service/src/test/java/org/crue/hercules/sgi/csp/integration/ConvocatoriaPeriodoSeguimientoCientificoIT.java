@@ -1,7 +1,10 @@
 package org.crue.hercules.sgi.csp.integration;
 
+import java.net.URI;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -12,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -20,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Test de integracion de ConvocatoriaPeriodoSeguimientoCientifico.
@@ -50,107 +55,105 @@ public class ConvocatoriaPeriodoSeguimientoCientificoIT {
     return request;
   }
 
+  private HttpEntity<List<ConvocatoriaPeriodoSeguimientoCientifico>> buildRequestList(HttpHeaders headers,
+      List<ConvocatoriaPeriodoSeguimientoCientifico> entity) throws Exception {
+    headers = (headers != null ? headers : new HttpHeaders());
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Authorization", String.format("bearer %s",
+        tokenBuilder.buildToken("user", "CSP-CPSCI-B", "CSP-CPSCI-C", "CSP-CPSCI-E", "CSP-CPSCI-V")));
+
+    HttpEntity<List<ConvocatoriaPeriodoSeguimientoCientifico>> request = new HttpEntity<>(entity, headers);
+    return request;
+  }
+
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void create_ReturnsConvocatoriaPeriodoSeguimientoCientifico() throws Exception {
+  public void updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria_ReturnsConvocatoriaPeriodoSeguimientoCientificoList()
+      throws Exception {
 
-    // given: new ConvocatoriaPeriodoSeguimientoCientifico
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(12).build();
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico//
-        .builder()//
-        .convocatoria(convocatoria)//
-        .mesInicial(1)//
-        .mesFinal(2)//
-        .fechaInicioPresentacion(LocalDate.of(2020, 1, 1))//
-        .fechaFinPresentacion(LocalDate.of(2020, 2, 1))//
-        .observaciones("observaciones")//
-        .build();
+    // given: una lista con uno de los ConvocatoriaPeriodoSeguimientoCientifico
+    // actualizado,
+    // otro nuevo y sin los otros 3 periodos existentes
+    Long convocatoriaId = 1L;
+    ConvocatoriaPeriodoSeguimientoCientifico newConvocatoriaPeriodoSeguimientoCientifico = generarMockConvocatoriaPeriodoSeguimientoCientifico(
+        null, 27, 30, 1L);
+    ConvocatoriaPeriodoSeguimientoCientifico updatedConvocatoriaPeriodoSeguimientoCientifico = generarMockConvocatoriaPeriodoSeguimientoCientifico(
+        4L, 24, 26, 1L);
 
-    // when: create ConvocatoriaPeriodoSeguimientoCientifico
-    final ResponseEntity<ConvocatoriaPeriodoSeguimientoCientifico> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH, HttpMethod.POST, buildRequest(null, convocatoriaPeriodoSeguimientoCientifico),
-        ConvocatoriaPeriodoSeguimientoCientifico.class);
+    List<ConvocatoriaPeriodoSeguimientoCientifico> convocatoriaPeriodoSeguimientoCientificos = Arrays
+        .asList(newConvocatoriaPeriodoSeguimientoCientifico, updatedConvocatoriaPeriodoSeguimientoCientifico);
 
-    // then: new ConvocatoriaPeriodoSeguimientoCientifico is created
+    // when: updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID)
+        .buildAndExpand(convocatoriaId).toUri();
+
+    final ResponseEntity<List<ConvocatoriaPeriodoSeguimientoCientifico>> response = restTemplate.exchange(uri,
+        HttpMethod.PATCH, buildRequestList(null, convocatoriaPeriodoSeguimientoCientificos),
+        new ParameterizedTypeReference<List<ConvocatoriaPeriodoSeguimientoCientifico>>() {
+        });
+
+    // then: Se crea el nuevo ConvocatoriaPeriodoSeguimientoCientifico, se actualiza
+    // el
+    // existe y se eliminan los otros
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-    ConvocatoriaPeriodoSeguimientoCientifico responseData = response.getBody();
-    Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getConvocatoria().getId());
-    Assertions.assertThat(responseData.getNumPeriodo()).as("getNumPeriodo()").isEqualTo(1);
-    Assertions.assertThat(responseData.getMesInicial()).as("getMesInicial()")
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getMesInicial());
-    Assertions.assertThat(responseData.getMesFinal()).as("getMesFinal()")
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getMesFinal());
-    Assertions.assertThat(responseData.getFechaInicioPresentacion()).as("getFechaInicioPresentacion()")
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaInicioPresentacion());
-    Assertions.assertThat(responseData.getFechaFinPresentacion()).as("getFechaFinPresentacion()")
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaFinPresentacion());
-    Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getObservaciones());
-  }
+    List<ConvocatoriaPeriodoSeguimientoCientifico> responseData = response.getBody();
+    Assertions.assertThat(responseData.get(0).getId()).as("get(0).getId()")
+        .isEqualTo(updatedConvocatoriaPeriodoSeguimientoCientifico.getId());
+    Assertions.assertThat(responseData.get(0).getConvocatoria().getId()).as("get(0).getConvocatoria().getId()")
+        .isEqualTo(convocatoriaId);
+    Assertions.assertThat(responseData.get(0).getMesInicial()).as("get(0).getMesInicial()")
+        .isEqualTo(updatedConvocatoriaPeriodoSeguimientoCientifico.getMesInicial());
+    Assertions.assertThat(responseData.get(0).getMesFinal()).as("get(0).getMesFinal()")
+        .isEqualTo(updatedConvocatoriaPeriodoSeguimientoCientifico.getMesFinal());
+    Assertions.assertThat(responseData.get(0).getFechaInicioPresentacion()).as("get(0).getFechaInicioPresentacion()")
+        .isEqualTo(updatedConvocatoriaPeriodoSeguimientoCientifico.getFechaInicioPresentacion());
+    Assertions.assertThat(responseData.get(0).getFechaFinPresentacion()).as("get(0).getFechaFinPresentacion()")
+        .isEqualTo(updatedConvocatoriaPeriodoSeguimientoCientifico.getFechaFinPresentacion());
+    Assertions.assertThat(responseData.get(0).getNumPeriodo()).as("get(0).getNumPeriodo()").isEqualTo(1);
+    Assertions.assertThat(responseData.get(0).getObservaciones()).as("get(0).getObservaciones()")
+        .isEqualTo(updatedConvocatoriaPeriodoSeguimientoCientifico.getObservaciones());
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  public void update_ReturnsConvocatoriaPeriodoSeguimientoCientifico() throws Exception {
-    // given: existing ConvocatoriaPeriodoSeguimientoCientifico to be updated
-    Convocatoria convocatoria = Convocatoria.builder().id(1L).duracion(12).build();
-    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = ConvocatoriaPeriodoSeguimientoCientifico//
-        .builder()//
-        .id(1L)//
-        .convocatoria(convocatoria)//
-        .numPeriodo(1)//
-        .mesInicial(10)//
-        .mesFinal(11)//
-        .fechaInicioPresentacion(LocalDate.of(2020, 10, 1))//
-        .fechaFinPresentacion(LocalDate.of(2020, 11, 1))//
-        .observaciones("observaciones")//
-        .build();
+    Assertions.assertThat(responseData.get(1).getConvocatoria().getId()).as("get(1).getConvocatoria().getId()")
+        .isEqualTo(convocatoriaId);
+    Assertions.assertThat(responseData.get(1).getMesInicial()).as("get(1).getMesInicial()")
+        .isEqualTo(newConvocatoriaPeriodoSeguimientoCientifico.getMesInicial());
+    Assertions.assertThat(responseData.get(1).getMesFinal()).as("get(1).getMesFinal()")
+        .isEqualTo(newConvocatoriaPeriodoSeguimientoCientifico.getMesFinal());
+    Assertions.assertThat(responseData.get(1).getFechaInicioPresentacion()).as("get(1).getFechaInicioPresentacion()")
+        .isEqualTo(newConvocatoriaPeriodoSeguimientoCientifico.getFechaInicioPresentacion());
+    Assertions.assertThat(responseData.get(1).getFechaFinPresentacion()).as("get(1).getFechaFinPresentacion()")
+        .isEqualTo(newConvocatoriaPeriodoSeguimientoCientifico.getFechaFinPresentacion());
+    Assertions.assertThat(responseData.get(1).getNumPeriodo()).as("get(1).getNumPeriodo()").isEqualTo(2);
+    Assertions.assertThat(responseData.get(1).getObservaciones()).as("get(1).getObservaciones()")
+        .isEqualTo(newConvocatoriaPeriodoSeguimientoCientifico.getObservaciones());
 
-    // when: update ConvocatoriaPeriodoSeguimientoCientifico
-    final ResponseEntity<ConvocatoriaPeriodoSeguimientoCientifico> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.PUT,
-        buildRequest(null, convocatoriaPeriodoSeguimientoCientifico), ConvocatoriaPeriodoSeguimientoCientifico.class,
-        convocatoriaPeriodoSeguimientoCientifico.getId());
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CENL-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "mesInicial+";
 
-    // then: ConvocatoriaPeriodoSeguimientoCientifico is updated
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    ConvocatoriaPeriodoSeguimientoCientifico responseData = response.getBody();
-    Assertions.assertThat(responseData.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(responseData.getId()).as("getId()")
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getId());
-    Assertions.assertThat(responseData.getConvocatoria().getId()).as("getConvocatoria().getId()")
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getConvocatoria().getId());
-    Assertions.assertThat(responseData.getNumPeriodo()).as("getNumPeriodo()").isEqualTo(4);
-    Assertions.assertThat(responseData.getMesInicial()).as("getMesInicial()")
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getMesInicial());
-    Assertions.assertThat(responseData.getMesFinal()).as("getMesFinal()")
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getMesFinal());
-    Assertions.assertThat(responseData.getFechaInicioPresentacion()).as("getFechaInicioPresentacion()")
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaInicioPresentacion());
-    Assertions.assertThat(responseData.getFechaFinPresentacion()).as("getFechaFinPresentacion()")
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getFechaFinPresentacion());
-    Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
-        .isEqualTo(convocatoriaPeriodoSeguimientoCientifico.getObservaciones());
-  }
+    URI uriFindAllConvocatoriaPeriodoSeguimientoCientifico = UriComponentsBuilder
+        .fromUriString("/convocatorias" + PATH_PARAMETER_ID + CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .buildAndExpand(convocatoriaId).toUri();
 
-  @Sql
-  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
-  @Test
-  public void delete_Return204() throws Exception {
-    // given: existing ConvocatoriaPeriodoSeguimientoCientifico to delete
-    Long id = 1L;
+    final ResponseEntity<List<ConvocatoriaPeriodoSeguimientoCientifico>> responseFindAllConvocatoriaPeriodoSeguimientoCientifico = restTemplate
+        .exchange(uriFindAllConvocatoriaPeriodoSeguimientoCientifico, HttpMethod.GET, buildRequestList(headers, null),
+            new ParameterizedTypeReference<List<ConvocatoriaPeriodoSeguimientoCientifico>>() {
+            });
 
-    // when: disable ConvocatoriaPeriodoSeguimientoCientifico
-    final ResponseEntity<ConvocatoriaPeriodoSeguimientoCientifico> response = restTemplate.exchange(
-        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null),
-        ConvocatoriaPeriodoSeguimientoCientifico.class, id);
-
-    // then: ConvocatoriaPeriodoSeguimientoCientifico is disabled
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-
+    Assertions.assertThat(responseFindAllConvocatoriaPeriodoSeguimientoCientifico.getStatusCode())
+        .isEqualTo(HttpStatus.OK);
+    final List<ConvocatoriaPeriodoSeguimientoCientifico> responseDataFindAll = responseFindAllConvocatoriaPeriodoSeguimientoCientifico
+        .getBody();
+    Assertions.assertThat(responseDataFindAll.size()).as("size()")
+        .isEqualTo(convocatoriaPeriodoSeguimientoCientificos.size());
+    Assertions.assertThat(responseDataFindAll.get(0).getId()).as("responseDataFindAll.get(0).getId()")
+        .isEqualTo(responseData.get(0).getId());
+    Assertions.assertThat(responseDataFindAll.get(1).getId()).as("responseDataFindAll.get(1).getId()")
+        .isEqualTo(responseData.get(1).getId());
   }
 
   @Sql
@@ -177,4 +180,33 @@ public class ConvocatoriaPeriodoSeguimientoCientificoIT {
     Assertions.assertThat(responseData.getObservaciones()).as("getObservaciones()")
         .isEqualTo("observaciones-meses-01-02");
   }
+
+  /**
+   * Función que devuelve un objeto ConvocatoriaPeriodoSeguimientoCientifico
+   * 
+   * @param id             id del ConvocatoriaPeriodoSeguimientoCientifico
+   * @param mesInicial     Mes inicial
+   * @param mesFinal       Mes final
+   * @param tipo           Tipo SeguimientoCientifico
+   * @param convocatoriaId Id Convocatoria
+   * @return el objeto ConvocatoriaPeriodoSeguimientoCientifico
+   */
+  private ConvocatoriaPeriodoSeguimientoCientifico generarMockConvocatoriaPeriodoSeguimientoCientifico(Long id,
+      Integer mesInicial, Integer mesFinal, Long convocatoriaId) {
+    Convocatoria convocatoria = new Convocatoria();
+    convocatoria.setId(convocatoriaId == null ? 1 : convocatoriaId);
+
+    ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = new ConvocatoriaPeriodoSeguimientoCientifico();
+    convocatoriaPeriodoSeguimientoCientifico.setId(id);
+    convocatoriaPeriodoSeguimientoCientifico.setConvocatoria(convocatoria);
+    convocatoriaPeriodoSeguimientoCientifico.setNumPeriodo(1);
+    convocatoriaPeriodoSeguimientoCientifico.setMesInicial(mesInicial);
+    convocatoriaPeriodoSeguimientoCientifico.setMesFinal(mesFinal);
+    convocatoriaPeriodoSeguimientoCientifico.setFechaInicioPresentacion(LocalDate.of(2020, 10, 10));
+    convocatoriaPeriodoSeguimientoCientifico.setFechaFinPresentacion(LocalDate.of(2020, 11, 20));
+    convocatoriaPeriodoSeguimientoCientifico.setObservaciones("observaciones-" + id);
+
+    return convocatoriaPeriodoSeguimientoCientifico;
+  }
+
 }

@@ -1,6 +1,6 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -45,88 +45,106 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceImpl
   }
 
   /**
-   * Guarda la entidad {@link ConvocatoriaPeriodoSeguimientoCientifico}.
-   * 
-   * @param convocatoriaPeriodoSeguimientoCientifico la entidad
-   *                                                 {@link ConvocatoriaPeriodoSeguimientoCientifico}
-   *                                                 a guardar.
-   * @return ConvocatoriaPeriodoSeguimientoCientifico la entidad
-   *         {@link ConvocatoriaPeriodoSeguimientoCientifico} persistida.
-   */
-  @Override
-  @Transactional
-  public ConvocatoriaPeriodoSeguimientoCientifico create(
-      ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico) {
-    log.debug("create(ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico) - start");
-
-    Assert.isNull(convocatoriaPeriodoSeguimientoCientifico.getId(),
-        "Id tiene que ser null para crear ConvocatoriaPeriodoSeguimientoCientifico");
-
-    // Lista de periodos validados
-    List<ConvocatoriaPeriodoSeguimientoCientifico> validListConvocatoriaPeriodoSeguimientoCientifico = validarDatosConvocatoriaPeriodoSeguimientoCientifico(
-        convocatoriaPeriodoSeguimientoCientifico, null);
-
-    repository.saveAll(validListConvocatoriaPeriodoSeguimientoCientifico);
-
-    log.debug("create(ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico) - end");
-    return convocatoriaPeriodoSeguimientoCientifico;
-  }
-
-  /**
-   * Actualiza los datos del {@link ConvocatoriaPeriodoSeguimientoCientifico}.
-   * 
-   * @param convocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientificoActualizar
-   *                                                 {@link ConvocatoriaPeriodoSeguimientoCientifico}
-   *                                                 con los datos actualizados.
-   * @return {@link ConvocatoriaPeriodoSeguimientoCientifico} actualizado.
-   */
-  @Override
-  @Transactional
-  public ConvocatoriaPeriodoSeguimientoCientifico update(
-      ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico) {
-    log.debug("update(ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico) - start");
-
-    Assert.notNull(convocatoriaPeriodoSeguimientoCientifico.getId(),
-        "Id no puede ser null para actualizar ConvocatoriaPeriodoSeguimientoCientifico");
-
-    return repository.findById(convocatoriaPeriodoSeguimientoCientifico.getId()).map((data) -> {
-
-      List<ConvocatoriaPeriodoSeguimientoCientifico> validListConvocatoriaPeriodoSeguimientoCientifico = validarDatosConvocatoriaPeriodoSeguimientoCientifico(
-          convocatoriaPeriodoSeguimientoCientifico, data);
-
-      repository.saveAll(validListConvocatoriaPeriodoSeguimientoCientifico);
-
-      log.debug("update(ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico) - end");
-      return data;
-    }).orElseThrow(() -> new ConvocatoriaPeriodoSeguimientoCientificoNotFoundException(
-        convocatoriaPeriodoSeguimientoCientifico.getId()));
-  }
-
-  /**
-   * Elimina la {@link ConvocatoriaPeriodoSeguimientoCientifico}.
+   * Actualiza el listado de {@link ConvocatoriaPeriodoSeguimientoCientifico} de
+   * la {@link Convocatoria} con el listado
+   * convocatoriaPeriodoSeguimientoCientificos añadiendo, editando o eliminando
+   * los elementos segun proceda.
    *
-   * @param id Id del {@link ConvocatoriaPeriodoSeguimientoCientifico}.
+   * @param convocatoriaId                            Id de la
+   *                                                  {@link Convocatoria}.
+   * @param convocatoriaPeriodoSeguimientoCientificos lista con los nuevos
+   *                                                  {@link ConvocatoriaPeriodoSeguimientoCientifico}
+   *                                                  a guardar.
+   * @return la entidad {@link ConvocatoriaPeriodoSeguimientoCientifico}
+   *         persistida.
    */
   @Override
   @Transactional
-  public void delete(Long id) {
-    log.debug("delete(Long id) - start");
+  public List<ConvocatoriaPeriodoSeguimientoCientifico> updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria(
+      Long convocatoriaId, List<ConvocatoriaPeriodoSeguimientoCientifico> convocatoriaPeriodoSeguimientoCientificos) {
+    log.debug(
+        "updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria(Long convocatoriaId, List<ConvocatoriaPeriodoSeguimientoCientifico> convocatoriaPeriodoSeguimientoCientificos) - start");
 
-    Assert.notNull(id,
-        "ConvocatoriaPeriodoSeguimientoCientifico id no puede ser null para eliminar un ConvocatoriaPeriodoSeguimientoCientifico");
+    if (convocatoriaPeriodoSeguimientoCientificos.isEmpty()) {
+      return new ArrayList<>();
+    }
 
-    final ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico = repository.findById(id)
-        .orElseThrow(() -> new ConvocatoriaPeriodoSeguimientoCientificoNotFoundException(id));
+    Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaId)
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaId));
 
-    repository.deleteById(id);
+    List<ConvocatoriaPeriodoSeguimientoCientifico> convocatoriaPeriodoSeguimientoCientificoesBD = repository
+        .findAllByConvocatoriaIdOrderByMesInicial(convocatoriaId);
 
-    // recalcular numPeriodo
-    List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientifico = repository
-        .findAllByConvocatoriaIdOrderByMesInicial(convocatoriaPeriodoSeguimientoCientifico.getConvocatoria().getId());
+    // Periodos eliminados
+    List<ConvocatoriaPeriodoSeguimientoCientifico> periodoSeguimientoCientificoesEliminar = convocatoriaPeriodoSeguimientoCientificoesBD
+        .stream()
+        .filter(periodo -> !convocatoriaPeriodoSeguimientoCientificos.stream()
+            .map(ConvocatoriaPeriodoSeguimientoCientifico::getId).anyMatch(id -> id == periodo.getId()))
+        .collect(Collectors.toList());
 
-    repository.saveAll(recalcularSecuenciaNumPeriodo(listaConvocatoriaPeriodoSeguimientoCientifico));
+    if (!periodoSeguimientoCientificoesEliminar.isEmpty()) {
+      repository.deleteAll(periodoSeguimientoCientificoesEliminar);
+    }
 
-    log.debug("delete(Long id) - end");
+    // Ordena los periodos por mesInicial
+    convocatoriaPeriodoSeguimientoCientificos
+        .sort(Comparator.comparing(ConvocatoriaPeriodoSeguimientoCientifico::getMesInicial));
+
+    AtomicInteger numPeriodo = new AtomicInteger(0);
+
+    ConvocatoriaPeriodoSeguimientoCientifico periodoSeguimientoCientificoAnterior = null;
+    for (ConvocatoriaPeriodoSeguimientoCientifico periodoSeguimientoCientifico : convocatoriaPeriodoSeguimientoCientificos) {
+      // Actualiza el numero de periodo
+      periodoSeguimientoCientifico.setNumPeriodo(numPeriodo.incrementAndGet());
+
+      // Si tiene id se valida que exista y que tenga la convocatoria de la que se
+      // estan actualizando los periodos
+      if (periodoSeguimientoCientifico.getId() != null) {
+        ConvocatoriaPeriodoSeguimientoCientifico periodoSeguimientoCientificoBD = convocatoriaPeriodoSeguimientoCientificoesBD
+            .stream().filter(periodo -> periodo.getId() == periodoSeguimientoCientifico.getId()).findFirst()
+            .orElseThrow(() -> new ConvocatoriaPeriodoSeguimientoCientificoNotFoundException(
+                periodoSeguimientoCientifico.getId()));
+
+        Assert
+            .isTrue(
+                periodoSeguimientoCientificoBD.getConvocatoria().getId() == periodoSeguimientoCientifico
+                    .getConvocatoria().getId(),
+                "No se puede modificar la convocatoria del ConvocatoriaPeriodoSeguimientoCientifico");
+      }
+
+      // Setea la convocatoria recuperada del convocatoriaId
+      periodoSeguimientoCientifico.setConvocatoria(convocatoria);
+
+      // Validaciones
+      Assert.isTrue(periodoSeguimientoCientifico.getMesInicial() < periodoSeguimientoCientifico.getMesFinal(),
+          "El mes final tiene que ser posterior al mes inicial");
+
+      if (periodoSeguimientoCientifico.getFechaInicioPresentacion() != null
+          && periodoSeguimientoCientifico.getFechaFinPresentacion() != null) {
+        Assert.isTrue(
+            periodoSeguimientoCientifico.getFechaInicioPresentacion()
+                .isBefore(periodoSeguimientoCientifico.getFechaFinPresentacion()),
+            "La fecha de fin tiene que ser posterior a la fecha de inicio");
+      }
+
+      Assert.isTrue(periodoSeguimientoCientifico.getConvocatoria().getDuracion() == null
+          || periodoSeguimientoCientifico.getMesFinal() <= periodoSeguimientoCientifico.getConvocatoria().getDuracion(),
+          "El mes final no puede ser superior a la duración en meses indicada en la Convocatoria");
+
+      Assert.isTrue(
+          periodoSeguimientoCientificoAnterior == null || (periodoSeguimientoCientificoAnterior != null
+              && periodoSeguimientoCientificoAnterior.getMesFinal() < periodoSeguimientoCientifico.getMesInicial()),
+          "El periodo se solapa con otro existente");
+
+      periodoSeguimientoCientificoAnterior = periodoSeguimientoCientifico;
+    }
+
+    List<ConvocatoriaPeriodoSeguimientoCientifico> returnValue = repository
+        .saveAll(convocatoriaPeriodoSeguimientoCientificos);
+    log.debug(
+        "updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria(Long convocatoriaId, List<ConvocatoriaPeriodoSeguimientoCientifico> convocatoriaPeriodoSeguimientoCientificos) - end");
+
+    return returnValue;
   }
 
   /**
@@ -173,119 +191,4 @@ public class ConvocatoriaPeriodoSeguimientoCientificoServiceImpl
     return returnValue;
   }
 
-  /**
-   * Comprueba y valida y reordena los periodos retornando una lista con los datos
-   * {@link ConvocatoriaPeriodoSeguimientoCientifico} que deben ser guardados.
-   * 
-   * @param datosConvocatoriaPeriodoSeguimientoCientifico datos de la
-   *                                                      {@link ConvocatoriaPeriodoSeguimientoCientifico}
-   * @param datosOriginales                               datos originales de la
-   *                                                      {@link ConvocatoriaPeriodoSeguimientoCientifico}
-   * @return lista de {@link ConvocatoriaPeriodoSeguimientoCientifico} con los
-   *         datos validados y listos para ser guardados.
-   */
-  private List<ConvocatoriaPeriodoSeguimientoCientifico> validarDatosConvocatoriaPeriodoSeguimientoCientifico(
-      ConvocatoriaPeriodoSeguimientoCientifico datosConvocatoriaPeriodoSeguimientoCientifico,
-      ConvocatoriaPeriodoSeguimientoCientifico datosOriginales) {
-    log.debug(
-        "List<ConvocatoriaPeriodoSeguimientoCientifico> validarDatosConvocatoriaPeriodoSeguimientoCientifico( ConvocatoriaPeriodoSeguimientoCientifico datosConvocatoriaPeriodoSeguimientoCientifico, ConvocatoriaPeriodoSeguimientoCientifico datosOriginales) - start");
-
-    // Convocatoria
-    Assert.notNull(datosConvocatoriaPeriodoSeguimientoCientifico.getConvocatoria(),
-        "Convocatoria no puede ser null en ConvocatoriaPeriodoSeguimientoCientifico");
-
-    // Mes Inicial < Mes Final
-    Assert
-        .isTrue(
-            (datosConvocatoriaPeriodoSeguimientoCientifico
-                .getMesInicial() < datosConvocatoriaPeriodoSeguimientoCientifico.getMesFinal()),
-            "El mes inicial debe ser anterior al mes final");
-
-    // Fecha Inicio < Fecha Fin
-    if (datosConvocatoriaPeriodoSeguimientoCientifico.getFechaInicioPresentacion() != null
-        && datosConvocatoriaPeriodoSeguimientoCientifico.getFechaFinPresentacion() != null) {
-      Assert.isTrue(
-          datosConvocatoriaPeriodoSeguimientoCientifico.getFechaInicioPresentacion()
-              .isBefore(datosConvocatoriaPeriodoSeguimientoCientifico.getFechaFinPresentacion()),
-          "La fecha de inicio debe ser anterior a la fecha de fin");
-    }
-
-    // Convocatoria
-    datosConvocatoriaPeriodoSeguimientoCientifico.setConvocatoria(
-        convocatoriaRepository.findById(datosConvocatoriaPeriodoSeguimientoCientifico.getConvocatoria().getId())
-            .orElseThrow(() -> new ConvocatoriaNotFoundException(
-                datosConvocatoriaPeriodoSeguimientoCientifico.getConvocatoria().getId())));
-
-    // duración en convocatoria < max mesFin de la convocatoria
-    if (datosConvocatoriaPeriodoSeguimientoCientifico.getConvocatoria().getDuracion() != null) {
-      Assert.isTrue(
-          (datosConvocatoriaPeriodoSeguimientoCientifico.getConvocatoria()
-              .getDuracion() > datosConvocatoriaPeriodoSeguimientoCientifico.getMesFinal()),
-          "La duración en meses de la convocatoria es inferior al periodo");
-    }
-
-    // lista periodos de la convocatoria
-    List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientifico = repository
-        .findAllByConvocatoriaIdOrderByMesInicial(
-            datosConvocatoriaPeriodoSeguimientoCientifico.getConvocatoria().getId());
-
-    // se elimina de la lista el que se está editando
-    listaConvocatoriaPeriodoSeguimientoCientifico
-        .removeIf(item -> item.getId().equals(datosConvocatoriaPeriodoSeguimientoCientifico.getId()));
-
-    Assert.isTrue(!listaConvocatoriaPeriodoSeguimientoCientifico.stream().anyMatch(t -> {
-      Boolean result = (datosConvocatoriaPeriodoSeguimientoCientifico.getMesInicial() <= t.getMesFinal())
-          && (t.getMesInicial() <= datosConvocatoriaPeriodoSeguimientoCientifico.getMesFinal());
-      return result;
-    }), "El periodo se solapa con otro existente");
-
-    // Si no hay cambio de MesInicial no es necesario recálculo
-    if (datosOriginales != null
-        && datosOriginales.getMesInicial() == datosConvocatoriaPeriodoSeguimientoCientifico.getMesInicial()) {
-      log.debug(
-          "List<ConvocatoriaPeriodoSeguimientoCientifico> validarDatosConvocatoriaPeriodoSeguimientoCientifico(ConvocatoriaPeriodoSeguimientoCientifico datosConvocatoriaPeriodoSeguimientoCientifico, ConvocatoriaPeriodoSeguimientoCientifico datosOriginales) - end");
-      return Arrays.asList(datosConvocatoriaPeriodoSeguimientoCientifico);
-    }
-    // Se añade el periodo que se está añadiendo o editando a la lista a actualizar
-    listaConvocatoriaPeriodoSeguimientoCientifico.add(datosConvocatoriaPeriodoSeguimientoCientifico);
-
-    List<ConvocatoriaPeriodoSeguimientoCientifico> returnValue = recalcularSecuenciaNumPeriodo(
-        listaConvocatoriaPeriodoSeguimientoCientifico);
-
-    log.debug(
-        "List<ConvocatoriaPeriodoSeguimientoCientifico> validarDatosConvocatoriaPeriodoSeguimientoCientifico(ConvocatoriaPeriodoSeguimientoCientifico datosConvocatoriaPeriodoSeguimientoCientifico, ConvocatoriaPeriodoSeguimientoCientifico datosOriginales) - end");
-
-    return returnValue;
-  }
-
-  /**
-   * Reasigna la secuencia con el número del periodo según el orden del mes
-   * inicial a todos los periodos de seguimiento de la convocatoria
-   * 
-   * @param listaConvocatoriaPeriodoSeguimientoCientifico lista con los
-   *                                                      {@link ConvocatoriaPeriodoSeguimientoCientifico}
-   *                                                      que necesitan ser
-   *                                                      recalculados
-   * @return lista de {@link ConvocatoriaPeriodoSeguimientoCientifico} con los
-   *         periodos recalculados.
-   */
-  private List<ConvocatoriaPeriodoSeguimientoCientifico> recalcularSecuenciaNumPeriodo(
-      List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientifico) {
-    log.debug(
-        "List<ConvocatoriaPeriodoSeguimientoCientifico> recalcularSecuenciaNumPeriodo(List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientifico - start");
-
-    listaConvocatoriaPeriodoSeguimientoCientifico
-        .sort(Comparator.comparing(ConvocatoriaPeriodoSeguimientoCientifico::getMesInicial));
-
-    AtomicInteger numPeriodo = new AtomicInteger(0);
-    listaConvocatoriaPeriodoSeguimientoCientifico.stream().map(ConvocatoriaPeriodoSeguimientoCientifico -> {
-      ConvocatoriaPeriodoSeguimientoCientifico.setNumPeriodo(numPeriodo.incrementAndGet());
-      return ConvocatoriaPeriodoSeguimientoCientifico;
-    }).collect(Collectors.toList());
-
-    log.debug(
-        "List<ConvocatoriaPeriodoSeguimientoCientifico> recalcularSecuenciaNumPeriodo(List<ConvocatoriaPeriodoSeguimientoCientifico> listaConvocatoriaPeriodoSeguimientoCientifico - end");
-
-    return listaConvocatoriaPeriodoSeguimientoCientifico;
-  }
 }

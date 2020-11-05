@@ -16,35 +16,21 @@ import org.springframework.data.domain.Pageable;
 public interface ConvocatoriaPeriodoSeguimientoCientificoService {
 
   /**
-   * Guarda la entidad {@link ConvocatoriaPeriodoSeguimientoCientifico}.
-   * 
-   * @param convocatoriaPeriodoSeguimientoCientifico la entidad
-   *                                                 {@link ConvocatoriaPeriodoSeguimientoCientifico}
-   *                                                 a guardar.
-   * @return ConvocatoriaPeriodoSeguimientoCientifico la entidad
-   *         {@link ConvocatoriaPeriodoSeguimientoCientifico} persistida.
-   */
-  ConvocatoriaPeriodoSeguimientoCientifico create(
-      ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientifico);
-
-  /**
-   * Actualiza los datos del {@link ConvocatoriaPeriodoSeguimientoCientifico}.
-   * 
-   * @param convocatoriaPeriodoSeguimientoCientificoActualizar {@link ConvocatoriaPeriodoSeguimientoCientifico}
-   *                                                           con los datos
-   *                                                           actualizados.
-   * @return ConvocatoriaPeriodoSeguimientoCientifico
-   *         {@link ConvocatoriaPeriodoSeguimientoCientifico} actualizado.
-   */
-  ConvocatoriaPeriodoSeguimientoCientifico update(
-      final ConvocatoriaPeriodoSeguimientoCientifico convocatoriaPeriodoSeguimientoCientificoActualizar);
-
-  /**
-   * Elimina el {@link ConvocatoriaPeriodoSeguimientoCientifico}.
+   * Actualiza el listado de {@link ConvocatoriaPeriodoSeguimientoCientifico} de
+   * la {@link Convocatoria} con el listado
+   * convocatoriaPeriodoSeguimientoCientificos añadiendo, editando o eliminando
+   * los elementos segun proceda.
    *
-   * @param id Id del {@link ConvocatoriaPeriodoSeguimientoCientifico}.
+   * @param convocatoriaId                            Id de la
+   *                                                  {@link Convocatoria}.
+   * @param convocatoriaPeriodoSeguimientoCientificos lista con los nuevos
+   *                                                  {@link ConvocatoriaPeriodoSeguimientoCientifico}
+   *                                                  a guardar.
+   * @return la entidad {@link ConvocatoriaPeriodoSeguimientoCientifico}
+   *         persistida.
    */
-  void delete(Long id);
+  List<ConvocatoriaPeriodoSeguimientoCientifico> updateConvocatoriaPeriodoSeguimientoCientificosConvocatoria(
+      Long convocatoriaId, List<ConvocatoriaPeriodoSeguimientoCientifico> convocatoriaPeriodoSeguimientoCientificos);
 
   /**
    * Obtiene una entidad {@link ConvocatoriaPeriodoSeguimientoCientifico} por id.
