@@ -7,10 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.assertj.core.api.Assertions;
-import org.crue.hercules.sgi.csp.config.SecurityConfig;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVNEnum;
 import org.crue.hercules.sgi.csp.enums.TipoDestinatarioEnum;
 import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
@@ -23,31 +21,31 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadGestora;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
+import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
-import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
-import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
-import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEnlaceService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadGestoraService;
-import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService;
-import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaFaseService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaHitoService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoSeguimientoCientificoService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -56,17 +54,14 @@ import org.mockito.BDDMockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -76,13 +71,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
  * ConvocatoriaControllerTest
  */
 @WebMvcTest(ConvocatoriaController.class)
-@Import(SecurityConfig.class)
-public class ConvocatoriaControllerTest {
-
-  @Autowired
-  private MockMvc mockMvc;
-  @Autowired
-  private ObjectMapper mapper;
+public class ConvocatoriaControllerTest extends BaseControllerTest {
 
   @MockBean
   private ConvocatoriaService service;

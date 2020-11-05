@@ -2,9 +2,6 @@ package org.crue.hercules.sgi.csp.controller;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.crue.hercules.sgi.csp.config.SecurityConfig;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaPeriodoSeguimientoCientificoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
@@ -15,14 +12,11 @@ import org.mockito.BDDMockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -31,14 +25,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
  * ConvocatoriaPeriodoSeguimientoCientificoControllerTest
  */
 @WebMvcTest(ConvocatoriaPeriodoSeguimientoCientificoController.class)
-@Import(SecurityConfig.class)
-public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest {
-
-  @Autowired
-  private MockMvc mockMvc;
-
-  @Autowired
-  private ObjectMapper mapper;
+public class ConvocatoriaPeriodoSeguimientoCientificoControllerTest extends BaseControllerTest {
 
   @MockBean
   private ConvocatoriaPeriodoSeguimientoCientificoService service;

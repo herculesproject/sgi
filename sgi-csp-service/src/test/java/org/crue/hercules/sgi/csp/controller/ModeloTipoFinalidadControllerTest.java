@@ -1,8 +1,5 @@
 package org.crue.hercules.sgi.csp.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.crue.hercules.sgi.csp.config.SecurityConfig;
 import org.crue.hercules.sgi.csp.exceptions.ModeloTipoFinalidadNotFoundException;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
@@ -14,14 +11,11 @@ import org.mockito.BDDMockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -31,16 +25,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
  */
 
 @WebMvcTest(ModeloTipoFinalidadController.class)
-// Since WebMvcTest is only sliced controller layer for the testing, it would
-// not take the security configurations.
-@Import(SecurityConfig.class)
-public class ModeloTipoFinalidadControllerTest {
-
-  @Autowired
-  private MockMvc mockMvc;
-
-  @Autowired
-  private ObjectMapper mapper;
+public class ModeloTipoFinalidadControllerTest extends BaseControllerTest {
 
   @MockBean
   private ModeloTipoFinalidadService service;
