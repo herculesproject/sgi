@@ -610,11 +610,11 @@ class Group implements IGroup {
 
   private isControlValid(form: AbstractControl): boolean {
     if (form instanceof FormControl) {
-      // Return FormControl errors or null
-      return form.status === 'VALID';
+      // VALID and DISABLED are mutually exclusive. A disabled control isn't valid, but are allowed.
+      return form.valid || form.disabled;
     }
     if (form instanceof FormGroup) {
-      if (form.status !== 'VALID') {
+      if (!form.valid) {
         return false;
       }
       return Object.keys(form.controls).find((key) => !this.isControlValid(form.get(key))) ? false : true;
