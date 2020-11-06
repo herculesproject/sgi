@@ -23,6 +23,17 @@ export class ProgramaService extends SgiRestService<number, IPrograma> {
     );
   }
 
+  /**
+   * Muestra activos y no activos
+   * @param options opciones de búsqueda.
+   */
+  findTodos(options?: SgiRestFindOptions): Observable<SgiRestListResult<IPrograma>> {
+    this.logger.debug(ProgramaService.name, `${this.findTodos.name}(`, '-', 'START');
+    return this.find<IPrograma, IPrograma>(`${this.endpointUrl}/plan/todos`, options).pipe(
+      tap(() => this.logger.debug(ProgramaService.name, `${this.findTodos.name}()`, '-', 'END'))
+    );
+  }
+
   findAllPlan(options?: SgiRestFindOptions): Observable<SgiRestListResult<IPrograma>> {
     this.logger.debug(ProgramaService.name, `${this.findAllPlan.name}(`, '-', 'start');
     return this.find<IPrograma, IPrograma>(`${this.endpointUrl}/plan`, options).pipe(

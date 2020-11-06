@@ -20,6 +20,7 @@ const MSG_GESTION_CONCEPTO_GASTO_TITLE = marker('menu.principal.csp.concepto.gas
 const MSG_TIPO_FINANCIACION_TITLE = marker('menu.principal.csp.tipo.financiacion');
 
 const MSG_FUENTE_FINANCIACION_TITLE = marker('menu.principal.csp.fuenteFinanciacion');
+const MSG_AREA_TEMATICA_TITLE = marker('menu.principal.csp.area.tematica');
 
 const routes: SgiRoutes = [
   {
@@ -158,6 +159,17 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_FUENTE_FINANCIACION_TITLE,
+        }
+      },
+      {
+        path: CSP_ROUTE_NAMES.AREA_TEMATICA,
+        loadChildren: () =>
+          import('./area-tematica/area-tematica.module').then(
+            (m) => m.AreaTematicaModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_AREA_TEMATICA_TITLE,
         }
       },
       { path: '**', component: null }

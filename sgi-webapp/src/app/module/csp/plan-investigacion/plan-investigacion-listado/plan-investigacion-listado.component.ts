@@ -78,7 +78,7 @@ export class PlanInvestigacionListadoComponent extends AbstractTablePaginationCo
 
   protected createObservable(): Observable<SgiRestListResult<IPrograma>> {
     this.logger.debug(PlanInvestigacionListadoComponent.name, `${this.createObservable.name}()`, 'start');
-    const observable$ = this.programaService.findAllPlan(this.getFindOptions());
+    const observable$ = this.programaService.findTodos(this.getFindOptions());
     this.logger.debug(PlanInvestigacionListadoComponent.name, `${this.createObservable.name}()`, 'end');
     return observable$;
   }

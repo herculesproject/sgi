@@ -53,6 +53,8 @@
           [routerLinkActive]="['is-active']">{{'menu.principal.csp.modelo.ejecucion' | translate}}</a>
         <a mat-list-item *sgiHasAuthorityForAnyUO="'CSP-PI-C'" [routerLink]="[CSP_ROUTE_NAMES.PLANES_INVESTIGACION]"
           [routerLinkActive]="['is-active']">{{'menu.principal.csp.planes.investigacion' | translate}}</a>
+        <a mat-list-item *sgiHasAuthorityForAnyUO="'CSP-AT-C'" [routerLink]="[CSP_ROUTE_NAMES.AREA_TEMATICA]"
+          [routerLinkActive]="['is-active']">{{'menu.principal.csp.area.tematica' | translate}}</a>
         <a mat-list-item *sgiHasAuthorityForAnyUO="'CSP-FF-C'" [routerLink]="[CSP_ROUTE_NAMES.FUENTE_FINANCIACION]"
           [routerLinkActive]="['is-active']">{{'menu.principal.csp.fuenteFinanciacion' | translate}}</a>
         <a mat-list-item *sgiHasAuthorityForAnyUO="'CSP-TFINAN-C'" [routerLink]="[CSP_ROUTE_NAMES.TIPO_FINANCIACION]"

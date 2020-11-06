@@ -10,4 +10,5 @@ export const CSP_ROUTE_NAMES = {
   PLANES_INVESTIGACION: 'planes-investigacion',
   CONCEPTO_GASTO: 'concepto-gasto',
   TIPO_FINANCIACION: 'tipo-financiaciones',
+  AREA_TEMATICA: 'area-tematica'
 };
