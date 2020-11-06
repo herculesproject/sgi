@@ -1,5 +1,4 @@
 -- vacia la bd
-DELETE FROM csp.concepto_gasto;
 DELETE FROM csp.convocatoria_area_tematica;
 DELETE FROM csp.area_tematica;
 DELETE FROM csp.convocatoria_entidad_convocante;
@@ -11,6 +10,7 @@ DELETE FROM csp.convocatoria_hito;
 DELETE FROM csp.convocatoria_periodo_justificacion;
 DELETE FROM csp.convocatoria_periodo_seguimiento_cientifico;
 DELETE FROM csp.requisito_ip;
+DELETE FROM csp.convocatoria_concepto_gasto;
 DELETE FROM csp.convocatoria;
 DELETE FROM csp.fuente_financiacion;
 DELETE FROM csp.modelo_tipo_enlace;
@@ -30,3 +30,4 @@ DELETE FROM csp.tipo_financiacion;
 DELETE FROM csp.tipo_hito;
 DELETE FROM csp.tipo_origen_fuente_financiacion;
 DELETE FROM csp.tipo_regimen_concurrencia;
+DELETE FROM csp.concepto_gasto;

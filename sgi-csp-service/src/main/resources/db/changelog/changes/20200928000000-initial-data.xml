@@ -924,4 +924,44 @@
     </insert>
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-convocatoria_concepto_gasto">
+    <insert tableName="convocatoria_concepto_gasto">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')" />
+      <column name="concepto_gasto_id" valueComputed="(select id from csp.concepto_gasto where nombre = 'conceptoGasto2')" />
+      <column name="observaciones" value="Observaciones permitido" />
+      <column name="importe_maximo" value="100.0" />
+      <column name="permitido" value="true" />
+      <column name="num_meses" value="4" />
+      <column name="porcentaje_coste_indirecto" value="25" />
+    </insert>
+    <insert tableName="convocatoria_concepto_gasto">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')" />
+      <column name="concepto_gasto_id" valueComputed="(select id from csp.concepto_gasto where nombre = 'conceptoGasto1')" />
+      <column name="observaciones" value="Observaciones permitido obs" />
+      <column name="importe_maximo" value="600.0" />
+      <column name="permitido" value="true" />
+      <column name="num_meses" value="2" />
+      <column name="porcentaje_coste_indirecto" value="15" />
+    </insert>
+
+    <insert tableName="convocatoria_concepto_gasto">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')" />
+      <column name="concepto_gasto_id" valueComputed="(select id from csp.concepto_gasto where nombre = 'conceptoGasto2')" />
+      <column name="observaciones" value="Observaciones no permitido" />
+      <column name="importe_maximo" value="100.0" />
+      <column name="permitido" value="false" />
+      <column name="num_meses" value="4" />
+      <column name="porcentaje_coste_indirecto" value="25" />
+    </insert>
+    <insert tableName="convocatoria_concepto_gasto">
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')" />
+      <column name="concepto_gasto_id" valueComputed="(select id from csp.concepto_gasto where nombre = 'conceptoGasto3')" />
+      <column name="observaciones" value="Observaciones no permitido obs" />
+      <column name="importe_maximo" value="600.0" />
+      <column name="permitido" value="false" />
+      <column name="num_meses" value="2" />
+      <column name="porcentaje_coste_indirecto" value="15" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>

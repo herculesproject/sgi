@@ -10,6 +10,7 @@ import org.crue.hercules.sgi.csp.enums.TipoDestinatarioEnum;
 import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
@@ -66,6 +67,8 @@ public class ConvocatoriaIT {
   private static final String PATH_HITOS = "/convocatoriahitos";
   private static final String PATH_PERIODO_JUSTIFICACION = "/convocatoriaperiodojustificaciones";
   private static final String PATH_PERIODO_SEGUIMIENTO_CIENTIFICO = "/convocatoriaperiodoseguimientocientificos";
+  private static final String PATH_ENTIDAD_CONCEPTO_GASTOS_PERMITIDOS = "/convocatoriagastos/permitidos";
+  private static final String PATH_ENTIDAD_CONCEPTO_GASTOS_NO_PERMITIDOS = "/convocatoriagastos/nopermitidos";
 
   private HttpEntity<Convocatoria> buildRequest(HttpHeaders headers, Convocatoria entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
@@ -725,6 +728,88 @@ public class ConvocatoriaIT {
         .as("get(1).getObservaciones())").isEqualTo("observaciones-" + String.format("%03d", 2));
     Assertions.assertThat(convocatoriaPeriodoSeguimientoCientificoes.get(2).getObservaciones())
         .as("get(2).getObservaciones()").isEqualTo("observaciones-" + String.format("%03d", 1));
+  }
+
+  /**
+   * 
+   * CONVOCATORIA CONCEPTO GASTO
+   * 
+   */
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllConvocatoriaConceptoGastoPermitidos_WithPagingSortingAndFiltering_ReturnsConvocatoriaConceptoGastoPermitidosSubList()
+      throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CGAS-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "id-";
+    String filter = "obs~%-00%";
+
+    Long convocatoriaId = 1L;
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ENTIDAD_CONCEPTO_GASTOS_PERMITIDOS)
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(convocatoriaId).toUri();
+
+    final ResponseEntity<List<ConvocatoriaConceptoGasto>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ConvocatoriaConceptoGasto>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<ConvocatoriaConceptoGasto> convocatoriaConceptoGastos = response.getBody();
+    Assertions.assertThat(convocatoriaConceptoGastos.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(convocatoriaConceptoGastos.get(0).getObservaciones()).as("get(0).getObservaciones()")
+        .isEqualTo("obs-" + String.format("%03d", 3));
+    Assertions.assertThat(convocatoriaConceptoGastos.get(1).getObservaciones()).as("get(1).getObservaciones())")
+        .isEqualTo("obs-" + String.format("%03d", 2));
+    Assertions.assertThat(convocatoriaConceptoGastos.get(2).getObservaciones()).as("get(2).getObservaciones()")
+        .isEqualTo("obs-" + String.format("%03d", 1));
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllConvocatoriaConceptoGastoNoPermitidos_WithPagingSortingAndFiltering_ReturnsConvocatoriaConceptoGastoNoPermitidosSubList()
+      throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CGAS-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "id-";
+    String filter = "obs~%-00%";
+
+    Long convocatoriaId = 1L;
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ENTIDAD_CONCEPTO_GASTOS_NO_PERMITIDOS)
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(convocatoriaId).toUri();
+
+    final ResponseEntity<List<ConvocatoriaConceptoGasto>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<ConvocatoriaConceptoGasto>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<ConvocatoriaConceptoGasto> convocatoriaConceptoGastos = response.getBody();
+    Assertions.assertThat(convocatoriaConceptoGastos.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(convocatoriaConceptoGastos.get(0).getObservaciones()).as("get(0).getObservaciones()")
+        .isEqualTo("obs-" + String.format("%03d", 6));
+    Assertions.assertThat(convocatoriaConceptoGastos.get(1).getObservaciones()).as("get(1).getObservaciones())")
+        .isEqualTo("obs-" + String.format("%03d", 5));
+    Assertions.assertThat(convocatoriaConceptoGastos.get(2).getObservaciones()).as("get(2).getObservaciones()")
+        .isEqualTo("obs-" + String.format("%03d", 4));
   }
 
   /**

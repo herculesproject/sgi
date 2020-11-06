@@ -129,6 +129,10 @@
     <createSequence sequenceName="requisito_ip_seq" />
   </changeSet>
 
+  <changeSet author="master" id="20200928000000-convocatoria_concepto_gasto_seq">
+    <createSequence sequenceName="convocatoria_concepto_gasto_seq" />
+  </changeSet>
+
   <!-- ########################################################## -->
   <!-- TABLE -->
   <!-- ########################################################## -->
@@ -689,6 +693,34 @@
       <column name="otros_requisitos" type="VARCHAR(250)" />
     </createTable>
   </changeSet>
+  <changeSet author="master" id="20200928000000-convocatoria_concepto_gasto">
+    <createTable tableName="convocatoria_concepto_gasto">
+      <column name="id" type="BIGINT" defaultValueSequenceNext="convocatoria_concepto_gasto_seq">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_concepto_gasto_pk" />
+      </column>
+      <column name="convocatoria_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="concepto_gasto_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="observaciones" type="VARCHAR(250)">
+        <constraints nullable="true" />
+      </column>
+      <column name="importe_maximo" type="DOUBLE">
+        <constraints nullable="true" />
+      </column>
+      <column name="permitido" type="BOOLEAN">
+        <constraints nullable="true" />
+      </column>
+      <column name="num_meses" type="INT">
+        <constraints nullable="true" />
+      </column>
+      <column name="porcentaje_coste_indirecto" type="INT">
+        <constraints nullable="true" />
+      </column>
+    </createTable>
+  </changeSet>
 
   <!-- ########################################################## -->
   <!-- FOREIGN KEY CONSTRAINT -->
@@ -817,6 +849,13 @@
 
   <changeSet author="master" id="20200601000000-requisito_ip_convocatoria_FK">
     <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="requisito_ip" constraintName="requisito_ip_convocatoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-convocatoria_concepto_gasto_convocatoria_FK">
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_concepto_gasto" constraintName="convocatoria_concepto_gasto_convocatoria_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+  </changeSet>
+  <changeSet author="master" id="20200601000000-convocatoria_concepto_gasto_concepto_gasto_FK">
+    <addForeignKeyConstraint baseColumnNames="concepto_gasto_id" baseTableName="convocatoria_concepto_gasto" constraintName="convocatoria_concepto_gasto_concepto_gasto_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="concepto_gasto" validate="true" />
   </changeSet>
 
   <!-- ########################################################## -->

@@ -15,8 +15,10 @@ import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.enums.TipoJustificacionEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
+import org.crue.hercules.sgi.csp.model.ConceptoGasto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
@@ -37,6 +39,7 @@ import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEnlaceService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadFinanciadoraService;
@@ -93,6 +96,8 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   private ConvocatoriaPeriodoSeguimientoCientificoService convocatoriaPeriodoSeguimientoCientificoService;
   @MockBean
   private ConvocatoriaPeriodoJustificacionService convocatoriaPeriodoJustificacionService;
+  @MockBean
+  private ConvocatoriaConceptoGastoService convocatoriaConceptoGastoService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_REGISTRAR = "/registrar";
@@ -107,6 +112,8 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   private static final String PATH_HITO = "/convocatoriahitos";
   private static final String PATH_PERIODO_JUSTIFICACION = "/convocatoriaperiodojustificaciones";
   private static final String PATH_PERIODO_SEGUIMIENTO_CIENTIFICO = "/convocatoriaperiodoseguimientocientificos";
+  private static final String PATH_CONCEPTO_GASTO_PERMITIDO = "/convocatoriagastos/permitidos";
+  private static final String PATH_CONCEPTO_GASTO_NO_PERMITIDO = "/convocatoriagastos/nopermitidos";
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
@@ -1520,6 +1527,136 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   /**
+   * 
+   * CONVOCATORIA CONCEPTO GASTO
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  public void findAllConvocatoriaConceptoGastoPermitido_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ConvocatoriaConceptoGasto para la Convocatoria
+    Long convocatoriaId = 1L;
+
+    List<ConvocatoriaConceptoGasto> convocatoriaConceptoGastos = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      convocatoriaConceptoGastos.add(generarMockConvocatoriaConceptoGasto(i, true));
+    }
+
+    BDDMockito.given(convocatoriaConceptoGastoService
+        .findAllByConvocatoriaAndPermitidoTrue(ArgumentMatchers.<Long>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ConvocatoriaConceptoGasto>>() {
+          @Override
+          public Page<ConvocatoriaConceptoGasto> answer(InvocationOnMock invocation) throws Throwable {
+            List<ConvocatoriaConceptoGasto> content = new ArrayList<>();
+            for (ConvocatoriaConceptoGasto convocatoriaConceptoGasto : convocatoriaConceptoGastos) {
+              content.add(convocatoriaConceptoGasto);
+            }
+            return new PageImpl<>(content);
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CONCEPTO_GASTO_PERMITIDO, convocatoriaId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(37))).andReturn();
+
+    List<ConvocatoriaConceptoGasto> convocatoriaConceptoGastoResponse = mapper.readValue(
+        requestResult.getResponse().getContentAsString(), new TypeReference<List<ConvocatoriaConceptoGasto>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ConvocatoriaConceptoGasto convocatoriaConceptoGasto = convocatoriaConceptoGastoResponse.get(i - 1);
+      Assertions.assertThat(convocatoriaConceptoGasto.getObservaciones()).isEqualTo("Obs-" + i);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  public void findAllConvocatoriaConceptoGastoPermitido_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de ConvocatoriaConceptoGasto para la Convocatoria
+
+    BDDMockito.given(convocatoriaConceptoGastoService
+        .findAllByConvocatoriaAndPermitidoTrue(ArgumentMatchers.<Long>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(Collections.emptyList()));
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CONCEPTO_GASTO_PERMITIDO, 1L)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  public void findAllConvocatoriaConceptoGastoNoPermitido_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ConvocatoriaConceptoGasto para la Convocatoria
+    Long convocatoriaId = 1L;
+
+    List<ConvocatoriaConceptoGasto> convocatoriaConceptoGastos = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      convocatoriaConceptoGastos.add(generarMockConvocatoriaConceptoGasto(i, true));
+    }
+
+    BDDMockito.given(convocatoriaConceptoGastoService
+        .findAllByConvocatoriaAndPermitidoFalse(ArgumentMatchers.<Long>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ConvocatoriaConceptoGasto>>() {
+          @Override
+          public Page<ConvocatoriaConceptoGasto> answer(InvocationOnMock invocation) throws Throwable {
+            List<ConvocatoriaConceptoGasto> content = new ArrayList<>();
+            for (ConvocatoriaConceptoGasto convocatoriaConceptoGasto : convocatoriaConceptoGastos) {
+              content.add(convocatoriaConceptoGasto);
+            }
+            return new PageImpl<>(content);
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CONCEPTO_GASTO_NO_PERMITIDO, convocatoriaId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(37))).andReturn();
+
+    List<ConvocatoriaConceptoGasto> convocatoriaConceptoGastoResponse = mapper.readValue(
+        requestResult.getResponse().getContentAsString(), new TypeReference<List<ConvocatoriaConceptoGasto>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ConvocatoriaConceptoGasto convocatoriaConceptoGasto = convocatoriaConceptoGastoResponse.get(i - 1);
+      Assertions.assertThat(convocatoriaConceptoGasto.getObservaciones()).isEqualTo("Obs-" + i);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  public void findAllConvocatoriaConceptoGastoNoPermitido_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de ConvocatoriaConceptoGasto para la Convocatoria
+
+    BDDMockito.given(convocatoriaConceptoGastoService
+        .findAllByConvocatoriaAndPermitidoFalse(ArgumentMatchers.<Long>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(Collections.emptyList()));
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CONCEPTO_GASTO_NO_PERMITIDO, 1L)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
    * Función que devuelve un objeto ConvocatoriaAreaTematica
    * 
    * @param convocatoriaAreaTematicaId
@@ -1658,6 +1795,33 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
     convocatoriaPeriodoJustificacion.setTipoJustificacion(TipoJustificacionEnum.PERIODICA);
 
     return convocatoriaPeriodoJustificacion;
+  }
+
+  /**
+   * Función que devuelve un objeto ConvocatoriaConceptoGasto
+   * 
+   * @param id id del ConvocatoriaConceptoGasto
+   * @return el objeto ConvocatoriaConceptoGasto
+   */
+  private ConvocatoriaConceptoGasto generarMockConvocatoriaConceptoGasto(Long id, Boolean permitido) {
+    Convocatoria convocatoria = new Convocatoria();
+    convocatoria.setId(id == null ? 1 : id);
+
+    ConceptoGasto conceptoGasto = new ConceptoGasto();
+    conceptoGasto.setId(id == null ? 1 : id);
+    conceptoGasto.setActivo(true);
+
+    ConvocatoriaConceptoGasto convocatoriaConceptoGasto = new ConvocatoriaConceptoGasto();
+    convocatoriaConceptoGasto.setId(id);
+    convocatoriaConceptoGasto.setConceptoGasto(conceptoGasto);
+    convocatoriaConceptoGasto.setConvocatoria(convocatoria);
+    convocatoriaConceptoGasto.setImporteMaximo(20.0);
+    convocatoriaConceptoGasto.setNumMeses(3);
+    convocatoriaConceptoGasto.setObservaciones("Obs-" + id);
+    convocatoriaConceptoGasto.setPermitido(permitido);
+    convocatoriaConceptoGasto.setPorcentajeCosteIndirecto(2);
+
+    return convocatoriaConceptoGasto;
   }
 
 }
