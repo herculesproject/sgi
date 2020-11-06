@@ -1,9 +1,13 @@
 package org.crue.hercules.sgi.csp.repository.specification;
 
+import javax.persistence.criteria.JoinType;
+
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion_;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFase_;
+import org.crue.hercules.sgi.csp.model.TipoFase;
+import org.crue.hercules.sgi.csp.model.TipoFase_;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ModeloTipoFaseSpecifications {
@@ -58,13 +62,15 @@ public class ModeloTipoFaseSpecifications {
   }
 
   /**
-   * {@link ModeloTipoFase} con Activo a True
+   * {@link ModeloTipoFase} activos con {@link TipoFase} activo.
    * 
    * @return specification para obtener los {@link ModeloTipoFase} activos
    */
   public static Specification<ModeloTipoFase> activos() {
     return (root, query, cb) -> {
-      return cb.equal(root.get(ModeloTipoFase_.activo), Boolean.TRUE);
+      root.join(ModeloTipoFase_.tipoFase, JoinType.INNER);
+      return cb.and(cb.equal(root.get(ModeloTipoFase_.activo), Boolean.TRUE),
+          cb.equal(root.get(ModeloTipoFase_.tipoFase).get(TipoFase_.activo), Boolean.TRUE));
     };
   }
 

@@ -2,6 +2,7 @@
 INSERT INTO csp.tipo_finalidad (id, nombre, descripcion, activo) VALUES (1, 'nombre-001', 'descripcion-001', true);
 INSERT INTO csp.tipo_finalidad (id, nombre, descripcion, activo) VALUES (2, 'nombre-002', 'descripcion-002', true);
 INSERT INTO csp.tipo_finalidad (id, nombre, descripcion, activo) VALUES (3, 'nombre-003', 'descripcion-003', true);
+INSERT INTO csp.tipo_finalidad (id, nombre, descripcion, activo) VALUES (4, 'nombre-004', 'descripcion-004', false);
 INSERT INTO csp.tipo_finalidad (id, nombre, descripcion, activo) VALUES (10, 'nombre-010', 'descripcion-010', true);
 INSERT INTO csp.tipo_finalidad (id, nombre, descripcion, activo) VALUES (11, 'nombre-011', 'descripcion-011', true);
 INSERT INTO csp.tipo_finalidad (id, nombre, descripcion, activo) VALUES (12, 'nombre-012', 'descripcion-012', true);
@@ -22,3 +23,4 @@ INSERT INTO csp.modelo_tipo_finalidad (id, tipo_finalidad_id, modelo_ejecucion_i
 INSERT INTO csp.modelo_tipo_finalidad (id, tipo_finalidad_id, modelo_ejecucion_id, activo) VALUES (7, 12, 2, true);
 INSERT INTO csp.modelo_tipo_finalidad (id, tipo_finalidad_id, modelo_ejecucion_id, activo) VALUES (8, 13, 2, true);
 INSERT INTO csp.modelo_tipo_finalidad (id, tipo_finalidad_id, modelo_ejecucion_id, activo) VALUES (9, 14, 2, true);
+INSERT INTO csp.modelo_tipo_finalidad (id, tipo_finalidad_id, modelo_ejecucion_id, activo) VALUES (10, 4, 1, true);

@@ -4,18 +4,21 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion_;
 import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.model.ModeloTipoHito_;
+import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.model.TipoHito_;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ModeloTipoHitoSpecifications {
 
   /**
-   * {@link ModeloTipoHito} activos.
+   * {@link ModeloTipoHito} activos con {@link TipoHito} activo.
    * 
    * @return specification para obtener los {@link ModeloTipoHito} activos.
    */
   public static Specification<ModeloTipoHito> activos() {
     return (root, query, cb) -> {
-      return cb.equal(root.get(ModeloTipoHito_.activo), Boolean.TRUE);
+      return cb.and(cb.equal(root.get(ModeloTipoHito_.activo), Boolean.TRUE),
+          cb.equal(root.get(ModeloTipoHito_.tipoHito).get(TipoHito_.activo), Boolean.TRUE));
     };
   }
 

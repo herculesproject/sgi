@@ -91,13 +91,17 @@ public class ModeloTipoDocumentoServiceImpl implements ModeloTipoDocumentoServic
     if (!listaMismoModeloEjecucionAndTipoDocumento.isEmpty()) {
 
       if (modeloTipoDocumento.getModeloTipoFase() == null && listaMismoModeloEjecucionAndTipoDocumento.stream()
-          .anyMatch(modeloTipoDocumentoFilter -> modeloTipoDocumentoFilter.getModeloTipoFase() != null)) {
+          .anyMatch(modeloTipoDocumentoFilter -> modeloTipoDocumentoFilter.getActivo()
+              && modeloTipoDocumentoFilter.getTipoDocumento().getActivo()
+              && modeloTipoDocumentoFilter.getModeloTipoFase() != null)) {
         throw new IllegalArgumentException(
             "Ya existe una asociación activa para ese ModeloEjecucion y ese TipoDocumento con ModeloTipoFase");
       }
 
       if (modeloTipoDocumento.getModeloTipoFase() != null && listaMismoModeloEjecucionAndTipoDocumento.stream()
-          .anyMatch(modeloTipoDocumentoFilter -> modeloTipoDocumentoFilter.getModeloTipoFase() == null)) {
+          .anyMatch(modeloTipoDocumentoFilter -> modeloTipoDocumentoFilter.getActivo()
+              && modeloTipoDocumentoFilter.getTipoDocumento().getActivo()
+              && modeloTipoDocumentoFilter.getModeloTipoFase() == null)) {
         throw new IllegalArgumentException(
             "Ya existe una asociación activa para ese ModeloEjecucion y ese TipoDocumento sin ModeloTipoFase");
       }
@@ -109,8 +113,9 @@ public class ModeloTipoDocumentoServiceImpl implements ModeloTipoDocumentoServic
               && modeloTipoDocumentoFilter.getTipoDocumento().getId() == modeloTipoDocumento.getTipoDocumento().getId()
               && (modeloTipoDocumentoFilter.getModeloTipoFase() == null
                   && modeloTipoDocumento.getModeloTipoFase() == null
-                  || modeloTipoDocumentoFilter.getModeloTipoFase().getId() == modeloTipoDocumento.getModeloTipoFase()
-                      .getId()))
+                  || (modeloTipoDocumentoFilter.getModeloTipoFase() != null
+                      && modeloTipoDocumento.getModeloTipoFase() != null && modeloTipoDocumentoFilter
+                          .getModeloTipoFase().getId() == modeloTipoDocumento.getModeloTipoFase().getId())))
           .findFirst();
 
       modeloTipoDocumentoIgual.ifPresent(modeloTipoDocumentoExistente -> {
