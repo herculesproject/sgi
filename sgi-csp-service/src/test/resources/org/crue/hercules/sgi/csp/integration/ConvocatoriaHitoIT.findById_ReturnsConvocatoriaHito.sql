@@ -21,6 +21,7 @@ INSERT INTO csp.tipo_regimen_concurrencia (id,nombre,activo) VALUES (2,'nombre-2
 -- TIPO AMBITO GEOGRAFICO
 INSERT INTO csp.tipo_ambito_geografico (id, nombre, activo) VALUES (1, 'nombre-001', true);
 INSERT INTO csp.tipo_ambito_geografico (id, nombre, activo) VALUES (2, 'nombre-002', true);
+
 -- CONVOCATORIA
 INSERT INTO csp.convocatoria
 (id, unidad_gestion_ref, modelo_ejecucion_id, codigo, anio, titulo, objeto, observaciones, tipo_finalidad_id, tipo_regimen_concurrencia_id, destinatarios, colaborativos, estado_actual, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
@@ -31,6 +32,9 @@ VALUES(2, 'unidad-002', 1, 'codigo-002', 2020, 'titulo-002', 'objeto-002', 'obse
 
 --TIPO HITO
 insert into csp.tipo_hito (id,nombre,descripcion,activo) values (1,'nombre-1','descripcion-1',true);
+
+-- MODELO TIPO HITO
+INSERT INTO csp.modelo_tipo_hito (id, modelo_ejecucion_id, tipo_hito_id, solicitud, proyecto, convocatoria, activo) VALUES (1, 1, 1, true, true, true, true);
 
 --CONVOCATORIA HITO
 INSERT INTO csp.convocatoria_hito (id, convocatoria_id, tipo_hito_id,  fecha, comentario, genera_aviso ) values(1, 1, 1,'2021-10-22', 'comentario-1', true);

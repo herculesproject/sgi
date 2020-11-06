@@ -1,16 +1,17 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaFaseNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
-import org.crue.hercules.sgi.csp.exceptions.TipoFaseNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase;
+import org.crue.hercules.sgi.csp.model.ModeloTipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaFaseRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
-import org.crue.hercules.sgi.csp.repository.TipoFaseRepository;
+import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaFaseSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaFaseService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
@@ -34,13 +35,13 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
 
   private final ConvocatoriaFaseRepository repository;
   private final ConvocatoriaRepository convocatoriaRepository;
-  private final TipoFaseRepository tipoFaseRepository;
+  private final ModeloTipoFaseRepository modeloTipoFaseRepository;
 
   public ConvocatoriaFaseServiceImpl(ConvocatoriaFaseRepository repository,
-      ConvocatoriaRepository convocatoriaRepository, TipoFaseRepository tipoFaseRepository) {
+      ConvocatoriaRepository convocatoriaRepository, ModeloTipoFaseRepository modeloTipoFaseRepository) {
     this.repository = repository;
     this.convocatoriaRepository = convocatoriaRepository;
-    this.tipoFaseRepository = tipoFaseRepository;
+    this.modeloTipoFaseRepository = modeloTipoFaseRepository;
   }
 
   /**
@@ -56,10 +57,11 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
 
     Assert.isNull(convocatoriaFase.getId(), "Id tiene que ser null para crear ConvocatoriaFase");
 
-    Assert.notNull(convocatoriaFase.getConvocatoria().getId(),
+    Assert.isTrue(convocatoriaFase.getConvocatoria() != null && convocatoriaFase.getConvocatoria().getId() != null,
         "Id Convocatoria no puede ser null para crear ConvocatoriaFase");
 
-    Assert.notNull(convocatoriaFase.getTipoFase().getId(), "Id Fase no puede ser null para crear ConvocatoriaFase");
+    Assert.isTrue(convocatoriaFase.getTipoFase() != null && convocatoriaFase.getTipoFase().getId() != null,
+        "Id Fase no puede ser null para crear ConvocatoriaFase");
 
     Assert.notNull(convocatoriaFase.getFechaInicio(),
         "La fecha de inicio no puede ser null para crear ConvocatoriaFase");
@@ -72,9 +74,25 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
     convocatoriaFase.setConvocatoria(convocatoriaRepository.findById(convocatoriaFase.getConvocatoria().getId())
         .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaFase.getConvocatoria().getId())));
 
-    convocatoriaFase.setTipoFase(tipoFaseRepository.findById(convocatoriaFase.getTipoFase().getId())
-        .orElseThrow(() -> new TipoFaseNotFoundException(convocatoriaFase.getTipoFase().getId())));
-    Assert.isTrue(convocatoriaFase.getTipoFase().getActivo(), "El TipoFase debe estar activo");
+    // TipoFase
+    Optional<ModeloTipoFase> modeloTipoFase = modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(
+        convocatoriaFase.getConvocatoria().getModeloEjecucion().getId(), convocatoriaFase.getTipoFase().getId());
+
+    // Está asignado al ModeloEjecucion
+    Assert.isTrue(modeloTipoFase.isPresent(),
+        "TipoFase '" + convocatoriaFase.getTipoFase().getNombre() + "' no disponible para el ModeloEjecucion '"
+            + convocatoriaFase.getConvocatoria().getModeloEjecucion().getNombre() + "'");
+
+    // La asignación al ModeloEjecucion está activa
+    Assert.isTrue(modeloTipoFase.get().getActivo(), "ModeloTipoFase '" + modeloTipoFase.get().getTipoFase().getNombre()
+        + "' no está activo para el ModeloEjecucion '" + modeloTipoFase.get().getModeloEjecucion().getNombre() + "'");
+
+    // El TipoFase está activo
+    Assert.isTrue(modeloTipoFase.get().getTipoFase().getActivo(),
+        "TipoFase '" + modeloTipoFase.get().getTipoFase().getNombre() + "' no está activo");
+
+    convocatoriaFase.setTipoFase(modeloTipoFase.get().getTipoFase());
+
     Assert.isTrue(!existsConvocatoriaFaseConFechasSolapadas(convocatoriaFase),
         "Ya existe una convocatoria en ese rango de fechas");
 
@@ -99,28 +117,53 @@ public class ConvocatoriaFaseServiceImpl implements ConvocatoriaFaseService {
     Assert.notNull(convocatoriaFaseActualizar.getId(),
         "ConvocatoriaFase id no puede ser null para actualizar un ConvocatoriaFase");
 
-    Assert.notNull(convocatoriaFaseActualizar.getConvocatoria().getId(),
+    Assert.isTrue(
+        convocatoriaFaseActualizar.getConvocatoria() != null
+            && convocatoriaFaseActualizar.getConvocatoria().getId() != null,
         "Id Convocatoria no puede ser null para actualizar ConvocatoriaFase");
 
-    Assert.notNull(convocatoriaFaseActualizar.getTipoFase().getId(),
+    Assert.isTrue(
+        convocatoriaFaseActualizar.getTipoFase() != null && convocatoriaFaseActualizar.getTipoFase().getId() != null,
         "Id Fase no puede ser null para actualizar ConvocatoriaFase");
 
     Assert.notNull(convocatoriaFaseActualizar.getFechaInicio(),
         "La fecha de inicio no puede ser null para actualizar ConvocatoriaFase");
+
     Assert.notNull(convocatoriaFaseActualizar.getFechaFin(),
         "La fecha de fin no puede ser null para crear ConvocatoriaFase");
 
     Assert.isTrue(convocatoriaFaseActualizar.getFechaFin().compareTo(convocatoriaFaseActualizar.getFechaInicio()) >= 0,
         "La fecha de fecha de fin debe ser posterior a la fecha de inicio");
 
-    convocatoriaFaseActualizar.setTipoFase(tipoFaseRepository.findById(convocatoriaFaseActualizar.getTipoFase().getId())
-        .orElseThrow(() -> new TipoFaseNotFoundException(convocatoriaFaseActualizar.getTipoFase().getId())));
-
     return repository.findById(convocatoriaFaseActualizar.getId()).map(convocatoriaFase -> {
-      if (convocatoriaFaseActualizar.getTipoFase() != null) {
-        Assert.isTrue(convocatoriaFase.getTipoFase().getId() == convocatoriaFaseActualizar.getTipoFase().getId()
-            || convocatoriaFaseActualizar.getTipoFase().getActivo(), "El TipoFase debe estar activo");
-      }
+
+      // TipoFase
+      Optional<ModeloTipoFase> modeloTipoFase = modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(
+          convocatoriaFase.getConvocatoria().getModeloEjecucion().getId(),
+          convocatoriaFaseActualizar.getTipoFase().getId());
+
+      // Está asignado al ModeloEjecucion
+      Assert.isTrue(modeloTipoFase.isPresent(),
+          "TipoFase '" + convocatoriaFaseActualizar.getTipoFase().getNombre()
+              + "' no disponible para el ModeloEjecucion '"
+              + convocatoriaFase.getConvocatoria().getModeloEjecucion().getNombre() + "'");
+
+      // La asignación al ModeloEjecucion está activa
+      Assert.isTrue(
+          modeloTipoFase.get().getTipoFase().getId() == convocatoriaFase.getTipoFase().getId()
+              || modeloTipoFase.get().getActivo(),
+          "ModeloTipoFase '" + modeloTipoFase.get().getTipoFase().getNombre()
+              + "' no está activo para el ModeloEjecucion '" + modeloTipoFase.get().getModeloEjecucion().getNombre()
+              + "'");
+
+      // El TipoFase está activo
+      Assert.isTrue(
+          modeloTipoFase.get().getTipoFase().getId() == convocatoriaFase.getTipoFase().getId()
+              || modeloTipoFase.get().getTipoFase().getActivo(),
+          "TipoFase '" + modeloTipoFase.get().getTipoFase().getNombre() + "' no está activo");
+
+      convocatoriaFaseActualizar.setTipoFase(modeloTipoFase.get().getTipoFase());
+
       Assert.isTrue(!existsConvocatoriaFaseConFechasSolapadas(convocatoriaFaseActualizar),
           "Ya existe una convocatoria en ese rango de fechas");
 

@@ -1,15 +1,16 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaEnlaceNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
-import org.crue.hercules.sgi.csp.exceptions.TipoEnlaceNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
+import org.crue.hercules.sgi.csp.model.ModeloTipoEnlace;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaEnlaceRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
-import org.crue.hercules.sgi.csp.repository.TipoEnlaceRepository;
+import org.crue.hercules.sgi.csp.repository.ModeloTipoEnlaceRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaEnlaceSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEnlaceService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
@@ -34,13 +35,13 @@ public class ConvocatoriaEnlaceServiceImpl implements ConvocatoriaEnlaceService 
 
   private final ConvocatoriaEnlaceRepository repository;
   private final ConvocatoriaRepository convocatoriaRepository;
-  private final TipoEnlaceRepository tipoEnlaceRepository;
+  private final ModeloTipoEnlaceRepository modeloTipoEnlaceRepository;
 
   public ConvocatoriaEnlaceServiceImpl(ConvocatoriaEnlaceRepository convocatoriaEnlaceRepository,
-      ConvocatoriaRepository convocatoriaRepository, TipoEnlaceRepository tipoEnlaceRepository) {
+      ConvocatoriaRepository convocatoriaRepository, ModeloTipoEnlaceRepository modeloTipoEnlaceRepository) {
     this.repository = convocatoriaEnlaceRepository;
     this.convocatoriaRepository = convocatoriaRepository;
-    this.tipoEnlaceRepository = tipoEnlaceRepository;
+    this.modeloTipoEnlaceRepository = modeloTipoEnlaceRepository;
   }
 
   /**
@@ -57,27 +58,49 @@ public class ConvocatoriaEnlaceServiceImpl implements ConvocatoriaEnlaceService 
     Assert.isNull(convocatoriaEnlace.getId(),
         "ConvocatoriaEnlace id tiene que ser null para crear un nuevo ConvocatoriaEnlace");
 
-    Assert.notNull(convocatoriaEnlace.getConvocatoria().getId(),
+    Assert.isTrue(convocatoriaEnlace.getConvocatoria() != null && convocatoriaEnlace.getConvocatoria().getId() != null,
         "Id Convocatoria no puede ser null para crear ConvocatoriaEnlace");
 
     Assert.notNull(convocatoriaEnlace.getUrl(),
         "ConvocatoriaEnlace url no puede ser null para crear una nueva ConvocatoriaEnlace");
 
-    if (convocatoriaEnlace.getTipoEnlace() != null) {
-      if (convocatoriaEnlace.getTipoEnlace().getId() != null) {
-        convocatoriaEnlace.setTipoEnlace(tipoEnlaceRepository.findById(convocatoriaEnlace.getTipoEnlace().getId())
-            .orElseThrow(() -> new TipoEnlaceNotFoundException(convocatoriaEnlace.getTipoEnlace().getId())));
-        Assert.isTrue(convocatoriaEnlace.getTipoEnlace().getActivo(), "El TipoEnlace debe estar activo");
-      } else {
-        convocatoriaEnlace.setTipoEnlace(null);
-      }
-    }
+    convocatoriaEnlace.setConvocatoria(convocatoriaRepository.findById(convocatoriaEnlace.getConvocatoria().getId())
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaEnlace.getConvocatoria().getId())));
+
     Assert.isTrue(!repository
         .findByConvocatoriaIdAndUrl(convocatoriaEnlace.getConvocatoria().getId(), convocatoriaEnlace.getUrl())
         .isPresent(), "Ya existe esa url para esta Convocatoria");
 
-    convocatoriaEnlace.setConvocatoria(convocatoriaRepository.findById(convocatoriaEnlace.getConvocatoria().getId())
-        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaEnlace.getConvocatoria().getId())));
+    if (convocatoriaEnlace.getTipoEnlace() != null) {
+      if (convocatoriaEnlace.getTipoEnlace().getId() != null) {
+
+        // TipoEnlace
+        Optional<ModeloTipoEnlace> modeloTipoEnlace = modeloTipoEnlaceRepository.findByModeloEjecucionIdAndTipoEnlaceId(
+            convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getId(),
+            convocatoriaEnlace.getTipoEnlace().getId());
+
+        // Está asignado al ModeloEjecucion
+        Assert.isTrue(modeloTipoEnlace.isPresent(),
+            "TipoEnlace '" + convocatoriaEnlace.getTipoEnlace().getNombre()
+                + "' no disponible para el ModeloEjecucion '"
+                + convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getNombre() + "'");
+
+        // La asignación al ModeloEjecucion está activa
+        Assert.isTrue(modeloTipoEnlace.get().getActivo(),
+            "ModeloTipoEnlace '" + modeloTipoEnlace.get().getTipoEnlace().getNombre()
+                + "' no está activo para el ModeloEjecucion '" + modeloTipoEnlace.get().getModeloEjecucion().getNombre()
+                + "'");
+
+        // El TipoEnlace está activo
+        Assert.isTrue(modeloTipoEnlace.get().getTipoEnlace().getActivo(),
+            "TipoEnlace '" + modeloTipoEnlace.get().getTipoEnlace().getNombre() + "' no está activo");
+
+        convocatoriaEnlace.setTipoEnlace(modeloTipoEnlace.get().getTipoEnlace());
+
+      } else {
+        convocatoriaEnlace.setTipoEnlace(null);
+      }
+    }
 
     ConvocatoriaEnlace returnValue = repository.save(convocatoriaEnlace);
 
@@ -101,29 +124,54 @@ public class ConvocatoriaEnlaceServiceImpl implements ConvocatoriaEnlaceService 
     Assert.notNull(convocatoriaEnlaceActualizar.getId(),
         "ConvocatoriaEnlace id no puede ser null para actualizar un ConvocatoriaEnlace");
 
-    Assert.notNull(convocatoriaEnlaceActualizar.getConvocatoria().getId(),
+    Assert.isTrue(
+        convocatoriaEnlaceActualizar.getConvocatoria() != null
+            && convocatoriaEnlaceActualizar.getConvocatoria().getId() != null,
         "Id Convocatoria no puede ser null para actualizar ConvocatoriaEnlace");
 
     Assert.notNull(convocatoriaEnlaceActualizar.getUrl(),
         "ConvocatoriaEnlace url no puede ser null para actualizar un nuevo ConvocatoriaEnlace");
 
-    if (convocatoriaEnlaceActualizar.getTipoEnlace() != null) {
-      if (convocatoriaEnlaceActualizar.getTipoEnlace().getId() != null) {
-        convocatoriaEnlaceActualizar.setTipoEnlace(
-            tipoEnlaceRepository.findById(convocatoriaEnlaceActualizar.getTipoEnlace().getId()).orElseThrow(
-                () -> new TipoEnlaceNotFoundException(convocatoriaEnlaceActualizar.getTipoEnlace().getId())));
-      } else {
-        convocatoriaEnlaceActualizar.setTipoEnlace(null);
-      }
-    }
-    Assert.isTrue(!repository.findByConvocatoriaIdAndUrl(convocatoriaEnlaceActualizar.getConvocatoria().getId(),
-        convocatoriaEnlaceActualizar.getUrl()).isPresent(), "Ya existe esa url para esta Convocatoria");
-
     return repository.findById(convocatoriaEnlaceActualizar.getId()).map(convocatoriaEnlace -> {
+
+      Assert.isTrue(!repository.findByConvocatoriaIdAndUrl(convocatoriaEnlace.getConvocatoria().getId(),
+          convocatoriaEnlaceActualizar.getUrl()).isPresent(), "Ya existe esa url para esta Convocatoria");
+
       if (convocatoriaEnlaceActualizar.getTipoEnlace() != null) {
-        Assert.isTrue(convocatoriaEnlace.getTipoEnlace().getId() == convocatoriaEnlaceActualizar.getTipoEnlace().getId()
-            || convocatoriaEnlaceActualizar.getTipoEnlace().getActivo(), "El TipoEnlace debe estar activo");
+        if (convocatoriaEnlaceActualizar.getTipoEnlace().getId() != null) {
+
+          // TipoEnlace
+          Optional<ModeloTipoEnlace> modeloTipoEnlace = modeloTipoEnlaceRepository
+              .findByModeloEjecucionIdAndTipoEnlaceId(convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getId(),
+                  convocatoriaEnlaceActualizar.getTipoEnlace().getId());
+
+          // Está asignado al ModeloEjecucion
+          Assert.isTrue(modeloTipoEnlace.isPresent(),
+              "TipoEnlace '" + convocatoriaEnlaceActualizar.getTipoEnlace().getNombre()
+                  + "' no disponible para el ModeloEjecucion '"
+                  + convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getNombre() + "'");
+
+          // La asignación al ModeloEjecucion está activa
+          Assert.isTrue(
+              modeloTipoEnlace.get().getTipoEnlace().getId() == convocatoriaEnlace.getTipoEnlace().getId()
+                  || modeloTipoEnlace.get().getActivo(),
+              "ModeloTipoEnlace '" + modeloTipoEnlace.get().getTipoEnlace().getNombre()
+                  + "' no está activo para el ModeloEjecucion '"
+                  + modeloTipoEnlace.get().getModeloEjecucion().getNombre() + "'");
+
+          // El TipoEnlace está activo
+          Assert.isTrue(
+              modeloTipoEnlace.get().getTipoEnlace().getId() == convocatoriaEnlace.getTipoEnlace().getId()
+                  || modeloTipoEnlace.get().getTipoEnlace().getActivo(),
+              "TipoEnlace '" + modeloTipoEnlace.get().getTipoEnlace().getNombre() + "' no está activo");
+
+          convocatoriaEnlaceActualizar.setTipoEnlace(modeloTipoEnlace.get().getTipoEnlace());
+
+        } else {
+          convocatoriaEnlaceActualizar.setTipoEnlace(null);
+        }
       }
+
       convocatoriaEnlace.setUrl(convocatoriaEnlaceActualizar.getUrl());
       convocatoriaEnlace.setDescripcion(convocatoriaEnlaceActualizar.getDescripcion());
       convocatoriaEnlace.setTipoEnlace(convocatoriaEnlaceActualizar.getTipoEnlace());

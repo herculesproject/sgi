@@ -2,15 +2,16 @@ package org.crue.hercules.sgi.csp.service.impl;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaHitoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
-import org.crue.hercules.sgi.csp.exceptions.TipoHitoNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
+import org.crue.hercules.sgi.csp.model.ModeloTipoHito;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaHitoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
-import org.crue.hercules.sgi.csp.repository.TipoHitoRepository;
+import org.crue.hercules.sgi.csp.repository.ModeloTipoHitoRepository;
 import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaHitoSpecifications;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaHitoService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
@@ -34,13 +35,13 @@ public class ConvocatoriaHitoServiceImpl implements ConvocatoriaHitoService {
 
   private final ConvocatoriaHitoRepository repository;
   private final ConvocatoriaRepository convocatoriaRepository;
-  private final TipoHitoRepository tipoHitoRepository;
+  private final ModeloTipoHitoRepository modeloTipoHitoRepository;
 
   public ConvocatoriaHitoServiceImpl(ConvocatoriaHitoRepository convocatoriaHitoRepository,
-      ConvocatoriaRepository convocatoriaRepository, TipoHitoRepository tipoHitoRepository) {
+      ConvocatoriaRepository convocatoriaRepository, ModeloTipoHitoRepository modeloTipoHitoRepository) {
     this.repository = convocatoriaHitoRepository;
     this.convocatoriaRepository = convocatoriaRepository;
-    this.tipoHitoRepository = tipoHitoRepository;
+    this.modeloTipoHitoRepository = modeloTipoHitoRepository;
   }
 
   /**
@@ -57,8 +58,11 @@ public class ConvocatoriaHitoServiceImpl implements ConvocatoriaHitoService {
     Assert.isNull(convocatoriaHito.getId(),
         "ConvocatoriaHito id tiene que ser null para crear un nuevo ConvocatoriaHito");
 
-    Assert.notNull(convocatoriaHito.getConvocatoria().getId(),
+    Assert.isTrue(convocatoriaHito.getConvocatoria() != null && convocatoriaHito.getConvocatoria().getId() != null,
         "Id Convocatoria no puede ser null para crear ConvocatoriaHito");
+
+    Assert.isTrue(convocatoriaHito.getTipoHito() != null && convocatoriaHito.getTipoHito().getId() != null,
+        "Id Hito no puede ser null para crear ConvocatoriaHito");
 
     if (convocatoriaHito.getFecha().isBefore(LocalDate.now())) {
       convocatoriaHito.setGeneraAviso(false);
@@ -67,18 +71,35 @@ public class ConvocatoriaHitoServiceImpl implements ConvocatoriaHitoService {
     convocatoriaHito.setConvocatoria(convocatoriaRepository.findById(convocatoriaHito.getConvocatoria().getId())
         .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaHito.getConvocatoria().getId())));
 
-    convocatoriaHito.setTipoHito(tipoHitoRepository.findById(convocatoriaHito.getTipoHito().getId())
-        .orElseThrow(() -> new TipoHitoNotFoundException(convocatoriaHito.getTipoHito().getId())));
+    // TipoHito
+    Optional<ModeloTipoHito> modeloTipoHito = modeloTipoHitoRepository.findByModeloEjecucionIdAndTipoHitoId(
+        convocatoriaHito.getConvocatoria().getModeloEjecucion().getId(), convocatoriaHito.getTipoHito().getId());
+
+    // Está asignado al ModeloEjecucion
+    Assert.isTrue(modeloTipoHito.isPresent(),
+        "TipoHito '" + convocatoriaHito.getTipoHito().getNombre() + "' no disponible para el ModeloEjecucion '"
+            + convocatoriaHito.getConvocatoria().getModeloEjecucion().getNombre() + "'");
+
+    // La asignación al ModeloEjecucion está activa
+    Assert.isTrue(modeloTipoHito.get().getActivo(), "ModeloTipoHito '" + modeloTipoHito.get().getTipoHito().getNombre()
+        + "' no está activo para el ModeloEjecucion '" + modeloTipoHito.get().getModeloEjecucion().getNombre() + "'");
+
+    // El TipoHito está activo
+    Assert.isTrue(modeloTipoHito.get().getTipoHito().getActivo(),
+        "TipoHito '" + modeloTipoHito.get().getTipoHito().getNombre() + "' no está activo");
+
+    convocatoriaHito.setTipoHito(modeloTipoHito.get().getTipoHito());
+
     Assert.isTrue(!repository
         .findByFechaAndTipoHitoId(convocatoriaHito.getFecha(), convocatoriaHito.getTipoHito().getId()).isPresent(),
         "Ya existe un Hito con el mismo tipo en esa fecha");
+
     Assert.isTrue(convocatoriaHito.getTipoHito().getActivo(), "El TipoHito debe estar activo");
 
     ConvocatoriaHito returnValue = repository.save(convocatoriaHito);
 
     log.debug("create(ConvocatoriaHito convocatoriaHito) - end");
     return returnValue;
-
   }
 
   /**
@@ -96,15 +117,43 @@ public class ConvocatoriaHitoServiceImpl implements ConvocatoriaHitoService {
     Assert.notNull(convocatoriaHitoActualizar.getId(),
         "ConvocatoriaHito id no puede ser null para actualizar un ConvocatoriaHito");
 
-    Assert.notNull(convocatoriaHitoActualizar.getConvocatoria().getId(),
+    Assert.isTrue(
+        convocatoriaHitoActualizar.getConvocatoria() != null
+            && convocatoriaHitoActualizar.getConvocatoria().getId() != null,
         "Id Convocatoria no puede ser null para actualizar ConvocatoriaHito");
 
+    Assert.isTrue(
+        convocatoriaHitoActualizar.getTipoHito() != null && convocatoriaHitoActualizar.getTipoHito().getId() != null,
+        "Id Hito no puede ser null para actualizar ConvocatoriaHito");
+
     return repository.findById(convocatoriaHitoActualizar.getId()).map(convocatoriaHito -> {
-      convocatoriaHitoActualizar
-          .setTipoHito(tipoHitoRepository.findById(convocatoriaHitoActualizar.getTipoHito().getId())
-              .orElseThrow(() -> new TipoHitoNotFoundException(convocatoriaHitoActualizar.getTipoHito().getId())));
-      Assert.isTrue(convocatoriaHito.getTipoHito().getId() == convocatoriaHitoActualizar.getTipoHito().getId()
-          || convocatoriaHitoActualizar.getTipoHito().getActivo(), "El TipoHito debe estar activo");
+
+      // TipoHito
+      Optional<ModeloTipoHito> modeloTipoHito = modeloTipoHitoRepository.findByModeloEjecucionIdAndTipoHitoId(
+          convocatoriaHito.getConvocatoria().getModeloEjecucion().getId(),
+          convocatoriaHitoActualizar.getTipoHito().getId());
+
+      // Está asignado al ModeloEjecucion
+      Assert.isTrue(modeloTipoHito.isPresent(),
+          "TipoHito '" + convocatoriaHitoActualizar.getTipoHito().getNombre()
+              + "' no disponible para el ModeloEjecucion '"
+              + convocatoriaHito.getConvocatoria().getModeloEjecucion().getNombre() + "'");
+
+      // La asignación al ModeloEjecucion está activa
+      Assert.isTrue(
+          modeloTipoHito.get().getTipoHito().getId() == convocatoriaHito.getTipoHito().getId()
+              || modeloTipoHito.get().getActivo(),
+          "ModeloTipoHito '" + modeloTipoHito.get().getTipoHito().getNombre()
+              + "' no está activo para el ModeloEjecucion '" + modeloTipoHito.get().getModeloEjecucion().getNombre()
+              + "'");
+
+      // El TipoHito está activo
+      Assert.isTrue(
+          modeloTipoHito.get().getTipoHito().getId() == convocatoriaHito.getTipoHito().getId()
+              || modeloTipoHito.get().getTipoHito().getActivo(),
+          "TipoHito '" + modeloTipoHito.get().getTipoHito().getNombre() + "' no está activo");
+
+      convocatoriaHitoActualizar.setTipoHito(modeloTipoHito.get().getTipoHito());
 
       if (convocatoriaHitoActualizar.getFecha().isBefore(LocalDate.now())) {
         convocatoriaHitoActualizar.setGeneraAviso(false);
