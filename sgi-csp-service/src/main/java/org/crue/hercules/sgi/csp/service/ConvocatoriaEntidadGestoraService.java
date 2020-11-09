@@ -26,6 +26,17 @@ public interface ConvocatoriaEntidadGestoraService {
   ConvocatoriaEntidadGestora create(ConvocatoriaEntidadGestora convocatoriaEntidadGestora);
 
   /**
+   * Actualiza la entidad {@link ConvocatoriaEntidadGestora}.
+   * 
+   * @param convocatoriaEntidadGestora la entidad
+   *                                   {@link ConvocatoriaEntidadGestora} a
+   *                                   guardar.
+   * @return ConvocatoriaEntidadGestora la entidad
+   *         {@link ConvocatoriaEntidadGestora} persistida.
+   */
+  ConvocatoriaEntidadGestora update(ConvocatoriaEntidadGestora convocatoriaEntidadGestora);
+
+  /**
    * Elimina la {@link ConvocatoriaEntidadGestora}.
    *
    * @param id Id del {@link ConvocatoriaEntidadGestora}.

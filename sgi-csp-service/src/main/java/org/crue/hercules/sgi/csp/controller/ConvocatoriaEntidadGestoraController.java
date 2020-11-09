@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -51,6 +52,17 @@ public class ConvocatoriaEntidadGestoraController {
     ConvocatoriaEntidadGestora returnValue = service.create(convocatoriaEntidadGestora);
     log.debug("create(ConvocatoriaEntidadGestora convocatoriaEntidadGestora) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
+  }
+
+  @PutMapping("/{id}")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-E')")
+  public ConvocatoriaEntidadGestora update(@RequestBody ConvocatoriaEntidadGestora modeloTipoHito,
+      @PathVariable Long id) {
+    log.debug("update(ConvocatoriaEntidadGestora modeloTipoHito, Long id) - start");
+    modeloTipoHito.setId(id);
+    ConvocatoriaEntidadGestora returnValue = service.update(modeloTipoHito);
+    log.debug("update(ConvocatoriaEntidadGestora modeloTipoHito, Long id) - end");
+    return returnValue;
   }
 
   /**

@@ -76,6 +76,35 @@ public class ConvocatoriaEntidadGestoraServiceImpl implements ConvocatoriaEntida
   }
 
   /**
+   * Actualiza los datos del {@link ConvocatoriaEntidadGestora}.
+   * 
+   * @param convocatoriaEntidadGestora convocatoriaEntidadGestora
+   *                                   {@link ConvocatoriaEntidadGestora} con los
+   *                                   datos actualizados.
+   * @return {@link ConvocatoriaEntidadGestora} actualizado.
+   */
+  @Override
+  @Transactional
+  public ConvocatoriaEntidadGestora update(ConvocatoriaEntidadGestora convocatoriaEntidadGestora) {
+    log.debug("update(ConvocatoriaEntidadGestora convocatoriaEntidadGestora) - start");
+    Long id = convocatoriaEntidadGestora.getId();
+    Assert.notNull(id, "Id no puede ser null");
+    Assert.notNull(convocatoriaEntidadGestora.getConvocatoria(),
+        "Convocatoria no puede ser null para crear ConvocatoriaEntidadGestora");
+    Assert.notNull(convocatoriaEntidadGestora.getConvocatoria().getId(),
+        "Id Convocatoria no puede ser null para crear ConvocatoriaEntidadGestora");
+    Assert.notNull(convocatoriaEntidadGestora.getEntidadRef(),
+        "Entidad no puede ser null para crear ConvocatoriaEntidadGestora");
+    return repository.findById(id).map(entidadGestora -> {
+      entidadGestora.setConvocatoria(convocatoriaEntidadGestora.getConvocatoria());
+      entidadGestora.setEntidadRef(convocatoriaEntidadGestora.getEntidadRef());
+      ConvocatoriaEntidadGestora returnValue = repository.save(entidadGestora);
+      log.debug("update(ConvocatoriaEntidadGestora convocatoriaEntidadGestora) - end");
+      return returnValue;
+    }).orElseThrow(() -> new ConvocatoriaEntidadGestoraNotFoundException(id));
+  }
+
+  /**
    * Elimina la {@link ConvocatoriaEntidadGestora}.
    *
    * @param id Id del {@link ConvocatoriaEntidadGestora}.
