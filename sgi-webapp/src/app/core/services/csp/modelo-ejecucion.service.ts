@@ -4,7 +4,6 @@ import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@env';
 import { of, Observable } from 'rxjs';
-import { ITipoPeriodoJustificacion } from '@core/models/csp/tipo-periodo-justificacion';
 import { ITipoPlazosFases } from '@core/models/csp/tipo-plazos-fases';
 import { IModeloEjecucion, ITipoFinalidad, ITipoHito } from '@core/models/csp/tipos-configuracion';
 import { IModeloTipoEnlace } from '@core/models/csp/modelo-tipo-enlace';
@@ -22,16 +21,6 @@ const tiposHito: ITipoHito[] = [
   {
     id: 2, nombre: 'Resolución definitiva', descripcion: '', activo: false
   } as ITipoHito
-
-];
-
-const tipoJustificacion: ITipoPeriodoJustificacion[] = [
-  {
-    id: 1, nombre: 'Periodica'
-  },
-  {
-    id: 2, nombre: 'Final'
-  }
 
 ];
 
@@ -73,20 +62,6 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
       total: tiposHito.length,
       items: tiposHito
     } as SgiRestListResult<ITipoHito>);
-  }
-
-  /**
-   * Recupera los tipos de un tipo de periodo de justificacion
-   * @param idModeloEjecucion Identificador del modelo de ejecución.
-   * @returns Listado de periodo de justigicacion
-   */
-  findTipoJustificacion(idModeloEjecucion: number): Observable<SgiRestListResult<ITipoPeriodoJustificacion>> {
-    this.logger.debug(ModeloEjecucionService.name, `findTipoJustificacion(idModeloEjecucion)`, '-', 'START');
-    return of({
-      page: null,
-      total: tipoJustificacion.length,
-      items: tipoJustificacion
-    } as SgiRestListResult<ITipoPeriodoJustificacion>);
   }
 
   /**

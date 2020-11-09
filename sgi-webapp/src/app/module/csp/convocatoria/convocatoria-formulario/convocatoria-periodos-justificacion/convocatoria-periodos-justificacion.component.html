@@ -1,65 +1,83 @@
 <!-- Convocatoria enlace -->
-<section class="periodo-justificacion">
+<section class="convocatoria-periodo-justificacion">
 
   <h2>{{'csp.convocatoria.periodoJustificacion.titulo' | translate}}</h2>
 
-  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 table-justificacion">
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 table-convocatoria-periodo-justificacion">
 
     <!-- Num Periodo Column -->
     <ng-container matColumnDef="numPeriodo">
-      <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.periodoJustificacion.numero' | translate}} </th>
-      <td mat-cell *matCellDef="let justificacion"> {{justificacion.value.numPeriodo}}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{'csp.convocatoria.periodoJustificacion.numero' | translate}}
+      </th>
+      <td mat-cell *matCellDef="let periodoJustificacion">
+        {{ periodoJustificacion.value.numPeriodo }}
+      </td>
     </ng-container>
 
     <!-- Mes inicial Column -->
     <ng-container matColumnDef="mesInicial">
-      <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.periodoJustificacion.mesInicial' | translate}} </th>
-      <td mat-cell *matCellDef="let justificacion">
-        {{justificacion.value.mesInicial}}
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{'csp.convocatoria.periodoJustificacion.mesInicial' | translate}}
+      </th>
+      <td mat-cell *matCellDef="let periodoJustificacion">
+        {{ periodoJustificacion.value.mesInicial }}
       </td>
     </ng-container>
 
     <!-- Mes final Column -->
     <ng-container matColumnDef="mesFinal">
-      <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.periodoJustificacion.mesFinal' | translate}} </th>
-      <td mat-cell *matCellDef="let justificacion">
-        {{justificacion.value.mesFinal}}
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{'csp.convocatoria.periodoJustificacion.mesFinal' | translate}}
+      </th>
+      <td mat-cell *matCellDef="let periodoJustificacion">
+        {{ periodoJustificacion.value.mesFinal }}
       </td>
     </ng-container>
 
     <!-- Fecha inicio Column -->
     <ng-container matColumnDef="fechaInicio">
-      <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.periodoJustificacion.fechaInicio' | translate}} </th>
-      <td mat-cell *matCellDef="let justificacion">
-        {{justificacion.value.fechaInicio | date:'dd/MM/yyyy'}}
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{'csp.convocatoria.periodoJustificacion.fechaInicio' | translate}}
+      </th>
+      <td mat-cell *matCellDef="let periodoJustificacion">
+        {{ periodoJustificacion.value.fechaInicioPresentacion | date:'dd/MM/yyyy' }}
       </td>
     </ng-container>
 
     <!-- Fecha fin Column -->
     <ng-container matColumnDef="fechaFin">
-      <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.periodoJustificacion.fechaFin' | translate}} </th>
-      <td mat-cell *matCellDef="let justificacion">
-        {{justificacion.value.fechaFin | date:'dd/MM/yyyy'}}
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{'csp.convocatoria.periodoJustificacion.fechaFin' | translate}}
+      </th>
+      <td mat-cell *matCellDef="let periodoJustificacion">
+        {{ periodoJustificacion.value.fechaFinPresentacion | date:'dd/MM/yyyy' }}
       </td>
     </ng-container>
 
     <!-- Observaciones Column -->
     <ng-container matColumnDef="observaciones">
-      <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.periodoJustificacion.observaciones' | translate}} </th>
-      <td mat-cell *matCellDef="let justificacion">{{justificacion.value.observaciones}}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{'csp.convocatoria.periodoJustificacion.observaciones' | translate}}
+      </th>
+      <td mat-cell *matCellDef="let periodoJustificacion">
+        {{ periodoJustificacion.value.observaciones }}
+      </td>
     </ng-container>
 
     <!-- Acciones Column -->
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.periodoJustificacion.acciones' | translate}} </th>
-      <td mat-cell *matCellDef="let justificacion;let i=index;">
+      <td mat-cell *matCellDef="let periodoJustificacion; let i=index;">
         <ng-container>
-          <button mat-button matTooltip="{{'botones.editar' | translate}}" (click)="openModalPeriodo(justificacion)">
+          <button mat-button matTooltip="{{'botones.editar' | translate}}"
+            (click)="openModalPeriodoJustificacion(periodoJustificacion)">
             <mat-icon color="primary">border_color</mat-icon>
           </button>
         </ng-container>
         <ng-container>
-          <button mat-button matTooltip="{{'botones.borrar' | translate}}">
+          <button mat-button matTooltip="{{'botones.borrar' | translate}}"
+            (click)="deletePeriodoJustificacion(periodoJustificacion)">
             <mat-icon color="warn">highlight_off</mat-icon>
           </button>
         </ng-container>
@@ -76,7 +94,8 @@
   </mat-paginator>
 
   <div class="separation-button">
-    <button color="three" aria-label="Center Align" md-button mat-raised-button (click)="openModalPeriodo()">
+    <button color="three" aria-label="Center Align" md-button mat-raised-button
+      (click)="openModalPeriodoJustificacion()">
       <mat-icon color="accent">add_circle</mat-icon>
       {{'csp.convocatoria.periodoJustificacion.anadir'| translate}}
     </button>

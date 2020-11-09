@@ -57,7 +57,7 @@ export class EvaluadorDatosGeneralesFragment extends FormFragment<IEvaluador> {
       cargoComite: new FormControl({ value: null }, [new NullIdValidador().isValid()]),
       resumen: ['']
     }, {
-      validator: [new DateValidator().isAfter('fechaAlta', 'fechaBaja')]
+      validator: [DateValidator.isAfterOrEqual('fechaAlta', 'fechaBaja')]
     });
   }
 

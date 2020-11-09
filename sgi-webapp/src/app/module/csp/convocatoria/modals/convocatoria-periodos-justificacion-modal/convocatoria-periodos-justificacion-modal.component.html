@@ -1,6 +1,6 @@
 <div class="modal-editar-comentario-crear">
   <header class="modal-header-material">
-    <h3 mat-dialog-title>{{'csp.convocatoria.periodo.justificacion.modal.titulo' | translate}}</h3>
+    <h3 mat-dialog-title>{{'csp.convocatoria.periodoJustificacion.modal.titulo' | translate}}</h3>
   </header>
   <main>
 
@@ -13,12 +13,12 @@
           [fxFlexOrder]="fxFlexProperties.order">
 
           <mat-form-field fxFill>
-            <mat-label>{{'csp.convocatoria.periodo.justificacion.modal.numPeriodo' | translate}}</mat-label>
+            <mat-label>{{'csp.convocatoria.periodoJustificacion.modal.numPeriodo' | translate}}</mat-label>
             <input matInput formControlName="numPeriodo" type="text" id="numPeriodo"
-              placeholder="{{'csp.convocatoria.periodo.justificacion.modal.numPeriodo' | translate}}" required
+              placeholder="{{'csp.convocatoria.periodoJustificacion.modal.numPeriodo' | translate}}" readonly
               maxlength="100">
             <mat-error *ngIf="formGroup.controls.numPeriodo.errors?.required">
-              {{'csp.convocatoria.periodo.justificacion.modal.numPeriodo.requerido' | translate}}
+              {{'csp.convocatoria.periodoJustificacion.modal.numPeriodo.requerido' | translate}}
             </mat-error>
           </mat-form-field>
 
@@ -32,16 +32,20 @@
           [fxFlexOrder]="fxFlexProperties.order">
 
           <mat-form-field class="input-form" fxFill>
-            <mat-label>{{'csp.convocatoria.periodo.justificacion.modal.tipo' | translate}}</mat-label>
-            <input type="text" placeholder="{{'csp.convocatoria.periodo.justificacion.modal.tipo' | translate}}"
-              arial-label="Number" matInput formControlName="tipoPeriodo" [matAutocomplete]="auto" required>
-            <mat-autocomplete #auto="matAutocomplete" [displayWith]="getTipoPeriodo">
-              <mat-option *ngFor="let tipo of tiposPeriodo | async" [value]="tipo">
-                {{ tipo.nombre | translate}}
+            <mat-label>{{'csp.convocatoria.periodoJustificacion.modal.tipo' | translate}}</mat-label>
+            <mat-select matNativeControl formControlName="tipoJustificacion">
+              <mat-option *ngFor="let tipo of tiposJustificacion" [value]="tipo">
+                {{ tipo | translate}}
               </mat-option>
-            </mat-autocomplete>
-            <mat-error *ngIf="formGroup.controls.tipoPeriodo.errors?.required">
-              {{'csp.convocatoria.periodo.justificacion.modal.tipo.requerido' | translate}}
+            </mat-select>
+            <mat-error *ngIf="formGroup.controls.tipoJustificacion.errors?.required">
+              {{'csp.convocatoria.periodoJustificacion.modal.tipoJustificacion.requerido' | translate}}
+            </mat-error>
+            <mat-error *ngIf="formGroup.controls.tipoJustificacion.errors?.notAllowed">
+              {{'csp.convocatoria.periodoJustificacion.modal.tipoJustificacion.tipoFinalDuplicado' | translate}}
+            </mat-error>
+            <mat-error *ngIf="formGroup.controls.tipoJustificacion.errors?.finalNotLast">
+              {{'csp.convocatoria.periodoJustificacion.modal.tipoJustificacion.tipoFinalNoUltimo' | translate}}
             </mat-error>
           </mat-form-field>
 
@@ -49,6 +53,9 @@
 
       </div>
 
+      <div class="fieldset-form">
+        {{'csp.convocatoria.periodoJustificacion.modal.periodoJustificar' | translate}}
+      </div>
 
       <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
         [fxLayoutGap]="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
@@ -57,12 +64,21 @@
           [fxFlexOrder]="fxFlexProperties.order">
 
           <mat-form-field fxFill>
-            <mat-label>{{'csp.convocatoria.periodo.justificacion.modal.desdeMes' | translate}}</mat-label>
-            <input matInput formControlName="desdeMes" type="string" id="desdeMes"
-              placeholder="{{'csp.convocatoria.periodo.justificacion.modal.desdeMes' | translate}}" required
-              maxlength="100">
+            <mat-label>{{'csp.convocatoria.periodoJustificacion.modal.desdeMes' | translate}}</mat-label>
+            <input matInput formControlName="desdeMes" type="number" id="desdeMes"
+              placeholder="{{'csp.convocatoria.periodoJustificacion.modal.desdeMes' | translate}}" required
+              (blur)="recalcularNumPeriodo()">
             <mat-error *ngIf="formGroup.controls.desdeMes.errors?.required">
-              {{'csp.convocatoria.periodo.justificacion.modal.desdeMes.requerido' | translate}}
+              {{'csp.convocatoria.periodoJustificacion.modal.desdeMes.requerido' | translate}}
+            </mat-error>
+            <mat-error *ngIf="formGroup.controls.desdeMes.errors?.min">
+              {{'csp.convocatoria.periodoJustificacion.modal.desdeMes.min' | translate}}
+            </mat-error>
+            <mat-error *ngIf="formGroup.controls.desdeMes.errors?.max">
+              {{'csp.convocatoria.periodoJustificacion.modal.desdeMes.inicioPeriodoFinal' | translate}}
+            </mat-error>
+            <mat-error *ngIf="formGroup.controls.desdeMes.errors?.overlapped">
+              {{'csp.convocatoria.periodoJustificacion.modal.desdeMes.rangoSolapado' | translate}}
             </mat-error>
           </mat-form-field>
 
@@ -72,17 +88,33 @@
           [fxFlexOrder]="fxFlexProperties.order">
 
           <mat-form-field fxFill>
-            <mat-label>{{'csp.convocatoria.periodo.justificacion.modal.hastaMes' | translate}}</mat-label>
-            <input matInput formControlName="hastaMes" type="string" id="hastaMes"
-              placeholder="{{'csp.convocatoria.periodo.justificacion.modal.hastaMes' | translate}}" required
+            <mat-label>{{'csp.convocatoria.periodoJustificacion.modal.hastaMes' | translate}}</mat-label>
+            <input matInput formControlName="hastaMes" type="number" id="hastaMes"
+              placeholder="{{'csp.convocatoria.periodoJustificacion.modal.hastaMes' | translate}}" required
               maxlength="100">
             <mat-error *ngIf="formGroup.controls.hastaMes.errors?.required">
-              {{'csp.convocatoria.periodo.justificacion.modal.hastaMes.requerido' | translate}}
+              {{'csp.convocatoria.periodoJustificacion.modal.hastaMes.requerido' | translate}}
+            </mat-error>
+            <mat-error *ngIf="formGroup.controls.hastaMes.errors?.min">
+              {{'csp.convocatoria.periodoJustificacion.modal.hastaMes.min' | translate}}
+            </mat-error>
+            <mat-error *ngIf="formGroup.controls.hastaMes.errors?.after">
+              {{'csp.convocatoria.periodoJustificacion.modal.hastaMes.after' | translate}}
+            </mat-error>
+            <mat-error *ngIf="formGroup.controls.hastaMes.errors?.max">
+              {{'csp.convocatoria.periodoJustificacion.modal.hastaMes.duracionConvocatoria' | translate}}
+            </mat-error>
+            <mat-error *ngIf="formGroup.controls.hastaMes.errors?.overlapped">
+              {{'csp.convocatoria.periodoJustificacion.modal.hastaMes.rangoSolapado' | translate}}
             </mat-error>
           </mat-form-field>
 
         </div>
 
+      </div>
+
+      <div class="fieldset-form">
+        {{'csp.convocatoria.periodoJustificacion.modal.periodoEntregaJustificacion' | translate}}
       </div>
 
       <div [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
@@ -92,7 +124,7 @@
           [fxFlexOrder]="fxFlexProperties.order">
 
           <mat-form-field color="primary" fxFill>
-            <mat-label>{{'csp.convocatoria.periodo.justificacion.modal.fechaInicio' | translate}}</mat-label>
+            <mat-label>{{'csp.convocatoria.periodoJustificacion.modal.fechaInicio' | translate}}</mat-label>
             <input matInput formControlName="fechaInicio" [matDatepicker]="picker1">
             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
             <mat-datepicker #picker1></mat-datepicker>
@@ -104,10 +136,13 @@
           [fxFlexOrder]="fxFlexProperties.order">
 
           <mat-form-field color="primary" fxFill>
-            <mat-label>{{'csp.convocatoria.periodo.justificacion.modal.fechaFin' | translate}}</mat-label>
+            <mat-label>{{'csp.convocatoria.periodoJustificacion.modal.fechaFin' | translate}}</mat-label>
             <input matInput formControlName="fechaFin" [matDatepicker]="picker2">
             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
+            <mat-error *ngIf="formGroup.controls.fechaFin.errors?.after">
+              {{'csp.convocatoria.periodoJustificacion.modal.fechaFin.after' | translate}}
+            </mat-error>
           </mat-form-field>
 
         </div>
@@ -121,14 +156,13 @@
           [fxFlex.gt-md]="fxFlexProperties2.gtMd" [fxFlexOrder]="fxFlexProperties2.order">
 
           <mat-form-field fxFill>
-            <mat-label>{{'csp.convocatoria.periodo.justificacion.modal.observaciones' | translate}}</mat-label>
+            <mat-label>{{'csp.convocatoria.periodoJustificacion.modal.observaciones' | translate}}</mat-label>
             <textarea matInput formControlName="observaciones" type="text" id="observaciones"
-              placeholder="{{'csp.convocatoria.periodo.justificacion.modal.observaciones' | translate}}">
+              placeholder="{{'csp.convocatoria.periodoJustificacion.modal.observaciones' | translate}}">
                 </textarea>
 
-            <mat-error
-              *ngIf="FormGroupUtil.checkError(formGroup, 'observaciones') && (formGroup.get('observaciones').errors.vacio || formGroup.get('observaciones').errors.required)">
-              {{'eti.comentario.crear.comentario.error.requerido' | translate}}
+            <mat-error *ngIf="formGroup.controls.observaciones.errors?.after">
+              {{'csp.convocatoria.periodoJustificacion.modal.observaciones.maxlength' | translate}}
             </mat-error>
           </mat-form-field>
 

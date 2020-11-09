@@ -4,14 +4,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { IPeriodoJustificacion } from '@core/models/csp/periodo-justificacion';
+import { IConvocatoriaPeriodoJustificacion } from '@core/models/csp/convocatoria-periodo-justificacion';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
-import { ConvocatoriaPeriodosJustificacionModalComponent } from './convocatoria-periodos-justificacion-modal.component';
+import { ConvocatoriaPeriodosJustificacionModalComponent, IConvocatoriaPeriodoJustificacionModalData } from './convocatoria-periodos-justificacion-modal.component';
 
 describe('ConvocatoriaPeriodosJustificacionModalComponent', () => {
   let component: ConvocatoriaPeriodosJustificacionModalComponent;
@@ -33,8 +33,12 @@ describe('ConvocatoriaPeriodosJustificacionModalComponent', () => {
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: {} as IPeriodoJustificacion },
-        { provide: MAT_DIALOG_DATA, useValue: {} as IPeriodoJustificacion },
+        { provide: MatDialogRef, useValue: {} as IConvocatoriaPeriodoJustificacion },
+        {
+          provide: MAT_DIALOG_DATA, useValue: {
+            convocatoriaPeriodoJustificacionList: []
+          } as IConvocatoriaPeriodoJustificacionModalData
+        },
         SgiAuthService
       ],
     })

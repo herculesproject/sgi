@@ -25,6 +25,7 @@ import { RequisitoIPService } from '@core/services/csp/requisito-ip.service';
 import { ConvocatoriaEntidadGestoraService } from '@core/services/csp/convocatoria-entidad-gestora.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { FormBuilder } from '@angular/forms';
+import { ConvocatoriaPeriodoJustificacionService } from '@core/services/csp/convocatoria-periodo-justificacion.service';
 
 @Injectable()
 export class ConvocatoriaActionService extends ActionService {
@@ -64,7 +65,8 @@ export class ConvocatoriaActionService extends ActionService {
     convocatoriaHitoService: ConvocatoriaHitoService,
     requisitoIPService: RequisitoIPService,
     convocatoriaEntidadGestoraService: ConvocatoriaEntidadGestoraService,
-    unidadGestionService: UnidadGestionService
+    unidadGestionService: UnidadGestionService,
+    convocatoriaPeriodoJustificacionService: ConvocatoriaPeriodoJustificacionService
   ) {
     super();
     this.convocatoria = {} as IConvocatoria;
@@ -77,8 +79,8 @@ export class ConvocatoriaActionService extends ActionService {
       convocatoriaEntidadGestoraService, unidadGestionService);
     this.seguimientoCientifico = new ConvocatoriaSeguimientoCientificoFragment(
       logger, this.convocatoria?.id, convocatoriaService);
-    this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(
-      logger, this.convocatoria?.id, convocatoriaService);
+    this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(logger, this.convocatoria?.id, convocatoriaService,
+      convocatoriaPeriodoJustificacionService);
     this.entidadesConvocantes = new ConvocatoriaEntidadesConvocantesFragment(
       logger, this.convocatoria?.id, convocatoriaService);
     this.plazosFases = new ConvocatoriaPlazosFasesFragment(
@@ -100,6 +102,17 @@ export class ConvocatoriaActionService extends ActionService {
     this.addFragment(this.FRAGMENT.ENLACES, this.enlaces);
     this.addFragment(this.FRAGMENT.REQUISITOS_IP, this.requisitosIP);
 
+
+  }
+
+  /**
+   * Recupera los datos de la convocatoria del formulario de datos generales,
+   * si no se ha cargado el formulario de datos generales se recuperan los datos de la convocatoria que se esta editando.
+   *
+   * @returns los datos de la convocatoria.
+   */
+  getDatosGeneralesConvocatoria(): IConvocatoria {
+    return this.datosGenerales.isInitialized() ? this.datosGenerales.getValue() : this.convocatoria;
   }
 
 }

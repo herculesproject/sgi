@@ -4,7 +4,7 @@ import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@env';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
-import { IPeriodoJustificacion } from '@core/models/csp/periodo-justificacion';
+import { IConvocatoriaPeriodoJustificacion } from '@core/models/csp/convocatoria-periodo-justificacion';
 import { of, Observable } from 'rxjs';
 import { IPlazosFases } from '@core/models/csp/plazos-fases';
 import { ISeguimientoCientifico } from '@core/models/csp/seguimiento-cientifico';
@@ -18,17 +18,6 @@ import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 
-
-const periodosJustificacion: IPeriodoJustificacion[] = [
-  {
-    id: 1, numPeriodo: 1, tipoJustificacion: { id: 1, nombre: 'Periódica' }, mesInicial: 'Enero', mesFinal: 'Marzo',
-    fechaInicio: new Date(), fechaFin: new Date(), observaciones: 'Primer periodo de justificación', activo: true
-  },
-  {
-    id: 2, numPeriodo: 2, tipoJustificacion: { id: 2, nombre: 'Periódica' }, mesInicial: 'Septiembre', mesFinal: 'Diciembre',
-    fechaInicio: new Date(), fechaFin: new Date(), observaciones: 'Segundo periodo de justificación', activo: true
-
-  }];
 
 const plazosFases: IPlazosFases[] = [
   {
@@ -104,21 +93,17 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
   }
 
   /**
-   * Recupera listado mock de periodos justificacion.
-   * @param id convocatoria
+   * Recupera listado de periodos justificacion de una convocatoria.
+   *
+   * @param id Id de la convocatoria.
    * @param options opciones de búsqueda.
+   * @returns periodos de justificacion de la convocatoria.
    */
-  getPeriodosJustificacion(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IPeriodoJustificacion>> {
-    this.logger.debug(ConvocatoriaService.name, `getPeriodosJustificacion(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
-    const list = {
-      page: null,
-      total: periodosJustificacion.length,
-      items: periodosJustificacion
-    } as SgiRestListResult<IPeriodoJustificacion>;
-    return of(list)
+  getPeriodosJustificacion(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaPeriodoJustificacion>> {
+    this.logger.debug(ConvocatoriaService.name, `getPeriodosJustificacion(${id}, ${options ? JSON.stringify(options) : options})`, '-', 'START');
+    return this.find<IConvocatoriaPeriodoJustificacion, IConvocatoriaPeriodoJustificacion>(`${this.endpointUrl}/${id}/convocatoriaperiodojustificaciones`, options)
       .pipe(
-        tap(() => this.logger.debug(ConvocatoriaService.name,
-          `getPeriodosJustificacion(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+        tap(() => this.logger.debug(ConvocatoriaService.name, `getPeriodosJustificacion(${id}, ${options ? JSON.stringify(options) : options})`, '-', 'END'))
       );
   }
 
