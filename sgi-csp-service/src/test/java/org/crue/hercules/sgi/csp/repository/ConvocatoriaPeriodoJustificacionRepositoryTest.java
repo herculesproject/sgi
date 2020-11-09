@@ -8,14 +8,10 @@ import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.enums.TipoJustificacionEnum;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
-import org.crue.hercules.sgi.csp.repository.specification.ConvocatoriaPeriodoJustificacionSpecifications;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 
 @DataJpaTest
 public class ConvocatoriaPeriodoJustificacionRepositoryTest {
@@ -62,49 +58,6 @@ public class ConvocatoriaPeriodoJustificacionRepositoryTest {
   }
 
   @Test
-  public void findAllByConvocatoriaIdAndNumPeriodoGreaterThan_ReturnsConvocatoriaPeriodoJustificacion()
-      throws Exception {
-
-    // given: 3 ConvocatoriaPeriodoJustificacion de los que 2 tienen un numPeriodo
-    // mayor
-    Convocatoria convocatoria1 = Convocatoria.builder().codigo("codigo-1")
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).build();
-    entityManager.persistAndFlush(convocatoria1);
-    Convocatoria convocatoria2 = Convocatoria.builder().codigo("codigo-2")
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).build();
-    entityManager.persistAndFlush(convocatoria2);
-
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion1 = new ConvocatoriaPeriodoJustificacion(null,
-        convocatoria1, 1, 1, 2, LocalDate.of(2020, 10, 10), LocalDate.of(2020, 11, 20), "observaciones-1",
-        TipoJustificacionEnum.FINAL);
-    entityManager.persistAndFlush(convocatoriaPeriodoJustificacion1);
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion2 = new ConvocatoriaPeriodoJustificacion(null,
-        convocatoria1, 2, 3, 5, LocalDate.of(2020, 12, 10), LocalDate.of(2021, 11, 20), "observaciones-2",
-        TipoJustificacionEnum.PERIODICA);
-    entityManager.persistAndFlush(convocatoriaPeriodoJustificacion2);
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion3 = new ConvocatoriaPeriodoJustificacion(null,
-        convocatoria1, 3, 7, 9, LocalDate.of(2021, 12, 10), LocalDate.of(2021, 12, 20), "observaciones-3",
-        TipoJustificacionEnum.PERIODICA);
-    entityManager.persistAndFlush(convocatoriaPeriodoJustificacion3);
-
-    Long convocatoriaIdBuscado = convocatoria1.getId();
-
-    // when: se busca los ConvocatoriaPeriodoJustificacion por
-    // ConvocatoriaId y numPeriodo
-    List<ConvocatoriaPeriodoJustificacion> dataFound = repository
-        .findAllByConvocatoriaIdAndNumPeriodoGreaterThan(convocatoriaIdBuscado, 1);
-
-    // then: Se recupera los ConvocatoriaPeriodoJustificacion con el ConvocatoriaId
-    // y con un numPeriodo mayor del buscado
-    Assertions.assertThat(dataFound.size()).isEqualTo(2);
-    Assertions.assertThat(dataFound.get(0).getNumPeriodo())
-        .isEqualTo(convocatoriaPeriodoJustificacion2.getNumPeriodo());
-    Assertions.assertThat(dataFound.get(1).getNumPeriodo())
-        .isEqualTo(convocatoriaPeriodoJustificacion3.getNumPeriodo());
-
-  }
-
-  @Test
   public void findFirstByConvocatoriaIdOrderByNumPeriodoDesc_ReturnsConvocatoriaPeriodoJustificacion()
       throws Exception {
 
@@ -139,69 +92,6 @@ public class ConvocatoriaPeriodoJustificacionRepositoryTest {
         .isEqualTo(convocatoriaPeriodoJustificacion1.getMesFinal());
     Assertions.assertThat(dataFound.getObservaciones()).as("getObservaciones()")
         .isEqualTo(convocatoriaPeriodoJustificacion1.getObservaciones());
-  }
-
-  @Test
-  public void findAllByConvocatoriaIdAndTipoJustificacion_ReturnsList() throws Exception {
-
-    // given: 2 ConvocatoriaPeriodoJustificacion de los que 1 es final
-    Convocatoria convocatoria1 = Convocatoria.builder().codigo("codigo-1")
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).build();
-    entityManager.persistAndFlush(convocatoria1);
-
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion1 = new ConvocatoriaPeriodoJustificacion(null,
-        convocatoria1, 1, 1, 2, LocalDate.of(2020, 10, 10), LocalDate.of(2020, 11, 20), "observaciones-1",
-        TipoJustificacionEnum.FINAL);
-    entityManager.persistAndFlush(convocatoriaPeriodoJustificacion1);
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion2 = new ConvocatoriaPeriodoJustificacion(null,
-        convocatoria1, 2, 3, 5, LocalDate.of(2020, 12, 10), LocalDate.of(2021, 11, 20), "observaciones-2",
-        TipoJustificacionEnum.PERIODICA);
-    entityManager.persistAndFlush(convocatoriaPeriodoJustificacion2);
-
-    Long convocatoriaIdBuscado = convocatoria1.getId();
-
-    // when: se busca el ConvocatoriaPeriodoJustificacion por ConvocatoriaId y tipo
-    // justificacion
-    List<ConvocatoriaPeriodoJustificacion> periodosFinal = repository
-        .findAllByConvocatoriaIdAndTipoJustificacion(convocatoriaIdBuscado, TipoJustificacionEnum.FINAL);
-
-    // then: Devuelve el perido final
-    Assertions.assertThat(periodosFinal.size()).isEqualTo(1);
-  }
-
-  @Test
-  public void findAllConvocatoriaPeriodoJustificacionMesesSolapados_ReturnsList() throws Exception {
-
-    // given: ConvocatoriaPeriodoJustificacion con los meses solapados con los
-    // buscados
-    Convocatoria convocatoria1 = Convocatoria.builder().codigo("codigo-1")
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).build();
-    entityManager.persistAndFlush(convocatoria1);
-    Convocatoria convocatoria2 = Convocatoria.builder().codigo("codigo-2")
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).build();
-    entityManager.persistAndFlush(convocatoria2);
-
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion1 = new ConvocatoriaPeriodoJustificacion(null,
-        convocatoria1, 1, 10, 20, LocalDate.of(2020, 10, 10), LocalDate.of(2020, 11, 20), "observaciones-1",
-        TipoJustificacionEnum.FINAL);
-    entityManager.persistAndFlush(convocatoriaPeriodoJustificacion1);
-
-    Long convocatoriaPeriodoJustificacionIdBuscado = 999999L;
-    Long convocatoriaIdBuscado = convocatoria1.getId();
-    Integer mesInicialBuscado = 9;
-    Integer mesFinalBuscado = 11;
-
-    // when: se busca si existen ConvocatoriaPeriodoJustificacion con meses
-    // solapados
-    Pageable pageable = PageRequest.of(0, 10);
-    Specification<ConvocatoriaPeriodoJustificacion> spec = ConvocatoriaPeriodoJustificacionSpecifications
-        .byConvocatoriaAndRangoMesesSolapados(convocatoriaPeriodoJustificacionIdBuscado, convocatoriaIdBuscado,
-            mesInicialBuscado, mesFinalBuscado);
-    List<ConvocatoriaPeriodoJustificacion> dataFound = repository.findAll(spec, pageable).getContent();
-
-    // then: Se recupera los ConvocatoriaPeriodoJustificacion con meses solapados
-    Assertions.assertThat(dataFound.size()).isEqualTo(1);
-
   }
 
 }

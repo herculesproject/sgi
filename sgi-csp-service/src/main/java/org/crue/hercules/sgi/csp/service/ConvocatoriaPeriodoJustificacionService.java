@@ -14,31 +14,18 @@ import org.springframework.data.domain.Pageable;
 public interface ConvocatoriaPeriodoJustificacionService {
 
   /**
-   * Guardar un nuevo {@link ConvocatoriaPeriodoJustificacion}.
+   * Actualiza el listado de {@link ConvocatoriaPeriodoJustificacion} de la
+   * {@link Convocatoria} con el listado convocatoriaPeriodoJustificaciones
+   * añadiendo, editando o eliminando los elementos segun proceda.
    *
-   * @param convocatoriaPeriodoJustificacion la entidad
-   *                                         {@link ConvocatoriaPeriodoJustificacion}
-   *                                         a guardar.
+   * @param convocatoriaId                     Id de la {@link Convocatoria}.
+   * @param convocatoriaPeriodoJustificaciones lista con los nuevos
+   *                                           {@link ConvocatoriaPeriodoJustificacion}
+   *                                           a guardar.
    * @return la entidad {@link ConvocatoriaPeriodoJustificacion} persistida.
    */
-  ConvocatoriaPeriodoJustificacion create(ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion);
-
-  /**
-   * Actualizar {@link ConvocatoriaPeriodoJustificacion}.
-   *
-   * @param convocatoriaPeriodoJustificacionActualizar la entidad
-   *                                                   {@link ConvocatoriaPeriodoJustificacion}
-   *                                                   a actualizar.
-   * @return la entidad {@link ConvocatoriaPeriodoJustificacion} persistida.
-   */
-  ConvocatoriaPeriodoJustificacion update(ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacionActualizar);
-
-  /**
-   * Elimina el {@link ConvocatoriaPeriodoJustificacion}.
-   *
-   * @param id Id del {@link ConvocatoriaPeriodoJustificacion}.
-   */
-  void delete(Long id);
+  List<ConvocatoriaPeriodoJustificacion> updateConvocatoriaPeriodoJustificacionesConvocatoria(Long convocatoriaId,
+      List<ConvocatoriaPeriodoJustificacion> convocatoriaPeriodoJustificaciones);
 
   /**
    * Obtiene {@link ConvocatoriaPeriodoJustificacion} por su id.

@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -45,210 +46,102 @@ public class ConvocatoriaPeriodoJustificacionServiceImpl implements Convocatoria
   }
 
   /**
-   * Guardar un nuevo {@link ConvocatoriaPeriodoJustificacion}.
+   * Actualiza el listado de {@link ConvocatoriaPeriodoJustificacion} de la
+   * {@link Convocatoria} con el listado convocatoriaPeriodoJustificaciones
+   * añadiendo, editando o eliminando los elementos segun proceda.
    *
-   * @param convocatoriaPeriodoJustificacion la entidad
-   *                                         {@link ConvocatoriaPeriodoJustificacion}
-   *                                         a guardar.
+   * @param convocatoriaId                     Id de la {@link Convocatoria}.
+   * @param convocatoriaPeriodoJustificaciones lista con los nuevos
+   *                                           {@link ConvocatoriaPeriodoJustificacion}
+   *                                           a guardar.
    * @return la entidad {@link ConvocatoriaPeriodoJustificacion} persistida.
    */
   @Override
   @Transactional
-  public ConvocatoriaPeriodoJustificacion create(ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion) {
-    log.debug("create(ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion) - start");
+  public List<ConvocatoriaPeriodoJustificacion> updateConvocatoriaPeriodoJustificacionesConvocatoria(
+      Long convocatoriaId, List<ConvocatoriaPeriodoJustificacion> convocatoriaPeriodoJustificaciones) {
+    log.debug(
+        "updateConvocatoriaPeriodoJustificacionesConvocatoria(Long convocatoriaId, List<ConvocatoriaPeriodoJustificacion> convocatoriaPeriodoJustificaciones) - start");
 
-    Assert.isNull(convocatoriaPeriodoJustificacion.getId(),
-        "ConvocatoriaPeriodoJustificacion id tiene que ser null para crear un nuevo ConvocatoriaPeriodoJustificacion");
-
-    Assert.notNull(convocatoriaPeriodoJustificacion.getConvocatoria().getId(),
-        "Id Convocatoria no puede ser null para crear ConvocatoriaPeriodoJustificacion");
-
-    Assert.isTrue(convocatoriaPeriodoJustificacion.getMesInicial() < convocatoriaPeriodoJustificacion.getMesFinal(),
-        "El mes final tiene que ser posterior al mes inicial");
-
-    if (convocatoriaPeriodoJustificacion.getFechaInicioPresentacion() != null
-        && convocatoriaPeriodoJustificacion.getFechaFinPresentacion() != null) {
-      Assert.isTrue(
-          convocatoriaPeriodoJustificacion.getFechaInicioPresentacion()
-              .isBefore(convocatoriaPeriodoJustificacion.getFechaFinPresentacion()),
-          "La fecha de fin tiene que ser posterior a la fecha de inicio");
+    if (convocatoriaPeriodoJustificaciones.isEmpty()) {
+      return new ArrayList<>();
     }
 
-    convocatoriaPeriodoJustificacion.setConvocatoria(
-        convocatoriaRepository.findById(convocatoriaPeriodoJustificacion.getConvocatoria().getId()).orElseThrow(
-            () -> new ConvocatoriaNotFoundException(convocatoriaPeriodoJustificacion.getConvocatoria().getId())));
+    Convocatoria convocatoria = convocatoriaRepository.findById(convocatoriaId)
+        .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaId));
 
-    Assert.isTrue(
-        convocatoriaPeriodoJustificacion.getConvocatoria().getDuracion() == null || convocatoriaPeriodoJustificacion
-            .getMesFinal() <= convocatoriaPeriodoJustificacion.getConvocatoria().getDuracion(),
-        "El mes final no puede ser superior a la duración en meses indicada en la Convocatoria");
+    List<ConvocatoriaPeriodoJustificacion> convocatoriaPeriodoJustificacionesBD = repository
+        .findAllByConvocatoriaId(convocatoriaId);
 
-    repository.findAllByConvocatoriaIdAndTipoJustificacion(convocatoriaPeriodoJustificacion.getConvocatoria().getId(),
-        TipoJustificacionEnum.FINAL).stream().findFirst().ifPresent(convocatoriaPeriodoJustificacionFinal -> {
-          Assert.isTrue(convocatoriaPeriodoJustificacion.getTipoJustificacion().equals(TipoJustificacionEnum.PERIODICA),
-              "La convocatoria ya tiene un ConvocatoriaPeriodoJustificacion de tipo final");
+    // Periodos eliminados
+    List<ConvocatoriaPeriodoJustificacion> periodoJustificacionesEliminar = convocatoriaPeriodoJustificacionesBD
+        .stream().filter(periodo -> !convocatoriaPeriodoJustificaciones.stream()
+            .map(ConvocatoriaPeriodoJustificacion::getId).anyMatch(id -> id == periodo.getId()))
+        .collect(Collectors.toList());
 
-          Assert.isTrue(
-              convocatoriaPeriodoJustificacionFinal.getMesFinal() > convocatoriaPeriodoJustificacion.getMesInicial(),
-              "El ConvocatoriaPeriodoJustificacion de tipo final tiene que ser el último");
-        });
+    if (!periodoJustificacionesEliminar.isEmpty()) {
+      repository.deleteAll(periodoJustificacionesEliminar);
+    }
 
-    Assert.isTrue(
-        hasConvocatoriaPeriodoJustificacionMesesSolapados(null,
-            convocatoriaPeriodoJustificacion.getConvocatoria().getId(),
-            convocatoriaPeriodoJustificacion.getMesInicial(), convocatoriaPeriodoJustificacion.getMesFinal()),
-        "El periodo se solapa con otro existente");
+    // Ordena los periodos por mesInicial
+    convocatoriaPeriodoJustificaciones.sort(Comparator.comparing(ConvocatoriaPeriodoJustificacion::getMesInicial));
 
-    // Recupera la lista ConvocatoriaPeriodoJustificacion de la convocatoria y le
-    // añade el nuevo para reordenarlos
-    List<ConvocatoriaPeriodoJustificacion> listaConvocatoriaPeriodoJustificacionActualizar = repository
-        .findAllByConvocatoriaId(convocatoriaPeriodoJustificacion.getConvocatoria().getId());
-    listaConvocatoriaPeriodoJustificacionActualizar.add(convocatoriaPeriodoJustificacion);
+    AtomicInteger numPeriodo = new AtomicInteger(0);
 
-    List<ConvocatoriaPeriodoJustificacion> listaConvocatoriaPeriodoJustificacionActualizados = repository
-        .saveAll(recalcularSecuenciaNumPeriodo(listaConvocatoriaPeriodoJustificacionActualizar));
+    ConvocatoriaPeriodoJustificacion periodoJustificacionAnterior = null;
+    for (ConvocatoriaPeriodoJustificacion periodoJustificacion : convocatoriaPeriodoJustificaciones) {
+      // Actualiza el numero de periodo
+      periodoJustificacion.setNumPeriodo(numPeriodo.incrementAndGet());
 
-    ConvocatoriaPeriodoJustificacion returnValue = listaConvocatoriaPeriodoJustificacionActualizados.stream()
-        .max(Comparator.comparing(ConvocatoriaPeriodoJustificacion::getId)).get();
+      // Si tiene id se valida que exista y que tenga la convocatoria de la que se
+      // estan actualizando los periodos
+      if (periodoJustificacion.getId() != null) {
+        ConvocatoriaPeriodoJustificacion periodoJustificacionBD = convocatoriaPeriodoJustificacionesBD.stream()
+            .filter(periodo -> periodo.getId() == periodoJustificacion.getId()).findFirst()
+            .orElseThrow(() -> new ConvocatoriaPeriodoJustificacionNotFoundException(periodoJustificacion.getId()));
 
-    log.debug("create(ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion) - end");
+        Assert.isTrue(
+            periodoJustificacionBD.getConvocatoria().getId() == periodoJustificacion.getConvocatoria().getId(),
+            "No se puede modificar la convocatoria del ConvocatoriaPeriodoJustificacion");
+      }
+
+      // Setea la convocatoria recuperada del convocatoriaId
+      periodoJustificacion.setConvocatoria(convocatoria);
+
+      // Validaciones
+      Assert.isTrue(periodoJustificacion.getMesInicial() < periodoJustificacion.getMesFinal(),
+          "El mes final tiene que ser posterior al mes inicial");
+
+      if (periodoJustificacion.getFechaInicioPresentacion() != null
+          && periodoJustificacion.getFechaFinPresentacion() != null) {
+        Assert.isTrue(
+            periodoJustificacion.getFechaInicioPresentacion().isBefore(periodoJustificacion.getFechaFinPresentacion()),
+            "La fecha de fin tiene que ser posterior a la fecha de inicio");
+      }
+
+      Assert.isTrue(
+          periodoJustificacion.getConvocatoria().getDuracion() == null
+              || periodoJustificacion.getMesFinal() <= periodoJustificacion.getConvocatoria().getDuracion(),
+          "El mes final no puede ser superior a la duración en meses indicada en la Convocatoria");
+
+      Assert.isTrue(
+          periodoJustificacionAnterior == null || (periodoJustificacionAnterior != null
+              && periodoJustificacionAnterior.getMesFinal() < periodoJustificacion.getMesInicial()),
+          "El periodo se solapa con otro existente");
+
+      Assert.isTrue(
+          periodoJustificacionAnterior == null || (periodoJustificacionAnterior != null
+              && periodoJustificacionAnterior.getTipoJustificacion().equals(TipoJustificacionEnum.PERIODICA)),
+          "El ConvocatoriaPeriodoJustificacion de tipo final tiene que ser el último");
+
+      periodoJustificacionAnterior = periodoJustificacion;
+    }
+
+    List<ConvocatoriaPeriodoJustificacion> returnValue = repository.saveAll(convocatoriaPeriodoJustificaciones);
+    log.debug(
+        "updateConvocatoriaPeriodoJustificacionesConvocatoria(Long convocatoriaId, List<ConvocatoriaPeriodoJustificacion> convocatoriaPeriodoJustificaciones) - end");
+
     return returnValue;
-  }
-
-  /**
-   * Actualizar {@link ConvocatoriaPeriodoJustificacion}.
-   *
-   * @param convocatoriaPeriodoJustificacionActualizar la entidad
-   *                                                   {@link ConvocatoriaPeriodoJustificacion}
-   *                                                   a actualizar.
-   * @return la entidad {@link ConvocatoriaPeriodoJustificacion} persistida.
-   */
-  @Override
-  @Transactional
-  public ConvocatoriaPeriodoJustificacion update(
-      ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacionActualizar) {
-    log.debug("update(ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacionActualizar) - start");
-
-    Assert.notNull(convocatoriaPeriodoJustificacionActualizar.getId(),
-        "ConvocatoriaPeriodoJustificacion id no puede ser null para actualizar un ConvocatoriaPeriodoJustificacion");
-
-    Assert.notNull(convocatoriaPeriodoJustificacionActualizar.getConvocatoria().getId(),
-        "Id Convocatoria no puede ser null para crear ConvocatoriaPeriodoJustificacion");
-
-    Assert.isTrue(convocatoriaPeriodoJustificacionActualizar
-        .getMesInicial() < convocatoriaPeriodoJustificacionActualizar.getMesFinal(),
-        "El mes final tiene que ser posterior al mes inicial");
-
-    if (convocatoriaPeriodoJustificacionActualizar.getFechaInicioPresentacion() != null
-        && convocatoriaPeriodoJustificacionActualizar.getFechaFinPresentacion() != null) {
-      Assert.isTrue(
-          convocatoriaPeriodoJustificacionActualizar.getFechaInicioPresentacion()
-              .isBefore(convocatoriaPeriodoJustificacionActualizar.getFechaFinPresentacion()),
-          "La fecha de fin tiene que ser posterior a la fecha de inicio");
-    }
-
-    convocatoriaPeriodoJustificacionActualizar.setConvocatoria(
-        convocatoriaRepository.findById(convocatoriaPeriodoJustificacionActualizar.getConvocatoria().getId())
-            .orElseThrow(() -> new ConvocatoriaNotFoundException(
-                convocatoriaPeriodoJustificacionActualizar.getConvocatoria().getId())));
-
-    Assert.isTrue(
-        convocatoriaPeriodoJustificacionActualizar.getConvocatoria().getDuracion() == null
-            || convocatoriaPeriodoJustificacionActualizar.getMesFinal() <= convocatoriaPeriodoJustificacionActualizar
-                .getConvocatoria().getDuracion(),
-        "El mes final no puede ser superior a la duración en meses indicada en la Convocatoria");
-
-    return repository.findById(convocatoriaPeriodoJustificacionActualizar.getId())
-        .map(convocatoriaPeriodoJustificacion -> {
-
-          boolean recalcularNumPeriodos = false;
-
-          if (convocatoriaPeriodoJustificacionActualizar.getMesInicial() != convocatoriaPeriodoJustificacion
-              .getMesInicial()
-              || convocatoriaPeriodoJustificacionActualizar.getMesFinal() != convocatoriaPeriodoJustificacion
-                  .getMesFinal()) {
-            Assert.isTrue(
-                hasConvocatoriaPeriodoJustificacionMesesSolapados(convocatoriaPeriodoJustificacion.getId(),
-                    convocatoriaPeriodoJustificacion.getConvocatoria().getId(),
-                    convocatoriaPeriodoJustificacion.getMesInicial(), convocatoriaPeriodoJustificacion.getMesFinal()),
-                "El periodo se solapa con otro existente");
-
-            if (convocatoriaPeriodoJustificacionActualizar.getMesInicial() != convocatoriaPeriodoJustificacion
-                .getMesInicial()) {
-              recalcularNumPeriodos = true;
-            }
-          }
-
-          convocatoriaPeriodoJustificacion.setMesInicial(convocatoriaPeriodoJustificacionActualizar.getMesInicial());
-          convocatoriaPeriodoJustificacion.setMesFinal(convocatoriaPeriodoJustificacionActualizar.getMesFinal());
-          convocatoriaPeriodoJustificacion
-              .setFechaInicioPresentacion(convocatoriaPeriodoJustificacionActualizar.getFechaInicioPresentacion());
-          convocatoriaPeriodoJustificacion
-              .setFechaFinPresentacion(convocatoriaPeriodoJustificacionActualizar.getFechaFinPresentacion());
-          convocatoriaPeriodoJustificacion
-              .setObservaciones(convocatoriaPeriodoJustificacionActualizar.getObservaciones());
-
-          ConvocatoriaPeriodoJustificacion returnValue = repository.save(convocatoriaPeriodoJustificacion);
-
-          if (recalcularNumPeriodos) {
-            List<ConvocatoriaPeriodoJustificacion> listaConvocatoriaPeriodoJustificacionActualizar = recalcularSecuenciaNumPeriodo(
-                repository.findAllByConvocatoriaId(convocatoriaPeriodoJustificacion.getConvocatoria().getId()));
-
-            listaConvocatoriaPeriodoJustificacionActualizar.stream()
-                .filter(
-                    periodoActualizado -> periodoActualizado.getTipoJustificacion().equals(TipoJustificacionEnum.FINAL))
-                .findFirst().ifPresent(convocatoriaPeriodoJustificacionFinal -> {
-                  Assert.isTrue(
-                      listaConvocatoriaPeriodoJustificacionActualizar.indexOf(
-                          convocatoriaPeriodoJustificacionFinal) == (listaConvocatoriaPeriodoJustificacionActualizar
-                              .size() - 1),
-                      "El ConvocatoriaPeriodoJustificacion de tipo final tiene que ser el último");
-                });
-
-            repository.saveAll(listaConvocatoriaPeriodoJustificacionActualizar);
-
-            returnValue = listaConvocatoriaPeriodoJustificacionActualizar.stream()
-                .filter(periodoActualizado -> periodoActualizado.getId() == convocatoriaPeriodoJustificacion.getId())
-                .findFirst().get();
-          }
-
-          log.debug("update(ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacionActualizar) - end");
-          return returnValue;
-        }).orElseThrow(() -> new ConvocatoriaPeriodoJustificacionNotFoundException(
-            convocatoriaPeriodoJustificacionActualizar.getId()));
-  }
-
-  /**
-   * Elimina el {@link ConvocatoriaPeriodoJustificacion}.
-   *
-   * @param id Id del {@link ConvocatoriaPeriodoJustificacion}.
-   */
-  @Override
-  @Transactional
-  public void delete(Long id) {
-    log.debug("delete(Long id) - start");
-
-    Assert.notNull(id,
-        "ConvocatoriaPeriodoJustificacion id no puede ser null para desactivar un ConvocatoriaPeriodoJustificacion");
-
-    repository.findById(id).map(periodoEliminar -> {
-
-      repository.deleteById(id);
-
-      List<ConvocatoriaPeriodoJustificacion> periodosActualizados = repository
-          .findAllByConvocatoriaIdAndNumPeriodoGreaterThan(id, periodoEliminar.getNumPeriodo()).stream()
-          .map(convocatoriaPeriodoJustificacion -> {
-            convocatoriaPeriodoJustificacion.setNumPeriodo(convocatoriaPeriodoJustificacion.getNumPeriodo() - 1);
-            return convocatoriaPeriodoJustificacion;
-          }).collect(Collectors.toList());
-
-      repository.saveAll(periodosActualizados);
-
-      log.debug("delete(Long id) - end");
-      return periodoEliminar;
-    }).orElseThrow(() -> new ConvocatoriaPeriodoJustificacionNotFoundException(id));
-
-    log.debug("delete(Long id) - end");
   }
 
   /**
@@ -289,59 +182,6 @@ public class ConvocatoriaPeriodoJustificacionServiceImpl implements Convocatoria
     Page<ConvocatoriaPeriodoJustificacion> returnValue = repository.findAll(specs, pageable);
     log.debug("findAllByConvocatoria(Long idConvocatoria, List<QueryCriteria> query, Pageable pageable) - end");
     return returnValue;
-  }
-
-  /**
-   * Comprueba si existe algun {@link ConvocatoriaPeriodoJustificacion} con meses
-   * solapados a los meses del {@link ConvocatoriaPeriodoJustificacion} indicado
-   *
-   * @param id             identificador de la
-   *                       {@link ConvocatoriaPeriodoJustificacion}.
-   * @param idConvocatoria identificador de la {@link Convocatoria}.
-   * @param mesInicial     mes inicial
-   * @param mesFinal       mes final
-   * @return true si existe algun {@link ConvocatoriaPeriodoJustificacion} con
-   *         meses solapados a los meses del
-   *         {@link ConvocatoriaPeriodoJustificacion} indicado
-   */
-
-  private boolean hasConvocatoriaPeriodoJustificacionMesesSolapados(Long id, Long idConvocatoria, Integer mesInicial,
-      Integer mesFinal) {
-    log.debug(
-        "hasConvocatoriaPeriodoJustificacionMesesSolapados(Long id, Long idConvocatoria, Integer mesInicial, Integer mesFinal) - start");
-    Specification<ConvocatoriaPeriodoJustificacion> spec = ConvocatoriaPeriodoJustificacionSpecifications
-        .byConvocatoriaAndRangoMesesSolapados(id, idConvocatoria, mesInicial, mesFinal);
-
-    boolean returnValue = repository.findAll(spec, Pageable.unpaged()).isEmpty();
-
-    log.debug(
-        "hasConvocatoriaPeriodoJustificacionMesesSolapados(Long id, Long idConvocatoria, Integer mesInicial, Integer mesFinal) - end");
-    return returnValue;
-
-  }
-
-  /**
-   * Reasigna la secuencia con el número del periodo según el orden del mes
-   * inicial a los {@link ConvocatoriaPeriodoJustificacion} de la lista
-   * 
-   * @param listaConvocatoriaPeriodoJustificacion lista de
-   *                                              {@link ConvocatoriaPeriodoJustificacion}
-   * @return lista de {@link ConvocatoriaPeriodoJustificacion} con los números de
-   *         periodo actualizados
-   */
-  private List<ConvocatoriaPeriodoJustificacion> recalcularSecuenciaNumPeriodo(
-      List<ConvocatoriaPeriodoJustificacion> listaConvocatoriaPeriodoJustificacion) {
-    log.debug(
-        "List<ConvocatoriaPeriodoJustificacion> recalcularSecuenciaNumPeriodo(List<ConvocatoriaPeriodoJustificacion> listaConvocatoriaPeriodoJustificacion - start");
-    listaConvocatoriaPeriodoJustificacion.sort(Comparator.comparing(ConvocatoriaPeriodoJustificacion::getMesInicial));
-    AtomicInteger numPeriodo = new AtomicInteger(0);
-    listaConvocatoriaPeriodoJustificacion.stream().map(ConvocatoriaPeriodoSeguimientoCientifico -> {
-      ConvocatoriaPeriodoSeguimientoCientifico.setNumPeriodo(numPeriodo.incrementAndGet());
-      return ConvocatoriaPeriodoSeguimientoCientifico;
-    }).collect(Collectors.toList());
-    log.debug(
-        "List<ConvocatoriaPeriodoJustificacion> recalcularSecuenciaNumPeriodo(List<ConvocatoriaPeriodoJustificacion> listaConvocatoriaPeriodoJustificacion - end");
-    return listaConvocatoriaPeriodoJustificacion;
   }
 
 }

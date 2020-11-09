@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.enums.TipoJustificacionEnum;
@@ -24,7 +25,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -51,630 +51,253 @@ public class ConvocatoriaPeriodoJustificacionServiceTest {
   }
 
   @Test
-  public void create_ReturnsConvocatoriaPeriodoJustificacion() {
-    // given: Un nuevo ConvocatoriaPeriodoJustificacion
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacionAnterior = generarMockConvocatoriaPeriodoJustificacion(
-        1L);
-    convocatoriaPeriodoJustificacionAnterior.setMesInicial(1);
-    convocatoriaPeriodoJustificacionAnterior.setMesFinal(2);
+  public void updateConvocatoriaPeriodoJustificacionesConvocatoria_ReturnsConvocatoriaPeriodoJustificacionList() {
+    // given: una lista con uno de los ConvocatoriaPeriodoJustificacion actualizado,
+    // otro nuevo y sin el otros existente
+    Long convocatoriaId = 1L;
 
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(
-        null);
+    List<ConvocatoriaPeriodoJustificacion> peridosJustificiacionExistentes = new ArrayList<>();
+    peridosJustificiacionExistentes
+        .add(generarMockConvocatoriaPeriodoJustificacion(2L, 5, 10, TipoJustificacionEnum.PERIODICA, 1L));
+    peridosJustificiacionExistentes
+        .add(generarMockConvocatoriaPeriodoJustificacion(4L, 11, 15, TipoJustificacionEnum.PERIODICA, 1L));
+    peridosJustificiacionExistentes
+        .add(generarMockConvocatoriaPeriodoJustificacion(5L, 20, 25, TipoJustificacionEnum.FINAL, 1L));
 
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoJustificacion.getConvocatoria()));
+    ConvocatoriaPeriodoJustificacion newConvocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(
+        null, 1, 10, TipoJustificacionEnum.PERIODICA, 1L);
+    ConvocatoriaPeriodoJustificacion updatedConvocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(
+        4L, 11, 19, TipoJustificacionEnum.FINAL, 1L);
 
-    BDDMockito.given(repository.findAllByConvocatoriaIdAndTipoJustificacion(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.<TipoJustificacionEnum>any())).willReturn(new ArrayList<>());
-
-    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaPeriodoJustificacion>>any(),
-        ArgumentMatchers.<Pageable>any())).willAnswer((InvocationOnMock invocation) -> {
-          Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<ConvocatoriaPeriodoJustificacion> page = new PageImpl<>(
-              new ArrayList<ConvocatoriaPeriodoJustificacion>(), pageable, 0);
-          return page;
-        });
-
-    List<ConvocatoriaPeriodoJustificacion> periodosExistentes = new ArrayList<>();
-    periodosExistentes.add(convocatoriaPeriodoJustificacionAnterior);
-    BDDMockito.given(repository.findAllByConvocatoriaId(ArgumentMatchers.anyLong())).willReturn(periodosExistentes);
-
-    BDDMockito.given(repository.saveAll(ArgumentMatchers.<ConvocatoriaPeriodoJustificacion>anyList()))
-        .will((InvocationOnMock invocation) -> {
-          List<ConvocatoriaPeriodoJustificacion> convocatoriaPeriodoJustificaciones = invocation.getArgument(0);
-          List<ConvocatoriaPeriodoJustificacion> convocatoriaPeriodoJustificacionesResponse = new ArrayList<>();
-          convocatoriaPeriodoJustificaciones.forEach(periodoJustificacion -> {
-            ConvocatoriaPeriodoJustificacion periodoJustificacionResponse = new ConvocatoriaPeriodoJustificacion();
-            BeanUtils.copyProperties(periodoJustificacion, periodoJustificacionResponse);
-            if (periodoJustificacionResponse.getId() == null) {
-              periodoJustificacionResponse.setId(2L);
-            }
-            convocatoriaPeriodoJustificacionesResponse.add(periodoJustificacionResponse);
-          });
-
-          return convocatoriaPeriodoJustificacionesResponse;
-        });
-
-    // when: Creamos el ConvocatoriaPeriodoJustificacion
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacionCreado = service
-        .create(convocatoriaPeriodoJustificacion);
-
-    // then: El ConvocatoriaPeriodoJustificacion se crea correctamente
-    Assertions.assertThat(convocatoriaPeriodoJustificacionCreado).as("isNotNull()").isNotNull();
-    Assertions.assertThat(convocatoriaPeriodoJustificacionCreado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(convocatoriaPeriodoJustificacionCreado.getConvocatoria().getId())
-        .as("getConvocatoria().getId()").isEqualTo(convocatoriaPeriodoJustificacion.getConvocatoria().getId());
-    Assertions.assertThat(convocatoriaPeriodoJustificacionCreado.getMesInicial()).as("getMesInicial()")
-        .isEqualTo(convocatoriaPeriodoJustificacion.getMesInicial());
-    Assertions.assertThat(convocatoriaPeriodoJustificacionCreado.getMesFinal()).as("getMesFinal()")
-        .isEqualTo(convocatoriaPeriodoJustificacion.getMesFinal());
-    Assertions.assertThat(convocatoriaPeriodoJustificacionCreado.getFechaInicioPresentacion())
-        .as("getFechaInicioPresentacion()").isEqualTo(convocatoriaPeriodoJustificacion.getFechaInicioPresentacion());
-    Assertions.assertThat(convocatoriaPeriodoJustificacionCreado.getFechaFinPresentacion())
-        .as("getFechaFinPresentacion()").isEqualTo(convocatoriaPeriodoJustificacion.getFechaFinPresentacion());
-    Assertions.assertThat(convocatoriaPeriodoJustificacionCreado.getNumPeriodo()).as("getNumPeriodo()")
-        .isEqualTo(convocatoriaPeriodoJustificacionAnterior.getNumPeriodo() + 1);
-    Assertions.assertThat(convocatoriaPeriodoJustificacionCreado.getObservaciones()).as("getObservaciones()")
-        .isEqualTo(convocatoriaPeriodoJustificacion.getObservaciones());
-    Assertions.assertThat(convocatoriaPeriodoJustificacionCreado.getTipoJustificacion()).as("getTipoJustificacion()")
-        .isEqualTo(convocatoriaPeriodoJustificacion.getTipoJustificacion());
-  }
-
-  @Test
-  public void create_WithPeriodoDisordered_ReturnsConvocatoriaPeriodoJustificacion() {
-    // given: Un nuevo ConvocatoriaPeriodoJustificacion
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacionAnterior = generarMockConvocatoriaPeriodoJustificacion(
-        1L);
-    convocatoriaPeriodoJustificacionAnterior.setMesInicial(100);
-    convocatoriaPeriodoJustificacionAnterior.setMesFinal(200);
-
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(
-        null);
+    List<ConvocatoriaPeriodoJustificacion> peridosJustificiacionActualizar = new ArrayList<>();
+    peridosJustificiacionActualizar.add(newConvocatoriaPeriodoJustificacion);
+    peridosJustificiacionActualizar.add(updatedConvocatoriaPeriodoJustificacion);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoJustificacion.getConvocatoria()));
-
-    BDDMockito.given(repository.findAllByConvocatoriaIdAndTipoJustificacion(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.<TipoJustificacionEnum>any())).willReturn(new ArrayList<>());
-
-    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaPeriodoJustificacion>>any(),
-        ArgumentMatchers.<Pageable>any())).willAnswer((InvocationOnMock invocation) -> {
-          Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<ConvocatoriaPeriodoJustificacion> page = new PageImpl<>(
-              new ArrayList<ConvocatoriaPeriodoJustificacion>(), pageable, 0);
-          return page;
-        });
-
-    List<ConvocatoriaPeriodoJustificacion> periodosExistentes = new ArrayList<>();
-    periodosExistentes.add(convocatoriaPeriodoJustificacionAnterior);
-    BDDMockito.given(repository.findAllByConvocatoriaId(ArgumentMatchers.anyLong())).willReturn(periodosExistentes);
-
-    BDDMockito.given(repository.saveAll(ArgumentMatchers.<ConvocatoriaPeriodoJustificacion>anyList()))
-        .will((InvocationOnMock invocation) -> {
-          List<ConvocatoriaPeriodoJustificacion> convocatoriaPeriodoJustificaciones = invocation.getArgument(0);
-          List<ConvocatoriaPeriodoJustificacion> convocatoriaPeriodoJustificacionesResponse = new ArrayList<>();
-          convocatoriaPeriodoJustificaciones.forEach(periodoJustificacion -> {
-            ConvocatoriaPeriodoJustificacion periodoJustificacionResponse = new ConvocatoriaPeriodoJustificacion();
-            BeanUtils.copyProperties(periodoJustificacion, periodoJustificacionResponse);
-            if (periodoJustificacionResponse.getId() == null) {
-              periodoJustificacionResponse.setId(2L);
-            }
-            convocatoriaPeriodoJustificacionesResponse.add(periodoJustificacionResponse);
-          });
-
-          return convocatoriaPeriodoJustificacionesResponse;
-        });
-
-    // when: Creamos el ConvocatoriaPeriodoJustificacion
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacionCreado = service
-        .create(convocatoriaPeriodoJustificacion);
-
-    // then: El ConvocatoriaPeriodoJustificacion se crea correctamente
-    Assertions.assertThat(convocatoriaPeriodoJustificacionCreado).as("isNotNull()").isNotNull();
-    Assertions.assertThat(convocatoriaPeriodoJustificacionCreado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(convocatoriaPeriodoJustificacionCreado.getConvocatoria().getId())
-        .as("getConvocatoria().getId()").isEqualTo(convocatoriaPeriodoJustificacion.getConvocatoria().getId());
-    Assertions.assertThat(convocatoriaPeriodoJustificacionCreado.getMesInicial()).as("getMesInicial()")
-        .isEqualTo(convocatoriaPeriodoJustificacion.getMesInicial());
-    Assertions.assertThat(convocatoriaPeriodoJustificacionCreado.getMesFinal()).as("getMesFinal()")
-        .isEqualTo(convocatoriaPeriodoJustificacion.getMesFinal());
-    Assertions.assertThat(convocatoriaPeriodoJustificacionCreado.getFechaInicioPresentacion())
-        .as("getFechaInicioPresentacion()").isEqualTo(convocatoriaPeriodoJustificacion.getFechaInicioPresentacion());
-    Assertions.assertThat(convocatoriaPeriodoJustificacionCreado.getFechaFinPresentacion())
-        .as("getFechaFinPresentacion()").isEqualTo(convocatoriaPeriodoJustificacion.getFechaFinPresentacion());
-    Assertions.assertThat(convocatoriaPeriodoJustificacionCreado.getNumPeriodo()).as("getNumPeriodo()")
-        .isEqualTo(convocatoriaPeriodoJustificacionAnterior.getNumPeriodo() - 1);
-    Assertions.assertThat(convocatoriaPeriodoJustificacionCreado.getObservaciones()).as("getObservaciones()")
-        .isEqualTo(convocatoriaPeriodoJustificacion.getObservaciones());
-    Assertions.assertThat(convocatoriaPeriodoJustificacionCreado.getTipoJustificacion()).as("getTipoJustificacion()")
-        .isEqualTo(convocatoriaPeriodoJustificacion.getTipoJustificacion());
-  }
-
-  @Test
-  public void create_WithId_ThrowsIllegalArgumentException() {
-    // given: Un nuevo ConvocatoriaPeriodoJustificacion que ya tiene id
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(1L);
-
-    // when: Creamos el ConvocatoriaPeriodoJustificacion
-    // then: Lanza una excepcion porque el ConvocatoriaPeriodoJustificacion ya tiene
-    // id
-    Assertions.assertThatThrownBy(() -> service.create(convocatoriaPeriodoJustificacion))
-        .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "ConvocatoriaPeriodoJustificacion id tiene que ser null para crear un nuevo ConvocatoriaPeriodoJustificacion");
-  }
-
-  @Test
-  public void create_WithoutConvocatoriaId_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoJustificacion without ConvocatoriaId
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(
-        null);
-    convocatoriaPeriodoJustificacion.getConvocatoria().setId(null);
-
-    Assertions.assertThatThrownBy(
-        // when: create ConvocatoriaPeriodoJustificacion
-        () -> service.create(convocatoriaPeriodoJustificacion))
-        // then: throw exception as ConvocatoriaId is null
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Convocatoria no puede ser null para crear ConvocatoriaPeriodoJustificacion");
-  }
-
-  @Test
-  public void create_WithMesFinalLowerThanMesInicial_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoJustificacion with mesFinal lower than mesInicial
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(
-        null);
-    convocatoriaPeriodoJustificacion.setMesInicial(convocatoriaPeriodoJustificacion.getMesFinal() + 1);
-
-    Assertions.assertThatThrownBy(
-        // when: create ConvocatoriaPeriodoJustificacion
-        () -> service.create(convocatoriaPeriodoJustificacion))
-        // then: throw exception
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El mes final tiene que ser posterior al mes inicial");
-  }
-
-  @Test
-  public void create_WithFechaFinBeforeFechaInicio_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoJustificacion with FechaFinPresentacion before
-    // FechaInicioPresentacion
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(
-        null);
-    convocatoriaPeriodoJustificacion
-        .setFechaInicioPresentacion(convocatoriaPeriodoJustificacion.getFechaFinPresentacion().plusDays(1));
-
-    Assertions.assertThatThrownBy(
-        // when: create ConvocatoriaPeriodoJustificacion
-        () -> service.create(convocatoriaPeriodoJustificacion))
-        // then: throw exception as ConvocatoriaId is null
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La fecha de fin tiene que ser posterior a la fecha de inicio");
-  }
-
-  @Test
-  public void create_WithNoExistingConvocatoria_ThrowsConvocatoriaNotFoundException() {
-    // given: a ConvocatoriaEntidadGestora with non existing Convocatoria
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(
-        null);
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
-
-    Assertions.assertThatThrownBy(
-        // when: create ConvocatoriaEntidadGestora
-        () -> service.create(convocatoriaPeriodoJustificacion))
-        // then: throw exception as Convocatoria is not found
-        .isInstanceOf(ConvocatoriaNotFoundException.class);
-  }
-
-  @Test
-  public void create_WithMesFinalGreaterThanDuracionConvocatoria_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoJustificacion with mesFinal greater than duracion
-    // convocatoria
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(
-        null);
-    convocatoriaPeriodoJustificacion.getConvocatoria().setDuracion(convocatoriaPeriodoJustificacion.getMesFinal() - 1);
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoJustificacion.getConvocatoria()));
-
-    Assertions.assertThatThrownBy(
-        // when: create ConvocatoriaPeriodoJustificacion
-        () -> service.create(convocatoriaPeriodoJustificacion))
-        // then: throw exception
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("El mes final no puede ser superior a la duración en meses indicada en la Convocatoria");
-  }
-
-  @Test
-  public void create_WithConvocatoriaPeriodoJustificacionFinal_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoJustificacion with
-    // a ConvocatoriaPeriodoJustificacion Final
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(
-        null);
-    convocatoriaPeriodoJustificacion.setTipoJustificacion(TipoJustificacionEnum.FINAL);
-
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacionFinal = generarMockConvocatoriaPeriodoJustificacion(
-        null);
-    convocatoriaPeriodoJustificacionFinal.setTipoJustificacion(TipoJustificacionEnum.FINAL);
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoJustificacion.getConvocatoria()));
-
-    BDDMockito
-        .given(repository.findAllByConvocatoriaIdAndTipoJustificacion(ArgumentMatchers.anyLong(),
-            ArgumentMatchers.<TipoJustificacionEnum>any()))
-        .willReturn(Arrays.asList(convocatoriaPeriodoJustificacionFinal));
-
-    Assertions.assertThatThrownBy(
-        // when: create ConvocatoriaPeriodoJustificacion
-        () -> service.create(convocatoriaPeriodoJustificacion))
-        // then: throw exception
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La convocatoria ya tiene un ConvocatoriaPeriodoJustificacion de tipo final");
-  }
-
-  @Test
-  public void create_WithConvocatoriaPeriodoJustificacionPeriodoAfterFinal_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoJustificacion with
-    // a ConvocatoriaPeriodoJustificacion Final
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(
-        null);
-    convocatoriaPeriodoJustificacion.setTipoJustificacion(TipoJustificacionEnum.PERIODICA);
-    convocatoriaPeriodoJustificacion.setMesInicial(6);
-    convocatoriaPeriodoJustificacion.setMesFinal(8);
-
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacionFinal = generarMockConvocatoriaPeriodoJustificacion(
-        null);
-    convocatoriaPeriodoJustificacionFinal.setTipoJustificacion(TipoJustificacionEnum.FINAL);
-    convocatoriaPeriodoJustificacionFinal.setMesInicial(3);
-    convocatoriaPeriodoJustificacionFinal.setMesFinal(5);
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoJustificacion.getConvocatoria()));
-
-    BDDMockito
-        .given(repository.findAllByConvocatoriaIdAndTipoJustificacion(ArgumentMatchers.anyLong(),
-            ArgumentMatchers.<TipoJustificacionEnum>any()))
-        .willReturn(Arrays.asList(convocatoriaPeriodoJustificacionFinal));
-
-    Assertions.assertThatThrownBy(
-        // when: create ConvocatoriaPeriodoJustificacion
-        () -> service.create(convocatoriaPeriodoJustificacion))
-        // then: throw exception
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("El ConvocatoriaPeriodoJustificacion de tipo final tiene que ser el último");
-  }
-
-  @Test
-  public void create_WithPeriodoSolapado_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoJustificacion with mesFinal greater than duracion
-    // convocatoria
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(
-        null);
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacionPrevio = generarMockConvocatoriaPeriodoJustificacion(
-        1L);
-    convocatoriaPeriodoJustificacion.setMesInicial(convocatoriaPeriodoJustificacionPrevio.getMesFinal() - 1);
-    convocatoriaPeriodoJustificacion.setMesFinal(convocatoriaPeriodoJustificacion.getMesInicial() + 1);
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoJustificacion.getConvocatoria()));
-
-    BDDMockito.given(repository.findAllByConvocatoriaIdAndTipoJustificacion(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.<TipoJustificacionEnum>any())).willReturn(new ArrayList<>());
-
-    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaPeriodoJustificacion>>any(),
-        ArgumentMatchers.<Pageable>any())).willAnswer((InvocationOnMock invocation) -> {
-          Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<ConvocatoriaPeriodoJustificacion> page = new PageImpl<>(
-              Arrays.asList(convocatoriaPeriodoJustificacionPrevio), pageable, 0);
-          return page;
-        });
-
-    Assertions.assertThatThrownBy(
-        // when: create ConvocatoriaPeriodoJustificacion
-        () -> service.create(convocatoriaPeriodoJustificacion))
-        // then: throw exception
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El periodo se solapa con otro existente");
-  }
-
-  @Test
-  public void update_ReturnsConvocatoriaPeriodoJustificacion() {
-    // given: Un nuevo ConvocatoriaPeriodoJustificacion con las observaciones y los
-    // meses actualizados para que sea el primero
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(2L);
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacionObservacionesActualizado = generarMockConvocatoriaPeriodoJustificacion(
-        2L);
-    convocatoriaPeriodoJustificacionObservacionesActualizado.setObservaciones("observaciones-actualizadas");
-    convocatoriaPeriodoJustificacionObservacionesActualizado.setMesInicial(30);
-    convocatoriaPeriodoJustificacionObservacionesActualizado.setMesFinal(40);
-
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacionAnterior = generarMockConvocatoriaPeriodoJustificacion(
-        1L);
-    convocatoriaPeriodoJustificacionAnterior.setMesInicial(50);
-    convocatoriaPeriodoJustificacionAnterior.setMesFinal(60);
-
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacionSiguiente = generarMockConvocatoriaPeriodoJustificacion(
-        3L);
-    convocatoriaPeriodoJustificacionSiguiente.setMesInicial(100);
-    convocatoriaPeriodoJustificacionSiguiente.setMesFinal(200);
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoJustificacion.getConvocatoria()));
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(convocatoriaPeriodoJustificacion));
-
-    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaPeriodoJustificacion>>any(),
-        ArgumentMatchers.<Pageable>any())).willAnswer((InvocationOnMock invocation) -> {
-          Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<ConvocatoriaPeriodoJustificacion> page = new PageImpl<>(
-              new ArrayList<ConvocatoriaPeriodoJustificacion>(), pageable, 0);
-          return page;
-        });
+        .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
 
     BDDMockito.given(repository.findAllByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Arrays.asList(convocatoriaPeriodoJustificacionAnterior,
-            convocatoriaPeriodoJustificacionObservacionesActualizado, convocatoriaPeriodoJustificacionSiguiente));
+        .willReturn(peridosJustificiacionExistentes);
 
-    BDDMockito.given(repository.save(ArgumentMatchers.<ConvocatoriaPeriodoJustificacion>any()))
-        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+    BDDMockito.doNothing().when(repository).deleteAll(ArgumentMatchers.<ConvocatoriaPeriodoJustificacion>anyList());
 
     BDDMockito.given(repository.saveAll(ArgumentMatchers.<ConvocatoriaPeriodoJustificacion>anyList()))
-        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+        .will((InvocationOnMock invocation) -> {
+          List<ConvocatoriaPeriodoJustificacion> periodoJustificaciones = invocation.getArgument(0);
+          return periodoJustificaciones.stream().map(periodoJustificacion -> {
+            if (periodoJustificacion.getId() == null) {
+              periodoJustificacion.setId(6L);
+            }
+            periodoJustificacion.getConvocatoria().setId(convocatoriaId);
+            return periodoJustificacion;
+          }).collect(Collectors.toList());
+        });
 
-    // when: Actualizamos el ConvocatoriaPeriodoJustificacion
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacionActualizado = service
-        .update(convocatoriaPeriodoJustificacionObservacionesActualizado);
+    // when: updateConvocatoriaPeriodoJustificacionesConvocatoria
+    List<ConvocatoriaPeriodoJustificacion> periodosJustificacionActualizados = service
+        .updateConvocatoriaPeriodoJustificacionesConvocatoria(convocatoriaId, peridosJustificiacionActualizar);
 
-    // then: El ConvocatoriaPeriodoJustificacion se actualiza correctamente.
-    Assertions.assertThat(convocatoriaPeriodoJustificacionActualizado).as("isNotNull()").isNotNull();
-    Assertions.assertThat(convocatoriaPeriodoJustificacionActualizado.getId()).as("getId()")
-        .isEqualTo(convocatoriaPeriodoJustificacion.getId());
-    Assertions.assertThat(convocatoriaPeriodoJustificacionActualizado.getConvocatoria().getId())
-        .as("getConvocatoria().getId()").isEqualTo(convocatoriaPeriodoJustificacion.getConvocatoria().getId());
-    Assertions.assertThat(convocatoriaPeriodoJustificacionActualizado.getMesInicial()).as("getMesInicial()")
-        .isEqualTo(convocatoriaPeriodoJustificacionObservacionesActualizado.getMesInicial());
-    Assertions.assertThat(convocatoriaPeriodoJustificacionActualizado.getMesFinal()).as("getMesFinal()")
-        .isEqualTo(convocatoriaPeriodoJustificacionObservacionesActualizado.getMesFinal());
-    Assertions.assertThat(convocatoriaPeriodoJustificacionActualizado.getFechaInicioPresentacion())
-        .as("getFechaInicioPresentacion()").isEqualTo(convocatoriaPeriodoJustificacion.getFechaInicioPresentacion());
-    Assertions.assertThat(convocatoriaPeriodoJustificacionActualizado.getFechaFinPresentacion())
-        .as("getFechaFinPresentacion()").isEqualTo(convocatoriaPeriodoJustificacion.getFechaFinPresentacion());
-    Assertions.assertThat(convocatoriaPeriodoJustificacionActualizado.getNumPeriodo()).as("getNumPeriodo()")
+    // then: Se crea el nuevo ConvocatoriaPeriodoJustificacion, se actualiza el
+    // existe y se elimina el otro
+    Assertions.assertThat(periodosJustificacionActualizados.get(0).getId()).as("get(0).getId()").isEqualTo(6L);
+    Assertions.assertThat(periodosJustificacionActualizados.get(0).getConvocatoria().getId())
+        .as("get(0).getConvocatoria().getId()").isEqualTo(convocatoriaId);
+    Assertions.assertThat(periodosJustificacionActualizados.get(0).getMesInicial()).as("get(0).getMesInicial()")
+        .isEqualTo(newConvocatoriaPeriodoJustificacion.getMesInicial());
+    Assertions.assertThat(periodosJustificacionActualizados.get(0).getMesFinal()).as("get(0).getMesFinal()")
+        .isEqualTo(newConvocatoriaPeriodoJustificacion.getMesFinal());
+    Assertions.assertThat(periodosJustificacionActualizados.get(0).getFechaInicioPresentacion())
+        .as("get(0).getFechaInicioPresentacion()")
+        .isEqualTo(newConvocatoriaPeriodoJustificacion.getFechaInicioPresentacion());
+    Assertions.assertThat(periodosJustificacionActualizados.get(0).getFechaFinPresentacion())
+        .as("get(0).getFechaFinPresentacion()")
+        .isEqualTo(newConvocatoriaPeriodoJustificacion.getFechaFinPresentacion());
+    Assertions.assertThat(periodosJustificacionActualizados.get(0).getNumPeriodo()).as("get(0).getNumPeriodo()")
         .isEqualTo(1);
-    Assertions.assertThat(convocatoriaPeriodoJustificacionActualizado.getObservaciones()).as("getObservaciones()")
-        .isEqualTo(convocatoriaPeriodoJustificacionObservacionesActualizado.getObservaciones());
-    Assertions.assertThat(convocatoriaPeriodoJustificacionActualizado.getTipoJustificacion())
-        .as("getTipoJustificacion()").isEqualTo(convocatoriaPeriodoJustificacion.getTipoJustificacion());
+    Assertions.assertThat(periodosJustificacionActualizados.get(0).getObservaciones()).as("get(0).getObservaciones()")
+        .isEqualTo(newConvocatoriaPeriodoJustificacion.getObservaciones());
+    Assertions.assertThat(periodosJustificacionActualizados.get(0).getTipoJustificacion())
+        .as("get(0).getTipoJustificacion()").isEqualTo(newConvocatoriaPeriodoJustificacion.getTipoJustificacion());
 
+    Assertions.assertThat(periodosJustificacionActualizados.get(1).getId()).as("get(1).getId()")
+        .isEqualTo(updatedConvocatoriaPeriodoJustificacion.getId());
+    Assertions.assertThat(periodosJustificacionActualizados.get(1).getConvocatoria().getId())
+        .as("get(1).getConvocatoria().getId()").isEqualTo(convocatoriaId);
+    Assertions.assertThat(periodosJustificacionActualizados.get(1).getMesInicial()).as("get(1).getMesInicial()")
+        .isEqualTo(updatedConvocatoriaPeriodoJustificacion.getMesInicial());
+    Assertions.assertThat(periodosJustificacionActualizados.get(1).getMesFinal()).as("get(1).getMesFinal()")
+        .isEqualTo(updatedConvocatoriaPeriodoJustificacion.getMesFinal());
+    Assertions.assertThat(periodosJustificacionActualizados.get(1).getFechaInicioPresentacion())
+        .as("get(1).getFechaInicioPresentacion()")
+        .isEqualTo(updatedConvocatoriaPeriodoJustificacion.getFechaInicioPresentacion());
+    Assertions.assertThat(periodosJustificacionActualizados.get(1).getFechaFinPresentacion())
+        .as("get(1).getFechaFinPresentacion()")
+        .isEqualTo(updatedConvocatoriaPeriodoJustificacion.getFechaFinPresentacion());
+    Assertions.assertThat(periodosJustificacionActualizados.get(1).getNumPeriodo()).as("get(1).getNumPeriodo()")
+        .isEqualTo(2);
+    Assertions.assertThat(periodosJustificacionActualizados.get(1).getObservaciones()).as("get(1).getObservaciones()")
+        .isEqualTo(updatedConvocatoriaPeriodoJustificacion.getObservaciones());
+    Assertions.assertThat(periodosJustificacionActualizados.get(1).getTipoJustificacion())
+        .as("get(1).getTipoJustificacion()").isEqualTo(updatedConvocatoriaPeriodoJustificacion.getTipoJustificacion());
+
+    Mockito.verify(repository, Mockito.times(1))
+        .deleteAll(ArgumentMatchers.<ConvocatoriaPeriodoJustificacion>anyList());
     Mockito.verify(repository, Mockito.times(1)).saveAll(ArgumentMatchers.<ConvocatoriaPeriodoJustificacion>anyList());
   }
 
   @Test
-  public void update_WithoutConvocatoriaPeriodoJustificacionId_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoJustificacion without ConvocatoriaId
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(
-        null);
-
-    Assertions.assertThatThrownBy(
-        // when: update ConvocatoriaPeriodoJustificacion
-        () -> service.update(convocatoriaPeriodoJustificacion))
-        // then: throw exception as ConvocatoriaPeriodoJustificacionId is null
-        .isInstanceOf(IllegalArgumentException.class).hasMessage(
-            "ConvocatoriaPeriodoJustificacion id no puede ser null para actualizar un ConvocatoriaPeriodoJustificacion");
-  }
-
-  @Test
-  public void update_WithoutConvocatoriaId_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoJustificacion without ConvocatoriaId
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(1L);
-    convocatoriaPeriodoJustificacion.getConvocatoria().setId(null);
-
-    Assertions.assertThatThrownBy(
-        // when: update ConvocatoriaPeriodoJustificacion
-        () -> service.update(convocatoriaPeriodoJustificacion))
-        // then: throw exception as ConvocatoriaId is null
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Convocatoria no puede ser null para crear ConvocatoriaPeriodoJustificacion");
-  }
-
-  @Test
-  public void update_WithMesFinalLowerThanMesInicial_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoJustificacion with mesFinal lower than mesInicial
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(1L);
-    convocatoriaPeriodoJustificacion.setMesInicial(convocatoriaPeriodoJustificacion.getMesFinal() + 1);
-
-    Assertions.assertThatThrownBy(
-        // when: update ConvocatoriaPeriodoJustificacion
-        () -> service.update(convocatoriaPeriodoJustificacion))
-        // then: throw exception
-        .isInstanceOf(IllegalArgumentException.class).hasMessage("El mes final tiene que ser posterior al mes inicial");
-  }
-
-  @Test
-  public void update_WithFechaFinBeforeFechaInicio_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoJustificacion with FechaFinPresentacion before
-    // FechaInicioPresentacion
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(1L);
-    convocatoriaPeriodoJustificacion
-        .setFechaInicioPresentacion(convocatoriaPeriodoJustificacion.getFechaFinPresentacion().plusDays(1));
-
-    Assertions.assertThatThrownBy(
-        // when: update ConvocatoriaPeriodoJustificacion
-        () -> service.update(convocatoriaPeriodoJustificacion))
-        // then: throw exception
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La fecha de fin tiene que ser posterior a la fecha de inicio");
-  }
-
-  @Test
-  public void update_WithIdNotExist_ThrowsConvocatoriaPeriodoJustificacionNotFoundException() {
-    // given: Un ConvocatoriaPeriodoJustificacion a actualizar con un id que no
-    // existe
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(1L);
-
-    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoJustificacion.getConvocatoria()));
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
-
-    // when: Actualizamos el ConvocatoriaPeriodoJustificacion
-    // then: Lanza una excepcion porque el ConvocatoriaPeriodoJustificacion no
-    // existe
-    Assertions.assertThatThrownBy(() -> service.update(convocatoriaPeriodoJustificacion))
-        .isInstanceOf(ConvocatoriaPeriodoJustificacionNotFoundException.class);
-  }
-
-  @Test
-  public void update_WithNoExistingConvocatoria_ThrowsConvocatoriaNotFoundException() {
+  public void updateConvocatoriaPeriodoJustificacionesConvocatoria_WithNoExistingConvocatoria_ThrowsConvocatoriaNotFoundException() {
     // given: a ConvocatoriaEntidadGestora with non existing Convocatoria
+    Long convocatoriaId = 1L;
     ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(1L);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
     Assertions.assertThatThrownBy(
         // when: update ConvocatoriaEntidadGestora
-        () -> service.update(convocatoriaPeriodoJustificacion))
+        () -> service.updateConvocatoriaPeriodoJustificacionesConvocatoria(convocatoriaId,
+            Arrays.asList(convocatoriaPeriodoJustificacion)))
         // then: throw exception as Convocatoria is not found
         .isInstanceOf(ConvocatoriaNotFoundException.class);
   }
 
   @Test
-  public void update_WithMesFinalGreaterThanDuracionConvocatoria_ThrowsIllegalArgumentException() {
-    // given: a ConvocatoriaPeriodoJustificacion with mesFinal greater than duracion
-    // convocatoria
+  public void updateConvocatoriaPeriodoJustificacionesConvocatoria_WithIdNotExist_ThrowsConvocatoriaPeriodoJustificacionNotFoundException() {
+    // given: Un ConvocatoriaPeriodoJustificacion a actualizar con un id que no
+    // existe
+    Long convocatoriaId = 1L;
     ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(1L);
-    convocatoriaPeriodoJustificacion.getConvocatoria().setDuracion(convocatoriaPeriodoJustificacion.getMesFinal() - 1);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoJustificacion.getConvocatoria()));
+        .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
+
+    BDDMockito.given(repository.findAllByConvocatoriaId(ArgumentMatchers.anyLong())).willReturn(new ArrayList<>());
+
+    // when:updateConvocatoriaPeriodoJustificacionesConvocatoria
+    // then: Lanza una excepcion porque el ConvocatoriaPeriodoJustificacion no
+    // existe
+    Assertions
+        .assertThatThrownBy(() -> service.updateConvocatoriaPeriodoJustificacionesConvocatoria(convocatoriaId,
+            Arrays.asList(convocatoriaPeriodoJustificacion)))
+        .isInstanceOf(ConvocatoriaPeriodoJustificacionNotFoundException.class);
+  }
+
+  @Test
+  public void updateConvocatoriaPeriodoJustificacionesConvocatoria_WithMesFinalLowerThanMesInicial_ThrowsIllegalArgumentException() {
+    // given: a ConvocatoriaPeriodoJustificacion with mesFinal lower than mesInicial
+    Long convocatoriaId = 1L;
+    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(1L);
+    convocatoriaPeriodoJustificacion.setMesInicial(convocatoriaPeriodoJustificacion.getMesFinal() + 1);
+
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
+
+    BDDMockito.given(repository.findAllByConvocatoriaId(ArgumentMatchers.anyLong()))
+        .willReturn(Arrays.asList(convocatoriaPeriodoJustificacion));
 
     Assertions.assertThatThrownBy(
-        // when: update ConvocatoriaPeriodoJustificacion
-        () -> service.update(convocatoriaPeriodoJustificacion))
+        // when: updateConvocatoriaPeriodoJustificacionesConvocatoria
+        () -> service.updateConvocatoriaPeriodoJustificacionesConvocatoria(convocatoriaId,
+            Arrays.asList(convocatoriaPeriodoJustificacion)))
+        // then: throw exception
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("El mes final tiene que ser posterior al mes inicial");
+  }
+
+  @Test
+  public void updateConvocatoriaPeriodoJustificacionesConvocatoria_WithFechaFinBeforeFechaInicio_ThrowsIllegalArgumentException() {
+    // given: a ConvocatoriaPeriodoJustificacion with FechaFinPresentacion before
+    // FechaInicioPresentacion
+    Long convocatoriaId = 1L;
+    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(1L);
+    convocatoriaPeriodoJustificacion
+        .setFechaInicioPresentacion(convocatoriaPeriodoJustificacion.getFechaFinPresentacion().plusDays(1));
+
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
+
+    BDDMockito.given(repository.findAllByConvocatoriaId(ArgumentMatchers.anyLong()))
+        .willReturn(Arrays.asList(convocatoriaPeriodoJustificacion));
+
+    Assertions.assertThatThrownBy(
+        // when: updateConvocatoriaPeriodoJustificacionesConvocatoria
+        () -> service.updateConvocatoriaPeriodoJustificacionesConvocatoria(convocatoriaId,
+            Arrays.asList(convocatoriaPeriodoJustificacion)))
+        // then: throw exception
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("La fecha de fin tiene que ser posterior a la fecha de inicio");
+  }
+
+  @Test
+  public void updateConvocatoriaPeriodoJustificacionesConvocatoria_WithMesFinalGreaterThanDuracionConvocatoria_ThrowsIllegalArgumentException() {
+    // given: a ConvocatoriaPeriodoJustificacion with mesFinal greater than duracion
+    // convocatoria
+    Long convocatoriaId = 1L;
+    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(1L);
+
+    Convocatoria convocatoria = generarMockConvocatoria(convocatoriaId);
+    convocatoria.setDuracion(convocatoriaPeriodoJustificacion.getMesFinal() - 1);
+
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
+
+    BDDMockito.given(repository.findAllByConvocatoriaId(ArgumentMatchers.anyLong()))
+        .willReturn(Arrays.asList(convocatoriaPeriodoJustificacion));
+
+    Assertions.assertThatThrownBy(
+        // when: updateConvocatoriaPeriodoJustificacionesConvocatoria
+        () -> service.updateConvocatoriaPeriodoJustificacionesConvocatoria(convocatoriaId,
+            Arrays.asList(convocatoriaPeriodoJustificacion)))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("El mes final no puede ser superior a la duración en meses indicada en la Convocatoria");
   }
 
   @Test
-  public void update_WithMesSolapado_ThrowsIllegalArgumentException() {
+  public void updateConvocatoriaPeriodoJustificacionesConvocatoria_WithMesSolapado_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaPeriodoJustificacion with mesFinal greater than duracion
     // convocatoria
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(1L);
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacionActualizado = generarMockConvocatoriaPeriodoJustificacion(
-        1L);
-    convocatoriaPeriodoJustificacionActualizado.setMesInicial(13);
+    Long convocatoriaId = 1L;
+    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion1 = generarMockConvocatoriaPeriodoJustificacion(1L,
+        1, 10, TipoJustificacionEnum.PERIODICA, 1L);
+    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion2 = generarMockConvocatoriaPeriodoJustificacion(2L,
+        8, 15, TipoJustificacionEnum.PERIODICA, 1L);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoJustificacion.getConvocatoria()));
+        .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
 
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoJustificacion));
-
-    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaPeriodoJustificacion>>any(),
-        ArgumentMatchers.<Pageable>any())).willAnswer((InvocationOnMock invocation) -> {
-          Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<ConvocatoriaPeriodoJustificacion> page = new PageImpl<>(
-              Arrays.asList(generarMockConvocatoriaPeriodoJustificacion(2L)), pageable, 0);
-          return page;
-        });
+    BDDMockito.given(repository.findAllByConvocatoriaId(ArgumentMatchers.anyLong()))
+        .willReturn(Arrays.asList(convocatoriaPeriodoJustificacion1, convocatoriaPeriodoJustificacion2));
 
     Assertions.assertThatThrownBy(
-        // when: update ConvocatoriaPeriodoJustificacion
-        () -> service.update(convocatoriaPeriodoJustificacionActualizado))
+        // when: updateConvocatoriaPeriodoJustificacionesConvocatori
+        () -> service.updateConvocatoriaPeriodoJustificacionesConvocatoria(convocatoriaId,
+            Arrays.asList(convocatoriaPeriodoJustificacion1, convocatoriaPeriodoJustificacion2)))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class).hasMessage("El periodo se solapa con otro existente");
   }
 
   @Test
-  public void update_With_MesesAfterConvocatoriaPeriodoJustificacionFinal_ThrowsIllegalArgumentException() {
+  public void updateConvocatoriaPeriodoJustificacionesConvocatori_WithMesesAfterConvocatoriaPeriodoJustificacionFinal_ThrowsIllegalArgumentException() {
     // given: a ConvocatoriaPeriodoJustificacion with mesInicial greater than
     // ConvocatoriaPeriodoJustificacion FINAL
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = generarMockConvocatoriaPeriodoJustificacion(2L);
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacionActualizado = generarMockConvocatoriaPeriodoJustificacion(
-        2L);
-    convocatoriaPeriodoJustificacionActualizado.setObservaciones("observaciones-actualizadas");
-    convocatoriaPeriodoJustificacionActualizado.setMesInicial(130);
-    convocatoriaPeriodoJustificacionActualizado.setMesFinal(140);
-
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacionAnterior = generarMockConvocatoriaPeriodoJustificacion(
-        1L);
-    convocatoriaPeriodoJustificacionAnterior.setMesInicial(50);
-    convocatoriaPeriodoJustificacionAnterior.setMesFinal(60);
-
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacionSiguiente = generarMockConvocatoriaPeriodoJustificacion(
-        3L);
-    convocatoriaPeriodoJustificacionSiguiente.setMesInicial(100);
-    convocatoriaPeriodoJustificacionSiguiente.setMesFinal(200);
-    convocatoriaPeriodoJustificacionSiguiente.setTipoJustificacion(TipoJustificacionEnum.FINAL);
+    Long convocatoriaId = 1L;
+    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion1 = generarMockConvocatoriaPeriodoJustificacion(1L,
+        1, 5, TipoJustificacionEnum.FINAL, 1L);
+    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion2 = generarMockConvocatoriaPeriodoJustificacion(2L,
+        8, 15, TipoJustificacionEnum.PERIODICA, 1L);
 
     BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoJustificacion.getConvocatoria()));
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any()))
-        .willReturn(Optional.of(convocatoriaPeriodoJustificacion));
-
-    BDDMockito.given(repository.findAll(ArgumentMatchers.<Specification<ConvocatoriaPeriodoJustificacion>>any(),
-        ArgumentMatchers.<Pageable>any())).willAnswer((InvocationOnMock invocation) -> {
-          Pageable pageable = invocation.getArgument(1, Pageable.class);
-          Page<ConvocatoriaPeriodoJustificacion> page = new PageImpl<>(
-              new ArrayList<ConvocatoriaPeriodoJustificacion>(), pageable, 0);
-          return page;
-        });
+        .willReturn(Optional.of(generarMockConvocatoria(convocatoriaId)));
 
     BDDMockito.given(repository.findAllByConvocatoriaId(ArgumentMatchers.anyLong()))
-        .willReturn(Arrays.asList(convocatoriaPeriodoJustificacionAnterior, convocatoriaPeriodoJustificacionActualizado,
-            convocatoriaPeriodoJustificacionSiguiente));
+        .willReturn(Arrays.asList(convocatoriaPeriodoJustificacion1, convocatoriaPeriodoJustificacion2));
 
     Assertions.assertThatThrownBy(
-        // when: update ConvocatoriaPeriodoJustificacion
-        () -> service.update(convocatoriaPeriodoJustificacionActualizado))
+        // when: updateConvocatoriaPeriodoJustificacionesConvocatoria
+        () -> service.updateConvocatoriaPeriodoJustificacionesConvocatoria(convocatoriaId,
+            Arrays.asList(convocatoriaPeriodoJustificacion1, convocatoriaPeriodoJustificacion2)))
         // then: throw exception
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("El ConvocatoriaPeriodoJustificacion de tipo final tiene que ser el último");
-  }
-
-  @Test
-  public void delete_WithExistingId_NoReturnsAnyException() {
-    // given: existing ConvocatoriaPeriodoJustificacion
-    Long id = 1L;
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion1 = generarMockConvocatoriaPeriodoJustificacion(
-        1L);
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion2 = generarMockConvocatoriaPeriodoJustificacion(
-        2L);
-    ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion3 = generarMockConvocatoriaPeriodoJustificacion(
-        3L);
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(convocatoriaPeriodoJustificacion1));
-    BDDMockito
-        .given(repository.findAllByConvocatoriaIdAndNumPeriodoGreaterThan(ArgumentMatchers.anyLong(),
-            ArgumentMatchers.anyInt()))
-        .willReturn(Arrays.asList(convocatoriaPeriodoJustificacion2, convocatoriaPeriodoJustificacion3));
-
-    BDDMockito.doNothing().when(repository).deleteById(ArgumentMatchers.anyLong());
-
-    Assertions.assertThatCode(
-        // when: delete by existing id
-        () -> service.delete(id))
-        // then: no exception is thrown
-        .doesNotThrowAnyException();
-
-    Mockito.verify(repository, Mockito.times(1)).deleteById(ArgumentMatchers.anyLong());
-    Mockito.verify(repository, Mockito.times(1)).saveAll(ArgumentMatchers.<ConvocatoriaPeriodoJustificacion>anyList());
-  }
-
-  @Test
-  public void delete_WithNoExistingId_ThrowsNotFoundException() throws Exception {
-    // given: no existing id
-    Long id = 1L;
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
-
-    Assertions.assertThatThrownBy(
-        // when: delete
-        () -> service.delete(id))
-        // then: NotFoundException is thrown
-        .isInstanceOf(ConvocatoriaPeriodoJustificacionNotFoundException.class);
   }
 
   @Test
@@ -734,8 +357,8 @@ public class ConvocatoriaPeriodoJustificacionServiceTest {
     // then: el ConvocatoriaPeriodoJustificacion
     Assertions.assertThat(convocatoriaPeriodoJustificacion).as("isNotNull()").isNotNull();
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getId()).as("getId()").isEqualTo(idBuscado);
-    Assertions.assertThat(convocatoriaPeriodoJustificacion.getMesInicial()).as("getMesInicial()").isEqualTo(10);
-    Assertions.assertThat(convocatoriaPeriodoJustificacion.getMesFinal()).as("getMesFinal()").isEqualTo(20);
+    Assertions.assertThat(convocatoriaPeriodoJustificacion.getMesInicial()).as("getMesInicial()").isEqualTo(1);
+    Assertions.assertThat(convocatoriaPeriodoJustificacion.getMesFinal()).as("getMesFinal()").isEqualTo(2);
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getFechaInicioPresentacion())
         .as("getFechaInicioPresentacion()").isEqualTo(LocalDate.of(2020, 10, 10));
     Assertions.assertThat(convocatoriaPeriodoJustificacion.getFechaFinPresentacion()).as("getFechaFinPresentacion()")
@@ -766,21 +389,49 @@ public class ConvocatoriaPeriodoJustificacionServiceTest {
    * @return el objeto ConvocatoriaPeriodoJustificacion
    */
   private ConvocatoriaPeriodoJustificacion generarMockConvocatoriaPeriodoJustificacion(Long id) {
+    return generarMockConvocatoriaPeriodoJustificacion(id, 1, 2, TipoJustificacionEnum.PERIODICA, id);
+  }
+
+  /**
+   * Función que devuelve un objeto ConvocatoriaPeriodoJustificacion
+   * 
+   * @param id             id del ConvocatoriaPeriodoJustificacion
+   * @param mesInicial     Mes inicial
+   * @param mesFinal       Mes final
+   * @param tipo           Tipo justificacion
+   * @param convocatoriaId Id Convocatoria
+   * @return el objeto ConvocatoriaPeriodoJustificacion
+   */
+  private ConvocatoriaPeriodoJustificacion generarMockConvocatoriaPeriodoJustificacion(Long id, Integer mesInicial,
+      Integer mesFinal, TipoJustificacionEnum tipo, Long convocatoriaId) {
     Convocatoria convocatoria = new Convocatoria();
-    convocatoria.setId(id == null ? 1 : id);
+    convocatoria.setId(convocatoriaId == null ? 1 : convocatoriaId);
 
     ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion = new ConvocatoriaPeriodoJustificacion();
     convocatoriaPeriodoJustificacion.setId(id);
     convocatoriaPeriodoJustificacion.setConvocatoria(convocatoria);
-    convocatoriaPeriodoJustificacion.setNumPeriodo(id == null ? 1 : id.intValue());
-    convocatoriaPeriodoJustificacion.setMesInicial(10);
-    convocatoriaPeriodoJustificacion.setMesFinal(20);
+    convocatoriaPeriodoJustificacion.setNumPeriodo(1);
+    convocatoriaPeriodoJustificacion.setMesInicial(mesInicial);
+    convocatoriaPeriodoJustificacion.setMesFinal(mesFinal);
     convocatoriaPeriodoJustificacion.setFechaInicioPresentacion(LocalDate.of(2020, 10, 10));
     convocatoriaPeriodoJustificacion.setFechaFinPresentacion(LocalDate.of(2020, 11, 20));
     convocatoriaPeriodoJustificacion.setObservaciones("observaciones-" + id);
-    convocatoriaPeriodoJustificacion.setTipoJustificacion(TipoJustificacionEnum.PERIODICA);
+    convocatoriaPeriodoJustificacion.setTipoJustificacion(tipo);
 
     return convocatoriaPeriodoJustificacion;
+  }
+
+  /**
+   * Función que devuelve un objeto Convocatoria
+   * 
+   * @param id id del Convocatoria
+   * @return el objeto Convocatoria
+   */
+  private Convocatoria generarMockConvocatoria(Long id) {
+    Convocatoria convocatoria = new Convocatoria();
+    convocatoria.setId(id == null ? 1 : id);
+
+    return convocatoria;
   }
 
 }

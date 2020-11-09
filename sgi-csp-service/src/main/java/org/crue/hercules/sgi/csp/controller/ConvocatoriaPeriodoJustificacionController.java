@@ -1,19 +1,19 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
@@ -55,54 +55,28 @@ public class ConvocatoriaPeriodoJustificacionController {
   }
 
   /**
-   * Crea nuevo {@link ConvocatoriaPeriodoJustificacion}.
+   * Actualiza el listado de {@link ConvocatoriaPeriodoJustificacion} de la
+   * {@link Convocatoria} con el listado convocatoriaPeriodoJustificaciones
+   * añadiendo, editando o eliminando los elementos segun proceda.
    * 
-   * @param convocatoriaPeriodoJustificacion {@link ConvocatoriaPeriodoJustificacion}.
-   *                                         que se quiere crear.
-   * @return Nuevo {@link ConvocatoriaPeriodoJustificacion} creado.
+   * @param convocatoriaId                     Id de la {@link Convocatoria}.
+   * @param convocatoriaPeriodoJustificaciones lista con los nuevos
+   *                                           {@link ConvocatoriaPeriodoJustificacion}
+   *                                           a guardar.
+   * @return Lista actualizada con los {@link ConvocatoriaPeriodoJustificacion}.
    */
-  @PostMapping
+  @PatchMapping("/{convocatoriaId}")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-C')")
-  public ResponseEntity<ConvocatoriaPeriodoJustificacion> create(
-      @Valid @RequestBody ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion) {
-    log.debug("create(ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion) - start");
-    ConvocatoriaPeriodoJustificacion returnValue = service.create(convocatoriaPeriodoJustificacion);
-    log.debug("create(ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion) - end");
+  public ResponseEntity<List<ConvocatoriaPeriodoJustificacion>> updateConvocatoriaPeriodoJustificacionesConvocatoria(
+      @PathVariable Long convocatoriaId,
+      @Valid @RequestBody List<ConvocatoriaPeriodoJustificacion> convocatoriaPeriodoJustificaciones) {
+    log.debug(
+        "updateConvocatoriaPeriodoJustificacionesConvocatoria(Long convocatoriaId, List<ConvocatoriaPeriodoJustificacion> convocatoriaPeriodoJustificaciones) - start");
+    List<ConvocatoriaPeriodoJustificacion> returnValue = service
+        .updateConvocatoriaPeriodoJustificacionesConvocatoria(convocatoriaId, convocatoriaPeriodoJustificaciones);
+    log.debug(
+        "updateConvocatoriaPeriodoJustificacionesConvocatoria(Long convocatoriaId, List<ConvocatoriaPeriodoJustificacion> convocatoriaPeriodoJustificaciones) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
   }
 
-  /**
-   * Actualiza el {@link ConvocatoriaPeriodoJustificacion} con el id indicado.
-   * 
-   * @param convocatoriaPeriodoJustificacion {@link ConvocatoriaPeriodoJustificacion}
-   *                                         a actualizar.
-   * @param id                               id
-   *                                         {@link ConvocatoriaPeriodoJustificacion}
-   *                                         a actualizar.
-   * @return {@link ConvocatoriaPeriodoJustificacion} actualizado.
-   */
-  @PutMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TDOC-E')")
-  ConvocatoriaPeriodoJustificacion update(
-      @Valid @RequestBody ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion, @PathVariable Long id) {
-    log.debug("update(ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion, Long id) - start");
-    convocatoriaPeriodoJustificacion.setId(id);
-    ConvocatoriaPeriodoJustificacion returnValue = service.update(convocatoriaPeriodoJustificacion);
-    log.debug("update(ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion, Long id) - end");
-    return returnValue;
-  }
-
-  /**
-   * Desactiva {@link ConvocatoriaPeriodoJustificacion} con id indicado.
-   * 
-   * @param id Identificador de {@link ConvocatoriaPeriodoJustificacion}.
-   */
-  @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CENTGES-B')")
-  @ResponseStatus(value = HttpStatus.NO_CONTENT)
-  void deleteById(@PathVariable Long id) {
-    log.debug("deleteById(Long id) - start");
-    service.delete(id);
-    log.debug("deleteById(Long id) - end");
-  }
 }
