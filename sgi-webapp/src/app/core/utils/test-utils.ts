@@ -2,6 +2,8 @@ import { TranslateTestingModule } from 'ngx-translate-testing';
 
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiAuthService } from '@sgi/framework/auth';
+import { BehaviorSubject } from 'rxjs';
+import { defaultAuthStatus } from '@sgi/framework/auth/auth.service';
 
 /**
  * A Utility Class for testing.

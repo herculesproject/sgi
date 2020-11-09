@@ -16,6 +16,7 @@ export class ConvocatoriaSeguimientoCientificoFragment extends Fragment {
   ) {
     super(key);
     this.logger.debug(ConvocatoriaSeguimientoCientificoFragment.name, 'constructor()', 'start');
+    this.setComplete(true);
     this.seguimientosCientificos$ = new BehaviorSubject<StatusWrapper<ISeguimientoCientifico>[]>([]);
     this.logger.debug(ConvocatoriaSeguimientoCientificoFragment.name, 'constructor()', 'end');
   }

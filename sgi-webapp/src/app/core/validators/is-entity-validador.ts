@@ -6,7 +6,8 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 export class IsEntityValidator {
   static isValid(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      if (typeof control.value === 'string' && control.value.toString().length === 0) {
+      if (!control.value || typeof control.value === 'string'
+        && control.value.toString().length === 0) {
         return null;
       }
       if (control.value && control.value.id) {

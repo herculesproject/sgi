@@ -21,13 +21,14 @@ export class ConvocatoriaEntidadesFinanciadorasFragment extends Fragment {
   ) {
     super(key);
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name, 'constructor()', 'start');
+    this.setComplete(true);
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name, 'constructor()', 'end');
   }
 
   protected onInitialize(): void {
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name, `${this.onInitialize.name}()`, 'start');
     if (this.getKey()) {
-      this.convocatoriaService.getEntidadesFinanciadoras(this.getKey() as number).pipe(
+      this.convocatoriaService.findEntidadesFinanciadoras(this.getKey() as number).pipe(
         map(response => response.items)
       ).subscribe(convocatoriaEntidadesFinanciadoras => {
         this.convocatoriaEntidadesFinanciadoras$.next(convocatoriaEntidadesFinanciadoras.map(

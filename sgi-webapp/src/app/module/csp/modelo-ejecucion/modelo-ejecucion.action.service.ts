@@ -54,7 +54,7 @@ export class ModeloEjecucionActionService extends ActionService {
       this.modeloEjecucion = route.snapshot.data.modeloEjecucion;
       this.enableEdit();
     }
-    this.datosGenerales = new ModeloEjecucionDatosGeneralesFragment(logger, this.modeloEjecucion?.id, modeloEjecucionService, this);
+    this.datosGenerales = new ModeloEjecucionDatosGeneralesFragment(logger, this.modeloEjecucion?.id, modeloEjecucionService);
     this.tipoEnlaces = new ModeloEjecucionTipoEnlaceFragment(logger, this.modeloEjecucion?.id,
       modeloEjecucionService, modeloTipoEnlaceService, this);
     this.tipoFinalidades = new ModeloEjecucionTipoFinalidadFragment(logger, this.modeloEjecucion?.id,

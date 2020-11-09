@@ -78,7 +78,7 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
           return new StatusWrapper<ConvocatoriaEntidadFinanciadoraData>(data);
         });
       }),
-      switchMap((wrappers: StatusWrapper<ConvocatoriaEntidadFinanciadoraData>[]) => {
+      switchMap(wrappers => {
         return forkJoin(wrappers.map(
           wrapper => {
             return this.empresaEconomicaService.findById(wrapper.value.entidad.entidadRef).pipe(

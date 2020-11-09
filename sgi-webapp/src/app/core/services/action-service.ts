@@ -343,7 +343,7 @@ export abstract class FormFragment<T> implements IFormFragment<T> {
   private auxiliarStatus: boolean;
   private group: IGroup;
   private initialized: boolean;
-  private subscriptions: Subscription[] = [];
+  protected subscriptions: Subscription[] = [];
   private key: number | string;
   private edit: boolean;
 

@@ -17,6 +17,7 @@ export class ConvocatoriaPlazosFasesFragment extends Fragment {
   ) {
     super(key);
     this.logger.debug(ConvocatoriaPlazosFasesFragment.name, 'constructor()', 'start');
+    this.setComplete(true);
     this.plazosFase$ = new BehaviorSubject<StatusWrapper<IPlazosFases>[]>([]);
     this.logger.debug(ConvocatoriaPlazosFasesFragment.name, 'constructor()', 'end');
   }

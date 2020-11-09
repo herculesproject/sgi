@@ -5,18 +5,14 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IApartado } from '@core/models/eti/apartado';
 import { IBloque } from '@core/models/eti/bloque';
 import { IComentario } from '@core/models/eti/comentario';
-import { IComite } from '@core/models/eti/comite';
 import { resolveFormularioByTipoEvaluacionAndComite } from '@core/models/eti/formulario';
-import { TipoComentario } from '@core/models/eti/tipo-comentario';
-import { TipoEvaluacion } from '@core/models/eti/tipo-evaluacion';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ApartadoService } from '@core/services/eti/apartado.service';
 import { BloqueService } from '@core/services/eti/bloque.service';
 import { FormularioService } from '@core/services/eti/formulario.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
-import { IsApartado } from '@core/validators/is-apartado-validador';
-import { IsBloque } from '@core/validators/is-bloque-validador';
+import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
@@ -88,8 +84,8 @@ export class ComentarioEditarModalComponent implements OnInit, OnDestroy {
       subapartado = null;
     }
     this.formGroup = new FormGroup({
-      bloque: new FormControl(this.data.apartado?.bloque, [IsBloque.isValid()]),
-      apartado: new FormControl(apartado, [IsApartado.isValid()]),
+      bloque: new FormControl(this.data.apartado?.bloque, [IsEntityValidator.isValid()]),
+      apartado: new FormControl(apartado, [IsEntityValidator.isValid()]),
       subapartado: new FormControl(subapartado, []),
       comentario: new FormControl(this.data.texto, [])
     });

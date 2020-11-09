@@ -20,6 +20,7 @@ export class ConvocatoriaHitosFragment extends Fragment {
     private readonly convocatoriaHitoService: ConvocatoriaHitoService
   ) {
     super(key);
+    this.setComplete(true);
   }
 
 

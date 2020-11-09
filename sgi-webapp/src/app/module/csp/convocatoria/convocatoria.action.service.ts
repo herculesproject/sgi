@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { ActionService } from '@core/services/action-service';
-import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
@@ -23,12 +22,15 @@ import { ConvocatoriaEnlaceService } from '@core/services/csp/convocatoria-enlac
 import { ConvocatoriaHitoService } from '@core/services/csp/convocatoria-hito.service';
 import { ConvocatoriaRequisitosIPFragment } from './convocatoria-formulario/convocatoria-requisitos-ip/convocatoria-requisitos-ip.fragment';
 import { RequisitoIPService } from '@core/services/csp/requisito-ip.service';
+import { ConvocatoriaEntidadGestoraService } from '@core/services/csp/convocatoria-entidad-gestora.service';
+import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
+import { FormBuilder } from '@angular/forms';
 
 @Injectable()
 export class ConvocatoriaActionService extends ActionService {
 
   public readonly FRAGMENT = {
-    DATOS_GENERALES: 'datosGenerales',
+    DATOS_GENERALES: 'datos-generales',
     PERIODO_JUSTIFICACION: 'periodos-justificacion',
     PLAZOS_FASES: 'plazos-fases',
     HITOS: 'hitos',
@@ -52,15 +54,17 @@ export class ConvocatoriaActionService extends ActionService {
   private convocatoria: IConvocatoria;
 
   constructor(
+    private fb: FormBuilder,
     logger: NGXLogger,
-    fb: FormBuilder,
     route: ActivatedRoute,
     convocatoriaService: ConvocatoriaService,
     convocatoriaEnlaceService: ConvocatoriaEnlaceService,
     empresaEconomicaService: EmpresaEconomicaService,
     convocatoriaEntidadFinanciadoraService: ConvocatoriaEntidadFinanciadoraService,
     convocatoriaHitoService: ConvocatoriaHitoService,
-    requisitoIPService: RequisitoIPService
+    requisitoIPService: RequisitoIPService,
+    convocatoriaEntidadGestoraService: ConvocatoriaEntidadGestoraService,
+    unidadGestionService: UnidadGestionService
   ) {
     super();
     this.convocatoria = {} as IConvocatoria;
@@ -68,12 +72,19 @@ export class ConvocatoriaActionService extends ActionService {
       this.convocatoria = route.snapshot.data.convocatoria;
       this.enableEdit();
     }
-    this.datosGenerales = new ConvocatoriaDatosGeneralesFragment(fb, this.convocatoria?.id, convocatoriaService, empresaEconomicaService);
-    this.seguimientoCientifico = new ConvocatoriaSeguimientoCientificoFragment(logger, this.convocatoria?.id, convocatoriaService);
-    this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(logger, this.convocatoria?.id, convocatoriaService);
-    this.entidadesConvocantes = new ConvocatoriaEntidadesConvocantesFragment(logger, this.convocatoria?.id, convocatoriaService);
-    this.plazosFases = new ConvocatoriaPlazosFasesFragment(logger, this.convocatoria?.id, convocatoriaService);
-    this.hitos = new ConvocatoriaHitosFragment(logger, this.convocatoria?.id, convocatoriaService, convocatoriaHitoService);
+    this.datosGenerales = new ConvocatoriaDatosGeneralesFragment(
+      logger, this.convocatoria?.id, convocatoriaService, empresaEconomicaService,
+      convocatoriaEntidadGestoraService, unidadGestionService);
+    this.seguimientoCientifico = new ConvocatoriaSeguimientoCientificoFragment(
+      logger, this.convocatoria?.id, convocatoriaService);
+    this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(
+      logger, this.convocatoria?.id, convocatoriaService);
+    this.entidadesConvocantes = new ConvocatoriaEntidadesConvocantesFragment(
+      logger, this.convocatoria?.id, convocatoriaService);
+    this.plazosFases = new ConvocatoriaPlazosFasesFragment(
+      logger, this.convocatoria?.id, convocatoriaService);
+    this.hitos = new ConvocatoriaHitosFragment(
+      logger, this.convocatoria?.id, convocatoriaService, convocatoriaHitoService);
     this.entidadesFinanciadorasFragment = new ConvocatoriaEntidadesFinanciadorasFragment(
       logger, this.convocatoria?.id, convocatoriaService, convocatoriaEntidadFinanciadoraService);
     this.enlaces = new ConvocatoriaEnlaceFragment(logger, this.convocatoria?.id, convocatoriaService, convocatoriaEnlaceService);

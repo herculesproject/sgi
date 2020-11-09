@@ -11,54 +11,13 @@ import { ISeguimientoCientifico } from '@core/models/csp/seguimiento-cientifico'
 import { tap } from 'rxjs/operators';
 import { IEntidadConvocante } from '@core/models/csp/entidad-convocante';
 import { DateUtils } from '@core/utils/date-utils';
-import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
-import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
-import { ITipoRegimenConcurrencia } from '@core/models/csp/tipo-regimen-concurrencia';
-import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
 import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
 import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
+import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
+import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 
-const convocatorias: IConvocatoria[] = [
-  {
-    id: 1, referencia: 'REF001', titulo: 'Ayudas plan propio', fechaInicioSolicitud: new Date(),
-    fechaFinSolicitud: new Date(), estadoConvocante: 'Universidad', planInvestigacion: 'Plan propio',
-    entidadFinanciadora: 'Universidad', fuenteFinanciacion: 'Fondos propios', activo: true,
-    estado: 'Borrador', unidadGestion: { id: 1, nombre: 'OTRI' } as IUnidadGestion, anio: 2020,
-    modeloEjecucion: { id: 2, nombre: 'Contratos' } as IModeloEjecucion,
-    finalidad: { id: 3, nombre: 'Servicios Técnicos' } as ITipoFinalidad,
-    duracionMeses: 20, tipoAmbitoGeografico: { id: 3, nombre: 'Autonómico' } as ITipoAmbitoGeografico, clasificacionProduccion: 'Proyectos competitivos',
-    tipoRegimenConcurrencia: { id: 2, nombre: 'Concurrencia competitiva' } as ITipoRegimenConcurrencia,
-    proyectoColaborativo: 'Sí', destinatarios: 'Equipo de proyecto', entidadGestora: '',
-    descripcionConvocatoria: 'Plan fondos propios de Universidad', observaciones: ''
-  },
-  {
-    id: 2, referencia: 'REF002', titulo: 'Programa 2020', fechaInicioSolicitud: new Date(),
-    fechaFinSolicitud: new Date(), estadoConvocante: 'AEI', planInvestigacion: 'Plan Nacional 2020',
-    entidadFinanciadora: 'AEI', fuenteFinanciacion: 'Presupuestos generados estado', activo: false,
-    estado: 'Borrador', unidadGestion: { id: 1, nombre: 'OTRI' } as IUnidadGestion, anio: 2019,
-    modeloEjecucion: { id: 2, nombre: 'Contratos' } as IModeloEjecucion,
-    finalidad: { id: 2, nombre: 'Contratación RRHH' } as ITipoFinalidad,
-    duracionMeses: 12, tipoAmbitoGeografico: { id: 2, nombre: 'Local' } as ITipoAmbitoGeografico, clasificacionProduccion: 'Contratos, convenios  y proyectos no competitivos',
-    tipoRegimenConcurrencia: { id: 1, nombre: 'Contratación RRHH' } as ITipoRegimenConcurrencia,
-    proyectoColaborativo: 'No', destinatarios: 'Grupo de investigación', entidadGestora: '',
-    descripcionConvocatoria: '', observaciones: 'Contratación 2019'
-  },
-  {
-    id: 3, referencia: 'REF003', titulo: 'Fondo COVID', fechaInicioSolicitud: new Date(),
-    fechaFinSolicitud: new Date(), estadoConvocante: 'CRUE', planInvestigacion: 'Plan COVID',
-    entidadFinanciadora: 'CSIC', fuenteFinanciacion: 'Fondos COVID', activo: true,
-    estado: 'Borrador', unidadGestion: { id: 2, nombre: 'OPE' } as IUnidadGestion, anio: 2020,
-    modeloEjecucion: { id: 1, nombre: 'Ayudas y subvenciones' } as IModeloEjecucion,
-    finalidad: { id: 3, nombre: 'Proyectos I+D' } as ITipoFinalidad,
-    duracionMeses: 24, tipoAmbitoGeografico: { id: 5, nombre: 'Europeo' } as ITipoAmbitoGeografico, clasificacionProduccion: 'Proyectos competitivos',
-    tipoRegimenConcurrencia: { id: 2, nombre: 'Concurrencia competitiva' } as ITipoRegimenConcurrencia,
-    proyectoColaborativo: 'Sí', destinatarios: 'Individual', entidadGestora: '',
-    descripcionConvocatoria: 'Convocatoria Proyecto Covid I+D', observaciones: ''
-  }
-
-];
 
 const periodosJustificacion: IPeriodoJustificacion[] = [
   {
@@ -137,18 +96,11 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
     );
   }
 
-  /**
-   * Recupera listado mock de convocatorias.
-   * @param options opciones de búsqueda.
-   * @returns listado de convocatorias.
-   */
-  findConvocatoria(options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoria>> {
-    this.logger.debug(ConvocatoriaService.name, `findConvocatoria(${options ? JSON.stringify(options) : ''})`, '-', 'START');
-    return of({
-      page: null,
-      total: convocatorias.length,
-      items: convocatorias
-    } as SgiRestListResult<IConvocatoria>);
+  findAllTodos(options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoria>> {
+    this.logger.debug(ConvocatoriaService.name, `${this.findAllTodos.name}(`, '-', 'START');
+    return this.find<IConvocatoria, IConvocatoria>(`${this.endpointUrl}/todos`, options).pipe(
+      tap(() => this.logger.debug(ConvocatoriaService.name, `${this.findAllTodos.name}()`, '-', 'END'))
+    );
   }
 
   /**
@@ -204,16 +156,6 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
   }
 
   /**
-   * Recupera una convocatoria por id.
-   * @param idConvocatoria Identificador de la convocatoria.
-   * @return convocatoria.
-   */
-  findById(idConvocatoria: number) {
-    this.logger.debug(ConvocatoriaService.name, `findById(idConvocatoria)`, '-', 'START');
-    return of(convocatorias[idConvocatoria - 1]);
-  }
-
-  /**
    * Recupera los hitos de una convocatoria
    * @param idConvocatoria Identificador de la convocatoria.
    * @returns Listado de hitos.
@@ -263,13 +205,45 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
       );
   }
 
-  getEntidadesFinanciadoras(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaEntidadFinanciadora>> {
+  findEntidadesFinanciadoras(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaEntidadFinanciadora>> {
     this.logger.debug(ConvocatoriaService.name,
-      `${this.getEntidadesFinanciadoras.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+      `${this.findEntidadesFinanciadoras.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
     return this.find<IConvocatoriaEntidadFinanciadora, IConvocatoriaEntidadFinanciadora>(
       `${this.endpointUrl}/${id}/convocatoriaentidadfinanciadoras`, options).pipe(
         tap(() => this.logger.debug(ConvocatoriaService.name,
-          `${this.getEntidadesFinanciadoras.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+          `${this.findEntidadesFinanciadoras.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+      );
+  }
+
+  findAllConvocatoriaFases(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaFase>> {
+    this.logger.debug(ConvocatoriaService.name,
+      `${this.findAllConvocatoriaFases.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    return this.find<IConvocatoriaFase, IConvocatoriaFase>(
+      `${this.endpointUrl}/${id}/convocatoriafases`, options).pipe(
+        tap(() => this.logger.debug(ConvocatoriaService.name,
+          `${this.findAllConvocatoriaFases.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+      );
+  }
+
+  findAllConvocatoriaEntidadConvocantes(id: number, options?:
+    SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaEntidadConvocante>> {
+    this.logger.debug(ConvocatoriaService.name,
+      `${this.findAllConvocatoriaFases.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    return this.find<IConvocatoriaEntidadConvocante, IConvocatoriaEntidadConvocante>(
+      `${this.endpointUrl}/${id}/convocatoriaentidadconvocantes`, options).pipe(
+        tap(() => this.logger.debug(ConvocatoriaService.name,
+          `${this.findAllConvocatoriaFases.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+      );
+  }
+
+  findAllConvocatoriaEntidadGestora(id: number, options?:
+    SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaEntidadConvocante>> {
+    this.logger.debug(ConvocatoriaService.name,
+      `${this.findAllConvocatoriaFases.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    return this.find<IConvocatoriaEntidadConvocante, IConvocatoriaEntidadConvocante>(
+      `${this.endpointUrl}/${id}/convocatoriaentidadgestoras`, options).pipe(
+        tap(() => this.logger.debug(ConvocatoriaService.name,
+          `${this.findAllConvocatoriaFases.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
       );
   }
 
@@ -285,13 +259,4 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
         tap(() => this.logger.debug(ConvocatoriaService.name, `${this.findAreaTematicas.name}(id: ${id})`, '-', 'END'))
       );
   }
-
-  create(convocatoria: IConvocatoria): Observable<IConvocatoria> {
-    return of(convocatoria);
-  }
-
-  update(idConvocatoria: number, convocatoria: IConvocatoria): Observable<IConvocatoria> {
-    return of(convocatoria);
-  }
-
 }

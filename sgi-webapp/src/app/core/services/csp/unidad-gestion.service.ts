@@ -4,7 +4,8 @@ import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@env';
-import { of, Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 
 @Injectable({

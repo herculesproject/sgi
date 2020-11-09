@@ -16,6 +16,7 @@ export class ConvocatoriaEntidadesConvocantesFragment extends Fragment {
   ) {
     super(key);
     this.logger.debug(ConvocatoriaEntidadesConvocantesFragment.name, 'constructor()', 'start');
+    this.setComplete(true);
     this.entidadesConvocantes$ = new BehaviorSubject<StatusWrapper<IEntidadConvocante>[]>([]);
     this.logger.debug(ConvocatoriaEntidadesConvocantesFragment.name, 'constructor()', 'end');
   }

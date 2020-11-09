@@ -2,30 +2,42 @@
 <section class="convocatoria-listado">
 
   <!-- Buscador de convocatorias -->
-  <form class="formulario" [formGroup]="buscadorFormGroup" [fxLayout.xs]="fxLayoutProperties.xs"
+  <form class="formulario" [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs"
     [fxLayout]="fxLayoutProperties.layout" fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
-    <!--Titulo-->
+    <!-- Titulo -->
     <div class="col">
       <mat-form-field>
-        <mat-label>{{'csp.convocatoria.listado.titulo' | translate}}</mat-label>
-        <input matInput type="text" placeholder="{{'csp.convocatoria.listado.titulo' | translate}}"
+        <mat-label>{{'csp.convocatoria.listado.convocatoria.titulo' | translate}}</mat-label>
+        <input matInput type="text" placeholder="{{'csp.convocatoria.listado.convocatoria.titulo' | translate}}"
           formControlName="titulo">
       </mat-form-field>
     </div>
 
-    <!--Referencia-->
+    <!-- Referencia -->
     <div class="col">
       <mat-form-field>
         <mat-label>{{'csp.convocatoria.listado.referencia' | translate}}</mat-label>
         <input matInput type="text" placeholder="{{'csp.convocatoria.listado.referencia' | translate}}"
-          formControlName="referencia">
+          formControlName="codigo">
+      </mat-form-field>
+    </div>
+
+    <!-- Activo -->
+    <div class="col">
+      <mat-form-field>
+        <mat-label>{{'csp.convocatoria.activo' | translate}}</mat-label>
+        <mat-select matNativeControl formControlName="activo">
+          <mat-option value="todos">{{'label.todos' | translate}}</mat-option>
+          <mat-option value="true">{{'label.si' | translate}}</mat-option>
+          <mat-option value="false">{{'label.no' | translate}}</mat-option>
+        </mat-select>
       </mat-form-field>
     </div>
 
     <div class="buttons-final">
       <div class="col filter-button">
-        <button color="primary" aria-label="Center Align" md-button mat-raised-button>
+        <button color="primary" aria-label="Center Align" md-button mat-raised-button (click)="onSearch()">
           <mat-icon>search</mat-icon> {{'botones.buscar'| translate}}
         </button>
         <button color="warn" class="md-primary" aria-label="Center Align" md-button (click)="onClearFilters()"
@@ -40,58 +52,58 @@
     matSortActive="id" matSortDirection="asc" matSortDisableClear>
 
     <!-- Referencia Column -->
-    <ng-container matColumnDef="referencia">
+    <ng-container matColumnDef="codigo">
       <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.listado.referencia' | translate}} </th>
-      <td mat-cell *matCellDef="let convocatoria"> {{convocatoria.referencia}}</td>
+      <td mat-cell *matCellDef="let element"> {{element.convocatoria.codigo}}</td>
     </ng-container>
 
     <!-- Titulo Column -->
     <ng-container matColumnDef="titulo">
-      <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.listado.titulo' | translate}} </th>
-      <td mat-cell *matCellDef="let convocatoria"> {{convocatoria.titulo}}</td>
+      <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.listado.convocatoria.titulo' | translate}} </th>
+      <td mat-cell *matCellDef="let element"> {{element.convocatoria.titulo}}</td>
     </ng-container>
 
     <!-- Fecha inicio solicitud Column -->
     <ng-container matColumnDef="fechaInicioSolicitud">
       <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.listado.fecha.inicio.solicitud' | translate}} </th>
-      <td mat-cell *matCellDef="let convocatoria">{{convocatoria.fechaInicioSolicitud | date:'dd/MM/yyyy'}}</td>
+      <td mat-cell *matCellDef="let element">{{element.fase.fechaInicio | date:'dd/MM/yyyy'}}</td>
     </ng-container>
 
     <!-- Fecha fin solicitud Column -->
     <ng-container matColumnDef="fechaFinSolicitud">
       <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.listado.fecha.fin.solicitud' | translate}} </th>
-      <td mat-cell *matCellDef="let convocatoria">{{convocatoria.fechaFinSolicitud | date:'dd/MM/yyyy'}}</td>
+      <td mat-cell *matCellDef="let element">{{element.fase.fechaFin | date:'dd/MM/yyyy'}}</td>
     </ng-container>
 
     <!-- Estado convocante Column -->
-    <ng-container matColumnDef="estadoConvocante">
-      <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.listado.estado.convocante' | translate}} </th>
-      <td mat-cell *matCellDef="let convocatoria">{{convocatoria.estadoConvocante}}</td>
+    <ng-container matColumnDef="entidadConvocante">
+      <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.listado.entidad.convocante' | translate}} </th>
+      <td mat-cell *matCellDef="let element">{{element.entidadConvocanteEmpresa.razonSocial}}</td>
     </ng-container>
 
     <!-- Plan Investigacion Column -->
     <ng-container matColumnDef="planInvestigacion">
       <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.listado.plan.investigacion' | translate}} </th>
-      <td mat-cell *matCellDef="let convocatoria"> {{convocatoria.planInvestigacion}}</td>
+      <td mat-cell *matCellDef="let element">{{element.entidadConvocante.programa?.nombre}}</td>
     </ng-container>
 
     <!-- Entidad Financiadora Column -->
     <ng-container matColumnDef="entidadFinanciadora">
       <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.listado.entidad.financiadora' | translate}} </th>
-      <td mat-cell *matCellDef="let convocatoria">{{convocatoria.entidadFinanciadora}}</td>
+      <td mat-cell *matCellDef="let element">{{element.entidadFinanciadoraEmpresa.razonSocial}}</td>
     </ng-container>
 
     <!-- Fuente Financiacion Column -->
     <ng-container matColumnDef="fuenteFinanciacion">
       <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.listado.fuente.financiacion' | translate}} </th>
-      <td mat-cell *matCellDef="let convocatoria">{{convocatoria.fuenteFinanciacion}}</td>
+      <td mat-cell *matCellDef="let element">{{element.entidadFinanciadora.fuenteFinanciacion?.nombre}}</td>
     </ng-container>
 
     <!-- Activo Column -->
     <ng-container matColumnDef="activo">
       <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.listado.activo' | translate}} </th>
-      <td mat-cell *matCellDef="let convocatoria">
-        {{convocatoria.activo === true ? ('label.si' | translate) : 'label.no' | translate }}
+      <td mat-cell *matCellDef="let element">
+        {{element.convocatoria.activo ? ('label.si' | translate) : 'label.no' | translate }}
       </td>
     </ng-container>
 
@@ -99,9 +111,9 @@
     <!-- Acciones Column -->
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.listado.acciones' | translate}} </th>
-      <td mat-cell *matCellDef="let convocatoria;let i=index;">
+      <td mat-cell *matCellDef="let element;let i=index;">
         <ng-container>
-          <button mat-button matTooltip="{{'botones.editar' | translate}}" [routerLink]="[convocatoria.id]">
+          <button mat-button matTooltip="{{'botones.editar' | translate}}" [routerLink]="[element.convocatoria.id]">
             <mat-icon color="primary">border_color</mat-icon>
           </button>
         </ng-container>
@@ -112,13 +124,9 @@
         </ng-container>
       </td>
     </ng-container>
-
     <tr mat-header-row *matHeaderRowDef="columnas"></tr>
     <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
-
   </table>
-
-
   <mat-paginator [pageSizeOptions]="elementosPagina" [length]="totalElementos" showFirstLastButtons>
   </mat-paginator>
 </section>

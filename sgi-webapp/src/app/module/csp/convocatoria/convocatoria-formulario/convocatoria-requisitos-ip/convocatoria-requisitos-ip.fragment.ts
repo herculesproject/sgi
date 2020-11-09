@@ -15,7 +15,8 @@ export class ConvocatoriaRequisitosIPFragment extends FormFragment<IRequisitoIP>
     private readonly logger: NGXLogger,
     key: number,
     private requisitoIPService: RequisitoIPService) {
-    super(key);
+    super(key, true);
+    this.setComplete(true);
     this.requisitoIP = {} as IRequisitoIP;
   }
 

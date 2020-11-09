@@ -1,79 +1,25 @@
-import { IUnidadGestion } from '../usr/unidad-gestion';
+import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
+import { TipoDestinatario } from '@core/enums/tipo-destinatario';
 import { ITipoAmbitoGeografico } from './tipo-ambito-geografico';
 import { ITipoRegimenConcurrencia } from './tipo-regimen-concurrencia';
 import { IModeloEjecucion, ITipoFinalidad } from './tipos-configuracion';
 
 export interface IConvocatoria {
-  /** Id */
   id: number;
-
-  /** Referencia */
-  referencia: string;
-
-  /** Titulo */
-  titulo: string;
-
-  /** Fecha Solicitud inicio */
-  fechaInicioSolicitud: Date;
-
-  /** Fecha Solicitud fin */
-  fechaFinSolicitud: Date;
-
-  /** Estado convocante */
-  estadoConvocante: string;
-
-  /** Plan Investigacion */
-  planInvestigacion: string;
-
-  /** Entidad Financiadora */
-  entidadFinanciadora: string;
-
-  /** Fuente Financiacion */
-  fuenteFinanciacion: string;
-
-  /** Activo */
-  activo: boolean;
-
-  /** Estado. */
-  estado: string;
-
-  /** Unidad de gestión */
-  unidadGestion: IUnidadGestion;
-
-  /** Anio */
-  anio: number;
-
-  /** Modelo de ejecución */
+  unidadGestionRef: string;
   modeloEjecucion: IModeloEjecucion;
-
-  /** Finalidad */
-  finalidad: ITipoFinalidad;
-
-  /** Duración meses */
-  duracionMeses: number;
-
-  /** Ámbito geográfico */
-  tipoAmbitoGeografico: ITipoAmbitoGeografico;
-
-  /** Clasificación Producción */
-  clasificacionProduccion: string;
-
-  /** Régimen concurrencia */
-  tipoRegimenConcurrencia: ITipoRegimenConcurrencia;
-
-  /** Proyecto Colaborativo */
-  proyectoColaborativo: string;
-
-  /** Destinatarios */
-  destinatarios: string;
-
-  /** Entidad gestora */
-  entidadGestora: string;
-
-  /** Descripción convocatoria */
-  descripcionConvocatoria: string;
-
-  /** Observaciones */
+  codigo: string;
+  anio: number;
+  titulo: string;
+  objeto: string;
   observaciones: string;
-
+  finalidad: ITipoFinalidad;
+  regimenConcurrencia: ITipoRegimenConcurrencia;
+  destinatarios: TipoDestinatario;
+  colaborativos: boolean;
+  estadoActual: string;
+  duracion: number;
+  ambitoGeografico: ITipoAmbitoGeografico;
+  clasificacionCVN: ClasificacionCVN;
+  activo: boolean;
 }

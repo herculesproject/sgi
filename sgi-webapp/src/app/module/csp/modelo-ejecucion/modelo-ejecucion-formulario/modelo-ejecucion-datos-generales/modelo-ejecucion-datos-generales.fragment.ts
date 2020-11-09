@@ -1,13 +1,10 @@
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 import { FormFragment } from '@core/services/action-service';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
-import { FormGroupUtil } from '@core/utils/form-group-util';
 import { NGXLogger } from 'ngx-logger';
-import { EMPTY, Observable, of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { ModeloEjecucionActionService } from '../../modelo-ejecucion.action.service';
+import { EMPTY, Observable } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 export class ModeloEjecucionDatosGeneralesFragment extends FormFragment<IModeloEjecucion> {
   modeloEjecucion: IModeloEjecucion;
@@ -15,8 +12,7 @@ export class ModeloEjecucionDatosGeneralesFragment extends FormFragment<IModeloE
   constructor(
     private readonly logger: NGXLogger,
     key: number,
-    private modeloEjecucionService: ModeloEjecucionService,
-    private actionService: ModeloEjecucionActionService
+    private modeloEjecucionService: ModeloEjecucionService
   ) {
     super(key);
     this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name, 'constructor()', 'start');

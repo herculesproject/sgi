@@ -17,6 +17,7 @@ export class ConvocatoriaPeriodosJustificacionFragment extends Fragment {
   ) {
     super(key);
     this.logger.debug(ConvocatoriaPeriodosJustificacionFragment.name, 'constructor()', 'start');
+    this.setComplete(true);
     this.periodosJustificacion$ = new BehaviorSubject<StatusWrapper<IPeriodoJustificacion>[]>([]);
     this.logger.debug(ConvocatoriaPeriodosJustificacionFragment.name, 'constructor()', 'end');
   }

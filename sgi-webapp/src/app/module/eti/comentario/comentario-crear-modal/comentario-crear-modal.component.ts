@@ -10,8 +10,6 @@ import { ApartadoService } from '@core/services/eti/apartado.service';
 import { BloqueService } from '@core/services/eti/bloque.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
-import { IsApartado } from '@core/validators/is-apartado-validador';
-import { IsBloque } from '@core/validators/is-bloque-validador';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Subscription } from 'rxjs';
@@ -20,6 +18,7 @@ import { ActionService } from '@core/services/action-service';
 import { resolveFormularioByTipoEvaluacionAndComite } from '@core/models/eti/formulario';
 import { FormularioService } from '@core/services/eti/formulario.service';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
+import { IsEntityValidator } from '@core/validators/is-entity-validador';
 
 const MSG_ERROR_BLOQUE = marker('eti.comentario.crear.bloque.error.cargar');
 const MSG_ERROR_APARTADO = marker('eti.comentario.crear.apartado.error.cargar');
@@ -70,8 +69,8 @@ export class ComentarioCrearModalComponent implements OnInit, OnDestroy {
     this.logger.debug(ComentarioCrearModalComponent.name, 'ngOnInit()', 'start');
     this.suscripciones = [];
     this.formGroup = new FormGroup({
-      bloque: new FormControl('', [IsBloque.isValid()]),
-      apartado: new FormControl('', [IsApartado.isValid()]),
+      bloque: new FormControl('', [IsEntityValidator.isValid()]),
+      apartado: new FormControl('', [IsEntityValidator.isValid()]),
       subapartado: new FormControl('', []),
       comentario: new FormControl('', [])
     });

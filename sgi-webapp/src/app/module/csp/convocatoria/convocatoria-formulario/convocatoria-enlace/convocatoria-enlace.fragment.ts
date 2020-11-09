@@ -21,6 +21,7 @@ export class ConvocatoriaEnlaceFragment extends Fragment {
   ) {
     super(key);
     this.logger.debug(ConvocatoriaEnlaceFragment.name, 'constructor()', 'start');
+    this.setComplete(true);
     this.logger.debug(ConvocatoriaEnlaceFragment.name, 'constructor()', 'end');
   }
 

@@ -38,6 +38,7 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
   ) {
     super(actionService.FRAGMENT.PERIODO_JUSTIFICACION, actionService);
     this.logger.debug(ConvocatoriaPeriodosJustificacionComponent.name, 'constructor()', 'start');
+
     this.formPart = this.fragment as ConvocatoriaPeriodosJustificacionFragment;
     this.elementosPagina = [5, 10, 25, 100];
     this.displayedColumns = ['numPeriodo', 'mesInicial', 'mesFinal', 'fechaInicio', 'fechaFin', 'observaciones', 'acciones'];
