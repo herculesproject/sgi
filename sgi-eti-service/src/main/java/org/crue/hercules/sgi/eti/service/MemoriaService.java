@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.eti.service;
 
+import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
@@ -201,4 +202,22 @@ public interface MemoriaService {
    * @param personaRef Referencia de la persona logueada.
    */
   void enviarSecretariaRetrospectiva(Long id, String personaRef);
+
+  /**
+   * Recupera una lista paginada de memorias asociadas al comité recibido.
+   * 
+   * @param idComite Identificador {@link Comite}.
+   * @param pageable Datos de la paginación.
+   * @return lista paginada de memorias
+   */
+  Page<Memoria> findByComite(Long idComite, Pageable pageable);
+
+  /**
+   * Crea una memoria del tipo modificada a partir de la recibida por parámetro.
+   * 
+   * @param nuevaMemoria Nueva {@link Memoria} a crear.
+   * @param id           Identificador de {@link Memoria} de la que se parte.
+   * @return {@link Memoria} creada.
+   */
+  Memoria createModificada(Memoria nuevaMemoria, Long id);
 }

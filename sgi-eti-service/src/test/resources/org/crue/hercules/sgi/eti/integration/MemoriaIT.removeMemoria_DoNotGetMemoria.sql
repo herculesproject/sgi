@@ -28,5 +28,5 @@ INSERT INTO ETI.RETROSPECTIVA
 VALUES(1, 1, '2020-07-01');   
 
 -- MEMORIA 
-INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, persona_ref, tipo_memoria_id, estado_actual_id, fecha_envio_secretaria, requiere_retrospectiva, retrospectiva_id, version, activo)
- VALUES (2, 'ref-3534', 1, 2, 'Memoria2', 'userref-5698', 1, 1, null, false, 1, 1, true);
+INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, persona_ref, tipo_memoria_id, estado_actual_id, fecha_envio_secretaria, requiere_retrospectiva, retrospectiva_id, version, activo, memoria_original_id)
+ VALUES (2, 'ref-3534', 1, 2, 'Memoria2', 'userref-5698', 1, 1, null, false, 1, 1, true, null);

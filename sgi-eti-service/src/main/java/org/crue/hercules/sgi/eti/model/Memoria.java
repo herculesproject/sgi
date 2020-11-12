@@ -41,11 +41,12 @@ public class Memoria extends BaseEntity {
   @Column(name = "id", nullable = false)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "memoria_seq")
   @SequenceGenerator(name = "memoria_seq", sequenceName = "memoria_seq", allocationSize = 1)
+  @NotNull(groups = { Update.class })
   private Long id;
 
   /** Referencia memoria */
   @Column(name = "num_referencia", length = 250, nullable = false)
-  @NotNull
+  @NotNull(groups = { Update.class })
   private String numReferencia;
 
   /** Petición evaluación */
@@ -79,17 +80,16 @@ public class Memoria extends BaseEntity {
   /** Estado Memoria Actual */
   @OneToOne
   @JoinColumn(name = "estado_actual_id", nullable = false)
-  @NotNull
+  @NotNull(groups = { Update.class })
   private TipoEstadoMemoria estadoActual;
 
   /** Fecha envio secretaria. */
-  @Column(name = "fecha_envio_secretaria", nullable = false)
-  @NotNull
+  @Column(name = "fecha_envio_secretaria", nullable = true)
   private LocalDate fechaEnvioSecretaria;
 
   /** Indicador require retrospectiva */
   @Column(name = "requiere_retrospectiva", columnDefinition = "boolean default false", nullable = false)
-  @NotNull
+  @NotNull(groups = { Update.class })
   private Boolean requiereRetrospectiva;
 
   /** Retrospectiva. */
@@ -99,7 +99,7 @@ public class Memoria extends BaseEntity {
 
   /** Version */
   @Column(name = "version", nullable = false)
-  @NotNull
+  @NotNull(groups = { Update.class })
   private Integer version;
 
   /** Código órgano competente */
@@ -109,5 +109,10 @@ public class Memoria extends BaseEntity {
   /** Activo */
   @Column(name = "activo", columnDefinition = "boolean default true", nullable = false)
   private Boolean activo;
+
+  /** Memoria original */
+  @OneToOne
+  @JoinColumn(name = "memoria_original_id", nullable = true)
+  private Memoria memoriaOriginal;
 
 }

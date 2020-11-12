@@ -7,6 +7,8 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.Formulario;
+import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
 import org.junit.jupiter.api.Test;
@@ -49,6 +51,30 @@ public class ComiteIT {
     }
 
     HttpEntity<Comite> request = new HttpEntity<>(entity, headers);
+    return request;
+  }
+
+  private HttpEntity<TipoMemoria> buildRequestTipoMemoria(HttpHeaders headers, TipoMemoria entity) throws Exception {
+    headers = (headers != null ? headers : new HttpHeaders());
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    if (!headers.containsKey("Authorization")) {
+      headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user")));
+    }
+
+    HttpEntity<TipoMemoria> request = new HttpEntity<>(entity, headers);
+    return request;
+  }
+
+  private HttpEntity<Memoria> buildRequestMemoria(HttpHeaders headers, Memoria entity) throws Exception {
+    headers = (headers != null ? headers : new HttpHeaders());
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    if (!headers.containsKey("Authorization")) {
+      headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user")));
+    }
+
+    HttpEntity<Memoria> request = new HttpEntity<>(entity, headers);
     return request;
   }
 
@@ -264,6 +290,94 @@ public class ComiteIT {
     Assertions.assertThat(comites.get(0).getComite()).isEqualTo("Comite" + String.format("%03d", 3));
     Assertions.assertThat(comites.get(1).getComite()).isEqualTo("Comite" + String.format("%03d", 2));
     Assertions.assertThat(comites.get(2).getComite()).isEqualTo("Comite" + String.format("%03d", 1));
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findMemorias_ReturnsMemoria() throws Exception {
+
+    // when: find unlimited asignables para el comité
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-C-INV", "ETI-PEV-ER-INV")));
+
+    final ResponseEntity<List<Memoria>> response = restTemplate.exchange(
+        COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/memorias", HttpMethod.GET,
+        buildRequestMemoria(headers, null), new ParameterizedTypeReference<List<Memoria>>() {
+        }, 2L);
+
+    // then: Obtiene las memorias del comité 2.
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Memoria> memoria = response.getBody();
+    Assertions.assertThat(memoria.size()).isEqualTo(2);
+
+    Assertions.assertThat(memoria.get(0).getTitulo()).isEqualTo("Memoria1");
+    Assertions.assertThat(memoria.get(1).getTitulo()).isEqualTo("Memoria2");
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findMemoria_Unlimited_ReturnsEmptyMemoria() throws Exception {
+
+    // when: find unlimited asignables para la memoria
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-C-INV", "ETI-PEV-ER-INV")));
+
+    final ResponseEntity<List<Memoria>> response = restTemplate.exchange(
+        COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/memorias", HttpMethod.GET,
+        buildRequestMemoria(headers, null), new ParameterizedTypeReference<List<Memoria>>() {
+        }, 2L);
+
+    // then: No existen memorias.
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findTipoMemoria_ReturnsTipoMemoria() throws Exception {
+
+    // when: find unlimited asignables para el comité
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-C-INV", "ETI-PEV-ER-INV")));
+
+    final ResponseEntity<List<TipoMemoria>> response = restTemplate.exchange(
+        COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/tipo-memorias", HttpMethod.GET,
+        buildRequestTipoMemoria(headers, null), new ParameterizedTypeReference<List<TipoMemoria>>() {
+        }, 1L);
+
+    // then: Obtiene los tipos de memoria del comité 1
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<TipoMemoria> tipoMemoria = response.getBody();
+    Assertions.assertThat(tipoMemoria.size()).isEqualTo(2);
+
+    Assertions.assertThat(tipoMemoria.get(0).getNombre()).isEqualTo("Nueva");
+    Assertions.assertThat(tipoMemoria.get(1).getNombre()).isEqualTo("Modificada");
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findTipoMemoria_Unlimited_ReturnsEmptyTipoMemoria() throws Exception {
+
+    // when: find unlimited asignables para el comité
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-C-INV", "ETI-PEV-ER-INV")));
+
+    final ResponseEntity<List<TipoMemoria>> response = restTemplate.exchange(
+        COMITE_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/tipo-memorias", HttpMethod.GET,
+        buildRequestTipoMemoria(headers, null), new ParameterizedTypeReference<List<TipoMemoria>>() {
+        }, 2L);
+
+    // then: No obtiene ningún tipo de memoria para el comité 2.
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
   }
 

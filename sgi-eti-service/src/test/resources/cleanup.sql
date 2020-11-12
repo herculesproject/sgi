@@ -7,7 +7,6 @@ DELETE FROM eti.estado_memoria
 DELETE FROM eti.comentario
 DELETE FROM eti.evaluacion
 DELETE FROM eti.memoria
-DELETE FROM eti.memoria
 DELETE FROM eti.tipo_memoria_comite
 DELETE FROM eti.asistentes
 DELETE FROM eti.conflicto_interes

@@ -709,7 +709,7 @@
       <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Modificación')" />
     </insert>
     <insert tableName="tipo_memoria_comite">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Ratificación')" />
     </insert>
     <insert tableName="tipo_memoria_comite">
@@ -717,12 +717,16 @@
       <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Nueva')" />
     </insert>
     <insert tableName="tipo_memoria_comite">
-      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEIAB')" />
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
       <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Modificación')" />
     </insert>
     <insert tableName="tipo_memoria_comite">
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEIAB')" />
-      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Ratificación')" />
+      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Nueva')" />
+    </insert>
+    <insert tableName="tipo_memoria_comite">
+      <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEIAB')" />
+      <column name="tipo_memoria_id" valueComputed="(select id from eti.tipo_memoria where nombre='Modificación')" />
     </insert>
   </changeSet>
 
@@ -759,7 +763,7 @@
 
   <changeSet author="master" id="20200601000000-memoria">
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-134" />
+      <column name="num_referencia" value="M20/2020/001" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion4')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
       <column name="titulo" value="Memoria1" />
@@ -773,12 +777,12 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-234" />
+      <column name="num_referencia" value="M20/2020/002" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion3')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
       <column name="titulo" value="Memoria2" />
       <column name="persona_ref" value="user-049" />
-      <column name="tipo_memoria_id" value="2" />
+      <column name="tipo_memoria_id" value="1" />
       <column name="estado_actual_id" value="3" />
       <column name="fecha_envio_secretaria" value="2020-06-09" />
       <column name="requiere_retrospectiva" value="false" />
@@ -787,7 +791,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-334" />
+      <column name="num_referencia" value="M20/2020/003R" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
       <column name="titulo" value="Memoria3" />
@@ -801,7 +805,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-884" />
+      <column name="num_referencia" value="M10/2020/001R" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria4" />
@@ -813,7 +817,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-324" />
+      <column name="num_referencia" value="M10/2020/002R" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria5" />
@@ -827,7 +831,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-634" />
+      <column name="num_referencia" value="M20/2020/002MR1" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
       <column name="titulo" value="Memoria6" />
@@ -840,9 +844,10 @@
       <column name="version" value="2" />
       <column name="cod_organo_competente" value="CodOrganoCompetente" />
       <column name="activo" value="true" />
+      <column name="memoria_original_id" value="2" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-934" />
+      <column name="num_referencia" value="M10/2020/001MR1" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion5')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria7" />
@@ -854,9 +859,10 @@
       <column name="retrospectiva_id" value="3" />
       <column name="version" value="2" />
       <column name="activo" value="true" />
+      <column name="memoria_original_id" value="4" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-834" />
+      <column name="num_referencia" value="M10/2020/003R" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion5')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria8" />
@@ -870,7 +876,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-100" />
+      <column name="num_referencia" value="M10/2020/004" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria9" />
@@ -884,7 +890,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-034" />
+      <column name="num_referencia" value="M10/2020/005" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria10" />
@@ -899,7 +905,7 @@
     </insert>
 
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-101" />
+      <column name="num_referencia" value="M10/2020/006" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria20" />
@@ -914,7 +920,7 @@
     </insert>
 
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-102" />
+      <column name="num_referencia" value="M10/2020/007" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria21" />
@@ -929,7 +935,7 @@
     </insert>
 
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-666" />
+      <column name="num_referencia" value="M20/2020/004" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion1')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
       <column name="titulo" value="Memoria11" />
@@ -944,7 +950,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-667" />
+      <column name="num_referencia" value="M20/2020/002MR2" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
       <column name="titulo" value="Memoria12" />
@@ -957,9 +963,10 @@
       <column name="version" value="1" />
       <column name="cod_organo_competente" value="CodOrganoCompetente" />
       <column name="activo" value="true" />
+      <column name="memoria_original_id" value="2" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-668" />
+      <column name="num_referencia" value="M10/2020/008R" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion3')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEISH')" />
       <column name="titulo" value="Memoria13" />
@@ -973,7 +980,7 @@
       <column name="activo" value="true" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-669" />
+      <column name="num_referencia" value="M20/2020/002MR3" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion5')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
       <column name="titulo" value="Memoria14" />
@@ -986,9 +993,10 @@
       <column name="version" value="3" />
       <column name="cod_organo_competente" value="CodOrganoCompetente" />
       <column name="activo" value="true" />
+      <column name="memoria_original_id" value="2" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-670" />
+      <column name="num_referencia" value="M20/2020/002MR4" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion5')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
       <column name="titulo" value="Memoria300" />
@@ -1001,9 +1009,10 @@
       <column name="version" value="1" />
       <column name="cod_organo_competente" value="CodOrganoCompetente" />
       <column name="activo" value="true" />
+      <column name="memoria_original_id" value="2" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-200" />
+      <column name="num_referencia" value="M20/2020/002MR5" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion2')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
       <column name="titulo" value="Memoria200" />
@@ -1016,9 +1025,10 @@
       <column name="version" value="1" />
       <column name="cod_organo_competente" value="CodOrganoCompetente" />
       <column name="activo" value="true" />
+      <column name="memoria_original_id" value="2" />
     </insert>
     <insert tableName="memoria">
-      <column name="num_referencia" value="ref-201" />
+      <column name="num_referencia" value="M20/2020/002MR6" />
       <column name="peticion_evaluacion_id" valueComputed="(select id from eti.peticion_evaluacion where titulo='PeticionEvaluacion5')" />
       <column name="comite_id" valueComputed="(select id from eti.comite where comite='CEEA')" />
       <column name="titulo" value="Memoria201" />
@@ -1030,6 +1040,7 @@
       <column name="retrospectiva_id" value="4" />
       <column name="version" value="1" />
       <column name="activo" value="true" />
+      <column name="memoria_original_id" value="2" />
     </insert>
   </changeSet>
 
@@ -1164,7 +1175,7 @@
   <changeSet author="master" id="20200601000000-tarea">
     <insert tableName="tarea">
       <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where persona_ref='user-001')" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/001')" />
       <column name="formacion" value="Formacion1" />
       <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where id=1)" />
       <column name="organismo" value="Organismo1" />
@@ -1173,7 +1184,7 @@
     </insert>
     <insert tableName="tarea">
       <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where persona_ref='user-003')" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/001')" />
       <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where id=2)" />
       <column name="organismo" value="Organismo2" />
       <column name="anio" value="2020" />
@@ -1181,7 +1192,7 @@
     </insert>
     <insert tableName="tarea">
       <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where persona_ref='user-003')" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/001')" />
       <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where id=3)" />
       <column name="organismo" value="Organismo3" />
       <column name="anio" value="2020" />
@@ -1189,7 +1200,7 @@
     </insert>
     <insert tableName="tarea">
       <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where persona_ref='user-004')" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/001')" />
       <column name="formacion_especifica_id" valueComputed="(select id from eti.formacion_especifica where id=4)" />
       <column name="organismo" value="Organismo4" />
       <column name="anio" value="2021" />
@@ -1197,13 +1208,13 @@
     </insert>
     <insert tableName="tarea">
       <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where persona_ref='user-005')" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="tarea" value="Tarea5" />
       <column name="formacion" value="Formacion5" />
     </insert>
     <insert tableName="tarea">
       <column name="equipo_trabajo_id" valueComputed="(select id from eti.equipo_trabajo where persona_ref='user-006')" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-334')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/003R')" />
       <column name="tarea" value="Tarea6" />
       <column name="formacion" value="Formacion6" />
 
@@ -1896,32 +1907,32 @@
 
   <changeSet author="master" id="20200601000000-informe">
     <insert tableName="informe">
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-134')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/001')" />
       <column name="documento_ref" value="documento-001" />
       <column name="version" value="4" />
     </insert>
     <insert tableName="informe">
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-234')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/002')" />
       <column name="documento_ref" value="documento-002" />
       <column name="version" value="4" />
     </insert>
     <insert tableName="informe">
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-334')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/003R')" />
       <column name="documento_ref" value="documento-003" />
       <column name="version" value="4" />
     </insert>
     <insert tableName="informe">
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-884')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001R')" />
       <column name="documento_ref" value="documento-004" />
       <column name="version" value="4" />
     </insert>
     <insert tableName="informe">
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-324')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/002R')" />
       <column name="documento_ref" value="documento-005" />
       <column name="version" value="4" />
     </insert>
     <insert tableName="informe">
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-634')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/002MR1')" />
       <column name="documento_ref" value="documento-006" />
       <column name="version" value="4" />
     </insert>
@@ -3102,14 +3113,14 @@
   <changeSet author="master" id="20200601000000-comentario">
     <insert tableName="comentario">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Justificación del uso de seres humanos')" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="evaluacion_id" valueComputed="(select e.id from eti.evaluacion e join eti.memoria m on e.memoria_id=m.id where m.titulo='Memoria1')" />
       <column name="tipo_comentario_id" valueComputed="(select id from eti.tipo_comentario where nombre='GESTOR')" />
       <column name="texto" value="Comentario1" />
     </insert>
     <insert tableName="comentario">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Personal que llevará a cabo las tareas con seres humanos, sus muestras y/o sus datos')" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="evaluacion_id" valueComputed="(select e.id from eti.evaluacion e join eti.memoria m on e.memoria_id=m.id where m.titulo='Memoria2')" />
       <column name="tipo_comentario_id" valueComputed="(select id from eti.tipo_comentario where nombre='GESTOR')" />
       <column name="texto" value="Comentario2" />
@@ -3119,84 +3130,84 @@
   <changeSet author="master" id="20200601000000-respuesta">
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Justificación del uso de seres humanos' and bloque_id=(select id from eti.bloque where orden = '1' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"justificacion": "Justificación de prueba"}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Personal que llevará a cabo las tareas con seres humanos, sus muestras y/o sus datos' and bloque_id=(select id from eti.bloque where orden = '2' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"nombre": "Nombre de prueba", "nif": "74713504M", "vinculacion": "Vinculación de prueba", "nivelAcademico": "Nivel academico de prueba", "tarea": "Tarea de prueba", "experiencia": "Experiencia de prueba"}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Referencias de publicaciones científicas' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"referenciasPublicaciones": "Referencias de publicaciones científicas"}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Intervenciones o pruebas en seres humanos' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"intervencionesSeresHumanosRadio": "si", "intervencionesSeresHumanosCheck": [ "entrevistasEncuestas", "otras" ], "otrasTexto": "Otra intervención o prueba en seres humanos"}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Proceso de reclutamiento' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"ap3_4_1": {"descripcionProcesoReclutamiento": "Proceso de reclutamiento", "fechaReclutamiento": "2020-10-29T00:00:00.000Z"}}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Reclutamiento realizado por personal ajeno al equipo investigado' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"ap3_4_2": {"reclutamientoPersonalAjenoRadio": "si", "tipoCompensacionRadio": "si", "tipoCompensacionTexto": "El reclutamiento recibe compensación especial"}}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Descripción de las intervenciones o pruebas' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"ap3_4_3": {"descripcionIntervenciones": "Intervenciones de prueba"}}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Incentivos para la participación' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"ap3_4_4": {"incentivosParticipacionRadio": "si", "incentivosParticipacionTexto": "Se llevan un incentivo por participar"}}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Muestras biológicas de origen humano' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"muestrasBiologicasRadio": "si", "muestrasBiologicasCheck": ["celulasgerminales"]}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Origen de las muestras' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"ap3_5_1": { "recogidasExpresamente": true, "recogidasApartirDeMuestras": true, "especificarRecogidasApartirDeMuestras": "Especificación de muestras recogidas de otro proceso", "procedentesBiobanco": true, "especificarProcedentesBiobanco": "Especificación de muestras procedentes de un biobanco", "procedentesColeccion": true, "especificarProcedentesColeccion": "Especificación de muestras procedentes de otra colección" }}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Destino de las muestras de origen humano' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"ap3_5_2": { "destruccion": true, "especificarDestruccion": "Especificación de como se destruiran las muestras", "conservacion": true, "cesionBiobanco": true, "especificarCesionBiobanco": "Especificación de como se cederán las muestras a un biobanco", "usoColeccionMuestras": true, "especificarUsoColeccionMuestras": "Especificación de como se integraran las muestras en una colección", "incorporacionColeccionMuestras": true, "especificarIncorporacionColeccionMuestras": "Especificación de como se incorporaran las muestras a otra colección de muestras" }}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Datos de carácter personal' and bloque_id=(select id from eti.bloque where orden = '3' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"datosCaracterPersonalRadio": "si", "numeroRegistrosTratamientoDatos": "Registro 334747"}]]>
       </column>
@@ -3204,140 +3215,140 @@
 
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Tipo de riesgos o molestias' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"ap4_1_1": { "tipoRiesgosOMolestiasCheck": [ "intromisionIntimidad" ] }}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Valoración de los riesgos o molestias' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"ap4_1_2": { "valoracionRiesgosMolestiasCheck": [ "riesgoSuperior"], "riesgoSuperiorTexto": "Justificación riesgo superior al mínimo"}}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Minimización del riesgo o molestias superiores al mínimo' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"ap4_1_3": { "minimizacionRiesgo": "Mecanismos de reducción del riesgo"}}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Aseguramiento del daño' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"ap4_1_4": { "aseguramientoDanoRadio": "si", "numPoliza": "POLIZA-3443"}}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Selección equitativa de la muestra' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"equitativaMuestra": "Justificación selección equitativa de la muestra"}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Protección de grupos vulnerables' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"gruposVulnerablesRadio": "si", "especificarColectivoVulnerables": "Colectivo de personas vulnerables", "justificarPersonasMenosVulnerables": "Justifación de no utilizar personas menos vulnerables", "especificarBeneficiosInvestigacionVulnerables": "Beneficios de la investigación con personas vulnerables"}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Información y consentimiento' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"informacionConsentimientoRadio": "si", "informacionConsentimientoMotivoTexto": "Motivo por el que se solicita consentimiento"}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Tipo de consentimiento' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"ap4_4_1": { "tipoConsentimientoCheck": [ "cesion" ]}}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Estudios genéticos' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"estudiosGeneticosRadio": "si", "pruebaPredectivaRadio": "otra", "otraPruebaPredictiva": "Otra prueba predictiva", "finesRadio": "otros", "otrosFines": "Otro fin" }]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Resultado del estudio genético' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"ap4_5_1": { "resultadoEstudioGeneticoRadio": "si", "especificarResultadoEstudioGenetico": "Información relevante del estudio genético"}}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Consejo genético' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"ap4_5_2": { "proporcionarConsejoGeneticoRadio": "si", "personaExpertaConsejoGeneticoRadio": "si", "documentoConsejoGeneticoRadio": "si"}}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='No discriminación por motivos genéticos' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"ap4_5_3": { "noDiscriminacionMotivosGeneticos": "Medidas de prevención de la discriminación por motivos genéticos"}}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Estudiantes como sujetos de investigación' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"estudiantesSujetosInvestigacionRadio": "si", "especificarEstudiantesSujetosInvestigacion": "Estudiantes de la facultad de medicina", "justificarEstudiantesSujetosInvestigacion": "Justificación de estudiantes como sujetos de investigación"}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Justificación del uso de estudiantes' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"ap4_6_1": { "justificacionUsoEstudiantesRadio": "no", "motivosNoPlanteamientoSustitucion": "Motivo por el que los estudiantes no son un grupo especifico"}}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Beneficio formativo para el estudiante' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"ap4_6_2": { "beneficioFormativoEstudianteRadio": "si", "especificarBeneficioFormativo": "Beneficio del estudiante"}}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Vinculación académica con el equipo investigador' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"ap4_6_3": { "vinculacionAcademicaEquipoInvestigadorRadio": "si", "especificarVinculacion": "Vinculación academica con la investigación", "calificacionEstudiantesRadio": "no", "medidasEspecialesEquipoInvestigadorRadio": "otras","especificarOtras": "Medidas especiales para la protección de la voluntariedad de los alumnos"}}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Incentivos académicos' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"ap4_6_4": { "incentivosAcademicosRadio": "si", "describirIncentivos": "Incentivos académicos"}}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Uso de tiempo lectivo' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"ap4_6_5": { "usoTiempoLectivoRadio": "si", "horarioYduracion": "Horario lectivo"}}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Actividades alternativas' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"ap4_6_6": { "actividadesAlternativas": "Actividades alternativas"}}]]>
       </column>
     </insert>
     <insert tableName="respuesta">
       <column name="apartado_id" valueComputed="(select id from eti.apartado where nombre='Protección de la privacidad' and bloque_id=(select id from eti.bloque where orden = '4' and formulario_id = (select id from eti.formulario where nombre = 'M10')))" />
-      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='ref-934')" />
+      <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2020/001MR1')" />
       <column name="valor">
         <![CDATA[{"ap4_6_7": { "proteccionPrivacidad": "Medidas de protección de la privacidad"}}]]>
       </column>

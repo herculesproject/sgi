@@ -111,7 +111,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-MEMORIA-EDITAR" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-PEV-ER-INV" })
   public void newMemoria_ReturnsMemoria() throws Exception {
     // given: Una memoria nueva
     String nuevaMemoriaJson = mapper.writeValueAsString(generarMockMemoria(null, "numRef-5599", "Memoria1", 1));
@@ -132,7 +132,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-PEV-ER-INV" })
   public void newMemoria_Error_Returns400() throws Exception {
     // given: Una memoria nueva que produce un error al crearse
     String nuevaMemoriaJson = "{\"numReferencia\": \"numRef-5599\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
@@ -146,6 +146,52 @@ public class MemoriaControllerTest extends BaseControllerTest {
         .perform(
             MockMvcRequestBuilders.post(MEMORIA_CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
                 .contentType(MediaType.APPLICATION_JSON).content(nuevaMemoriaJson))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devueve un error 400
+        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-PEV-ER-INV" })
+  public void newMemoriaModificada_ReturnsMemoria() throws Exception {
+    // given: Una memoria nueva
+    String nuevaMemoriaJson = mapper.writeValueAsString(generarMockMemoria(null, "numRef-5599", "Memoria1", 1));
+
+    Memoria memoria = generarMockMemoria(1L, "numRef-5598", "Memoria1", 1);
+
+    BDDMockito.given(memoriaService.createModificada(ArgumentMatchers.<Memoria>any(), ArgumentMatchers.anyLong()))
+        .willReturn(memoria);
+
+    // when: Creamos una memoria
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .post(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/crear-memoria-modificada", 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevaMemoriaJson))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Crea el nuevo tipo memoria y lo devuelve
+        .andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("id").value(1))
+        .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("Memoria1"));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-C-INV", "ETI-PEV-ER-INV" })
+  public void newMemoriaModificada_Error_Returns400() throws Exception {
+    // given: Una memoria nueva que produce un error al crearse
+    String nuevaMemoriaJson = "{\"numReferencia\": \"numRef-5599\", \"peticionEvaluacion\": {\"id\": 1, \"titulo\": \"PeticionEvaluacion1\"},"
+        + " \"comite\": {\"comite\": \"Comite1\"},\"titulo\": \"Memoria1\", \"numReferencia\": \"userRef-55\", \"fechaEstado\": \"19/06/2020\","
+        + "\"tipoMemoria\": {\"id\": 2, \"nombre\": \"Modificada\", \"activo\": \"true\"}, \"requiereRetrospectiva\": \"false\",\"version\": \"1\"}";
+
+    BDDMockito.given(memoriaService.createModificada(ArgumentMatchers.<Memoria>any(), ArgumentMatchers.anyLong()))
+        .willThrow(new IllegalArgumentException());
+
+    // when: Creamos una memoria
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .post(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/crear-memoria-modificada", 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .content(nuevaMemoriaJson))
         .andDo(MockMvcResultHandlers.print())
         // then: Devueve un error 400
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
@@ -1180,7 +1226,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
         generarMockComite(id, "comite" + id, true), titulo, "user-00" + id,
         generarMockTipoMemoria(1L, "TipoMemoria1", true),
         generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.TRUE,
-        generarMockRetrospectiva(1L), version, "CodOrganoCompetente", Boolean.TRUE);
+        generarMockRetrospectiva(1L), version, "CodOrganoCompetente", Boolean.TRUE, null);
   }
 
   /**
@@ -1356,7 +1402,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
     Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
         tipoMemoria, new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.FALSE,
         new Retrospectiva(id, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), LocalDate.now()), 3,
-        "CodOrganoCompetente", Boolean.TRUE);
+        "CodOrganoCompetente", Boolean.TRUE, null);
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
 

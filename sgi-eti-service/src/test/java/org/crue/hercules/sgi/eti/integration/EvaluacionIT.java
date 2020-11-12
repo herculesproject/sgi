@@ -877,7 +877,7 @@ public class EvaluacionIT {
     Memoria memoria = new Memoria(1L, "numRef-001", peticionEvaluacion, comite, "Memoria" + sufijoStr, "user-00" + id,
         tipoMemoria, new TipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.FALSE,
         new Retrospectiva(1L, new EstadoRetrospectiva(3L, "En evaluación", Boolean.TRUE), LocalDate.now()), 3,
-        "CodOrganoCompetente", Boolean.TRUE);
+        "CodOrganoCompetente", Boolean.TRUE, null);
 
     TipoConvocatoriaReunion tipoConvocatoriaReunion = new TipoConvocatoriaReunion(1L, "Ordinaria", Boolean.TRUE);
 

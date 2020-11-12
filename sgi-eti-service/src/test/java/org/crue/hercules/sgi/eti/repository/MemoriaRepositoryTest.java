@@ -18,6 +18,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 public class MemoriaRepositoryTest {
@@ -49,6 +51,23 @@ public class MemoriaRepositoryTest {
 
     // when: Se buscan los datos
     Optional<Memoria> result = repository.findByIdAndActivoTrue(memoria.getId());
+
+    // then: Se recuperan los datos correctamente
+    Assertions.assertThat(result.get()).isNotNull();
+
+  }
+
+  @Test
+  public void findByComiteIdAndActivoTrueAndComiteActivoTrue_ReturnsData() throws Exception {
+
+    // given: Datos existentes para la memoria activa
+
+    Formulario formulario = entityManager.persistFlushFind(generarMockFormulario());
+    Comite comite = entityManager.persistFlushFind(generarMockComite(formulario));
+
+    // when: Se buscan los datos
+    Page<Memoria> result = repository.findByComiteIdAndActivoTrueAndComiteActivoTrue(comite.getId(),
+        Pageable.unpaged());
 
     // then: Se recuperan los datos correctamente
     Assertions.assertThat(result.get()).isNotNull();
@@ -157,7 +176,7 @@ public class MemoriaRepositoryTest {
   private Memoria generarMockMemoria(PeticionEvaluacion peticionEvaluacion, Comite comite, TipoMemoria tipoMemoria,
       TipoEstadoMemoria tipoEstadoMemoria, Retrospectiva retrospectiva) {
     return new Memoria(null, "numRef-001", peticionEvaluacion, comite, "Memoria", "user-001", tipoMemoria,
-        tipoEstadoMemoria, LocalDate.now(), Boolean.TRUE, retrospectiva, 3, "CodOrganoCompetente", Boolean.TRUE);
+        tipoEstadoMemoria, LocalDate.now(), Boolean.TRUE, retrospectiva, 3, "CodOrganoCompetente", Boolean.TRUE, null);
   }
 
 }

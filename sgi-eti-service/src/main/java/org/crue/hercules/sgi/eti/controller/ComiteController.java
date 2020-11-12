@@ -6,7 +6,11 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
+import org.crue.hercules.sgi.eti.model.Memoria;
+import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.service.ComiteService;
+import org.crue.hercules.sgi.eti.service.MemoriaService;
+import org.crue.hercules.sgi.eti.service.TipoMemoriaComiteService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
@@ -38,14 +42,25 @@ public class ComiteController {
   /** Comité service */
   private ComiteService service;
 
+  /** Memoria service */
+  private MemoriaService memoriaService;
+
+  /** Tipo Memoria Comite service */
+  private TipoMemoriaComiteService tipoMemoriaComiteService;
+
   /**
    * Instancia un nuevo ComiteController.
    * 
-   * @param service {@link ComiteService}.
+   * @param service                  {@link ComiteService}.
+   * @param tipoMemoriaComiteService {@link TipoMemoriaComiteService}.
+   * @param memoriaService           {@link MemoriaService}
    */
-  public ComiteController(ComiteService service) {
+  public ComiteController(ComiteService service, TipoMemoriaComiteService tipoMemoriaComiteService,
+      MemoriaService memoriaService) {
     log.debug("ComiteController(ComiteService service) - start");
     this.service = service;
+    this.tipoMemoriaComiteService = tipoMemoriaComiteService;
+    this.memoriaService = memoriaService;
     log.debug("ComiteController(ComiteService service) - end");
   }
 
@@ -76,7 +91,6 @@ public class ComiteController {
     log.debug("replaceComite(Comite updatedComite, Long id) - start");
     updatedComite.setId(id);
     Comite returnValue = service.update(updatedComite);
-    log.debug("replaceComite(Comite updatedComite, Long id) - end");
     return returnValue;
   }
 
@@ -128,6 +142,53 @@ public class ComiteController {
     }
     log.debug("findAllComite(List<QueryCriteria> query,Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Recupera la lista paginada de tipos de memoria de un comité.
+   * 
+   * @param id       Identificador de {@link Comite}.
+   * @param pageable Datos de la paginación
+   * 
+   * @return lista paginada de tipos de memoria.
+   */
+  @GetMapping("/{id}/tipo-memorias")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-C-INV', 'ETI-PEV-ER-INV')")
+  ResponseEntity<Page<TipoMemoria>> findTipoMemoria(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("findTipoMemoria(Long id, Pageable paging) - start");
+    Page<TipoMemoria> tiposMemoria = tipoMemoriaComiteService.findByComite(id, pageable);
+
+    if (tiposMemoria.isEmpty()) {
+      log.debug("findTipoMemoria(Long id, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findTipoMemoria(Long id, Pageable paging) - end");
+    return new ResponseEntity<>(tiposMemoria, HttpStatus.OK);
+  }
+
+  /**
+   * Recupera la lista paginada de memorias de un comité.
+   * 
+   * @param id       Identificador de {@link Comite}.
+   * @param pageable Datos de la paginación.
+   * 
+   * @return lista paginada de memorias.
+   */
+  @GetMapping("/{id}/memorias")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-C-INV', 'ETI-PEV-ER-INV')")
+  ResponseEntity<Page<Memoria>> findMemorias(@PathVariable Long id, @RequestPageable(sort = "s") Pageable pageable) {
+    log.debug("findMemorias(Long id, Pageable paging) - start");
+    Page<Memoria> memorias = memoriaService.findByComite(id, pageable);
+
+    if (memorias.isEmpty()) {
+      log.debug("findMemorias(Long id, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findMemorias(Long id, Pageable paging) - end");
+    return new ResponseEntity<>(memorias, HttpStatus.OK);
   }
 
 }

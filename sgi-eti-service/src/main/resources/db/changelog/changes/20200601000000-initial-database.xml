@@ -322,6 +322,7 @@
       <column name="activo" type="BOOLEAN" defaultValueBoolean="true">
         <constraints nullable="false" />
       </column>
+      <column name="memoria_original_id" type="BIGINT" />
     </createTable>
   </changeSet>
 
@@ -722,6 +723,10 @@
 
   <changeSet author="master" id="20200601000000-memoria_retrospectiva_FK">
     <addForeignKeyConstraint baseColumnNames="retrospectiva_id" baseTableName="memoria" constraintName="memoria_retrospectiva_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="retrospectiva" validate="true" />
+  </changeSet>
+
+  <changeSet author="master" id="20200601000000-memoria_memoria_FK">
+    <addForeignKeyConstraint baseColumnNames="memoria_original_id" baseTableName="memoria" constraintName="memoria_memoria_original_FK" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="memoria" validate="true" />
   </changeSet>
 
   <changeSet author="master" id="20200601000000-memoria_estado_actual_FK">

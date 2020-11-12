@@ -3,12 +3,15 @@ package org.crue.hercules.sgi.eti.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
+import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
+import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.model.Dictamen;
@@ -26,10 +29,14 @@ import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
+import org.crue.hercules.sgi.eti.repository.ComiteRepository;
+import org.crue.hercules.sgi.eti.repository.DocumentacionMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoRetrospectivaRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
+import org.crue.hercules.sgi.eti.repository.PeticionEvaluacionRepository;
+import org.crue.hercules.sgi.eti.repository.RespuestaRepository;
 import org.crue.hercules.sgi.eti.service.impl.MemoriaServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -71,12 +78,25 @@ public class MemoriaServiceTest {
   private ComentarioRepository comentarioRepository;
 
   @Mock
+  private PeticionEvaluacionRepository peticionEvaluacionRepository;
+
+  @Mock
+  private ComiteRepository comiteRepository;
+
+  @Mock
+  private DocumentacionMemoriaRepository documentacionMemoriaRepository;
+
+  @Mock
+  private RespuestaRepository respuestaRepository;
+
+  @Mock
   private InformeService informeFormularioService;
 
   @BeforeEach
   public void setUp() throws Exception {
     memoriaService = new MemoriaServiceImpl(memoriaRepository, estadoMemoriaRepository, estadoRetrospectivaRepository,
-        evaluacionRepository, comentarioRepository, informeFormularioService);
+        evaluacionRepository, comentarioRepository, informeFormularioService, peticionEvaluacionRepository,
+        comiteRepository, documentacionMemoriaRepository, respuestaRepository);
   }
 
   @Test
@@ -102,11 +122,65 @@ public class MemoriaServiceTest {
   }
 
   @Test
+  public void findByComite_WithId_ReturnsMemoria() {
+
+    BDDMockito.given(comiteRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.of(new Comite()));
+
+    List<Memoria> memorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      memorias.add(generarMockMemoria(Long.valueOf(i), "numRef-5" + String.format("%03d", i),
+          "Memoria" + String.format("%03d", i), 1, 1L));
+    }
+
+    BDDMockito.given(memoriaRepository.findByComiteIdAndActivoTrueAndComiteActivoTrue(1L, Pageable.unpaged()))
+        .willReturn(new PageImpl<>(memorias));
+
+    // when: find unlimited
+    Page<Memoria> page = memoriaService.findByComite(1L, Pageable.unpaged());
+    // then: Get a page with one hundred Memorias
+    Assertions.assertThat(page.getContent().size()).isEqualTo(100);
+    Assertions.assertThat(page.getNumber()).isEqualTo(0);
+    Assertions.assertThat(page.getSize()).isEqualTo(100);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+
+  }
+
+  @Test
+  public void findByComite_NotFound_ThrowsComiteNotFoundException() throws Exception {
+    BDDMockito.given(comiteRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.empty());
+
+    Assertions.assertThatThrownBy(() -> memoriaService.findByComite(1L, null))
+        .isInstanceOf(ComiteNotFoundException.class);
+  }
+
+  @Test
+  public void findByComite_ComiteIdNull() throws Exception {
+
+    try {
+      // when: Creamos la memoria
+      memoriaService.findByComite(null, null);
+      Assertions.fail("El identificador del comité no puede ser null para recuperar sus tipos de memoria asociados.");
+      // then: se debe lanzar una excepción
+    } catch (final IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage())
+          .isEqualTo("El identificador del comité no puede ser null para recuperar sus tipos de memoria asociados.");
+    }
+  }
+
+  @Test
   public void create_ReturnsMemoria() {
     // given: Una nueva Memoria
     Memoria memoriaNew = generarMockMemoria(null, "numRef-5598", "MemoriaNew", 1, 1L);
+    PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
+    peticionEvaluacion.setId(1L);
+    memoriaNew.setPeticionEvaluacion(peticionEvaluacion);
 
     Memoria memoria = generarMockMemoria(1L, "numRef-5598", "MemoriaNew", 1, 1L);
+
+    BDDMockito.given(peticionEvaluacionRepository.findByIdAndActivoTrue(1L))
+        .willReturn(Optional.of(peticionEvaluacion));
+    BDDMockito.given(comiteRepository.findByIdAndActivoTrue(memoriaNew.getComite().getId()))
+        .willReturn(Optional.of(memoriaNew.getComite()));
 
     BDDMockito.given(memoriaRepository.save(memoriaNew)).willReturn(memoria);
 
@@ -127,6 +201,248 @@ public class MemoriaServiceTest {
     // when: Creamos la Memoria
     // then: Lanza una excepcion porque la Memoria ya tiene id
     Assertions.assertThatThrownBy(() -> memoriaService.create(memoriaNew)).isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  public void create_MemoriaIdNull() {
+    // given: Una nueva Memoria
+    Memoria memoriaNew = generarMockMemoria(1L, "numRef-5598", "MemoriaNew", 1, 1L);
+
+    try {
+      // when: Creamos la memoria
+      memoriaService.create(memoriaNew);
+      Assertions.fail("Memoria id tiene que ser null para crear una nueva memoria");
+      // then: se debe lanzar una excepción
+    } catch (final IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage()).isEqualTo("Memoria id tiene que ser null para crear una nueva memoria");
+    }
+
+  }
+
+  @Test
+  public void create_PeticionEvaluacionIdNull() {
+    // given: Una nueva Memoria
+    Memoria memoriaNew = generarMockMemoria(null, "numRef-5598", "MemoriaNew", 1, 1L);
+
+    try {
+      // when: Creamos la memoria
+      memoriaService.create(memoriaNew);
+      Assertions.fail("Petición evaluación id no puede ser null para crear una nueva memoria");
+      // then: se debe lanzar una excepción
+    } catch (final IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage())
+          .isEqualTo("Petición evaluación id no puede ser null para crear una nueva memoria");
+    }
+
+  }
+
+  @Test
+  public void create_ThrowPeticionEvaluacionNotFound() {
+    // given: Una nueva Memoria
+    Memoria memoriaNew = generarMockMemoria(null, "numRef-5598", "MemoriaNew", 1, 1L);
+
+    PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
+    peticionEvaluacion.setId(1L);
+    memoriaNew.setPeticionEvaluacion(peticionEvaluacion);
+
+    BDDMockito.given(peticionEvaluacionRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.empty());
+
+    Assertions.assertThatThrownBy(() -> memoriaService.create(memoriaNew))
+        .isInstanceOf(PeticionEvaluacionNotFoundException.class);
+
+  }
+
+  @Test
+  public void create_ThrowComiteNotFound() {
+    // given: Una nueva Memoria
+    Memoria memoriaNew = generarMockMemoria(null, "numRef-5598", "MemoriaNew", 1, 1L);
+
+    PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
+    peticionEvaluacion.setId(1L);
+    memoriaNew.setPeticionEvaluacion(peticionEvaluacion);
+
+    BDDMockito.given(peticionEvaluacionRepository.findByIdAndActivoTrue(1L))
+        .willReturn(Optional.of(peticionEvaluacion));
+    BDDMockito.given(comiteRepository.findByIdAndActivoTrue(memoriaNew.getComite().getId()))
+        .willReturn(Optional.empty());
+
+    Assertions.assertThatThrownBy(() -> memoriaService.create(memoriaNew)).isInstanceOf(ComiteNotFoundException.class);
+
+  }
+
+  @Test
+  public void create_FailTipoMemoria() {
+    // given: Una nueva Memoria
+    Memoria memoriaNew = generarMockMemoria(null, "numRef-5598", "MemoriaNew", 1, 1L);
+
+    PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
+    peticionEvaluacion.setId(1L);
+    memoriaNew.setPeticionEvaluacion(peticionEvaluacion);
+    memoriaNew.getTipoMemoria().setId(2L);
+
+    BDDMockito.given(peticionEvaluacionRepository.findByIdAndActivoTrue(1L))
+        .willReturn(Optional.of(peticionEvaluacion));
+    BDDMockito.given(comiteRepository.findByIdAndActivoTrue(memoriaNew.getComite().getId()))
+        .willReturn(Optional.of(memoriaNew.getComite()));
+
+    try {
+      // when: Creamos la memoria
+      memoriaService.create(memoriaNew);
+      Assertions.fail("La memoria no es del tipo adecuado para realizar una copia a partir de otra memoria.");
+      // then: se debe lanzar una excepción
+    } catch (final IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage())
+          .isEqualTo("La memoria no es del tipo adecuado para realizar una copia a partir de otra memoria.");
+    }
+
+  }
+
+  @Test
+  public void createModificada_ReturnsMemoria() {
+    // given: Una nueva Memoria
+    Memoria memoriaNew = generarMockMemoria(null, "", "MemoriaNew", 1, 1L);
+    PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
+    peticionEvaluacion.setId(1L);
+    memoriaNew.setPeticionEvaluacion(peticionEvaluacion);
+    memoriaNew.getTipoMemoria().setId(2L);
+
+    Memoria memoriaOld = generarMockMemoria(2L, "M10/2020/001", "MemoriaNew", 1, 1L);
+
+    Memoria memoria = generarMockMemoria(3L, "M10/2020/001MR1", "MemoriaNew", 1, 1L);
+
+    BDDMockito.given(memoriaRepository.findByIdAndActivoTrue(2L)).willReturn(Optional.of(memoriaOld));
+
+    BDDMockito.given(peticionEvaluacionRepository.findByIdAndActivoTrue(1L))
+        .willReturn(Optional.of(peticionEvaluacion));
+    BDDMockito.given(comiteRepository.findByIdAndActivoTrue(memoriaNew.getComite().getId()))
+        .willReturn(Optional.of(memoriaNew.getComite()));
+
+    BDDMockito
+        .given(memoriaRepository
+            .findFirstByNumReferenciaContainingAndComiteIdOrderByNumReferenciaDesc(memoriaOld.getNumReferencia(), 2L))
+        .willReturn((memoriaOld));
+
+    BDDMockito.given(documentacionMemoriaRepository.findByMemoriaIdAndMemoriaActivoTrue(memoriaOld.getId(), null))
+        .willReturn(new PageImpl<>(Collections.emptyList()));
+
+    BDDMockito.given(respuestaRepository.findByMemoriaIdAndMemoriaActivoTrue(memoriaOld.getId(), null))
+        .willReturn(new PageImpl<>(Collections.emptyList()));
+
+    BDDMockito.given(memoriaRepository.save(memoriaNew)).willReturn(memoria);
+
+    // when: Creamos la memoria
+    Memoria memoriaCreado = memoriaService.createModificada(memoriaNew, 2L);
+
+    // then: La memoria se crea correctamente
+    Assertions.assertThat(memoriaCreado).isNotNull();
+    Assertions.assertThat(memoriaCreado.getId()).isEqualTo(3L);
+    Assertions.assertThat(memoriaCreado.getTitulo()).isEqualTo("MemoriaNew");
+    Assertions.assertThat(memoriaCreado.getNumReferencia()).isEqualTo("M10/2020/001MR1");
+  }
+
+  @Test
+  public void createModificada_MemoriaWithId_ThrowsIllegalArgumentException() {
+    // given: Una nueva Memoria que ya tiene id
+    Memoria memoriaNew = generarMockMemoria(1L, "numRef-5598", "MemoriaNew", 1, 1L);
+    // when: Creamos la Memoria
+    // then: Lanza una excepcion porque la Memoria ya tiene id
+    Assertions.assertThatThrownBy(() -> memoriaService.createModificada(memoriaNew, 2L))
+        .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  public void createModificada_MemoriaIdNull() {
+    // given: Una nueva Memoria
+    Memoria memoriaNew = generarMockMemoria(1L, "numRef-5598", "MemoriaNew", 1, 1L);
+
+    try {
+      // when: Creamos la memoria
+      memoriaService.createModificada(memoriaNew, 2L);
+      Assertions.fail("Memoria id tiene que ser null para crear una nueva memoria");
+      // then: se debe lanzar una excepción
+    } catch (final IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage()).isEqualTo("Memoria id tiene que ser null para crear una nueva memoria");
+    }
+
+  }
+
+  @Test
+  public void createModificada_PeticionEvaluacionIdNull() {
+    // given: Una nueva Memoria
+    Memoria memoriaNew = generarMockMemoria(null, "numRef-5598", "MemoriaNew", 1, 1L);
+
+    try {
+      // when: Creamos la memoria
+      memoriaService.createModificada(memoriaNew, 2L);
+      Assertions.fail("Petición evaluación id no puede ser null para crear una nueva memoria");
+      // then: se debe lanzar una excepción
+    } catch (final IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage())
+          .isEqualTo("Petición evaluación id no puede ser null para crear una nueva memoria");
+    }
+
+  }
+
+  @Test
+  public void createModificada_ThrowPeticionEvaluacionNotFound() {
+    // given: Una nueva Memoria
+    Memoria memoriaNew = generarMockMemoria(null, "numRef-5598", "MemoriaNew", 1, 1L);
+
+    PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
+    peticionEvaluacion.setId(1L);
+    memoriaNew.setPeticionEvaluacion(peticionEvaluacion);
+
+    BDDMockito.given(peticionEvaluacionRepository.findByIdAndActivoTrue(1L)).willReturn(Optional.empty());
+
+    Assertions.assertThatThrownBy(() -> memoriaService.createModificada(memoriaNew, 2L))
+        .isInstanceOf(PeticionEvaluacionNotFoundException.class);
+
+  }
+
+  @Test
+  public void createModificada_ThrowComiteNotFound() {
+    // given: Una nueva Memoria
+    Memoria memoriaNew = generarMockMemoria(null, "numRef-5598", "MemoriaNew", 1, 1L);
+
+    PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
+    peticionEvaluacion.setId(1L);
+    memoriaNew.setPeticionEvaluacion(peticionEvaluacion);
+
+    BDDMockito.given(peticionEvaluacionRepository.findByIdAndActivoTrue(1L))
+        .willReturn(Optional.of(peticionEvaluacion));
+    BDDMockito.given(comiteRepository.findByIdAndActivoTrue(memoriaNew.getComite().getId()))
+        .willReturn(Optional.empty());
+
+    Assertions.assertThatThrownBy(() -> memoriaService.createModificada(memoriaNew, 2L))
+        .isInstanceOf(ComiteNotFoundException.class);
+
+  }
+
+  @Test
+  public void createModificada_FailTipoMemoria() {
+    // given: Una nueva Memoria
+    Memoria memoriaNew = generarMockMemoria(null, "", "MemoriaNew", 1, 1L);
+
+    PeticionEvaluacion peticionEvaluacion = new PeticionEvaluacion();
+    peticionEvaluacion.setId(1L);
+    memoriaNew.setPeticionEvaluacion(peticionEvaluacion);
+    memoriaNew.getTipoMemoria().setId(1L);
+
+    BDDMockito.given(peticionEvaluacionRepository.findByIdAndActivoTrue(1L))
+        .willReturn(Optional.of(peticionEvaluacion));
+    BDDMockito.given(comiteRepository.findByIdAndActivoTrue(memoriaNew.getComite().getId()))
+        .willReturn(Optional.of(memoriaNew.getComite()));
+
+    try {
+      // when: Creamos la memoria
+      memoriaService.createModificada(memoriaNew, 2L);
+      Assertions.fail("La memoria no es del tipo adecuado para realizar una copia a partir de otra memoria.");
+      // then: se debe lanzar una excepción
+    } catch (final IllegalArgumentException e) {
+      Assertions.assertThat(e.getMessage())
+          .isEqualTo("La memoria no es del tipo adecuado para realizar una copia a partir de otra memoria.");
+    }
+
   }
 
   @Test
@@ -618,7 +934,7 @@ public class MemoriaServiceTest {
         generarMockComite(id, "comite" + id, true), titulo, "user-00" + id,
         generarMockTipoMemoria(1L, "TipoMemoria1", true),
         generarMockTipoEstadoMemoria(idTipoEstadoMemoria, "Estado", Boolean.TRUE), LocalDate.now(), Boolean.TRUE,
-        generarMockRetrospectiva(1L), version, "CodOrganoCompetente", Boolean.TRUE);
+        generarMockRetrospectiva(1L), version, "CodOrganoCompetente", Boolean.TRUE, null);
   }
 
   /**

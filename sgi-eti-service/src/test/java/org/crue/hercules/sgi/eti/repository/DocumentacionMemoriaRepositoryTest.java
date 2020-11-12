@@ -20,6 +20,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 public class DocumentacionMemoriaRepositoryTest {
@@ -54,6 +56,32 @@ public class DocumentacionMemoriaRepositoryTest {
         .findByIdAndMemoriaIdAndMemoriaActivoTrue(documenteacionMemoria.getId(), memoria.getId());
     // then: Se recuperan los datos correctamente
     Assertions.assertThat(result.get()).isNotNull();
+
+  }
+
+  @Test
+  public void findByMemoriaIdAndMemoriaActivoTrue_ReturnsData() throws Exception {
+
+    // given: Datos existentes mmemoria activa y documentación.
+
+    Formulario formulario = entityManager.persistFlushFind(generarMockFormulario());
+    Comite comite = entityManager.persistFlushFind(generarMockComite(formulario));
+    TipoActividad tipoActividad = entityManager.persistAndFlush(generarMockTipoActividad());
+    PeticionEvaluacion peticionEvaluacion = entityManager.persistAndFlush(generarMockPeticionEvaluacion(tipoActividad));
+    TipoMemoria tipoMemoria = entityManager.persistAndFlush(generarMockTipoMemoria());
+    TipoEstadoMemoria tipoEstadoMemoria = entityManager.persistAndFlush(generarMockTipoEstadoMemoria());
+    EstadoRetrospectiva estadoRetrospectiva = entityManager.persistAndFlush(generarMockEstadoRetrospectiva());
+    Retrospectiva retrospectiva = entityManager.persistAndFlush(generarMockRetrospectiva(estadoRetrospectiva));
+    Memoria memoria = entityManager
+        .persistAndFlush(generarMockMemoria(peticionEvaluacion, comite, tipoMemoria, tipoEstadoMemoria, retrospectiva));
+    TipoDocumento tipoDocumento = entityManager.persistAndFlush(generarMockTipoDocumento(formulario));
+    entityManager.persistAndFlush(generarMockDocumentacionMemoria(memoria, tipoDocumento));
+
+    // when: Se buscan los datos
+    Page<DocumentacionMemoria> result = repository.findByMemoriaIdAndMemoriaActivoTrue(memoria.getId(),
+        Pageable.unpaged());
+    // then: Se recuperan los datos correctamente
+    Assertions.assertThat(result.getContent()).isNotEmpty();
 
   }
 
@@ -138,7 +166,7 @@ public class DocumentacionMemoriaRepositoryTest {
   private Memoria generarMockMemoria(PeticionEvaluacion peticionEvaluacion, Comite comite, TipoMemoria tipoMemoria,
       TipoEstadoMemoria tipoEstadoMemoria, Retrospectiva retrospectiva) {
     return new Memoria(null, "numRef-001", peticionEvaluacion, comite, "Memoria", "user-001", tipoMemoria,
-        tipoEstadoMemoria, LocalDate.now(), Boolean.TRUE, retrospectiva, 3, "CodOrganoCompetente", Boolean.TRUE);
+        tipoEstadoMemoria, LocalDate.now(), Boolean.TRUE, retrospectiva, 3, "CodOrganoCompetente", Boolean.TRUE, null);
   }
 
   /**

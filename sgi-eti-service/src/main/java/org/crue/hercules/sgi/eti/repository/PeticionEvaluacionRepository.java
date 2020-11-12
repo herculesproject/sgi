@@ -1,5 +1,7 @@
 package org.crue.hercules.sgi.eti.repository;
 
+import java.util.Optional;
+
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -20,5 +22,13 @@ public interface PeticionEvaluacionRepository
    * @return petición evaluación.
    */
   PeticionEvaluacion findFirstByCodigoContainingOrderByCodigoDesc(String anio);
+
+  /**
+   * Devuelve la petición asociada al id que se encuentra activa.
+   * 
+   * @param id Identificador {@link PeticionEvaluacion}
+   * @return {@link PeticionEvaluacion}
+   */
+  Optional<PeticionEvaluacion> findByIdAndActivoTrue(Long id);
 
 }

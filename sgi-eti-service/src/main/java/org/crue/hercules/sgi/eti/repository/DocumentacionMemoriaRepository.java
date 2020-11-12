@@ -63,4 +63,13 @@ public interface DocumentacionMemoriaRepository
    * @return documentacion memoria
    */
   Optional<DocumentacionMemoria> findByIdAndMemoriaIdAndMemoriaActivoTrue(Long id, Long idMemoria);
+
+  /**
+   * Devuelve una lista paginada de la documentación de una memoria.
+   * 
+   * @param idMemoria Identificador de {@link Memoria}.
+   * @param pageable  Datos de la paginación.
+   * @return lista paginada de la documentación de una memoria
+   */
+  Page<DocumentacionMemoria> findByMemoriaIdAndMemoriaActivoTrue(Long idMemoria, Pageable pageable);
 }

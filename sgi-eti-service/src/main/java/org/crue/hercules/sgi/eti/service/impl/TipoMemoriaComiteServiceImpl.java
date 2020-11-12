@@ -1,14 +1,19 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.TipoMemoriaComiteNotFoundException;
+import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoriaComite;
+import org.crue.hercules.sgi.eti.repository.ComiteRepository;
 import org.crue.hercules.sgi.eti.repository.TipoMemoriaComiteRepository;
 import org.crue.hercules.sgi.eti.service.TipoMemoriaComiteService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -25,10 +30,16 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class TipoMemoriaComiteServiceImpl implements TipoMemoriaComiteService {
 
+  /** Tipo memoria comite repository. */
   private final TipoMemoriaComiteRepository tipoMemoriaComiteRepository;
 
-  public TipoMemoriaComiteServiceImpl(TipoMemoriaComiteRepository tipoMemoriaComiteRepository) {
+  /** Comite repository. */
+  private final ComiteRepository comiteRepository;
+
+  public TipoMemoriaComiteServiceImpl(TipoMemoriaComiteRepository tipoMemoriaComiteRepository,
+      ComiteRepository comiteRepository) {
     this.tipoMemoriaComiteRepository = tipoMemoriaComiteRepository;
+    this.comiteRepository = comiteRepository;
   }
 
   /**
@@ -134,6 +145,25 @@ public class TipoMemoriaComiteServiceImpl implements TipoMemoriaComiteService {
       log.debug("update(TipoMemoriaComite tipoMemoriaComiteActualizar) - end");
       return returnValue;
     }).orElseThrow(() -> new TipoMemoriaComiteNotFoundException(tipoMemoriaComiteActualizar.getId()));
+  }
+
+  @Override
+  public Page<TipoMemoria> findByComite(Long id, Pageable paging) {
+    log.debug("findByComite(Long id, Pageable paging) - start");
+
+    Assert.notNull(id, "El identificador del comité no puede ser null para recuperar sus tipos de memoria asociados.");
+
+    return comiteRepository.findByIdAndActivoTrue(id).map(comite -> {
+      Page<TipoMemoriaComite> tiposMemoriaComite = tipoMemoriaComiteRepository.findByComiteIdAndComiteActivoTrue(id,
+          paging);
+
+      List<TipoMemoria> listTipoMemoria = tiposMemoriaComite.getContent().stream()
+          .map(tipoMemoria -> tipoMemoria.getTipoMemoria()).collect(Collectors.toList());
+
+      log.debug("findByComite(Long id, Pageable paging) - end");
+      return new PageImpl<TipoMemoria>(listTipoMemoria, paging, listTipoMemoria.size());
+    }).orElseThrow(() -> new ComiteNotFoundException(id));
+
   }
 
 }

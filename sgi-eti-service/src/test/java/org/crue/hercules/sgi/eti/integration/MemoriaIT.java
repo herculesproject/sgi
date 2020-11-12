@@ -127,7 +127,7 @@ public class MemoriaIT {
 
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization",
-        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-MEMORIA-EDITAR", "ETI-MEMORIA-VER")));
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-C-INV", "ETI-PEV-ER-INV")));
 
     restTemplate.exchange(MEMORIA_CONTROLLER_BASE_PATH, HttpMethod.POST, buildRequest(headers, nuevaMemoria),
         Memoria.class);
@@ -1167,7 +1167,7 @@ public class MemoriaIT {
         generarMockComite(id, "comite" + id, true), titulo, "user-00" + id,
         generarMockTipoMemoria(1L, "TipoMemoria1", true),
         generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.TRUE,
-        generarMockRetrospectiva(1L), version, "codOrganoCompetente", Boolean.TRUE);
+        generarMockRetrospectiva(1L), version, "codOrganoCompetente", Boolean.TRUE, null);
   }
 
   /**

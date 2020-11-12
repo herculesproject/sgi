@@ -8,21 +8,31 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
+import org.crue.hercules.sgi.eti.exceptions.ComiteNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.EstadoRetrospectivaNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.EvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.MemoriaNotFoundException;
+import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
+import org.crue.hercules.sgi.eti.model.Comite;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
+import org.crue.hercules.sgi.eti.model.DocumentacionMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoMemoria;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
 import org.crue.hercules.sgi.eti.model.Evaluacion;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
+import org.crue.hercules.sgi.eti.model.Respuesta;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.repository.ComentarioRepository;
+import org.crue.hercules.sgi.eti.repository.ComiteRepository;
+import org.crue.hercules.sgi.eti.repository.DocumentacionMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoMemoriaRepository;
 import org.crue.hercules.sgi.eti.repository.EstadoRetrospectivaRepository;
 import org.crue.hercules.sgi.eti.repository.EvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.MemoriaRepository;
+import org.crue.hercules.sgi.eti.repository.PeticionEvaluacionRepository;
+import org.crue.hercules.sgi.eti.repository.RespuestaRepository;
 import org.crue.hercules.sgi.eti.repository.specification.MemoriaSpecifications;
 import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.eti.service.MemoriaService;
@@ -47,30 +57,51 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional(readOnly = true)
 public class MemoriaServiceImpl implements MemoriaService {
 
+  /** Comentario repository */
+  private final ComentarioRepository comentarioRepository;
+
+  /** Comité repository */
+  private final ComiteRepository comiteRepository;
+
+  /** Documentacion memoria repository. */
+  private final DocumentacionMemoriaRepository documentacionMemoriaRepository;
+
   /** Estado Memoria Repository. */
   private final EstadoMemoriaRepository estadoMemoriaRepository;
 
   /** Estado Retrospectiva repository */
   private final EstadoRetrospectivaRepository estadoRetrospectivaRepository;
 
-  private final MemoriaRepository memoriaRepository;
-
-  private final ComentarioRepository comentarioRepository;
-
-  // ** Evaluacion repository */
+  /** Evaluacion repository */
   private final EvaluacionRepository evaluacionRepository;
 
-  private final InformeService informeFormularioService;
+  /** Memoria repository */
+  private final MemoriaRepository memoriaRepository;
+
+  /** Petición evaluación repository */
+  private final PeticionEvaluacionRepository peticionEvaluacionRepository;
+
+  /** Respuesta repository */
+  private final RespuestaRepository respuestaRepository;
+
+  /** Informe service */
+  private final InformeService informeService;
 
   public MemoriaServiceImpl(MemoriaRepository memoriaRepository, EstadoMemoriaRepository estadoMemoriaRepository,
       EstadoRetrospectivaRepository estadoRetrospectivaRepository, EvaluacionRepository evaluacionRepository,
-      ComentarioRepository comentarioRepository, InformeService informeFormularioService) {
+      ComentarioRepository comentarioRepository, InformeService informeService,
+      PeticionEvaluacionRepository peticionEvaluacionRepository, ComiteRepository comiteRepository,
+      DocumentacionMemoriaRepository documentacionMemoriaRepository, RespuestaRepository respuestaRepository) {
     this.memoriaRepository = memoriaRepository;
     this.estadoMemoriaRepository = estadoMemoriaRepository;
     this.estadoRetrospectivaRepository = estadoRetrospectivaRepository;
     this.evaluacionRepository = evaluacionRepository;
     this.comentarioRepository = comentarioRepository;
-    this.informeFormularioService = informeFormularioService;
+    this.informeService = informeService;
+    this.peticionEvaluacionRepository = peticionEvaluacionRepository;
+    this.comiteRepository = comiteRepository;
+    this.documentacionMemoriaRepository = documentacionMemoriaRepository;
+    this.respuestaRepository = respuestaRepository;
   }
 
   /**
@@ -83,9 +114,80 @@ public class MemoriaServiceImpl implements MemoriaService {
   @Override
   public Memoria create(Memoria memoria) {
     log.debug("Memoria create(Memoria memoria) - start");
-    Assert.isNull(memoria.getId(), "Memoria id tiene que ser null para crear un nueva memoria");
+
+    validacionesCreateMemoria(memoria);
+
+    Assert.isTrue(memoria.getTipoMemoria().getId().equals(1L) || memoria.getTipoMemoria().getId().equals(3L),
+        "La memoria no es del tipo adecuado para realizar una copia a partir de otra memoria.");
+
+    // La memoria se crea con tipo estado memoria "En elaboración".
+    TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
+    tipoEstadoMemoria.setId(Constantes.TIPO_ESTADO_MEMORIA_EN_ELABORACION);
+    memoria.setEstadoActual(tipoEstadoMemoria);
+
+    memoria.setNumReferencia(
+        getReferenciaMemoria(memoria.getTipoMemoria().getId(), memoria.getNumReferencia(), memoria.getComite()));
+
+    // Requiere retrospectiva
+    memoria.setRequiereRetrospectiva(Boolean.FALSE);
+
+    // Versión
+    memoria.setVersion(1);
+
+    // Activo
+    memoria.setActivo(Boolean.TRUE);
 
     return memoriaRepository.save(memoria);
+  }
+
+  @Transactional
+  @Override
+  public Memoria createModificada(Memoria nuevaMemoria, Long id) {
+    log.debug("Memoria createModificada(Memoria memoria, id) - start");
+
+    validacionesCreateMemoria(nuevaMemoria);
+
+    Assert.isTrue(nuevaMemoria.getTipoMemoria().getId().equals(2L),
+        "La memoria no es del tipo adecuado para realizar una copia a partir de otra memoria.");
+
+    Memoria memoria = memoriaRepository.findByIdAndActivoTrue(id).orElseThrow(() -> new MemoriaNotFoundException(id));
+
+    nuevaMemoria.setRequiereRetrospectiva(memoria.getRequiereRetrospectiva());
+    nuevaMemoria.setVersion(1);
+    nuevaMemoria.setActivo(Boolean.TRUE);
+    nuevaMemoria.setMemoriaOriginal(memoria);
+
+    // La memoria se crea con tipo estado memoria "En elaboración".
+    TipoEstadoMemoria tipoEstadoMemoria = new TipoEstadoMemoria();
+    tipoEstadoMemoria.setId(Constantes.TIPO_ESTADO_MEMORIA_EN_ELABORACION);
+    nuevaMemoria.setEstadoActual(tipoEstadoMemoria);
+
+    nuevaMemoria.setNumReferencia(
+        getReferenciaMemoria(nuevaMemoria.getTipoMemoria().getId(), memoria.getNumReferencia(), memoria.getComite()));
+
+    final Memoria memoriaCreada = memoriaRepository.save(nuevaMemoria);
+
+    Page<DocumentacionMemoria> documentacionesMemoriaPage = documentacionMemoriaRepository
+        .findByMemoriaIdAndMemoriaActivoTrue(memoria.getId(), null);
+
+    List<DocumentacionMemoria> documentacionesMemoriaList = documentacionesMemoriaPage.getContent().stream()
+        .map(documentacionMemoria -> {
+          return new DocumentacionMemoria(null, memoriaCreada, documentacionMemoria.getTipoDocumento(),
+              documentacionMemoria.getDocumentoRef(), documentacionMemoria.getAportado());
+        }).collect(Collectors.toList());
+
+    documentacionMemoriaRepository.saveAll(documentacionesMemoriaList);
+
+    Page<Respuesta> respuestasPage = respuestaRepository.findByMemoriaIdAndMemoriaActivoTrue(memoria.getId(), null);
+
+    List<Respuesta> respuestaList = respuestasPage.getContent().stream().map(respuesta -> {
+      return new Respuesta(null, memoriaCreada, respuesta.getApartado(), respuesta.getValor());
+    }).collect(Collectors.toList());
+
+    respuestaRepository.saveAll(respuestaList);
+
+    log.debug("Memoria createModificada(Memoria memoria, id) - end");
+    return memoriaCreada;
   }
 
   /**
@@ -431,7 +533,7 @@ public class MemoriaServiceImpl implements MemoriaService {
           if (memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA
               || memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_REVISION_MINIMA) {
             // se eliminan los informes en caso de que las memorias tengan alguno asociado
-            informeFormularioService.deleteInformeMemoria(memoria.getId());
+            informeService.deleteInformeMemoria(memoria.getId());
           }
 
           // Se retrocede el estado de la memoria, no se hace nada con el estado de la
@@ -635,6 +737,126 @@ public class MemoriaServiceImpl implements MemoriaService {
     // en informes el identificador del documento.
 
     log.debug("enviarSecretariaRetrospectiva(Long id) - end");
+  }
+
+  @Override
+  public Page<Memoria> findByComite(Long idComite, Pageable paging) {
+    log.debug("findByComite(Long idComite) - start");
+
+    Assert.notNull(idComite,
+        "El identificador del comité no puede ser null para recuperar sus tipos de memoria asociados.");
+
+    return comiteRepository.findByIdAndActivoTrue(idComite).map(comite -> {
+      log.debug("findByComite(Long idComite) - end");
+      return memoriaRepository.findByComiteIdAndActivoTrueAndComiteActivoTrue(idComite, paging);
+
+    }).orElseThrow(() -> new ComiteNotFoundException(idComite));
+
+  }
+
+  private void validacionesCreateMemoria(Memoria memoria) {
+    log.debug("validacionesCreateMemoria(Memoria memoria) - start");
+
+    Assert.isNull(memoria.getId(), "Memoria id tiene que ser null para crear una nueva memoria");
+    Assert.notNull(memoria.getPeticionEvaluacion().getId(),
+        "Petición evaluación id no puede ser null para crear una nueva memoria");
+
+    peticionEvaluacionRepository.findByIdAndActivoTrue(memoria.getPeticionEvaluacion().getId())
+        .orElseThrow(() -> new PeticionEvaluacionNotFoundException(memoria.getPeticionEvaluacion().getId()));
+
+    comiteRepository.findByIdAndActivoTrue(memoria.getComite().getId())
+        .orElseThrow(() -> new ComiteNotFoundException(memoria.getComite().getId()));
+
+    log.debug("validacionesCreateMemoria(Memoria memoria) - end");
+  }
+
+  /**
+   * Recupera la referencia de una memoria según su tipo y comité.
+   * 
+   * @param idTipoMemoria Identificador {@link TipoMemoria}
+   * @param numReferencia Referencia de la memoria copiada en caso de ser memoria
+   *                      modificada.
+   * @param comite        {ælink {@link Comite}}
+   * @return número de referencia.
+   */
+  private String getReferenciaMemoria(Long idTipoMemoria, String numReferencia, Comite comite) {
+
+    log.debug("getReferenciaMemoria(Long id, String numReferencia) - start");
+
+    // Referencia memoria
+    int anioActual = LocalDate.now().getYear();
+    StringBuffer sbNumReferencia = new StringBuffer();
+    sbNumReferencia.append(comite.getFormulario().getNombre()).append("/").append(anioActual).append("/");
+
+    String numMemoria = "001";
+
+    switch (idTipoMemoria.intValue()) {
+      case 1: {
+        // NUEVA
+        // Se recupera la última memoria para el comité seleccionado
+        Memoria ultimaMemoriaComite = memoriaRepository
+            .findFirstByNumReferenciaContainingAndTipoMemoriaIdIsNotAndComiteIdOrderByNumReferenciaDesc(
+                String.valueOf(anioActual), 2L, comite.getId());
+
+        // Se incrementa el número de la memoria para el comité
+        if (ultimaMemoriaComite != null) {
+          Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("/")[2].split("R")[0]);
+          numeroUltimaMemoria++;
+          numMemoria = String.format("%03d", numeroUltimaMemoria);
+        }
+
+        break;
+      }
+      case 2: {
+        // MODIFICACIÓN
+
+        // Se recupera la última memoria modificada de la memoria de la que se realiza
+        // la copia y del comité de la memoria.
+        Memoria ultimaMemoriaComite = memoriaRepository
+            .findFirstByNumReferenciaContainingAndComiteIdOrderByNumReferenciaDesc(numReferencia, comite.getId());
+
+        StringBuilder sbReferencia = new StringBuilder();
+        sbReferencia.append(ultimaMemoriaComite.getNumReferencia().split("MR")[0].split("/")[2].split("R")[0])
+            .append("MR");
+        if (ultimaMemoriaComite != null && ultimaMemoriaComite.getNumReferencia().contains("MR")) {
+          Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("MR")[1]);
+          numeroUltimaMemoria++;
+          sbReferencia.append(numeroUltimaMemoria);
+
+        } else {
+          sbReferencia.append("1");
+        }
+
+        numMemoria = sbReferencia.toString();
+
+        break;
+      }
+      case 3: {
+        // RATIFICACIÓN
+        // Se recupera la última memoria para el comité seleccionado
+        Memoria ultimaMemoriaComite = memoriaRepository
+            .findFirstByNumReferenciaContainingAndTipoMemoriaIdIsNotAndComiteIdOrderByNumReferenciaDesc(
+                String.valueOf(anioActual), 2L, comite.getId());
+
+        // Se incrementa el número de la memoria para el comité
+        if (ultimaMemoriaComite != null) {
+          Long numeroUltimaMemoria = Long.valueOf(ultimaMemoriaComite.getNumReferencia().split("/")[2].split("R")[0]);
+          numeroUltimaMemoria++;
+
+          StringBuilder sbReferencia = new StringBuilder();
+          sbReferencia.append(String.format("%03d", numeroUltimaMemoria)).append("R");
+          numMemoria = sbReferencia.toString();
+        }
+
+        break;
+      }
+    }
+    ;
+
+    sbNumReferencia.append(numMemoria);
+
+    log.debug("getReferenciaMemoria(Long id, String numReferencia) - end");
+    return sbNumReferencia.toString();
   }
 
 }

@@ -1,6 +1,9 @@
 package org.crue.hercules.sgi.eti.repository;
 
+import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Respuesta;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -19,4 +22,13 @@ public interface RespuestaRepository extends JpaRepository<Respuesta, Long>, Jpa
    * @return Respuesta
    */
   Respuesta findByMemoriaIdAndApartadoId(Long id, Long idApartado);
+
+  /**
+   * Recupera una listado paginado de todas las respuestas de una memoria activa.
+   * 
+   * @param idMemoria Identificador {@link Memoria}.
+   * @param pageable  Datos de la paginación.
+   * @return listado paginado de respuestas.
+   */
+  Page<Respuesta> findByMemoriaIdAndMemoriaActivoTrue(Long idMemoria, Pageable pageable);
 }

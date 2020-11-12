@@ -377,7 +377,7 @@ public class EstadoMemoriaControllerTest extends BaseControllerTest {
         generarMockComite(id, "comite" + id, true), titulo, "user-00" + id,
         generarMockTipoMemoria(1L, "TipoMemoria1", true),
         generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), LocalDate.now(), Boolean.TRUE,
-        generarMockRetrospectiva(1L), version, "CodOrganoCompetente", Boolean.TRUE);
+        generarMockRetrospectiva(1L), version, "CodOrganoCompetente", Boolean.TRUE, null);
   }
 
   /**
