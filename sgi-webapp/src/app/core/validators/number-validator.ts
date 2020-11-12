@@ -1,4 +1,4 @@
-import { ValidatorFn, FormGroup, ValidationErrors } from '@angular/forms';
+import { ValidatorFn, FormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
 
 export class NumberValidator {
 
@@ -28,6 +28,34 @@ export class NumberValidator {
         delete numeroPosteriorControl.errors.after;
         numeroPosteriorControl.updateValueAndValidity({ onlySelf: true });
       }
+    };
+  }
+
+  /**
+   * Comprueba que el número sea entero. Sin decimales
+   */
+  static isInteger(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (control.value && control.value !== parseInt(control.value, 10)) {
+        return { integer: true };
+      }
+      return null;
+    };
+  }
+
+  /**
+   * Comprueba que la parte decimal introducida no se pase de los caracteres indicados.
+   * @param max Máximo de caracteres decimales
+   */
+  static maxDecimalPlaces(max: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.value && max) {
+        const arrayDecimal = control.value.toString().split('.');
+        if (arrayDecimal.length > 1) {
+          return !isNaN(control.value) && arrayDecimal[1].length > max ? { max: { max, actual: control.value } } : null;
+        }
+      }
+      return null;
     };
   }
 

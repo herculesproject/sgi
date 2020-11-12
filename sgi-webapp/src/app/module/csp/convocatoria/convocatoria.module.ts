@@ -26,6 +26,8 @@ import { ConvocatoriaPlazosFaseModalComponent } from './modals/convocatoria-plaz
 import { ConvocatoriaSeguimientoCientificoModalComponent } from './modals/convocatoria-seguimiento-cientifico-modal/convocatoria-seguimiento-cientifico-modal.component';
 import { ConvocatoriaAreaTematicaModalComponent } from './modals/convocatoria-area-tematica-modal/convocatoria-area-tematica-modal.component';
 import { ConvocatoriaRequisitosIPComponent } from './convocatoria-formulario/convocatoria-requisitos-ip/convocatoria-requisitos-ip.component';
+import { ConvocatoriaConceptoGastoComponent } from './convocatoria-formulario/convocatoria-concepto-gasto/convocatoria-concepto-gasto.component';
+import { ConvocatoriaConceptoGastoModalComponent } from './modals/convocatoria-concepto-gasto-modal/convocatoria-concepto-gasto-modal.component';
 
 
 @NgModule({
@@ -49,7 +51,9 @@ import { ConvocatoriaRequisitosIPComponent } from './convocatoria-formulario/con
     ConvocatoriaPlazosFaseModalComponent,
     ConvocatoriaSeguimientoCientificoModalComponent,
     ConvocatoriaAreaTematicaModalComponent,
-    ConvocatoriaRequisitosIPComponent
+    ConvocatoriaRequisitosIPComponent,
+    ConvocatoriaConceptoGastoComponent,
+    ConvocatoriaConceptoGastoModalComponent
   ],
   imports: [
     CommonModule,

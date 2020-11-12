@@ -42,7 +42,9 @@
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item class="demo" [title]="'csp.convocatoria.requisitos.equipo' | translate">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item class="demo" [title]="'csp.convocatoria.elegibilidad' | translate">
+      <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.ELEGIBILIDAD]"
+        [title]="'csp.convocatoria.elegibilidad' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.ELEGIBILIDAD)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item class="demo" [title]="'csp.convocatoria.codigos.economicos' | translate">
       </sgi-action-fragment-menu-item>

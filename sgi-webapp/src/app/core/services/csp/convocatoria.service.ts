@@ -6,7 +6,6 @@ import { environment } from '@env';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaPeriodoJustificacion } from '@core/models/csp/convocatoria-periodo-justificacion';
 import { of, Observable } from 'rxjs';
-import { IPlazosFases } from '@core/models/csp/plazos-fases';
 import { ISeguimientoCientifico } from '@core/models/csp/seguimiento-cientifico';
 import { tap } from 'rxjs/operators';
 import { IEntidadConvocante } from '@core/models/csp/entidad-convocante';
@@ -17,6 +16,7 @@ import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
 import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
+import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 
 const entidadesConvocantes: IEntidadConvocante[] = [
   {
@@ -226,4 +226,33 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
         tap(() => this.logger.debug(ConvocatoriaService.name, `${this.findAreaTematicas.name}(id: ${id})`, '-', 'END'))
       );
   }
+
+  /**
+   * Recupera listado de convocatoria concepto gastos permitidos.
+   * @param id convocatoria
+   * @param options opciones de búsqueda.
+   */
+  getConvocatoriaConceptoGastosPermitidos(id: number): Observable<SgiRestListResult<IConvocatoriaConceptoGasto>> {
+    this.logger.debug(ConvocatoriaService.name, `getConvocatoriaConceptoGastosPermitidos(${id})`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${id}/convocatoriagastos/permitidos`;
+    return this.find<IConvocatoriaConceptoGasto, IConvocatoriaConceptoGasto>(endpointUrl)
+      .pipe(
+        tap(() => this.logger.debug(ConvocatoriaService.name, `getConvocatoriaConceptoGastosPermitidos(${id})`, '-', 'end'))
+      );
+  }
+
+  /**
+   * Recupera listado de convocatoria concepto gastos NO permitidos.
+   * @param id convocatoria
+   * @param options opciones de búsqueda.
+   */
+  getConvocatoriaConceptoGastosNoPermitidos(id: number): Observable<SgiRestListResult<IConvocatoriaConceptoGasto>> {
+    this.logger.debug(ConvocatoriaService.name, `getConvocatoriaConceptoGastosNoPermitidos(${id})`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${id}/convocatoriagastos/nopermitidos`;
+    return this.find<IConvocatoriaConceptoGasto, IConvocatoriaConceptoGasto>(endpointUrl)
+      .pipe(
+        tap(() => this.logger.debug(ConvocatoriaService.name, `getConvocatoriaConceptoGastosNoPermitidos(${id})`, '-', 'end'))
+      );
+  }
+
 }
