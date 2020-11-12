@@ -6,10 +6,8 @@ import { environment } from '@env';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaPeriodoJustificacion } from '@core/models/csp/convocatoria-periodo-justificacion';
 import { of, Observable } from 'rxjs';
-import { ISeguimientoCientifico } from '@core/models/csp/seguimiento-cientifico';
 import { tap } from 'rxjs/operators';
 import { IEntidadConvocante } from '@core/models/csp/entidad-convocante';
-import { DateUtils } from '@core/utils/date-utils';
 import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
 import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
@@ -17,6 +15,7 @@ import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
+import { IConvocatoriaSeguimientoCientifico } from '@core/models/csp/convocatoria-seguimiento-cientifico';
 
 const entidadesConvocantes: IEntidadConvocante[] = [
   {
@@ -35,25 +34,6 @@ const entidadesConvocantes: IEntidadConvocante[] = [
     plan: 'Plan propio',
     programa: 'Programa ayudas propias'
   } as IEntidadConvocante
-];
-
-const seguimientosCientificos: ISeguimientoCientifico[] = [
-  {
-    numPeriodo: 1,
-    mesInicial: 1,
-    mesFinal: 18,
-    fechaInicio: DateUtils.fechaToDate('05/15/2020'),
-    fechaFin: DateUtils.fechaToDate('06/16/2020'),
-    observaciones: 'Primer periodo de seguimiento'
-  } as ISeguimientoCientifico,
-  {
-    numPeriodo: 2,
-    mesInicial: 19,
-    mesFinal: 36,
-    fechaInicio: DateUtils.fechaToDate('05/20/2020'),
-    fechaFin: DateUtils.fechaToDate('06/20/2020'),
-    observaciones: 'Segundo periodo de seguimiento'
-  } as ISeguimientoCientifico,
 ];
 
 @Injectable({
@@ -109,8 +89,32 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
   }
 
   /**
-   * Recupera listado de plazos y fases de una convocatoria
-   * @param idConvocatoria convocatoria
+   * Recupera listado de seguimiento científicos.
+   * @param id seguimiento científicos
+   * @param options opciones de búsqueda.
+   */
+  findSeguimientosCientificos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaSeguimientoCientifico>> {
+    this.logger.debug(ConvocatoriaService.name, `findSeguimientosCientificos(${id}, ${options})`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${id}/convocatoriaperiodoseguimientocientificos`;
+    return this.find<IConvocatoriaSeguimientoCientifico, IConvocatoriaSeguimientoCientifico>(endpointUrl, options)
+      .pipe(
+        tap(() => this.logger.debug(ConvocatoriaService.name, `findSeguimientosCientificos(${id}, ${options})`, '-', 'end'))
+      );
+  }
+
+  findEntidadesFinanciadoras(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaEntidadFinanciadora>> {
+    this.logger.debug(ConvocatoriaService.name,
+      `${this.findEntidadesFinanciadoras.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    return this.find<IConvocatoriaEntidadFinanciadora, IConvocatoriaEntidadFinanciadora>(
+      `${this.endpointUrl}/${id}/convocatoriaentidadfinanciadoras`, options).pipe(
+        tap(() => this.logger.debug(ConvocatoriaService.name,
+          `${this.findEntidadesFinanciadoras.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+      );
+  }
+
+  /**
+   * Recupera listado mock de plazos y fases.
+   * @param id convocatoria
    * @param options opciones de búsqueda.
    */
   findFasesConvocatoria(idConvocatoria: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaFase>> {
@@ -154,31 +158,6 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
       .pipe(
         tap(() => this.logger.debug(ConvocatoriaService.name,
           `${this.getEntidadesConvocantes.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
-      );
-  }
-
-  getSeguimientosCientificos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<ISeguimientoCientifico>> {
-    this.logger.debug(ConvocatoriaService.name,
-      `${this.getSeguimientosCientificos.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
-    const list = {
-      page: null,
-      total: seguimientosCientificos.length,
-      items: seguimientosCientificos
-    } as SgiRestListResult<ISeguimientoCientifico>;
-    return of(list)
-      .pipe(
-        tap(() => this.logger.debug(ConvocatoriaService.name,
-          `${this.getSeguimientosCientificos.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
-      );
-  }
-
-  findEntidadesFinanciadoras(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaEntidadFinanciadora>> {
-    this.logger.debug(ConvocatoriaService.name,
-      `${this.findEntidadesFinanciadoras.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
-    return this.find<IConvocatoriaEntidadFinanciadora, IConvocatoriaEntidadFinanciadora>(
-      `${this.endpointUrl}/${id}/convocatoriaentidadfinanciadoras`, options).pipe(
-        tap(() => this.logger.debug(ConvocatoriaService.name,
-          `${this.findEntidadesFinanciadoras.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
       );
   }
 

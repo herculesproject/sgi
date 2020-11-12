@@ -1,34 +1,45 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { ISeguimientoCientifico } from '@core/models/csp/seguimiento-cientifico';
+import { BaseModalComponent } from '@core/component/base-modal.component';
+import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { IConvocatoriaSeguimientoCientifico } from '@core/models/csp/convocatoria-seguimiento-cientifico';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { DateValidator } from '@core/validators/date-validator';
+import { NumberValidator } from '@core/validators/number-validator';
+import { RangeValidator } from '@core/validators/range-validator';
 import { NGXLogger } from 'ngx-logger';
-import { Subscription } from 'rxjs';
 
-const MSG_ERROR_FORM_GROUP = marker('form-group.error');
+export interface IConvocatoriaSeguimientoCientificoModalData {
+  convocatoria: IConvocatoria;
+  convocatoriaSeguimientoCientifico: IConvocatoriaSeguimientoCientifico;
+  convocatoriaSeguimientoCientificoList: StatusWrapper<IConvocatoriaSeguimientoCientifico>[];
+}
 
 @Component({
   templateUrl: './convocatoria-seguimiento-cientifico-modal.component.html',
   styleUrls: ['./convocatoria-seguimiento-cientifico-modal.component.scss']
 })
-export class ConvocatoriaSeguimientoCientificoModalComponent implements OnInit, OnDestroy {
-  formGroup: FormGroup;
-  fxLayoutProperties: FxLayoutProperties;
+export class ConvocatoriaSeguimientoCientificoModalComponent
+  extends BaseModalComponent<IConvocatoriaSeguimientoCientifico, ConvocatoriaSeguimientoCientificoModalComponent> implements OnInit {
+
   fxFlexProperties2: FxFlexProperties;
-  fxFlexProperties: FxFlexProperties;
-  suscripciones: Subscription[];
+  fxLayoutProperties: FxLayoutProperties;
+
+  FormGroupUtil = FormGroupUtil;
 
   constructor(
-    private readonly logger: NGXLogger,
-    private readonly snackBarService: SnackBarService,
-    public readonly matDialogRef: MatDialogRef<ConvocatoriaSeguimientoCientificoModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public seguimientoCientifico: ISeguimientoCientifico,
+    protected readonly logger: NGXLogger,
+    protected readonly snackBarService: SnackBarService,
+    @Inject(MAT_DIALOG_DATA) public data: IConvocatoriaSeguimientoCientificoModalData,
+    public readonly matDialogRef: MatDialogRef<ConvocatoriaSeguimientoCientificoModalComponent>
   ) {
+    super(logger, snackBarService, matDialogRef, data.convocatoriaSeguimientoCientifico);
     this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, 'constructor()', 'start');
 
     this.fxFlexProperties = new FxFlexProperties();
@@ -52,61 +63,99 @@ export class ConvocatoriaSeguimientoCientificoModalComponent implements OnInit, 
   }
 
   ngOnInit(): void {
+    super.ngOnInit();
     this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, 'ngOnInit()', 'start');
-    this.suscripciones = [];
-    this.formGroup = new FormGroup({
-      numPeriodo: new FormControl(this.seguimientoCientifico?.numPeriodo),
-      desdeMes: new FormControl(this.seguimientoCientifico?.mesInicial),
-      hastaMes: new FormControl(this.seguimientoCientifico?.mesFinal),
-      fechaInicio: new FormControl(this.seguimientoCientifico?.fechaInicio),
-      fechaFin: new FormControl(this.seguimientoCientifico?.fechaFin),
-      observaciones: new FormControl(this.seguimientoCientifico?.observaciones)
+    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, 'ngOnInit()', 'start');
+  }
+
+  protected getFormGroup(): FormGroup {
+    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, `${this.getFormGroup.name}()`, 'start');
+
+    const rangosPeriodosExistentes = this.data.convocatoriaSeguimientoCientificoList
+      .filter(seguimientoCientifico => seguimientoCientifico.value?.mesInicial !== this.data.convocatoriaSeguimientoCientifico?.mesInicial)
+      .map(seguimientoCientifico => {
+        return {
+          inicio: seguimientoCientifico.value.mesInicial,
+          fin: seguimientoCientifico.value.mesFinal
+        };
+      });
+
+    const ultimoseguimientoCientificoNoFinal = this.data.convocatoriaSeguimientoCientificoList
+      .filter(seguimientoCientifico => seguimientoCientifico.value.mesInicial !== this.data.convocatoriaSeguimientoCientifico.mesInicial)
+      .sort((a, b) => (b.value.mesInicial > a.value.mesInicial) ? 1 : ((a.value.mesInicial > b.value.mesInicial) ? -1 : 0)).find(c => true);
+
+    const formGroup = new FormGroup({
+      numPeriodo: new FormControl(this.data.convocatoriaSeguimientoCientifico?.numPeriodo),
+      desdeMes: new FormControl(this.data.convocatoriaSeguimientoCientifico?.mesInicial, [Validators.required, Validators.min(1)]),
+      hastaMes: new FormControl(this.data.convocatoriaSeguimientoCientifico?.mesFinal, [Validators.required, Validators.min(2)]),
+      fechaInicio: new FormControl(this.data.convocatoriaSeguimientoCientifico?.fechaInicioPresentacion, []),
+      fechaFin: new FormControl(this.data.convocatoriaSeguimientoCientifico?.fechaFinPresentacion, []),
+      observaciones: new FormControl(this.data.convocatoriaSeguimientoCientifico?.observaciones, [Validators.maxLength(2000)])
+    }, {
+      validators: [
+        this.isFinalUltimoPeriodo(ultimoseguimientoCientificoNoFinal?.value.mesFinal),
+        NumberValidator.isAfer('desdeMes', 'hastaMes'),
+        RangeValidator.notOverlaps('desdeMes', 'hastaMes', rangosPeriodosExistentes),
+        DateValidator.isAfter('fechaInicio', 'fechaFin')]
     });
-    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, 'ngOnInit()', 'start');
-  }
 
-  ngOnDestroy(): void {
-    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, 'ngOnDestroy()', 'start');
-    this.suscripciones?.forEach(x => x.unsubscribe());
-    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, 'ngOnDestroy()', 'end');
-  }
-
-  /**
-   * Cierra la ventana modal
-   */
-  closeModal(seguimientoCientifico?: ISeguimientoCientifico): void {
-    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, 'closeModal()', 'start');
-    this.matDialogRef.close(seguimientoCientifico);
-    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, 'closeModal()', 'end');
-  }
-
-  /**
-   * Actualizar o guardar datos
-   */
-  saveOrUpdate(): void {
-    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, 'saveOrUpdate()', 'start');
-    if (FormGroupUtil.valid(this.formGroup)) {
-      this.loadDatosForm();
-      this.closeModal(this.seguimientoCientifico);
-    } else {
-      this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
+    // Si la convocatoria tiene duracion el mesFinal no puede superarla
+    if (this.data.convocatoria && this.data.convocatoria?.duracion) {
+      formGroup.get('hastaMes').setValidators([
+        Validators.max(this.data.convocatoria.duracion),
+        formGroup.get('hastaMes').validator
+      ]);
     }
-    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, 'saveOrUpdate()', 'end');
+
+    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, `${this.getFormGroup.name}()`, 'end');
+    return formGroup;
+  }
+
+  protected getDatosForm(): IConvocatoriaSeguimientoCientifico {
+    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, `${this.getDatosForm.name}()`, 'start');
+    const convocatoriaSeguimientoCientifico = this.data.convocatoriaSeguimientoCientifico;
+    convocatoriaSeguimientoCientifico.numPeriodo = this.formGroup.get('numPeriodo').value;
+    convocatoriaSeguimientoCientifico.mesInicial = this.formGroup.get('desdeMes').value;
+    convocatoriaSeguimientoCientifico.mesFinal = this.formGroup.get('hastaMes').value;
+    convocatoriaSeguimientoCientifico.fechaInicioPresentacion = this.formGroup.get('fechaInicio').value;
+    convocatoriaSeguimientoCientifico.fechaFinPresentacion = this.formGroup.get('fechaFin').value;
+    convocatoriaSeguimientoCientifico.observaciones = this.formGroup.get('observaciones').value;
+    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, `${this.getDatosForm.name}()`, 'end');
+    return convocatoriaSeguimientoCientifico;
   }
 
   /**
-   * Método para actualizar la entidad con los datos de un formGroup
-   *
-   * @returns Comentario con los datos del formulario
+   * Recalcula el numero de periodo en funcion de la ordenacion por mes inicial de todos los periodos.
    */
-  private loadDatosForm(): void {
-    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, 'loadDatosForm()', 'start');
-    this.seguimientoCientifico.numPeriodo = FormGroupUtil.getValue(this.formGroup, 'numPeriodo');
-    this.seguimientoCientifico.mesInicial = FormGroupUtil.getValue(this.formGroup, 'desdeMes');
-    this.seguimientoCientifico.mesFinal = FormGroupUtil.getValue(this.formGroup, 'hastaMes');
-    this.seguimientoCientifico.fechaInicio = FormGroupUtil.getValue(this.formGroup, 'fechaInicio');
-    this.seguimientoCientifico.fechaFin = FormGroupUtil.getValue(this.formGroup, 'fechaFin');
-    this.seguimientoCientifico.observaciones = FormGroupUtil.getValue(this.formGroup, 'observaciones');
-    this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, 'loadDatosForm()', 'end');
+  recalcularNumPeriodo(): void {
+    let numPeriodo = 1;
+    const mesInicial = this.formGroup.get('desdeMes').value;
+
+    this.data.convocatoriaSeguimientoCientificoList.forEach(c => {
+      if (mesInicial > c.value.mesInicial) {
+        numPeriodo++;
+      }
+    });
+
+    this.formGroup.get('numPeriodo').setValue(numPeriodo);
   }
+
+  /**
+   * Comprueba el mes sea el ultimo (empieza despues del ultimo periodo no final).
+   *
+   * @param mesFinUltimoPeriodoNoFinal Mes de fin del ultimo periodo que no es de tipo final.
+   */
+  private isFinalUltimoPeriodo(mesFinUltimoPeriodoNoFinal: number): ValidatorFn {
+    return (formGroup: FormGroup): ValidationErrors | null => {
+
+      const mesInicioControl = formGroup.controls.desdeMes;
+
+      if (!mesFinUltimoPeriodoNoFinal || (mesInicioControl.errors && !mesInicioControl.errors.finalNotLast)) {
+        return;
+      }
+
+    };
+  }
+
+
 }

@@ -164,7 +164,7 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
     this.dataSource.data
       .sort((a, b) => (a.value.mesInicial > b.value.mesInicial) ? 1 : ((b.value.mesInicial > a.value.mesInicial) ? -1 : 0));
 
-    this.dataSource.data.map(c => {
+    this.dataSource.data.forEach(c => {
       c.value.numPeriodo = numPeriodo++;
     });
 

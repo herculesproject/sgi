@@ -29,6 +29,7 @@ import { ConvocatoriaPeriodoJustificacionService } from '@core/services/csp/conv
 import { ConvocatoriaFaseService } from '@core/services/csp/convocatoria-fase.service';
 import { ConvocatoriaConceptoGastoFragment } from './convocatoria-formulario/convocatoria-concepto-gasto/convocatoria-concepto-gasto.fragment';
 import { ConvocatoriaConceptoGastoService } from '@core/services/csp/convocatoria-concepto-gasto.service';
+import { ConvocatoriaSeguimientoCientificoService } from '@core/services/csp/convocatoria-seguimiento-cientifico.service';
 
 @Injectable()
 export class ConvocatoriaActionService extends ActionService {
@@ -67,13 +68,14 @@ export class ConvocatoriaActionService extends ActionService {
     convocatoriaEnlaceService: ConvocatoriaEnlaceService,
     empresaEconomicaService: EmpresaEconomicaService,
     convocatoriaEntidadFinanciadoraService: ConvocatoriaEntidadFinanciadoraService,
-    convocatoriaHitoService: ConvocatoriaHitoService,
     requisitoIPService: RequisitoIPService,
     convocatoriaEntidadGestoraService: ConvocatoriaEntidadGestoraService,
     unidadGestionService: UnidadGestionService,
     convocatoriaPeriodoJustificacionService: ConvocatoriaPeriodoJustificacionService,
     convocatoriaFaseService: ConvocatoriaFaseService,
-    convocatoriaConceptoGastoService: ConvocatoriaConceptoGastoService
+    convocatoriaConceptoGastoService: ConvocatoriaConceptoGastoService,
+    convocatoriaHitoService: ConvocatoriaHitoService,
+    convocatoriaSeguimientoCientificoService: ConvocatoriaSeguimientoCientificoService
   ) {
     super();
     this.convocatoria = {} as IConvocatoria;
@@ -84,8 +86,6 @@ export class ConvocatoriaActionService extends ActionService {
     this.datosGenerales = new ConvocatoriaDatosGeneralesFragment(
       logger, this.convocatoria?.id, convocatoriaService, empresaEconomicaService,
       convocatoriaEntidadGestoraService, unidadGestionService);
-    this.seguimientoCientifico = new ConvocatoriaSeguimientoCientificoFragment(
-      logger, this.convocatoria?.id, convocatoriaService);
     this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(logger, this.convocatoria?.id, convocatoriaService,
       convocatoriaPeriodoJustificacionService);
     this.entidadesConvocantes = new ConvocatoriaEntidadesConvocantesFragment(
@@ -93,6 +93,11 @@ export class ConvocatoriaActionService extends ActionService {
     this.plazosFases = new ConvocatoriaPlazosFasesFragment(logger, this.convocatoria?.id, convocatoriaService, convocatoriaFaseService);
     this.hitos = new ConvocatoriaHitosFragment(
       logger, this.convocatoria?.id, convocatoriaService, convocatoriaHitoService);
+    this.seguimientoCientifico = new ConvocatoriaSeguimientoCientificoFragment(logger, this.convocatoria?.id,
+      convocatoriaService, convocatoriaSeguimientoCientificoService);
+    this.entidadesConvocantes = new ConvocatoriaEntidadesConvocantesFragment(logger, this.convocatoria?.id, convocatoriaService);
+    this.plazosFases = new ConvocatoriaPlazosFasesFragment(logger, this.convocatoria?.id, convocatoriaService, convocatoriaFaseService);
+    this.hitos = new ConvocatoriaHitosFragment(logger, this.convocatoria?.id, convocatoriaService, convocatoriaHitoService);
     this.entidadesFinanciadorasFragment = new ConvocatoriaEntidadesFinanciadorasFragment(
       logger, this.convocatoria?.id, convocatoriaService, convocatoriaEntidadFinanciadoraService);
     this.enlaces = new ConvocatoriaEnlaceFragment(logger, this.convocatoria?.id, convocatoriaService, convocatoriaEnlaceService);
