@@ -11,12 +11,23 @@ import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { ConvocatoriaPlazosFaseModalComponent } from './convocatoria-plazos-fase-modal.component';
+import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
+import { ActivatedRoute } from '@angular/router';
 
 describe('ConvocatoriaPlazosFaseModalComponent', () => {
   let component: ConvocatoriaPlazosFaseModalComponent;
   let fixture: ComponentFixture<ConvocatoriaPlazosFaseModalComponent>;
 
   beforeEach(async(() => {
+
+    const snapshotData = {
+      plazos: [],
+      plazo: {
+        id: 1
+      } as IConvocatoriaFase,
+      idConvocatoria: 1
+    };
+
     TestBed.configureTestingModule({
       declarations: [ConvocatoriaPlazosFaseModalComponent],
       imports: [
@@ -32,8 +43,9 @@ describe('ConvocatoriaPlazosFaseModalComponent', () => {
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: {} },
-        { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: MatDialogRef, useValue: snapshotData },
+        { provide: MAT_DIALOG_DATA, useValue: snapshotData },
+        { provide: ActivatedRoute, useValue: { snapshot: { data: snapshotData } } },
         SgiAuthService
       ],
     })

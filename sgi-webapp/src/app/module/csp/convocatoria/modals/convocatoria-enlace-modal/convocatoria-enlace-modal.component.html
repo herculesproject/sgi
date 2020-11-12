@@ -1,6 +1,6 @@
-<div class="convocatoria-entidad-financiadora-modal">
+<div class="convocatoria-enlace-modal">
   <header class="modal-header-material">
-    <h3 mat-dialog-title>{{'csp.convocatoria.entidades-financiadoras.modal.titulo' | translate}}</h3>
+    <h3 mat-dialog-title>{{'csp.convocatoria.enlace.modal.titulo' | translate}}</h3>
   </header>
   <main>
     <form [formGroup]="formGroup">
@@ -15,6 +15,9 @@
             <mat-error *ngIf="formGroup.controls.url.errors?.required">
               {{'csp.convocatoria.enlace.modal.url.error.requerido' | translate}}
             </mat-error>
+            <mat-error *ngIf="formGroup.get('url').errors?.maxlength">
+              {{'csp.convocatoria.enlace.modal.url.maximo' | translate}}
+            </mat-error>
           </mat-form-field>
         </div>
       </div>
@@ -27,6 +30,9 @@
             <textarea matInput formControlName="descripcion" type="text" id="descripcion"
               placeholder="{{'csp.convocatoria.enlace.modal.descripcion' | translate}}">
              </textarea>
+            <mat-error *ngIf="formGroup.get('descripcion').errors?.maxlength">
+              {{'csp.convocatoria.enlace.modal.descripcion.maximo' | translate}}
+            </mat-error>
           </mat-form-field>
         </div>
       </div>
@@ -39,8 +45,9 @@
               placeholder="{{'csp.convocatoria.enlace.modal.tipoEnlace' | translate}}"
               [matAutocomplete]="autoTipoEnlace">
             <mat-autocomplete #autoTipoEnlace="matAutocomplete" [displayWith]="getNombreTipoEnlace">
-              <mat-option *ngFor="let tipoEnlace of tiposEnlace$ | async" [value]="tipoEnlace">
-                {{tipoEnlace.nombre}}
+              <mat-option *ngFor="let modeloTipoEnlace of modeloTiposEnlace$ | async"
+                [value]="modeloTipoEnlace.tipoEnlace">
+                {{modeloTipoEnlace.tipoEnlace.nombre}}
               </mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="formGroup.controls.tipoEnlace.errors?.invalid">

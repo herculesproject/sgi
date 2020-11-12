@@ -16,7 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogService } from '@core/services/dialog.service';
-import { ConvocatoriaHitosModalComponent } from '../../modals/convocatoria-hitos-modal/convocatoria-hitos-modal.component';
+import { ConvocatoriaHitosModalComponent, ConvocatoriaHitosModalComponentData } from '../../modals/convocatoria-hitos-modal/convocatoria-hitos-modal.component';
 
 const MSG_DELETE = marker('csp.convocatoria.hito.listado.borrar');
 
@@ -32,6 +32,7 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
+  public disableAddHito = true;
 
   elementosPagina: number[] = [5, 10, 25, 100];
   displayedColumns: string[] = ['fechaInicio', 'tipoHito', 'comentario', 'aviso', 'acciones'];
@@ -44,7 +45,7 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly convocatoriaReunionService: ConvocatoriaService,
-    actionService: ConvocatoriaActionService,
+    private actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
     private readonly dialogService: DialogService
   ) {
@@ -72,6 +73,7 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
         }
       };
     this.dataSource.sort = this.sort;
+    this.disableAddHito = !Boolean(this.actionService.getDatosGeneralesConvocatoria().modeloEjecucion);
     this.subscriptions.push(this.formPart.hitos$.subscribe(elements => {
       this.dataSource.data = elements;
       this.logger.debug(ConvocatoriaHitosComponent.name, 'ngOnInit()', 'end');
@@ -84,10 +86,14 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
    */
   openModal(wrapper?: StatusWrapper<IConvocatoriaHito>): void {
     this.logger.debug(ConvocatoriaHitosComponent.name, `${this.openModal.name}()`, 'start');
+    const datosHito = {
+      hito: wrapper ? wrapper.value : {} as IConvocatoriaHito,
+      idModeloEjecucion: this.actionService.getDatosGeneralesConvocatoria().modeloEjecucion?.id
+    } as ConvocatoriaHitosModalComponentData;
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: wrapper ? wrapper.value : {} as IConvocatoriaHito
+      data: datosHito
     };
     const dialogRef = this.matDialog.open(ConvocatoriaHitosModalComponent, config);
     dialogRef.afterClosed().subscribe(

@@ -4,8 +4,7 @@ import { NGXLogger } from 'ngx-logger';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@env';
 import { of, Observable } from 'rxjs';
-import { ITipoPlazosFases } from '@core/models/csp/tipo-plazos-fases';
-import { IModeloEjecucion, ITipoFinalidad, ITipoHito } from '@core/models/csp/tipos-configuracion';
+import { IModeloEjecucion, ITipoHito } from '@core/models/csp/tipos-configuracion';
 import { IModeloTipoEnlace } from '@core/models/csp/modelo-tipo-enlace';
 import { tap } from 'rxjs/operators';
 import { IModeloTipoFinalidad } from '@core/models/csp/modelo-tipo-finalidad';
@@ -21,16 +20,6 @@ const tiposHito: ITipoHito[] = [
   {
     id: 2, nombre: 'Resolución definitiva', descripcion: '', activo: false
   } as ITipoHito
-
-];
-
-const tipoPlazoFase: ITipoPlazosFases[] = [
-  {
-    id: 1, nombre: 'Presentación interna solicitudes'
-  },
-  {
-    id: 2, nombre: 'Presentación solicitudes'
-  }
 
 ];
 
@@ -64,20 +53,6 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
     } as SgiRestListResult<ITipoHito>);
   }
 
-  /**
-   * Recupera los tipos de una fase de plazo
-   * @param idModeloEjecucion Identificador del modelo de ejecución.
-   * @returns Listado de una fase de plazo
-   */
-  findPlazoFase(idModeloEjecucion: number): Observable<SgiRestListResult<ITipoPlazosFases>> {
-    this.logger.debug(ModeloEjecucionService.name, `findPlazoFase(idModeloEjecucion)`, '-', 'START');
-    return of({
-      page: null,
-      total: tipoPlazoFase.length,
-      items: tipoPlazoFase
-    } as SgiRestListResult<ITipoPlazosFases>);
-  }
-
   findModeloTipoEnlace(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoEnlace>> {
     this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoEnlace.name}(id: ${id})`, '-', 'START');
     return this.find<IModeloTipoEnlace, IModeloTipoEnlace>(`${this.endpointUrl}/${id}/modelotipoenlaces`, options).pipe(
@@ -99,7 +74,7 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
    */
   findModeloTipoFase(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoFase>> {
     this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoFase.name}(id: ${id})`, '-', 'START');
-    return this.find<IModeloTipoFase, IModeloTipoFase>(`${this.endpointUrl}/${id}/modelotipofases`, options).pipe(
+    return this.find<IModeloTipoFase, IModeloTipoFase>(`${this.endpointUrl}/${id}/modelotipofases/convocatoria`, options).pipe(
       tap(() => this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoFase.name}(id: ${id})`, '-', 'END'))
     );
   }

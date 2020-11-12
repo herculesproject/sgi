@@ -16,13 +16,20 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { ITipoHito } from '@core/models/csp/tipos-configuracion';
-import { TipoHitoService } from '@core/services/csp/tipo-hito.service';
 import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { IModeloTipoHito } from '@core/models/csp/modelo-tipo-hito';
+import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
+import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 
 const MSG_ERROR_INIT = marker('csp.convocatoria.hitos.error.cargar');
+const MSG_ERROR_TIPOS = marker('csp.convocatoria.tipo.hitos.error.cargar');
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 
+export interface ConvocatoriaHitosModalComponentData {
+  hito: IConvocatoriaHito;
+  idModeloEjecucion: number;
+}
 @Component({
   templateUrl: './convocatoria-hitos-modal.component.html',
   styleUrls: ['./convocatoria-hitos-modal.component.scss']
@@ -39,17 +46,19 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
   fxFlexProperties3: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  tiposHitoFiltered: ITipoHito[];
-  tiposHito: Observable<ITipoHito[]>;
+  modeloTiposHito$: Observable<IModeloTipoHito[]>;
+
+  private modeloTiposHitoFiltered: IModeloTipoHito[];
 
   suscripciones: Subscription[] = [];
 
   constructor(
     private readonly logger: NGXLogger,
     public readonly matDialogRef: MatDialogRef<ConvocatoriaHitosModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public hito: IConvocatoriaHito,
-    private readonly snackBarService: SnackBarService,
-    private readonly tipoHitoService: TipoHitoService) {
+    private readonly modeloEjecucionService: ModeloEjecucionService,
+    private readonly convocatoriaService: ConvocatoriaService,
+    @Inject(MAT_DIALOG_DATA) private data: ConvocatoriaHitosModalComponentData,
+    private readonly snackBarService: SnackBarService) {
 
     this.logger.debug(ConvocatoriaHitosModalComponent.name, 'constructor()', 'start');
     this.fxFlexProperties = new FxFlexProperties();
@@ -82,23 +91,23 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
     this.logger.debug(ConvocatoriaHitosModalComponent.name, 'ngOnInit()', 'start');
 
     this.formGroup = new FormGroup({
-      tipoHito: new FormControl(this.hito?.tipoHito, [Validators.required, IsEntityValidator.isValid()]),
-      fechaInicio: new FormControl(this.hito?.fecha, [Validators.required]),
-      comentario: new FormControl(this.hito?.comentario),
-      aviso: new FormControl(this.hito?.generaAviso)
+      tipoHito: new FormControl(this.data?.hito?.tipoHito, [Validators.required, IsEntityValidator.isValid()]),
+      fechaInicio: new FormControl(this.data?.hito?.fecha, [Validators.required]),
+      comentario: new FormControl(this.data?.hito?.comentario, [Validators.maxLength(250)]),
+      aviso: new FormControl(this.data?.hito?.generaAviso)
     });
     this.loadTiposHito();
-
     this.logger.debug(ConvocatoriaHitosModalComponent.name, 'ngOnInit()', 'start');
   }
 
   loadTiposHito() {
     this.logger.debug(ConvocatoriaHitosModalComponent.name, 'loadTiposHito()', 'start');
+
     this.suscripciones.push(
-      this.tipoHitoService.findAll().subscribe(
-        (res: SgiRestListResult<ITipoHito>) => {
-          this.tiposHitoFiltered = res.items;
-          this.tiposHito = this.formGroup.controls.tipoHito.valueChanges
+      this.modeloEjecucionService.findModeloTipoHito(this.data.idModeloEjecucion).subscribe(
+        (res: SgiRestListResult<IModeloTipoHito>) => {
+          this.modeloTiposHitoFiltered = res.items;
+          this.modeloTiposHito$ = this.formGroup.controls.tipoHito.valueChanges
             .pipe(
               startWith(''),
               map(value => this.filtroTipoHito(value))
@@ -106,10 +115,13 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
           this.logger.debug(ConvocatoriaHitosModalComponent.name, 'loadTiposHito()', 'end');
         },
         () => {
-          this.snackBarService.showError(MSG_ERROR_INIT);
+          if (this.data.idModeloEjecucion) {
+            this.snackBarService.showError(MSG_ERROR_INIT);
+          } else {
+            this.snackBarService.showError(MSG_ERROR_TIPOS);
+          }
           this.logger.debug(ConvocatoriaHitosModalComponent.name, 'loadTiposHito()', 'end');
-        }
-      )
+        })
     );
     this.logger.debug(ConvocatoriaHitosModalComponent.name, 'loadTiposHito()', 'end');
   }
@@ -123,20 +135,15 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
     return typeof tipoHito === 'string' ? tipoHito : tipoHito?.nombre;
   }
 
-  getNombreTipoHito(tipoHito?: ITipoHito): string | undefined {
-    return typeof tipoHito === 'string' ? tipoHito : tipoHito?.nombre;
-  }
-
   /**
    * Filtra la lista devuelta por el servicio.
    *
    * @param value del input para autocompletar
    */
-  filtroTipoHito(value: string): ITipoHito[] {
+  filtroTipoHito(value: string): IModeloTipoHito[] {
     const filterValue = value.toString().toLowerCase();
-    return this.tiposHitoFiltered.filter(tipoHito => tipoHito.nombre.toLowerCase().includes(filterValue));
+    return this.modeloTiposHitoFiltered.filter(modeloTipoHito => modeloTipoHito.tipoHito?.nombre.toLowerCase().includes(filterValue));
   }
-
 
   /**
    * Cierra la ventana modal y devuelve el hito modificado o creado.
@@ -153,7 +160,7 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
     this.logger.debug(ConvocatoriaHitosModalComponent.name, 'updateComentario()', 'start');
     if (FormGroupUtil.valid(this.formGroup)) {
       this.loadDatosForm();
-      this.closeModal(this.hito);
+      this.closeModal(this.data.hito);
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
@@ -167,10 +174,10 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
    */
   private loadDatosForm(): void {
     this.logger.debug(ConvocatoriaHitosModalComponent.name, 'loadDatosForm()', 'start');
-    this.hito.comentario = this.formGroup.get('comentario').value;
-    this.hito.fecha = this.formGroup.get('fechaInicio').value;
-    this.hito.tipoHito = this.formGroup.get('tipoHito').value;
-    this.hito.generaAviso = this.formGroup.get('aviso').value ? this.formGroup.get('aviso').value : false;
+    this.data.hito.comentario = this.formGroup.get('comentario').value;
+    this.data.hito.fecha = this.formGroup.get('fechaInicio').value;
+    this.data.hito.tipoHito = this.formGroup.get('tipoHito').value;
+    this.data.hito.generaAviso = this.formGroup.get('aviso').value ? this.formGroup.get('aviso').value : false;
     this.logger.debug(ConvocatoriaHitosModalComponent.name, 'loadDatosForm()', 'end');
   }
 

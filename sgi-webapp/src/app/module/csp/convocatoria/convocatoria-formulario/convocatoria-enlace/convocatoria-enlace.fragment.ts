@@ -11,7 +11,7 @@ import { IConvocatoria } from '@core/models/csp/convocatoria';
 
 export class ConvocatoriaEnlaceFragment extends Fragment {
   enlace$ = new BehaviorSubject<StatusWrapper<IConvocatoriaEnlace>[]>([]);
-  enlaceEliminados: StatusWrapper<IConvocatoriaEnlace>[] = [];
+  private enlaceEliminados: StatusWrapper<IConvocatoriaEnlace>[] = [];
 
   constructor(
     private readonly logger: NGXLogger,

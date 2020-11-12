@@ -51,7 +51,7 @@ export class DateValidator {
       const fechaPosteriorDate = DateUtils.fechaToDate(fechaPosteriorControl.value);
 
 
-      if (fechaPosteriorDate && (!fechaAnteriorDate || fechaAnteriorDate > fechaPosteriorDate)) {
+      if (fechaPosteriorDate && (fechaAnteriorDate > fechaPosteriorDate)) {
         fechaPosteriorControl.setErrors({ after: true });
         fechaPosteriorControl.markAsTouched({ onlySelf: true });
       } else if (fechaPosteriorControl.errors) {
@@ -61,4 +61,25 @@ export class DateValidator {
     };
   }
 
+  static isBefore(fechaPosterior: string, fechaAnterior: string): ValidatorFn {
+    return (formGroup: FormGroup): ValidationErrors | null => {
+
+      const fechaAnteriorControl = formGroup.controls[fechaAnterior];
+      const fechaPosteriorControl = formGroup.controls[fechaPosterior];
+
+      if (fechaAnteriorControl.errors && !fechaAnteriorControl.errors.before) {
+        return;
+      }
+
+      const fechaAnteriorDate = DateUtils.fechaToDate(fechaAnteriorControl.value);
+      const fechaPosteriorDate = DateUtils.fechaToDate(fechaPosteriorControl.value);
+
+
+      if (fechaAnteriorDate && (fechaPosteriorDate < fechaAnteriorDate)) {
+        fechaAnteriorControl.setErrors({ before: true });
+      } else {
+        fechaAnteriorControl.setErrors(null);
+      }
+    };
+  }
 }

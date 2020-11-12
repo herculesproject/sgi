@@ -71,7 +71,7 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
 
 
   registrar(): void {
-    //TODO: Implementar
+    // TODO: Implementar
   }
 
 }

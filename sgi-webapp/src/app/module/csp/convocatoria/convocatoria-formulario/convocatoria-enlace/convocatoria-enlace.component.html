@@ -3,6 +3,9 @@
 
   <h2>{{'csp.convocatoria.enlace.titulo' | translate}}</h2>
 
+  <div *ngIf="disableAddEnlace" class="info-message">
+    {{'csp.convocatoria.tipo.enlace.modeloEjecucion' | translate}}
+  </div>
   <table class="mat-elevation-z8 table-enlace" mat-table [dataSource]="dataSource" matSort matSortActive="id"
     matSortDirection="asc" matSortDisableClear>
 
@@ -51,10 +54,10 @@
   </mat-paginator>
 
   <div class="separation-button">
-    <button color="three" aria-label="Center Align" md-button mat-raised-button (click)="openModal()">
+    <button color="three" aria-label="Center Align" md-button mat-raised-button (click)="openModal()"
+      [disabled]="disableAddEnlace">
       <mat-icon color="accent">add_circle</mat-icon>
       {{'csp.convocatoria.enlace.anadir'| translate}}
     </button>
   </div>
-
 </section>

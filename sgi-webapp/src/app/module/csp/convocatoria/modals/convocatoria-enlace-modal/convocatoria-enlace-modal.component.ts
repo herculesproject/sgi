@@ -1,12 +1,11 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
 import { ITipoEnlace } from '@core/models/csp/tipos-configuracion';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { TipoEnlaceService } from '@core/services/csp/tipo-enlace.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
@@ -14,10 +13,18 @@ import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { IModeloTipoEnlace } from '@core/models/csp/modelo-tipo-enlace';
+import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
+import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
-const MSG_ERROR_INIT = marker('csp.convocatoria.plazos.enlace.error.cargar');
+const MSG_ERROR_INIT = marker('csp.convocatoria.enlace.error.cargar');
+const MSG_ERROR_TIPOS = marker('csp.convocatoria.tipo.enlace.error.cargar');
 
+export interface ConvocatoriaEnlaceModalComponentData {
+  enlace: IConvocatoriaEnlace;
+  idModeloEjecucion: number;
+}
 @Component({
   templateUrl: './convocatoria-enlace-modal.component.html',
   styleUrls: ['./convocatoria-enlace-modal.component.scss']
@@ -28,15 +35,17 @@ export class ConvocatoriaEnlaceModalComponent implements OnInit, OnDestroy {
   fxFlexProperties: FxFlexProperties;
   suscripciones: Subscription[];
 
-  tiposEnlaceFiltered: ITipoEnlace[];
-  tiposEnlace$: Observable<ITipoEnlace[]>;
+  modeloTiposEnlace$: Observable<IModeloTipoEnlace[]>;
+
+  private modeloTiposEnlaceFiltered: IModeloTipoEnlace[];
 
   constructor(
     private readonly logger: NGXLogger,
     private readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<ConvocatoriaEnlaceModalComponent>,
-    private readonly tipoEnlaceService: TipoEnlaceService,
-    @Inject(MAT_DIALOG_DATA) public enlace: IConvocatoriaEnlace,
+    private readonly modeloEjecucionService: ModeloEjecucionService,
+    private readonly convocatoriaService: ConvocatoriaService,
+    @Inject(MAT_DIALOG_DATA) private data: ConvocatoriaEnlaceModalComponentData,
   ) {
     this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'constructor()', 'start');
     this.fxLayoutProperties = new FxLayoutProperties();
@@ -54,9 +63,9 @@ export class ConvocatoriaEnlaceModalComponent implements OnInit, OnDestroy {
     this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'ngOnInit()', 'start');
     this.suscripciones = [];
     this.formGroup = new FormGroup({
-      url: new FormControl(this.enlace?.url),
-      descripcion: new FormControl(this.enlace?.tipoEnlace?.descripcion),
-      tipoEnlace: new FormControl(this.enlace?.tipoEnlace, [IsEntityValidator.isValid()]),
+      url: new FormControl(this.data?.enlace?.url, [Validators.maxLength(250)]),
+      descripcion: new FormControl(this.data?.enlace?.tipoEnlace?.descripcion, [Validators.maxLength(250)]),
+      tipoEnlace: new FormControl(this.data?.enlace?.tipoEnlace, [IsEntityValidator.isValid()]),
     });
     this.loadTiposEnlaces();
     this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'ngOnInit()', 'end');
@@ -67,22 +76,20 @@ export class ConvocatoriaEnlaceModalComponent implements OnInit, OnDestroy {
    */
   loadTiposEnlaces() {
     this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'loadTiposEnlaces()', 'start');
-    this.suscripciones.push(
-      this.tipoEnlaceService.findAll().subscribe(
-        (res: SgiRestListResult<ITipoEnlace>) => {
-          this.tiposEnlaceFiltered = res.items;
-          this.tiposEnlace$ = this.formGroup.controls.tipoEnlace.valueChanges
-            .pipe(
-              startWith(''),
-              map(value => this.filtroTipoEnlace(value))
-            );
-          this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'loadTiposEnlaces()', 'end');
-        },
-        () => {
-          this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.error(ConvocatoriaEnlaceModalComponent.name, 'loadTiposEnlaces()', 'error');
-        }
-      )
+    this.suscripciones.push(this.modeloEjecucionService.findModeloTipoEnlace(this.data.idModeloEjecucion).subscribe(
+      (res: SgiRestListResult<IModeloTipoEnlace>) => {
+        this.modeloTiposEnlaceFiltered = res.items;
+        this.modeloTiposEnlace$ = this.formGroup.controls.tipoEnlace.valueChanges
+          .pipe(
+            startWith(''),
+            map(value => this.filtroTipoEnlace(value))
+          );
+        this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'loadTiposEnlaces()', 'end');
+      },
+      () => {
+        this.snackBarService.showError(MSG_ERROR_INIT);
+        this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'loadTiposEnlaces()', 'end');
+      })
     );
   }
 
@@ -91,9 +98,10 @@ export class ConvocatoriaEnlaceModalComponent implements OnInit, OnDestroy {
    *
    * @param value del input para autocompletar
    */
-  filtroTipoEnlace(value: string): ITipoEnlace[] {
+  filtroTipoEnlace(value: string): IModeloTipoEnlace[] {
     const filterValue = value.toString().toLowerCase();
-    return this.tiposEnlaceFiltered.filter(tipoLazoEnlace => tipoLazoEnlace.nombre.toLowerCase().includes(filterValue));
+    return this.modeloTiposEnlaceFiltered.filter(modeloTipoLazoEnlace =>
+      modeloTipoLazoEnlace.tipoEnlace?.nombre.toLowerCase().includes(filterValue));
   }
 
   getNombreTipoEnlace(tipoEnlace?: ITipoEnlace): string | undefined {
@@ -121,7 +129,7 @@ export class ConvocatoriaEnlaceModalComponent implements OnInit, OnDestroy {
     this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'updateComentario()', 'start');
     if (FormGroupUtil.valid(this.formGroup)) {
       this.loadDatosForm();
-      this.closeModal(this.enlace);
+      this.closeModal(this.data.enlace);
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
@@ -135,9 +143,9 @@ export class ConvocatoriaEnlaceModalComponent implements OnInit, OnDestroy {
    */
   private loadDatosForm(): void {
     this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'getDatosForm()', 'start');
-    this.enlace.url = FormGroupUtil.getValue(this.formGroup, 'url');
-    this.enlace.descripcion = FormGroupUtil.getValue(this.formGroup, 'descripcion');
-    this.enlace.tipoEnlace = FormGroupUtil.getValue(this.formGroup, 'tipoEnlace');
+    this.data.enlace.url = FormGroupUtil.getValue(this.formGroup, 'url');
+    this.data.enlace.descripcion = FormGroupUtil.getValue(this.formGroup, 'descripcion');
+    this.data.enlace.tipoEnlace = FormGroupUtil.getValue(this.formGroup, 'tipoEnlace');
     this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'getDatosForm()', 'end');
   }
 

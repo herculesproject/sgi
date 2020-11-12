@@ -19,6 +19,12 @@
             <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.required">
               {{'csp.convocatoria.plazos.fases.modal.fechaInicio.error.requerido' | translate}}
             </mat-error>
+            <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.before">
+              {{'csp.convocatoria.plazos.fases.modal.fechaInicio.error' | translate}}
+            </mat-error>
+            <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.overlapped">
+              {{'csp.convocatoria.plazos.fases.modal.fechaInicio.rangoSolapado' | translate}}
+            </mat-error>
           </mat-form-field>
         </div>
 
@@ -33,6 +39,12 @@
             <mat-error *ngIf="formGroup.controls.fechaFin.errors?.required">
               {{'csp.convocatoria.plazos.fases.modal.fechaFin.error.requerido' | translate}}
             </mat-error>
+            <mat-error *ngIf="formGroup.controls.fechaFin.errors?.after">
+              {{'csp.convocatoria.plazos.fases.modal.fechaFin.error' | translate}}
+            </mat-error>
+            <mat-error *ngIf="formGroup.controls.fechaFin.errors?.overlapped">
+              {{'csp.convocatoria.plazos.fases.modal.fechaFin.rangoSolapado' | translate}}
+            </mat-error>
           </mat-form-field>
         </div>
 
@@ -44,15 +56,15 @@
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
             <mat-label>{{'csp.convocatoria.plazos.fases.modal.tipoPlazosFases' | translate}}</mat-label>
-            <input matInput formControlName="tipoPlazosFases" type="text" id="tipoPlazosFases"
+            <input matInput formControlName="tipoFase" type="text" id="tipoPlazosFases"
               placeholder="{{'csp.convocatoria.plazos.fases.modal.tipoPlazosFases' | translate}}"
               [matAutocomplete]="autoPlazosFase">
             <mat-autocomplete #autoPlazosFase="matAutocomplete" [displayWith]="getTipoPlazosFase">
-              <mat-option *ngFor="let plazo of plazosFase | async" [value]="plazo">
-                {{plazo.nombre}}
+              <mat-option *ngFor="let modeloTipoFase of modeloTipoFases$ | async" [value]="modeloTipoFase.tipoFase">
+                {{modeloTipoFase.tipoFase.nombre}}
               </mat-option>
             </mat-autocomplete>
-            <mat-error *ngIf="formGroup.controls.tipoPlazosFases.errors?.required">
+            <mat-error *ngIf="formGroup.controls.tipoFase.errors?.required">
               {{'csp.convocatoria.plazos.fases.modal.tipoPlazosFases.error.requerido' | translate}}
             </mat-error>
           </mat-form-field>
@@ -69,7 +81,10 @@
             <mat-label>{{'csp.convocatoria.plazos.fases.modal.observaciones' | translate}}</mat-label>
             <textarea matInput formControlName="observaciones" type="text" id="observaciones"
               placeholder="{{'csp.convocatoria.plazos.fases.modal.observaciones' | translate}}">
-                            </textarea>
+            </textarea>
+            <mat-error *ngIf="formGroup.get('observaciones').errors?.maxlength">
+              {{'csp.convocatoria.plazos.fases.modal.observaciones.maximo' | translate}}
+            </mat-error>
           </mat-form-field>
 
         </div>

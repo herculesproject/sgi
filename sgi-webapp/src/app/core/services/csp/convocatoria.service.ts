@@ -18,19 +18,6 @@ import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 
-
-const plazosFases: IPlazosFases[] = [
-  {
-    id: 1, fechaInicio: new Date(), fechaFin: new Date(), tipoPlazosFases: { id: 1, nombre: 'Presentación interna solicitudes' },
-    observaciones: 'Recogida de solicitudes en UGI', activo: true
-  },
-  {
-    id: 1, fechaInicio: new Date(), fechaFin: new Date(), tipoPlazosFases: { id: 2, nombre: 'Presentación solicitudes' },
-    observaciones: 'Entrega de solicitudes en Ministerio', activo: true
-  }
-];
-
-
 const entidadesConvocantes: IEntidadConvocante[] = [
   {
     id: 1,
@@ -122,21 +109,16 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
   }
 
   /**
-   * Recupera listado mock de plazos y fases.
-   * @param id convocatoria
+   * Recupera listado de plazos y fases de una convocatoria
+   * @param idConvocatoria convocatoria
    * @param options opciones de búsqueda.
    */
-  getPlazosFases(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IPlazosFases>> {
-    this.logger.debug(ConvocatoriaService.name, `getPlazosFases(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
-    const list = {
-      page: null,
-      total: plazosFases.length,
-      items: plazosFases
-    } as SgiRestListResult<IPlazosFases>;
-    return of(list)
+  findFasesConvocatoria(idConvocatoria: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaFase>> {
+    this.logger.debug(ConvocatoriaService.name, `findFasesConvocatoria(${idConvocatoria}, ${options})`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${idConvocatoria}/convocatoriafases`;
+    return this.find<IConvocatoriaFase, IConvocatoriaFase>(endpointUrl, options)
       .pipe(
-        tap(() => this.logger.debug(ConvocatoriaService.name,
-          `getPlazosFases(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+        tap(() => this.logger.debug(ConvocatoriaService.name, `findFasesConvocatoria(${idConvocatoria}, ${options})`, '-', 'end'))
       );
   }
 

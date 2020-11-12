@@ -15,8 +15,8 @@
             <input matInput formControlName="tipoHito" type="text" id="tipoHito"
               placeholder="{{'csp.convocatoria.hitos.tipo.hito' | translate}}" required [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="getTipoHito">
-              <mat-option *ngFor="let tipoHito of tiposHito | async" [value]="tipoHito">
-                {{tipoHito.nombre}}
+              <mat-option *ngFor="let modeloTipoHito of modeloTiposHito$ | async" [value]="modeloTipoHito.tipoHito">
+                {{modeloTipoHito.tipoHito.nombre}}
               </mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="formGroup.controls.tipoHito.errors?.required">
@@ -59,7 +59,9 @@
             <textarea matInput formControlName="comentario" type="text" id="comentario"
               placeholder="{{'csp.convocatoria.hitos.comentario' | translate}}">
             </textarea>
-
+            <mat-error *ngIf="formGroup.get('comentario').errors?.maxlength">
+              {{'csp.convocatoria.hitos.modal.comentario.maximo' | translate}}
+            </mat-error>
           </mat-form-field>
 
         </div>

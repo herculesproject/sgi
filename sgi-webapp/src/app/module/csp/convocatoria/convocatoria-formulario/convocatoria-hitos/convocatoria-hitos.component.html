@@ -1,5 +1,9 @@
 <section class="convocatoria-hitos">
   <h2>{{'csp.convocatoria.hitos.title' | translate}}</h2>
+
+  <div *ngIf="disableAddHito" class="info-message">
+    {{'csp.convocatoria.tipo.hito.modeloEjecucion' | translate}}
+  </div>
   <table class="mat-elevation-z8 table-acta" mat-table [dataSource]="dataSource" matSort matSortActive="id"
     matSortDirection="asc" matSortDisableClear>
 
@@ -55,7 +59,7 @@
 
   <div class="separation-button">
     <!-- Botón añadir hitos -->
-    <button color="three" mat-button mat-raised-button (click)="openModal()">
+    <button color="three" mat-button mat-raised-button (click)="openModal()" [disabled]="disableAddHito">
       <mat-icon color="accent">add_circle</mat-icon>
       {{'csp.convocatoria.hitos.aniadir' | translate}}
     </button>

@@ -4,14 +4,18 @@ import { MatPaginator } from '@angular/material/paginator';
 import { NGXLogger } from 'ngx-logger';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { ConvocatoriaPlazosFasesFragment } from './convocatoria-plazos-fases.fragment';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription, of } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { IPlazosFases } from '@core/models/csp/plazos-fases';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { MatDialog } from '@angular/material/dialog';
-import { ConvocatoriaPlazosFaseModalComponent } from '../../modals/convocatoria-plazos-fase-modal/convocatoria-plazos-fase-modal.component';
+import { ConvocatoriaPlazosFaseModalComponent, ConvocatoriaPlazosFaseModalComponentData } from '../../modals/convocatoria-plazos-fase-modal/convocatoria-plazos-fase-modal.component';
+import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
+import { DialogService } from '@core/services/dialog.service';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+
+const MSG_DELETE = marker('csp.convocatoria.fase.listado.borrar');
 
 @Component({
   selector: 'sgi-convocatoria-plazos-fases',
@@ -27,17 +31,19 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
   totalElementos: number;
   displayedColumns: string[];
   elementosPagina: number[];
+  public disableAddFase = true;
 
-  dataSource: MatTableDataSource<StatusWrapper<IPlazosFases>>;
+  dataSource: MatTableDataSource<StatusWrapper<IConvocatoriaFase>>;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  plazosFase$: BehaviorSubject<StatusWrapper<IPlazosFases>[]>;
+  plazosFase$: BehaviorSubject<StatusWrapper<IConvocatoriaFase>[]>;
 
   constructor(
     protected readonly logger: NGXLogger,
-    protected readonly actionService: ConvocatoriaActionService,
-    private matDialog: MatDialog
+    private actionService: ConvocatoriaActionService,
+    private matDialog: MatDialog,
+    private readonly dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.PLAZOS_FASES, actionService);
     this.logger.debug(ConvocatoriaPlazosFasesComponent.name, 'constructor()', 'start');
@@ -53,9 +59,10 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
     super.ngOnInit();
     this.totalElementos = 0;
     this.subscriptions = [];
-    this.dataSource = new MatTableDataSource<StatusWrapper<IPlazosFases>>();
+    this.dataSource = new MatTableDataSource<StatusWrapper<IConvocatoriaFase>>();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.disableAddFase = !Boolean(this.actionService.getDatosGeneralesConvocatoria().modeloEjecucion);
     this.subscriptions.push(this.formPart.plazosFase$.subscribe(elements => {
       this.dataSource.data = elements;
       this.logger.debug(ConvocatoriaPlazosFasesComponent.name, 'ngOnInit()', 'end');
@@ -66,18 +73,24 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
    * Apertura de modal de plazos fase
    * @param plazo Identificador de plazos fase al guardar/editar
    */
-  openModalPeriodo(plazo?: StatusWrapper<IPlazosFases>): void {
+  openModalPlazos(plazo?: StatusWrapper<IConvocatoriaFase>): void {
     this.logger.debug(ConvocatoriaPlazosFasesComponent.name, 'openModalPeriodo()', 'start');
+    const datosPlazosFases = {
+      plazos: this.dataSource.data,
+      plazo: plazo ? plazo.value : {} as IConvocatoriaFase,
+      idModeloEjecucion: this.actionService.getDatosGeneralesConvocatoria().modeloEjecucion?.id
+    } as ConvocatoriaPlazosFaseModalComponentData;
+
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: plazo ? plazo.value : {} as IPlazosFases,
+      data: datosPlazosFases,
       autoFocus: false
     };
 
     const dialogRef = this.matDialog.open(ConvocatoriaPlazosFaseModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (plazosFase: IPlazosFases) => {
+      (plazosFase: IConvocatoriaFase) => {
         if (plazosFase) {
           if (plazo) {
             if (!plazo.created) {
@@ -97,6 +110,25 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
 
     this.logger.debug(ConvocatoriaPlazosFasesComponent.name, 'openModalPeriodo()', 'end');
 
+  }
+
+  /**
+   * Desactivar convocatoria fase
+   */
+  deleteFase(wrapper: StatusWrapper<IConvocatoriaFase>) {
+    this.logger.debug(ConvocatoriaPlazosFasesComponent.name,
+      `${this.deleteFase.name}(${wrapper})`, 'start');
+    this.subscriptions.push(
+      this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+        (aceptado: boolean) => {
+          if (aceptado) {
+            this.formPart.deleteFase(wrapper);
+          }
+          this.logger.debug(ConvocatoriaPlazosFasesComponent.name,
+            `${this.deleteFase.name}(${wrapper})`, 'end');
+        }
+      )
+    );
   }
 
   ngOnDestroy(): void {

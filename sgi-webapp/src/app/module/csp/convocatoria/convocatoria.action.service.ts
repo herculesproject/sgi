@@ -26,6 +26,7 @@ import { ConvocatoriaEntidadGestoraService } from '@core/services/csp/convocator
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { FormBuilder } from '@angular/forms';
 import { ConvocatoriaPeriodoJustificacionService } from '@core/services/csp/convocatoria-periodo-justificacion.service';
+import { ConvocatoriaFaseService } from '@core/services/csp/convocatoria-fase.service';
 
 @Injectable()
 export class ConvocatoriaActionService extends ActionService {
@@ -66,7 +67,8 @@ export class ConvocatoriaActionService extends ActionService {
     requisitoIPService: RequisitoIPService,
     convocatoriaEntidadGestoraService: ConvocatoriaEntidadGestoraService,
     unidadGestionService: UnidadGestionService,
-    convocatoriaPeriodoJustificacionService: ConvocatoriaPeriodoJustificacionService
+    convocatoriaPeriodoJustificacionService: ConvocatoriaPeriodoJustificacionService,
+    convocatoriaFaseService: ConvocatoriaFaseService
   ) {
     super();
     this.convocatoria = {} as IConvocatoria;
@@ -83,8 +85,7 @@ export class ConvocatoriaActionService extends ActionService {
       convocatoriaPeriodoJustificacionService);
     this.entidadesConvocantes = new ConvocatoriaEntidadesConvocantesFragment(
       logger, this.convocatoria?.id, convocatoriaService);
-    this.plazosFases = new ConvocatoriaPlazosFasesFragment(
-      logger, this.convocatoria?.id, convocatoriaService);
+    this.plazosFases = new ConvocatoriaPlazosFasesFragment(logger, this.convocatoria?.id, convocatoriaService, convocatoriaFaseService);
     this.hitos = new ConvocatoriaHitosFragment(
       logger, this.convocatoria?.id, convocatoriaService, convocatoriaHitoService);
     this.entidadesFinanciadorasFragment = new ConvocatoriaEntidadesFinanciadorasFragment(

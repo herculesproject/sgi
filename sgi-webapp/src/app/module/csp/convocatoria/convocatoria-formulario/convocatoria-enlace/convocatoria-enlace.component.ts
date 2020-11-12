@@ -10,7 +10,7 @@ import { ConvocatoriaEnlaceFragment } from './convocatoria-enlace.fragment';
 import { Subscription } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
-import { ConvocatoriaEnlaceModalComponent } from '../../modals/convocatoria-enlace-modal/convocatoria-enlace-modal.component';
+import { ConvocatoriaEnlaceModalComponent, ConvocatoriaEnlaceModalComponentData } from '../../modals/convocatoria-enlace-modal/convocatoria-enlace-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogService } from '@core/services/dialog.service';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -26,6 +26,7 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
 
   private formPart: ConvocatoriaEnlaceFragment;
   private subscriptions: Subscription[] = [];
+  public disableAddEnlace = true;
 
   totalElementos: number;
   elementosPagina: number[] = [5, 10, 25, 100];
@@ -37,7 +38,7 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
 
   constructor(
     protected readonly logger: NGXLogger,
-    protected readonly actionService: ConvocatoriaActionService,
+    private actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
     private readonly dialogService: DialogService
   ) {
@@ -65,6 +66,7 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
             return wrapper[property];
         }
       };
+    this.disableAddEnlace = !Boolean(this.actionService.getDatosGeneralesConvocatoria().modeloEjecucion);
     this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.enlace$.subscribe(elements => {
       this.dataSource.data = elements;
@@ -78,10 +80,14 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
    */
   openModal(wrapper?: StatusWrapper<IConvocatoriaEnlace>): void {
     this.logger.debug(ConvocatoriaEnlaceComponent.name, `${this.openModal.name}()`, 'start');
+    const datosEnlace = {
+      enlace: wrapper ? wrapper.value : {} as IConvocatoriaEnlace,
+      idModeloEjecucion: this.actionService.getDatosGeneralesConvocatoria().modeloEjecucion?.id
+    } as ConvocatoriaEnlaceModalComponentData;
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: wrapper ? wrapper.value : {} as IConvocatoriaEnlace
+      data: datosEnlace
     };
     const dialogRef = this.matDialog.open(ConvocatoriaEnlaceModalComponent, config);
     dialogRef.afterClosed().subscribe(
