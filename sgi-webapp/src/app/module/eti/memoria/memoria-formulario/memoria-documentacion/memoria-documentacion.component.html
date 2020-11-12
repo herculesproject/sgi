@@ -114,7 +114,8 @@
           <td mat-cell *matCellDef="let wrapper;let i=index;">
 
             <ng-container *ngIf="wrapper.value.aportado === true">
-              <button mat-button matTooltip="{{'botones.visualizar' | translate}}">
+              <button mat-button matTooltip="{{'botones.visualizar' | translate}}"
+                (click)="visualizarDocumento(wrapper.value.documentoRef)">
                 <mat-icon color="primary">picture_as_pdf</mat-icon>
               </button>
             </ng-container>
@@ -186,7 +187,8 @@
         <td mat-cell *matCellDef="let wrapper;let i=index;">
 
           <ng-container *ngIf="wrapper.value.aportado === true">
-            <button mat-button matTooltip="{{'botones.visualizar' | translate}}">
+            <button mat-button matTooltip="{{'botones.visualizar' | translate}}"
+              (click)="visualizarDocumento(wrapper.value.documentoRef)">
               <mat-icon color="primary">picture_as_pdf</mat-icon>
             </button>
           </ng-container>
@@ -258,7 +260,8 @@
         <td mat-cell *matCellDef="let wrapper;let i=index;">
 
           <ng-container *ngIf="wrapper.value.aportado === true">
-            <button mat-button matTooltip="{{'botones.visualizar' | translate}}">
+            <button mat-button matTooltip="{{'botones.visualizar' | translate}}"
+              (click)="visualizarDocumento(wrapper.value.documentoRef)">
               <mat-icon color="primary">picture_as_pdf</mat-icon>
             </button>
           </ng-container>

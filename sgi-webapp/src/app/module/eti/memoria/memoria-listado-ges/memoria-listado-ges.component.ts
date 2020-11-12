@@ -26,6 +26,7 @@ import { IMemoria } from '@core/models/eti/memoria';
 const MSG_BUTTON_SAVE = marker('footer.eti.peticionEvaluacion.crear');
 const TEXT_USER_TITLE = marker('eti.peticionEvaluacion.listado.buscador.solicitante');
 const TEXT_USER_BUTTON = marker('eti.peticionEvaluacion.listado.buscador.buscar.solicitante');
+const MSG_ERROR_LISTADO_MEMORIAS = marker('eti.memoria.listado.error');
 const MSG_ESTADO_ANTERIOR_OK = marker('eti.memoria.listado.volverEstadoAnterior.ok');
 const MSG_ESTADO_ANTERIOR_ERROR = marker('eti.memoria.listado.volverEstadoAnterior.error');
 const MSG_RECUPERAR_ESTADO = marker('eti.memoria.listado.volverEstadoAnterior.confirmacion');
@@ -36,6 +37,8 @@ const MSG_RECUPERAR_ESTADO = marker('eti.memoria.listado.volverEstadoAnterior.co
   styleUrls: ['./memoria-listado-ges.component.scss']
 })
 export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDestroy {
+
+
   MEMORIAS_ROUTE = MEMORIAS_ROUTE;
   ROUTE_NAMES = ROUTE_NAMES;
 
@@ -43,8 +46,8 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
   fxLayoutProperties: FxLayoutProperties;
 
   displayedColumns: string[];
-  elementosPagina: number[];
-  totalElementos: number;
+  elementosPagina = [5, 10, 25, 100];
+  totalElementos = 0;
   filter: SgiRestFilter[];
 
   textoCrear = MSG_BUTTON_SAVE;
@@ -80,8 +83,6 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
     private readonly memoriaService: MemoriaService
   ) {
     this.displayedColumns = ['num_referencia', 'comite', 'estado', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
-    this.elementosPagina = [5, 10, 25, 100];
-    this.totalElementos = 0;
 
     this.filter = [{
       field: undefined,
@@ -157,10 +158,19 @@ export class MemoriaListadoGesComponent implements AfterViewInit, OnInit, OnDest
         filters: this.buildFilters()
       }).pipe(
         map((response) => {
+          // Map response total
+          this.totalElementos = response.total;
+          if (reset) {
+            this.paginator.pageIndex = 0;
+          }
           // Return the values
           return response.items;
         }),
         catchError(() => {
+          this.paginator.firstPage();
+          this.totalElementos = 0;
+          this.snackBarService.showError(MSG_ERROR_LISTADO_MEMORIAS);
+          this.logger.debug(MemoriaListadoGesComponent.name, 'loadTable()', 'end');
           return of([]);
         })
       );

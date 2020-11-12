@@ -16,6 +16,8 @@ import { TipoMemoria } from '@core/models/eti/tipo-memoria';
 import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { IPersona } from '@core/models/sgp/persona';
 import { TipoMemoriaService } from '@core/services/eti/tipo-memoria.service';
+import { FormControl } from '@angular/forms';
+import { NullIdValidador } from '@core/validators/null-id-validador';
 
 const MSG_ERROR_INIT_ = marker('eti.memoria.datosGenerales.error.init');
 const TEXT_USER_TITLE = marker('eti.memoria.datosGenerales.buscador.solicitante');
@@ -34,8 +36,11 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
   comites: IComite[] = [];
   tiposMemoria: TipoMemoria[] = [];
 
+  memorias: IMemoria[] = [];
+
   filteredComites: Observable<IComite[]>;
   filteredTipoMemorias: Observable<TipoMemoria[]>;
+  filteredMemorias: Observable<IMemoria[]>;
 
   datosGeneralesFragment: MemoriaDatosGeneralesFragment;
   textoUsuarioLabel = TEXT_USER_TITLE;
@@ -70,28 +75,7 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
     super.ngOnInit();
     this.logger.debug(MemoriaDatosGeneralesComponent.name, 'ngOnInit()', 'start');
     this.loadComites();
-    this.loadTipoMemorias();
     this.logger.debug(MemoriaDatosGeneralesComponent.name, 'ngOnInit()', 'end');
-  }
-
-  loadTipoMemorias() {
-    this.subscriptions.push(this.tipoMemoriaService.findAll().subscribe(
-      (res) => {
-        this.tiposMemoria = res.items;
-        this.logger.debug(MemoriaDatosGeneralesComponent.name, 'loadTipoMemorias()', 'start');
-        this.filteredTipoMemorias = this.formGroup.controls.tipoMemoria.valueChanges
-          .pipe(
-            startWith(''),
-            map(value => {
-              return this.filterTipoMemorias(value);
-            })
-          );
-      },
-      () => {
-        this.snackBarService.showError(MSG_ERROR_INIT_);
-        this.logger.debug(MemoriaDatosGeneralesComponent.name, 'loadTipoMemorias()', 'end');
-      }
-    ));
   }
 
   loadComites() {
@@ -149,6 +133,19 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
       (tipoMemoria => tipoMemoria.nombre.toLowerCase().includes(filterValue));
   }
 
+
+  private filterMemorias(value: string | IMemoria): IMemoria[] {
+    let filterValue: string;
+    if (typeof value === 'string') {
+      filterValue = value.toLowerCase();
+    } else {
+      filterValue = value.numReferencia.toLowerCase();
+    }
+
+    return this.memorias.filter
+      (memoria => memoria.numReferencia.toLowerCase().includes(filterValue));
+  }
+
   /**
    * Devuelve el nombre de un comité.
    * @param comite comités
@@ -166,6 +163,10 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
     return titulo;
   }
 
+  getMemoria(memoria: IMemoria): string {
+    return memoria?.numReferencia;
+  }
+
   getPersonaResponsable(persona: IPersona): string {
     if (persona) {
       return persona?.nombre + ' ' + persona?.primerApellido + ' ' +
@@ -175,6 +176,76 @@ export class MemoriaDatosGeneralesComponent extends FormFragmentComponent<IMemor
 
   getPersonaRef(persona: IPersona): string {
     return persona.personaRef;
+  }
+
+  /**
+   * Recupera los tipos de memoria según el comité seleccionado.
+   * @param comite Comité seleccionado.
+   */
+  selectComite(comite: IComite): void {
+
+    this.logger.debug(MemoriaDatosGeneralesComponent.name, 'selectComite()', 'start');
+    this.datosGeneralesFragment.showCodOrganoCompetente = comite.comite === 'CEEA' ? true : false;
+    this.datosGeneralesFragment.showTitulo = comite.comite === 'CEEA' ? true : false;
+
+    this.formGroup.controls.tipoMemoria.reset();
+    this.formGroup.controls.memoria?.reset();
+    this.formGroup.controls.codOrganoCompetente?.reset();
+
+    this.comiteService.findTipoMemoria(comite.id).subscribe(
+      (res) => {
+        this.tiposMemoria = res.items;
+
+        this.filteredTipoMemorias = this.formGroup.controls.tipoMemoria.valueChanges
+          .pipe(
+            startWith(''),
+            map(value => {
+              return this.filterTipoMemorias(value);
+            })
+          );
+      },
+      () => {
+        this.snackBarService.showError(MSG_ERROR_INIT_);
+        this.logger.debug(MemoriaDatosGeneralesComponent.name, 'selectComite()', 'end');
+      }
+    );
+  }
+
+
+  /**
+   * En caso de que la opción seleccionada sea "Modificada"
+   * se recuperará el listado de memorias del comité previamente seleccionado.
+   * @param comite Comité seleccionado.
+   */
+  selectTipoMemoria(tipoMemoria: TipoMemoria): void {
+    this.logger.debug(MemoriaDatosGeneralesComponent.name, 'selectTipoMemoria()', 'start');
+
+    this.datosGeneralesFragment.showMemoriaOriginal = tipoMemoria.id === 2 ? true : false;
+    if (tipoMemoria.id === 2) {
+      this.formGroup.controls.memoriaOriginal.setValidators(new NullIdValidador().isValid());
+      this.formGroup.controls.memoriaOriginal.updateValueAndValidity();
+
+      this.comiteService.findMemorias(this.formGroup.controls.comite.value.id).subscribe(
+        (res) => {
+          this.memorias = res.items;
+
+          this.filteredMemorias = this.formGroup.controls.memoriaOriginal.valueChanges
+            .pipe(
+              startWith(''),
+              map(value => {
+                return this.filterMemorias(value);
+              })
+            );
+        },
+        () => {
+          this.snackBarService.showError(MSG_ERROR_INIT_);
+          this.logger.debug(MemoriaDatosGeneralesComponent.name, 'selectTipoMemoria()', 'end');
+        }
+      );
+    } else {
+      this.formGroup.controls.memoriaOriginal.clearValidators();
+      this.formGroup.controls.memoriaOriginal.updateValueAndValidity();
+    }
   }
 
   ngOnDestroy(): void {

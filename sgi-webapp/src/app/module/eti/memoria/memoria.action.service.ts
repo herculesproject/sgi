@@ -7,7 +7,7 @@ import { MemoriaService } from '@core/services/eti/memoria.service';
 import { IMemoria } from '@core/models/eti/memoria';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { PETICION_EVALUACION_ROUTE } from '../peticion-evaluacion/peticion-evaluacion-route-names';
 import { MemoriaDocumentacionFragment } from './memoria-formulario/memoria-documentacion/memoria-documentacion.fragment';
@@ -23,6 +23,7 @@ import { ApartadoService } from '@core/services/eti/apartado.service';
 import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { IRetrospectiva } from '@core/models/eti/retrospectiva';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
+import { of } from 'rxjs';
 
 const MSG_PETICIONES_EVALUACION = marker('eti.memoria.link.peticionEvaluacion');
 
@@ -86,6 +87,7 @@ export class MemoriaActionService extends ActionService {
       this.addFragment(this.FRAGMENT.EVALUACIONES, this.evaluaciones);
       this.addFragment(this.FRAGMENT.INFORMES, this.informes);
     }
+
   }
 
   private addPeticionEvaluacionLink(idPeticionEvaluacion: number): void {
@@ -102,6 +104,7 @@ export class MemoriaActionService extends ActionService {
           this.memoria.peticionEvaluacion = peticionEvaluacion;
           this.formularios.setPeticionEvaluacion(peticionEvaluacion);
           this.addPeticionEvaluacionLink(id);
+          this.datosGenerales.loadResponsable(id);
         })
       ).subscribe();
     }

@@ -16,6 +16,7 @@ import { IInforme } from '@core/models/eti/informe';
   providedIn: 'root'
 })
 export class MemoriaService extends SgiRestService<number, IMemoria>{
+
   private static readonly MAPPING = '/memorias';
 
   constructor(logger: NGXLogger, protected http: HttpClient) {
@@ -405,6 +406,18 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
     this.logger.debug(MemoriaService.name, `enviarSecretariaRetrospectiva(${memoriaId})`, '-', 'start');
     return this.http.put<void>(`${this.endpointUrl}/${memoriaId}/enviar-secretaria-retrospectiva`, null).pipe(
       tap(() => this.logger.debug(MemoriaService.name, `enviarSecretariaRetrospectiva(${memoriaId})`, '-', 'end'))
+    );
+  }
+
+  /**
+   * Crea una memoria del tipo modificada enviando el id de la memoria de la que se realizará la copia de datos.
+   * @param memoria memoria a crear.
+   * @param id identificador de la memoria de la que se parte para crear la nueva memoria.
+   */
+  createMemoriaModificada(memoria: IMemoria, id: number): Observable<IMemoria> {
+    this.logger.debug(MemoriaService.name, `createMemoriaModificada(${memoria}, ${id})`, '-', 'start');
+    return this.http.post<IMemoria>(`${this.endpointUrl}/${id}/crear-memoria-modificada`, memoria).pipe(
+      tap(() => this.logger.debug(MemoriaService.name, `createMemoriaModificada(${memoria}, ${id})`, '-', 'end'))
     );
   }
 

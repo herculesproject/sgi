@@ -285,7 +285,7 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
    * PENDIENTE, COMPLETADA
    */
   hasPermisoUpdateDocumentacionRetrospectiva(): boolean {
-    return this.estadoRetrospectiva.id === 1 || this.estadoRetrospectiva.id === 2;
+    return this.estadoRetrospectiva?.id === 1 || this.estadoRetrospectiva?.id === 2;
   }
 
   /**

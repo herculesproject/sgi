@@ -180,48 +180,71 @@ export class MemoriaDocumentacionMemoriaModalComponent implements OnInit {
           this.snackBarService.showError(MSG_ERROR_APORTAR_DOCUMENTACION);
           return of();
         })).subscribe((documentoRefGenerado: string) => {
-          this.documentacionesMemoria.map(documentacionMemoriaListado => {
+          if (this.documentacionesMemoria.length > 0) {
+            this.documentacionesMemoria.map(documentacionMemoriaListado => {
 
 
-            if (documentacionMemoriaListado.value.tipoDocumento.nombre === this.formGroup.controls.tipoDocumento.value.nombre
-              && !documentacionMemoriaListado.value.aportado) {
-              documentacionMemoriaListado.value.documentoRef = documentoRefGenerado;
-              documentacionMemoriaListado.value.tipoDocumento = this.formGroup.controls.tipoDocumento.value;
+              if (documentacionMemoriaListado.value.tipoDocumento.nombre === this.formGroup.controls.tipoDocumento.value.nombre
+                && !documentacionMemoriaListado.value.aportado) {
+                documentacionMemoriaListado.value.documentoRef = documentoRefGenerado;
+                documentacionMemoriaListado.value.tipoDocumento = this.formGroup.controls.tipoDocumento.value;
 
-              if (documentacionMemoriaListado.value.id) {
-                documentacionMemoriaListado.setEdited();
+                if (documentacionMemoriaListado.value.id) {
+                  documentacionMemoriaListado.setEdited();
+                }
+                documentacionMemoriaListado.value.aportado = true;
+                existDocumentacion = true;
+
+                this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'save()', 'end');
+                this.closeModal(documentacionMemoriaListado);
               }
-              documentacionMemoriaListado.value.aportado = true;
-              existDocumentacion = true;
-
-              this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'save()', 'end');
-              this.closeModal(documentacionMemoriaListado);
-            }
 
 
-            if (!existDocumentacion) {
+              if (!existDocumentacion) {
 
-              this.documentacionesMemoria = [];
-              documentacionMemoria = {
-                id: null,
-                aportado: true,
-                tipoDocumento: this.formGroup.controls.tipoDocumento.value,
-                documentoRef: documentoRefGenerado,
-                memoria: null,
-                fichero: this.formGroup.controls.fileUpload.value
-              };
+                this.documentacionesMemoria = [];
+                documentacionMemoria = {
+                  id: null,
+                  aportado: true,
+                  tipoDocumento: this.formGroup.controls.tipoDocumento.value,
+                  documentoRef: documentoRefGenerado,
+                  memoria: null,
+                  fichero: this.formGroup.controls.fileUpload.value
+                };
 
 
-              const wrapperDocumentacion: StatusWrapper<IDocumentacionMemoria> =
-                new StatusWrapper<IDocumentacionMemoria>(documentacionMemoria);
-              wrapperDocumentacion.setCreated();
-              this.documentacionesMemoria.push(wrapperDocumentacion);
-              this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'save()', 'end');
-              this.closeModal(wrapperDocumentacion);
+                const wrapperDocumentacion: StatusWrapper<IDocumentacionMemoria> =
+                  new StatusWrapper<IDocumentacionMemoria>(documentacionMemoria);
+                wrapperDocumentacion.setCreated();
+                this.documentacionesMemoria.push(wrapperDocumentacion);
+                this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'save()', 'end');
+                this.closeModal(wrapperDocumentacion);
 
-            }
+              }
 
-          });
+            });
+          } else {
+
+            this.documentacionesMemoria = [];
+            documentacionMemoria = {
+              id: null,
+              aportado: true,
+              tipoDocumento: this.formGroup.controls.tipoDocumento.value,
+              documentoRef: documentoRefGenerado,
+              memoria: null,
+              fichero: this.formGroup.controls.fileUpload.value
+            };
+
+
+            const wrapperDocumentacion: StatusWrapper<IDocumentacionMemoria> =
+              new StatusWrapper<IDocumentacionMemoria>(documentacionMemoria);
+            wrapperDocumentacion.setCreated();
+            this.documentacionesMemoria.push(wrapperDocumentacion);
+            this.logger.debug(MemoriaDocumentacionMemoriaModalComponent.name, 'save()', 'end');
+            this.closeModal(wrapperDocumentacion);
+
+          }
+
 
         });
     } else {

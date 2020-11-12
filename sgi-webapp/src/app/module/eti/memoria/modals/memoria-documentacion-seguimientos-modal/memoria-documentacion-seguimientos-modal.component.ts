@@ -149,32 +149,7 @@ export class MemoriaDocumentacionSeguimientosModalComponent implements OnInit {
     this.logger.debug(MemoriaDocumentacionSeguimientosModalComponent.name, 'save()', 'end');
   }
 
-  /**
-   * Método para actualizar la entidad con los datos de un formGroup
-   *
-   * @returns Comentario con los datos del formulario
-   */
-  private loadDatosForm(): IDocumentacionMemoria {
-    this.logger.debug(MemoriaDocumentacionSeguimientosModalComponent.name, 'loadDatosForm()', 'start');
-    const documentacionMemoria = {} as IDocumentacionMemoria;
 
-    documentacionMemoria.aportado = true;
-    documentacionMemoria.documentoRef = '';
-
-    documentacionMemoria.fichero = FormGroupUtil.getValue(this.formGroup, 'fileUpload');
-
-    this.documentoService.uploadFichero(documentacionMemoria.fichero).pipe(
-      map((documentoSgdoc: IDocumento) => {
-        documentacionMemoria.documentoRef = documentoSgdoc.documentoRef;
-        return documentacionMemoria;
-
-      }));
-
-
-    this.logger.debug(MemoriaDocumentacionSeguimientosModalComponent.name, 'loadDatosForm()', 'end');
-    return documentacionMemoria;
-
-  }
 
   /**
    * Rellena el campo del formulario con el fichero seleccionado.

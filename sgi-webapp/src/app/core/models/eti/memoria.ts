@@ -46,4 +46,7 @@ export interface IMemoria {
 
   /** Código organo */
   codOrganoCompetente: string;
+
+  /** Memoria original */
+  memoriaOriginal: IMemoria;
 }

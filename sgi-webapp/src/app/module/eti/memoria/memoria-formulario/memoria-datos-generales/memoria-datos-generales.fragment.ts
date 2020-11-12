@@ -6,20 +6,24 @@ import { NullIdValidador } from '@core/validators/null-id-validador';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, switchMap, catchError, tap } from 'rxjs/operators';
 import { IPersona } from '@core/models/sgp/persona';
-import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
-import { Subscription } from 'rxjs/internal/Subscription';
 import { OnDestroy } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
+import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 
-export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria> implements OnDestroy {
+export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
   private memoria: IMemoria;
   public readonly: boolean;
+  public showCodOrganoCompetente = false;
+  public showTitulo = false;
+  public showMemoriaOriginal = false;
   public personasResponsable$: BehaviorSubject<IPersona[]> = new BehaviorSubject<IPersona[]>([]);
-  private subscriptionsFragment: Subscription[] = [];
   public mostrarCodOrgano = false;
+
+  private idPeticionEvaluacion: number;
+
 
   constructor(
     private fb: FormBuilder, private logger: NGXLogger, readonly: boolean, key: number, private service: MemoriaService,
@@ -30,20 +34,33 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria> implem
     this.readonly = readonly;
   }
 
-  public setPeticionEvaluacion(peticionEvaluacion: IPeticionEvaluacion) {
-    this.logger.debug(MemoriaDatosGeneralesFragment.name, 'setPeticionEvaluacion(peticionEvaluacion: IPeticionEvaluacion)', 'start');
-    if (!this.getKey()) {
-      this.memoria.peticionEvaluacion = peticionEvaluacion;
-      if (this.memoria.comite.comite === 'CEEA') {
-        this.mostrarCodOrgano = true;
-      }
-      this.loadResponsable(peticionEvaluacion.id);
-    }
-    else {
-      Error('Value mismatch. Cannot change the value when editing');
-    }
-    this.logger.debug(MemoriaDatosGeneralesFragment.name, 'setPeticionEvaluacion(peticionEvaluacion: IPeticionEvaluacion)', 'end');
+
+
+  public loadResponsable(idPeticionEvaluacion: number): void {
+    this.logger.debug(MemoriaDatosGeneralesFragment.name, 'loadResponsable(idPeticionEvaluacion: number)', 'start');
+    this.idPeticionEvaluacion = idPeticionEvaluacion;
+    this.subscriptions.push(
+      this.peticionEvaluacionService.findEquipoInvestigador(idPeticionEvaluacion).pipe(
+        map((response) => {
+          const equiposTrabajo = response.items;
+          if (response.items) {
+            const personaRefsEquiposTrabajo = equiposTrabajo.map((equipoTrabajo: IEquipoTrabajo) => equipoTrabajo.personaRef);
+            this.personaFisicaService.findByPersonasRefs([...personaRefsEquiposTrabajo]).pipe(
+              map(
+                responsePersonas => {
+                  return responsePersonas.items;
+                }
+              )
+            )
+              .subscribe((persona) => {
+                this.personasResponsable$.next(persona);
+              });
+          }
+        })
+      ).subscribe());
+    this.logger.debug(MemoriaDatosGeneralesFragment.name, 'loadResponsable(idPeticionEvaluacion: number)', 'end');
   }
+
 
   protected buildFormGroup(): FormGroup {
     this.logger.debug(MemoriaDatosGeneralesFragment.name, 'buildFormGroup()', 'start');
@@ -53,7 +70,12 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria> implem
       tipoMemoria: [{ value: this.isEdit() ? this.memoria.tipoMemoria : '', disabled: (this.isEdit() || this.readonly) }],
       titulo: [{ value: this.isEdit() ? this.memoria.titulo : '', disabled: this.readonly }],
       personaResponsable: [{ value: '', disabled: this.readonly }, Validators.required],
-      codOrganoCompetente: [{ value: this.isEdit() ? this.memoria.codOrganoCompetente : '', disabled: this.readonly }]
+      codOrganoCompetente: [{ value: this.isEdit() ? this.memoria.codOrganoCompetente : '', disabled: this.readonly }],
+      memoriaOriginal: [{
+        value: this.isEdit() ? this.memoria.memoriaOriginal?.numReferencia : '',
+        disabled: this.isEdit()
+      }, new NullIdValidador().isValid()]
+
     });
   }
 
@@ -63,7 +85,8 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria> implem
       tipoMemoria: value.tipoMemoria,
       titulo: value.titulo,
       personaRef: value.personaRef,
-      codOrganoCompetente: value.codOrganoCompetente
+      codOrganoCompetente: value.codOrganoCompetente,
+      memoriaOriginal: value.memoriaOriginal
     };
   }
 
@@ -88,7 +111,12 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria> implem
   saveOrUpdate(): Observable<number> {
     this.logger.debug(MemoriaDatosGeneralesFragment.name, 'saveOrUpdate()', 'start');
     const datosGenerales = this.getValue();
-    const obs = this.isEdit() ? this.service.update(this.getKey() as number, datosGenerales) : this.service.create(datosGenerales);
+    datosGenerales.peticionEvaluacion = {} as IPeticionEvaluacion;
+    datosGenerales.peticionEvaluacion.id = this.idPeticionEvaluacion;
+    const obs = this.isEdit() ? this.service.update(this.getKey() as number, datosGenerales) :
+      datosGenerales.tipoMemoria.id === 2 ?
+        this.service.createMemoriaModificada(datosGenerales,
+          this.getFormGroup().controls.memoriaOriginal.value.id) : this.service.create(datosGenerales);
     return obs.pipe(
       map((value) => {
         this.memoria = value;
@@ -107,6 +135,14 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria> implem
             map((persona) => {
               this.getFormGroup().controls.personaResponsable.setValue(persona);
               this.memoria = memoria;
+
+              this.showCodOrganoCompetente = this.memoria.comite.comite === 'CEEA' ? true : false;
+              this.showTitulo = this.memoria.comite.comite === 'CEEA' ? true : false;
+              this.showMemoriaOriginal = this.memoria.tipoMemoria.id === 2 ? true : false;
+              if (!this.showMemoriaOriginal) {
+                this.getFormGroup().controls.memoriaOriginal.clearValidators();
+                this.getFormGroup().controls.memoriaOriginal.updateValueAndValidity();
+              }
               return memoria;
             }),
             catchError(() => of(memoria)),
@@ -120,33 +156,4 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria> implem
     this.logger.debug(MemoriaDatosGeneralesFragment.name, 'initializer(key: number)', 'end');
   }
 
-  loadResponsable(idPeticionEvaluacion: number): void {
-    this.logger.debug(MemoriaDatosGeneralesFragment.name, 'loadResponsable(idPeticionEvaluacion: number)', 'start');
-    this.subscriptionsFragment.push(
-      this.peticionEvaluacionService.findEquipoInvestigador(idPeticionEvaluacion).pipe(
-        map((response) => {
-          const equiposTrabajo = response.items;
-          if (response.items) {
-            const personaRefsEquiposTrabajo = equiposTrabajo.map((equipoTrabajo: IEquipoTrabajo) => equipoTrabajo.personaRef);
-            this.personaFisicaService.findByPersonasRefs([...personaRefsEquiposTrabajo]).pipe(
-              map(
-                responsePersonas => {
-                  return responsePersonas.items;
-                }
-              )
-            )
-              .subscribe((persona) => {
-                this.personasResponsable$.next(persona);
-              });
-          }
-        })
-      ).subscribe());
-    this.logger.debug(MemoriaDatosGeneralesFragment.name, 'loadResponsable(idPeticionEvaluacion: number)', 'end');
-  }
-
-  ngOnDestroy(): void {
-    this.logger.debug(MemoriaDatosGeneralesFragment.name, 'ngOnDestroy()', 'start');
-    this.subscriptionsFragment.forEach(x => x.unsubscribe());
-    this.logger.debug(MemoriaDatosGeneralesFragment.name, 'ngOnDestroy()', 'end');
-  }
 }
