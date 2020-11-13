@@ -59,6 +59,19 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
     );
   }
 
+
+  /**
+   * Recupera el listado de todas las convocatorias asociadas a las unidades de gestión del uusario logueado.
+   * @param options Opciones de búsqueda
+   * @returns listado de convocatorias
+   */
+  findAllTodosRestringidos(options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoria>> {
+    this.logger.debug(ConvocatoriaService.name, `${this.findAllTodos.name}(`, '-', 'START');
+    return this.find<IConvocatoria, IConvocatoria>(`${this.endpointUrl}/todos/restringidos`, options).pipe(
+      tap(() => this.logger.debug(ConvocatoriaService.name, `${this.findAllTodos.name}()`, '-', 'END'))
+    );
+  }
+
   /**
    * Recupera listado de periodos justificacion de una convocatoria.
    *

@@ -22,4 +22,17 @@ export class UnidadGestionService extends SgiRestService<number, IUnidadGestion>
       http
     );
   }
+
+
+
+  /**
+   * Recupera las unidades de gestión restringidas por los permisos del usuario logueado.
+   * @param options opciones de búsqueda.
+   */
+  findAllRestringidos(options?: SgiRestFindOptions): Observable<SgiRestListResult<IUnidadGestion>> {
+    this.logger.debug(UnidadGestionService.name, `findAllRestringidos(${options ? JSON.stringify(options) : options})`, '-', 'START');
+    return this.find<IUnidadGestion, IUnidadGestion>(`${this.endpointUrl}/restringidos`, options).pipe(
+      tap(() => this.logger.debug(UnidadGestionService.name, `findAllRestringidos(${options ? JSON.stringify(options) : options})`, '-', 'END'))
+    );
+  }
 }

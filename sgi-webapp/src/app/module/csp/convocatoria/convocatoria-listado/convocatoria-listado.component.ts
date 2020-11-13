@@ -80,7 +80,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
 
   protected createObservable(): Observable<SgiRestListResult<IConvocatoriaListado>> {
     this.logger.debug(ConvocatoriaListadoComponent.name, `${this.createObservable.name}()`, 'start');
-    const observable$ = this.convocatoriaService.findAllTodos(this.getFindOptions()).pipe(
+    const observable$ = this.convocatoriaService.findAllTodosRestringidos(this.getFindOptions()).pipe(
       map(result => {
         const convocatorias = result.items.map((convocatoria) => {
           return {

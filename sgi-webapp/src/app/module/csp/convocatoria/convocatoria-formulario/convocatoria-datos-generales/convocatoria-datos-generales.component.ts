@@ -137,8 +137,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
   private loadUnidadesGestion() {
     this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadUnidadesGestion.name}()`, 'start');
     this.subscriptions.push(
-      // TODO Debería filtrar por el rol
-      this.unidadGestionService.findAll().subscribe(
+      this.unidadGestionService.findAllRestringidos().subscribe(
         res => {
           this.unidadGestionFiltered = res.items;
           this.unidadesGestion$ = this.formGroup.controls.unidadGestion.valueChanges
