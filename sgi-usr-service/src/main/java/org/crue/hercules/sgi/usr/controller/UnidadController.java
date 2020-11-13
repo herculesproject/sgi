@@ -1,6 +1,8 @@
 package org.crue.hercules.sgi.usr.controller;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 import javax.validation.groups.Default;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -89,6 +92,41 @@ public class UnidadController {
     }
 
     log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link Unidad} restringida por los
+   * permisos del usuario logueado.
+   * 
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/restringidos")
+  // @PreAuthorize("hasAuthorityForAnyUO('USR-UNI-V')")
+  ResponseEntity<Page<Unidad>> findAllTodosRestringidos(
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging, Authentication atuhentication) {
+    log.debug(
+        "findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging, Authentication atuhentication) - start");
+
+    List<String> acronimosUnidadGestion = atuhentication.getAuthorities().stream().map(acronimo -> {
+      if (acronimo.getAuthority().indexOf("_") > 0) {
+        return acronimo.getAuthority().split("_")[1];
+      }
+      return null;
+    }).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+
+    Page<Unidad> page = service.findAllRestringidos(query, acronimosUnidadGestion, paging);
+
+    if (page.isEmpty()) {
+      log.debug(
+          "findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging, Authentication atuhentication) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug(
+        "findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging, Authentication atuhentication) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

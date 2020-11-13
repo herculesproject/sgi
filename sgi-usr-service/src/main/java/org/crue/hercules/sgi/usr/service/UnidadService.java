@@ -62,4 +62,16 @@ public interface UnidadService {
    */
   Unidad findById(Long id);
 
+  /**
+   * Recupera una lista de paginada de {@link Unidad} restringidas por los
+   * permisos del usuario logueado.
+   * 
+   * @param query                  datos de búsqueda
+   * @param acronimosUnidadGestion listado de los acrónimos de las unidades de
+   *                               gestión del usuario logueado.
+   * @param paging                 datos de la paginación
+   * @return listado paginado de {@link Unidad}
+   */
+  Page<Unidad> findAllRestringidos(List<QueryCriteria> query, List<String> acronimosUnidadGestion, Pageable paging);
+
 }

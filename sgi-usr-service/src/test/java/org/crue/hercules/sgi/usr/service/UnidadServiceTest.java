@@ -310,6 +310,49 @@ public class UnidadServiceTest {
     Assertions.assertThatThrownBy(() -> service.findById(idBuscado)).isInstanceOf(UnidadNotFoundException.class);
   }
 
+  @Test
+  public void findAllTodosRestringidos_ReturnsPage() {
+    // given: Una lista con 37 Unidad
+    List<Unidad> unidades = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      unidades.add(generarMockUnidad(i, "Unidad" + String.format("%03d", i)));
+    }
+
+    BDDMockito
+        .given(repository.findAll(ArgumentMatchers.<Specification<Unidad>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<Unidad>>() {
+          @Override
+          public Page<Unidad> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > unidades.size() ? unidades.size() : toIndex;
+            List<Unidad> content = unidades.subList(fromIndex, toIndex);
+            Page<Unidad> page = new PageImpl<>(content, pageable, unidades.size());
+            return page;
+          }
+        });
+
+    List<String> acronimosUnidadGestion = new ArrayList<>();
+    acronimosUnidadGestion.add("OPE");
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<Unidad> page = service.findAllRestringidos(null, acronimosUnidadGestion, paging);
+
+    // then: Devuelve la pagina 3 con los Unidad del 31 al 37
+    Assertions.assertThat(page.getContent().size()).as("getContent().size()").isEqualTo(7);
+    Assertions.assertThat(page.getNumber()).as("getNumber()").isEqualTo(3);
+    Assertions.assertThat(page.getSize()).as("getSize()").isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).as("getTotalElements()").isEqualTo(37);
+    for (int i = 31; i <= 37; i++) {
+      Unidad unidad = page.getContent().get(i - (page.getSize() * page.getNumber()) - 1);
+      Assertions.assertThat(unidad.getNombre()).isEqualTo("Unidad" + String.format("%03d", i));
+    }
+  }
+
   /**
    * Función que devuelve un objeto Unidad
    * 
@@ -331,7 +374,7 @@ public class UnidadServiceTest {
     Unidad unidad = new Unidad();
     unidad.setId(id);
     unidad.setNombre(nombre);
-    unidad.setAcronimo("acronimo-" + id);
+    unidad.setAcronimo("OPE");
     unidad.setDescripcion("descripcion-" + id);
     unidad.setActivo(true);
 

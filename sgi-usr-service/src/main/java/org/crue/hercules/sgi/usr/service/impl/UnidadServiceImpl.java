@@ -152,6 +152,32 @@ public class UnidadServiceImpl implements UnidadService {
   }
 
   /**
+   * Recupera una lista de paginada de {@link Unidad} restringidas por los
+   * permisos del usuario logueado.
+   * 
+   * @param query                  datos de búsqueda
+   * @param acronimosUnidadGestion listado de los acrónimos de las unidades de
+   *                               gestión del usuario logueado.
+   * @param pageable               datos de la paginación
+   * @return listado paginado de {@link Unidad}
+   */
+  @Override
+  public Page<Unidad> findAllRestringidos(List<QueryCriteria> query, List<String> acronimosUnidadGestion,
+      Pageable pageable) {
+    log.debug("findAllTodosRestringidos(List<QueryCriteria> query, Object credentials, Pageable pageable) - start");
+
+    Specification<Unidad> specByQuery = new QuerySpecification<Unidad>(query);
+    Specification<Unidad> specAcronimos = UnidadSpecifications.acronimosIn(acronimosUnidadGestion);
+
+    Specification<Unidad> specs = Specification.where(specByQuery).and(specAcronimos);
+
+    Page<Unidad> returnValue = repository.findAll(specs, pageable);
+
+    log.debug("findAllTodosRestringidos(List<QueryCriteria> query, Object credentials, Pageable pageable) - end");
+    return returnValue;
+  }
+
+  /**
    * Obtiene {@link Unidad} por su id.
    *
    * @param id el id de la entidad {@link Unidad}.

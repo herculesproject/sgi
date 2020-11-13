@@ -350,6 +350,83 @@ public class UnidadControllerTest extends BaseControllerTest {
         andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONGAS-V_OPE" })
+  public void findAllTodosRestringidos_ReturnsPage() throws Exception {
+    // given: Una lista con 37 Unidad
+    List<Unidad> unidades = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      unidades.add(generarMockUnidad(i, "Unidad" + String.format("%03d", i)));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(service.findAllRestringidos(ArgumentMatchers.<List<QueryCriteria>>any(),
+            ArgumentMatchers.<List<String>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > unidades.size() ? unidades.size() : toIndex;
+          List<Unidad> content = unidades.subList(fromIndex, toIndex);
+          Page<Unidad> pageResponse = new PageImpl<>(content, pageable, unidades.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/restringidos")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los Unidad del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<Unidad> unidadesResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<Unidad>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      Unidad unidad = unidadesResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(unidad.getNombre()).isEqualTo("Unidad" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONGAS-V" })
+  public void findAllTodosRestringidos_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de Unidad
+    List<Unidad> unidades = new ArrayList<>();
+    Integer page = 0;
+    Integer pageSize = 10;
+    BDDMockito
+        .given(service.findAllRestringidos(ArgumentMatchers.<List<QueryCriteria>>any(),
+            ArgumentMatchers.<List<String>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          Page<Unidad> pageResponse = new PageImpl<>(unidades, pageable, 0);
+          return pageResponse;
+        });
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/restringidos")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
   /**
    * Función que devuelve un objeto Unidad
    * 
@@ -372,7 +449,7 @@ public class UnidadControllerTest extends BaseControllerTest {
     Unidad unidad = new Unidad();
     unidad.setId(id);
     unidad.setNombre(nombre);
-    unidad.setAcronimo("acronimo-" + id);
+    unidad.setAcronimo("OPE");
     unidad.setDescripcion("descripcion-" + id);
     unidad.setActivo(true);
 
