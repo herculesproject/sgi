@@ -69,13 +69,14 @@ public class ConvocatoriaIT {
   private static final String PATH_PERIODO_SEGUIMIENTO_CIENTIFICO = "/convocatoriaperiodoseguimientocientificos";
   private static final String PATH_ENTIDAD_CONCEPTO_GASTOS_PERMITIDOS = "/convocatoriagastos/permitidos";
   private static final String PATH_ENTIDAD_CONCEPTO_GASTOS_NO_PERMITIDOS = "/convocatoriagastos/nopermitidos";
+  private static final String PATH_PARAMETER_RESTRINGIDOS = "/restringidos";
 
   private HttpEntity<Convocatoria> buildRequest(HttpHeaders headers, Convocatoria entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "SYSADMIN", "CSP-TFAS-B",
-        "CSP-TFAS-C", "CSP-TFAS-E", "CSP-TFAS-V", "CSP-CENTGES-V", "CSP-CATEM-V", "CSP-CENL-V")));
+        "CSP-TFAS-C", "CSP-TFAS-E", "CSP-TFAS-V", "CSP-CENTGES-V", "CSP-CATEM-V", "CSP-CENL-V_OPE")));
 
     HttpEntity<Convocatoria> request = new HttpEntity<>(entity, headers);
     return request;
@@ -294,7 +295,7 @@ public class ConvocatoriaIT {
 
     // first page, 3 elements per page sorted by nombre desc
     HttpHeaders headers = new HttpHeaders();
-    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V")));
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V_OPE")));
     headers.add("X-Page", "0");
     headers.add("X-Page-Size", "3");
     String sort = "codigo-";
@@ -338,6 +339,71 @@ public class ConvocatoriaIT {
     String filter = "titulo~%00%";
 
     URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_TODOS).queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
+
+    final ResponseEntity<List<Convocatoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Convocatoria>>() {
+        });
+
+    // then: 204 no content
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllTodosRestringidos_WithPagingSortingAndFiltering_ReturnsConvocatoriaSubList() throws Exception {
+
+    // given: data for Convocatoria
+
+    // first page, 3 elements per page sorted by nombre desc
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V_OPE")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    String sort = "codigo-";
+    String filter = "titulo~%00%";
+
+    // when: find Convocatoria
+    URI uri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_TODOS + PATH_PARAMETER_RESTRINGIDOS).queryParam("s", sort)
+        .queryParam("q", filter).build(false).toUri();
+    final ResponseEntity<List<Convocatoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Convocatoria>>() {
+        });
+
+    // given: Convocatoria data filtered and sorted
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Convocatoria> responseData = response.getBody();
+    Assertions.assertThat(responseData.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(responseData.get(0).getCodigo()).as("get(0).getCodigo())")
+        .isEqualTo("codigo-" + String.format("%03d", 6));
+    Assertions.assertThat(responseData.get(1).getCodigo()).as("get(1).getCodigo())")
+        .isEqualTo("codigo-" + String.format("%03d", 2));
+    Assertions.assertThat(responseData.get(2).getCodigo()).as("get(2).getCodigo())")
+        .isEqualTo("codigo-" + String.format("%03d", 1));
+  }
+
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllTodosRestringidos_EmptyList_Returns204() throws Exception {
+
+    // given: no data for Convocatoria
+    // when: find Convocatoria
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    String sort = "codigo-";
+    String filter = "titulo~%00%";
+
+    URI uri = UriComponentsBuilder
+        .fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_TODOS + PATH_PARAMETER_RESTRINGIDOS).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
 
     final ResponseEntity<List<Convocatoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
@@ -870,7 +936,7 @@ public class ConvocatoriaIT {
 
     Convocatoria convocatoria = Convocatoria.builder()//
         .id(convocatoriaId)//
-        .unidadGestionRef((unidadGestionId == null) ? null : "unidad-" + String.format("%03d", unidadGestionId))//
+        .unidadGestionRef((unidadGestionId == null) ? null : "OPE")//
         .modeloEjecucion(modeloEjecucion)//
         .codigo("codigo-" + String.format("%03d", convocatoriaId))//
         .anio(2020)//

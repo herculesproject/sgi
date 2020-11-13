@@ -16,18 +16,22 @@ public interface ConvocatoriaService {
   /**
    * Guarda la entidad {@link Convocatoria}.
    * 
-   * @param convocatoria la entidad {@link Convocatoria} a guardar.
+   * @param convocatoria           la entidad {@link Convocatoria} a guardar.
+   * @param acronimosUnidadGestion listado de acrónimos asociados a las unidades
+   *                               de gestión del usuario logueado.
    * @return Convocatoria la entidad {@link Convocatoria} persistida.
    */
-  Convocatoria create(Convocatoria convocatoria);
+  Convocatoria create(Convocatoria convocatoria, List<String> acronimosUnidadGestion);
 
   /**
    * Actualiza los datos del {@link Convocatoria}.
    * 
-   * @param convocatoria {@link Convocatoria} con los datos actualizados.
+   * @param convocatoria           {@link Convocatoria} con los datos
+   *                               actualizados.
+   * @param acronimosUnidadGestion
    * @return Convocatoria {@link Convocatoria} actualizado.
    */
-  Convocatoria update(final Convocatoria convocatoria);
+  Convocatoria update(final Convocatoria convocatoria, List<String> acronimosUnidadGestion);
 
   /**
    * Registra una {@link Convocatoria} actualizando su estado de 'Borrador' a
@@ -73,5 +77,12 @@ public interface ConvocatoriaService {
    * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
    */
   Page<Convocatoria> findAllTodos(List<QueryCriteria> query, Pageable paging);
+
+  /**
+   * Devuelve todas las convocatorias activas que se encuentren dentro de la
+   * unidad de gestión del usuario logueado.
+   */
+  Page<Convocatoria> findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging,
+      List<String> acronimosUnidadGestion);
 
 }

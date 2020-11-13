@@ -1,6 +1,9 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -44,6 +47,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import org.springframework.security.core.Authentication;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -134,9 +139,18 @@ public class ConvocatoriaController {
    */
   @PostMapping
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-C')")
-  public ResponseEntity<Convocatoria> create(@Valid @RequestBody Convocatoria convocatoria) {
+  public ResponseEntity<Convocatoria> create(@Valid @RequestBody Convocatoria convocatoria,
+      Authentication atuhentication) {
     log.debug("create(Convocatoria convocatoria) - start");
-    Convocatoria returnValue = service.create(convocatoria);
+
+    List<String> acronimosUnidadGestion = atuhentication.getAuthorities().stream().map(acronimo -> {
+      if (acronimo.getAuthority().indexOf("_") > 0) {
+        return acronimo.getAuthority().split("_")[1];
+      }
+      return null;
+    }).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+
+    Convocatoria returnValue = service.create(convocatoria, acronimosUnidadGestion);
     log.debug("create(Convocatoria convocatoria) - end");
     return new ResponseEntity<>(returnValue, HttpStatus.CREATED);
   }
@@ -150,10 +164,19 @@ public class ConvocatoriaController {
    */
   @PutMapping("/{id}")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-E')")
-  public Convocatoria update(@Valid @RequestBody Convocatoria convocatoria, @PathVariable Long id) {
+  public Convocatoria update(@Valid @RequestBody Convocatoria convocatoria, @PathVariable Long id,
+      Authentication atuhentication) {
     log.debug("update(Convocatoria convocatoria, Long id) - start");
+
+    List<String> acronimosUnidadGestion = atuhentication.getAuthorities().stream().map(acronimo -> {
+      if (acronimo.getAuthority().indexOf("_") > 0) {
+        return acronimo.getAuthority().split("_")[1];
+      }
+      return null;
+    }).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+
     convocatoria.setId(id);
-    Convocatoria returnValue = service.update(convocatoria);
+    Convocatoria returnValue = service.update(convocatoria, acronimosUnidadGestion);
     log.debug("update(Convocatoria convocatoria, Long id) - end");
     return returnValue;
   }
@@ -244,6 +267,40 @@ public class ConvocatoriaController {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     log.debug("findAllTodos(List<QueryCriteria> query,Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link Convocatoria}.
+   * 
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
+   */
+  @GetMapping("/todos/restringidos")
+  // @PreAuthorize("hasAuthorityForAnyUO('SYSADMIN')")
+  ResponseEntity<Page<Convocatoria>> findAllTodosRestringidos(
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging, Authentication atuhentication) {
+    log.debug(
+        "findAllTodosRestringidos(List<QueryCriteria> query,Pageable paging, Authentication atuhentication) - start");
+
+    List<String> acronimosUnidadGestion = atuhentication.getAuthorities().stream().map(acronimo -> {
+      if (acronimo.getAuthority().indexOf("_") > 0) {
+        return acronimo.getAuthority().split("_")[1];
+      }
+      return null;
+    }).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+
+    Page<Convocatoria> page = service.findAllTodosRestringidos(query, paging, acronimosUnidadGestion);
+
+    if (page.isEmpty()) {
+      log.debug(
+          "findAllTodosRestringidos(List<QueryCriteria> query,Pageable paging, Authentication atuhentication) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug(
+        "findAllTodosRestringidos(List<QueryCriteria> query,Pageable paging Authentication atuhentication) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

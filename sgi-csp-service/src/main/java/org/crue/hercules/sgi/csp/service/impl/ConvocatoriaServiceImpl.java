@@ -29,6 +29,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -71,11 +72,12 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
    */
   @Override
   @Transactional
-  public Convocatoria create(Convocatoria convocatoria) {
+  public Convocatoria create(Convocatoria convocatoria, List<String> acronimosUnidadGestion) {
     log.debug("create(Convocatoria convocatoria) - start");
 
     Assert.isNull(convocatoria.getId(), "Id tiene que ser null para crear la Convocatoria");
-    Convocatoria validConvocatoria = validarDatosConvocatoria(convocatoria, null);
+
+    Convocatoria validConvocatoria = validarDatosConvocatoria(convocatoria, null, acronimosUnidadGestion);
     validConvocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
     validConvocatoria.setActivo(Boolean.TRUE);
     Convocatoria returnValue = repository.save(validConvocatoria);
@@ -93,7 +95,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
    */
   @Override
   @Transactional
-  public Convocatoria update(Convocatoria convocatoria) {
+  public Convocatoria update(Convocatoria convocatoria, List<String> acronimosUnidadGestion) {
     log.debug("update(Convocatoria convocatoria) - start");
 
     Assert.notNull(convocatoria.getId(), "Id no puede ser null para actualizar Convocatoria");
@@ -102,7 +104,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
 
     return repository.findById(convocatoria.getId()).map((data) -> {
 
-      Convocatoria validConvocatoria = validarDatosConvocatoria(convocatoria, data);
+      Convocatoria validConvocatoria = validarDatosConvocatoria(convocatoria, data, acronimosUnidadGestion);
 
       data.setUnidadGestionRef(validConvocatoria.getUnidadGestionRef());
       data.setModeloEjecucion(validConvocatoria.getModeloEjecucion());
@@ -232,14 +234,32 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     return returnValue;
   }
 
+  @Override
+  public Page<Convocatoria> findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging,
+      List<String> acronimosUnidadGestion) {
+    log.debug(
+        "findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging,  List<String> acronimosUnidadGestion) - start");
+    Specification<Convocatoria> spec = new QuerySpecification<Convocatoria>(query);
+    Specification<Convocatoria> specAcronimos = ConvocatoriaSpecifications.acronimosIn(acronimosUnidadGestion);
+
+    Specification<Convocatoria> specs = Specification.where(spec).and(specAcronimos);
+
+    Page<Convocatoria> returnValue = repository.findAll(specs, paging);
+    log.debug(
+        "findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging,  List<String> acronimosUnidadGestion) - end");
+    return returnValue;
+  }
+
   /**
    * Comprueba y valida los datos de una convocatoria.
    * 
    * @param datosConvocatoria
    * @param datosOriginales
+   * @param acronimosUnidadGestion
    * @return convocatoria con los datos validados
    */
-  private Convocatoria validarDatosConvocatoria(Convocatoria datosConvocatoria, Convocatoria datosOriginales) {
+  private Convocatoria validarDatosConvocatoria(Convocatoria datosConvocatoria, Convocatoria datosOriginales,
+      List<String> acronimosUnidadGestion) {
     log.debug("validarDatosConvocatoria(Convocatoria datosConvocatoria, Convocatoria datosOriginales) - start");
 
     // Campos obligatorios en estado Registrada
@@ -248,8 +268,10 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     }
 
     // ModeloUnidadGestion
-    if (datosConvocatoria.getUnidadGestionRef() != null) {
-      // TODO: Validar UnidadGestion
+    if (datosConvocatoria.getUnidadGestionRef() != null && !CollectionUtils.isEmpty(acronimosUnidadGestion)) {
+
+      Assert.isTrue(acronimosUnidadGestion.contains(datosConvocatoria.getUnidadGestionRef()),
+          "El usuario no tiene permisos para crear una convocatoria asociada a la unidad de gestión recibida.");
     }
 
     // ModeloEjecucion
