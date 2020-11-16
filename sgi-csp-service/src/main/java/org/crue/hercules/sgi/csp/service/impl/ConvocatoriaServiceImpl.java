@@ -101,8 +101,8 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     log.debug("update(Convocatoria convocatoria) - start");
 
     Assert.notNull(convocatoria.getId(), "Id no puede ser null para actualizar Convocatoria");
-    // TODO: Validación permitir edición en función valor fechaInicioSolicitudes de
-    // la tabla ConfiguracionSolicitud
+    // TODO: FALTA AÑADIR VALIDACIÓN DE QUE NO EXISTAN SOLICITUDES ASOCIADAS O
+    // PROYECTOS (update y delete)
 
     return repository.findById(convocatoria.getId()).map((data) -> {
 
@@ -162,6 +162,30 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
   }
 
   /**
+   * Reactiva el {@link Convocatoria}.
+   *
+   * @param id Id del {@link Convocatoria}.
+   * @return la entidad {@link Convocatoria} persistida.
+   */
+  @Override
+  @Transactional
+  public Convocatoria enable(Long id) {
+    log.debug("enable(Long id) - start");
+
+    Assert.notNull(id, "Convocatoria id no puede ser null para reactivar un Convocatoria");
+
+    return repository.findById(id).map(convocatoria -> {
+      if (convocatoria.getActivo()) {
+        return convocatoria;
+      }
+      convocatoria.setActivo(Boolean.TRUE);
+      Convocatoria returnValue = repository.save(convocatoria);
+      log.debug("enable(Long id) - end");
+      return returnValue;
+    }).orElseThrow(() -> new ConvocatoriaNotFoundException(id));
+  }
+
+  /**
    * Desactiva el {@link Convocatoria}.
    *
    * @param id Id del {@link Convocatoria}.
@@ -173,13 +197,14 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     log.debug("disable(Long id) - start");
 
     Assert.notNull(id, "Convocatoria id no puede ser null para desactivar un Convocatoria");
-
-    // TODO: Validación permitir edición en función valor fechaInicioSolicitudes de
-    // la tabla ConfiguracionSolicitud
+    // TODO: FALTA AÑADIR VALIDACIÓN DE QUE NO EXISTAN SOLICITUDES ASOCIADAS O
+    // PROYECTOS (update y delete)
 
     return repository.findById(id).map(convocatoria -> {
-      convocatoria.setActivo(false);
-
+      if (!convocatoria.getActivo()) {
+        return convocatoria;
+      }
+      convocatoria.setActivo(Boolean.FALSE);
       Convocatoria returnValue = repository.save(convocatoria);
       log.debug("disable(Long id) - end");
       return returnValue;

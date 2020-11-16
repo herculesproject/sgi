@@ -43,6 +43,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class ConvocatoriaIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
+  private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
   private static final String PATH_PARAMETER_REGISTRAR = "/registrar";
   private static final String PATH_PARAMETER_TODOS = "/todos";
   private static final String CONTROLLER_BASE_PATH = "/convocatorias";
@@ -186,16 +188,44 @@ public class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void delete_Return204() throws Exception {
+  public void enable_ReturnsConvocatoria() throws Exception {
+    // given: existing Convocatoria to be enabled
+    Long id = 1L;
+
+    // when: disable Convocatoria
+    final ResponseEntity<Convocatoria> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, HttpMethod.PATCH, buildRequest(null, null),
+        Convocatoria.class, id);
+
+    // then: Convocatoria is disabled
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    Convocatoria convocatoria = response.getBody();
+    Assertions.assertThat(convocatoria.getId()).as("getId()").isNotNull();
+    Assertions.assertThat(convocatoria.getId()).as("getId()").isEqualTo(id);
+    Assertions.assertThat(convocatoria.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void disable_ReturnsConvocatoria() throws Exception {
     // given: existing Convocatoria to be disabled
     Long id = 1L;
 
     // when: disable Convocatoria
-    final ResponseEntity<Convocatoria> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.DELETE, buildRequest(null, null), Convocatoria.class, id);
+    final ResponseEntity<Convocatoria> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null), Convocatoria.class, id);
 
     // then: Convocatoria is disabled
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    Convocatoria convocatoria = response.getBody();
+    Assertions.assertThat(convocatoria.getId()).as("getId()").isNotNull();
+    Assertions.assertThat(convocatoria.getId()).as("getId()").isEqualTo(id);
+    Assertions.assertThat(convocatoria.getActivo()).as("getActivo()").isEqualTo(Boolean.FALSE);
 
   }
 

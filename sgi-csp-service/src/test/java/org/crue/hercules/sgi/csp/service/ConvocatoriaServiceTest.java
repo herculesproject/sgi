@@ -1766,6 +1766,64 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void enable_WithExistingId_ReturnsConvocatoria() {
+    // given: existing Convocatoria
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.FALSE);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
+
+    BDDMockito.given(repository.save(ArgumentMatchers.<Convocatoria>any())).willAnswer(new Answer<Convocatoria>() {
+      @Override
+      public Convocatoria answer(InvocationOnMock invocation) throws Throwable {
+        Convocatoria givenData = invocation.getArgument(0, Convocatoria.class);
+        givenData.setActivo(Boolean.TRUE);
+        return givenData;
+      }
+    });
+
+    // when: disable Convocatoria
+    Convocatoria disabledData = service.enable(convocatoria.getId());
+
+    // then: Convocatoria is enabled
+    Assertions.assertThat(disabledData).isNotNull();
+    Assertions.assertThat(disabledData.getId()).isNotNull();
+    Assertions.assertThat(disabledData.getId()).isEqualTo(convocatoria.getId());
+    Assertions.assertThat(disabledData.getUnidadGestionRef()).isEqualTo(convocatoria.getUnidadGestionRef());
+    Assertions.assertThat(disabledData.getModeloEjecucion().getId())
+        .isEqualTo(convocatoria.getModeloEjecucion().getId());
+    Assertions.assertThat(disabledData.getCodigo()).isEqualTo(convocatoria.getCodigo());
+    Assertions.assertThat(disabledData.getAnio()).isEqualTo(convocatoria.getAnio());
+    Assertions.assertThat(disabledData.getTitulo()).isEqualTo(convocatoria.getTitulo());
+    Assertions.assertThat(disabledData.getObjeto()).isEqualTo(convocatoria.getObjeto());
+    Assertions.assertThat(disabledData.getObservaciones()).isEqualTo(convocatoria.getObservaciones());
+    Assertions.assertThat(disabledData.getFinalidad().getId()).isEqualTo(convocatoria.getFinalidad().getId());
+    Assertions.assertThat(disabledData.getRegimenConcurrencia().getId())
+        .isEqualTo(convocatoria.getRegimenConcurrencia().getId());
+    Assertions.assertThat(disabledData.getDestinatarios()).isEqualTo(convocatoria.getDestinatarios());
+    Assertions.assertThat(disabledData.getColaborativos()).isEqualTo(convocatoria.getColaborativos());
+    Assertions.assertThat(disabledData.getEstadoActual()).isEqualTo(convocatoria.getEstadoActual());
+    Assertions.assertThat(disabledData.getDuracion()).isEqualTo(convocatoria.getDuracion());
+    Assertions.assertThat(disabledData.getAmbitoGeografico().getId())
+        .isEqualTo(convocatoria.getAmbitoGeografico().getId());
+    Assertions.assertThat(disabledData.getClasificacionCVN()).isEqualTo(convocatoria.getClasificacionCVN());
+    Assertions.assertThat(disabledData.getActivo()).isEqualTo(Boolean.TRUE);
+  }
+
+  @Test
+  public void enable_WithNoExistingId_ThrowsNotFoundException() throws Exception {
+    // given: no existing id
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.FALSE);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
+
+    Assertions.assertThatThrownBy(
+        // when: enable non existing Convocatoria
+        () -> service.disable(convocatoria.getId()))
+        // then: NotFoundException is thrown
+        .isInstanceOf(ConvocatoriaNotFoundException.class);
+  }
+
+  @Test
   public void disable_WithExistingId_ReturnsConvocatoria() {
     // given: existing Convocatoria
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1817,7 +1875,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
 
     Assertions.assertThatThrownBy(
-        // when: update non existing Convocatoria
+        // when: disable non existing Convocatoria
         () -> service.disable(convocatoria.getId()))
         // then: NotFoundException is thrown
         .isInstanceOf(ConvocatoriaNotFoundException.class);

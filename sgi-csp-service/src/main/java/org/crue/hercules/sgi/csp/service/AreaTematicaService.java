@@ -21,8 +21,7 @@ public interface AreaTematicaService {
   AreaTematica create(AreaTematica areaTematica);
 
   /**
-   * Actualizar {@link AreaTematica} y si se pone activo a false hace lo mismo con
-   * todos sus hijos en cascada.
+   * Actualizar {@link AreaTematica}.
    *
    * @param areaTematicaActualizar la entidad {@link AreaTematica} a actualizar.
    * @return la entidad {@link AreaTematica} persistida.

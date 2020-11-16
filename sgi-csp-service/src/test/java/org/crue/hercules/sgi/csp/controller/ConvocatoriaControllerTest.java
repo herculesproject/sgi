@@ -100,6 +100,8 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   private ConvocatoriaConceptoGastoService convocatoriaConceptoGastoService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
+  private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
   private static final String PATH_PARAMETER_REGISTRAR = "/registrar";
   private static final String PATH_PARAMETER_TODOS = "/todos";
   private static final String CONTROLLER_BASE_PATH = "/convocatorias";
@@ -281,33 +283,83 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CONV-B" })
-  public void delete_WithExistingId_Return204() throws Exception {
+  public void enable_WithExistingId_Return204() throws Exception {
     // given: existing id
-    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.FALSE);
 
-    BDDMockito.given(service.disable(ArgumentMatchers.<Long>any())).willReturn(convocatoria);
+    BDDMockito.given(service.enable(ArgumentMatchers.<Long>any())).willAnswer((InvocationOnMock invocation) -> {
+      Convocatoria convocatoriaDisabled = new Convocatoria();
+      BeanUtils.copyProperties(convocatoria, convocatoriaDisabled);
+      convocatoriaDisabled.setActivo(Boolean.TRUE);
+      return convocatoriaDisabled;
+    });
 
-    // when: delete by id
+    // when: enable by id
     mockMvc
-        .perform(MockMvcRequestBuilders.delete(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, convocatoria.getId())
+        .perform(MockMvcRequestBuilders
+            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, convocatoria.getId())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
-        // then: 204
-        .andExpect(MockMvcResultMatchers.status().isNoContent());
+        // then: convocatoria is enabled
+        .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(convocatoria.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.TRUE));
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CONV-B" })
-  public void delete_NoExistingId_Return404() throws Exception {
+  public void enable_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
 
-    BDDMockito.willThrow(new ConvocatoriaNotFoundException(id)).given(service).findById(ArgumentMatchers.<Long>any());
+    BDDMockito.willThrow(new ConvocatoriaNotFoundException(id)).given(service).enable(ArgumentMatchers.<Long>any());
+
+    // when: enable by non existing id
+    mockMvc
+        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: 404 error
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-B" })
+  public void disable_WithExistingId_Return204() throws Exception {
+    // given: existing id
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+
+    BDDMockito.given(service.disable(ArgumentMatchers.<Long>any())).willAnswer((InvocationOnMock invocation) -> {
+      Convocatoria convocatoriaDisabled = new Convocatoria();
+      BeanUtils.copyProperties(convocatoria, convocatoriaDisabled);
+      convocatoriaDisabled.setActivo(Boolean.FALSE);
+      return convocatoriaDisabled;
+    });
+
+    // when: desactivar by id
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, convocatoria.getId())
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: convocatoria is disabled
+        .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(convocatoria.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.FALSE));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-B" })
+  public void disable_NoExistingId_Return404() throws Exception {
+    // given: non existing id
+    Long id = 1L;
+
     BDDMockito.willThrow(new ConvocatoriaNotFoundException(id)).given(service).disable(ArgumentMatchers.<Long>any());
 
-    // when: delete by non existing id
+    // when: disable by non existing id
     mockMvc
-        .perform(MockMvcRequestBuilders.delete(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
+        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())

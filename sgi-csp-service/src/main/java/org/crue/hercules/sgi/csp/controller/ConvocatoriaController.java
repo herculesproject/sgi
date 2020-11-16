@@ -25,17 +25,17 @@ import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadFinanciadoraService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadGestoraService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaFaseService;
-import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoSeguimientoCientificoService;
-import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaHitoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoJustificacionService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaPeriodoSeguimientoCientificoService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,10 +44,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import org.springframework.security.core.Authentication;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -196,17 +193,33 @@ public class ConvocatoriaController {
   }
 
   /**
+   * Reactiva el {@link Convocatoria} con id indicado.
+   * 
+   * @param id Identificador de {@link Convocatoria}.
+   * @return {@link Convocatoria} actualizado.
+   */
+  @PatchMapping("/{id}/reactivar")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-R')")
+  public Convocatoria reactivar(@PathVariable Long id) {
+    log.debug("reactivar(Long id) - start");
+    Convocatoria returnValue = service.enable(id);
+    log.debug("reactivar(Long id) - end");
+    return returnValue;
+  }
+
+  /**
    * Desactiva {@link Convocatoria} con id indicado.
    * 
    * @param id Identificador de {@link Convocatoria}.
+   * @return {@link Convocatoria} actualizado.
    */
-  @DeleteMapping("/{id}")
+  @PatchMapping("/{id}/desactivar")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-B')")
-  @ResponseStatus(value = HttpStatus.NO_CONTENT)
-  public void deleteById(@PathVariable Long id) {
-    log.debug("deleteById(Long id) - start");
-    service.disable(id);
-    log.debug("deleteById(Long id) - end");
+  public Convocatoria desactivar(@PathVariable Long id) {
+    log.debug("desactivar(Long id) - start");
+    Convocatoria returnValue = service.disable(id);
+    log.debug("desactivar(Long id) - end");
+    return returnValue;
   }
 
   /**

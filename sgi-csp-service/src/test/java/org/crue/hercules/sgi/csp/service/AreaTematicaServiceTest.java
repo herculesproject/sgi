@@ -546,7 +546,7 @@ public class AreaTematicaServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.save(ArgumentMatchers.<AreaTematica>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
-    // when: Desactivamos el AreaTematica y todos sus hijos en cascada
+    // when: Desactivamos el AreaTematica
     AreaTematica areaTematicaActualizado = service.disable(areaTematica.getId());
 
     // then: El AreaTematica y todos sus hijos se desactivan correctamente

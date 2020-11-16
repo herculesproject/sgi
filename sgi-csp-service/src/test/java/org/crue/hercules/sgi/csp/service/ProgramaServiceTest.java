@@ -352,7 +352,7 @@ public class ProgramaServiceTest extends BaseServiceTest {
     BDDMockito.given(repository.save(ArgumentMatchers.<Programa>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
 
-    // when: Desactivamos el Programa y todos sus hijos en cascada
+    // when: Desactivamos el Programa
     Programa programaActualizado = service.disable(programa.getId());
 
     // then: El Programa y todos sus hijos se desactivan correctamente

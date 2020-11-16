@@ -43,6 +43,14 @@ public interface ConvocatoriaService {
   Convocatoria registrar(final Long id);
 
   /**
+   * Reactiva el {@link Convocatoria}.
+   *
+   * @param id Id del {@link Convocatoria}.
+   * @return la entidad {@link Convocatoria} persistida.
+   */
+  Convocatoria enable(Long id);
+
+  /**
    * Desactiva el {@link Convocatoria}.
    *
    * @param id Id del {@link Convocatoria}.
