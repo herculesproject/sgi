@@ -32,7 +32,7 @@ import org.springframework.data.jpa.domain.Specification;
  * EquipoTrabajoServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class EquipoTrabajoServiceTest {
+public class EquipoTrabajoServiceTest extends BaseServiceTest {
 
   @Mock
   private EquipoTrabajoRepository equipoTrabajoRepository;

@@ -39,7 +39,7 @@ import org.springframework.data.jpa.domain.Specification;
  * EstadoMemoriaServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class EstadoMemoriaServiceTest {
+public class EstadoMemoriaServiceTest extends BaseServiceTest {
 
   @Mock
   private EstadoMemoriaRepository estadoMemoriaRepository;

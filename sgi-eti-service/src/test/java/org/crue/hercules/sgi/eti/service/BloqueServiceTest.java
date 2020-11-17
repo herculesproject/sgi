@@ -29,7 +29,7 @@ import org.springframework.data.jpa.domain.Specification;
  * BloqueServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class BloqueServiceTest {
+public class BloqueServiceTest extends BaseServiceTest {
 
   @Mock
   private BloqueRepository bloqueRepository;

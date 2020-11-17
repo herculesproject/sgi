@@ -38,7 +38,7 @@ import org.springframework.data.jpa.domain.Specification;
  * InformeServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class InformeServiceTest {
+public class InformeServiceTest extends BaseServiceTest {
 
   @Mock
   private InformeRepository informeRepository;

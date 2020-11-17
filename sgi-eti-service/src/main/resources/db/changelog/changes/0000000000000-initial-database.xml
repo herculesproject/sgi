@@ -1,0 +1,917 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet author="user (generated)" id="1605508648901-1">
+        <createSequence sequenceName="acta_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-2">
+        <createSequence sequenceName="apartado_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-3">
+        <createSequence sequenceName="asistentes_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-4">
+        <createSequence sequenceName="bloque_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-5">
+        <createSequence sequenceName="comentario_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-6">
+        <createSequence sequenceName="comite_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-7">
+        <createSequence sequenceName="configuracion_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-8">
+        <createSequence sequenceName="conflicto_interes_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-9">
+        <createSequence sequenceName="convocatoria_reunion_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-10">
+        <createSequence sequenceName="documentacion_memoria_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-11">
+        <createSequence sequenceName="equipo_trabajo_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-12">
+        <createSequence sequenceName="estado_acta_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-13">
+        <createSequence sequenceName="estado_memoria_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-14">
+        <createSequence sequenceName="evaluacion_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-15">
+        <createSequence sequenceName="evaluador_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-16">
+        <createSequence sequenceName="informe_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-17">
+        <createSequence sequenceName="memoria_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-18">
+        <createSequence sequenceName="peticion_evaluacion_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-19">
+        <createSequence sequenceName="respuesta_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-20">
+        <createSequence sequenceName="retrospectiva_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-21">
+        <createSequence sequenceName="tarea_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-22">
+        <createSequence sequenceName="tipo_memoria_comite_seq"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-23">
+        <createTable tableName="acta">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="actaPK"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hora_fin" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hora_inicio" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="true" name="inactiva" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="minuto_fin" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="minuto_inicio" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="numero" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="resumen" type="VARCHAR(8000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="convocatoria_reunion_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="estado_actual_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-24">
+        <createTable tableName="apartado">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="apartadoPK"/>
+            </column>
+            <column name="esquema" type="VARCHAR(5000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nombre" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="orden" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bloque_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="padre_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-25">
+        <createTable tableName="asistentes">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="asistentesPK"/>
+            </column>
+            <column name="asistencia" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="motivo" type="VARCHAR(250)"/>
+            <column name="convocatoria_reunion_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="evaluador_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-26">
+        <createTable tableName="bloque">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="bloquePK"/>
+            </column>
+            <column name="nombre" type="VARCHAR(2000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="orden" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="formulario_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-27">
+        <createTable tableName="cargo_comite">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="cargo_comitePK"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nombre" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-28">
+        <createTable tableName="comentario">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="comentarioPK"/>
+            </column>
+            <column name="texto" type="VARCHAR(2000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="apartado_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="evaluacion_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="memoria_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tipo_comentario_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-29">
+        <createTable tableName="comite">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="comitePK"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comite" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="formulario_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-30">
+        <createTable tableName="configuracion">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="configuracionPK"/>
+            </column>
+            <column name="dias_archivada_pendiente_correcciones" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dias_limite_evaluador" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="meses_archivada_inactivo" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="meses_aviso_proyecto_ceea" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="meses_aviso_proyecto_ceiab" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="meses_aviso_proyecto_ceish" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-31">
+        <createTable tableName="conflicto_interes">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="conflicto_interesPK"/>
+            </column>
+            <column name="persona_conflicto_ref" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="evaluador_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-32">
+        <createTable tableName="convocatoria_reunion">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_reunionPK"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="anio" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_envio" type="date"/>
+            <column name="fecha_evaluacion" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_limite" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hora_inicio" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lugar" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="minuto_inicio" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="numero_acta" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="orden_dia" type="VARCHAR(2000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comite_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tipo_convocatoria_reunion_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-33">
+        <createTable tableName="dictamen">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="dictamenPK"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nombre" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tipo_evaluacion_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-34">
+        <createTable tableName="documentacion_memoria">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="documentacion_memoriaPK"/>
+            </column>
+            <column defaultValueBoolean="false" name="aportado" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="documento_ref" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="memoria_id" type="BIGINT"/>
+            <column name="tipo_documento_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-35">
+        <createTable tableName="equipo_trabajo">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="equipo_trabajoPK"/>
+            </column>
+            <column name="persona_ref" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="peticion_evaluacion_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-36">
+        <createTable tableName="estado_acta">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="estado_actaPK"/>
+            </column>
+            <column name="fecha_estado" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="acta_id" type="BIGINT"/>
+            <column name="tipo_estado_acta_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-37">
+        <createTable tableName="estado_memoria">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="estado_memoriaPK"/>
+            </column>
+            <column name="fecha_estado" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="memoria_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tipo_estado_memoria_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-38">
+        <createTable tableName="estado_retrospectiva">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="estado_retrospectivaPK"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nombre" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-39">
+        <createTable tableName="evaluacion">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="evaluacionPK"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="es_rev_minima" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_dictamen" type="date"/>
+            <column name="version" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="convocatoria_reunion_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dictamen_id" type="BIGINT"/>
+            <column name="evaluador1_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="evaluador2_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="memoria_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tipo_evaluacion_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-40">
+        <createTable tableName="evaluador">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="evaluadorPK"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_alta" type="date"/>
+            <column name="fecha_baja" type="date"/>
+            <column name="persona_ref" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="resumen" type="VARCHAR(8000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cargo_comite_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comite_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-41">
+        <createTable tableName="formacion_especifica">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="formacion_especificaPK"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nombre" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-42">
+        <createTable tableName="formulario">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="formularioPK"/>
+            </column>
+            <column name="descripcion" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nombre" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-43">
+        <createTable tableName="informe">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="informePK"/>
+            </column>
+            <column name="documento_ref" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="memoria_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-44">
+        <createTable tableName="memoria">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="memoriaPK"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cod_organo_competente" type="VARCHAR(255)"/>
+            <column name="fecha_envio_secretaria" type="date"/>
+            <column name="num_referencia" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="persona_ref" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="requiere_retrospectiva" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="titulo" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comite_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="estado_actual_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="memoria_original_id" type="BIGINT"/>
+            <column name="peticion_evaluacion_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="retrospectiva_id" type="BIGINT"/>
+            <column name="tipo_memoria_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-45">
+        <createTable tableName="peticion_evaluacion">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="peticion_evaluacionPK"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="codigo" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dis_metodologico" type="VARCHAR(2000)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="externo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_fin" type="date"/>
+            <column name="fecha_inicio" type="date"/>
+            <column name="fuente_financiacion" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="objetivos" type="VARCHAR(2000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="persona_ref" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="resumen" type="VARCHAR(8000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="solicitud_convocatoria_ref" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueBoolean="false" name="tiene_fondos_propios" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="titulo" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="valor_social" type="VARCHAR(2000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tipo_actividad_id" type="BIGINT"/>
+            <column name="tipo_investigacion_tutelada_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-46">
+        <createTable tableName="respuesta">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="respuestaPK"/>
+            </column>
+            <column name="valor" type="VARCHAR(5000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="apartado_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="memoria_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-47">
+        <createTable tableName="retrospectiva">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="retrospectivaPK"/>
+            </column>
+            <column name="fecha_retrospectiva" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="estado_retrospectiva_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-48">
+        <createTable tableName="tarea">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tareaPK"/>
+            </column>
+            <column name="anio" type="INT"/>
+            <column name="formacion" type="VARCHAR(250)"/>
+            <column name="organismo" type="VARCHAR(250)"/>
+            <column name="tarea" type="VARCHAR(250)"/>
+            <column name="equipo_trabajo_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="formacion_especifica_id" type="BIGINT"/>
+            <column name="memoria_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tipo_tarea_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-49">
+        <createTable tableName="tipo_actividad">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_actividadPK"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nombre" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-50">
+        <createTable tableName="tipo_comentario">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_comentarioPK"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nombre" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-51">
+        <createTable tableName="tipo_convocatoria_reunion">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_convocatoria_reunionPK"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nombre" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-52">
+        <createTable tableName="tipo_documento">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_documentoPK"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nombre" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="formulario_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-53">
+        <createTable tableName="tipo_estado_acta">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_estado_actaPK"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nombre" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-54">
+        <createTable tableName="tipo_estado_memoria">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_estado_memoriaPK"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nombre" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-55">
+        <createTable tableName="tipo_evaluacion">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_evaluacionPK"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nombre" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-56">
+        <createTable tableName="tipo_investigacion_tutelada">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_investigacion_tuteladaPK"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nombre" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-57">
+        <createTable tableName="tipo_memoria">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_memoriaPK"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nombre" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-58">
+        <createTable tableName="tipo_memoria_comite">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_memoria_comitePK"/>
+            </column>
+            <column name="comite_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tipo_memoria_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-59">
+        <createTable tableName="tipo_tarea">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_tareaPK"/>
+            </column>
+            <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nombre" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-60">
+        <addUniqueConstraint columnNames="dias_archivada_pendiente_correcciones" constraintName="UC_CONFIGURACIONDIAS_ARCHIVADA_PENDIENTE_CORRECCIONES_COL" tableName="configuracion"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-61">
+        <addUniqueConstraint columnNames="dias_limite_evaluador" constraintName="UC_CONFIGURACIONDIAS_LIMITE_EVALUADOR_COL" tableName="configuracion"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-62">
+        <addUniqueConstraint columnNames="meses_archivada_inactivo" constraintName="UC_CONFIGURACIONMESES_ARCHIVADA_INACTIVO_COL" tableName="configuracion"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-63">
+        <addUniqueConstraint columnNames="meses_aviso_proyecto_ceea" constraintName="UC_CONFIGURACIONMESES_AVISO_PROYECTO_CEEA_COL" tableName="configuracion"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-64">
+        <addUniqueConstraint columnNames="meses_aviso_proyecto_ceiab" constraintName="UC_CONFIGURACIONMESES_AVISO_PROYECTO_CEIAB_COL" tableName="configuracion"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-65">
+        <addUniqueConstraint columnNames="meses_aviso_proyecto_ceish" constraintName="UC_CONFIGURACIONMESES_AVISO_PROYECTO_CEISH_COL" tableName="configuracion"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-66">
+        <addForeignKeyConstraint baseColumnNames="dictamen_id" baseTableName="evaluacion" constraintName="FK2itghhbnqk73uaf1b1g4rw2ge" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="dictamen" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-67">
+        <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="respuesta" constraintName="FK3snr7tfnb8rw4c0hd66r624xc" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="memoria" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-68">
+        <addForeignKeyConstraint baseColumnNames="retrospectiva_id" baseTableName="memoria" constraintName="FK426i2udxys2u8rj2m6gsl0l3v" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="retrospectiva" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-69">
+        <addForeignKeyConstraint baseColumnNames="cargo_comite_id" baseTableName="evaluador" constraintName="FK44s6be5xffkd1g96g6fpw02f" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="cargo_comite" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-70">
+        <addForeignKeyConstraint baseColumnNames="comite_id" baseTableName="tipo_memoria_comite" constraintName="FK4roah361xqmuj1s0khsvtjm0r" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="comite" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-71">
+        <addForeignKeyConstraint baseColumnNames="padre_id" baseTableName="apartado" constraintName="FK4vmg6ta8k3o6en0oik7xuxo42" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="apartado" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-72">
+        <addForeignKeyConstraint baseColumnNames="estado_actual_id" baseTableName="memoria" constraintName="FK55hnqsxp65jgeync9jokow2me" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_estado_memoria" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-73">
+        <addForeignKeyConstraint baseColumnNames="convocatoria_reunion_id" baseTableName="evaluacion" constraintName="FK5aurnld4pkg9lenr9o4r84ttk" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_reunion" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-74">
+        <addForeignKeyConstraint baseColumnNames="comite_id" baseTableName="evaluador" constraintName="FK6xxwfwxsne5dv88bi25fuqx34" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="comite" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-75">
+        <addForeignKeyConstraint baseColumnNames="apartado_id" baseTableName="respuesta" constraintName="FK70xwpnu7cknftqrm99aopan2i" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="apartado" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-76">
+        <addForeignKeyConstraint baseColumnNames="evaluador1_id" baseTableName="evaluacion" constraintName="FK78shj4agtsr3gcotnangmldeg" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="evaluador" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-77">
+        <addForeignKeyConstraint baseColumnNames="formacion_especifica_id" baseTableName="tarea" constraintName="FK7b6tex8f1orca82n37txjlbhp" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="formacion_especifica" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-78">
+        <addForeignKeyConstraint baseColumnNames="tipo_evaluacion_id" baseTableName="evaluacion" constraintName="FK9dxl5yubacenltoelx2dp5x30" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_evaluacion" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-79">
+        <addForeignKeyConstraint baseColumnNames="estado_actual_id" baseTableName="acta" constraintName="FK9n59626o0pj7cugma9nuispd5" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_estado_acta" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-80">
+        <addForeignKeyConstraint baseColumnNames="tipo_evaluacion_id" baseTableName="dictamen" constraintName="FKactrcyrrr9h3yytsfwek7sxnu" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_evaluacion" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-81">
+        <addForeignKeyConstraint baseColumnNames="estado_retrospectiva_id" baseTableName="retrospectiva" constraintName="FKausum8es47xj9nll15xr1ok2l" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="estado_retrospectiva" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-82">
+        <addForeignKeyConstraint baseColumnNames="tipo_estado_memoria_id" baseTableName="estado_memoria" constraintName="FKb9mojkhk3ljanev0s5gvc2wp6" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_estado_memoria" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-83">
+        <addForeignKeyConstraint baseColumnNames="memoria_original_id" baseTableName="memoria" constraintName="FKbkiodlxn4n6aqc4qoysrwbff6" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="memoria" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-84">
+        <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="documentacion_memoria" constraintName="FKc588a4oelox91fa5jjn3tu58m" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-85">
+        <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="documentacion_memoria" constraintName="FKd0v0ijb4dmbwff0ugv5nx8edo" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="memoria" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-86">
+        <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="informe" constraintName="FKedvdwixvl5da8lckxrbb1d0n" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="memoria" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-87">
+        <addForeignKeyConstraint baseColumnNames="acta_id" baseTableName="estado_acta" constraintName="FKesbddy5e21ijcc0ui2hft8n8" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="acta" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-88">
+        <addForeignKeyConstraint baseColumnNames="evaluacion_id" baseTableName="comentario" constraintName="FKf9egl2qmdhdorqm2b0pfsnjji" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="evaluacion" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-89">
+        <addForeignKeyConstraint baseColumnNames="tipo_estado_acta_id" baseTableName="estado_acta" constraintName="FKg6mmkhpm9lslanmsh94gyry2g" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_estado_acta" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-90">
+        <addForeignKeyConstraint baseColumnNames="tipo_memoria_id" baseTableName="tipo_memoria_comite" constraintName="FKjn03brp1v458bds205vkxc2u1" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_memoria" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-91">
+        <addForeignKeyConstraint baseColumnNames="comite_id" baseTableName="memoria" constraintName="FKjr2j1d7i9v5qp5gcj3iwan0j9" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="comite" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-92">
+        <addForeignKeyConstraint baseColumnNames="evaluador2_id" baseTableName="evaluacion" constraintName="FKjxs0wuljj6j2u9q7yhu5nrfny" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="evaluador" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-93">
+        <addForeignKeyConstraint baseColumnNames="evaluador_id" baseTableName="conflicto_interes" constraintName="FKk7ls6xk3a61o2cxraotttj9rp" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="evaluador" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-94">
+        <addForeignKeyConstraint baseColumnNames="tipo_investigacion_tutelada_id" baseTableName="peticion_evaluacion" constraintName="FKkc91ify61kxd8s2b9bkihy7k" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_investigacion_tutelada" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-95">
+        <addForeignKeyConstraint baseColumnNames="tipo_memoria_id" baseTableName="memoria" constraintName="FKkx5owgypb8xr4kyxve91cbi5u" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_memoria" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-96">
+        <addForeignKeyConstraint baseColumnNames="apartado_id" baseTableName="comentario" constraintName="FKl1pt3vj9sde2tqk3xns46t6ib" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="apartado" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-97">
+        <addForeignKeyConstraint baseColumnNames="comite_id" baseTableName="convocatoria_reunion" constraintName="FKlasjroxx7ftgjdqnn66g9oa0x" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="comite" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-98">
+        <addForeignKeyConstraint baseColumnNames="peticion_evaluacion_id" baseTableName="memoria" constraintName="FKlipawh9cwqp4qx72ta9wuygxj" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="peticion_evaluacion" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-99">
+        <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="estado_memoria" constraintName="FKll1j1r7cgpqxx9dk0jyys2fln" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="memoria" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-100">
+        <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="comentario" constraintName="FKlo2lb5f844c6ro835lek4m1h" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="memoria" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-101">
+        <addForeignKeyConstraint baseColumnNames="tipo_comentario_id" baseTableName="comentario" constraintName="FKlqm845dguxbxjfi8t7204vpoa" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_comentario" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-102">
+        <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="evaluacion" constraintName="FKmbjqdh5m59pupfk8c4gmffvb4" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="memoria" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-103">
+        <addForeignKeyConstraint baseColumnNames="bloque_id" baseTableName="apartado" constraintName="FKnp3l0nn3wyqnfwo839ma56y1p" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="bloque" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-104">
+        <addForeignKeyConstraint baseColumnNames="tipo_convocatoria_reunion_id" baseTableName="convocatoria_reunion" constraintName="FKnxvbl8oagcqcvueunbrwt29bq" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_convocatoria_reunion" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-105">
+        <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="tarea" constraintName="FKol4e0kjnn8tfsh8ouixkigk2s" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="memoria" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-106">
+        <addForeignKeyConstraint baseColumnNames="tipo_tarea_id" baseTableName="tarea" constraintName="FKp5f5s3413i2x2o7wma32wteax" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_tarea" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-107">
+        <addForeignKeyConstraint baseColumnNames="evaluador_id" baseTableName="asistentes" constraintName="FKpakf81gapukx327iir0lbe8rm" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="evaluador" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-108">
+        <addForeignKeyConstraint baseColumnNames="tipo_actividad_id" baseTableName="peticion_evaluacion" constraintName="FKpbeyl1nr63sxc3xb7b8q2pejk" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_actividad" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-109">
+        <addForeignKeyConstraint baseColumnNames="equipo_trabajo_id" baseTableName="tarea" constraintName="FKq7prksanitlrnomjunyfoscwx" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="equipo_trabajo" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-110">
+        <addForeignKeyConstraint baseColumnNames="formulario_id" baseTableName="tipo_documento" constraintName="FKq7s8mn7eowkaq1q0gpom64awe" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="formulario" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-111">
+        <addForeignKeyConstraint baseColumnNames="formulario_id" baseTableName="bloque" constraintName="FKqcx15i8ec5iaiayy28kjt89vp" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="formulario" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-112">
+        <addForeignKeyConstraint baseColumnNames="peticion_evaluacion_id" baseTableName="equipo_trabajo" constraintName="FKrcpax2efio79p8bu09io9ka6l" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="peticion_evaluacion" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-113">
+        <addForeignKeyConstraint baseColumnNames="convocatoria_reunion_id" baseTableName="asistentes" constraintName="FKrolqkpg0qrop8qh7l9migcapj" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_reunion" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-114">
+        <addForeignKeyConstraint baseColumnNames="convocatoria_reunion_id" baseTableName="acta" constraintName="FKs131xcx4v4ytlk7mr66k0wwmw" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_reunion" validate="true"/>
+    </changeSet>
+    <changeSet author="user (generated)" id="1605508648901-115">
+        <addForeignKeyConstraint baseColumnNames="formulario_id" baseTableName="comite" constraintName="FKt7v92qsq4ntc65o3fxyr15lg5" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="formulario" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

@@ -30,7 +30,7 @@ import org.springframework.data.jpa.domain.Specification;
  * ComiteServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class ComiteServiceTest {
+public class ComiteServiceTest extends BaseServiceTest {
   @Mock
   private ComiteRepository comiteRepository;
 

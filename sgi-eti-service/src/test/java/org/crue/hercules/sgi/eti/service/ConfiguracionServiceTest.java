@@ -17,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * ConfiguracionServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class ConfiguracionServiceTest {
+public class ConfiguracionServiceTest extends BaseServiceTest {
 
   @Mock
   private ConfiguracionRepository configuracionRepository;

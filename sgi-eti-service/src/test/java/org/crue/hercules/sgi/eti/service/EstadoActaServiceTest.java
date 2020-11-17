@@ -31,7 +31,7 @@ import org.springframework.data.jpa.domain.Specification;
  * EstadoActaServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class EstadoActaServiceTest {
+public class EstadoActaServiceTest extends BaseServiceTest {
 
   @Mock
   private EstadoActaRepository estadoActaRepository;

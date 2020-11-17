@@ -13,9 +13,9 @@ VALUES(2, 'Bloque2', 1, 2);
 
 -- APARTADO FORMULARIO
 INSERT INTO ETI.APARTADO
-(ID, BLOQUE_ID, NOMBRE, PADRE_ID, ORDEN, ESQUEMA, ACTIVO)
-VALUES(1, 1, 'Apartado01', NULL, 1, '{"nombre":"EsquemaApartado01"}', true);
+(ID, BLOQUE_ID, NOMBRE, PADRE_ID, ORDEN, ESQUEMA)
+VALUES(1, 1, 'Apartado01', NULL, 1, '{"nombre":"EsquemaApartado01"}');
 
 INSERT INTO ETI.APARTADO
-(ID, BLOQUE_ID, NOMBRE, PADRE_ID, ORDEN, ESQUEMA, ACTIVO)
-VALUES(2, 1, 'Apartado2', 1, 2, '{"nombre":"EsquemaApartado2"}', true);
+(ID, BLOQUE_ID, NOMBRE, PADRE_ID, ORDEN, ESQUEMA)
+VALUES(2, 1, 'Apartado2', 1, 2, '{"nombre":"EsquemaApartado2"}');

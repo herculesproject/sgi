@@ -28,7 +28,7 @@ import org.springframework.data.jpa.domain.Specification;
  * TipoEstadoMemoriaServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class TipoEstadoMemoriaServiceTest {
+public class TipoEstadoMemoriaServiceTest extends BaseServiceTest {
 
   @Mock
   private TipoEstadoMemoriaRepository tipoEstadoMemoriaRepository;

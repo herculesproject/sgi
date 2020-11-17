@@ -7,12 +7,8 @@ import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.EstadoRetrospectiva;
-import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
-import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +16,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -28,15 +23,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de EstadoRetrospectiva.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(initializers = { Oauth2WireMockInitializer.class })
-
-public class EstadoRetrospectivaIT {
-
-  @Autowired
-  private TestRestTemplate restTemplate;
-
-  @Autowired
-  private TokenBuilder tokenBuilder;
+public class EstadoRetrospectivaIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH = "/estadoretrospectivas";

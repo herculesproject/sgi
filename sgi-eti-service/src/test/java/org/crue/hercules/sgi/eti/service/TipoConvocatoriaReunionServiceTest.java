@@ -28,7 +28,7 @@ import org.springframework.data.jpa.domain.Specification;
  * TipoConvocatoriaReunionServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class TipoConvocatoriaReunionServiceTest {
+public class TipoConvocatoriaReunionServiceTest extends BaseServiceTest {
 
   @Mock
   private TipoConvocatoriaReunionRepository tipoConvocatoriaReunionRepository;

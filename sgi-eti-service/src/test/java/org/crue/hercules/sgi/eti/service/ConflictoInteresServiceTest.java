@@ -25,7 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * ConflictoInteresServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class ConflictoInteresServiceTest {
+public class ConflictoInteresServiceTest extends BaseServiceTest {
 
   @Mock
   private ConflictoInteresRepository conflictoInteresRepository;

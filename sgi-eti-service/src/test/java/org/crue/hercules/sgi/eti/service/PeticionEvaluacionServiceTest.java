@@ -30,7 +30,7 @@ import org.springframework.data.jpa.domain.Specification;
  * PeticionEvaluacionServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class PeticionEvaluacionServiceTest {
+public class PeticionEvaluacionServiceTest extends BaseServiceTest {
 
   @Mock
   private PeticionEvaluacionRepository peticionEvaluacionRepository;

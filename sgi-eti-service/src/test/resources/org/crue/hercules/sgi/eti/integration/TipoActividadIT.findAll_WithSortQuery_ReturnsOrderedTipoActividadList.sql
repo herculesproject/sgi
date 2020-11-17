@@ -1,4 +1,4 @@
 -- TIPO ACTIVIDAD 
-INSERT INTO eti.tipo_actividad (id, nombre, activo) VALUES (1, 'Proyecto de investigación', true);
-INSERT INTO eti.tipo_actividad (id, nombre, activo) VALUES (2, 'Práctica docente', true);
-INSERT INTO eti.tipo_actividad (id, nombre, activo) VALUES (3, 'Investigación tutelada', true);
+INSERT INTO eti.tipo_actividad (id, nombre, activo) VALUES (1, 'Proyecto de investigacion', true);
+INSERT INTO eti.tipo_actividad (id, nombre, activo) VALUES (2, 'Pructica docente', true);
+INSERT INTO eti.tipo_actividad (id, nombre, activo) VALUES (3, 'Investigacion tutelada', true);

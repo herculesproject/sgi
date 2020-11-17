@@ -33,8 +33,7 @@ import org.springframework.data.jpa.domain.Specification;
  * TipoMemoriaComiteServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-
-public class TipoMemoriaComiteServiceTest {
+public class TipoMemoriaComiteServiceTest extends BaseServiceTest {
 
   @Mock
   private TipoMemoriaComiteRepository tipoMemoriaComiteRepository;

@@ -11,9 +11,7 @@ import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.model.TipoTarea;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,25 +21,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
-import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
-import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Test de integracion de Tarea.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(initializers = { Oauth2WireMockInitializer.class })
-public class TareaIT {
+public class TareaIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String TAREA_CONTROLLER_BASE_PATH = "/tareas";
-
-  @Autowired
-  private TestRestTemplate restTemplate;
-
-  @Autowired
-  private TokenBuilder tokenBuilder;
 
   private HttpEntity<Tarea> buildRequest(HttpHeaders headers, Tarea entity) throws Exception {
     headers = (headers != null ? headers : new HttpHeaders());

@@ -39,7 +39,7 @@ import org.springframework.data.domain.Pageable;
  * ComentarioServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class ComentarioServiceTest {
+public class ComentarioServiceTest extends BaseServiceTest {
 
   @Mock
   private ComentarioRepository comentarioRepository;

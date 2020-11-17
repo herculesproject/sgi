@@ -16,17 +16,13 @@ import org.crue.hercules.sgi.eti.model.TipoConvocatoriaReunion;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
-public class AsistentesRepositoryTest {
-
-  @Autowired
-  private TestEntityManager entityManager;
+public class AsistentesRepositoryTest extends BaseRepositoryTest {
 
   @Autowired
   private AsistentesRepository repository;

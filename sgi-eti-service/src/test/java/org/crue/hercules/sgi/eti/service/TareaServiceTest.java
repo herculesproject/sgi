@@ -33,7 +33,7 @@ import org.springframework.data.jpa.domain.Specification;
  * TareaServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class TareaServiceTest {
+public class TareaServiceTest extends BaseServiceTest {
 
   @Mock
   private TareaRepository tareaRepository;

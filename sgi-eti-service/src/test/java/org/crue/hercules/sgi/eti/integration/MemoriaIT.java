@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.integration;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,12 +20,8 @@ import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoDocumento;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
-import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
-import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -32,7 +29,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -40,14 +36,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de Memoria.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(initializers = { Oauth2WireMockInitializer.class })
-public class MemoriaIT {
-
-  @Autowired
-  private TestRestTemplate restTemplate;
-
-  @Autowired
-  private TokenBuilder tokenBuilder;
+public class MemoriaIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_ASIGNABLES = "/asignables/{idConvocatoria}";
@@ -355,10 +344,11 @@ public class MemoriaIT {
 
     // Memoria 7 tiene estado 3(En Secretaría) pero su fecha de envío es menor que
     // la fecha límite, por lo que no es asignable.
-    Assertions.assertThat(memorias.get(0).getTitulo()).isEqualTo("Memoria1");
-    Assertions.assertThat(memorias.get(1).getTitulo()).isEqualTo("Memoria3");
-    Assertions.assertThat(memorias.get(2).getTitulo()).isEqualTo("Memoria5");
-    Assertions.assertThat(memorias.get(3).getTitulo()).isEqualTo("Memoria6");
+    List<String> titulos = new ArrayList<>();
+    for (int i = 0; i < 4; i++) {
+      titulos.add(memorias.get(i).getTitulo());
+    }
+    Assertions.assertThat(titulos).contains("Memoria1", "Memoria3", "Memoria5", "Memoria6");
   }
 
   @Sql
@@ -565,9 +555,11 @@ public class MemoriaIT {
     // seguimiento anual/final) y su fecha de envío es menor que la fecha límite por
     // que son asignables.
 
-    Assertions.assertThat(memorias.get(0).getTitulo()).isEqualTo("Memoria2");
-    Assertions.assertThat(memorias.get(1).getTitulo()).isEqualTo("Memoria4");
-    Assertions.assertThat(memorias.get(2).getTitulo()).isEqualTo("Memoria6");
+    List<String> titulos = new ArrayList<>();
+    for (int i = 0; i < 3; i++) {
+      titulos.add(memorias.get(i).getTitulo());
+    }
+    Assertions.assertThat(titulos).contains("Memoria2", "Memoria4", "Memoria6");
 
     // Memoria 8 tiene estado 17(En Secretaría seguimiento final) pero su fecha de
     // envío es menor que

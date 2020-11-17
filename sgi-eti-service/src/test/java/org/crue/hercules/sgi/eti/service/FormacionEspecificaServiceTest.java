@@ -28,7 +28,7 @@ import org.springframework.data.jpa.domain.Specification;
  * FormacionEspecificaServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class FormacionEspecificaServiceTest {
+public class FormacionEspecificaServiceTest extends BaseServiceTest {
 
   @Mock
   private FormacionEspecificaRepository formacionEspecificaRepository;

@@ -7,16 +7,11 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 @DataJpaTest
-public class TipoEvaluacionRepositoryTest {
-
-  @Autowired
-  private TestEntityManager entityManager;
+public class TipoEvaluacionRepositoryTest extends BaseRepositoryTest {
 
   @Autowired
   private TipoEvaluacionRepository repository;

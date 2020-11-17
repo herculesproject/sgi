@@ -28,7 +28,7 @@ import org.springframework.data.jpa.domain.Specification;
  * FormularioServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class FormularioServiceTest {
+public class FormularioServiceTest extends BaseServiceTest {
 
   @Mock
   private FormularioRepository formularioRepository;

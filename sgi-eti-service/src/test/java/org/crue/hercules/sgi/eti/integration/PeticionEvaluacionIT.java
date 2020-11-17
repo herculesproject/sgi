@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.integration;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,12 +17,8 @@ import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Tarea;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoTarea;
-import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
-import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -29,7 +26,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -37,15 +33,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * Test de integracion de PeticionEvaluacion.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(initializers = { Oauth2WireMockInitializer.class })
-
-public class PeticionEvaluacionIT {
-
-  @Autowired
-  private TestRestTemplate restTemplate;
-
-  @Autowired
-  private TokenBuilder tokenBuilder;
+public class PeticionEvaluacionIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PETICION_EVALUACION_CONTROLLER_BASE_PATH = "/peticionevaluaciones";
@@ -187,7 +175,10 @@ public class PeticionEvaluacionIT {
     headers.add("X-Page", "1");
     headers.add("X-Page-Size", "5");
 
-    URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH).build(false).toUri();
+    String query = "id+";
+
+    URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", query)
+        .build(false).toUri();
 
     final ResponseEntity<List<PeticionEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(headers, null), new ParameterizedTypeReference<List<PeticionEvaluacion>>() {
@@ -203,9 +194,11 @@ public class PeticionEvaluacionIT {
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
 
     // Contiene de titulo='PeticionEvaluacion6' a 'PeticionEvaluacion8'
-    Assertions.assertThat(peticionEvaluaciones.get(0).getTitulo()).isEqualTo("PeticionEvaluacion6");
-    Assertions.assertThat(peticionEvaluaciones.get(1).getTitulo()).isEqualTo("PeticionEvaluacion7");
-    Assertions.assertThat(peticionEvaluaciones.get(2).getTitulo()).isEqualTo("PeticionEvaluacion8");
+    List<String> titulos = new ArrayList<>();
+    for (int i = 0; i < 3; i++) {
+      titulos.add(peticionEvaluaciones.get(i).getTitulo());
+    }
+    Assertions.assertThat(titulos).contains("PeticionEvaluacion6", "PeticionEvaluacion7", "PeticionEvaluacion8");
   }
 
   @Sql

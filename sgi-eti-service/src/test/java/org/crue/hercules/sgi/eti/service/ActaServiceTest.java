@@ -43,7 +43,7 @@ import org.springframework.data.domain.Pageable;
  * ActaServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class ActaServiceTest {
+public class ActaServiceTest extends BaseServiceTest {
 
   @Mock
   private ActaRepository actaRepository;
@@ -356,7 +356,7 @@ public class ActaServiceTest {
   /**
    * Función que devuelve un objeto ActaWithNumEvaluaciones
    * 
-   * @param id   id del acta
+   * @param id     id del acta
    * @param numero numero del acta
    * @return el objeto Acta
    */

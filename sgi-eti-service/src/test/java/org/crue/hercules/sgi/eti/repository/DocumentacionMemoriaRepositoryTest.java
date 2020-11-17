@@ -1,7 +1,6 @@
 package org.crue.hercules.sgi.eti.repository;
 
 import java.time.LocalDate;
-
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
@@ -19,15 +18,11 @@ import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
-public class DocumentacionMemoriaRepositoryTest {
-
-  @Autowired
-  private TestEntityManager entityManager;
+public class DocumentacionMemoriaRepositoryTest extends BaseRepositoryTest {
 
   @Autowired
   private DocumentacionMemoriaRepository repository;

@@ -13,17 +13,17 @@ VALUES(2, 'Bloque2', 1, 2);
 
 -- APARTADO FORMULARIO
 INSERT INTO ETI.APARTADO
-(ID, BLOQUE_ID, NOMBRE, PADRE_ID, ORDEN, ESQUEMA, ACTIVO)
-VALUES(1, 1, 'Apartado01', NULL, 1, '{"nombre":"EsquemaApartado01"}', true);
+(ID, BLOQUE_ID, NOMBRE, PADRE_ID, ORDEN, ESQUEMA)
+VALUES(1, 1, 'Apartado01', NULL, 1, '{"nombre":"EsquemaApartado01"}');
 INSERT INTO ETI.APARTADO
-(ID, BLOQUE_ID, NOMBRE, PADRE_ID, ORDEN, ESQUEMA, ACTIVO)
-VALUES(2, 1, 'Apartado2', 1, 2, '{"nombre":"EsquemaApartado2"}', true);
+(ID, BLOQUE_ID, NOMBRE, PADRE_ID, ORDEN, ESQUEMA)
+VALUES(2, 1, 'Apartado2', 1, 2, '{"nombre":"EsquemaApartado2"}');
 INSERT INTO ETI.APARTADO
-(ID, BLOQUE_ID, NOMBRE, PADRE_ID, ORDEN, ESQUEMA, ACTIVO)
-VALUES(3, 1, 'Apartado03', 1, 3, '{"nombre":"EsquemaApartado03"}', true);
+(ID, BLOQUE_ID, NOMBRE, PADRE_ID, ORDEN, ESQUEMA)
+VALUES(3, 1, 'Apartado03', 1, 3, '{"nombre":"EsquemaApartado03"}');
 INSERT INTO ETI.APARTADO
-(ID, BLOQUE_ID, NOMBRE, PADRE_ID, ORDEN, ESQUEMA, ACTIVO)
-VALUES(4, 2, 'Apartado4', NULL, 4, '{"nombre":"EsquemaApartado4"}', true);
+(ID, BLOQUE_ID, NOMBRE, PADRE_ID, ORDEN, ESQUEMA)
+VALUES(4, 2, 'Apartado4', NULL, 4, '{"nombre":"EsquemaApartado4"}');
 INSERT INTO ETI.APARTADO
-(ID, BLOQUE_ID, NOMBRE, PADRE_ID, ORDEN, ESQUEMA, ACTIVO)
-VALUES(5, 2, 'Apartado05', 4, 5, '{"nombre":"EsquemaApartado05"}', true);
+(ID, BLOQUE_ID, NOMBRE, PADRE_ID, ORDEN, ESQUEMA)
+VALUES(5, 2, 'Apartado05', 4, 5, '{"nombre":"EsquemaApartado05"}');
