@@ -26,7 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 @ExtendWith(MockitoExtension.class)
-public class TipoEnlaceServiceTest {
+public class TipoEnlaceServiceTest extends BaseServiceTest {
 
   @Mock
   private TipoEnlaceRepository repository;

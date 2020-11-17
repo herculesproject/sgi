@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -58,13 +59,13 @@ public class FuenteFinanciacion extends BaseEntity {
 
   /** Tipo ambito geografico. */
   @ManyToOne
-  @JoinColumn(name = "tipo_ambito_geografico_id", nullable = false)
+  @JoinColumn(name = "tipo_ambito_geografico_id", nullable = false, foreignKey = @ForeignKey(name = "FK_FUENTEFINANCIACION_TIPOAMBITOGEOGRAFICO"))
   @NotNull
   private TipoAmbitoGeografico tipoAmbitoGeografico;
 
   /** Tipo origen fuente financiacion. */
   @ManyToOne
-  @JoinColumn(name = "tipo_origen_fuente_financiacion_id", nullable = false)
+  @JoinColumn(name = "tipo_origen_fuente_financiacion_id", nullable = false, foreignKey = @ForeignKey(name = "FK_FUENTEFINANCIACION_TIPOORIGENFUENTEFINANCIACION"))
   @NotNull
   private TipoOrigenFuenteFinanciacion tipoOrigenFuenteFinanciacion;
 

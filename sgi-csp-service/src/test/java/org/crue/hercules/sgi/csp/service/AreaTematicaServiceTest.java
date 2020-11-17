@@ -29,7 +29,7 @@ import org.springframework.data.jpa.domain.Specification;
  * AreaTematicaServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class AreaTematicaServiceTest {
+public class AreaTematicaServiceTest extends BaseServiceTest {
 
   @Mock
   private AreaTematicaRepository repository;

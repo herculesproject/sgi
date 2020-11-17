@@ -22,7 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * RequisitoIPServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class RequisitoIPServiceTest {
+public class RequisitoIPServiceTest extends BaseServiceTest {
 
   @Mock
   private RequisitoIPRepository repository;

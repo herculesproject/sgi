@@ -9,13 +9,9 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 @DataJpaTest
-public class ConvocatoriaEntidadConvocanteRepositoryTest {
-
-  @Autowired
-  private TestEntityManager entityManager;
+public class ConvocatoriaEntidadConvocanteRepositoryTest extends BaseRepositoryTest {
 
   @Autowired
   private ConvocatoriaEntidadConvocanteRepository repository;
@@ -26,10 +22,10 @@ public class ConvocatoriaEntidadConvocanteRepositoryTest {
     // given: 2 ConvocatoriaEntidadConvocante de los que 1 coincide con el
     // ConvocatoriaId y EntidadRef buscado
     Convocatoria convocatoria1 = Convocatoria.builder().codigo("codigo-1")
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).build();
+        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).colaborativos(Boolean.FALSE).build();
     entityManager.persistAndFlush(convocatoria1);
     Convocatoria convocatoria2 = Convocatoria.builder().codigo("codigo-2")
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).build();
+        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).colaborativos(Boolean.FALSE).build();
     entityManager.persistAndFlush(convocatoria2);
 
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante1 = new ConvocatoriaEntidadConvocante(null,
@@ -61,10 +57,10 @@ public class ConvocatoriaEntidadConvocanteRepositoryTest {
     // given: 2 ConvocatoriaEntidadConvocante que no coincide con el ConvocatoriaId
     // y EntidadRef buscado
     Convocatoria convocatoria1 = Convocatoria.builder().codigo("codigo-1")
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).build();
+        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).colaborativos(Boolean.FALSE).build();
     entityManager.persistAndFlush(convocatoria1);
     Convocatoria convocatoria2 = Convocatoria.builder().codigo("codigo-2")
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).build();
+        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).colaborativos(Boolean.FALSE).build();
     entityManager.persistAndFlush(convocatoria2);
 
     ConvocatoriaEntidadConvocante convocatoriaEntidadConvocante1 = new ConvocatoriaEntidadConvocante(null,

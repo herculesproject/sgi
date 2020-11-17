@@ -1,7 +1,9 @@
 package org.crue.hercules.sgi.csp.model;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,6 +16,9 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
+import org.crue.hercules.sgi.csp.converter.ClasificacionCVNConverter;
+import org.crue.hercules.sgi.csp.converter.TipoDestinatarioConverter;
+import org.crue.hercules.sgi.csp.converter.TipoEstadoConvocatoriaConverter;
 import org.crue.hercules.sgi.csp.enums.ClasificacionCVNEnum;
 import org.crue.hercules.sgi.csp.enums.TipoDestinatarioEnum;
 import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
@@ -51,7 +56,7 @@ public class Convocatoria extends BaseEntity {
 
   /** Modelo Ejecucion */
   @ManyToOne
-  @JoinColumn(name = "modelo_ejecucion_id", nullable = true)
+  @JoinColumn(name = "modelo_ejecucion_id", nullable = true, foreignKey = @ForeignKey(name = "FK_CONVOCATORIA_MODELOEJECUCION"))
   private ModeloEjecucion modeloEjecucion;
 
   /** Codigo */
@@ -83,16 +88,17 @@ public class Convocatoria extends BaseEntity {
 
   /** Tipo Finalidad */
   @ManyToOne
-  @JoinColumn(name = "tipo_finalidad_id", nullable = true)
+  @JoinColumn(name = "tipo_finalidad_id", nullable = true, foreignKey = @ForeignKey(name = "FK_CONVOCATORIA_FINALIDAD"))
   private TipoFinalidad finalidad;
 
   /** Regimen Concurrencia */
   @ManyToOne
-  @JoinColumn(name = "tipo_regimen_concurrencia_id", nullable = true)
+  @JoinColumn(name = "tipo_regimen_concurrencia_id", nullable = true, foreignKey = @ForeignKey(name = "FK_CONVOCATORIA_REGIMENCONCURRENCIA"))
   private TipoRegimenConcurrencia regimenConcurrencia;
 
   /** Destinatarios */
   @Column(name = "destinatarios", length = 50, nullable = true)
+  @Convert(converter = TipoDestinatarioConverter.class)
   private TipoDestinatarioEnum destinatarios;
 
   /** Colaborativos */
@@ -101,6 +107,7 @@ public class Convocatoria extends BaseEntity {
 
   /** Estado Actual */
   @Column(name = "estado_actual", length = 50, nullable = false)
+  @Convert(converter = TipoEstadoConvocatoriaConverter.class)
   private TipoEstadoConvocatoriaEnum estadoActual;
 
   /** Duracion */
@@ -112,11 +119,12 @@ public class Convocatoria extends BaseEntity {
 
   /** Ambito Geografico */
   @ManyToOne
-  @JoinColumn(name = "tipo_ambito_geografico_id", nullable = true)
+  @JoinColumn(name = "tipo_ambito_geografico_id", nullable = true, foreignKey = @ForeignKey(name = "FK_CONVOCATORIA_AMBITOGEOGRAFICO"))
   private TipoAmbitoGeografico ambitoGeografico;
 
   /** Clasificacion CVN */
   @Column(name = "clasificacion_cvn", length = 50, nullable = true)
+  @Convert(converter = ClasificacionCVNConverter.class)
   private ClasificacionCVNEnum clasificacionCVN;
 
   /** Activo */

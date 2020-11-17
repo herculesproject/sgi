@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -41,7 +42,7 @@ public class ConvocatoriaEntidadFinanciadora extends BaseEntity {
 
   /** Convocatoria */
   @ManyToOne
-  @JoinColumn(name = "convocatoria_id", nullable = false)
+  @JoinColumn(name = "convocatoria_id", nullable = false, foreignKey = @ForeignKey(name = "FK_CONVOCATORIAENTIDADFINANCIADORA_CONVOCATORIA"))
   @NotNull
   private Convocatoria convocatoria;
 
@@ -53,12 +54,12 @@ public class ConvocatoriaEntidadFinanciadora extends BaseEntity {
 
   /** FuenteFinanciacion */
   @ManyToOne
-  @JoinColumn(name = "fuente_financiacion_id", nullable = true)
+  @JoinColumn(name = "fuente_financiacion_id", nullable = true, foreignKey = @ForeignKey(name = "FK_CONVOCATORIAENTIDADFINANCIADORA_FUENTEFINANCIACION"))
   private FuenteFinanciacion fuenteFinanciacion;
 
   /** TipoFinanciacion */
   @ManyToOne
-  @JoinColumn(name = "tipo_financiacion_id", nullable = true)
+  @JoinColumn(name = "tipo_financiacion_id", nullable = true, foreignKey = @ForeignKey(name = "FK_CONVOCATORIAENTIDADFINANCIADORA_TIPOFINANCIACION"))
   private TipoFinanciacion tipoFinanciacion;
 
   /** PorcentajeFinanciacion */

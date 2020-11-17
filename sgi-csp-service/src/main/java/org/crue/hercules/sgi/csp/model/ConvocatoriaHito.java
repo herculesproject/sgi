@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -43,13 +44,13 @@ public class ConvocatoriaHito extends BaseEntity {
 
   /** Convocatoria */
   @ManyToOne
-  @JoinColumn(name = "convocatoria_id", nullable = false)
+  @JoinColumn(name = "convocatoria_id", nullable = false, foreignKey = @ForeignKey(name = "FK_CONVOCATORIAHITO_CONVOCATORIA"))
   @NotNull
   private Convocatoria convocatoria;
 
   /** Tipo hito. */
   @ManyToOne
-  @JoinColumn(name = "tipo_hito_id", nullable = false)
+  @JoinColumn(name = "tipo_hito_id", nullable = false, foreignKey = @ForeignKey(name = "FK_CONVOCATORIAHITO_TIPOHITO"))
   @NotNull
   private TipoHito tipoHito;
 

@@ -44,7 +44,7 @@ import org.springframework.data.jpa.domain.Specification;
  */
 @ExtendWith(MockitoExtension.class)
 
-public class ConvocatoriaFaseServiceTest {
+public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
 
   @Mock
   private ConvocatoriaFaseRepository repository;

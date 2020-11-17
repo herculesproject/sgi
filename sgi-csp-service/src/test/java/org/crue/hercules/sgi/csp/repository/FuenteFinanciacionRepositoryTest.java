@@ -9,16 +9,12 @@ import org.crue.hercules.sgi.csp.model.TipoOrigenFuenteFinanciacion;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 /**
  * FuenteFinanciacionRepositoryTest
  */
 @DataJpaTest
-public class FuenteFinanciacionRepositoryTest {
-
-  @Autowired
-  private TestEntityManager entityManager;
+public class FuenteFinanciacionRepositoryTest extends BaseRepositoryTest {
 
   @Autowired
   private FuenteFinanciacionRepository repository;

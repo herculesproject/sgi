@@ -9,16 +9,12 @@ import org.crue.hercules.sgi.csp.model.RequisitoIP;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 /**
  * RequisitoIPRepositoryTest
  */
 @DataJpaTest
-public class RequisitoIPRepositoryTest {
-
-  @Autowired
-  private TestEntityManager entityManager;
+public class RequisitoIPRepositoryTest extends BaseRepositoryTest {
 
   @Autowired
   private RequisitoIPRepository repository;
@@ -77,7 +73,7 @@ public class RequisitoIPRepositoryTest {
   private RequisitoIP generarMockRequisitoIP(Long id) {
     RequisitoIP requisitoIP = new RequisitoIP();
     requisitoIP.setConvocatoria(Convocatoria.builder().activo(Boolean.TRUE).codigo("codigo-00" + id)
-        .estadoActual(TipoEstadoConvocatoriaEnum.REGISTRADA).build());
+        .estadoActual(TipoEstadoConvocatoriaEnum.REGISTRADA).colaborativos(Boolean.FALSE).build());
     requisitoIP.setSexo("Hombre");
     requisitoIP.setModalidadContratoRef("modalidad-00" + (id != null ? id : 1L));
     requisitoIP.setNivelAcademicoRef("nivel-00" + (id != null ? id : 1L));

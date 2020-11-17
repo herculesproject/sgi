@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,7 +43,7 @@ public class ConvocatoriaEnlace extends BaseEntity {
 
   /** Convocatoria */
   @ManyToOne
-  @JoinColumn(name = "convocatoria_id", nullable = false)
+  @JoinColumn(name = "convocatoria_id", nullable = false, foreignKey = @ForeignKey(name = "FK_CONVOCATORIAENLACE_CONVOCATORIA"))
   @NotNull
   private Convocatoria convocatoria;
 
@@ -58,7 +59,7 @@ public class ConvocatoriaEnlace extends BaseEntity {
 
   /** Tipo enlace. */
   @ManyToOne
-  @JoinColumn(name = "tipo_enlace_id")
+  @JoinColumn(name = "tipo_enlace_id", foreignKey = @ForeignKey(name = "FK_CONVOCATORIAENLACE_TIPOENLACE"))
   private TipoEnlace tipoEnlace;
 
 }

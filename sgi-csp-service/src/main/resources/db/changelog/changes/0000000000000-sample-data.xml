@@ -1,37 +1,7 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-  <!-- ########################################################## -->
-  <!-- START FIXED DATA -->
-  <!-- ########################################################## -->
-
-  <changeSet author="master" id="20200928000000-tipo_origen_fuente_financiacion">
-    <insert tableName="tipo_origen_fuente_financiacion">
-      <column name="nombre" value="Público" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_origen_fuente_financiacion">
-      <column name="nombre" value="Privado" />
-      <column name="activo" value="true" />
-    </insert>
-  </changeSet>
-
-  <changeSet author="master" id="20200928000000-tipo_regimen_concurrencia">
-    <insert tableName="tipo_regimen_concurrencia">
-      <column name="nombre" value="Concesión directa" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_regimen_concurrencia">
-      <column name="nombre" value="Concurrencia competitiva" />
-      <column name="activo" value="true" />
-    </insert>
-  </changeSet>
-
-  <!-- ########################################################## -->
-  <!-- END FIXED DATA -->
-  <!-- ########################################################## -->
-
-  <changeSet author="master" id="20200928000000-area_tematica">
+  <changeSet context="dev" author="master" id="0000000000000-area_tematica">
     <insert tableName="area_tematica">
       <column name="nombre" value="area_tematica AAA" />
       <column name="descripcion" value="descripcion area tematica AAA" />
@@ -88,7 +58,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-modelo_ejecucion">
+  <changeSet context="dev" author="master" id="0000000000000-modelo_ejecucion">
     <insert tableName="modelo_ejecucion">
       <column name="nombre" value="nombre-001" />
       <column name="descripcion" value="descripcion-001" />
@@ -111,7 +81,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-modelo_unidad">
+  <changeSet context="dev" author="master" id="0000000000000-modelo_unidad">
     <insert tableName="modelo_unidad">
       <column name="unidad_gestion_ref" value="OTRI" />
       <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')"></column>
@@ -144,7 +114,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-programa">
+  <changeSet context="dev" author="master" id="0000000000000-programa">
     <insert tableName="programa">
       <column name="nombre" value="nombre-001" />
       <column name="descripcion" value="descripcion-001" />
@@ -189,7 +159,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-tipo_ambito_geografico">
+  <changeSet context="dev" author="master" id="0000000000000-tipo_ambito_geografico">
     <insert tableName="tipo_ambito_geografico">
       <column name="nombre" value="nombre-001" />
       <column name="activo" value="true" />
@@ -204,7 +174,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-fuente_financiacion">
+  <changeSet context="dev" author="master" id="0000000000000-fuente_financiacion">
     <insert tableName="fuente_financiacion">
       <column name="nombre" value="nombre-001" />
       <column name="descripcion" value="descripcion-001" />
@@ -240,7 +210,7 @@
 
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-tipo_documento">
+  <changeSet context="dev" author="master" id="0000000000000-tipo_documento">
     <insert tableName="tipo_documento">
       <column name="nombre" value="nombre-001" />
       <column name="descripcion" value="descripcion-001" />
@@ -258,7 +228,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-tipo_enlace">
+  <changeSet context="dev" author="master" id="0000000000000-tipo_enlace">
     <insert tableName="tipo_enlace">
       <column name="nombre" value="tipo_enlace AAA" />
       <column name="descripcion" value="tipo_enlace AAA" />
@@ -286,7 +256,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-modelo_tipo_enlace">
+  <changeSet context="dev" author="master" id="0000000000000-modelo_tipo_enlace">
     <insert tableName="modelo_tipo_enlace">
       <column name="tipo_enlace_id" valueComputed="(select id from csp.tipo_enlace where nombre = 'tipo_enlace AAA')" />
       <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')"></column>
@@ -314,7 +284,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-tipo_fase">
+  <changeSet context="dev" author="master" id="0000000000000-tipo_fase">
     <insert tableName="tipo_fase">
       <column name="nombre" value="Fase1" />
       <column name="descripcion" value="Descripción del Fase1"></column>
@@ -332,7 +302,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-modelo_tipo_fase">
+  <changeSet context="dev" author="master" id="0000000000000-modelo_tipo_fase">
     <insert tableName="modelo_tipo_fase">
       <column name="tipo_fase_id" valueComputed="(select id from csp.tipo_fase where nombre='Fase1')"></column>
       <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')"></column>
@@ -359,7 +329,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-modelo_tipo_documento">
+  <changeSet context="dev" author="master" id="0000000000000-modelo_tipo_documento">
     <insert tableName="modelo_tipo_documento">
       <column name="tipo_documento_id" valueComputed="(select id from csp.tipo_documento where nombre = 'nombre-001')" />
       <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')" />
@@ -386,7 +356,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-tipo_finalidad">
+  <changeSet context="dev" author="master" id="0000000000000-tipo_finalidad">
     <insert tableName="tipo_finalidad">
       <column name="nombre" value="tipo finalidad AAA" />
       <column name="descripcion" value="tipo finalidad AAA" />
@@ -419,7 +389,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20201008000000-tipo_financiacion">
+  <changeSet context="dev" author="master" id="20201008000000-tipo_financiacion">
     <insert tableName="tipo_financiacion">
       <column name="nombre" value="nombreTipoFinanciacion1" />
       <column name="descripcion" value="descripción tipoFinanciacion1" />
@@ -437,7 +407,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-modelo_tipo_finalidad">
+  <changeSet context="dev" author="master" id="0000000000000-modelo_tipo_finalidad">
     <insert tableName="modelo_tipo_finalidad">
       <column name="tipo_finalidad_id" valueComputed="(select id from csp.tipo_finalidad where nombre like '% AAA')" />
       <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre like '%-001')" />
@@ -465,7 +435,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-tipo_hito">
+  <changeSet context="dev" author="master" id="0000000000000-tipo_hito">
     <insert tableName="tipo_hito">
       <column name="nombre" value="Hito1" />
       <column name="descripcion" value="Descripción del Hito1"></column>
@@ -483,7 +453,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-modelo_tipo_hito">
+  <changeSet context="dev" author="master" id="0000000000000-modelo_tipo_hito">
     <insert tableName="modelo_tipo_hito">
       <column name="tipo_hito_id" valueComputed="(select id from csp.tipo_hito where nombre like '%Hito1')" />
       <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre like '%-001')" />
@@ -526,7 +496,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20201009000000-concepto_gasto">
+  <changeSet context="dev" author="master" id="20201009000000-concepto_gasto">
     <insert tableName="concepto_gasto">
       <column name="nombre" value="conceptoGasto1" />
       <column name="descripcion" value="descripción conceptoGasto1" />
@@ -544,7 +514,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-convocatoria">
+  <changeSet context="dev" author="master" id="0000000000000-convocatoria">
     <insert tableName="convocatoria">
       <column name="unidad_gestion_ref" value="OTRI" />
       <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-001')" />
@@ -617,7 +587,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-convocatoria_area_tematica">
+  <changeSet context="dev" author="master" id="0000000000000-convocatoria_area_tematica">
     <insert tableName="convocatoria_area_tematica">
       <column name="area_tematica_id" valueComputed="(select id from csp.area_tematica where nombre = 'area_tematica AAA')"></column>
       <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
@@ -650,7 +620,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20201016000000-convocatoria_enlace">
+  <changeSet context="dev" author="master" id="20201016000000-convocatoria_enlace">
     <insert tableName="convocatoria_enlace">
       <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
       <column name="url" value="www.url1.com" />
@@ -671,7 +641,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-convocatoria_entidad_convocante">
+  <changeSet context="dev" author="master" id="0000000000000-convocatoria_entidad_convocante">
     <insert tableName="convocatoria_entidad_convocante">
       <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
       <column name="entidad_ref" value="ent-001" />
@@ -689,7 +659,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-convocatoria_entidad_financiadora">
+  <changeSet context="dev" author="master" id="0000000000000-convocatoria_entidad_financiadora">
     <insert tableName="convocatoria_entidad_financiadora">
       <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
       <column name="entidad_ref" value="ent-004" />
@@ -713,7 +683,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-convocatoria_entidad_gestora">
+  <changeSet context="dev" author="master" id="0000000000000-convocatoria_entidad_gestora">
     <insert tableName="convocatoria_entidad_gestora">
       <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
       <column name="entidad_ref" value="ent-001" />
@@ -728,7 +698,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20201018000000-convocatoria_fase">
+  <changeSet context="dev" author="master" id="20201018000000-convocatoria_fase">
     <insert tableName="convocatoria_fase">
       <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
       <column name="tipo_fase_id" valueComputed="(select id from csp.tipo_fase where nombre = 'Fase1')"></column>
@@ -752,7 +722,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20201022000000-convocatoria_hito">
+  <changeSet context="dev" author="master" id="20201022000000-convocatoria_hito">
     <insert tableName="convocatoria_hito">
       <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
       <column name="tipo_hito_id" valueComputed="(select id from csp.tipo_hito where nombre = 'Hito1')"></column>
@@ -776,7 +746,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-convocatoria_periodo_justificacion">
+  <changeSet context="dev" author="master" id="0000000000000-convocatoria_periodo_justificacion">
     <insert tableName="convocatoria_periodo_justificacion">
       <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
       <column name="num_periodo" value="1" />
@@ -809,7 +779,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-convocatoria_periodo_seguimiento_cientifico">
+  <changeSet context="dev" author="master" id="0000000000000-convocatoria_periodo_seguimiento_cientifico">
     <insert tableName="convocatoria_periodo_seguimiento_cientifico">
       <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
       <column name="num_periodo" value="1" />
@@ -857,7 +827,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20201022000000-requisito_ip">
+  <changeSet context="dev" author="master" id="20201022000000-requisito_ip">
     <insert tableName="requisito_ip">
       <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')" />
       <column name="num_maximo_ip" value="8" />
@@ -924,7 +894,7 @@
     </insert>
   </changeSet>
 
-  <changeSet author="master" id="20200928000000-convocatoria_concepto_gasto">
+  <changeSet context="dev" author="master" id="0000000000000-convocatoria_concepto_gasto">
     <insert tableName="convocatoria_concepto_gasto">
       <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')" />
       <column name="concepto_gasto_id" valueComputed="(select id from csp.concepto_gasto where nombre = 'conceptoGasto2')" />

@@ -26,7 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * ConvocatoriaConceptoGastoServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class ConvocatoriaConceptoGastoServiceTest {
+public class ConvocatoriaConceptoGastoServiceTest extends BaseServiceTest {
 
   @Mock
   private ConvocatoriaConceptoGastoRepository repository;

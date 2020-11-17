@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -44,7 +45,7 @@ public class ConvocatoriaPeriodoSeguimientoCientifico extends BaseEntity {
 
   /** Convocatoria */
   @ManyToOne
-  @JoinColumn(name = "convocatoria_id", nullable = false)
+  @JoinColumn(name = "convocatoria_id", nullable = false, foreignKey = @ForeignKey(name = "FK_CONVOCATORIAPERIODOSEGUIMIENTOCIENTIFICO_CONVOCATORIA"))
   @NotNull
   private Convocatoria convocatoria;
 

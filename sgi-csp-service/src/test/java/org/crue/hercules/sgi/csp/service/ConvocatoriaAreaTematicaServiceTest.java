@@ -32,7 +32,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 @ExtendWith(MockitoExtension.class)
-public class ConvocatoriaAreaTematicaServiceTest {
+public class ConvocatoriaAreaTematicaServiceTest extends BaseServiceTest {
 
   @Mock
   private ConvocatoriaAreaTematicaRepository convocatoriaAreaTematicaRepository;

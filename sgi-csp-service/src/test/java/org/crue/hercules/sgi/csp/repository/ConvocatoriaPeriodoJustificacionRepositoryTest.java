@@ -11,13 +11,9 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 @DataJpaTest
-public class ConvocatoriaPeriodoJustificacionRepositoryTest {
-
-  @Autowired
-  private TestEntityManager entityManager;
+public class ConvocatoriaPeriodoJustificacionRepositoryTest extends BaseRepositoryTest {
 
   @Autowired
   private ConvocatoriaPeriodoJustificacionRepository repository;
@@ -27,10 +23,10 @@ public class ConvocatoriaPeriodoJustificacionRepositoryTest {
 
     // given: 2 ConvocatoriaPeriodoJustificacion para el ConvocatoriaId buscado
     Convocatoria convocatoria1 = Convocatoria.builder().codigo("codigo-1")
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).build();
+        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).colaborativos(Boolean.FALSE).build();
     entityManager.persistAndFlush(convocatoria1);
     Convocatoria convocatoria2 = Convocatoria.builder().codigo("codigo-2")
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).build();
+        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).colaborativos(Boolean.FALSE).build();
     entityManager.persistAndFlush(convocatoria2);
 
     ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion1 = new ConvocatoriaPeriodoJustificacion(null,
@@ -63,7 +59,7 @@ public class ConvocatoriaPeriodoJustificacionRepositoryTest {
 
     // given: 2 ConvocatoriaPeriodoJustificacion de una Convocatoria
     Convocatoria convocatoria1 = Convocatoria.builder().codigo("codigo-1")
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).build();
+        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).colaborativos(Boolean.FALSE).build();
     entityManager.persistAndFlush(convocatoria1);
 
     ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion1 = new ConvocatoriaPeriodoJustificacion(null,

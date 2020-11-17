@@ -8,16 +8,12 @@ import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 /**
  * ModeloUnidadRepositoryTest
  */
 @DataJpaTest
-public class ModeloUnidadRepositoryTest {
-
-  @Autowired
-  private TestEntityManager entityManager;
+public class ModeloUnidadRepositoryTest extends BaseRepositoryTest {
 
   @Autowired
   private ModeloUnidadRepository repository;

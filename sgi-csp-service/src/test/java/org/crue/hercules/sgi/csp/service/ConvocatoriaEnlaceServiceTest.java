@@ -33,7 +33,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * ConvocatoriaEnlaceServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class ConvocatoriaEnlaceServiceTest {
+public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
 
   @Mock
   private ConvocatoriaEnlaceRepository repository;

@@ -3,7 +3,9 @@ package org.crue.hercules.sgi.csp.model;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +17,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.crue.hercules.sgi.csp.converter.TipoJustificacionConverter;
 import org.crue.hercules.sgi.csp.enums.TipoJustificacionEnum;
 
 import lombok.AllArgsConstructor;
@@ -44,7 +47,7 @@ public class ConvocatoriaPeriodoJustificacion extends BaseEntity {
 
   /** Convocatoria */
   @ManyToOne
-  @JoinColumn(name = "convocatoria_id", nullable = false)
+  @JoinColumn(name = "convocatoria_id", nullable = false, foreignKey = @ForeignKey(name = "FK_CONVOCATORIAPERIODOJUSTIFICACION_CONVOCATORIA"))
   @NotNull
   private Convocatoria convocatoria;
 
@@ -79,6 +82,7 @@ public class ConvocatoriaPeriodoJustificacion extends BaseEntity {
 
   /** Tipo justificacion */
   @Column(name = "tipo_justificacion", length = 10)
+  @Convert(converter = TipoJustificacionConverter.class)
   private TipoJustificacionEnum tipoJustificacion;
 
 }

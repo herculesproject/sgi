@@ -7,13 +7,9 @@ import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 @DataJpaTest
-public class TipoRegimenConcurrenciaRepositoryTest {
-
-  @Autowired
-  private TestEntityManager entityManager;
+public class TipoRegimenConcurrenciaRepositoryTest extends BaseRepositoryTest {
 
   @Autowired
   private TipoRegimenConcurrenciaRepository repository;

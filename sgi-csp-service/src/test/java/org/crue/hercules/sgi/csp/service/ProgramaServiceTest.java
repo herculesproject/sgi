@@ -29,7 +29,7 @@ import org.springframework.data.jpa.domain.Specification;
  * ProgramaServiceTest
  */
 @ExtendWith(MockitoExtension.class)
-public class ProgramaServiceTest {
+public class ProgramaServiceTest extends BaseServiceTest {
 
   @Mock
   private ProgramaRepository repository;

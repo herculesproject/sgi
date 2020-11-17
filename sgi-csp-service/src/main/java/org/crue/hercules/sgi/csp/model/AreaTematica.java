@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -54,7 +55,7 @@ public class AreaTematica extends BaseEntity {
 
   /** Area Tematica padre. */
   @ManyToOne
-  @JoinColumn(name = "area_tematica_padre_id", nullable = true)
+  @JoinColumn(name = "area_tematica_padre_id", nullable = true, foreignKey = @ForeignKey(name = "FK_AREATEMATICA_PADRE"))
   private AreaTematica padre;
 
   /** Activo */

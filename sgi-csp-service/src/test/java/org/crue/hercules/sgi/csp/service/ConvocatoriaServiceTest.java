@@ -45,7 +45,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 @ExtendWith(MockitoExtension.class)
-public class ConvocatoriaServiceTest {
+public class ConvocatoriaServiceTest extends BaseServiceTest {
 
   @Mock
   private ConvocatoriaRepository repository;

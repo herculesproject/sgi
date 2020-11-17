@@ -9,16 +9,12 @@ import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 /**
  * ModeloTipoDocumentoRepositoryTest
  */
 @DataJpaTest
-public class ModeloTipoDocumentoRepositoryTest {
-
-  @Autowired
-  private TestEntityManager entityManager;
+public class ModeloTipoDocumentoRepositoryTest extends BaseRepositoryTest {
 
   @Autowired
   private ModeloTipoDocumentoRepository repository;

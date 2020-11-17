@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.csp.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,6 +13,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -39,7 +41,7 @@ public class RequisitoIP extends BaseEntity {
 
   /** Convocatoria */
   @OneToOne
-  @JoinColumn(name = "convocatoria_id", nullable = false, unique = true)
+  @JoinColumn(name = "convocatoria_id", nullable = false, unique = true, foreignKey = @ForeignKey(name = "FK_REQUISITOIP_CONVOCATORIA"))
   @NotNull
   private Convocatoria convocatoria;
 
