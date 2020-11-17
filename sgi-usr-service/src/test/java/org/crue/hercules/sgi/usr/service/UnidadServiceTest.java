@@ -29,7 +29,7 @@ import org.springframework.data.jpa.domain.Specification;
  */
 @ExtendWith(MockitoExtension.class)
 
-public class UnidadServiceTest {
+public class UnidadServiceTest extends BaseServiceTest {
 
   @Mock
   private UnidadRepository repository;

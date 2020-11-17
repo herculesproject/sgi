@@ -35,7 +35,7 @@
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <version>1.4.199</version>
+      <version>1.4.200</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -132,7 +132,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <liquibase-hibernate5.version>3.6</liquibase-hibernate5.version>
+    <liquibase-hibernate5.version>4.1.1</liquibase-hibernate5.version>
     <validation-api.version>2.0.1.Final</validation-api.version>
     <org.hibernate-jpamodelgen.version>5.3.15.Final</org.hibernate-jpamodelgen.version>
     <docker-maven-plugin.version>0.33.0</docker-maven-plugin.version>
@@ -148,7 +148,7 @@
     <taglist-maven-plugin.version>2.4</taglist-maven-plugin.version>
     <site-maven-plugin.version>0.12</site-maven-plugin.version>
     <heroku-maven-plugin.verion>2.0.16</heroku-maven-plugin.verion>
-    <liquibase-maven-plugin.version>3.8.8</liquibase-maven-plugin.version>
+    <liquibase-maven-plugin.version>4.1.1</liquibase-maven-plugin.version>
 
     <!-- Spring Boot doesn't have this property... so, this is needed -->
     <maven-surefire-report-plugin.version>3.0.0-M4</maven-surefire-report-plugin.version>
@@ -163,8 +163,6 @@
     <!-- Custom properties -->
     <docker.image.prefix>nexus.treelogic.local:8083/hercules/sgi-usr</docker.image.prefix>
     <full-artifact-name>target/${project.artifactId}-${project.version}-exec.jar</full-artifact-name>
-    <diffChangeLogFile>src/main/resources/db/changelog/to-be-changed.yaml</diffChangeLogFile>
-    <outputChangeLogFile>src/main/resources/db/changelog/changes/initial-database.xml</outputChangeLogFile>
 
     <!--Properties by profile -->
     <spring.profiles.active>dev</spring.profiles.active>
@@ -202,7 +200,7 @@
       <!-- The Configuration of the unit-test profile -->
       <id>unit-test</id>
       <properties>
-        <spring.profiles.active>unit-test</spring.profiles.active>
+        <spring.profiles.active>test</spring.profiles.active>
       </properties>
     </profile>
     <profile>
@@ -400,9 +398,11 @@
         <configuration>
           <!-- The skip.unit.tests property is used to decide whether these tests should be run or not -->
           <skipTests>${skip.unit.tests}</skipTests>
-          <!-- Redirect JBoss logging to SLF4J -->
           <systemPropertyVariables>
+            <!-- Redirect JBoss logging to SLF4J -->
             <org.jboss.logging.provider>slf4j</org.jboss.logging.provider>
+            <!-- Set spring active profile -->
+            <spring.profiles.active>${spring.profiles.active}</spring.profiles.active>
           </systemPropertyVariables>
         </configuration>
       </plugin>
@@ -417,6 +417,10 @@
         <configuration>
           <!-- The skip.integration.tests property is used to decide if this plugin should fire or not -->
           <skipTests>${skip.integration.tests}</skipTests>
+          <systemPropertyVariables>
+            <!-- Set spring active profile -->
+            <spring.profiles.active>${spring.profiles.active}</spring.profiles.active>
+          </systemPropertyVariables>
         </configuration>
         <executions>
           <execution>
@@ -624,9 +628,6 @@
         <groupId>org.liquibase</groupId>
         <artifactId>liquibase-maven-plugin</artifactId>
         <configuration>
-          <propertyFile>src/main/resources/liquibase.properties</propertyFile>
-          <outputChangeLogFile>${outputChangeLogFile}</outputChangeLogFile>
-          <diffChangeLogFile>${diffChangeLogFile}</diffChangeLogFile>
           <verbose>true</verbose>
           <logging>debug</logging>
           <!-- see: http://blog.nutpan.com/2012/03/liquibase-maven-plugin-issue-with-non.html -->
@@ -637,6 +638,24 @@
             <groupId>org.liquibase.ext</groupId>
             <artifactId>liquibase-hibernate5</artifactId>
             <version>${liquibase-hibernate5.version}</version>
+            <exclusions>
+              <exclusion>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+              </exclusion>
+              <exclusion>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-entitymanager</artifactId>
+              </exclusion>
+              <exclusion>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-envers</artifactId>
+              </exclusion>
+              <exclusion>
+                <groupId>org.hibernate.javax.persistence</groupId>
+                <artifactId>hibernate-jpa-2.0-api</artifactId>
+              </exclusion>
+            </exclusions>
           </dependency>
           <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -676,7 +695,7 @@
                 <env>
                   <POSTGRES_USER>postgres</POSTGRES_USER>
                   <POSTGRES_PASSWORD>admin</POSTGRES_PASSWORD>
-                  <POSTGRES_DB>usr</POSTGRES_DB>
+                  <POSTGRES_DB>db</POSTGRES_DB>
                 </env>
               </run>
             </image>
