@@ -3,20 +3,25 @@
 
   <changeSet context="!unit-test AND !integration-test" author="master" id="0000000000000-tipo_origen_fuente_financiacion">
     <insert tableName="tipo_origen_fuente_financiacion">
+      <column name="id" valueSequenceNext="tipo_origen_fuente_financiacion_seq" />
       <column name="nombre" value="Público" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_origen_fuente_financiacion">
+      <column name="id" valueSequenceNext="tipo_origen_fuente_financiacion_seq" />
       <column name="nombre" value="Privado" />
       <column name="activo" value="true" />
     </insert>
   </changeSet>
+
   <changeSet context="!unit-test AND !integration-test" author="master" id="0000000000000-tipo_regimen_concurrencia">
     <insert tableName="tipo_regimen_concurrencia">
+      <column name="id" valueSequenceNext="tipo_regimen_concurrencia_seq" />
       <column name="nombre" value="Concesión directa" />
       <column name="activo" value="true" />
     </insert>
     <insert tableName="tipo_regimen_concurrencia">
+      <column name="id" valueSequenceNext="tipo_regimen_concurrencia_seq" />
       <column name="nombre" value="Concurrencia competitiva" />
       <column name="activo" value="true" />
     </insert>

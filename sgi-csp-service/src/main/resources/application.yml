@@ -30,6 +30,8 @@ spring:
     enabled: true
     # Set default Liquibase schema
     default-schema: csp
+    # Set Liquibase contexts same as spring profiles
+    contexts: dev
   jpa:
     hibernate:
       # Make sure Hibernate will not use the entities to create, update or validate the database
