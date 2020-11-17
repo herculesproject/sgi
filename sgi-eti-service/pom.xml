@@ -132,7 +132,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <liquibase-hibernate5.version>3.6</liquibase-hibernate5.version>
+    <liquibase-hibernate5.version>4.1.1</liquibase-hibernate5.version>
     <validation-api.version>2.0.1.Final</validation-api.version>
     <org.hibernate-jpamodelgen.version>5.3.15.Final</org.hibernate-jpamodelgen.version>
     <docker-maven-plugin.version>0.33.0</docker-maven-plugin.version>
@@ -149,7 +149,7 @@
     <taglist-maven-plugin.version>2.4</taglist-maven-plugin.version>
     <site-maven-plugin.version>0.12</site-maven-plugin.version>
     <heroku-maven-plugin.verion>2.0.16</heroku-maven-plugin.verion>
-    <liquibase-maven-plugin.version>3.8.8</liquibase-maven-plugin.version>
+    <liquibase-maven-plugin.version>4.1.1</liquibase-maven-plugin.version>
 
     <!-- Spring Boot doesn't have this property... so, this is needed -->
     <maven-surefire-report-plugin.version>3.0.0-M4</maven-surefire-report-plugin.version>

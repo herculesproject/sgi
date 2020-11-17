@@ -5,6 +5,7 @@ import java.io.StringWriter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -49,7 +50,7 @@ public class Apartado extends BaseEntity {
 
   /** Bloque. */
   @ManyToOne
-  @JoinColumn(name = "bloque_id", nullable = false)
+  @JoinColumn(name = "bloque_id", nullable = false, foreignKey = @ForeignKey(name = "FK_APARTADO_BLOQUE"))
   private Bloque bloque;
 
   /** Nombre. */
@@ -58,7 +59,7 @@ public class Apartado extends BaseEntity {
 
   /** Apartado Formulario Padre. */
   @ManyToOne
-  @JoinColumn(name = "padre_id", nullable = true)
+  @JoinColumn(name = "padre_id", nullable = true, foreignKey = @ForeignKey(name = "FK_APARTADO_PADRE"))
   private Apartado padre;
 
   /** Orden. */

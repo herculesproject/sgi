@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,13 +38,13 @@ public class TipoMemoriaComite extends BaseEntity {
 
   /** Comite. */
   @ManyToOne
-  @JoinColumn(name = "comite_id", nullable = false)
+  @JoinColumn(name = "comite_id", nullable = false, foreignKey = @ForeignKey(name = "FK_TIPOMEMORIACOMITE_COMITE"))
   @NotNull
   private Comite comite;
 
   /** Tipo Memoria. */
   @ManyToOne
-  @JoinColumn(name = "tipo_memoria_id", nullable = false)
+  @JoinColumn(name = "tipo_memoria_id", nullable = false, foreignKey = @ForeignKey(name = "FK_TIPOMEMORIACOMITE_TIPOMEMORIA"))
   @NotNull
   private TipoMemoria tipoMemoria;
 

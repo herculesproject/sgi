@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,7 +43,7 @@ public class Bloque extends BaseEntity {
 
   /** Formulario */
   @ManyToOne
-  @JoinColumn(name = "formulario_id", nullable = true)
+  @JoinColumn(name = "formulario_id", nullable = true, foreignKey = @ForeignKey(name = "FK_BLOQUE_FORMULARIO"))
   private Formulario formulario;
 
   /** Nombre */

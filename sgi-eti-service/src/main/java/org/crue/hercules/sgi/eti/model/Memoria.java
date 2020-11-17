@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -51,13 +52,13 @@ public class Memoria extends BaseEntity {
 
   /** Petición evaluación */
   @ManyToOne
-  @JoinColumn(name = "peticion_evaluacion_id", nullable = false)
+  @JoinColumn(name = "peticion_evaluacion_id", nullable = false, foreignKey = @ForeignKey(name = "FK_MEMORIA_PETICIONEVALUACION"))
   @NotNull
   private PeticionEvaluacion peticionEvaluacion;
 
   /** Comité */
   @ManyToOne
-  @JoinColumn(name = "comite_id", nullable = false)
+  @JoinColumn(name = "comite_id", nullable = false, foreignKey = @ForeignKey(name = "FK_MEMORIA_COMITE"))
   @NotNull
   private Comite comite;
 
@@ -73,13 +74,13 @@ public class Memoria extends BaseEntity {
 
   /** Tipo Memoria */
   @ManyToOne
-  @JoinColumn(name = "tipo_memoria_id", nullable = false)
+  @JoinColumn(name = "tipo_memoria_id", nullable = false, foreignKey = @ForeignKey(name = "FK_MEMORIA_TIPOMEMORIA"))
   @NotNull
   private TipoMemoria tipoMemoria;
 
   /** Estado Memoria Actual */
   @OneToOne
-  @JoinColumn(name = "estado_actual_id", nullable = false)
+  @JoinColumn(name = "estado_actual_id", nullable = false, foreignKey = @ForeignKey(name = "FK_MEMORIA_ESTADOACTUAL"))
   @NotNull(groups = { Update.class })
   private TipoEstadoMemoria estadoActual;
 
@@ -94,7 +95,7 @@ public class Memoria extends BaseEntity {
 
   /** Retrospectiva. */
   @OneToOne
-  @JoinColumn(name = "retrospectiva_id", nullable = true)
+  @JoinColumn(name = "retrospectiva_id", nullable = true, foreignKey = @ForeignKey(name = "FK_MEMORIA_RETROSPECTIVA"))
   private Retrospectiva retrospectiva;
 
   /** Version */
@@ -112,7 +113,7 @@ public class Memoria extends BaseEntity {
 
   /** Memoria original */
   @OneToOne
-  @JoinColumn(name = "memoria_original_id", nullable = true)
+  @JoinColumn(name = "memoria_original_id", nullable = true, foreignKey = @ForeignKey(name = "FK_MEMORIA_MEMORIAORIGINAL"))
   private Memoria memoriaOriginal;
 
 }

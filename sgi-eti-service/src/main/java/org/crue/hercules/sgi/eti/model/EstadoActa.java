@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -39,12 +40,12 @@ public class EstadoActa extends BaseEntity {
 
   /** Acta */
   @ManyToOne
-  @JoinColumn(name = "acta_id", nullable = true)
+  @JoinColumn(name = "acta_id", nullable = true, foreignKey = @ForeignKey(name = "FK_ESTADOACTA_ACTA"))
   private Acta acta;
 
   /** Tipo Estado Acta */
   @ManyToOne
-  @JoinColumn(name = "tipo_estado_acta_id", nullable = true)
+  @JoinColumn(name = "tipo_estado_acta_id", nullable = true, foreignKey = @ForeignKey(name = "FK_ESTADOACTA_TIPOESTADOACTA"))
   private TipoEstadoActa tipoEstadoActa;
 
   /** Fecha Estado */

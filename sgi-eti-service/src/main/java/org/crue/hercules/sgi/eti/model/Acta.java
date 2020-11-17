@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -38,7 +39,7 @@ public class Acta extends BaseEntity {
   private Long id;
 
   @OneToOne
-  @JoinColumn(name = "convocatoria_reunion_id", nullable = false)
+  @JoinColumn(name = "convocatoria_reunion_id", nullable = false, foreignKey = @ForeignKey(name = "FK_ACTA_CONVOCATORIAREUNION"))
   @NotNull
   private ConvocatoriaReunion convocatoriaReunion;
 
@@ -81,7 +82,7 @@ public class Acta extends BaseEntity {
 
   /** Tipo Estado Acta */
   @OneToOne
-  @JoinColumn(name = "estado_actual_id", nullable = false)
+  @JoinColumn(name = "estado_actual_id", nullable = false, foreignKey = @ForeignKey(name = "FK_ACTA_ESTADOACTUAL"))
   @NotNull(groups = { Update.class })
   private TipoEstadoActa estadoActual;
 

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -55,12 +56,12 @@ public class PeticionEvaluacion extends BaseEntity {
 
   /** Tipo Actividad */
   @ManyToOne
-  @JoinColumn(name = "tipo_actividad_id", nullable = true)
+  @JoinColumn(name = "tipo_actividad_id", nullable = true, foreignKey = @ForeignKey(name = "FK_PETICIONEVALUACION_TIPOACTIVIDAD"))
   private TipoActividad tipoActividad;
 
   /** Tipo Investigacion Tutelada */
   @ManyToOne
-  @JoinColumn(name = "tipo_investigacion_tutelada_id", nullable = true)
+  @JoinColumn(name = "tipo_investigacion_tutelada_id", nullable = true, foreignKey = @ForeignKey(name = "FK_PETICIONEVALUACION_TIPOINVESTIGACIONTUTELADA"))
   private TipoInvestigacionTutelada tipoInvestigacionTutelada;
 
   /** Fuente financiacion */

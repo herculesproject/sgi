@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,7 +38,7 @@ public class Retrospectiva extends BaseEntity {
 
   /** Estado Retrospectiva. */
   @ManyToOne
-  @JoinColumn(name = "estado_retrospectiva_id", nullable = false)
+  @JoinColumn(name = "estado_retrospectiva_id", nullable = false, foreignKey = @ForeignKey(name = "FK_RETROSPECTIVA_ESTADORETROSPECTIVA"))
   @NotNull
   private EstadoRetrospectiva estadoRetrospectiva;
 

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -45,36 +46,36 @@ public class Evaluacion extends BaseEntity {
 
   /** Memoria */
   @ManyToOne
-  @JoinColumn(name = "memoria_id", nullable = false)
+  @JoinColumn(name = "memoria_id", nullable = false, foreignKey = @ForeignKey(name = "FK_EVALUACION_MEMORIA"))
   @NotNull
   private Memoria memoria;
 
   /** Convocatoria reunión */
   @ManyToOne
-  @JoinColumn(name = "convocatoria_reunion_id", nullable = false)
+  @JoinColumn(name = "convocatoria_reunion_id", nullable = false, foreignKey = @ForeignKey(name = "FK_EVALUACION_CONVOCATORIAREUNION"))
   @NotNull
   private ConvocatoriaReunion convocatoriaReunion;
 
   /** Tipo evaluacion */
   @OneToOne
-  @JoinColumn(name = "tipo_evaluacion_id", nullable = false)
+  @JoinColumn(name = "tipo_evaluacion_id", nullable = false, foreignKey = @ForeignKey(name = "FK_EVALUACION_TIPOEVALUACION"))
   @NotNull
   private TipoEvaluacion tipoEvaluacion;
 
   /** Dictamen */
   @ManyToOne
-  @JoinColumn(name = "dictamen_id", nullable = true)
+  @JoinColumn(name = "dictamen_id", nullable = true, foreignKey = @ForeignKey(name = "FK_EVALUACION_DICTAMEN"))
   private Dictamen dictamen;
 
   /** Evaluador 1 */
   @ManyToOne
-  @JoinColumn(name = "evaluador1_id", nullable = false)
+  @JoinColumn(name = "evaluador1_id", nullable = false, foreignKey = @ForeignKey(name = "FK_EVALUACION_EVALUADOR1"))
   @NotNull
   private Evaluador evaluador1;
 
   /** Evaluador 2 */
   @ManyToOne
-  @JoinColumn(name = "evaluador2_id", nullable = false)
+  @JoinColumn(name = "evaluador2_id", nullable = false, foreignKey = @ForeignKey(name = "FK_EVALUACION_EVALUADOR2"))
   @NotNull
   private Evaluador evaluador2;
 

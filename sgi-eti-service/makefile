@@ -2,7 +2,7 @@ MIGRATION_LABEL = "to-be-changed"
 DATE_WITH_TIME := $(shell /bin/date "+%Y%m%d%H%M%S")
 
 makeFullChangeset:
-	rm src/main/resources/db/changelog/changes/0000000000000-initial-database.xml
+	rm -f src/main/resources/db/changelog/changes/0000000000000-initial-database.xml
 	./mvnw -X liquibase:diff -Dliquibase.propertyFile=src/main/resources/liquibase-initial.properties -Dliquibase.diffChangeLogFile=src/main/resources/db/changelog/changes/0000000000000-initial-database.xml
 
 makeMigration:

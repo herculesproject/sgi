@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,12 +38,12 @@ public class Tarea extends BaseEntity {
 
   /** Equipo trabajo */
   @ManyToOne
-  @JoinColumn(name = "equipo_trabajo_id", nullable = false)
+  @JoinColumn(name = "equipo_trabajo_id", nullable = false, foreignKey = @ForeignKey(name = "FK_TAREA_EQUIPOTRABAJO"))
   private EquipoTrabajo equipoTrabajo;
 
   /** Memoria */
   @ManyToOne
-  @JoinColumn(name = "memoria_id", nullable = false)
+  @JoinColumn(name = "memoria_id", nullable = false, foreignKey = @ForeignKey(name = "FK_TAREA_MEMORIA"))
   @NotNull
   private Memoria memoria;
 
@@ -56,7 +57,7 @@ public class Tarea extends BaseEntity {
 
   /** Formacion especifica */
   @ManyToOne
-  @JoinColumn(name = "formacion_especifica_id", nullable = true)
+  @JoinColumn(name = "formacion_especifica_id", nullable = true, foreignKey = @ForeignKey(name = "FK_TAREA_FORMACIONESPECIFICA"))
   private FormacionEspecifica formacionEspecifica;
 
   /** Formacion */
@@ -69,7 +70,7 @@ public class Tarea extends BaseEntity {
 
   /** Tipo tarea */
   @ManyToOne
-  @JoinColumn(name = "tipo_tarea_id", nullable = true)
+  @JoinColumn(name = "tipo_tarea_id", nullable = true, foreignKey = @ForeignKey(name = "FK_TAREA_TIPOTAREA"))
   private TipoTarea tipoTarea;
 
 }

@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -41,7 +42,7 @@ public class ConflictoInteres extends BaseEntity {
 
   /** Evaluador */
   @ManyToOne
-  @JoinColumn(name = "evaluador_id", nullable = false)
+  @JoinColumn(name = "evaluador_id", nullable = false, foreignKey = @ForeignKey(name = "FK_CONFLICTOINTERES_EVALUADOR"))
   private Evaluador evaluador;
 
   /** Referencia de la persona conflicto */

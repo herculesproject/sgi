@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,7 +43,7 @@ public class Informe extends BaseEntity {
 
   /** Formulario Memoria */
   @ManyToOne
-  @JoinColumn(name = "memoria_id", nullable = true)
+  @JoinColumn(name = "memoria_id", nullable = true, foreignKey = @ForeignKey(name = "FK_INFORME_MEMORIA"))
   private Memoria memoria;
 
   /** Referencia documento */

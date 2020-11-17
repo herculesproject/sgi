@@ -2,6 +2,7 @@ package org.crue.hercules.sgi.eti.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -45,7 +46,7 @@ public class EquipoTrabajo extends BaseEntity {
 
   /** Peticion Evaluación */
   @ManyToOne
-  @JoinColumn(name = "peticion_evaluacion_id", nullable = false)
+  @JoinColumn(name = "peticion_evaluacion_id", nullable = false, foreignKey = @ForeignKey(name = "FK_EQUIPOTRABAJO_PETICIONEVALUACION"))
   private PeticionEvaluacion peticionEvaluacion;
 
 }
