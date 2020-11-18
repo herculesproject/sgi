@@ -28,6 +28,7 @@ const MSG_BUTTON_SAVE = marker('footer.eti.peticionEvaluacion.crear');
 const MSG_ERROR = marker('eti.peticionEvaluacion.listado.error');
 const TEXT_USER_TITLE = marker('eti.peticionEvaluacion.listado.buscador.solicitante');
 const TEXT_USER_BUTTON = marker('eti.peticionEvaluacion.listado.buscador.buscar.solicitante');
+const LISTADO_ERROR = marker('eti.peticionEvaluacion.listado.error');
 
 @Component({
   selector: 'sgi-peticion-evaluacion-listado-ges',
@@ -205,7 +206,7 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
             }
           },
           () => {
-            this.snackBarService.showError('eti.peticionEvaluacion.listado.error');
+            this.snackBarService.showError(LISTADO_ERROR);
             this.logger.debug(
               PeticionEvaluacionListadoGesComponent.name,
               'loadDatosUsuario()',
@@ -240,7 +241,7 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
             }
           },
           () => {
-            this.snackBarService.showError('eti.peticionEvaluacion.listado.error');
+            this.snackBarService.showError(LISTADO_ERROR);
             this.logger.debug(
               PeticionEvaluacionListadoGesComponent.name,
               'filterPeticionEvaluacionByComite()',

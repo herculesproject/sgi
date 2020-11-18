@@ -32,6 +32,101 @@ body {
 /** FIN Layout estructura */
 /**/
 
+
+/**/
+/** MENU DERECHO SIDENAV */
+/**/
+
+// Puntos de menu simples
+.opciones-menu {
+  .item {
+    font-size: mat-font-size($custom-typography, body-2);
+    border-bottom: 1px solid map-get($palette-grease, 100);
+    box-shadow: none;
+    border-radius: 0px;
+    p {
+      //Si es grande el titulo en 2 líneas
+      width: 10em;
+      white-space: normal;
+    }
+    &:hover,
+    &:focus {
+      &:before {
+        @extend .border-seleccion;
+      }
+    }
+    &.is-active {
+      &:before {
+        @extend .border-seleccion;
+      }
+    }
+  }
+  // extensiones
+  .border-seleccion {
+    content: "";
+    position: absolute;
+    height: 100%;
+    border-left: 3px solid map-get($palette-primary, 500);
+  }
+}
+
+// Puntos de menu accordeon
+.acordeon-sidenav{
+  .panel {
+    border-radius: 0px;
+    .header {
+      padding: 4px 7px 4px 20px;
+      &.item {
+        padding: 4px 7px 4px 0px;
+        .titulo {
+          padding: 4px 7px 4px 20px;
+        }
+      }
+      .titulo {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        box-sizing: border-box;
+        position: relative;
+        height: inherit;
+      }
+    }
+    .mat-expansion-panel-body {
+      background:map-get($palette-primary, 50);
+    }
+    .opciones-accordion {
+      padding-top: 5px;
+      a {
+        font-size: mat-font-size($custom-typography, caption);
+        color: map-get($custom-colors, black);
+        background: map-get($custom-colors, white);
+        height: 25px;
+        border-radius: 18px;
+        padding: 2px 0px 2px 0px;
+        margin-top: 5px;
+        line-height: 12px;
+        &:hover,
+        &:focus {
+          font-weight: bold;
+        }
+        mat-icon {
+          color: map-get($custom-colors, success);
+          display: flex;
+          width: 100%;
+          justify-content: flex-end;
+        }
+        &.is-active{
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+
+/**/
+/** MENU DERECHO SIDENAV */
+/**/
+
 /**/
 /** Tabs verticales */
 /**/

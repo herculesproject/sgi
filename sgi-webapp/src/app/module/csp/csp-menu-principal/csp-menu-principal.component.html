@@ -29,7 +29,7 @@
     <p matLine *ngIf="opened">{{'menu.principal.csp.contratosRRHH' | translate}}</p>
   </a>
 
-  <mat-accordion #accordion="matAccordion" class="acordeon">
+  <mat-accordion #accordion="matAccordion" class="acordeon-sidenav">
     <mat-expansion-panel #expPanel class="panel"
       [expanded]="panelDesplegado && opened ? !panelDesplegado : panelDesplegado">
       <mat-expansion-panel-header class="header item" (click)="activarAcordeon($event)">

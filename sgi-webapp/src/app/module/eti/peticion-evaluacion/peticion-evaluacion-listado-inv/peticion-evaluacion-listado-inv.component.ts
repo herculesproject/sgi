@@ -21,6 +21,7 @@ import { catchError, map, startWith, tap } from 'rxjs/operators';
 
 
 const MSG_FOOTER = marker('eti.peticionEvaluacion.listado.nuevaPeticionEvaluacion');
+const LISTADO_ERROR = marker('eti.peticionEvaluacion.listado.error');
 
 @Component({
   selector: 'sgi-peticion-evaluacion-listado-inv',
@@ -166,7 +167,7 @@ export class PeticionEvaluacionListadoInvComponent implements AfterViewInit, OnI
           }
         },
         () => {
-          this.snackBarService.showError('eti.peticionEvaluacion.listado.error');
+          this.snackBarService.showError(LISTADO_ERROR);
           this.logger.debug(
             PeticionEvaluacionListadoInvComponent.name,
             'loadTableResponsable()',
@@ -214,7 +215,7 @@ export class PeticionEvaluacionListadoInvComponent implements AfterViewInit, OnI
           // On error reset pagination values
           this.paginator.firstPage();
           this.totalElementos = 0;
-          this.snackBarService.showError('eti.peticionEvaluacion.listado.error');
+          this.snackBarService.showError(LISTADO_ERROR);
           this.logger.debug(PeticionEvaluacionListadoInvComponent.name, 'loadTableCreador()', 'end');
           return of([]);
         })
@@ -242,7 +243,7 @@ export class PeticionEvaluacionListadoInvComponent implements AfterViewInit, OnI
             }
           },
           () => {
-            this.snackBarService.showError('eti.peticionEvaluacion.listado.error');
+            this.snackBarService.showError(LISTADO_ERROR);
             this.logger.debug(
               PeticionEvaluacionListadoInvComponent.name,
               'filterPeticionEvaluacionByComite()',
