@@ -1,12 +1,12 @@
 {
   "/auth": {
-    "target": "http://hercules-sgi-auth:8080",
+    "target": "http://sgi-auth:8080",
     "secure": false,
     "logLevel": "debug",
     "headers": {}
   },
   "/api/eti": {
-    "target": "http://hercules-sgi-eti:8080",
+    "target": "http://sgi-eti-service:8080",
     "pathRewrite": {
       "^/api/eti": ""
     },
@@ -14,7 +14,7 @@
     "logLevel": "debug"
   },
   "/api/csp": {
-    "target": "http://hercules-sgi-csp:8080",
+    "target": "http://sgi-csp-service:8080",
     "pathRewrite": {
       "^/api/csp": ""
     },
@@ -22,7 +22,7 @@
     "logLevel": "debug"
   },
   "/api/usr": {
-    "target": "http://hercules-sgi-usr:8080",
+    "target": "http://sgi-usr-service:8080",
     "pathRewrite": {
       "^/api/usr": ""
     },
@@ -30,7 +30,7 @@
     "logLevel": "debug"
   },
   "/api/sgp": {
-    "target": "http://hercules-sgp-service:8080",
+    "target": "http://192.168.3.127:8280",
     "pathRewrite": {
       "^/api/sgp": "/sgp"
     },
@@ -38,7 +38,7 @@
     "logLevel": "debug"
   },
   "/api/sgdoc": {
-    "target": "http://hercules-sgdoc-service:8080",
+    "target": "http://192.168.3.127:8280",
     "pathRewrite": {
       "^/api/sgdoc": "/sgdoc"
     },
