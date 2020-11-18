@@ -11,7 +11,7 @@
                                         setPersona($event)"></sgi-buscar-persona>
     </div>
 
-    <form [formGroup]="buscadorFormGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
+    <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
       fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
 
       <!-- Comité -->
@@ -156,9 +156,9 @@
     <ng-container matColumnDef="solicitante">
       <th mat-header-cell *matHeaderCellDef>
         {{'eti.evaluacion.listado.solicitante' | translate}} </th>
-      <td mat-cell *matCellDef="let evaluacion"> {{evaluacion.persona.nombre}}
-        {{evaluacion.persona.primerApellido}}
-        {{evaluacion.persona.segundoApellido}}</td>
+      <td mat-cell *matCellDef="let evaluacion"> {{evaluacion.persona?.nombre}}
+        {{evaluacion.persona?.primerApellido}}
+        {{evaluacion.persona?.segundoApellido}}</td>
     </ng-container>
 
     <!-- Dictamen Column -->

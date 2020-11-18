@@ -17,13 +17,15 @@ import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacio
 import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
+import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, startWith, tap } from 'rxjs/operators';
+import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 
 
 const MSG_BUTTON_SAVE = marker('footer.eti.peticionEvaluacion.crear');
+const MSG_ERROR = marker('eti.peticionEvaluacion.listado.error');
 const TEXT_USER_TITLE = marker('eti.peticionEvaluacion.listado.buscador.solicitante');
 const TEXT_USER_BUTTON = marker('eti.peticionEvaluacion.listado.buscador.buscar.solicitante');
 
@@ -32,7 +34,8 @@ const TEXT_USER_BUTTON = marker('eti.peticionEvaluacion.listado.buscador.buscar.
   templateUrl: './peticion-evaluacion-listado-ges.component.html',
   styleUrls: ['./peticion-evaluacion-listado-ges.component.scss']
 })
-export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnInit, OnDestroy {
+export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginationComponent<IPeticionEvaluacion> implements OnInit {
+
 
   ROUTE_NAMES = ROUTE_NAMES;
 
@@ -40,7 +43,6 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
   fxLayoutProperties: FxLayoutProperties;
 
   displayedColumns: string[];
-  elementosPagina: number[];
   totalElementos: number;
   filter: SgiRestFilter[];
 
@@ -62,7 +64,6 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
   estadosMemoriaSubscription: Subscription;
   filteredEstadosMemoria: Observable<TipoEstadoMemoria[]>;
 
-  buscadorFormGroup: FormGroup;
 
   dialogServiceSubscription: Subscription;
   dialogServiceSubscriptionGetSubscription: Subscription;
@@ -77,16 +78,16 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
   datosSolicitante: string;
 
   constructor(
-    private readonly logger: NGXLogger,
+    protected readonly logger: NGXLogger,
     private readonly peticionesEvaluacionService: PeticionEvaluacionService,
-    private readonly snackBarService: SnackBarService,
+    protected readonly snackBarService: SnackBarService,
     private readonly comiteService: ComiteService,
     private readonly tipoEstadoMemoriaService: TipoEstadoMemoriaService,
     private readonly memoriaService: MemoriaService,
     private readonly personaFisicaService: PersonaFisicaService
   ) {
-    this.displayedColumns = ['solicitante', 'codigo', 'titulo', 'fuenteFinanciacion', 'fechaInicio', 'fechaFin', 'acciones'];
-    this.elementosPagina = [5, 10, 25, 100];
+    super(logger, snackBarService, MSG_ERROR);
+
     this.totalElementos = 0;
 
     this.filter = [{
@@ -111,7 +112,9 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
   ngOnInit(): void {
     this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'ngOnInit()', 'start');
 
-    this.buscadorFormGroup = new FormGroup({
+    super.ngOnInit();
+
+    this.formGroup = new FormGroup({
       comite: new FormControl('', []),
       titulo: new FormControl('', []),
       codigo: new FormControl('', []),
@@ -123,72 +126,66 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
     this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'ngOnInit()', 'end');
   }
 
-  ngAfterViewInit(): void {
-    this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'ngAfterViewInit()', 'start');
-
-    // Merge events that trigger load table data
-    merge(
-      // Link pageChange event to fire new request
-      this.paginator.page,
-      // Link sortChange event to fire new request
-      this.sort.sortChange
-    )
-      .pipe(
-        tap(() => {
-          // Load table
-          this.loadTable();
-        })
-      )
-      .subscribe();
-    // First load
-    this.loadTable();
-
-    this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'ngAfterViewInit()', 'end');
+  protected createObservable(): Observable<SgiRestListResult<IPeticionEvaluacion>> {
+    this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'createObservable()', 'start');
+    const observable$ = this.peticionesEvaluacionService.findAll(this.getFindOptions());
+    this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'createObservable()', 'end');
+    return observable$;
   }
 
-  private async loadTable(reset?: boolean) {
-    this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'loadTable()', 'start');
-    // Do the request with paginator/sort/filter values
-    this.peticionesEvaluacion$ = this.peticionesEvaluacionService
-      .findAll({
-        page: {
-          index: reset ? 0 : this.paginator.pageIndex,
-          size: this.paginator.pageSize
-        },
-        sort: {
-          direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
-          field: this.sort.active
-        },
-        filters: this.buildFilters()
-      })
-      .pipe(
-        map((response) => {
-          // Map response total
-          this.totalElementos = response.total;
-          // Reset pagination to first page
-          if (reset) {
-            this.paginator.pageIndex = 0;
-          }
-          this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'loadTable()', 'end');
-          let peticionesEvaluacionByFilters: IPeticionEvaluacion[] = new Array();
-          peticionesEvaluacionByFilters = response.items;
-          if (this.buscadorFormGroup.controls.comite.value || this.buscadorFormGroup.controls.tipoEstadoMemoria.value) {
-            peticionesEvaluacionByFilters = this.filterPeticionEvaluacionByFilters(
-              peticionesEvaluacionByFilters);
-          }
 
-          // Return the values
-          return this.loadDatosUsuario(peticionesEvaluacionByFilters);
-        }),
-        catchError(() => {
-          // On error reset pagination values
-          this.paginator.firstPage();
-          this.totalElementos = 0;
-          this.snackBarService.showError('eti.peticionEvaluacion.listado.error');
-          this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'loadTableCreador()', 'end');
-          return of([]);
-        })
-      );
+  protected initColumns(): void {
+    this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'initColumns()', 'start');
+    this.displayedColumns = ['solicitante', 'codigo', 'titulo', 'fuenteFinanciacion', 'fechaInicio', 'fechaFin', 'acciones'];
+    this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'initColumns()', 'end');
+  }
+  protected createFilters(): SgiRestFilter[] {
+    this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'createFilters()', 'start');
+    this.filter = [];
+    if (this.formGroup.controls.codigo.value) {
+      this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'createFilters()', 'codigo');
+      const filterCodigo: SgiRestFilter = {
+        field: 'codigo',
+        type: SgiRestFilterType.LIKE,
+        value: this.formGroup.controls.codigo.value,
+      };
+
+      this.filter.push(filterCodigo);
+
+    }
+
+    if (this.formGroup.controls.titulo.value) {
+      this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'createFilters()', 'titulo');
+      const filterTitulo: SgiRestFilter = {
+        field: 'titulo',
+        type: SgiRestFilterType.LIKE,
+        value: this.formGroup.controls.titulo.value,
+      };
+
+      this.filter.push(filterTitulo);
+
+    }
+
+    if (this.personaRef) {
+      this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'createFilters()', 'persona ref');
+      const filterPersonaRef: SgiRestFilter = {
+        field: 'personaRef',
+        type: SgiRestFilterType.EQUALS,
+        value: this.personaRef,
+      };
+
+      this.filter.push(filterPersonaRef);
+
+    }
+
+    this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'createFilters()', 'end');
+    return this.filter;
+  }
+
+  protected loadTable(reset?: boolean) {
+    this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'loadTable()', 'start');
+    this.peticionesEvaluacion$ = this.getObservableLoadTable(reset);
+    this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'loadTable()', 'end');
   }
 
   loadDatosUsuario(peticionesEvaluacion: IPeticionEvaluacion[]): IPeticionEvaluacion[] {
@@ -259,48 +256,48 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
     this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'buildFiltersMemoria()', 'start');
 
     this.filter = [];
-    if (this.buscadorFormGroup.controls.comite.value) {
+    if (this.formGroup.controls.comite.value) {
       this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'buildFiltersMemoria()', 'comite');
       const filterComite: SgiRestFilter = {
         field: 'comite.id',
         type: SgiRestFilterType.EQUALS,
-        value: this.buscadorFormGroup.controls.comite.value.id,
+        value: this.formGroup.controls.comite.value.id,
       };
 
       this.filter.push(filterComite);
 
     }
 
-    if (this.buscadorFormGroup.controls.tipoEstadoMemoria.value) {
+    if (this.formGroup.controls.tipoEstadoMemoria.value) {
       this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'buildFiltersMemoria()', 'estadoMemoria');
       const filterEstadoMemoria: SgiRestFilter = {
         field: 'estadoActual.id',
         type: SgiRestFilterType.EQUALS,
-        value: this.buscadorFormGroup.controls.tipoEstadoMemoria.value.id,
+        value: this.formGroup.controls.tipoEstadoMemoria.value.id,
       };
 
       this.filter.push(filterEstadoMemoria);
 
     }
 
-    if (this.buscadorFormGroup.controls.codigo.value) {
+    if (this.formGroup.controls.codigo.value) {
       this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'buildFilters()', 'codigo');
       const filterCodigo: SgiRestFilter = {
         field: 'peticionEvaluacion.codigo',
         type: SgiRestFilterType.LIKE,
-        value: this.buscadorFormGroup.controls.codigo.value,
+        value: this.formGroup.controls.codigo.value,
       };
 
       this.filter.push(filterCodigo);
 
     }
 
-    if (this.buscadorFormGroup.controls.titulo.value) {
+    if (this.formGroup.controls.titulo.value) {
       this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'buildFilters()', 'titulo');
       const filterTitulo: SgiRestFilter = {
         field: 'peticionEvaluacion.titulo',
         type: SgiRestFilterType.LIKE,
-        value: this.buscadorFormGroup.controls.titulo.value,
+        value: this.formGroup.controls.titulo.value,
       };
 
       this.filter.push(filterTitulo);
@@ -319,48 +316,6 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
     return this.filter;
   }
 
-  private buildFilters(): SgiRestFilter[] {
-    this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'buildFilters()', 'start');
-    this.filter = [];
-    if (this.buscadorFormGroup.controls.codigo.value) {
-      this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'buildFilters()', 'codigo');
-      const filterCodigo: SgiRestFilter = {
-        field: 'codigo',
-        type: SgiRestFilterType.LIKE,
-        value: this.buscadorFormGroup.controls.codigo.value,
-      };
-
-      this.filter.push(filterCodigo);
-
-    }
-
-    if (this.buscadorFormGroup.controls.titulo.value) {
-      this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'buildFilters()', 'titulo');
-      const filterTitulo: SgiRestFilter = {
-        field: 'titulo',
-        type: SgiRestFilterType.LIKE,
-        value: this.buscadorFormGroup.controls.titulo.value,
-      };
-
-      this.filter.push(filterTitulo);
-
-    }
-
-    if (this.personaRef) {
-      this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'buildFilters()', 'titulo');
-      const filterPersonaRef: SgiRestFilter = {
-        field: 'personaRef',
-        type: SgiRestFilterType.EQUALS,
-        value: this.personaRef,
-      };
-
-      this.filter.push(filterPersonaRef);
-
-    }
-
-    this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'buildFilters()', 'end');
-    return this.filter;
-  }
 
   /**
    * Devuelve el nombre de un comité.
@@ -397,7 +352,7 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
       (response) => {
         this.comiteListado = response.items;
 
-        this.filteredComites = this.buscadorFormGroup.controls.comite.valueChanges
+        this.filteredComites = this.formGroup.controls.comite.valueChanges
           .pipe(
             startWith(''),
             map(value => this.filterComite(value))
@@ -421,7 +376,7 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
       (response) => {
         this.estadoMemoriaListado = response.items;
 
-        this.filteredEstadosMemoria = this.buscadorFormGroup.controls.tipoEstadoMemoria.valueChanges
+        this.filteredEstadosMemoria = this.formGroup.controls.tipoEstadoMemoria.valueChanges
           .pipe(
             startWith(''),
             map(value => this.filterEstadoMemoria(value))
@@ -498,7 +453,7 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
       'onClearFilters()',
       'start');
     this.filter = [];
-    this.buscadorFormGroup.reset();
+    this.formGroup.reset();
     this.personaRef = null;
     this.loadTable(true);
     this.getComites();
@@ -510,16 +465,5 @@ export class PeticionEvaluacionListadoGesComponent implements AfterViewInit, OnI
   }
 
 
-  ngOnDestroy(): void {
-    this.logger.debug(PeticionEvaluacionListadoGesComponent.name,
-      'ngOnDestroy()',
-      'start');
-    this.comitesSubscription?.unsubscribe();
-
-    this.logger.debug(PeticionEvaluacionListadoGesComponent.name,
-      'ngOnDestroy()',
-      'end');
-
-  }
 
 }

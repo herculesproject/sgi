@@ -5,7 +5,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { Observable, of, merge, Subscription } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 
-import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
+import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection, SgiRestListResult } from '@sgi/framework/http';
 import { tap, map, catchError, startWith } from 'rxjs/operators';
 
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -25,9 +25,11 @@ import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 
 
 const MSG_BUTTON_SAVE = marker('footer.eti.evaluador.crear');
+const MSG_ERROR = marker('eti.evaluador.listado.error');
 const TEXT_USER_TITLE = marker('eti.buscarUsuario.titulo');
 const TEXT_USER_BUTTON = marker('eti.buscarUsuario.boton.buscar');
 
@@ -37,7 +39,7 @@ const TEXT_USER_BUTTON = marker('eti.buscarUsuario.boton.buscar');
   templateUrl: './evaluador-listado.component.html',
   styleUrls: ['./evaluador-listado.component.scss']
 })
-export class EvaluadorListadoComponent implements AfterViewInit, OnInit, OnDestroy {
+export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<IEvaluador> implements OnInit {
 
   ROUTE_NAMES = ROUTE_NAMES;
 
@@ -45,9 +47,6 @@ export class EvaluadorListadoComponent implements AfterViewInit, OnInit, OnDestr
   fxLayoutProperties: FxLayoutProperties;
 
   displayedColumns: string[];
-  elementosPagina: number[];
-  totalElementos: number;
-  filter: SgiRestFilter[];
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -57,8 +56,6 @@ export class EvaluadorListadoComponent implements AfterViewInit, OnInit, OnDestr
   comiteListado: IComite[];
   comitesSubscription: Subscription;
   filteredComites: Observable<IComite[]>;
-
-  buscadorFormGroup: FormGroup;
 
   dialogServiceSubscription: Subscription;
   dialogServiceSubscriptionGetSubscription: Subscription;
@@ -78,24 +75,15 @@ export class EvaluadorListadoComponent implements AfterViewInit, OnInit, OnDestr
   personas$: Observable<IPersona[]> = of();
 
   constructor(
-    private readonly logger: NGXLogger,
+    protected readonly logger: NGXLogger,
     private readonly evaluadoresService: EvaluadorService,
-    private readonly snackBarService: SnackBarService,
+    protected readonly snackBarService: SnackBarService,
     private readonly comiteService: ComiteService,
     private readonly personaService: PersonaService,
     private readonly personaFisicaService: PersonaFisicaService,
     private readonly dialogService: DialogService
   ) {
-    this.displayedColumns = ['nombre', 'identificadorNumero', 'comite', 'cargoComite', 'fechaAlta', 'fechaBaja', 'activo', 'acciones'];
-    this.elementosPagina = [5, 10, 25, 100];
-    this.totalElementos = 0;
-
-    this.filter = [{
-      field: undefined,
-      type: SgiRestFilterType.NONE,
-      value: '',
-    }];
-
+    super(logger, snackBarService, MSG_ERROR);
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
@@ -111,8 +99,8 @@ export class EvaluadorListadoComponent implements AfterViewInit, OnInit, OnDestr
 
   ngOnInit(): void {
     this.logger.debug(EvaluadorListadoComponent.name, 'ngOnInit()', 'start');
-
-    this.buscadorFormGroup = new FormGroup({
+    super.ngOnInit();
+    this.formGroup = new FormGroup({
       comite: new FormControl('', []),
       estado: new FormControl('', [])
     });
@@ -122,115 +110,69 @@ export class EvaluadorListadoComponent implements AfterViewInit, OnInit, OnDestr
     this.logger.debug(EvaluadorListadoComponent.name, 'ngOnInit()', 'end');
   }
 
-  ngAfterViewInit(): void {
-    this.logger.debug(EvaluadorListadoComponent.name, 'ngAfterViewInit()', 'start');
 
-    // Merge events that trigger load table data
-    merge(
-      // Link pageChange event to fire new request
-      this.paginator.page,
-      // Link sortChange event to fire new request
-      this.sort.sortChange
-    )
-      .pipe(
-        tap(() => {
-          // Load table
-          this.loadTable();
-        })
-      )
-      .subscribe();
-    // First load
-    this.loadTable();
-
-    this.logger.debug(EvaluadorListadoComponent.name, 'ngAfterViewInit()', 'end');
+  protected createObservable(): Observable<SgiRestListResult<IEvaluador>> {
+    this.logger.debug(EvaluadorListadoComponent.name, 'createObservable()', 'start');
+    const observable$ = this.evaluadoresService.findAll(this.getFindOptions());
+    this.logger.debug(EvaluadorListadoComponent.name, 'createObservable()', 'end');
+    return observable$;
   }
 
-  private loadTable(reset?: boolean) {
+  protected initColumns(): void {
+    this.logger.debug(EvaluadorListadoComponent.name, 'initColumns()', 'start');
+    this.displayedColumns = ['nombre', 'identificadorNumero', 'comite', 'cargoComite', 'fechaAlta', 'fechaBaja', 'activo', 'acciones'];
+    this.logger.debug(EvaluadorListadoComponent.name, 'initColumns()', 'end');
+  }
+
+  protected createFilters(): SgiRestFilter[] {
+    this.logger.debug(EvaluadorListadoComponent.name, 'createFilters()', 'start');
+
+    const filtro: SgiRestFilter[] = [];
+
+    this.addFiltro(filtro, 'comite.id', SgiRestFilterType.EQUALS, this.formGroup.controls.comite.value.id);
+
+    if (this.formGroup.controls.estado.value) {
+      this.addFiltro(filtro, 'fechaBaja', SgiRestFilterType.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(new Date()));
+      this.addFiltro(filtro, 'fechaAlta', SgiRestFilterType.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(new Date()));
+
+    }
+
+    this.addFiltro(filtro, 'personaRef', SgiRestFilterType.EQUALS, this.personaRef);
+
+
+    this.logger.debug(EvaluadorListadoComponent.name, 'createFilters()', 'end');
+    return filtro;
+  }
+
+
+
+  protected loadTable(reset?: boolean) {
     this.logger.debug(EvaluadorListadoComponent.name, 'loadTable()', 'start');
     // Do the request with paginator/sort/filter values
-    this.evaluadores$ = this.evaluadoresService
-      .findAll({
-        page: {
-          index: reset ? 0 : this.paginator.pageIndex,
-          size: this.paginator.pageSize
-        },
-        sort: {
-          direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
-          field: this.sort.active
-        },
-        filters: this.buildFilters()
+    this.evaluadores$ = this.createObservable().pipe(
+      map((response) => {
+        // Map response total
+        this.totalElementos = response.total;
+        // Reset pagination to first page
+        if (reset) {
+          this.paginator.pageIndex = 0;
+        }
+        this.logger.debug(EvaluadorListadoComponent.name, 'loadTable()', 'end');
+        // Return the values
+        return this.getDatosEvaluadores(response.items);
+      }),
+      catchError(() => {
+        // On error reset pagination values
+        this.paginator.firstPage();
+        this.totalElementos = 0;
+        this.snackBarService.showError('eti.evaluador.listado.error');
+        this.logger.debug(EvaluadorListadoComponent.name, 'loadTable()', 'end');
+        return of([]);
       })
-      .pipe(
-        map((response) => {
-          // Map response total
-          this.totalElementos = response.total;
-          // Reset pagination to first page
-          if (reset) {
-            this.paginator.pageIndex = 0;
-          }
-          this.logger.debug(EvaluadorListadoComponent.name, 'loadTable()', 'end');
-          // Return the values
-          return this.getDatosEvaluadores(response.items);
-        }),
-        catchError(() => {
-          // On error reset pagination values
-          this.paginator.firstPage();
-          this.totalElementos = 0;
-          this.snackBarService.showError('eti.evaluador.listado.error');
-          this.logger.debug(EvaluadorListadoComponent.name, 'loadTable()', 'end');
-          return of([]);
-        })
-      );
+    );
+    this.logger.debug(EvaluadorListadoComponent.name, 'loadTable()', 'end');
   }
 
-
-  private buildFilters(): SgiRestFilter[] {
-    this.logger.debug(EvaluadorListadoComponent.name, 'buildFilters()', 'start');
-
-    this.filter = [];
-    if (this.buscadorFormGroup.controls.comite.value) {
-      this.logger.debug(EvaluadorListadoComponent.name, 'buildFilters()', 'comite');
-      const filterComite: SgiRestFilter = {
-        field: 'comite.id',
-        type: SgiRestFilterType.EQUALS,
-        value: this.buscadorFormGroup.controls.comite.value.id,
-      };
-
-      this.filter.push(filterComite);
-
-    }
-
-    if (this.buscadorFormGroup.controls.estado.value) {
-      this.logger.debug(EvaluadorListadoComponent.name, 'buildFilters()', 'estado');
-      const filterFechaBaja: SgiRestFilter = {
-        field: 'fechaBaja',
-        type: SgiRestFilterType.GREATHER_OR_EQUAL,
-        value: DateUtils.formatFechaAsISODate(new Date()),
-      };
-
-      const filterFechaAlta: SgiRestFilter = {
-        field: 'fechaAlta',
-        type: SgiRestFilterType.LOWER_OR_EQUAL,
-        value: DateUtils.formatFechaAsISODate(new Date()),
-      };
-
-      this.filter.push(filterFechaBaja);
-      this.filter.push(filterFechaAlta);
-
-    }
-
-    if (this.personaRef) {
-      const filterUsuarioRef: SgiRestFilter = {
-        field: 'personaRef',
-        type: SgiRestFilterType.EQUALS,
-        value: this.personaRef,
-      };
-      this.filter.push(filterUsuarioRef);
-    }
-
-    this.logger.debug(EvaluadorListadoComponent.name, 'buildFilters()', 'end');
-    return this.filter;
-  }
 
   /**
    * Devuelve el nombre de un comité.
@@ -335,7 +277,7 @@ export class EvaluadorListadoComponent implements AfterViewInit, OnInit, OnDestr
       (response) => {
         this.comiteListado = response.items;
 
-        this.filteredComites = this.buscadorFormGroup.controls.comite.valueChanges
+        this.filteredComites = this.formGroup.controls.comite.valueChanges
           .pipe(
             startWith(''),
             map(value => this.filterComite(value))
@@ -365,12 +307,6 @@ export class EvaluadorListadoComponent implements AfterViewInit, OnInit, OnDestr
       (comite => comite.comite.toLowerCase().includes(filterValue));
   }
 
-  /**
-   * Load table data
-   */
-  public onSearch() {
-    this.loadTable(true);
-  }
 
   /**
    * Elimina el evaluador con el id recibido por parametro.
@@ -415,36 +351,5 @@ export class EvaluadorListadoComponent implements AfterViewInit, OnInit, OnDestr
   }
 
 
-  /**
-   * Clean filters an reload the table
-   */
-  public onClearFilters() {
-
-    this.logger.debug(EvaluadorListadoComponent.name,
-      'onClearFilters()',
-      'start');
-    this.filter = [];
-    this.buscadorFormGroup.reset();
-    this.personaRef = '';
-    this.datosUsuarioEvaluador = '';
-    this.loadTable(true);
-
-    this.logger.debug(EvaluadorListadoComponent.name,
-      'onClearFilters()',
-      'end');
-  }
-
-
-  ngOnDestroy(): void {
-    this.logger.debug(EvaluadorListadoComponent.name,
-      'ngOnDestroy()',
-      'start');
-    this.comitesSubscription?.unsubscribe();
-
-    this.logger.debug(EvaluadorListadoComponent.name,
-      'ngOnDestroy()',
-      'end');
-
-  }
 
 }

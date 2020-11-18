@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Observable, of, merge, Subscription } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
-import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection } from '@sgi/framework/http';
-import { tap, map, catchError, startWith, switchMap } from 'rxjs/operators';
+import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { map, startWith, switchMap } from 'rxjs/operators';
 
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -15,17 +15,17 @@ import { IPersona } from '@core/models/sgp/persona';
 import { DialogService } from '@core/services/dialog.service';
 import { ComiteService } from '@core/services/eti/comite.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { ROUTE_NAMES } from '@core/route.names';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria.service';
-import { FormGroupUtil } from '@core/utils/form-group-util';
 import { MEMORIAS_ROUTE } from '../memoria-route-names';
 import { IMemoria } from '@core/models/eti/memoria';
+import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 
 const MSG_BUTTON_SAVE = marker('footer.eti.peticionEvaluacion.crear');
+const MSG_ERROR = marker('eti.memoria.listado.error');
 const TEXT_USER_TITLE = marker('eti.peticionEvaluacion.listado.buscador.solicitante');
 const TEXT_USER_BUTTON = marker('eti.peticionEvaluacion.listado.buscador.buscar.solicitante');
 const MSG_SUCCESS_ENVIAR_SECRETARIA = marker('eti.memorias.formulario.memorias.listado.enviarSecretaria.correcto');
@@ -42,7 +42,7 @@ const MSG_CONFIRM_ENVIAR_SECRETARIA_RETROSPECTIVA = marker('eti.memorias.formula
   templateUrl: './memoria-listado-inv.component.html',
   styleUrls: ['./memoria-listado-inv.component.scss']
 })
-export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDestroy {
+export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent<IMemoriaPeticionEvaluacion> implements OnInit {
   MEMORIAS_ROUTE = MEMORIAS_ROUTE;
   ROUTE_NAMES = ROUTE_NAMES;
 
@@ -50,9 +50,7 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
   fxLayoutProperties: FxLayoutProperties;
 
   displayedColumns: string[];
-  elementosPagina: number[];
   totalElementos: number;
-  filter: SgiRestFilter[];
 
   textoCrear = MSG_BUTTON_SAVE;
 
@@ -67,9 +65,6 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
   estadoMemoriaListado: TipoEstadoMemoria[];
   filteredEstadosMemoria: Observable<TipoEstadoMemoria[]>;
 
-  buscadorFormGroup: FormGroup;
-
-  private subscriptions: Subscription[] = [];
 
   textoUsuarioLabel = TEXT_USER_TITLE;
   textoUsuarioInput = TEXT_USER_TITLE;
@@ -77,25 +72,20 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
   personaRef: string;
   datosSolicitante: string;
 
-  private suscripciones: Subscription[] = [];
 
   constructor(
-    private readonly logger: NGXLogger,
+    protected readonly logger: NGXLogger,
     private readonly comiteService: ComiteService,
     private readonly tipoEstadoMemoriaService: TipoEstadoMemoriaService,
     private readonly memoriaService: MemoriaService,
     protected readonly snackBarService: SnackBarService,
     protected readonly dialogService: DialogService,
   ) {
-    this.displayedColumns = ['numReferencia', 'comite', 'estadoActual', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
-    this.elementosPagina = [5, 10, 25, 100];
-    this.totalElementos = 0;
+    super(logger, snackBarService, MSG_ERROR);
 
-    this.filter = [{
-      field: undefined,
-      type: SgiRestFilterType.NONE,
-      value: '',
-    }];
+    this.totalElementos = 0;
+    this.suscripciones = [];
+
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
@@ -113,7 +103,8 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
   ngOnInit(): void {
     this.logger.debug(MemoriaListadoInvComponent.name, 'ngOnInit()', 'start');
 
-    this.buscadorFormGroup = new FormGroup({
+    super.ngOnInit();
+    this.formGroup = new FormGroup({
       comite: new FormControl('', []),
       titulo: new FormControl('', []),
       numReferencia: new FormControl('', []),
@@ -125,117 +116,62 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
     this.logger.debug(MemoriaListadoInvComponent.name, 'ngOnInit()', 'end');
   }
 
-  ngAfterViewInit(): void {
-    this.logger.debug(MemoriaListadoInvComponent.name, 'ngAfterViewInit()', 'start');
-
-    // Merge events that trigger load table data
-    merge(
-      // Link pageChange event to fire new request
-      this.paginator.page,
-      // Link sortChange event to fire new request
-      this.sort.sortChange
-    )
-      .pipe(
-        tap(() => {
-          // Load table
-          this.loadTable();
-        })
-      )
-      .subscribe();
-    // First load
-    this.loadTable();
-
-    this.logger.debug(MemoriaListadoInvComponent.name, 'ngAfterViewInit()', 'end');
+  protected createObservable(): Observable<SgiRestListResult<IMemoriaPeticionEvaluacion>> {
+    this.logger.debug(MemoriaListadoInvComponent.name, 'createObservable()', 'start');
+    const observable$ = this.memoriaService.findAll(this.getFindOptions());
+    this.logger.debug(MemoriaListadoInvComponent.name, 'createObservable()', 'end');
+    return observable$;
   }
 
-  private async loadTable(reset?: boolean) {
-    this.logger.debug(MemoriaListadoInvComponent.name, 'loadTable()', 'start');
-    // Do the request with paginator/sort/filter values
 
-    this.memorias$ = this.memoriaService
-      .findAllByPersonaRefPeticionEvaluacion({
-        page: {
-          index: reset ? 0 : this.paginator.pageIndex,
-          size: this.paginator.pageSize
-        },
-        sort: {
-          direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
-          field: this.sort.active
-        },
-        filters: this.buildFilters()
-      }).pipe(
-        map((response) => {
-          // Return the values
-          return response.items;
-        }),
-        catchError(() => {
-          return of([]);
-        })
-      );
 
+  protected initColumns(): void {
+    this.logger.debug(MemoriaListadoInvComponent.name, 'initColumns()', 'start');
+    this.displayedColumns = ['numReferencia', 'comite', 'estadoActual', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
+    this.logger.debug(MemoriaListadoInvComponent.name, 'initColumns()', 'end');
   }
 
-  private buildFilters(): SgiRestFilter[] {
+
+  protected createFilters(): SgiRestFilter[] {
+
     this.logger.debug(MemoriaListadoInvComponent.name, 'buildFilters()', 'start');
-    this.filter = [];
+    const filtro: SgiRestFilter[] = [];
 
-    const comite = FormGroupUtil.getValue(this.buscadorFormGroup, 'comite');
-    if (comite) {
-      const filterComite = {
-        field: 'comite.id',
-        type: SgiRestFilterType.EQUALS,
-        value: comite.id,
-      };
-
-      this.filter.push(filterComite);
+    if (this.formGroup.controls.comite.value) {
+      this.addFiltro(filtro, 'comite.id', SgiRestFilterType.EQUALS, this.formGroup.controls.comite.value.id);
     }
 
-    const titulo = FormGroupUtil.getValue(this.buscadorFormGroup, 'titulo');
-    if (titulo) {
-      const filterTitulo = {
-        field: 'peticionEvaluacion.titulo',
-        type: SgiRestFilterType.LIKE,
-        value: titulo,
-      };
-
-      this.filter.push(filterTitulo);
+    if (this.formGroup.controls.titulo.value) {
+      this.addFiltro(filtro, 'peticionEvaluacion.titulo', SgiRestFilterType.LIKE, this.formGroup.controls.titulo.value);
     }
 
-    const numReferencia = FormGroupUtil.getValue(this.buscadorFormGroup, 'numReferencia');
-    if (numReferencia) {
-      const filterRef = {
-        field: 'numReferencia',
-        type: SgiRestFilterType.EQUALS,
-        value: numReferencia,
-      };
-
-      this.filter.push(filterRef);
+    if (this.formGroup.controls.numReferencia.value) {
+      this.addFiltro(filtro, 'numReferencia', SgiRestFilterType.EQUALS, this.formGroup.controls.numReferencia.value);
     }
 
-    const tipoEstadoMemoria = FormGroupUtil.getValue(this.buscadorFormGroup, 'tipoEstadoMemoria');
-    if (tipoEstadoMemoria) {
-      const filterTipoEstadoMemoria = {
-        field: 'estadoActual.id',
-        type: SgiRestFilterType.EQUALS,
-        value: tipoEstadoMemoria.id,
-      };
 
-      this.filter.push(filterTipoEstadoMemoria);
+    if (this.formGroup.controls.tipoEstadoMemoria.value) {
+      this.addFiltro(filtro, 'estadoActual.id', SgiRestFilterType.EQUALS, this.formGroup.controls.tipoEstadoMemoria.value.id);
     }
 
     if (this.personaRef) {
-      const filterPersona = {
-        field: 'personaRef',
-        type: SgiRestFilterType.EQUALS,
-        value: this.personaRef,
-      };
-
-      this.filter.push(filterPersona);
+      this.addFiltro(filtro, 'personaRef', SgiRestFilterType.EQUALS, this.personaRef);
     }
+
 
     this.logger.debug(MemoriaListadoInvComponent.name, 'buildFilters()', 'end');
 
-    return this.filter;
+
+    return filtro;
+  }
+
+  protected loadTable(reset?: boolean) {
+    this.logger.debug(MemoriaListadoInvComponent.name, 'loadTable()', 'start');
+    // Do the request with paginator/sort/filter values
+
+    this.memorias$ = this.getObservableLoadTable(reset);
+    this.logger.debug(MemoriaListadoInvComponent.name, 'loadTable()', 'end');
+
   }
 
   /**
@@ -269,11 +205,11 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
       'getComites()',
       'start');
 
-    this.subscriptions.push(this.comiteService.findAll().subscribe(
+    this.suscripciones.push(this.comiteService.findAll().subscribe(
       (response) => {
         this.comiteListado = response.items;
 
-        this.filteredComites = this.buscadorFormGroup.controls.comite.valueChanges
+        this.filteredComites = this.formGroup.controls.comite.valueChanges
           .pipe(
             startWith(''),
             map(value => this.filterComite(value))
@@ -297,7 +233,7 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
       (response) => {
         this.estadoMemoriaListado = response.items;
 
-        this.filteredEstadosMemoria = this.buscadorFormGroup.controls.tipoEstadoMemoria.valueChanges
+        this.filteredEstadosMemoria = this.formGroup.controls.tipoEstadoMemoria.valueChanges
           .pipe(
             startWith(''),
             map(value => this.filterEstadoMemoria(value))
@@ -360,32 +296,7 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
     this.personaRef = solicitante?.personaRef;
   }
 
-  /**
-   * Load table data
-   */
-  public onSearch() {
-    this.loadTable(true);
-  }
 
-  /**
-   * Clean filters an reload the table
-   */
-  public onClearFilters() {
-
-    this.logger.debug(MemoriaListadoInvComponent.name,
-      'onClearFilters()',
-      'start');
-    this.filter = [];
-    this.buscadorFormGroup.reset();
-    this.personaRef = null;
-    this.loadTable(true);
-    this.loadComites();
-    this.loadEstadosMemoria();
-    this.datosSolicitante = '';
-    this.logger.debug(MemoriaListadoInvComponent.name,
-      'onClearFilters()',
-      'end');
-  }
 
   hasPermisoEnviarSecretaria(estadoMemoriaId: number, responsable: boolean): boolean {
 
@@ -460,15 +371,5 @@ export class MemoriaListadoInvComponent implements AfterViewInit, OnInit, OnDest
     this.logger.debug(MemoriaListadoInvComponent.name, 'enviarSecretariaRetrospectiva(memoria: IMemoriaPeticionEvaluacion) - end');
   }
 
-  ngOnDestroy(): void {
-    this.logger.debug(MemoriaListadoInvComponent.name,
-      'ngOnDestroy()',
-      'start');
-    this.subscriptions?.forEach(x => x.unsubscribe());
-    this.logger.debug(MemoriaListadoInvComponent.name,
-      'ngOnDestroy()',
-      'end');
-
-  }
 
 }
