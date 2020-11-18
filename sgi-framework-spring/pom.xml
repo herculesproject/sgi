@@ -8,7 +8,7 @@
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
   <groupId>org.crue.hercules.sgi</groupId>
-  <artifactId>sgi-framework</artifactId>
+  <artifactId>sgi-framework-spring</artifactId>
 
   <version>0.0.1-SNAPSHOT</version>
 
@@ -16,7 +16,7 @@
   <!-- ******************** ABOUT ******************* -->
   <!-- ********************************************** -->
 
-  <name>sgi-framework</name>
+  <name>sgi-framework-spring</name>
   <description>SGI Framework</description>
 
   <!-- ********************************************** -->
