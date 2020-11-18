@@ -11,12 +11,11 @@ describe('AreaTematicaService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
+        HttpClientTestingModule,
         BrowserAnimationsModule,
         HttpClientTestingModule,
         LoggerTestingModule
-      ],
-      providers: [
-      ],
+      ]
     });
     service = TestBed.inject(AreaTematicaService);
   });

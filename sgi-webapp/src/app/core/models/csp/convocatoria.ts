@@ -19,6 +19,7 @@ export interface IConvocatoria {
   colaborativos: boolean;
   estadoActual: string;
   duracion: number;
+  abiertoPlazoPresentacionSolicitud: boolean;
   ambitoGeografico: ITipoAmbitoGeografico;
   clasificacionCVN: ClasificacionCVN;
   activo: boolean;

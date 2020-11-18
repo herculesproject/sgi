@@ -5,8 +5,7 @@ import { environment } from '@env';
 import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-
+import { tap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })

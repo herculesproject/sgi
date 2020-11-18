@@ -259,6 +259,15 @@ mat-form-field {
   }
 }
 
+.link-busqueda{
+  cursor: pointer;
+  font-weight: bold;
+  color: map-get($custom-colors, primary);
+  &.underline{
+    text-decoration: underline;
+  }
+}
+
 .separation-button {
   padding-top: 15px;
   padding-bottom: 15px;

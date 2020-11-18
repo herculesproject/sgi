@@ -4,7 +4,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { IAreaTematicaArbol } from '@core/models/csp/area-tematica-arbol';
 import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
-import { AreaTematicaArbolService } from '@core/services/csp/area-tematica-arbol.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
@@ -21,8 +20,7 @@ export class ConvocatoriaAreaTematicaModalComponent extends
     protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<ConvocatoriaAreaTematicaModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: IConvocatoriaAreaTematica,
-    private areaTematicaArbolService: AreaTematicaArbolService
+    @Inject(MAT_DIALOG_DATA) public data: IConvocatoriaAreaTematica
   ) {
     super(logger, snackBarService, matDialogRef, data);
     this.logger.debug(ConvocatoriaAreaTematicaModalComponent.name, 'constructor()', 'start');

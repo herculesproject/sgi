@@ -67,7 +67,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       ambitoGeografico: new FormControl(''),
       clasificacionCVN: new FormControl('', EnumValidador.isValid(ClasificacionCVN)),
       regimenConcurrencia: new FormControl(''),
-      colaborativos: new FormControl(''),
+      colaborativos: new FormControl(null),
       destinatarios: new FormControl('', [Validators.required, EnumValidador.isValid(TipoDestinatario)]),
       entidadGestora: new FormControl(''),
       objeto: new FormControl('', Validators.maxLength(2000)),
@@ -97,6 +97,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       duracion: convocatoria.duracion,
       ambitoGeografico: convocatoria.ambitoGeografico,
       clasificacionCVN: convocatoria.clasificacionCVN,
+      activo: convocatoria.activo,
     };
     this.checkEstado(this.getFormGroup(), convocatoria);
     this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
