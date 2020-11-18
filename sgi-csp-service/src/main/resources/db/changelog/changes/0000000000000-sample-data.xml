@@ -110,13 +110,13 @@
     <insert tableName="modelo_unidad">
       <column name="id" valueSequenceNext="modelo_unidad_seq" />
       <column name="unidad_gestion_ref" value="OPE" />
-      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-003')"></column>
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-002')"></column>
       <column name="activo" value="true" />
     </insert>
     <insert tableName="modelo_unidad">
       <column name="id" valueSequenceNext="modelo_unidad_seq" />
       <column name="unidad_gestion_ref" value="OTRI" />
-      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-002')"></column>
+      <column name="modelo_ejecucion_id" valueComputed="(select id from csp.modelo_ejecucion where nombre = 'nombre-003')"></column>
       <column name="activo" value="true" />
     </insert>
     <insert tableName="modelo_unidad">
@@ -740,7 +740,7 @@
       <column name="id" valueSequenceNext="convocatoria_entidad_convocante_seq" />
       <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
       <column name="entidad_ref" value="ent-001" />
-      <column name="programa_id" valueComputed="(select id from csp.programa where nombre = 'nombre-007')"></column>
+      <column name="programa_id" valueComputed="(select id from csp.programa where nombre = 'nombre-001')"></column>
     </insert>
     <insert tableName="convocatoria_entidad_convocante">
       <column name="id" valueSequenceNext="convocatoria_entidad_convocante_seq" />

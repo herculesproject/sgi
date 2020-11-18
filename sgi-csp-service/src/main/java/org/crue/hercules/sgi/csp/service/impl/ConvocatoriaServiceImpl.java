@@ -1,8 +1,10 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import java.time.LocalDate;
+
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
@@ -227,10 +229,12 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
    */
   @Override
   public Page<Convocatoria> findAllTodos(List<QueryCriteria> query, Pageable paging) {
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
-    Specification<Convocatoria> spec = new QuerySpecification<Convocatoria>(query);
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - start");
+
+    Specification<Convocatoria> spec = getFiltroAplicado(query);
+
     Page<Convocatoria> returnValue = repository.findAll(spec, paging);
-    log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
+    log.debug("findAllTodos(List<QueryCriteria> query, Pageable paging) - end");
     return returnValue;
   }
 
@@ -239,12 +243,18 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
       List<String> acronimosUnidadGestion) {
     log.debug(
         "findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging,  List<String> acronimosUnidadGestion) - start");
-    Specification<Convocatoria> spec = new QuerySpecification<Convocatoria>(query);
+
+    Specification<Convocatoria> spec = getFiltroAplicado(query);
+
     Specification<Convocatoria> specAcronimos = ConvocatoriaSpecifications.acronimosIn(acronimosUnidadGestion);
+    if (spec != null) {
+      spec = spec.and(specAcronimos);
+    } else {
+      spec = Specification.where(specAcronimos);
+    }
 
-    Specification<Convocatoria> specs = Specification.where(spec).and(specAcronimos);
+    Page<Convocatoria> returnValue = repository.findAll(spec, paging);
 
-    Page<Convocatoria> returnValue = repository.findAll(specs, paging);
     log.debug(
         "findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging,  List<String> acronimosUnidadGestion) - end");
     return returnValue;
@@ -444,6 +454,100 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     Assert.notNull(datosConvocatoria.getAmbitoGeografico(), "AmbitoGeografico no puede ser null en la Convocatoria");
 
     log.debug("validarRequeridosConvocatoriaRegistrada(Convocatoria datosConvocatoria) - end");
+  }
+
+  /**
+   * Devuelve la Specification para el filtro avanzado de convocatoria.
+   * 
+   * @param query opciones de búsqueda.
+   */
+  private Specification<Convocatoria> getFiltroAplicado(List<QueryCriteria> query) {
+    log.debug("getFiltroAplicado(List<QueryCriteria> query) - start");
+    Specification<Convocatoria> spec = null;
+
+    List<QueryCriteria> queryEntity = CollectionUtils.isEmpty(query) ? query
+        : query.stream()
+            .filter(criteria -> !criteria.getKey().equals("areaTematica.id")
+                && !criteria.getKey().equals("convocatoriaEntidadConvocante.entidadRef")
+                && !criteria.getKey().equals("convocatoriaEntidadFinanciadora.entidadRef")
+                && !criteria.getKey().equals("fuenteFinanciacion.id"))
+            .collect(Collectors.toList());
+
+    if (!CollectionUtils.isEmpty(queryEntity)) {
+      Specification<Convocatoria> specByQuery = new QuerySpecification<Convocatoria>(queryEntity);
+      spec = Specification.where(specByQuery);
+    }
+
+    // Área temática
+    List<QueryCriteria> idAreaTematica = CollectionUtils.isEmpty(query) ? query
+        : query.stream().filter(criteria -> criteria.getKey().equals("areaTematica.id")).collect(Collectors.toList());
+    if (!CollectionUtils.isEmpty(idAreaTematica)) {
+      Specification<Convocatoria> specByAreaTematicaId = ConvocatoriaSpecifications
+          .byAreaTematicaId(Long.valueOf(idAreaTematica.get(0).getValue()));
+
+      if (spec != null) {
+
+        spec = spec.and(specByAreaTematicaId);
+      } else {
+        spec = Specification.where(specByAreaTematicaId);
+      }
+
+    }
+
+    // Entidad convocante
+    List<QueryCriteria> entidadConvocanteRef = CollectionUtils.isEmpty(query) ? query
+        : query.stream().filter(criteria -> criteria.getKey().equals("convocatoriaEntidadConvocante.entidadRef"))
+            .collect(Collectors.toList());
+    if (!CollectionUtils.isEmpty(entidadConvocanteRef)) {
+      Specification<Convocatoria> specByEntidadConvocanteRef = ConvocatoriaSpecifications
+          .byEntidadConvocanteRef(entidadConvocanteRef.get(0).getValue());
+
+      if (spec != null) {
+
+        spec = spec.and(specByEntidadConvocanteRef);
+      } else {
+        spec = Specification.where(specByEntidadConvocanteRef);
+      }
+
+    }
+
+    // Entidad financiadora
+    List<QueryCriteria> entidadFinanciadoraRef = CollectionUtils.isEmpty(query) ? query
+        : query.stream().filter(criteria -> criteria.getKey().equals("convocatoriaEntidadFinanciadora.entidadRef"))
+            .collect(Collectors.toList());
+    if (!CollectionUtils.isEmpty(entidadFinanciadoraRef)) {
+      Specification<Convocatoria> specByEntidadFinanciadoraRef = ConvocatoriaSpecifications
+          .byEntidadFinancieraRef(entidadFinanciadoraRef.get(0).getValue());
+
+      if (spec != null) {
+
+        spec = spec.and(specByEntidadFinanciadoraRef);
+      } else {
+        spec = Specification.where(specByEntidadFinanciadoraRef);
+      }
+
+    }
+
+    // Fuente financiación
+    List<QueryCriteria> fuenteFinanciacionId = CollectionUtils.isEmpty(query) ? query
+        : query.stream().filter(criteria -> criteria.getKey().equals("fuenteFinanciacion.id"))
+            .collect(Collectors.toList());
+    if (!CollectionUtils.isEmpty(fuenteFinanciacionId)) {
+      Specification<Convocatoria> specByFuenteFinanciacionRef = ConvocatoriaSpecifications
+          .byFuenteFinanciacionId(Long.valueOf(fuenteFinanciacionId.get(0).getValue()));
+
+      if (spec != null) {
+
+        spec = spec.and(specByFuenteFinanciacionRef);
+      } else {
+        spec = Specification.where(specByFuenteFinanciacionRef);
+      }
+
+    }
+    log.debug("getFiltroAplicado(List<QueryCriteria> query) - start");
+
+    return spec;
+
   }
 
 }

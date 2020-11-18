@@ -102,7 +102,7 @@ public class Convocatoria extends BaseEntity {
   private TipoDestinatarioEnum destinatarios;
 
   /** Colaborativos */
-  @Column(name = "colaborativos", columnDefinition = "boolean default true", nullable = false)
+  @Column(name = "colaborativos", nullable = true)
   private Boolean colaborativos;
 
   /** Estado Actual */

@@ -136,9 +136,7 @@
       <column name="anio" type="INT" />
       <column name="clasificacion_cvn" type="VARCHAR(50)" />
       <column name="codigo" type="VARCHAR(50)" />
-      <column defaultValueBoolean="true" name="colaborativos" type="BOOLEAN">
-        <constraints nullable="false" />
-      </column>
+      <column name="colaborativos" type="BOOLEAN" />
       <column name="destinatarios" type="VARCHAR(50)" />
       <column name="duracion" type="INT" />
       <column name="estado_actual" type="VARCHAR(50)">
