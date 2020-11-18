@@ -17,6 +17,9 @@ import { ModeloEjecucionTipoDocumentoFragment } from './modelo-ejecucion-formula
 import { ModeloTipoDocumentoService } from '@core/services/csp/modelo-tipo-documento.service';
 import { ModeloEjecucionTipoHitoFragment } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-hito/modelo-ejecucion-tipo-hito.fragment';
 import { ModeloTipoHitoService } from '@core/services/csp/modelo-tipo-hito.service';
+import { ModeloEjecucionTipoUnidadGestionFragment } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-unidad-gestion/modelo-ejecucion-tipo-unidad-gestion.fragment';
+import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
+import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 
 @Injectable()
 export class ModeloEjecucionActionService extends ActionService {
@@ -26,7 +29,8 @@ export class ModeloEjecucionActionService extends ActionService {
     TIPO_FINALIDADES: 'tipo-finalidades',
     TIPO_FASES: 'tipo-fases',
     TIPO_DOCUMENTOS: 'tipo-documentos',
-    TIPO_HITOS: 'tipo-hitos'
+    TIPO_HITOS: 'tipo-hitos',
+    UNIDAD_GESTION: 'unidades',
   };
 
   private modeloEjecucion: IModeloEjecucion;
@@ -36,6 +40,7 @@ export class ModeloEjecucionActionService extends ActionService {
   private tipoFases: ModeloEjecucionTipoFaseFragment;
   private tipoDocumentos: ModeloEjecucionTipoDocumentoFragment;
   private tipoHitos: ModeloEjecucionTipoHitoFragment;
+  private tipoUnidadGestion: ModeloEjecucionTipoUnidadGestionFragment;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -45,8 +50,9 @@ export class ModeloEjecucionActionService extends ActionService {
     modeloTipoFinalidadService: ModeloTipoFinalidadService,
     modeloTipoFaseService: ModeloTipoFaseService,
     modeloTipoDocumentoService: ModeloTipoDocumentoService,
-    modeloTipoHitoService: ModeloTipoHitoService
-  ) {
+    modeloTipoHitoService: ModeloTipoHitoService,
+    modeloUnidadService: ModeloUnidadService,
+    unidadGestionService: UnidadGestionService) {
     super();
     this.logger.debug(ModeloEjecucionActionService.name, 'constructor()', 'start');
     this.modeloEjecucion = {} as IModeloEjecucion;
@@ -65,14 +71,16 @@ export class ModeloEjecucionActionService extends ActionService {
       modeloTipoDocumentoService, this);
     this.tipoHitos = new ModeloEjecucionTipoHitoFragment(logger, this.modeloEjecucion?.id, modeloEjecucionService,
       modeloTipoHitoService, this);
+    this.tipoUnidadGestion = new ModeloEjecucionTipoUnidadGestionFragment(logger, this.modeloEjecucion?.id, modeloEjecucionService,
+      modeloUnidadService, unidadGestionService, this);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.TIPO_FASES, this.tipoFases);
     this.addFragment(this.FRAGMENT.TIPO_FINALIDADES, this.tipoFinalidades);
     this.addFragment(this.FRAGMENT.TIPO_ENLACES, this.tipoEnlaces);
     this.addFragment(this.FRAGMENT.TIPO_DOCUMENTOS, this.tipoDocumentos);
-    this.logger.debug(ModeloEjecucionActionService.name, 'constructor()', 'start');
     this.addFragment(this.FRAGMENT.TIPO_HITOS, this.tipoHitos);
+    this.addFragment(this.FRAGMENT.UNIDAD_GESTION, this.tipoUnidadGestion);
     this.logger.debug(ModeloEjecucionActionService.name, 'constructor()', 'end');
   }
 }

@@ -11,7 +11,8 @@ import { IModeloTipoFinalidad } from '@core/models/csp/modelo-tipo-finalidad';
 import { IModeloTipoFase } from '@core/models/csp/modelo-tipo-fase';
 import { IModeloTipoDocumento } from '@core/models/csp/modelo-tipo-documento';
 import { IModeloTipoHito } from '@core/models/csp/modelo-tipo-hito';
-
+import { ModeloUnidadService, IModeloUnidadBackend } from './modelo-unidad.service';
+import { IModeloUnidad } from '@core/models/csp/modelo-unidad';
 
 const tiposHito: ITipoHito[] = [
   {
@@ -22,6 +23,7 @@ const tiposHito: ITipoHito[] = [
   } as ITipoHito
 
 ];
+
 
 @Injectable({
   providedIn: 'root'
@@ -96,6 +98,17 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
     return this.find<IModeloTipoHito, IModeloTipoHito>(`${this.endpointUrl}/${id}/modelotipohitos`, options).pipe(
       tap(() => this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoHito.name}(id: ${id})`, '-', 'END'))
     );
+  }
+
+  /**
+   * Encuentra unidades de gestion
+   */
+  findModeloTipoUnidadGestion(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloUnidad>> {
+    this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoUnidadGestion.name}(id: ${id})`, '-', 'START');
+    return this.find<IModeloUnidadBackend, IModeloUnidad>(`${this.endpointUrl}/${id}/modelounidades`,
+      options, ModeloUnidadService.CONVERTER).pipe(
+        tap(() => this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoUnidadGestion.name}(id: ${id})`, '-', 'END'))
+      );
   }
 
   /**

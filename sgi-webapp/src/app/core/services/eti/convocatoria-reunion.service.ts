@@ -157,7 +157,7 @@ export class ConvocatoriaReunionService extends SgiMutableRestService<number, IC
     this.logger.debug(ConvocatoriaReunionService.name, `${this.endpointUrl}/${evaluacion.convocatoriaReunion.id}/evaluacion/${evaluacion.id}`, '-', 'START');
     return this.http.delete<void>(`${this.endpointUrl}/${evaluacion.convocatoriaReunion.id}/evaluacion/${evaluacion.id}`).pipe(
       tap(() => {
-        this.logger.debug(ConvocatoriaReunionService.name, `${this.endpointUrl}/${evaluacion.convocatoriaReunion.id}/evaluacion/${evaluacion.id}`, '-', 'end')
+        this.logger.debug(ConvocatoriaReunionService.name, `${this.endpointUrl}/${evaluacion.convocatoriaReunion.id}/evaluacion/${evaluacion.id}`, '-', 'end');
       })
     );
   }

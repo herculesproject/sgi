@@ -18,12 +18,10 @@ import { ModeloEjecucionTipoFaseComponent } from './modelo-ejecucion-formulario/
 import { ModeloEjecucionTipoDocumentoComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-documento/modelo-ejecucion-tipo-documento.component';
 import { ModeloEjecucionTipoDocumentoModalComponent } from './modals/modelo-ejecucion-tipo-documento-modal/modelo-ejecucion-tipo-documento-modal.component';
 import { ModeloEjecucionTipoHitoComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-hito/modelo-ejecucion-tipo-hito.component';
-import {
-  ModeloEjecucionTipoFaseModalComponent
-} from './modals/modelo-ejecucion-tipo-fase-modal/modelo-ejecucion-tipo-fase-modal.component';
-import {
-  ModeloEjecucionTipoHitoModalComponent
-} from './modals/modelo-ejecucion-tipo-hito-modal/modelo-ejecucion-tipo-hito-modal.component';
+import { ModeloEjecucionTipoFaseModalComponent } from './modals/modelo-ejecucion-tipo-fase-modal/modelo-ejecucion-tipo-fase-modal.component';
+import { ModeloEjecucionTipoUnidadGestionComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-unidad-gestion/modelo-ejecucion-tipo-unidad-gestion.component';
+import { ModeloEjecucionTipoUnidadGestionModalComponent } from './modals/modelo-ejecucion-tipo-unidad-gestion-modal/modelo-ejecucion-tipo-unidad-gestion-modal.component';
+import { ModeloEjecucionTipoHitoModalComponent } from './modals/modelo-ejecucion-tipo-hito-modal/modelo-ejecucion-tipo-hito-modal.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +38,9 @@ import {
     ModeloEjecucionTipoDocumentoComponent,
     ModeloEjecucionTipoDocumentoModalComponent,
     ModeloEjecucionTipoHitoComponent,
-    ModeloEjecucionTipoHitoModalComponent
+    ModeloEjecucionTipoHitoModalComponent,
+    ModeloEjecucionTipoUnidadGestionComponent,
+    ModeloEjecucionTipoUnidadGestionModalComponent
   ],
   imports: [
     CommonModule,

@@ -17,6 +17,7 @@ import { ModeloEjecucionListadoComponent } from './modelo-ejecucion-listado/mode
 import { MODELO_EJECUCION_ROUTE_NAMES } from './modelo-ejecucion-route-names';
 import { ModeloEjecucionResolver } from './modelo-ejecucion.resolver';
 import { ModeloEjecucionTipoHitoComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-hito/modelo-ejecucion-tipo-hito.component';
+import { ModeloEjecucionTipoUnidadGestionComponent } from './modelo-ejecucion-formulario/modelo-ejecucion-tipo-unidad-gestion/modelo-ejecucion-tipo-unidad-gestion.component';
 
 const MSG_LISTADO_TITLE = marker('csp.modelo.ejecucion.listado.titulo');
 const MSG_NEW_TITLE = marker('csp.modelo.ejecucion.crear.titulo');
@@ -74,7 +75,12 @@ const routes: SgiRoutes = [
         path: MODELO_EJECUCION_ROUTE_NAMES.TIPO_HITOS,
         component: ModeloEjecucionTipoHitoComponent,
         canDeactivate: [FragmentGuard]
-      }
+      },
+      {
+        path: MODELO_EJECUCION_ROUTE_NAMES.UNIDAD_GESTION,
+        component: ModeloEjecucionTipoUnidadGestionComponent,
+        canDeactivate: [FragmentGuard]
+      },
     ]
   },
   {
@@ -123,7 +129,12 @@ const routes: SgiRoutes = [
         path: MODELO_EJECUCION_ROUTE_NAMES.TIPO_HITOS,
         component: ModeloEjecucionTipoHitoComponent,
         canDeactivate: [FragmentGuard]
-      }
+      },
+      {
+        path: MODELO_EJECUCION_ROUTE_NAMES.UNIDAD_GESTION,
+        component: ModeloEjecucionTipoUnidadGestionComponent,
+        canDeactivate: [FragmentGuard]
+      },
     ]
   }
 ];

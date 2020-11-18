@@ -9,6 +9,7 @@ import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/fram
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { IModeloEjecucion } from '@core/models/csp/tipos-configuracion';
 
 @Injectable({
   providedIn: 'root'
