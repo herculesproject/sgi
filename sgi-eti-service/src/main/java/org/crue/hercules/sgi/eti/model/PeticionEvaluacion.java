@@ -43,7 +43,7 @@ public class PeticionEvaluacion extends BaseEntity {
   private Long id;
 
   /** Referencia solicitud convocatoria */
-  @Column(name = "solicitud_convocatoria_ref", length = 250, nullable = false)
+  @Column(name = "solicitud_convocatoria_ref", length = 250, nullable = true)
   private String solicitudConvocatoriaRef;
 
   /** Código */

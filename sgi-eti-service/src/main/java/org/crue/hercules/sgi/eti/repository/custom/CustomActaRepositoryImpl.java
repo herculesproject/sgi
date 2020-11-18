@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.eti.repository.custom;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -8,6 +9,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
@@ -59,11 +61,25 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
     // Define FROM clause
     Root<Acta> root = cq.from(Acta.class);
 
+    // Count query
+    CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+    Root<Acta> rootCount = countQuery.from(Acta.class);
+    countQuery.select(cb.count(rootCount));
+
+    List<Predicate> listPredicates = new ArrayList<Predicate>();
+    List<Predicate> listPredicatesCount = new ArrayList<Predicate>();
+
+    listPredicates.add(cb.and(cb.equal(root.get(Acta_.activo), Boolean.TRUE)));
+    listPredicatesCount.add(cb.and(cb.equal(rootCount.get(Acta_.activo), Boolean.TRUE)));
+
     // Where
     if (query != null) {
       Specification<Acta> spec = new QuerySpecification<Acta>(query);
-      cq.where(spec.toPredicate(root, cq, cb));
+      listPredicates.add(spec.toPredicate(root, cq, cb));
+      listPredicatesCount.add(spec.toPredicate(rootCount, cq, cb));
     }
+
+    cq.where(listPredicates.toArray(new Predicate[] {}));
 
     // Execute query
     cq.multiselect(root.get(Acta_.id).alias("id"),
@@ -80,6 +96,10 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
     List<Order> orders = QueryUtils.toOrders(pageable.getSort(), root, cb);
     cq.orderBy(orders);
 
+    // Número de registros totales para la paginación
+    countQuery.where(listPredicatesCount.toArray(new Predicate[] {}));
+    Long count = entityManager.createQuery(countQuery).getSingleResult();
+
     TypedQuery<ActaWithNumEvaluaciones> typedQuery = entityManager.createQuery(cq);
     if (pageable != null && pageable.isPaged()) {
       typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
@@ -87,7 +107,7 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
     }
 
     List<ActaWithNumEvaluaciones> result = typedQuery.getResultList();
-    Page<ActaWithNumEvaluaciones> returnValue = new PageImpl<ActaWithNumEvaluaciones>(result, pageable, result.size());
+    Page<ActaWithNumEvaluaciones> returnValue = new PageImpl<ActaWithNumEvaluaciones>(result, pageable, count);
 
     log.debug("findAllActaWithNumEvaluaciones(List<QueryCriteria> query, Pageable paging) - end");
 
