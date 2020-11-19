@@ -1,27 +1,8 @@
-# SgiFrameworkAngular
+![](./doc/images/logos_feder.png)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.11.
+# HÉRCULES - SGI 
+El objetivo del Proyecto SGI dentro del Proyecto HÉRCULES es crear un Prototipo de un Sistema de Gestión de Investigación (SGI) basado en datos abiertos semánticos que ofrezca una visión global de los datos de investigación del Sistema Universitario Español (SUE) para mejorar la gestión, el análisis y las posibles sinergias entre universidades y el gran público desarrollando e incorporando  soluciones que superen las actualmente disponibles en el mercado.
 
-## Development server
+## HÉRCULES SGI - Framework Angular
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+SGI Framework Angular contiene funcionalidades comunes que dan soporte a los módulos del sistema SGI.
