@@ -119,10 +119,7 @@ public class ConvocatoriaEntidadConvocanteServiceImpl implements ConvocatoriaEnt
           convocatoriaEntidadConvocanteActualizar.setPrograma(
               programaRepository.findById(convocatoriaEntidadConvocanteActualizar.getPrograma().getId()).orElseThrow(
                   () -> new ProgramaNotFoundException(convocatoriaEntidadConvocanteActualizar.getPrograma().getId())));
-
-          Assert.isTrue(
-              convocatoriaEntidadConvocante.getPrograma().getId() == convocatoriaEntidadConvocanteActualizar
-                  .getPrograma().getId() || convocatoriaEntidadConvocanteActualizar.getPrograma().getActivo(),
+          Assert.isTrue(convocatoriaEntidadConvocanteActualizar.getPrograma().getActivo(),
               "El Programa debe estar Activo");
         }
       }
