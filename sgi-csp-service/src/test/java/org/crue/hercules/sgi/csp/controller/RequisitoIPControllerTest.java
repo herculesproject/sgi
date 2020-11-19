@@ -153,6 +153,21 @@ public class RequisitoIPControllerTest extends BaseControllerTest {
         andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  public void findByConvocatoriaRequisitoIP_WithNoExistingRequisitoIP_Returns204() throws Exception {
+    // given: Existing convocatoriaId and no existing RequisitoIP
+    BDDMockito.given(service.findByConvocatoria(ArgumentMatchers.<Long>any())).willReturn(null);
+
+    // when: find
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).
+        // then: HTTP code 204 No Content
+        andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
   /**
    * Función que devuelve un objeto RequisitoIP
    * 

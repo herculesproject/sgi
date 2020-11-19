@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.service;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.RequisitoIPNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.RequisitoIP;
@@ -121,6 +122,9 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
   public void findByConvocatoriaId_ReturnsRequisitoIP() {
     // given: Un RequisitoIP con el id buscado
     Long idBuscado = 1L;
+
+    BDDMockito.given(convocatoriaRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
     BDDMockito.given(repository.findByConvocatoriaId(idBuscado))
         .willReturn(Optional.of(generarMockRequisitoIP(idBuscado)));
 
@@ -135,15 +139,16 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findByConvocatoriaId_WithIdNotExist_ThrowsRequisitoIPNotFoundException() throws Exception {
-    // given: Ningun RequisitoIP con el id buscado
+  public void findByConvocatoriaId_WithIdNotExist_ThrowsConvocatoriaNotFoundExceptionException() throws Exception {
+    // given: Ninguna Convocatoria con el id buscado
     Long idBuscado = 1L;
-    BDDMockito.given(repository.findByConvocatoriaId(idBuscado)).willReturn(Optional.empty());
 
-    // when: Buscamos el RequisitoIP por su id
-    // then: lanza un RequisitoIPNotFoundException
+    BDDMockito.given(convocatoriaRepository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.FALSE);
+
+    // when: Buscamos el RequisitoIP por id Convocatoria
+    // then: lanza un ConvocatoriaNotFoundException
     Assertions.assertThatThrownBy(() -> service.findByConvocatoria(idBuscado))
-        .isInstanceOf(RequisitoIPNotFoundException.class);
+        .isInstanceOf(ConvocatoriaNotFoundException.class);
   }
 
   /**

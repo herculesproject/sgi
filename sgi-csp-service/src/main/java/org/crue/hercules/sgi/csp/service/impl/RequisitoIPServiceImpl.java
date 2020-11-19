@@ -1,6 +1,9 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import org.crue.hercules.sgi.csp.exceptions.RequisitoIPNotFoundException;
+
+import java.util.Optional;
+
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.RequisitoIP;
@@ -101,10 +104,14 @@ public class RequisitoIPServiceImpl implements RequisitoIPService {
   @Override
   public RequisitoIP findByConvocatoria(Long id) {
     log.debug("findByConvocatoria(Long id) - start");
-    RequisitoIP returnValue = repository.findByConvocatoriaId(id)
-        .orElseThrow(() -> new RequisitoIPNotFoundException(id));
-    log.debug("findByConvocatoria(Long id) - end");
-    return returnValue;
+
+    if (convocatoriaRepository.existsById(id)) {
+      final Optional<RequisitoIP> returnValue = repository.findByConvocatoriaId(id);
+      log.debug("findByConvocatoriaId(Long id) - end");
+      return (returnValue.isPresent()) ? returnValue.get() : null;
+    } else {
+      throw new ConvocatoriaNotFoundException(id);
+    }
   }
 
 }

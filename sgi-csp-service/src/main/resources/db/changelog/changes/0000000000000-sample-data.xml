@@ -943,6 +943,41 @@
       <column name="observaciones" value="Observaciones meses 4-6" />
     </insert>
   </changeSet>
+  <changeSet context="dev" author="master" id="20201022000000-requisito_equipo">
+    <insert tableName="requisito_equipo">
+      <column name="id" valueSequenceNext="requisito_equipo_seq" />
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')" />
+      <column name="nivel_academico_ref" value="na-001" />
+      <column name="anios_nivel_academico" value="4" />
+      <column name="edad_maxima" value="48" />
+      <column name="ratio_mujeres" value="5" />
+      <column name="vinculacion_universidad" value="false" />
+      <column name="modalidad_contrato_ref" value="mc-001" />
+      <column name="anios_vinculacion" value="10" />
+      <column name="num_minimo_competitivos" value="11" />
+      <column name="num_minimo_no_competitivos" value="5" />
+      <column name="num_maximo_competitivos_activos" value="10" />
+      <column name="num_maximo_no_competitivos_activos" value="3" />
+      <column name="otros_requisitos" value="otros" />
+    </insert>
+    <insert tableName="requisito_equipo">
+      <column name="id" valueSequenceNext="requisito_equipo_seq" />
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')" />
+      <column name="nivel_academico_ref" value="na-002" />
+      <column name="anios_nivel_academico" value="4" />
+      <column name="edad_maxima" value="3" />
+      <column name="ratio_mujeres" value="3" />
+      <column name="vinculacion_universidad" value="false" />
+      <column name="modalidad_contrato_ref" value="mc-002" />
+      <column name="anios_vinculacion" value="10" />
+      <column name="num_minimo_competitivos" value="11" />
+      <column name="num_minimo_no_competitivos" value="5" />
+      <column name="num_maximo_competitivos_activos" value="10" />
+      <column name="num_maximo_no_competitivos_activos" value="3" />
+      <column name="otros_requisitos" value="otros" />
+    </insert>
+  </changeSet>
+
 
   <changeSet context="dev" author="master" id="20201022000000-requisito_ip">
     <insert tableName="requisito_ip">

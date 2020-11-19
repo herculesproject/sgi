@@ -79,11 +79,17 @@ public class RequisitoIPController {
    */
   @GetMapping("/{id}")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-E')")
-  ResponseEntity<RequisitoIP> findConvocatoriaRequisitoIP(@PathVariable Long id) {
-    log.debug("findConvocatoriaRequisitoIP(Long id) - start");
-    RequisitoIP requisitoIP = service.findByConvocatoria(id);
-    log.debug("findConvocatoriaRequisitoIP(Long id) - end");
-    return new ResponseEntity<>(requisitoIP, HttpStatus.OK);
+  ResponseEntity<RequisitoIP> findByConvocatoriaId(@PathVariable Long id) {
+    log.debug("RequisitoIP findByConvocatoriaId(Long id) - start");
+    RequisitoIP returnValue = service.findByConvocatoria(id);
+
+    if (returnValue == null) {
+      log.debug("RequisitoIP findByConvocatoriaId(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("RequisitoIP findByConvocatoriaId(Long id) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
 
 }

@@ -9,6 +9,7 @@ DELETE FROM csp.convocatoria_fase;
 DELETE FROM csp.convocatoria_hito;
 DELETE FROM csp.convocatoria_periodo_justificacion;
 DELETE FROM csp.convocatoria_periodo_seguimiento_cientifico;
+DELETE FROM csp.requisito_equipo;
 DELETE FROM csp.requisito_ip;
 DELETE FROM csp.convocatoria_concepto_gasto;
 DELETE FROM csp.convocatoria;
