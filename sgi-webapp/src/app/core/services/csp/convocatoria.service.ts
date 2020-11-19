@@ -15,6 +15,7 @@ import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { IConvocatoriaSeguimientoCientifico } from '@core/models/csp/convocatoria-seguimiento-cientifico';
+import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
 
 @Injectable({
   providedIn: 'root'
@@ -227,6 +228,34 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
     return this.http.patch<void>(`${this.endpointUrl}/${id}/desactivar`, undefined).pipe(
       tap(() => this.logger.debug(ConvocatoriaService.name, `${this.desactivar.name}()`, '-', 'end'))
     );
+  }
+
+  /**
+   * Recupera listado de convocatoria concepto gastos códigos económicos permitidos.
+   * @param id convocatoria
+   * @param options opciones de búsqueda.
+   */
+  getConvocatoriaConceptoGastoCodigoEcsPermitidos(id: number): Observable<SgiRestListResult<IConvocatoriaConceptoGastoCodigoEc>> {
+    this.logger.debug(ConvocatoriaService.name, `getConvocatoriaConceptoGastoCodigoEcsPermitidos(${id})`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${id}/convocatoriagastocodigoec/permitidos`;
+    return this.find<IConvocatoriaConceptoGastoCodigoEc, IConvocatoriaConceptoGastoCodigoEc>(endpointUrl)
+      .pipe(
+        tap(() => this.logger.debug(ConvocatoriaService.name, `getConvocatoriaConceptoGastoCodigoEcsPermitidos(${id})`, '-', 'end'))
+      );
+  }
+
+  /**
+   * Recupera listado de convocatoria concepto gasto códigos económicos NO permitidos.
+   * @param id convocatoria
+   * @param options opciones de búsqueda.
+   */
+  getConvocatoriaConceptoGastoCodigoEcsNoPermitidos(id: number): Observable<SgiRestListResult<IConvocatoriaConceptoGastoCodigoEc>> {
+    this.logger.debug(ConvocatoriaService.name, `getConvocatoriaConceptoGastoCodigoEcsPermitidos(${id})`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${id}/convocatoriagastocodigoec/nopermitidos`;
+    return this.find<IConvocatoriaConceptoGastoCodigoEc, IConvocatoriaConceptoGastoCodigoEc>(endpointUrl)
+      .pipe(
+        tap(() => this.logger.debug(ConvocatoriaService.name, `getConvocatoriaConceptoGastoCodigoEcsPermitidos(${id})`, '-', 'end'))
+      );
   }
 
 }

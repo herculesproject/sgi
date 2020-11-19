@@ -49,5 +49,13 @@
     "target": "http://192.168.3.50:8080",
     "secure": false,
     "logLevel": "debug"
+  },
+  "/api/sge": {
+    "target": "http://hercules-sge-service:8080",
+    "pathRewrite": {
+      "^/api/sge": "/sge"
+    },
+    "secure": false,
+    "logLevel": "debug"
   }
 }

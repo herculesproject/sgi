@@ -210,6 +210,7 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
         (aceptado: boolean) => {
           if (aceptado) {
             this.formPart.deleteConvocatoriaConceptoGasto(wrapper);
+            this.actionService.deleteCodigoEconomico(wrapper.value);
           }
           this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name,
             `${this.deleteConvocatoriaConceptoGasto.name}(${wrapper})`, 'end');

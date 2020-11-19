@@ -249,11 +249,13 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
               (currentConvocatoriaConceptoGastos) => currentConvocatoriaConceptoGastos === wrappedConvocatoriaConceptoGastos);
             this.convocatoriaConceptoGastoPermitido$.value[indexPermitido] =
               new StatusWrapper<IConvocatoriaConceptoGasto>(updatedConvocatoriaConceptoGastos);
+            this.convocatoriaConceptoGastoPermitido$.next(this.convocatoriaConceptoGastoPermitido$.value);
 
-            const indexNoPermitido = this.convocatoriaConceptoGastoPermitido$.value.findIndex(
+            const indexNoPermitido = this.convocatoriaConceptoGastoNoPermitido$.value.findIndex(
               (currentConvocatoriaConceptoGastos) => currentConvocatoriaConceptoGastos === wrappedConvocatoriaConceptoGastos);
-            this.convocatoriaConceptoGastoPermitido$.value[indexNoPermitido] =
+            this.convocatoriaConceptoGastoNoPermitido$.value[indexNoPermitido] =
               new StatusWrapper<IConvocatoriaConceptoGasto>(updatedConvocatoriaConceptoGastos);
+            this.convocatoriaConceptoGastoNoPermitido$.next(this.convocatoriaConceptoGastoNoPermitido$.value);
           }),
           tap(() => this.logger.debug(ConvocatoriaConceptoGastoFragment.name,
             `${this.createConvocatoriaConceptoGastos.name}()`, 'end'))

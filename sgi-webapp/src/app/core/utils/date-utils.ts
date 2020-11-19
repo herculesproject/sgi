@@ -122,4 +122,17 @@ export class DateUtils {
     return [fechaString, horaString].join('T');
   }
 
+  /**
+   * Comprueba que el rango de fechas no se solapen
+   *
+   * @param fecha una fecha
+   * @return un string con la fecha formateada o '' si la fecha no esta definida.
+   */
+  static dateRangeOverlaps(aDateStart: Date, aDateEnd: Date, bDateStart: Date, bDateEnd: Date) {
+    if (aDateStart.getTime() <= bDateStart.getTime() && bDateStart.getTime() <= aDateEnd.getTime()) { return true; } // b starts in a
+    if (aDateStart.getTime() <= bDateEnd.getTime() && bDateEnd.getTime() <= aDateEnd.getTime()) { return true; } // b ends in a
+    if (bDateStart.getTime() < aDateStart.getTime() && aDateEnd.getTime() < bDateEnd.getTime()) { return true; } // a in b
+    return false;
+  }
+
 }

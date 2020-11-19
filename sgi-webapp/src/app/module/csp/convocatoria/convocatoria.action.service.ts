@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { ActionService } from '@core/services/action-service';
+import { ActionService, IFragment } from '@core/services/action-service';
 import { ActivatedRoute } from '@angular/router';
 
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
@@ -35,6 +35,13 @@ import { ConvocatoriaRequisitosEquipoFragment } from './convocatoria-formulario/
 import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip.service';
 import { ConvocatoriaRequisitoEquipoService } from '@core/services/csp/convocatoria-requisito-equipo.service';
 
+import { ConvocatoriaConceptoGastoCodigoEcFragment } from './convocatoria-formulario/convocatoria-concepto-gasto-codigo-ec/convocatoria-concepto-gasto-codigo-ec.fragment';
+import { ConvocatoriaConceptoGastoCodigoEcService } from '@core/services/csp/convocatoria-concepto-gasto-codigo-ec.service';
+import { Observable, throwError, from, of } from 'rxjs';
+import { filter, switchMap, concatMap, tap, takeLast } from 'rxjs/operators';
+import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
 
 @Injectable()
 export class ConvocatoriaActionService extends ActionService {
@@ -50,7 +57,8 @@ export class ConvocatoriaActionService extends ActionService {
     ENTIDADES_FINANCIADORAS: 'entidades-financiadoras',
     REQUISITOS_IP: 'requisitos-ip',
     ELEGIBILIDAD: 'elegibilidad',
-    REQUISITOS_EQUIPO: 'requisitos-equipo'
+    REQUISITOS_EQUIPO: 'requisitos-equipo',
+    CODIGOS_ECONOMICOS: 'codigos-economicos'
   };
 
   private datosGenerales: ConvocatoriaDatosGeneralesFragment;
@@ -64,8 +72,11 @@ export class ConvocatoriaActionService extends ActionService {
   private requisitosIP: ConvocatoriaRequisitosIPFragment;
   private elegibilidad: ConvocatoriaConceptoGastoFragment;
   private requisitosEquipo: ConvocatoriaRequisitosEquipoFragment;
+  private codigosEconomicos: ConvocatoriaConceptoGastoCodigoEcFragment;
 
   private convocatoria: IConvocatoria;
+
+  private fragmentos: IFragment[] = [];
 
   constructor(
     fb: FormBuilder,
@@ -86,6 +97,7 @@ export class ConvocatoriaActionService extends ActionService {
     convocatoriaEntidadConvocanteService: ConvocatoriaEntidadConvocanteService,
     convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService,
     convocatoriaRequisitoIPService: ConvocatoriaRequisitoIPService,
+    convocatoriaConceptoGastoCodigoEcService: ConvocatoriaConceptoGastoCodigoEcService
   ) {
     super();
     this.convocatoria = {} as IConvocatoria;
@@ -116,6 +128,8 @@ export class ConvocatoriaActionService extends ActionService {
     this.elegibilidad = new ConvocatoriaConceptoGastoFragment(fb, logger, this.convocatoria?.id, convocatoriaService,
       convocatoriaConceptoGastoService);
     this.requisitosEquipo = new ConvocatoriaRequisitosEquipoFragment(fb, logger, this.convocatoria?.id, convocatoriaRequisitoEquipoService);
+    this.codigosEconomicos = new ConvocatoriaConceptoGastoCodigoEcFragment(logger, this.convocatoria?.id, convocatoriaService,
+      convocatoriaConceptoGastoCodigoEcService, this.elegibilidad);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.SEGUIMIENTO_CIENTIFICO, this.seguimientoCientifico);
@@ -128,7 +142,20 @@ export class ConvocatoriaActionService extends ActionService {
     this.addFragment(this.FRAGMENT.REQUISITOS_IP, this.requisitosIP);
     this.addFragment(this.FRAGMENT.ELEGIBILIDAD, this.elegibilidad);
     this.addFragment(this.FRAGMENT.REQUISITOS_EQUIPO, this.requisitosEquipo);
+    this.addFragment(this.FRAGMENT.CODIGOS_ECONOMICOS, this.codigosEconomicos);
 
+    this.fragmentos.push(this.datosGenerales);
+    this.fragmentos.push(this.seguimientoCientifico);
+    this.fragmentos.push(this.entidadesConvocantes);
+    this.fragmentos.push(this.entidadesFinanciadorasFragment);
+    this.fragmentos.push(this.periodoJustificacion);
+    this.fragmentos.push(this.plazosFases);
+    this.fragmentos.push(this.hitos);
+    this.fragmentos.push(this.enlaces);
+    this.fragmentos.push(this.requisitosIP);
+    this.fragmentos.push(this.elegibilidad);
+    this.fragmentos.push(this.requisitosEquipo);
+    this.fragmentos.push(this.codigosEconomicos);
 
   }
 
@@ -140,6 +167,95 @@ export class ConvocatoriaActionService extends ActionService {
    */
   getDatosGeneralesConvocatoria(): IConvocatoria {
     return this.datosGenerales.isInitialized() ? this.datosGenerales.getValue() : this.convocatoria;
+  }
+
+  /**
+   * Recupera los registros de conceptos de gasto permitidos en la convocatoria
+   *
+   * @returns los conceptos de gastos permitidos de la convocatoria.
+   */
+  getElegibilidadPermitidos(): StatusWrapper<IConvocatoriaConceptoGasto>[] {
+    return this.elegibilidad.isInitialized() ? this.elegibilidad.convocatoriaConceptoGastoPermitido$.value : [];
+  }
+
+  /**
+   * Recupera los registros de conceptos de gasto no permitidos en la convocatoria
+   *
+   * @returns los conceptos de gastos no permitidos de la convocatoria.
+   */
+  getElegibilidadNoPermitidos(): StatusWrapper<IConvocatoriaConceptoGasto>[] {
+    return this.elegibilidad.isInitialized() ? this.elegibilidad.convocatoriaConceptoGastoNoPermitido$.value : [];
+  }
+
+  /**
+   * Recupera los registros de códigos económicos permitidos en la convocatoria
+   *
+   * @returns los códigos económicos permitidos de la convocatoria.
+   */
+  private getCodigosEconomicosPermitidos(): StatusWrapper<IConvocatoriaConceptoGastoCodigoEc>[] {
+    return this.codigosEconomicos.isInitialized() ? this.codigosEconomicos.convocatoriaConceptoGastoCodigoEcPermitido$.value : [];
+  }
+
+  /**
+   * Recupera los registros de códigos económicos no permitidos en la convocatoria
+   *
+   * @returns los códigos económicos no permitidos de la convocatoria.
+   */
+  private getCodigosEconomicosNoPermitidos(): StatusWrapper<IConvocatoriaConceptoGastoCodigoEc>[] {
+    return this.codigosEconomicos.isInitialized() ? this.codigosEconomicos.convocatoriaConceptoGastoCodigoEcNoPermitido$.value : [];
+  }
+
+
+  /**
+   * Elimina los códigos de gasto relacionados con el concepto de gasto de la convocatoria a eliminar
+   * @param convocatoriaConceptoGasto el concepto de gasto de la convocatoria a eliminar
+   */
+  deleteCodigoEconomico(convocatoriaConceptoGasto: IConvocatoriaConceptoGasto) {
+    if (convocatoriaConceptoGasto.permitido) {
+      this.getCodigosEconomicosPermitidos().filter(codigoEconomico =>
+        codigoEconomico.value.convocatoriaConceptoGasto.conceptoGasto.id === convocatoriaConceptoGasto.conceptoGasto.id).forEach(
+          codEconomicoWrapper => {
+            this.codigosEconomicos.deleteConvocatoriaConceptoGastoCodigoEc(codEconomicoWrapper, true);
+          });
+    } else {
+      this.getCodigosEconomicosNoPermitidos().filter(codigoEconomico =>
+        codigoEconomico.value.convocatoriaConceptoGasto.conceptoGasto.id === convocatoriaConceptoGasto.conceptoGasto.id).forEach(
+          codEconomicoWrapper => {
+            this.codigosEconomicos.deleteConvocatoriaConceptoGastoCodigoEc(codEconomicoWrapper, true);
+          });
+    }
+  }
+
+  saveOrUpdate(): Observable<void> {
+    this.performChecks(true);
+    if (this.hasErrors()) {
+      return throwError('Errores');
+    }
+    if (this.isEdit()) {
+      return from(this.fragmentos.values()).pipe(
+        filter((part) => part.hasChanges()),
+        concatMap((part) => part.saveOrUpdate().pipe(
+          switchMap(() => {
+            return of(void 0);
+          }),
+          tap(() => part.refreshInitialState(true)))
+        ),
+        takeLast(1)
+      );
+    }
+    else {
+      const part = this.datosGenerales;
+      return part.saveOrUpdate().pipe(
+        tap(() => part.refreshInitialState(true)),
+        switchMap((k) => {
+          if (typeof k === 'string' || typeof k === 'number') {
+            this.onKeyChange(k);
+          }
+          return this.saveOrUpdate();
+        }),
+        takeLast(1)
+      );
+    }
   }
 
 }

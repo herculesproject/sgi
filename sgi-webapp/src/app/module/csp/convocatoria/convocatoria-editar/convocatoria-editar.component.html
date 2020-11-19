@@ -47,7 +47,9 @@
         [title]="'csp.convocatoria.elegibilidad' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.ELEGIBILIDAD)">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item class="demo" [title]="'csp.convocatoria.codigos.economicos' | translate">
+      <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.CODIGOS_ECONOMICOS]"
+        [title]="'csp.convocatoria.codigos.economicos' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.CODIGOS_ECONOMICOS)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item class="demo" [title]="'csp.convocatoria.configuracion.solicitudes' | translate">
       </sgi-action-fragment-menu-item>

@@ -17,7 +17,7 @@ import { IConceptoGasto } from '@core/models/csp/concepto-gasto';
 import { NumberValidator } from '@core/validators/number-validator';
 
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
-const MSG_ERROR_INIT = marker('csp.convocatoria.plazos.concepto-gasto.error.cargar');
+const MSG_ERROR_INIT = marker('csp.convocatoria.concepto-gasto.error.cargar');
 const MSG_ERROR_CONCEPTO_GASTO_REPETIDO = marker('csp.convocatoria.concepto-gasto.modal.repetido');
 
 export interface IConvocatoriaConceptoGastoModalComponent {

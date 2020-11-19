@@ -9,7 +9,8 @@ export const environment = {
     sgp: '/api/sgp',
     csp: '/api/csp',
     usr: '/api/usr',
-    sgdoc: '/api/sgdoc'
+    sgdoc: '/api/sgdoc',
+    sge: '/api/sge'
   },
   loggerConfig: {
     enableSourceMaps: true, // <-- THIS IS REQUIRED, to make "line-numbers" work in SourceMap Object defition (without evalSourceMap)
