@@ -20,8 +20,8 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { MemoriaDocumentacionSeguimientosModalComponent } from '../../modals/memoria-documentacion-seguimientos-modal/memoria-documentacion-seguimientos-modal.component';
 import { IComite } from '@core/models/eti/comite';
 import { IEstadoRetrospectiva } from '@core/models/eti/estado-retrospectiva';
-import { DocumentoService } from '@core/services/sgdoc/documento.service';
-import { switchMap, map } from 'rxjs/operators';
+import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
+import { switchMap } from 'rxjs/operators';
 import { IDocumento } from '@core/models/sgdoc/documento';
 
 const MSG_CONFIRM_DELETE = marker('eti.memoria.documentacion.listado.eliminar');
@@ -305,39 +305,12 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
         return this.documentoService.downloadFichero(documentoRef);
       })
     ).subscribe(response => {
-
-      this.downLoadFile(response, documento.nombre, documento.tipo);
+      triggerDownloadToUser(response, documento.nombre);
 
       this.logger.debug(MemoriaDocumentacionComponent.name,
         'visualizarDocumento(documentoRef: string) - end');
 
     });
-  }
-
-  /**
-   * Descarga de fichero.
-   * @param data array buffer datos.
-   * @param type tipo.
-   */
-  private downLoadFile(data: any, nombreFichero: string, type: string) {
-    this.logger.debug(MemoriaDocumentacionComponent.name, 'downLoadFile() - start');
-    const blob = new Blob([data], { type });
-
-    if (window.navigator.msSaveOrOpenBlob) {
-      window.navigator.msSaveOrOpenBlob(blob, nombreFichero);
-    } else {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      document.body.appendChild(a);
-      a.setAttribute('style', 'display: none');
-      a.href = url;
-      a.download = nombreFichero;
-      a.click();
-      window.URL.revokeObjectURL(url);
-      a.remove();
-    }
-
-    this.logger.debug(MemoriaDocumentacionComponent.name, 'downLoadFile() - end');
   }
 
 

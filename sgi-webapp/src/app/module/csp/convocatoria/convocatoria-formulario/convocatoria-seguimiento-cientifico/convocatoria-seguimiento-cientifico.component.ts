@@ -85,7 +85,7 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
       `${this.openModalSeguimientoCientifico.name}(${seguimientoCientificoActualizar})`, 'start');
 
     const modalData: IConvocatoriaSeguimientoCientificoModalData = {
-      convocatoria: this.actionService.getDatosGeneralesConvocatoria(),
+      duracion: this.actionService.duracion,
       convocatoriaSeguimientoCientifico: seguimientoCientificoActualizar
         ? seguimientoCientificoActualizar.value : {} as IConvocatoriaSeguimientoCientifico,
       convocatoriaSeguimientoCientificoList: this.dataSource.data

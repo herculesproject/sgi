@@ -16,6 +16,7 @@ import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-en
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { IConvocatoriaSeguimientoCientifico } from '@core/models/csp/convocatoria-seguimiento-cientifico';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
+import { IConvocatoriaDocumento } from '@core/models/csp/convocatoria-documento';
 
 @Injectable({
   providedIn: 'root'
@@ -177,6 +178,14 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
     return this.find<IConvocatoriaAreaTematica, IConvocatoriaAreaTematica>(
       `${this.endpointUrl}/${id}/convocatoriaareatematicas`, options).pipe(
         tap(() => this.logger.debug(ConvocatoriaService.name, `${this.findAreaTematicas.name}(id: ${id})`, '-', 'END'))
+      );
+  }
+
+  findDocumentos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaDocumento>> {
+    this.logger.debug(ConvocatoriaService.name, `${this.findDocumentos.name}(id: ${id})`, '-', 'START');
+    return this.find<IConvocatoriaDocumento, IConvocatoriaDocumento>(
+      `${this.endpointUrl}/${id}/convocatoriadocumentos`, options).pipe(
+        tap(() => this.logger.debug(ConvocatoriaService.name, `${this.findDocumentos.name}(id: ${id})`, '-', 'END'))
       );
   }
 

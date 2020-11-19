@@ -524,7 +524,7 @@ export abstract class FormFragment<T> implements IFormFragment<T> {
   }
 }
 
-class Group implements IGroup {
+export class Group implements IGroup {
   form: FormGroup;
   status$: BehaviorSubject<GroupStatus> = new BehaviorSubject<GroupStatus>({ errors: false, changes: false, complete: false });
   private initialState: any;

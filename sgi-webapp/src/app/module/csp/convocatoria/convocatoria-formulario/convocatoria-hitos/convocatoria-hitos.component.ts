@@ -73,7 +73,7 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
         }
       };
     this.dataSource.sort = this.sort;
-    this.disableAddHito = !Boolean(this.actionService.getDatosGeneralesConvocatoria().modeloEjecucion);
+    this.disableAddHito = !Boolean(this.actionService.modeloEjecucionId);
     this.subscriptions.push(this.formPart.hitos$.subscribe(elements => {
       this.dataSource.data = elements;
       this.logger.debug(ConvocatoriaHitosComponent.name, 'ngOnInit()', 'end');
@@ -88,7 +88,7 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
     this.logger.debug(ConvocatoriaHitosComponent.name, `${this.openModal.name}()`, 'start');
     const datosHito = {
       hito: wrapper ? wrapper.value : {} as IConvocatoriaHito,
-      idModeloEjecucion: this.actionService.getDatosGeneralesConvocatoria().modeloEjecucion?.id
+      idModeloEjecucion: this.actionService.modeloEjecucionId
     } as ConvocatoriaHitosModalComponentData;
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,

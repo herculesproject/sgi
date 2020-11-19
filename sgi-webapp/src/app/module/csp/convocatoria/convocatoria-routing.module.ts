@@ -27,7 +27,7 @@ import { ConvocatoriaRequisitosIPComponent } from './convocatoria-formulario/con
 import { ConvocatoriaConceptoGastoComponent } from './convocatoria-formulario/convocatoria-concepto-gasto/convocatoria-concepto-gasto.component';
 import { ConvocatoriaRequisitosEquipoComponent } from './convocatoria-formulario/convocatoria-requisitos-equipo/convocatoria-requisitos-equipo.component';
 import { ConvocatoriaConceptoGastoCodigoEcComponent } from './convocatoria-formulario/convocatoria-concepto-gasto-codigo-ec/convocatoria-concepto-gasto-codigo-ec.component';
-
+import { ConvocatoriaDocumentosComponent } from './convocatoria-formulario/convocatoria-documentos/convocatoria-documentos.component';
 
 const MSG_EDIT_TITLE = marker('csp.convocatoria.editar.titulo');
 const MSG_LISTADO_TITLE = marker('csp.convocatoria.listado.titulo');
@@ -115,6 +115,11 @@ const routes: SgiRoutes = [
         component: ConvocatoriaConceptoGastoCodigoEcComponent,
         canDeactivate: [FragmentGuard]
       },
+      {
+        path: CONVOCATORIA_ROUTE_NAMES.DOCUMENTOS,
+        component: ConvocatoriaDocumentosComponent,
+        canDeactivate: [FragmentGuard]
+      },
     ]
   },
   {
@@ -176,7 +181,8 @@ const routes: SgiRoutes = [
         path: CONVOCATORIA_ROUTE_NAMES.REQUISITOS_IP,
         component: ConvocatoriaRequisitosIPComponent,
         canDeactivate: [FragmentGuard]
-      }, {
+      }, 
+      {
         path: CONVOCATORIA_ROUTE_NAMES.ELEGIBILIDAD,
         component: ConvocatoriaConceptoGastoComponent,
         canDeactivate: [FragmentGuard]
@@ -189,6 +195,11 @@ const routes: SgiRoutes = [
       {
         path: CONVOCATORIA_ROUTE_NAMES.CODIGOS_ECONOMICOS,
         component: ConvocatoriaConceptoGastoCodigoEcComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: CONVOCATORIA_ROUTE_NAMES.DOCUMENTOS,
+        component: ConvocatoriaDocumentosComponent,
         canDeactivate: [FragmentGuard]
       },
     ]

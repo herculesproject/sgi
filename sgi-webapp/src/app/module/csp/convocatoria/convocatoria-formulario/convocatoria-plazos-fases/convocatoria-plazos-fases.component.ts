@@ -62,7 +62,7 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
     this.dataSource = new MatTableDataSource<StatusWrapper<IConvocatoriaFase>>();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.disableAddFase = !Boolean(this.actionService.getDatosGeneralesConvocatoria().modeloEjecucion);
+    this.disableAddFase = !Boolean(this.actionService.modeloEjecucionId);
     this.subscriptions.push(this.formPart.plazosFase$.subscribe(elements => {
       this.dataSource.data = elements;
       this.logger.debug(ConvocatoriaPlazosFasesComponent.name, 'ngOnInit()', 'end');
@@ -78,7 +78,7 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
     const datosPlazosFases = {
       plazos: this.dataSource.data,
       plazo: plazo ? plazo.value : {} as IConvocatoriaFase,
-      idModeloEjecucion: this.actionService.getDatosGeneralesConvocatoria().modeloEjecucion?.id
+      idModeloEjecucion: this.actionService.modeloEjecucionId
     } as ConvocatoriaPlazosFaseModalComponentData;
 
     const config = {

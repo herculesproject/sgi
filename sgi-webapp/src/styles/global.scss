@@ -271,8 +271,16 @@ mat-form-field {
 .separation-button {
   padding-top: 15px;
   padding-bottom: 15px;
-  button{
-    margin-right: 10px;
+  button ~ button {
+     margin-left: 10px;
+  }
+  button.rounded {
+    border-radius: 1.5em;
+    padding-right: 1.2em;
+    mat-icon {
+      margin-left: -.2em;
+      padding-right: .1em;
+    }
   }
   // Boton verde terciario
   .mat-three {

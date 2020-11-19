@@ -34,6 +34,8 @@ import { ConvocatoriaEntidadConvocanteService } from '@core/services/csp/convoca
 import { ConvocatoriaRequisitosEquipoFragment } from './convocatoria-formulario/convocatoria-requisitos-equipo/convocatoria-requisitos-equipo.fragment';
 import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip.service';
 import { ConvocatoriaRequisitoEquipoService } from '@core/services/csp/convocatoria-requisito-equipo.service';
+import { ConvocatoriaDocumentosFragment } from './convocatoria-formulario/convocatoria-documentos/convocatoria-documentos.fragment';
+import { ConvocatoriaDocumentoService } from '@core/services/csp/convocatoria-documento.service';
 
 import { ConvocatoriaConceptoGastoCodigoEcFragment } from './convocatoria-formulario/convocatoria-concepto-gasto-codigo-ec/convocatoria-concepto-gasto-codigo-ec.fragment';
 import { ConvocatoriaConceptoGastoCodigoEcService } from '@core/services/csp/convocatoria-concepto-gasto-codigo-ec.service';
@@ -58,7 +60,8 @@ export class ConvocatoriaActionService extends ActionService {
     REQUISITOS_IP: 'requisitos-ip',
     ELEGIBILIDAD: 'elegibilidad',
     REQUISITOS_EQUIPO: 'requisitos-equipo',
-    CODIGOS_ECONOMICOS: 'codigos-economicos'
+    CODIGOS_ECONOMICOS: 'codigos-economicos',
+    DOCUMENTOS: 'documentos'
   };
 
   private datosGenerales: ConvocatoriaDatosGeneralesFragment;
@@ -73,10 +76,19 @@ export class ConvocatoriaActionService extends ActionService {
   private elegibilidad: ConvocatoriaConceptoGastoFragment;
   private requisitosEquipo: ConvocatoriaRequisitosEquipoFragment;
   private codigosEconomicos: ConvocatoriaConceptoGastoCodigoEcFragment;
+  private documentos: ConvocatoriaDocumentosFragment;
 
   private convocatoria: IConvocatoria;
 
   private fragmentos: IFragment[] = [];
+
+  get modeloEjecucionId(): number {
+    return this.getConvocatoria().modeloEjecucion?.id;
+  }
+
+  get duracion(): number {
+    return this.getConvocatoria().duracion;
+  }
 
   constructor(
     fb: FormBuilder,
@@ -97,7 +109,8 @@ export class ConvocatoriaActionService extends ActionService {
     convocatoriaEntidadConvocanteService: ConvocatoriaEntidadConvocanteService,
     convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService,
     convocatoriaRequisitoIPService: ConvocatoriaRequisitoIPService,
-    convocatoriaConceptoGastoCodigoEcService: ConvocatoriaConceptoGastoCodigoEcService
+    convocatoriaConceptoGastoCodigoEcService: ConvocatoriaConceptoGastoCodigoEcService,
+    convocatoriaDocumentoService: ConvocatoriaDocumentoService
   ) {
     super();
     this.convocatoria = {} as IConvocatoria;
@@ -119,6 +132,7 @@ export class ConvocatoriaActionService extends ActionService {
       logger, this.convocatoria?.id, convocatoriaService, convocatoriaFaseService);
     this.hitos = new ConvocatoriaHitosFragment(
       logger, this.convocatoria?.id, convocatoriaService, convocatoriaHitoService);
+    this.documentos = new ConvocatoriaDocumentosFragment(logger, this.convocatoria?.id, convocatoriaService, convocatoriaDocumentoService);
     this.seguimientoCientifico = new ConvocatoriaSeguimientoCientificoFragment(logger, this.convocatoria?.id,
       convocatoriaService, convocatoriaSeguimientoCientificoService);
     this.entidadesFinanciadorasFragment = new ConvocatoriaEntidadesFinanciadorasFragment(
@@ -138,6 +152,7 @@ export class ConvocatoriaActionService extends ActionService {
     this.addFragment(this.FRAGMENT.PERIODO_JUSTIFICACION, this.periodoJustificacion);
     this.addFragment(this.FRAGMENT.PLAZOS_FASES, this.plazosFases);
     this.addFragment(this.FRAGMENT.HITOS, this.hitos);
+    this.addFragment(this.FRAGMENT.DOCUMENTOS, this.documentos);
     this.addFragment(this.FRAGMENT.ENLACES, this.enlaces);
     this.addFragment(this.FRAGMENT.REQUISITOS_IP, this.requisitosIP);
     this.addFragment(this.FRAGMENT.ELEGIBILIDAD, this.elegibilidad);
@@ -151,21 +166,15 @@ export class ConvocatoriaActionService extends ActionService {
     this.fragmentos.push(this.periodoJustificacion);
     this.fragmentos.push(this.plazosFases);
     this.fragmentos.push(this.hitos);
+    this.fragmentos.push(this.documentos);
     this.fragmentos.push(this.enlaces);
     this.fragmentos.push(this.requisitosIP);
     this.fragmentos.push(this.elegibilidad);
     this.fragmentos.push(this.requisitosEquipo);
     this.fragmentos.push(this.codigosEconomicos);
-
   }
 
-  /**
-   * Recupera los datos de la convocatoria del formulario de datos generales,
-   * si no se ha cargado el formulario de datos generales se recuperan los datos de la convocatoria que se esta editando.
-   *
-   * @returns los datos de la convocatoria.
-   */
-  getDatosGeneralesConvocatoria(): IConvocatoria {
+  private getConvocatoria(): IConvocatoria {
     return this.datosGenerales.isInitialized() ? this.datosGenerales.getValue() : this.convocatoria;
   }
 

@@ -14,7 +14,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IDocumento } from '@core/models/sgdoc/documento';
-import { DocumentoService } from '@core/services/sgdoc/documento.service';
+import { DocumentoService, FileModel } from '@core/services/sgdoc/documento.service';
 import { map, catchError } from 'rxjs/operators';
 
 const MSG_ERROR_APORTAR_DOCUMENTACION = marker('eti.memoria.documentacion.error.aportar');
@@ -115,7 +115,10 @@ export class MemoriaDocumentacionSeguimientosModalComponent implements OnInit {
     if (FormGroupUtil.valid(this.formGroup)) {
 
       let documentacionMemoria: IDocumentacionMemoria = {} as IDocumentacionMemoria;
-      this.documentoService.uploadFichero(FormGroupUtil.getValue(this.formGroup, 'fileUpload')).pipe(
+      const fileModel = {
+        file: FormGroupUtil.getValue(this.formGroup, 'fileUpload')
+      } as FileModel;
+      this.documentoService.uploadFichero(fileModel).pipe(
         map((documentoSgdoc: IDocumento) => {
 
           return documentoSgdoc.documentoRef;

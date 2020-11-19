@@ -66,7 +66,7 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
             return wrapper[property];
         }
       };
-    this.disableAddEnlace = !Boolean(this.actionService.getDatosGeneralesConvocatoria().modeloEjecucion);
+    this.disableAddEnlace = !Boolean(this.actionService.modeloEjecucionId);
     this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.enlace$.subscribe(elements => {
       this.dataSource.data = elements;
@@ -82,7 +82,7 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
     this.logger.debug(ConvocatoriaEnlaceComponent.name, `${this.openModal.name}()`, 'start');
     const datosEnlace = {
       enlace: wrapper ? wrapper.value : {} as IConvocatoriaEnlace,
-      idModeloEjecucion: this.actionService.getDatosGeneralesConvocatoria().modeloEjecucion?.id
+      idModeloEjecucion: this.actionService.modeloEjecucionId
     } as ConvocatoriaEnlaceModalComponentData;
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,

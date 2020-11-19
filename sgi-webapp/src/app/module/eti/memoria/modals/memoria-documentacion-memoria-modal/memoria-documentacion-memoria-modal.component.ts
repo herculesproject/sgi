@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { FormGroupUtil } from '@core/utils/form-group-util';
@@ -16,7 +16,7 @@ import { startWith, map, catchError } from 'rxjs/operators';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IDocumentacionMemoria } from '@core/models/eti/documentacion-memoria';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { DocumentoService } from '@core/services/sgdoc/documento.service';
+import { DocumentoService, FileModel } from '@core/services/sgdoc/documento.service';
 import { IDocumento } from '@core/models/sgdoc/documento';
 
 const MSG_ERROR_APORTAR_DOCUMENTACION = marker('eti.memoria.documentacion.error.aportar');
@@ -169,8 +169,10 @@ export class MemoriaDocumentacionMemoriaModalComponent implements OnInit {
 
       let existDocumentacion = false;
       let documentacionMemoria: IDocumentacionMemoria = {} as IDocumentacionMemoria;
-
-      this.documentoService.uploadFichero(this.formGroup.controls.fileUpload.value).pipe(
+      const fileModel = {
+        file: this.formGroup.controls.fileUpload.value
+      } as FileModel;
+      this.documentoService.uploadFichero(fileModel).pipe(
         map((documentoSgdoc: IDocumento) => {
 
           return documentoSgdoc.documentoRef;

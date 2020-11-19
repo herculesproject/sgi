@@ -8,17 +8,15 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { DateValidator } from '@core/validators/date-validator';
 import { NumberValidator } from '@core/validators/number-validator';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { RangeValidator } from '@core/validators/range-validator';
 import { StringValidator } from '@core/validators/string-validator';
-import { IConvocatoria } from '@core/models/csp/convocatoria';
 
 export interface IConvocatoriaPeriodoJustificacionModalData {
-  convocatoria: IConvocatoria;
+  duracion: number;
   convocatoriaPeriodoJustificacion: IConvocatoriaPeriodoJustificacion;
   convocatoriaPeriodoJustificacionList: StatusWrapper<IConvocatoriaPeriodoJustificacion>[];
 }
@@ -125,9 +123,9 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
     }
 
     // Si la convocatoria tiene duracion el mesFinal no puede superarla
-    if (this.data.convocatoria && this.data.convocatoria?.duracion) {
+    if (this.data.duracion) {
       formGroup.get('hastaMes').setValidators([
-        Validators.max(this.data.convocatoria.duracion),
+        Validators.max(this.data.duracion),
         formGroup.get('hastaMes').validator
       ]);
     }

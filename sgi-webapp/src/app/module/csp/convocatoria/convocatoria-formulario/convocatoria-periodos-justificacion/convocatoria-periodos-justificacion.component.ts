@@ -88,7 +88,7 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
       `${this.openModalPeriodoJustificacion.name}(${periodoJustificacionActualizar})`, 'start');
 
     const modalData = {
-      convocatoria: this.actionService.getDatosGeneralesConvocatoria(),
+      duracion: this.actionService.duracion,
       convocatoriaPeriodoJustificacion: periodoJustificacionActualizar
         ? periodoJustificacionActualizar.value : {} as IConvocatoriaPeriodoJustificacion,
       convocatoriaPeriodoJustificacionList: this.dataSource.data

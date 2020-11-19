@@ -32,9 +32,9 @@
         [title]="'csp.convocatoria.hitos' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.HITOS)">
       </sgi-action-fragment-menu-item>
-
-
-      <sgi-action-fragment-menu-item class="demo" [title]="'csp.convocatoria.documentos' | translate">
+      <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.DOCUMENTOS]"
+        [title]="'csp.convocatoria.documentos' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.DOCUMENTOS)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.REQUISITOS_IP]"
         [title]="'csp.convocatoria.requisitos-ip' | translate"

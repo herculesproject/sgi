@@ -1,9 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
-import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaSeguimientoCientifico } from '@core/models/csp/convocatoria-seguimiento-cientifico';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -16,7 +14,7 @@ import { RangeValidator } from '@core/validators/range-validator';
 import { NGXLogger } from 'ngx-logger';
 
 export interface IConvocatoriaSeguimientoCientificoModalData {
-  convocatoria: IConvocatoria;
+  duracion: number;
   convocatoriaSeguimientoCientifico: IConvocatoriaSeguimientoCientifico;
   convocatoriaSeguimientoCientificoList: StatusWrapper<IConvocatoriaSeguimientoCientifico>[];
 }
@@ -100,9 +98,9 @@ export class ConvocatoriaSeguimientoCientificoModalComponent
     });
 
     // Si la convocatoria tiene duracion el mesFinal no puede superarla
-    if (this.data.convocatoria && this.data.convocatoria?.duracion) {
+    if (this.data.duracion) {
       formGroup.get('hastaMes').setValidators([
-        Validators.max(this.data.convocatoria.duracion),
+        Validators.max(this.data.duracion),
         formGroup.get('hastaMes').validator
       ]);
     }

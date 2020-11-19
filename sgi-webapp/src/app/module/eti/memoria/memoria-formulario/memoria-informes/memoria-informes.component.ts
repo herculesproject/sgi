@@ -16,7 +16,7 @@ import { MemoriaActionService } from '../../memoria.action.service';
 import { MemoriaInformesFragment } from './memoria-informes.fragment';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { switchMap } from 'rxjs/operators';
-import { DocumentoService } from '@core/services/sgdoc/documento.service';
+import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
 
 @Component({
   selector: 'sgi-memoria-informes',
@@ -84,43 +84,12 @@ export class MemoriaInformesComponent extends FragmentComponent implements OnIni
         return this.documentoService.downloadFichero(documentoRef);
       })
     ).subscribe(response => {
-
-      this.downLoadFile(response, documento.nombre, documento.tipo);
+      triggerDownloadToUser(response, documento.nombre);
 
       this.logger.debug(MemoriaInformesComponent.name,
         'visualizarInforme(documentoRef: string) - end');
-
     });
   }
-
-
-  /**
-   * Descarga de fichero.
-   * @param data array buffer datos.
-   * @param type tipo.
-   */
-  private downLoadFile(data: any, nombreFichero: string, type: string) {
-    this.logger.debug(MemoriaInformesComponent.name, 'downLoadFile() - start');
-    const blob = new Blob([data], { type });
-
-    if (window.navigator.msSaveOrOpenBlob) {
-      window.navigator.msSaveOrOpenBlob(blob, nombreFichero);
-    } else {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      document.body.appendChild(a);
-      a.setAttribute('style', 'display: none');
-      a.href = url;
-      a.download = nombreFichero;
-      a.click();
-      window.URL.revokeObjectURL(url);
-      a.remove();
-    }
-
-    this.logger.debug(MemoriaInformesComponent.name, 'downLoadFile() - end');
-  }
-
-
 
   ngOnDestroy(): void {
     this.logger.debug(MemoriaInformesComponent.name, 'ngOnDestroy()', 'start');
