@@ -12,9 +12,7 @@ import { switchMap } from 'rxjs/operators';
 import { DialogService } from '@core/services/dialog.service';
 import { ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { requiredChecked } from '@core/validators/checkbox-validator';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 
-const MSG_CHECK = marker('csp.check.continuar');
 export interface ModeloEjecucionTipoFaseModalData {
   modeloTipoFase: IModeloTipoFase;
   tipoFases: ITipoFase[];
@@ -26,16 +24,15 @@ export interface ModeloEjecucionTipoFaseModalData {
 })
 export class ModeloEjecucionTipoFaseModalComponent extends
   BaseModalComponent<IModeloTipoFase, ModeloEjecucionTipoFaseModalComponent> implements OnInit {
-
   tipoFases$: Observable<ITipoFase[]>;
 
   constructor(
-    protected readonly logger: NGXLogger,
-    protected readonly snackBarService: SnackBarService,
-    public readonly matDialogRef: MatDialogRef<ModeloEjecucionTipoFaseModalComponent>,
+    protected logger: NGXLogger,
+    protected snackBarService: SnackBarService,
+    public matDialogRef: MatDialogRef<ModeloEjecucionTipoFaseModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ModeloEjecucionTipoFaseModalData,
-    private readonly tipoFaseService: TipoFaseService,
-    protected readonly dialogService: DialogService
+    private tipoFaseService: TipoFaseService,
+    protected dialogService: DialogService
   ) {
     super(logger, snackBarService, matDialogRef, data.modeloTipoFase);
     this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, 'constructor()', 'start');
@@ -46,22 +43,21 @@ export class ModeloEjecucionTipoFaseModalComponent extends
     super.ngOnInit();
     if (!this.data.modeloTipoFase.tipoFase) {
       this.tipoFases$ = this.tipoFaseService.findAll().pipe(
-        switchMap((result: SgiRestListResult<ITipoFase>) => {
+        switchMap((result) => {
           const list = this.filterExistingTipoFase(result);
           return of(list);
         })
       );
     } else {
       this.tipoFases$ = this.tipoFaseService.findAll().pipe(
-        switchMap((result: SgiRestListResult<ITipoFase>) => {
-          return of(result.items);
-        })
+        switchMap((result) => of(result.items))
       );
     }
   }
 
   /**
-   *  Comprueba que no hay 2 valores en la lista
+   * Comprueba que no hay 2 valores en la lista
+   *
    * @param result resultado
    */
   private filterExistingTipoFase(result: SgiRestListResult<ITipoFase>): ITipoFase[] {
@@ -71,31 +67,34 @@ export class ModeloEjecucionTipoFaseModalComponent extends
   }
 
   protected getDatosForm(): IModeloTipoFase {
-    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, `${this.getDatosForm.name}()`, 'start');
+    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, `getDatosForm()`, 'start');
     const modeloTipoFase = this.data.modeloTipoFase;
     const disponible = this.formGroup.controls.disponible as FormGroup;
     modeloTipoFase.tipoFase = this.formGroup.get('tipoFase').value;
     modeloTipoFase.convocatoria = disponible.get('convocatoria').value;
     modeloTipoFase.proyecto = disponible.get('proyecto').value;
     modeloTipoFase.solicitud = false;
-    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, `${this.getDatosForm.name}()`, 'end');
+    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, `getDatosForm()`, 'end');
     return modeloTipoFase;
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, `${this.getFormGroup.name}()`, 'start');
+    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, `getFormGroup()`, 'start');
     const formGroup = new FormGroup({
-      tipoFase: new FormControl(this.data.modeloTipoFase?.tipoFase, Validators.required),
+      tipoFase: new FormControl({
+        value: this.data.modeloTipoFase?.tipoFase,
+        disabled: this.data.modeloTipoFase.tipoFase
+      }, Validators.required),
       disponible: new FormGroup({
         convocatoria: new FormControl(this.data.modeloTipoFase?.convocatoria),
         proyecto: new FormControl(this.data.modeloTipoFase?.proyecto)
       }, [requiredChecked(1)]),
     });
-    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, `${this.getFormGroup.name}()`, 'end');
+    this.logger.debug(ModeloEjecucionTipoFaseModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }
 
-  equals(o1?: ITipoFase, o2?: ITipoFase): boolean {
-    return o1.id === o2.id;
+  equals(o1: ITipoFase, o2: ITipoFase): boolean {
+    return o1?.id === o2?.id;
   }
 }

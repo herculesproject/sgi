@@ -9,7 +9,7 @@ import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.serv
 import { TipoDocumentoService } from '@core/services/csp/tipo-documento.service';
 import { TipoFaseService } from '@core/services/csp/tipo-fase.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
@@ -29,16 +29,14 @@ export interface ModeloTipoDocumentoModalData {
 export class ModeloEjecucionTipoDocumentoModalComponent extends
   BaseModalComponent<IModeloTipoDocumento, ModeloEjecucionTipoDocumentoModalComponent> implements OnInit {
   tipoDocumentos$: Observable<ITipoDocumento[]>;
-  tipoFases$: Observable<ITipoFase[]>;
 
   constructor(
-    protected readonly logger: NGXLogger,
-    protected readonly snackBarService: SnackBarService,
-    public readonly matDialogRef: MatDialogRef<ModeloEjecucionTipoDocumentoModalComponent>,
+    protected logger: NGXLogger,
+    protected snackBarService: SnackBarService,
+    public matDialogRef: MatDialogRef<ModeloEjecucionTipoDocumentoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ModeloTipoDocumentoModalData,
-    private readonly tipoDocumentoService: TipoDocumentoService,
-    private readonly tipoFaseService: TipoFaseService,
-    private readonly modeloEjecucionService: ModeloEjecucionService
+    private tipoDocumentoService: TipoDocumentoService,
+    private modeloEjecucionService: ModeloEjecucionService
   ) {
     super(logger, snackBarService, matDialogRef, data.modeloTipoDocumento);
     this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, 'constructor()', 'start');
@@ -46,39 +44,39 @@ export class ModeloEjecucionTipoDocumentoModalComponent extends
   }
 
   ngOnInit(): void {
-    this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `${this.ngOnInit.name}()`, 'start');
+    this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `ngOnInit()`, 'start');
     super.ngOnInit();
     this.loadTipoDocumentos();
-    this.loadTipoFases();
-    this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `${this.ngOnInit.name}()`, 'end');
+    this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `ngOnInit()`, 'end');
   }
 
   private loadTipoDocumentos(): void {
-    this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `${this.loadTipoDocumentos.name}()`, 'start');
+    this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `loadTipoDocumentos()`, 'start');
     if (this.data.id) {
       this.tipoDocumentos$ = this.getUpdateTipoDocumentos();
     } else {
       this.tipoDocumentos$ = this.getNewTipoDocumentos();
     }
-    this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `${this.loadTipoDocumentos.name}()`, 'end');
+    this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `loadTipoDocumentos()`, 'end');
   }
 
   private getNewTipoDocumentos(): Observable<ITipoDocumento[]> {
-    this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `${this.getNewTipoDocumentos.name}()`, 'start');
+    this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `getNewTipoDocumentos()`, 'start');
     return this.tipoDocumentoService.findAll().pipe(
       switchMap(
-        (result: SgiRestListResult<ITipoDocumento>) => of(this.filterExistingTipoDocumentos(result.items, this.data.tipoDocumentos))
+        (result) =>
+          of(this.filterExistingTipoDocumentos(result.items, this.data.tipoDocumentos))
       ),
-      tap(() => this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `${this.getNewTipoDocumentos.name}()`, 'end'))
+      tap(() => this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `getNewTipoDocumentos()`, 'end'))
     );
   }
 
   private getUpdateTipoDocumentos(): Observable<ITipoDocumento[]> {
-    this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `${this.getUpdateTipoDocumentos.name}()`, 'start');
+    this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `getUpdateTipoDocumentos()`, 'start');
     let tiposDocumento = [] as ITipoDocumento[];
     return this.tipoDocumentoService.findAll().pipe(
       switchMap(
-        (result: SgiRestListResult<ITipoDocumento>) => {
+        (result) => {
           tiposDocumento = this.filterExistingTipoDocumentos(result.items, this.data.tipoDocumentos);
           return this.modeloEjecucionService.findModeloTipoDocumento(this.data.id).pipe(
             map((listResult: SgiRestListResult<IModeloTipoDocumento>) => {
@@ -103,44 +101,34 @@ export class ModeloEjecucionTipoDocumentoModalComponent extends
           })
         );
       }),
-      tap(() => this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `${this.getUpdateTipoDocumentos.name}()`, 'end'))
+      tap(() => this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `getUpdateTipoDocumentos()`, 'end'))
     );
   }
 
   private filterExistingTipoDocumentos(result: ITipoDocumento[], filters: ITipoDocumento[]): ITipoDocumento[] {
-    return result.filter((tipoEnlace: ITipoDocumento) => {
+    return result.filter((tipoEnlace) => {
       return !filters.find((currentTipo) => currentTipo.id === tipoEnlace.id);
     });
   }
 
-  private loadTipoFases(): void {
-    this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `${this.loadTipoFases.name}()`, 'start');
-    this.tipoFases$ = this.tipoFaseService.findTodos().pipe(
-      switchMap((result: SgiRestListResult<ITipoFase>) => of(result.items.filter(
-        tipoFase => !this.data.tipoFases.find((currentTipo) => currentTipo.id === tipoFase.id)
-      ))),
-      tap(() => this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `${this.loadTipoFases.name}()`, 'end'))
-    );
-  }
-
   protected getFormGroup(): FormGroup {
-    this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `${this.getFormGroup.name}()`, 'start');
+    this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `getFormGroup()`, 'start');
     const formGroup = new FormGroup({
       tipoDocumento: new FormControl(this.data.modeloTipoDocumento?.tipoDocumento),
       tipoFase: new FormControl(this.data.modeloTipoDocumento?.modeloTipoFase)
     });
-    this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `${this.getFormGroup.name}()`, 'end');
+    this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }
 
   protected getDatosForm(): IModeloTipoDocumento {
-    this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `${this.getDatosForm.name}()`, 'start');
+    this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `getDatosForm()`, 'start');
     const modeloTipoDocumento = this.data.modeloTipoDocumento;
     modeloTipoDocumento.tipoDocumento = this.formGroup.get('tipoDocumento').value;
     modeloTipoDocumento.modeloTipoFase = {
       tipoFase: this.formGroup.get('tipoFase').value
     } as IModeloTipoFase;
-    this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `${this.getDatosForm.name}()`, 'end');
+    this.logger.debug(ModeloEjecucionTipoDocumentoModalComponent.name, `getDatosForm}()`, 'end');
     return modeloTipoDocumento;
   }
 }

@@ -13,8 +13,7 @@
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
             <mat-label>{{'csp.tipo.hito' | translate}}</mat-label>
-            <mat-select matNativeControl formControlName="tipoHito" required [disabled]="data.modeloTipoHito.tipoHito"
-              [compareWith]="equals">
+            <mat-select matNativeControl formControlName="tipoHito" required [compareWith]="equals">
               <mat-option *ngFor="let tipoHito of tipoHitos$ | async" [value]="tipoHito">{{tipoHito.nombre}}
               </mat-option>
             </mat-select>

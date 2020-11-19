@@ -11,7 +11,7 @@ import { requiredChecked } from '@core/validators/checkbox-validator';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 
 export interface ModeloEjecucionTipoHitoModalData {
   modeloTipoHito: IModeloTipoHito;
@@ -28,12 +28,12 @@ export class ModeloEjecucionTipoHitoModalComponent extends
   tipoHitos$: Observable<ITipoHito[]>;
 
   constructor(
-    protected readonly logger: NGXLogger,
-    protected readonly snackBarService: SnackBarService,
-    public readonly matDialogRef: MatDialogRef<ModeloEjecucionTipoHitoModalComponent>,
+    protected logger: NGXLogger,
+    protected snackBarService: SnackBarService,
+    public matDialogRef: MatDialogRef<ModeloEjecucionTipoHitoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ModeloEjecucionTipoHitoModalData,
-    private readonly tipoHitoService: TipoHitoService,
-    protected readonly dialogService: DialogService
+    private tipoHitoService: TipoHitoService,
+    protected dialogService: DialogService
   ) {
     super(logger, snackBarService, matDialogRef, data.modeloTipoHito);
     this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, 'constructor()', 'start');
@@ -41,19 +41,22 @@ export class ModeloEjecucionTipoHitoModalComponent extends
   }
 
   ngOnInit(): void {
+    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     if (!this.data.modeloTipoHito.tipoHito) {
       this.tipoHitos$ = this.tipoHitoService.findTodos().pipe(
-        switchMap((result: SgiRestListResult<ITipoHito>) => {
+        switchMap((result) => {
           const list = this.filterExistingTipoHito(result);
           return of(list);
-        })
+        }),
+        tap(() => this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, 'ngOnInit()', 'end'))
       );
     } else {
       this.tipoHitos$ = this.tipoHitoService.findTodos().pipe(
-        switchMap((result: SgiRestListResult<ITipoHito>) => {
+        switchMap((result) => {
           return of(result.items);
-        })
+        }),
+        tap(() => this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, 'ngOnInit()', 'end'))
       );
     }
   }
@@ -70,32 +73,35 @@ export class ModeloEjecucionTipoHitoModalComponent extends
   }
 
   protected getDatosForm(): IModeloTipoHito {
-    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, `${this.getDatosForm.name}()`, 'start');
+    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, `getDatosForm()`, 'start');
     const modeloTipoHito = this.data.modeloTipoHito;
     const disponible = this.formGroup.controls.disponible as FormGroup;
     modeloTipoHito.tipoHito = this.formGroup.get('tipoHito').value;
     modeloTipoHito.convocatoria = disponible.get('convocatoria').value;
     modeloTipoHito.proyecto = disponible.get('proyecto').value;
     modeloTipoHito.solicitud = disponible.get('solicitud').value;
-    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, `${this.getDatosForm.name}()`, 'end');
+    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, `getDatosForm()`, 'end');
     return modeloTipoHito;
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, `${this.getFormGroup.name}()`, 'start');
+    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, `getFormGroup()`, 'start');
     const formGroup = new FormGroup({
-      tipoHito: new FormControl(this.data.modeloTipoHito?.tipoHito, Validators.required),
+      tipoHito: new FormControl({
+        value: this.data.modeloTipoHito?.tipoHito,
+        disabled: this.data.modeloTipoHito.tipoHito
+      }, Validators.required),
       disponible: new FormGroup({
         convocatoria: new FormControl(this.data.modeloTipoHito?.convocatoria),
         proyecto: new FormControl(this.data.modeloTipoHito?.proyecto),
         solicitud: new FormControl(this.data.modeloTipoHito?.solicitud)
       }, [requiredChecked(1)]),
     });
-    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, `${this.getFormGroup.name}()`, 'end');
+    this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }
 
-  equals(o1?: ITipoHito, o2?: ITipoHito): boolean {
-    return o1.id === o2.id;
+  equals(o1: ITipoHito, o2: ITipoHito): boolean {
+    return o1?.id === o2?.id;
   }
 }

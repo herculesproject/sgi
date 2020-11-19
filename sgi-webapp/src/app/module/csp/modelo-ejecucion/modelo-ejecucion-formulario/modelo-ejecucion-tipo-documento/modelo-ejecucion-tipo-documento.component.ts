@@ -31,7 +31,6 @@ export class ModeloEjecucionTipoDocumentoComponent extends FragmentComponent imp
 
   columns = ['nombre', 'descripcion', 'nombreFase', 'acciones'];
   numPage = [5, 10, 25, 100];
-  totalElements = 0;
 
   modelosTipoDocumentos = new MatTableDataSource<StatusWrapper<IModeloTipoDocumento>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -41,8 +40,8 @@ export class ModeloEjecucionTipoDocumentoComponent extends FragmentComponent imp
   fxLayoutProperties: FxLayoutProperties;
 
   constructor(
-    protected readonly logger: NGXLogger,
-    private readonly dialogService: DialogService,
+    protected logger: NGXLogger,
+    private dialogService: DialogService,
     private matDialog: MatDialog,
     private actionService: ModeloEjecucionActionService
   ) {
@@ -85,26 +84,37 @@ export class ModeloEjecucionTipoDocumentoComponent extends FragmentComponent imp
   }
 
   openModal(): void {
-    this.logger.debug(ModeloEjecucionTipoDocumentoComponent.name, `${this.openModal.name}()`, 'start');
-    const modeloTipoDocumento = { activo: true } as IModeloTipoDocumento;
+    this.logger.debug(ModeloEjecucionTipoDocumentoComponent.name, `openModal()`, 'start');
+    const modeloTipoDocumento: IModeloTipoDocumento = {
+      activo: true,
+      id: undefined,
+      modeloEjecucion: undefined,
+      modeloTipoFase: undefined,
+      tipoDocumento: undefined
+    };
     const tipoDocumentos: ITipoDocumento[] = [];
-    const tipoFases = new Set<ITipoFase>();
-    this.modelosTipoDocumentos.data.forEach((wrapper: StatusWrapper<IModeloTipoDocumento>) => {
+    const selectedTipoFases: ITipoFase[] = [];
+    this.modelosTipoDocumentos.data.forEach(wrapper => {
       tipoDocumentos.push(wrapper.value.tipoDocumento);
       if (wrapper.value.modeloTipoFase) {
-        tipoFases.add(wrapper.value.modeloTipoFase.tipoFase);
+        selectedTipoFases.push(wrapper.value.modeloTipoFase.tipoFase);
       }
     });
-    const id = this.formPart.getKey() as number;
+    let availableTipoFases = this.actionService.getTipoFases();
+    availableTipoFases = availableTipoFases.filter(availableTipoFase => {
+      return selectedTipoFases.find((currentTipo) =>
+        currentTipo.id === availableTipoFase.id) ? false : true;
+    });
+    const data: ModeloTipoDocumentoModalData = {
+      modeloTipoDocumento,
+      tipoDocumentos,
+      tipoFases: availableTipoFases,
+      id: this.formPart.getKey() as number
+    };
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: {
-        modeloTipoDocumento,
-        tipoDocumentos,
-        tipoFases: Array.from(tipoFases),
-        id
-      } as ModeloTipoDocumentoModalData
+      data
     };
     const dialogRef = this.matDialog.open(ModeloEjecucionTipoDocumentoModalComponent, config);
     dialogRef.afterClosed().subscribe(
@@ -112,22 +122,22 @@ export class ModeloEjecucionTipoDocumentoComponent extends FragmentComponent imp
         if (result) {
           this.formPart.addModeloTipoDocumento(result);
         }
-        this.logger.debug(ModeloEjecucionTipoDocumentoComponent.name, `${this.openModal.name}()`, 'end');
+        this.logger.debug(ModeloEjecucionTipoDocumentoComponent.name, `openModal()`, 'end');
       }
     );
   }
 
   deleteModeloTipoDocumento(wrapper: StatusWrapper<IModeloTipoDocumento>) {
     this.logger.debug(ModeloEjecucionTipoDocumentoComponent.name,
-      `${this.deleteModeloTipoDocumento.name}(${wrapper})`, 'start');
+      `deleteModeloTipoDocumento(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
-        (aceptado: boolean) => {
+        (aceptado) => {
           if (aceptado) {
             this.formPart.deleteModeloTipoDocumento(wrapper);
           }
           this.logger.debug(ModeloEjecucionTipoDocumentoComponent.name,
-            `${this.deleteModeloTipoDocumento.name}(${wrapper})`, 'end');
+            `deleteModeloTipoDocumento(${wrapper})`, 'end');
         }
       )
     );

@@ -13,8 +13,7 @@
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
             <mat-label>{{'csp.tipo.fase' | translate}}</mat-label>
-            <mat-select matNativeControl formControlName="tipoFase" required [disabled]="data.modeloTipoFase.tipoFase"
-              [compareWith]="equals">
+            <mat-select matNativeControl formControlName="tipoFase" required [compareWith]="equals">
               <mat-option *ngFor="let tipoFase of tipoFases$ | async" [value]="tipoFase">{{tipoFase.nombre}}
               </mat-option>
             </mat-select>

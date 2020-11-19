@@ -31,7 +31,6 @@ export class ModeloEjecucionTipoFaseComponent extends FragmentComponent implemen
 
   columns = ['nombre', 'descripcion', 'convocatorias', 'proyectos', 'acciones'];
   numPage = [5, 10, 25, 100];
-  totalElements = 0;
 
   modelosTipoFases = new MatTableDataSource<StatusWrapper<IModeloTipoFase>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -41,10 +40,10 @@ export class ModeloEjecucionTipoFaseComponent extends FragmentComponent implemen
   fxLayoutProperties: FxLayoutProperties;
 
   constructor(
-    protected readonly logger: NGXLogger,
-    private readonly dialogService: DialogService,
+    protected logger: NGXLogger,
+    private dialogService: DialogService,
     private matDialog: MatDialog,
-    private actionService: ModeloEjecucionActionService
+    actionService: ModeloEjecucionActionService
   ) {
     super(actionService.FRAGMENT.TIPO_FASES, actionService);
     this.logger.debug(ModeloEjecucionTipoFaseComponent.name, 'constructor()', 'start');
@@ -66,10 +65,7 @@ export class ModeloEjecucionTipoFaseComponent extends FragmentComponent implemen
     super.ngOnInit();
     this.logger.debug(ModeloEjecucionTipoFaseComponent.name, 'ngOnInit()', 'start');
     const subscription = this.formPart.modeloTipoFase$.subscribe(
-      (wrappers: StatusWrapper<IModeloTipoFase>[]) => {
-        this.modelosTipoFases.data = wrappers;
-      }
-    );
+      wrappers => this.modelosTipoFases.data = wrappers);
     this.subscriptions.push(subscription);
     this.modelosTipoFases.paginator = this.paginator;
     this.modelosTipoFases.sortingDataAccessor =
@@ -93,25 +89,26 @@ export class ModeloEjecucionTipoFaseComponent extends FragmentComponent implemen
    * Abre el modal para crear/modificar
    */
   openModal(statusWrapper?: StatusWrapper<IModeloTipoFase>): void {
-    this.logger.debug(ModeloEjecucionTipoFaseComponent.name, `${this.openModal.name}()`, 'start');
-    const modeloTipoFase = {
+    this.logger.debug(ModeloEjecucionTipoFaseComponent.name, `openModal()`, 'start');
+    const modeloTipoFase: IModeloTipoFase = {
       activo: true,
       convocatoria: false,
       solicitud: false,
-      proyecto: false
-    } as IModeloTipoFase;
+      proyecto: false,
+      id: undefined,
+      modeloEjecucion: undefined,
+      tipoFase: undefined
+    };
     const tipoFases: ITipoFase[] = [];
-    this.modelosTipoFases.data.forEach((wrapper: StatusWrapper<IModeloTipoFase>) => {
-      tipoFases.push(wrapper.value.tipoFase);
-    });
-
+    this.modelosTipoFases.data.forEach(wrapper => tipoFases.push(wrapper.value.tipoFase));
+    const data: ModeloEjecucionTipoFaseModalData = {
+      modeloTipoFase: statusWrapper ? statusWrapper.value : modeloTipoFase,
+      tipoFases
+    };
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: {
-        modeloTipoFase: statusWrapper ? statusWrapper.value : modeloTipoFase,
-        tipoFases
-      } as ModeloEjecucionTipoFaseModalData
+      data
     };
     const dialogRef = this.matDialog.open(ModeloEjecucionTipoFaseModalComponent, config);
     dialogRef.afterClosed().subscribe(
@@ -126,7 +123,7 @@ export class ModeloEjecucionTipoFaseComponent extends FragmentComponent implemen
             this.formPart.addModeloTipoFase(result);
           }
         }
-        this.logger.debug(ModeloEjecucionTipoFaseComponent.name, `${this.openModal.name}()`, 'end');
+        this.logger.debug(ModeloEjecucionTipoFaseComponent.name, `openModal()`, 'end');
       }
     );
   }
@@ -136,15 +133,15 @@ export class ModeloEjecucionTipoFaseComponent extends FragmentComponent implemen
    */
   deleteModeloTipoFase(wrapper: StatusWrapper<IModeloTipoFase>) {
     this.logger.debug(ModeloEjecucionTipoFaseComponent.name,
-      `${this.deleteModeloTipoFase.name}(${wrapper})`, 'start');
+      `deleteModeloTipoFase(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
-        (aceptado: boolean) => {
+        (aceptado) => {
           if (aceptado) {
             this.formPart.deleteModeloTipoFase(wrapper);
           }
           this.logger.debug(ModeloEjecucionTipoFaseComponent.name,
-            `${this.deleteModeloTipoFase.name}(${wrapper})`, 'end');
+            `deleteModeloTipoFase(${wrapper})`, 'end');
         }
       )
     );

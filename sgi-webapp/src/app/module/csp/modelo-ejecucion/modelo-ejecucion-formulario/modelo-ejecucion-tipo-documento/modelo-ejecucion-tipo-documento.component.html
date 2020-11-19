@@ -36,7 +36,7 @@
     <tr mat-header-row *matHeaderRowDef="columns"></tr>
     <tr mat-row *matRowDef="let row; columns: columns;"></tr>
   </table>
-  <mat-paginator [pageSizeOptions]="numPage" [length]="totalElements" showFirstLastButtons>
+  <mat-paginator [pageSizeOptions]="numPage" showFirstLastButtons>
   </mat-paginator>
 
   <div class="separation-button">

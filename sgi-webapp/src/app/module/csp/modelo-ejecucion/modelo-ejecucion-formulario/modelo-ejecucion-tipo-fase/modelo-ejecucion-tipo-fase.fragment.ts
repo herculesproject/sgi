@@ -8,7 +8,6 @@ import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
 import { map, mergeMap, takeLast, tap } from 'rxjs/operators';
-import { ModeloEjecucionActionService } from '../../modelo-ejecucion.action.service';
 
 export class ModeloEjecucionTipoFaseFragment extends Fragment {
 
@@ -16,11 +15,10 @@ export class ModeloEjecucionTipoFaseFragment extends Fragment {
   modeloTipoFaseEliminados: StatusWrapper<IModeloTipoFase>[] = [];
 
   constructor(
-    private readonly logger: NGXLogger,
+    private logger: NGXLogger,
     key: number,
     private modeloEjecucionService: ModeloEjecucionService,
-    private modeloTipoFaseService: ModeloTipoFaseService,
-    private actionService: ModeloEjecucionActionService
+    private modeloTipoFaseService: ModeloTipoFaseService
   ) {
     super(key);
     this.logger.debug(ModeloEjecucionTipoFaseFragment.name, 'constructor()', 'start');
@@ -29,27 +27,27 @@ export class ModeloEjecucionTipoFaseFragment extends Fragment {
   }
 
   protected onInitialize(): void {
-    this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `${this.onInitialize.name}()`, 'start');
+    this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `onInitialize()`, 'start');
     if (this.getKey()) {
       this.modeloEjecucionService.findModeloTipoFase(this.getKey() as number).pipe(
         map((response: SgiRestListResult<IModeloTipoFase>) => response.items)
       ).subscribe(
-        (modelosTipoFase: IModeloTipoFase[]) => {
+        (modelosTipoFase) => {
           this.modeloTipoFase$.next(
             modelosTipoFase.map(modeloTipoFase => new StatusWrapper<IModeloTipoFase>(modeloTipoFase))
           );
         }
       );
     }
-    this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `${this.onInitialize.name}()`, 'end');
+    this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `onInitialize()`, 'end');
   }
 
   /**
    * Añadir tipo fase
    */
-  public addModeloTipoFase(modeloTipoFase: IModeloTipoFase) {
+  addModeloTipoFase(modeloTipoFase: IModeloTipoFase) {
     this.logger.debug(ModeloEjecucionTipoFaseFragment.name,
-      `${this.addModeloTipoFase.name}(modeloTipoFase: ${modeloTipoFase})`, 'start');
+      `addModeloTipoFase(modeloTipoFase: ${modeloTipoFase})`, 'start');
     const wrapped = new StatusWrapper<IModeloTipoFase>(modeloTipoFase);
     wrapped.setCreated();
     const current = this.modeloTipoFase$.value;
@@ -57,15 +55,15 @@ export class ModeloEjecucionTipoFaseFragment extends Fragment {
     this.modeloTipoFase$.next(current);
     this.setChanges(true);
     this.logger.debug(ModeloEjecucionTipoFaseFragment.name,
-      `${this.addModeloTipoFase.name}(modeloTipoFase: ${modeloTipoFase})`, 'end');
+      `addModeloTipoFase(modeloTipoFase: ${modeloTipoFase})`, 'end');
   }
 
   /**
    * Borrar modelo tipo fase
    */
-  public deleteModeloTipoFase(wrapper: StatusWrapper<IModeloTipoFase>) {
+  deleteModeloTipoFase(wrapper: StatusWrapper<IModeloTipoFase>) {
     this.logger.debug(ModeloEjecucionTipoFaseFragment.name,
-      `${this.deleteModeloTipoFase.name}(wrapper: ${wrapper})`, 'start');
+      `deleteModeloTipoFase(wrapper: ${wrapper})`, 'start');
     const current = this.modeloTipoFase$.value;
     const index = current.findIndex(
       (value: StatusWrapper<IModeloTipoFase>) => value === wrapper
@@ -79,16 +77,16 @@ export class ModeloEjecucionTipoFaseFragment extends Fragment {
       this.setChanges(true);
     }
     this.logger.debug(ModeloEjecucionTipoFaseFragment.name,
-      `${this.deleteModeloTipoFase.name}(wrapper: ${wrapper})`, 'end');
+      `deleteModeloTipoFase(wrapper: ${wrapper})`, 'end');
   }
 
   /**
    * Borrar modelo tipo fases
    */
   private deleteModeloTipoFases(): Observable<void> {
-    this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `${this.deleteModeloTipoFases.name}()`, 'start');
+    this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `deleteModeloTipoFases()`, 'start');
     if (this.modeloTipoFaseEliminados.length === 0) {
-      this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `${this.deleteModeloTipoFases.name}()`, 'end');
+      this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `deleteModeloTipoFases()`, 'end');
       return of(void 0);
     }
     return from(this.modeloTipoFaseEliminados).pipe(
@@ -100,7 +98,7 @@ export class ModeloEjecucionTipoFaseFragment extends Fragment {
                 deletedModelo.value.id !== wrapped.value.id);
             }),
             tap(() => this.logger.debug(ModeloEjecucionTipoFaseFragment.name,
-              `${this.deleteModeloTipoFases.name}()`, 'end'))
+              `deleteModeloTipoFases()`, 'end'))
           );
       })
     );
@@ -110,10 +108,10 @@ export class ModeloEjecucionTipoFaseFragment extends Fragment {
    * Actualiza modelo tipos fases
    */
   private updatedModeloTipoFases(): Observable<void> {
-    this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `${this.updatedModeloTipoFases.name}()`, 'start');
+    this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `updatedModeloTipoFases()`, 'start');
     const updatedModelos = this.modeloTipoFase$.value.filter((modeloTipoFase) => modeloTipoFase.edited);
     if (updatedModelos.length === 0) {
-      this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `${this.updatedModeloTipoFases.name}()`, 'end');
+      this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `updatedModeloTipoFases()`, 'end');
       return of(void 0);
     }
     return from(updatedModelos).pipe(
@@ -124,7 +122,7 @@ export class ModeloEjecucionTipoFaseFragment extends Fragment {
             this.modeloTipoFase$.value[index] = new StatusWrapper<IModeloTipoFase>(updatedTarea);
           }),
           tap(() => this.logger.debug(ModeloEjecucionTipoFaseFragment.name,
-            `${this.updatedModeloTipoFases.name}()`, 'end'))
+            `updatedModeloTipoFases()`, 'end'))
         );
       })
     );
@@ -134,10 +132,10 @@ export class ModeloEjecucionTipoFaseFragment extends Fragment {
    * Crear modelo tipos fases
    */
   private createModeloTipoFases(): Observable<void> {
-    this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `${this.createModeloTipoFases.name}()`, 'start');
+    this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `createModeloTipoFases()`, 'start');
     const createdModelos = this.modeloTipoFase$.value.filter((modeloTipoFase) => modeloTipoFase.created);
     if (createdModelos.length === 0) {
-      this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `${this.createModeloTipoFases.name}()`, 'end');
+      this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `createModeloTipoFases()`, 'end');
       return of(void 0);
     }
     createdModelos.forEach(
@@ -151,20 +149,17 @@ export class ModeloEjecucionTipoFaseFragment extends Fragment {
         return this.modeloTipoFaseService.create(wrappedTarea.value).pipe(
           map((updatedTarea) => {
             const index = this.modeloTipoFase$.value.findIndex((currentTarea) => currentTarea === wrappedTarea);
-            this.modeloTipoFase$[index] = new StatusWrapper<IModeloTipoFase>(updatedTarea);
+            this.modeloTipoFase$.value[index] = new StatusWrapper<IModeloTipoFase>(updatedTarea);
           }),
           tap(() => this.logger.debug(ModeloEjecucionTipoFaseFragment.name,
-            `${this.createModeloTipoFases.name}()`, 'end'))
+            `createModeloTipoFases()`, 'end'))
         );
       })
     );
   }
 
-  /**
-   * Guardar form
-   */
   saveOrUpdate(): Observable<void> {
-    this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `${this.saveOrUpdate.name}()`, 'start');
+    this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `saveOrUpdate()`, 'start');
     return merge(
       this.deleteModeloTipoFases(),
       this.updatedModeloTipoFases(),
@@ -176,14 +171,14 @@ export class ModeloEjecucionTipoFaseFragment extends Fragment {
           this.setChanges(false);
         }
       }),
-      tap(() => this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `${this.saveOrUpdate.name}()`, 'end'))
+      tap(() => this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `saveOrUpdate()`, 'end'))
     );
   }
 
   private isSaveOrUpdateComplete(): boolean {
-    this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `${this.isSaveOrUpdateComplete.name}()`, 'start');
+    this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `isSaveOrUpdateComplete()`, 'start');
     const touched: boolean = this.modeloTipoFase$.value.some((wrapper) => wrapper.touched);
-    this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `${this.isSaveOrUpdateComplete.name}()`, 'end');
+    this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `isSaveOrUpdateComplete()`, 'end');
     return (this.modeloTipoFaseEliminados.length > 0 || touched);
   }
 
