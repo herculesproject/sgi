@@ -5,9 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@env';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaPeriodoJustificacion } from '@core/models/csp/convocatoria-periodo-justificacion';
-import { of, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { IEntidadConvocante } from '@core/models/csp/entidad-convocante';
 import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
 import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
@@ -16,25 +15,6 @@ import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { IConvocatoriaSeguimientoCientifico } from '@core/models/csp/convocatoria-seguimiento-cientifico';
-
-const entidadesConvocantes: IEntidadConvocante[] = [
-  {
-    id: 1,
-    nombre: 'Entidad 1',
-    cif: 'V5920978',
-    itemPrograma: 'Modalidad K',
-    plan: 'Plan Nacional 2020-2023',
-    programa: 'Programa 1'
-  } as IEntidadConvocante,
-  {
-    id: 2,
-    nombre: 'Entidad 2',
-    cif: 'V3142340',
-    itemPrograma: 'Predoctorales',
-    plan: 'Plan propio',
-    programa: 'Programa ayudas propias'
-  } as IEntidadConvocante
-];
 
 @Injectable({
   providedIn: 'root'
@@ -153,24 +133,15 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
       );
   }
 
-  /**
-   * Recupera las entidades convocantes.
-   *
-   * @param id Id de la convocatoria
-   * @param options opciones de búsqueda.
-   */
-  getEntidadesConvocantes(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IEntidadConvocante>> {
+  findAllConvocatoriaEntidadConvocantes(id: number, options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IConvocatoriaEntidadConvocante>> {
     this.logger.debug(ConvocatoriaService.name,
-      `${this.getEntidadesConvocantes.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
-    const list = {
-      page: null,
-      total: entidadesConvocantes.length,
-      items: entidadesConvocantes
-    } as SgiRestListResult<IEntidadConvocante>;
-    return of(list)
+      `${this.findAllConvocatoriaEntidadConvocantes.name}(${id}, ${options ? JSON.stringify(options) : options})`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${id}/convocatoriaentidadconvocantes`;
+    return this.find<IConvocatoriaEntidadConvocante, IConvocatoriaEntidadConvocante>(endpointUrl, options)
       .pipe(
         tap(() => this.logger.debug(ConvocatoriaService.name,
-          `${this.getEntidadesConvocantes.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+          `${this.findAllConvocatoriaEntidadConvocantes.name}(${id}, ${options ? JSON.stringify(options) : options})`, '-', 'end'))
       );
   }
 
@@ -179,17 +150,6 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
       `${this.findAllConvocatoriaFases.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
     return this.find<IConvocatoriaFase, IConvocatoriaFase>(
       `${this.endpointUrl}/${id}/convocatoriafases`, options).pipe(
-        tap(() => this.logger.debug(ConvocatoriaService.name,
-          `${this.findAllConvocatoriaFases.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
-      );
-  }
-
-  findAllConvocatoriaEntidadConvocantes(id: number, options?:
-    SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaEntidadConvocante>> {
-    this.logger.debug(ConvocatoriaService.name,
-      `${this.findAllConvocatoriaFases.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
-    return this.find<IConvocatoriaEntidadConvocante, IConvocatoriaEntidadConvocante>(
-      `${this.endpointUrl}/${id}/convocatoriaentidadconvocantes`, options).pipe(
         tap(() => this.logger.debug(ConvocatoriaService.name,
           `${this.findAllConvocatoriaFases.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
       );

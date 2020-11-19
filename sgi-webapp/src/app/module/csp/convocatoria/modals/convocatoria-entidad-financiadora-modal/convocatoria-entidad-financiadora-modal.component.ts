@@ -11,10 +11,9 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion.service';
 import { TipoFinanciacionService } from '@core/services/csp/tipo-financiacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiRestListResult } from '@sgi/framework/http';
 import { BuscarEmpresaEconomicaComponent } from '@shared/buscar-empresa-economica/buscar-empresa-economica.component';
 import {
-  BuscarEmpresaEconomicaDialogoComponent
+  BuscarEmpresaEconomicaDialogoComponent, EmpresaEconomicaModalData
 } from '@shared/buscar-empresa-economica/dialogo/buscar-empresa-economica-dialogo.component';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
@@ -56,14 +55,9 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent extends
 
   ngOnInit(): void {
     this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, 'ngOnInit()', 'start');
+    super.ngOnInit();
     this.loadFuentesFinanciacion();
     this.loadTiposFinanciacion();
-    this.formGroup = new FormGroup({
-      nombreEmpresa: new FormControl(this.data.empresa.razonSocial),
-      fuenteFinanciacion: new FormControl(this.data.entidad.fuenteFinanciacion),
-      tipoFinanciacion: new FormControl(this.data.entidad.tipoFinanciacion),
-      porcentajeFinanciacion: new FormControl(this.data.entidad.porcentajeFinanciacion)
-    });
     this.empresa = this.data.empresa;
     this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, 'ngOnInit()', 'end');
   }
@@ -97,7 +91,7 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent extends
   private loadFuentesFinanciacion(): void {
     this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `${this.loadFuentesFinanciacion.name}()`, 'start');
     this.fuentesFinanciacion$ = this.fuenteFinanciacionService.findAll().pipe(
-      map((fuenteFinanciones: SgiRestListResult<IFuenteFinanciacion>) => fuenteFinanciones.items)
+      map((fuenteFinanciones) => fuenteFinanciones.items)
     );
     this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `${this.loadFuentesFinanciacion.name}()`, 'end');
   }
@@ -108,7 +102,7 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent extends
   private loadTiposFinanciacion(): void {
     this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `${this.loadTiposFinanciacion.name}()`, 'start');
     this.tiposFinanciacion$ = this.tipoFinanciacionService.findAll().pipe(
-      map((tipoFinanciaciones: SgiRestListResult<ITipoFinanciacion>) => tipoFinanciaciones.items)
+      map((tipoFinanciaciones) => tipoFinanciaciones.items)
     );
     this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `${this.loadTiposFinanciacion.name}()`, 'end');
   }
@@ -123,9 +117,12 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent extends
 
   selectEmpresaEconomica(): void {
     this.logger.debug(BuscarEmpresaEconomicaComponent.name, `${this.selectEmpresaEconomica.name}()`, 'start');
+    const data: EmpresaEconomicaModalData = {
+      empresaEconomica: this.empresa ? this.empresa : {} as IEmpresaEconomica
+    };
     const dialogRef = this.dialog.open(BuscarEmpresaEconomicaDialogoComponent, {
       width: '1000px',
-      data: this.empresa ? this.empresa : {} as IEmpresaEconomica
+      data
     });
     dialogRef.afterClosed().subscribe(empresaEconomica => {
       if (empresaEconomica) {

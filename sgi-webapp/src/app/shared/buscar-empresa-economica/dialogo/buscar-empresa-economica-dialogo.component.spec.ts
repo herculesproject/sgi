@@ -5,12 +5,13 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HeaderComponent } from '@block/header/header.component';
+import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
-import { BuscarEmpresaEconomicaDialogoComponent } from './buscar-empresa-economica-dialogo.component';
+import { BuscarEmpresaEconomicaDialogoComponent, EmpresaEconomicaModalData } from './buscar-empresa-economica-dialogo.component';
 
 describe('BuscarPersonaDialogoComponent', () => {
   let component: BuscarEmpresaEconomicaDialogoComponent;
@@ -22,7 +23,11 @@ describe('BuscarPersonaDialogoComponent', () => {
     };
 
     // Mock MAT_DIALOG
-    const matDialogData = {};
+    const matDialogData: EmpresaEconomicaModalData = {
+      empresaEconomica: {
+        personaRef: 'ent-001'
+      } as IEmpresaEconomica,
+    };
 
     TestBed.configureTestingModule({
       imports: [

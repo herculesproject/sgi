@@ -2,16 +2,17 @@ import { Fragment } from '@core/services/action-service';
 import { map, mergeMap, takeLast, tap } from 'rxjs/operators';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
-import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 import { ConvocatoriaHitoService } from '@core/services/csp/convocatoria-hito.service';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
+import { OnDestroy } from '@angular/core';
 
-export class ConvocatoriaHitosFragment extends Fragment {
-
+export class ConvocatoriaHitosFragment extends Fragment implements OnDestroy {
   hitos$ = new BehaviorSubject<StatusWrapper<IConvocatoriaHito>[]>([]);
   private hitosEliminados: StatusWrapper<IConvocatoriaHito>[] = [];
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private readonly logger: NGXLogger,
@@ -23,6 +24,11 @@ export class ConvocatoriaHitosFragment extends Fragment {
     this.setComplete(true);
   }
 
+  ngOnDestroy(): void {
+    this.logger.debug(ConvocatoriaHitosFragment.name, 'ngOnDestroy()', 'start');
+    this.subscriptions.forEach(x => x.unsubscribe());
+    this.logger.debug(ConvocatoriaHitosFragment.name, 'ngOnDestroy()', 'end');
+  }
 
   protected onInitialize(): void {
     this.logger.debug(ConvocatoriaHitosFragment.name, 'onInitialize()', 'start');

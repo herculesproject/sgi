@@ -4,22 +4,53 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { IEntidadConvocante } from '@core/models/csp/entidad-convocante';
+import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
+import { IEmpresaEconomica, TipoEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
-import { ConvocatoriaEntidadConvocanteaModalComponent } from './convocatoria-entidad-convocante-modal.component';
+import { ConvocatoriaEntidadConvocanteModalComponent, ConvocatoriaEntidadConvocanteModalData } from './convocatoria-entidad-convocante-modal.component';
 
-describe('ConvocatoriaEntidadConvocanteaModalComponent', () => {
-  let component: ConvocatoriaEntidadConvocanteaModalComponent;
-  let fixture: ComponentFixture<ConvocatoriaEntidadConvocanteaModalComponent>;
+describe('ConvocatoriaEntidadConvocanteModalComponent', () => {
+  let component: ConvocatoriaEntidadConvocanteModalComponent;
+  let fixture: ComponentFixture<ConvocatoriaEntidadConvocanteModalComponent>;
+
+  const data: IConvocatoriaEntidadConvocante = {
+    convocatoria: undefined,
+    entidadRef: '',
+    id: 1,
+    programa: undefined
+  };
+
+  const empresaEconomica: IEmpresaEconomica = {
+    direccion: '',
+    numeroDocumento: '',
+    personaRef: '',
+    personaRefPadre: '',
+    razonSocial: '',
+    tipo: TipoEmpresaEconomica.ENTIDAD,
+    tipoDocumento: '',
+    tipoEmpresa: ''
+  };
+
+  const modalData: ConvocatoriaEntidadConvocanteModalData = {
+    entidadConvocanteData: {
+      empresaEconomica,
+      entidadConvocante: new StatusWrapper<IConvocatoriaEntidadConvocante>(data),
+      plan: undefined,
+      programa: undefined,
+      modalidad: undefined,
+    },
+    selectedEmpresas: []
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        ConvocatoriaEntidadConvocanteaModalComponent
+        ConvocatoriaEntidadConvocanteModalComponent
       ],
       imports: [
         BrowserAnimationsModule,
@@ -33,15 +64,15 @@ describe('ConvocatoriaEntidadConvocanteaModalComponent', () => {
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: {} as IEntidadConvocante },
-        { provide: MAT_DIALOG_DATA, useValue: {} as IEntidadConvocante },
+        { provide: MatDialogRef, useValue: modalData },
+        { provide: MAT_DIALOG_DATA, useValue: modalData },
       ]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConvocatoriaEntidadConvocanteaModalComponent);
+    fixture = TestBed.createComponent(ConvocatoriaEntidadConvocanteModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

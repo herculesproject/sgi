@@ -1,17 +1,18 @@
+import { OnDestroy } from '@angular/core';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
 import { Fragment } from '@core/services/action-service';
 import { ConvocatoriaEntidadFinanciadoraService } from '@core/services/csp/convocatoria-entidad-financiadora.service';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, from, merge, Observable, of } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, of, Subscription } from 'rxjs';
 import { map, mergeMap, takeLast, tap } from 'rxjs/operators';
 
-export class ConvocatoriaEntidadesFinanciadorasFragment extends Fragment {
+export class ConvocatoriaEntidadesFinanciadorasFragment extends Fragment implements OnDestroy {
   convocatoriaEntidadesFinanciadoras$ = new BehaviorSubject<StatusWrapper<IConvocatoriaEntidadFinanciadora>[]>([]);
   convocatoriaEntidadesEliminadas: StatusWrapper<IConvocatoriaEntidadFinanciadora>[] = [];
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private readonly logger: NGXLogger,
@@ -25,10 +26,16 @@ export class ConvocatoriaEntidadesFinanciadorasFragment extends Fragment {
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name, 'constructor()', 'end');
   }
 
+  ngOnDestroy(): void {
+    this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name, 'ngOnDestroy()', 'start');
+    this.subscriptions.forEach(x => x.unsubscribe());
+    this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name, 'ngOnDestroy()', 'end');
+  }
+
   protected onInitialize(): void {
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name, `${this.onInitialize.name}()`, 'start');
     if (this.getKey()) {
-      this.convocatoriaService.findEntidadesFinanciadoras(this.getKey() as number).pipe(
+      const subscription = this.convocatoriaService.findEntidadesFinanciadoras(this.getKey() as number).pipe(
         map(response => response.items)
       ).subscribe(convocatoriaEntidadesFinanciadoras => {
         this.convocatoriaEntidadesFinanciadoras$.next(convocatoriaEntidadesFinanciadoras.map(
@@ -36,8 +43,8 @@ export class ConvocatoriaEntidadesFinanciadorasFragment extends Fragment {
         );
         this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name, `${this.onInitialize.name}()`, 'end');
       });
+      this.subscriptions.push(subscription);
     }
-    this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name, `${this.onInitialize.name}()`, 'end');
   }
 
   public deleteConvocatoriaEntidadFinanciadora(wrapper: StatusWrapper<IConvocatoriaEntidadFinanciadora>) {
@@ -161,9 +168,9 @@ export class ConvocatoriaEntidadesFinanciadorasFragment extends Fragment {
     return from(createdEntidades).pipe(
       mergeMap((wrapped) => {
         return this.convocatoriaEntidadFinanciadoraService.create(wrapped.value).pipe(
-          map((updatedEntidad) => {
+          map((createdEntidad) => {
             const index = this.convocatoriaEntidadesFinanciadoras$.value.findIndex((currentEntidad) => currentEntidad === wrapped);
-            this.convocatoriaEntidadesFinanciadoras$[index] = new StatusWrapper<IConvocatoriaEntidadFinanciadora>(updatedEntidad);
+            this.convocatoriaEntidadesFinanciadoras$[index] = new StatusWrapper<IConvocatoriaEntidadFinanciadora>(createdEntidad);
           }),
           tap(() => this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name,
             `${this.createConvocatoriaEntidadFinanciadoras.name}()`, 'end'))

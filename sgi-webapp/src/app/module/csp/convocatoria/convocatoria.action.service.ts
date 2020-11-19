@@ -31,6 +31,7 @@ import { ConvocatoriaConceptoGastoFragment } from './convocatoria-formulario/con
 import { ConvocatoriaConceptoGastoService } from '@core/services/csp/convocatoria-concepto-gasto.service';
 import { ConvocatoriaSeguimientoCientificoService } from '@core/services/csp/convocatoria-seguimiento-cientifico.service';
 import { ConvocatoriaAreaTematicaService } from '@core/services/csp/convocatoria-area-tematica.service';
+import { ConvocatoriaEntidadConvocanteService } from '@core/services/csp/convocatoria-entidad-convocante.service';
 
 @Injectable()
 export class ConvocatoriaActionService extends ActionService {
@@ -77,7 +78,8 @@ export class ConvocatoriaActionService extends ActionService {
     convocatoriaConceptoGastoService: ConvocatoriaConceptoGastoService,
     convocatoriaHitoService: ConvocatoriaHitoService,
     convocatoriaSeguimientoCientificoService: ConvocatoriaSeguimientoCientificoService,
-    convocatoriaAreaTematicaService: ConvocatoriaAreaTematicaService
+    convocatoriaAreaTematicaService: ConvocatoriaAreaTematicaService,
+    convocatoriaEntidadConvocanteService: ConvocatoriaEntidadConvocanteService,
   ) {
     super();
     this.convocatoria = {} as IConvocatoria;
@@ -90,10 +92,13 @@ export class ConvocatoriaActionService extends ActionService {
       convocatoriaEntidadGestoraService, unidadGestionService, convocatoriaAreaTematicaService);
     this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(logger,
       this.convocatoria?.id, convocatoriaService, convocatoriaPeriodoJustificacionService);
+    this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(
+      logger, this.convocatoria?.id, convocatoriaService, convocatoriaPeriodoJustificacionService);
     this.entidadesConvocantes = new ConvocatoriaEntidadesConvocantesFragment(
-      logger, this.convocatoria?.id, convocatoriaService);
-    this.plazosFases = new ConvocatoriaPlazosFasesFragment(logger, this.convocatoria?.id,
-      convocatoriaService, convocatoriaFaseService);
+      logger, this.convocatoria?.id, convocatoriaService, convocatoriaEntidadConvocanteService,
+      empresaEconomicaService);
+    this.plazosFases = new ConvocatoriaPlazosFasesFragment(
+      logger, this.convocatoria?.id, convocatoriaService, convocatoriaFaseService);
     this.hitos = new ConvocatoriaHitosFragment(
       logger, this.convocatoria?.id, convocatoriaService, convocatoriaHitoService);
     this.seguimientoCientifico = new ConvocatoriaSeguimientoCientificoFragment(logger, this.convocatoria?.id,

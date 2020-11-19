@@ -4,17 +4,55 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
+import { TipoDestinatario } from '@core/enums/tipo-destinatario';
+import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
-import { ConvocatoriaEnlaceModalComponent } from './convocatoria-enlace-modal.component';
+import { ConvocatoriaEnlaceModalComponent, ConvocatoriaEnlaceModalComponentData } from './convocatoria-enlace-modal.component';
 
 describe('ConvocatoriaEnlaceModalComponent', () => {
   let component: ConvocatoriaEnlaceModalComponent;
   let fixture: ComponentFixture<ConvocatoriaEnlaceModalComponent>;
+
+  const convocatoria: IConvocatoria = {
+    activo: true,
+    ambitoGeografico: undefined,
+    anio: 2020,
+    clasificacionCVN: ClasificacionCVN.AYUDAS,
+    codigo: '',
+    colaborativos: true,
+    destinatarios: TipoDestinatario.EQUIPO_PROYECTO,
+    duracion: 1,
+    estadoActual: '',
+    finalidad: undefined,
+    id: 1,
+    modeloEjecucion: undefined,
+    objeto: '',
+    observaciones: '',
+    regimenConcurrencia: undefined,
+    titulo: '',
+    unidadGestionRef: '',
+    abiertoPlazoPresentacionSolicitud: undefined
+  };
+
+  const convocatoriaEnlace: IConvocatoriaEnlace = {
+    activo: true,
+    convocatoria,
+    descripcion: '',
+    id: 1,
+    tipoEnlace: undefined,
+    url: ''
+  };
+
+  const data: ConvocatoriaEnlaceModalComponentData = {
+    enlace: convocatoriaEnlace,
+    idModeloEjecucion: 1
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -33,8 +71,8 @@ describe('ConvocatoriaEnlaceModalComponent', () => {
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: {} as IConvocatoriaEnlace },
-        { provide: MAT_DIALOG_DATA, useValue: {} as IConvocatoriaEnlace },
+        { provide: MatDialogRef, useValue: data },
+        { provide: MAT_DIALOG_DATA, useValue: data },
       ]
     })
       .compileComponents();

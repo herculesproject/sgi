@@ -61,42 +61,44 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
     super.ngOnInit();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.subscriptions.push(this.getDataSource());
+    this.getDataSource();
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, 'ngOnInit()', 'end');
   }
 
-  private getDataSource(): Subscription {
+  private getDataSource(): void {
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, `${this.getDataSource.name}()`, 'start');
     this.dataSource.data = [];
-    return this.formPart.convocatoriaEntidadesFinanciadoras$.pipe(
-      map(wrappers => {
-        return wrappers.map(wrapper => {
-          const data = {
-            empresa: {} as IEmpresaEconomica,
-            entidad: wrapper.value
-          } as ConvocatoriaEntidadFinanciadoraData;
-          return new StatusWrapper<ConvocatoriaEntidadFinanciadoraData>(data);
-        });
-      }),
-      switchMap(wrappers => {
-        return forkJoin(wrappers.map(
-          wrapper => {
-            return this.empresaEconomicaService.findById(wrapper.value.entidad.entidadRef).pipe(
-              map(empresa => {
-                wrapper.value.empresa = empresa;
-                return wrapper;
-              }),
-              catchError(() => {
-                return of(wrapper);
-              })
-            );
-          })
-        );
+    this.subscriptions.push(
+      this.formPart.convocatoriaEntidadesFinanciadoras$.pipe(
+        map(wrappers => {
+          return wrappers.map(wrapper => {
+            const data = {
+              empresa: {} as IEmpresaEconomica,
+              entidad: wrapper.value
+            } as ConvocatoriaEntidadFinanciadoraData;
+            return new StatusWrapper<ConvocatoriaEntidadFinanciadoraData>(data);
+          });
+        }),
+        switchMap(wrappers => {
+          return forkJoin(wrappers.map(
+            wrapper => {
+              return this.empresaEconomicaService.findById(wrapper.value.entidad.entidadRef).pipe(
+                map(empresa => {
+                  wrapper.value.empresa = empresa;
+                  return wrapper;
+                }),
+                catchError(() => {
+                  return of(wrapper);
+                })
+              );
+            })
+          );
+        })
+      ).subscribe(elements => {
+        this.dataSource.data = elements;
+        this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, `${this.getDataSource.name}()`, 'end');
       })
-    ).subscribe(elements => {
-      this.dataSource.data = elements;
-      this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, `${this.getDataSource.name}()`, 'end');
-    });
+    );
   }
 
   ngOnDestroy(): void {

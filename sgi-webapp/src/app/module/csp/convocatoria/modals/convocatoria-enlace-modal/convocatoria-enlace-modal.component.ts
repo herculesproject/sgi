@@ -36,16 +36,14 @@ export class ConvocatoriaEnlaceModalComponent implements OnInit, OnDestroy {
   suscripciones: Subscription[];
 
   modeloTiposEnlace$: Observable<IModeloTipoEnlace[]>;
-
   private modeloTiposEnlaceFiltered: IModeloTipoEnlace[];
 
   constructor(
-    private readonly logger: NGXLogger,
-    private readonly snackBarService: SnackBarService,
-    public readonly matDialogRef: MatDialogRef<ConvocatoriaEnlaceModalComponent>,
-    private readonly modeloEjecucionService: ModeloEjecucionService,
-    private readonly convocatoriaService: ConvocatoriaService,
-    @Inject(MAT_DIALOG_DATA) private data: ConvocatoriaEnlaceModalComponentData,
+    private logger: NGXLogger,
+    private snackBarService: SnackBarService,
+    public matDialogRef: MatDialogRef<ConvocatoriaEnlaceModalComponent>,
+    private modeloEjecucionService: ModeloEjecucionService,
+    @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaEnlaceModalComponentData,
   ) {
     this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'constructor()', 'start');
     this.fxLayoutProperties = new FxLayoutProperties();
@@ -126,14 +124,14 @@ export class ConvocatoriaEnlaceModalComponent implements OnInit, OnDestroy {
   }
 
   saveOrUpdate(): void {
-    this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'updateComentario()', 'start');
+    this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'saveOrUpdate()', 'start');
     if (FormGroupUtil.valid(this.formGroup)) {
       this.loadDatosForm();
       this.closeModal(this.data.enlace);
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
-    this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'updateComentario()', 'end');
+    this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'saveOrUpdate()', 'end');
   }
 
   /**
@@ -142,11 +140,11 @@ export class ConvocatoriaEnlaceModalComponent implements OnInit, OnDestroy {
    * @returns Comentario con los datos del formulario
    */
   private loadDatosForm(): void {
-    this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'getDatosForm()', 'start');
+    this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'loadDatosForm()', 'start');
     this.data.enlace.url = FormGroupUtil.getValue(this.formGroup, 'url');
     this.data.enlace.descripcion = FormGroupUtil.getValue(this.formGroup, 'descripcion');
     this.data.enlace.tipoEnlace = FormGroupUtil.getValue(this.formGroup, 'tipoEnlace');
-    this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'getDatosForm()', 'end');
+    this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'loadDatosForm()', 'end');
   }
 
 }

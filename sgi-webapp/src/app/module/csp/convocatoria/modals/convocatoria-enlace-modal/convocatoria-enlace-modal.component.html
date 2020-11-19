@@ -1,6 +1,9 @@
 <div class="convocatoria-enlace-modal">
   <header class="modal-header-material">
-    <h3 mat-dialog-title>{{'csp.convocatoria.enlace.modal.titulo' | translate}}</h3>
+    <h3 mat-dialog-title *ngIf="!data.enlace.id">{{'csp.convocatoria.entidades.enlace.modal.titulo.añadir' | translate}}
+    </h3>
+    <h3 mat-dialog-title *ngIf="data.enlace.id">{{'csp.convocatoria.entidades.enlace.modal.titulo.editar' | translate}}
+    </h3>
   </header>
   <main>
     <form [formGroup]="formGroup">

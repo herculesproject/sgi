@@ -3,7 +3,7 @@ import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { MatDialog } from '@angular/material/dialog';
 import { NGXLogger } from 'ngx-logger';
-import { BuscarEmpresaEconomicaDialogoComponent } from './dialogo/buscar-empresa-economica-dialogo.component';
+import { BuscarEmpresaEconomicaDialogoComponent, EmpresaEconomicaModalData } from './dialogo/buscar-empresa-economica-dialogo.component';
 
 const TEXT_USER_TITLE = marker('sgp.buscadorEmpresaEconomica.titulo');
 const TEXT_USER_BUTTON = marker('botones.buscar');
@@ -37,9 +37,12 @@ export class BuscarEmpresaEconomicaComponent implements OnChanges {
 
   formularioBuscarEmpresaEconomica(): void {
     this.logger.debug(BuscarEmpresaEconomicaComponent.name, `${this.formularioBuscarEmpresaEconomica.name}()`, 'start');
+    const data: EmpresaEconomicaModalData = {
+      empresaEconomica: this.empresaEconomica
+    };
     const dialogRef = this.dialog.open(BuscarEmpresaEconomicaDialogoComponent, {
       width: '1000px',
-      data: this.empresaEconomica
+      data
     });
     dialogRef.afterClosed().subscribe((empresaEconomica: IEmpresaEconomica) => {
       if (empresaEconomica) {

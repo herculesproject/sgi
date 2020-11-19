@@ -346,7 +346,6 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
 
   onClearFilters() {
     this.logger.debug(ConvocatoriaListadoComponent.name, `${this.onClearFilters.name}()`, 'start');
-    this.formGroup.controls.activo.setValue('todos');
     this.formGroup.controls.codigo.setValue('');
     this.formGroup.controls.titulo.setValue('');
     this.formGroup.controls.unidadGestion.setValue('');
