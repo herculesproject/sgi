@@ -2,11 +2,11 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { ConvocatoriaAreaTematicaService } from './convocatoria-area-tematica.service';
 
-import { ConvocatoriaEnlaceService } from './convocatoria-enlace.service';
 
-describe('ConvocatoriaEnlaceService', () => {
-  let service: ConvocatoriaEnlaceService;
+describe('ConvocatoriaAreaTematicaService', () => {
+  let service: ConvocatoriaAreaTematicaService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -17,7 +17,7 @@ describe('ConvocatoriaEnlaceService', () => {
         LoggerTestingModule
       ]
     });
-    service = TestBed.inject(ConvocatoriaEnlaceService);
+    service = TestBed.inject(ConvocatoriaAreaTematicaService);
   });
 
   it('should be created', () => {

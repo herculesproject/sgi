@@ -1,9 +1,9 @@
-import { IAreaTematicaArbol } from './area-tematica-arbol';
+import { IAreaTematica } from './area-tematica';
 import { IConvocatoria } from './convocatoria';
 
 export interface IConvocatoriaAreaTematica {
   id: number;
-  areaTematicaArbol: IAreaTematicaArbol;
+  areaTematica: IAreaTematica;
   convocatoria: IConvocatoria;
   observaciones: string;
 }

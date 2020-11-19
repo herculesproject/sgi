@@ -6,6 +6,7 @@ import { SgiRestFindOptions, SgiRestListResult, SgiRestService } from '@sgi/fram
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -21,10 +22,10 @@ export class AreaTematicaService extends SgiRestService<number, IAreaTematica> {
     );
   }
 
-  findAllArea(options?: SgiRestFindOptions): Observable<SgiRestListResult<IAreaTematica>> {
-    this.logger.debug(AreaTematicaService.name, `${this.findAllArea.name}(`, '-', 'start');
+  findAllGrupo(options?: SgiRestFindOptions): Observable<SgiRestListResult<IAreaTematica>> {
+    this.logger.debug(AreaTematicaService.name, `${this.findAllGrupo.name}(`, '-', 'start');
     return this.find<IAreaTematica, IAreaTematica>(`${this.endpointUrl}/grupo`, options).pipe(
-      tap(() => this.logger.debug(AreaTematicaService.name, `${this.findAllArea.name}()`, '-', 'end'))
+      tap(() => this.logger.debug(AreaTematicaService.name, `${this.findAllGrupo.name}()`, '-', 'end'))
     );
   }
 
@@ -72,5 +73,4 @@ export class AreaTematicaService extends SgiRestService<number, IAreaTematica> {
       tap(() => this.logger.debug(AreaTematicaService.name, `${this.reactivar.name}()`, '-', 'end'))
     );
   }
-
 }

@@ -6,15 +6,24 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { StatusWrapper } from '@core/utils/status-wrapper';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { AreaTematicaData } from '../../convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.fragment';
 
 import { ConvocatoriaAreaTematicaModalComponent } from './convocatoria-area-tematica-modal.component';
 
 describe('ConvocatoriaAreaTematicaModalComponent', () => {
   let component: ConvocatoriaAreaTematicaModalComponent;
   let fixture: ComponentFixture<ConvocatoriaAreaTematicaModalComponent>;
+
+  const convocatoriaAreaTematica = {} as IConvocatoriaAreaTematica;
+  const newData: AreaTematicaData = {
+    padre: undefined,
+    observaciones: '',
+    convocatoriaAreaTematica: new StatusWrapper<IConvocatoriaAreaTematica>(convocatoriaAreaTematica)
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -33,8 +42,8 @@ describe('ConvocatoriaAreaTematicaModalComponent', () => {
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: {} as IConvocatoriaAreaTematica },
-        { provide: MAT_DIALOG_DATA, useValue: {} as IConvocatoriaAreaTematica },
+        { provide: MatDialogRef, useValue: newData },
+        { provide: MAT_DIALOG_DATA, useValue: newData },
       ]
     })
       .compileComponents();
@@ -48,5 +57,10 @@ describe('ConvocatoriaAreaTematicaModalComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    const formGroup = component.formGroup;
+    expect(formGroup).toBeTruthy();
+    expect(Object.keys(formGroup.controls).length).toBe(2);
+    expect(formGroup.controls.padre).toBeTruthy();
+    expect(formGroup.controls.observaciones).toBeTruthy();
   });
 });

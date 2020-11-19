@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { NGXLogger } from 'ngx-logger';
@@ -17,8 +17,7 @@ import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geog
 import { ITipoRegimenConcurrencia } from '@core/models/csp/tipo-regimen-concurrencia';
 import { TipoRegimenConcurrenciaService } from '@core/services/csp/tipo-regimen-concurrencia.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { IAreaTematicaArbol } from '@core/models/csp/area-tematica-arbol';
-import { ConvocatoriaDatosGeneralesFragment } from './convocatoria-datos-generales.fragment';
+import { AreaTematicaData, ConvocatoriaDatosGeneralesFragment } from './convocatoria-datos-generales.fragment';
 import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -30,9 +29,13 @@ import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
 import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
 import { TipoDestinatario } from '@core/enums/tipo-destinatario';
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
+import { IAreaTematica } from '@core/models/csp/area-tematica';
+import { ConvocatoriaAreaTematicaModalComponent } from '../../modals/convocatoria-area-tematica-modal/convocatoria-area-tematica-modal.component';
+import { DialogService } from '@core/services/dialog.service';
 
 const MSG_ERROR_INIT = marker('csp.convocatoria.datos.generales.error.cargar');
 const LABEL_BUSCADOR_EMPRESAS_ECONOMICAS = marker('csp.convocatoria.entidad.gestora');
+const MSG_DELETE = marker('csp.convocatoria.area.tematica.listado.borrar');
 
 @Component({
   selector: 'sgi-convocatoria-datos-generales',
@@ -43,7 +46,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
   formPart: ConvocatoriaDatosGeneralesFragment;
   label = LABEL_BUSCADOR_EMPRESAS_ECONOMICAS;
 
-  areasTematicas$: BehaviorSubject<StatusWrapper<IAreaTematicaArbol>[]>;
+  areasTematicas$: BehaviorSubject<StatusWrapper<IAreaTematica>[]>;
 
   fxFlexProperties: FxFlexProperties;
   fxFlexPropertiesOne: FxFlexProperties;
@@ -68,25 +71,26 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
 
   private subscriptions = [] as Subscription[];
 
-  convocatoriaAreaTematicas = new MatTableDataSource<StatusWrapper<IConvocatoriaAreaTematica>>();
+  convocatoriaAreaTematicas = new MatTableDataSource<AreaTematicaData>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  columns = ['listadoAreas', 'areaTematica', 'observaciones', 'acciones'];
+  columns = ['padre', 'nombre', 'observaciones', 'acciones'];
   numPage = [5, 10, 25, 50];
 
   clasificacionesProduccion = Object.keys(ClasificacionCVN).map<string>((key) => ClasificacionCVN[key]);
   destinatarios = Object.keys(TipoDestinatario).map<string>((key) => TipoDestinatario[key]);
 
   constructor(
-    protected readonly logger: NGXLogger,
+    protected logger: NGXLogger,
     protected actionService: ConvocatoriaActionService,
-    private readonly snackBarService: SnackBarService,
+    private snackBarService: SnackBarService,
     private modeloEjecucionService: ModeloEjecucionService,
     private unidadGestionService: UnidadGestionService,
     private regimenConcurrenciaService: TipoRegimenConcurrenciaService,
     private tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
     private unidadModeloService: ModeloUnidadService,
-    private matDialog: MatDialog
+    private matDialog: MatDialog,
+    private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
     this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'constructor()', 'start');
@@ -135,7 +139,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
   }
 
   private loadUnidadesGestion() {
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadUnidadesGestion.name}()`, 'start');
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadUnidadesGestion()`, 'start');
     this.subscriptions.push(
       this.unidadGestionService.findAllRestringidos().subscribe(
         res => {
@@ -145,18 +149,18 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
               startWith(''),
               map(value => this.filtroUnidadGestion(value))
             );
-          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadUnidadesGestion.name}()`, 'end');
+          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadUnidadesGestion()`, 'end');
         },
-        () => {
+        (error) => {
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.error(ConvocatoriaDatosGeneralesComponent.name, `${this.loadUnidadesGestion.name}()`, 'error');
+          this.logger.error(ConvocatoriaDatosGeneralesComponent.name, `loadUnidadesGestion()`, error);
         }
       )
     );
   }
 
   loadModelosEjecucion() {
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadModelosEjecucion.name}()`, 'start');
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadModelosEjecucion()`, 'start');
     const options = {
       filters: [
         {
@@ -179,18 +183,18 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
             startWith(''),
             map(value => this.filtroModeloEjecucion(value))
           );
-        this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadModelosEjecucion.name}()`, 'end');
+        this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadModelosEjecucion()`, 'end');
       },
-      () => {
+      (error) => {
         this.snackBarService.showError(MSG_ERROR_INIT);
-        this.logger.error(ConvocatoriaDatosGeneralesComponent.name, `${this.loadModelosEjecucion.name}()`, 'error');
+        this.logger.error(ConvocatoriaDatosGeneralesComponent.name, `loadModelosEjecucion()`, error);
       }
     );
     this.subscriptions.push(subcription);
   }
 
   loadFinalidades() {
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadFinalidades.name}()`, 'start');
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadFinalidades()`, 'start');
     const modeloEjecucion = this.formGroup.get('modeloEjecucion').value;
     if (modeloEjecucion) {
       const id = modeloEjecucion.id;
@@ -218,11 +222,11 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
                   startWith(''),
                   map(value => this.filtroFinalidades(value))
                 );
-              this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadFinalidades.name}()`, 'end');
+              this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadFinalidades()`, 'end');
             },
-            () => {
+            (error) => {
               this.snackBarService.showError(MSG_ERROR_INIT);
-              this.logger.error(ConvocatoriaDatosGeneralesComponent.name, `${this.loadFinalidades.name}()`, 'error');
+              this.logger.error(ConvocatoriaDatosGeneralesComponent.name, `loadFinalidades()`, error);
             }
           )
         );
@@ -231,24 +235,24 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
   }
 
   clearModeloEjecuccion() {
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.clearModeloEjecuccion.name}()`, 'end');
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `clearModeloEjecuccion()`, 'end');
     this.formGroup.get('modeloEjecucion').setValue('');
     this.modelosEjecucionFiltered = [];
     this.modelosEjecucion$ = of();
     this.clearFinalidad();
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.clearModeloEjecuccion.name}()`, 'end');
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `clearModeloEjecuccion()`, 'end');
   }
 
   clearFinalidad() {
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.clearFinalidad.name}()`, 'end');
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `clearFinalidad()`, 'end');
     this.formGroup.get('finalidad').setValue('');
     this.finalidadFiltered = [];
     this.finalidades$ = of();
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.clearFinalidad.name}()`, 'end');
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `clearFinalidad()`, 'end');
   }
 
   private loadTipoRegimenConcurrencia() {
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadTipoRegimenConcurrencia.name}()`, 'start');
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadTipoRegimenConcurrencia()`, 'start');
     this.subscriptions.push(
       this.regimenConcurrenciaService.findAll().subscribe(
         res => {
@@ -258,18 +262,18 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
               startWith(''),
               map(value => this.filtroRegimenConcurrencia(value))
             );
-          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadTipoRegimenConcurrencia.name}()`, 'end');
+          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadTipoRegimenConcurrencia()`, 'end');
         },
-        () => {
+        (error) => {
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.error(ConvocatoriaDatosGeneralesComponent.name, `${this.loadTipoRegimenConcurrencia.name}()`, 'error');
+          this.logger.error(ConvocatoriaDatosGeneralesComponent.name, `loadTipoRegimenConcurrencia()`, error);
         }
       )
     );
   }
 
   private loadAmbitosGeograficos() {
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadAmbitosGeograficos.name}()`, 'start');
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadAmbitosGeograficos()`, 'start');
     this.subscriptions.push(
       this.tipoAmbitoGeograficoService.findAll().subscribe(
         res => {
@@ -279,27 +283,26 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
               startWith(''),
               map(value => this.filtroTipoAmbitoGeografico(value))
             );
-          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadAmbitosGeograficos.name}()`, 'end');
+          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadAmbitosGeograficos()`, 'end');
         },
         () => {
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.error(ConvocatoriaDatosGeneralesComponent.name, `${this.loadAmbitosGeograficos.name}()`, 'error');
+          this.logger.error(ConvocatoriaDatosGeneralesComponent.name, `loadAmbitosGeograficos()`, 'error');
         }
       )
     );
   }
 
   private loadAreaTematicas() {
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadAreaTematicas.name}()`, 'start');
-    const subscription = this.formPart.convocatoriaAreaTematicas$.subscribe(
-      wrappers => this.convocatoriaAreaTematicas.data = wrappers
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadAreaTematicas()`, 'start');
+    const subscription = this.formPart.areasTematicas$.subscribe(
+      data => this.convocatoriaAreaTematicas.data = data
     );
+    this.subscriptions.push(subscription);
     this.convocatoriaAreaTematicas.paginator = this.paginator;
     this.convocatoriaAreaTematicas.sort = this.sort;
-    this.subscriptions.push(subscription);
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.loadAreaTematicas.name}()`, 'end');
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadAreaTematicas()`, 'end');
   }
-
 
   /**
    * Devuelve el nombre de un modelo de ejecución.
@@ -400,22 +403,52 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     );
   }
 
-  openModal(): void {
-    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.openModal.name}()`, 'start');
-    const areaTematica = { activo: true } as IAreaTematicaArbol;
+  openModal(data?: AreaTematicaData): void {
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `openModal()`, 'start');
+    const convocatoriaAreaTematica: IConvocatoriaAreaTematica = {
+      areaTematica: undefined,
+      convocatoria: undefined,
+      id: undefined,
+      observaciones: undefined
+    };
+    const newData: AreaTematicaData = {
+      padre: undefined,
+      observaciones: '',
+      convocatoriaAreaTematica: new StatusWrapper<IConvocatoriaAreaTematica>(convocatoriaAreaTematica)
+    };
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: { areaTematica }
+      data: data ? data : newData
     };
-    // const dialogRef = this.matDialog.open(ConvocatoriaAreaTematicaModalComponent, config);
-    // dialogRef.afterClosed().subscribe(
-    //   (result: IConvocatoriaAreaTematica) => {
-    //     if (result) {
-    //       // this.formPart.addModeloTipoDocumento(result);
-    //     }
-    //     this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `${this.openModal.name}()`, 'end');
-    //   }
-    // );
+    const dialogRef = this.matDialog.open(ConvocatoriaAreaTematicaModalComponent, config);
+    dialogRef.afterClosed().subscribe(
+      (result: AreaTematicaData) => {
+        if (result) {
+          if (data) {
+            this.formPart.updateConvocatoriaAreaTematica(result);
+          } else {
+            this.formPart.addConvocatoriaAreaTematica(result);
+          }
+        }
+        this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `openModal()`, 'end');
+      }
+    );
+  }
+
+  deleteAreaTematica(data: AreaTematicaData) {
+    this.logger.debug(ConvocatoriaDatosGeneralesComponent.name,
+      `deleteAreaTematica(${data})`, 'start');
+    this.subscriptions.push(
+      this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+        (aceptado) => {
+          if (aceptado) {
+            this.formPart.deleteConvocatoriaAreaTematica(data);
+          }
+          this.logger.debug(ConvocatoriaDatosGeneralesComponent.name,
+            `deleteAreaTematica(${data})`, 'end');
+        }
+      )
+    );
   }
 }

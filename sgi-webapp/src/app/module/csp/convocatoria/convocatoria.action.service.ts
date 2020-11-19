@@ -30,6 +30,7 @@ import { ConvocatoriaFaseService } from '@core/services/csp/convocatoria-fase.se
 import { ConvocatoriaConceptoGastoFragment } from './convocatoria-formulario/convocatoria-concepto-gasto/convocatoria-concepto-gasto.fragment';
 import { ConvocatoriaConceptoGastoService } from '@core/services/csp/convocatoria-concepto-gasto.service';
 import { ConvocatoriaSeguimientoCientificoService } from '@core/services/csp/convocatoria-seguimiento-cientifico.service';
+import { ConvocatoriaAreaTematicaService } from '@core/services/csp/convocatoria-area-tematica.service';
 
 @Injectable()
 export class ConvocatoriaActionService extends ActionService {
@@ -61,7 +62,7 @@ export class ConvocatoriaActionService extends ActionService {
   private convocatoria: IConvocatoria;
 
   constructor(
-    private fb: FormBuilder,
+    fb: FormBuilder,
     logger: NGXLogger,
     route: ActivatedRoute,
     convocatoriaService: ConvocatoriaService,
@@ -75,7 +76,8 @@ export class ConvocatoriaActionService extends ActionService {
     convocatoriaFaseService: ConvocatoriaFaseService,
     convocatoriaConceptoGastoService: ConvocatoriaConceptoGastoService,
     convocatoriaHitoService: ConvocatoriaHitoService,
-    convocatoriaSeguimientoCientificoService: ConvocatoriaSeguimientoCientificoService
+    convocatoriaSeguimientoCientificoService: ConvocatoriaSeguimientoCientificoService,
+    convocatoriaAreaTematicaService: ConvocatoriaAreaTematicaService
   ) {
     super();
     this.convocatoria = {} as IConvocatoria;
@@ -85,22 +87,21 @@ export class ConvocatoriaActionService extends ActionService {
     }
     this.datosGenerales = new ConvocatoriaDatosGeneralesFragment(
       logger, this.convocatoria?.id, convocatoriaService, empresaEconomicaService,
-      convocatoriaEntidadGestoraService, unidadGestionService);
-    this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(logger, this.convocatoria?.id, convocatoriaService,
-      convocatoriaPeriodoJustificacionService);
+      convocatoriaEntidadGestoraService, unidadGestionService, convocatoriaAreaTematicaService);
+    this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(logger,
+      this.convocatoria?.id, convocatoriaService, convocatoriaPeriodoJustificacionService);
     this.entidadesConvocantes = new ConvocatoriaEntidadesConvocantesFragment(
       logger, this.convocatoria?.id, convocatoriaService);
-    this.plazosFases = new ConvocatoriaPlazosFasesFragment(logger, this.convocatoria?.id, convocatoriaService, convocatoriaFaseService);
+    this.plazosFases = new ConvocatoriaPlazosFasesFragment(logger, this.convocatoria?.id,
+      convocatoriaService, convocatoriaFaseService);
     this.hitos = new ConvocatoriaHitosFragment(
       logger, this.convocatoria?.id, convocatoriaService, convocatoriaHitoService);
     this.seguimientoCientifico = new ConvocatoriaSeguimientoCientificoFragment(logger, this.convocatoria?.id,
       convocatoriaService, convocatoriaSeguimientoCientificoService);
-    this.entidadesConvocantes = new ConvocatoriaEntidadesConvocantesFragment(logger, this.convocatoria?.id, convocatoriaService);
-    this.plazosFases = new ConvocatoriaPlazosFasesFragment(logger, this.convocatoria?.id, convocatoriaService, convocatoriaFaseService);
-    this.hitos = new ConvocatoriaHitosFragment(logger, this.convocatoria?.id, convocatoriaService, convocatoriaHitoService);
     this.entidadesFinanciadorasFragment = new ConvocatoriaEntidadesFinanciadorasFragment(
       logger, this.convocatoria?.id, convocatoriaService, convocatoriaEntidadFinanciadoraService);
-    this.enlaces = new ConvocatoriaEnlaceFragment(logger, this.convocatoria?.id, convocatoriaService, convocatoriaEnlaceService);
+    this.enlaces = new ConvocatoriaEnlaceFragment(logger, this.convocatoria?.id, convocatoriaService,
+      convocatoriaEnlaceService);
     this.requisitosIP = new ConvocatoriaRequisitosIPFragment(fb, logger, this.convocatoria?.id, requisitoIPService);
     this.elegibilidad = new ConvocatoriaConceptoGastoFragment(fb, logger, this.convocatoria?.id, convocatoriaService,
       convocatoriaConceptoGastoService);

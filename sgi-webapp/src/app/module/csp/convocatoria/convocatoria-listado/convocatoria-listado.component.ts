@@ -4,9 +4,9 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http/';
 import { NGXLogger } from 'ngx-logger';
 import { FormGroup, FormControl } from '@angular/forms';
-import { forkJoin, Observable, of, Subscription } from 'rxjs';
+import { forkJoin, from, Observable, of, Subscription } from 'rxjs';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { ROUTE_NAMES } from '@core/route.names';
 
@@ -29,7 +29,6 @@ import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
 import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion.service';
-import { IAreaTematicaArbol } from '@core/models/csp/area-tematica-arbol';
 import { AreaTematicaService } from '@core/services/csp/area-tematica.service';
 import { IConvocatoriaEntidadGestora } from '@core/models/csp/convocatoria-entidad-gestora';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
@@ -108,17 +107,17 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
   empresaFinanciadoraText: string;
 
   constructor(
-    protected readonly logger: NGXLogger,
-    protected readonly snackBarService: SnackBarService,
-    private readonly convocatoriaService: ConvocatoriaService,
-    private readonly empresaEconomicaService: EmpresaEconomicaService,
-    private readonly unidadGestionService: UnidadGestionService,
-    private readonly unidadModeloService: ModeloUnidadService,
-    private readonly modeloEjecucionService: ModeloEjecucionService,
-    private readonly tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
-    private readonly fuenteFinanciacionService: FuenteFinanciacionService,
-    private readonly areaTematicaService: AreaTematicaService,
-    private readonly dialogService: DialogService
+    protected logger: NGXLogger,
+    protected snackBarService: SnackBarService,
+    private convocatoriaService: ConvocatoriaService,
+    private empresaEconomicaService: EmpresaEconomicaService,
+    private unidadGestionService: UnidadGestionService,
+    private unidadModeloService: ModeloUnidadService,
+    private modeloEjecucionService: ModeloEjecucionService,
+    private tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
+    private fuenteFinanciacionService: FuenteFinanciacionService,
+    private areaTematicaService: AreaTematicaService,
+    private dialogService: DialogService
   ) {
     super(logger, snackBarService, MSG_ERROR);
     this.logger.debug(ConvocatoriaListadoComponent.name, 'constructor()', 'start');
@@ -193,31 +192,30 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
           items: convocatorias
         } as SgiRestListResult<IConvocatoriaListado>;
       }),
-      switchMap(convocatoriaListados => {
-        return forkJoin(
-          convocatoriaListados.items.map(
-            element => {
-              return this.convocatoriaService.findEntidadesFinanciadoras(element.convocatoria.id).pipe(
-                map(entidadFinanciadora => {
-                  if (entidadFinanciadora.items.length > 0) {
-                    element.entidadFinanciadora = entidadFinanciadora.items[0];
-                  }
-                  return element;
-                }),
-                switchMap(convocatoriaListado => {
-                  if (convocatoriaListado.entidadFinanciadora.id) {
-                    return this.empresaEconomicaService.findById(convocatoriaListado.entidadFinanciadora.entidadRef).pipe(
-                      map(empresaEconomica => {
-                        convocatoriaListado.entidadFinanciadoraEmpresa = empresaEconomica;
-                        return empresaEconomica;
-                      }),
-                    );
-                  }
-                  return of({} as IEmpresaEconomica);
-                }),
-                catchError(() => of(element))
-              );
-            })
+      mergeMap(convocatoriaListados => {
+        return from(convocatoriaListados.items).pipe(
+          mergeMap((element) => {
+            return this.convocatoriaService.findEntidadesFinanciadoras(element.convocatoria.id).pipe(
+              map(entidadFinanciadora => {
+                if (entidadFinanciadora.items.length > 0) {
+                  element.entidadFinanciadora = entidadFinanciadora.items[0];
+                }
+                return element;
+              }),
+              switchMap(convocatoriaListado => {
+                if (convocatoriaListado.entidadFinanciadora.id) {
+                  return this.empresaEconomicaService.findById(convocatoriaListado.entidadFinanciadora.entidadRef).pipe(
+                    map(empresaEconomica => {
+                      convocatoriaListado.entidadFinanciadoraEmpresa = empresaEconomica;
+                      return empresaEconomica;
+                    }),
+                  );
+                }
+                return of({} as IEmpresaEconomica);
+              }),
+              catchError(() => of(element))
+            );
+          })
         ).pipe(
           switchMap(() => {
             return of({
@@ -228,20 +226,19 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
           })
         );
       }),
-      switchMap(convocatoriaListados => {
-        return forkJoin(
-          convocatoriaListados.items.map(
-            element => {
-              return this.convocatoriaService.findAllConvocatoriaFases(element.convocatoria.id).pipe(
-                map(convocatoriaFase => {
-                  if (convocatoriaFase.items.length > 0) {
-                    element.fase = convocatoriaFase.items[0];
-                  }
-                  return element;
-                }),
-                catchError(() => of(element))
-              );
-            })
+      mergeMap(convocatoriaListados => {
+        return from(convocatoriaListados.items).pipe(
+          mergeMap((element) => {
+            return this.convocatoriaService.findAllConvocatoriaFases(element.convocatoria.id).pipe(
+              map(convocatoriaFase => {
+                if (convocatoriaFase.items.length > 0) {
+                  element.fase = convocatoriaFase.items[0];
+                }
+                return element;
+              }),
+              catchError(() => of(element))
+            );
+          })
         ).pipe(
           switchMap(() => {
             return of({
@@ -252,31 +249,30 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
           })
         );
       }),
-      switchMap(convocatoriaListados => {
-        return forkJoin(
-          convocatoriaListados.items.map(
-            element => {
-              return this.convocatoriaService.findAllConvocatoriaEntidadConvocantes(element.convocatoria.id).pipe(
-                map(convocatoriaEntidadConvocante => {
-                  if (convocatoriaEntidadConvocante.items.length > 0) {
-                    element.entidadConvocante = convocatoriaEntidadConvocante.items[0];
-                  }
-                  return element;
-                }),
-                switchMap(convocatoriaListado => {
-                  if (convocatoriaListado.entidadFinanciadora.id) {
-                    return this.empresaEconomicaService.findById(convocatoriaListado.entidadConvocante.entidadRef).pipe(
-                      map(empresaEconomica => {
-                        convocatoriaListado.entidadConvocanteEmpresa = empresaEconomica;
-                        return empresaEconomica;
-                      }),
-                    );
-                  }
-                  return of({} as IEmpresaEconomica);
-                }),
-                catchError(() => of(element))
-              );
-            })
+      mergeMap(convocatoriaListados => {
+        return from(convocatoriaListados.items).pipe(
+          mergeMap((element) => {
+            return this.convocatoriaService.findAllConvocatoriaEntidadConvocantes(element.convocatoria.id).pipe(
+              map(convocatoriaEntidadConvocante => {
+                if (convocatoriaEntidadConvocante.items.length > 0) {
+                  element.entidadConvocante = convocatoriaEntidadConvocante.items[0];
+                }
+                return element;
+              }),
+              switchMap(convocatoriaListado => {
+                if (convocatoriaListado.entidadFinanciadora.id) {
+                  return this.empresaEconomicaService.findById(convocatoriaListado.entidadConvocante.entidadRef).pipe(
+                    map(empresaEconomica => {
+                      convocatoriaListado.entidadConvocanteEmpresa = empresaEconomica;
+                      return empresaEconomica;
+                    }),
+                  );
+                }
+                return of({} as IEmpresaEconomica);
+              }),
+              catchError(() => of(element))
+            );
+          })
         ).pipe(
           switchMap(() => {
             return of({
@@ -648,7 +644,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
    * @param area area tematica
    * @returns nombre de area tematica
    */
-  getAreaTematica(area?: IAreaTematicaArbol): string | undefined {
+  getAreaTematica(area?: IAreaTematica): string | undefined {
     return typeof area === 'string' ? area : area?.nombre;
   }
 
