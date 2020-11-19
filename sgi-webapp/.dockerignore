@@ -1,7 +1,0 @@
-# Ignore everything
-**
-
-# Exceptions
-!docker/nginx.conf.template
-!docker/nginx-entrypoint.sh
-!dist/sgi
