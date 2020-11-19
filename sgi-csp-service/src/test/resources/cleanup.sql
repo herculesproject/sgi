@@ -1,4 +1,5 @@
 -- vacia la bd
+DELETE FROM csp.convocatoria_documento;
 DELETE FROM csp.convocatoria_area_tematica;
 DELETE FROM csp.area_tematica;
 DELETE FROM csp.convocatoria_entidad_convocante;

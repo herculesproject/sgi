@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class TipoDocumento extends BaseEntity {
 
   /**

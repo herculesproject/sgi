@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.crue.hercules.sgi.csp.exceptions.ModeloEjecucionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ModeloTipoDocumentoNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.ModeloTipoFaseNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
@@ -58,78 +59,72 @@ public class ModeloTipoDocumentoServiceImpl implements ModeloTipoDocumentoServic
   public ModeloTipoDocumento create(ModeloTipoDocumento modeloTipoDocumento) {
     log.debug("create(ModeloTipoDocumento modeloTipoDocumento) - start");
 
+    // datos obligatorios
     Assert.isNull(modeloTipoDocumento.getId(), "Id tiene que ser null para crear un modeloTipoDocumento");
-    Assert.notNull(modeloTipoDocumento.getModeloEjecucion().getId(),
+    Assert.notNull(modeloTipoDocumento.getModeloEjecucion(),
         "Id ModeloEjecucion no puede ser null para crear un modeloTipoDocumento");
-    Assert.notNull(modeloTipoDocumento.getTipoDocumento().getId(),
+    Assert.notNull(modeloTipoDocumento.getTipoDocumento(),
         "Id TipoDocumento no puede ser null para crear un modeloTipoDocumento");
 
+    /** Modelo Ejecución */
     modeloTipoDocumento
         .setModeloEjecucion(modeloEjecucionRepository.findById(modeloTipoDocumento.getModeloEjecucion().getId())
             .orElseThrow(() -> new ModeloEjecucionNotFoundException(modeloTipoDocumento.getModeloEjecucion().getId())));
 
+    Assert.isTrue(modeloTipoDocumento.getModeloEjecucion().getActivo(), "El ModeloEjecucion debe estar Activo");
+
+    /** Tipo Documento */
     modeloTipoDocumento
         .setTipoDocumento(tipoDocumentoRepository.findById(modeloTipoDocumento.getTipoDocumento().getId())
             .orElseThrow(() -> new TipoDocumentoNotFoundException(modeloTipoDocumento.getTipoDocumento().getId())));
+
     Assert.isTrue(modeloTipoDocumento.getTipoDocumento().getActivo(), "El TipoDocumento debe estar Activo");
 
+    /** Modelo tipo fase */
     if (modeloTipoDocumento.getModeloTipoFase() != null) {
       if (modeloTipoDocumento.getModeloTipoFase().getId() == null) {
         modeloTipoDocumento.setModeloTipoFase(null);
       } else {
         modeloTipoDocumento.setModeloTipoFase(
             modeloTipoFaseRepository.findById(modeloTipoDocumento.getModeloTipoFase().getId()).orElseThrow(
-                () -> new ModeloEjecucionNotFoundException(modeloTipoDocumento.getModeloTipoFase().getId())));
+                () -> new ModeloTipoFaseNotFoundException(modeloTipoDocumento.getModeloTipoFase().getId())));
+
+        Assert.isTrue(
+            modeloTipoDocumento.getModeloEjecucion().getId() == modeloTipoDocumento.getModeloTipoFase()
+                .getModeloEjecucion().getId(),
+            "El ModeloEjecucion '" + modeloTipoDocumento.getModeloEjecucion().getNombre()
+                + "' no coincide con el ModeloEjecucion del ModeloTipoFase asociado '"
+                + modeloTipoDocumento.getModeloTipoFase().getModeloEjecucion().getNombre() + "'");
+
         Assert.isTrue(modeloTipoDocumento.getModeloTipoFase().getActivo(), "El ModeloTipoFase debe estar Activo");
+
+        Assert.isTrue(modeloTipoDocumento.getModeloTipoFase().getTipoFase().getActivo(),
+            "El TipoFase debe estar Activo");
       }
     }
 
-    List<ModeloTipoDocumento> listaMismoModeloEjecucionAndTipoDocumento = modeloTipoDocumentoRepository
-        .findByModeloEjecucionIdAndTipoDocumentoId(modeloTipoDocumento.getModeloEjecucion().getId(),
+    /** duplicados */
+    Optional<ModeloTipoDocumento> modeloTipoDocumentoEncontrado = modeloTipoDocumentoRepository
+        .findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(modeloTipoDocumento.getModeloEjecucion().getId(),
+            (modeloTipoDocumento.getModeloTipoFase() != null) ? modeloTipoDocumento.getModeloTipoFase().getId() : null,
             modeloTipoDocumento.getTipoDocumento().getId());
 
-    if (!listaMismoModeloEjecucionAndTipoDocumento.isEmpty()) {
+    if (modeloTipoDocumentoEncontrado.isPresent()) {
+      Assert.isTrue(!modeloTipoDocumentoEncontrado.get().getActivo(),
+          "Ya existe una asociación activa para el ModeloEjecucion '"
+              + modeloTipoDocumento.getModeloEjecucion().getNombre() + "' y el TipoDocumento '"
+              + modeloTipoDocumento.getTipoDocumento().getNombre() + "' con ModeloTipoFase de '"
+              + ((modeloTipoDocumento.getModeloTipoFase() != null)
+                  ? modeloTipoDocumento.getModeloTipoFase().getTipoFase().getNombre()
+                  : "Sin fase asignada")
+              + "'");
 
-      if (modeloTipoDocumento.getModeloTipoFase() == null && listaMismoModeloEjecucionAndTipoDocumento.stream()
-          .anyMatch(modeloTipoDocumentoFilter -> modeloTipoDocumentoFilter.getActivo()
-              && modeloTipoDocumentoFilter.getTipoDocumento().getActivo()
-              && modeloTipoDocumentoFilter.getModeloTipoFase() != null)) {
-        throw new IllegalArgumentException(
-            "Ya existe una asociación activa para ese ModeloEjecucion y ese TipoDocumento con ModeloTipoFase");
-      }
-
-      if (modeloTipoDocumento.getModeloTipoFase() != null && listaMismoModeloEjecucionAndTipoDocumento.stream()
-          .anyMatch(modeloTipoDocumentoFilter -> modeloTipoDocumentoFilter.getActivo()
-              && modeloTipoDocumentoFilter.getTipoDocumento().getActivo()
-              && modeloTipoDocumentoFilter.getModeloTipoFase() == null)) {
-        throw new IllegalArgumentException(
-            "Ya existe una asociación activa para ese ModeloEjecucion y ese TipoDocumento sin ModeloTipoFase");
-      }
-
-      // Comprueba si existe ya esa misma relacion
-      Optional<ModeloTipoDocumento> modeloTipoDocumentoIgual = listaMismoModeloEjecucionAndTipoDocumento.stream()
-          .filter(modeloTipoDocumentoFilter -> modeloTipoDocumentoFilter.getModeloEjecucion()
-              .getId() == modeloTipoDocumento.getModeloEjecucion().getId()
-              && modeloTipoDocumentoFilter.getTipoDocumento().getId() == modeloTipoDocumento.getTipoDocumento().getId()
-              && (modeloTipoDocumentoFilter.getModeloTipoFase() == null
-                  && modeloTipoDocumento.getModeloTipoFase() == null
-                  || (modeloTipoDocumentoFilter.getModeloTipoFase() != null
-                      && modeloTipoDocumento.getModeloTipoFase() != null && modeloTipoDocumentoFilter
-                          .getModeloTipoFase().getId() == modeloTipoDocumento.getModeloTipoFase().getId())))
-          .findFirst();
-
-      modeloTipoDocumentoIgual.ifPresent(modeloTipoDocumentoExistente -> {
-        Assert.isTrue(!modeloTipoDocumentoExistente.getActivo(),
-            "Ya existe una asociación activa para ese ModeloEjecucion, TipoDocumento y ModeloTipoFase");
-
-        // Si existe pero esta inactiva se settea el id para que se actualice la
-        // relacion existente
-        modeloTipoDocumento.setId(modeloTipoDocumentoExistente.getId());
-      });
-
+      // Si existe y está inactiva se asocia el Id para que se actualice
+      modeloTipoDocumento.setId(modeloTipoDocumentoEncontrado.get().getId());
     }
 
     modeloTipoDocumento.setActivo(true);
+
     ModeloTipoDocumento returnValue = modeloTipoDocumentoRepository.save(modeloTipoDocumento);
     log.debug("create(ModeloTipoDocumento modeloTipoDocumento) - end");
     return returnValue;

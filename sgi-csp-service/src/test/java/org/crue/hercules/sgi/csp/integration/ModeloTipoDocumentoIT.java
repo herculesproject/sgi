@@ -45,11 +45,12 @@ public class ModeloTipoDocumentoIT extends BaseIT {
   public void create_ReturnsModeloTipoDocumento() throws Exception {
 
     // given: new ModeloTipoDocumento
-    ModeloTipoDocumento modeloTipoEnlace = generarMockModeloTipoDocumento(null, 1L, 1L);
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(1L, 1L, 1L);
+    modeloTipoDocumento.setId(null);
 
     // when: create ModeloTipoDocumento
     final ResponseEntity<ModeloTipoDocumento> response = restTemplate.exchange(CONTROLLER_BASE_PATH, HttpMethod.POST,
-        buildRequest(null, modeloTipoEnlace), ModeloTipoDocumento.class);
+        buildRequest(null, modeloTipoDocumento), ModeloTipoDocumento.class);
 
     // then: new ModeloTipoDocumento is created
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -58,13 +59,13 @@ public class ModeloTipoDocumentoIT extends BaseIT {
     Assertions.assertThat(modeloTipoDocumentoResponse.getId()).as("getId()").isNotNull();
     Assertions.assertThat(modeloTipoDocumentoResponse.getModeloEjecucion()).as("getModeloEjecucion()").isNotNull();
     Assertions.assertThat(modeloTipoDocumentoResponse.getModeloEjecucion().getId()).as("getModeloEjecucion().getId()")
-        .isEqualTo(modeloTipoEnlace.getModeloEjecucion().getId());
+        .isEqualTo(modeloTipoDocumento.getModeloEjecucion().getId());
     Assertions.assertThat(modeloTipoDocumentoResponse.getTipoDocumento()).as("getTipoDocumento()").isNotNull();
     Assertions.assertThat(modeloTipoDocumentoResponse.getTipoDocumento().getId()).as("getTipoDocumento().getId()")
-        .isEqualTo(modeloTipoEnlace.getTipoDocumento().getId());
+        .isEqualTo(modeloTipoDocumento.getTipoDocumento().getId());
     Assertions.assertThat(modeloTipoDocumentoResponse.getModeloTipoFase()).as("getModeloTipoFase()").isNotNull();
     Assertions.assertThat(modeloTipoDocumentoResponse.getModeloTipoFase().getId()).as("getModeloTipoFase().getId()")
-        .isEqualTo(modeloTipoEnlace.getModeloTipoFase().getId());
+        .isEqualTo(modeloTipoDocumento.getModeloTipoFase().getId());
     Assertions.assertThat(modeloTipoDocumentoResponse.getActivo()).as("getActivo()").isEqualTo(true);
   }
 

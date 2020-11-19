@@ -1,13 +1,13 @@
 package org.crue.hercules.sgi.csp.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.csp.exceptions.ModeloEjecucionNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ModeloTipoDocumentoNotFoundException;
+import org.crue.hercules.sgi.csp.exceptions.ModeloTipoFaseNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.TipoDocumentoNotFoundException;
 import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoDocumento;
@@ -63,16 +63,22 @@ public class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
   @Test
   public void create_ReturnsModeloTipoDocumento() {
     // given: Un nuevo ModeloTipoDocumento
-    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(null, 1L, null);
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(1L, 1L, 1L);
+    modeloTipoDocumento.setId(null);
 
-    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.anyLong()))
+    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(modeloTipoDocumento.getModeloEjecucion()));
 
-    BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.anyLong()))
+    BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(modeloTipoDocumento.getTipoDocumento()));
 
-    BDDMockito.given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndTipoDocumentoId(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyLong())).willReturn(new ArrayList<>());
+    BDDMockito.given(modeloTipoFaseRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(generarMockModeloTipoFase(1L, 1L)));
+
+    BDDMockito
+        .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
+            ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(modeloTipoDocumentoRepository.save(modeloTipoDocumento)).will((InvocationOnMock invocation) -> {
       ModeloTipoDocumento modeloTipoDocumentoCreado = invocation.getArgument(0);
@@ -92,14 +98,15 @@ public class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
     Assertions.assertThat(modeloTipoDocumentoCreado.getTipoDocumento()).as("getTipoDocumento()").isNotNull();
     Assertions.assertThat(modeloTipoDocumentoCreado.getTipoDocumento().getId()).as("getTipoDocumento().getId()")
         .isEqualTo(modeloTipoDocumento.getTipoDocumento().getId());
-    Assertions.assertThat(modeloTipoDocumentoCreado.getModeloTipoFase()).as("getModeloTipoFase()").isNull();
+    Assertions.assertThat(modeloTipoDocumentoCreado.getModeloTipoFase().getId()).as("getModeloTipoFase().getId()")
+        .isEqualTo(modeloTipoDocumento.getModeloTipoFase().getId());
     Assertions.assertThat(modeloTipoDocumentoCreado.getActivo()).as("getActivo()").isEqualTo(true);
   }
 
   @Test
   public void create_WithId_ThrowsIllegalArgumentException() {
     // given: Un nuevo ModeloTipoDocumento que ya tiene id
-    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(1L);
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(1L, 1L, 1L);
 
     // when: Creamos el ModeloTipoDocumento
     // then: Lanza una excepcion porque el ModeloTipoDocumento ya tiene id
@@ -111,8 +118,9 @@ public class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
   @Test
   public void create_WithoutModeloEjecucionId_ThrowsIllegalArgumentException() {
     // given: Un nuevo ModeloTipoDocumento con un ModeloEjecucion sin id
-    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(null);
-    modeloTipoDocumento.getModeloEjecucion().setId(null);
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(1L, 1L, 1L);
+    modeloTipoDocumento.setId(null);
+    modeloTipoDocumento.setModeloEjecucion(null);
 
     // when: Creamos el ModeloTipoDocumento
     // then: Lanza una excepcion
@@ -124,8 +132,9 @@ public class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
   @Test
   public void create_WithoutTipoDocumentoId_ThrowsIllegalArgumentException() {
     // given: Un nuevo ModeloTipoDocumento con un TipoDocumento sin id
-    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(null);
-    modeloTipoDocumento.getTipoDocumento().setId(null);
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(1L, 1L, 1L);
+    modeloTipoDocumento.setId(null);
+    modeloTipoDocumento.setTipoDocumento(null);
 
     // when: Creamos el ModeloTipoDocumento
     // then: Lanza una excepcion
@@ -137,9 +146,10 @@ public class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
   @Test
   public void create_WithNoExistingModeloEjecucion_ThrowsModeloEjecucionNotFoundException() {
     // given: Un nuevo ModeloTipoDocumento con un ModeleoEjecucion que no existe
-    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(null, 1L, null);
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(1L, 1L, 1L);
+    modeloTipoDocumento.setId(null);
 
-    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
+    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
 
     // when: Creamos el ModeloTipoDocumento
     // then: Lanza una excepcion porque el ModeleoEjecucion no existe id
@@ -148,53 +158,146 @@ public class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithNoExistingTipoDocumento_ThrowsTipoDocumentoNotFoundException() {
-    // given: Un nuevo ModeloTipoDocumento con un TipoDocumento que no existe
-    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(null, 1L, null);
-    modeloTipoDocumento.getTipoDocumento().setActivo(false);
+  public void create_WithModeloEjecucionDisabled_ThrowsIllegalArgumentException() {
+    // given: Un nuevo ModeloTipoDocumento con un ModeleoEjecucion inactivo
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(1L, 1L, 1L);
+    modeloTipoDocumento.setId(null);
+    modeloTipoDocumento.getModeloEjecucion().setActivo(Boolean.FALSE);
 
-    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.anyLong()))
+    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(modeloTipoDocumento.getModeloEjecucion()));
 
-    BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
+    // when: Creamos el ModeloTipoDocumento
+    // then: Lanza una excepcion porque el ModeleoEjecucion está inactivo
+    Assertions.assertThatThrownBy(() -> service.create(modeloTipoDocumento))
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("El ModeloEjecucion debe estar Activo");
+  }
+
+  @Test
+  public void create_WithNoExistingTipoDocumento_ThrowsTipoDocumentoNotFoundException() {
+    // given: Un nuevo ModeloTipoDocumento con un TipoDocumento que no existe
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(1L, 1L, 1L);
+    modeloTipoDocumento.setId(null);
+
+    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(modeloTipoDocumento.getModeloEjecucion()));
+
+    BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
 
     // when: Creamos el modeloTipoDocumento
-    // then: Lanza una excepcion porque el TipoDocumento no existe id
+    // then: Lanza una excepcion porque el TipoDocumento no existe
     Assertions.assertThatThrownBy(() -> service.create(modeloTipoDocumento))
         .isInstanceOf(TipoDocumentoNotFoundException.class);
   }
 
   @Test
-  public void create_WithDisabledTipoDocumento_ThrowsIllegalArgumentException() {
-    // given: Un nuevo ModeloTipoDocumento con un TipoDocumento que no esta activo
-    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(null, 1L, null);
+  public void create_WithTipoDocumentoDisabled_ThrowsIllegalArgumentException() {
+    // given: Un nuevo ModeloTipoDocumento con un TipoDocumento inactivo
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(1L, 1L, 1L);
+    modeloTipoDocumento.setId(null);
     modeloTipoDocumento.getTipoDocumento().setActivo(false);
 
-    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.anyLong()))
+    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(modeloTipoDocumento.getModeloEjecucion()));
 
-    BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.anyLong()))
+    BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(modeloTipoDocumento.getTipoDocumento()));
 
-    // when: Creamos el ModeloTipoDocumento
-    // then: Lanza una excepcion porque el TipoDocumento no esta activo
+    // when: Creamos el modeloTipoDocumento
+    // then: Lanza una excepcion porque el TipoDocumento está inactivo
     Assertions.assertThatThrownBy(() -> service.create(modeloTipoDocumento))
         .isInstanceOf(IllegalArgumentException.class).hasMessage("El TipoDocumento debe estar Activo");
   }
 
   @Test
-  public void create_WithDisabledModeloTipoFase_ThrowsIllegalArgumentException() {
-    // given: Un nuevo ModeloTipoDocumento con un ModeloTipoFase que no esta activo
-    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(null, 1L, 1L);
-    modeloTipoDocumento.getModeloTipoFase().setActivo(false);
+  public void create_WithoutModeloTipoFase_DoesNotThrowAnyException() {
+    // given: Un nuevo ModeloTipoDocumento
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(1L, 1L, 1L);
+    modeloTipoDocumento.setId(null);
+    modeloTipoDocumento.setModeloTipoFase(null);
 
-    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.anyLong()))
+    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(modeloTipoDocumento.getModeloEjecucion()));
 
-    BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.anyLong()))
+    BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(modeloTipoDocumento.getTipoDocumento()));
 
-    BDDMockito.given(modeloTipoFaseRepository.findById(ArgumentMatchers.anyLong()))
+    BDDMockito
+        .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
+            ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.empty());
+
+    BDDMockito.given(modeloTipoDocumentoRepository.save(modeloTipoDocumento)).will((InvocationOnMock invocation) -> {
+      ModeloTipoDocumento modeloTipoDocumentoCreado = invocation.getArgument(0);
+      modeloTipoDocumentoCreado.setId(1L);
+      return modeloTipoDocumentoCreado;
+    });
+
+    // when: Creamos el ModeloTipoDocumento
+    // then: El ModeloTipoDocumento se crea correctamente
+    Assertions.assertThatCode(() -> service.create(modeloTipoDocumento)).doesNotThrowAnyException();
+  }
+
+  @Test
+  public void create_WithNoExistingModeloTipoFase_ThrowsNotFoundException() {
+    // given: Un nuevo ModeloTipoDocumento con un ModeloTipoFase inxistente
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(1L, 1L, 1L);
+    modeloTipoDocumento.setId(null);
+
+    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(modeloTipoDocumento.getModeloEjecucion()));
+
+    BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(modeloTipoDocumento.getTipoDocumento()));
+
+    BDDMockito.given(modeloTipoFaseRepository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
+
+    // when: Creamos el ModeloTipoDocumento
+    // then: Lanza una excepcion porque el ModeloTipoFase no existe
+    Assertions.assertThatThrownBy(() -> service.create(modeloTipoDocumento))
+        .isInstanceOf(ModeloTipoFaseNotFoundException.class);
+  }
+
+  @Test
+  public void create_WithNotEqualsModelosEjecucion_ThrowsIllegalArgumentException() {
+    // given: Un nuevo ModeloTipoDocumento con un ModeloTipoFase que que tiene un
+    // ModeloEjecucion distinto
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(1L, 1L, 1L);
+    modeloTipoDocumento.setId(null);
+    modeloTipoDocumento.getModeloTipoFase().getModeloEjecucion().setId(2L);
+
+    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(modeloTipoDocumento.getModeloEjecucion()));
+
+    BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(modeloTipoDocumento.getTipoDocumento()));
+
+    BDDMockito.given(modeloTipoFaseRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(modeloTipoDocumento.getModeloTipoFase()));
+
+    // when: Creamos el ModeloTipoDocumento
+    // then: Lanza una excepcion porque el ModeloTipoFase no esta activo
+    Assertions.assertThatThrownBy(() -> service.create(modeloTipoDocumento))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("El ModeloEjecucion '%s' no coincide con el ModeloEjecucion del ModeloTipoFase asociado '%s'",
+            modeloTipoDocumento.getModeloEjecucion().getNombre(),
+            modeloTipoDocumento.getModeloTipoFase().getModeloEjecucion().getNombre());
+  }
+
+  @Test
+  public void create_WithDisabledModeloTipoFase_ThrowsIllegalArgumentException() {
+    // given: Un nuevo ModeloTipoDocumento con un ModeloTipoFase que no esta activo
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(1L, 1L, 1L);
+    modeloTipoDocumento.setId(null);
+    modeloTipoDocumento.getModeloTipoFase().setActivo(false);
+
+    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(modeloTipoDocumento.getModeloEjecucion()));
+
+    BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(modeloTipoDocumento.getTipoDocumento()));
+
+    BDDMockito.given(modeloTipoFaseRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(modeloTipoDocumento.getModeloTipoFase()));
 
     // when: Creamos el ModeloTipoDocumento
@@ -204,119 +307,290 @@ public class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void create_WithModeloTipoFaseAndExistWithoutModeloTipoFase_ThrowsIllegalArgumentException() {
-    // given: Un nuevo ModeloTipoDocumento con una combinacion de ModeloEjecucionId
-    // y TipoDocumentoId y ModeloTipoFaseId que ya existe y esta activo
-    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(null, 1L, 1L);
+  public void create_WithDisabledTipoFase_ThrowsIllegalArgumentException() {
+    // given: Un nuevo ModeloTipoDocumento con un ModeloTipoFase con Fase inactiva
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(1L, 1L, 1L);
+    modeloTipoDocumento.setId(null);
+    modeloTipoDocumento.getModeloTipoFase().getTipoFase().setActivo(false);
 
-    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.anyLong()))
+    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(modeloTipoDocumento.getModeloEjecucion()));
 
-    BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.anyLong()))
+    BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(modeloTipoDocumento.getTipoDocumento()));
 
-    BDDMockito.given(modeloTipoFaseRepository.findById(ArgumentMatchers.anyLong()))
+    BDDMockito.given(modeloTipoFaseRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(modeloTipoDocumento.getModeloTipoFase()));
 
-    BDDMockito.given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndTipoDocumentoId(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyLong())).willReturn(Arrays.asList(generarMockModeloTipoDocumento(1L, 1L, null)));
+    // when: Creamos el ModeloTipoDocumento
+    // then: Lanza una excepcion porque el ModeloTipoFase no esta activo
+    Assertions.assertThatThrownBy(() -> service.create(modeloTipoDocumento))
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("El TipoFase debe estar Activo");
+  }
+
+  @Test
+  public void create_EnableDuplicateWithModeloTipoFase_ThrowsIllegalArgumentException() {
+    // given: Un nuevo ModeloTipoDocumento con una combinacion de ModeloEjecucionId
+    // y TipoDocumentoId y ModeloTipoFaseId que ya existe y esta activo
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(2L, 1L, 1L);
+    modeloTipoDocumento.setId(null);
+    ModeloTipoDocumento modeloTipoDocumentoExistente = generarMockModeloTipoDocumento(1L, 1L, 1L);
+    modeloTipoDocumentoExistente.setActivo(Boolean.TRUE);
+
+    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(modeloTipoDocumento.getModeloEjecucion()));
+
+    BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(modeloTipoDocumento.getTipoDocumento()));
+
+    BDDMockito.given(modeloTipoFaseRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(modeloTipoDocumento.getModeloTipoFase()));
+
+    BDDMockito
+        .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
+            ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(modeloTipoDocumentoExistente));
 
     // when: Creamos el ModeloTipoDocumento
     // then: Lanza una excepcion porque ya existe esa relacion activa
     Assertions.assertThatThrownBy(() -> service.create(modeloTipoDocumento))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe una asociación activa para ese ModeloEjecucion y ese TipoDocumento sin ModeloTipoFase");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "Ya existe una asociación activa para el ModeloEjecucion '%s' y el TipoDocumento '%s' con ModeloTipoFase de '%s'",
+            modeloTipoDocumento.getModeloEjecucion().getNombre(), modeloTipoDocumento.getTipoDocumento().getNombre(),
+            modeloTipoDocumento.getModeloTipoFase().getTipoFase().getNombre());
   }
 
   @Test
-  public void create_WithoutModeloTipoFaseAndExistWithModeloTipoFase_ThrowsIllegalArgumentException() {
+  public void create_EnabledDuplicateWithoutModeloTipoFase_ThrowsIllegalArgumentException() {
     // given: Un nuevo ModeloTipoDocumento con una combinacion de ModeloEjecucionId
-    // y TipoDocumentoId y ModeloTipoFaseId que ya existe y esta activo
-    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(null, 1L, null);
+    // y TipoDocumentoId y sin ModeloTipoFaseId que ya existe y esta activo
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(2L, 1L, 1L);
+    modeloTipoDocumento.setId(null);
+    modeloTipoDocumento.setModeloTipoFase(null);
+    ModeloTipoDocumento modeloTipoDocumentoExistente = generarMockModeloTipoDocumento(1L, 1L, 1L);
+    modeloTipoDocumentoExistente.setModeloTipoFase(null);
+    modeloTipoDocumentoExistente.setActivo(Boolean.TRUE);
 
-    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.anyLong()))
+    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(modeloTipoDocumento.getModeloEjecucion()));
 
-    BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.anyLong()))
+    BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(modeloTipoDocumento.getTipoDocumento()));
 
-    BDDMockito.given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndTipoDocumentoId(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyLong())).willReturn(Arrays.asList(generarMockModeloTipoDocumento(1L, 1L, 1L)));
+    BDDMockito
+        .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
+            ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(modeloTipoDocumentoExistente));
 
     // when: Creamos el ModeloTipoDocumento
     // then: Lanza una excepcion porque ya existe esa relacion activa
     Assertions.assertThatThrownBy(() -> service.create(modeloTipoDocumento))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe una asociación activa para ese ModeloEjecucion y ese TipoDocumento con ModeloTipoFase");
+        .isInstanceOf(IllegalArgumentException.class).hasMessage(
+            "Ya existe una asociación activa para el ModeloEjecucion '%s' y el TipoDocumento '%s' con ModeloTipoFase de '%s'",
+            modeloTipoDocumento.getModeloEjecucion().getNombre(), modeloTipoDocumento.getTipoDocumento().getNombre(),
+            "Sin fase asignada");
   }
 
   @Test
-  public void create_WithDuplicatedModeloEjecucionIdAndTipoDocumentoAndModeloTipoFaseIdAndActivo_ThrowsIllegalArgumentException() {
+  public void create_DisabledDuplicateWithModeloTipoFase_ThrowsIllegalArgumentException() {
     // given: Un nuevo ModeloTipoDocumento con una combinacion de ModeloEjecucionId
-    // y TipoDocumentoId y ModeloTipoFaseId que ya existe y esta activo
-    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(null, 1L, 1L);
+    // y TipoDocumentoId y ModeloTipoFaseId que ya existe y esta inactivo
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(2L, 1L, 1L);
+    modeloTipoDocumento.setId(null);
+    ModeloTipoDocumento modeloTipoDocumentoExistente = generarMockModeloTipoDocumento(1L, 1L, 1L);
+    modeloTipoDocumentoExistente.setActivo(Boolean.FALSE);
 
-    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.anyLong()))
+    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(modeloTipoDocumento.getModeloEjecucion()));
 
-    BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.anyLong()))
+    BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(modeloTipoDocumento.getTipoDocumento()));
 
-    BDDMockito.given(modeloTipoFaseRepository.findById(ArgumentMatchers.anyLong()))
+    BDDMockito.given(modeloTipoFaseRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(modeloTipoDocumento.getModeloTipoFase()));
 
-    BDDMockito.given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndTipoDocumentoId(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyLong())).willReturn(Arrays.asList(generarMockModeloTipoDocumento(1L, 1L, 1L)));
-
-    // when: Creamos el ModeloTipoDocumento
-    // then: Lanza una excepcion porque ya existe esa relacion activa
-    Assertions.assertThatThrownBy(() -> service.create(modeloTipoDocumento))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe una asociación activa para ese ModeloEjecucion, TipoDocumento y ModeloTipoFase");
-  }
-
-  @Test
-  public void create_WithDuplicatedModeloEjecucionIdAndTipoDocumentoAndModeloTipoFaseIdAndActivoFalse_ReturnEnableModeloTipoDocumento() {
-    // given: Un nuevo ModeloTipoDocumento con una combinacion de ModeloEjecucionId
-    // y TipoDocumentoId y ModeloTipoFaseId que ya existe y no esta activo
-    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(null, 1L, 1L);
-    ModeloTipoDocumento modeloTipoDocumentoExiste = generarMockModeloTipoDocumento(1L, 1L, 1L);
-    modeloTipoDocumentoExiste.setActivo(false);
-
-    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(modeloTipoDocumento.getModeloEjecucion()));
-
-    BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(modeloTipoDocumento.getTipoDocumento()));
-
-    BDDMockito.given(modeloTipoFaseRepository.findById(ArgumentMatchers.anyLong()))
-        .willReturn(Optional.of(modeloTipoDocumento.getModeloTipoFase()));
-
-    BDDMockito.given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndTipoDocumentoId(ArgumentMatchers.anyLong(),
-        ArgumentMatchers.anyLong())).willReturn(Arrays.asList(modeloTipoDocumentoExiste));
+    BDDMockito
+        .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
+            ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(modeloTipoDocumentoExistente));
 
     BDDMockito.given(modeloTipoDocumentoRepository.save(modeloTipoDocumento)).will((InvocationOnMock invocation) -> {
       ModeloTipoDocumento modeloTipoDocumentoCreado = invocation.getArgument(0);
+      modeloTipoDocumentoCreado.setId(modeloTipoDocumentoExistente.getId());
+      modeloTipoDocumentoCreado.setActivo(Boolean.TRUE);
       return modeloTipoDocumentoCreado;
     });
 
     // when: Creamos el ModeloTipoDocumento
     ModeloTipoDocumento modeloTipoDocumentoCreado = service.create(modeloTipoDocumento);
 
-    // then: El ModeloTipoDocumento se crea correctamente
+    // then: Se activa el ModeloTipoDocumento ya existente
     Assertions.assertThat(modeloTipoDocumentoCreado).as("isNotNull()").isNotNull();
-    Assertions.assertThat(modeloTipoDocumentoCreado.getId()).as("getId()").isNotNull();
-    Assertions.assertThat(modeloTipoDocumentoCreado.getModeloEjecucion()).as("getModeloEjecucion()").isNotNull();
-    Assertions.assertThat(modeloTipoDocumentoCreado.getModeloEjecucion().getId()).as("getModeloEjecucion().getId()")
-        .isEqualTo(modeloTipoDocumento.getModeloEjecucion().getId());
-    Assertions.assertThat(modeloTipoDocumentoCreado.getTipoDocumento()).as("getTipoDocumento()").isNotNull();
+    Assertions.assertThat(modeloTipoDocumentoCreado.getId()).as("getId()")
+        .isEqualTo(modeloTipoDocumentoExistente.getId());
     Assertions.assertThat(modeloTipoDocumentoCreado.getTipoDocumento().getId()).as("getTipoDocumento().getId()")
         .isEqualTo(modeloTipoDocumento.getTipoDocumento().getId());
-    Assertions.assertThat(modeloTipoDocumentoCreado.getModeloTipoFase()).as("getModeloTipoFase()").isNotNull();
     Assertions.assertThat(modeloTipoDocumentoCreado.getModeloTipoFase().getId()).as("getModeloTipoFase().getId()")
         .isEqualTo(modeloTipoDocumento.getModeloTipoFase().getId());
-    Assertions.assertThat(modeloTipoDocumentoCreado.getActivo()).as("getActivo()").isEqualTo(true);
+    Assertions.assertThat(modeloTipoDocumentoCreado.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
   }
+
+  @Test
+  public void create_DisabledDuplicateWithoutModeloTipoFase_ThrowsIllegalArgumentException() {
+    // given: Un nuevo ModeloTipoDocumento con una combinacion de ModeloEjecucionId
+    // y TipoDocumentoId y sin ModeloTipoFaseId que ya existe y esta inactivo
+    ModeloTipoDocumento modeloTipoDocumento = generarMockModeloTipoDocumento(2L, 1L, 1L);
+    modeloTipoDocumento.setId(null);
+    modeloTipoDocumento.setModeloTipoFase(null);
+    ModeloTipoDocumento modeloTipoDocumentoExistente = generarMockModeloTipoDocumento(1L, 1L, 1L);
+    modeloTipoDocumentoExistente.setModeloTipoFase(null);
+    modeloTipoDocumentoExistente.setActivo(Boolean.FALSE);
+
+    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(modeloTipoDocumento.getModeloEjecucion()));
+
+    BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(modeloTipoDocumento.getTipoDocumento()));
+
+    BDDMockito
+        .given(modeloTipoDocumentoRepository.findByModeloEjecucionIdAndModeloTipoFaseIdAndTipoDocumentoId(
+            ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any(), ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(modeloTipoDocumentoExistente));
+
+    BDDMockito.given(modeloTipoDocumentoRepository.save(modeloTipoDocumento)).will((InvocationOnMock invocation) -> {
+      ModeloTipoDocumento modeloTipoDocumentoCreado = invocation.getArgument(0);
+      modeloTipoDocumentoCreado.setId(modeloTipoDocumentoExistente.getId());
+      modeloTipoDocumentoCreado.setActivo(Boolean.TRUE);
+      return modeloTipoDocumentoCreado;
+    });
+
+    // when: Creamos el ModeloTipoDocumento
+    ModeloTipoDocumento modeloTipoDocumentoCreado = service.create(modeloTipoDocumento);
+
+    // then: Se activa el ModeloTipoDocumento ya existente
+    Assertions.assertThat(modeloTipoDocumentoCreado).as("isNotNull()").isNotNull();
+    Assertions.assertThat(modeloTipoDocumentoCreado.getId()).as("getId()")
+        .isEqualTo(modeloTipoDocumentoExistente.getId());
+    Assertions.assertThat(modeloTipoDocumentoCreado.getTipoDocumento().getId()).as("getTipoDocumento().getId()")
+        .isEqualTo(modeloTipoDocumento.getTipoDocumento().getId());
+    Assertions.assertThat(modeloTipoDocumentoCreado.getModeloTipoFase()).as("getModeloTipoFase()").isNull();
+    Assertions.assertThat(modeloTipoDocumentoCreado.getModeloTipoFase()).as("getModeloTipoFase()")
+        .isEqualTo(modeloTipoDocumento.getModeloTipoFase());
+    Assertions.assertThat(modeloTipoDocumentoCreado.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
+  }
+
+  // @Test
+  // public void
+  // create_WithoutModeloTipoFaseAndExistWithModeloTipoFase_ThrowsIllegalArgumentException()
+  // {
+  // // given: Un nuevo ModeloTipoDocumento con una combinacion de
+  // ModeloEjecucionId
+  // // y TipoDocumentoId y ModeloTipoFaseId que ya existe y esta activo
+  // ModeloTipoDocumento modeloTipoDocumento =
+  // generarMockModeloTipoDocumento(null, 1L, null);
+
+  // BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any()))
+  // .willReturn(Optional.of(modeloTipoDocumento.getModeloEjecucion()));
+
+  // BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.<Long>any()))
+  // .willReturn(Optional.of(modeloTipoDocumento.getTipoDocumento()));
+
+  // BDDMockito.given(modeloTipoDocumentoRepository
+  // .findByModeloEjecucionIdAndTipoDocumentoId(ArgumentMatchers.<Long>any(),
+  // ArgumentMatchers.<Long>any()))
+  // .willReturn(Arrays.asList(generarMockModeloTipoDocumento(1L, 1L, 1L)));
+
+  // // when: Creamos el ModeloTipoDocumento
+  // // then: Lanza una excepcion porque ya existe esa relacion activa
+  // Assertions.assertThatThrownBy(() -> service.create(modeloTipoDocumento))
+  // .isInstanceOf(IllegalArgumentException.class)
+  // .hasMessage("Ya existe una asociación activa para ese ModeloEjecucion y ese
+  // TipoDocumento con ModeloTipoFase");
+  // }
+
+  // @Test
+  // public void
+  // create_WithDuplicatedModeloEjecucionIdAndTipoDocumentoAndModeloTipoFaseIdAndActivo_ThrowsIllegalArgumentException()
+  // {
+  // // given: Un nuevo ModeloTipoDocumento con una combinacion de
+  // ModeloEjecucionId
+  // // y TipoDocumentoId y ModeloTipoFaseId que ya existe y esta activo
+  // ModeloTipoDocumento modeloTipoDocumento =
+  // generarMockModeloTipoDocumento(null, 1L, 1L);
+
+  // BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any()))
+  // .willReturn(Optional.of(modeloTipoDocumento.getModeloEjecucion()));
+
+  // BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.<Long>any()))
+  // .willReturn(Optional.of(modeloTipoDocumento.getTipoDocumento()));
+
+  // BDDMockito.given(modeloTipoFaseRepository.findById(ArgumentMatchers.<Long>any()))
+  // .willReturn(Optional.of(modeloTipoDocumento.getModeloTipoFase()));
+
+  // BDDMockito.given(modeloTipoDocumentoRepository
+  // .findByModeloEjecucionIdAndTipoDocumentoId(ArgumentMatchers.<Long>any(),
+  // ArgumentMatchers.<Long>any()))
+  // .willReturn(Arrays.asList(generarMockModeloTipoDocumento(1L, 1L, 1L)));
+
+  // // when: Creamos el ModeloTipoDocumento
+  // // then: Lanza una excepcion porque ya existe esa relacion activa
+  // Assertions.assertThatThrownBy(() -> service.create(modeloTipoDocumento))
+  // .isInstanceOf(IllegalArgumentException.class)
+  // .hasMessage("Ya existe una asociación activa para ese ModeloEjecucion,
+  // TipoDocumento y ModeloTipoFase");
+  // }
+
+  // @Test
+  // public void
+  // create_WithDuplicatedModeloEjecucionIdAndTipoDocumentoAndModeloTipoFaseIdAndActivoFalse_ReturnEnableModeloTipoDocumento()
+  // {
+  // // given: Un nuevo ModeloTipoDocumento con una combinacion de
+  // ModeloEjecucionId
+  // // y TipoDocumentoId y ModeloTipoFaseId que ya existe y no esta activo
+  // ModeloTipoDocumento modeloTipoDocumento =
+  // generarMockModeloTipoDocumento(null, 1L, 1L);
+  // ModeloTipoDocumento modeloTipoDocumentoExiste =
+  // generarMockModeloTipoDocumento(1L, 1L, 1L);
+  // modeloTipoDocumentoExiste.setActivo(false);
+
+  // BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any()))
+  // .willReturn(Optional.of(modeloTipoDocumento.getModeloEjecucion()));
+
+  // BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.<Long>any()))
+  // .willReturn(Optional.of(modeloTipoDocumento.getTipoDocumento()));
+
+  // BDDMockito.given(modeloTipoFaseRepository.findById(ArgumentMatchers.<Long>any()))
+  // .willReturn(Optional.of(modeloTipoDocumento.getModeloTipoFase()));
+
+  // BDDMockito.given(modeloTipoDocumentoRepository
+  // .findByModeloEjecucionIdAndTipoDocumentoId(ArgumentMatchers.<Long>any(),
+  // ArgumentMatchers.<Long>any()))
+  // .willReturn(Arrays.asList(modeloTipoDocumentoExiste));
+
+  // BDDMockito.given(modeloTipoDocumentoRepository.save(modeloTipoDocumento)).will((InvocationOnMock
+  // invocation) -> {
+  // ModeloTipoDocumento modeloTipoDocumentoCreado = invocation.getArgument(0);
+  // return modeloTipoDocumentoCreado;
+  // });
+
+  // // when: Creamos el ModeloTipoDocumento
+  // ModeloTipoDocumento modeloTipoDocumentoCreado =
+  // service.create(modeloTipoDocumento);
+
+  // // then: El ModeloTipoDocumento se crea correctamente
+  // Assertions.assertThat(modeloTipoDocumentoCreado).as("isNotNull()").isNotNull();
+  // Assertions.assertThat(modeloTipoDocumentoCreado.getId()).as("getId()").isNotNull();
+  // Assertions.assertThat(modeloTipoDocumentoCreado.getModeloEjecucion()).as("getModeloEjecucion()").isNotNull();
+  // Assertions.assertThat(modeloTipoDocumentoCreado.getModeloEjecucion().getId()).as("getModeloEjecucion().getId()")
+  // .isEqualTo(modeloTipoDocumento.getModeloEjecucion().getId());
+  // Assertions.assertThat(modeloTipoDocumentoCreado.getTipoDocumento()).as("getTipoDocumento()").isNotNull();
+  // Assertions.assertThat(modeloTipoDocumentoCreado.getTipoDocumento().getId()).as("getTipoDocumento().getId()")
+  // .isEqualTo(modeloTipoDocumento.getTipoDocumento().getId());
+  // Assertions.assertThat(modeloTipoDocumentoCreado.getModeloTipoFase()).as("getModeloTipoFase()").isNotNull();
+  // Assertions.assertThat(modeloTipoDocumentoCreado.getModeloTipoFase().getId()).as("getModeloTipoFase().getId()")
+  // .isEqualTo(modeloTipoDocumento.getModeloTipoFase().getId());
+  // Assertions.assertThat(modeloTipoDocumentoCreado.getActivo()).as("getActivo()").isEqualTo(true);
+  // }
 
   @Test
   public void disable_ReturnsModeloTipoDocumento() {
@@ -469,6 +743,8 @@ public class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
   private ModeloTipoDocumento generarMockModeloTipoDocumento(Long id, Long idTipoDocumento, Long idModeloTipoFase) {
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion();
     modeloEjecucion.setId(1L);
+    modeloEjecucion.setNombre("nombreModeloEjecion-1");
+    modeloEjecucion.setActivo(Boolean.TRUE);
 
     ModeloTipoDocumento modeloTipoDocumento = new ModeloTipoDocumento();
     modeloTipoDocumento.setId(id);
@@ -485,7 +761,7 @@ public class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
   }
 
   /**
-   * Función que devuelve un objeto ModeloTipoDocumento
+   * Función que devuelve un objeto ModeloTipoFase
    * 
    * @param id id del ModeloTipoDocumento
    * @param id idTipoDocumento del TipoDocumento
@@ -494,6 +770,7 @@ public class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
   private ModeloTipoFase generarMockModeloTipoFase(Long id, Long idTipoFase) {
     ModeloEjecucion modeloEjecucion = new ModeloEjecucion();
     modeloEjecucion.setId(1L);
+    modeloEjecucion.setNombre("nombreModeloEjecion-1");
 
     TipoFase tipoFase = new TipoFase();
     tipoFase.setId(idTipoFase);
@@ -505,6 +782,7 @@ public class ModeloTipoDocumentoServiceTest extends BaseServiceTest {
     modeloTipoFase.setId(id);
     modeloTipoFase.setActivo(true);
     modeloTipoFase.setTipoFase(tipoFase);
+    modeloTipoFase.setModeloEjecucion(modeloEjecucion);
 
     return modeloTipoFase;
   }

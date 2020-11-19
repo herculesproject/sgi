@@ -20,6 +20,7 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaDocumento;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
@@ -33,6 +34,7 @@ import org.crue.hercules.sgi.csp.model.ModeloEjecucion;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
+import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.model.TipoEnlace;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
@@ -42,6 +44,7 @@ import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoCodigoEcService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaDocumentoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEnlaceService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadFinanciadoraService;
@@ -87,6 +90,8 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   @MockBean
   private ConvocatoriaAreaTematicaService convocatoriaAreaTematicaService;
   @MockBean
+  private ConvocatoriaDocumentoService convocatoriaDocumentoService;
+  @MockBean
   private ConvocatoriaEnlaceService convocatoriaEnlaceService;
   @MockBean
   private ConvocatoriaEntidadConvocanteService convocatoriaEntidadConvocanteService;
@@ -110,7 +115,8 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   private static final String PATH_PARAMETER_TODOS = "/todos";
   private static final String CONTROLLER_BASE_PATH = "/convocatorias";
   private static final String PATH_AREA_TEMATICA = "/convocatoriaareatematicas";
-  private static final String PATH_ENTIDAD_ENLACES = "/convocatoriaenlaces";
+  private static final String PATH_ENTIDAD_DOCUMENTO = "/convocatoriadocumentos";
+  private static final String PATH_ENTIDAD_ENLACE = "/convocatoriaenlaces";
   private static final String PATH_ENTIDAD_CONVOCANTE = "/convocatoriaentidadconvocantes";
   private static final String PATH_ENTIDAD_FINANCIADORA = "/convocatoriaentidadfinanciadoras";
   private static final String PATH_ENTIDAD_GESTORA = "/convocatoriaentidadgestoras";
@@ -907,6 +913,103 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
 
   /**
    * 
+   * CONVOCATORIA ENTIDAD DOCUMENTO
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  public void findAllConvocatoriaDocumento_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ConvocatoriaDocumento para la Convocatoria
+    Long convocatoriaId = 1L;
+
+    List<ConvocatoriaDocumento> convocatoriaDocumentos = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      convocatoriaDocumentos.add(generarMockConvocatoriaDocumento(i));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(convocatoriaDocumentoService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ConvocatoriaDocumento>>() {
+          @Override
+          public Page<ConvocatoriaDocumento> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(2, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            toIndex = toIndex > convocatoriaDocumentos.size() ? convocatoriaDocumentos.size() : toIndex;
+            List<ConvocatoriaDocumento> content = convocatoriaDocumentos.subList(fromIndex, toIndex);
+            Page<ConvocatoriaDocumento> page = new PageImpl<>(content, pageable, convocatoriaDocumentos.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ENTIDAD_DOCUMENTO, convocatoriaId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los ConvocatoriaDocumento del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<ConvocatoriaDocumento> convocatoriaDocumentoResponse = mapper
+        .readValue(requestResult.getResponse().getContentAsString(), new TypeReference<List<ConvocatoriaDocumento>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ConvocatoriaDocumento convocatoriaDocumento = convocatoriaDocumentoResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(convocatoriaDocumento.getDocumentoRef()).isEqualTo("documentoRef" + i);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  public void findAllConvocatoriaDocumento_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de ConvocatoriaDocumento para la Convocatoria
+    Long convocatoriaId = 1L;
+    List<ConvocatoriaDocumento> convocatoriaDocumentos = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(convocatoriaDocumentoService.findAllByConvocatoria(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ConvocatoriaDocumento>>() {
+          @Override
+          public Page<ConvocatoriaDocumento> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(2, Pageable.class);
+            Page<ConvocatoriaDocumento> page = new PageImpl<>(convocatoriaDocumentos, pageable, 0);
+            return page;
+          }
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ENTIDAD_DOCUMENTO, convocatoriaId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
+   * 
    * CONVOCATORIA ENTIDAD ENLACE
    * 
    */
@@ -946,7 +1049,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
     // when: Get page=3 with pagesize=10
     MvcResult requestResult = mockMvc
         .perform(
-            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ENTIDAD_ENLACES, convocatoriaId)
+            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ENTIDAD_ENLACE, convocatoriaId)
                 .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page)
                 .header("X-Page-Size", pageSize).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
@@ -994,7 +1097,7 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
     // when: Get page=0 with pagesize=10
     mockMvc
         .perform(
-            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ENTIDAD_ENLACES, convocatoriaId)
+            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ENTIDAD_ENLACE, convocatoriaId)
                 .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page)
                 .header("X-Page-Size", pageSize).accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
@@ -1978,10 +2081,33 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   /**
+   * Función que devuelve un objeto ConvocatoriaDocumento
+   * 
+   * @param id id del ConvocatoriaDocumento
+   * @return el objeto ConvocatoriaDocumento
+   */
+  private ConvocatoriaDocumento generarMockConvocatoriaDocumento(Long id) {
+
+    Convocatoria convocatoria = Convocatoria.builder().id(1L).build();
+    TipoFase tipoFase = TipoFase.builder().id(id).build();
+    TipoDocumento tipoDocumento = TipoDocumento.builder().id(id).build();
+
+    return ConvocatoriaDocumento.builder()//
+        .id(id)//
+        .convocatoria(convocatoria)//
+        .tipoFase(tipoFase)//
+        .tipoDocumento(tipoDocumento)//
+        .nombre("nombre doc-" + id)//
+        .publico(Boolean.TRUE)//
+        .observaciones("observaciones-" + id)//
+        .documentoRef("documentoRef" + id)//
+        .build();
+  }
+
+  /**
    * Función que devuelve un objeto ConvocatoriaEnlace
    * 
-   * @param id     id del ConvocatoriaEnlace
-   * @param nombre nombre del ConvocatoriaEnlace
+   * @param id id del ConvocatoriaEnlace
    * @return el objeto ConvocatoriaEnlace
    */
   private ConvocatoriaEnlace generarMockConvocatoriaEnlace(Long id) {
