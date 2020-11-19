@@ -57,16 +57,25 @@
     <!-- Dictamen -->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field class="input-form">
-        <mat-label>{{'eti.evaluacion.evaluar.evaluacion.dictamen' | translate}}</mat-label>
-        <input type="text" [placeholder]="'eti.evaluacion.evaluar.evaluacion.dictamen' | translate" arial-label="Number"
-          matInput formControlName="dictamen" [matAutocomplete]="autocompleteDictamen">
-        <mat-autocomplete #autocompleteDictamen="matAutocomplete" [displayWith]="getDictamen">
-          <mat-option *ngFor="let dictamen of dictamenListado" [value]="dictamen">
-            {{dictamen.nombre}}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
+      <div fxLayout="row">
+        <mat-form-field class="input-form">
+          <mat-label>{{'eti.evaluacion.evaluar.evaluacion.dictamen' | translate}}</mat-label>
+          <input type="text" [placeholder]="'eti.evaluacion.evaluar.evaluacion.dictamen' | translate"
+            arial-label="Number" matInput formControlName="dictamen" [matAutocomplete]="autocompleteDictamen">
+          <mat-autocomplete #autocompleteDictamen="matAutocomplete" [displayWith]="getDictamen">
+            <mat-option *ngFor="let dictamen of dictamenListado" [value]="dictamen">
+              {{dictamen.nombre}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <div fxLayoutAlign="center center">
+          <button mat-icon-button
+            (click)="generateInformeDictamenFavorable(this.formPart.evaluacion?.memoria?.tipoMemoria?.id)"
+            [disabled]="(this.formPart.evaluacion?.memoria?.tipoMemoria?.id === 1 || this.formPart.evaluacion?.memoria?.tipoMemoria?.id === 3) && this.formGroup.controls.dictamen.value?.id !== 1">
+            <mat-icon color="primary">picture_as_pdf</mat-icon>
+          </button>
+        </div>
+      </div>
     </div>
 
   </form>

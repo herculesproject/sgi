@@ -3,7 +3,7 @@ import { FragmentComponent } from '@core/component/fragment.component';
 import { NGXLogger } from 'ngx-logger';
 import { MatDialog } from '@angular/material/dialog';
 import { MemoriaActionService } from '../../memoria.action.service';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -15,6 +15,7 @@ import { MemoriaEvaluacionesFragment } from './memoria-evaluaciones.fragment';
 import { IEvaluacion } from '@core/models/eti/evaluacion';
 
 import { MemoriaService } from '@core/services/eti/memoria.service';
+import { openInformeFavorableMemoria, openInformeFavorableTipoRatificacion } from '@core/services/pentaho.service';
 
 @Component({
   selector: 'sgi-memoria-evaluaciones',
@@ -75,6 +76,15 @@ export class MemoriaEvaluacionesComponent extends FragmentComponent implements O
     return ((evaluacion.value.tipoEvaluacion.id === 1 && evaluacion.value.dictamen?.id === 9)
       || (evaluacion.value.tipoEvaluacion.id === 2 && evaluacion.value.dictamen?.id === 1)
     );
+  }
+
+  generateInformeDictamenFavorable(idTipoMemoria: number, idEvaluacion: number): void {
+    if (idTipoMemoria === 1) {
+      openInformeFavorableMemoria(idEvaluacion);
+    }
+    else if (idTipoMemoria === 3) {
+      openInformeFavorableTipoRatificacion(idEvaluacion);
+    }
   }
 
   ngOnDestroy(): void {

@@ -15,6 +15,7 @@ import { EvaluacionEvaluacionFragment } from './evaluacion-evaluacion.fragment';
 import { IMemoria } from '@core/models/eti/memoria';
 import { TipoEvaluacionService } from '@core/services/eti/tipo-evaluacion.service';
 import { EvaluacionFormularioActionService } from '../evaluacion-formulario.action.service';
+import { openInformeFavorableMemoria, openInformeFavorableTipoRatificacion } from '@core/services/pentaho.service';
 
 @Component({
   selector: 'sgi-evaluacion-evaluacion',
@@ -32,6 +33,8 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
   dictamenListado: IDictamen[];
   filteredDictamenes: Observable<IDictamen[]>;
   suscriptions: Subscription[] = [];
+
+  formPart: EvaluacionEvaluacionFragment;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -57,6 +60,8 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
 
+    this.formPart = this.fragment as EvaluacionEvaluacionFragment;
+
     this.logger.debug(EvaluacionEvaluacionComponent.name, 'constructor()', 'end');
   }
 
@@ -80,6 +85,15 @@ export class EvaluacionEvaluacionComponent extends FormFragmentComponent<IMemori
     this.evaluaciones.evaluacionId = this.actionService.getEvaluacion()?.id;
     this.evaluaciones.ngAfterViewInit();
     this.logger.debug(EvaluacionEvaluacionComponent.name, 'ngAfterViewInit()', 'end');
+  }
+
+  generateInformeDictamenFavorable(idTipoMemoria: number): void {
+    if (idTipoMemoria === 1) {
+      openInformeFavorableMemoria(this.actionService.getEvaluacion()?.id);
+    }
+    else if (idTipoMemoria === 3) {
+      openInformeFavorableTipoRatificacion(this.actionService.getEvaluacion()?.id);
+    }
   }
 
   /**
