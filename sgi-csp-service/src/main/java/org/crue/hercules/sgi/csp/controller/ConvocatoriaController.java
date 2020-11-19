@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.crue.hercules.sgi.csp.dto.ConvocatoriaConceptoGastoCodigoEcWithEnableAccion;
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaConceptoGastoWithEnableAccion;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
@@ -19,6 +20,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaHito;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoJustificacion;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoCodigoEcService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEnlaceService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
@@ -89,6 +91,9 @@ public class ConvocatoriaController {
   /** ConvocatoriaConceptoGastoService */
   private final ConvocatoriaConceptoGastoService convocatoriaConceptoGastoService;
 
+  /** ConvocatoriaConceptoGastoCodigoEcService */
+  private final ConvocatoriaConceptoGastoCodigoEcService convocatoriaConceptoGastoCodigoEcService;
+
   /**
    * Instancia un nuevo ConvocatoriaController.
    * 
@@ -103,6 +108,7 @@ public class ConvocatoriaController {
    * @param convocatoriaPeriodoJustificacionService         {@link ConvocatoriaPeriodoJustificacionService}.
    * @param convocatoriaPeriodoSeguimientoCientificoService {@link ConvocatoriaPeriodoSeguimientoCientificoService}
    * @param convocatoriaConceptoGastoService                {@link ConvocatoriaConceptoGastoService}
+   * @param convocatoriaConceptoGastoCodigoEcService        {@link ConvocatoriaConceptoGastoCodigoEcService}
    */
   public ConvocatoriaController(ConvocatoriaService convocatoriaService,
       ConvocatoriaAreaTematicaService convocatoriaAreaTematicaService,
@@ -113,7 +119,8 @@ public class ConvocatoriaController {
       ConvocatoriaFaseService convocatoriaFaseService, ConvocatoriaHitoService convocatoriaHitoService,
       ConvocatoriaPeriodoJustificacionService convocatoriaPeriodoJustificacionService,
       ConvocatoriaPeriodoSeguimientoCientificoService convocatoriaPeriodoSeguimientoCientificoService,
-      ConvocatoriaConceptoGastoService convocatoriaConceptoGastoService) {
+      ConvocatoriaConceptoGastoService convocatoriaConceptoGastoService,
+      ConvocatoriaConceptoGastoCodigoEcService convocatoriaConceptoGastoCodigoEcService) {
     this.service = convocatoriaService;
     this.convocatoriaAreaTematicaService = convocatoriaAreaTematicaService;
     this.convocatoriaEnlaceService = convocatoriaEnlaceService;
@@ -125,6 +132,7 @@ public class ConvocatoriaController {
     this.convocatoriaPeriodoJustificacionService = convocatoriaPeriodoJustificacionService;
     this.convocatoriaPeriodoSeguimientoCientificoService = convocatoriaPeriodoSeguimientoCientificoService;
     this.convocatoriaConceptoGastoService = convocatoriaConceptoGastoService;
+    this.convocatoriaConceptoGastoCodigoEcService = convocatoriaConceptoGastoCodigoEcService;
   }
 
   /**
@@ -614,7 +622,6 @@ public class ConvocatoriaController {
    * permitidos de la {@link Convocatoria}.
    * 
    * @param id     Identificador de {@link Convocatoria}.
-   * @param query  filtro de {@link QueryCriteria}.
    * @param paging pageable.
    */
   @GetMapping("/{id}/convocatoriagastos/permitidos")
@@ -638,7 +645,6 @@ public class ConvocatoriaController {
    * no permitidos de la {@link Convocatoria}.
    *
    * @param id     Identificador de {@link Convocatoria}.
-   * @param query  filtro de {@link QueryCriteria}.
    * @param paging pageable.
    */
   @GetMapping("/{id}/convocatoriagastos/nopermitidos")
@@ -655,6 +661,61 @@ public class ConvocatoriaController {
     }
 
     log.debug("findAllConvocatoriaGastosNoPermitidos(Long id, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * 
+   * CONVOCATORIA GASTOS CÓDIGO ECONÓMICO
+   * 
+   */
+
+  /**
+   * Devuelve una lista paginada y filtrada de
+   * {@link ConvocatoriaConceptoGastoCodigoEc} permitidos de la
+   * {@link Convocatoria}.
+   * 
+   * @param id     Identificador de {@link Convocatoria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/convocatoriagastocodigoec/permitidos")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CCOD-V')")
+  ResponseEntity<Page<ConvocatoriaConceptoGastoCodigoEcWithEnableAccion>> findAllConvocatoriaGastosCodigoEcPermitidos(
+      @PathVariable Long id, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllConvocatoriaGastosCodigoEcPermitidos(Long id, Pageable paging) - start");
+    Page<ConvocatoriaConceptoGastoCodigoEcWithEnableAccion> page = convocatoriaConceptoGastoCodigoEcService
+        .findAllByConvocatoriaAndPermitidoTrue(id, paging);
+    if (page.isEmpty()) {
+      log.debug("findAllConvocatoriaGastosCodigoEcPermitidos(Long id, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllConvocatoriaGastosCodigoEcPermitidos(Long id, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada de
+   * {@link ConvocatoriaConceptoGastoCodigoEc} no permitidos de la
+   * {@link Convocatoria}.
+   *
+   * @param id     Identificador de {@link Convocatoria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/convocatoriagastocodigoec/nopermitidos")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-CCOD-V')")
+  ResponseEntity<Page<ConvocatoriaConceptoGastoCodigoEcWithEnableAccion>> findAllConvocatoriaGastosCodigoEcNoPermitidos(
+      @PathVariable Long id, @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllConvocatoriaGastosCodigoEcNoPermitidos(Long id, Pageable paging) - start");
+    Page<ConvocatoriaConceptoGastoCodigoEcWithEnableAccion> page = convocatoriaConceptoGastoCodigoEcService
+        .findAllByConvocatoriaAndPermitidoFalse(id, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllConvocatoriaGastosCodigoEcNoPermitidos(Long id, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllConvocatoriaGastosCodigoEcNoPermitidos(Long id, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

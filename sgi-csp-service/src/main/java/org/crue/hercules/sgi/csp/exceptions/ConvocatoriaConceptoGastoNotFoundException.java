@@ -10,8 +10,8 @@ public class ConvocatoriaConceptoGastoNotFoundException extends CspNotFoundExcep
    */
   private static final long serialVersionUID = 1L;
 
-  public ConvocatoriaConceptoGastoNotFoundException(Long convocatoriaEnlaceId) {
-    super("ConvocatoriaConceptoGasto " + convocatoriaEnlaceId + " does not exist.");
+  public ConvocatoriaConceptoGastoNotFoundException(Long convocatoriaConceptoGastoId) {
+    super("ConvocatoriaConceptoGasto " + convocatoriaConceptoGastoId + " does not exist.");
   }
 
 }

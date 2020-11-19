@@ -1069,7 +1069,6 @@
       <column name="importe_maximo" value="600.0" />
       <column name="permitido" value="true" />
       <column name="num_meses" value="2" />
-      <column name="porcentaje_coste_indirecto" value="15" />
     </insert>
 
     <insert tableName="convocatoria_concepto_gasto">
@@ -1080,7 +1079,6 @@
       <column name="importe_maximo" value="100.0" />
       <column name="permitido" value="false" />
       <column name="num_meses" value="4" />
-      <column name="porcentaje_coste_indirecto" value="25" />
     </insert>
     <insert tableName="convocatoria_concepto_gasto">
       <column name="id" valueSequenceNext="convocatoria_concepto_gasto_seq" />
@@ -1090,7 +1088,17 @@
       <column name="importe_maximo" value="600.0" />
       <column name="permitido" value="false" />
       <column name="num_meses" value="2" />
-      <column name="porcentaje_coste_indirecto" value="15" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000000-convocatoria_concepto_gasto_codigo_ec">
+    <insert tableName="convocatoria_concepto_gasto_codigo_ec">
+      <column name="id" valueSequenceNext="convocatoria_concepto_gasto_codigo_ec_seq" />
+      <column name="convocatoria_concepto_gasto_id" valueComputed="(select ccg.id from csp.convocatoria_concepto_gasto ccg inner join csp.convocatoria c on ccg.convocatoria_id = c.id where c.codigo = 'codigo-001' and ccg.concepto_gasto_id=1 and ccg.permitido='true')" />
+      <column name="codigo_economico_ref" value="cod-001" />
+      <column name="fecha_inicio" value="2020-10-12" />
+      <column name="fecha_fin" value="2020-10-15" />
+      <column name="observaciones" value="Obs codigo economico" />
     </insert>
   </changeSet>
 

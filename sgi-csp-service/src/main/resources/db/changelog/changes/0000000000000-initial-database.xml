@@ -10,96 +10,99 @@
     <createSequence incrementBy="1" sequenceName="convocatoria_area_tematica_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-4">
-    <createSequence incrementBy="1" sequenceName="convocatoria_concepto_gasto_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="convocatoria_concepto_gasto_codigo_ec_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-5">
-    <createSequence incrementBy="1" sequenceName="convocatoria_enlace_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="convocatoria_concepto_gasto_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-6">
-    <createSequence incrementBy="1" sequenceName="convocatoria_entidad_convocante_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="convocatoria_enlace_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-7">
-    <createSequence incrementBy="1" sequenceName="convocatoria_entidad_financiadora_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="convocatoria_entidad_convocante_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-8">
-    <createSequence incrementBy="1" sequenceName="convocatoria_entidad_gestora_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="convocatoria_entidad_financiadora_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-9">
-    <createSequence incrementBy="1" sequenceName="convocatoria_fase_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="convocatoria_entidad_gestora_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-10">
-    <createSequence incrementBy="1" sequenceName="convocatoria_hito_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="convocatoria_fase_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-11">
-    <createSequence incrementBy="1" sequenceName="convocatoria_periodo_justificacion_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="convocatoria_hito_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-12">
-    <createSequence incrementBy="1" sequenceName="convocatoria_periodo_seguimiento_cientifico_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="convocatoria_periodo_justificacion_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-13">
-    <createSequence incrementBy="1" sequenceName="convocatoria_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="convocatoria_periodo_seguimiento_cientifico_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-14">
-    <createSequence incrementBy="1" sequenceName="fuente_financiacion_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="convocatoria_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-15">
-    <createSequence incrementBy="1" sequenceName="modelo_ejecucion_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="fuente_financiacion_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-16">
-    <createSequence incrementBy="1" sequenceName="modelo_tipo_documento_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="modelo_ejecucion_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-17">
-    <createSequence incrementBy="1" sequenceName="modelo_tipo_enlace_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="modelo_tipo_documento_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-18">
-    <createSequence incrementBy="1" sequenceName="modelo_tipo_fase_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="modelo_tipo_enlace_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-19">
-    <createSequence incrementBy="1" sequenceName="modelo_tipo_finalidad_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="modelo_tipo_fase_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-20">
-    <createSequence incrementBy="1" sequenceName="modelo_tipo_hito_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="modelo_tipo_finalidad_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-21">
-    <createSequence incrementBy="1" sequenceName="modelo_unidad_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="modelo_tipo_hito_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-22">
-    <createSequence incrementBy="1" sequenceName="programa_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="modelo_unidad_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-23">
-    <createSequence incrementBy="1" sequenceName="requisito_equipo_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="programa_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-24">
-    <createSequence incrementBy="1" sequenceName="requisito_ip_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="requisito_equipo_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-25">
-    <createSequence incrementBy="1" sequenceName="tipo_ambito_geografico_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="requisito_ip_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-26">
-    <createSequence incrementBy="1" sequenceName="tipo_documento_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="tipo_ambito_geografico_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-27">
-    <createSequence incrementBy="1" sequenceName="tipo_enlace_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="tipo_documento_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-28">
-    <createSequence incrementBy="1" sequenceName="tipo_fase_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="tipo_enlace_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-29">
-    <createSequence incrementBy="1" sequenceName="tipo_finalidad_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="tipo_fase_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-30">
-    <createSequence incrementBy="1" sequenceName="tipo_financiacion_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="tipo_finalidad_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-31">
-    <createSequence incrementBy="1" sequenceName="tipo_hito_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="tipo_financiacion_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-32">
-    <createSequence incrementBy="1" sequenceName="tipo_origen_fuente_financiacion_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="tipo_hito_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-33">
-    <createSequence incrementBy="1" sequenceName="tipo_regimen_concurrencia_seq" startValue="1" />
+    <createSequence incrementBy="1" sequenceName="tipo_origen_fuente_financiacion_seq" startValue="1" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-34">
+    <createSequence incrementBy="1" sequenceName="tipo_regimen_concurrencia_seq" startValue="1" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000000-35">
     <createTable tableName="area_tematica">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="area_tematicaPK" />
@@ -114,7 +117,7 @@
       <column name="area_tematica_padre_id" type="BIGINT" />
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-35">
+  <changeSet author="user (generated)" id="0000000000000-36">
     <createTable tableName="concepto_gasto">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="concepto_gastoPK" />
@@ -128,7 +131,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-36">
+  <changeSet author="user (generated)" id="0000000000000-37">
     <createTable tableName="convocatoria">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoriaPK" />
@@ -155,7 +158,7 @@
       <column name="tipo_regimen_concurrencia_id" type="BIGINT" />
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-37">
+  <changeSet author="user (generated)" id="0000000000000-38">
     <createTable tableName="convocatoria_area_tematica">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_area_tematicaPK" />
@@ -169,7 +172,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-38">
+  <changeSet author="user (generated)" id="0000000000000-39">
     <createTable tableName="convocatoria_concepto_gasto">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_concepto_gastoPK" />
@@ -187,7 +190,23 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-39">
+  <changeSet author="user (generated)" id="0000000000000-40">
+    <createTable tableName="convocatoria_concepto_gasto_codigo_ec">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_concepto_gasto_codigo_ecPK" />
+      </column>
+      <column name="codigo_economico_ref" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>
+      <column name="fecha_fin" type="date" />
+      <column name="fecha_inicio" type="date" />
+      <column name="observaciones" type="VARCHAR(250)" />
+      <column name="convocatoria_concepto_gasto_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000000-41">
     <createTable tableName="convocatoria_enlace">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_enlacePK" />
@@ -202,7 +221,7 @@
       <column name="tipo_enlace_id" type="BIGINT" />
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-40">
+  <changeSet author="user (generated)" id="0000000000000-42">
     <createTable tableName="convocatoria_entidad_convocante">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_entidad_convocantePK" />
@@ -216,7 +235,7 @@
       <column name="programa_id" type="BIGINT" />
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-41">
+  <changeSet author="user (generated)" id="0000000000000-43">
     <createTable tableName="convocatoria_entidad_financiadora">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_entidad_financiadoraPK" />
@@ -232,7 +251,7 @@
       <column name="tipo_financiacion_id" type="BIGINT" />
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-42">
+  <changeSet author="user (generated)" id="0000000000000-44">
     <createTable tableName="convocatoria_entidad_gestora">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_entidad_gestoraPK" />
@@ -245,7 +264,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-43">
+  <changeSet author="user (generated)" id="0000000000000-45">
     <createTable tableName="convocatoria_fase">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_fasePK" />
@@ -265,7 +284,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-44">
+  <changeSet author="user (generated)" id="0000000000000-46">
     <createTable tableName="convocatoria_hito">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_hitoPK" />
@@ -285,7 +304,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-45">
+  <changeSet author="user (generated)" id="0000000000000-47">
     <createTable tableName="convocatoria_periodo_justificacion">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_periodo_justificacionPK" />
@@ -308,7 +327,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-46">
+  <changeSet author="user (generated)" id="0000000000000-48">
     <createTable tableName="convocatoria_periodo_seguimiento_cientifico">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_periodo_seguimiento_cientificoPK" />
@@ -330,7 +349,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-47">
+  <changeSet author="user (generated)" id="0000000000000-49">
     <createTable tableName="fuente_financiacion">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="fuente_financiacionPK" />
@@ -353,7 +372,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-48">
+  <changeSet author="user (generated)" id="0000000000000-50">
     <createTable tableName="modelo_ejecucion">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_ejecucionPK" />
@@ -367,7 +386,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-49">
+  <changeSet author="user (generated)" id="0000000000000-51">
     <createTable tableName="modelo_tipo_documento">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_tipo_documentoPK" />
@@ -384,7 +403,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-50">
+  <changeSet author="user (generated)" id="0000000000000-52">
     <createTable tableName="modelo_tipo_enlace">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_tipo_enlacePK" />
@@ -400,7 +419,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-51">
+  <changeSet author="user (generated)" id="0000000000000-53">
     <createTable tableName="modelo_tipo_fase">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_tipo_fasePK" />
@@ -425,7 +444,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-52">
+  <changeSet author="user (generated)" id="0000000000000-54">
     <createTable tableName="modelo_tipo_finalidad">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_tipo_finalidadPK" />
@@ -441,7 +460,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-53">
+  <changeSet author="user (generated)" id="0000000000000-55">
     <createTable tableName="modelo_tipo_hito">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_tipo_hitoPK" />
@@ -466,7 +485,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-54">
+  <changeSet author="user (generated)" id="0000000000000-56">
     <createTable tableName="modelo_unidad">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_unidadPK" />
@@ -482,7 +501,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-55">
+  <changeSet author="user (generated)" id="0000000000000-57">
     <createTable tableName="programa">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="programaPK" />
@@ -497,7 +516,7 @@
       <column name="programa_padre_id" type="BIGINT" />
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-56">
+  <changeSet author="user (generated)" id="0000000000000-58">
     <createTable tableName="requisito_equipo">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="requisito_equipoPK" />
@@ -519,7 +538,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-57">
+  <changeSet author="user (generated)" id="0000000000000-59">
     <createTable tableName="requisito_ip">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="requisito_ipPK" />
@@ -542,7 +561,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-58">
+  <changeSet author="user (generated)" id="0000000000000-60">
     <createTable tableName="tipo_ambito_geografico">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_ambito_geograficoPK" />
@@ -555,7 +574,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-59">
+  <changeSet author="user (generated)" id="0000000000000-61">
     <createTable tableName="tipo_documento">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_documentoPK" />
@@ -569,7 +588,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-60">
+  <changeSet author="user (generated)" id="0000000000000-62">
     <createTable tableName="tipo_enlace">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_enlacePK" />
@@ -583,7 +602,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-61">
+  <changeSet author="user (generated)" id="0000000000000-63">
     <createTable tableName="tipo_fase">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_fasePK" />
@@ -597,7 +616,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-62">
+  <changeSet author="user (generated)" id="0000000000000-64">
     <createTable tableName="tipo_finalidad">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_finalidadPK" />
@@ -611,7 +630,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-63">
+  <changeSet author="user (generated)" id="0000000000000-65">
     <createTable tableName="tipo_financiacion">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_financiacionPK" />
@@ -625,7 +644,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-64">
+  <changeSet author="user (generated)" id="0000000000000-66">
     <createTable tableName="tipo_hito">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_hitoPK" />
@@ -639,7 +658,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-65">
+  <changeSet author="user (generated)" id="0000000000000-67">
     <createTable tableName="tipo_origen_fuente_financiacion">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_origen_fuente_financiacionPK" />
@@ -652,7 +671,7 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-66">
+  <changeSet author="user (generated)" id="0000000000000-68">
     <createTable tableName="tipo_regimen_concurrencia">
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_regimen_concurrenciaPK" />
@@ -665,130 +684,133 @@
       </column>
     </createTable>
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-67">
+  <changeSet author="user (generated)" id="0000000000000-69">
     <addUniqueConstraint columnNames="convocatoria_id" constraintName="UC_REQUISITO_EQUIPOCONVOCATORIA_ID_COL" tableName="requisito_equipo" />
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-68">
+  <changeSet author="user (generated)" id="0000000000000-70">
     <addUniqueConstraint columnNames="convocatoria_id" constraintName="UC_REQUISITO_IPCONVOCATORIA_ID_COL" tableName="requisito_ip" />
   </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-69">
-    <addForeignKeyConstraint baseColumnNames="area_tematica_padre_id" baseTableName="area_tematica" constraintName="FK_AREATEMATICA_PADRE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="area_tematica" validate="true" />
-  </changeSet>
-  <changeSet author="user (generated)" id="0000000000000-70">
-    <addForeignKeyConstraint baseColumnNames="area_tematica_id" baseTableName="convocatoria_area_tematica" constraintName="FK_CONVOCATORIAAREATEMATICA_AREATEMATICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="area_tematica" validate="true" />
-  </changeSet>
   <changeSet author="user (generated)" id="0000000000000-71">
-    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_area_tematica" constraintName="FK_CONVOCATORIAAREATEMATICA_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="convocatoria_concepto_gasto_id" baseTableName="convocatoria_concepto_gasto_codigo_ec" constraintName="FK8drwsddpr67ht71swb3f5b89x" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria_concepto_gasto" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-72">
-    <addForeignKeyConstraint baseColumnNames="concepto_gasto_id" baseTableName="convocatoria_concepto_gasto" constraintName="FK_CONVOCATORIACONCEPTOGASTO_CONCEPTOGASTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="concepto_gasto" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="area_tematica_padre_id" baseTableName="area_tematica" constraintName="FK_AREATEMATICA_PADRE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="area_tematica" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-73">
-    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_concepto_gasto" constraintName="FK_CONVOCATORIACONCEPTOGASTO_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="area_tematica_id" baseTableName="convocatoria_area_tematica" constraintName="FK_CONVOCATORIAAREATEMATICA_AREATEMATICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="area_tematica" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-74">
-    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_enlace" constraintName="FK_CONVOCATORIAENLACE_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_area_tematica" constraintName="FK_CONVOCATORIAAREATEMATICA_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-75">
-    <addForeignKeyConstraint baseColumnNames="tipo_enlace_id" baseTableName="convocatoria_enlace" constraintName="FK_CONVOCATORIAENLACE_TIPOENLACE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_enlace" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="concepto_gasto_id" baseTableName="convocatoria_concepto_gasto" constraintName="FK_CONVOCATORIACONCEPTOGASTO_CONCEPTOGASTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="concepto_gasto" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-76">
-    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_entidad_convocante" constraintName="FK_CONVOCATORIAENTIDADCONVOCANTE_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_concepto_gasto" constraintName="FK_CONVOCATORIACONCEPTOGASTO_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-77">
-    <addForeignKeyConstraint baseColumnNames="programa_id" baseTableName="convocatoria_entidad_convocante" constraintName="FK_CONVOCATORIAENTIDADCONVOCANTE_PROGRAMA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="programa" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_enlace" constraintName="FK_CONVOCATORIAENLACE_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-78">
-    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_entidad_financiadora" constraintName="FK_CONVOCATORIAENTIDADFINANCIADORA_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="tipo_enlace_id" baseTableName="convocatoria_enlace" constraintName="FK_CONVOCATORIAENLACE_TIPOENLACE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_enlace" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-79">
-    <addForeignKeyConstraint baseColumnNames="fuente_financiacion_id" baseTableName="convocatoria_entidad_financiadora" constraintName="FK_CONVOCATORIAENTIDADFINANCIADORA_FUENTEFINANCIACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="fuente_financiacion" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_entidad_convocante" constraintName="FK_CONVOCATORIAENTIDADCONVOCANTE_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-80">
-    <addForeignKeyConstraint baseColumnNames="tipo_financiacion_id" baseTableName="convocatoria_entidad_financiadora" constraintName="FK_CONVOCATORIAENTIDADFINANCIADORA_TIPOFINANCIACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_financiacion" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="programa_id" baseTableName="convocatoria_entidad_convocante" constraintName="FK_CONVOCATORIAENTIDADCONVOCANTE_PROGRAMA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="programa" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-81">
-    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_entidad_gestora" constraintName="FK_CONVOCATORIAENTIDADGESTORA_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_entidad_financiadora" constraintName="FK_CONVOCATORIAENTIDADFINANCIADORA_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-82">
-    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_fase" constraintName="FK_CONVOCATORIAFASE_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="fuente_financiacion_id" baseTableName="convocatoria_entidad_financiadora" constraintName="FK_CONVOCATORIAENTIDADFINANCIADORA_FUENTEFINANCIACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="fuente_financiacion" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-83">
-    <addForeignKeyConstraint baseColumnNames="tipo_fase_id" baseTableName="convocatoria_fase" constraintName="FK_CONVOCATORIAFASE_TIPOFASE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_fase" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="tipo_financiacion_id" baseTableName="convocatoria_entidad_financiadora" constraintName="FK_CONVOCATORIAENTIDADFINANCIADORA_TIPOFINANCIACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_financiacion" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-84">
-    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_hito" constraintName="FK_CONVOCATORIAHITO_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_entidad_gestora" constraintName="FK_CONVOCATORIAENTIDADGESTORA_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-85">
-    <addForeignKeyConstraint baseColumnNames="tipo_hito_id" baseTableName="convocatoria_hito" constraintName="FK_CONVOCATORIAHITO_TIPOHITO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_hito" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_fase" constraintName="FK_CONVOCATORIAFASE_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-86">
-    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_periodo_justificacion" constraintName="FK_CONVOCATORIAPERIODOJUSTIFICACION_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="tipo_fase_id" baseTableName="convocatoria_fase" constraintName="FK_CONVOCATORIAFASE_TIPOFASE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_fase" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-87">
-    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_periodo_seguimiento_cientifico" constraintName="FK_CONVOCATORIAPERIODOSEGUIMIENTOCIENTIFICO_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_hito" constraintName="FK_CONVOCATORIAHITO_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-88">
-    <addForeignKeyConstraint baseColumnNames="tipo_ambito_geografico_id" baseTableName="convocatoria" constraintName="FK_CONVOCATORIA_AMBITOGEOGRAFICO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_ambito_geografico" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="tipo_hito_id" baseTableName="convocatoria_hito" constraintName="FK_CONVOCATORIAHITO_TIPOHITO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_hito" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-89">
-    <addForeignKeyConstraint baseColumnNames="tipo_finalidad_id" baseTableName="convocatoria" constraintName="FK_CONVOCATORIA_FINALIDAD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_finalidad" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_periodo_justificacion" constraintName="FK_CONVOCATORIAPERIODOJUSTIFICACION_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-90">
-    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="convocatoria" constraintName="FK_CONVOCATORIA_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="convocatoria_periodo_seguimiento_cientifico" constraintName="FK_CONVOCATORIAPERIODOSEGUIMIENTOCIENTIFICO_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-91">
-    <addForeignKeyConstraint baseColumnNames="tipo_regimen_concurrencia_id" baseTableName="convocatoria" constraintName="FK_CONVOCATORIA_REGIMENCONCURRENCIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_regimen_concurrencia" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="tipo_ambito_geografico_id" baseTableName="convocatoria" constraintName="FK_CONVOCATORIA_AMBITOGEOGRAFICO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_ambito_geografico" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-92">
-    <addForeignKeyConstraint baseColumnNames="tipo_ambito_geografico_id" baseTableName="fuente_financiacion" constraintName="FK_FUENTEFINANCIACION_TIPOAMBITOGEOGRAFICO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_ambito_geografico" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="tipo_finalidad_id" baseTableName="convocatoria" constraintName="FK_CONVOCATORIA_FINALIDAD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_finalidad" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-93">
-    <addForeignKeyConstraint baseColumnNames="tipo_origen_fuente_financiacion_id" baseTableName="fuente_financiacion" constraintName="FK_FUENTEFINANCIACION_TIPOORIGENFUENTEFINANCIACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_origen_fuente_financiacion" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="convocatoria" constraintName="FK_CONVOCATORIA_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-94">
-    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_documento" constraintName="FK_MODELOTIPODOCUMENTO_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="tipo_regimen_concurrencia_id" baseTableName="convocatoria" constraintName="FK_CONVOCATORIA_REGIMENCONCURRENCIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_regimen_concurrencia" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-95">
-    <addForeignKeyConstraint baseColumnNames="modelo_tipo_fase_id" baseTableName="modelo_tipo_documento" constraintName="FK_MODELOTIPODOCUMENTO_MODELOTIPOFASE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_tipo_fase" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="tipo_ambito_geografico_id" baseTableName="fuente_financiacion" constraintName="FK_FUENTEFINANCIACION_TIPOAMBITOGEOGRAFICO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_ambito_geografico" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-96">
-    <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="modelo_tipo_documento" constraintName="FK_MODELOTIPODOCUMENTO_TIPODOCUMENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="tipo_origen_fuente_financiacion_id" baseTableName="fuente_financiacion" constraintName="FK_FUENTEFINANCIACION_TIPOORIGENFUENTEFINANCIACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_origen_fuente_financiacion" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-97">
-    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_enlace" constraintName="FK_MODELOTIPOENLACE_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_documento" constraintName="FK_MODELOTIPODOCUMENTO_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-98">
-    <addForeignKeyConstraint baseColumnNames="tipo_enlace_id" baseTableName="modelo_tipo_enlace" constraintName="FK_MODELOTIPOENLACE_TIPODOENLACE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_enlace" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="modelo_tipo_fase_id" baseTableName="modelo_tipo_documento" constraintName="FK_MODELOTIPODOCUMENTO_MODELOTIPOFASE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_tipo_fase" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-99">
-    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_fase" constraintName="FK_MODELOTIPOFASE_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="tipo_documento_id" baseTableName="modelo_tipo_documento" constraintName="FK_MODELOTIPODOCUMENTO_TIPODOCUMENTO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_documento" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-100">
-    <addForeignKeyConstraint baseColumnNames="tipo_fase_id" baseTableName="modelo_tipo_fase" constraintName="FK_MODELOTIPOFASE_TIPOFASE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_fase" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_enlace" constraintName="FK_MODELOTIPOENLACE_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-101">
-    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_finalidad" constraintName="FK_MODELOTIPOFINALIDAD_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="tipo_enlace_id" baseTableName="modelo_tipo_enlace" constraintName="FK_MODELOTIPOENLACE_TIPODOENLACE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_enlace" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-102">
-    <addForeignKeyConstraint baseColumnNames="tipo_finalidad_id" baseTableName="modelo_tipo_finalidad" constraintName="FK_MODELOTIPOFINALIDAD_TIPOFINALIDAD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_finalidad" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_fase" constraintName="FK_MODELOTIPOFASE_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-103">
-    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_hito" constraintName="FK_MODELOTIPOHITO_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="tipo_fase_id" baseTableName="modelo_tipo_fase" constraintName="FK_MODELOTIPOFASE_TIPOFASE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_fase" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-104">
-    <addForeignKeyConstraint baseColumnNames="tipo_hito_id" baseTableName="modelo_tipo_hito" constraintName="FK_MODELOTIPOHITO_TIPOHITO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_hito" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_finalidad" constraintName="FK_MODELOTIPOFINALIDAD_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-105">
-    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_unidad" constraintName="FK_MODELOUNIDAD_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="tipo_finalidad_id" baseTableName="modelo_tipo_finalidad" constraintName="FK_MODELOTIPOFINALIDAD_TIPOFINALIDAD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_finalidad" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-106">
-    <addForeignKeyConstraint baseColumnNames="programa_padre_id" baseTableName="programa" constraintName="FK_PROGRAMA_PADRE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="programa" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_tipo_hito" constraintName="FK_MODELOTIPOHITO_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-107">
-    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="requisito_equipo" constraintName="FK_REQUISITOEQUIPO_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="tipo_hito_id" baseTableName="modelo_tipo_hito" constraintName="FK_MODELOTIPOHITO_TIPOHITO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_hito" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-108">
+    <addForeignKeyConstraint baseColumnNames="modelo_ejecucion_id" baseTableName="modelo_unidad" constraintName="FK_MODELOUNIDAD_MODELOEJECUCION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="modelo_ejecucion" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000000-109">
+    <addForeignKeyConstraint baseColumnNames="programa_padre_id" baseTableName="programa" constraintName="FK_PROGRAMA_PADRE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="programa" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000000-110">
+    <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="requisito_equipo" constraintName="FK_REQUISITOEQUIPO_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000000-111">
     <addForeignKeyConstraint baseColumnNames="convocatoria_id" baseTableName="requisito_ip" constraintName="FK_REQUISITOIP_CONVOCATORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="convocatoria" validate="true" />
   </changeSet>
 </databaseChangeLog>

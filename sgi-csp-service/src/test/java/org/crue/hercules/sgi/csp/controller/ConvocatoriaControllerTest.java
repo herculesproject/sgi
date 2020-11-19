@@ -19,6 +19,7 @@ import org.crue.hercules.sgi.csp.model.ConceptoGasto;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaAreaTematica;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEnlace;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
@@ -39,6 +40,7 @@ import org.crue.hercules.sgi.csp.model.TipoFinanciacion;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaAreaTematicaService;
+import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoCodigoEcService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEnlaceService;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaEntidadConvocanteService;
@@ -98,6 +100,8 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   private ConvocatoriaPeriodoJustificacionService convocatoriaPeriodoJustificacionService;
   @MockBean
   private ConvocatoriaConceptoGastoService convocatoriaConceptoGastoService;
+  @MockBean
+  private ConvocatoriaConceptoGastoCodigoEcService convocatoriaConceptoGastoCodigoEcService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
@@ -117,6 +121,8 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   private static final String PATH_CONCEPTO_GASTO_PERMITIDO = "/convocatoriagastos/permitidos";
   private static final String PATH_CONCEPTO_GASTO_NO_PERMITIDO = "/convocatoriagastos/nopermitidos";
   private static final String PATH_PARAMETER_RESTRINGIDOS = "/restringidos";
+  private static final String PATH_CONCEPTO_GASTO_CODIGO_EC_PERMITIDO = "/convocatoriagastocodigoec/permitidos";
+  private static final String PATH_CONCEPTO_GASTO_CODIGO_EC_NO_PERMITIDO = "/convocatoriagastocodigoec/nopermitidos";
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-CONV-C" })
@@ -1768,6 +1774,146 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
   }
 
   /**
+   * 
+   * CONVOCATORIA CÓDIGOS ECONÓMICOS
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  public void findAllConvocatoriaConceptoGastoCodigoEcPermitido_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ConvocatoriaConceptoGastoCodigoEc para la
+    // Convocatoria
+    Long convocatoriaId = 1L;
+
+    List<ConvocatoriaConceptoGastoCodigoEc> convocatoriaConceptoGastoCodigoEcs = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      convocatoriaConceptoGastoCodigoEcs.add(generarMockConvocatoriaConceptoGastoCodigoEc(i, true));
+    }
+
+    BDDMockito
+        .given(convocatoriaConceptoGastoCodigoEcService
+            .findAllByConvocatoriaAndPermitidoTrue(ArgumentMatchers.<Long>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ConvocatoriaConceptoGastoCodigoEc>>() {
+          @Override
+          public Page<ConvocatoriaConceptoGastoCodigoEc> answer(InvocationOnMock invocation) throws Throwable {
+            List<ConvocatoriaConceptoGastoCodigoEc> content = new ArrayList<>();
+            for (ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc : convocatoriaConceptoGastoCodigoEcs) {
+              content.add(convocatoriaConceptoGastoCodigoEc);
+            }
+            return new PageImpl<>(content);
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CONCEPTO_GASTO_CODIGO_EC_PERMITIDO, convocatoriaId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(37))).andReturn();
+
+    List<ConvocatoriaConceptoGastoCodigoEc> convocatoriaConceptoGastoCodigoEcResponse = mapper.readValue(
+        requestResult.getResponse().getContentAsString(), new TypeReference<List<ConvocatoriaConceptoGastoCodigoEc>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc = convocatoriaConceptoGastoCodigoEcResponse
+          .get(i - 1);
+      Assertions.assertThat(convocatoriaConceptoGastoCodigoEc.getCodigoEconomicoRef()).isEqualTo("cod-" + i);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  public void findAllConvocatoriaConceptoGastoCodigoEcPermitido_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de ConvocatoriaConceptoGastoCodigoEc para la
+    // Convocatoria
+
+    BDDMockito
+        .given(convocatoriaConceptoGastoCodigoEcService
+            .findAllByConvocatoriaAndPermitidoTrue(ArgumentMatchers.<Long>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(Collections.emptyList()));
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CONCEPTO_GASTO_CODIGO_EC_PERMITIDO, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  public void findAllConvocatoriaConceptoGastoCodigoEcNoPermitido_ReturnsPage() throws Exception {
+    // given: Una lista con 37 ConvocatoriaConceptoGastoCodigoEc para la
+    // Convocatoria
+    Long convocatoriaId = 1L;
+
+    List<ConvocatoriaConceptoGastoCodigoEc> convocatoriaConceptoGastoCodigoEcs = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      convocatoriaConceptoGastoCodigoEcs.add(generarMockConvocatoriaConceptoGastoCodigoEc(i, true));
+    }
+
+    BDDMockito
+        .given(convocatoriaConceptoGastoCodigoEcService
+            .findAllByConvocatoriaAndPermitidoFalse(ArgumentMatchers.<Long>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<ConvocatoriaConceptoGastoCodigoEc>>() {
+          @Override
+          public Page<ConvocatoriaConceptoGastoCodigoEc> answer(InvocationOnMock invocation) throws Throwable {
+            List<ConvocatoriaConceptoGastoCodigoEc> content = new ArrayList<>();
+            for (ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc : convocatoriaConceptoGastoCodigoEcs) {
+              content.add(convocatoriaConceptoGastoCodigoEc);
+            }
+            return new PageImpl<>(content);
+          }
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CONCEPTO_GASTO_CODIGO_EC_NO_PERMITIDO, convocatoriaId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(37))).andReturn();
+
+    List<ConvocatoriaConceptoGastoCodigoEc> convocatoriaConceptoGastoCodigoEcResponse = mapper.readValue(
+        requestResult.getResponse().getContentAsString(), new TypeReference<List<ConvocatoriaConceptoGastoCodigoEc>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc = convocatoriaConceptoGastoCodigoEcResponse
+          .get(i - 1);
+      Assertions.assertThat(convocatoriaConceptoGastoCodigoEc.getCodigoEconomicoRef()).isEqualTo("cod-" + i);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-E" })
+  public void findAllConvocatoriaConceptoGastoCodigoEcNoPermitido_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de ConvocatoriaConceptoGastoCodigoEc para la
+    // Convocatoria
+
+    BDDMockito
+        .given(convocatoriaConceptoGastoCodigoEcService
+            .findAllByConvocatoriaAndPermitidoFalse(ArgumentMatchers.<Long>any(), ArgumentMatchers.<Pageable>any()))
+        .willReturn(new PageImpl<>(Collections.emptyList()));
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_CONCEPTO_GASTO_CODIGO_EC_NO_PERMITIDO, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
    * Función que devuelve un objeto ConvocatoriaAreaTematica
    * 
    * @param convocatoriaAreaTematicaId
@@ -1933,6 +2079,27 @@ public class ConvocatoriaControllerTest extends BaseControllerTest {
     convocatoriaConceptoGasto.setPorcentajeCosteIndirecto(2);
 
     return convocatoriaConceptoGasto;
+  }
+
+  /**
+   * Función que devuelve un objeto ConvocatoriaConceptoGastoCodigoEc
+   * 
+   * @param id id del ConvocatoriaConceptoGastoCodigoEc
+   * @return el objeto ConvocatoriaConceptoGastoCodigoEc
+   */
+  private ConvocatoriaConceptoGastoCodigoEc generarMockConvocatoriaConceptoGastoCodigoEc(Long id, Boolean permitido) {
+
+    ConvocatoriaConceptoGasto convocatoriaConceptoGasto = generarMockConvocatoriaConceptoGasto(id == null ? 1 : id,
+        permitido);
+
+    ConvocatoriaConceptoGastoCodigoEc convocatoriaConceptoGastoCodigoEc = new ConvocatoriaConceptoGastoCodigoEc();
+    convocatoriaConceptoGastoCodigoEc.setId(id);
+    convocatoriaConceptoGastoCodigoEc.setCodigoEconomicoRef("cod-" + id);
+    convocatoriaConceptoGastoCodigoEc.setConvocatoriaConceptoGasto(convocatoriaConceptoGasto);
+    convocatoriaConceptoGastoCodigoEc.setFechaInicio(LocalDate.now());
+    convocatoriaConceptoGastoCodigoEc.setFechaFin(LocalDate.now());
+
+    return convocatoriaConceptoGastoCodigoEc;
   }
 
 }

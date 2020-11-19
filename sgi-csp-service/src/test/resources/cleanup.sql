@@ -11,6 +11,7 @@ DELETE FROM csp.convocatoria_periodo_justificacion;
 DELETE FROM csp.convocatoria_periodo_seguimiento_cientifico;
 DELETE FROM csp.requisito_equipo;
 DELETE FROM csp.requisito_ip;
+DELETE FROM csp.convocatoria_concepto_gasto_codigo_ec;
 DELETE FROM csp.convocatoria_concepto_gasto;
 DELETE FROM csp.convocatoria;
 DELETE FROM csp.fuente_financiacion;

@@ -1,13 +1,18 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
 import org.crue.hercules.sgi.csp.mapper.ConvocatoriaConceptoGastoMapper;
+
+import java.util.List;
+
 import org.crue.hercules.sgi.csp.dto.ConvocatoriaConceptoGastoWithEnableAccion;
 import org.crue.hercules.sgi.csp.exceptions.ConceptoGastoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaConceptoGastoNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGasto;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaConceptoGastoCodigoEc;
 import org.crue.hercules.sgi.csp.repository.ConceptoGastoRepository;
+import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoCodigoEcRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaConceptoGastoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.service.ConvocatoriaConceptoGastoService;
@@ -32,14 +37,17 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
   private final ConvocatoriaRepository convocatoriaRepository;
   private final ConceptoGastoRepository conceptoGastoRepository;
   private final ConvocatoriaConceptoGastoMapper convocatoriaConceptoGastoMapper;
+  private final ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository;
 
   public ConvocatoriaConceptoGastoServiceImpl(ConvocatoriaConceptoGastoRepository repository,
       ConvocatoriaRepository convocatoriaRepository, ConceptoGastoRepository conceptoGastoRepository,
-      ConvocatoriaConceptoGastoMapper convocatoriaConceptoGastoMapper) {
+      ConvocatoriaConceptoGastoMapper convocatoriaConceptoGastoMapper,
+      ConvocatoriaConceptoGastoCodigoEcRepository convocatoriaConceptoGastoCodigoEcRepository) {
     this.repository = repository;
     this.convocatoriaRepository = convocatoriaRepository;
     this.conceptoGastoRepository = conceptoGastoRepository;
     this.convocatoriaConceptoGastoMapper = convocatoriaConceptoGastoMapper;
+    this.convocatoriaConceptoGastoCodigoEcRepository = convocatoriaConceptoGastoCodigoEcRepository;
   }
 
   /**
@@ -149,6 +157,15 @@ public class ConvocatoriaConceptoGastoServiceImpl implements ConvocatoriaConcept
     Assert.notNull(id, "ConvocatoriaConceptoGasto id no puede ser null para eliminar un ConvocatoriaConceptoGasto");
     if (!repository.existsById(id)) {
       throw new ConvocatoriaConceptoGastoNotFoundException(id);
+    }
+
+    List<ConvocatoriaConceptoGastoCodigoEc> codigosEconomicos = convocatoriaConceptoGastoCodigoEcRepository
+        .findByConvocatoriaConceptoGastoId(id);
+
+    if (codigosEconomicos != null) {
+      codigosEconomicos.stream().forEach(codigoEconomico -> {
+        convocatoriaConceptoGastoCodigoEcRepository.deleteById(codigoEconomico.getId());
+      });
     }
 
     repository.deleteById(id);
