@@ -25,6 +25,7 @@ import { ConvocatoriaEntidadesFinanciadorasComponent } from './convocatoria-form
 import { ConvocatoriaEnlaceComponent } from './convocatoria-formulario/convocatoria-enlace/convocatoria-enlace.component';
 import { ConvocatoriaRequisitosIPComponent } from './convocatoria-formulario/convocatoria-requisitos-ip/convocatoria-requisitos-ip.component';
 import { ConvocatoriaConceptoGastoComponent } from './convocatoria-formulario/convocatoria-concepto-gasto/convocatoria-concepto-gasto.component';
+import { ConvocatoriaRequisitosEquipoComponent } from './convocatoria-formulario/convocatoria-requisitos-equipo/convocatoria-requisitos-equipo.component';
 
 
 const MSG_EDIT_TITLE = marker('csp.convocatoria.editar.titulo');
@@ -103,6 +104,11 @@ const routes: SgiRoutes = [
         component: ConvocatoriaConceptoGastoComponent,
         canDeactivate: [FragmentGuard]
       },
+      {
+        path: CONVOCATORIA_ROUTE_NAMES.REQUISITOS_EQUIPO,
+        component: ConvocatoriaRequisitosEquipoComponent,
+        canDeactivate: [FragmentGuard]
+      },
     ]
   },
   {
@@ -167,6 +173,11 @@ const routes: SgiRoutes = [
       }, {
         path: CONVOCATORIA_ROUTE_NAMES.ELEGIBILIDAD,
         component: ConvocatoriaConceptoGastoComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: CONVOCATORIA_ROUTE_NAMES.REQUISITOS_EQUIPO,
+        component: ConvocatoriaRequisitosEquipoComponent,
         canDeactivate: [FragmentGuard]
       },
     ]

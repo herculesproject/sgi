@@ -40,7 +40,9 @@
         [title]="'csp.convocatoria.requisitos-ip' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.REQUISITOS_IP)">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item class="demo" [title]="'csp.convocatoria.requisitos.equipo' | translate">
+      <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.REQUISITOS_EQUIPO]"
+        [title]="'csp.convocatoria.requisitos.equipo' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.REQUISITOS_EQUIPO)">
       </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.ELEGIBILIDAD]"
         [title]="'csp.convocatoria.elegibilidad' | translate"

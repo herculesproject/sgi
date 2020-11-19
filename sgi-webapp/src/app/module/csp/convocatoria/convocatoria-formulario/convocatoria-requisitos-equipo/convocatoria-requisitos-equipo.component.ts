@@ -1,21 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { FormFragmentComponent } from '@core/component/fragment.component';
-import { NGXLogger } from 'ngx-logger';
-import { ConvocatoriaActionService } from '../../convocatoria.action.service';
+import { IConvocatoriaRequisitoEquipo } from '@core/models/csp/convocatoria-requisito-equipo';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { ConvocatoriaRequisitosIPFragment } from './convocatoria-requisitos-ip.fragment';
 import { TranslateService } from '@ngx-translate/core';
-import { IConvocatoriaRequisitoIP } from '@core/models/csp/convocatoria-requisito-ip';
+import { NGXLogger } from 'ngx-logger';
+import { ConvocatoriaActionService } from '../../convocatoria.action.service';
+import { ConvocatoriaRequisitosEquipoFragment } from './convocatoria-requisitos-equipo.fragment';
 
 @Component({
-  selector: 'sgi-convocatoria-requisitos-ip',
-  templateUrl: './convocatoria-requisitos-ip.component.html',
-  styleUrls: ['./convocatoria-requisitos-ip.component.scss']
+  selector: 'sgi-convocatoria-requisitos-equipo',
+  templateUrl: './convocatoria-requisitos-equipo.component.html',
+  styleUrls: ['./convocatoria-requisitos-equipo.component.scss']
 })
-
-export class ConvocatoriaRequisitosIPComponent extends FormFragmentComponent<IConvocatoriaRequisitoIP> implements OnInit {
-  formPart: ConvocatoriaRequisitosIPFragment;
+export class ConvocatoriaRequisitosEquipoComponent extends FormFragmentComponent<IConvocatoriaRequisitoEquipo> implements OnInit {
+  formPart: ConvocatoriaRequisitosEquipoFragment;
   fxFlexProperties: FxFlexProperties;
   fxFlexPropertiesOne: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
@@ -27,9 +26,9 @@ export class ConvocatoriaRequisitosIPComponent extends FormFragmentComponent<ICo
     protected actionService: ConvocatoriaActionService,
     public translate: TranslateService
   ) {
-    super(actionService.FRAGMENT.REQUISITOS_IP, actionService);
-    this.logger.debug(ConvocatoriaRequisitosIPComponent.name, 'constructor()', 'start');
-    this.formPart = this.fragment as ConvocatoriaRequisitosIPFragment;
+    super(actionService.FRAGMENT.REQUISITOS_EQUIPO, actionService);
+    this.logger.debug(ConvocatoriaRequisitosEquipoComponent.name, 'constructor()', 'start');
+    this.formPart = this.fragment as ConvocatoriaRequisitosEquipoFragment;
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
@@ -48,13 +47,12 @@ export class ConvocatoriaRequisitosIPComponent extends FormFragmentComponent<ICo
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
 
-    this.logger.debug(ConvocatoriaRequisitosIPComponent.name, 'constructor()', 'end');
+    this.logger.debug(ConvocatoriaRequisitosEquipoComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit() {
-    this.logger.debug(ConvocatoriaRequisitosIPComponent.name, 'ngOnInit()', 'start');
+    this.logger.debug(ConvocatoriaRequisitosEquipoComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
-    this.logger.debug(ConvocatoriaRequisitosIPComponent.name, 'ngOnInit()', 'end');
+    this.logger.debug(ConvocatoriaRequisitosEquipoComponent.name, 'ngOnInit()', 'end');
   }
-
 }

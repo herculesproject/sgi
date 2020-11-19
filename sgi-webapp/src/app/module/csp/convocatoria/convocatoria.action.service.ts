@@ -21,7 +21,6 @@ import { ConvocatoriaEntidadFinanciadoraService } from '@core/services/csp/convo
 import { ConvocatoriaEnlaceService } from '@core/services/csp/convocatoria-enlace.service';
 import { ConvocatoriaHitoService } from '@core/services/csp/convocatoria-hito.service';
 import { ConvocatoriaRequisitosIPFragment } from './convocatoria-formulario/convocatoria-requisitos-ip/convocatoria-requisitos-ip.fragment';
-import { RequisitoIPService } from '@core/services/csp/requisito-ip.service';
 import { ConvocatoriaEntidadGestoraService } from '@core/services/csp/convocatoria-entidad-gestora.service';
 import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
 import { FormBuilder } from '@angular/forms';
@@ -32,6 +31,10 @@ import { ConvocatoriaConceptoGastoService } from '@core/services/csp/convocatori
 import { ConvocatoriaSeguimientoCientificoService } from '@core/services/csp/convocatoria-seguimiento-cientifico.service';
 import { ConvocatoriaAreaTematicaService } from '@core/services/csp/convocatoria-area-tematica.service';
 import { ConvocatoriaEntidadConvocanteService } from '@core/services/csp/convocatoria-entidad-convocante.service';
+import { ConvocatoriaRequisitosEquipoFragment } from './convocatoria-formulario/convocatoria-requisitos-equipo/convocatoria-requisitos-equipo.fragment';
+import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip.service';
+import { ConvocatoriaRequisitoEquipoService } from '@core/services/csp/convocatoria-requisito-equipo.service';
+
 
 @Injectable()
 export class ConvocatoriaActionService extends ActionService {
@@ -46,7 +49,8 @@ export class ConvocatoriaActionService extends ActionService {
     ENLACES: 'enlaces',
     ENTIDADES_FINANCIADORAS: 'entidades-financiadoras',
     REQUISITOS_IP: 'requisitos-ip',
-    ELEGIBILIDAD: 'elegibilidad'
+    ELEGIBILIDAD: 'elegibilidad',
+    REQUISITOS_EQUIPO: 'requisitos-equipo'
   };
 
   private datosGenerales: ConvocatoriaDatosGeneralesFragment;
@@ -59,6 +63,7 @@ export class ConvocatoriaActionService extends ActionService {
   private enlaces: ConvocatoriaEnlaceFragment;
   private requisitosIP: ConvocatoriaRequisitosIPFragment;
   private elegibilidad: ConvocatoriaConceptoGastoFragment;
+  private requisitosEquipo: ConvocatoriaRequisitosEquipoFragment;
 
   private convocatoria: IConvocatoria;
 
@@ -70,7 +75,6 @@ export class ConvocatoriaActionService extends ActionService {
     convocatoriaEnlaceService: ConvocatoriaEnlaceService,
     empresaEconomicaService: EmpresaEconomicaService,
     convocatoriaEntidadFinanciadoraService: ConvocatoriaEntidadFinanciadoraService,
-    requisitoIPService: RequisitoIPService,
     convocatoriaEntidadGestoraService: ConvocatoriaEntidadGestoraService,
     unidadGestionService: UnidadGestionService,
     convocatoriaPeriodoJustificacionService: ConvocatoriaPeriodoJustificacionService,
@@ -80,6 +84,8 @@ export class ConvocatoriaActionService extends ActionService {
     convocatoriaSeguimientoCientificoService: ConvocatoriaSeguimientoCientificoService,
     convocatoriaAreaTematicaService: ConvocatoriaAreaTematicaService,
     convocatoriaEntidadConvocanteService: ConvocatoriaEntidadConvocanteService,
+    convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService,
+    convocatoriaRequisitoIPService: ConvocatoriaRequisitoIPService,
   ) {
     super();
     this.convocatoria = {} as IConvocatoria;
@@ -105,11 +111,11 @@ export class ConvocatoriaActionService extends ActionService {
       convocatoriaService, convocatoriaSeguimientoCientificoService);
     this.entidadesFinanciadorasFragment = new ConvocatoriaEntidadesFinanciadorasFragment(
       logger, this.convocatoria?.id, convocatoriaService, convocatoriaEntidadFinanciadoraService);
-    this.enlaces = new ConvocatoriaEnlaceFragment(logger, this.convocatoria?.id, convocatoriaService,
-      convocatoriaEnlaceService);
-    this.requisitosIP = new ConvocatoriaRequisitosIPFragment(fb, logger, this.convocatoria?.id, requisitoIPService);
+    this.enlaces = new ConvocatoriaEnlaceFragment(logger, this.convocatoria?.id, convocatoriaService, convocatoriaEnlaceService);
+    this.requisitosIP = new ConvocatoriaRequisitosIPFragment(fb, logger, this.convocatoria?.id, convocatoriaRequisitoIPService);
     this.elegibilidad = new ConvocatoriaConceptoGastoFragment(fb, logger, this.convocatoria?.id, convocatoriaService,
       convocatoriaConceptoGastoService);
+    this.requisitosEquipo = new ConvocatoriaRequisitosEquipoFragment(fb, logger, this.convocatoria?.id, convocatoriaRequisitoEquipoService);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.SEGUIMIENTO_CIENTIFICO, this.seguimientoCientifico);
@@ -121,6 +127,7 @@ export class ConvocatoriaActionService extends ActionService {
     this.addFragment(this.FRAGMENT.ENLACES, this.enlaces);
     this.addFragment(this.FRAGMENT.REQUISITOS_IP, this.requisitosIP);
     this.addFragment(this.FRAGMENT.ELEGIBILIDAD, this.elegibilidad);
+    this.addFragment(this.FRAGMENT.REQUISITOS_EQUIPO, this.requisitosEquipo);
 
 
   }

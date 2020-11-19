@@ -357,6 +357,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     this.formGroup.controls.estado.setValue('');
     this.formGroup.controls.fuenteFinanciacion.setValue('');
     this.formGroup.controls.areaTematica.setValue('');
+    this.formGroup.controls.activo.setValue('todos');
     this.setEmpresaFinanciadora({} as IEmpresaEconomica);
     this.setEmpresaConvocante({} as IEmpresaEconomica);
     this.onSearch();

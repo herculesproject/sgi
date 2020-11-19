@@ -1,6 +1,6 @@
 import { IConvocatoria } from './convocatoria';
 
-export interface IRequisitoIP {
+export interface IConvocatoriaRequisitoIP {
   /** Id */
   id: number;
 

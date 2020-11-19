@@ -8,5 +8,6 @@ export const CONVOCATORIA_ROUTE_NAMES = {
   SEGUIMIENTO_CIENTIFICO: 'seguimiento-cientifico',
   ENLACES: 'enlaces',
   REQUISITOS_IP: 'requisitos-ip',
-  ELEGIBILIDAD: 'elegibilidad'
+  ELEGIBILIDAD: 'elegibilidad',
+  REQUISITOS_EQUIPO: 'requisitos-equipo'
 };
