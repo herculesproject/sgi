@@ -56,7 +56,7 @@
           [fxFlexOrder]="fxFlexProperties.order">
           <mat-form-field fxFill>
             <mat-label>{{'csp.convocatoria.plazos.fases.modal.tipoPlazosFases' | translate}}</mat-label>
-            <input matInput formControlName="tipoFase" type="text" id="tipoPlazosFases"
+            <input matInput formControlName="tipoFase" type="text" id="tipoPlazosFases" required
               placeholder="{{'csp.convocatoria.plazos.fases.modal.tipoPlazosFases' | translate}}"
               [matAutocomplete]="autoPlazosFase">
             <mat-autocomplete #autoPlazosFase="matAutocomplete" [displayWith]="getTipoPlazosFase">

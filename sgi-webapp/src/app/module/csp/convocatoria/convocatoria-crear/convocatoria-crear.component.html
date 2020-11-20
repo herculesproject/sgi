@@ -52,7 +52,9 @@
         [title]="'csp.convocatoria.codigos.economicos' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.CODIGOS_ECONOMICOS)">
       </sgi-action-fragment-menu-item>
-      <sgi-action-fragment-menu-item class="demo" [title]="'csp.convocatoria.configuracion.solicitudes' | translate">
+      <sgi-action-fragment-menu-item [route]="[CONVOCATORIA_ROUTE_NAMES.CONFIGURACION_SOLICITUDES]"
+        [title]="'csp.convocatoria.configuracion.solicitudes' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.CONFIGURACION_SOLICITUDES)">
       </sgi-action-fragment-menu-item>
     </mat-list>
   </mat-drawer>

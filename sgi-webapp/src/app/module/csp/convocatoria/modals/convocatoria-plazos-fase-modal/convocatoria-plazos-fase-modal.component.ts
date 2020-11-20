@@ -19,6 +19,7 @@ import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { RangeValidator } from '@core/validators/range-validator';
 import { DateUtils } from '@core/utils/date-utils';
+import { NullIdValidador } from '@core/validators/null-id-validador';
 
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 const MSG_ERROR_INIT = marker('csp.convocatoria.plazos.fases.error.cargar');
@@ -110,7 +111,7 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
     this.formGroup = new FormGroup({
       fechaInicio: new FormControl(this.data?.plazo?.fechaInicio, [Validators.required]),
       fechaFin: new FormControl(this.data?.plazo?.fechaFin, [Validators.required]),
-      tipoFase: new FormControl(this.data?.plazo?.tipoFase, [Validators.required]),
+      tipoFase: new FormControl(this.data?.plazo?.tipoFase, [Validators.required, new NullIdValidador().isValid()]),
       observaciones: new FormControl(this.data?.plazo?.observaciones, [Validators.maxLength(250)])
     },
       {
@@ -183,7 +184,6 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
    * @returns nombre de plazos fase
    */
   getTipoPlazosFase(tipoFase?: ITipoFase): string | undefined {
-    console.log(tipoFase);
     return typeof tipoFase === 'string' ? tipoFase : tipoFase?.nombre;
   }
 
@@ -194,7 +194,8 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
    */
   filtroTipoPlazosFase(value: string): IModeloTipoFase[] {
     const filterValue = value.toString().toLowerCase();
-    return this.modeloTipoFasesFiltered.filter(modeloTipoFase => modeloTipoFase.tipoFase?.nombre?.toLowerCase().includes(filterValue));
+    return this.modeloTipoFasesFiltered.filter(modeloTipoFase =>
+      modeloTipoFase.tipoFase?.nombre?.toLowerCase().includes(filterValue));
   }
 
   /**

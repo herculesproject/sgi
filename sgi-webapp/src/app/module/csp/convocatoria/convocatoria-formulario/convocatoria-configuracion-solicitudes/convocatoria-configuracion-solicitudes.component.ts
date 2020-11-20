@@ -1,0 +1,293 @@
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { FormFragmentComponent } from '@core/component/fragment.component';
+import { TipoBaremacionEnum } from '@core/enums/tipo-baremacion';
+import { TipoFormularioSolicitudEnum } from '@core/enums/tipo-formulario-solicitud';
+import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitud';
+import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
+import { IDocumentoRequerido } from '@core/models/csp/documentos-requeridos-solicitud';
+import { ITipoFase } from '@core/models/csp/tipos-configuracion';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
+import { DialogService } from '@core/services/dialog.service';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { TranslateService } from '@ngx-translate/core';
+import { NGXLogger } from 'ngx-logger';
+import { Observable, Subscription, of } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { ConvocatoriaActionService } from '../../convocatoria.action.service';
+import { ConvocatoriaConfiguracionSolicitudesModalComponent } from '../../modals/convocatoria-configuracion-solicitudes-modal/convocatoria-configuracion-solicitudes-modal.component';
+import { ConvocatoriaConfiguracionSolicitudesFragment } from './convocatoria-configuracion-solicitudes.fragment';
+
+const MSG_DELETE = marker('csp.convocatoria.configuracionSolicitud.listado.borrar');
+const MSG_ERROR_INIT = marker('csp.convocatoria.configuracionSolicitud.error.cargar');
+
+@Component({
+  selector: 'sgi-convocatoria-configuracion-solicitudes',
+  templateUrl: './convocatoria-configuracion-solicitudes.component.html',
+  styleUrls: ['./convocatoria-configuracion-solicitudes.component.scss']
+})
+export class ConvocatoriaConfiguracionSolicitudesComponent extends
+  FormFragmentComponent<IConfiguracionSolicitud> implements OnInit, OnDestroy {
+  formPart: ConvocatoriaConfiguracionSolicitudesFragment;
+  fxFlexProperties: FxFlexProperties;
+  fxFlexPropertiesOne: FxFlexProperties;
+  fxLayoutProperties: FxLayoutProperties;
+  fxFlexPropertiesInline: FxFlexProperties;
+  fxFlexPropertiesEntidad: FxFlexProperties;
+
+  tiposFormularioSolicitud = Object.keys(TipoFormularioSolicitudEnum).map<string>(
+    (key) => TipoFormularioSolicitudEnum[key]);
+
+  tipoBaremacion = Object.keys(TipoBaremacionEnum).map<string>(
+    (key) => TipoBaremacionEnum[key]);
+
+  columns = ['nombre', 'descripcion', 'observaciones', 'acciones'];
+  numPage = [5, 10, 25, 100];
+  convocatoriaFase: IConvocatoriaFase;
+
+  dataSource = new MatTableDataSource<StatusWrapper<IDocumentoRequerido>>();
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+  private subscriptions: Subscription[] = [];
+
+  private convocatoriaFaseFiltered = [] as IConvocatoriaFase[];
+  convocatoriaFase$: Observable<IConvocatoriaFase[]>;
+  configuracionSolicitud: IConfiguracionSolicitud;
+
+  disabledPlazoPresentacion: Observable<boolean>;
+
+  constructor(
+    protected logger: NGXLogger,
+    protected actionService: ConvocatoriaActionService,
+    public translate: TranslateService,
+    private matDialog: MatDialog,
+    private convocatoriaService: ConvocatoriaService,
+    private dialogService: DialogService,
+    private snackBarService: SnackBarService
+  ) {
+    super(actionService.FRAGMENT.CONFIGURACION_SOLICITUDES, actionService);
+    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name, 'constructor()', 'start');
+
+    this.formPart = this.fragment as ConvocatoriaConfiguracionSolicitudesFragment;
+
+    this.fxFlexProperties = new FxFlexProperties();
+    this.fxFlexProperties.sm = '0 1 calc(50%-10px)';
+    this.fxFlexProperties.md = '0 1 calc(33%-10px)';
+    this.fxFlexProperties.gtMd = '0 1 calc(32%-10px)';
+    this.fxFlexProperties.order = '1';
+
+    this.fxFlexPropertiesInline = new FxFlexProperties();
+    this.fxFlexPropertiesInline.sm = '0 1 calc(100%-10px)';
+    this.fxFlexPropertiesInline.md = '0 1 calc(100%-10px)';
+    this.fxFlexPropertiesInline.gtMd = '0 1 calc(100%-10px)';
+    this.fxFlexPropertiesInline.order = '4';
+
+    this.fxLayoutProperties = new FxLayoutProperties();
+    this.fxLayoutProperties.gap = '20px';
+    this.fxLayoutProperties.layout = 'row wrap';
+    this.fxLayoutProperties.xs = 'column';
+    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name, 'constructor()', 'end');
+  }
+
+  ngOnInit(): void {
+    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name, 'ngOnInit()', 'start');
+    super.ngOnInit();
+    this.loadConvocatoriaFases();
+    this.initializeDataSource();
+
+    this.actionService.initializePlazosFases();
+
+    this.subscriptions.push(this.formPart.documentosRequeridos$.subscribe(elements => {
+      this.dataSource.data = elements;
+      this.disabledPlazoPresentacion = of(elements.length > 0);
+    }));
+    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name, 'ngOnInit()', 'end');
+  }
+
+  private initializeDataSource(): void {
+    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name, `${this.initializeDataSource.name}()`, 'start');
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sortingDataAccessor =
+      (wrapper: StatusWrapper<IDocumentoRequerido>, property: string) => {
+        switch (property) {
+          case 'nombre':
+            return wrapper.value.tipoDocumento.nombre;
+          case 'descripcion':
+            return wrapper.value.tipoDocumento.descripcion;
+          case 'observaciones':
+            return wrapper.value.observaciones;
+          default:
+            return wrapper[property];
+        }
+      };
+    this.dataSource.sort = this.sort;
+    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name, `${this.initializeDataSource.name}()`, 'end');
+  }
+
+  /**
+   * Cargamos fases asignadas a la convocatoria
+   * del fragment
+   */
+  loadConvocatoriaFases(): void {
+    this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
+      `${this.loadConvocatoriaFases.name}()`, 'start');
+
+    if (this.actionService.isPlazosFasesInitialized()) {
+      this.convocatoriaFaseFiltered = [];
+      this.actionService.getPlazosFases().forEach((x) => {
+        this.convocatoriaFaseFiltered.push(x.value);
+      });
+    } else {
+      const id = Number(this.formPart.getKey());
+      if (id && !isNaN(id)) {
+        this.subscriptions.push(
+          this.convocatoriaService.findAllConvocatoriaFases(id).subscribe(
+            res => {
+              this.convocatoriaFaseFiltered = [];
+              this.convocatoriaFaseFiltered = res.items;
+            },
+            (error) => {
+              this.snackBarService.showError(MSG_ERROR_INIT);
+              this.logger.error(ConvocatoriaConfiguracionSolicitudesFragment.name,
+                `${this.loadConvocatoriaFases.name}()`, error);
+            }
+          )
+        );
+      }
+    }
+
+    this.convocatoriaFase$ = this.formGroup.controls.fasePresentacionSolicitudes.valueChanges
+      .pipe(
+        startWith(''),
+        map(value =>
+          this.filtroConvocatoriaFase(value)
+        )
+      );
+  }
+
+  /**
+   * Filtra la lista devuelta por el servicio
+   *
+   * @param value del input para autocompletar
+   */
+  private filtroConvocatoriaFase(value: string): IConvocatoriaFase[] {
+    const filterValue = value?.toString().toLowerCase();
+    return this.convocatoriaFaseFiltered.filter(convocatoriaFase =>
+      convocatoriaFase.tipoFase.nombre.toLowerCase().includes(filterValue));
+  }
+
+  /**
+   * Si solicitudes SGI es -SI-
+   * El campo presentación es obligatorio
+   */
+  presentacionSolicitud() {
+    return this.formGroup.controls.tramitacionSGI.value;
+  }
+
+  /**
+   * Devuelve el nombre de un Tipo Formulario Solicitud.
+   * @param formulario tipo formulario solicitud.
+   * @returns nombre de un tipo formulario solicitud.
+   */
+  getFormularioSolicitud(convocatoriaFase?: IConvocatoriaFase): string | undefined {
+    return typeof convocatoriaFase === 'string' ? convocatoriaFase : convocatoriaFase?.tipoFase.nombre;
+  }
+
+  /**
+   * Filtramos por el ID del seleccionado.
+   * Rellenos los campos FECHA correspondientes
+   */
+  habilitarCampos(): void {
+    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name,
+      `${this.habilitarCampos.name}()`, 'start');
+    const tipoFase = this.formGroup.controls.fasePresentacionSolicitudes.value;
+    if (tipoFase) {
+      this.convocatoriaFase = tipoFase;
+      this.formGroup.controls.fechaInicioFase.patchValue(tipoFase.fechaInicio);
+      this.formGroup.controls.fechaFinFase.patchValue(tipoFase.fechaFin);
+    } else {
+      this.formGroup.controls.fechaInicioFase.patchValue('');
+      this.formGroup.controls.fechaFinFase.patchValue('');
+    }
+    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name,
+      `${this.habilitarCampos.name}()`, 'end');
+  }
+
+
+
+  /**
+   * Abre modal con el modelo convocatoria enlace seleccionada
+   * @param wrapper convocatoria enlace
+   */
+  openModal(wrapper?: StatusWrapper<IDocumentoRequerido>): void {
+    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name, `${this.openModal.name}()`, 'start');
+    const tipoFase: ITipoFase = this.formGroup.controls.fasePresentacionSolicitudes.value.tipoFase;
+    if (this.configuracionSolicitud) {
+      this.configuracionSolicitud.fasePresentacionSolicitudes.tipoFase = tipoFase;
+    }
+    const documentosRequerido: IDocumentoRequerido = {
+      configuracionSolicitud: this.formPart.getValue(),
+      id: undefined,
+      observaciones: undefined,
+      tipoDocumento: undefined,
+    };
+    const config = {
+      width: GLOBAL_CONSTANTS.widthModalCSP,
+      maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
+      data: wrapper ? wrapper.value : documentosRequerido
+    };
+    const dialogRef = this.matDialog.open(ConvocatoriaConfiguracionSolicitudesModalComponent, config);
+    dialogRef.afterClosed().subscribe(
+      (documentoRequerido) => {
+        if (documentoRequerido) {
+          if (wrapper) {
+            if (!wrapper.created) {
+              wrapper.setEdited();
+            }
+            this.formPart.setChanges(true);
+          } else {
+            this.formPart.addDocumentoRequerido(documentoRequerido);
+          }
+          this.subscriptions.push(this.formPart.documentosRequeridos$.subscribe(elements => {
+            this.dataSource.data = elements;
+          }));
+        }
+        this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name, `${this.openModal.name}()`, 'end');
+      }
+    );
+  }
+
+  /**
+   * Desactivar documento
+   */
+  deactivateDocumento(wrapper: StatusWrapper<IDocumentoRequerido>) {
+    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name,
+      `${this.deactivateDocumento.name}(${wrapper})`, 'start');
+    this.subscriptions.push(
+      this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+        (aceptado) => {
+          if (aceptado) {
+            this.formPart.deleteDocumentoRequerido(wrapper);
+          }
+          this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name,
+            `${this.deactivateDocumento.name}(${wrapper})`, 'end');
+        }
+      )
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name, 'ngOnDestroy()', 'start');
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name, 'ngOnDestroy()', 'end');
+  }
+}

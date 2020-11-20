@@ -2,11 +2,11 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { ConvocatoriaRequisitoIPService } from './convocatoria-requisito-ip.service';
 
+import { ConfiguracionSolicitudService } from './configuracion-solicitud.service';
 
-describe('ConvocatoriaRequisitoIPService', () => {
-  let service: ConvocatoriaRequisitoIPService;
+describe('ConfiguracionSolicitudService', () => {
+  let service: ConfiguracionSolicitudService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -17,7 +17,7 @@ describe('ConvocatoriaRequisitoIPService', () => {
         LoggerTestingModule
       ]
     });
-    service = TestBed.inject(ConvocatoriaRequisitoIPService);
+    service = TestBed.inject(ConfiguracionSolicitudService);
   });
 
   it('should be created', () => {

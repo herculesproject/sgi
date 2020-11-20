@@ -7,7 +7,7 @@ import { SgiResolverResolver } from '@core/resolver/sgi-resolver';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 
-const MSG_NOT_FOUND = marker('eti.convocatoria.editar.no-encontrado');
+const MSG_NOT_FOUND = marker('csp.convocatoria.editar.no-encontrado');
 
 @Injectable()
 export class ConvocatoriaResolver extends SgiResolverResolver<IConvocatoria> {

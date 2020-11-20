@@ -98,7 +98,7 @@
         <mat-label>{{'csp.convocatoria.modelo.ejecucion' | translate}}</mat-label>
         <input type="text" placeholder="{{'csp.convocatoria.modelo.ejecucion' | translate}}" matInput
           formControlName="modeloEjecucion" [matAutocomplete]="autoModeloEjecucion" (ngModelChange)="loadFinalidades()"
-          (keyup)="clearFinalidad()" [required]="formPart.isEstadoRegistrada()">
+          (keyup)="clearFinalidad()" (click)="loadModelosEjecucion()" [required]="formPart.isEstadoRegistrada()">
         <mat-autocomplete #autoModeloEjecucion="matAutocomplete" [displayWith]="getModeloEjecucion">
           <mat-option *ngFor="let modeloEjecucion of modelosEjecucion$ | async" [value]="modeloEjecucion"
             (click)="clearFinalidad()">

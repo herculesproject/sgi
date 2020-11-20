@@ -30,14 +30,7 @@ export class ConvocatoriaPlazosFasesFragment extends Fragment {
     this.logger.debug(ConvocatoriaPlazosFasesFragment.name, 'onInitialize()', 'start');
     if (this.getKey()) {
       this.convocatoriaService.findFasesConvocatoria(this.getKey() as number).pipe(
-        map((response) => {
-          if (response.items) {
-            return response.items;
-          }
-          else {
-            return [];
-          }
-        })
+        map((response) => response.items)
       ).subscribe((plazosFases) => {
         this.plazosFase$.next(plazosFases.map(
           plazosFase => new StatusWrapper<IConvocatoriaFase>(plazosFase))
@@ -77,6 +70,7 @@ export class ConvocatoriaPlazosFasesFragment extends Fragment {
       if (!wrapper.created) {
         this.fasesEliminadas.push(current[index]);
       }
+      wrapper.setDeleted();
       current.splice(index, 1);
       this.plazosFase$.next(current);
       this.setChanges(true);
@@ -136,11 +130,11 @@ export class ConvocatoriaPlazosFasesFragment extends Fragment {
       } as IConvocatoria
     );
     return from(createdFases).pipe(
-      mergeMap((wrappedFases) => {
-        return this.convocatoriaFaseService.create(wrappedFases.value).pipe(
-          map((updatedFases) => {
-            const index = this.plazosFase$.value.findIndex((currentFases) => currentFases === wrappedFases);
-            this.plazosFase$.value[index] = new StatusWrapper<IConvocatoriaFase>(updatedFases);
+      mergeMap((wrappedFase) => {
+        return this.convocatoriaFaseService.create(wrappedFase.value).pipe(
+          map((result) => {
+            const index = this.plazosFase$.value.findIndex((currentFases) => currentFases === wrappedFase);
+            this.plazosFase$.value[index] = new StatusWrapper<IConvocatoriaFase>(result);
           }),
           tap(() => this.logger.debug(ConvocatoriaPlazosFasesFragment.name,
             `${this.createFases.name}()`, 'end'))
@@ -165,7 +159,8 @@ export class ConvocatoriaPlazosFasesFragment extends Fragment {
           tap(() => this.logger.debug(ConvocatoriaPlazosFasesFragment.name,
             `${this.updateFases.name}()`, 'end'))
         );
-      }));
+      })
+    );
   }
 
   private isSaveOrUpdateComplete(): boolean {

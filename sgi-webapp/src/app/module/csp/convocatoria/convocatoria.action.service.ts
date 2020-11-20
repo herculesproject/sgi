@@ -36,13 +36,17 @@ import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-
 import { ConvocatoriaRequisitoEquipoService } from '@core/services/csp/convocatoria-requisito-equipo.service';
 import { ConvocatoriaDocumentosFragment } from './convocatoria-formulario/convocatoria-documentos/convocatoria-documentos.fragment';
 import { ConvocatoriaDocumentoService } from '@core/services/csp/convocatoria-documento.service';
+import { ConvocatoriaConfiguracionSolicitudesFragment } from './convocatoria-formulario/convocatoria-configuracion-solicitudes/convocatoria-configuracion-solicitudes.fragment';
+import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
+import { DocumentoRequeridoService } from '@core/services/csp/documento-requerido.service';
+import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
+import { StatusWrapper } from '@core/utils/status-wrapper';
+import { Observable, throwError, from, of } from 'rxjs';
+import { filter, switchMap, concatMap, tap, takeLast, } from 'rxjs/operators';
 
 import { ConvocatoriaConceptoGastoCodigoEcFragment } from './convocatoria-formulario/convocatoria-concepto-gasto-codigo-ec/convocatoria-concepto-gasto-codigo-ec.fragment';
 import { ConvocatoriaConceptoGastoCodigoEcService } from '@core/services/csp/convocatoria-concepto-gasto-codigo-ec.service';
-import { Observable, throwError, from, of } from 'rxjs';
-import { filter, switchMap, concatMap, tap, takeLast } from 'rxjs/operators';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
-import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
 
 @Injectable()
@@ -61,7 +65,8 @@ export class ConvocatoriaActionService extends ActionService {
     ELEGIBILIDAD: 'elegibilidad',
     REQUISITOS_EQUIPO: 'requisitos-equipo',
     CODIGOS_ECONOMICOS: 'codigos-economicos',
-    DOCUMENTOS: 'documentos'
+    DOCUMENTOS: 'documentos',
+    CONFIGURACION_SOLICITUDES: 'configuracion-solicitudes'
   };
 
   private datosGenerales: ConvocatoriaDatosGeneralesFragment;
@@ -77,22 +82,21 @@ export class ConvocatoriaActionService extends ActionService {
   private requisitosEquipo: ConvocatoriaRequisitosEquipoFragment;
   private codigosEconomicos: ConvocatoriaConceptoGastoCodigoEcFragment;
   private documentos: ConvocatoriaDocumentosFragment;
+  private configuracionSolicitudes: ConvocatoriaConfiguracionSolicitudesFragment;
 
   private convocatoria: IConvocatoria;
 
-  private fragmentos: IFragment[] = [];
-
   get modeloEjecucionId(): number {
-    return this.getConvocatoria().modeloEjecucion?.id;
+    return this.getDatosGeneralesConvocatoria().modeloEjecucion?.id;
   }
 
   get duracion(): number {
-    return this.getConvocatoria().duracion;
+    return this.getDatosGeneralesConvocatoria().duracion;
   }
 
   constructor(
     fb: FormBuilder,
-    logger: NGXLogger,
+    private logger: NGXLogger,
     route: ActivatedRoute,
     convocatoriaService: ConvocatoriaService,
     convocatoriaEnlaceService: ConvocatoriaEnlaceService,
@@ -110,7 +114,9 @@ export class ConvocatoriaActionService extends ActionService {
     convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService,
     convocatoriaRequisitoIPService: ConvocatoriaRequisitoIPService,
     convocatoriaConceptoGastoCodigoEcService: ConvocatoriaConceptoGastoCodigoEcService,
-    convocatoriaDocumentoService: ConvocatoriaDocumentoService
+    convocatoriaDocumentoService: ConvocatoriaDocumentoService,
+    configuracionSolicitudService: ConfiguracionSolicitudService,
+    documentoRequeridoService: DocumentoRequeridoService
   ) {
     super();
     this.convocatoria = {} as IConvocatoria;
@@ -144,6 +150,8 @@ export class ConvocatoriaActionService extends ActionService {
     this.requisitosEquipo = new ConvocatoriaRequisitosEquipoFragment(fb, logger, this.convocatoria?.id, convocatoriaRequisitoEquipoService);
     this.codigosEconomicos = new ConvocatoriaConceptoGastoCodigoEcFragment(logger, this.convocatoria?.id, convocatoriaService,
       convocatoriaConceptoGastoCodigoEcService, this.elegibilidad);
+    this.configuracionSolicitudes = new ConvocatoriaConfiguracionSolicitudesFragment(
+      logger, this.convocatoria?.id, configuracionSolicitudService, documentoRequeridoService, this, this.plazosFases);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.SEGUIMIENTO_CIENTIFICO, this.seguimientoCientifico);
@@ -158,24 +166,27 @@ export class ConvocatoriaActionService extends ActionService {
     this.addFragment(this.FRAGMENT.ELEGIBILIDAD, this.elegibilidad);
     this.addFragment(this.FRAGMENT.REQUISITOS_EQUIPO, this.requisitosEquipo);
     this.addFragment(this.FRAGMENT.CODIGOS_ECONOMICOS, this.codigosEconomicos);
-
-    this.fragmentos.push(this.datosGenerales);
-    this.fragmentos.push(this.seguimientoCientifico);
-    this.fragmentos.push(this.entidadesConvocantes);
-    this.fragmentos.push(this.entidadesFinanciadorasFragment);
-    this.fragmentos.push(this.periodoJustificacion);
-    this.fragmentos.push(this.plazosFases);
-    this.fragmentos.push(this.hitos);
-    this.fragmentos.push(this.documentos);
-    this.fragmentos.push(this.enlaces);
-    this.fragmentos.push(this.requisitosIP);
-    this.fragmentos.push(this.elegibilidad);
-    this.fragmentos.push(this.requisitosEquipo);
-    this.fragmentos.push(this.codigosEconomicos);
+    this.addFragment(this.FRAGMENT.CONFIGURACION_SOLICITUDES, this.configuracionSolicitudes);
   }
 
-  private getConvocatoria(): IConvocatoria {
+  /**
+   * Recupera los datos de la convocatoria del formulario de datos generales,
+   * si no se ha cargado el formulario de datos generales se recuperan los datos de la convocatoria que se esta editando.
+   *
+   * @returns los datos de la convocatoria.
+   */
+  getDatosGeneralesConvocatoria(): IConvocatoria {
     return this.datosGenerales.isInitialized() ? this.datosGenerales.getValue() : this.convocatoria;
+  }
+
+  /**
+   * Recupera plazos y fases
+   * si no se ha cargado el formulario de plazos y fases se recuperan los datos de la convocatoria que se esta editando.
+   *
+   * @returns los datos de la convocatoria.
+   */
+  getPlazosFases(): StatusWrapper<IConvocatoriaFase>[] {
+    return this.plazosFases.isInitialized() ? this.plazosFases.plazosFase$.value : [];
   }
 
   /**
@@ -235,36 +246,69 @@ export class ConvocatoriaActionService extends ActionService {
     }
   }
 
+  /**
+   * Recupera plazos y fases
+   * si no se ha cargado el formulario de plazos y fases se recuperan los datos de la convocatoria que se esta editando.
+   *
+   * @returns los datos de la convocatoria.
+   */
+  isPlazosFasesInitialized(): boolean {
+    return this.plazosFases.isInitialized();
+  }
+
+  /**
+   * Cuando se elimina una fase se actualizan los datos de la pestaña configuración solicitudes.
+   */
+  isDelete(convocatoriaFaseEliminada: IConvocatoriaFase): boolean {
+    const fasePresentacionSolicitudes = this.configuracionSolicitudes.getFormGroup()
+      .controls.fasePresentacionSolicitudes.value;
+    return !(convocatoriaFaseEliminada.tipoFase.id === fasePresentacionSolicitudes.tipoFase.id
+      && convocatoriaFaseEliminada.fechaInicio === fasePresentacionSolicitudes.fechaInicio
+      && convocatoriaFaseEliminada.fechaFin === fasePresentacionSolicitudes.fechaFin
+      && convocatoriaFaseEliminada.observaciones === fasePresentacionSolicitudes.observaciones);
+  }
+
+
+  initializeConfiguracionSolicitud(): void {
+    this.configuracionSolicitudes.initialize();
+  }
+
+  initializePlazosFases(): void {
+    this.plazosFases.initialize();
+  }
+
   saveOrUpdate(): Observable<void> {
+    this.logger.debug(ConvocatoriaActionService.name, 'saveOrUpdate()', 'start');
     this.performChecks(true);
     if (this.hasErrors()) {
+      this.logger.error(ConvocatoriaActionService.name, 'saveOrUpdate()', 'error');
       return throwError('Errores');
     }
     if (this.isEdit()) {
-      return from(this.fragmentos.values()).pipe(
-        filter((part) => part.hasChanges()),
-        concatMap((part) => part.saveOrUpdate().pipe(
-          switchMap(() => {
-            return of(void 0);
-          }),
-          tap(() => part.refreshInitialState(true)))
-        ),
-        takeLast(1)
-      );
-    }
-    else {
-      const part = this.datosGenerales;
-      return part.saveOrUpdate().pipe(
-        tap(() => part.refreshInitialState(true)),
-        switchMap((k) => {
-          if (typeof k === 'string' || typeof k === 'number') {
-            this.onKeyChange(k);
-          }
-          return this.saveOrUpdate();
+      return this.plazosFases.saveOrUpdate().pipe(
+        switchMap(() => {
+          this.plazosFases.refreshInitialState(true);
+          return super.saveOrUpdate();
         }),
-        takeLast(1)
+        tap(() => this.logger.debug(ConvocatoriaActionService.name,
+          'saveOrUpdate()', 'end'))
+      );
+    } else {
+      return this.datosGenerales.saveOrUpdate().pipe(
+        switchMap((key) => {
+          this.datosGenerales.refreshInitialState(true);
+          if (typeof key === 'string' || typeof key === 'number') {
+            this.onKeyChange(key);
+          }
+          return this.plazosFases.saveOrUpdate();
+        }),
+        switchMap(() => {
+          this.plazosFases.refreshInitialState(true);
+          return super.saveOrUpdate();
+        }),
+        tap(() => this.logger.debug(ConvocatoriaActionService.name,
+          'saveOrUpdate()', 'end'))
       );
     }
   }
-
 }

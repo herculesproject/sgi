@@ -32,6 +32,8 @@ import { ConvocatoriaRequisitosEquipoComponent } from './convocatoria-formulario
 import { ConvocatoriaConceptoGastoCodigoEcComponent } from './convocatoria-formulario/convocatoria-concepto-gasto-codigo-ec/convocatoria-concepto-gasto-codigo-ec.component';
 import { ConvocatoriaConceptoGastoCodigoEcModalComponent } from './modals/convocatoria-concepto-gasto-codigo-ec-modal/convocatoria-concepto-gasto-codigo-ec-modal.component';
 import { ConvocatoriaDocumentosComponent } from './convocatoria-formulario/convocatoria-documentos/convocatoria-documentos.component';
+import { ConvocatoriaConfiguracionSolicitudesComponent } from './convocatoria-formulario/convocatoria-configuracion-solicitudes/convocatoria-configuracion-solicitudes.component';
+import { ConvocatoriaConfiguracionSolicitudesModalComponent } from './modals/convocatoria-configuracion-solicitudes-modal/convocatoria-configuracion-solicitudes-modal.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +62,9 @@ import { ConvocatoriaDocumentosComponent } from './convocatoria-formulario/convo
     ConvocatoriaRequisitosEquipoComponent,
     ConvocatoriaConceptoGastoCodigoEcComponent,
     ConvocatoriaConceptoGastoCodigoEcModalComponent,
-    ConvocatoriaDocumentosComponent
+    ConvocatoriaDocumentosComponent,
+    ConvocatoriaConfiguracionSolicitudesComponent,
+    ConvocatoriaConfiguracionSolicitudesModalComponent
   ],
   imports: [
     CommonModule,

@@ -45,8 +45,6 @@ export class ModeloEjecucionActionService extends ActionService {
   private tipoHitos: ModeloEjecucionTipoHitoFragment;
   private tipoUnidadGestion: ModeloEjecucionTipoUnidadGestionFragment;
 
-  private fragmentos: Map<string, IFragment> = new Map();
-
   constructor(
     private logger: NGXLogger,
     route: ActivatedRoute,
@@ -86,14 +84,6 @@ export class ModeloEjecucionActionService extends ActionService {
     this.addFragment(this.FRAGMENT.TIPO_DOCUMENTOS, this.tipoDocumentos);
     this.addFragment(this.FRAGMENT.TIPO_HITOS, this.tipoHitos);
     this.addFragment(this.FRAGMENT.UNIDAD_GESTION, this.tipoUnidadGestion);
-
-    this.fragmentos.set(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
-    this.fragmentos.set(this.FRAGMENT.TIPO_FASES, this.tipoFases);
-    this.fragmentos.set(this.FRAGMENT.TIPO_FINALIDADES, this.tipoFinalidades);
-    this.fragmentos.set(this.FRAGMENT.TIPO_ENLACES, this.tipoEnlaces);
-    this.fragmentos.set(this.FRAGMENT.TIPO_DOCUMENTOS, this.tipoDocumentos);
-    this.fragmentos.set(this.FRAGMENT.TIPO_HITOS, this.tipoHitos);
-    this.fragmentos.set(this.FRAGMENT.UNIDAD_GESTION, this.tipoUnidadGestion);
 
     this.logger.debug(ModeloEjecucionActionService.name, 'constructor()', 'end');
   }
