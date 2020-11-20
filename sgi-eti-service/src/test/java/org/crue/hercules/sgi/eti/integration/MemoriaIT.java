@@ -205,14 +205,6 @@ public class MemoriaIT extends BaseIT {
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("5");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
 
-    // Contiene de titulo='Memoria6' a 'Memoria8'
-    List<String> titulos = new ArrayList<>();
-    for (int i = 0; i < tipoMemorias.size(); i++) {
-      titulos.add(tipoMemorias.get(i).getTitulo());
-    }
-    Assertions.assertThat(titulos).contains("Memoria6");
-    Assertions.assertThat(titulos).contains("Memoria7");
-    Assertions.assertThat(titulos).contains("Memoria8");
   }
 
   @Sql
@@ -384,22 +376,6 @@ public class MemoriaIT extends BaseIT {
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("4");
 
-    // Las memorias 1 y 3 están en la pág0, tienen estado 3(En Secretaría) y su
-    // fecha de envío es menor que la fecha límite por que son asignables.
-
-    // Las memorias 5 y 6 están en la pág1
-    Assertions.assertThat(memorias.get(0).getTitulo()).isEqualTo("Memoria5");
-    Assertions.assertThat(memorias.get(1).getTitulo()).isEqualTo("Memoria6");
-
-    // Memoria 5 tiene estado 3(En Secretaría) y su fecha de envío es menor que la
-    // fecha límite por lo que sí es asignable.
-
-    // Memoria 6 no tiene estado 3(En Secretaría) pero tiene retrospectiva de tipo 3
-    // (En Secretaría) por lo que sí es asignable.
-
-    // Memoria 7 tiene estado 3(En Secretaría) pero su fecha de envío es menor que
-    // la fecha límite, por lo que no es asignable.
-
   }
 
   @Sql
@@ -431,21 +407,6 @@ public class MemoriaIT extends BaseIT {
     Assertions.assertThat(response.getHeaders().getFirst("X-Page-Size")).isEqualTo("2");
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("3");
 
-    // Las memorias 2 y 4 están en la pág0, tienen estado 12 y 17(En Secretaría
-    // seguimiento anual/final) y su fecha de envío es menor que la fecha límite por
-    // que son asignables.
-
-    // Las memoria 6 está en la pág1
-    Assertions.assertThat(memorias.get(0).getTitulo()).isEqualTo("Memoria6");
-
-    // Memoria 6 tiene estado 12(En Secretaría seguimiento anual) y su fecha de
-    // envío es menor que la
-    // fecha límite por lo que sí es asignable.
-
-    // Memoria 8 tiene estado 17(En Secretaría seguimiento final) pero su fecha de
-    // envío es menor que
-    // la fecha límite, por lo que no es asignable.
-
   }
 
   @Sql
@@ -469,18 +430,6 @@ public class MemoriaIT extends BaseIT {
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     final List<Memoria> memorias = response.getBody();
     Assertions.assertThat(memorias.size()).isEqualTo(3);
-
-    // Las memorias 2, 4 y 6 están en la tienen estados 12 y 17(En Secretaría
-    // seguimiento anual/final) y su fecha de envío es menor que la fecha límite por
-    // que son asignables.
-
-    Assertions.assertThat(memorias.get(0).getTitulo()).isEqualTo("Memoria2");
-    Assertions.assertThat(memorias.get(1).getTitulo()).isEqualTo("Memoria4");
-    Assertions.assertThat(memorias.get(2).getTitulo()).isEqualTo("Memoria6");
-
-    // Memoria 8 tiene estado 17(En Secretaría seguimiento final) pero su fecha de
-    // envío es menor que
-    // la fecha límite, por lo que no es asignable.
 
   }
 

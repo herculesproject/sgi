@@ -196,6 +196,7 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
     CriteriaQuery<MemoriaPeticionEvaluacion> cq = cb.createQuery(MemoriaPeticionEvaluacion.class);
     Root<Memoria> root = cq.from(Memoria.class);
+    root.join(Memoria_.retrospectiva, JoinType.LEFT);
 
     // Count query
     CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
@@ -208,7 +209,8 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
         cb.equal(root.get(Memoria_.personaRef), personaRefConsulta != null ? personaRefConsulta : "")
             .alias("isResponsable"));
 
-    cq.where(cb.equal(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id), idPeticionEvaluacion));
+    cq.where(cb.equal(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id), idPeticionEvaluacion),
+        cb.isTrue(root.get(Memoria_.activo)));
 
     List<Order> orders = QueryUtils.toOrders(pageable.getSort(), root, cb);
     cq.orderBy(orders);
