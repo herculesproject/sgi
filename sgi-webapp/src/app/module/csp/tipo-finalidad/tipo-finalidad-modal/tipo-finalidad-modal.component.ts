@@ -21,15 +21,17 @@ export class TipoFinalidadModalComponent extends BaseModalComponent<ITipoFinalid
   ) {
     super(logger, snackBarService, matDialogRef, tipoFinalidad);
     this.logger.debug(TipoFinalidadModalComponent.name, 'constructor()', 'start');
+    if (tipoFinalidad) {
+      this.tipoFinalidad = { ...tipoFinalidad };
+    } else {
+      this.tipoFinalidad = { activo: true } as ITipoFinalidad;
+    }
     this.logger.debug(TipoFinalidadModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
     this.logger.debug(TipoFinalidadModalComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
-    if (this.tipoFinalidad?.id) {
-      FormGroupUtil.addFormControl(this.formGroup, 'activo', new FormControl('' + this.tipoFinalidad.activo));
-    }
     this.logger.debug(TipoFinalidadModalComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -38,9 +40,6 @@ export class TipoFinalidadModalComponent extends BaseModalComponent<ITipoFinalid
     const tipoFinalidad = this.tipoFinalidad;
     tipoFinalidad.nombre = this.formGroup.get('nombre').value;
     tipoFinalidad.descripcion = this.formGroup.get('descripcion').value;
-    if (tipoFinalidad?.id) {
-      tipoFinalidad.activo = this.formGroup.get('activo').value;
-    }
     this.logger.debug(TipoFinalidadModalComponent.name, `${this.getDatosForm.name}()`, 'end');
     return tipoFinalidad;
   }

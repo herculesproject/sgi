@@ -33,9 +33,9 @@
             <mat-checkbox color="primary" class="checkbox" formControlName="convocatoria">
               {{'csp.modelo.tipo.hito.convocatorias' | translate}}
             </mat-checkbox>
-            <mat-checkbox color="primary" class="checkbox" formControlName="proyecto">
-              {{'csp.modelo.tipo.hito.solicitudes' | translate}}</mat-checkbox>
             <mat-checkbox color="primary" class="checkbox" formControlName="solicitud">
+              {{'csp.modelo.tipo.hito.solicitudes' | translate}}</mat-checkbox>
+            <mat-checkbox color="primary" class="checkbox" formControlName="proyecto">
               {{'csp.modelo.tipo.hito.proyectos' | translate}}</mat-checkbox>
             <mat-error *ngIf="formGroup.controls.disponible.errors?.requiredChecked">
               {{'csp.tipo.fase.checkbox.error.requerido' | translate}}

@@ -28,13 +28,12 @@ export class ConceptoGastoModalComponent extends
   ) {
     super(logger, snackBarService, matDialogRef, conceptoGasto);
     this.logger.debug(ConceptoGastoModalComponent.name, 'constructor()', 'start');
-    this.logger.debug(ConceptoGastoModalComponent.name, 'constructor()', 'end');
-
     if (conceptoGasto) {
       this.conceptoGasto = { ...conceptoGasto };
     } else {
       this.conceptoGasto = { activo: true } as IConceptoGasto;
     }
+    this.logger.debug(ConceptoGastoModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
@@ -43,7 +42,6 @@ export class ConceptoGastoModalComponent extends
     this.formGroup = new FormGroup({
       nombre: new FormControl(this.conceptoGasto?.nombre),
       descripcion: new FormControl(this.conceptoGasto?.descripcion),
-      activo: new FormControl(this.conceptoGasto.activo)
     });
     this.logger.debug(ConceptoGastoModalComponent.name, 'ngOnInit()', 'end');
   }
@@ -70,7 +68,6 @@ export class ConceptoGastoModalComponent extends
     const conceptoGasto = this.conceptoGasto;
     conceptoGasto.nombre = this.formGroup.get('nombre').value;
     conceptoGasto.descripcion = this.formGroup.get('descripcion').value;
-    conceptoGasto.activo = this.formGroup.get('activo').value;
     this.logger.debug(ConceptoGastoModalComponent.name, `${this.getDatosForm.name}()`, 'end');
     return conceptoGasto;
   }

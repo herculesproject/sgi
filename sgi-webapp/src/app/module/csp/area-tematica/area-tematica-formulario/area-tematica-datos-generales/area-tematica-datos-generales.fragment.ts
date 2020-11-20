@@ -29,7 +29,6 @@ export class AreaTematicaDatosGeneralesFragment extends FormFragment<IAreaTemati
     const fb = new FormGroup({
       nombre: new FormControl('', [Validators.maxLength(50)]),
       descripcion: new FormControl('', [Validators.maxLength(250)]),
-      activo: new FormControl('')
     });
     this.logger.debug(AreaTematicaDatosGeneralesFragment.name,
       `${this.buildFormGroup.name}()`, 'end');
@@ -73,7 +72,6 @@ export class AreaTematicaDatosGeneralesFragment extends FormFragment<IAreaTemati
     const areaTematica = this.areaTematica;
     areaTematica.nombre = form.nombre;
     areaTematica.descripcion = form.descripcion;
-    areaTematica.activo = form.activo;
     this.logger.debug(AreaTematicaDatosGeneralesFragment.name, `${this.getValue.name}()`, 'end');
     return areaTematica;
   }

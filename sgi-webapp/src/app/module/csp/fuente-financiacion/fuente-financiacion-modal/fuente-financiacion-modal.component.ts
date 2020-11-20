@@ -53,13 +53,12 @@ export class FuenteFinanciacionModalComponent implements OnInit {
     this.fxFlexProperties.md = '0 1 calc(100%-10px)';
     this.fxFlexProperties.gtMd = '0 1 calc(100%-10px)';
     this.fxFlexProperties.order = '2';
-    this.logger.debug(FuenteFinanciacionModalComponent.name, 'constructor()', 'end');
-
     if (fuenteFinanciacion) {
       this.fuenteFinanciacion = { ...fuenteFinanciacion };
     } else {
       this.fuenteFinanciacion = { activo: true } as IFuenteFinanciacion;
     }
+    this.logger.debug(FuenteFinanciacionModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
@@ -70,7 +69,6 @@ export class FuenteFinanciacionModalComponent implements OnInit {
       ambitoGeografico: new FormControl(this.fuenteFinanciacion?.tipoAmbitoGeografico),
       origen: new FormControl(this.fuenteFinanciacion?.tipoOrigenFuenteFinanciacion),
       fondoEstructural: new FormControl(this.fuenteFinanciacion?.id ? this.fuenteFinanciacion.fondoEstructural : true),
-      activo: new FormControl(this.fuenteFinanciacion.activo)
     });
 
     this.loadAmbitosGeograficos();
@@ -106,7 +104,6 @@ export class FuenteFinanciacionModalComponent implements OnInit {
     this.fuenteFinanciacion.tipoAmbitoGeografico = this.formGroup.get('ambitoGeografico').value;
     this.fuenteFinanciacion.tipoOrigenFuenteFinanciacion = this.formGroup.get('origen').value;
     this.fuenteFinanciacion.fondoEstructural = this.formGroup.get('fondoEstructural').value;
-    this.fuenteFinanciacion.activo = this.formGroup.get('activo').value;
     this.logger.debug(FuenteFinanciacionModalComponent.name, `${this.loadDatosForm.name}()`, 'end');
   }
 

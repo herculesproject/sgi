@@ -28,7 +28,6 @@ export class PlanInvestigacionDatosGeneralesFragment extends FormFragment<IProgr
     const fb = new FormGroup({
       nombre: new FormControl(''),
       descripcion: new FormControl(''),
-      activo: new FormControl('')
     });
     this.logger.debug(PlanInvestigacionDatosGeneralesFragment.name,
       `${this.buildFormGroup.name}()`, 'end');
@@ -72,7 +71,6 @@ export class PlanInvestigacionDatosGeneralesFragment extends FormFragment<IProgr
     const programa = this.programas;
     programa.nombre = form.nombre;
     programa.descripcion = form.descripcion;
-    programa.activo = form.activo;
     this.logger.debug(PlanInvestigacionDatosGeneralesFragment.name, `${this.getValue.name}()`, 'end');
     return programa;
   }

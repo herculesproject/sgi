@@ -27,23 +27,24 @@ export class ModeloEjecucionDatosGeneralesFragment extends FormFragment<IModeloE
     const fb = new FormGroup({
       nombre: new FormControl(''),
       descripcion: new FormControl(''),
-      activo: new FormControl('')
     });
     this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name,
       `${this.buildFormGroup.name}()`, 'end');
     return fb;
   }
 
-  protected buildPatch(modeloEjecucion: IModeloEjecucion): { [key: string]: any; } {
+  protected buildPatch(modelo: IModeloEjecucion): { [key: string]: any; } {
     this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name,
-      `${this.buildPatch.name}(modeloEjecucion: ${modeloEjecucion})`, 'start');
+      `${this.buildPatch.name}(modeloEjecucion: ${modelo})`, 'start');
     const result = {
-      activo: modeloEjecucion.activo,
-      descripcion: modeloEjecucion.descripcion,
-      nombre: modeloEjecucion.nombre
+      id: modelo.id,
+      activo: modelo.activo,
+      descripcion: modelo.descripcion,
+      nombre: modelo.nombre
     } as IModeloEjecucion;
+    this.modeloEjecucion = modelo;
     this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name,
-      `${this.buildPatch.name}(modeloEjecucion: ${modeloEjecucion})`, 'end');
+      `${this.buildPatch.name}(modeloEjecucion: ${modelo})`, 'end');
     return result;
   }
 
@@ -69,9 +70,6 @@ export class ModeloEjecucionDatosGeneralesFragment extends FormFragment<IModeloE
     const modeloEjecucion = this.modeloEjecucion;
     modeloEjecucion.nombre = form.nombre;
     modeloEjecucion.descripcion = form.descripcion;
-    if (modeloEjecucion?.id) {
-      modeloEjecucion.activo = form.activo;
-    }
     this.logger.debug(ModeloEjecucionDatosGeneralesFragment.name, `${this.getValue.name}()`, 'end');
     return modeloEjecucion;
   }

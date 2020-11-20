@@ -29,7 +29,7 @@ export class ModeloEjecucionTipoFinalidadComponent extends FragmentComponent imp
   private formPart: ModeloEjecucionTipoFinalidadFragment;
   private subscriptions = [] as Subscription[];
 
-  columns = ['nombre', 'descripcion', 'activo', 'acciones'];
+  columns = ['nombre', 'descripcion', 'acciones'];
   numPage = [5, 10, 25, 100];
   totalElements = 0;
 

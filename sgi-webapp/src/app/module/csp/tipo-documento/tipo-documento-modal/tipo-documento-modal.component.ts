@@ -21,15 +21,17 @@ export class TipoDocumentoModalComponent extends BaseModalComponent<ITipoDocumen
   ) {
     super(logger, snackBarService, matDialogRef, tipoDocumento);
     this.logger.debug(TipoDocumentoModalComponent.name, 'constructor()', 'start');
+    if (tipoDocumento) {
+      this.tipoDocumento = { ...tipoDocumento };
+    } else {
+      this.tipoDocumento = { activo: true } as ITipoDocumento;
+    }
     this.logger.debug(TipoDocumentoModalComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
     this.logger.debug(TipoDocumentoModalComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
-    if (this.tipoDocumento?.id) {
-      FormGroupUtil.addFormControl(this.formGroup, 'activo', new FormControl('' + this.tipoDocumento.activo));
-    }
     this.logger.debug(TipoDocumentoModalComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -38,9 +40,6 @@ export class TipoDocumentoModalComponent extends BaseModalComponent<ITipoDocumen
     const tipoDocumento = this.tipoDocumento;
     tipoDocumento.nombre = this.formGroup.get('nombre').value;
     tipoDocumento.descripcion = this.formGroup.get('descripcion').value;
-    if (tipoDocumento?.id) {
-      tipoDocumento.activo = this.formGroup.get('activo').value;
-    }
     this.logger.debug(TipoDocumentoModalComponent.name, `${this.getDatosForm.name}()`, 'end');
     return tipoDocumento;
   }

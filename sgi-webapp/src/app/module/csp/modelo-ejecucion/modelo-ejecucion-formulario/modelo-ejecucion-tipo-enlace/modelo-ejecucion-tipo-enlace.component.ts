@@ -29,7 +29,7 @@ export class ModeloEjecucionTipoEnlaceComponent extends FragmentComponent implem
   private formPart: ModeloEjecucionTipoEnlaceFragment;
   private subscriptions = [] as Subscription[];
 
-  columns = ['nombre', 'descripcion', 'activo', 'acciones'];
+  columns = ['nombre', 'descripcion', 'acciones'];
   numPage = [5, 10, 25, 100];
   totalElements = 0;
 

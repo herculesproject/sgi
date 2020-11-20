@@ -11,6 +11,7 @@ import { FooterCrearComponent } from '@shared/footers/footer-crear/footer-crear.
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { PlanInvestigacionListadoComponent } from './plan-investigacion-listado.component';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 describe('PlanInvestigacionListadoComponent', () => {
   let component: PlanInvestigacionListadoComponent;
@@ -35,6 +36,7 @@ describe('PlanInvestigacionListadoComponent', () => {
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
+        SgiAuthService
       ]
     })
       .compileComponents();

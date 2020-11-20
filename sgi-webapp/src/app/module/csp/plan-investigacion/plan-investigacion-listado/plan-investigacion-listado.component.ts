@@ -13,6 +13,7 @@ import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framew
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 const MSG_ERROR = marker('csp.plan.investigacion.listado.error');
 const MSG_BUTTON_NEW = marker('footer.csp.plan.investigacion.crear');
@@ -40,7 +41,8 @@ export class PlanInvestigacionListadoComponent extends AbstractTablePaginationCo
     protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     private readonly programaService: ProgramaService,
-    private readonly dialogService: DialogService
+    private readonly dialogService: DialogService,
+    public authService: SgiAuthService,
   ) {
     super(logger, snackBarService, MSG_ERROR);
     this.logger.debug(PlanInvestigacionListadoComponent.name, 'constructor()', 'start');
@@ -85,7 +87,14 @@ export class PlanInvestigacionListadoComponent extends AbstractTablePaginationCo
 
   protected initColumns(): void {
     this.logger.debug(PlanInvestigacionListadoComponent.name, `${this.initColumns.name}()`, 'start');
-    this.columnas = ['nombre', 'descripcion', 'activo', 'acciones'];
+
+    let columns = ['nombre', 'descripcion', 'activo', 'acciones'];
+
+    if (!this.authService.hasAuthorityForAnyUO('CSP-PI-ACT')) {
+      columns = columns.filter(column => column !== 'activo');
+    }
+
+    this.columnas = columns;
     this.logger.debug(PlanInvestigacionListadoComponent.name, `${this.initColumns.name}()`, 'end');
   }
 

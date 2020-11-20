@@ -11,16 +11,18 @@
     </div>
 
     <!-- Activo -->
-    <div class="col">
-      <mat-form-field>
-        <mat-label>{{'csp.plan.investigacion.activo' | translate}}</mat-label>
-        <mat-select matNativeControl formControlName="activo">
-          <mat-option value="todos">{{'label.todos' | translate}}</mat-option>
-          <mat-option value="true">{{'label.si' | translate}}</mat-option>
-          <mat-option value="false">{{'label.no' | translate}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
+    <ng-container *sgiHasAnyAuthorityForAnyUO="['CSP-PI-ACT']">
+      <div class="col">
+        <mat-form-field>
+          <mat-label>{{'csp.plan.investigacion.activo' | translate}}</mat-label>
+          <mat-select matNativeControl formControlName="activo">
+            <mat-option value="todos">{{'label.todos' | translate}}</mat-option>
+            <mat-option value="true">{{'label.si' | translate}}</mat-option>
+            <mat-option value="false">{{'label.no' | translate}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </ng-container>
 
     <div class="buttons-final">
       <div class="col filter-button">
@@ -53,11 +55,13 @@
     </ng-container>
 
     <!-- Activo -->
-    <ng-container matColumnDef="activo">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.plan.investigacion.activo' | translate}}
-      </th>
-      <td mat-cell *matCellDef="let programa">{{(programa.activo ? 'label.si' : 'label.no') | translate}}
-      </td>
+    <ng-container *sgiHasAnyAuthorityForAnyUO="['CSP-PI-ACT']">
+      <ng-container matColumnDef="activo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'csp.plan.investigacion.activo' | translate}}
+        </th>
+        <td mat-cell *matCellDef="let programa">{{(programa.activo ? 'label.si' : 'label.no') | translate}}
+        </td>
+      </ng-container>
     </ng-container>
 
     <!-- Acciones -->
@@ -72,10 +76,12 @@
           (click)="desactivePlan(programa)">
           <mat-icon color="warn">highlight_off</mat-icon>
         </button>
-        <button *ngIf="programa.activo === false" (click)="activePlan(programa)" mat-button
-          matTooltip="{{'botones.reactivar' | translate}}">
-          <mat-icon color="accent">add_circle_outline</mat-icon>
-        </button>
+        <ng-container *sgiHasAnyAuthorityForAnyUO="['CSP-PI-ACT']">
+          <button *ngIf="programa.activo === false" (click)="activePlan(programa)" mat-button
+            matTooltip="{{'botones.reactivar' | translate}}">
+            <mat-icon color="accent">add_circle_outline</mat-icon>
+          </button>
+        </ng-container>
       </td>
     </ng-container>
 

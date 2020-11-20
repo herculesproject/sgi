@@ -35,6 +35,11 @@ export class TipoEnlaceModalComponent implements OnInit {
     this.fxFlexProperties.md = '0 1 calc(100%-10px)';
     this.fxFlexProperties.gtMd = '0 1 calc(100%-10px)';
     this.fxFlexProperties.order = '2';
+    if (tipoEnlace) {
+      this.tipoEnlace = { ...tipoEnlace };
+    } else {
+      this.tipoEnlace = { activo: true } as ITipoEnlace;
+    }
     this.logger.debug(TipoEnlaceModalComponent.name, 'constructor()', 'end');
   }
 
@@ -44,9 +49,6 @@ export class TipoEnlaceModalComponent implements OnInit {
       nombre: new FormControl(this.tipoEnlace?.nombre),
       descripcion: new FormControl(this.tipoEnlace?.descripcion)
     });
-    if (this.tipoEnlace?.id) {
-      FormGroupUtil.addFormControl(this.formGroup, 'activo', new FormControl('' + this.tipoEnlace.activo));
-    }
     this.logger.debug(TipoEnlaceModalComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -74,9 +76,6 @@ export class TipoEnlaceModalComponent implements OnInit {
     this.logger.debug(TipoEnlaceModalComponent.name, `${this.loadDatosForm.name}()`, 'start');
     this.tipoEnlace.nombre = this.formGroup.get('nombre').value;
     this.tipoEnlace.descripcion = this.formGroup.get('descripcion').value;
-    if (this.tipoEnlace?.id) {
-      this.tipoEnlace.activo = this.formGroup.get('activo').value;
-    }
     this.logger.debug(TipoEnlaceModalComponent.name, `${this.loadDatosForm.name}()`, 'end');
   }
 

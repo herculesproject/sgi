@@ -12,16 +12,18 @@
     </div>
 
     <!-- Activo -->
-    <div class="col">
-      <mat-form-field>
-        <mat-label>{{'csp.area.tematica.activo' | translate}}</mat-label>
-        <mat-select matNativeControl formControlName="activo">
-          <mat-option value="todos">{{'label.todos' | translate}}</mat-option>
-          <mat-option value="true">{{'label.si' | translate}}</mat-option>
-          <mat-option value="false">{{'label.no' | translate}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
+    <ng-container *sgiHasAnyAuthorityForAnyUO="['CSP-AT-ACT']">
+      <div class="col">
+        <mat-form-field>
+          <mat-label>{{'csp.area.tematica.activo' | translate}}</mat-label>
+          <mat-select matNativeControl formControlName="activo">
+            <mat-option value="todos">{{'label.todos' | translate}}</mat-option>
+            <mat-option value="true">{{'label.si' | translate}}</mat-option>
+            <mat-option value="false">{{'label.no' | translate}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </ng-container>
 
     <div class="buttons-final">
       <div class="col filter-button">

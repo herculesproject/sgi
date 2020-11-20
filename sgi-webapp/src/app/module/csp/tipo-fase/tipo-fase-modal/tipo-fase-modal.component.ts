@@ -36,6 +36,11 @@ export class TipoFaseModalComponent implements OnInit {
     this.fxFlexProperties.md = '0 1 calc(100%-10px)';
     this.fxFlexProperties.gtMd = '0 1 calc(100%-10px)';
     this.fxFlexProperties.order = '2';
+    if (tipoFase) {
+      this.tipoFase = { ...tipoFase };
+    } else {
+      this.tipoFase = { activo: true } as ITipoFase;
+    }
     this.logger.debug(TipoFaseModalComponent.name, 'constructor()', 'end');
   }
 
@@ -45,9 +50,6 @@ export class TipoFaseModalComponent implements OnInit {
       nombre: new FormControl(this.tipoFase?.nombre),
       descripcion: new FormControl(this.tipoFase?.descripcion)
     });
-    if (this.tipoFase?.id) {
-      FormGroupUtil.addFormControl(this.formGroup, 'activo', new FormControl('' + this.tipoFase.activo));
-    }
     this.logger.debug(TipoFaseModalComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -75,9 +77,6 @@ export class TipoFaseModalComponent implements OnInit {
     this.logger.debug(TipoFaseModalComponent.name, `${this.loadDatosForm.name}()`, 'start');
     this.tipoFase.nombre = this.formGroup.get('nombre').value;
     this.tipoFase.descripcion = this.formGroup.get('descripcion').value;
-    if (this.tipoFase?.id) {
-      this.tipoFase.activo = this.formGroup.get('activo').value;
-    }
     this.logger.debug(TipoFaseModalComponent.name, `${this.loadDatosForm.name}()`, 'end');
   }
 

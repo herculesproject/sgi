@@ -27,19 +27,5 @@
       </div>
     </div>
 
-    <!-- Activo -->
-    <div *ngIf="fragment.isEdit()" [fxLayout]="fxLayoutProperties.layout"
-      [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
-      <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-        [fxFlexOrder]="fxFlexProperties.order">
-        <mat-form-field fxFill>
-          <mat-label>{{'csp.plan.investigacion.activo' | translate}}</mat-label>
-          <input matInput formControlName="activo" type="text" #activo [hidden]="true">
-          <input matInput [value]="activo.value ? ('label.si' | translate) : 'label.no' | translate" type="text"
-            id="activo" readonly>
-        </mat-form-field>
-      </div>
-    </div>
-
   </form>
 </section>

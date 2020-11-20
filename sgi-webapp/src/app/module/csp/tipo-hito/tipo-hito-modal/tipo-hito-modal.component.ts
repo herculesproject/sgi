@@ -36,6 +36,11 @@ export class TipoHitoModalComponent implements OnInit {
     this.fxFlexProperties.md = '0 1 calc(100%-10px)';
     this.fxFlexProperties.gtMd = '0 1 calc(100%-10px)';
     this.fxFlexProperties.order = '2';
+    if (tipoHito) {
+      this.tipoHito = { ...tipoHito };
+    } else {
+      this.tipoHito = { activo: true } as ITipoHito;
+    }
     this.logger.debug(TipoHitoModalComponent.name, 'constructor()', 'end');
   }
 
@@ -45,9 +50,6 @@ export class TipoHitoModalComponent implements OnInit {
       nombre: new FormControl(this.tipoHito?.nombre),
       descripcion: new FormControl(this.tipoHito?.descripcion)
     });
-    if (this.tipoHito?.id) {
-      FormGroupUtil.addFormControl(this.formGroup, 'activo', new FormControl('' + this.tipoHito.activo));
-    }
     this.logger.debug(TipoHitoModalComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -75,9 +77,6 @@ export class TipoHitoModalComponent implements OnInit {
     this.logger.debug(TipoHitoModalComponent.name, `${this.loadDatosForm.name}()`, 'start');
     this.tipoHito.nombre = this.formGroup.get('nombre').value;
     this.tipoHito.descripcion = this.formGroup.get('descripcion').value;
-    if (this.tipoHito?.id) {
-      this.tipoHito.activo = this.formGroup.get('activo').value;
-    }
     this.logger.debug(TipoHitoModalComponent.name, `${this.loadDatosForm.name}()`, 'end');
   }
 

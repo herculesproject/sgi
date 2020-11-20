@@ -11,6 +11,7 @@ import { PlanInvestigacionEditarComponent } from './plan-investigacion-editar/pl
 import { PlanInvestigacionListadoComponent } from './plan-investigacion-listado/plan-investigacion-listado.component';
 import { PlanInvestigacionDatosGeneralesComponent } from './plan-investigacion-formulario/plan-investigacion-datos-generales/plan-investigacion-datos-generales.component';
 import { PlanInvestigacionProgramasComponent } from './plan-investigacion-formulario/plan-investigacion-programas/plan-investigacion-programas.component';
+import { SgiAuthModule } from '@sgi/framework/auth';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { PlanInvestigacionProgramasComponent } from './plan-investigacion-formul
     MaterialDesignModule,
     ReactiveFormsModule,
     TranslateModule,
-    FormsModule
+    FormsModule,
+    SgiAuthModule
   ],
   providers: [
     PlanInvestigacionResolver

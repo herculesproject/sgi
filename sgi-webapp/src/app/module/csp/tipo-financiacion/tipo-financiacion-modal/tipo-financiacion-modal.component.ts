@@ -50,7 +50,6 @@ export class TipoFinanciacionModalComponent implements OnInit {
     this.formGroup = new FormGroup({
       nombre: new FormControl(this.tipoFinanciacion?.nombre),
       descripcion: new FormControl(this.tipoFinanciacion?.descripcion),
-      activo: new FormControl(this.tipoFinanciacion.activo)
     });
     this.logger.debug(TipoFinanciacionModalComponent.name, 'ngOnInit()', 'end');
   }
@@ -79,9 +78,6 @@ export class TipoFinanciacionModalComponent implements OnInit {
     this.logger.debug(TipoFinanciacionModalComponent.name, `${this.loadDatosForm.name}()`, 'start');
     this.tipoFinanciacion.nombre = this.formGroup.get('nombre').value;
     this.tipoFinanciacion.descripcion = this.formGroup.get('descripcion').value;
-    if (this.tipoFinanciacion?.id) {
-      this.tipoFinanciacion.activo = this.formGroup.get('activo').value;
-    }
     this.logger.debug(TipoFinanciacionModalComponent.name, `${this.loadDatosForm.name}()`, 'end');
   }
 
