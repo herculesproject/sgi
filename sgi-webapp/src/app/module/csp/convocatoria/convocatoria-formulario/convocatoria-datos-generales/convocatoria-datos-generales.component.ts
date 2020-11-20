@@ -135,6 +135,10 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     this.loadTipoRegimenConcurrencia();
     this.loadAmbitosGeograficos();
     this.loadAreaTematicas();
+
+    if (this.formGroup.controls.unidadGestion.value) {
+      this.loadModelosEjecucion();
+    }
     this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'ngOnInit()', 'end');
   }
 
