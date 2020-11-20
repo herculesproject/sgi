@@ -639,7 +639,7 @@
       <column name="colaborativos" value="false" />
       <column name="estado_actual" value="Registrada" />
       <column name="duracion" value="24" />
-      <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'nombre-001')" />
+      <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'Propio')" />
       <column name="clasificacion_cvn" value="Ayudas y becas" />
       <column name="activo" value="true" />
     </insert>
