@@ -27,4 +27,36 @@
     </insert>
   </changeSet>
 
+  <changeSet context="!unit-test AND !integration-test" author="master" id="0000000000000-tipo_ambito_geografico">
+    <insert tableName="tipo_ambito_geografico">
+      <column name="id" valueSequenceNext="tipo_ambito_geografico_seq" />
+      <column name="nombre" value="Propio" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_ambito_geografico">
+      <column name="id" valueSequenceNext="tipo_ambito_geografico_seq" />
+      <column name="nombre" value="Local" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_ambito_geografico">
+      <column name="id" valueSequenceNext="tipo_ambito_geografico_seq" />
+      <column name="nombre" value="Autonómico" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_ambito_geografico">
+      <column name="id" valueSequenceNext="tipo_ambito_geografico_seq" />
+      <column name="nombre" value="Estatal" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_ambito_geografico">
+      <column name="id" valueSequenceNext="tipo_ambito_geografico_seq" />
+      <column name="nombre" value="Europeo" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_ambito_geografico">
+      <column name="id" valueSequenceNext="tipo_ambito_geografico_seq" />
+      <column name="nombre" value="Internacional no europeo" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
 </databaseChangeLog>

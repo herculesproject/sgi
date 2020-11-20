@@ -185,31 +185,13 @@
     </insert>
   </changeSet>
 
-  <changeSet context="dev" author="master" id="0000000000000-tipo_ambito_geografico">
-    <insert tableName="tipo_ambito_geografico">
-      <column name="id" valueSequenceNext="tipo_ambito_geografico_seq" />
-      <column name="nombre" value="nombre-001" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_ambito_geografico">
-      <column name="id" valueSequenceNext="tipo_ambito_geografico_seq" />
-      <column name="nombre" value="nombre-002" />
-      <column name="activo" value="true" />
-    </insert>
-    <insert tableName="tipo_ambito_geografico">
-      <column name="id" valueSequenceNext="tipo_ambito_geografico_seq" />
-      <column name="nombre" value="nombre-003" />
-      <column name="activo" value="false" />
-    </insert>
-  </changeSet>
-
   <changeSet context="dev" author="master" id="0000000000000-fuente_financiacion">
     <insert tableName="fuente_financiacion">
       <column name="id" valueSequenceNext="fuente_financiacion_seq" />
       <column name="nombre" value="nombre-001" />
       <column name="descripcion" value="descripcion-001" />
       <column name="fondo_estructural" value="true" />
-      <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'nombre-001')" />
+      <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'Propio')" />
       <column name="tipo_origen_fuente_financiacion_id" valueComputed="(select id from csp.tipo_origen_fuente_financiacion where nombre = 'Público')" />
       <column name="activo" value="true" />
     </insert>
@@ -218,7 +200,7 @@
       <column name="nombre" value="nombre-002" />
       <column name="descripcion" value="descripcion-002" />
       <column name="fondo_estructural" value="true" />
-      <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'nombre-001')" />
+      <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'Propio')" />
       <column name="tipo_origen_fuente_financiacion_id" valueComputed="(select id from csp.tipo_origen_fuente_financiacion where nombre = 'Privado')" />
       <column name="activo" value="true" />
     </insert>
@@ -227,7 +209,7 @@
       <column name="nombre" value="nombre-003" />
       <column name="descripcion" value="descripcion-003" />
       <column name="fondo_estructural" value="false" />
-      <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'nombre-002')" />
+      <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'Local')" />
       <column name="tipo_origen_fuente_financiacion_id" valueComputed="(select id from csp.tipo_origen_fuente_financiacion where nombre = 'Público')" />
       <column name="activo" value="true" />
     </insert>
@@ -236,7 +218,7 @@
       <column name="nombre" value="nombre-004" />
       <column name="descripcion" value="descripcion-004" />
       <column name="fondo_estructural" value="true" />
-      <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'nombre-003')" />
+      <column name="tipo_ambito_geografico_id" valueComputed="(select id from csp.tipo_ambito_geografico where nombre = 'Autonómico')" />
       <column name="tipo_origen_fuente_financiacion_id" valueComputed="(select id from csp.tipo_origen_fuente_financiacion where nombre = 'Privado')" />
       <column name="activo" value="false" />
     </insert>
