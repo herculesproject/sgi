@@ -71,19 +71,26 @@ public class ConvocatoriaEnlaceServiceImpl implements ConvocatoriaEnlaceService 
         .findByConvocatoriaIdAndUrl(convocatoriaEnlace.getConvocatoria().getId(), convocatoriaEnlace.getUrl())
         .isPresent(), "Ya existe esa url para esta Convocatoria");
 
+    // Se recupera el Id de ModeloEjecucion para las siguientes validaciones
+    Long modeloEjecucionId = (convocatoriaEnlace.getConvocatoria().getModeloEjecucion() != null
+        && convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getId() != null)
+            ? convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getId()
+            : null;
+
     if (convocatoriaEnlace.getTipoEnlace() != null) {
       if (convocatoriaEnlace.getTipoEnlace().getId() != null) {
 
         // TipoEnlace
-        Optional<ModeloTipoEnlace> modeloTipoEnlace = modeloTipoEnlaceRepository.findByModeloEjecucionIdAndTipoEnlaceId(
-            convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getId(),
-            convocatoriaEnlace.getTipoEnlace().getId());
+        Optional<ModeloTipoEnlace> modeloTipoEnlace = modeloTipoEnlaceRepository
+            .findByModeloEjecucionIdAndTipoEnlaceId(modeloEjecucionId, convocatoriaEnlace.getTipoEnlace().getId());
 
         // Está asignado al ModeloEjecucion
         Assert.isTrue(modeloTipoEnlace.isPresent(),
             "TipoEnlace '" + convocatoriaEnlace.getTipoEnlace().getNombre()
                 + "' no disponible para el ModeloEjecucion '"
-                + convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getNombre() + "'");
+                + ((modeloEjecucionId != null) ? convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getNombre()
+                    : "Convocatoria sin modelo asignado")
+                + "'");
 
         // La asignación al ModeloEjecucion está activa
         Assert.isTrue(modeloTipoEnlace.get().getActivo(),
@@ -137,19 +144,27 @@ public class ConvocatoriaEnlaceServiceImpl implements ConvocatoriaEnlaceService 
       Assert.isTrue(!repository.findByConvocatoriaIdAndUrl(convocatoriaEnlace.getConvocatoria().getId(),
           convocatoriaEnlaceActualizar.getUrl()).isPresent(), "Ya existe esa url para esta Convocatoria");
 
+      // Se recupera el Id de ModeloEjecucion para las siguientes validaciones
+      Long modeloEjecucionId = (convocatoriaEnlace.getConvocatoria().getModeloEjecucion() != null
+          && convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getId() != null)
+              ? convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getId()
+              : null;
+
       if (convocatoriaEnlaceActualizar.getTipoEnlace() != null) {
         if (convocatoriaEnlaceActualizar.getTipoEnlace().getId() != null) {
 
           // TipoEnlace
           Optional<ModeloTipoEnlace> modeloTipoEnlace = modeloTipoEnlaceRepository
-              .findByModeloEjecucionIdAndTipoEnlaceId(convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getId(),
+              .findByModeloEjecucionIdAndTipoEnlaceId(modeloEjecucionId,
                   convocatoriaEnlaceActualizar.getTipoEnlace().getId());
 
           // Está asignado al ModeloEjecucion
           Assert.isTrue(modeloTipoEnlace.isPresent(),
               "TipoEnlace '" + convocatoriaEnlaceActualizar.getTipoEnlace().getNombre()
                   + "' no disponible para el ModeloEjecucion '"
-                  + convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getNombre() + "'");
+                  + ((modeloEjecucionId != null) ? convocatoriaEnlace.getConvocatoria().getModeloEjecucion().getNombre()
+                      : "Convocatoria sin modelo asignado")
+                  + "'");
 
           // La asignación al ModeloEjecucion está activa
           Assert.isTrue(

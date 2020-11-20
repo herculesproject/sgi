@@ -549,7 +549,7 @@ public class AreaTematicaServiceTest extends BaseServiceTest {
     // when: Desactivamos el AreaTematica
     AreaTematica areaTematicaActualizado = service.disable(areaTematica.getId());
 
-    // then: El AreaTematica y todos sus hijos se desactivan correctamente
+    // then: El AreaTematica se desactiva correctamente
     Assertions.assertThat(areaTematicaActualizado).as("isNotNull()").isNotNull();
     Assertions.assertThat(areaTematicaActualizado.getId()).as("getId()").isEqualTo(1L);
     Assertions.assertThat(areaTematicaActualizado.getNombre()).as("getNombre()").isEqualTo(areaTematica.getNombre());

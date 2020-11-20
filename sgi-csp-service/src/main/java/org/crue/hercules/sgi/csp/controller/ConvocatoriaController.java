@@ -151,10 +151,10 @@ public class ConvocatoriaController {
   @PostMapping
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-C')")
   public ResponseEntity<Convocatoria> create(@Valid @RequestBody Convocatoria convocatoria,
-      Authentication atuhentication) {
+      Authentication authentication) {
     log.debug("create(Convocatoria convocatoria) - start");
 
-    List<String> acronimosUnidadGestion = atuhentication.getAuthorities().stream().map(acronimo -> {
+    List<String> acronimosUnidadGestion = authentication.getAuthorities().stream().map(acronimo -> {
       if (acronimo.getAuthority().indexOf("_") > 0) {
         return acronimo.getAuthority().split("_")[1];
       }
@@ -176,10 +176,10 @@ public class ConvocatoriaController {
   @PutMapping("/{id}")
   // @PreAuthorize("hasAuthorityForAnyUO('CSP-CONV-E')")
   public Convocatoria update(@Valid @RequestBody Convocatoria convocatoria, @PathVariable Long id,
-      Authentication atuhentication) {
+      Authentication authentication) {
     log.debug("update(Convocatoria convocatoria, Long id) - start");
 
-    List<String> acronimosUnidadGestion = atuhentication.getAuthorities().stream().map(acronimo -> {
+    List<String> acronimosUnidadGestion = authentication.getAuthorities().stream().map(acronimo -> {
       if (acronimo.getAuthority().indexOf("_") > 0) {
         return acronimo.getAuthority().split("_")[1];
       }
@@ -308,11 +308,11 @@ public class ConvocatoriaController {
   // @PreAuthorize("hasAuthorityForAnyUO('SYSADMIN')")
   ResponseEntity<Page<Convocatoria>> findAllTodosRestringidos(
       @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging, Authentication atuhentication) {
+      @RequestPageable(sort = "s") Pageable paging, Authentication authentication) {
     log.debug(
-        "findAllTodosRestringidos(List<QueryCriteria> query,Pageable paging, Authentication atuhentication) - start");
+        "findAllTodosRestringidos(List<QueryCriteria> query,Pageable paging, Authentication authentication) - start");
 
-    List<String> acronimosUnidadGestion = atuhentication.getAuthorities().stream().map(acronimo -> {
+    List<String> acronimosUnidadGestion = authentication.getAuthorities().stream().map(acronimo -> {
       if (acronimo.getAuthority().indexOf("_") > 0) {
         return acronimo.getAuthority().split("_")[1];
       }
@@ -323,11 +323,11 @@ public class ConvocatoriaController {
 
     if (page.isEmpty()) {
       log.debug(
-          "findAllTodosRestringidos(List<QueryCriteria> query,Pageable paging, Authentication atuhentication) - end");
+          "findAllTodosRestringidos(List<QueryCriteria> query,Pageable paging, Authentication authentication) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     log.debug(
-        "findAllTodosRestringidos(List<QueryCriteria> query,Pageable paging Authentication atuhentication) - end");
+        "findAllTodosRestringidos(List<QueryCriteria> query,Pageable paging Authentication authentication) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

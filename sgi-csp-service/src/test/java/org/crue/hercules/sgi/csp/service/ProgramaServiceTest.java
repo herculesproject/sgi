@@ -355,7 +355,7 @@ public class ProgramaServiceTest extends BaseServiceTest {
     // when: Desactivamos el Programa
     Programa programaActualizado = service.disable(programa.getId());
 
-    // then: El Programa y todos sus hijos se desactivan correctamente
+    // then: El Programa se desactiva correctamente
     Assertions.assertThat(programaActualizado).as("isNotNull()").isNotNull();
     Assertions.assertThat(programaActualizado.getId()).as("getId()").isEqualTo(1L);
     Assertions.assertThat(programaActualizado.getNombre()).as("getNombre()").isEqualTo(programa.getNombre());

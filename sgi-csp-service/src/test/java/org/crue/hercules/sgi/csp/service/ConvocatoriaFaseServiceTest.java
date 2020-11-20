@@ -3,6 +3,7 @@ package org.crue.hercules.sgi.csp.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,7 @@ import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.csp.model.TipoFinalidad;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
+import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaFaseRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
 import org.crue.hercules.sgi.csp.repository.ModeloTipoFaseRepository;
@@ -53,13 +55,17 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   private ConvocatoriaRepository convocatoriaRepository;
 
   @Mock
+  private ConfiguracionSolicitudRepository configuracionSolicitudRepository;
+
+  @Mock
   private ModeloTipoFaseRepository modeloTipoFaseRepository;
 
   private ConvocatoriaFaseService service;
 
   @BeforeEach
   public void setUp() throws Exception {
-    service = new ConvocatoriaFaseServiceImpl(repository, convocatoriaRepository, modeloTipoFaseRepository);
+    service = new ConvocatoriaFaseServiceImpl(repository, convocatoriaRepository, configuracionSolicitudRepository,
+        modeloTipoFaseRepository);
   }
 
   @Test
@@ -155,6 +161,25 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
         // then: throw exception as tipoFaseId is null
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("Id Fase no puede ser null para crear ConvocatoriaFase");
+  }
+
+  @Test
+  public void create_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
+    // given: ConvocatoriaFase con Convocatoria sin Modelo de Ejecucion
+    ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(null);
+    convocatoriaFase.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaFase.getConvocatoria().setModeloEjecucion(null);
+
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(convocatoriaFase.getConvocatoria()));
+
+    Assertions.assertThatThrownBy(
+        // when: create ConvocatoriaFase
+        () -> service.create(convocatoriaFase))
+        // then: throw exception as ModeloEjecucion not found
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("TipoFase '%s' no disponible para el ModeloEjecucion '%s'",
+            convocatoriaFase.getTipoFase().getNombre(), "Convocatoria sin modelo asignado");
   }
 
   @Test
@@ -304,6 +329,28 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void update_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
+    // given: ConvocatoriaFase con Convocatoria sin Modelo de Ejecucion
+    ConvocatoriaFase convocatoriaFase = generarMockConvocatoriaFase(1L);
+    convocatoriaFase.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaFase.getConvocatoria().setModeloEjecucion(null);
+    ConvocatoriaFase convocatoriaFaseActualizado = generarMockConvocatoriaFase(1L);
+    convocatoriaFaseActualizado.setTipoFase(generarMockTipoFase(2L, Boolean.TRUE));
+    convocatoriaFase.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaFase.getConvocatoria().setModeloEjecucion(null);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaFase));
+
+    Assertions.assertThatThrownBy(
+        // when: update ConvocatoriaFase
+        () -> service.update(convocatoriaFaseActualizado))
+        // then: throw exception as ModeloTipoFase not found
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("TipoFase '%s' no disponible para el ModeloEjecucion '%s'",
+            convocatoriaFaseActualizado.getTipoFase().getNombre(), "Convocatoria sin modelo asignado");
+  }
+
+  @Test
   public void update_WithoutModeloTipoFase_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaFase con TipoFase no asignado al Modelo de Ejecucion de la
     // convocatoria
@@ -410,6 +457,10 @@ public class ConvocatoriaFaseServiceTest extends BaseServiceTest {
     Long id = 1L;
 
     BDDMockito.given(repository.existsById(ArgumentMatchers.anyLong())).willReturn(Boolean.TRUE);
+
+    BDDMockito.given(configuracionSolicitudRepository.findByFasePresentacionSolicitudesId(ArgumentMatchers.anyLong(),
+        ArgumentMatchers.<Pageable>any())).willReturn(new PageImpl<>(Collections.emptyList()));
+
     BDDMockito.doNothing().when(repository).deleteById(ArgumentMatchers.anyLong());
 
     Assertions.assertThatCode(

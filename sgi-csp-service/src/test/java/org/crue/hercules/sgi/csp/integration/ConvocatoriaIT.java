@@ -82,6 +82,7 @@ public class ConvocatoriaIT extends BaseIT {
     // given: new Convocatoria
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.setId(null);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
 
     // when: create Convocatoria
     final ResponseEntity<Convocatoria> response = restTemplate.exchange(CONTROLLER_BASE_PATH, HttpMethod.POST,

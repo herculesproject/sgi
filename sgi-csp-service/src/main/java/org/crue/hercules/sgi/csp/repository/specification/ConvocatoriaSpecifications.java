@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.repository.specification;
 
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 
@@ -9,14 +10,18 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante_;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora_;
+import org.crue.hercules.sgi.csp.model.ConvocatoriaFase_;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
 import org.crue.hercules.sgi.csp.model.AreaTematica_;
+import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
+import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud_;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.Convocatoria_;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion;
 import org.crue.hercules.sgi.csp.model.FuenteFinanciacion_;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class ConvocatoriaSpecifications {
@@ -127,6 +132,31 @@ public class ConvocatoriaSpecifications {
               fuenteFinanciacionId));
 
       return root.get(Convocatoria_.id).in(queryConvocatoriaEntidadFinanciera);
+    };
+  }
+
+  /**
+   * {@link Convocatoria} dentro del plazo de presentación de solicitudes.
+   * 
+   * @return specification para obtener las {@link Convocatoria} dentro del plazo
+   *         de presentación de solicitudes.
+   */
+  public static Specification<Convocatoria> inPlazoPresentacionSolicitudes() {
+    return (root, query, cb) -> {
+
+      Subquery<Long> queryConfiguracionSolicitud = query.subquery(Long.class);
+      Root<ConfiguracionSolicitud> subqRoot = queryConfiguracionSolicitud.from(ConfiguracionSolicitud.class);
+
+      // Dentro del rango de fechas de la configuración
+      Predicate plazoInicio = cb.lessThanOrEqualTo(subqRoot.get(ConfiguracionSolicitud_.fasePresentacionSolicitudes)
+          .get(ConvocatoriaFase_.fechaInicio).as(java.time.LocalDate.class), LocalDate.now());
+      Predicate plazoFin = cb.greaterThanOrEqualTo(subqRoot.get(ConfiguracionSolicitud_.fasePresentacionSolicitudes)
+          .get(ConvocatoriaFase_.fechaFin).as(java.time.LocalDate.class), LocalDate.now());
+      Predicate dentroPlazo = cb.and(plazoInicio, plazoFin);
+
+      queryConfiguracionSolicitud.select(subqRoot.get(ConfiguracionSolicitud_.convocatoria).get(Convocatoria_.id))
+          .where(dentroPlazo);
+      return root.get(Convocatoria_.id).in(queryConfiguracionSolicitud);
     };
   }
 

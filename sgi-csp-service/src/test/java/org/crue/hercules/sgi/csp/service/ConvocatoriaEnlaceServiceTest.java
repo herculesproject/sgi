@@ -140,6 +140,25 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void create_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
+    // given: ConvocatoriaEnlace con Convocatoria sin Modelo de Ejecucion
+    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(null);
+    convocatoriaEnlace.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaEnlace.getConvocatoria().setModeloEjecucion(null);
+
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(convocatoriaEnlace.getConvocatoria()));
+
+    Assertions.assertThatThrownBy(
+        // when: create ConvocatoriaEnlace
+        () -> service.create(convocatoriaEnlace))
+        // then: throw exception as ModeloEjecucion not found
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("TipoEnlace '%s' no disponible para el ModeloEjecucion '%s'",
+            convocatoriaEnlace.getTipoEnlace().getNombre(), "Convocatoria sin modelo asignado");
+  }
+
+  @Test
   public void create_WithoutModeloTipoEnlace_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaEnlace con TipoEnlace no asignado al Modelo de Ejecucion
     // de la
@@ -305,6 +324,28 @@ public class ConvocatoriaEnlaceServiceTest extends BaseServiceTest {
         () -> service.update(convocatoriaEnlace))
         // then: Lanza una excepcion porque la url es duplicada
         .isInstanceOf(IllegalArgumentException.class).hasMessage("Ya existe esa url para esta Convocatoria");
+  }
+
+  @Test
+  public void update_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
+    // given: ConvocatoriaEnlace con Convocatoria sin Modelo de Ejecucion
+    ConvocatoriaEnlace convocatoriaEnlace = generarMockConvocatoriaEnlace(1L);
+    convocatoriaEnlace.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaEnlace.getConvocatoria().setModeloEjecucion(null);
+    ConvocatoriaEnlace convocatoriaEnlaceActualizado = generarMockConvocatoriaEnlace(1L);
+    convocatoriaEnlaceActualizado.setTipoEnlace(generarMockTipoEnlace(2L, Boolean.TRUE));
+    convocatoriaEnlace.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaEnlace.getConvocatoria().setModeloEjecucion(null);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaEnlace));
+
+    Assertions.assertThatThrownBy(
+        // when: update ConvocatoriaEnlace
+        () -> service.update(convocatoriaEnlaceActualizado))
+        // then: throw exception as ModeloTipoEnlace not found
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("TipoEnlace '%s' no disponible para el ModeloEjecucion '%s'",
+            convocatoriaEnlaceActualizado.getTipoEnlace().getNombre(), "Convocatoria sin modelo asignado");
   }
 
   @Test

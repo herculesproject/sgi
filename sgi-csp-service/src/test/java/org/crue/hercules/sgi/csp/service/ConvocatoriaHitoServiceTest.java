@@ -210,6 +210,25 @@ public class ConvocatoriaHitoServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void create_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
+    // given: ConvocatoriaHito con Convocatoria sin Modelo de Ejecucion
+    ConvocatoriaHito convocatoriaHito = generarMockConvocatoriaHito(null);
+    convocatoriaHito.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaHito.getConvocatoria().setModeloEjecucion(null);
+
+    BDDMockito.given(convocatoriaRepository.findById(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(convocatoriaHito.getConvocatoria()));
+
+    Assertions.assertThatThrownBy(
+        // when: create ConvocatoriaHito
+        () -> service.create(convocatoriaHito))
+        // then: throw exception as ModeloEjecucion not found
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("TipoHito '%s' no disponible para el ModeloEjecucion '%s'",
+            convocatoriaHito.getTipoHito().getNombre(), "Convocatoria sin modelo asignado");
+  }
+
+  @Test
   public void create_WithoutModeloTipoHito_ThrowsIllegalArgumentException() {
     // given: ConvocatoriaHito con TipoHito no asignado al Modelo de Ejecucion de la
     // convocatoria
@@ -373,6 +392,28 @@ public class ConvocatoriaHitoServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque el ConvocatoriaHito no existe
     Assertions.assertThatThrownBy(() -> service.update(convocatoriaHito))
         .isInstanceOf(ConvocatoriaHitoNotFoundException.class);
+  }
+
+  @Test
+  public void update_WithoutModeloEjecucion_ThrowsIllegalArgumentException() {
+    // given: ConvocatoriaHito con Convocatoria sin Modelo de Ejecucion
+    ConvocatoriaHito convocatoriaHito = generarMockConvocatoriaHito(1L);
+    convocatoriaHito.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaHito.getConvocatoria().setModeloEjecucion(null);
+    ConvocatoriaHito convocatoriaHitoActualizado = generarMockConvocatoriaHito(1L);
+    convocatoriaHitoActualizado.setTipoHito(generarMockTipoHito(2L, Boolean.TRUE));
+    convocatoriaHito.getConvocatoria().setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoriaHito.getConvocatoria().setModeloEjecucion(null);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(convocatoriaHito));
+
+    Assertions.assertThatThrownBy(
+        // when: update ConvocatoriaHito
+        () -> service.update(convocatoriaHitoActualizado))
+        // then: throw exception as ModeloTipoHito not found
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("TipoHito '%s' no disponible para el ModeloEjecucion '%s'",
+            convocatoriaHitoActualizado.getTipoHito().getNombre(), "Convocatoria sin modelo asignado");
   }
 
   @Test

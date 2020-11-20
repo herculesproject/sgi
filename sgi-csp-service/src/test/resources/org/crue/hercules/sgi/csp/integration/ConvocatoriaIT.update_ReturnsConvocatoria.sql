@@ -20,3 +20,15 @@ INSERT INTO csp.tipo_ambito_geografico (id, nombre, activo) VALUES (1, 'nombre-0
 INSERT INTO csp.convocatoria
 (id, unidad_gestion_ref, modelo_ejecucion_id, codigo, anio, titulo, objeto, observaciones, tipo_finalidad_id, tipo_regimen_concurrencia_id, destinatarios, colaborativos, estado_actual, duracion, tipo_ambito_geografico_id, clasificacion_cvn, activo)
 VALUES(1, 'OPE', 1, 'codigo-001', 2020, 'titulo-001', 'objeto-001', 'observaciones-001', 1, 1, 'Individual', true, 'Registrada', 12, 1, 'Ayudas y becas', true);
+
+-- TIPO FASE
+INSERT INTO csp.tipo_fase (id, nombre, descripcion, activo) VALUES (1, 'nombre-001', 'descripcion-001', true);
+
+-- CONVOCATORIA FASE
+INSERT INTO csp.convocatoria_fase(id, convocatoria_id, tipo_fase_id, fecha_inicio, fecha_fin, observaciones) VALUES (1, 1, 1, '2020-10-01', '2020-10-15', 'observaciones-1');
+
+-- CONFIGURACION SOLICITUD
+INSERT INTO csp.configuracion_solicitud 
+(id, convocatoria_id, tramitacion_sgi, convocatoria_fase_id, importe_maximo_solicitud, formulario_solicitud, baremacion_ref) 
+VALUES(1, 1, TRUE, 1, 12345, 'Estándar', 'Sin baremación');
+

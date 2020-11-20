@@ -71,14 +71,22 @@ public class ConvocatoriaHitoServiceImpl implements ConvocatoriaHitoService {
     convocatoriaHito.setConvocatoria(convocatoriaRepository.findById(convocatoriaHito.getConvocatoria().getId())
         .orElseThrow(() -> new ConvocatoriaNotFoundException(convocatoriaHito.getConvocatoria().getId())));
 
+    // Se recupera el Id de ModeloEjecucion para las siguientes validaciones
+    Long modeloEjecucionId = (convocatoriaHito.getConvocatoria().getModeloEjecucion() != null
+        && convocatoriaHito.getConvocatoria().getModeloEjecucion().getId() != null)
+            ? convocatoriaHito.getConvocatoria().getModeloEjecucion().getId()
+            : null;
+
     // TipoHito
-    Optional<ModeloTipoHito> modeloTipoHito = modeloTipoHitoRepository.findByModeloEjecucionIdAndTipoHitoId(
-        convocatoriaHito.getConvocatoria().getModeloEjecucion().getId(), convocatoriaHito.getTipoHito().getId());
+    Optional<ModeloTipoHito> modeloTipoHito = modeloTipoHitoRepository
+        .findByModeloEjecucionIdAndTipoHitoId(modeloEjecucionId, convocatoriaHito.getTipoHito().getId());
 
     // Está asignado al ModeloEjecucion
     Assert.isTrue(modeloTipoHito.isPresent(),
         "TipoHito '" + convocatoriaHito.getTipoHito().getNombre() + "' no disponible para el ModeloEjecucion '"
-            + convocatoriaHito.getConvocatoria().getModeloEjecucion().getNombre() + "'");
+            + ((modeloEjecucionId != null) ? convocatoriaHito.getConvocatoria().getModeloEjecucion().getNombre()
+                : "Convocatoria sin modelo asignado")
+            + "'");
 
     // La asignación al ModeloEjecucion está activa
     Assert.isTrue(modeloTipoHito.get().getActivo(), "ModeloTipoHito '" + modeloTipoHito.get().getTipoHito().getNombre()
@@ -128,16 +136,23 @@ public class ConvocatoriaHitoServiceImpl implements ConvocatoriaHitoService {
 
     return repository.findById(convocatoriaHitoActualizar.getId()).map(convocatoriaHito -> {
 
+      // Se recupera el Id de ModeloEjecucion para las siguientes validaciones
+      Long modeloEjecucionId = (convocatoriaHito.getConvocatoria().getModeloEjecucion() != null
+          && convocatoriaHito.getConvocatoria().getModeloEjecucion().getId() != null)
+              ? convocatoriaHito.getConvocatoria().getModeloEjecucion().getId()
+              : null;
+
       // TipoHito
-      Optional<ModeloTipoHito> modeloTipoHito = modeloTipoHitoRepository.findByModeloEjecucionIdAndTipoHitoId(
-          convocatoriaHito.getConvocatoria().getModeloEjecucion().getId(),
-          convocatoriaHitoActualizar.getTipoHito().getId());
+      Optional<ModeloTipoHito> modeloTipoHito = modeloTipoHitoRepository
+          .findByModeloEjecucionIdAndTipoHitoId(modeloEjecucionId, convocatoriaHitoActualizar.getTipoHito().getId());
 
       // Está asignado al ModeloEjecucion
       Assert.isTrue(modeloTipoHito.isPresent(),
           "TipoHito '" + convocatoriaHitoActualizar.getTipoHito().getNombre()
               + "' no disponible para el ModeloEjecucion '"
-              + convocatoriaHito.getConvocatoria().getModeloEjecucion().getNombre() + "'");
+              + ((modeloEjecucionId != null) ? convocatoriaHito.getConvocatoria().getModeloEjecucion().getNombre()
+                  : "Convocatoria sin modelo asignado")
+              + "'");
 
       // La asignación al ModeloEjecucion está activa
       Assert.isTrue(

@@ -7,13 +7,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
+import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.ConvocatoriaNotFoundException;
+import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaPeriodoSeguimientoCientifico;
 import org.crue.hercules.sgi.csp.model.ModeloTipoFinalidad;
 import org.crue.hercules.sgi.csp.model.ModeloUnidad;
 import org.crue.hercules.sgi.csp.model.TipoAmbitoGeografico;
 import org.crue.hercules.sgi.csp.model.TipoRegimenConcurrencia;
+import org.crue.hercules.sgi.csp.repository.ConfiguracionSolicitudRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoJustificacionRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaPeriodoSeguimientoCientificoRepository;
 import org.crue.hercules.sgi.csp.repository.ConvocatoriaRepository;
@@ -50,13 +53,15 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
   private final TipoRegimenConcurrenciaRepository tipoRegimenConcurrenciaRepository;
   private final TipoAmbitoGeograficoRepository tipoAmbitoGeograficoRepository;
   private final ConvocatoriaPeriodoSeguimientoCientificoRepository convocatoriaPeriodoSeguimientoCientificoRepository;
+  private final ConfiguracionSolicitudRepository configuracionSolicitudRepository;
 
   public ConvocatoriaServiceImpl(ConvocatoriaRepository repository,
       ConvocatoriaPeriodoJustificacionRepository convocatoriaPeriodoJustificacionRepository,
       ModeloUnidadRepository modeloUnidadRepository, ModeloTipoFinalidadRepository modeloTipoFinalidadRepository,
       TipoRegimenConcurrenciaRepository tipoRegimenConcurrenciaRepository,
       TipoAmbitoGeograficoRepository tipoAmbitoGeograficoRepository,
-      ConvocatoriaPeriodoSeguimientoCientificoRepository convocatoriaPeriodoSeguimientoCientificoRepository) {
+      ConvocatoriaPeriodoSeguimientoCientificoRepository convocatoriaPeriodoSeguimientoCientificoRepository,
+      ConfiguracionSolicitudRepository configuracionSolicitudRepository) {
     this.repository = repository;
     this.convocatoriaPeriodoJustificacionRepository = convocatoriaPeriodoJustificacionRepository;
     this.modeloUnidadRepository = modeloUnidadRepository;
@@ -64,6 +69,7 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     this.tipoRegimenConcurrenciaRepository = tipoRegimenConcurrenciaRepository;
     this.tipoAmbitoGeograficoRepository = tipoAmbitoGeograficoRepository;
     this.convocatoriaPeriodoSeguimientoCientificoRepository = convocatoriaPeriodoSeguimientoCientificoRepository;
+    this.configuracionSolicitudRepository = configuracionSolicitudRepository;
   }
 
   /**
@@ -454,7 +460,8 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
   }
 
   /**
-   * Valida los campos requieridos para una convocatoria en estado 'Registrada'
+   * Valida los campos generales requeridos para una convocatoria en estado
+   * 'Registrada'
    * 
    * @param datosConvocatoria
    */
@@ -478,7 +485,41 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     // TipoAmbitoGeografico
     Assert.notNull(datosConvocatoria.getAmbitoGeografico(), "AmbitoGeografico no puede ser null en la Convocatoria");
 
+    // ConfiguracionSolicitud
+    validarRequeridosConfiguracionSolicitudConvocatoriaRegistrada(datosConvocatoria);
+
     log.debug("validarRequeridosConvocatoriaRegistrada(Convocatoria datosConvocatoria) - end");
+  }
+
+  /**
+   * Valida los campos requeridos de la configuración solicitud para una
+   * convocatoria en estado 'Registrada'
+   * 
+   * @param datosConvocatoria
+   */
+  private void validarRequeridosConfiguracionSolicitudConvocatoriaRegistrada(Convocatoria datosConvocatoria) {
+    log.debug("validarRequeridosConfiguracionSolicitudConvocatoriaRegistrada(Convocatoria datosConvocatoria) - start");
+
+    ConfiguracionSolicitud datosConfiguracionSolicitud = configuracionSolicitudRepository
+        .findByConvocatoriaId(datosConvocatoria.getId())
+        .orElseThrow(() -> new ConfiguracionSolicitudNotFoundException(datosConvocatoria.getId()));
+
+    // Tramitacion SGI
+    Assert.notNull(datosConfiguracionSolicitud.getTramitacionSGI(),
+        "Habilitar presentacion SGI no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
+    // Convocatoria Fase
+    Assert.isTrue(
+        !(datosConfiguracionSolicitud.getFasePresentacionSolicitudes() == null
+            && datosConfiguracionSolicitud.getTramitacionSGI() == Boolean.TRUE),
+        "Plazo presentación solicitudes no puede ser null cuando se establece presentacion SGI");
+    // Tipo Formulario Solicitud
+    Assert.notNull(datosConfiguracionSolicitud.getFormularioSolicitud(),
+        "Tipo formulario no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
+    // Baremación
+    Assert.notNull(datosConfiguracionSolicitud.getBaremacionRef(),
+        "Tipo baremación no puede ser null para crear ConfiguracionSolicitud cuando la convocatoria está registrada");
+
+    log.debug("validarRequeridosConfiguracionSolicitudConvocatoriaRegistrada(Convocatoria datosConvocatoria) - end");
   }
 
   /**
@@ -569,6 +610,24 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
       }
 
     }
+
+    // Plazo Presentacion Solicitudes
+    List<QueryCriteria> plazoPresentacionSolicitud = CollectionUtils.isEmpty(query) ? query
+        : query.stream().filter(criteria -> criteria.getKey().equals("abiertoPlazoPresentacionSolicitud"))
+            .collect(Collectors.toList());
+    if (!CollectionUtils.isEmpty(plazoPresentacionSolicitud)) {
+      if (Boolean.valueOf(plazoPresentacionSolicitud.get(0).getValue())) {
+        Specification<Convocatoria> specInPlazoPresentacionSolicitudes = ConvocatoriaSpecifications
+            .inPlazoPresentacionSolicitudes();
+
+        if (spec != null) {
+          spec = spec.and(specInPlazoPresentacionSolicitudes);
+        } else {
+          spec = Specification.where(specInPlazoPresentacionSolicitudes);
+        }
+      }
+    }
+
     log.debug("getFiltroAplicado(List<QueryCriteria> query) - start");
 
     return spec;

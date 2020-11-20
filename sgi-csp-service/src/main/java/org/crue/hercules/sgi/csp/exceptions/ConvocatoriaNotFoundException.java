@@ -7,7 +7,7 @@ public class ConvocatoriaNotFoundException extends CspNotFoundException {
    */
   private static final long serialVersionUID = 1L;
 
-  public ConvocatoriaNotFoundException(Long CconvocatoriaId) {
-    super("Convocatoria " + CconvocatoriaId + " does not exist.");
+  public ConvocatoriaNotFoundException(Long convocatoriaId) {
+    super("Convocatoria " + convocatoriaId + " does not exist.");
   }
 }

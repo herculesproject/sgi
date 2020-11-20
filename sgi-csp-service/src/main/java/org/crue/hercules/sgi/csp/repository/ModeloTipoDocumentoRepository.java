@@ -24,7 +24,7 @@ public interface ModeloTipoDocumentoRepository
    * 
    * @param idModeloEjecucion Id del {@link ModeloEjecucion}.
    * @param idTipoDocumento   Id del {@link TipoDocumento}.
-   * @return un {@link ModeloTipoDocumento}.
+   * @return lista {@link ModeloTipoDocumento} con el modelo de ejecución.
    */
   List<ModeloTipoDocumento> findByModeloEjecucionIdAndTipoDocumentoId(Long idModeloEjecucion, Long idTipoDocumento);
 

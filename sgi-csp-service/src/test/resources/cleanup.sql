@@ -1,5 +1,7 @@
 -- vacia la bd
 DELETE FROM csp.convocatoria_documento;
+DELETE FROM csp.documento_requerido_solicitud;
+DELETE FROM csp.configuracion_solicitud;
 DELETE FROM csp.convocatoria_area_tematica;
 DELETE FROM csp.area_tematica;
 DELETE FROM csp.convocatoria_entidad_convocante;
@@ -33,4 +35,5 @@ DELETE FROM csp.tipo_financiacion;
 DELETE FROM csp.tipo_hito;
 DELETE FROM csp.tipo_origen_fuente_financiacion;
 DELETE FROM csp.tipo_regimen_concurrencia;
+DELETE FROM csp.concepto_gasto;
 DELETE FROM csp.concepto_gasto;
