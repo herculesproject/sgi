@@ -206,9 +206,13 @@ public class MemoriaIT extends BaseIT {
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
 
     // Contiene de titulo='Memoria6' a 'Memoria8'
-    Assertions.assertThat(tipoMemorias.get(0).getTitulo()).isEqualTo("Memoria6");
-    Assertions.assertThat(tipoMemorias.get(1).getTitulo()).isEqualTo("Memoria7");
-    Assertions.assertThat(tipoMemorias.get(2).getTitulo()).isEqualTo("Memoria8");
+    List<String> titulos = new ArrayList<>();
+    for (int i = 0; i < tipoMemorias.size(); i++) {
+      titulos.add(tipoMemorias.get(i).getTitulo());
+    }
+    Assertions.assertThat(titulos).contains("Memoria6");
+    Assertions.assertThat(titulos).contains("Memoria7");
+    Assertions.assertThat(titulos).contains("Memoria8");
   }
 
   @Sql
