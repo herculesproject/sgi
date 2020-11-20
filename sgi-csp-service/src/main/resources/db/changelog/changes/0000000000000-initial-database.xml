@@ -180,7 +180,7 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_concepto_gastoPK" />
       </column>
-      <column name="importe_maximo" type="FLOAT8" />
+      <column name="importe_maximo" type="DOUBLE" />
       <column name="num_meses" type="INT" />
       <column name="observaciones" type="VARCHAR(250)" />
       <column name="permitido" type="BOOLEAN" />
