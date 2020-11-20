@@ -536,7 +536,8 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
             .filter(criteria -> !criteria.getKey().equals("areaTematica.id")
                 && !criteria.getKey().equals("convocatoriaEntidadConvocante.entidadRef")
                 && !criteria.getKey().equals("convocatoriaEntidadFinanciadora.entidadRef")
-                && !criteria.getKey().equals("fuenteFinanciacion.id"))
+                && !criteria.getKey().equals("fuenteFinanciacion.id")
+                && !criteria.getKey().equals("abiertoPlazoPresentacionSolicitud"))
             .collect(Collectors.toList());
 
     if (!CollectionUtils.isEmpty(queryEntity)) {
