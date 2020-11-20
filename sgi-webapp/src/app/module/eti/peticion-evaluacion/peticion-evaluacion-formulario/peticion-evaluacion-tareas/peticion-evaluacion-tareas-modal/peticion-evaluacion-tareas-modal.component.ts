@@ -22,6 +22,7 @@ import { TipoTarea } from '@core/models/eti/tipo-tarea';
 import { TipoTareaService } from '@core/services/eti/tipo-tarea.service';
 
 const MSG_ERROR_FORM = marker('form-group.error');
+const MSG_ERROR = marker('eti.peticionEvaluacion.tareas.personas.no-encontrado');
 
 @Component({
   selector: 'sgi-peticion-evaluacion-tareas-modal',
@@ -408,7 +409,7 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
             this.equipoTrabajoListado.push(equipoTrabajo);
           },
           () => {
-            this.snackBarService.showError('eti.peticionEvaluacion.tareas.personas.no-encontrado');
+            this.snackBarService.showError(MSG_ERROR);
             this.logger.debug(
               PeticionEvaluacionTareasModalComponent.name,
               'loadDatosUsuario()',

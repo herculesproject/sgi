@@ -9,7 +9,7 @@ import { DialogService } from '@core/services/dialog.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
-import { Subscription, Observable, of } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 import { FragmentComponent } from '@core/component/fragment.component';
 import { EvaluacionComentarioFragment } from './evaluacion-comentarios.fragment';
@@ -35,7 +35,7 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
   columnas: string[];
   elementosPagina: number[];
   tipoComentario$: Observable<TipoComentario>;
-
+  
   dataSource: MatTableDataSource<StatusWrapper<IComentario>> = new MatTableDataSource<StatusWrapper<IComentario>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -61,10 +61,10 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
   ngOnInit() {
     super.ngOnInit();
     this.logger.debug(EvaluacionComentariosComponent.name, 'ngOnInit()', 'start');
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
     this.subscriptions.push(this.formPart.comentarios$.subscribe(elements => {
       this.dataSource.data = elements;
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
       this.logger.debug(EvaluacionComentariosComponent.name, 'ngOnInit()', 'end');
     }));
   }

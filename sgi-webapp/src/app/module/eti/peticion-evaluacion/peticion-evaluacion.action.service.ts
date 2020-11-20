@@ -17,6 +17,7 @@ import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { Observable, throwError, from, of } from 'rxjs';
 import { filter, concatMap, switchMap, tap, takeLast } from 'rxjs/operators';
+import { MemoriaService } from '@core/services/eti/memoria.service';
 
 
 @Injectable()
@@ -46,7 +47,8 @@ export class PeticionEvaluacionActionService extends ActionService {
     protected readonly logger: NGXLogger,
     protected readonly personaFisicaService: PersonaFisicaService,
     protected readonly equipoTrabajoService: EquipoTrabajoService,
-    protected readonly tareaService: TareaService
+    protected readonly tareaService: TareaService,
+    protected readonly memoriaService: MemoriaService
   ) {
     super();
 
@@ -63,7 +65,7 @@ export class PeticionEvaluacionActionService extends ActionService {
         fb, this.peticionEvaluacion?.id, peticionEvaluacionService, sgiAuthService, this.readonly);
     this.equipoInvestigadorListado = new EquipoInvestigadorListadoFragment(
       this.peticionEvaluacion?.id, logger, personaFisicaService, equipoTrabajoService, peticionEvaluacionService, sgiAuthService);
-    this.memoriasListado = new MemoriasListadoFragment(this.peticionEvaluacion?.id, peticionEvaluacionService);
+    this.memoriasListado = new MemoriasListadoFragment(this.peticionEvaluacion?.id, peticionEvaluacionService, memoriaService);
     this.tareas = new PeticionEvaluacionTareasFragment(this.peticionEvaluacion?.id, logger, personaFisicaService, tareaService,
       peticionEvaluacionService, this.equipoInvestigadorListado, this.memoriasListado);
 

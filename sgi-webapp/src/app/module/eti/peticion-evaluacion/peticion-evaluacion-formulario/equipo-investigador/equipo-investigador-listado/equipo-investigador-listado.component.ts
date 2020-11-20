@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -6,15 +6,11 @@ import { FragmentComponent } from '@core/component/fragment.component';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { Observable, of, Subscription, zip, BehaviorSubject } from 'rxjs';
-import { map, switchMap, catchError, filter, tap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
-import { IPersona } from '@core/models/sgp/persona';
-import { FormGroup } from '@angular/forms';
 import { DialogService } from '@core/services/dialog.service';
 import { EquipoTrabajoService } from '@core/services/eti/equipo-trabajo.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
@@ -26,6 +22,8 @@ import {
   EquipoInvestigadorCrearModalComponent,
 } from '../equipo-investigador-crear-modal/equipo-investigador-crear-modal.component';
 import { EquipoInvestigadorListadoFragment } from './equipo-investigador-listado.fragment';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 const MSG_CONFIRM_DELETE = marker('eti.peticionEvaluacion.formulario.equipoInvestigador.listado.eliminar');
 const MSG_ERROR_INVESTIGADOR_REPETIDO = marker('eti.peticionEvaluacion.formulario.equipoInvestigador.listado.investigadorRepetido');
@@ -49,6 +47,10 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
   private subscriptions: Subscription[] = [];
   private listadoFragment: EquipoInvestigadorListadoFragment;
 
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  elementosPagina: number[] = [5, 10, 25, 100];
+
   constructor(
     protected matDialog: MatDialog,
     protected readonly dialogService: DialogService,
@@ -69,11 +71,11 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
   ngOnInit(): void {
     super.ngOnInit();
     this.logger.debug(EquipoInvestigadorListadoComponent.name, 'ngOnInit() - start');
-
+    this.datasource.paginator = this.paginator;
+    this.datasource.sort = this.sort;
     this.listadoFragment.equiposTrabajo$.subscribe((equiposTrabajo) => {
       this.datasource.data = equiposTrabajo;
     });
-
     this.logger.debug(EquipoInvestigadorListadoComponent.name, 'ngOnInit() - end');
   }
 

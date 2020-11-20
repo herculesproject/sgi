@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { NGXLogger } from 'ngx-logger';
@@ -6,7 +6,7 @@ import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service'
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { IMemoria } from '@core/models/eti/memoria';
-import { Subscription, Observable, of, BehaviorSubject } from 'rxjs';
+import { Subscription, of } from 'rxjs';
 import { MemoriaService } from '@core/services/eti/memoria.service';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { DialogService } from '@core/services/dialog.service';
@@ -19,6 +19,8 @@ import { IMemoriaPeticionEvaluacion } from '@core/models/eti/memoriaPeticionEval
 import { MEMORIAS_ROUTE } from '../../../memoria/memoria-route-names';
 import { map } from 'rxjs/operators';
 import { switchMap } from 'rxjs/operators';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 const MSG_CONFIRM_DELETE = marker('eti.peticionEvaluacion.formulario.memorias.listado.eliminar');
 const MSG_ESTADO_ANTERIOR_OK = marker('eti.memoria.listado.volverEstadoAnterior.ok');
@@ -43,6 +45,7 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
+  elementosPagina: number[] = [5, 10, 25, 100];
   displayedColumns: string[] = ['numReferencia', 'comite.id', 'estadoActual.id', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
   disableEnviarSecretaria = true;
 
@@ -50,6 +53,9 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
 
   private subscriptions: Subscription[] = [];
   private listadoFragment: MemoriasListadoFragment;
+
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
     protected readonly dialogService: DialogService,
@@ -66,6 +72,9 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.logger.debug(MemoriasListadoComponent.name, 'ngOnInit()', 'start');
+    this.datasource.paginator = this.paginator;
+    this.datasource.sort = this.sort;
     this.subscriptions.push(this.listadoFragment.memorias$.subscribe((memorias) => {
       this.datasource.data = memorias;
     }));
@@ -74,6 +83,7 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
       this.disableEnviarSecretaria = status.changes;
     }
     ));
+    this.logger.debug(MemoriasListadoComponent.name, 'ngOnInit()', 'start');
   }
 
   /**

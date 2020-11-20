@@ -77,7 +77,7 @@ export class PeticionEvaluacionDatosGeneralesFragment extends FormFragment<IPeti
 
   getValue(): IPeticionEvaluacion {
     const form = this.getFormGroup().value;
-    this.peticionEvaluacion.titulo = form.titulo;
+    this.peticionEvaluacion.titulo = form.titulo ? form.titulo : this.getFormGroup().controls.titulo.value;
     this.peticionEvaluacion.tipoActividad = form.tipoActividad;
     this.peticionEvaluacion.tipoInvestigacionTutelada = form.tipoInvestigacionTutelada;
     this.peticionEvaluacion.fuenteFinanciacion = form.financiacion;

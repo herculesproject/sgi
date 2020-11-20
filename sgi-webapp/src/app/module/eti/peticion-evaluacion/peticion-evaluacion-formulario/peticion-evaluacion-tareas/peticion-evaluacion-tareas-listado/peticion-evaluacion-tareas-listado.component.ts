@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
@@ -19,9 +19,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DialogService } from '@core/services/dialog.service';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { IMemoria } from '@core/models/eti/memoria';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 const MSG_CONFIRM_DELETE = marker('eti.peticionEvaluacion.tareas.listado.eliminar');
-const MSG_ERROR_TAREA_REPETIDA = marker('eti.peticionEvaluacion.formulario.equipoInvestigador.listado.investigadorRepetido');
 
 @Component({
   selector: 'sgi-peticion-evaluacion-tareas',
@@ -38,8 +39,11 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
   tareas$: BehaviorSubject<StatusWrapper<ITarea>[]>;
   private listadoFragment: PeticionEvaluacionTareasFragment;
   private subscriptions: Subscription[] = [];
-
+  elementosPagina: number[] = [5, 10, 25, 100];
   datasource: MatTableDataSource<StatusWrapper<ITarea>> = new MatTableDataSource<StatusWrapper<ITarea>>();
+
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
     protected readonly dialogService: DialogService,
@@ -62,11 +66,11 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
   ngOnInit(): void {
     super.ngOnInit();
     this.logger.debug(PeticionEvaluacionTareasListadoComponent.name, 'ngOnInit() - start');
-
+    this.datasource.paginator = this.paginator;
+    this.datasource.sort = this.sort;
     this.listadoFragment.tareas$.subscribe((tarea) => {
       this.datasource.data = tarea;
     });
-
     this.logger.debug(PeticionEvaluacionTareasListadoComponent.name, 'ngOnInit() - end');
   }
 

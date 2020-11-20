@@ -29,7 +29,6 @@ export class MemoriaEvaluacionesComponent extends FragmentComponent implements O
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
-  totalElementos: number;
   displayedColumns: string[] = ['tipoEvaluacion.nombre', 'version', 'dictamen.nombre', 'informeEvaluacion',
     'informeFavorable'];
   elementosPagina: number[] = [5, 10, 25, 100];
@@ -51,15 +50,13 @@ export class MemoriaEvaluacionesComponent extends FragmentComponent implements O
   }
 
   ngOnInit(): void {
-
-    this.logger.debug(MemoriaEvaluacionesComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
-    this.dataSource = new MatTableDataSource<StatusWrapper<IEvaluacion>>();
+    this.logger.debug(MemoriaEvaluacionesComponent.name, 'ngOnInit()', 'start');
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.dataSource = new MatTableDataSource<StatusWrapper<IEvaluacion>>();
     this.subscriptions.push(this.formPart.evaluaciones$.subscribe(elements => {
       this.dataSource.data = elements;
-      this.totalElementos = elements.length;
     }));
     this.logger.debug(MemoriaEvaluacionesComponent.name, 'ngOnInit()', 'end');
 

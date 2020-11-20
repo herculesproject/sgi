@@ -19,8 +19,8 @@ import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service'
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { merge, Observable, of, Subscription } from 'rxjs';
-import { catchError, map, startWith, tap } from 'rxjs/operators';
+import { Observable, of, Subscription } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
 
 
@@ -45,7 +45,6 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
 
   displayedColumns: string[];
   totalElementos: number;
-  filter: SgiRestFilter[];
 
   datosUsuarioSolicitante: string;
 
@@ -90,12 +89,6 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
     super(logger, snackBarService, MSG_ERROR);
 
     this.totalElementos = 0;
-
-    this.filter = [{
-      field: undefined,
-      type: SgiRestFilterType.NONE,
-      value: '',
-    }];
 
     this.fxFlexProperties = new FxFlexProperties();
     this.fxFlexProperties.sm = '0 1 calc(50%-10px)';

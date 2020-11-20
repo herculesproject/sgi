@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Observable, of, merge, Subscription } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 
-import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection, SgiRestListResult } from '@sgi/framework/http';
-import { tap, map, catchError, startWith } from 'rxjs/operators';
+import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { map, catchError, startWith } from 'rxjs/operators';
 
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
@@ -22,7 +22,6 @@ import { DateUtils } from '@core/utils/date-utils';
 import { ROUTE_NAMES } from '@core/route.names';
 
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
-import { PersonaService } from '@core/services/sgp/persona.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
@@ -32,7 +31,8 @@ const MSG_BUTTON_SAVE = marker('footer.eti.evaluador.crear');
 const MSG_ERROR = marker('eti.evaluador.listado.error');
 const TEXT_USER_TITLE = marker('eti.buscarUsuario.titulo');
 const TEXT_USER_BUTTON = marker('eti.buscarUsuario.boton.buscar');
-
+const MSG_DELETE = marker('eti.evaluador.listado.eliminar');
+const MSG_SUCCESS = marker('eti.evaluador.listado.eliminarConfirmado');
 
 @Component({
   selector: 'sgi-evaluador-listado',
@@ -79,7 +79,6 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
     private readonly evaluadoresService: EvaluadorService,
     protected readonly snackBarService: SnackBarService,
     private readonly comiteService: ComiteService,
-    private readonly personaService: PersonaService,
     private readonly personaFisicaService: PersonaFisicaService,
     private readonly dialogService: DialogService
   ) {
@@ -165,7 +164,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
         // On error reset pagination values
         this.paginator.firstPage();
         this.totalElementos = 0;
-        this.snackBarService.showError('eti.evaluador.listado.error');
+        this.snackBarService.showError(MSG_ERROR);
         this.logger.debug(EvaluadorListadoComponent.name, 'loadTable()', 'end');
         return of([]);
       })
@@ -244,7 +243,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
           evaluador.identificadorLetra = persona.identificadorLetra;
         },
         () => {
-          this.snackBarService.showError('eti.evaluador.actualizar.no-encontrado');
+          this.snackBarService.showError(MSG_ERROR);
           this.logger.debug(
             EvaluadorListadoComponent.name,
             'loadDatosUsuario()',
@@ -320,9 +319,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
     $event.stopPropagation();
     $event.preventDefault();
 
-    this.dialogServiceSubscriptionGetSubscription = this.dialogService.showConfirmation(
-      'eti.evaluador.listado.eliminar'
-    ).subscribe(
+    this.dialogServiceSubscriptionGetSubscription = this.dialogService.showConfirmation(MSG_DELETE).subscribe(
       (aceptado: boolean) => {
         if (aceptado) {
           this.evaluadorServiceDeleteSubscription = this.evaluadoresService
@@ -332,7 +329,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
                 return this.loadTable();
               })
             ).subscribe(() => {
-              this.snackBarService.showSuccess('eti.evaluador.listado.eliminarConfirmado');
+              this.snackBarService.showSuccess(MSG_SUCCESS);
             });
         }
         aceptado = false;
