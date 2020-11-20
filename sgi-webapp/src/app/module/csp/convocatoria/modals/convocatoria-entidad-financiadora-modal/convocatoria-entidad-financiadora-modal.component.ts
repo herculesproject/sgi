@@ -18,7 +18,12 @@ import {
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ConvocatoriaEntidadFinanciadoraData } from '../../convocatoria-formulario/convocatoria-entidades-financiadoras/convocatoria-entidades-financiadoras.component';
+
+export interface ConvocatoriaEntidadFinanciadoraDataModal {
+  entidad: IConvocatoriaEntidadFinanciadora;
+  empresa: IEmpresaEconomica;
+  selectedEmpresas: IEmpresaEconomica[];
+}
 
 @Component({
   templateUrl: './convocatoria-entidad-financiadora-modal.component.html',
@@ -35,7 +40,7 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent extends
     protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<ConvocatoriaEntidadFinanciadoraModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaEntidadFinanciadoraData,
+    @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaEntidadFinanciadoraDataModal,
     private tipoFinanciacionService: TipoFinanciacionService,
     private fuenteFinanciacionService: FuenteFinanciacionService,
     public dialog: MatDialog
@@ -118,7 +123,8 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent extends
   selectEmpresaEconomica(): void {
     this.logger.debug(BuscarEmpresaEconomicaComponent.name, `${this.selectEmpresaEconomica.name}()`, 'start');
     const data: EmpresaEconomicaModalData = {
-      empresaEconomica: this.empresa ? this.empresa : {} as IEmpresaEconomica
+      empresaEconomica: this.empresa ? this.empresa : {} as IEmpresaEconomica,
+      selectedEmpresa: this.data.selectedEmpresas
     };
     const dialogRef = this.dialog.open(BuscarEmpresaEconomicaDialogoComponent, {
       width: '1000px',

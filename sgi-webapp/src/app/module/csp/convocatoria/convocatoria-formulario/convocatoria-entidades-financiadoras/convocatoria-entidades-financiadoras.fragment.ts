@@ -111,16 +111,17 @@ export class ConvocatoriaEntidadesFinanciadorasFragment extends Fragment impleme
 
   private deleteConvocatoriaEntidadFinanciadoras(): Observable<void> {
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name, `${this.deleteConvocatoriaEntidadFinanciadoras.name}()`, 'start');
-    if (this.convocatoriaEntidadesEliminadas.length === 0) {
+    const deletedEntidades = this.convocatoriaEntidadesEliminadas.filter((value) => value.value.id);
+    if (deletedEntidades.length === 0) {
       this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name, `${this.deleteConvocatoriaEntidadFinanciadoras.name}()`, 'end');
       return of(void 0);
     }
-    return from(this.convocatoriaEntidadesEliminadas).pipe(
+    return from(deletedEntidades).pipe(
       mergeMap((wrapped) => {
         return this.convocatoriaEntidadFinanciadoraService.deleteById(wrapped.value.id)
           .pipe(
             tap(() => {
-              this.convocatoriaEntidadesEliminadas = this.convocatoriaEntidadesEliminadas.filter(deletedModelo =>
+              this.convocatoriaEntidadesEliminadas = deletedEntidades.filter(deletedModelo =>
                 deletedModelo.value.id !== wrapped.value.id);
             }),
             tap(() => this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name,

@@ -16,7 +16,7 @@ import { of, Subscription } from 'rxjs';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
-import { ConvocatoriaEntidadFinanciadoraModalComponent } from '../../modals/convocatoria-entidad-financiadora-modal/convocatoria-entidad-financiadora-modal.component';
+import { ConvocatoriaEntidadFinanciadoraDataModal, ConvocatoriaEntidadFinanciadoraModalComponent } from '../../modals/convocatoria-entidad-financiadora-modal/convocatoria-entidad-financiadora-modal.component';
 import { ConvocatoriaEntidadesFinanciadorasFragment } from './convocatoria-entidades-financiadoras.fragment';
 
 const MSG_DELETE = marker('csp.convocatoria.entidad.financiadora.listado.borrar');
@@ -43,6 +43,8 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
+  selectedEmpresas: IEmpresaEconomica[];
+
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly actionService: ConvocatoriaActionService,
@@ -68,6 +70,7 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
   private getDataSource(): void {
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, `${this.getDataSource.name}()`, 'start');
     this.dataSource.data = [];
+    this.selectedEmpresas = [];
     this.subscriptions.push(
       this.formPart.convocatoriaEntidadesFinanciadoras$.pipe(
         map(wrappers => {
@@ -84,6 +87,7 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
             wrapper => {
               return this.empresaEconomicaService.findById(wrapper.value.entidad.entidadRef).pipe(
                 map(empresa => {
+                  this.selectedEmpresas.push(empresa);
                   wrapper.value.empresa = empresa;
                   return wrapper;
                 }),
@@ -109,10 +113,11 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
 
   openModal(wrapper?: StatusWrapper<ConvocatoriaEntidadFinanciadoraData>): void {
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, `${this.openModal.name}()`, 'start');
-    const newData = {
+    const newData: ConvocatoriaEntidadFinanciadoraDataModal = {
       empresa: {} as IEmpresaEconomica,
-      entidad: {} as IConvocatoriaEntidadFinanciadora
-    } as ConvocatoriaEntidadFinanciadoraData;
+      entidad: {} as IConvocatoriaEntidadFinanciadora,
+      selectedEmpresas: this.selectedEmpresas
+    };
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
@@ -141,6 +146,8 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado: boolean) => {
           if (aceptado) {
+            const empresa = wrapper.value.empresa;
+            this.selectedEmpresas = this.selectedEmpresas.filter(x => x.personaRef !== empresa.personaRef);
             const entidad = new StatusWrapper<IConvocatoriaEntidadFinanciadora>(wrapper.value.entidad);
             this.formPart.deleteConvocatoriaEntidadFinanciadora(entidad);
             this.getDataSource();

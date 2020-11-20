@@ -140,7 +140,10 @@ export class BuscarEmpresaEconomicaDialogoComponent implements AfterViewInit {
   checkSelectedEmpresa(empresa: IEmpresaEconomica) {
     this.logger.debug(BuscarEmpresaEconomicaDialogoComponent.name,
       `checkSelectedEmpresa()`, 'start');
-    const index = this.data.selectedEmpresa?.findIndex(x => x.personaRef === empresa.personaRef);
+    if (!this.data.selectedEmpresa) {
+      return true;
+    }
+    const index = this.data.selectedEmpresa.findIndex(x => x.personaRef === empresa.personaRef);
     const result = index < 0;
     this.logger.debug(BuscarEmpresaEconomicaDialogoComponent.name,
       `checkSelectedEmpresa()`, 'end');
