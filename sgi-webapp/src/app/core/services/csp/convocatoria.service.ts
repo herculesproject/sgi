@@ -267,4 +267,15 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
       );
   }
 
+  /**
+   * Acción de registro de una convocatoria
+   * @param id identificador de la convocatoria a registrar
+   */
+  registrar(id: number): Observable<void> {
+    this.logger.debug(ConvocatoriaService.name, `${this.registrar.name}(`, '-', 'start');
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/registrar`, undefined).pipe(
+      tap(() => this.logger.debug(ConvocatoriaService.name, `${this.registrar.name}()`, '-', 'end'))
+    );
+  }
+
 }

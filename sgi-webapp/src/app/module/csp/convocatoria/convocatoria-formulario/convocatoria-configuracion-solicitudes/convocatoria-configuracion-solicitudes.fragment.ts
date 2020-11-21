@@ -2,7 +2,6 @@ import { OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitud';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
-import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IDocumentoRequerido } from '@core/models/csp/documentos-requeridos-solicitud';
 import { FormFragment } from '@core/services/action-service';
 import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
@@ -159,7 +158,6 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
     return observable$.pipe(
       map(value => {
         this.configuracionSolicitud = value;
-        this.createDocumentoRequeridos(this.configuracionSolicitud);
         return this.configuracionSolicitud.id;
       }),
       tap(() => this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, `saveOrUpdate()`, 'end'))
@@ -190,7 +188,8 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
     }
 
     return this.configuracionSolicitudService.create(configuracion).pipe(
-
+      tap(result => this.configuracionSolicitud = result),
+      switchMap(result => this.saveOrUpdateDocumentoRequeridos(result)),
       tap(() => this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
         `create(configuracion: ${configuracion})`, 'end'))
     );
@@ -271,7 +270,7 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
 
   private updateDocumentoRequeridos(result: IConfiguracionSolicitud): Observable<void> {
     this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, `updateDocumentoRequeridos()`, 'start');
-    const editedDocumentos = this.documentosRequeridos$.value.filter((value) => value.value.id);
+    const editedDocumentos = this.documentosRequeridos$.value.filter((value) => value.value.id && value.edited);
     if (editedDocumentos.length === 0) {
       this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, `updateDocumentoRequeridos()`, 'end');
       return of(void 0);
@@ -295,7 +294,7 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
 
   private createDocumentoRequeridos(configuracion: IConfiguracionSolicitud): Observable<void> {
     this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, `createDocumentoRequeridos()`, 'start');
-    const createdDocumentos = this.documentosRequeridos$.value.filter((value) => !value.value.id);
+    const createdDocumentos = this.documentosRequeridos$.value.filter((value) => !value.value.id && value.created);
     if (createdDocumentos.length === 0) {
       this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, `createDocumentoRequeridos()`, 'end');
       return of(void 0);

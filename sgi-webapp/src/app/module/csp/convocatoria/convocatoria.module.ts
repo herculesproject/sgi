@@ -34,6 +34,7 @@ import { ConvocatoriaConceptoGastoCodigoEcModalComponent } from './modals/convoc
 import { ConvocatoriaDocumentosComponent } from './convocatoria-formulario/convocatoria-documentos/convocatoria-documentos.component';
 import { ConvocatoriaConfiguracionSolicitudesComponent } from './convocatoria-formulario/convocatoria-configuracion-solicitudes/convocatoria-configuracion-solicitudes.component';
 import { ConvocatoriaConfiguracionSolicitudesModalComponent } from './modals/convocatoria-configuracion-solicitudes-modal/convocatoria-configuracion-solicitudes-modal.component';
+import { ConfiguracionSolicitudResolver } from './configuracion-solicitud.resolver';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import { ConvocatoriaConfiguracionSolicitudesModalComponent } from './modals/con
     FormsModule
   ],
   providers: [
-    ConvocatoriaResolver
+    ConvocatoriaResolver,
+    ConfiguracionSolicitudResolver
   ]
 })
 export class ConvocatoriaModule { }

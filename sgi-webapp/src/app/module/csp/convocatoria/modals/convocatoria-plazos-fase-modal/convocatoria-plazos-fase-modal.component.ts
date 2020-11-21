@@ -26,7 +26,7 @@ const MSG_ERROR_INIT = marker('csp.convocatoria.plazos.fases.error.cargar');
 const MSG_ERROR_TIPOS = marker('csp.convocatoria.tipo.fases.error.cargar');
 
 export interface ConvocatoriaPlazosFaseModalComponentData {
-  plazos: any;
+  plazos: IConvocatoriaFase[];
   plazo: IConvocatoriaFase;
   idModeloEjecucion: number;
 }
@@ -100,11 +100,11 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
     this.logger.debug(ConvocatoriaPlazosFaseModalComponent.name, 'initFormGroup()', 'start');
 
     const rangosFasesExistentes = this.data.plazos
-      .filter(fase => fase.value.fechaInicio !== this.data.plazos.fechaInicio)
+      .filter(fase => fase.fechaInicio !== this.data.plazo.fechaInicio)
       .map(fase => {
         return {
-          inicio: DateUtils.fechaToDate(fase.value.fechaInicio).getTime(),
-          fin: DateUtils.fechaToDate(fase.value.fechaFin).getTime()
+          inicio: DateUtils.fechaToDate(fase.fechaInicio).getTime(),
+          fin: DateUtils.fechaToDate(fase.fechaFin).getTime()
         };
       });
 

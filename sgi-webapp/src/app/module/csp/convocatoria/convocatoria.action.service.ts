@@ -48,7 +48,12 @@ import { ConvocatoriaConceptoGastoCodigoEcFragment } from './convocatoria-formul
 import { ConvocatoriaConceptoGastoCodigoEcService } from '@core/services/csp/convocatoria-concepto-gasto-codigo-ec.service';
 import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concepto-gasto';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
+import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitud';
+import { DialogService } from '@core/services/dialog.service';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+import { ITipoFase } from '@core/models/csp/tipos-configuracion';
 
+const MSG_REGISTRAR = marker('csp.convocatoria.registrar.msg');
 @Injectable()
 export class ConvocatoriaActionService extends ActionService {
 
@@ -85,6 +90,9 @@ export class ConvocatoriaActionService extends ActionService {
   private configuracionSolicitudes: ConvocatoriaConfiguracionSolicitudesFragment;
 
   private convocatoria: IConvocatoria;
+  private dialogService: DialogService;
+  private convocatoriaService: ConvocatoriaService;
+  private configuracionSolicitud: IConfiguracionSolicitud;
 
   get modeloEjecucionId(): number {
     return this.getDatosGeneralesConvocatoria().modeloEjecucion?.id;
@@ -116,14 +124,22 @@ export class ConvocatoriaActionService extends ActionService {
     convocatoriaConceptoGastoCodigoEcService: ConvocatoriaConceptoGastoCodigoEcService,
     convocatoriaDocumentoService: ConvocatoriaDocumentoService,
     configuracionSolicitudService: ConfiguracionSolicitudService,
-    documentoRequeridoService: DocumentoRequeridoService
+    documentoRequeridoService: DocumentoRequeridoService,
+    dialogService: DialogService
   ) {
     super();
     this.convocatoria = {} as IConvocatoria;
+    this.dialogService = dialogService;
+    this.logger = logger;
+    this.convocatoriaService = convocatoriaService;
     if (route.snapshot.data.convocatoria) {
       this.convocatoria = route.snapshot.data.convocatoria;
       this.enableEdit();
     }
+    if (route.snapshot.data.configuracionSolicitud) {
+      this.configuracionSolicitud = route.snapshot.data.configuracionSolicitud;
+    }
+
     this.datosGenerales = new ConvocatoriaDatosGeneralesFragment(
       logger, this.convocatoria?.id, convocatoriaService, empresaEconomicaService,
       convocatoriaEntidadGestoraService, unidadGestionService, convocatoriaAreaTematicaService);
@@ -262,6 +278,11 @@ export class ConvocatoriaActionService extends ActionService {
   isDelete(convocatoriaFaseEliminada: IConvocatoriaFase): boolean {
     const fasePresentacionSolicitudes = this.configuracionSolicitudes.getFormGroup()
       .controls.fasePresentacionSolicitudes.value;
+
+    if (!fasePresentacionSolicitudes) {
+      return true;
+    }
+
     return !(convocatoriaFaseEliminada.tipoFase.id === fasePresentacionSolicitudes.tipoFase.id
       && convocatoriaFaseEliminada.fechaInicio === fasePresentacionSolicitudes.fechaInicio
       && convocatoriaFaseEliminada.fechaFin === fasePresentacionSolicitudes.fechaFin
@@ -310,5 +331,34 @@ export class ConvocatoriaActionService extends ActionService {
           'saveOrUpdate()', 'end'))
       );
     }
+  }
+
+  /**
+   * Recupera los datos de la convocatoria del formulario de configuración de solicitudes
+   *
+   * @return los datos de la cofiguración de solicitudes.
+   */
+  getConfiguracionSolicitudesConvocatoria(): IConfiguracionSolicitud {
+    return this.configuracionSolicitudes.isInitialized() ? this.configuracionSolicitudes.getValue() : this.configuracionSolicitud;
+  }
+
+  /**
+   * Acción de registro de una convocatoria
+   */
+  registrar(): Observable<void> {
+    this.logger.debug(ConvocatoriaActionService.name,
+      `${this.registrar.name}()`, 'start');
+    return this.dialogService.showConfirmation(MSG_REGISTRAR)
+      .pipe(switchMap((accept) => {
+        if (accept) {
+          this.logger.debug(ConvocatoriaActionService.name,
+            `${this.registrar.name}()`, 'end');
+          return this.convocatoriaService.registrar(this.convocatoria?.id);
+        } else {
+          this.logger.debug(ConvocatoriaActionService.name,
+            `${this.registrar.name}()`, 'end');
+          return of(void 0);
+        }
+      }));
   }
 }

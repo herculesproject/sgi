@@ -92,6 +92,7 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
     },
       {
         validators: [
+          DateValidator.isBefore('fechaFin', 'fechaInicio'),
           DateValidator.isAfter('fechaInicio', 'fechaFin')]
       });
     this.logger.debug(ConvocatoriaConceptoGastoCodigoEcModalComponent.name, 'initFormGroup()', 'end');

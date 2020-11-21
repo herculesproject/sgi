@@ -59,6 +59,9 @@
             <input matInput [matDatepicker]="pickerFechaInicio" formControlName="fechaInicio">
             <mat-datepicker-toggle class="fechaIcon" matSuffix [for]="pickerFechaInicio"></mat-datepicker-toggle>
             <mat-datepicker #pickerFechaInicio></mat-datepicker>
+            <mat-error *ngIf="formGroup.controls.fechaInicio.errors?.before">
+              {{'csp.convocatoria.concepto-gasto-codigo-ec.modal.fechaInicio.before' | translate}}
+            </mat-error>
           </mat-form-field>
         </div>
 
