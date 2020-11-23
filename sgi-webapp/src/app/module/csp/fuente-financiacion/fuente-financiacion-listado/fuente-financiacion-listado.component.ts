@@ -82,7 +82,7 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
       nombre: new FormControl(''),
       ambitoGeografico: new FormControl(''),
       origen: new FormControl(''),
-      activo: new FormControl(true)
+      activo: new FormControl('true')
     });
     this.filter = this.createFilters();
     this.loadAmbitosGeograficos();
@@ -133,7 +133,7 @@ export class FuenteFinanciacionListadoComponent extends AbstractTablePaginationC
 
   onClearFilters() {
     this.logger.debug(FuenteFinanciacionListadoComponent.name, `${this.onClearFilters.name}()`, 'start');
-    this.formGroup.controls.activo.setValue(true);
+    this.formGroup.controls.activo.setValue('true');
     this.formGroup.controls.nombre.setValue('');
     this.formGroup.controls.ambitoGeografico.setValue('');
     this.formGroup.controls.origen.setValue('');
