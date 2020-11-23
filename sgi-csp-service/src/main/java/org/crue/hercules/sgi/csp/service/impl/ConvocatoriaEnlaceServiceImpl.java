@@ -140,9 +140,13 @@ public class ConvocatoriaEnlaceServiceImpl implements ConvocatoriaEnlaceService 
         "ConvocatoriaEnlace url no puede ser null para actualizar un nuevo ConvocatoriaEnlace");
 
     return repository.findById(convocatoriaEnlaceActualizar.getId()).map(convocatoriaEnlace -> {
-
-      Assert.isTrue(!repository.findByConvocatoriaIdAndUrl(convocatoriaEnlace.getConvocatoria().getId(),
-          convocatoriaEnlaceActualizar.getUrl()).isPresent(), "Ya existe esa url para esta Convocatoria");
+      Long convocatoriaId = convocatoriaEnlace.getConvocatoria().getId();
+      String url = convocatoriaEnlaceActualizar.getUrl();
+      Optional<ConvocatoriaEnlace> optional = repository.findByConvocatoriaIdAndUrl(convocatoriaId, url);
+      if (optional.isPresent()) {
+        Assert.isTrue(optional.get().getId() == convocatoriaEnlaceActualizar.getId(),
+            "Ya existe esa url para esta Convocatoria");
+      }
 
       // Se recupera el Id de ModeloEjecucion para las siguientes validaciones
       Long modeloEjecucionId = (convocatoriaEnlace.getConvocatoria().getModeloEjecucion() != null
