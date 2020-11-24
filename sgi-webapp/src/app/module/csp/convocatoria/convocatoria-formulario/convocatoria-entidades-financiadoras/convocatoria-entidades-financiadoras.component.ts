@@ -126,13 +126,12 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
     const dialogRef = this.matDialog.open(ConvocatoriaEntidadFinanciadoraModalComponent, config);
     dialogRef.afterClosed().subscribe(entidadFinanciadora => {
       if (entidadFinanciadora) {
-        if (wrapper) {
+        if (!wrapper) {
+          this.formPart.addConvocatoriaEntidadFinanciadora(entidadFinanciadora);
+        } else if (wrapper.value.entidad?.id) {
           const entidad = new StatusWrapper<IConvocatoriaEntidadFinanciadora>(wrapper.value.entidad);
           this.formPart.updateConvocatoriaEntidadFinanciadora(entidad);
-        } else {
-          this.formPart.addConvocatoriaEntidadFinanciadora(entidadFinanciadora);
         }
-        this.getDataSource();
       }
       this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, `${this.openModal.name}()`, 'end');
     }
