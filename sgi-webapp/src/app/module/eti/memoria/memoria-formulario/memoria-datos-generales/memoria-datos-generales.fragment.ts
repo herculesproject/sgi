@@ -12,6 +12,7 @@ import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacio
 import { OnDestroy } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
+import { IsEntityValidator } from '@core/validators/is-entity-validador';
 
 export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
   private memoria: IMemoria;
@@ -65,12 +66,17 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
   protected buildFormGroup(): FormGroup {
     this.logger.debug(MemoriaDatosGeneralesFragment.name, 'buildFormGroup()', 'start');
     return this.fb.group({
+      numReferencia: [{ value: '', disabled: true }],
       comite: [{ value: this.isEdit() ? this.memoria.comite : '', disabled: (this.isEdit() || this.readonly) },
-      new NullIdValidador().isValid()],
-      tipoMemoria: [{ value: this.isEdit() ? this.memoria.tipoMemoria : '', disabled: (this.isEdit() || this.readonly) }],
+      [new NullIdValidador().isValid(), IsEntityValidator.isValid()]],
+      tipoMemoria: [{
+        value: this.isEdit() ?
+          this.memoria.tipoMemoria : '', disabled: (this.isEdit() || this.readonly)
+      }, IsEntityValidator.isValid()],
       titulo: [{ value: this.isEdit() ? this.memoria.titulo : '', disabled: this.readonly }],
-      personaResponsable: [{ value: '', disabled: this.readonly }, Validators.required],
-      codOrganoCompetente: [{ value: this.isEdit() ? this.memoria.codOrganoCompetente : '', disabled: this.readonly }],
+      personaResponsable: [{ value: '', disabled: this.readonly }, Validators.maxLength(250)],
+      codOrganoCompetente: [{ value: this.isEdit() ? this.memoria.codOrganoCompetente : '', disabled: this.readonly },
+      Validators.maxLength(250)],
       memoriaOriginal: [{
         value: this.isEdit() ? this.memoria.memoriaOriginal?.numReferencia : '',
         disabled: this.isEdit()
@@ -81,6 +87,7 @@ export class MemoriaDatosGeneralesFragment extends FormFragment<IMemoria>  {
 
   buildPatch(value: IMemoria): { [key: string]: any } {
     return {
+      numReferencia: value.numReferencia,
       comite: value.comite,
       tipoMemoria: value.tipoMemoria,
       titulo: value.titulo,
