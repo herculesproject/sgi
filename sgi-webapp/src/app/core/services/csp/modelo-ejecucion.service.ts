@@ -70,16 +70,30 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
   }
 
   /**
-   * Muestra todos los modelos tipo de fase
+   * Muestra todos los modelos tipo de fase de modelo ejecución convocatoria
    * @param id modelo de ejecucion
    * @param options opciones de búsqueda.
    */
-  findModeloTipoFase(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoFase>> {
-    this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoFase.name}(id: ${id})`, '-', 'START');
+  findModeloTipoFaseModeloEjecucionConvocatoria(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoFase>> {
+    this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoFaseModeloEjecucionConvocatoria.name}(id: ${id})`, '-', 'START');
     return this.find<IModeloTipoFase, IModeloTipoFase>(`${this.endpointUrl}/${id}/modelotipofases/convocatoria`, options).pipe(
-      tap(() => this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoFase.name}(id: ${id})`, '-', 'END'))
+      tap(() => this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoFaseModeloEjecucionConvocatoria.name}(id: ${id})`, '-', 'END'))
     );
   }
+
+
+  /**
+   * Muestra todos los modelos tipo de fase del modelo de ejecución
+   * @param id modelo de ejecucion
+   * @param options opciones de búsqueda.
+   */
+  findModeloTipoFaseModeloEjecucion(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IModeloTipoFase>> {
+    this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoFaseModeloEjecucionConvocatoria.name}(id: ${id})`, '-', 'START');
+    return this.find<IModeloTipoFase, IModeloTipoFase>(`${this.endpointUrl}/${id}/modelotipofases`, options).pipe(
+      tap(() => this.logger.debug(ModeloEjecucionService.name, `${this.findModeloTipoFaseModeloEjecucionConvocatoria.name}(id: ${id})`, '-', 'END'))
+    );
+  }
+
 
   /**
    * Muestra todos los modelos tipo de documento

@@ -143,24 +143,25 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
 
   loadTipoFases() {
     this.logger.debug(ConvocatoriaPlazosFaseModalComponent.name, 'loadTipoFases()', 'start');
-    this.suscripciones.push(this.modeloEjecucionService.findModeloTipoFase(this.data.idModeloEjecucion).subscribe(
-      (res: SgiRestListResult<IModeloTipoFase>) => {
-        this.modeloTipoFasesFiltered = res.items;
-        this.modeloTipoFases$ = this.formGroup.controls.tipoFase.valueChanges
-          .pipe(
-            startWith(''),
-            map(value => this.filtroTipoPlazosFase(value))
-          );
-        this.logger.debug(ConvocatoriaPlazosFaseModalComponent.name, 'loadTipoFases()', 'end');
-      },
-      () => {
-        if (this.data.idModeloEjecucion) {
-          this.snackBarService.showError(MSG_ERROR_INIT);
-        } else {
-          this.snackBarService.showError(MSG_ERROR_TIPOS);
-        }
-        this.logger.debug(ConvocatoriaPlazosFaseModalComponent.name, 'loadTipoFases()', 'end');
-      })
+    this.suscripciones.push(
+      this.modeloEjecucionService.findModeloTipoFaseModeloEjecucionConvocatoria(this.data.idModeloEjecucion).subscribe(
+        (res: SgiRestListResult<IModeloTipoFase>) => {
+          this.modeloTipoFasesFiltered = res.items;
+          this.modeloTipoFases$ = this.formGroup.controls.tipoFase.valueChanges
+            .pipe(
+              startWith(''),
+              map(value => this.filtroTipoPlazosFase(value))
+            );
+          this.logger.debug(ConvocatoriaPlazosFaseModalComponent.name, 'loadTipoFases()', 'end');
+        },
+        () => {
+          if (this.data.idModeloEjecucion) {
+            this.snackBarService.showError(MSG_ERROR_INIT);
+          } else {
+            this.snackBarService.showError(MSG_ERROR_TIPOS);
+          }
+          this.logger.debug(ConvocatoriaPlazosFaseModalComponent.name, 'loadTipoFases()', 'end');
+        })
     );
 
 

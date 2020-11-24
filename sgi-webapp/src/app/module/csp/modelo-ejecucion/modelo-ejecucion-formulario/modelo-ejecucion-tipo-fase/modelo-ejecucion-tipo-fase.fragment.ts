@@ -29,7 +29,7 @@ export class ModeloEjecucionTipoFaseFragment extends Fragment {
   protected onInitialize(): void {
     this.logger.debug(ModeloEjecucionTipoFaseFragment.name, `onInitialize()`, 'start');
     if (this.getKey()) {
-      this.modeloEjecucionService.findModeloTipoFase(this.getKey() as number).pipe(
+      this.modeloEjecucionService.findModeloTipoFaseModeloEjecucion(this.getKey() as number).pipe(
         map((response: SgiRestListResult<IModeloTipoFase>) => response.items)
       ).subscribe(
         (modelosTipoFase) => {
