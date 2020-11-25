@@ -64,11 +64,13 @@
           <mat-icon color="primary">border_color</mat-icon>
         </button>
 
-        <button mat-button *sgiHasAnyAuthorityForAnyUO="['ETI-PEV-C-INV', 'ETI-PEV-ER-INV']"
-          matTooltip="{{'eti.peticionEvaluacion.formulario.memoria.listado.borrar' | translate}}"
-          (click)="delete(wrapper)">
-          <mat-icon color="warn">highlight_off</mat-icon>
-        </button>
+        <ng-container *ngIf="hasPermisoEliminar(wrapper.value.estadoActual.id)">
+          <button mat-button *sgiHasAnyAuthorityForAnyUO="['ETI-PEV-C-INV', 'ETI-PEV-ER-INV']"
+            matTooltip="{{'eti.peticionEvaluacion.formulario.memoria.listado.borrar' | translate}}"
+            (click)="delete(wrapper)">
+            <mat-icon color="warn">highlight_off</mat-icon>
+          </button>
+        </ng-container>
 
         <ng-container *sgiHasAuthorityForAnyUO="'ETI-PEV-V'">
           <button *ngIf="wrapper.value.estadoActual.id === 3 || wrapper.value.estadoActual.id === 4 || 

@@ -214,6 +214,13 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
     this.logger.debug(MemoriasListadoComponent.name, 'enviarSecretariaRetrospectiva(memoria: IMemoriaPeticionEvaluacion) - end');
   }
 
+
+  hasPermisoEliminar(estadoMemoriaId: number): boolean {
+
+    // Si el estado es 'En elaboración' o 'Completada'.
+    return (estadoMemoriaId === 1 || estadoMemoriaId === 2);
+  }
+
   ngOnDestroy(): void {
     this.logger.debug(MemoriasListadoComponent.name, 'ngOnDestroy()', 'start');
     this.subscriptions?.forEach(x => x.unsubscribe());

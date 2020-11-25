@@ -31,8 +31,11 @@ const TEXT_USER_BUTTON = marker('eti.peticionEvaluacion.listado.buscador.buscar.
 const MSG_SUCCESS_ENVIAR_SECRETARIA = marker('eti.memorias.formulario.memorias.listado.enviarSecretaria.correcto');
 const MSG_ERROR_ENVIAR_SECRETARIA = marker('eti.memorias.formulario.memorias.listado.enviarSecretaria.error');
 const MSG_CONFIRM_ENVIAR_SECRETARIA = marker('eti.memorias.formulario.memorias.listado.enviarSecretaria.confirmar');
+const MSG_CONFIRM_ELIMINAR = marker('eti.memorias.formulario.memorias.listado.eliminar.confirmar');
 const MSG_SUCCESS_ENVIAR_SECRETARIA_RETROSPECTIVA = marker(
   'eti.memorias.formulario.memorias.listado.enviarSecretariaRetrospectiva.correcto');
+const MSG_SUCCESS_ELIMINAR = marker('eti.memorias.formulario.memorias.listado.eliminar.correcto');
+const MSG_ERROR_ENVIAR_ELIMINAR = marker('eti.memorias.formulario.memorias.listado.eliminar.error');
 const MSG_ERROR_ENVIAR_SECRETARIA_RETROSPECTIVA = marker('eti.memorias.formulario.memorias.listado.enviarSecretariaRetrospectiva.error');
 const MSG_CONFIRM_ENVIAR_SECRETARIA_RETROSPECTIVA = marker('eti.memorias.formulario.memorias.listado.enviarSecretariaRetrospectiva.confirmar');
 
@@ -313,6 +316,13 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
 
   }
 
+
+  hasPermisoEliminar(estadoMemoriaId: number): boolean {
+
+    // Si el estado es 'En elaboración' o 'Completada'.
+    return (estadoMemoriaId === 1 || estadoMemoriaId === 2);
+  }
+
   enviarSecretaria(memoria: IMemoriaPeticionEvaluacion) {
     this.logger.debug(MemoriaListadoInvComponent.name, 'enviarSecretaria(memoria: IMemoriaPeticionEvaluacion) - start');
 
@@ -335,6 +345,35 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
     this.logger.debug(MemoriaListadoInvComponent.name, 'enviarSecretaria(memoria: IMemoriaPeticionEvaluacion) - end');
 
   }
+
+
+  /**
+   * Elimina la memoria.
+   *
+   * @param idMemoria Identificador de la memoria
+   */
+  delete(idMemoria: number): void {
+    this.logger.debug(MemoriaListadoInvComponent.name, 'delete(idMemoria: number) - start');
+
+    this.dialogService.showConfirmation(MSG_CONFIRM_ELIMINAR)
+      .pipe(switchMap((aceptado) => {
+        if (aceptado) {
+          return this.memoriaService.deleteById(idMemoria);
+        }
+        return of();
+      })).subscribe(
+        () => {
+          this.loadTable();
+          this.snackBarService.showSuccess(MSG_SUCCESS_ELIMINAR);
+        },
+        () => {
+          this.snackBarService.showError(MSG_ERROR_ENVIAR_ELIMINAR);
+        }
+      );
+
+    this.logger.debug(MemoriaListadoInvComponent.name, 'delete(idMemoria: number) - end');
+  }
+
 
   hasPermisoEnviarSecretariaRetrospectiva(memoria: IMemoria, responsable: boolean): boolean {
 
