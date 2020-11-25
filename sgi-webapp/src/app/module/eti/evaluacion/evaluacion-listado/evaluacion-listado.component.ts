@@ -141,14 +141,14 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
     if (this.formGroup.controls.fechaEvaluacionInicio) {
       const fechaFilter = DateUtils.getFechaFinDia(this.formGroup.controls.fechaEvaluacionInicio.value);
       this.addFiltro(filtro, 'fechaDictamen',
-        SgiRestFilterType.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODateTime(fechaFilter));
+        SgiRestFilterType.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(fechaFilter));
 
     }
 
     if (this.formGroup.controls.fechaEvaluacionFin) {
       const fechaFilter = DateUtils.getFechaFinDia(this.formGroup.controls.fechaEvaluacionFin.value);
       this.addFiltro(filtro, 'fechaDictamen',
-        SgiRestFilterType.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODateTime(fechaFilter));
+        SgiRestFilterType.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(fechaFilter));
 
     }
 
