@@ -7,7 +7,7 @@ import { tap, map, mergeMap, takeLast } from 'rxjs/operators';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { ConvocatoriaFaseService } from '@core/services/csp/convocatoria-fase.service';
-
+import { ITipoFase } from '@core/models/csp/tipos-configuracion';
 
 export class ConvocatoriaPlazosFasesFragment extends Fragment {
   plazosFase$: BehaviorSubject<StatusWrapper<IConvocatoriaFase>[]>;
@@ -38,6 +38,14 @@ export class ConvocatoriaPlazosFasesFragment extends Fragment {
         this.logger.debug(ConvocatoriaPlazosFasesFragment.name, 'onInitialize()', 'end');
       });
     }
+  }
+
+  /**
+   * Recuperamos todas las convocatorias fase
+   */
+  public getConvocatoriasFases(): IConvocatoriaFase[] {
+    const fechas = this.plazosFase$.value.map(plazoFase => plazoFase.value);
+    return fechas;
   }
 
   /**

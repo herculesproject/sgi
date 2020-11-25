@@ -2,7 +2,6 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { IPlazosFases } from '@core/models/csp/plazos-fases';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
@@ -11,13 +10,13 @@ import { FormGroupUtil } from '@core/utils/form-group-util';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription, of } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, tap } from 'rxjs/operators';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { DateValidator } from '@core/validators/date-validator';
 import { IModeloTipoFase } from '@core/models/csp/modelo-tipo-fase';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { ITipoFase } from '@core/models/csp/tipos-configuracion';
-import { RangeValidator } from '@core/validators/range-validator';
+import { IRange, RangeValidator } from '@core/validators/range-validator';
 import { DateUtils } from '@core/utils/date-utils';
 import { NullIdValidador } from '@core/validators/null-id-validador';
 
@@ -99,29 +98,47 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
   private initFormGroup() {
     this.logger.debug(ConvocatoriaPlazosFaseModalComponent.name, 'initFormGroup()', 'start');
 
-    const rangosFasesExistentes = this.data.plazos
-      .filter(fase => fase.fechaInicio !== this.data.plazo.fechaInicio)
-      .map(fase => {
-        return {
-          inicio: DateUtils.fechaToDate(fase.fechaInicio).getTime(),
-          fin: DateUtils.fechaToDate(fase.fechaFin).getTime()
-        };
-      });
-
     this.formGroup = new FormGroup({
       fechaInicio: new FormControl(this.data?.plazo?.fechaInicio, [Validators.required]),
       fechaFin: new FormControl(this.data?.plazo?.fechaFin, [Validators.required]),
       tipoFase: new FormControl(this.data?.plazo?.tipoFase, [Validators.required, new NullIdValidador().isValid()]),
       observaciones: new FormControl(this.data?.plazo?.observaciones, [Validators.maxLength(250)])
-    },
-      {
-        validators: [
-          DateValidator.isAfter('fechaInicio', 'fechaFin'),
-          DateValidator.isBefore('fechaFin', 'fechaInicio'),
-          RangeValidator.notOverlaps('fechaInicio', 'fechaFin', rangosFasesExistentes)
-        ],
-      });
+    });
+
+    this.createValidatorDate(this.data?.plazo?.tipoFase);
+
+    const suscription = this.formGroup.controls.tipoFase.valueChanges.pipe(tap((value) => this.createValidatorDate(value))).subscribe();
+    this.suscripciones.push(suscription);
+
     this.logger.debug(ConvocatoriaPlazosFaseModalComponent.name, 'initFormGroup()', 'end');
+  }
+
+  /**
+   * Validacion del rango de fechas a la hora de seleccionar
+   * un tipo de fase en el modal
+   * @param tipoFase convocatoria tipoFase
+   */
+  private createValidatorDate(tipoFase: ITipoFase | string): void {
+    let rangoFechas: IRange[];
+    if (!tipoFase || typeof tipoFase === 'string') {
+      rangoFechas = [];
+    } else {
+      const convocatoriasFases = this.data.plazos.filter(plazo => plazo.tipoFase.id === tipoFase.id && plazo.id !== this.data.plazo.id);
+      rangoFechas = convocatoriasFases.map(
+        fase => {
+          const rango: IRange = {
+            inicio: DateUtils.fechaToDate(fase.fechaInicio).getTime(),
+            fin: DateUtils.fechaToDate(fase.fechaFin).getTime()
+          };
+          return rango;
+        }
+      );
+    }
+    this.formGroup.setValidators([
+      DateValidator.isAfter('fechaInicio', 'fechaFin'),
+      DateValidator.isBefore('fechaFin', 'fechaInicio'),
+      RangeValidator.notOverlaps('fechaInicio', 'fechaFin', rangoFechas)
+    ]);
   }
 
   loadTipoFases() {
