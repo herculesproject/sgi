@@ -371,6 +371,15 @@ public class MemoriaServiceImpl implements MemoriaService {
     Assert.notNull(memoriaActualizar.getId(), "Memoria id no puede ser null para actualizar un tipo memoria");
 
     return memoriaRepository.findById(memoriaActualizar.getId()).map(memoria -> {
+
+      // Se comprueba si se está desactivando la memoria
+      if (memoria.getActivo() && !memoriaActualizar.getActivo()) {
+        Assert.isTrue(
+            memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_ELABORACION
+                || memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_COMPLETADA,
+            "El estado actual de la memoria no es el correcto para desactivar la memoria");
+      }
+
       memoria.setNumReferencia(memoriaActualizar.getNumReferencia());
       memoria.setPeticionEvaluacion(memoriaActualizar.getPeticionEvaluacion());
       memoria.setComite((memoriaActualizar.getComite()));

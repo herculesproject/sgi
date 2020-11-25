@@ -486,6 +486,28 @@ public class MemoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void update_EstadoActualInvalid_ThrowsIllegalArgumentException() {
+
+    // given: Una nueva Memoria con activo a false
+    Memoria memoriaInactiva = generarMockMemoria(1L, "numRef-99", "Memoria", 1, 1L);
+    memoriaInactiva.setActivo(Boolean.FALSE);
+
+    Memoria memoria = generarMockMemoria(1L, "numRef-5598", "Memoria1", 1, 1L);
+
+    memoria.getEstadoActual().setId(3L);
+
+    BDDMockito.given(memoriaRepository.findById(1L)).willReturn(Optional.of(memoria));
+
+    Assertions.assertThatThrownBy(
+        // when: create Convocatoria
+        () -> memoriaService.update(memoriaInactiva))
+        // then: throw exception as id can't be provided
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("El estado actual de la memoria no es el correcto para desactivar la memoria");
+
+  }
+
+  @Test
   public void delete_WithoutId_ThrowsIllegalArgumentException() {
     // given: Sin id
     Assertions.assertThatThrownBy(
