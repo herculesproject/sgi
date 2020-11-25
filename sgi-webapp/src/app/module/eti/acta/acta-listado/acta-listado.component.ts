@@ -150,7 +150,7 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
       SgiRestFilterType.EQUALS, this.formGroup.controls.numeroActa.value);
 
     this.addFiltro(filtro, 'estadoActual.id',
-      SgiRestFilterType.EQUALS, this.formGroup.controls.tipoEstadoActa.value);
+      SgiRestFilterType.EQUALS, this.formGroup.controls.tipoEstadoActa.value.id);
 
     this.logger.debug(ActaListadoComponent.name, 'createFilters()', 'end');
     return filtro;
