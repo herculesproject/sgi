@@ -8,7 +8,6 @@ import { CONVOCATORIA_ROUTE_NAMES } from '../convocatoria-route-names';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TipoEstadoConvocatoria } from '@core/enums/tipo-estado-convocatoria';
-import { config } from 'rxjs';
 
 const MSG_BUTTON_EDIT = marker('botones.guardar');
 const MSG_BUTTON_REGISTRAR = marker('csp.convocatoria.registrar');
@@ -90,38 +89,29 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
   private isDisableRegistrar(): boolean {
     // Se deshabilita el botón de registrar si la convocatoria está en estado registrada
     const convocatoria = this.actionService.getDatosGeneralesConvocatoria();
-    let disable = convocatoria.estadoActual !== TipoEstadoConvocatoria.BORRADOR;
+    if (convocatoria.estadoActual === TipoEstadoConvocatoria.REGISTRADA) {
+      return true;
+    }
 
-    // a parte de los campos obligatoris, deben estar 
-    disable = !Boolean(convocatoria.modeloEjecucion);
-    disable = !Boolean(convocatoria.finalidad);
-    disable = !Boolean(convocatoria.ambitoGeografico);
+    // a parte de los campos obligatoris, deben estar
+    if (!convocatoria.modeloEjecucion || !convocatoria.finalidad || !convocatoria.ambitoGeografico) {
+      return true;
+    }
 
     // Se obtienen los datos de la pestaña configuración solicitud y se realiza la validación oportuna
     // sobre los campos correspondientes para saber si se puede registrar o no la convocatoria
     const configuracionSolicitudes = this.actionService.getConfiguracionSolicitudesConvocatoria();
     if (configuracionSolicitudes) {
-      if (!disable) {
-        // Si el campo de habilitar presentación de solicitudes es afirmativo se comprueba que el campo de presentación de solicitudes
-        // esté relleno
-        if (configuracionSolicitudes.tramitacionSGI) {
-          disable = !Boolean(configuracionSolicitudes.fasePresentacionSolicitudes);
-        }
+      // Si el campo de habilitar presentación de solicitudes es afirmativo
+      // se comprueba que el campo de presentación de solicitudes esté relleno
+      if (configuracionSolicitudes.tramitacionSGI) {
+        return !Boolean(configuracionSolicitudes.fasePresentacionSolicitudes);
       }
-
-      if (!disable) {
-        // El campo de tipo de baremación debe estar cumplimentado
-        disable = !Boolean(configuracionSolicitudes.baremacionRef);
-      }
-      if (!disable) {
-        // El campo de tipo de formulario debe estar cumplimentado
-        disable = !Boolean(configuracionSolicitudes.formularioSolicitud);
-      }
-    } else {
-      disable = true;
+      // El campo de tipo de baremación debe estar cumplimentado
+      // El campo de tipo de formulario debe estar cumplimentado
+      return !Boolean(configuracionSolicitudes.baremacionRef) || !Boolean(configuracionSolicitudes.formularioSolicitud);
     }
-
-    return disable;
+    return false;
   }
 
 }
