@@ -28,19 +28,18 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
   private subscriptions: Subscription[] = [];
   public disableAddEnlace = true;
 
-  totalElementos: number;
-  elementosPagina: number[] = [5, 10, 25, 100];
-  displayedColumns: string[] = ['url', 'descripcion', 'tipoEnlace', 'acciones'];
+  elementosPagina = [5, 10, 25, 100];
+  displayedColumns = ['url', 'descripcion', 'tipoEnlace', 'acciones'];
 
-  dataSource: MatTableDataSource<StatusWrapper<IConvocatoriaEnlace>> = new MatTableDataSource<StatusWrapper<IConvocatoriaEnlace>>();
+  dataSource = new MatTableDataSource<StatusWrapper<IConvocatoriaEnlace>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    protected readonly logger: NGXLogger,
+    protected logger: NGXLogger,
     private actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
-    private readonly dialogService: DialogService
+    private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.ENLACES, actionService);
     this.logger.debug(ConvocatoriaEnlaceComponent.name, 'constructor()', 'start');
@@ -51,7 +50,6 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
   ngOnInit(): void {
     this.logger.debug(ConvocatoriaEnlaceComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
-    this.totalElementos = 0;
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
       (wrapper: StatusWrapper<IConvocatoriaEnlace>, property: string) => {
@@ -80,26 +78,35 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
    */
   openModal(wrapper?: StatusWrapper<IConvocatoriaEnlace>): void {
     this.logger.debug(ConvocatoriaEnlaceComponent.name, `${this.openModal.name}()`, 'start');
-    const datosEnlace = {
-      enlace: wrapper ? wrapper.value : {} as IConvocatoriaEnlace,
-      idModeloEjecucion: this.actionService.modeloEjecucionId
-    } as ConvocatoriaEnlaceModalComponentData;
+    const enlace: IConvocatoriaEnlace = {
+      activo: true,
+      convocatoria: undefined,
+      descripcion: undefined,
+      id: undefined,
+      tipoEnlace: undefined,
+      url: undefined
+    };
+    const data: ConvocatoriaEnlaceModalComponentData = {
+      enlace: wrapper ? wrapper.value : enlace,
+      idModeloEjecucion: this.actionService.modeloEjecucionId,
+      selectedUrls: this.formPart.getSelectedUrls()
+    };
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: datosEnlace
+      data
     };
     const dialogRef = this.matDialog.open(ConvocatoriaEnlaceModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (convocatoriaEnlace: IConvocatoriaEnlace) => {
-        if (convocatoriaEnlace) {
+      (result: ConvocatoriaEnlaceModalComponentData) => {
+        if (result) {
           if (wrapper) {
             if (!wrapper.created) {
               wrapper.setEdited();
             }
             this.formPart.setChanges(true);
           } else {
-            this.formPart.addEnlace(convocatoriaEnlace);
+            this.formPart.addEnlace(result.enlace);
           }
         }
         this.logger.debug(ConvocatoriaEnlaceModalComponent.name, `${this.openModal.name}()`, 'end');
@@ -115,7 +122,7 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
       `${this.deleteEnlace.name}(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
-        (aceptado: boolean) => {
+        (aceptado) => {
           if (aceptado) {
             this.formPart.deleteEnlace(wrapper);
           }

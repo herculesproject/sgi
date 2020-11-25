@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -14,7 +14,7 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { SgiRestFindOptions, SgiRestFilterType, SgiRestFilter } from '@sgi/framework/http';
 
-const MSG_ERROR_INIT = marker('csp.convocatoria.plazos.enlace.error.cargar');
+const MSG_ERROR_INIT = marker('csp.convocatoria.tipo.documento.error.cargar');
 
 @Component({
   templateUrl: './convocatoria-configuracion-solicitudes-modal.component.html',

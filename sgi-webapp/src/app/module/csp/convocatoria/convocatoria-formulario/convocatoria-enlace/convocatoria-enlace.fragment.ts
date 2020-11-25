@@ -8,16 +8,15 @@ import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
 import { ConvocatoriaEnlaceService } from '@core/services/csp/convocatoria-enlace.service';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 
-
 export class ConvocatoriaEnlaceFragment extends Fragment {
   enlace$ = new BehaviorSubject<StatusWrapper<IConvocatoriaEnlace>[]>([]);
   private enlaceEliminados: StatusWrapper<IConvocatoriaEnlace>[] = [];
 
   constructor(
-    private readonly logger: NGXLogger,
+    private logger: NGXLogger,
     key: number,
-    private readonly convocatoriaService: ConvocatoriaService,
-    private readonly convocatoriaEnlaceService: ConvocatoriaEnlaceService
+    private convocatoriaService: ConvocatoriaService,
+    private convocatoriaEnlaceService: ConvocatoriaEnlaceService
   ) {
     super(key);
     this.logger.debug(ConvocatoriaEnlaceFragment.name, 'constructor()', 'start');
@@ -29,14 +28,7 @@ export class ConvocatoriaEnlaceFragment extends Fragment {
     this.logger.debug(ConvocatoriaEnlaceFragment.name, 'onInitialize()', 'start');
     if (this.getKey()) {
       this.convocatoriaService.getEnlaces(this.getKey() as number).pipe(
-        map((response) => {
-          if (response.items) {
-            return response.items;
-          }
-          else {
-            return [];
-          }
-        })
+        map((response) => response.items)
       ).subscribe((enlace) => {
         this.enlace$.next(enlace.map(
           enlaces => new StatusWrapper<IConvocatoriaEnlace>(enlaces))
@@ -48,7 +40,7 @@ export class ConvocatoriaEnlaceFragment extends Fragment {
 
   public addEnlace(enlace: IConvocatoriaEnlace) {
     this.logger.debug(ConvocatoriaEnlaceFragment.name,
-      `${this.addEnlace.name}(addEnlace: ${enlace})`, 'start');
+      `addEnlace(addEnlace: ${enlace})`, 'start');
     const wrapped = new StatusWrapper<IConvocatoriaEnlace>(enlace);
     wrapped.setCreated();
     const current = this.enlace$.value;
@@ -56,12 +48,12 @@ export class ConvocatoriaEnlaceFragment extends Fragment {
     this.enlace$.next(current);
     this.setChanges(true);
     this.logger.debug(ConvocatoriaEnlaceFragment.name,
-      `${this.addEnlace.name}(addEnlace: ${enlace})`, 'end');
+      `addEnlace(addEnlace: ${enlace})`, 'end');
   }
 
   public deleteEnlace(wrapper: StatusWrapper<IConvocatoriaEnlace>) {
     this.logger.debug(ConvocatoriaEnlaceFragment.name,
-      `${this.deleteEnlace.name}(wrapper: ${wrapper})`, 'start');
+      `deleteEnlace(wrapper: ${wrapper})`, 'start');
     const current = this.enlace$.value;
     const index = current.findIndex(
       (value: StatusWrapper<IConvocatoriaEnlace>) => value === wrapper
@@ -75,11 +67,11 @@ export class ConvocatoriaEnlaceFragment extends Fragment {
       this.setChanges(true);
     }
     this.logger.debug(ConvocatoriaEnlaceFragment.name,
-      `${this.deleteEnlace.name}(wrapper: ${wrapper})`, 'end');
+      `deleteEnlace(wrapper: ${wrapper})`, 'end');
   }
 
   saveOrUpdate(): Observable<void> {
-    this.logger.debug(ConvocatoriaEnlaceFragment.name, `${this.saveOrUpdate.name}()`, 'start');
+    this.logger.debug(ConvocatoriaEnlaceFragment.name, `saveOrUpdate()`, 'start');
     return merge(
       this.deleteEnlaces(),
       this.updateEnlaces(),
@@ -91,14 +83,14 @@ export class ConvocatoriaEnlaceFragment extends Fragment {
           this.setChanges(false);
         }
       }),
-      tap(() => this.logger.debug(ConvocatoriaEnlaceFragment.name, `${this.saveOrUpdate.name}()`, 'end'))
+      tap(() => this.logger.debug(ConvocatoriaEnlaceFragment.name, `saveOrUpdate()`, 'end'))
     );
   }
 
   private deleteEnlaces(): Observable<void> {
-    this.logger.debug(ConvocatoriaEnlaceFragment.name, `${this.deleteEnlaces.name}()`, 'start');
+    this.logger.debug(ConvocatoriaEnlaceFragment.name, `deleteEnlaces()`, 'start');
     if (this.enlaceEliminados.length === 0) {
-      this.logger.debug(ConvocatoriaEnlaceFragment.name, `${this.deleteEnlaces.name}()`, 'end');
+      this.logger.debug(ConvocatoriaEnlaceFragment.name, `deleteEnlaces()`, 'end');
       return of(void 0);
     }
     return from(this.enlaceEliminados).pipe(
@@ -110,16 +102,16 @@ export class ConvocatoriaEnlaceFragment extends Fragment {
                 deletedEnlace.value.id !== wrapped.value.id);
             }),
             tap(() => this.logger.debug(ConvocatoriaEnlaceFragment.name,
-              `${this.deleteEnlaces.name}()`, 'end'))
+              `deleteEnlaces()`, 'end'))
           );
       }));
   }
 
   private createEnlaces(): Observable<void> {
-    this.logger.debug(ConvocatoriaEnlaceFragment.name, `${this.createEnlaces.name}()`, 'start');
+    this.logger.debug(ConvocatoriaEnlaceFragment.name, `createEnlaces()`, 'start');
     const createdEnlaces = this.enlace$.value.filter((convocatoriaEnlace) => convocatoriaEnlace.created);
     if (createdEnlaces.length === 0) {
-      this.logger.debug(ConvocatoriaEnlaceFragment.name, `${this.createEnlaces.name}()`, 'end');
+      this.logger.debug(ConvocatoriaEnlaceFragment.name, `createEnlaces()`, 'end');
       return of(void 0);
     }
     createdEnlaces.forEach(
@@ -136,16 +128,16 @@ export class ConvocatoriaEnlaceFragment extends Fragment {
             this.enlace$.value[index] = new StatusWrapper<IConvocatoriaEnlace>(updatedEnlaces);
           }),
           tap(() => this.logger.debug(ConvocatoriaEnlaceFragment.name,
-            `${this.createEnlaces.name}()`, 'end'))
+            `createEnlaces()`, 'end'))
         );
       }));
   }
 
   private updateEnlaces(): Observable<void> {
-    this.logger.debug(ConvocatoriaEnlaceFragment.name, `${this.updateEnlaces.name}()`, 'start');
+    this.logger.debug(ConvocatoriaEnlaceFragment.name, `updateEnlaces()`, 'start');
     const updateEnlaces = this.enlace$.value.filter((convocatoriaEnlace) => convocatoriaEnlace.edited);
     if (updateEnlaces.length === 0) {
-      this.logger.debug(ConvocatoriaEnlaceFragment.name, `${this.updateEnlaces.name}()`, 'end');
+      this.logger.debug(ConvocatoriaEnlaceFragment.name, `updateEnlaces()`, 'end');
       return of(void 0);
     }
     return from(updateEnlaces).pipe(
@@ -156,16 +148,23 @@ export class ConvocatoriaEnlaceFragment extends Fragment {
             this.enlace$.value[index] = new StatusWrapper<IConvocatoriaEnlace>(updatedEnlaces);
           }),
           tap(() => this.logger.debug(ConvocatoriaEnlaceFragment.name,
-            `${this.updateEnlaces.name}()`, 'end'))
+            `updateEnlaces()`, 'end'))
         );
       }));
   }
 
   private isSaveOrUpdateComplete(): boolean {
-    this.logger.debug(ConvocatoriaEnlaceFragment.name, `${this.isSaveOrUpdateComplete.name}()`, 'start');
+    this.logger.debug(ConvocatoriaEnlaceFragment.name, `isSaveOrUpdateComplete()`, 'start');
     const touched: boolean = this.enlace$.value.some((wrapper) => wrapper.touched);
-    this.logger.debug(ConvocatoriaEnlaceFragment.name, `${this.isSaveOrUpdateComplete.name}()`, 'end');
+    this.logger.debug(ConvocatoriaEnlaceFragment.name, `isSaveOrUpdateComplete()`, 'end');
     return (this.enlaceEliminados.length > 0 || touched);
   }
 
+
+  getSelectedUrls(): string[] {
+    this.logger.debug(ConvocatoriaEnlaceFragment.name, `getSelectedUrls()`, 'start');
+    const urls = this.enlace$.value.map(enlace => enlace.value.url);
+    this.logger.debug(ConvocatoriaEnlaceFragment.name, `getSelectedUrls()`, 'end');
+    return urls;
+  }
 }
