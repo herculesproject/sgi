@@ -1,5 +1,5 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -48,6 +48,7 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
   treeControl: FlatTreeControl<NodeDocumento>;
   private treeFlattener: MatTreeFlattener<NodeDocumento, NodeDocumento>;
   dataSource: MatTreeFlatDataSource<NodeDocumento, NodeDocumento>;
+  @ViewChild('fileUpload') private fileUploadInput: ElementRef;
 
   viewingNode: NodeDocumento;
   viewMode = VIEW_MODE.NONE;
@@ -113,6 +114,7 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
     }));
     this.group.load(new FormGroup({
       nombre: new FormControl('', Validators.required),
+      fileInfo: new FormControl(null),
       fichero: new FormControl({ value: null, disabled: this.disableUpload }, Validators.required),
       fase: new FormControl(null, IsEntityValidator.isValid),
       tipoDocumento: new FormControl(null, IsEntityValidator.isValid),
@@ -228,6 +230,8 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
 
     this.formGroup.reset();
     this.formGroup.get('nombre').patchValue(node?.documento?.value?.nombre);
+    this.cleanFileUploadInput();
+    this.formGroup.get('fileInfo').patchValue(node?.fichero);
     this.formGroup.get('fichero').patchValue(node?.fichero?.nombre);
     this.formGroup.get('fase').setValue(node?.documento?.value?.tipoFase);
     this.formGroup.get('tipoDocumento').patchValue(node?.documento?.value?.tipoDocumento);
@@ -273,6 +277,7 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
     detail.documento.value.tipoDocumento = this.formGroup.get('tipoDocumento').value;
     detail.documento.value.publico = this.formGroup.get('publico').value;
     detail.documento.value.observaciones = this.formGroup.get('observaciones').value;
+    detail.fichero = this.formGroup.get('fileInfo').value;
     return detail;
   }
 
@@ -331,6 +336,12 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
     }
   }
 
+  private cleanFileUploadInput() {
+    if (this.fileUploadInput) {
+      this.fileUploadInput.nativeElement.value = null;
+    }
+  }
+
   onSeletectFile(files: FileList) {
     if (files && files.length) {
       this.fileToUpload = {
@@ -342,8 +353,8 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
       this.subscriptions.push(this.documentoService.uploadFichero(this.fileToUpload).subscribe(
         (fileModel) => {
           this.snackBar.showSuccess(MSG_UPLOAD_SUCCES);
-          this.viewingNode.fichero = fileModel;
           this.formGroup.controls.fichero.setValue(fileModel.nombre);
+          this.formGroup.controls.fileInfo.setValue(fileModel);
           this.setUploadDisabled(false);
         },
         () => {
