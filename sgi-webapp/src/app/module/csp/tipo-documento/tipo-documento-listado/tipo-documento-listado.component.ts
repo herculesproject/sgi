@@ -172,7 +172,7 @@ export class TipoDocumentoListadoComponent extends AbstractTablePaginationCompon
     const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE)
       .pipe(switchMap((accept) => {
         if (accept) {
-          return this.tipoDocumentoService.deleteById(tipoDocumento.id);
+          return this.tipoDocumentoService.desactivar(tipoDocumento.id);
         } else {
           return of();
         }
@@ -204,7 +204,7 @@ export class TipoDocumentoListadoComponent extends AbstractTablePaginationCompon
       .pipe(switchMap((accept) => {
         if (accept) {
           tipoDocumento.activo = true;
-          return this.tipoDocumentoService.update(tipoDocumento.id, tipoDocumento);
+          return this.tipoDocumentoService.reactivar(tipoDocumento.id);
         } else {
           return of();
         }

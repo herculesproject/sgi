@@ -167,7 +167,7 @@ export class TipoFaseListadoComponent extends AbstractTablePaginationComponent<I
     const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE)
       .pipe(switchMap((accept) => {
         if (accept) {
-          return this.tipoFaseService.deleteById(tipoFase.id);
+          return this.tipoFaseService.desactivar(tipoFase.id);
         } else {
           return of();
         }
@@ -200,7 +200,7 @@ export class TipoFaseListadoComponent extends AbstractTablePaginationComponent<I
       .pipe(switchMap((accept) => {
         if (accept) {
           tipoFase.activo = true;
-          return this.tipoFaseService.update(tipoFase.id, tipoFase);
+          return this.tipoFaseService.reactivar(tipoFase.id);
         } else {
           return of();
         }

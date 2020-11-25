@@ -173,7 +173,7 @@ export class TipoFinalidadListadoComponent extends AbstractTablePaginationCompon
     const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE)
       .pipe(switchMap((accept) => {
         if (accept) {
-          return this.tipoFinalidadService.deleteById(tipoFinalidad.id);
+          return this.tipoFinalidadService.desactivar(tipoFinalidad.id);
         } else {
           return of();
         }
@@ -205,7 +205,7 @@ export class TipoFinalidadListadoComponent extends AbstractTablePaginationCompon
       .pipe(switchMap((accept) => {
         if (accept) {
           tipoFinalidad.activo = true;
-          return this.tipoFinalidadService.update(tipoFinalidad.id, tipoFinalidad);
+          return this.tipoFinalidadService.reactivar(tipoFinalidad.id);
         } else {
           return of();
         }

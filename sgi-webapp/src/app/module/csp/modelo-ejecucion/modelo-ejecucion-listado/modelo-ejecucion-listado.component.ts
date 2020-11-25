@@ -115,7 +115,7 @@ export class ModeloEjecucionListadoComponent extends AbstractTablePaginationComp
     const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE)
       .pipe(switchMap((accept) => {
         if (accept) {
-          return this.modeloEjecucionService.deleteById(modeloEjecucion.id);
+          return this.modeloEjecucionService.desactivar(modeloEjecucion.id);
         } else {
           return of();
         }
@@ -148,7 +148,7 @@ export class ModeloEjecucionListadoComponent extends AbstractTablePaginationComp
       .pipe(switchMap((accept) => {
         if (accept) {
           modeloEjecucion.activo = true;
-          return this.modeloEjecucionService.update(modeloEjecucion.id, modeloEjecucion);
+          return this.modeloEjecucionService.reactivar(modeloEjecucion.id);
         } else {
           return of();
         }

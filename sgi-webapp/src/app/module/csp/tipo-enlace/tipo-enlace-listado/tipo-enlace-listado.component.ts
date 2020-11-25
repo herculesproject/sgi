@@ -169,7 +169,7 @@ export class TipoEnlaceListadoComponent extends AbstractTablePaginationComponent
     const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE)
       .pipe(switchMap((accept) => {
         if (accept) {
-          return this.tipoEnlaceService.deleteById(tipoEnlace.id);
+          return this.tipoEnlaceService.desactivar(tipoEnlace.id);
         } else {
           return of();
         }
@@ -201,7 +201,7 @@ export class TipoEnlaceListadoComponent extends AbstractTablePaginationComponent
       .pipe(switchMap((accept) => {
         if (accept) {
           tipoEnlace.activo = true;
-          return this.tipoEnlaceService.update(tipoEnlace.id, tipoEnlace);
+          return this.tipoEnlaceService.reactivar(tipoEnlace.id);
         } else {
           return of();
         }

@@ -136,4 +136,27 @@ export class ModeloEjecucionService extends SgiRestService<number, IModeloEjecuc
     );
   }
 
+  /**
+   * Desactivar modelo ejecucion
+   * @param options opciones de búsqueda.
+   */
+  desactivar(id: number): Observable<void> {
+    this.logger.debug(ModeloEjecucionService.name, `${this.desactivar.name}(`, '-', 'start');
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/desactivar`, undefined).pipe(
+      tap(() => this.logger.debug(ModeloEjecucionService.name, `${this.desactivar.name}()`, '-', 'end'))
+    );
+  }
+
+  /**
+   * Reactivar modelo ejecucion
+   * @param options opciones de búsqueda.
+   */
+  reactivar(id: number): Observable<void> {
+    this.logger.debug(ModeloEjecucionService.name, `${this.reactivar.name}(`, '-', 'start');
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/reactivar`, undefined).pipe(
+      tap(() => this.logger.debug(ModeloEjecucionService.name, `${this.reactivar.name}()`, '-', 'end'))
+    );
+  }
+
+
 }

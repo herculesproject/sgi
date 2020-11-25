@@ -33,6 +33,28 @@ export class TipoHitoService extends SgiRestService<number, ITipoHito> {
     );
   }
 
+  /**
+   * Desactivar tipo hito
+   * @param options opciones de búsqueda.
+   */
+  desactivar(id: number): Observable<void> {
+    this.logger.debug(TipoHitoService.name, `${this.desactivar.name}(`, '-', 'start');
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/desactivar`, undefined).pipe(
+      tap(() => this.logger.debug(TipoHitoService.name, `${this.desactivar.name}()`, '-', 'end'))
+    );
+  }
+
+  /**
+   * Reactivar tipo hito
+   * @param options opciones de búsqueda.
+   */
+  reactivar(id: number): Observable<void> {
+    this.logger.debug(TipoHitoService.name, `${this.reactivar.name}(`, '-', 'start');
+    return this.http.patch<void>(`${this.endpointUrl}/${id}/reactivar`, undefined).pipe(
+      tap(() => this.logger.debug(TipoHitoService.name, `${this.reactivar.name}()`, '-', 'end'))
+    );
+  }
+
 
 }
 

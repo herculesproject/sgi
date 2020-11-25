@@ -167,7 +167,7 @@ export class TipoHitoListadoComponent extends AbstractTablePaginationComponent<I
     const subcription = this.dialogService.showConfirmation(MSG_DEACTIVATE)
       .pipe(switchMap((accept) => {
         if (accept) {
-          return this.tipoHitoService.deleteById(tipoHito.id);
+          return this.tipoHitoService.desactivar(tipoHito.id);
         } else {
           return of();
         }
@@ -199,7 +199,7 @@ export class TipoHitoListadoComponent extends AbstractTablePaginationComponent<I
       .pipe(switchMap((accept) => {
         if (accept) {
           tipoHito.activo = true;
-          return this.tipoHitoService.update(tipoHito.id, tipoHito);
+          return this.tipoHitoService.reactivar(tipoHito.id);
         } else {
           return of();
         }
