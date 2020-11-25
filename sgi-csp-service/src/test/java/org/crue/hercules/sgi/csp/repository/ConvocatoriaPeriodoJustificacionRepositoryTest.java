@@ -22,11 +22,25 @@ public class ConvocatoriaPeriodoJustificacionRepositoryTest extends BaseReposito
   public void findAllByConvocatoriaId_ReturnsConvocatoriaPeriodoJustificacion() throws Exception {
 
     // given: 2 ConvocatoriaPeriodoJustificacion para el ConvocatoriaId buscado
-    Convocatoria convocatoria1 = Convocatoria.builder().codigo("codigo-1")
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).colaborativos(Boolean.FALSE).build();
+    Convocatoria convocatoria1 = Convocatoria.builder()//
+        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)//
+        .codigo("codigo-1")//
+        .unidadGestionRef("OPE")//
+        .anio(2020)//
+        .titulo("titulo")//
+        .activo(Boolean.TRUE)//
+        .build();
+    ;
     entityManager.persistAndFlush(convocatoria1);
-    Convocatoria convocatoria2 = Convocatoria.builder().codigo("codigo-2")
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).colaborativos(Boolean.FALSE).build();
+    Convocatoria convocatoria2 = Convocatoria.builder()//
+        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)//
+        .codigo("codigo-2")//
+        .unidadGestionRef("OPE")//
+        .anio(2020)//
+        .titulo("titulo")//
+        .activo(Boolean.TRUE)//
+        .build();
+    ;
     entityManager.persistAndFlush(convocatoria2);
 
     ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion1 = new ConvocatoriaPeriodoJustificacion(null,
@@ -58,8 +72,14 @@ public class ConvocatoriaPeriodoJustificacionRepositoryTest extends BaseReposito
       throws Exception {
 
     // given: 2 ConvocatoriaPeriodoJustificacion de una Convocatoria
-    Convocatoria convocatoria1 = Convocatoria.builder().codigo("codigo-1")
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).colaborativos(Boolean.FALSE).build();
+    Convocatoria convocatoria1 = Convocatoria.builder()//
+        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)//
+        .codigo("codigo-1")//
+        .unidadGestionRef("OPE")//
+        .anio(2020)//
+        .titulo("titulo")//
+        .activo(Boolean.TRUE)//
+        .build();
     entityManager.persistAndFlush(convocatoria1);
 
     ConvocatoriaPeriodoJustificacion convocatoriaPeriodoJustificacion1 = new ConvocatoriaPeriodoJustificacion(null,

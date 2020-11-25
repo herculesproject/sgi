@@ -74,7 +74,7 @@ public class TipoFinalidadServiceTest extends BaseServiceTest {
         // when: create TipoFinalidad
         () -> service.create(data))
         // then: throw exception as id can't be provided
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Id tiene que ser null para crear TipoFinalidad");
   }
 
   @Test
@@ -86,13 +86,15 @@ public class TipoFinalidadServiceTest extends BaseServiceTest {
     BeanUtils.copyProperties(givenData, newData);
     newData.setId(null);
 
-    BDDMockito.given(repository.findByNombre(ArgumentMatchers.anyString())).willReturn(Optional.of(givenData));
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(ArgumentMatchers.anyString()))
+        .willReturn(Optional.of(givenData));
 
     Assertions.assertThatThrownBy(
         // when: create TipoFinalidad
         () -> service.create(newData))
         // then: throw exception as Nombre already exists
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Ya existe un TipoFinalidad activo con el nombre %s", newData.getNombre());
   }
 
   @Test
@@ -146,7 +148,7 @@ public class TipoFinalidadServiceTest extends BaseServiceTest {
         // when: update TipoFinalidad
         () -> service.update(data))
         // then: throw exception as id must be provided
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Id no puede ser null para actualizar TipoFinalidad");
   }
 
   @Test
@@ -157,13 +159,15 @@ public class TipoFinalidadServiceTest extends BaseServiceTest {
     BeanUtils.copyProperties(givenData, data);
     data.setId(2L);
 
-    BDDMockito.given(repository.findByNombre(ArgumentMatchers.anyString())).willReturn(Optional.of(givenData));
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(ArgumentMatchers.anyString()))
+        .willReturn(Optional.of(givenData));
 
     Assertions.assertThatThrownBy(
         // when: update TipoFinalidad
         () -> service.update(data))
         // then: throw exception as Nombre already exists
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Ya existe un TipoFinalidad activo con el nombre %s", data.getNombre());
   }
 
   @Test

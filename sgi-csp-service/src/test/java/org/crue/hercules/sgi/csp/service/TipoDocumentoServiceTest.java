@@ -45,7 +45,8 @@ public class TipoDocumentoServiceTest extends BaseServiceTest {
     // given: Un nuevo TipoDocumento
     TipoDocumento tipoDocumento = generarMockTipoDocumento(null);
 
-    BDDMockito.given(tipoDocumentoRepository.findByNombre(tipoDocumento.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(tipoDocumentoRepository.findByNombreAndActivoIsTrue(tipoDocumento.getNombre()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(tipoDocumentoRepository.save(tipoDocumento)).will((InvocationOnMock invocation) -> {
       TipoDocumento tipoDocumentoCreado = invocation.getArgument(0);
@@ -71,7 +72,8 @@ public class TipoDocumentoServiceTest extends BaseServiceTest {
     // when: Creamos el TipoDocumento
     // then: Lanza una excepcion porque el TipoDocumento ya tiene id
     Assertions.assertThatThrownBy(() -> tipoDocumentoService.create(tipoDocumentoNew))
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("TipoDocumento id tiene que ser null para crear un nuevo TipoDocumento");
   }
 
   @Test
@@ -80,13 +82,14 @@ public class TipoDocumentoServiceTest extends BaseServiceTest {
     TipoDocumento tipoDocumentoNew = generarMockTipoDocumento(null, "nombreRepetido");
     TipoDocumento tipoDocumento = generarMockTipoDocumento(1L, "nombreRepetido");
 
-    BDDMockito.given(tipoDocumentoRepository.findByNombre(tipoDocumentoNew.getNombre()))
+    BDDMockito.given(tipoDocumentoRepository.findByNombreAndActivoIsTrue(tipoDocumentoNew.getNombre()))
         .willReturn(Optional.of(tipoDocumento));
 
     // when: Creamos el TipoDocumento
     // then: Lanza una excepcion porque hay otro TipoDocumento con ese nombre
     Assertions.assertThatThrownBy(() -> tipoDocumentoService.create(tipoDocumentoNew))
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Ya existe un TipoDocumento activo con el nombre %s", tipoDocumentoNew.getNombre());
   }
 
   @Test
@@ -95,7 +98,7 @@ public class TipoDocumentoServiceTest extends BaseServiceTest {
     TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
     TipoDocumento tipoDocumentoNombreActualizado = generarMockTipoDocumento(1L, "NombreActualizado");
 
-    BDDMockito.given(tipoDocumentoRepository.findByNombre(tipoDocumentoNombreActualizado.getNombre()))
+    BDDMockito.given(tipoDocumentoRepository.findByNombreAndActivoIsTrue(tipoDocumentoNombreActualizado.getNombre()))
         .willReturn(Optional.of(tipoDocumento));
 
     BDDMockito.given(tipoDocumentoRepository.findById(ArgumentMatchers.<Long>any()))
@@ -165,13 +168,14 @@ public class TipoDocumentoServiceTest extends BaseServiceTest {
     TipoDocumento tipoDocumentoUpdated = generarMockTipoDocumento(1L, "nombreRepetido");
     TipoDocumento tipoDocumento = generarMockTipoDocumento(2L, "nombreRepetido");
 
-    BDDMockito.given(tipoDocumentoRepository.findByNombre(tipoDocumentoUpdated.getNombre()))
+    BDDMockito.given(tipoDocumentoRepository.findByNombreAndActivoIsTrue(tipoDocumentoUpdated.getNombre()))
         .willReturn(Optional.of(tipoDocumento));
 
     // when: Actualizamos el TipoDocumento
     // then: Lanza una excepcion porque ya existe otro TipoDocumento con ese nombre
     Assertions.assertThatThrownBy(() -> tipoDocumentoService.update(tipoDocumentoUpdated))
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Ya existe un TipoDocumento activo con el nombre %s", tipoDocumentoUpdated.getNombre());
   }
 
   @Test

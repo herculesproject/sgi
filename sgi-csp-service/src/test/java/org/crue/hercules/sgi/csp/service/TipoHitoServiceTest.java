@@ -64,7 +64,7 @@ public class TipoHitoServiceTest extends BaseServiceTest {
     // given: Un nuevo TipoHito
     TipoHito tipoHito = generarMockTipoHito(null);
 
-    BDDMockito.given(tipoHitoRepository.findByNombre(tipoHito.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(tipoHitoRepository.findByNombreAndActivoIsTrue(tipoHito.getNombre())).willReturn(Optional.empty());
 
     BDDMockito.given(tipoHitoRepository.save(tipoHito)).will((InvocationOnMock invocation) -> {
       TipoHito tipoHitoCreado = invocation.getArgument(0);
@@ -90,7 +90,8 @@ public class TipoHitoServiceTest extends BaseServiceTest {
     // when: Creamos el TipoHito
     // then: Lanza una excepcion porque el TipoHito ya tiene id
     Assertions.assertThatThrownBy(() -> tipoHitoService.create(tipoHitoNew))
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("TipoHito id tiene que ser null para crear un nuevo tipoHito");
   }
 
   @Test
@@ -131,13 +132,15 @@ public class TipoHitoServiceTest extends BaseServiceTest {
     BeanUtils.copyProperties(givenData, newTHito);
     newTHito.setId(null);
 
-    BDDMockito.given(tipoHitoRepository.findByNombre(ArgumentMatchers.anyString())).willReturn(Optional.of(givenData));
+    BDDMockito.given(tipoHitoRepository.findByNombreAndActivoIsTrue(ArgumentMatchers.anyString()))
+        .willReturn(Optional.of(givenData));
 
     Assertions.assertThatThrownBy(
         // when: create TipoHito
         () -> tipoHitoService.create(newTHito))
         // then: throw exception as Nombre already exists
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Ya existe un TipoHito activo con el nombre %s", newTHito.getNombre());
   }
 
   @Test
@@ -146,12 +149,14 @@ public class TipoHitoServiceTest extends BaseServiceTest {
     TipoHito tipoHitoUpdated = generarMockTipoHito(1L, "nombreRepetido");
     TipoHito tipoHito = generarMockTipoHito(2L, "nombreRepetido");
 
-    BDDMockito.given(tipoHitoRepository.findByNombre(tipoHitoUpdated.getNombre())).willReturn(Optional.of(tipoHito));
+    BDDMockito.given(tipoHitoRepository.findByNombreAndActivoIsTrue(tipoHitoUpdated.getNombre()))
+        .willReturn(Optional.of(tipoHito));
 
     // when: Actualizamos el TipoHito
     // then: Lanza una excepcion porque ya existe otro TipoHito con ese nombre
     Assertions.assertThatThrownBy(() -> tipoHitoService.update(tipoHitoUpdated))
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Ya existe un TipoHito activo con el nombre %s", tipoHito.getNombre());
   }
 
   @Test

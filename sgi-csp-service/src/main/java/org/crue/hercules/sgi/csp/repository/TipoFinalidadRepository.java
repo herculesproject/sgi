@@ -10,10 +10,10 @@ public interface TipoFinalidadRepository
     extends JpaRepository<TipoFinalidad, Long>, JpaSpecificationExecutor<TipoFinalidad> {
 
   /**
-   * Obtiene la entidad {@link TipoFinalidad} con el nombre indicado
+   * Obtiene la entidad {@link TipoFinalidad} activa con el nombre indicado
    *
    * @param nombre el nombre de {@link TipoFinalidad}.
    * @return el {@link TipoFinalidad} con el nombre indicado
    */
-  Optional<TipoFinalidad> findByNombre(String nombre);
+  Optional<TipoFinalidad> findByNombreAndActivoIsTrue(String nombre);
 }

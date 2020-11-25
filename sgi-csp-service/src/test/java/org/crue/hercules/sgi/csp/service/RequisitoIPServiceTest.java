@@ -80,7 +80,22 @@ public class RequisitoIPServiceTest extends BaseServiceTest {
     // when: Creamos el RequisitoIP
     // then: Lanza una excepcion porque la convocatoria es null
     Assertions.assertThatThrownBy(() -> service.create(requisitoIP)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Convocatoria no puede ser null para crear RequisitoIP");
+        .hasMessage("Convocatoria no puede ser null para crear RequisitoIP");
+  }
+
+  @Test
+  public void create_WithDuplicatedConvocatoria_ThrowsIllegalArgumentException() {
+    // given: Un nuevo RequisitoIP con convocatoria ya asignada
+    RequisitoIP requisitoIPExistente = generarMockRequisitoIP(1L);
+    RequisitoIP requisitoIP = generarMockRequisitoIP(null);
+
+    BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(requisitoIPExistente));
+
+    // when: Creamos el RequisitoIP
+    // then: Lanza una excepcion porque la convocatoria ya tiene un RequisitoIP
+    Assertions.assertThatThrownBy(() -> service.create(requisitoIP)).isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Ya existe RequisitoIP para la convocatoria %s", requisitoIP.getConvocatoria().getCodigo());
   }
 
   @Test

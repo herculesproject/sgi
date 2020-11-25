@@ -11,9 +11,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.crue.hercules.sgi.csp.converter.ClasificacionCVNConverter;
@@ -30,7 +33,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "convocatoria")
+@Table(name = "convocatoria", uniqueConstraints = {
+    @UniqueConstraint(columnNames = { "codigo" }, name = "UK_CONVOCATORIA_CODIGO") })
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
@@ -51,7 +55,8 @@ public class Convocatoria extends BaseEntity {
   private Long id;
 
   /** Unidad Gestion */
-  @Column(name = "unidad_gestion_ref", nullable = true)
+  @Column(name = "unidad_gestion_ref", nullable = false)
+  @NotBlank
   private String unidadGestionRef;
 
   /** Modelo Ejecucion */
@@ -60,19 +65,22 @@ public class Convocatoria extends BaseEntity {
   private ModeloEjecucion modeloEjecucion;
 
   /** Codigo */
-  @Column(name = "codigo", length = 50, nullable = true)
+  @Column(name = "codigo", length = 50, nullable = false)
+  @NotBlank
   @Size(max = 50)
   private String codigo;
 
   /** Anio */
-  @Column(name = "anio", nullable = true)
+  @Column(name = "anio", nullable = false)
+  @NotNull
   @Min(1000)
   @Max(9999)
   @Digits(fraction = 0, integer = 4)
   private Integer anio;
 
   /** Titulo */
-  @Column(name = "titulo", length = 250, nullable = true)
+  @Column(name = "titulo", length = 250, nullable = false)
+  @NotBlank
   @Size(max = 250)
   private String titulo;
 
@@ -108,6 +116,7 @@ public class Convocatoria extends BaseEntity {
   /** Estado Actual */
   @Column(name = "estado_actual", length = 50, nullable = false)
   @Convert(converter = TipoEstadoConvocatoriaConverter.class)
+  @NotNull
   private TipoEstadoConvocatoriaEnum estadoActual;
 
   /** Duracion */

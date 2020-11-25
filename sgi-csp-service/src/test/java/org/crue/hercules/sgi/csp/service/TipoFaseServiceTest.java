@@ -64,7 +64,7 @@ public class TipoFaseServiceTest extends BaseServiceTest {
     // given: Un nuevo TipoFase
     TipoFase tipoFase = generarMockTipoFase(null);
 
-    BDDMockito.given(tipoFaseRepository.findByNombre(tipoFase.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(tipoFaseRepository.findByNombreAndActivoIsTrue(tipoFase.getNombre())).willReturn(Optional.empty());
 
     BDDMockito.given(tipoFaseRepository.save(tipoFase)).will((InvocationOnMock invocation) -> {
       TipoFase tipoFaseCreado = invocation.getArgument(0);
@@ -119,7 +119,7 @@ public class TipoFaseServiceTest extends BaseServiceTest {
         // when: Delete sin id
         () -> tipoFaseService.disable(null))
         // then: Lanza una excepción
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("El id no puede ser nulo");
   }
 
   @Test
@@ -211,13 +211,15 @@ public class TipoFaseServiceTest extends BaseServiceTest {
     BeanUtils.copyProperties(givenData, newTFase);
     newTFase.setId(null);
 
-    BDDMockito.given(tipoFaseRepository.findByNombre(ArgumentMatchers.anyString())).willReturn(Optional.of(givenData));
+    BDDMockito.given(tipoFaseRepository.findByNombreAndActivoIsTrue(ArgumentMatchers.anyString()))
+        .willReturn(Optional.of(givenData));
 
     Assertions.assertThatThrownBy(
         // when: create TipoFase
         () -> tipoFaseService.create(newTFase))
         // then: throw exception as Nombre already exists
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Ya existe un TipoFase activo con el nombre %s", newTFase.getNombre());
   }
 
   @Test
@@ -226,12 +228,14 @@ public class TipoFaseServiceTest extends BaseServiceTest {
     TipoFase tipoFaseUpdated = generarMockTipoFase(1L, "nombreRepetido");
     TipoFase tipoFase = generarMockTipoFase(2L, "nombreRepetido");
 
-    BDDMockito.given(tipoFaseRepository.findByNombre(tipoFaseUpdated.getNombre())).willReturn(Optional.of(tipoFase));
+    BDDMockito.given(tipoFaseRepository.findByNombreAndActivoIsTrue(tipoFaseUpdated.getNombre()))
+        .willReturn(Optional.of(tipoFase));
 
     // when: Actualizamos el TipoFase
     // then: Lanza una excepcion porque ya existe otro TipoFase con ese nombre
     Assertions.assertThatThrownBy(() -> tipoFaseService.update(tipoFaseUpdated))
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Ya existe un TipoFase activo con el nombre %s", tipoFaseUpdated.getNombre());
   }
 
   /**

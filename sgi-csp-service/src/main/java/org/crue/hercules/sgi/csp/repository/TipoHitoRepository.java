@@ -15,11 +15,11 @@ import org.springframework.stereotype.Repository;
 public interface TipoHitoRepository extends JpaRepository<TipoHito, Long>, JpaSpecificationExecutor<TipoHito> {
 
   /**
-   * Busca un {@link TipoHito} por su nombre.
+   * Busca un {@link TipoHito} activo por su nombre.
    * 
    * @param nombre Nombre del {@link TipoHito}.
    * @return un {@link TipoHito} si tiene el nombre buscado.
    */
-  Optional<TipoHito> findByNombre(String nombre);
+  Optional<TipoHito> findByNombreAndActivoIsTrue(String nombre);
 
 }

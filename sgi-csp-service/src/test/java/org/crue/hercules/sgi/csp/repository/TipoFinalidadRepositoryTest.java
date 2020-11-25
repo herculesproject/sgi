@@ -15,33 +15,33 @@ public class TipoFinalidadRepositoryTest extends BaseRepositoryTest {
   private TipoFinalidadRepository repository;
 
   @Test
-  public void findByNombre_ReturnsTipoFinalidad() throws Exception {
+  public void findByNombreAndActivoIsTrue_ReturnsTipoFinalidad() throws Exception {
     // given: data TipoFinalidad with nombre to find
     TipoFinalidad data = generarMockTipoFinalidad(1L, Boolean.TRUE);
     entityManager.persistAndFlush(data);
     entityManager.persistAndFlush(generarMockTipoFinalidad(2L, Boolean.TRUE));
-    entityManager.persistAndFlush(generarMockTipoFinalidad(3L, Boolean.TRUE));
+    entityManager.persistAndFlush(generarMockTipoFinalidad(1L, Boolean.FALSE));
 
     // when: find given nombre
-    TipoFinalidad dataFound = repository.findByNombre(data.getNombre()).get();
+    TipoFinalidad dataFound = repository.findByNombreAndActivoIsTrue(data.getNombre()).get();
 
     // then: TipoFinalidad with given name is found
     Assertions.assertThat(dataFound).isNotNull();
     Assertions.assertThat(dataFound.getId()).isEqualTo(data.getId());
     Assertions.assertThat(dataFound.getNombre()).isEqualTo(data.getNombre());
     Assertions.assertThat(dataFound.getDescripcion()).isEqualTo(data.getDescripcion());
-    Assertions.assertThat(dataFound.getActivo()).isEqualTo(data.getActivo());
+    Assertions.assertThat(dataFound.getActivo()).isEqualTo(Boolean.TRUE);
   }
 
   @Test
-  public void findByNombre_ReturnsNull() throws Exception {
+  public void findByNombreAndActivoIsTrue_ReturnsNull() throws Exception {
     // given: data TipoFinalidad with nombre to find
     TipoFinalidad data = generarMockTipoFinalidad(1L, Boolean.TRUE);
     entityManager.persistAndFlush(generarMockTipoFinalidad(2L, Boolean.TRUE));
     entityManager.persistAndFlush(generarMockTipoFinalidad(3L, Boolean.TRUE));
 
     // when: find given nombre
-    Optional<TipoFinalidad> dataFound = repository.findByNombre(data.getNombre());
+    Optional<TipoFinalidad> dataFound = repository.findByNombreAndActivoIsTrue(data.getNombre());
 
     // then: TipoFinalidad with given name is not found
     Assertions.assertThat(dataFound).isEqualTo(Optional.empty());

@@ -15,11 +15,11 @@ import org.springframework.stereotype.Repository;
 public interface TipoFaseRepository extends JpaRepository<TipoFase, Long>, JpaSpecificationExecutor<TipoFase> {
 
   /**
-   * Busca un {@link TipoFase} por su nombre.
+   * Busca un {@link TipoFase} activo por nombre.
    * 
    * @param nombre Nombre del {@link TipoFase}.
    * @return un {@link TipoFase} si tiene el nombre buscado.
    */
-  Optional<TipoFase> findByNombre(String nombre);
+  Optional<TipoFase> findByNombreAndActivoIsTrue(String nombre);
 
 }

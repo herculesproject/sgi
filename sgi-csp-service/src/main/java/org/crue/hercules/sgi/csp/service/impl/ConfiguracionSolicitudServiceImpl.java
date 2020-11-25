@@ -64,6 +64,10 @@ public class ConfiguracionSolicitudServiceImpl implements ConfiguracionSolicitud
         configuracionSolicitud.getConvocatoria() != null && configuracionSolicitud.getConvocatoria().getId() != null,
         "Convocatoria no puede ser null en ConfiguracionSolicitud");
 
+    Assert.isTrue(!repository.findByConvocatoriaId(configuracionSolicitud.getConvocatoria().getId()).isPresent(),
+        "Ya existe ConfiguracionSolicitud para la convocatoria "
+            + configuracionSolicitud.getConvocatoria().getCodigo());
+
     configuracionSolicitud
         .setConvocatoria(convocatoriaRepository.findById(configuracionSolicitud.getConvocatoria().getId())
             .orElseThrow(() -> new ConvocatoriaNotFoundException(configuracionSolicitud.getConvocatoria().getId())));

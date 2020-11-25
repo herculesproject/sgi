@@ -18,7 +18,7 @@ public class ModeloEjecucionRepositoryTest extends BaseRepositoryTest {
   private ModeloEjecucionRepository repository;
 
   @Test
-  public void findByNombre_ReturnsModeloEjecucion() throws Exception {
+  public void findByNombreAndActivoIsTrue_ReturnsModeloEjecucion() throws Exception {
 
     // given: 2 ModeloEjecucion de los que 1 coincide con el nombre buscado
     ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true);
@@ -27,10 +27,13 @@ public class ModeloEjecucionRepositoryTest extends BaseRepositoryTest {
     ModeloEjecucion modeloEjecucion2 = new ModeloEjecucion(null, "nombre-2", "descripcion-2", true);
     entityManager.persistAndFlush(modeloEjecucion2);
 
+    ModeloEjecucion modeloEjecucion3 = new ModeloEjecucion(null, "nombre-1", "descripcion-1", false);
+    entityManager.persistAndFlush(modeloEjecucion3);
+
     String nombreBuscado = "nombre-1";
 
     // when: se busca el ModeloEjecucion por nombre
-    ModeloEjecucion modeloEjecucionEncontrado = repository.findByNombre(nombreBuscado).get();
+    ModeloEjecucion modeloEjecucionEncontrado = repository.findByNombreAndActivoIsTrue(nombreBuscado).get();
 
     // then: Se recupera el ModeloEjecucion con el nombre buscado
     Assertions.assertThat(modeloEjecucionEncontrado.getId()).as("getId").isNotNull();
@@ -38,12 +41,11 @@ public class ModeloEjecucionRepositoryTest extends BaseRepositoryTest {
         .isEqualTo(modeloEjecucion1.getNombre());
     Assertions.assertThat(modeloEjecucionEncontrado.getDescripcion()).as("getDescripcion")
         .isEqualTo(modeloEjecucion1.getDescripcion());
-    Assertions.assertThat(modeloEjecucionEncontrado.getActivo()).as("getActivo")
-        .isEqualTo(modeloEjecucion1.getActivo());
+    Assertions.assertThat(modeloEjecucionEncontrado.getActivo()).as("getActivo").isEqualTo(Boolean.TRUE);
   }
 
   @Test
-  public void findByNombreNoExiste_ReturnsNull() throws Exception {
+  public void findByNombreAndActivoIsTrueNoExiste_ReturnsNull() throws Exception {
 
     // given: 2 ModeloEjecucion que no coinciden con el nombre buscado
     ModeloEjecucion modeloEjecucion1 = new ModeloEjecucion(null, "nombre-1", "descripcion-1", true);
@@ -55,7 +57,7 @@ public class ModeloEjecucionRepositoryTest extends BaseRepositoryTest {
     String nombreBuscado = "nombre-noexiste";
 
     // when: se busca el ModeloEjecucion por nombre
-    Optional<ModeloEjecucion> modeloEjecucionEncontrado = repository.findByNombre(nombreBuscado);
+    Optional<ModeloEjecucion> modeloEjecucionEncontrado = repository.findByNombreAndActivoIsTrue(nombreBuscado);
 
     // then: Se recupera el TipoDocumento con el nombre buscado
     Assertions.assertThat(modeloEjecucionEncontrado).isEqualTo(Optional.empty());

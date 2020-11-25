@@ -82,7 +82,22 @@ public class RequisitoEquipoServiceTest {
     // when: Creamos el RequisitoEquipo
     // then: Lanza una excepcion porque la convocatoria es null
     Assertions.assertThatThrownBy(() -> service.create(requisitoEquipo)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Id Convocatoria no puede ser null para crear RequisitoEquipo");
+        .hasMessage("Convocatoria no puede ser null para crear RequisitoEquipo");
+  }
+
+  @Test
+  public void create_WithDuplicatedConvocatoria_ThrowsIllegalArgumentException() {
+    // given: Un nuevo RequisitoEquipo con convocatoria ya asignada
+    RequisitoEquipo requisitoEquipoExistente = generarMockRequisitoEquipo(1L);
+    RequisitoEquipo requisitoEquipo = generarMockRequisitoEquipo(null);
+
+    BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(requisitoEquipoExistente));
+
+    // when: Creamos el RequisitoEquipo
+    // then: Lanza una excepcion porque la convocatoria ya tiene un RequisitoEquipo
+    Assertions.assertThatThrownBy(() -> service.create(requisitoEquipo)).isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Ya existe RequisitoEquipo para la convocatoria %s", requisitoEquipo.getConvocatoria().getCodigo());
   }
 
   @Test

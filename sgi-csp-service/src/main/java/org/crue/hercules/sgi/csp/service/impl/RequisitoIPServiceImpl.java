@@ -45,9 +45,11 @@ public class RequisitoIPServiceImpl implements RequisitoIPService {
 
     Assert.isNull(requisitoIP.getId(), "Id tiene que ser null para crear RequisitoIP");
 
-    Assert.notNull(requisitoIP.getConvocatoria(), "La Convocatoria no puede ser null para crear RequisitoIP");
+    Assert.isTrue(requisitoIP.getConvocatoria() != null && requisitoIP.getConvocatoria().getId() != null,
+        "Convocatoria no puede ser null para crear RequisitoIP");
 
-    Assert.notNull(requisitoIP.getConvocatoria().getId(), "Id Convocatoria no puede ser null para crear RequisitoIP");
+    Assert.isTrue(!repository.findByConvocatoriaId(requisitoIP.getConvocatoria().getId()).isPresent(),
+        "Ya existe RequisitoIP para la convocatoria " + requisitoIP.getConvocatoria().getCodigo());
 
     requisitoIP.setConvocatoria(convocatoriaRepository.findById(requisitoIP.getConvocatoria().getId())
         .orElseThrow(() -> new ConvocatoriaNotFoundException(requisitoIP.getConvocatoria().getId())));

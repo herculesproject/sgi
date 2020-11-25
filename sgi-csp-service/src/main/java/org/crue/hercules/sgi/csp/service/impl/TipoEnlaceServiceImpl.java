@@ -44,8 +44,8 @@ public class TipoEnlaceServiceImpl implements TipoEnlaceService {
     log.debug("create(TipoEnlace tipoEnlace) - start");
 
     Assert.isNull(tipoEnlace.getId(), "Id tiene que ser null para crear TipoEnlace");
-    Assert.isTrue(!(repository.findByNombre(tipoEnlace.getNombre()).isPresent()),
-        "Ya existe TipoEnlace con el nombre " + tipoEnlace.getNombre());
+    Assert.isTrue(!(repository.findByNombreAndActivoIsTrue(tipoEnlace.getNombre()).isPresent()),
+        "Ya existe un TipoEnlace activo con el nombre " + tipoEnlace.getNombre());
 
     tipoEnlace.setActivo(Boolean.TRUE);
     TipoEnlace returnValue = repository.save(tipoEnlace);
@@ -67,9 +67,9 @@ public class TipoEnlaceServiceImpl implements TipoEnlaceService {
     log.debug("update(TipoEnlace tipoEnlace) - start");
 
     Assert.notNull(tipoEnlace.getId(), "Id no puede ser null para actualizar TipoEnlace");
-    repository.findByNombre(tipoEnlace.getNombre()).ifPresent((tipoEnlaceExistente) -> {
+    repository.findByNombreAndActivoIsTrue(tipoEnlace.getNombre()).ifPresent((tipoEnlaceExistente) -> {
       Assert.isTrue(tipoEnlace.getId() == tipoEnlaceExistente.getId(),
-          "Ya existe un TipoEnlace con el nombre " + tipoEnlaceExistente.getNombre());
+          "Ya existe un TipoEnlace activo con el nombre " + tipoEnlaceExistente.getNombre());
     });
 
     return repository.findById(tipoEnlace.getId()).map((data) -> {

@@ -44,8 +44,8 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
     log.debug("create(ModeloEjecucion modeloEjecucion) - start");
 
     Assert.isNull(modeloEjecucion.getId(), "ModeloEjecucion id tiene que ser null para crear un nuevo ModeloEjecucion");
-    Assert.isTrue(!(modeloEjecucionRepository.findByNombre(modeloEjecucion.getNombre()).isPresent()),
-        "Ya existe ModeloEjecucion con el nombre " + modeloEjecucion.getNombre());
+    Assert.isTrue(!(modeloEjecucionRepository.findByNombreAndActivoIsTrue(modeloEjecucion.getNombre()).isPresent()),
+        "Ya existe un ModeloEjecucion activo con el nombre " + modeloEjecucion.getNombre());
 
     modeloEjecucion.setActivo(true);
 
@@ -69,10 +69,10 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
 
     Assert.notNull(modeloEjecucionActualizar.getId(),
         "ModeloEjecucion id no puede ser null para actualizar un ModeloEjecucion");
-    modeloEjecucionRepository.findByNombre(modeloEjecucionActualizar.getNombre())
+    modeloEjecucionRepository.findByNombreAndActivoIsTrue(modeloEjecucionActualizar.getNombre())
         .ifPresent((modeloEjecucionExistente) -> {
           Assert.isTrue(modeloEjecucionActualizar.getId() == modeloEjecucionExistente.getId(),
-              "Ya existe un ModeloEjecucion con el nombre " + modeloEjecucionExistente.getNombre());
+              "Ya existe un ModeloEjecucion activo con el nombre " + modeloEjecucionExistente.getNombre());
         });
 
     return modeloEjecucionRepository.findById(modeloEjecucionActualizar.getId()).map(modeloEjecucion -> {

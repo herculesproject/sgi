@@ -45,7 +45,8 @@ public class ModeloEjecucionServiceTest extends BaseServiceTest {
     // given: Un nuevo ModeloEjecucion
     ModeloEjecucion modeloEjecucion = generarMockModeloEjecucion(null);
 
-    BDDMockito.given(modeloEjecucionRepository.findByNombre(modeloEjecucion.getNombre())).willReturn(Optional.empty());
+    BDDMockito.given(modeloEjecucionRepository.findByNombreAndActivoIsTrue(modeloEjecucion.getNombre()))
+        .willReturn(Optional.empty());
 
     BDDMockito.given(modeloEjecucionRepository.save(modeloEjecucion)).will((InvocationOnMock invocation) -> {
       ModeloEjecucion modeloEjecucionCreado = invocation.getArgument(0);
@@ -71,7 +72,8 @@ public class ModeloEjecucionServiceTest extends BaseServiceTest {
     // when: Creamos el ModeloEjecucion
     // then: Lanza una excepcion porque el ModeloEjecucion ya tiene id
     Assertions.assertThatThrownBy(() -> modeloEjecucionService.create(modeloEjecucion))
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("ModeloEjecucion id tiene que ser null para crear un nuevo ModeloEjecucion");
   }
 
   @Test
@@ -80,13 +82,14 @@ public class ModeloEjecucionServiceTest extends BaseServiceTest {
     ModeloEjecucion modeloEjecucionNew = generarMockModeloEjecucion(null, "nombreRepetido");
     ModeloEjecucion modeloEjecucion = generarMockModeloEjecucion(1L, "nombreRepetido");
 
-    BDDMockito.given(modeloEjecucionRepository.findByNombre(modeloEjecucionNew.getNombre()))
+    BDDMockito.given(modeloEjecucionRepository.findByNombreAndActivoIsTrue(modeloEjecucionNew.getNombre()))
         .willReturn(Optional.of(modeloEjecucion));
 
     // when: Creamos el ModeloEjecucion
     // then: Lanza una excepcion porque hay otro ModeloEjecucion con ese nombre
     Assertions.assertThatThrownBy(() -> modeloEjecucionService.create(modeloEjecucionNew))
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Ya existe un ModeloEjecucion activo con el nombre %s", modeloEjecucionNew.getNombre());
   }
 
   @Test
@@ -95,7 +98,8 @@ public class ModeloEjecucionServiceTest extends BaseServiceTest {
     ModeloEjecucion modeloEjecucion = generarMockModeloEjecucion(1L);
     ModeloEjecucion modeloEjecucionNombreActualizado = generarMockModeloEjecucion(1L, "NombreActualizado");
 
-    BDDMockito.given(modeloEjecucionRepository.findByNombre(modeloEjecucionNombreActualizado.getNombre()))
+    BDDMockito
+        .given(modeloEjecucionRepository.findByNombreAndActivoIsTrue(modeloEjecucionNombreActualizado.getNombre()))
         .willReturn(Optional.of(modeloEjecucion));
 
     BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any()))
@@ -166,14 +170,15 @@ public class ModeloEjecucionServiceTest extends BaseServiceTest {
     ModeloEjecucion modeloEjecucionUpdated = generarMockModeloEjecucion(1L, "nombreRepetido");
     ModeloEjecucion modeloEjecucion = generarMockModeloEjecucion(2L, "nombreRepetido");
 
-    BDDMockito.given(modeloEjecucionRepository.findByNombre(modeloEjecucionUpdated.getNombre()))
+    BDDMockito.given(modeloEjecucionRepository.findByNombreAndActivoIsTrue(modeloEjecucionUpdated.getNombre()))
         .willReturn(Optional.of(modeloEjecucion));
 
     // when: Actualizamos el ModeloEjecucion
     // then: Lanza una excepcion porque ya existe otro ModeloEjecucion con ese
     // nombre
     Assertions.assertThatThrownBy(() -> modeloEjecucionService.update(modeloEjecucionUpdated))
-        .isInstanceOf(IllegalArgumentException.class);
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Ya existe un ModeloEjecucion activo con el nombre %s", modeloEjecucionUpdated.getNombre());
   }
 
   @Test

@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.crue.hercules.sgi.csp.converter.TipoFormularioSolicitudConverter;
@@ -26,7 +27,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "configuracion_solicitud")
+@Table(name = "configuracion_solicitud", uniqueConstraints = {
+    @UniqueConstraint(columnNames = { "convocatoria_id" }, name = "UK_CONFIGURACIONSOLICITUD_CONVOCATORIA") })
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
@@ -53,7 +55,7 @@ public class ConfiguracionSolicitud extends BaseEntity {
   private Convocatoria convocatoria;
 
   /** Tramitacion SGI */
-  @Column(name = "tramitacion_sgi", columnDefinition = "boolean default true", nullable = true)
+  @Column(name = "tramitacion_sgi", columnDefinition = "boolean default false", nullable = true)
   private Boolean tramitacionSGI;
 
   /** Convocatoria Fase */

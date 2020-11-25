@@ -15,33 +15,33 @@ public class TipoEnlaceRepositoryTest extends BaseRepositoryTest {
   private TipoEnlaceRepository repository;
 
   @Test
-  public void findByNombre_ReturnsTipoEnlace() throws Exception {
+  public void findByNombreAndActivoIsTrue_ReturnsTipoEnlace() throws Exception {
     // given: data TipoEnlace with nombre to find
     TipoEnlace data = generarMockTipoEnlace(1L, Boolean.TRUE);
     entityManager.persistAndFlush(data);
     entityManager.persistAndFlush(generarMockTipoEnlace(2L, Boolean.TRUE));
-    entityManager.persistAndFlush(generarMockTipoEnlace(3L, Boolean.TRUE));
+    entityManager.persistAndFlush(generarMockTipoEnlace(1L, Boolean.FALSE));
 
     // when: find given nombre
-    TipoEnlace dataFound = repository.findByNombre(data.getNombre()).get();
+    TipoEnlace dataFound = repository.findByNombreAndActivoIsTrue(data.getNombre()).get();
 
     // then: TipoEnlace with given name is found
     Assertions.assertThat(dataFound).isNotNull();
     Assertions.assertThat(dataFound.getId()).isEqualTo(data.getId());
     Assertions.assertThat(dataFound.getNombre()).isEqualTo(data.getNombre());
     Assertions.assertThat(dataFound.getDescripcion()).isEqualTo(data.getDescripcion());
-    Assertions.assertThat(dataFound.getActivo()).isEqualTo(data.getActivo());
+    Assertions.assertThat(dataFound.getActivo()).isEqualTo(Boolean.TRUE);
   }
 
   @Test
-  public void findByNombre_ReturnsNull() throws Exception {
+  public void findByNombreAndActivoIsTrue_ReturnsNull() throws Exception {
     // given: data TipoEnlace with nombre to find
     TipoEnlace data = generarMockTipoEnlace(1L, Boolean.TRUE);
     entityManager.persistAndFlush(generarMockTipoEnlace(2L, Boolean.TRUE));
-    entityManager.persistAndFlush(generarMockTipoEnlace(3L, Boolean.TRUE));
+    entityManager.persistAndFlush(generarMockTipoEnlace(1L, Boolean.FALSE));
 
     // when: find given nombre
-    Optional<TipoEnlace> dataFound = repository.findByNombre(data.getNombre());
+    Optional<TipoEnlace> dataFound = repository.findByNombreAndActivoIsTrue(data.getNombre());
 
     // then: TipoEnlace with given name is not found
     Assertions.assertThat(dataFound).isEqualTo(Optional.empty());

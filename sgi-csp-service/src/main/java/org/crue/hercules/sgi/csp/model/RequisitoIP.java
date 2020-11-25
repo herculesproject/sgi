@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -20,7 +21,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "requisito_ip")
+@Table(name = "requisito_ip", uniqueConstraints = {
+    @UniqueConstraint(columnNames = { "convocatoria_id" }, name = "UK_REQUISITOIP_CONVOCATORIA") })
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
@@ -41,7 +43,7 @@ public class RequisitoIP extends BaseEntity {
 
   /** Convocatoria */
   @OneToOne
-  @JoinColumn(name = "convocatoria_id", nullable = false, unique = true, foreignKey = @ForeignKey(name = "FK_REQUISITOIP_CONVOCATORIA"))
+  @JoinColumn(name = "convocatoria_id", nullable = false, foreignKey = @ForeignKey(name = "FK_REQUISITOIP_CONVOCATORIA"))
   @NotNull
   private Convocatoria convocatoria;
 

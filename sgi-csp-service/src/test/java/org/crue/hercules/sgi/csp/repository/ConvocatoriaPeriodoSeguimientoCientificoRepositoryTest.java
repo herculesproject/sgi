@@ -21,12 +21,24 @@ public class ConvocatoriaPeriodoSeguimientoCientificoRepositoryTest extends Base
       throws Exception {
 
     // given: 10 ConvocatoriaPeriodoSeguimientoCientifico with same ConvocatoriId
-    Convocatoria convocatoria1 = Convocatoria.builder().codigo("codigo-1")
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).colaborativos(Boolean.FALSE).build();
+    Convocatoria convocatoria1 = Convocatoria.builder()//
+        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)//
+        .codigo("codigo-1")//
+        .unidadGestionRef("OPE")//
+        .anio(2020)//
+        .titulo("titulo")//
+        .activo(Boolean.TRUE)//
+        .build();
     entityManager.persistAndFlush(convocatoria1);
 
-    Convocatoria convocatoria2 = Convocatoria.builder().codigo("codigo-2")
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).colaborativos(Boolean.FALSE).build();
+    Convocatoria convocatoria2 = Convocatoria.builder()//
+        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)//
+        .codigo("codigo-2")//
+        .unidadGestionRef("OPE")//
+        .anio(2020)//
+        .titulo("titulo")//
+        .activo(Boolean.TRUE)//
+        .build();
     entityManager.persistAndFlush(convocatoria2);
 
     for (int i = 11; i > 1; i--) {
@@ -63,12 +75,24 @@ public class ConvocatoriaPeriodoSeguimientoCientificoRepositoryTest extends Base
   @Test
   public void findAllByConvocatoriaIdOrderByMesInicial_ReturnsNull() throws Exception {
     // given: 10 ConvocatoriaPeriodoSeguimientoCientifico
-    Convocatoria convocatoria1 = Convocatoria.builder().codigo("codigo-1")
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).colaborativos(Boolean.FALSE).build();
+    Convocatoria convocatoria1 = Convocatoria.builder()//
+        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)//
+        .codigo("codigo-1")//
+        .unidadGestionRef("OPE")//
+        .anio(2020)//
+        .titulo("titulo")//
+        .activo(Boolean.TRUE)//
+        .build();
     entityManager.persistAndFlush(convocatoria1);
 
-    Convocatoria convocatoria2 = Convocatoria.builder().codigo("codigo-2")
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(Boolean.TRUE).colaborativos(Boolean.FALSE).build();
+    Convocatoria convocatoria2 = Convocatoria.builder()//
+        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)//
+        .codigo("codigo-2")//
+        .unidadGestionRef("OPE")//
+        .anio(2020)//
+        .titulo("titulo")//
+        .activo(Boolean.TRUE)//
+        .build();
     entityManager.persistAndFlush(convocatoria2);
 
     for (int i = 11; i > 1; i--) {

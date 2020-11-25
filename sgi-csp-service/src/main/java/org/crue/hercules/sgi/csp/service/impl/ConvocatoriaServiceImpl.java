@@ -306,6 +306,8 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     // Campos obligatorios en estado Registrada
     if (datosConvocatoria.getEstadoActual().equals(TipoEstadoConvocatoriaEnum.REGISTRADA)) {
       validarRequeridosConvocatoriaRegistrada(datosConvocatoria);
+    } else {
+      validarRequeridosConvocatoriaBorrador(datosConvocatoria);
     }
 
     // ModeloUnidadGestion
@@ -489,6 +491,27 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     validarRequeridosConfiguracionSolicitudConvocatoriaRegistrada(datosConvocatoria);
 
     log.debug("validarRequeridosConvocatoriaRegistrada(Convocatoria datosConvocatoria) - end");
+  }
+
+  /**
+   * Valida los campos generales requeridos para una convocatoria en estado
+   * 'Borrador'
+   * 
+   * @param datosConvocatoria
+   */
+  private void validarRequeridosConvocatoriaBorrador(Convocatoria datosConvocatoria) {
+    log.debug("validarRequeridosConvocatoriaBorrador(Convocatoria datosConvocatoria) - start");
+
+    // ModeloUnidadGestion
+    Assert.notNull(datosConvocatoria.getUnidadGestionRef(), "UnidadGestionRef no puede ser null en la Convocatoria");
+    // Codigo
+    Assert.notNull(datosConvocatoria.getCodigo(), "Codigo no puede ser null en la Convocatoria");
+    // Anio
+    Assert.notNull(datosConvocatoria.getAnio(), "Año no puede ser null en la Convocatoria");
+    // Titulo
+    Assert.notNull(datosConvocatoria.getTitulo(), "Titulo no puede ser null en la Convocatoria");
+
+    log.debug("validarRequeridosConvocatoriaBorrador(Convocatoria datosConvocatoria) - end");
   }
 
   /**

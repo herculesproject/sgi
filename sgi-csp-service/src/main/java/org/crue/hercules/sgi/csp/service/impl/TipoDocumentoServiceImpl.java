@@ -44,8 +44,8 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
     log.debug("create(TipoDocumento tipoDocumento) - start");
 
     Assert.isNull(tipoDocumento.getId(), "TipoDocumento id tiene que ser null para crear un nuevo TipoDocumento");
-    Assert.isTrue(!(tipoDocumentoRepository.findByNombre(tipoDocumento.getNombre()).isPresent()),
-        "Ya existe TipoDocumento con el nombre " + tipoDocumento.getNombre());
+    Assert.isTrue(!(tipoDocumentoRepository.findByNombreAndActivoIsTrue(tipoDocumento.getNombre()).isPresent()),
+        "Ya existe un TipoDocumento activo con el nombre " + tipoDocumento.getNombre());
 
     tipoDocumento.setActivo(Boolean.TRUE);
     TipoDocumento returnValue = tipoDocumentoRepository.save(tipoDocumento);
@@ -67,10 +67,11 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
 
     Assert.notNull(tipoDocumentoActualizar.getId(),
         "TipoDocumento id no puede ser null para actualizar un TipoDocumento");
-    tipoDocumentoRepository.findByNombre(tipoDocumentoActualizar.getNombre()).ifPresent((tipoDocumentoExistente) -> {
-      Assert.isTrue(tipoDocumentoActualizar.getId() == tipoDocumentoExistente.getId(),
-          "Ya existe un TipoDocumento con el nombre " + tipoDocumentoExistente.getNombre());
-    });
+    tipoDocumentoRepository.findByNombreAndActivoIsTrue(tipoDocumentoActualizar.getNombre())
+        .ifPresent((tipoDocumentoExistente) -> {
+          Assert.isTrue(tipoDocumentoActualizar.getId() == tipoDocumentoExistente.getId(),
+              "Ya existe un TipoDocumento activo con el nombre " + tipoDocumentoExistente.getNombre());
+        });
 
     return tipoDocumentoRepository.findById(tipoDocumentoActualizar.getId()).map(tipoDocumento -> {
       tipoDocumento.setNombre(tipoDocumentoActualizar.getNombre());

@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -17,7 +18,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "tipo_origen_fuente_financiacion")
+@Table(name = "tipo_origen_fuente_financiacion", uniqueConstraints = {
+    @UniqueConstraint(columnNames = { "nombre" }, name = "UK_TIPOORIGENFUENTEFINANCIACION_NOMBRE") })
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor

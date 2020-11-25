@@ -40,9 +40,9 @@ public class TipoHitoServiceImpl implements TipoHitoService {
   public TipoHito create(TipoHito tipoHito) {
     log.debug("create(TipoHito tipoHito) - start");
 
-    Assert.isNull(tipoHito.getId(), "tipoHito id tiene que ser null para crear un nuevo tipoHito");
-    Assert.isTrue(!(tipoHitoRepository.findByNombre(tipoHito.getNombre()).isPresent()),
-        "Ya existe TipoHito con el nombre " + tipoHito.getNombre());
+    Assert.isNull(tipoHito.getId(), "TipoHito id tiene que ser null para crear un nuevo tipoHito");
+    Assert.isTrue(!(tipoHitoRepository.findByNombreAndActivoIsTrue(tipoHito.getNombre()).isPresent()),
+        "Ya existe un TipoHito activo con el nombre " + tipoHito.getNombre());
 
     tipoHito.setActivo(Boolean.TRUE);
     TipoHito returnValue = tipoHitoRepository.save(tipoHito);
@@ -63,9 +63,9 @@ public class TipoHitoServiceImpl implements TipoHitoService {
     log.debug("update(TipoHito tipoHitoActualizar) - start");
 
     Assert.notNull(tipoHitoActualizar.getId(), "TipoHito id no puede ser null para actualizar");
-    tipoHitoRepository.findByNombre(tipoHitoActualizar.getNombre()).ifPresent((tipoHitoExistente) -> {
+    tipoHitoRepository.findByNombreAndActivoIsTrue(tipoHitoActualizar.getNombre()).ifPresent((tipoHitoExistente) -> {
       Assert.isTrue(tipoHitoActualizar.getId() == tipoHitoExistente.getId(),
-          "Ya existe un TipoHito con el nombre " + tipoHitoExistente.getNombre());
+          "Ya existe un TipoHito activo con el nombre " + tipoHitoExistente.getNombre());
     });
 
     return tipoHitoRepository.findById(tipoHitoActualizar.getId()).map(tipoHito -> {

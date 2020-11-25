@@ -15,11 +15,11 @@ public interface ModeloEjecucionRepository
     extends JpaRepository<ModeloEjecucion, Long>, JpaSpecificationExecutor<ModeloEjecucion> {
 
   /**
-   * Busca un {@link ModeloEjecucion} por su nombre.
+   * Busca un {@link ModeloEjecucion} activo por nombre.
    * 
    * @param nombre Nombre del {@link ModeloEjecucion}.
    * @return un {@link ModeloEjecucion} si tiene el nombre buscado.
    */
-  Optional<ModeloEjecucion> findByNombre(String nombre);
+  Optional<ModeloEjecucion> findByNombreAndActivoIsTrue(String nombre);
 
 }

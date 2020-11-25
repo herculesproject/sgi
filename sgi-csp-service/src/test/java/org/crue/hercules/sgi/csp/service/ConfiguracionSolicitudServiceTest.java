@@ -187,6 +187,24 @@ public class ConfiguracionSolicitudServiceTest {
   }
 
   @Test
+  public void create_WithDuplicatedConvocatoria_ThrowsIllegalArgumentException() {
+    // given: a ConfiguracionSolicitud with duplicated Convocatoria
+    ConfiguracionSolicitud configuracionSolicitudExistente = generarMockConfiguracionSolicitud(1L, 1L, 1L);
+    ConfiguracionSolicitud configuracionSolicitud = generarMockConfiguracionSolicitud(null, 1L, 1L);
+
+    BDDMockito.given(repository.findByConvocatoriaId(ArgumentMatchers.anyLong()))
+        .willReturn(Optional.of(configuracionSolicitudExistente));
+
+    Assertions.assertThatThrownBy(
+        // when: create ConfiguracionSolicitud
+        () -> service.create(configuracionSolicitud))
+        // then: throw exception as Convocatoria already asigned
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Ya existe ConfiguracionSolicitud para la convocatoria %s",
+            configuracionSolicitud.getConvocatoria().getCodigo());
+  }
+
+  @Test
   public void create_WithConvocatoriaRegistradaAndWithoutTramitacionSGI_ThrowsIllegalArgumentException() {
     // given: a ConfiguracionSolicitud with convocatoria registrada and without
     // Tramitacion SGI

@@ -145,7 +145,13 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   @Test
   public void create_WithMinimumRequiredData_ReturnsConvocatoria() {
     // given: new Convocatoria with minimum required data
-    Convocatoria convocatoria = Convocatoria.builder().estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).build();
+    Convocatoria convocatoria = Convocatoria.builder()//
+        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)//
+        .codigo("codigo")//
+        .unidadGestionRef("OPE")//
+        .anio(2020)//
+        .titulo("titulo")//
+        .build();
     BDDMockito.given(repository.save(ArgumentMatchers.<Convocatoria>any())).willAnswer(new Answer<Convocatoria>() {
       @Override
       public Convocatoria answer(InvocationOnMock invocation) throws Throwable {
@@ -165,11 +171,11 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     // then: new Convocatoria is created with minimum required data
     Assertions.assertThat(created).isNotNull();
-    Assertions.assertThat(created.getUnidadGestionRef()).isNull();
+    Assertions.assertThat(created.getUnidadGestionRef()).isEqualTo(convocatoria.getUnidadGestionRef());
     Assertions.assertThat(created.getModeloEjecucion()).isNull();
-    Assertions.assertThat(created.getCodigo()).isNull();
-    Assertions.assertThat(created.getAnio()).isNull();
-    Assertions.assertThat(created.getTitulo()).isNull();
+    Assertions.assertThat(created.getCodigo()).isEqualTo(convocatoria.getCodigo());
+    Assertions.assertThat(created.getAnio()).isEqualTo(convocatoria.getAnio());
+    Assertions.assertThat(created.getTitulo()).isEqualTo(convocatoria.getTitulo());
     Assertions.assertThat(created.getObjeto()).isNull();
     Assertions.assertThat(created.getObservaciones()).isNull();
     Assertions.assertThat(created.getFinalidad()).isNull();
@@ -216,6 +222,23 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void create_BorradorWithoutUnidadRef_ThrowsIllegalArgumentException() {
+    // given: a Convocatoria Borrador without UnidadRef
+    Convocatoria convocatoria = generarMockConvocatoria(null, null, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+
+    List<String> acronimos = new ArrayList<>();
+    acronimos.add("OPE");
+
+    Assertions.assertThatThrownBy(
+        // when: create Convocatoria
+        () -> service.create(convocatoria, acronimos))
+        // then: throw exception as UnidadRef is not present
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("UnidadGestionRef no puede ser null en la Convocatoria");
+  }
+
+  @Test
   public void create_UnidadGestionInvalid_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Borrador with ModeloEjecucion and without UnidadGestion
     Convocatoria convocatoria = generarMockConvocatoria(null, null, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -232,23 +255,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
         // then: throw exception as id can't be provided
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
             "El usuario no tiene permisos para crear una convocatoria asociada a la unidad de gestión recibida.");
-  }
-
-  @Test
-  public void create_BorradorWithModeloEjecucionAndWithoutUnidadGestion_ThrowsIllegalArgumentException() {
-    // given: a Convocatoria Borrador with ModeloEjecucion and without UnidadGestion
-    Convocatoria convocatoria = generarMockConvocatoria(null, null, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
-
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
-    Assertions.assertThatThrownBy(
-        // when: create Convocatoria
-        () -> service.create(convocatoria, acronimos))
-        // then: throw exception as UnidadGestion is not present
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("UnidadGestionRef requerido para obtener ModeloEjecucion");
   }
 
   @Test
@@ -338,6 +344,23 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void create_BorradorWithoutCodigo_ThrowsIllegalArgumentException() {
+    // given: a Convocatoria Borrador without Codigo
+    Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoria.setCodigo(null);
+
+    List<String> acronimos = new ArrayList<>();
+    acronimos.add("OPE");
+
+    Assertions.assertThatThrownBy(
+        // when: create Convocatoria
+        () -> service.create(convocatoria, acronimos))
+        // then: throw exception as Codigo is not present
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Codigo no puede ser null en la Convocatoria");
+  }
+
+  @Test
   public void create_RegistradaWithoutCodigo_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Registrada without Codigo
     Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -397,6 +420,23 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void create_BorradorWithoutAnio_ThrowsIllegalArgumentException() {
+    // given: a Convocatoria Borrador without Anio
+    Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoria.setAnio(null);
+
+    List<String> acronimos = new ArrayList<>();
+    acronimos.add("OPE");
+
+    Assertions.assertThatThrownBy(
+        // when: create Convocatoria
+        () -> service.create(convocatoria, acronimos))
+        // then: throw exception as Anio is not present
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Año no puede ser null en la Convocatoria");
+  }
+
+  @Test
   public void create_WithAnioInvalid_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with invalid Anio
     Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -423,6 +463,23 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   public void create_RegistradaWithoutTitulo_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Registrada without Titulo
     Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setTitulo(null);
+
+    List<String> acronimos = new ArrayList<>();
+    acronimos.add("OPE");
+
+    Assertions.assertThatThrownBy(
+        // when: create Convocatoria
+        () -> service.create(convocatoria, acronimos))
+        // then: throw exception as Titulo is not present
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Titulo no puede ser null en la Convocatoria");
+  }
+
+  @Test
+  public void create_BorradorWithoutTitulo_ThrowsIllegalArgumentException() {
+    // given: a Convocatoria Borrador without Titulo
+    Convocatoria convocatoria = generarMockConvocatoria(null, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
     convocatoria.setTitulo(null);
 
     List<String> acronimos = new ArrayList<>();
@@ -787,8 +844,14 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     // required data
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
-    Convocatoria convocatoriaBorrador = Convocatoria.builder().id(convocatoria.getId())
-        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR).activo(convocatoria.getActivo()).build();
+    Convocatoria convocatoriaBorrador = Convocatoria.builder()//
+        .id(convocatoria.getId())//
+        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)//
+        .codigo("codigo")//
+        .unidadGestionRef("OPE")//
+        .anio(2020)//
+        .titulo("titulo")//
+        .build();
 
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
     BDDMockito.given(repository.save(ArgumentMatchers.any())).willReturn(convocatoriaBorrador);
@@ -802,11 +865,11 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     // then: Convocatoria is updated to Borrador with minimum required data
     Assertions.assertThat(updated).isNotNull();
     Assertions.assertThat(updated.getId()).isEqualTo(convocatoria.getId());
-    Assertions.assertThat(updated.getUnidadGestionRef()).isNull();
+    Assertions.assertThat(updated.getUnidadGestionRef()).isEqualTo(convocatoriaBorrador.getUnidadGestionRef());
     Assertions.assertThat(updated.getModeloEjecucion()).isNull();
-    Assertions.assertThat(updated.getCodigo()).isNull();
-    Assertions.assertThat(updated.getAnio()).isNull();
-    Assertions.assertThat(updated.getTitulo()).isNull();
+    Assertions.assertThat(updated.getCodigo()).isEqualTo(convocatoriaBorrador.getCodigo());
+    Assertions.assertThat(updated.getAnio()).isEqualTo(convocatoriaBorrador.getAnio());
+    Assertions.assertThat(updated.getTitulo()).isEqualTo(convocatoriaBorrador.getTitulo());
     Assertions.assertThat(updated.getObjeto()).isNull();
     Assertions.assertThat(updated.getObservaciones()).isNull();
     Assertions.assertThat(updated.getFinalidad()).isNull();
@@ -872,6 +935,28 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void update_BorradorWithoutUnidadRef_ThrowsIllegalArgumentException() {
+    // given: a Convocatoria Borrador without UnidadRef
+    Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoriaExistente.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, null, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoria.setObservaciones("observaciones-modificadas");
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
+
+    List<String> acronimos = new ArrayList<>();
+    acronimos.add("OPE");
+
+    Assertions.assertThatThrownBy(
+        // when: update Convocatoria
+        () -> service.update(convocatoria, acronimos))
+        // then: throw exception as UnidadRef is not present
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("UnidadGestionRef no puede ser null en la Convocatoria");
+  }
+
+  @Test
   public void update_UnidadGestionInvalid_ThrowsIllegalArgumentException() {
     // given: a Convocatoria Borrador with ModeloEjecucion and without UnidadGestion
 
@@ -892,28 +977,6 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
         // then: throw exception as id can't be provided
         .isInstanceOf(IllegalArgumentException.class).hasMessage(
             "El usuario no tiene permisos para crear una convocatoria asociada a la unidad de gestión recibida.");
-  }
-
-  @Test
-  public void update_BorradorWithModeloEjecucionAndWithoutUnidadGestion_ThrowsIllegalArgumentException() {
-    // given: a Convocatoria Borrador with ModeloEjecucion and without UnidadGestion
-    Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoriaExistente.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
-    Convocatoria convocatoria = generarMockConvocatoria(1L, null, 1L, 1L, 1L, 1L, Boolean.TRUE);
-    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
-    convocatoria.setObservaciones("observaciones-modificadas");
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
-
-    List<String> acronimos = new ArrayList<>();
-    acronimos.add("OPE");
-
-    Assertions.assertThatThrownBy(
-        // when: update Convocatoria
-        () -> service.update(convocatoria, acronimos))
-        // then: throw exception as UnidadGestion is not present
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("UnidadGestionRef requerido para obtener ModeloEjecucion");
   }
 
   @Test
@@ -1133,6 +1196,26 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void update_BorradorWithoutCodigo_ThrowsIllegalArgumentException() {
+    // given: a Convocatoria Borrador without Codigo
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoria.setCodigo(null);
+    convocatoria.setObservaciones("observaciones-modificadas");
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoria));
+
+    List<String> acronimos = new ArrayList<>();
+    acronimos.add("OPE");
+
+    Assertions.assertThatThrownBy(
+        // when: update Convocatoria
+        () -> service.update(convocatoria, acronimos))
+        // then: throw exception as Codigo is not present
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Codigo no puede ser null en la Convocatoria");
+  }
+
+  @Test
   public void update_WithDuplicatedCodigo_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with duplicated codigo
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1188,6 +1271,28 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void update_BorradorWithoutAnio_ThrowsIllegalArgumentException() {
+    // given: a Convocatoria Borrador without Anio
+    Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoriaExistente.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    convocatoria.setAnio(null);
+    convocatoria.setObservaciones("observaciones-modificadas");
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
+
+    List<String> acronimos = new ArrayList<>();
+    acronimos.add("OPE");
+
+    Assertions.assertThatThrownBy(
+        // when: update Convocatoria
+        () -> service.update(convocatoria, acronimos))
+        // then: throw exception as Anio is not present
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Año no puede ser null en la Convocatoria");
+  }
+
+  @Test
   public void update_WithAnioInvalid_ThrowsIllegalArgumentException() {
     // given: a Convocatoria with invalid Anio
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
@@ -1222,6 +1327,28 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
     // given: a Convocatoria Registrada without Titulo
     Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
     Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setTitulo(null);
+    convocatoria.setObservaciones("observaciones-modificadas");
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(convocatoriaExistente));
+
+    List<String> acronimos = new ArrayList<>();
+    acronimos.add("OPE");
+
+    Assertions.assertThatThrownBy(
+        // when: update Convocatoria
+        () -> service.update(convocatoria, acronimos))
+        // then: throw exception as Titulo is not present
+        .isInstanceOf(IllegalArgumentException.class).hasMessage("Titulo no puede ser null en la Convocatoria");
+  }
+
+  @Test
+  public void update_BorradorWithoutTitulo_ThrowsIllegalArgumentException() {
+    // given: a Convocatoria Borrador without Titulo
+    Convocatoria convocatoriaExistente = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoriaExistente.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
+    Convocatoria convocatoria = generarMockConvocatoria(1L, 1L, 1L, 1L, 1L, 1L, Boolean.TRUE);
+    convocatoria.setEstadoActual(TipoEstadoConvocatoriaEnum.BORRADOR);
     convocatoria.setTitulo(null);
     convocatoria.setObservaciones("observaciones-modificadas");
 

@@ -45,10 +45,11 @@ public class RequisitoEquipoServiceImpl implements RequisitoEquipoService {
 
     Assert.isNull(requisitoEquipo.getId(), "Id tiene que ser null para crear RequisitoEquipo");
 
-    Assert.notNull(requisitoEquipo.getConvocatoria(), "La Convocatoria no puede ser null para crear RequisitoEquipo");
+    Assert.isTrue(requisitoEquipo.getConvocatoria() != null && requisitoEquipo.getConvocatoria().getId() != null,
+        "Convocatoria no puede ser null para crear RequisitoEquipo");
 
-    Assert.notNull(requisitoEquipo.getConvocatoria().getId(),
-        "Id Convocatoria no puede ser null para crear RequisitoEquipo");
+    Assert.isTrue(!repository.findByConvocatoriaId(requisitoEquipo.getConvocatoria().getId()).isPresent(),
+        "Ya existe RequisitoEquipo para la convocatoria " + requisitoEquipo.getConvocatoria().getCodigo());
 
     requisitoEquipo.setConvocatoria(convocatoriaRepository.findById(requisitoEquipo.getConvocatoria().getId())
         .orElseThrow(() -> new ConvocatoriaNotFoundException(requisitoEquipo.getConvocatoria().getId())));

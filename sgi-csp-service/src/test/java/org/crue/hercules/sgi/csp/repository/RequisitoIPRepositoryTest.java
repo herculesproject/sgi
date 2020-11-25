@@ -71,9 +71,18 @@ public class RequisitoIPRepositoryTest extends BaseRepositoryTest {
    * @return el objeto RequisitoIP
    */
   private RequisitoIP generarMockRequisitoIP(Long id) {
+
+    Convocatoria convocatoria = Convocatoria.builder()//
+        .estadoActual(TipoEstadoConvocatoriaEnum.BORRADOR)//
+        .codigo("codigo-00" + id)//
+        .unidadGestionRef("OPE")//
+        .anio(2020)//
+        .titulo("titulo")//
+        .activo(Boolean.TRUE)//
+        .build();
+
     RequisitoIP requisitoIP = new RequisitoIP();
-    requisitoIP.setConvocatoria(Convocatoria.builder().activo(Boolean.TRUE).codigo("codigo-00" + id)
-        .estadoActual(TipoEstadoConvocatoriaEnum.REGISTRADA).colaborativos(Boolean.FALSE).build());
+    requisitoIP.setConvocatoria(convocatoria);
     requisitoIP.setSexo("Hombre");
     requisitoIP.setModalidadContratoRef("modalidad-00" + (id != null ? id : 1L));
     requisitoIP.setNivelAcademicoRef("nivel-00" + (id != null ? id : 1L));

@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -19,7 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "modelo_unidad")
+@Table(name = "modelo_unidad", uniqueConstraints = { @UniqueConstraint(columnNames = { "modelo_ejecucion_id",
+    "unidad_gestion_ref" }, name = "UK_MODELOUNIDAD_MODELO_UNIDAD") })
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor

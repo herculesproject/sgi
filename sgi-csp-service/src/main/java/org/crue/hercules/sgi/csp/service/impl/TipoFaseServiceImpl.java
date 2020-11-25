@@ -41,8 +41,8 @@ public class TipoFaseServiceImpl implements TipoFaseService {
     log.debug("create (TipoFase tipoFase) - start");
 
     Assert.isNull(tipoFase.getId(), "tipoFase id no puede ser null para crear un nuevo tipoFase");
-    Assert.isTrue(!(tipoFaseRepository.findByNombre(tipoFase.getNombre()).isPresent()),
-        "Ya existe TipoFase con el nombre " + tipoFase.getNombre());
+    Assert.isTrue(!(tipoFaseRepository.findByNombreAndActivoIsTrue(tipoFase.getNombre()).isPresent()),
+        "Ya existe un TipoFase activo con el nombre " + tipoFase.getNombre());
 
     tipoFase.setActivo(Boolean.TRUE);
     TipoFase returnValue = tipoFaseRepository.save(tipoFase);
@@ -63,9 +63,9 @@ public class TipoFaseServiceImpl implements TipoFaseService {
     log.debug("update(TipoFase tipoFaseActualizar) - start");
 
     Assert.notNull(tipoFaseActualizar.getId(), "TipoFase id no puede ser null para actualizar");
-    tipoFaseRepository.findByNombre(tipoFaseActualizar.getNombre()).ifPresent((tipoFaseExistente) -> {
+    tipoFaseRepository.findByNombreAndActivoIsTrue(tipoFaseActualizar.getNombre()).ifPresent((tipoFaseExistente) -> {
       Assert.isTrue(tipoFaseActualizar.getId() == tipoFaseExistente.getId(),
-          "Ya existe un TipoFase con el nombre " + tipoFaseExistente.getNombre());
+          "Ya existe un TipoFase activo con el nombre " + tipoFaseExistente.getNombre());
     });
 
     return tipoFaseRepository.findById(tipoFaseActualizar.getId()).map(tipoFase -> {

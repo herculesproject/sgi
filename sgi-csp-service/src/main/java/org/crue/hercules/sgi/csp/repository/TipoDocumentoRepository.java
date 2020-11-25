@@ -15,11 +15,11 @@ public interface TipoDocumentoRepository
     extends JpaRepository<TipoDocumento, Long>, JpaSpecificationExecutor<TipoDocumento> {
 
   /**
-   * Busca un {@link TipoDocumento} por su nombre.
+   * Busca un {@link TipoDocumento} activo por su nombre.
    * 
    * @param nombre Nombre del {@link TipoDocumento}.
    * @return un {@link TipoDocumento} si tiene el nombre buscado.
    */
-  Optional<TipoDocumento> findByNombre(String nombre);
+  Optional<TipoDocumento> findByNombreAndActivoIsTrue(String nombre);
 
 }
