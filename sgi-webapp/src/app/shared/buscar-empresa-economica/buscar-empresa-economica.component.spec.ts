@@ -12,7 +12,7 @@ import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { BuscarEmpresaEconomicaComponent } from './buscar-empresa-economica.component';
 
-describe('BuscarPersonaComponent', () => {
+describe('BuscarEmpresaEconomicaComponent', () => {
   let component: BuscarEmpresaEconomicaComponent;
   let fixture: ComponentFixture<BuscarEmpresaEconomicaComponent>;
 

@@ -17,6 +17,7 @@ import { IConvocatoriaConceptoGasto } from '@core/models/csp/convocatoria-concep
 import { IConvocatoriaSeguimientoCientifico } from '@core/models/csp/convocatoria-seguimiento-cientifico';
 import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatoria-concepto-gasto-codigo-ec';
 import { IConvocatoriaDocumento } from '@core/models/csp/convocatoria-documento';
+import { ConvocatoriaEntidadConvocanteService, IConvocatoriaEntidadConvocanteBackend } from './convocatoria-entidad-convocante.service';
 
 @Injectable({
   providedIn: 'root'
@@ -41,9 +42,20 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
     );
   }
 
+  /**
+   * Recupera el listado de todas las convocatorias activas asociadas a las unidades de gestión del usuario logueado.
+   * @param options Opciones de búsqueda
+   * @returns listado de convocatorias
+   */
+  findAllRestringidos(options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoria>> {
+    this.logger.debug(ConvocatoriaService.name, `${this.findAllRestringidos.name}(`, '-', 'START');
+    return this.find<IConvocatoria, IConvocatoria>(`${this.endpointUrl}/restringidos`, options).pipe(
+      tap(() => this.logger.debug(ConvocatoriaService.name, `${this.findAllRestringidos.name}()`, '-', 'END'))
+    );
+  }
 
   /**
-   * Recupera el listado de todas las convocatorias asociadas a las unidades de gestión del uusario logueado.
+   * Recupera el listado de todas las convocatorias asociadas a las unidades de gestión del usuario logueado.
    * @param options Opciones de búsqueda
    * @returns listado de convocatorias
    */
@@ -140,7 +152,8 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
     this.logger.debug(ConvocatoriaService.name,
       `${this.findAllConvocatoriaEntidadConvocantes.name}(${id}, ${options ? JSON.stringify(options) : options})`, '-', 'start');
     const endpointUrl = `${this.endpointUrl}/${id}/convocatoriaentidadconvocantes`;
-    return this.find<IConvocatoriaEntidadConvocante, IConvocatoriaEntidadConvocante>(endpointUrl, options)
+    return this.find<IConvocatoriaEntidadConvocanteBackend, IConvocatoriaEntidadConvocante>(endpointUrl, options,
+      ConvocatoriaEntidadConvocanteService.CONVERTER)
       .pipe(
         tap(() => this.logger.debug(ConvocatoriaService.name,
           `${this.findAllConvocatoriaEntidadConvocantes.name}(${id}, ${options ? JSON.stringify(options) : options})`, '-', 'end'))

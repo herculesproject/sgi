@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { TipoBaremacionEnum } from '@core/enums/tipo-baremacion';
-import { TipoFormularioSolicitudEnum } from '@core/enums/tipo-formulario-solicitud';
+import { TipoFormularioSolicitud } from '@core/enums/tipo-formulario-solicitud';
 import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitud';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IDocumentoRequerido } from '@core/models/csp/documentos-requeridos-solicitud';
@@ -43,8 +43,8 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
   fxFlexPropertiesInline: FxFlexProperties;
   fxFlexPropertiesEntidad: FxFlexProperties;
 
-  tiposFormularioSolicitud = Object.keys(TipoFormularioSolicitudEnum).map<string>(
-    (key) => TipoFormularioSolicitudEnum[key]);
+  tiposFormularioSolicitud = Object.keys(TipoFormularioSolicitud).map<string>(
+    (key) => TipoFormularioSolicitud[key]);
 
   tipoBaremacion = Object.keys(TipoBaremacionEnum).map<string>(
     (key) => TipoBaremacionEnum[key]);

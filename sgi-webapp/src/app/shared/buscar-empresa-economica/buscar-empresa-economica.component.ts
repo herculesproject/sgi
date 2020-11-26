@@ -18,6 +18,8 @@ export class BuscarEmpresaEconomicaComponent implements OnChanges {
   datosEmpresaEconomica = '';
   empresaEconomica = {} as IEmpresaEconomica;
 
+  @Input() required = false;
+  @Input() disabled = false;
   @Input() textoLabel = TEXT_USER_TITLE;
   @Input() textoInput = TEXT_USER_TITLE;
   @Input() textoButton = TEXT_USER_BUTTON;
@@ -55,10 +57,10 @@ export class BuscarEmpresaEconomicaComponent implements OnChanges {
 
   selectEmpresaEconomica(empresaEconomica: IEmpresaEconomica) {
     this.logger.debug(BuscarEmpresaEconomicaComponent.name,
-      `${this.formularioBuscarEmpresaEconomica.name}(empresaEconomica: ${empresaEconomica})`, 'start');
+      `${this.selectEmpresaEconomica.name}(empresaEconomica: ${empresaEconomica})`, 'start');
     this.empresaEconomicaSeleccionada.emit(empresaEconomica);
     this.logger.debug(BuscarEmpresaEconomicaComponent.name,
-      `${this.formularioBuscarEmpresaEconomica.name}(empresaEconomica: ${empresaEconomica})`, 'end');
+      `${this.selectEmpresaEconomica.name}(empresaEconomica: ${empresaEconomica})`, 'end');
   }
 
 }

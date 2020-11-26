@@ -7,7 +7,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
 import { TipoBaremacionEnum } from '@core/enums/tipo-baremacion';
 import { TipoDestinatario } from '@core/enums/tipo-destinatario';
-import { TipoFormularioSolicitudEnum } from '@core/enums/tipo-formulario-solicitud';
+import { TipoFormularioSolicitud } from '@core/enums/tipo-formulario-solicitud';
 import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitud';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
@@ -73,7 +73,7 @@ describe('ConvocatoriaConfiguracionSolicitudesModalComponent', () => {
   const configuracionSolicitud: IConfiguracionSolicitud = {
     convocatoria,
     fasePresentacionSolicitudes,
-    formularioSolicitud: TipoFormularioSolicitudEnum.ESTANDAR,
+    formularioSolicitud: TipoFormularioSolicitud.ESTANDAR,
     id: 1,
     importeMaximoSolicitud: 1_000_000,
     baremacionRef: TipoBaremacionEnum.SIN_BAREMACION,

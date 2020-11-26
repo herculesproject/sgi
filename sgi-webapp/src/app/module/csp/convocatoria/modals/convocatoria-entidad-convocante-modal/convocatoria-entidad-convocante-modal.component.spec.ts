@@ -20,6 +20,7 @@ describe('ConvocatoriaEntidadConvocanteModalComponent', () => {
 
   const data: IConvocatoriaEntidadConvocante = {
     convocatoria: undefined,
+    entidad: undefined,
     entidadRef: '',
     id: 1,
     programa: undefined

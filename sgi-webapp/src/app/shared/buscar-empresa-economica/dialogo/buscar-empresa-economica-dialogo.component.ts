@@ -118,20 +118,22 @@ export class BuscarEmpresaEconomicaDialogoComponent implements AfterViewInit {
     this.logger.debug(BuscarEmpresaEconomicaDialogoComponent.name, `buildFilters()`, 'start');
     this.filter = [];
     if (empresaEconomica.numeroDocumento) {
-      const filterNombre: SgiRestFilter = {
+      const filterNumeroDocumento: SgiRestFilter = {
         field: 'numeroDocumento',
         type: SgiRestFilterType.LIKE,
         value: empresaEconomica.numeroDocumento,
       };
-      this.filter.push(filterNombre);
+
+      this.filter.push(filterNumeroDocumento);
     }
     if (empresaEconomica.razonSocial) {
-      const filterPrimerApellido: SgiRestFilter = {
+      const filterRazonSocial: SgiRestFilter = {
         field: 'razonSocial',
         type: SgiRestFilterType.LIKE,
         value: empresaEconomica.razonSocial,
       };
-      this.filter.push(filterPrimerApellido);
+
+      this.filter.push(filterRazonSocial);
     }
     this.logger.debug(BuscarEmpresaEconomicaDialogoComponent.name, `buildFilters()`, 'end');
     return this.filter;

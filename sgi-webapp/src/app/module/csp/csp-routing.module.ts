@@ -10,6 +10,7 @@ import { CspInicioComponent } from './csp-inicio/csp-inicio.component';
 
 const MSG_ROOT_TITLE = marker('csp.root.title');
 const MSG_CONVOCATORIA_TITLE = marker('menu.principal.csp.convocatoria');
+const MSG_SOLICITUD_TITLE = marker('menu.principal.csp.solicitudes');
 const MSG_TIPO_ENLACE_TITLE = marker('menu.principal.csp.tipo.enlace');
 const MSG_TIPO_HITO_TITLE = marker('menu.principal.csp.tipo.hito');
 const MSG_TIPO_FINALIDAD_TITLE = marker('menu.principal.csp.tipo.finalidad');
@@ -47,6 +48,17 @@ const routes: SgiRoutes = [
         canActivate: [SgiAuthGuard],
         data: {
           title: MSG_CONVOCATORIA_TITLE,
+        }
+      },
+      {
+        path: CSP_ROUTE_NAMES.SOLICITUD,
+        loadChildren: () =>
+          import('./solicitud/solicitud.module').then(
+            (m) => m.SolicitudModule
+          ),
+        canActivate: [SgiAuthGuard],
+        data: {
+          title: MSG_SOLICITUD_TITLE,
         }
       },
       {

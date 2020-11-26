@@ -1,5 +1,5 @@
 import { TipoBaremacionEnum } from '@core/enums/tipo-baremacion';
-import { TipoFormularioSolicitudEnum } from '@core/enums/tipo-formulario-solicitud';
+import { TipoFormularioSolicitud } from '@core/enums/tipo-formulario-solicitud';
 import { IConvocatoria } from './convocatoria';
 import { IConvocatoriaFase } from './convocatoria-fase';
 
@@ -20,7 +20,7 @@ export interface IConfiguracionSolicitud {
   importeMaximoSolicitud: number;
 
   /** Tipo Formulario Solicitud */
-  formularioSolicitud: TipoFormularioSolicitudEnum;
+  formularioSolicitud: TipoFormularioSolicitud;
 
   /** Baremación */
   baremacionRef: TipoBaremacionEnum;

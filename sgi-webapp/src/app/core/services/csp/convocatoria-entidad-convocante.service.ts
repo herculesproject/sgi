@@ -2,21 +2,56 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { environment } from '@env';
-import { SgiRestService } from '@sgi/framework/http';
+import { SgiMutableRestService } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
+import { IConvocatoria } from '@core/models/csp/convocatoria';
+import { IPrograma } from '@core/models/csp/programa';
+import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { SgiBaseConverter } from '@sgi/framework/core';
+
+
+export interface IConvocatoriaEntidadConvocanteBackend {
+  id: number;
+  convocatoria: IConvocatoria;
+  entidadRef: string;
+  programa: IPrograma;
+}
 
 @Injectable({
   providedIn: 'root'
 })
-export class ConvocatoriaEntidadConvocanteService extends SgiRestService<number, IConvocatoriaEntidadConvocante> {
+export class ConvocatoriaEntidadConvocanteService
+  extends SgiMutableRestService<number, IConvocatoriaEntidadConvocanteBackend, IConvocatoriaEntidadConvocante> {
   private static readonly MAPPING = '/convocatoriaentidadconvocantes';
+
+  static readonly CONVERTER = new class extends SgiBaseConverter<IConvocatoriaEntidadConvocanteBackend, IConvocatoriaEntidadConvocante> {
+    toTarget(value: IConvocatoriaEntidadConvocanteBackend): IConvocatoriaEntidadConvocante {
+      return {
+        id: value.id,
+        convocatoria: value.convocatoria,
+        entidadRef: value.entidadRef,
+        entidad: { personaRef: value.entidadRef } as IEmpresaEconomica,
+        programa: value.programa
+      };
+    }
+
+    fromTarget(value: IConvocatoriaEntidadConvocante): IConvocatoriaEntidadConvocanteBackend {
+      return {
+        id: value.id,
+        convocatoria: value.convocatoria,
+        entidadRef: value.entidad?.personaRef,
+        programa: value.programa
+      };
+    }
+  }();
 
   constructor(logger: NGXLogger, protected http: HttpClient) {
     super(
       ConvocatoriaEntidadConvocanteService.name,
       logger,
       `${environment.serviceServers.csp}${ConvocatoriaEntidadConvocanteService.MAPPING}`,
-      http
+      http,
+      ConvocatoriaEntidadConvocanteService.CONVERTER
     );
   }
 }

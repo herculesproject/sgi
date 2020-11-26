@@ -2,8 +2,8 @@
   <mat-form-field class="input-right">
     <mat-label>{{textoLabel | translate}}</mat-label>
     <input type="text" [placeholder]="textoInput | translate" arial-label="Number" matInput
-      [(ngModel)]="datosEmpresaEconomica" readonly>
+      [(ngModel)]="datosEmpresaEconomica" readonly [required]="required" [disabled]="disabled">
   </mat-form-field>
-  <button class="boton-left" color="primary" md-button mat-raised-button
+  <button type="button" class="boton-left" color="primary" md-button mat-raised-button
     (click)="formularioBuscarEmpresaEconomica()">{{textoButton | translate}}</button>
 </ng-container>

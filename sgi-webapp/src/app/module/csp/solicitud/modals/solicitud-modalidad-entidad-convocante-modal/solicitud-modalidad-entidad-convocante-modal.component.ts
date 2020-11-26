@@ -1,0 +1,257 @@
+import { Component, OnInit, Inject } from '@angular/core';
+import { IPrograma } from '@core/models/csp/programa';
+import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
+import { BaseModalComponent } from '@core/component/base-modal.component';
+import { FormGroupUtil } from '@core/utils/form-group-util';
+import { NGXLogger } from 'ngx-logger';
+import { SnackBarService } from '@core/services/snack-bar.service';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
+import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Observable, from, of } from 'rxjs';
+import { MatTreeNestedDataSource } from '@angular/material/tree';
+import { NestedTreeControl } from '@angular/cdk/tree';
+import { ProgramaService } from '@core/services/csp/programa.service';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { switchMap, mergeMap, map, takeLast, tap } from 'rxjs/operators';
+import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+
+export interface SolicitudModalidadEntidadConvocanteModalData {
+  entidad: IEmpresaEconomica;
+  plan: IPrograma;
+  programa: IPrograma;
+  modalidad: ISolicitudModalidad;
+}
+
+class NodePrograma {
+  parent: NodePrograma;
+  programa: IPrograma;
+  // tslint:disable-next-line: variable-name
+  _childs: NodePrograma[];
+  get childs(): NodePrograma[] {
+    return this._childs;
+  }
+
+  constructor(programa: IPrograma) {
+    this.programa = programa;
+    this._childs = [];
+  }
+
+  addChild(child: NodePrograma) {
+    child.parent = this;
+    child.programa.padre = this.programa;
+    this._childs.push(child);
+    this.sortChildsByName();
+  }
+
+  removeChild(child: NodePrograma) {
+    this._childs = this._childs.filter((programa) => programa !== child);
+  }
+
+  sortChildsByName(): void {
+    this._childs = sortByName(this._childs);
+  }
+}
+
+function sortByName(nodes: NodePrograma[]): NodePrograma[] {
+  return nodes.sort((a, b) => {
+    if (a.programa.nombre < b.programa.nombre) {
+      return -1;
+    }
+    if (a.programa.nombre > b.programa.nombre) {
+      return 1;
+    }
+    return 0;
+  });
+}
+
+@Component({
+  templateUrl: './solicitud-modalidad-entidad-convocante-modal.component.html',
+  styleUrls: ['./solicitud-modalidad-entidad-convocante-modal.component.scss']
+})
+export class SolicitudModalidadEntidadConvocanteModalComponent
+  extends BaseModalComponent<SolicitudModalidadEntidadConvocanteModalData, SolicitudModalidadEntidadConvocanteModalComponent>
+  implements OnInit {
+
+  isEdit = false;
+
+  checkedNode: NodePrograma;
+
+  dataSource = new MatTreeNestedDataSource<NodePrograma>();
+  nodeMap = new Map<number, NodePrograma>();
+  treeControl = new NestedTreeControl<NodePrograma>(node => node.childs);
+
+  hasChild = (_: number, node: NodePrograma) => node.childs.length > 0;
+
+  constructor(
+    protected readonly logger: NGXLogger,
+    protected readonly snackBarService: SnackBarService,
+    @Inject(MAT_DIALOG_DATA) public data: SolicitudModalidadEntidadConvocanteModalData,
+    public readonly matDialogRef: MatDialogRef<SolicitudModalidadEntidadConvocanteModalComponent>,
+    private programaService: ProgramaService
+  ) {
+    super(logger, snackBarService, matDialogRef, data);
+    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, 'constructor()', 'start');
+
+    this.isEdit = data.modalidad ? true : false;
+
+    this.fxFlexProperties = new FxFlexProperties();
+    this.fxFlexProperties.sm = '0 1 calc(100%-10px)';
+    this.fxFlexProperties.md = '0 1 calc(33%-10px)';
+    this.fxFlexProperties.gtMd = '0 1 calc(20%-10px)';
+    this.fxFlexProperties.order = '2';
+
+    this.fxLayoutProperties = new FxLayoutProperties();
+    this.fxLayoutProperties.gap = '20px';
+    this.fxLayoutProperties.layout = 'row wrap';
+    this.fxLayoutProperties.xs = 'column';
+
+    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, 'constructor()', 'end');
+  }
+
+  ngOnInit(): void {
+    super.ngOnInit();
+    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, 'ngOnInit()', 'start');
+
+    const subscription = this.getTreePrograma(this.data.programa, this.data.modalidad?.programa)
+      .subscribe((nodePrograma) => {
+        this.dataSource.data = [nodePrograma];
+      });
+
+    this.subscriptions.push(subscription);
+
+    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, 'ngOnInit()', 'end');
+  }
+
+  protected getFormGroup(): FormGroup {
+    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, `getFormGroup()`, 'start');
+
+    const formGroup = new FormGroup({
+      entidadConvocante: new FormControl({ value: this.data.entidad?.razonSocial, disabled: true }),
+      plan: new FormControl({ value: this.data.plan?.nombre, disabled: true })
+    });
+
+    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, `getFormGroup()`, 'end');
+    return formGroup;
+  }
+
+  protected getDatosForm(): SolicitudModalidadEntidadConvocanteModalData {
+    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, `getDatosForm()`, 'start');
+
+    const entidadConvocanteModalidad = this.data;
+
+    if (!this.checkedNode) {
+      entidadConvocanteModalidad.modalidad = null;
+      this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, `getDatosForm()`, 'end');
+
+      return entidadConvocanteModalidad;
+    }
+
+    if (!entidadConvocanteModalidad.modalidad) {
+      entidadConvocanteModalidad.modalidad = {
+        entidad: entidadConvocanteModalidad.entidad
+      } as ISolicitudModalidad;
+    }
+
+    entidadConvocanteModalidad.modalidad.programa = this.checkedNode?.programa;
+
+    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, `getDatosForm()`, 'end');
+    return entidadConvocanteModalidad;
+  }
+
+  /**
+   * Carga el arbol que tiene como raiz el programa rootPrograma y si se indica el checkedPrograma
+   * se marca como seleccionado dicho nodo del arbol.
+   *
+   * @param rootPrograma el programa raiz del arbol.
+   * @param checkedPrograma el programa seleccionado en el arbol.
+   */
+  getTreePrograma(rootPrograma: IPrograma, checkedPrograma?: IPrograma): Observable<NodePrograma> {
+    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name,
+      `getTreePrograma(rootPrograma: ${rootPrograma}, checkedPrograma?: ${checkedPrograma})`, 'start');
+
+    const node = new NodePrograma(rootPrograma);
+    this.nodeMap.set(node.programa.id, node);
+    return this.getChilds(node).pipe(map(() => node)).pipe(
+      tap(() => {
+        this.checkedNode = this.nodeMap.get(checkedPrograma?.id);
+        if (this.checkedNode) {
+          this.expandParentNodes(this.checkedNode);
+        }
+
+        this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name,
+          `getTreePrograma(rootPrograma: ${rootPrograma}, checkedPrograma?: ${checkedPrograma})`, 'end');
+      })
+    );
+  }
+
+  /**
+   * Actualiza el nodo del arbol que esta seleccionado.
+   */
+  onCheckNode(node: NodePrograma, $event: MatCheckboxChange): void {
+    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name,
+      `onCheckNode(node: ${node}, $event: ${$event})`, 'start');
+    this.checkedNode = $event.checked ? node : undefined;
+    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name,
+      `onCheckNode(node: ${node}, $event: ${$event})`, 'end');
+  }
+
+  /**
+   * Obtiene los hijos del nodo recursivamente hasta llegar a las "hojas"
+   *
+   * @param parent nodo del que se quieren obtener los hijos
+   * @returns observable con el arbol de nodos con parent como nodo raiz.
+   */
+  private getChilds(parent: NodePrograma): Observable<NodePrograma[]> {
+    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name,
+      `getChilds(parent: ${parent})`, 'start');
+    return this.programaService.findAllHijosPrograma(parent.programa.id).pipe(
+      map((result) => {
+        const childs: NodePrograma[] = result.items.map(
+          (programa) => {
+            const child = new NodePrograma(programa);
+            child.parent = parent;
+            this.nodeMap.set(child.programa.id, child);
+            return child;
+          });
+        return childs;
+      }),
+      switchMap((nodes) => {
+        parent.childs.push(...nodes);
+        parent.sortChildsByName();
+        if (nodes.length > 0) {
+          return from(nodes).pipe(
+            mergeMap((node) => {
+              return this.getChilds(node);
+            })
+          );
+        }
+        return of([]);
+      }),
+      takeLast(1),
+      tap(() => this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name,
+        `getChilds(parent: ${parent})`, 'end'))
+    );
+  }
+
+  /**
+   * Expande todos los nodos desde el nodo indicado hasta la raiz del arbol.
+   *
+   * @param node nodo del arbol
+   */
+  private expandParentNodes(node: NodePrograma): void {
+    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, `expandParentNodes(node: ${node})`, 'start');
+
+    if (!node || !node.parent) {
+      this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, `expandParentNodes(node: ${node})`, 'end');
+      return;
+    }
+
+    this.treeControl.expand(node.parent);
+    this.expandParentNodes(node.parent);
+
+    this.logger.debug(SolicitudModalidadEntidadConvocanteModalComponent.name, `expandParentNodes(node: ${node})`, 'end');
+  }
+
+}

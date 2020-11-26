@@ -13,7 +13,7 @@ import { LoggerTestingModule } from 'ngx-logger/testing';
 
 import { BuscarEmpresaEconomicaDialogoComponent, EmpresaEconomicaModalData } from './buscar-empresa-economica-dialogo.component';
 
-describe('BuscarPersonaDialogoComponent', () => {
+describe('BuscarEmpresaEconomicaDialogoComponent', () => {
   let component: BuscarEmpresaEconomicaDialogoComponent;
   let fixture: ComponentFixture<BuscarEmpresaEconomicaDialogoComponent>;
 

@@ -3,7 +3,7 @@ import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable, EMPTY, BehaviorSubject, of, from, merge } from 'rxjs';
-import { catchError, map, mergeMap, switchMap, take, takeLast, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operators';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';

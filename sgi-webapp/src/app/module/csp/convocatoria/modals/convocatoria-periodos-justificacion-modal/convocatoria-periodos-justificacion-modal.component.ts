@@ -34,7 +34,6 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
   FormGroupUtil = FormGroupUtil;
 
   tiposJustificacion: TipoJustificacion[];
-  tiposJustificacionFiltered: Observable<TipoJustificacion[]>;
 
   constructor(
     protected readonly logger: NGXLogger,

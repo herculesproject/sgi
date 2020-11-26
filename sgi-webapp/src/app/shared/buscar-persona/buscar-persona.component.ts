@@ -20,6 +20,8 @@ export class BuscarPersonaComponent implements OnChanges {
   usuarioDialogo: IPersonaDialogo;
   persona: IPersona;
 
+  @Input() required = false;
+  @Input() disabled = false;
   @Input() textoLabel = TEXT_USER_TITLE;
   @Input() textoInput = TEXT_USER_TITLE;
   @Input() textoButton = TEXT_USER_BUTTON;
