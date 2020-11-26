@@ -157,16 +157,18 @@ public class ConvocatoriaEntidadFinanciadoraServiceImpl implements ConvocatoriaE
         .map(convocatoriaEntidadFinanciadora -> {
           if (convocatoriaEntidadFinanciadoraActualizar.getFuenteFinanciacion() != null) {
             Assert.isTrue(
-                convocatoriaEntidadFinanciadora.getFuenteFinanciacion()
-                    .getId() == convocatoriaEntidadFinanciadoraActualizar.getFuenteFinanciacion().getId()
+                (convocatoriaEntidadFinanciadora.getFuenteFinanciacion() != null
+                    && convocatoriaEntidadFinanciadora.getFuenteFinanciacion()
+                        .getId() == convocatoriaEntidadFinanciadoraActualizar.getFuenteFinanciacion().getId())
                     || convocatoriaEntidadFinanciadoraActualizar.getFuenteFinanciacion().getActivo(),
                 "La FuenteFinanciacion debe estar Activo");
           }
 
           if (convocatoriaEntidadFinanciadoraActualizar.getTipoFinanciacion() != null) {
             Assert.isTrue(
-                convocatoriaEntidadFinanciadora.getTipoFinanciacion()
-                    .getId() == convocatoriaEntidadFinanciadoraActualizar.getTipoFinanciacion().getId()
+                (convocatoriaEntidadFinanciadora.getTipoFinanciacion() != null
+                    && convocatoriaEntidadFinanciadora.getTipoFinanciacion()
+                        .getId() == convocatoriaEntidadFinanciadoraActualizar.getTipoFinanciacion().getId())
                     || convocatoriaEntidadFinanciadoraActualizar.getTipoFinanciacion().getActivo(),
                 "El TipoFinanciacion debe estar Activo");
           }
