@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -17,7 +17,7 @@ import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacio
 import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { SgiRestFilter, SgiRestFilterType, SgiRestSortDirection, SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -112,7 +112,8 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
       comite: new FormControl('', []),
       titulo: new FormControl('', []),
       codigo: new FormControl('', []),
-      tipoEstadoMemoria: new FormControl('', [])
+      tipoEstadoMemoria: new FormControl('', []),
+      solicitante: new FormControl('', [])
     });
 
     this.getComites();
@@ -428,7 +429,17 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
    * @param personaRef referencia del persona seleccionado
    */
   public setUsuario(solicitante: IPersona) {
+    this.logger.debug(PeticionEvaluacionListadoGesComponent.name,
+      'setUsuario()',
+      'start');
+    this.formGroup.controls.solicitante.setValue(solicitante.personaRef);
+    this.datosSolicitante =
+      solicitante.nombre ? solicitante.nombre + ' ' + solicitante.primerApellido + ' ' + solicitante.segundoApellido : '';
     this.personaRef = solicitante?.personaRef;
+
+    this.logger.debug(PeticionEvaluacionListadoGesComponent.name,
+      'setUsuario()',
+      'end');
   }
 
   /**
@@ -446,13 +457,8 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
     this.logger.debug(PeticionEvaluacionListadoGesComponent.name,
       'onClearFilters()',
       'start');
-    this.filter = [];
-    this.formGroup.reset();
-    this.personaRef = null;
-    this.loadTable(true);
-    this.getComites();
-    this.getEstadosMemoria();
-    this.datosSolicitante = '';
+    super.onClearFilters();
+    this.setUsuario({} as IPersona);
     this.logger.debug(PeticionEvaluacionListadoGesComponent.name,
       'onClearFilters()',
       'end');

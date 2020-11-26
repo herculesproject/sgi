@@ -338,8 +338,28 @@ export class EvaluacionListadoComponent extends AbstractTablePaginationComponent
    * @param persona Persona seleccionada
    */
   public setPersona(persona: IPersona) {
+    this.logger.debug(EvaluacionListadoComponent.name, `${this.setPersona.name}()`, 'start');
+
+    this.formGroup.controls.solicitante.setValue(persona.personaRef);
+    this.datosUsuarioSolicitante = persona.nombre ? persona.nombre + ' ' + persona.primerApellido + ' ' + persona.segundoApellido : '';
     this.personaRefSolicitante = persona.personaRef;
+
+    this.logger.debug(EvaluacionListadoComponent.name, `${this.setPersona.name}()`, 'start');
   }
+
+  /**
+   * Clean filters an reload the table
+   */
+  onClearFilters(): void {
+    this.logger.debug(EvaluacionListadoComponent.name, `${this.onClearFilters.name}()`, 'start');
+
+    super.onClearFilters();
+    this.setPersona({} as IPersona);
+
+    this.logger.debug(EvaluacionListadoComponent.name, `${this.onClearFilters.name}()`, 'end');
+  }
+
+
 
 
 }

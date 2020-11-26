@@ -383,7 +383,24 @@ export class GestionSeguimientoListadoComponent extends AbstractTablePaginationC
    * @param persona Persona seleccionada
    */
   public setPersona(persona: IPersona) {
-    this.personaRefSolicitante = persona.personaRef;
+    this.logger.debug(GestionSeguimientoListadoComponent.name, `${this.setPersona.name}()`, 'start');
+
+    this.formGroup.controls.solicitante.setValue(persona.personaRef);
+    this.datosUsuarioSolicitante = persona.nombre ? persona.nombre + ' ' + persona.primerApellido + ' ' + persona.segundoApellido : '';
+    this.personaRefSolicitante = persona?.personaRef;
+
+    this.logger.debug(GestionSeguimientoListadoComponent.name, `${this.setPersona.name}()`, 'end');
+  }
+
+
+  /**
+   * Clean filters an reload the table
+   */
+  onClearFilters(): void {
+    this.logger.debug(GestionSeguimientoListadoComponent.name, `${this.onClearFilters.name}()`, 'start');
+    super.onClearFilters();
+    this.setPersona({} as IPersona);
+    this.logger.debug(GestionSeguimientoListadoComponent.name, `${this.onClearFilters.name}()`, 'end');
   }
 
 }

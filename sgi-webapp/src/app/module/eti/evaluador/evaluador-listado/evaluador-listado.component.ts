@@ -101,7 +101,8 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
     super.ngOnInit();
     this.formGroup = new FormGroup({
       comite: new FormControl('', []),
-      estado: new FormControl('', [])
+      estado: new FormControl('', []),
+      solicitante: new FormControl('', [])
     });
 
     this.getComites();
@@ -344,9 +345,23 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
    * @param persona persona seleccionado
    */
   public setUsuario(persona: IPersona) {
-    this.personaRef = persona ? persona.personaRef : undefined;
+    this.logger.debug(EvaluadorListadoComponent.name, `${this.setUsuario.name}()`, 'start');
+    this.formGroup.controls.solicitante.setValue(persona.personaRef);
+    this.datosUsuarioEvaluador = persona.nombre ? persona.nombre + ' ' + persona.primerApellido + ' ' + persona.segundoApellido : '';
+    this.personaRef = persona.personaRef;
+    this.logger.debug(EvaluadorListadoComponent.name, `${this.setUsuario.name}()`, 'end');
   }
 
 
+
+  /**
+   * Clean filters an reload the table
+   */
+  onClearFilters(): void {
+    this.logger.debug(EvaluadorListadoComponent.name, `${this.onClearFilters.name}()`, 'start');
+    super.onClearFilters();
+    this.setUsuario({} as IPersona);
+    this.logger.debug(EvaluadorListadoComponent.name, `${this.onClearFilters.name}()`, 'end');
+  }
 
 }
