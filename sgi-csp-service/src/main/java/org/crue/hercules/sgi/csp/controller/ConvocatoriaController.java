@@ -145,7 +145,8 @@ public class ConvocatoriaController {
   /**
    * Crea nuevo {@link Convocatoria}
    * 
-   * @param convocatoria {@link Convocatoria}. que se quiere crear.
+   * @param convocatoria   {@link Convocatoria}. que se quiere crear.
+   * @param authentication {@link Authentication}.
    * @return Nuevo {@link Convocatoria} creado.
    */
   @PostMapping
@@ -169,8 +170,9 @@ public class ConvocatoriaController {
   /**
    * Actualiza {@link Convocatoria}.
    * 
-   * @param convocatoria {@link Convocatoria} a actualizar.
-   * @param id           Identificador {@link Convocatoria} a actualizar.
+   * @param convocatoria   {@link Convocatoria} a actualizar.
+   * @param id             Identificador {@link Convocatoria} a actualizar.
+   * @param authentication {@link Authentication}.
    * @return Convocatoria {@link Convocatoria} actualizado
    */
   @PutMapping("/{id}")
@@ -272,6 +274,38 @@ public class ConvocatoriaController {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link Convocatoria} activas
+   * registradas restringidas a las del usuario.
+   * 
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging {@link Pageable}.
+   * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
+   */
+  @GetMapping("/restringidos")
+  // @PreAuthorize("hasAuthorityForAnyUO('SYSADMIN')")
+  ResponseEntity<Page<Convocatoria>> findAllRestringidos(
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging, Authentication atuhentication) {
+    log.debug("findAllRestringidos(List<QueryCriteria> query, Pageable paging, Authentication atuhentication) - start");
+
+    List<String> acronimosUnidadGestion = atuhentication.getAuthorities().stream().map(acronimo -> {
+      if (acronimo.getAuthority().indexOf("_") > 0) {
+        return acronimo.getAuthority().split("_")[1];
+      }
+      return null;
+    }).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+
+    Page<Convocatoria> page = service.findAllRestringidos(query, paging, acronimosUnidadGestion);
+
+    if (page.isEmpty()) {
+      log.debug("findAllRestringidos(List<QueryCriteria> query, Pageable paging, Authentication atuhentication) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAllRestringidos(List<QueryCriteria> query, Pageable paging Authentication atuhentication) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

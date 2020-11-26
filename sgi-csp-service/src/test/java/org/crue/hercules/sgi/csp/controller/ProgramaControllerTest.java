@@ -45,7 +45,7 @@ public class ProgramaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-ME-C" })
-  public void create_ReturnsModeloPrograma() throws Exception {
+  public void create_ReturnsPrograma() throws Exception {
     // given: new Programa
     Programa programa = generarMockPrograma(1L);
 

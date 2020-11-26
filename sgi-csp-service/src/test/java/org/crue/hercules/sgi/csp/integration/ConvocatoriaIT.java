@@ -373,6 +373,45 @@ public class ConvocatoriaIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
+  public void findAllRestringidos_WithPagingSortingAndFiltering_ReturnsConvocatoriaSubList() throws Exception {
+
+    // given: data for Convocatoria
+
+    // first page, 3 elements per page sorted by nombre desc
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-CONV-V_OPE")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    String sort = "codigo-";
+    String filter = "titulo~%00%";
+
+    // when: find Convocatoria
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_RESTRINGIDOS)
+        .queryParam("s", sort).queryParam("q", filter).build(false).toUri();
+    final ResponseEntity<List<Convocatoria>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<Convocatoria>>() {
+        });
+
+    // given: Convocatoria data filtered and sorted
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<Convocatoria> responseData = response.getBody();
+    Assertions.assertThat(responseData.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(responseData.get(0).getCodigo()).as("get(0).getCodigo())")
+        .isEqualTo("codigo-" + String.format("%03d", 3));
+    Assertions.assertThat(responseData.get(1).getCodigo()).as("get(1).getCodigo())")
+        .isEqualTo("codigo-" + String.format("%03d", 2));
+    Assertions.assertThat(responseData.get(2).getCodigo()).as("get(2).getCodigo())")
+        .isEqualTo("codigo-" + String.format("%03d", 1));
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
   public void findAllTodosRestringidos_WithPagingSortingAndFiltering_ReturnsConvocatoriaSubList() throws Exception {
 
     // given: data for Convocatoria

@@ -28,7 +28,7 @@ public interface ConvocatoriaService {
    * 
    * @param convocatoria           {@link Convocatoria} con los datos
    *                               actualizados.
-   * @param acronimosUnidadGestion
+   * @param acronimosUnidadGestion lista de acronimos
    * @return Convocatoria {@link Convocatoria} actualizado.
    */
   Convocatoria update(final Convocatoria convocatoria, List<String> acronimosUnidadGestion);
@@ -87,8 +87,27 @@ public interface ConvocatoriaService {
   Page<Convocatoria> findAllTodos(List<QueryCriteria> query, Pageable paging);
 
   /**
+   * Devuelve todas las convocatorias activas registradas que se encuentren dentro
+   * de la unidad de gestión del usuario logueado.
+   * 
+   * @param query                  información del filtro.
+   * @param paging                 información de paginación.
+   * @param acronimosUnidadGestion lista de acronimos de unidad de gestion a los
+   *                               que se restringe la busqueda.
+   * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
+   */
+  Page<Convocatoria> findAllRestringidos(List<QueryCriteria> query, Pageable paging,
+      List<String> acronimosUnidadGestion);
+
+  /**
    * Devuelve todas las convocatorias activas que se encuentren dentro de la
    * unidad de gestión del usuario logueado.
+   * 
+   * @param query                  información del filtro.
+   * @param paging                 información de paginación.
+   * @param acronimosUnidadGestion lista de acronimos de unidad de gestion a los
+   *                               que se restringe la busqueda.
+   * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
    */
   Page<Convocatoria> findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging,
       List<String> acronimosUnidadGestion);

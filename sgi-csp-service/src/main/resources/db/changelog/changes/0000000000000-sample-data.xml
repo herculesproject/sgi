@@ -183,6 +183,20 @@
       <column name="programa_padre_id" valueComputed="(select id from csp.programa where nombre = 'nombre-006')" />
       <column name="activo" value="true" />
     </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="nombre" value="nombre-008" />
+      <column name="descripcion" value="descripcion-008" />
+      <column name="programa_padre_id" valueComputed="(select id from csp.programa where nombre = 'nombre-003')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="programa">
+      <column name="id" valueSequenceNext="programa_seq" />
+      <column name="nombre" value="nombre-009" />
+      <column name="descripcion" value="descripcion-009" />
+      <column name="programa_padre_id" valueComputed="(select id from csp.programa where nombre = 'nombre-003')" />
+      <column name="activo" value="true" />
+    </insert>
   </changeSet>
 
   <changeSet context="dev" author="master" id="0000000000000-fuente_financiacion">
@@ -860,8 +874,20 @@
     <insert tableName="convocatoria_entidad_convocante">
       <column name="id" valueSequenceNext="convocatoria_entidad_convocante_seq" />
       <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
+      <column name="entidad_ref" value="ent-001" />
+      <column name="programa_id" valueComputed="(select id from csp.programa where nombre = 'nombre-007')"></column>
+    </insert>
+    <insert tableName="convocatoria_entidad_convocante">
+      <column name="id" valueSequenceNext="convocatoria_entidad_convocante_seq" />
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
       <column name="entidad_ref" value="ent-002" />
       <column name="programa_id" valueComputed="(select id from csp.programa where nombre = 'nombre-001')"></column>
+    </insert>
+    <insert tableName="convocatoria_entidad_convocante">
+      <column name="id" valueSequenceNext="convocatoria_entidad_convocante_seq" />
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
+      <column name="entidad_ref" value="ent-003" />
+      <column name="programa_id" valueComputed="(select id from csp.programa where nombre = 'nombre-005')"></column>
     </insert>
     <insert tableName="convocatoria_entidad_convocante">
       <column name="id" valueSequenceNext="convocatoria_entidad_convocante_seq" />
@@ -869,6 +895,7 @@
       <column name="entidad_ref" value="ent-003" />
       <column name="programa_id" valueComputed="(select id from csp.programa where nombre = 'nombre-001')"></column>
     </insert>
+
   </changeSet>
 
   <changeSet context="dev" author="master" id="0000000000000-convocatoria_entidad_financiadora">
@@ -1271,6 +1298,98 @@
       <column name="configuracion_solicitud_id" valueComputed="(select id from csp.configuracion_solicitud where convocatoria_id = (select id from csp.convocatoria where codigo = 'codigo-002'))"></column>
       <column name="tipo_documento_id" valueComputed="(select td.id from csp.convocatoria c join csp.modelo_ejecucion me on c.modelo_ejecucion_id = me.id join csp.modelo_tipo_documento mtd on me.id = mtd.modelo_ejecucion_id join csp.tipo_documento td on mtd.tipo_documento_id = td.id where c.codigo = 'codigo-002' and td.nombre= 'nombre-004' limit 1)"></column>
       <column name="observaciones" value="observaciones Convocatoria2 TipoDocumento2" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000000-solicitud">
+    <insert tableName="solicitud">
+      <column name="id" valueSequenceNext="solicitud_seq" />
+      <column name="codigo_externo" value="codigo-externo-001" />
+      <column name="codigo_registro_interno" value="SGI_SLC1202011061027" />
+      <column name="creador_ref" value="user-012" />
+      <column name="solicitante_ref" value="user-030" />
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-002')"></column>
+      <column name="convocatoria_externa" value="" />
+      <column name="unidad_gestion_ref" value="OPE" />
+      <column name="formulario_solicitud" value="Estándar" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="solicitud">
+      <column name="id" valueSequenceNext="solicitud_seq" />
+      <column name="codigo_externo" value="codigo-externo-002" />
+      <column name="codigo_registro_interno" value="SGI_SLC2202011061035" />
+      <column name="creador_ref" value="user-012" />
+      <column name="solicitante_ref" value="user-031" />
+      <column name="convocatoria_id" valueComputed="(select id from csp.convocatoria where codigo = 'codigo-001')"></column>
+      <column name="convocatoria_externa" value="" />
+      <column name="unidad_gestion_ref" value="OTRI" />
+      <column name="formulario_solicitud" value="Estándar" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="solicitud">
+      <column name="id" valueSequenceNext="solicitud_seq" />
+      <column name="codigo_externo" value="codigo-externo-003" />
+      <column name="codigo_registro_interno" value="SGI_SLC3202011071200" />
+      <column name="creador_ref" value="user-032" />
+      <column name="solicitante_ref" value="user-032" />
+      <column name="convocatoria_externa" value="convocatoria-externa-001" />
+      <column name="unidad_gestion_ref" value="OPE" />
+      <column name="formulario_solicitud" value="Estándar" />
+      <column name="activo" value="true" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000000-estado_solicitud">
+    <insert tableName="estado_solicitud">
+      <column name="id" valueSequenceNext="estado_solicitud_seq" />
+      <column name="id_solicitud" valueComputed="(select id from csp.solicitud where codigo_registro_interno = 'SGI_SLC1202011061027')" />
+      <column name="estado" value="Borrador" />
+      <column name="fecha_estado" value="2020-11-06 10:27:00" />
+      <column name="comentario" value="comentario1" />
+    </insert>
+    <insert tableName="estado_solicitud">
+      <column name="id" valueSequenceNext="estado_solicitud_seq" />
+      <column name="id_solicitud" valueComputed="(select id from csp.solicitud where codigo_registro_interno = 'SGI_SLC2202011061035')" />
+      <column name="estado" value="Borrador" />
+      <column name="fecha_estado" value="2020-11-06 10:35:00" />
+      <column name="comentario" value="comentario2" />
+    </insert>
+    <insert tableName="estado_solicitud">
+      <column name="id" valueSequenceNext="estado_solicitud_seq" />
+      <column name="id_solicitud" valueComputed="(select id from csp.solicitud where codigo_registro_interno = 'SGI_SLC3202011071200')" />
+      <column name="estado" value="Borrador" />
+      <column name="fecha_estado" value="2020-11-07 12:00:00" />
+      <column name="comentario" value="comentario3" />
+    </insert>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000000-solicitud-update_estado">
+    <update tableName="solicitud">
+      <column name="estado_solicitud_id" valueComputed="(select id from csp.estado_solicitud  where comentario = 'comentario1')" />
+      <where>codigo_registro_interno = 'SGI_SLC1202011061027'</where>
+    </update>
+    <update tableName="solicitud">
+      <column name="estado_solicitud_id" valueComputed="(select id from csp.estado_solicitud  where comentario = 'comentario2')" />
+      <where>codigo_registro_interno = 'SGI_SLC2202011061035'</where>
+    </update>
+    <update tableName="solicitud">
+      <column name="estado_solicitud_id" valueComputed="(select id from csp.estado_solicitud  where comentario = 'comentario3')" />
+      <where>codigo_registro_interno = 'SGI_SLC3202011071200'</where>
+    </update>
+  </changeSet>
+
+  <changeSet context="dev" author="master" id="0000000000000-solicitud_modalidad">
+    <insert tableName="solicitud_modalidad">
+      <column name="id" valueSequenceNext="solicitud_modalidad_seq" />
+      <column name="solicitud_id" valueComputed="(select id from csp.solicitud where codigo_registro_interno = 'SGI_SLC1202011061027')"></column>
+      <column name="entidad_ref" value="ent-001" />
+      <column name="programa_id" valueComputed="(select id from csp.programa where nombre = 'nombre-007')"></column>
+    </insert>
+    <insert tableName="solicitud_modalidad">
+      <column name="id" valueSequenceNext="solicitud_modalidad_seq" />
+      <column name="solicitud_id" valueComputed="(select id from csp.solicitud where codigo_registro_interno = 'SGI_SLC1202011061027')"></column>
+      <column name="entidad_ref" value="ent-003" />
+      <column name="programa_id" valueComputed="(select id from csp.programa where nombre = 'nombre-008')"></column>
     </insert>
   </changeSet>
 

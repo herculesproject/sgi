@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadConvocante_;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaEntidadFinanciadora_;
 import org.crue.hercules.sgi.csp.model.ConvocatoriaFase_;
+import org.crue.hercules.sgi.csp.enums.TipoEstadoConvocatoriaEnum;
 import org.crue.hercules.sgi.csp.model.AreaTematica;
 import org.crue.hercules.sgi.csp.model.AreaTematica_;
 import org.crue.hercules.sgi.csp.model.ConfiguracionSolicitud;
@@ -38,8 +39,20 @@ public class ConvocatoriaSpecifications {
   }
 
   /**
+   * {@link Convocatoria} registradas
+   * 
+   * @return specification para obtener las {@link Convocatoria} registradas
+   */
+  public static Specification<Convocatoria> registradas() {
+    return (root, query, cb) -> {
+      return cb.equal(root.get(Convocatoria_.estadoActual), TipoEstadoConvocatoriaEnum.REGISTRADA);
+    };
+  }
+
+  /**
    * {@link Convocatoria} unidadGestionRef.
    * 
+   * @param acronimos lista de acronimos
    * @return specification para obtener los {@link Convocatoria} cuyo
    *         unidadGestionRef se encuentre entre los recibidos.
    */

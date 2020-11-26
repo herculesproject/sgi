@@ -1,0 +1,589 @@
+package org.crue.hercules.sgi.csp.controller;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
+import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
+import org.crue.hercules.sgi.csp.model.Convocatoria;
+import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
+import org.crue.hercules.sgi.csp.model.Programa;
+import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
+import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
+import org.crue.hercules.sgi.csp.service.SolicitudService;
+import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.BDDMockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.springframework.beans.BeanUtils;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+/**
+ * SolicitudControllerTest
+ */
+@WebMvcTest(SolicitudController.class)
+public class SolicitudControllerTest extends BaseControllerTest {
+
+  @MockBean
+  private SolicitudService service;
+
+  @MockBean
+  private SolicitudModalidadService solicitudModalidadService;
+
+  private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
+  private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
+  private static final String CONTROLLER_BASE_PATH = "/solicitudes";
+  private static final String PATH_SOLICITUD_MODALIDADES = "/solicitudmodalidades";
+  private static final String PATH_TODOS = "/todos";
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-C" })
+  public void create_ReturnsSolicitud() throws Exception {
+    // given: new Solicitud
+    Solicitud solicitud = generarMockSolicitud(1L);
+
+    BDDMockito.given(service.create(ArgumentMatchers.<Solicitud>any(), ArgumentMatchers.<String>anyList()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Solicitud newSolicitud = new Solicitud();
+          BeanUtils.copyProperties(invocation.getArgument(0), newSolicitud);
+          newSolicitud.setId(1L);
+          return newSolicitud;
+        });
+
+    // when: create Solicitud
+    mockMvc
+        .perform(MockMvcRequestBuilders.post(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+            .content(mapper.writeValueAsString(solicitud)))
+        .andDo(MockMvcResultHandlers.print())
+        // then: new Solicitud is created
+        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
+        .andExpect(MockMvcResultMatchers.jsonPath("codigoRegistroInterno").isNotEmpty())
+        .andExpect(MockMvcResultMatchers.jsonPath("estado.id").isNotEmpty())
+        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id").value(solicitud.getConvocatoria().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("creadorRef").isNotEmpty())
+        .andExpect(MockMvcResultMatchers.jsonPath("solicitanteRef").value(solicitud.getSolicitanteRef()))
+        .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value(solicitud.getObservaciones()))
+        .andExpect(MockMvcResultMatchers.jsonPath("unidadGestionRef").value(solicitud.getUnidadGestionRef()));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-C" })
+  public void create_WithId_Returns400() throws Exception {
+    // given: a Solicitud with id filled
+    Solicitud solicitud = generarMockSolicitud(1L);
+
+    BDDMockito.given(service.create(ArgumentMatchers.<Solicitud>any(), ArgumentMatchers.<String>anyList()))
+        .willThrow(new IllegalArgumentException());
+
+    // when: create Solicitud
+    mockMvc
+        .perform(MockMvcRequestBuilders.post(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+            .content(mapper.writeValueAsString(solicitud)))
+        .andDo(MockMvcResultHandlers.print())
+        // then: 400 error
+        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  public void update_ReturnsSolicitud() throws Exception {
+    // given: Existing Solicitud to be updated
+    Solicitud solicitudExistente = generarMockSolicitud(1L);
+    Solicitud solicitud = generarMockSolicitud(1L);
+    solicitud.setObservaciones("observaciones actualizadas");
+
+    BDDMockito.given(service.update(ArgumentMatchers.<Solicitud>any(), ArgumentMatchers.<String>anyList()))
+        .willAnswer((InvocationOnMock invocation) -> invocation.getArgument(0));
+
+    // when: update Solicitud
+    mockMvc
+        .perform(MockMvcRequestBuilders.put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, solicitudExistente.getId())
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(solicitud)))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Solicitud is updated
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(solicitudExistente.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("codigoRegistroInterno")
+            .value(solicitudExistente.getCodigoRegistroInterno()))
+        .andExpect(MockMvcResultMatchers.jsonPath("estado.id").value(solicitudExistente.getEstado().getId()))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("convocatoria.id").value(solicitudExistente.getConvocatoria().getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("creadorRef").value(solicitudExistente.getCreadorRef()))
+        .andExpect(MockMvcResultMatchers.jsonPath("solicitanteRef").value(solicitudExistente.getSolicitanteRef()))
+        .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value(solicitud.getObservaciones()))
+        .andExpect(MockMvcResultMatchers.jsonPath("unidadGestionRef").value(solicitudExistente.getUnidadGestionRef()));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  public void update_WithNoExistingId_Returns404() throws Exception {
+    // given: No existing Id
+    Long id = 1L;
+    Solicitud solicitud = generarMockSolicitud(1L);
+
+    BDDMockito.willThrow(new SolicitudNotFoundException(id)).given(service).update(ArgumentMatchers.<Solicitud>any(),
+        ArgumentMatchers.<String>anyList());
+
+    // when: update Solicitud
+    mockMvc
+        .perform(MockMvcRequestBuilders.put(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(solicitud)))
+        .andDo(MockMvcResultHandlers.print())
+        // then: 404 error
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  public void reactivar_WithExistingId_ReturnSolicitud() throws Exception {
+    // given: existing id
+    Solicitud solicitud = generarMockSolicitud(1L);
+    solicitud.setActivo(false);
+
+    BDDMockito.given(service.enable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>anyList()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Solicitud solicitudDisabled = new Solicitud();
+          BeanUtils.copyProperties(solicitud, solicitudDisabled);
+          solicitudDisabled.setActivo(true);
+          return solicitudDisabled;
+        });
+
+    // when: reactivar by id
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, solicitud.getId())
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Solicitud is updated
+        .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(true));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-E" })
+  public void reactivar_NoExistingId_Return404() throws Exception {
+    // given: non existing id
+    Long id = 1L;
+
+    BDDMockito.willThrow(new SolicitudNotFoundException(id)).given(service).enable(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<String>anyList());
+
+    // when: reactivar by non existing id
+    mockMvc
+        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: 404 error
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-B" })
+  public void desactivar_WithExistingId_ReturnSolicitud() throws Exception {
+    // given: existing id
+    Solicitud solicitud = generarMockSolicitud(1L);
+    BDDMockito.given(service.disable(ArgumentMatchers.<Long>any(), ArgumentMatchers.<String>anyList()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Solicitud solicitudDisabled = new Solicitud();
+          BeanUtils.copyProperties(solicitud, solicitudDisabled);
+          solicitudDisabled.setActivo(false);
+          return solicitudDisabled;
+        });
+
+    // when: desactivar by id
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, solicitud.getId())
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Programa is updated
+        .andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(false));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-B" })
+  public void desactivar_NoExistingId_Return404() throws Exception {
+    // given: non existing id
+    Long id = 1L;
+
+    BDDMockito.willThrow(new SolicitudNotFoundException(id)).given(service).disable(ArgumentMatchers.<Long>any(),
+        ArgumentMatchers.<String>anyList());
+
+    // when: desactivar by non existing id
+    mockMvc
+        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: 404 error
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
+  public void findById_WithExistingId_ReturnsSolicitud() throws Exception {
+    // given: existing id
+    BDDMockito.given(service.findById(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>anyList()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          return generarMockSolicitud(invocation.getArgument(0));
+        });
+
+    // when: find by existing id
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: response is OK
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        // and the requested Solicitud is resturned as JSON object
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
+        .andExpect(MockMvcResultMatchers.jsonPath("codigoRegistroInterno").value("SGI_SLC1202011061027"))
+        .andExpect(MockMvcResultMatchers.jsonPath("estado.id").value(1L))
+        .andExpect(MockMvcResultMatchers.jsonPath("convocatoria.id").value(1L))
+        .andExpect(MockMvcResultMatchers.jsonPath("creadorRef").value("usr-001"))
+        .andExpect(MockMvcResultMatchers.jsonPath("solicitanteRef").value("usr-002"))
+        .andExpect(MockMvcResultMatchers.jsonPath("observaciones").value("observaciones-001"))
+        .andExpect(MockMvcResultMatchers.jsonPath("unidadGestionRef").value("OPE"));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
+  public void findById_WithNoExistingId_Returns404() throws Exception {
+    // given: no existing id
+    BDDMockito.given(service.findById(ArgumentMatchers.anyLong(), ArgumentMatchers.<String>anyList()))
+        .will((InvocationOnMock invocation) -> {
+          throw new SolicitudNotFoundException(1L);
+        });
+
+    // when: find by non existing id
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).
+        // then: HTTP code 404 NotFound pressent
+        andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  public void findAll_ReturnsPage() throws Exception {
+    // given: Una lista con 37 Solicitud
+    List<Solicitud> solicitudes = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      solicitudes.add(generarMockSolicitud(i));
+    }
+    Integer page = 3;
+    Integer pageSize = 10;
+    BDDMockito
+        .given(service.findAllRestringidos(ArgumentMatchers.<List<QueryCriteria>>any(),
+            ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<List<String>>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > solicitudes.size() ? solicitudes.size() : toIndex;
+          List<Solicitud> content = solicitudes.subList(fromIndex, toIndex);
+          Page<Solicitud> pageResponse = new PageImpl<>(content, pageable, solicitudes.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .header("X-Page", page).header("X-Page-Size", pageSize).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los TipoFase del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+    List<Solicitud> solicitudesResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<Solicitud>>() {
+        });
+    for (int i = 31; i <= 37; i++) {
+      Solicitud solicitud = solicitudesResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(solicitud.getObservaciones()).isEqualTo("observaciones-" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  public void findAll_EmptyList_Returns204() throws Exception {
+    // given: no data Solicitud
+    BDDMockito
+        .given(service.findAllRestringidos(ArgumentMatchers.<List<QueryCriteria>>any(),
+            ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<List<String>>any()))
+        .willAnswer(new Answer<Page<Solicitud>>() {
+          @Override
+          public Page<Solicitud> answer(InvocationOnMock invocation) throws Throwable {
+            Page<Solicitud> page = new PageImpl<>(Collections.emptyList());
+            return page;
+          }
+        });
+
+    // when: get page=3 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH).with(SecurityMockMvcRequestPostProcessors.csrf())
+            .header("X-Page", "3").header("X-Page-Size", "10").accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: returns 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TFAS-V" })
+  public void findAllTodos_ReturnsPage() throws Exception {
+    // given: Una lista con 37 Solicitud
+    List<Solicitud> solicitudes = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      solicitudes.add(generarMockSolicitud(i));
+    }
+    Integer page = 3;
+    Integer pageSize = 10;
+    BDDMockito
+        .given(service.findAllTodosRestringidos(ArgumentMatchers.<List<QueryCriteria>>any(),
+            ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<List<String>>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > solicitudes.size() ? solicitudes.size() : toIndex;
+          List<Solicitud> content = solicitudes.subList(fromIndex, toIndex);
+          Page<Solicitud> pageResponse = new PageImpl<>(content, pageable, solicitudes.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_TODOS)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los TipoFase del 31 al 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+    List<Solicitud> solicitudesResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<Solicitud>>() {
+        });
+    for (int i = 31; i <= 37; i++) {
+      Solicitud solicitud = solicitudesResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(solicitud.getObservaciones()).isEqualTo("observaciones-" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CONV-V" })
+  public void findAllTodos_EmptyList_Returns204() throws Exception {
+    // given: no data Solicitud
+    BDDMockito
+        .given(service.findAllTodosRestringidos(ArgumentMatchers.<List<QueryCriteria>>any(),
+            ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<List<String>>any()))
+        .willAnswer(new Answer<Page<Solicitud>>() {
+          @Override
+          public Page<Solicitud> answer(InvocationOnMock invocation) throws Throwable {
+            Page<Solicitud> page = new PageImpl<>(Collections.emptyList());
+            return page;
+          }
+        });
+
+    // when: get page=3 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_TODOS)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: returns 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
+   * 
+   * CONVOCATORIA ENTIDAD FINANCIADORA
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void findAllSolicitudModalidad_ReturnsPage() throws Exception {
+    // given: Una lista con 37 SolicitudModalidad para la Solicitud
+    Long solicitudId = 1L;
+
+    List<SolicitudModalidad> solicitudModalidades = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      solicitudModalidades.add(generarMockSolicitudModalidad(i));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(solicitudModalidadService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > solicitudModalidades.size() ? solicitudModalidades.size() : toIndex;
+          List<SolicitudModalidad> content = solicitudModalidades.subList(fromIndex, toIndex);
+          Page<SolicitudModalidad> pageResponse = new PageImpl<>(content, pageable, solicitudModalidades.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_MODALIDADES, solicitudId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los SolicitudModalidad del 31 al
+        // 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<SolicitudModalidad> convocatoriaEntidadFinanciadorasResponse = mapper
+        .readValue(requestResult.getResponse().getContentAsString(), new TypeReference<List<SolicitudModalidad>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      SolicitudModalidad solicitudModalidad = convocatoriaEntidadFinanciadorasResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(solicitudModalidad.getEntidadRef()).isEqualTo("entidad-" + String.format("%03d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void findAllSolicitudModalidad_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de SolicitudModalidad para la
+    // Solicitud
+    Long solicitudId = 1L;
+    List<SolicitudModalidad> solicitudModalidades = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(solicitudModalidadService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          Page<SolicitudModalidad> pageResponse = new PageImpl<>(solicitudModalidades, pageable, 0);
+          return pageResponse;
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_SOLICITUD_MODALIDADES, solicitudId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
+   * Función que devuelve un objeto Solicitud
+   * 
+   * @param id id del Solicitud
+   * @return el objeto Solicitud
+   */
+  private Solicitud generarMockSolicitud(Long id) {
+    EstadoSolicitud estadoSolicitud = new EstadoSolicitud();
+    estadoSolicitud.setId(1L);
+
+    Programa programa = new Programa();
+    programa.setId(1L);
+
+    Convocatoria convocatoria = new Convocatoria();
+    convocatoria.setId(1L);
+
+    Solicitud solicitud = new Solicitud();
+    solicitud.setId(id);
+    solicitud.setCodigoExterno(null);
+    solicitud.setConvocatoria(convocatoria);
+    solicitud.setSolicitanteRef("usr-002");
+    solicitud.setObservaciones("observaciones-" + String.format("%03d", id));
+    solicitud.setConvocatoriaExterna(null);
+    solicitud.setUnidadGestionRef("OPE");
+    solicitud.setFormularioSolicitud(TipoFormularioSolicitudEnum.RRHH);
+    solicitud.setActivo(true);
+
+    if (id != null) {
+      solicitud.setEstado(estadoSolicitud);
+      solicitud.setCodigoRegistroInterno("SGI_SLC1202011061027");
+      solicitud.setCreadorRef("usr-001");
+    }
+
+    return solicitud;
+  }
+
+  /**
+   * Función que devuelve un objeto SolicitudModalidad
+   * 
+   * @param id id del SolicitudModalidad
+   * @return el objeto SolicitudModalidad
+   */
+  private SolicitudModalidad generarMockSolicitudModalidad(Long id) {
+    Solicitud solicitud = new Solicitud();
+    solicitud.setId(1L);
+
+    Programa programa = new Programa();
+    programa.setId(1L);
+
+    SolicitudModalidad solicitudModalidad = new SolicitudModalidad();
+    solicitudModalidad.setId(id);
+    solicitudModalidad.setEntidadRef("entidad-" + String.format("%03d", id));
+    solicitudModalidad.setSolicitud(solicitud);
+    solicitudModalidad.setPrograma(programa);
+
+    return solicitudModalidad;
+  }
+
+}

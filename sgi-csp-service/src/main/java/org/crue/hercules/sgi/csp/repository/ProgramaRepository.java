@@ -23,4 +23,13 @@ public interface ProgramaRepository extends JpaRepository<Programa, Long>, JpaSp
    */
   List<Programa> findByPadreIdInAndActivoIsTrue(List<Long> ids);
 
+  /**
+   * Comprueba si exite un {@link Programa} activo que tenga como padre el
+   * {@link Programa} con el id buscado.
+   * 
+   * @param id Id del {@link Programa}.
+   * @return true si existe o false en caso contrario.
+   */
+  boolean existsByPadreIdAndActivoIsTrue(Long id);
+
 }

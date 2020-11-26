@@ -43,7 +43,8 @@ public class ConfiguracionSolicitudController {
   /**
    * Instancia un nuevo ConfiguracionSolicitudController.
    * 
-   * @param configuracionSolicitudService {@link ConfiguracionSolicitudService}.
+   * @param configuracionSolicitudService      {@link ConfiguracionSolicitudService}.
+   * @param documentoRequeridoSolicitudService {@link DocumentoRequeridoSolicitudService}.
    */
   public ConfiguracionSolicitudController(ConfiguracionSolicitudService configuracionSolicitudService,
       DocumentoRequeridoSolicitudService documentoRequeridoSolicitudService) {

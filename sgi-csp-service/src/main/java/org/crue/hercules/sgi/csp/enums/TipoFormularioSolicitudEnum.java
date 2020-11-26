@@ -9,7 +9,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum TipoFormularioSolicitudEnum {
 
   /** ESTANDAR */
-  ESTANDAR("Estándar");
+  ESTANDAR("Estándar"),
+  /** RRHH */
+  RRHH("RRHH (predoctoral, posdoctoral)"),
+  /** AYUDAS A GRUPOS */
+  AYUDAS_GRUPOS("Ayudas a grupos");
 
   /**
    * The value.

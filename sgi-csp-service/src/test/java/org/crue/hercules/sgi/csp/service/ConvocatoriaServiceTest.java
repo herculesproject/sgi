@@ -2788,6 +2788,53 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void findAllRestringidos_WithPaging_ReturnsPage() {
+    // given: One hundred Convocatoria
+    List<Convocatoria> convocatorias = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      convocatorias.add(
+          generarMockConvocatoria(Long.valueOf(i), 1L, 1L, 1L, 1L, 1L, (i % 2 == 0) ? Boolean.TRUE : Boolean.FALSE));
+    }
+
+    BDDMockito
+        .given(
+            repository.findAll(ArgumentMatchers.<Specification<Convocatoria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer(new Answer<Page<Convocatoria>>() {
+          @Override
+          public Page<Convocatoria> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<Convocatoria> content = convocatorias.subList(fromIndex, toIndex);
+            Page<Convocatoria> page = new PageImpl<>(content, pageable, convocatorias.size());
+            return page;
+          }
+        });
+
+    List<String> acronimosUnidadGestion = new ArrayList<>();
+    acronimosUnidadGestion.add("OPE");
+
+    // when: Get page=3 with pagesize=10
+    Pageable paging = PageRequest.of(3, 10);
+    Page<Convocatoria> page = service.findAllRestringidos(null, paging, acronimosUnidadGestion);
+
+    // then: A Page with ten Convocatoria are returned containing
+    // Nombre='nombre-31' to
+    // 'nombre-40'
+    Assertions.assertThat(page.getContent().size()).isEqualTo(10);
+    Assertions.assertThat(page.getNumber()).isEqualTo(3);
+    Assertions.assertThat(page.getSize()).isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      Convocatoria item = page.getContent().get(i);
+      Assertions.assertThat(item.getCodigo()).isEqualTo("codigo-" + String.format("%03d", j));
+      Assertions.assertThat(item.getActivo()).isEqualTo((j % 2 == 0 ? Boolean.TRUE : Boolean.FALSE));
+    }
+  }
+
+  @Test
   public void findAllTodosRestringidos_WithPaging_ReturnsPage() {
     // given: One hundred Convocatoria
     List<Convocatoria> convocatorias = new ArrayList<>();

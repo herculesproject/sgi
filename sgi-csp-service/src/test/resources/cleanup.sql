@@ -1,4 +1,7 @@
 -- vacia la bd
+DELETE FROM csp.solicitud_modalidad;
+DELETE FROM csp.solicitud;
+DELETE FROM csp.estado_solicitud;
 DELETE FROM csp.convocatoria_documento;
 DELETE FROM csp.documento_requerido_solicitud;
 DELETE FROM csp.configuracion_solicitud;

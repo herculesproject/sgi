@@ -269,6 +269,46 @@ public class ConvocatoriaServiceImpl implements ConvocatoriaService {
     return returnValue;
   }
 
+  /**
+   * Devuelve todas las convocatorias activas registradas que se encuentren dentro
+   * de la unidad de gestión del usuario logueado.
+   * 
+   * @param query                  información del filtro.
+   * @param paging                 información de paginación.
+   * @param acronimosUnidadGestion lista de acronimos de unidad de gestion a los
+   *                               que se restringe la busqueda.
+   * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
+   */
+  @Override
+  public Page<Convocatoria> findAllRestringidos(List<QueryCriteria> query, Pageable paging,
+      List<String> acronimosUnidadGestion) {
+    log.debug(
+        "findAllRestringidos(List<QueryCriteria> query, Pageable paging, List<String> acronimosUnidadGestion) - start");
+
+    Specification<Convocatoria> specByQuery = getFiltroAplicado(query);
+    Specification<Convocatoria> specActivos = ConvocatoriaSpecifications.activos();
+    Specification<Convocatoria> specRegistradas = ConvocatoriaSpecifications.registradas();
+    Specification<Convocatoria> specAcronimos = ConvocatoriaSpecifications.acronimosIn(acronimosUnidadGestion);
+    Specification<Convocatoria> specs = Specification.where(specActivos).and(specRegistradas).and(specByQuery)
+        .and(specAcronimos);
+
+    Page<Convocatoria> returnValue = repository.findAll(specs, paging);
+
+    log.debug(
+        "findAllRestringidos(List<QueryCriteria> query, Pageable paging, List<String> acronimosUnidadGestion) - end");
+    return returnValue;
+  }
+
+  /**
+   * Devuelve todas las convocatorias activas que se encuentren dentro de la
+   * unidad de gestión del usuario logueado.
+   * 
+   * @param query                  información del filtro.
+   * @param paging                 información de paginación.
+   * @param acronimosUnidadGestion lista de acronimos de unidad de gestion a los
+   *                               que se restringe la busqueda.
+   * @return el listado de entidades {@link Convocatoria} paginadas y filtradas.
+   */
   @Override
   public Page<Convocatoria> findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging,
       List<String> acronimosUnidadGestion) {
