@@ -18,7 +18,8 @@ import { BaseModalComponent } from '@core/component/base-modal.component';
 import { StringValidator } from '@core/validators/string-validator';
 
 const MSG_ERROR_INIT = marker('csp.convocatoria.enlace.error.cargar');
-
+const MSG_ANADIR = marker('botones.aniadir');
+const MSG_ACEPTAR = marker('botones.aceptar');
 export interface ConvocatoriaEnlaceModalComponentData {
   enlace: IConvocatoriaEnlace;
   idModeloEjecucion: number;
@@ -35,6 +36,7 @@ export class ConvocatoriaEnlaceModalComponent extends
 
   modeloTiposEnlace$: Observable<IModeloTipoEnlace[]>;
   private modeloTiposEnlaceFiltered: IModeloTipoEnlace[];
+  textSaveOrUpdate: string;
 
   constructor(
     protected logger: NGXLogger,
@@ -60,6 +62,7 @@ export class ConvocatoriaEnlaceModalComponent extends
     this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadTiposEnlaces();
+    this.textSaveOrUpdate = this.data.enlace.url ? MSG_ACEPTAR : MSG_ANADIR;
     this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'ngOnInit()', 'end');
   }
 

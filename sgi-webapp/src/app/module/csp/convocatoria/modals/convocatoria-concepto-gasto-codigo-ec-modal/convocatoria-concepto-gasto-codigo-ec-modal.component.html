@@ -1,6 +1,8 @@
 <div class="convocatoria-concepto-gasto-codigo-ec-modal">
   <header class="modal-header-material">
-    <h3 mat-dialog-title>{{'csp.convocatoria.concepto-gasto-codigo-ec.modal.titulo' | translate}}</h3>
+    <h3 mat-dialog-title>
+      {{( data.convocatoriaConceptoGastoCodigoEc.convocatoriaConceptoGasto.permitido ? 'csp.convocatoria.concepto-gasto-codigo-ec.modal.titulo.permitido' : 'csp.convocatoria.concepto-gasto-codigo-ec.modal.titulo.no-permitido') | translate}}
+    </h3>
   </header>
   <main>
     <form [formGroup]="formGroup">
@@ -100,7 +102,7 @@
   </main>
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
     <button color="accent" (click)="saveOrUpdate()" md-button mat-raised-button
-      type="submit">{{'botones.guardar' | translate}}</button>
+      type="submit">{{textSaveOrUpdate | translate}}</button>
     <button class="link-cancelar" mat-button mat-dialog-close tabindex="-1"
       type="button">{{'botones.cancelar' | translate}}</button>
   </div>

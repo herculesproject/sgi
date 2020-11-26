@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
@@ -25,6 +26,8 @@ export interface ConvocatoriaEntidadFinanciadoraDataModal {
   selectedEmpresas: IEmpresaEconomica[];
 }
 
+const MSG_ANADIR = marker('botones.aniadir');
+const MSG_ACEPTAR = marker('botones.aceptar');
 @Component({
   templateUrl: './convocatoria-entidad-financiadora-modal.component.html',
   styleUrls: ['./convocatoria-entidad-financiadora-modal.component.scss']
@@ -35,6 +38,7 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent extends
   fuentesFinanciacion$: Observable<IFuenteFinanciacion[]>;
   tiposFinanciacion$: Observable<ITipoFinalidad[]>;
   private empresa: IEmpresaEconomica;
+  textSaveOrUpdate: string;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -64,6 +68,7 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent extends
     this.loadFuentesFinanciacion();
     this.loadTiposFinanciacion();
     this.empresa = this.data.empresa;
+    this.textSaveOrUpdate = this.data.empresa.personaRef ? MSG_ACEPTAR : MSG_ANADIR;
     this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, 'ngOnInit()', 'end');
   }
 

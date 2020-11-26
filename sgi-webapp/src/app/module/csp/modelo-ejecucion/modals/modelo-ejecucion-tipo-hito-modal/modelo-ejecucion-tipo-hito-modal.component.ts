@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { IModeloTipoHito } from '@core/models/csp/modelo-tipo-hito';
 import { ITipoHito } from '@core/models/csp/tipos-configuracion';
@@ -18,6 +19,9 @@ export interface ModeloEjecucionTipoHitoModalData {
   tipoHitos: ITipoHito[];
 }
 
+const MSG_ANADIR = marker('botones.aniadir');
+const MSG_ACEPTAR = marker('botones.aceptar');
+
 @Component({
   selector: 'sgi-modelo-ejecucion-tipo-hito-modal',
   templateUrl: './modelo-ejecucion-tipo-hito-modal.component.html',
@@ -26,6 +30,8 @@ export interface ModeloEjecucionTipoHitoModalData {
 export class ModeloEjecucionTipoHitoModalComponent extends
   BaseModalComponent<IModeloTipoHito, ModeloEjecucionTipoHitoModalComponent> implements OnInit {
   tipoHitos$: Observable<ITipoHito[]>;
+
+  textSaveOrUpdate: string;
 
   constructor(
     protected logger: NGXLogger,
@@ -51,6 +57,7 @@ export class ModeloEjecucionTipoHitoModalComponent extends
         }),
         tap(() => this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, 'ngOnInit()', 'end'))
       );
+      this.textSaveOrUpdate = MSG_ANADIR;
     } else {
       this.tipoHitos$ = this.tipoHitoService.findTodos().pipe(
         switchMap((result) => {
@@ -58,6 +65,7 @@ export class ModeloEjecucionTipoHitoModalComponent extends
         }),
         tap(() => this.logger.debug(ModeloEjecucionTipoHitoModalComponent.name, 'ngOnInit()', 'end'))
       );
+      this.textSaveOrUpdate = MSG_ACEPTAR;
     }
   }
 

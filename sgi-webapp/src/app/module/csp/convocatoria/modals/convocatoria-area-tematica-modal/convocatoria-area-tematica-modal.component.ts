@@ -19,7 +19,8 @@ import { catchError, map, mergeMap, switchMap, takeLast, tap } from 'rxjs/operat
 import { AreaTematicaData } from '../../convocatoria-formulario/convocatoria-datos-generales/convocatoria-datos-generales.fragment';
 
 const MSG_ERROR_AREA_TEMATICA = marker('csp.convocatoria.area.tematica.modal.error.areas');
-
+const MSG_ANADIR = marker('botones.aniadir');
+const MSG_ACEPTAR = marker('botones.aceptar');
 class NodeAreaTematica {
   parent: NodeAreaTematica;
   areaTematica: StatusWrapper<IAreaTematica>;
@@ -77,6 +78,8 @@ export class ConvocatoriaAreaTematicaModalComponent extends
   dataSource = new MatTreeNestedDataSource<NodeAreaTematica>();
   private nodeMap = new Map<number, NodeAreaTematica>();
 
+  textSaveOrUpdate: string;
+
   checkedNode: NodeAreaTematica;
   hasChild = (_: number, node: NodeAreaTematica) => node.childs.length > 0;
 
@@ -109,6 +112,7 @@ export class ConvocatoriaAreaTematicaModalComponent extends
     const subscription = this.formGroup.get('padre').valueChanges.pipe(
       tap(() => this.loadTreeAreaTematica())
     ).subscribe();
+    this.textSaveOrUpdate = this.data.convocatoriaAreaTematica.value.areaTematica?.padre ? MSG_ACEPTAR : MSG_ANADIR;
     this.subscriptions.push(subscription);
     this.logger.debug(ConvocatoriaAreaTematicaModalComponent.name, 'ngOnInit()', 'end');
   }

@@ -1,17 +1,21 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { ITipoDocumento } from '@core/models/csp/tipos-configuracion';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { FormGroupUtil } from '@core/utils/form-group-util';
 import { NGXLogger } from 'ngx-logger';
 
+const MSG_ANADIR = marker('botones.aniadir');
+const MSG_ACEPTAR = marker('botones.aceptar');
 @Component({
   templateUrl: './tipo-documento-modal.component.html',
   styleUrls: ['./tipo-documento-modal.component.scss']
 })
 export class TipoDocumentoModalComponent extends BaseModalComponent<ITipoDocumento, TipoDocumentoModalComponent> implements OnInit {
+
+  textSaveOrUpdate: string;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -21,10 +25,12 @@ export class TipoDocumentoModalComponent extends BaseModalComponent<ITipoDocumen
   ) {
     super(logger, snackBarService, matDialogRef, tipoDocumento);
     this.logger.debug(TipoDocumentoModalComponent.name, 'constructor()', 'start');
-    if (tipoDocumento) {
+    if (tipoDocumento.id) {
       this.tipoDocumento = { ...tipoDocumento };
+      this.textSaveOrUpdate = MSG_ACEPTAR;
     } else {
       this.tipoDocumento = { activo: true } as ITipoDocumento;
+      this.textSaveOrUpdate = MSG_ANADIR;
     }
     this.logger.debug(TipoDocumentoModalComponent.name, 'constructor()', 'end');
   }

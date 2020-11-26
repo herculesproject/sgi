@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BaseModalComponent } from '@core/component/base-modal.component';
@@ -7,11 +7,15 @@ import { TipoFaseService } from '@core/services/csp/tipo-fase.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { DialogService } from '@core/services/dialog.service';
 import { ITipoFase } from '@core/models/csp/tipos-configuracion';
 import { requiredChecked } from '@core/validators/checkbox-validator';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+
+const MSG_ANADIR = marker('botones.aniadir');
+const MSG_ACEPTAR = marker('botones.aceptar');
 
 export interface ModeloEjecucionTipoFaseModalData {
   modeloTipoFase: IModeloTipoFase;
@@ -25,6 +29,8 @@ export interface ModeloEjecucionTipoFaseModalData {
 export class ModeloEjecucionTipoFaseModalComponent extends
   BaseModalComponent<IModeloTipoFase, ModeloEjecucionTipoFaseModalComponent> implements OnInit {
   tipoFases$: Observable<ITipoFase[]>;
+
+  textSaveOrUpdate: string;
 
   constructor(
     protected logger: NGXLogger,
@@ -48,10 +54,12 @@ export class ModeloEjecucionTipoFaseModalComponent extends
           return of(list);
         })
       );
+      this.textSaveOrUpdate = MSG_ANADIR;
     } else {
       this.tipoFases$ = this.tipoFaseService.findAll().pipe(
         switchMap((result) => of(result.items))
       );
+      this.textSaveOrUpdate = MSG_ACEPTAR;
     }
   }
 

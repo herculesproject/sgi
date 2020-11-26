@@ -117,7 +117,7 @@ export class TipoFinanciacionListadoComponent extends AbstractTablePaginationCom
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: tipoFinanciacion
+      data: tipoFinanciacion ? Object.assign({}, tipoFinanciacion) : { activo: true } as ITipoFinanciacion
     };
     const dialogRef = this.matDialog.open(TipoFinanciacionModalComponent, config);
     dialogRef.afterClosed().subscribe(

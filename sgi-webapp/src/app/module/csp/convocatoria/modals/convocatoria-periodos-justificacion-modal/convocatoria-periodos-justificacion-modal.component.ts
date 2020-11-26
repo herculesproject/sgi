@@ -14,6 +14,7 @@ import { BaseModalComponent } from '@core/component/base-modal.component';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { RangeValidator } from '@core/validators/range-validator';
 import { StringValidator } from '@core/validators/string-validator';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 
 export interface IConvocatoriaPeriodoJustificacionModalData {
   duracion: number;
@@ -21,6 +22,8 @@ export interface IConvocatoriaPeriodoJustificacionModalData {
   convocatoriaPeriodoJustificacionList: StatusWrapper<IConvocatoriaPeriodoJustificacion>[];
 }
 
+const MSG_ANADIR = marker('botones.aniadir');
+const MSG_ACEPTAR = marker('botones.aceptar');
 @Component({
   templateUrl: './convocatoria-periodos-justificacion-modal.component.html',
   styleUrls: ['./convocatoria-periodos-justificacion-modal.component.scss']
@@ -34,6 +37,8 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
   FormGroupUtil = FormGroupUtil;
 
   tiposJustificacion: TipoJustificacion[];
+
+  textSaveOrUpdate: string;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -68,6 +73,7 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
     super.ngOnInit();
     this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'ngOnInit()', 'start');
     this.loadTiposJustificacion();
+    this.textSaveOrUpdate = this.data.convocatoriaPeriodoJustificacion?.numPeriodo ? MSG_ACEPTAR : MSG_ANADIR;
     this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'ngOnInit()', 'start');
   }
 

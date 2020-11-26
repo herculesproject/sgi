@@ -9,7 +9,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, Subscription, of } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, startWith, tap } from 'rxjs/operators';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { DateValidator } from '@core/validators/date-validator';
@@ -23,7 +23,8 @@ import { NullIdValidador } from '@core/validators/null-id-validador';
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 const MSG_ERROR_INIT = marker('csp.convocatoria.plazos.fases.error.cargar');
 const MSG_ERROR_TIPOS = marker('csp.convocatoria.tipo.fases.error.cargar');
-
+const MSG_ANADIR = marker('botones.aniadir');
+const MSG_ACEPTAR = marker('botones.aceptar');
 export interface ConvocatoriaPlazosFaseModalComponentData {
   plazos: IConvocatoriaFase[];
   plazo: IConvocatoriaFase;
@@ -48,6 +49,8 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
   private modeloTipoFasesFiltered: IModeloTipoFase[];
 
   suscripciones: Subscription[];
+
+  textSaveOrUpdate: string;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -89,6 +92,7 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
     this.suscripciones = [];
     this.initFormGroup();
     this.loadTipoFases();
+    this.textSaveOrUpdate = this.data.plazo.fechaInicio ? MSG_ACEPTAR : MSG_ANADIR;
     this.logger.debug(ConvocatoriaPlazosFaseModalComponent.name, 'ngOnInit()', 'start');
   }
 

@@ -20,12 +20,12 @@ import { IConvocatoriaHito } from '@core/models/csp/convocatoria-hito';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { IModeloTipoHito } from '@core/models/csp/modelo-tipo-hito';
 import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
-import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 
 const MSG_ERROR_INIT = marker('csp.convocatoria.hitos.error.cargar');
 const MSG_ERROR_TIPOS = marker('csp.convocatoria.tipo.hitos.error.cargar');
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
-
+const MSG_ANADIR = marker('botones.aniadir');
+const MSG_ACEPTAR = marker('botones.aceptar');
 export interface ConvocatoriaHitosModalComponentData {
   hito: IConvocatoriaHito;
   idModeloEjecucion: number;
@@ -50,13 +50,14 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
 
   private modeloTiposHitoFiltered: IModeloTipoHito[];
 
+  textSaveOrUpdate: string;
+
   suscripciones: Subscription[] = [];
 
   constructor(
     private readonly logger: NGXLogger,
     public readonly matDialogRef: MatDialogRef<ConvocatoriaHitosModalComponent>,
     private readonly modeloEjecucionService: ModeloEjecucionService,
-    private readonly convocatoriaService: ConvocatoriaService,
     @Inject(MAT_DIALOG_DATA) private data: ConvocatoriaHitosModalComponentData,
     private readonly snackBarService: SnackBarService) {
 
@@ -87,15 +88,14 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.logger.debug(ConvocatoriaHitosModalComponent.name, 'ngOnInit()', 'start');
-
     this.formGroup = new FormGroup({
       tipoHito: new FormControl(this.data?.hito?.tipoHito, [Validators.required, IsEntityValidator.isValid()]),
       fechaInicio: new FormControl(this.data?.hito?.fecha, [Validators.required]),
       comentario: new FormControl(this.data?.hito?.comentario, [Validators.maxLength(250)]),
       aviso: new FormControl(this.data?.hito?.generaAviso)
     });
+    this.textSaveOrUpdate = this.data?.hito?.tipoHito ? MSG_ACEPTAR : MSG_ANADIR;
     this.loadTiposHito();
     this.logger.debug(ConvocatoriaHitosModalComponent.name, 'ngOnInit()', 'start');
   }

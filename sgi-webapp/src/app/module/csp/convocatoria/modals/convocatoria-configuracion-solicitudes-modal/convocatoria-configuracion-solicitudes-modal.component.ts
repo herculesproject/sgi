@@ -14,8 +14,9 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { SgiRestFindOptions, SgiRestFilterType, SgiRestFilter } from '@sgi/framework/http';
 
-const MSG_ERROR_INIT = marker('csp.convocatoria.tipo.documento.error.cargar');
-
+const MSG_ERROR_INIT = marker('csp.convocatoria.plazos.enlace.error.cargar');
+const MSG_ANADIR = marker('botones.aniadir');
+const MSG_ACEPTAR = marker('botones.aceptar');
 @Component({
   templateUrl: './convocatoria-configuracion-solicitudes-modal.component.html',
   styleUrls: ['./convocatoria-configuracion-solicitudes-modal.component.scss']
@@ -27,6 +28,7 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent extends
 
   documentoRequeridoFiltered: ITipoDocumento[];
   documentoRequerido$: Observable<ITipoDocumento[]>;
+  textSaveOrUpdate: string;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -52,6 +54,7 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent extends
     this.logger.debug(ConvocatoriaConfiguracionSolicitudesModalComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadTipoDocumento();
+    this.textSaveOrUpdate = this.data.tipoDocumento ? MSG_ACEPTAR : MSG_ANADIR;
     this.logger.debug(ConvocatoriaConfiguracionSolicitudesModalComponent.name, 'ngOnInit()', 'end');
   }
 

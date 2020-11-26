@@ -29,7 +29,8 @@ import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-en
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 const MSG_FORM_GROUP_WITHOUT_PLAN = marker('csp.convocatoria.entidades.convocantes.modal.sin.plan');
 const MSG_FORM_GROUP_WITHOUT_PROGRAMA = marker('csp.convocatoria.entidades.convocantes.modal.sin.programa');
-
+const MSG_ANADIR = marker('botones.aniadir');
+const MSG_ACEPTAR = marker('botones.aceptar');
 export interface ConvocatoriaEntidadConvocanteModalData {
   entidadConvocanteData: ConvocatoriaEntidadConvocanteData;
   selectedEmpresas: IEmpresaEconomica[];
@@ -95,6 +96,8 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
   dataSource = new MatTreeNestedDataSource<NodePrograma>();
   private nodeMap = new Map<number, NodePrograma>();
 
+  textSaveOrUpdate: string;
+
   checkedNode: NodePrograma;
   hasChild = (_: number, node: NodePrograma) => node.childs.length > 0;
 
@@ -128,6 +131,9 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
         plan: undefined,
         programa: undefined,
       };
+      this.textSaveOrUpdate = MSG_ANADIR;
+    } else {
+      this.textSaveOrUpdate = MSG_ACEPTAR;
     }
 
     this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name, 'constructor()', 'end');

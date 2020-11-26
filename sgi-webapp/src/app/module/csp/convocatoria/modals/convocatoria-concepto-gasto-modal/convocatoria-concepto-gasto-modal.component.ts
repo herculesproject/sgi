@@ -19,7 +19,8 @@ import { NumberValidator } from '@core/validators/number-validator';
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 const MSG_ERROR_INIT = marker('csp.convocatoria.concepto-gasto.error.cargar');
 const MSG_ERROR_CONCEPTO_GASTO_REPETIDO = marker('csp.convocatoria.concepto-gasto.modal.repetido');
-
+const MSG_ANADIR = marker('botones.aniadir');
+const MSG_ACEPTAR = marker('botones.aceptar');
 export interface IConvocatoriaConceptoGastoModalComponent {
   convocatoriaConceptoGasto: IConvocatoriaConceptoGasto;
   convocatoriaConceptoGastosTabla: IConvocatoriaConceptoGasto[];
@@ -38,6 +39,8 @@ export class ConvocatoriaConceptoGastoModalComponent implements OnInit, OnDestro
 
   conceptoGastosFiltered: IConceptoGasto[];
   conceptoGastos$: Observable<IConceptoGasto[]>;
+
+  textSaveOrUpdate: string;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -63,6 +66,7 @@ export class ConvocatoriaConceptoGastoModalComponent implements OnInit, OnDestro
     this.suscripciones = [];
     this.initFormGroup();
     this.loadConceptoGastos();
+    this.textSaveOrUpdate = this.data.convocatoriaConceptoGasto.conceptoGasto ? MSG_ACEPTAR : MSG_ANADIR;
     this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'ngOnInit()', 'end');
   }
 

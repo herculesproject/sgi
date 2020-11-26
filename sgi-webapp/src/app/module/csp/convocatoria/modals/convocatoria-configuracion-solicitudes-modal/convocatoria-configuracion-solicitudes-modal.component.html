@@ -1,7 +1,7 @@
 <div class="convocatoria-configuracion-solicitudes-modal">
   <header class="modal-header-material">
     <h3 mat-dialog-title>
-      {{( data.id ? 'csp.convocatoria.configuracionSolicitud.formularioSolicitud.modal.editar.titulo' : 'csp.convocatoria.configuracionSolicitud.formularioSolicitud.modal.crear.titulo') | translate}}
+      {{ 'csp.convocatoria.configuracionSolicitud.formularioSolicitud.modal.titulo' | translate}}
     </h3>
   </header>
   <main>
@@ -44,7 +44,7 @@
   </main>
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
     <button color="accent" (click)="saveOrUpdate()" md-button mat-raised-button
-      type="submit">{{'botones.guardar' | translate}}</button>
+      type="submit">{{textSaveOrUpdate | translate}}</button>
     <button class="link-cancelar" mat-button (click)="closeModal()"
       type="button">{{'botones.cancelar' | translate}}</button>
   </div>

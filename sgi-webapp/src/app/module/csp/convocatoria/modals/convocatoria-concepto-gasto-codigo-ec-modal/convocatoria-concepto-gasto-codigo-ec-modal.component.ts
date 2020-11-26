@@ -21,7 +21,8 @@ import { DateUtils } from '@core/utils/date-utils';
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 const MSG_ERROR_INIT = marker('csp.convocatoria.concepto-gasto-codigo-ec.error.cargar');
 const MSG_ERROR_CONCEPTO_GASTO_REPETIDO = marker('csp.convocatoria.concepto-gasto-codigo-ec.modal.repetido');
-
+const MSG_ANADIR = marker('botones.aniadir');
+const MSG_ACEPTAR = marker('botones.aceptar');
 
 export interface IConvocatoriaConceptoGastoCodigoEcModalComponent {
   convocatoriaConceptoGastoCodigoEc: IConvocatoriaConceptoGastoCodigoEc;
@@ -45,13 +46,14 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
 
   codigosEconomicosFiltered: ICodigoEconomico[];
   codigosEconomicos$: Observable<ICodigoEconomico[]>;
+  textSaveOrUpdate: string;
 
   constructor(
     private readonly logger: NGXLogger,
     private readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<ConvocatoriaConceptoGastoCodigoEcModalComponent>,
     private readonly codigoEconomicoService: CodigoEconomicoService,
-    @Inject(MAT_DIALOG_DATA) private data: IConvocatoriaConceptoGastoCodigoEcModalComponent
+    @Inject(MAT_DIALOG_DATA) public data: IConvocatoriaConceptoGastoCodigoEcModalComponent
   ) {
     this.logger.debug(ConvocatoriaConceptoGastoCodigoEcModalComponent.name, 'constructor()', 'start');
     this.fxLayoutProperties = new FxLayoutProperties();
@@ -73,6 +75,7 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
     this.initFormGroup();
     this.loadConceptoGastos();
     this.loadCodigosEconomicos();
+    this.textSaveOrUpdate = this.data.convocatoriaConceptoGastoCodigoEc.codigoEconomicoRef ? MSG_ACEPTAR : MSG_ANADIR;
     this.logger.debug(ConvocatoriaConceptoGastoCodigoEcModalComponent.name, 'ngOnInit()', 'end');
   }
 

@@ -10,7 +10,8 @@ import { FormGroupUtil } from '@core/utils/form-group-util';
 import { NGXLogger } from 'ngx-logger';
 
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
-
+const MSG_ANADIR = marker('botones.aniadir');
+const MSG_ACEPTAR = marker('botones.aceptar');
 @Component({
   selector: 'sgi-tipo-financiacion-modal',
   templateUrl: './tipo-financiacion-modal.component.html',
@@ -21,6 +22,7 @@ export class TipoFinanciacionModalComponent implements OnInit {
   fxLayoutProperties: FxLayoutProperties;
   fxFlexProperties: FxFlexProperties;
   public tipoFinanciacion: ITipoFinanciacion;
+  textSaveOrUpdate: string;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -37,10 +39,12 @@ export class TipoFinanciacionModalComponent implements OnInit {
     this.fxFlexProperties.md = '0 1 calc(100%-10px)';
     this.fxFlexProperties.gtMd = '0 1 calc(100%-10px)';
     this.fxFlexProperties.order = '2';
-    if (tipoFinanciacion) {
+    if (tipoFinanciacion.id) {
       this.tipoFinanciacion = { ...tipoFinanciacion };
+      this.textSaveOrUpdate = MSG_ACEPTAR;
     } else {
       this.tipoFinanciacion = { activo: true } as ITipoFinanciacion;
+      this.textSaveOrUpdate = MSG_ANADIR;
     }
     this.logger.debug(TipoFinanciacionModalComponent.name, 'constructor()', 'end');
   }

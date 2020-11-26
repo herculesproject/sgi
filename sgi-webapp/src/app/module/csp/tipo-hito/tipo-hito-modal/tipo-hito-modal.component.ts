@@ -10,7 +10,8 @@ import { FormGroupUtil } from '@core/utils/form-group-util';
 import { NGXLogger } from 'ngx-logger';
 
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
-
+const MSG_ANADIR = marker('botones.aniadir');
+const MSG_ACEPTAR = marker('botones.aceptar');
 @Component({
   selector: 'sgi-tipo-hito-modal',
   templateUrl: './tipo-hito-modal.component.html',
@@ -20,6 +21,7 @@ export class TipoHitoModalComponent implements OnInit {
   formGroup: FormGroup;
   fxLayoutProperties: FxLayoutProperties;
   fxFlexProperties: FxFlexProperties;
+  textSaveOrUpdate: string;
 
   constructor(
     private readonly logger: NGXLogger,
@@ -36,10 +38,12 @@ export class TipoHitoModalComponent implements OnInit {
     this.fxFlexProperties.md = '0 1 calc(100%-10px)';
     this.fxFlexProperties.gtMd = '0 1 calc(100%-10px)';
     this.fxFlexProperties.order = '2';
-    if (tipoHito) {
+    if (tipoHito.id) {
       this.tipoHito = { ...tipoHito };
+      this.textSaveOrUpdate = MSG_ACEPTAR;
     } else {
       this.tipoHito = { activo: true } as ITipoHito;
+      this.textSaveOrUpdate = MSG_ANADIR;
     }
     this.logger.debug(TipoHitoModalComponent.name, 'constructor()', 'end');
   }

@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { IConvocatoriaSeguimientoCientifico } from '@core/models/csp/convocatoria-seguimiento-cientifico';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -19,6 +20,9 @@ export interface IConvocatoriaSeguimientoCientificoModalData {
   convocatoriaSeguimientoCientificoList: StatusWrapper<IConvocatoriaSeguimientoCientifico>[];
 }
 
+const MSG_ANADIR = marker('botones.aniadir');
+const MSG_ACEPTAR = marker('botones.aceptar');
+
 @Component({
   templateUrl: './convocatoria-seguimiento-cientifico-modal.component.html',
   styleUrls: ['./convocatoria-seguimiento-cientifico-modal.component.scss']
@@ -30,6 +34,7 @@ export class ConvocatoriaSeguimientoCientificoModalComponent
   fxLayoutProperties: FxLayoutProperties;
 
   FormGroupUtil = FormGroupUtil;
+  textSaveOrUpdate: string;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -63,6 +68,7 @@ export class ConvocatoriaSeguimientoCientificoModalComponent
   ngOnInit(): void {
     super.ngOnInit();
     this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, 'ngOnInit()', 'start');
+    this.textSaveOrUpdate = this.data?.convocatoriaSeguimientoCientifico?.mesInicial ? MSG_ACEPTAR : MSG_ANADIR;
     this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, 'ngOnInit()', 'start');
   }
 
