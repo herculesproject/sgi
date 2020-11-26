@@ -11,7 +11,7 @@ import { EvaluacionEvaluadorActionService } from '../evaluacion-evaluador.action
 import { EVALUACION_EVALUADOR_ROUTE_NAMES } from '../evaluacion-evaluador-route-names';
 import { EvaluacionFormularioActionService } from '../../evaluacion-formulario/evaluacion-formulario.action.service';
 
-const MSG_BUTTON_SAVE = marker('footer.eti.evaluacion.guardar');
+const MSG_BUTTON_SAVE = marker('botones.aceptar');
 const MSG_SUCCESS = marker('eti.evaluacion.evaluar.correcto');
 const MSG_ERROR_SAVE = marker('eti.evaluacion.evaluar.comentarios.error.crear');
 

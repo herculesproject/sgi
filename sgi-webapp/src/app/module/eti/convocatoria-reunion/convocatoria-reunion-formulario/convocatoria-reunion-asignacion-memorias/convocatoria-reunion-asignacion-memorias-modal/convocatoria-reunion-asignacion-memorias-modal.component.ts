@@ -22,6 +22,7 @@ import { Observable, of, Subscription } from 'rxjs';
 import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { IConvocatoriaReunion } from '@core/models/eti/convocatoria-reunion';
 
+
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 const MSG_ERROR_CARGAR_MEMORIA = marker('eti.convocatoriaReunion.formulario.asignacionMemorias.memoria.error.cargar');
 const MSG_ERROR_CARGAR_EVALUADOR1 = marker('eti.convocatoriaReunion.formulario.asignacionMemorias.evaluador1.error.cargar');
@@ -55,6 +56,8 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
   filterMemoriasAsignables: SgiRestFilter[];
   memoriasAsignadas: IMemoria[];
   evaluacion: IEvaluacion;
+
+  isEdit = false;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -102,6 +105,8 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
         this.loadMemoriasAsignablesConvocatoriaOrdExt();
       }
     }
+
+    this.isEdit = this.evaluacion?.memoria ? true : false;
 
     this.loadEvaluadores();
 
@@ -435,6 +440,7 @@ export class ConvocatoriaReunionAsignacionMemoriasModalComponent implements OnIn
    * @returns referencia y titulo memoria
    */
   getMemoria(memoria: IMemoria): string {
+
     return memoria ? (memoria.numReferencia + ' - ' + memoria.titulo) : '';
   }
 

@@ -10,7 +10,7 @@ import { SeguimientoEvaluarActionService } from '../seguimiento-evaluar.action.s
 import { SEGUIMIENTO_ROUTE_NAMES } from '../seguimiento-route-names';
 import { SeguimientoFormularioActionService } from '../../seguimiento-formulario/seguimiento-formulario.action.service';
 
-const MSG_BUTTON_SAVE = marker('botones.guardar');
+const MSG_BUTTON_SAVE = marker('botones.aceptar');
 const MSG_SUCCESS = marker('eti.seguimiento.evaluar.correcto');
 const MSG_ERROR_SAVE = marker('eti.seguimiento.evaluar.comentarios.error.crear');
 

@@ -10,7 +10,7 @@ import { GESTION_SEGUIMIENTO_ROUTE_NAMES } from '../gestion-seguimiento-route-na
 import { DialogService } from '@core/services/dialog.service';
 import { SeguimientoFormularioActionService } from '../../seguimiento-formulario/seguimiento-formulario.action.service';
 
-const MSG_BUTTON_SAVE = marker('footer.eti.evaluacion.guardar');
+const MSG_BUTTON_SAVE = marker('botones.aceptar');
 const MSG_SUCCESS = marker('eti.evaluacion.evaluar.correcto');
 const MSG_ERROR_SAVE = marker('eti.evaluacion.evaluar.comentarios.error.crear');
 

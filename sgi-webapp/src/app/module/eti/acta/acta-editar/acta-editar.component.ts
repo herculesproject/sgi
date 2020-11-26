@@ -11,7 +11,7 @@ import { DialogService } from '@core/services/dialog.service';
 import { ACTA_ROUTE_NAMES } from '../acta-route-names';
 import { ActionService } from '@core/services/action-service';
 
-const MSG_BUTTON_EDIT = marker('footer.eti.acta.actualizar');
+const MSG_BUTTON_EDIT = marker('botones.aceptar');
 const MSG_SUCCESS = marker('eti.acta.editar.correcto');
 const MSG_ERROR = marker('eti.acta.editar.error');
 

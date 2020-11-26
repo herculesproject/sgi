@@ -8,7 +8,7 @@ import { EvaluadorActionService } from '../evaluador.action.service';
 import { DialogService } from '@core/services/dialog.service';
 import { EVALUADOR_ROUTE_NAMES } from '../evaluador-route-names';
 
-const MSG_BUTTON_SAVE = marker('footer.eti.evaluador.actualizar');
+const MSG_BUTTON_SAVE = marker('botones.aceptar');
 const MSG_SUCCESS = marker('eti.evaluador.actualizar.correcto');
 const MSG_ERROR = marker('eti.evaluador.actualizar.error');
 

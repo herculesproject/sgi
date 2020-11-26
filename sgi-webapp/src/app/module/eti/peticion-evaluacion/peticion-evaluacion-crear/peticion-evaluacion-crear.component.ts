@@ -14,12 +14,11 @@ import {
 } from '../peticion-evaluacion-formulario/peticion-evaluacion-datos-generales/peticion-evaluacion-datos-generales.component';
 
 
-
 import { PETICION_EVALUACION_ROUTE_NAMES } from '../peticion-evaluacion-route-names';
 import { PeticionEvaluacionActionService } from '../peticion-evaluacion.action.service';
 
 
-const MSG_BUTTON_SAVE = marker('footer.eti.acta.guardar');
+const MSG_BUTTON_SAVE = marker('botones.aniadir');
 const MSG_ERROR = marker('eti.peticionEvaluacion.crear.error');
 const MSG_SUCCESS = marker('eti.peticionEvaluacion.crear.correcto');
 

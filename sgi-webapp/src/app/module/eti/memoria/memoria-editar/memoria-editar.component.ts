@@ -9,7 +9,7 @@ import { MemoriaActionService } from '../memoria.action.service';
 
 import { MEMORIA_ROUTE_NAMES } from '../memoria-route-names';
 
-const MSG_BUTTON_SAVE = marker('botones.guardar');
+const MSG_BUTTON_SAVE = marker('botones.aceptar');
 const MSG_SUCCESS = marker('eti.memoria.actualizar.correcto');
 const MSG_ERROR = marker('eti.memoria.actualizar.error');
 

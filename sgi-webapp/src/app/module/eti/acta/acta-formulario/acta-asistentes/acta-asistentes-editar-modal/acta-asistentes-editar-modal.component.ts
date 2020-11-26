@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IAsistente } from '@core/models/eti/asistente';
@@ -6,12 +6,9 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { FormGroupUtil } from '@core/utils/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { Subscription } from 'rxjs';
-import { AsistenteService } from '@core/services/eti/asistente.service';
+
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 
-const MSG_SUCCESS = marker('eti.acta.asistentes.correcto');
-const MSG_ERROR = marker('eti.acta.asistentes.error');
 const MSG_ERROR_FORM = marker('form-group.error');
 
 @Component({

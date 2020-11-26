@@ -11,7 +11,7 @@ import { DialogService } from '@core/services/dialog.service';
 import { ACTA_ROUTE_NAMES } from '../acta-route-names';
 
 
-const MSG_BUTTON_SAVE = marker('footer.eti.acta.guardar');
+const MSG_BUTTON_SAVE = marker('botones.aniadir');
 const MSG_SUCCESS = marker('eti.acta.crear.correcto');
 const MSG_ERROR = marker('eti.acta.crear.error');
 

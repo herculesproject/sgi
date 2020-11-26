@@ -9,7 +9,7 @@ import { EVALUADOR_ROUTE_NAMES } from '../evaluador-route-names';
 import { DialogService } from '@core/services/dialog.service';
 
 
-const MSG_BUTTON_SAVE = marker('footer.eti.evaluador.guardar');
+const MSG_BUTTON_SAVE = marker('botones.aniadir');
 const MSG_SUCCESS = marker('eti.evaluador.crear.correcto');
 const MSG_ERROR = marker('eti.evaluador.crear.error');
 

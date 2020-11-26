@@ -10,7 +10,7 @@ import { NGXLogger } from 'ngx-logger';
 import { PETICION_EVALUACION_ROUTE_NAMES } from '../peticion-evaluacion-route-names';
 import { PeticionEvaluacionActionService } from '../peticion-evaluacion.action.service';
 
-const MSG_BUTTON_EDIT = marker('footer.eti.peticionEvaluacion.actualizar');
+const MSG_BUTTON_EDIT = marker('botones.aceptar');
 const MSG_SUCCESS = marker('eti.peticionEvaluacion.editar.correcto');
 const MSG_ERROR = marker('eti.peticionEvaluacion.editar.error');
 
