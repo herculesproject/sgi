@@ -303,6 +303,14 @@
       <td mat-cell *matCellDef="let element">{{element.entidadFinanciadora.fuenteFinanciacion?.nombre}}</td>
     </ng-container>
 
+    <!-- Estado actual Column -->
+    <ng-container matColumnDef="estadoActual">
+      <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.listado.estado' | translate}} </th>
+      <td mat-cell *matCellDef="let element">
+        {{element.convocatoria.estadoActual}}
+      </td>
+    </ng-container>
+
     <!-- Activo Column -->
     <ng-container matColumnDef="activo">
       <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.listado.activo' | translate}} </th>

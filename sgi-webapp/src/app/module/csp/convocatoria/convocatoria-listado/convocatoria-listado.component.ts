@@ -4,7 +4,7 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http/';
 import { NGXLogger } from 'ngx-logger';
 import { FormGroup, FormControl } from '@angular/forms';
-import { forkJoin, from, Observable, of, Subscription } from 'rxjs';
+import { from, Observable, of, Subscription } from 'rxjs';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { catchError, map, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
 
@@ -143,7 +143,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
       codigo: new FormControl(''),
       titulo: new FormControl(''),
       anio: new FormControl(''),
-      activo: new FormControl('todos'),
+      activo: new FormControl('true'),
       unidadGestion: new FormControl('', [IsEntityValidator.isValid()]),
       modeloEjecucion: new FormControl('', [IsEntityValidator.isValid()]),
       abiertoPlazoPresentacionSolicitud: new FormControl(''),
@@ -295,7 +295,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     this.columnas = [
       'codigo', 'titulo', 'fechaInicioSolicitud', 'fechaFinSolicitud',
       'entidadConvocante', 'planInvestigacion', 'entidadFinanciadora',
-      'fuenteFinanciacion', 'activo', 'acciones'
+      'fuenteFinanciacion', 'estadoActual', 'activo', 'acciones'
     ];
     this.logger.debug(ConvocatoriaListadoComponent.name, `${this.initColumns.name}()`, 'end');
   }
@@ -319,6 +319,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     if (this.formGroup.controls.activo.value !== 'todos') {
       this.addFiltro(filtros, 'activo', SgiRestFilterType.EQUALS, this.formGroup.controls.activo.value);
     }
+
     this.addFiltro(filtros, 'anio', SgiRestFilterType.EQUALS, this.formGroup.controls.anio.value);
     this.addFiltro(filtros, 'unidadGestionRef', SgiRestFilterType.EQUALS, this.formGroup.controls.unidadGestion.value.acronimo);
     this.addFiltro(filtros, 'modeloEjecucion.id', SgiRestFilterType.EQUALS, this.formGroup.controls.modeloEjecucion.value.id);
@@ -362,8 +363,8 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
   private loadAreasTematica() {
     this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadAreasTematica.name}()`, 'start');
     this.suscripciones.push(
-      this.areaTematicaService.findAll().subscribe(
-        (res: SgiRestListResult<IAreaTematica>) => {
+      this.areaTematicaService.findAllGrupo().subscribe(
+        (res) => {
           this.areaTematicaFiltered = res.items;
           this.areaTematica$ = this.formGroup.controls.areaTematica.valueChanges
             .pipe(
@@ -372,9 +373,9 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
             );
           this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadAreasTematica.name}()`, 'end');
         },
-        () => {
+        (error) => {
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadAreasTematica.name}()`, 'end');
+          this.logger.error(ConvocatoriaListadoComponent.name, `${this.loadAreasTematica.name}()`, error);
         }
       )
     );
@@ -388,7 +389,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     this.logger.debug(ConvocatoriaListadoComponent.name, `${this.fuenteFinanciacion.name}()`, 'start');
     this.suscripciones.push(
       this.fuenteFinanciacionService.findAll().subscribe(
-        (res: SgiRestListResult<IFuenteFinanciacion>) => {
+        (res) => {
           this.fuenteFinanciacionFiltered = res.items;
           this.fuenteFinanciacion$ = this.formGroup.controls.fuenteFinanciacion.valueChanges
             .pipe(
@@ -397,9 +398,9 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
             );
           this.logger.debug(ConvocatoriaListadoComponent.name, `${this.fuenteFinanciacion.name}()`, 'end');
         },
-        () => {
+        (error) => {
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.debug(ConvocatoriaListadoComponent.name, `${this.fuenteFinanciacion.name}()`, 'end');
+          this.logger.error(ConvocatoriaListadoComponent.name, `${this.fuenteFinanciacion.name}()`, error);
         }
       )
     );
@@ -423,12 +424,13 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
             );
           this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadUnidadesGestion.name}()`, 'end');
         },
-        () => {
+        (error) => {
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.error(ConvocatoriaListadoComponent.name, `${this.loadUnidadesGestion.name}()`, 'error');
+          this.logger.error(ConvocatoriaListadoComponent.name, `${this.loadUnidadesGestion.name}()`, error);
         }
       )
     );
+    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadUnidadesGestion.name}()`, 'end');
   }
 
   /**
@@ -447,12 +449,13 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
             );
           this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadAmbitosGeograficos.name}()`, 'end');
         },
-        () => {
+        (error) => {
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.error(ConvocatoriaListadoComponent.name, `${this.loadAmbitosGeograficos.name}()`, 'error');
+          this.logger.error(ConvocatoriaListadoComponent.name, `${this.loadAmbitosGeograficos.name}()`, error);
         }
       )
     );
+    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadAmbitosGeograficos.name}()`, 'end');
   }
 
   /**
@@ -481,11 +484,12 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
           );
         this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadModelosEjecucion.name}()`, 'end');
       },
-      () => {
+      (error) => {
         this.snackBarService.showError(MSG_ERROR_INIT);
-        this.logger.error(ConvocatoriaListadoComponent.name, `${this.loadModelosEjecucion.name}()`, 'error');
+        this.logger.error(ConvocatoriaListadoComponent.name, `${this.loadModelosEjecucion.name}()`, error);
       }
     ));
+    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadModelosEjecucion.name}()`, 'end');
   }
 
   /**
@@ -514,14 +518,15 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
                 );
               this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadFinalidades.name}()`, 'end');
             },
-            () => {
+            (error) => {
               this.snackBarService.showError(MSG_ERROR_INIT);
-              this.logger.error(ConvocatoriaListadoComponent.name, `${this.loadFinalidades.name}()`, 'error');
+              this.logger.error(ConvocatoriaListadoComponent.name, `${this.loadFinalidades.name}()`, error);
             }
           )
         );
       }
     }
+    this.logger.debug(ConvocatoriaListadoComponent.name, `${this.loadFinalidades.name}()`, 'end');
   }
 
   /**

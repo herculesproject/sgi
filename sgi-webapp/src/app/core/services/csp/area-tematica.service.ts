@@ -22,6 +22,10 @@ export class AreaTematicaService extends SgiRestService<number, IAreaTematica> {
     );
   }
 
+  /**
+   * Muestra las areas temáticas que tienen padre a NULL
+   * @param options opciones de búsqueda.
+   */
   findAllGrupo(options?: SgiRestFindOptions): Observable<SgiRestListResult<IAreaTematica>> {
     this.logger.debug(AreaTematicaService.name, `${this.findAllGrupo.name}(`, '-', 'start');
     return this.find<IAreaTematica, IAreaTematica>(`${this.endpointUrl}/grupo`, options).pipe(
