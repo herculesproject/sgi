@@ -134,6 +134,19 @@ public class ActaServiceImpl implements ActaService {
   }
 
   /**
+   * Comprueba la existencia del {@link Acta} por id.
+   *
+   * @param id el id de la entidad {@link Acta}.
+   * @return true si existe y false en caso contrario.
+   */
+  public boolean existsById(final Long id) throws TareaNotFoundException {
+    log.debug("Acta existsById (Acta acta)  - start", id);
+    final boolean existe = actaRepository.existsById(id);
+    log.debug("Acta existsById (Acta acta)  - end", id);
+    return existe;
+  }
+
+  /**
    * Elimina una entidad {@link Acta} por id.
    *
    * @param id el id de la entidad {@link Acta}.

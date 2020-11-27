@@ -73,6 +73,28 @@ public class ActaControllerTest extends BaseControllerTest {
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
+  public void existsActa_WithId_Returns200() throws Exception {
+    BDDMockito.given(actaService.existsById(ArgumentMatchers.anyLong())).willReturn(true);
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.head(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
+  public void existsActa_WithId_Returns204() throws Exception {
+    BDDMockito.given(actaService.existsById(ArgumentMatchers.anyLong())).willReturn(false);
+
+    mockMvc
+        .perform(MockMvcRequestBuilders.head(ACTA_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-ACT-V" })
   public void getActa_NotFound_Returns404() throws Exception {
     BDDMockito.given(actaService.findById(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
       throw new ActaNotFoundException(invocation.getArgument(0));

@@ -48,6 +48,14 @@ public interface ActaService {
   Acta findById(Long id);
 
   /**
+   * Comprueba la existencia del {@link Acta} por id.
+   *
+   * @param id el id de la entidad {@link Acta}.
+   * @return true si existe y false en caso contrario.
+   */
+  boolean existsById(Long id);
+
+  /**
    * Elimina el {@link Acta} por id.
    *
    * @param id el id de la entidad {@link Acta}.

@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -119,6 +120,23 @@ public class ActaController {
     Acta returnValue = service.findById(id);
     log.debug("Acta one(Long id) - end");
     return returnValue;
+  }
+
+  /**
+   * Comprueba la existencia del {@link Acta} con el id indicado.
+   * 
+   * @param id Identificador de {@link Acta}.
+   * @return HTTP 200 si existe y HTTP 204 si no.
+   */
+  @RequestMapping(path = "/{id}", method = RequestMethod.HEAD)
+  public ResponseEntity<?> exists(@PathVariable Long id) {
+    log.debug("Acta exists(Long id) - start");
+    if (service.existsById(id)) {
+      log.debug("Acta exists(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.OK);
+    }
+    log.debug("Acta exists(Long id) - end");
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   /**
