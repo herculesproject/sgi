@@ -29,9 +29,9 @@ export interface ConvocatoriaPlazosFaseModalComponentData {
   plazos: IConvocatoriaFase[];
   plazo: IConvocatoriaFase;
   idModeloEjecucion: number;
+  readonly: boolean;
 }
 @Component({
-  selector: 'sgi-convocatoria-plazos-fase-modal',
   templateUrl: './convocatoria-plazos-fase-modal.component.html',
   styleUrls: ['./convocatoria-plazos-fase-modal.component.scss']
 })
@@ -42,23 +42,19 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
   fxFlexProperties2: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
   fxLayoutProperties2: FxLayoutProperties;
-
-  FormGroupUtil = FormGroupUtil;
   modeloTipoFases$: Observable<IModeloTipoFase[]>;
 
   private modeloTipoFasesFiltered: IModeloTipoFase[];
-
-  suscripciones: Subscription[];
+  private suscripciones: Subscription[] = [];
 
   textSaveOrUpdate: string;
 
   constructor(
-    private readonly logger: NGXLogger,
-    private readonly snackBarService: SnackBarService,
-    @Inject(MAT_DIALOG_DATA) private data: ConvocatoriaPlazosFaseModalComponentData,
-    public readonly matDialogRef: MatDialogRef<ConvocatoriaPlazosFaseModalComponent>,
-    private readonly modeloEjecucionService: ModeloEjecucionService,
-    private readonly convocatoriaService: ConvocatoriaService
+    private logger: NGXLogger,
+    private snackBarService: SnackBarService,
+    @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaPlazosFaseModalComponentData,
+    public matDialogRef: MatDialogRef<ConvocatoriaPlazosFaseModalComponent>,
+    private modeloEjecucionService: ModeloEjecucionService,
   ) {
     this.logger.debug(ConvocatoriaPlazosFaseModalComponent.name, 'constructor()', 'start');
 
@@ -89,7 +85,6 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.logger.debug(ConvocatoriaPlazosFaseModalComponent.name, 'ngOnInit()', 'start');
-    this.suscripciones = [];
     this.initFormGroup();
     this.loadTipoFases();
     this.textSaveOrUpdate = this.data.plazo.fechaInicio ? MSG_ACEPTAR : MSG_ANADIR;
@@ -104,10 +99,14 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
 
     this.formGroup = new FormGroup({
       fechaInicio: new FormControl(this.data?.plazo?.fechaInicio, [Validators.required]),
-      fechaFin: new FormControl(this.data?.plazo?.fechaFin, [Validators.required]),
+      fechaFin: new FormControl(this.data?.plazo?.fechaFin, Validators.required),
       tipoFase: new FormControl(this.data?.plazo?.tipoFase, [Validators.required, new NullIdValidador().isValid()]),
       observaciones: new FormControl(this.data?.plazo?.observaciones, [Validators.maxLength(250)])
     });
+
+    if (this.data.readonly) {
+      this.formGroup.disable();
+    }
 
     this.createValidatorDate(this.data?.plazo?.tipoFase);
 
@@ -123,11 +122,13 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
    * @param tipoFase convocatoria tipoFase
    */
   private createValidatorDate(tipoFase: ITipoFase | string): void {
+    this.logger.debug(ConvocatoriaPlazosFaseModalComponent.name, `createValidatorDate(tipoFase: ${tipoFase})`, 'end');
     let rangoFechas: IRange[];
     if (!tipoFase || typeof tipoFase === 'string') {
       rangoFechas = [];
     } else {
-      const convocatoriasFases = this.data.plazos.filter(plazo => plazo.tipoFase.id === tipoFase.id && plazo.id !== this.data.plazo.id);
+      const convocatoriasFases = this.data.plazos.filter(plazo =>
+        plazo.tipoFase.id === tipoFase.id && plazo.id !== this.data.plazo.id);
       rangoFechas = convocatoriasFases.map(
         fase => {
           const rango: IRange = {
@@ -143,6 +144,7 @@ export class ConvocatoriaPlazosFaseModalComponent implements OnInit, OnDestroy {
       DateValidator.isBefore('fechaFin', 'fechaInicio'),
       RangeValidator.notOverlaps('fechaInicio', 'fechaFin', rangoFechas)
     ]);
+    this.logger.debug(ConvocatoriaPlazosFaseModalComponent.name, `createValidatorDate(tipoFase: ${tipoFase})`, 'end');
   }
 
   loadTipoFases() {

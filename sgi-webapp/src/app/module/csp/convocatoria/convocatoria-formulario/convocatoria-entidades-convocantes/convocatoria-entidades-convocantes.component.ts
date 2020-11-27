@@ -21,7 +21,7 @@ const MSG_DELETE = marker('csp.convocatoria.entidad.convocante.listado.borrar');
   styleUrls: ['./convocatoria-entidades-convocantes.component.scss']
 })
 export class ConvocatoriaEntidadesConvocantesComponent extends FragmentComponent implements OnInit, OnDestroy {
-  private formPart: ConvocatoriaEntidadesConvocantesFragment;
+  formPart: ConvocatoriaEntidadesConvocantesFragment;
   private subscriptions: Subscription[] = [];
 
   columns = ['nombre', 'cif', 'plan', 'programa', 'itemPrograma', 'acciones'];
@@ -68,7 +68,8 @@ export class ConvocatoriaEntidadesConvocantesComponent extends FragmentComponent
 
     const data: ConvocatoriaEntidadConvocanteModalData = {
       entidadConvocanteData: value,
-      selectedEmpresas: this.formPart.data$.value.map((convocanteData) => convocanteData.empresaEconomica)
+      selectedEmpresas: this.formPart.data$.value.map((convocanteData) => convocanteData.empresaEconomica),
+      readonly: this.formPart.readonly
     };
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,

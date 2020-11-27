@@ -34,6 +34,7 @@ const MSG_ACEPTAR = marker('botones.aceptar');
 export interface ConvocatoriaEntidadConvocanteModalData {
   entidadConvocanteData: ConvocatoriaEntidadConvocanteData;
   selectedEmpresas: IEmpresaEconomica[];
+  readonly: boolean;
 }
 
 class NodePrograma {
@@ -148,7 +149,7 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
         this.dataSource.data = programas;
       }
     ));
-    this.subscriptions.push(this.programaService.findAllPlan().subscribe(
+    const subcription = this.programaService.findAllPlan().subscribe(
       list => {
         this.programaFiltered = list.items;
         this.planes$ = this.formGroup.get('plan').valueChanges.pipe(
@@ -164,7 +165,8 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
           })
         );
       }
-    ));
+    );
+    this.subscriptions.push(subcription);
     this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -279,6 +281,9 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
       plan: new FormControl(this.data.entidadConvocanteData.plan, IsEntityValidator.isValid()),
       programa: new FormControl(this.data.entidadConvocanteData.entidadConvocante.value.programa?.id)
     });
+    if (this.data.readonly) {
+      formGroup.disable();
+    }
     this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }

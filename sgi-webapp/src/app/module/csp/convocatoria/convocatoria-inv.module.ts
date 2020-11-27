@@ -7,6 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ConvocatoriaResolver } from './convocatoria.resolver';
 import { ConvocatoriaListadoInvComponent } from './convocatoria-listado-inv/convocatoria-listado-inv.component';
 import { ConvocatoriaRoutingInvModule } from './convocatoria-routing-inv.module';
+import { ConfiguracionSolicitudResolver } from './configuracion-solicitud.resolver';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { ConvocatoriaRoutingInvModule } from './convocatoria-routing-inv.module'
     FormsModule
   ],
   providers: [
-    ConvocatoriaResolver
+    ConvocatoriaResolver,
+    ConfiguracionSolicitudResolver
   ]
 })
 export class ConvocatoriaInvModule { }

@@ -23,38 +23,31 @@ const MSG_DELETE = marker('csp.convocatoria.periodoJustificacion.listado.borrar'
   styleUrls: ['./convocatoria-periodos-justificacion.component.scss']
 })
 export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponent implements OnInit, OnDestroy {
+  formPart: ConvocatoriaPeriodosJustificacionFragment;
+  private subscriptions: Subscription[] = [];
 
-  private formPart: ConvocatoriaPeriodosJustificacionFragment;
-  private subscriptions: Subscription[];
-
-  totalElementos: number;
-  displayedColumns: string[];
-  elementosPagina: number[];
+  displayedColumns = ['numPeriodo', 'mesInicial', 'mesFinal', 'fechaInicio', 'fechaFin', 'observaciones', 'acciones'];
+  elementosPagina = [5, 10, 25, 100];
 
   dataSource: MatTableDataSource<StatusWrapper<IConvocatoriaPeriodoJustificacion>>;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    protected readonly logger: NGXLogger,
-    private readonly dialogService: DialogService,
-    protected readonly actionService: ConvocatoriaActionService,
+    protected logger: NGXLogger,
+    private dialogService: DialogService,
+    protected actionService: ConvocatoriaActionService,
     private matDialog: MatDialog
   ) {
     super(actionService.FRAGMENT.PERIODO_JUSTIFICACION, actionService);
     this.logger.debug(ConvocatoriaPeriodosJustificacionComponent.name, 'constructor()', 'start');
-
     this.formPart = this.fragment as ConvocatoriaPeriodosJustificacionFragment;
-    this.elementosPagina = [5, 10, 25, 100];
-    this.displayedColumns = ['numPeriodo', 'mesInicial', 'mesFinal', 'fechaInicio', 'fechaFin', 'observaciones', 'acciones'];
     this.logger.debug(ConvocatoriaPeriodosJustificacionComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
     this.logger.debug(ConvocatoriaPeriodosJustificacionComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
-    this.totalElementos = 0;
-    this.subscriptions = [];
     this.dataSource = new MatTableDataSource<StatusWrapper<IConvocatoriaPeriodoJustificacion>>();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sortingDataAccessor =
@@ -85,20 +78,20 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
    */
   openModalPeriodoJustificacion(periodoJustificacionActualizar?: StatusWrapper<IConvocatoriaPeriodoJustificacion>): void {
     this.logger.debug(ConvocatoriaPeriodosJustificacionComponent.name,
-      `${this.openModalPeriodoJustificacion.name}(${periodoJustificacionActualizar})`, 'start');
+      `openModalPeriodoJustificacion(${periodoJustificacionActualizar})`, 'start');
 
-    const modalData = {
+    const data: IConvocatoriaPeriodoJustificacionModalData = {
       duracion: this.actionService.duracion,
       convocatoriaPeriodoJustificacion: periodoJustificacionActualizar
         ? periodoJustificacionActualizar.value : {} as IConvocatoriaPeriodoJustificacion,
-      convocatoriaPeriodoJustificacionList: this.dataSource.data
-    } as IConvocatoriaPeriodoJustificacionModalData;
+      convocatoriaPeriodoJustificacionList: this.dataSource.data,
+      readonly: this.formPart.readonly
+    };
 
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: modalData,
-      autoFocus: false
+      data,
     };
 
     const dialogRef = this.matDialog.open(ConvocatoriaPeriodosJustificacionModalComponent, config);
@@ -120,7 +113,7 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
         this.recalcularNumPeriodos();
 
         this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name,
-          `${this.openModalPeriodoJustificacion.name}(${periodoJustificacionActualizar})`, 'end');
+          `openModalPeriodoJustificacion(${periodoJustificacionActualizar})`, 'end');
       }
     );
 
@@ -133,18 +126,18 @@ export class ConvocatoriaPeriodosJustificacionComponent extends FragmentComponen
    */
   deletePeriodoJustificacion(periodoJustificacion?: StatusWrapper<IConvocatoriaPeriodoJustificacion>): void {
     this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name,
-      `${this.deletePeriodoJustificacion.name}(${periodoJustificacion})`, 'start');
+      `deletePeriodoJustificacion(${periodoJustificacion})`, 'start');
 
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
-        (aceptado: boolean) => {
+        (aceptado) => {
           if (aceptado) {
             this.formPart.deletePeriodoJustificacion(periodoJustificacion);
             this.recalcularNumPeriodos();
           }
 
           this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name,
-            `${this.deletePeriodoJustificacion.name}(${periodoJustificacion})`, 'end');
+            `deletePeriodoJustificacion(${periodoJustificacion})`, 'end');
         }
       )
     );

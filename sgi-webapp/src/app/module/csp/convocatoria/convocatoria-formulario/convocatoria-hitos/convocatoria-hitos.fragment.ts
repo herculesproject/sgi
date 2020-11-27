@@ -15,13 +15,16 @@ export class ConvocatoriaHitosFragment extends Fragment implements OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private readonly logger: NGXLogger,
+    private logger: NGXLogger,
     key: number,
-    private readonly convocatoriaService: ConvocatoriaService,
-    private readonly convocatoriaHitoService: ConvocatoriaHitoService
+    private convocatoriaService: ConvocatoriaService,
+    private convocatoriaHitoService: ConvocatoriaHitoService,
+    public readonly: boolean
   ) {
     super(key);
+    this.logger.debug(ConvocatoriaHitosFragment.name, 'constructor()', 'start');
     this.setComplete(true);
+    this.logger.debug(ConvocatoriaHitosFragment.name, 'constructor()', 'start');
   }
 
   ngOnDestroy(): void {
@@ -46,7 +49,7 @@ export class ConvocatoriaHitosFragment extends Fragment implements OnDestroy {
 
   public addHito(hito: IConvocatoriaHito) {
     this.logger.debug(ConvocatoriaHitosFragment.name,
-      `${this.addHito.name}(addHito: ${hito})`, 'start');
+      `addHito(addHito: ${hito})`, 'start');
     const wrapped = new StatusWrapper<IConvocatoriaHito>(hito);
     wrapped.setCreated();
     const current = this.hitos$.value;
@@ -54,12 +57,12 @@ export class ConvocatoriaHitosFragment extends Fragment implements OnDestroy {
     this.hitos$.next(current);
     this.setChanges(true);
     this.logger.debug(ConvocatoriaHitosFragment.name,
-      `${this.addHito.name}(addHito: ${hito})`, 'end');
+      `addHito(addHito: ${hito})`, 'end');
   }
 
   public deleteHito(wrapper: StatusWrapper<IConvocatoriaHito>) {
     this.logger.debug(ConvocatoriaHitosFragment.name,
-      `${this.deleteHito.name}(wrapper: ${wrapper})`, 'start');
+      `deleteHito(wrapper: ${wrapper})`, 'start');
     const current = this.hitos$.value;
     const index = current.findIndex(
       (value) => value === wrapper
@@ -73,11 +76,11 @@ export class ConvocatoriaHitosFragment extends Fragment implements OnDestroy {
       this.setChanges(true);
     }
     this.logger.debug(ConvocatoriaHitosFragment.name,
-      `${this.deleteHito.name}(wrapper: ${wrapper})`, 'end');
+      `deleteHito(wrapper: ${wrapper})`, 'end');
   }
 
   saveOrUpdate(): Observable<void> {
-    this.logger.debug(ConvocatoriaHitosFragment.name, `${this.saveOrUpdate.name}()`, 'start');
+    this.logger.debug(ConvocatoriaHitosFragment.name, `saveOrUpdate()`, 'start');
     return merge(
       this.deleteHitos(),
       this.updateHitos(),
@@ -89,14 +92,14 @@ export class ConvocatoriaHitosFragment extends Fragment implements OnDestroy {
           this.setChanges(false);
         }
       }),
-      tap(() => this.logger.debug(ConvocatoriaHitosFragment.name, `${this.saveOrUpdate.name}()`, 'end'))
+      tap(() => this.logger.debug(ConvocatoriaHitosFragment.name, `saveOrUpdate()`, 'end'))
     );
   }
 
   private deleteHitos(): Observable<void> {
-    this.logger.debug(ConvocatoriaHitosFragment.name, `${this.deleteHitos.name}()`, 'start');
+    this.logger.debug(ConvocatoriaHitosFragment.name, `deleteHitos()`, 'start');
     if (this.hitosEliminados.length === 0) {
-      this.logger.debug(ConvocatoriaHitosFragment.name, `${this.deleteHitos.name}()`, 'end');
+      this.logger.debug(ConvocatoriaHitosFragment.name, `deleteHitos()`, 'end');
       return of(void 0);
     }
     return from(this.hitosEliminados).pipe(
@@ -108,16 +111,17 @@ export class ConvocatoriaHitosFragment extends Fragment implements OnDestroy {
                 deletedHito.value.id !== wrapped.value.id);
             }),
             tap(() => this.logger.debug(ConvocatoriaHitosFragment.name,
-              `${this.deleteHitos.name}()`, 'end'))
+              `deleteHitos()`, 'end'))
           );
-      }));
+      })
+    );
   }
 
   private createHitos(): Observable<void> {
-    this.logger.debug(ConvocatoriaHitosFragment.name, `${this.createHitos.name}()`, 'start');
+    this.logger.debug(ConvocatoriaHitosFragment.name, `createHitos()`, 'start');
     const createdHitos = this.hitos$.value.filter((convocatoriaHito) => convocatoriaHito.created);
     if (createdHitos.length === 0) {
-      this.logger.debug(ConvocatoriaHitosFragment.name, `${this.createHitos.name}()`, 'end');
+      this.logger.debug(ConvocatoriaHitosFragment.name, `createHitos()`, 'end');
       return of(void 0);
     }
     createdHitos.forEach(
@@ -134,16 +138,17 @@ export class ConvocatoriaHitosFragment extends Fragment implements OnDestroy {
             this.hitos$.value[index] = new StatusWrapper<IConvocatoriaHito>(updatedHitos);
           }),
           tap(() => this.logger.debug(ConvocatoriaHitosFragment.name,
-            `${this.createHitos.name}()`, 'end'))
+            `createHitos()`, 'end'))
         );
-      }));
+      })
+    );
   }
 
   private updateHitos(): Observable<void> {
-    this.logger.debug(ConvocatoriaHitosFragment.name, `${this.updateHitos.name}()`, 'start');
+    this.logger.debug(ConvocatoriaHitosFragment.name, `updateHitos()`, 'start');
     const updateHitos = this.hitos$.value.filter((convocatoriaHito) => convocatoriaHito.edited);
     if (updateHitos.length === 0) {
-      this.logger.debug(ConvocatoriaHitosFragment.name, `${this.updateHitos.name}()`, 'end');
+      this.logger.debug(ConvocatoriaHitosFragment.name, `updateHitos()`, 'end');
       return of(void 0);
     }
     return from(updateHitos).pipe(
@@ -154,15 +159,16 @@ export class ConvocatoriaHitosFragment extends Fragment implements OnDestroy {
             this.hitos$.value[index] = new StatusWrapper<IConvocatoriaHito>(updatedHitos);
           }),
           tap(() => this.logger.debug(ConvocatoriaHitosFragment.name,
-            `${this.updateHitos.name}()`, 'end'))
+            `updateHitos()`, 'end'))
         );
-      }));
+      })
+    );
   }
 
   private isSaveOrUpdateComplete(): boolean {
-    this.logger.debug(ConvocatoriaHitosFragment.name, `${this.isSaveOrUpdateComplete.name}()`, 'start');
+    this.logger.debug(ConvocatoriaHitosFragment.name, `isSaveOrUpdateComplete()`, 'start');
     const touched: boolean = this.hitos$.value.some((wrapper) => wrapper.touched);
-    this.logger.debug(ConvocatoriaHitosFragment.name, `${this.isSaveOrUpdateComplete.name}()`, 'end');
+    this.logger.debug(ConvocatoriaHitosFragment.name, `isSaveOrUpdateComplete()`, 'end');
     return (this.hitosEliminados.length > 0 || touched);
   }
 

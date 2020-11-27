@@ -12,7 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ConvocatoriaActionService } from '../convocatoria.action.service';
 import { LoggerTestingModule } from 'ngx-logger/testing';
-import { SgiAuthModule } from '@sgi/framework/auth';
+import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 
 describe('ConvocatoriaEditarComponent', () => {
   let component: ConvocatoriaEditarComponent;
@@ -37,7 +37,8 @@ describe('ConvocatoriaEditarComponent', () => {
         SgiAuthModule,
       ],
       providers: [
-        ConvocatoriaActionService
+        ConvocatoriaActionService,
+        SgiAuthService
       ],
     })
       .compileComponents();

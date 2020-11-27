@@ -17,12 +17,19 @@ import { SgiRestFindOptions, SgiRestFilterType, SgiRestFilter } from '@sgi/frame
 const MSG_ERROR_INIT = marker('csp.convocatoria.plazos.enlace.error.cargar');
 const MSG_ANADIR = marker('botones.aniadir');
 const MSG_ACEPTAR = marker('botones.aceptar');
+
+export interface ConvocatoriaConfiguracionSolicitudesModalData {
+  documentoRequerido: IDocumentoRequerido;
+  readonly: boolean;
+}
+
 @Component({
   templateUrl: './convocatoria-configuracion-solicitudes-modal.component.html',
   styleUrls: ['./convocatoria-configuracion-solicitudes-modal.component.scss']
 })
 export class ConvocatoriaConfiguracionSolicitudesModalComponent extends
-  BaseModalComponent<IDocumentoRequerido, ConvocatoriaConfiguracionSolicitudesModalComponent> implements OnInit {
+  BaseModalComponent<ConvocatoriaConfiguracionSolicitudesModalData, ConvocatoriaConfiguracionSolicitudesModalComponent>
+  implements OnInit {
   fxLayoutProperties: FxLayoutProperties;
   fxFlexProperties: FxFlexProperties;
 
@@ -34,7 +41,7 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent extends
     protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
     public readonly matDialogRef: MatDialogRef<ConvocatoriaConfiguracionSolicitudesModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: IDocumentoRequerido,
+    @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaConfiguracionSolicitudesModalData,
     private modeloEjecucionService: ModeloEjecucionService
   ) {
     super(logger, snackBarService, matDialogRef, data);
@@ -54,7 +61,7 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent extends
     this.logger.debug(ConvocatoriaConfiguracionSolicitudesModalComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
     this.loadTipoDocumento();
-    this.textSaveOrUpdate = this.data.tipoDocumento ? MSG_ACEPTAR : MSG_ANADIR;
+    this.textSaveOrUpdate = this.data.documentoRequerido.tipoDocumento ? MSG_ACEPTAR : MSG_ANADIR;
     this.logger.debug(ConvocatoriaConfiguracionSolicitudesModalComponent.name, 'ngOnInit()', 'end');
   }
 
@@ -64,8 +71,8 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent extends
   loadTipoDocumento() {
     this.logger.debug(ConvocatoriaConfiguracionSolicitudesModalComponent.name,
       `${this.loadTipoDocumento.name}()`, 'start');
-    const id = this.data.configuracionSolicitud.convocatoria.modeloEjecucion.id;
-    const idTipoFase = this.data.configuracionSolicitud.fasePresentacionSolicitudes?.tipoFase.id;
+    const id = this.data.documentoRequerido.configuracionSolicitud.convocatoria.modeloEjecucion.id;
+    const idTipoFase = this.data.documentoRequerido.configuracionSolicitud.fasePresentacionSolicitudes?.tipoFase.id;
     const options = {
       filters: [
         {
@@ -119,10 +126,10 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent extends
     return typeof docRequerido === 'string' ? docRequerido : docRequerido?.nombre;
   }
 
-  protected getDatosForm(): IDocumentoRequerido {
+  protected getDatosForm(): ConvocatoriaConfiguracionSolicitudesModalData {
     this.logger.debug(ConvocatoriaConfiguracionSolicitudesModalComponent.name, `${this.getDatosForm.name}()`, 'start');
-    this.data.tipoDocumento = this.formGroup.controls.tipoDocumento.value;
-    this.data.observaciones = this.formGroup.controls.observaciones.value;
+    this.data.documentoRequerido.tipoDocumento = this.formGroup.controls.tipoDocumento.value;
+    this.data.documentoRequerido.observaciones = this.formGroup.controls.observaciones.value;
     this.logger.debug(ConvocatoriaConfiguracionSolicitudesModalComponent.name, `${this.getDatosForm.name}()`, 'end');
     return this.data;
   }
@@ -130,9 +137,12 @@ export class ConvocatoriaConfiguracionSolicitudesModalComponent extends
   protected getFormGroup(): FormGroup {
     this.logger.debug(ConvocatoriaConfiguracionSolicitudesModalComponent.name, `${this.getFormGroup.name}()`, 'start');
     const formGroup = new FormGroup({
-      tipoDocumento: new FormControl(this.data.tipoDocumento),
-      observaciones: new FormControl(this.data.observaciones),
+      tipoDocumento: new FormControl(this.data.documentoRequerido.tipoDocumento),
+      observaciones: new FormControl(this.data.documentoRequerido.observaciones),
     });
+    if (this.data.readonly) {
+      formGroup.disable();
+    }
     this.logger.debug(ConvocatoriaConfiguracionSolicitudesModalComponent.name, `${this.getFormGroup.name}()`, 'end');
     return formGroup;
   }

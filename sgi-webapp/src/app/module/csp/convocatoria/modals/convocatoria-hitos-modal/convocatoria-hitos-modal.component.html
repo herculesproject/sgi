@@ -76,7 +76,7 @@
   </main>
 
   <div id="modals-buttons" class="float-right" mat-dialog-actions>
-    <button color="accent" (click)="saveOrUpdate()" md-button mat-raised-button
+    <button color="accent" (click)="saveOrUpdate()" md-button mat-raised-button *ngIf="!data.readonly"
       type="submit">{{textSaveOrUpdate | translate}}</button>
     <button class="link-cancelar" mat-button (click)="closeModal()"
       type="button">{{'botones.cancelar' | translate}}</button>

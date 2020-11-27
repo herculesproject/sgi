@@ -35,6 +35,7 @@ import { IAreaTematica } from '@core/models/csp/area-tematica';
 import { DialogService } from '@core/services/dialog.service';
 import { TipoEstadoConvocatoria } from '@core/enums/tipo-estado-convocatoria';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 const MSG_BUTTON_NEW = marker('footer.csp.convocatoria.crear');
 const MSG_ERROR = marker('csp.convocatoria.listado.error');
@@ -62,7 +63,7 @@ interface IConvocatoriaListado {
   templateUrl: './convocatoria-listado.component.html',
   styleUrls: ['./convocatoria-listado.component.scss']
 })
-export class ConvocatoriaListadoComponent extends AbstractTablePaginationComponent<IConvocatoriaListado> implements OnInit, OnDestroy {
+export class ConvocatoriaListadoComponent extends AbstractTablePaginationComponent<IConvocatoriaListado> implements OnInit {
   ROUTE_NAMES = ROUTE_NAMES;
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
@@ -73,28 +74,28 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
 
   busquedaAvanzada = false;
 
-  private subscriptions = [] as Subscription[];
+  private subscriptions: Subscription[] = [];
 
   selectedEmpresaConvocante: IEmpresaEconomica;
   selectedEmpresaFinanciadora: IEmpresaEconomica;
   convocatoriaEntidadGestora: IConvocatoriaEntidadGestora;
 
-  private unidadGestionFiltered = [] as IUnidadGestion[];
+  private unidadGestionFiltered: IUnidadGestion[] = [];
   unidadesGestion$: Observable<IUnidadGestion[]>;
 
-  private modelosEjecucionFiltered = [] as IModeloEjecucion[];
+  private modelosEjecucionFiltered: IModeloEjecucion[] = [];
   modelosEjecucion$: Observable<IModeloEjecucion[]>;
 
-  private finalidadFiltered = [] as ITipoFinalidad[];
+  private finalidadFiltered: ITipoFinalidad[] = [];
   finalidades$: Observable<ITipoFinalidad[]>;
 
-  private tipoAmbitoGeograficoFiltered = [] as ITipoAmbitoGeografico[];
+  private tipoAmbitoGeograficoFiltered: ITipoAmbitoGeografico[] = [];
   tipoAmbitosGeograficos$: Observable<ITipoAmbitoGeografico[]>;
 
-  private fuenteFinanciacionFiltered = [] as IFuenteFinanciacion[];
+  private fuenteFinanciacionFiltered: IFuenteFinanciacion[] = [];
   fuenteFinanciacion$: Observable<IFuenteFinanciacion[]>;
 
-  private areaTematicaFiltered = [] as IAreaTematica[];
+  private areaTematicaFiltered: IAreaTematica[] = [];
   areaTematica$: Observable<IAreaTematica[]>;
 
   empresaConvocante: string;
@@ -117,7 +118,8 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
     private tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
     private fuenteFinanciacionService: FuenteFinanciacionService,
     private areaTematicaService: AreaTematicaService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    public authService: SgiAuthService
   ) {
     super(logger, snackBarService, MSG_ERROR);
     this.logger.debug(ConvocatoriaListadoComponent.name, 'constructor()', 'start');
@@ -174,7 +176,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
 
   protected createObservable(): Observable<SgiRestListResult<IConvocatoriaListado>> {
     this.logger.debug(ConvocatoriaListadoComponent.name, `${this.createObservable.name}()`, 'start');
-    const observable$ = this.convocatoriaService.findAllTodosRestringidos(this.getFindOptions()).pipe(
+    const observable$ = this.convocatoriaService.findAllTodos(this.getFindOptions()).pipe(
       map(result => {
         const convocatorias = result.items.map((convocatoria) => {
           return {
@@ -346,17 +348,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
 
   onClearFilters() {
     this.logger.debug(ConvocatoriaListadoComponent.name, `${this.onClearFilters.name}()`, 'start');
-    this.formGroup.controls.codigo.setValue('');
-    this.formGroup.controls.titulo.setValue('');
-    this.formGroup.controls.unidadGestion.setValue('');
-    this.formGroup.controls.modeloEjecucion.setValue('');
-    this.formGroup.controls.finalidad.setValue('');
-    this.formGroup.controls.anio.setValue('');
-    this.formGroup.controls.abiertoPlazoPresentacionSolicitud.setValue('');
-    this.formGroup.controls.ambitoGeografico.setValue('');
-    this.formGroup.controls.estado.setValue('');
-    this.formGroup.controls.fuenteFinanciacion.setValue('');
-    this.formGroup.controls.areaTematica.setValue('');
+    super.onClearFilters();
     this.formGroup.controls.activo.setValue('todos');
     this.setEmpresaFinanciadora({} as IEmpresaEconomica);
     this.setEmpresaConvocante({} as IEmpresaEconomica);
@@ -736,11 +728,4 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
       );
     this.suscripciones.push(suscription);
   }
-
-  ngOnDestroy(): void {
-    this.logger.debug(AbstractTablePaginationComponent.name, 'ngOnDestroy()', 'start');
-    this.suscripciones.forEach(x => x.unsubscribe());
-    this.logger.debug(AbstractTablePaginationComponent.name, 'ngOnDestroy()', 'end');
-  }
-
 }

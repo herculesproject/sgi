@@ -52,7 +52,8 @@ describe('ConvocatoriaEnlaceModalComponent', () => {
   const data: ConvocatoriaEnlaceModalComponentData = {
     enlace: convocatoriaEnlace,
     idModeloEjecucion: 1,
-    selectedUrls: []
+    selectedUrls: [],
+    readonly: false
   };
 
   beforeEach(async(() => {

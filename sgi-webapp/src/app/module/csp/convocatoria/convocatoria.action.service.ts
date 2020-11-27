@@ -51,7 +51,7 @@ import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatori
 import { IConfiguracionSolicitud } from '@core/models/csp/configuracion-solicitud';
 import { DialogService } from '@core/services/dialog.service';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { ITipoFase } from '@core/models/csp/tipos-configuracion';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 const MSG_REGISTRAR = marker('csp.convocatoria.registrar.msg');
 @Injectable()
@@ -125,7 +125,8 @@ export class ConvocatoriaActionService extends ActionService {
     convocatoriaDocumentoService: ConvocatoriaDocumentoService,
     configuracionSolicitudService: ConfiguracionSolicitudService,
     documentoRequeridoService: DocumentoRequeridoService,
-    dialogService: DialogService
+    dialogService: DialogService,
+    private authService: SgiAuthService
   ) {
     super();
     this.convocatoria = {} as IConvocatoria;
@@ -139,35 +140,43 @@ export class ConvocatoriaActionService extends ActionService {
     if (route.snapshot.data.configuracionSolicitud) {
       this.configuracionSolicitud = route.snapshot.data.configuracionSolicitud;
     }
-
+    let readonly = true;
+    const unidadGestionRef = this.convocatoria.unidadGestionRef;
+    if (unidadGestionRef) {
+      readonly = !this.authService.hasAuthority(`CSP-CONV-C_${unidadGestionRef}`);
+    }
     this.datosGenerales = new ConvocatoriaDatosGeneralesFragment(
       logger, this.convocatoria?.id, convocatoriaService, empresaEconomicaService,
-      convocatoriaEntidadGestoraService, unidadGestionService, convocatoriaAreaTematicaService);
+      convocatoriaEntidadGestoraService, unidadGestionService, convocatoriaAreaTematicaService,
+      readonly);
     this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(logger,
-      this.convocatoria?.id, convocatoriaService, convocatoriaPeriodoJustificacionService);
-    this.periodoJustificacion = new ConvocatoriaPeriodosJustificacionFragment(
-      logger, this.convocatoria?.id, convocatoriaService, convocatoriaPeriodoJustificacionService);
+      this.convocatoria?.id, convocatoriaService, convocatoriaPeriodoJustificacionService, readonly);
     this.entidadesConvocantes = new ConvocatoriaEntidadesConvocantesFragment(
       logger, this.convocatoria?.id, convocatoriaService, convocatoriaEntidadConvocanteService,
-      empresaEconomicaService);
+      empresaEconomicaService, readonly);
     this.plazosFases = new ConvocatoriaPlazosFasesFragment(
-      logger, this.convocatoria?.id, convocatoriaService, convocatoriaFaseService);
-    this.hitos = new ConvocatoriaHitosFragment(
-      logger, this.convocatoria?.id, convocatoriaService, convocatoriaHitoService);
-    this.documentos = new ConvocatoriaDocumentosFragment(logger, this.convocatoria?.id, convocatoriaService, convocatoriaDocumentoService);
+      logger, this.convocatoria?.id, convocatoriaService, convocatoriaFaseService, readonly);
+    this.hitos = new ConvocatoriaHitosFragment(logger, this.convocatoria?.id, convocatoriaService,
+      convocatoriaHitoService, readonly);
+    this.documentos = new ConvocatoriaDocumentosFragment(logger, this.convocatoria?.id, convocatoriaService,
+      convocatoriaDocumentoService, readonly);
     this.seguimientoCientifico = new ConvocatoriaSeguimientoCientificoFragment(logger, this.convocatoria?.id,
-      convocatoriaService, convocatoriaSeguimientoCientificoService);
+      convocatoriaService, convocatoriaSeguimientoCientificoService, readonly);
     this.entidadesFinanciadorasFragment = new ConvocatoriaEntidadesFinanciadorasFragment(
-      logger, this.convocatoria?.id, convocatoriaService, convocatoriaEntidadFinanciadoraService);
-    this.enlaces = new ConvocatoriaEnlaceFragment(logger, this.convocatoria?.id, convocatoriaService, convocatoriaEnlaceService);
-    this.requisitosIP = new ConvocatoriaRequisitosIPFragment(fb, logger, this.convocatoria?.id, convocatoriaRequisitoIPService);
+      logger, this.convocatoria?.id, convocatoriaService, convocatoriaEntidadFinanciadoraService, readonly);
+    this.enlaces = new ConvocatoriaEnlaceFragment(logger, this.convocatoria?.id, convocatoriaService,
+      convocatoriaEnlaceService, readonly);
+    this.requisitosIP = new ConvocatoriaRequisitosIPFragment(fb, logger, this.convocatoria?.id,
+      convocatoriaRequisitoIPService, readonly);
     this.elegibilidad = new ConvocatoriaConceptoGastoFragment(fb, logger, this.convocatoria?.id, convocatoriaService,
-      convocatoriaConceptoGastoService);
-    this.requisitosEquipo = new ConvocatoriaRequisitosEquipoFragment(fb, logger, this.convocatoria?.id, convocatoriaRequisitoEquipoService);
-    this.codigosEconomicos = new ConvocatoriaConceptoGastoCodigoEcFragment(logger, this.convocatoria?.id, convocatoriaService,
-      convocatoriaConceptoGastoCodigoEcService, this.elegibilidad);
+      convocatoriaConceptoGastoService, readonly);
+    this.requisitosEquipo = new ConvocatoriaRequisitosEquipoFragment(fb, logger, this.convocatoria?.id,
+      convocatoriaRequisitoEquipoService, readonly);
+    this.codigosEconomicos = new ConvocatoriaConceptoGastoCodigoEcFragment(logger, this.convocatoria?.id,
+      convocatoriaService, convocatoriaConceptoGastoCodigoEcService, this.elegibilidad, readonly);
     this.configuracionSolicitudes = new ConvocatoriaConfiguracionSolicitudesFragment(
-      logger, this.convocatoria?.id, configuracionSolicitudService, documentoRequeridoService, this, this.plazosFases);
+      logger, this.convocatoria?.id, configuracionSolicitudService, documentoRequeridoService, this, this.plazosFases,
+      readonly);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.SEGUIMIENTO_CIENTIFICO, this.seguimientoCientifico);
@@ -347,16 +356,16 @@ export class ConvocatoriaActionService extends ActionService {
    */
   registrar(): Observable<void> {
     this.logger.debug(ConvocatoriaActionService.name,
-      `${this.registrar.name}()`, 'start');
+      `registrar()`, 'start');
     return this.dialogService.showConfirmation(MSG_REGISTRAR)
       .pipe(switchMap((accept) => {
         if (accept) {
           this.logger.debug(ConvocatoriaActionService.name,
-            `${this.registrar.name}()`, 'end');
+            `registrar()`, 'end');
           return this.convocatoriaService.registrar(this.convocatoria?.id);
         } else {
           this.logger.debug(ConvocatoriaActionService.name,
-            `${this.registrar.name}()`, 'end');
+            `registrar()`, 'end');
           return of(void 0);
         }
       }));

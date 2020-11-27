@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { FormFragmentComponent } from '@core/component/fragment.component';
 import { NGXLogger } from 'ngx-logger';
@@ -75,7 +75,6 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   columns = ['padre', 'nombre', 'observaciones', 'acciones'];
-  numPage = [5, 10, 25, 50];
 
   clasificacionesProduccion = Object.keys(ClasificacionCVN).map<string>((key) => ClasificacionCVN[key]);
   destinatarios = Object.keys(TipoDestinatario).map<string>((key) => TipoDestinatario[key]);
@@ -131,17 +130,19 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
   ngOnInit() {
     this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
-    this.loadUnidadesGestion();
-    this.loadTipoRegimenConcurrencia();
-    this.loadAmbitosGeograficos();
-    this.loadAreaTematicas();
-    if (this.formPart.isEdit()) {
-      this.loadModelosEjecucion();
+    if (!this.formPart.readonly) {
+      this.loadUnidadesGestion();
+      this.loadTipoRegimenConcurrencia();
+      this.loadAmbitosGeograficos();
+      this.loadAreaTematicas();
+      if (this.formPart.isEdit()) {
+        this.loadModelosEjecucion();
+      }
     }
     this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, 'ngOnInit()', 'end');
   }
 
-  private loadUnidadesGestion() {
+  private loadUnidadesGestion(): void {
     this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadUnidadesGestion()`, 'start');
     this.subscriptions.push(
       this.unidadGestionService.findAllRestringidos().subscribe(
@@ -162,7 +163,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     );
   }
 
-  loadModelosEjecucion() {
+  loadModelosEjecucion(): void {
     this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadModelosEjecucion()`, 'start');
     const options = {
       filters: [
@@ -196,7 +197,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     this.subscriptions.push(subcription);
   }
 
-  loadFinalidades() {
+  loadFinalidades(): void {
     this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadFinalidades()`, 'start');
     const modeloEjecucion = this.formGroup.get('modeloEjecucion').value;
     if (modeloEjecucion) {
@@ -237,7 +238,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     }
   }
 
-  clearModeloEjecuccion() {
+  clearModeloEjecuccion(): void {
     this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `clearModeloEjecuccion()`, 'end');
     this.formGroup.get('modeloEjecucion').setValue('');
     this.modelosEjecucionFiltered = [];
@@ -246,7 +247,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `clearModeloEjecuccion()`, 'end');
   }
 
-  clearFinalidad() {
+  clearFinalidad(): void {
     this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `clearFinalidad()`, 'end');
     this.formGroup.get('finalidad').setValue('');
     this.finalidadFiltered = [];
@@ -254,7 +255,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `clearFinalidad()`, 'end');
   }
 
-  private loadTipoRegimenConcurrencia() {
+  private loadTipoRegimenConcurrencia(): void {
     this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadTipoRegimenConcurrencia()`, 'start');
     this.subscriptions.push(
       this.regimenConcurrenciaService.findAll().subscribe(
@@ -275,7 +276,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     );
   }
 
-  private loadAmbitosGeograficos() {
+  private loadAmbitosGeograficos(): void {
     this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadAmbitosGeograficos()`, 'start');
     this.subscriptions.push(
       this.tipoAmbitoGeograficoService.findAll().subscribe(
@@ -296,7 +297,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     );
   }
 
-  private loadAreaTematicas() {
+  private loadAreaTematicas(): void {
     this.logger.debug(ConvocatoriaDatosGeneralesComponent.name, `loadAreaTematicas()`, 'start');
     const subscription = this.formPart.areasTematicas$.subscribe(
       data => this.convocatoriaAreaTematicas.data = data
@@ -439,7 +440,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
     );
   }
 
-  deleteAreaTematica(data: AreaTematicaData) {
+  deleteAreaTematica(data: AreaTematicaData): void {
     this.logger.debug(ConvocatoriaDatosGeneralesComponent.name,
       `deleteAreaTematica(${data})`, 'start');
     this.subscriptions.push(

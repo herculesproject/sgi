@@ -21,12 +21,14 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
   private subscriptionsFragment: Subscription[] = [];
 
   constructor(
-    private readonly logger: NGXLogger,
+    private logger: NGXLogger,
     key: number,
     private configuracionSolicitudService: ConfiguracionSolicitudService,
     private documentoRequeridoService: DocumentoRequeridoService,
     private convocatoriaActionService: ConvocatoriaActionService,
-    private plazosFasesFragment: ConvocatoriaPlazosFasesFragment) {
+    private plazosFasesFragment: ConvocatoriaPlazosFasesFragment,
+    public readonly: boolean
+  ) {
     super(key, true);
     this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, 'constructor()', 'start');
     this.setComplete(true);
@@ -51,6 +53,9 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
       fechaFinFase: new FormControl({ value: '', disabled: true }),
       importeMaximoSolicitud: new FormControl('', [Validators.maxLength(50)]),
     });
+    if (this.readonly) {
+      form.disable();
+    }
     this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name, `buildFormGroup()`, 'start');
     return form;
   }
@@ -74,7 +79,7 @@ export class ConvocatoriaConfiguracionSolicitudesFragment extends FormFragment<I
 
   protected initializer(key: number): Observable<IConfiguracionSolicitud> {
     this.logger.debug(ConvocatoriaConfiguracionSolicitudesFragment.name,
-      `initializer()`, 'start');
+      `initializer(key: ${key})`, 'start');
     return this.configuracionSolicitudService.findById(key).pipe(
       switchMap((configuracionSolicitud) => {
         this.configuracionSolicitud = configuracionSolicitud;

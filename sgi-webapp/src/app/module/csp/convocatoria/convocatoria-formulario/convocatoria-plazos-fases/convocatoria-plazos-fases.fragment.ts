@@ -14,10 +14,11 @@ export class ConvocatoriaPlazosFasesFragment extends Fragment {
   private fasesEliminadas: StatusWrapper<IConvocatoriaFase>[] = [];
 
   constructor(
-    private readonly logger: NGXLogger,
+    private logger: NGXLogger,
     key: number,
-    private readonly convocatoriaService: ConvocatoriaService,
-    private readonly convocatoriaFaseService: ConvocatoriaFaseService
+    private convocatoriaService: ConvocatoriaService,
+    private convocatoriaFaseService: ConvocatoriaFaseService,
+    public readonly: boolean
   ) {
     super(key);
     this.logger.debug(ConvocatoriaPlazosFasesFragment.name, 'constructor()', 'start');

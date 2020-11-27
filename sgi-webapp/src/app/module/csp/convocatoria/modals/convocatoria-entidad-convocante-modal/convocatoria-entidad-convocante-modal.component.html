@@ -19,7 +19,7 @@
                 </mat-error>
               </mat-form-field>
             </div>
-            <button color="primary" md-button mat-raised-button
+            <button color="primary" md-button mat-raised-button *ngIf="!data.readonly"
               [disabled]="data.entidadConvocanteData.empresaEconomica?.personaRef"
               (click)="selectEmpresaEconomica()">{{'botones.buscar' | translate}}</button>
           </div>
@@ -30,7 +30,7 @@
         <mat-form-field class="input-form">
           <mat-label>{{'csp.convocatoria.entidades.convocantes.plan' | translate}}</mat-label>
           <input type="text" placeholder="{{'csp.convocatoria.entidades.convocantes.plan' | translate}}"
-            arial-label="Number" matInput formControlName="plan" [matAutocomplete]="auto" cdkFocusInitial>
+            arial-label="Number" matInput formControlName="plan" [matAutocomplete]="auto">
           <mat-autocomplete #auto="matAutocomplete" [displayWith]="getNombrePlan">
             <mat-option *ngFor="let plan of planes$ | async" [value]="plan">
               {{plan.nombre}}
@@ -50,7 +50,7 @@
               <li class="mat-tree-node">
                 <button mat-icon-button disabled></button>
                 <mat-checkbox class="checkbox" color="primary" [checked]="node === checkedNode"
-                  (change)="onCheckNode(node, $event)">
+                  [disabled]="data.readonly" (change)="onCheckNode(node, $event)">
                   {{node.programa.value.nombre}}
                 </mat-checkbox>
               </li>
@@ -64,7 +64,7 @@
                     </mat-icon>
                   </button>
                   <mat-checkbox class="checkbox" color="primary" [checked]="node === checkedNode"
-                    (change)="onCheckNode(node, $event)">
+                    [disabled]="data.readonly" (change)="onCheckNode(node, $event)">
                     {{node.programa.value.nombre}}
                   </mat-checkbox>
                 </div>
@@ -80,7 +80,8 @@
   </main>
 </div>
 <div id="modals-buttons" class="float-right" mat-dialog-actions>
-  <button color="accent" md-button mat-raised-button (click)="saveOrUpdate()">{{textSaveOrUpdate | translate}}</button>
+  <button color="accent" md-button mat-raised-button (click)="saveOrUpdate()"
+    *ngIf="!data.readonly">{{textSaveOrUpdate | translate}}</button>
   <button class="link-cancelar" mat-button (click)="closeModal()"
     type="button">{{'botones.cancelar' | translate}}</button>
 </div>

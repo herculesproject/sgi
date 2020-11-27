@@ -107,17 +107,18 @@
           <mat-icon>arrow_downward</mat-icon>
           {{'csp.convocatoria.documentos.documento.button.descargarFichero' | translate}}
         </button>
-        <button *ngIf="viewMode === 'new' || viewMode === 'edit'" color="accent" mat-button mat-raised-button
-          (click)="acceptDetail()" [disabled]="!status.complete">{{'botones.aceptar' | translate}}</button>
-        <button *ngIf="viewMode === 'new' || viewMode === 'edit'" class="link-cancelar" mat-button><span
-            class="underline" (click)="cancelDetail()">{{'botones.cancelar' | translate}}</span></button>
-        <button *ngIf="viewMode === 'view'" color="accent" class="rounded" mat-button mat-raised-button
-          (click)="switchToEdit()">
+        <button *ngIf="!formPart.readonly && viewMode === 'new' || viewMode === 'edit'" color="accent" mat-button
+          mat-raised-button (click)="acceptDetail()"
+          [disabled]="!status.complete">{{'botones.aceptar' | translate}}</button>
+        <button *ngIf="!formPart.readonly && viewMode === 'new' || viewMode === 'edit'" class="link-cancelar"
+          mat-button><span class="underline" (click)="cancelDetail()">{{'botones.cancelar' | translate}}</span></button>
+        <button *ngIf="!formPart.readonly && viewMode === 'view'" color="accent" class="rounded" mat-button
+          mat-raised-button (click)="switchToEdit()">
           <mat-icon>edit</mat-icon>
           {{'csp.convocatoria.documentos.documento.button.editar'| translate}}
         </button>
-        <button *ngIf="viewMode === 'view'" color="warn" class="rounded" mat-button mat-raised-button
-          (click)="deleteDetail()">
+        <button *ngIf="!formPart.readonly && viewMode === 'view'" color="warn" class="rounded" mat-button
+          mat-raised-button (click)="deleteDetail()">
           <mat-icon>close</mat-icon>
           {{'csp.convocatoria.documentos.documento.button.eliminar' | translate}}
         </button>
@@ -126,7 +127,7 @@
     <!-- FIN Visualizacion crear/editar/detalle -->
   </div>
 
-  <div class="separation-button">
+  <div class="separation-button" *ngIf="!formPart.readonly">
     <button color="three" aria-label="Center Align" mat-button mat-raised-button (click)="switchToNew()">
       <mat-icon color="accent">add_circle</mat-icon>
       {{'csp.convocatoria.documentos.button.anadir'| translate}}

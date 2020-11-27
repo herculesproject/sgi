@@ -102,10 +102,11 @@ export class ConvocatoriaDocumentosFragment extends Fragment {
   private nodeLookup = new Map<string, NodeDocumento>();
 
   constructor(
-    private readonly logger: NGXLogger,
+    private logger: NGXLogger,
     key: number,
     private convocatoriaService: ConvocatoriaService,
-    private convocatoriaDocumentoService: ConvocatoriaDocumentoService
+    private convocatoriaDocumentoService: ConvocatoriaDocumentoService,
+    public readonly: boolean
   ) {
     super(key);
     this.logger.debug(ConvocatoriaDocumentosFragment.name, 'constructor()', 'start');
@@ -118,7 +119,12 @@ export class ConvocatoriaDocumentosFragment extends Fragment {
     if (this.getKey()) {
       this.convocatoriaService.findDocumentos(this.getKey() as number).pipe(
         map(response => {
-          return this.buildTree(response.items);
+          // TODO este filtro debería hacerse en el back
+          let items = response.items;
+          if (this.readonly) {
+            items = items.filter(documento => documento.publico);
+          }
+          return this.buildTree(items);
         })
       ).subscribe(
         (documento) => {

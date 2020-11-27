@@ -10,6 +10,7 @@ import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaDatosGeneralesComponent } from './convocatoria-datos-generales.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexModule } from '@angular/flex-layout';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 describe('ConvocatoriaDatosGeneralesComponent', () => {
   let component: ConvocatoriaDatosGeneralesComponent;
@@ -32,7 +33,8 @@ describe('ConvocatoriaDatosGeneralesComponent', () => {
         RouterTestingModule,
       ],
       providers: [
-        ConvocatoriaActionService
+        ConvocatoriaActionService,
+        SgiAuthService
       ],
     })
       .compileComponents();

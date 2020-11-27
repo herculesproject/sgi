@@ -15,10 +15,11 @@ export class ConvocatoriaEntidadesFinanciadorasFragment extends Fragment impleme
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private readonly logger: NGXLogger,
+    private logger: NGXLogger,
     key: number,
-    private readonly convocatoriaService: ConvocatoriaService,
-    private readonly convocatoriaEntidadFinanciadoraService: ConvocatoriaEntidadFinanciadoraService
+    private convocatoriaService: ConvocatoriaService,
+    private convocatoriaEntidadFinanciadoraService: ConvocatoriaEntidadFinanciadoraService,
+    public readonly: boolean
   ) {
     super(key);
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasFragment.name, 'constructor()', 'start');

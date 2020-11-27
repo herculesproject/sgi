@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
+import { SgiAuthService } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 
@@ -30,7 +31,8 @@ describe('ConvocatoriaEntidadesConvocantesComponent', () => {
         BrowserAnimationsModule
       ],
       providers: [
-        ConvocatoriaActionService
+        ConvocatoriaActionService,
+        SgiAuthService
       ]
     }).compileComponents();
   }));

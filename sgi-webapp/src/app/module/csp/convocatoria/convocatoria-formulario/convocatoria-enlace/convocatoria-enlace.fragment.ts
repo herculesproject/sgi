@@ -16,7 +16,8 @@ export class ConvocatoriaEnlaceFragment extends Fragment {
     private logger: NGXLogger,
     key: number,
     private convocatoriaService: ConvocatoriaService,
-    private convocatoriaEnlaceService: ConvocatoriaEnlaceService
+    private convocatoriaEnlaceService: ConvocatoriaEnlaceService,
+    public readonly: boolean,
   ) {
     super(key);
     this.logger.debug(ConvocatoriaEnlaceFragment.name, 'constructor()', 'start');

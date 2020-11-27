@@ -8,14 +8,15 @@ import { IConvocatoriaRequisitoIP } from '@core/models/csp/convocatoria-requisit
 import { ConvocatoriaRequisitoIPService } from '@core/services/csp/convocatoria-requisito-ip.service';
 
 export class ConvocatoriaRequisitosIPFragment extends FormFragment<IConvocatoriaRequisitoIP> {
-
   private requisitoIP: IConvocatoriaRequisitoIP;
 
   constructor(
     private fb: FormBuilder,
-    private readonly logger: NGXLogger,
+    private logger: NGXLogger,
     key: number,
-    private convocatoriaRequisitoIPService: ConvocatoriaRequisitoIPService) {
+    private convocatoriaRequisitoIPService: ConvocatoriaRequisitoIPService,
+    public readonly: boolean
+  ) {
     super(key, true);
     this.setComplete(true);
     this.requisitoIP = {} as IConvocatoriaRequisitoIP;
@@ -23,7 +24,7 @@ export class ConvocatoriaRequisitosIPFragment extends FormFragment<IConvocatoria
 
   protected buildFormGroup(): FormGroup {
     this.logger.debug(ConvocatoriaRequisitosIPFragment.name, 'buildFormGroup()', 'start');
-    return this.fb.group({
+    const form = this.fb.group({
       numMaximoIP: [null, Validators.compose(
         [Validators.min(0), Validators.max(9999)])],
       nivelAcademicoRef: ['', Validators.maxLength(50)],
@@ -46,6 +47,11 @@ export class ConvocatoriaRequisitosIPFragment extends FormFragment<IConvocatoria
         [Validators.min(0), Validators.max(9999)])],
       otrosRequisitos: ['']
     });
+    if (this.readonly) {
+      form.disable();
+    }
+    this.logger.debug(ConvocatoriaRequisitosIPFragment.name, 'buildFormGroup()', 'end');
+    return form;
   }
 
   protected initializer(key: number): Observable<IConvocatoriaRequisitoIP> {

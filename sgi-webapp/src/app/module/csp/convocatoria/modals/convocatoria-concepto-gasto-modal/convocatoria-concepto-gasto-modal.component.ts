@@ -25,6 +25,7 @@ export interface IConvocatoriaConceptoGastoModalComponent {
   convocatoriaConceptoGasto: IConvocatoriaConceptoGasto;
   convocatoriaConceptoGastosTabla: IConvocatoriaConceptoGasto[];
   editModal: boolean;
+  readonly: boolean;
 }
 
 @Component({
@@ -35,7 +36,7 @@ export class ConvocatoriaConceptoGastoModalComponent implements OnInit, OnDestro
   formGroup: FormGroup;
   fxLayoutProperties: FxLayoutProperties;
   fxFlexProperties: FxFlexProperties;
-  suscripciones: Subscription[];
+  private subscriptions: Subscription[] = [];
 
   conceptoGastosFiltered: IConceptoGasto[];
   conceptoGastos$: Observable<IConceptoGasto[]>;
@@ -43,10 +44,10 @@ export class ConvocatoriaConceptoGastoModalComponent implements OnInit, OnDestro
   textSaveOrUpdate: string;
 
   constructor(
-    private readonly logger: NGXLogger,
-    private readonly snackBarService: SnackBarService,
-    public readonly matDialogRef: MatDialogRef<ConvocatoriaConceptoGastoModalComponent>,
-    private readonly conceptoGastoService: ConceptoGastoService,
+    private logger: NGXLogger,
+    private snackBarService: SnackBarService,
+    public matDialogRef: MatDialogRef<ConvocatoriaConceptoGastoModalComponent>,
+    private conceptoGastoService: ConceptoGastoService,
     @Inject(MAT_DIALOG_DATA) public data: IConvocatoriaConceptoGastoModalComponent
   ) {
     this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'constructor()', 'start');
@@ -63,7 +64,6 @@ export class ConvocatoriaConceptoGastoModalComponent implements OnInit, OnDestro
 
   ngOnInit(): void {
     this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'ngOnInit()', 'start');
-    this.suscripciones = [];
     this.initFormGroup();
     this.loadConceptoGastos();
     this.textSaveOrUpdate = this.data.convocatoriaConceptoGasto.conceptoGasto ? MSG_ACEPTAR : MSG_ANADIR;
@@ -80,12 +80,15 @@ export class ConvocatoriaConceptoGastoModalComponent implements OnInit, OnDestro
         [Validators.min(0), Validators.max(9999), NumberValidator.isInteger()])]),
       observaciones: new FormControl(this.data.convocatoriaConceptoGasto?.observaciones),
     });
+    if (this.data.readonly) {
+      this.formGroup.disable();
+    }
     this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'initFormGroup()', 'start');
   }
 
   loadConceptoGastos() {
     this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'loadTiposEnlaces()', 'start');
-    this.suscripciones.push(
+    this.subscriptions.push(
       this.conceptoGastoService.findAll().subscribe(
         (res: SgiRestListResult<IConceptoGasto>) => {
           this.conceptoGastosFiltered = res.items;
@@ -96,9 +99,9 @@ export class ConvocatoriaConceptoGastoModalComponent implements OnInit, OnDestro
             );
           this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'loadTiposEnlaces()', 'end');
         },
-        () => {
+        (error) => {
           this.snackBarService.showError(MSG_ERROR_INIT);
-          this.logger.error(ConvocatoriaConceptoGastoModalComponent.name, 'loadTiposEnlaces()', 'error');
+          this.logger.error(ConvocatoriaConceptoGastoModalComponent.name, 'loadTiposEnlaces()', error);
         }
       )
     );
@@ -155,11 +158,11 @@ export class ConvocatoriaConceptoGastoModalComponent implements OnInit, OnDestro
   }
 
   saveOrUpdate(): void {
-    this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'updateComentario()', 'start');
+    this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'saveOrUpdate()', 'start');
     if (FormGroupUtil.valid(this.formGroup)) {
       if (this.isRepetido(this.getDatosForm())) {
         this.snackBarService.showError(MSG_ERROR_CONCEPTO_GASTO_REPETIDO);
-        this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'closeModal() - end');
+        this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'saveOrUpdate() - end');
         return;
       }
       this.loadDatosForm();
@@ -167,12 +170,12 @@ export class ConvocatoriaConceptoGastoModalComponent implements OnInit, OnDestro
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
-    this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'updateComentario()', 'end');
+    this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'saveOrUpdate()', 'end');
   }
 
   ngOnDestroy(): void {
     this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'ngOnDestroy()', 'start');
-    this.suscripciones?.forEach(x => x.unsubscribe());
+    this.subscriptions?.forEach(x => x.unsubscribe());
     this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, 'ngOnDestroy()', 'end');
   }
 

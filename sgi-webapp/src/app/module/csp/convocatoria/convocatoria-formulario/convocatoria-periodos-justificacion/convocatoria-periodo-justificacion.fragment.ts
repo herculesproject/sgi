@@ -1,24 +1,22 @@
 import { Fragment } from '@core/services/action-service';
-import { BehaviorSubject, Observable, of, from, merge } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 import { IConvocatoriaPeriodoJustificacion } from '@core/models/csp/convocatoria-periodo-justificacion';
-import { tap, map, mergeMap, takeLast } from 'rxjs/operators';
+import { tap, map, takeLast } from 'rxjs/operators';
 import { ConvocatoriaPeriodoJustificacionService } from '@core/services/csp/convocatoria-periodo-justificacion.service';
-import { IConvocatoria } from '@core/models/csp/convocatoria';
-
 
 export class ConvocatoriaPeriodosJustificacionFragment extends Fragment {
-
   periodosJustificacion$: BehaviorSubject<StatusWrapper<IConvocatoriaPeriodoJustificacion>[]>;
   periodosJustificacionEliminados: StatusWrapper<IConvocatoriaPeriodoJustificacion>[] = [];
 
   constructor(
-    private readonly logger: NGXLogger,
+    private logger: NGXLogger,
     key: number,
-    private readonly convocatoriaService: ConvocatoriaService,
-    private readonly convocatoriaPeriodoJustificacionService: ConvocatoriaPeriodoJustificacionService
+    private convocatoriaService: ConvocatoriaService,
+    private convocatoriaPeriodoJustificacionService: ConvocatoriaPeriodoJustificacionService,
+    public readonly: boolean
   ) {
     super(key);
     this.logger.debug(ConvocatoriaPeriodosJustificacionFragment.name, 'constructor()', 'start');
@@ -31,14 +29,7 @@ export class ConvocatoriaPeriodosJustificacionFragment extends Fragment {
     this.logger.debug(ConvocatoriaPeriodosJustificacionFragment.name, 'onInitialize()', 'start');
     if (this.getKey()) {
       this.convocatoriaService.getPeriodosJustificacion(this.getKey() as number).pipe(
-        map((response) => {
-          if (response.items) {
-            return response.items;
-          }
-          else {
-            return [];
-          }
-        })
+        map((response) => response.items)
       ).subscribe((periodosJustificacion) => {
         this.periodosJustificacion$.next(periodosJustificacion.map(
           periodoJustificacion => new StatusWrapper<IConvocatoriaPeriodoJustificacion>(periodoJustificacion))

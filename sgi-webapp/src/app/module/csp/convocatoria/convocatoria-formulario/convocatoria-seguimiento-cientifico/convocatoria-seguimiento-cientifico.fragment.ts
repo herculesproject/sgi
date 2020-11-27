@@ -8,20 +8,19 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map, takeLast, tap } from 'rxjs/operators';
 
 export class ConvocatoriaSeguimientoCientificoFragment extends Fragment {
-
-  seguimientosCientificos$: BehaviorSubject<StatusWrapper<IConvocatoriaSeguimientoCientifico>[]>;
+  seguimientosCientificos$ = new BehaviorSubject<StatusWrapper<IConvocatoriaSeguimientoCientifico>[]>([]);
   seguimientosCientificosEliminados: StatusWrapper<IConvocatoriaSeguimientoCientifico>[] = [];
 
   constructor(
-    private readonly logger: NGXLogger,
+    private logger: NGXLogger,
     key: number,
-    private readonly convocatoriaService: ConvocatoriaService,
-    private readonly convocatoriaSeguimientoCientificoService: ConvocatoriaSeguimientoCientificoService
+    private convocatoriaService: ConvocatoriaService,
+    private convocatoriaSeguimientoCientificoService: ConvocatoriaSeguimientoCientificoService,
+    public readonly: boolean
   ) {
     super(key);
     this.logger.debug(ConvocatoriaSeguimientoCientificoFragment.name, 'constructor()', 'start');
     this.setComplete(true);
-    this.seguimientosCientificos$ = new BehaviorSubject<StatusWrapper<IConvocatoriaSeguimientoCientifico>[]>([]);
     this.logger.debug(ConvocatoriaSeguimientoCientificoFragment.name, 'constructor()', 'end');
   }
 
@@ -29,14 +28,7 @@ export class ConvocatoriaSeguimientoCientificoFragment extends Fragment {
     this.logger.debug(ConvocatoriaSeguimientoCientificoFragment.name, 'onInitialize()', 'start');
     if (this.getKey()) {
       this.convocatoriaService.findSeguimientosCientificos(this.getKey() as number).pipe(
-        map((response) => {
-          if (response.items) {
-            return response.items;
-          }
-          else {
-            return [];
-          }
-        })
+        map((response) => response.items)
       ).subscribe((seguimientosCientificos) => {
         this.seguimientosCientificos$.next(seguimientosCientificos.map(
           seguimientoCientifico => new StatusWrapper<IConvocatoriaSeguimientoCientifico>(seguimientoCientifico))

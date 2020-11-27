@@ -39,7 +39,7 @@ enum VIEW_MODE {
   styleUrls: ['./convocatoria-documentos.component.scss']
 })
 export class ConvocatoriaDocumentosComponent extends FragmentComponent implements OnInit, OnDestroy {
-  private formPart: ConvocatoriaDocumentosFragment;
+  formPart: ConvocatoriaDocumentosFragment;
   private subscriptions = [] as Subscription[];
 
   fxFlexProperties: FxFlexProperties;
@@ -77,8 +77,8 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
   compareTipoDocumento = (option: ITipoDocumento, value: ITipoDocumento) => option?.id === value?.id;
 
   constructor(
-    protected readonly logger: NGXLogger,
-    private readonly dialogService: DialogService,
+    protected logger: NGXLogger,
+    private dialogService: DialogService,
     public actionService: ConvocatoriaActionService,
     private modeloEjecucionService: ModeloEjecucionService,
     private documentoService: DocumentoService,

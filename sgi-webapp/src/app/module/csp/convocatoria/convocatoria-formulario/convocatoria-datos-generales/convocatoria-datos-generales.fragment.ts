@@ -43,7 +43,8 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
     private empresaEconomicaService: EmpresaEconomicaService,
     private convocatoriaEntidadGestoraService: ConvocatoriaEntidadGestoraService,
     private unidadGestionService: UnidadGestionService,
-    private convocatoriaAreaTematicaService: ConvocatoriaAreaTematicaService
+    private convocatoriaAreaTematicaService: ConvocatoriaAreaTematicaService,
+    public readonly: boolean
   ) {
     super(key, true);
     this.setComplete(true);
@@ -59,32 +60,44 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   protected buildFormGroup(): FormGroup {
     this.logger.debug(ConvocatoriaDatosGeneralesFragment.name, 'buildFormGroup()', 'start');
     const form = new FormGroup({
-      codigo: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+      codigo: new FormControl('', [
+        Validators.required, Validators.maxLength(50)]),
       estadoActual: new FormControl({
         value: TipoEstadoConvocatoria.BORRADOR,
         disabled: true
       }),
-      unidadGestion: new FormControl('', [Validators.required, IsEntityValidator.isValid()]),
+      unidadGestion: new FormControl('', [
+        Validators.required, IsEntityValidator.isValid()]),
       anio: new FormControl(new Date().getFullYear(), [
         Validators.required,
         Validators.min(1000),
         Validators.max(9999),
         IsYearPlus.isValid(1)
       ]),
-      titulo: new FormControl('', [Validators.required, Validators.maxLength(250)]),
+      titulo: new FormControl('', [
+        Validators.required, Validators.maxLength(250)]),
       modeloEjecucion: new FormControl(''),
       finalidad: new FormControl(''),
-      duracion: new FormControl('', [Validators.min(1), Validators.max(9999)]),
+      duracion: new FormControl('', [
+        Validators.min(1), Validators.max(9999)]),
       ambitoGeografico: new FormControl(''),
-      clasificacionCVN: new FormControl('', EnumValidador.isValid(ClasificacionCVN)),
+      clasificacionCVN: new FormControl('',
+        EnumValidador.isValid(ClasificacionCVN)),
       regimenConcurrencia: new FormControl(''),
       colaborativos: new FormControl(null),
-      destinatarios: new FormControl('', [Validators.required, EnumValidador.isValid(TipoDestinatario)]),
+      destinatarios: new FormControl(
+        '', [Validators.required,
+        EnumValidador.isValid(TipoDestinatario)]),
       entidadGestora: new FormControl(''),
-      objeto: new FormControl('', Validators.maxLength(2000)),
-      observaciones: new FormControl('', Validators.maxLength(2000)),
+      objeto: new FormControl('',
+        Validators.maxLength(2000)),
+      observaciones: new FormControl('',
+        Validators.maxLength(2000)),
       entidadGestoraRef: new FormControl(''),
     });
+    if (this.readonly) {
+      form.disable();
+    }
     this.checkEstado(form, this.convocatoria);
     this.logger.debug(ConvocatoriaDatosGeneralesFragment.name, 'buildFormGroup()', 'start');
     return form;

@@ -13,6 +13,7 @@ import { ActionFooterComponent } from '@shared/action-footer/action-footer.compo
 import { FlexModule, FlexLayoutModule } from '@angular/flex-layout';
 import { ConvocatoriaActionService } from '../convocatoria.action.service';
 import { SharedModule } from '@shared/shared.module';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 describe('ConvocatoriaCrearComponent', () => {
   let component: ConvocatoriaCrearComponent;
@@ -39,7 +40,8 @@ describe('ConvocatoriaCrearComponent', () => {
         SharedModule
       ],
       providers: [
-        ConvocatoriaActionService
+        ConvocatoriaActionService,
+        SgiAuthService
       ],
     })
       .compileComponents();

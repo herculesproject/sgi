@@ -139,7 +139,7 @@ const routes: SgiRoutes = [
       configuracionSolicitud: ConfiguracionSolicitudResolver
     },
     data: {
-      title: MSG_EDIT_TITLE,
+      title: MSG_EDIT_TITLE
     },
     children: [
       {
@@ -189,7 +189,7 @@ const routes: SgiRoutes = [
         path: CONVOCATORIA_ROUTE_NAMES.REQUISITOS_IP,
         component: ConvocatoriaRequisitosIPComponent,
         canDeactivate: [FragmentGuard]
-      }, 
+      },
       {
         path: CONVOCATORIA_ROUTE_NAMES.ELEGIBILIDAD,
         component: ConvocatoriaConceptoGastoComponent,

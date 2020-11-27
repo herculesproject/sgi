@@ -32,7 +32,7 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  private formPart: ConvocatoriaConceptoGastoCodigoEcFragment;
+  formPart: ConvocatoriaConceptoGastoCodigoEcFragment;
   private subscriptions: Subscription[] = [];
 
   elementosPagina: number[] = [5, 10, 25, 100];
@@ -127,22 +127,23 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
   openModal(wrapper?: StatusWrapper<IConvocatoriaConceptoGastoCodigoEc>, numFila?: number): void {
     this.logger.debug(ConvocatoriaConceptoGastoCodigoEcComponent.name, `${this.openModal.name}()`, 'start');
 
-    const listadoTabla = wrapper.value.convocatoriaConceptoGasto.permitido ? this.dataSourcePermitidos.data.map(
+    const convocatoriaConceptoGastoCodigoEcsTabla = wrapper.value.convocatoriaConceptoGasto.permitido ? this.dataSourcePermitidos.data.map(
       wrapperPermitidos => wrapperPermitidos.value)
       : this.dataSourceNoPermitidos.data.map(wrapperNoPermitidos => wrapperNoPermitidos.value);
 
-    listadoTabla.splice(numFila, 1);
+    convocatoriaConceptoGastoCodigoEcsTabla.splice(numFila, 1);
 
-    const listadoGastos = wrapper.value.convocatoriaConceptoGasto.permitido ?
+    const convocatoriaConceptoGastos = wrapper.value.convocatoriaConceptoGasto.permitido ?
       this.actionService.getElegibilidadPermitidos().map(permitidos => permitidos.value) :
       this.actionService.getElegibilidadNoPermitidos().map(noPermitidos => noPermitidos.value);
 
-    const data = {
+    const data: IConvocatoriaConceptoGastoCodigoEcModalComponent = {
       convocatoriaConceptoGastoCodigoEc: wrapper.value,
-      convocatoriaConceptoGastoCodigoEcsTabla: listadoTabla,
-      convocatoriaConceptoGastos: listadoGastos,
-      editModal: true
-    } as IConvocatoriaConceptoGastoCodigoEcModalComponent;
+      convocatoriaConceptoGastoCodigoEcsTabla,
+      convocatoriaConceptoGastos,
+      editModal: true,
+      readonly: this.formPart.readonly
+    };
 
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
@@ -168,7 +169,7 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
   }
 
   openModalCrear(permitido: boolean): void {
-    this.logger.debug(ConvocatoriaConceptoGastoCodigoEcComponent.name, `${this.openModal.name}()`, 'start');
+    this.logger.debug(ConvocatoriaConceptoGastoCodigoEcComponent.name, `openModalCrear()`, 'start');
     const listadoTabla = permitido ? this.dataSourcePermitidos.data.map(wrapperPermitidos => wrapperPermitidos.value)
       : this.dataSourceNoPermitidos.data.map(wrapperNoPermitidos => wrapperNoPermitidos.value);
 
@@ -176,28 +177,35 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
       this.actionService.getElegibilidadPermitidos().map(permitidos => permitidos.value) :
       this.actionService.getElegibilidadNoPermitidos().map(noPermitidos => noPermitidos.value);
 
-    const data = {
-      convocatoriaConceptoGastoCodigoEc: {
-        convocatoriaConceptoGasto: {
-          conceptoGasto: null,
-          convocatoria: null,
-          id: null,
-          importeMaximo: null,
-          numMeses: null,
-          observaciones: null,
-          permitido,
-          porcentajeCosteIndirecto: null
-        } as IConvocatoriaConceptoGasto,
-        codigoEconomicoRef: null,
-        enableAccion: true,
-        fechaFin: null,
-        fechaInicio: null,
-        id: null
-      } as IConvocatoriaConceptoGastoCodigoEc,
+    const convocatoriaConceptoGasto: IConvocatoriaConceptoGasto = {
+      conceptoGasto: null,
+      convocatoria: null,
+      id: null,
+      importeMaximo: null,
+      numMeses: null,
+      observaciones: null,
+      permitido,
+      porcentajeCosteIndirecto: null,
+      enableAccion: undefined
+    };
+
+    const convocatoriaConceptoGastoCodigoEc: IConvocatoriaConceptoGastoCodigoEc = {
+      convocatoriaConceptoGasto,
+      codigoEconomicoRef: null,
+      enableAccion: true,
+      fechaFin: null,
+      fechaInicio: null,
+      id: null,
+      observaciones: undefined
+    };
+
+    const data: IConvocatoriaConceptoGastoCodigoEcModalComponent = {
+      convocatoriaConceptoGastoCodigoEc,
       convocatoriaConceptoGastoCodigoEcsTabla: listadoTabla,
       convocatoriaConceptoGastos: listadoGastos,
-      editModal: false
-    } as IConvocatoriaConceptoGastoCodigoEcModalComponent;
+      editModal: false,
+      readonly: this.formPart.readonly
+    };
 
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
@@ -210,7 +218,7 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
         if (convocatoriaConceptoGastoCodigoEc) {
           this.formPart.addConvocatoriaConceptoGastoCodigoEc(convocatoriaConceptoGastoCodigoEc);
         }
-        this.logger.debug(ConvocatoriaConceptoGastoCodigoEcModalComponent.name, `${this.openModal.name}()`, 'end');
+        this.logger.debug(ConvocatoriaConceptoGastoCodigoEcModalComponent.name, `openModalCrear()`, 'end');
       }
     );
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { NGXLogger } from 'ngx-logger';
@@ -34,14 +34,12 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
   formPart: ConvocatoriaConceptoGastoFragment;
   private subscriptions: Subscription[] = [];
 
-  elementosPagina: number[] = [5, 10, 25, 100];
-  displayedColumnsPermitidos: string[] = ['conceptoGasto.nombre', 'conceptoGasto.descripcion', 'importeMaximo', 'numMeses', 'observaciones', 'acciones'];
-  displayedColumnsNoPermitidos: string[] = ['conceptoGasto.nombre', 'conceptoGasto.descripcion', 'observaciones', 'acciones'];
+  elementosPagina = [5, 10, 25, 100];
+  displayedColumnsPermitidos = ['conceptoGasto.nombre', 'conceptoGasto.descripcion', 'importeMaximo', 'numMeses', 'observaciones', 'acciones'];
+  displayedColumnsNoPermitidos = ['conceptoGasto.nombre', 'conceptoGasto.descripcion', 'observaciones', 'acciones'];
 
-  dataSourcePermitidos: MatTableDataSource<StatusWrapper<IConvocatoriaConceptoGasto>> =
-    new MatTableDataSource<StatusWrapper<IConvocatoriaConceptoGasto>>();
-  dataSourceNoPermitidos: MatTableDataSource<StatusWrapper<IConvocatoriaConceptoGasto>> =
-    new MatTableDataSource<StatusWrapper<IConvocatoriaConceptoGasto>>();
+  dataSourcePermitidos = new MatTableDataSource<StatusWrapper<IConvocatoriaConceptoGasto>>();
+  dataSourceNoPermitidos = new MatTableDataSource<StatusWrapper<IConvocatoriaConceptoGasto>>();
   @ViewChild('paginatorPermitidos', { static: true }) paginatorPermitidos: MatPaginator;
   @ViewChild('paginatorNoPermitidos', { static: true }) paginatorNoPermitidos: MatPaginator;
   @ViewChild('sortPermitidos', { static: true }) sortPermitidos: MatSort;
@@ -50,10 +48,10 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
   filteredCostesIndirectos: Observable<IConceptoGasto[]>;
 
   constructor(
-    protected readonly logger: NGXLogger,
-    protected readonly actionService: ConvocatoriaActionService,
+    protected logger: NGXLogger,
+    protected actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
-    private readonly dialogService: DialogService
+    private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.ELEGIBILIDAD, actionService);
     this.logger.debug(ConvocatoriaConceptoGastoComponent.name, 'constructor()', 'start');
@@ -83,7 +81,6 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
     this.dataSourceNoPermitidos.sort = this.sortNoPermitidos;
     this.subscriptions.push(this.formPart?.convocatoriaConceptoGastoPermitido$.subscribe(elements => {
       this.dataSourcePermitidos.data = elements;
-
       this.filteredCostesIndirectos = this.formPart.getFormGroup().controls.costeIndirecto.valueChanges
         .pipe(
           startWith(''),
@@ -130,16 +127,18 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
   }
 
   openModal(wrapper?: StatusWrapper<IConvocatoriaConceptoGasto>): void {
-    this.logger.debug(ConvocatoriaConceptoGastoComponent.name, `${this.openModal.name}()`, 'start');
+    this.logger.debug(ConvocatoriaConceptoGastoComponent.name, `openModal()`, 'start');
 
-    const listadoTabla = wrapper.value.permitido ? this.dataSourcePermitidos.data.map(wrapperPermitidos => wrapperPermitidos.value)
+    const convocatoriaConceptoGastosTabla = wrapper.value.permitido ? this.dataSourcePermitidos.data.map(
+      wrapperPermitidos => wrapperPermitidos.value)
       : this.dataSourceNoPermitidos.data.map(wrapperNoPermitidos => wrapperNoPermitidos.value);
 
-    const data = {
+    const data: IConvocatoriaConceptoGastoModalComponent = {
       convocatoriaConceptoGasto: wrapper.value,
-      convocatoriaConceptoGastosTabla: listadoTabla,
-      editModal: true
-    } as IConvocatoriaConceptoGastoModalComponent;
+      convocatoriaConceptoGastosTabla,
+      editModal: true,
+      readonly: this.formPart.readonly
+    };
 
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
@@ -159,31 +158,35 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
             this.formPart.addConvocatoriaConceptoGasto(convocatoriaConceptoGasto);
           }
         }
-        this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, `${this.openModal.name}()`, 'end');
+        this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, `openModal()`, 'end');
       }
     );
   }
 
   openModalCrear(permitido: boolean): void {
-    this.logger.debug(ConvocatoriaConceptoGastoComponent.name, `${this.openModal.name}()`, 'start');
-    const listadoTabla = permitido ? this.dataSourcePermitidos.data.map(wrapperPermitidos => wrapperPermitidos.value)
+    this.logger.debug(ConvocatoriaConceptoGastoComponent.name, `openModalCrear()`, 'start');
+    const convocatoriaConceptoGastosTabla = permitido ? this.dataSourcePermitidos.data.map(
+      wrapperPermitidos => wrapperPermitidos.value)
       : this.dataSourceNoPermitidos.data.map(wrapperNoPermitidos => wrapperNoPermitidos.value);
 
-    const data = {
-      convocatoriaConceptoGasto: {
-        conceptoGasto: null,
-        convocatoria: null,
-        id: null,
-        importeMaximo: null,
-        numMeses: null,
-        observaciones: null,
-        permitido,
-        porcentajeCosteIndirecto: null,
-        enableAccion: true
-      } as IConvocatoriaConceptoGasto,
-      convocatoriaConceptoGastosTabla: listadoTabla,
-      editModal: false
-    } as IConvocatoriaConceptoGastoModalComponent;
+    const convocatoriaConceptoGasto: IConvocatoriaConceptoGasto = {
+      conceptoGasto: null,
+      convocatoria: null,
+      id: null,
+      importeMaximo: null,
+      numMeses: null,
+      observaciones: null,
+      permitido,
+      porcentajeCosteIndirecto: null,
+      enableAccion: true
+    };
+
+    const data: IConvocatoriaConceptoGastoModalComponent = {
+      convocatoriaConceptoGasto,
+      convocatoriaConceptoGastosTabla,
+      editModal: false,
+      readonly: false
+    };
 
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
@@ -193,18 +196,18 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
 
     const dialogRef = this.matDialog.open(ConvocatoriaConceptoGastoModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (convocatoriaConceptoGasto: IConvocatoriaConceptoGasto) => {
-        if (convocatoriaConceptoGasto) {
-          this.formPart.addConvocatoriaConceptoGasto(convocatoriaConceptoGasto);
+      (result: IConvocatoriaConceptoGasto) => {
+        if (result) {
+          this.formPart.addConvocatoriaConceptoGasto(result);
         }
-        this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, `${this.openModal.name}()`, 'end');
+        this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name, `openModalCrear()`, 'end');
       }
     );
   }
 
   deleteConvocatoriaConceptoGasto(wrapper: StatusWrapper<IConvocatoriaConceptoGasto>) {
     this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name,
-      `${this.deleteConvocatoriaConceptoGasto.name}(${wrapper})`, 'start');
+      `deleteConvocatoriaConceptoGasto(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado: boolean) => {
@@ -213,7 +216,7 @@ export class ConvocatoriaConceptoGastoComponent extends FormFragmentComponent<IC
             this.actionService.deleteCodigoEconomico(wrapper.value);
           }
           this.logger.debug(ConvocatoriaConceptoGastoModalComponent.name,
-            `${this.deleteConvocatoriaConceptoGasto.name}(${wrapper})`, 'end');
+            `deleteConvocatoriaConceptoGasto(${wrapper})`, 'end');
         }
       )
     );

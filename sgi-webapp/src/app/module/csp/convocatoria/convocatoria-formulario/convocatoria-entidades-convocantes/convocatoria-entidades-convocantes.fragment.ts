@@ -31,6 +31,7 @@ export class ConvocatoriaEntidadesConvocantesFragment extends Fragment implement
     private convocatoriaService: ConvocatoriaService,
     private convocatoriaEntidadConvocanteService: ConvocatoriaEntidadConvocanteService,
     private empresaEconomicaService: EmpresaEconomicaService,
+    public readonly: boolean
   ) {
     super(key);
     this.logger.debug(ConvocatoriaEntidadesConvocantesFragment.name, 'constructor()', 'start');

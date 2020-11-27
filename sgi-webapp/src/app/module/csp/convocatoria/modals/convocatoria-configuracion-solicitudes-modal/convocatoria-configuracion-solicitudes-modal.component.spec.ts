@@ -18,7 +18,7 @@ import TestUtils from '@core/utils/test-utils';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
-import { ConvocatoriaConfiguracionSolicitudesModalComponent } from './convocatoria-configuracion-solicitudes-modal.component';
+import { ConvocatoriaConfiguracionSolicitudesModalComponent, ConvocatoriaConfiguracionSolicitudesModalData } from './convocatoria-configuracion-solicitudes-modal.component';
 
 describe('ConvocatoriaConfiguracionSolicitudesModalComponent', () => {
   let component: ConvocatoriaConfiguracionSolicitudesModalComponent;
@@ -87,6 +87,11 @@ describe('ConvocatoriaConfiguracionSolicitudesModalComponent', () => {
     tipoDocumento
   };
 
+  const data: ConvocatoriaConfiguracionSolicitudesModalData = {
+    documentoRequerido,
+    readonly: false
+  };
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
@@ -104,8 +109,8 @@ describe('ConvocatoriaConfiguracionSolicitudesModalComponent', () => {
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        { provide: MatDialogRef, useValue: documentoRequerido },
-        { provide: MAT_DIALOG_DATA, useValue: documentoRequerido },
+        { provide: MatDialogRef, useValue: data },
+        { provide: MAT_DIALOG_DATA, useValue: data },
       ]
     })
       .compileComponents();

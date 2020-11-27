@@ -29,6 +29,7 @@ export interface IConvocatoriaConceptoGastoCodigoEcModalComponent {
   convocatoriaConceptoGastoCodigoEcsTabla: IConvocatoriaConceptoGastoCodigoEc[];
   convocatoriaConceptoGastos: IConvocatoriaConceptoGasto[];
   editModal: boolean;
+  readonly: boolean;
 }
 
 @Component({
@@ -39,7 +40,7 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
   formGroup: FormGroup;
   fxLayoutProperties: FxLayoutProperties;
   fxFlexProperties: FxFlexProperties;
-  private suscripciones: Subscription[];
+  private suscripciones: Subscription[] = [];
 
   convocatoriaConceptoGastosFiltered: IConvocatoriaConceptoGasto[];
   convocatoriaConceptoGastos$: Observable<IConvocatoriaConceptoGasto[]>;
@@ -49,10 +50,10 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
   textSaveOrUpdate: string;
 
   constructor(
-    private readonly logger: NGXLogger,
-    private readonly snackBarService: SnackBarService,
-    public readonly matDialogRef: MatDialogRef<ConvocatoriaConceptoGastoCodigoEcModalComponent>,
-    private readonly codigoEconomicoService: CodigoEconomicoService,
+    private logger: NGXLogger,
+    private snackBarService: SnackBarService,
+    public matDialogRef: MatDialogRef<ConvocatoriaConceptoGastoCodigoEcModalComponent>,
+    private codigoEconomicoService: CodigoEconomicoService,
     @Inject(MAT_DIALOG_DATA) public data: IConvocatoriaConceptoGastoCodigoEcModalComponent
   ) {
     this.logger.debug(ConvocatoriaConceptoGastoCodigoEcModalComponent.name, 'constructor()', 'start');
@@ -71,7 +72,6 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
 
   ngOnInit(): void {
     this.logger.debug(ConvocatoriaConceptoGastoCodigoEcModalComponent.name, 'ngOnInit()', 'start');
-    this.suscripciones = [];
     this.initFormGroup();
     this.loadConceptoGastos();
     this.loadCodigosEconomicos();
@@ -82,15 +82,13 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
   private initFormGroup() {
     this.logger.debug(ConvocatoriaConceptoGastoCodigoEcModalComponent.name, 'initFormGroup()', 'start');
     this.formGroup = new FormGroup({
-      convocatoriaConceptoGasto: new FormControl(this.data.editModal ?
-        this.data.convocatoriaConceptoGastoCodigoEc?.convocatoriaConceptoGasto : null, [SelectValidator.isSelectOption(
+      convocatoriaConceptoGasto: new FormControl(
+        this.data.editModal ? this.data.convocatoriaConceptoGastoCodigoEc?.convocatoriaConceptoGasto : null,
+        [SelectValidator.isSelectOption(
           this.data.convocatoriaConceptoGastos.map(conv => conv.conceptoGasto.nombre), true)]),
-      codigoEconomicoRef: new FormControl(
-        this.data.convocatoriaConceptoGastoCodigoEc?.codigoEconomicoRef),
-      fechaInicio: new FormControl(
-        this.data.convocatoriaConceptoGastoCodigoEc?.fechaInicio),
-      fechaFin: new FormControl(
-        this.data.convocatoriaConceptoGastoCodigoEc?.fechaFin),
+      codigoEconomicoRef: new FormControl(this.data.convocatoriaConceptoGastoCodigoEc?.codigoEconomicoRef),
+      fechaInicio: new FormControl(this.data.convocatoriaConceptoGastoCodigoEc?.fechaInicio),
+      fechaFin: new FormControl(this.data.convocatoriaConceptoGastoCodigoEc?.fechaFin),
       observaciones: new FormControl(this.data.convocatoriaConceptoGastoCodigoEc?.observaciones),
     },
       {
@@ -98,6 +96,9 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
           DateValidator.isBefore('fechaFin', 'fechaInicio'),
           DateValidator.isAfter('fechaInicio', 'fechaFin')]
       });
+    if (this.data.readonly) {
+      this.formGroup.disable();
+    }
     this.logger.debug(ConvocatoriaConceptoGastoCodigoEcModalComponent.name, 'initFormGroup()', 'end');
   }
 

@@ -23,22 +23,21 @@ const MSG_DELETE = marker('csp.convocatoria.seguimiento.cientifico.listado.borra
   styleUrls: ['./convocatoria-seguimiento-cientifico.component.scss']
 })
 export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponent implements OnInit, OnDestroy {
-
-  private formPart: ConvocatoriaSeguimientoCientificoFragment;
+  formPart: ConvocatoriaSeguimientoCientificoFragment;
   private subscriptions: Subscription[] = [];
 
-  columnas: string[] = ['numPeriodo', 'mesInicial', 'mesFinal', 'fechaInicio', 'fechaFin', 'observaciones', 'acciones'];
-  elementosPagina: number[] = [5, 10, 25, 100];
+  columnas = ['numPeriodo', 'mesInicial', 'mesFinal', 'fechaInicio', 'fechaFin', 'observaciones', 'acciones'];
+  elementosPagina = [5, 10, 25, 100];
 
   dataSource = new MatTableDataSource<StatusWrapper<IConvocatoriaSeguimientoCientifico>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    protected readonly logger: NGXLogger,
-    protected readonly actionService: ConvocatoriaActionService,
+    protected logger: NGXLogger,
+    protected actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
-    private readonly dialogService: DialogService
+    private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.SEGUIMIENTO_CIENTIFICO, actionService);
     this.logger.debug(ConvocatoriaSeguimientoCientificoComponent.name, 'constructor()', 'start');
@@ -82,20 +81,20 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
    */
   openModalSeguimientoCientifico(seguimientoCientificoActualizar?: StatusWrapper<IConvocatoriaSeguimientoCientifico>): void {
     this.logger.debug(ConvocatoriaSeguimientoCientificoComponent.name,
-      `${this.openModalSeguimientoCientifico.name}(${seguimientoCientificoActualizar})`, 'start');
+      `openModalSeguimientoCientifico(${seguimientoCientificoActualizar})`, 'start');
 
     const modalData: IConvocatoriaSeguimientoCientificoModalData = {
       duracion: this.actionService.duracion,
       convocatoriaSeguimientoCientifico: seguimientoCientificoActualizar
         ? seguimientoCientificoActualizar.value : {} as IConvocatoriaSeguimientoCientifico,
-      convocatoriaSeguimientoCientificoList: this.dataSource.data
+      convocatoriaSeguimientoCientificoList: this.dataSource.data,
+      readonly: this.formPart.readonly
     };
 
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
       data: modalData,
-      autoFocus: false
     };
 
     const dialogRef = this.matDialog.open(ConvocatoriaSeguimientoCientificoModalComponent, config);
@@ -103,7 +102,7 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
       (periodoJustificacionModal: IConvocatoriaSeguimientoCientifico) => {
         if (!periodoJustificacionModal) {
           this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name,
-            `${this.openModalSeguimientoCientifico.name}(${seguimientoCientificoActualizar})`, 'end');
+            `openModalSeguimientoCientifico(${seguimientoCientificoActualizar})`, 'end');
           return;
         }
 
@@ -117,7 +116,7 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
         this.recalcularNumPeriodos();
 
         this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name,
-          `${this.openModalSeguimientoCientifico.name}(${seguimientoCientificoActualizar})`, 'end');
+          `openModalSeguimientoCientifico(${seguimientoCientificoActualizar})`, 'end');
       }
     );
 
@@ -130,18 +129,18 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
    */
   deleteSeguimientoCientifico(seguimientoCientifico?: StatusWrapper<IConvocatoriaSeguimientoCientifico>): void {
     this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name,
-      `${this.deleteSeguimientoCientifico.name}(${seguimientoCientifico})`, 'start');
+      `deleteSeguimientoCientifico(${seguimientoCientifico})`, 'start');
 
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
-        (aceptado: boolean) => {
+        (aceptado) => {
           if (aceptado) {
             this.formPart.deleteSeguimientoCientifico(seguimientoCientifico);
             this.recalcularNumPeriodos();
           }
 
           this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name,
-            `${this.deleteSeguimientoCientifico.name}(${seguimientoCientifico})`, 'end');
+            `deleteSeguimientoCientifico(${seguimientoCientifico})`, 'end');
         }
       )
     );
@@ -157,6 +156,7 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
    * Recalcula los numeros de los periodos de todos los periodos de justificacion de la tabla en funcion de su mes inicial.
    */
   private recalcularNumPeriodos(): void {
+    this.logger.debug(ConvocatoriaSeguimientoCientificoComponent.name, 'recalcularNumPeriodos()', 'start');
     let numPeriodo = 1;
     this.dataSource.data
       .sort((a, b) => (a.value.mesInicial > b.value.mesInicial) ? 1 : ((b.value.mesInicial > a.value.mesInicial) ? -1 : 0));
@@ -166,6 +166,7 @@ export class ConvocatoriaSeguimientoCientificoComponent extends FragmentComponen
     });
 
     this.formPart.seguimientosCientificos$.next(this.dataSource.data);
+    this.logger.debug(ConvocatoriaSeguimientoCientificoComponent.name, 'recalcularNumPeriodos()', 'end');
   }
 
 }

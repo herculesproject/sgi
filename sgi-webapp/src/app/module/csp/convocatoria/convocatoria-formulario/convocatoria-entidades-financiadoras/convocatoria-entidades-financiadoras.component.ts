@@ -32,7 +32,7 @@ export interface ConvocatoriaEntidadFinanciadoraData {
   styleUrls: ['./convocatoria-entidades-financiadoras.component.scss']
 })
 export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentComponent implements OnInit, OnDestroy {
-  private formPart: ConvocatoriaEntidadesFinanciadorasFragment;
+  formPart: ConvocatoriaEntidadesFinanciadorasFragment;
   private subscriptions: Subscription[] = [];
 
   columns = ['nombre', 'cif', 'fuenteFinanciacion', 'ambito', 'tipoFinanciacion',
@@ -46,11 +46,11 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
   selectedEmpresas: IEmpresaEconomica[];
 
   constructor(
-    protected readonly logger: NGXLogger,
-    protected readonly actionService: ConvocatoriaActionService,
+    protected logger: NGXLogger,
+    protected actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
-    private readonly empresaEconomicaService: EmpresaEconomicaService,
-    private readonly dialogService: DialogService
+    private empresaEconomicaService: EmpresaEconomicaService,
+    private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.ENTIDADES_FINANCIADORAS, actionService);
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, 'constructor()', 'start');
@@ -68,7 +68,7 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
   }
 
   private getDataSource(): void {
-    this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, `${this.getDataSource.name}()`, 'start');
+    this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, `getDataSource()`, 'start');
     this.dataSource.data = [];
     this.selectedEmpresas = [];
     this.subscriptions.push(
@@ -100,7 +100,7 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
         })
       ).subscribe(elements => {
         this.dataSource.data = elements;
-        this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, `${this.getDataSource.name}()`, 'end');
+        this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, `getDataSource()`, 'end');
       })
     );
   }
@@ -112,16 +112,17 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
   }
 
   openModal(wrapper?: StatusWrapper<ConvocatoriaEntidadFinanciadoraData>): void {
-    this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, `${this.openModal.name}()`, 'start');
-    const newData: ConvocatoriaEntidadFinanciadoraDataModal = {
-      empresa: {} as IEmpresaEconomica,
-      entidad: {} as IConvocatoriaEntidadFinanciadora,
-      selectedEmpresas: this.selectedEmpresas
+    this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, `openModal()`, 'start');
+    const data: ConvocatoriaEntidadFinanciadoraDataModal = {
+      empresa: wrapper ? wrapper.value.empresa : {} as IEmpresaEconomica,
+      entidad: wrapper ? wrapper.value.entidad : {} as IConvocatoriaEntidadFinanciadora,
+      selectedEmpresas: this.selectedEmpresas,
+      readonly: this.formPart.readonly
     };
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: wrapper ? wrapper.value : newData
+      data
     };
     const dialogRef = this.matDialog.open(ConvocatoriaEntidadFinanciadoraModalComponent, config);
     dialogRef.afterClosed().subscribe(entidadFinanciadora => {
@@ -133,14 +134,14 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
           this.formPart.updateConvocatoriaEntidadFinanciadora(entidad);
         }
       }
-      this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, `${this.openModal.name}()`, 'end');
+      this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, `openModal()`, 'end');
     }
     );
   }
 
   deleteConvocatoriaEntidadFinanciadora(wrapper: StatusWrapper<ConvocatoriaEntidadFinanciadoraData>) {
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name,
-      `${this.deleteConvocatoriaEntidadFinanciadora.name}(${wrapper})`, 'start');
+      `deleteConvocatoriaEntidadFinanciadora(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado: boolean) => {
@@ -152,7 +153,7 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
             this.getDataSource();
           }
           this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name,
-            `${this.deleteConvocatoriaEntidadFinanciadora.name}(${wrapper})`, 'end');
+            `deleteConvocatoriaEntidadFinanciadora(${wrapper})`, 'end');
         }
       )
     );

@@ -20,6 +20,7 @@ export interface IConvocatoriaPeriodoJustificacionModalData {
   duracion: number;
   convocatoriaPeriodoJustificacion: IConvocatoriaPeriodoJustificacion;
   convocatoriaPeriodoJustificacionList: StatusWrapper<IConvocatoriaPeriodoJustificacion>[];
+  readonly: boolean;
 }
 
 const MSG_ANADIR = marker('botones.aniadir');
@@ -41,10 +42,10 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
   textSaveOrUpdate: string;
 
   constructor(
-    protected readonly logger: NGXLogger,
-    protected readonly snackBarService: SnackBarService,
+    protected logger: NGXLogger,
+    protected snackBarService: SnackBarService,
     @Inject(MAT_DIALOG_DATA) public data: IConvocatoriaPeriodoJustificacionModalData,
-    public readonly matDialogRef: MatDialogRef<ConvocatoriaPeriodosJustificacionModalComponent>
+    public matDialogRef: MatDialogRef<ConvocatoriaPeriodosJustificacionModalComponent>
   ) {
     super(logger, snackBarService, matDialogRef, data.convocatoriaPeriodoJustificacion);
     this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'constructor()', 'start');
@@ -78,10 +79,11 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, `${this.getFormGroup.name}()`, 'start');
+    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, `getFormGroup()`, 'start');
 
     const rangosPeriodosExistentes = this.data.convocatoriaPeriodoJustificacionList
-      .filter(periodoJustificacion => periodoJustificacion.value.mesInicial !== this.data.convocatoriaPeriodoJustificacion.mesInicial)
+      .filter(periodoJustificacion =>
+        periodoJustificacion.value.mesInicial !== this.data.convocatoriaPeriodoJustificacion.mesInicial)
       .map(periodoJustificacion => {
         return {
           inicio: periodoJustificacion.value.mesInicial,
@@ -114,6 +116,10 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
         DateValidator.isAfter('fechaInicio', 'fechaFin')]
     });
 
+    if (this.data.readonly) {
+      formGroup.disable();
+    }
+
     // Si ya existe un periodo final tiene que ser el ultimo y solo puede haber 1
     if (periodoJustificacionFinal) {
       formGroup.get('tipoJustificacion').setValidators([
@@ -135,12 +141,12 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
       ]);
     }
 
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, `${this.getFormGroup.name}()`, 'end');
+    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }
 
   protected getDatosForm(): IConvocatoriaPeriodoJustificacion {
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, `${this.getDatosForm.name}()`, 'start');
+    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, `getDatosForm()`, 'start');
 
     const convocatoriaPeriodoJustificacion = this.data.convocatoriaPeriodoJustificacion;
     convocatoriaPeriodoJustificacion.numPeriodo = this.formGroup.get('numPeriodo').value;
@@ -151,7 +157,7 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
     convocatoriaPeriodoJustificacion.fechaFinPresentacion = this.formGroup.get('fechaFin').value;
     convocatoriaPeriodoJustificacion.observaciones = this.formGroup.get('observaciones').value;
 
-    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, `${this.getDatosForm.name}()`, 'end');
+    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, `getDatosForm()`, 'end');
     return convocatoriaPeriodoJustificacion;
   }
 
@@ -169,6 +175,7 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
    * Recalcula el numero de periodo en funcion de la ordenacion por mes inicial de todos los periodos.
    */
   recalcularNumPeriodo(): void {
+    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'recalcularNumPeriodo()', 'start');
     let numPeriodo = 1;
     const mesInicial = this.formGroup.get('desdeMes').value;
 
@@ -179,6 +186,7 @@ export class ConvocatoriaPeriodosJustificacionModalComponent
     });
 
     this.formGroup.get('numPeriodo').setValue(numPeriodo);
+    this.logger.debug(ConvocatoriaPeriodosJustificacionModalComponent.name, 'recalcularNumPeriodo()', 'end');
   }
 
   /**

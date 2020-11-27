@@ -251,7 +251,7 @@
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
       <sgi-buscar-empresa-economica [textoLabel]="label" [textoInput]="label"
-        [datosEmpresaEconomicaTexto]="formPart.empresaEconomicaText"
+        [datosEmpresaEconomicaTexto]="formPart.empresaEconomicaText" [readonly]="formPart.readonly"
         (empresaEconomicaSeleccionada)="formPart.setEmpresaEconomica($event)">
       </sgi-buscar-empresa-economica>
     </div>
@@ -312,12 +312,14 @@
         <th mat-header-cell *matHeaderCellDef>{{'csp.convocatoria.listado.acciones' | translate}} </th>
         <td mat-cell *matCellDef="let data">
           <ng-container>
-            <button mat-button matTooltip="{{'botones.editar' | translate}}" (click)="openModal(data)">
+            <button mat-button matTooltip="{{'botones.editar' | translate}}" *ngIf="!formPart.readonly"
+              (click)="openModal(data)">
               <mat-icon color="primary">border_color</mat-icon>
             </button>
           </ng-container>
           <ng-container>
-            <button mat-button matTooltip="{{'botones.borrar' | translate}}" (click)="deleteAreaTematica(data)">
+            <button mat-button matTooltip="{{'botones.borrar' | translate}}" *ngIf="!formPart.readonly"
+              (click)="deleteAreaTematica(data)">
               <mat-icon color="warn">highlight_off</mat-icon>
             </button>
           </ng-container>
@@ -326,11 +328,9 @@
       <tr mat-header-row *matHeaderRowDef="columns"></tr>
       <tr mat-row *matRowDef="let row; columns: columns;"></tr>
     </table>
-    <mat-paginator [pageSizeOptions]="numPage" showFirstLastButtons>
-    </mat-paginator>
     <div class="separation-button">
       <button color="three" aria-label="Center Align" md-button mat-raised-button (click)="openModal()"
-        *ngIf="convocatoriaAreaTematicas.data.length === 0">
+        *ngIf="convocatoriaAreaTematicas.data.length === 0 && !formPart.readonly">
         <mat-icon color="accent">add_circle</mat-icon>
         {{'csp.convocatoria.area.tematica.aniadir'| translate}}
       </button>

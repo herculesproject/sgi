@@ -11,6 +11,7 @@ import { LoggerTestingModule } from 'ngx-logger/testing';
 import { FooterCrearComponent } from '@shared/footers/footer-crear/footer-crear.component';
 import { ConvocatoriaListadoComponent } from 'src/app/module/csp/convocatoria/convocatoria-listado/convocatoria-listado.component';
 import { ConvocatoriaActionService } from '../convocatoria.action.service';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 describe('ConvocatoriaListadoComponent', () => {
   let component: ConvocatoriaListadoComponent;
@@ -35,7 +36,8 @@ describe('ConvocatoriaListadoComponent', () => {
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        ConvocatoriaActionService
+        ConvocatoriaActionService,
+        SgiAuthService
       ],
     })
       .compileComponents();

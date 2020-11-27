@@ -13,17 +13,21 @@ export class ConvocatoriaRequisitosEquipoFragment extends FormFragment<IConvocat
 
   constructor(
     private fb: FormBuilder,
-    private readonly logger: NGXLogger,
+    private logger: NGXLogger,
     key: number,
-    private convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService) {
+    private convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService,
+    private readonly: boolean
+  ) {
     super(key, true);
+    this.logger.debug(ConvocatoriaRequisitosEquipoFragment.name, 'constructor()', 'start');
     this.setComplete(true);
     this.requisitoEquipo = {} as IConvocatoriaRequisitoEquipo;
+    this.logger.debug(ConvocatoriaRequisitosEquipoFragment.name, 'constructor()', 'start');
   }
 
   protected buildFormGroup(): FormGroup {
     this.logger.debug(ConvocatoriaRequisitosEquipoFragment.name, 'buildFormGroup()', 'start');
-    return this.fb.group({
+    const form = this.fb.group({
       nivelAcademicoRef: ['', Validators.maxLength(50)],
       aniosNivelAcademico: ['', Validators.compose(
         [Validators.min(0), Validators.max(9999)])],
@@ -43,6 +47,11 @@ export class ConvocatoriaRequisitosEquipoFragment extends FormFragment<IConvocat
         [Validators.min(0), Validators.max(9999)])],
       otrosRequisitos: ['']
     });
+    if (this.readonly) {
+      form.disable();
+    }
+    this.logger.debug(ConvocatoriaRequisitosEquipoFragment.name, 'buildFormGroup()', 'end');
+    return form;
   }
 
   protected initializer(key: number): Observable<IConvocatoriaRequisitoEquipo> {

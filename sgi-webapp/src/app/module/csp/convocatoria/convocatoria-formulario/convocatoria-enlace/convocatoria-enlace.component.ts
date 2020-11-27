@@ -23,8 +23,7 @@ const MSG_DELETE = marker('csp.convocatoria.enlace.listado.borrar');
   styleUrls: ['./convocatoria-enlace.component.scss']
 })
 export class ConvocatoriaEnlaceComponent extends FragmentComponent implements OnInit, OnDestroy {
-
-  private formPart: ConvocatoriaEnlaceFragment;
+  formPart: ConvocatoriaEnlaceFragment;
   private subscriptions: Subscription[] = [];
   public disableAddEnlace = true;
 
@@ -89,7 +88,8 @@ export class ConvocatoriaEnlaceComponent extends FragmentComponent implements On
     const data: ConvocatoriaEnlaceModalComponentData = {
       enlace: wrapper ? wrapper.value : enlace,
       idModeloEjecucion: this.actionService.modeloEjecucionId,
-      selectedUrls: this.formPart.getSelectedUrls()
+      selectedUrls: this.formPart.getSelectedUrls(),
+      readonly: this.formPart.readonly
     };
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,

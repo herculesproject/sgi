@@ -24,6 +24,7 @@ export interface ConvocatoriaEntidadFinanciadoraDataModal {
   entidad: IConvocatoriaEntidadFinanciadora;
   empresa: IEmpresaEconomica;
   selectedEmpresas: IEmpresaEconomica[];
+  readonly: boolean;
 }
 
 const MSG_ANADIR = marker('botones.aniadir');
@@ -41,9 +42,9 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent extends
   textSaveOrUpdate: string;
 
   constructor(
-    protected readonly logger: NGXLogger,
-    protected readonly snackBarService: SnackBarService,
-    public readonly matDialogRef: MatDialogRef<ConvocatoriaEntidadFinanciadoraModalComponent>,
+    protected logger: NGXLogger,
+    protected snackBarService: SnackBarService,
+    public matDialogRef: MatDialogRef<ConvocatoriaEntidadFinanciadoraModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaEntidadFinanciadoraDataModal,
     private tipoFinanciacionService: TipoFinanciacionService,
     private fuenteFinanciacionService: FuenteFinanciacionService,
@@ -73,25 +74,28 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent extends
   }
 
   protected getDatosForm(): IConvocatoriaEntidadFinanciadora {
-    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `${this.getDatosForm.name}()`, 'start');
+    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `getDatosForm()`, 'start');
     const entidad = this.data.entidad;
     entidad.entidadRef = this.empresa.personaRef;
     entidad.fuenteFinanciacion = this.formGroup.get('fuenteFinanciacion').value;
     entidad.tipoFinanciacion = this.formGroup.get('tipoFinanciacion').value;
     entidad.porcentajeFinanciacion = this.formGroup.get('porcentajeFinanciacion').value;
-    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `${this.getDatosForm.name}()`, 'end');
+    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `getDatosForm()`, 'end');
     return entidad;
   }
 
   protected getFormGroup(): FormGroup {
-    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `${this.getFormGroup.name}()`, 'start');
+    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `getFormGroup()`, 'start');
     const formGroup = new FormGroup({
       nombreEmpresa: new FormControl(this.data.empresa.razonSocial),
       fuenteFinanciacion: new FormControl(this.data.entidad.fuenteFinanciacion),
       tipoFinanciacion: new FormControl(this.data.entidad.tipoFinanciacion),
       porcentajeFinanciacion: new FormControl(this.data.entidad.porcentajeFinanciacion)
     });
-    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `${this.getFormGroup.name}()`, 'end');
+    if (this.data.readonly) {
+      formGroup.disable();
+    }
+    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `getFormGroup()`, 'end');
     return formGroup;
   }
 
@@ -99,22 +103,22 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent extends
    * Carga todas las fuentes de financiación
    */
   private loadFuentesFinanciacion(): void {
-    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `${this.loadFuentesFinanciacion.name}()`, 'start');
+    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `loadFuentesFinanciacion()`, 'start');
     this.fuentesFinanciacion$ = this.fuenteFinanciacionService.findAll().pipe(
       map((fuenteFinanciones) => fuenteFinanciones.items)
     );
-    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `${this.loadFuentesFinanciacion.name}()`, 'end');
+    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `loadFuentesFinanciacion()`, 'end');
   }
 
   /**
    * Carga todos los tipos de financiación
    */
   private loadTiposFinanciacion(): void {
-    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `${this.loadTiposFinanciacion.name}()`, 'start');
+    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `loadTiposFinanciacion()`, 'start');
     this.tiposFinanciacion$ = this.tipoFinanciacionService.findAll().pipe(
       map((tipoFinanciaciones) => tipoFinanciaciones.items)
     );
-    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `${this.loadTiposFinanciacion.name}()`, 'end');
+    this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `loadTiposFinanciacion()`, 'end');
   }
 
   getNombreFuenteFinanciacion(fuenteFinanciacion: IFuenteFinanciacion): string {
@@ -126,7 +130,7 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent extends
   }
 
   selectEmpresaEconomica(): void {
-    this.logger.debug(BuscarEmpresaEconomicaComponent.name, `${this.selectEmpresaEconomica.name}()`, 'start');
+    this.logger.debug(BuscarEmpresaEconomicaComponent.name, `selectEmpresaEconomica()`, 'start');
     const data: EmpresaEconomicaModalData = {
       empresaEconomica: this.empresa ? this.empresa : {} as IEmpresaEconomica,
       selectedEmpresa: this.data.selectedEmpresas
@@ -141,6 +145,6 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent extends
         this.formGroup.get('nombreEmpresa').setValue(empresaEconomica.razonSocial);
       }
     });
-    this.logger.debug(BuscarEmpresaEconomicaComponent.name, `${this.selectEmpresaEconomica.name}()`, 'end');
+    this.logger.debug(BuscarEmpresaEconomicaComponent.name, `selectEmpresaEconomica()`, 'end');
   }
 }

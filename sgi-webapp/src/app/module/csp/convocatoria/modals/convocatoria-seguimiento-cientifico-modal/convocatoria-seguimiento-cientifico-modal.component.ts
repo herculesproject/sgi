@@ -18,6 +18,7 @@ export interface IConvocatoriaSeguimientoCientificoModalData {
   duracion: number;
   convocatoriaSeguimientoCientifico: IConvocatoriaSeguimientoCientifico;
   convocatoriaSeguimientoCientificoList: StatusWrapper<IConvocatoriaSeguimientoCientifico>[];
+  readonly: boolean;
 }
 
 const MSG_ANADIR = marker('botones.aniadir');
@@ -37,10 +38,10 @@ export class ConvocatoriaSeguimientoCientificoModalComponent
   textSaveOrUpdate: string;
 
   constructor(
-    protected readonly logger: NGXLogger,
-    protected readonly snackBarService: SnackBarService,
+    protected logger: NGXLogger,
+    protected snackBarService: SnackBarService,
     @Inject(MAT_DIALOG_DATA) public data: IConvocatoriaSeguimientoCientificoModalData,
-    public readonly matDialogRef: MatDialogRef<ConvocatoriaSeguimientoCientificoModalComponent>
+    public matDialogRef: MatDialogRef<ConvocatoriaSeguimientoCientificoModalComponent>
   ) {
     super(logger, snackBarService, matDialogRef, data.convocatoriaSeguimientoCientifico);
     this.logger.debug(ConvocatoriaSeguimientoCientificoModalComponent.name, 'constructor()', 'start');
@@ -89,7 +90,10 @@ export class ConvocatoriaSeguimientoCientificoModalComponent
       .sort((a, b) => (b.value.mesInicial > a.value.mesInicial) ? 1 : ((a.value.mesInicial > b.value.mesInicial) ? -1 : 0)).find(c => true);
 
     const formGroup = new FormGroup({
-      numPeriodo: new FormControl(this.data.convocatoriaSeguimientoCientifico?.numPeriodo),
+      numPeriodo: new FormControl({
+        value: this.data.convocatoriaSeguimientoCientifico?.numPeriodo,
+        disabled: true
+      }),
       desdeMes: new FormControl(this.data.convocatoriaSeguimientoCientifico?.mesInicial, [Validators.required, Validators.min(1)]),
       hastaMes: new FormControl(this.data.convocatoriaSeguimientoCientifico?.mesFinal, [Validators.required, Validators.min(2)]),
       fechaInicio: new FormControl(this.data.convocatoriaSeguimientoCientifico?.fechaInicioPresentacion, []),
@@ -102,6 +106,10 @@ export class ConvocatoriaSeguimientoCientificoModalComponent
         RangeValidator.notOverlaps('desdeMes', 'hastaMes', rangosPeriodosExistentes),
         DateValidator.isAfter('fechaInicio', 'fechaFin')]
     });
+
+    if (this.data.readonly) {
+      formGroup.disable();
+    }
 
     // Si la convocatoria tiene duracion el mesFinal no puede superarla
     if (this.data.duracion) {

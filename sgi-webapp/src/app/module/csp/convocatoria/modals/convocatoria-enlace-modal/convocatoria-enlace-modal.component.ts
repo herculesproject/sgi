@@ -24,6 +24,7 @@ export interface ConvocatoriaEnlaceModalComponentData {
   enlace: IConvocatoriaEnlace;
   idModeloEjecucion: number;
   selectedUrls: string[];
+  readonly: boolean;
 }
 @Component({
   templateUrl: './convocatoria-enlace-modal.component.html',
@@ -118,6 +119,9 @@ export class ConvocatoriaEnlaceModalComponent extends
       descripcion: new FormControl(this.data.enlace.descripcion, [Validators.maxLength(250)]),
       tipoEnlace: new FormControl(this.data.enlace.tipoEnlace, [IsEntityValidator.isValid()]),
     });
+    if (this.data.readonly) {
+      formGroup.disable();
+    }
     this.logger.debug(ConvocatoriaEnlaceModalComponent.name, 'getFormGroup()', 'start');
     return formGroup;
   }

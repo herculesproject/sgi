@@ -61,8 +61,6 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
 
   busquedaAvanzada = false;
 
-  private subscriptions = [] as Subscription[];
-
   selectedEmpresaConvocante: IEmpresaEconomica;
   selectedEmpresaFinanciadora: IEmpresaEconomica;
   convocatoriaEntidadGestora: IConvocatoriaEntidadGestora;
@@ -86,14 +84,14 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
   empresaFinanciadoraText: string;
 
   constructor(
-    protected readonly logger: NGXLogger,
-    protected readonly snackBarService: SnackBarService,
-    private readonly convocatoriaService: ConvocatoriaService,
-    private readonly empresaEconomicaService: EmpresaEconomicaService,
-    private readonly tipoFinalidadService: TipoFinalidadService,
-    private readonly tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
-    private readonly fuenteFinanciacionService: FuenteFinanciacionService,
-    private readonly areaTematicaService: AreaTematicaService
+    protected logger: NGXLogger,
+    protected snackBarService: SnackBarService,
+    private convocatoriaService: ConvocatoriaService,
+    private empresaEconomicaService: EmpresaEconomicaService,
+    private tipoFinalidadService: TipoFinalidadService,
+    private tipoAmbitoGeograficoService: TipoAmbitoGeograficoService,
+    private fuenteFinanciacionService: FuenteFinanciacionService,
+    private areaTematicaService: AreaTematicaService
   ) {
     super(logger, snackBarService, MSG_ERROR);
     this.logger.debug(ConvocatoriaListadoInvComponent.name, 'constructor()', 'start');
@@ -294,8 +292,6 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
     this.addFiltro(filtros, 'abiertoPlazoPresentacionSolicitud', SgiRestFilterType.EQUALS,
       this.formGroup.controls.abiertoPlazoPresentacionSolicitud.value);
 
-    //this.addFiltro(filtros, 'aplicarFiltroPerfil', SgiRestFilterType.EQUALS, this.formGroup.controls.aplicarFiltro.value);
-
     this.addFiltro(filtros, 'finalidad.id', SgiRestFilterType.EQUALS, this.formGroup.controls.finalidad.value.id);
     this.addFiltro(filtros, 'ambitoGeografico.id', SgiRestFilterType.EQUALS, this.formGroup.controls.ambitoGeografico.value.id);
     if (this.formGroup.controls.entidadConvocante.value) {
@@ -392,7 +388,7 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
    */
   private loadAmbitosGeograficos() {
     this.logger.debug(ConvocatoriaListadoInvComponent.name, `${this.loadAmbitosGeograficos.name}()`, 'start');
-    this.subscriptions.push(
+    this.suscripciones.push(
       this.tipoAmbitoGeograficoService.findAll().subscribe(
         res => {
           this.tipoAmbitoGeograficoFiltered = res.items;
@@ -416,7 +412,7 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
    */
   private loadFinalidades() {
     this.logger.debug(ConvocatoriaListadoInvComponent.name, `${this.loadFinalidades.name}()`, 'start');
-    this.subscriptions.push(
+    this.suscripciones.push(
       this.tipoFinalidadService.findAll().subscribe(
         res => {
           this.finalidadFiltered = res.items;
@@ -542,11 +538,4 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
     this.logger.debug(ConvocatoriaListadoInvComponent.name,
       `${this.setEmpresaConvocante.name}(value: ${empresa})`, 'end');
   }
-
-  ngOnDestroy(): void {
-    this.logger.debug(AbstractTablePaginationComponent.name, 'ngOnDestroy()', 'start');
-    this.suscripciones.forEach(x => x.unsubscribe());
-    this.logger.debug(AbstractTablePaginationComponent.name, 'ngOnDestroy()', 'end');
-  }
-
 }

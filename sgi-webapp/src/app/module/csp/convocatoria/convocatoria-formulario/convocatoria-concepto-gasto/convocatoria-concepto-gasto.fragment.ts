@@ -18,10 +18,11 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
 
   constructor(
     private fb: FormBuilder,
-    private readonly logger: NGXLogger,
+    private logger: NGXLogger,
     key: number,
-    private readonly convocatoriaService: ConvocatoriaService,
-    private readonly convocatoriaConceptoGastoService: ConvocatoriaConceptoGastoService
+    private convocatoriaService: ConvocatoriaService,
+    private convocatoriaConceptoGastoService: ConvocatoriaConceptoGastoService,
+    public readonly: boolean
   ) {
     super(key, true);
     this.setComplete(true);
@@ -30,15 +31,18 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
   }
 
   protected buildFormGroup(): FormGroup {
-    this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `${this.buildFormGroup.name}()`, 'start');
-    return this.fb.group({
+    this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `buildFormGroup()`, 'start');
+    const fb = this.fb.group({
       porcentajeCosteIndirecto: [null, [Validators.compose(
         [Validators.min(0), Validators.max(100)])]],
       costeIndirecto: [null, [IsEntityValidator.isValid()]]
     });
+    this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `buildFormGroup()`, 'end');
+    return fb;
   }
 
   protected buildPatch(values: IConvocatoriaConceptoGasto[]): { [key: string]: any } {
+    this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `buildPatch(values: ${values})`, 'start');
     let porcentajeCosteIndirecto = null;
     let costeIndirecto = null;
 
@@ -52,30 +56,23 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
     this.convocatoriaConceptoGastoPermitido$.next(values.map(
       convocatoriaConceptoGastos => new StatusWrapper<IConvocatoriaConceptoGasto>(convocatoriaConceptoGastos))
     );
-
+    this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `buildPatch(values: ${values})`, 'end');
     return {
       porcentajeCosteIndirecto,
       costeIndirecto
     };
   }
   protected initializer(key: string | number): Observable<IConvocatoriaConceptoGasto[]> {
-    this.logger.debug(ConvocatoriaConceptoGastoFragment.name, 'onInitialize()', 'start');
+    this.logger.debug(ConvocatoriaConceptoGastoFragment.name, 'initializer()', 'start');
     if (this.getKey()) {
 
       this.convocatoriaService.getConvocatoriaConceptoGastosNoPermitidos(this.getKey() as number).pipe(
-        map((response) => {
-          if (response.items) {
-            return response.items;
-          }
-          else {
-            return [];
-          }
-        })
+        map((response) => response.items)
       ).subscribe((convocatoriaConceptoGasto) => {
         this.convocatoriaConceptoGastoNoPermitido$.next(convocatoriaConceptoGasto.map(
           convocatoriaConceptoGastos => new StatusWrapper<IConvocatoriaConceptoGasto>(convocatoriaConceptoGastos))
         );
-        this.logger.debug(ConvocatoriaConceptoGastoFragment.name, 'onInitialize()', 'end');
+        this.logger.debug(ConvocatoriaConceptoGastoFragment.name, 'initializer()', 'end');
       });
 
       return this.convocatoriaService.getConvocatoriaConceptoGastosPermitidos(this.getKey() as number).pipe(
@@ -96,14 +93,7 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
     this.logger.debug(ConvocatoriaConceptoGastoFragment.name, 'onInitialize()', 'start');
     if (this.getKey()) {
       this.convocatoriaService.getConvocatoriaConceptoGastosPermitidos(this.getKey() as number).pipe(
-        map((response) => {
-          if (response.items) {
-            return response.items;
-          }
-          else {
-            return [];
-          }
-        })
+        map((response) => response.items)
       ).subscribe((convocatoriaConceptoGasto) => {
         this.convocatoriaConceptoGastoPermitido$.next(convocatoriaConceptoGasto.map(
           convocatoriaConceptoGastos => new StatusWrapper<IConvocatoriaConceptoGasto>(convocatoriaConceptoGastos))
@@ -128,9 +118,9 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
     }
   }
 
-  public addConvocatoriaConceptoGasto(convocatoriaConceptoGasto: IConvocatoriaConceptoGasto) {
+  addConvocatoriaConceptoGasto(convocatoriaConceptoGasto: IConvocatoriaConceptoGasto) {
     this.logger.debug(ConvocatoriaConceptoGastoFragment.name,
-      `${this.addConvocatoriaConceptoGasto.name}(addConvocatoriaConceptoGasto: ${convocatoriaConceptoGasto})`, 'start');
+      `addConvocatoriaConceptoGasto(addConvocatoriaConceptoGasto: ${convocatoriaConceptoGasto})`, 'start');
     const wrapped = new StatusWrapper<IConvocatoriaConceptoGasto>(convocatoriaConceptoGasto);
     wrapped.setCreated();
     const permitido = wrapped.value.permitido;
@@ -145,12 +135,12 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
     }
     this.setChanges(true);
     this.logger.debug(ConvocatoriaConceptoGastoFragment.name,
-      `${this.addConvocatoriaConceptoGasto.name}(addConvocatoriaConceptoGasto: ${convocatoriaConceptoGasto})`, 'end');
+      `addConvocatoriaConceptoGasto(addConvocatoriaConceptoGasto: ${convocatoriaConceptoGasto})`, 'end');
   }
 
-  public deleteConvocatoriaConceptoGasto(wrapper: StatusWrapper<IConvocatoriaConceptoGasto>) {
+  deleteConvocatoriaConceptoGasto(wrapper: StatusWrapper<IConvocatoriaConceptoGasto>) {
     this.logger.debug(ConvocatoriaConceptoGastoFragment.name,
-      `${this.deleteConvocatoriaConceptoGasto.name}(wrapper: ${wrapper})`, 'start');
+      `deleteConvocatoriaConceptoGasto(wrapper: ${wrapper})`, 'start');
     const permitido = wrapper.value.permitido;
     if (permitido) {
       const current = this.convocatoriaConceptoGastoPermitido$.value;
@@ -182,11 +172,11 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
 
 
     this.logger.debug(ConvocatoriaConceptoGastoFragment.name,
-      `${this.deleteConvocatoriaConceptoGasto.name}(wrapper: ${wrapper})`, 'end');
+      `deleteConvocatoriaConceptoGasto(wrapper: ${wrapper})`, 'end');
   }
 
   saveOrUpdate(): Observable<void> {
-    this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `${this.saveOrUpdate.name}()`, 'start');
+    this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `saveOrUpdate()`, 'start');
     this.applyCostesIndirectos();
     return merge(
       this.deleteConvocatoriaConceptoGastos(),
@@ -199,14 +189,14 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
           this.setChanges(false);
         }
       }),
-      tap(() => this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `${this.saveOrUpdate.name}()`, 'end'))
+      tap(() => this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `saveOrUpdate()`, 'end'))
     );
   }
 
   private deleteConvocatoriaConceptoGastos(): Observable<void> {
-    this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `${this.deleteConvocatoriaConceptoGastos.name}()`, 'start');
+    this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `deleteConvocatoriaConceptoGastos()`, 'start');
     if (this.convocatoriaConceptoGastoEliminados.length === 0) {
-      this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `${this.deleteConvocatoriaConceptoGastos.name}()`, 'end');
+      this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `deleteConvocatoriaConceptoGastos()`, 'end');
       return of(void 0);
     }
     return from(this.convocatoriaConceptoGastoEliminados).pipe(
@@ -214,17 +204,19 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
         return this.convocatoriaConceptoGastoService.deleteById(wrapped.value.id)
           .pipe(
             tap(() => {
-              this.convocatoriaConceptoGastoEliminados = this.convocatoriaConceptoGastoEliminados.filter(deletedConvocatoriaConceptoGasto =>
-                deletedConvocatoriaConceptoGasto.value.id !== wrapped.value.id);
+              this.convocatoriaConceptoGastoEliminados = this.convocatoriaConceptoGastoEliminados.filter(
+                deletedConvocatoriaConceptoGasto =>
+                  deletedConvocatoriaConceptoGasto.value.id !== wrapped.value.id);
             }),
             tap(() => this.logger.debug(ConvocatoriaConceptoGastoFragment.name,
-              `${this.deleteConvocatoriaConceptoGastos.name}()`, 'end'))
+              `deleteConvocatoriaConceptoGastos()`, 'end'))
           );
-      }));
+      })
+    );
   }
 
   private createConvocatoriaConceptoGastos(): Observable<void> {
-    this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `${this.createConvocatoriaConceptoGastos.name}()`, 'start');
+    this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `createConvocatoriaConceptoGastos()`, 'start');
     const createdConvocatoriaConceptoGastos =
       this.convocatoriaConceptoGastoPermitido$.value.filter(
         (convocatoriaConceptoGastoPermitido) => convocatoriaConceptoGastoPermitido.created).concat(
@@ -232,7 +224,7 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
             (convocatoriaConceptoGastoNoPermitido) => convocatoriaConceptoGastoNoPermitido.created)
         );
     if (createdConvocatoriaConceptoGastos.length === 0) {
-      this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `${this.createConvocatoriaConceptoGastos.name}()`, 'end');
+      this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `createConvocatoriaConceptoGastos()`, 'end');
       return of(void 0);
     }
     createdConvocatoriaConceptoGastos.forEach(
@@ -258,19 +250,19 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
             this.convocatoriaConceptoGastoNoPermitido$.next(this.convocatoriaConceptoGastoNoPermitido$.value);
           }),
           tap(() => this.logger.debug(ConvocatoriaConceptoGastoFragment.name,
-            `${this.createConvocatoriaConceptoGastos.name}()`, 'end'))
+            `createConvocatoriaConceptoGastos()`, 'end'))
         );
       }));
   }
 
   private updateConvocatoriaConceptoGastos(): Observable<void> {
-    this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `${this.updateConvocatoriaConceptoGastos.name}()`, 'start');
+    this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `updateConvocatoriaConceptoGastos()`, 'start');
     const updateConvocatoriaConceptoGastos = this.convocatoriaConceptoGastoPermitido$.value.filter(
       (convocatoriaConceptoGastoPermitido) => convocatoriaConceptoGastoPermitido.edited).concat(
         this.convocatoriaConceptoGastoNoPermitido$.value.filter(
           (convocatoriaConceptoGastoNoPermitido) => convocatoriaConceptoGastoNoPermitido.edited));
     if (updateConvocatoriaConceptoGastos.length === 0) {
-      this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `${this.updateConvocatoriaConceptoGastos.name}()`, 'end');
+      this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `updateConvocatoriaConceptoGastos()`, 'end');
       return of(void 0);
     }
     return from(updateConvocatoriaConceptoGastos).pipe(
@@ -289,12 +281,14 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
                 new StatusWrapper<IConvocatoriaConceptoGasto>(updatedConvocatoriaConceptoGastos);
             }),
             tap(() => this.logger.debug(ConvocatoriaConceptoGastoFragment.name,
-              `${this.updateConvocatoriaConceptoGastos.name}()`, 'end'))
+              `updateConvocatoriaConceptoGastos()`, 'end'))
           );
-      }));
+      })
+    );
   }
 
   private applyCostesIndirectos() {
+    this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `applyCostesIndirectos()`, 'start');
     if (this.getFormGroup().controls.costeIndirecto.value != null) {
       this.convocatoriaConceptoGastoPermitido$.value.forEach(wrapper => {
         if (wrapper.value.conceptoGasto.id === this.getFormGroup().controls.costeIndirecto.value.id
@@ -305,7 +299,8 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
           }
 
           this.convocatoriaConceptoGastoPermitido$.value.filter(wrap =>
-            wrap.value.conceptoGasto.id !== wrapper.value.conceptoGasto.id && wrap.value.porcentajeCosteIndirecto !== null).map(
+            wrap.value.conceptoGasto.id !== wrapper.value.conceptoGasto.id && wrap.value.porcentajeCosteIndirecto !== null)
+            .map(
               wrapperBuscado => {
                 wrapperBuscado.value.porcentajeCosteIndirecto = null;
                 if (!wrapperBuscado.created) {
@@ -315,12 +310,13 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
         }
       });
     }
+    this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `applyCostesIndirectos()`, 'end');
   }
 
   private isSaveOrUpdateComplete(): boolean {
-    this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `${this.isSaveOrUpdateComplete.name}()`, 'start');
+    this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `isSaveOrUpdateComplete()`, 'start');
     const touched: boolean = this.convocatoriaConceptoGastoPermitido$.value.some((wrapper) => wrapper.touched);
-    this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `${this.isSaveOrUpdateComplete.name}()`, 'end');
+    this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `isSaveOrUpdateComplete()`, 'end');
     return (this.convocatoriaConceptoGastoEliminados.length > 0 || touched);
   }
 

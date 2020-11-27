@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { NGXLogger } from 'ngx-logger';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { ConvocatoriaPlazosFasesFragment } from './convocatoria-plazos-fases.fragment';
-import { BehaviorSubject, Subscription, of } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
@@ -26,13 +26,11 @@ const MSG_ERROR = marker('csp.convocatoria.fase.listado.borrar.error');
 })
 
 export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implements OnInit, OnDestroy {
+  formPart: ConvocatoriaPlazosFasesFragment;
+  private subscriptions: Subscription[] = [];
 
-  private formPart: ConvocatoriaPlazosFasesFragment;
-  private subscriptions: Subscription[];
-
-  totalElementos: number;
-  displayedColumns: string[];
-  elementosPagina: number[];
+  displayedColumns = ['fechaInicio', 'fechaFin', 'tipoFase', 'observaciones', 'acciones'];
+  elementosPagina = [5, 10, 25, 100];
   disableAddFase = true;
 
   dataSource: MatTableDataSource<StatusWrapper<IConvocatoriaFase>>;
@@ -42,26 +40,22 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
   plazosFase$: BehaviorSubject<StatusWrapper<IConvocatoriaFase>[]>;
 
   constructor(
-    protected readonly logger: NGXLogger,
-    protected readonly snackBarService: SnackBarService,
+    protected logger: NGXLogger,
+    protected snackBarService: SnackBarService,
     private actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
-    private readonly dialogService: DialogService
+    private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.PLAZOS_FASES, actionService);
     this.logger.debug(ConvocatoriaPlazosFasesComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as ConvocatoriaPlazosFasesFragment;
     this.plazosFase$ = (this.fragment as ConvocatoriaPlazosFasesFragment).plazosFase$;
-    this.elementosPagina = [5, 10, 25, 100];
-    this.displayedColumns = ['fechaInicio', 'fechaFin', 'tipoFase', 'observaciones', 'acciones'];
     this.logger.debug(ConvocatoriaPlazosFasesComponent.name, 'constructor()', 'end');
   }
 
   ngOnInit(): void {
     this.logger.debug(ConvocatoriaPlazosFasesComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
-    this.totalElementos = 0;
-    this.subscriptions = [];
     this.dataSource = new MatTableDataSource<StatusWrapper<IConvocatoriaFase>>();
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -79,21 +73,21 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
    * Apertura de modal de plazos fase
    * @param plazo Identificador de plazos fase al guardar/editar
    */
-  openModalPlazos(plazo?: StatusWrapper<IConvocatoriaFase>, numFila?: number): void {
+  openModalPlazos(plazo?: StatusWrapper<IConvocatoriaFase>): void {
     this.logger.debug(ConvocatoriaPlazosFasesComponent.name, 'openModalPeriodo()', 'start');
 
 
     const datosPlazosFases: ConvocatoriaPlazosFaseModalComponentData = {
       plazos: this.formPart.getConvocatoriasFases(),
       plazo: plazo ? plazo.value : {} as IConvocatoriaFase,
-      idModeloEjecucion: this.actionService.getDatosGeneralesConvocatoria().modeloEjecucion?.id
+      idModeloEjecucion: this.actionService.getDatosGeneralesConvocatoria().modeloEjecucion?.id,
+      readonly: this.formPart.readonly
     };
 
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
       data: datosPlazosFases,
-      autoFocus: false
     };
 
     const dialogRef = this.matDialog.open(ConvocatoriaPlazosFaseModalComponent, config);
@@ -120,7 +114,7 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
    */
   deleteFase(wrapper: StatusWrapper<IConvocatoriaFase>) {
     this.logger.debug(ConvocatoriaPlazosFasesComponent.name,
-      `${this.deleteFase.name}(${wrapper})`, 'start');
+      `deleteFase(${wrapper})`, 'start');
     if (this.actionService.isDelete(wrapper.value)) {
       this.subscriptions.push(
         this.dialogService.showConfirmation(MSG_DELETE).subscribe(
@@ -129,7 +123,7 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
               this.formPart.deleteFase(wrapper);
             }
             this.logger.debug(ConvocatoriaPlazosFasesComponent.name,
-              `${this.deleteFase.name}(${wrapper})`, 'end');
+              `deleteFase(${wrapper})`, 'end');
           }
         )
       );

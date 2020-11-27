@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FragmentComponent } from '@core/component/fragment.component';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { NGXLogger } from 'ngx-logger';
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
@@ -27,27 +27,25 @@ const MSG_DELETE = marker('csp.convocatoria.hito.listado.borrar');
 })
 export class ConvocatoriaHitosComponent extends FragmentComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
-
-  private formPart: ConvocatoriaHitosFragment;
+  formPart: ConvocatoriaHitosFragment;
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
   public disableAddHito = true;
 
-  elementosPagina: number[] = [5, 10, 25, 100];
-  displayedColumns: string[] = ['fechaInicio', 'tipoHito', 'comentario', 'aviso', 'acciones'];
-
+  elementosPagina = [5, 10, 25, 100];
+  displayedColumns = ['fechaInicio', 'tipoHito', 'comentario', 'aviso', 'acciones'];
 
   dataSource = new MatTableDataSource<StatusWrapper<IConvocatoriaHito>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
-    protected readonly logger: NGXLogger,
-    protected readonly convocatoriaReunionService: ConvocatoriaService,
+    protected logger: NGXLogger,
+    protected convocatoriaReunionService: ConvocatoriaService,
     private actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
-    private readonly dialogService: DialogService
+    private dialogService: DialogService
   ) {
     super(actionService.FRAGMENT.HITOS, actionService);
     this.logger.debug(ConvocatoriaHitosComponent.name, 'constructor()', 'start');
@@ -85,15 +83,16 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
    * @param idHito Identificador de hito a editar.
    */
   openModal(wrapper?: StatusWrapper<IConvocatoriaHito>): void {
-    this.logger.debug(ConvocatoriaHitosComponent.name, `${this.openModal.name}()`, 'start');
-    const datosHito = {
+    this.logger.debug(ConvocatoriaHitosComponent.name, `openModal()`, 'start');
+    const data: ConvocatoriaHitosModalComponentData = {
       hito: wrapper ? wrapper.value : {} as IConvocatoriaHito,
-      idModeloEjecucion: this.actionService.modeloEjecucionId
-    } as ConvocatoriaHitosModalComponentData;
+      idModeloEjecucion: this.actionService.modeloEjecucionId,
+      readonly: this.formPart.readonly
+    };
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: datosHito
+      data
     };
     const dialogRef = this.matDialog.open(ConvocatoriaHitosModalComponent, config);
     dialogRef.afterClosed().subscribe(
@@ -108,7 +107,7 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
             this.formPart.addHito(convocatoriaHito);
           }
         }
-        this.logger.debug(ConvocatoriaHitosComponent.name, `${this.openModal.name}()`, 'end');
+        this.logger.debug(ConvocatoriaHitosComponent.name, `openModal()`, 'end');
       }
     );
   }
@@ -124,7 +123,7 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
    */
   deleteHito(wrapper: StatusWrapper<IConvocatoriaHito>) {
     this.logger.debug(ConvocatoriaHitosComponent.name,
-      `${this.deleteHito.name}(${wrapper})`, 'start');
+      `deleteHito(${wrapper})`, 'start');
     this.subscriptions.push(
       this.dialogService.showConfirmation(MSG_DELETE).subscribe(
         (aceptado) => {
@@ -132,7 +131,7 @@ export class ConvocatoriaHitosComponent extends FragmentComponent implements OnI
             this.formPart.deleteHito(wrapper);
           }
           this.logger.debug(ConvocatoriaHitosComponent.name,
-            `${this.deleteHito.name}(${wrapper})`, 'end');
+            `deleteHito(${wrapper})`, 'end');
         }
       )
     );

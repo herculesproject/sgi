@@ -11,6 +11,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { LoggerTestingModule } from 'ngx-logger/testing';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 describe('ConvocatoriaConceptoGastoComponent', () => {
   let component: ConvocatoriaConceptoGastoComponent;
@@ -32,7 +33,8 @@ describe('ConvocatoriaConceptoGastoComponent', () => {
       ],
       providers: [
         { provide: SnackBarService, useValue: TestUtils.getSnackBarServiceSpy() },
-        ConvocatoriaActionService
+        ConvocatoriaActionService,
+        SgiAuthService
       ],
     })
       .compileComponents();

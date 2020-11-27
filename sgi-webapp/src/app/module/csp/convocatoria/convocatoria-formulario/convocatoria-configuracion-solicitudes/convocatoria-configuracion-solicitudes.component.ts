@@ -23,7 +23,7 @@ import { NGXLogger } from 'ngx-logger';
 import { Observable, Subscription, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
-import { ConvocatoriaConfiguracionSolicitudesModalComponent } from '../../modals/convocatoria-configuracion-solicitudes-modal/convocatoria-configuracion-solicitudes-modal.component';
+import { ConvocatoriaConfiguracionSolicitudesModalComponent, ConvocatoriaConfiguracionSolicitudesModalData } from '../../modals/convocatoria-configuracion-solicitudes-modal/convocatoria-configuracion-solicitudes-modal.component';
 import { ConvocatoriaConfiguracionSolicitudesFragment } from './convocatoria-configuracion-solicitudes.fragment';
 
 const MSG_DELETE = marker('csp.convocatoria.configuracionSolicitud.listado.borrar');
@@ -240,26 +240,31 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
       observaciones: undefined,
       tipoDocumento: undefined,
     };
+    const data: ConvocatoriaConfiguracionSolicitudesModalData = {
+      documentoRequerido: wrapper ? wrapper.value : documentosRequerido,
+      readonly: this.formPart.readonly
+    };
     const config = {
       width: GLOBAL_CONSTANTS.widthModalCSP,
       maxHeight: GLOBAL_CONSTANTS.maxHeightModal,
-      data: wrapper ? wrapper.value : documentosRequerido
+      data
     };
     const dialogRef = this.matDialog.open(ConvocatoriaConfiguracionSolicitudesModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (documentoRequerido) => {
-        if (documentoRequerido) {
+      (result: ConvocatoriaConfiguracionSolicitudesModalData) => {
+        if (result) {
           if (wrapper) {
             if (!wrapper.created) {
               wrapper.setEdited();
             }
             this.formPart.setChanges(true);
           } else {
-            this.formPart.addDocumentoRequerido(documentoRequerido);
+            this.formPart.addDocumentoRequerido(result.documentoRequerido);
           }
           this.subscriptions.push(this.formPart.documentosRequeridos$.subscribe(elements => {
             this.dataSource.data = elements;
-          }));
+          })
+          );
         }
         this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name, `${this.openModal.name}()`, 'end');
       }

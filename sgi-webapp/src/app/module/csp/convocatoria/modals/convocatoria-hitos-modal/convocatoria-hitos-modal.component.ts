@@ -29,6 +29,7 @@ const MSG_ACEPTAR = marker('botones.aceptar');
 export interface ConvocatoriaHitosModalComponentData {
   hito: IConvocatoriaHito;
   idModeloEjecucion: number;
+  readonly: boolean;
 }
 @Component({
   templateUrl: './convocatoria-hitos-modal.component.html',
@@ -37,8 +38,6 @@ export interface ConvocatoriaHitosModalComponentData {
 export class ConvocatoriaHitosModalComponent implements OnInit {
 
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
-
-  FormGroupUtil = FormGroupUtil;
   formGroup: FormGroup;
 
   fxFlexProperties: FxFlexProperties;
@@ -55,11 +54,11 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
   suscripciones: Subscription[] = [];
 
   constructor(
-    private readonly logger: NGXLogger,
-    public readonly matDialogRef: MatDialogRef<ConvocatoriaHitosModalComponent>,
-    private readonly modeloEjecucionService: ModeloEjecucionService,
-    @Inject(MAT_DIALOG_DATA) private data: ConvocatoriaHitosModalComponentData,
-    private readonly snackBarService: SnackBarService) {
+    private logger: NGXLogger,
+    public matDialogRef: MatDialogRef<ConvocatoriaHitosModalComponent>,
+    private modeloEjecucionService: ModeloEjecucionService,
+    @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaHitosModalComponentData,
+    private snackBarService: SnackBarService) {
 
     this.logger.debug(ConvocatoriaHitosModalComponent.name, 'constructor()', 'start');
     this.fxFlexProperties = new FxFlexProperties();
@@ -95,6 +94,9 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
       comentario: new FormControl(this.data?.hito?.comentario, [Validators.maxLength(250)]),
       aviso: new FormControl(this.data?.hito?.generaAviso)
     });
+    if (this.data.readonly) {
+      this.formGroup.disable();
+    }
     this.textSaveOrUpdate = this.data?.hito?.tipoHito ? MSG_ACEPTAR : MSG_ANADIR;
     this.loadTiposHito();
     this.logger.debug(ConvocatoriaHitosModalComponent.name, 'ngOnInit()', 'start');
@@ -102,7 +104,6 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
 
   loadTiposHito() {
     this.logger.debug(ConvocatoriaHitosModalComponent.name, 'loadTiposHito()', 'start');
-
     this.suscripciones.push(
       this.modeloEjecucionService.findModeloTipoHito(this.data.idModeloEjecucion).subscribe(
         (res: SgiRestListResult<IModeloTipoHito>) => {
@@ -142,7 +143,8 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
    */
   filtroTipoHito(value: string): IModeloTipoHito[] {
     const filterValue = value.toString().toLowerCase();
-    return this.modeloTiposHitoFiltered.filter(modeloTipoHito => modeloTipoHito.tipoHito?.nombre.toLowerCase().includes(filterValue));
+    return this.modeloTiposHitoFiltered.filter(modeloTipoHito =>
+      modeloTipoHito.tipoHito?.nombre.toLowerCase().includes(filterValue));
   }
 
   /**
@@ -157,14 +159,14 @@ export class ConvocatoriaHitosModalComponent implements OnInit {
   }
 
   saveOrUpdate(): void {
-    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'updateComentario()', 'start');
+    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'saveOrUpdate()', 'start');
     if (FormGroupUtil.valid(this.formGroup)) {
       this.loadDatosForm();
       this.closeModal(this.data.hito);
     } else {
       this.snackBarService.showError(MSG_ERROR_FORM_GROUP);
     }
-    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'updateComentario()', 'end');
+    this.logger.debug(ConvocatoriaHitosModalComponent.name, 'saveOrUpdate()', 'end');
   }
 
   /**
