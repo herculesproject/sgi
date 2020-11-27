@@ -163,11 +163,17 @@ export class PeticionEvaluacionService extends SgiRestService<number, IPeticionE
     );
   }
 
-  findAllByPersonaRef(options?: SgiRestFindOptions):
+  /**
+   * Devuelve todas las peticiones de evaluación de una persona en la que es creador de la petición de evaluación
+   *  o responsable de una memoria
+   * @param options opciones de búsqueda
+   * @return las peticiones de evaluación
+   */
+  findAllPeticionEvaluacionMemoria(options?: SgiRestFindOptions):
     Observable<SgiRestListResult<IPeticionEvaluacion>> {
-    this.logger.debug(PeticionEvaluacionService.name, `findAllByPersonaRef()`, '-', 'START');
-    return this.find<IPeticionEvaluacion, IPeticionEvaluacion>(`${this.endpointUrl}/persona`, options).pipe(
-      tap(() => this.logger.debug(PeticionEvaluacionService.name, `findAllByPersonaRef()`, '-', 'END'))
+    this.logger.debug(PeticionEvaluacionService.name, `  findAllPeticionEvaluacionMemoria(options?: SgiRestFindOptions)`, '-', 'START');
+    return this.find<IPeticionEvaluacion, IPeticionEvaluacion>(`${this.endpointUrl}/memorias`, options).pipe(
+      tap(() => this.logger.debug(PeticionEvaluacionService.name, `  findAllPeticionEvaluacionMemoria(options?: SgiRestFindOptions)`, '-', 'END'))
     );
   }
 }

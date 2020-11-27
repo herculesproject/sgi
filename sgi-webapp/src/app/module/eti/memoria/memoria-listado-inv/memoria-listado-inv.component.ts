@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
 import { map, startWith, switchMap } from 'rxjs/operators';
@@ -121,7 +121,7 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
 
   protected createObservable(): Observable<SgiRestListResult<IMemoriaPeticionEvaluacion>> {
     this.logger.debug(MemoriaListadoInvComponent.name, 'createObservable()', 'start');
-    const observable$ = this.memoriaService.findAll(this.getFindOptions());
+    const observable$ = this.memoriaService.findAllMemoriasEvaluacionByPersonaRef(this.getFindOptions());
     this.logger.debug(MemoriaListadoInvComponent.name, 'createObservable()', 'end');
     return observable$;
   }
@@ -326,7 +326,7 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
   enviarSecretaria(memoria: IMemoriaPeticionEvaluacion) {
     this.logger.debug(MemoriaListadoInvComponent.name, 'enviarSecretaria(memoria: IMemoriaPeticionEvaluacion) - start');
 
-    this.dialogService.showConfirmation(MSG_CONFIRM_ENVIAR_SECRETARIA)
+    const dialogSubscription = this.dialogService.showConfirmation(MSG_CONFIRM_ENVIAR_SECRETARIA)
       .pipe(switchMap((aceptado) => {
         if (aceptado) {
           return this.memoriaService.enviarSecretaria(memoria.id);
@@ -341,6 +341,7 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
           this.snackBarService.showError(MSG_ERROR_ENVIAR_SECRETARIA);
         }
       );
+    this.suscripciones.push(dialogSubscription);
 
     this.logger.debug(MemoriaListadoInvComponent.name, 'enviarSecretaria(memoria: IMemoriaPeticionEvaluacion) - end');
 

@@ -117,11 +117,17 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
     );
   }
 
-  findAllByPersonaRef(options?: SgiRestFindOptions):
-    Observable<SgiRestListResult<IMemoria>> {
-    this.logger.debug(MemoriaService.name, `findAllByPersonaRef()`, '-', 'START');
-    return this.find<IMemoria, IMemoria>(`${this.endpointUrl}/persona`, options).pipe(
-      tap(() => this.logger.debug(MemoriaService.name, `findAllByPersonaRef()`, '-', 'END'))
+  /**
+   * Devuelve todas las memorias de una persona en la que es creador de la petición de evaluación
+   *  o responsable de una memoria
+   * @param options opciones de búsqueda
+   * @return las memorias
+   */
+  findAllMemoriasEvaluacionByPersonaRef(options?: SgiRestFindOptions):
+    Observable<SgiRestListResult<IMemoriaPeticionEvaluacion>> {
+    this.logger.debug(MemoriaService.name, `findAllMemoriasEvaluacionByPersonaRef()`, '-', 'START');
+    return this.find<IMemoriaPeticionEvaluacion, IMemoriaPeticionEvaluacion>(`${this.endpointUrl}/persona`, options).pipe(
+      tap(() => this.logger.debug(MemoriaService.name, `findAllMemoriasEvaluacionByPersonaRef()`, '-', 'END'))
     );
   }
 
@@ -270,21 +276,6 @@ export class MemoriaService extends SgiRestService<number, IMemoria>{
     return this.find<IEvaluacion, IEvaluacion>(`${this.endpointUrl}/${memoriaId}/evaluaciones`, options).pipe(
       tap(() => this.logger.debug(MemoriaService.name, `getEvaluacionesMemoria(${memoriaId}, ${options ? JSON.stringify(options) : options})`, '-', 'end'))
     );
-  }
-
-
-  /**
-   * Devuelve todos las memorias de responsable y creador a partir de una persona ref
-   *
-   * @param options opciones de busqueda.
-   */
-  findAllByPersonaRefPeticionEvaluacion(options?: SgiRestFindOptions):
-    Observable<SgiRestListResult<IMemoriaPeticionEvaluacion>> {
-    this.logger.debug(MemoriaService.name, `findAllByPersonaRefPeticionEvaluacion()`, '-', 'START');
-    return this.find<IMemoriaPeticionEvaluacion, IMemoriaPeticionEvaluacion>(
-      `${this.endpointUrl}/persona/peticion-evaluacion`, options).pipe(
-        tap(() => this.logger.debug(MemoriaService.name, `findAllByPersonaRefPeticionEvaluacion()`, '-', 'END'))
-      );
   }
 
   /**
