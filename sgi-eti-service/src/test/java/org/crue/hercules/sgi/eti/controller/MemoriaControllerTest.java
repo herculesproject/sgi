@@ -79,10 +79,10 @@ public class MemoriaControllerTest extends BaseControllerTest {
   private static final String PATH_PARAMETER_ASIGNABLES_SEG = "/tipo-convocatoria-seg";
   private static final String MEMORIA_CONTROLLER_BASE_PATH = "/memorias";
   private static final String PATH_PARAMETER_BY_DOCUMENTACION = "/documentaciones";
-  private static final String PATH_PARAMETER_PERSONA_PETICION_EVALUACION = "/persona/peticion-evaluacion";
   private static final String PATH_PARAMETER_EVALUACIONES = "/evaluaciones";
   private static final String PATH_PARAMETER_ENVIAR_SECRETARIA = "/enviar-secretaria";
   private static final String PATH_PARAMETER_ENVIAR_SECRETARIA_RETROSPECTIVA = "/enviar-secretaria-retrospectiva";
+  private static final String PATH_PARAMETER_PERSONA = "/persona";
 
   @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-V", "ETI-PEV-VR-INV" })
@@ -955,32 +955,6 @@ public class MemoriaControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-VR-INV" })
-  public void findAllByPersonaRefPeticionEvaluacion_Unlimited_ReturnsFullMemoriaPeticionEvaluacionList()
-      throws Exception {
-    // given: One hundred Memoria
-    List<MemoriaPeticionEvaluacion> memoriasPeticionEvaluacion = new ArrayList<>();
-    for (int i = 1; i <= 100; i++) {
-      memoriasPeticionEvaluacion.add(generarMockMemoriaPeticionEvaluacion(Long.valueOf(i),
-          "numRef-55" + String.valueOf(i), "Memoria" + String.format("%03d", i)));
-    }
-
-    BDDMockito
-        .given(memoriaService.findAllByPersonaRefPeticionEvaluacion(ArgumentMatchers.<List<QueryCriteria>>any(),
-            ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyString()))
-        .willReturn(new PageImpl<>(memoriasPeticionEvaluacion));
-
-    // when: find unlimited asignables by convocatoria
-    mockMvc
-        .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_PERSONA_PETICION_EVALUACION)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        // then: Get a page one hundred Memoria
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
-  }
-
-  @Test
   @WithMockUser(username = "user", authorities = { "ETI-PEV-ER-INV" })
   public void replaceDocumentacionMemoria_ReturnsMemoria() throws Exception {
     // given: Una documentación memoria a modificar
@@ -1053,61 +1027,6 @@ public class MemoriaControllerTest extends BaseControllerTest {
         // then: obtengo un listado de 100 conflictos
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
-  }
-
-  @Test
-  @WithMockUser(username = "user", authorities = { "ETI-PEV-VR-INV", "ETI-PEV-V", "ETI-MEM-CR-INV" })
-  public void findAllByPersonaRefPeticionEvaluacion_WithPaging_ReturnsMemoriaPeticionEvaluacionSubList()
-      throws Exception {
-    // given: One hundred Memoria
-    List<MemoriaPeticionEvaluacion> memoriasPeticionEvaluacion = new ArrayList<>();
-    for (int i = 1; i <= 100; i++) {
-      memoriasPeticionEvaluacion.add(generarMockMemoriaPeticionEvaluacion(Long.valueOf(i),
-          "numRef-55" + String.valueOf(i), "Memoria" + String.format("%03d", i)));
-    }
-
-    BDDMockito
-        .given(memoriaService.findAllByPersonaRefPeticionEvaluacion(ArgumentMatchers.<List<QueryCriteria>>any(),
-            ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyString()))
-        .willAnswer(new Answer<Page<MemoriaPeticionEvaluacion>>() {
-          @Override
-          public Page<MemoriaPeticionEvaluacion> answer(InvocationOnMock invocation) throws Throwable {
-            Pageable pageable = invocation.getArgument(1, Pageable.class);
-            int size = pageable.getPageSize();
-            int index = pageable.getPageNumber();
-            int fromIndex = size * index;
-            int toIndex = fromIndex + size;
-            List<MemoriaPeticionEvaluacion> content = memoriasPeticionEvaluacion.subList(fromIndex, toIndex);
-            Page<MemoriaPeticionEvaluacion> page = new PageImpl<>(content, pageable, memoriasPeticionEvaluacion.size());
-            return page;
-          }
-        });
-
-    // when: get page=3 with pagesize=10 asignables by convocatoria
-    MvcResult requestResult = mockMvc
-        .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_PERSONA_PETICION_EVALUACION)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
-            .accept(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        // then: the asked Memorias are returned with the right page information
-        // in headers
-        .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
-        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "100"))
-        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10))).andReturn();
-
-    // this uses a TypeReference to inform Jackson about the Lists's generic type
-    List<Memoria> actual = mapper.readValue(requestResult.getResponse().getContentAsString(),
-        new TypeReference<List<Memoria>>() {
-        });
-
-    // containing titulo='Memoria031' to 'Memoria040'
-    for (int i = 0, j = 31; i < 10; i++, j++) {
-      Memoria memoria = actual.get(i);
-      Assertions.assertThat(memoria.getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
-    }
   }
 
   @Test
@@ -1210,6 +1129,84 @@ public class MemoriaControllerTest extends BaseControllerTest {
         .andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isOk());
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-VR-INV" })
+  public void findAllMemoriasEvaluacionByPersonaRef_Unlimited_ReturnsFullMemoriaPeticionEvaluacionList()
+      throws Exception {
+    // given: One hundred Memoria
+    List<MemoriaPeticionEvaluacion> memoriasPeticionEvaluacion = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      memoriasPeticionEvaluacion.add(generarMockMemoriaPeticionEvaluacion(Long.valueOf(i),
+          "numRef-55" + String.valueOf(i), "Memoria" + String.format("%03d", i)));
+    }
+
+    BDDMockito.given(memoriaService.findAllMemoriasWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
+        ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyString()))
+        .willReturn(new PageImpl<>(memoriasPeticionEvaluacion));
+
+    // when: find unlimited asignables by convocatoria
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_PERSONA)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Get a page one hundred Memoria
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(100)));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "ETI-PEV-VR-INV", "ETI-PEV-V", "ETI-MEM-CR-INV" })
+  public void findAllMemoriasEvaluacionByPersonaRef_WithPaging_ReturnsMemoriaPeticionEvaluacionSubList()
+      throws Exception {
+    // given: One hundred Memoria
+    List<MemoriaPeticionEvaluacion> memoriasPeticionEvaluacion = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      memoriasPeticionEvaluacion.add(generarMockMemoriaPeticionEvaluacion(Long.valueOf(i),
+          "numRef-55" + String.valueOf(i), "Memoria" + String.format("%03d", i)));
+    }
+    BDDMockito.given(memoriaService.findAllMemoriasWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
+        ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any(), ArgumentMatchers.anyString()))
+        .willAnswer(new Answer<Page<MemoriaPeticionEvaluacion>>() {
+          @Override
+          public Page<MemoriaPeticionEvaluacion> answer(InvocationOnMock invocation) throws Throwable {
+            Pageable pageable = invocation.getArgument(1, Pageable.class);
+            int size = pageable.getPageSize();
+            int index = pageable.getPageNumber();
+            int fromIndex = size * index;
+            int toIndex = fromIndex + size;
+            List<MemoriaPeticionEvaluacion> content = memoriasPeticionEvaluacion.subList(fromIndex, toIndex);
+            Page<MemoriaPeticionEvaluacion> page = new PageImpl<>(content, pageable, memoriasPeticionEvaluacion.size());
+            return page;
+          }
+        });
+
+    // when: get page=3 with pagesize=10 asignables by convocatoria
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(MEMORIA_CONTROLLER_BASE_PATH + PATH_PARAMETER_PERSONA)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", "3").header("X-Page-Size", "10")
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: the asked Memorias are returned with the right page information
+        // in headers
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "100"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(10))).andReturn();
+
+    // this uses a TypeReference to inform Jackson about the Lists's generic type
+    List<Memoria> actual = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<Memoria>>() {
+        });
+
+    // containing titulo='Memoria031' to 'Memoria040'
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      Memoria memoria = actual.get(i);
+      Assertions.assertThat(memoria.getTitulo()).isEqualTo("Memoria" + String.format("%03d", j));
+    }
+  }
+
   /**
    * Función que devuelve un objeto Memoria.
    * 
@@ -1243,7 +1240,7 @@ public class MemoriaControllerTest extends BaseControllerTest {
 
     return new MemoriaPeticionEvaluacion(id, numReferencia, titulo, generarMockComite(id, "comite" + id, true),
         generarMockTipoEstadoMemoria(1L, "En elaboración", Boolean.TRUE), false, null,
-        LocalDateTime.of(2020, 7, 15, 0, 0, 1), LocalDate.now(), false);
+        LocalDateTime.of(2020, 7, 15, 0, 0, 1), LocalDate.now(), false, true);
   }
 
   /**

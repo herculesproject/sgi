@@ -159,11 +159,12 @@ public class EstadoRetrospectivaIT extends BaseIT {
     List<EstadoRetrospectiva> response = new LinkedList<>();
     response.add(getMockData(1L));
     response.add(getMockData(2L));
+    String sort = "id+";
 
-    final String url = new StringBuilder(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).toString();
-
+    URI uri = UriComponentsBuilder.fromUriString(ESTADO_RETROSPECTIVA_CONTROLLER_BASE_PATH).queryParam("s", sort)
+        .build(false).toUri();
     // when: Se buscan todos los datos
-    final ResponseEntity<List<EstadoRetrospectiva>> result = restTemplate.exchange(url, HttpMethod.GET,
+    final ResponseEntity<List<EstadoRetrospectiva>> result = restTemplate.exchange(uri, HttpMethod.GET,
         buildRequest(null, null), new ParameterizedTypeReference<List<EstadoRetrospectiva>>() {
         });
 

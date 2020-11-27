@@ -453,19 +453,20 @@ public class MemoriaController {
    */
   @GetMapping("/persona")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-VR-INV', 'ETI-PEV-V')")
-  ResponseEntity<Page<Memoria>> findAllByPersonaRef(
+  ResponseEntity<Page<MemoriaPeticionEvaluacion>> findAllMemoriasEvaluacionByPersonaRef(
       @RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging, Authentication authentication) {
-    log.debug("findAllPeticionesEvaluacionWithPersonaRefInMemoria(List<QueryCriteria> query,Pageable paging) - start");
+    log.debug("findAllMemoriasPeticionesEvaluacionByPersonaRef(List<QueryCriteria> query,Pageable paging) - start");
     String personaRef = authentication.getName();
 
-    Page<Memoria> page = service.findAllByPersonaRef(query, paging, personaRef);
+    Page<MemoriaPeticionEvaluacion> page = service
+        .findAllMemoriasWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(query, paging, personaRef);
 
     if (page.isEmpty()) {
-      log.debug("findAllPeticionesEvaluacionWithPersonaRefInMemoria(List<QueryCriteria> query,Pageable paging) - end");
+      log.debug("findAllMemoriasPeticionesEvaluacionByPersonaRef(List<QueryCriteria> query,Pageable paging) - end");
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    log.debug("findAllPeticionesEvaluacionWithPersonaRefInMemoria(List<QueryCriteria> query,Pageable paging) - end");
+    log.debug("findAllMemoriasPeticionesEvaluacionByPersonaRef(List<QueryCriteria> query,Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -566,33 +567,6 @@ public class MemoriaController {
         updatedDocumentacionMemoria);
     log.debug("replaceMemoria(Memoria updatedMemoria, Long id) - end");
     return returnValue;
-  }
-
-  /**
-   * Devuelve una lista paginada y filtrada de {@link Memoria} filtradas por el
-   * responsable de memoria (personaRef creador de la memoria).
-   * 
-   * @param query          filtro de {@link QueryCriteria}.
-   * @param paging         pageable
-   * @param authentication Authentication
-   * @return la lista de entidades {@link Memoria} paginadas.
-   */
-  @GetMapping("/persona/peticion-evaluacion")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-PEV-VR-INV')")
-  ResponseEntity<Page<MemoriaPeticionEvaluacion>> findAllByPersonaRefPeticionEvaluacion(
-      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
-      @RequestPageable(sort = "s") Pageable paging, Authentication authentication) {
-    log.debug("findAllByPersonaRefPeticionEvaluacion(List<QueryCriteria> query,Pageable paging) - start");
-    String personaRef = authentication.getName();
-
-    Page<MemoriaPeticionEvaluacion> page = service.findAllByPersonaRefPeticionEvaluacion(query, paging, personaRef);
-
-    if (page.isEmpty()) {
-      log.debug("findAllByPersonaRefPeticionEvaluacion(List<QueryCriteria> query,Pageable paging) - end");
-      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-    log.debug("findAllByPersonaRefPeticionEvaluacion(List<QueryCriteria> query,Pageable paging) - end");
-    return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
   /**

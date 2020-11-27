@@ -1,8 +1,8 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
 import java.util.List;
-
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
+import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.repository.PeticionEvaluacionRepository;
 import org.crue.hercules.sgi.eti.repository.specification.PeticionEvaluacionSpecifications;
@@ -15,6 +15,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -190,6 +191,33 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
 
     Page<PeticionEvaluacion> returnValue = peticionEvaluacionRepository.findAll(specs, paging);
     log.debug("findAllPeticionEvaluacion(List<QueryCriteria> query,Pageable paging) - end");
+    return returnValue;
+  }
+
+  /**
+   * Obtiene una lista paginada y filtrada {@link PeticionEvaluacion} de una
+   * persona responsable de memorias o creador de peticiones de evaluacion
+   * 
+   * @param query      Criterios de búsqueda
+   * @param pageable   datos paginación
+   * @param personaRef usuario
+   * @return las entidades {@link PeticionEvaluacion}
+   */
+  @Override
+  public Page<PeticionEvaluacion> findAllPeticionesWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
+      List<QueryCriteria> query, Pageable pageable, String personaRef) {
+    log.debug(
+        "findAllPeticionEvaluacionMemoria(List<QueryCriteria> query, Pageable pageable, String personaRef) - start");
+    Specification<Memoria> specsMemoria = null;
+    if (!CollectionUtils.isEmpty(query)) {
+      Specification<Memoria> specByQueryMem = new QuerySpecification<Memoria>(query);
+      specsMemoria = Specification.where(specByQueryMem);
+    }
+
+    Page<PeticionEvaluacion> returnValue = peticionEvaluacionRepository.findAllPeticionEvaluacionMemoria(specsMemoria,
+        pageable, personaRef);
+    log.debug(
+        "findAllPeticionEvaluacionMemoria(List<QueryCriteria> query, Pageable pageable,  String personaRef) - end");
     return returnValue;
   }
 

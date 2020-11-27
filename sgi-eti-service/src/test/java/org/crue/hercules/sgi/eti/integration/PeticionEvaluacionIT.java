@@ -207,7 +207,7 @@ public class PeticionEvaluacionIT extends BaseIT {
   public void findAll_WithSearchQuery_ReturnsFilteredPeticionEvaluacionList() throws Exception {
     // when: Búsqueda por titulo like e id equals
     Long id = 5L;
-    String query = "titulo~PeticionEvaluacion%,id:" + id;
+    String query = "peticionEvaluacion.titulo~PeticionEvaluacion%,peticionEvaluacion.id:" + id;
 
     URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH).queryParam("q", query)
         .build(false).toUri();
@@ -264,7 +264,7 @@ public class PeticionEvaluacionIT extends BaseIT {
     // when: Ordena por titulo desc
     String sort = "titulo-";
     // when: Filtra por titulo like e id equals
-    String filter = "titulo~%00%";
+    String filter = "peticionEvaluacion.titulo~%00%";
 
     URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH).queryParam("s", sort)
         .queryParam("q", filter).build(false).toUri();
@@ -498,6 +498,43 @@ public class PeticionEvaluacionIT extends BaseIT {
 
     // then: 404
     Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllPeticionEvaluacionMemoria_WithPagingSortingAndFiltering_ReturnsPeticionEvaluacionSubList()
+      throws Exception {
+    // when: Obtiene page=1 con pagesize=3
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization",
+        String.format("bearer %s", tokenBuilder.buildToken("user", "ETI-PEV-VR-INV", "ETI-PEV-V", "ETI-MEM-CR-INV")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "3");
+    // when: Ordena por id desc
+    String sort = "id-";
+    // when: Filtra por numReferencia like
+    String filter = "numReferencia~%ref-00%";
+
+    URI uri = UriComponentsBuilder.fromUriString(PETICION_EVALUACION_CONTROLLER_BASE_PATH + "/memorias")
+        .queryParam("s", sort).queryParam("q", filter).build(false).toUri();
+
+    final ResponseEntity<List<PeticionEvaluacion>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<PeticionEvaluacion>>() {
+        });
+
+    // then: Respuesta OK, peticiones de evaluación retorna la información de la
+    // página correcta en el header
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<PeticionEvaluacion> peticionesEvaluacion = response.getBody();
+    Assertions.assertThat(peticionesEvaluacion.size()).isEqualTo(1);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).isEqualTo("3");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).isEqualTo("1");
+
+    // Contiene titulo='PeticionEvaluacion1'
+    Assertions.assertThat(peticionesEvaluacion.get(0).getTitulo()).isEqualTo("PeticionEvaluacion1");
   }
 
   /**

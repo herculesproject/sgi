@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
+import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.repository.PeticionEvaluacionRepository;
@@ -230,6 +231,66 @@ public class PeticionEvaluacionServiceTest extends BaseServiceTest {
     for (int i = 0, j = 31; i < 10; i++, j++) {
       PeticionEvaluacion peticionEvaluacion = page.getContent().get(i);
       Assertions.assertThat(peticionEvaluacion.getTitulo()).isEqualTo("PeticionEvaluacion" + String.format("%03d", j));
+    }
+  }
+
+  @Test
+  public void findAllPeticionesWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria_Unlimited_ReturnsFullMemoriaPeticionEvaluacionList() {
+
+    List<PeticionEvaluacion> peticiones = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      peticiones.add(generarMockPeticionEvaluacion(Long.valueOf(i), "PeticionEvaluacion" + String.format("%03d", i)));
+    }
+    BDDMockito.given(
+        peticionEvaluacionRepository.findAllPeticionEvaluacionMemoria(ArgumentMatchers.<Specification<Memoria>>any(),
+            ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<String>any()))
+        .willReturn(new PageImpl<>(peticiones));
+
+    // when: find unlimited peticiones evaluación
+    Page<PeticionEvaluacion> page = peticionEvaluacionService
+        .findAllPeticionesWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(null, Pageable.unpaged(),
+            "user-001");
+
+    Assertions.assertThat(page.getContent().size()).isEqualTo(100);
+    Assertions.assertThat(page.getNumber()).isEqualTo(0);
+    Assertions.assertThat(page.getSize()).isEqualTo(100);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+  }
+
+  @Test
+  public void findAllMemoriasWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria_WithPaging_ReturnsPage() {
+
+    List<PeticionEvaluacion> peticiones = new ArrayList<>();
+    for (int i = 1; i <= 100; i++) {
+      peticiones.add(generarMockPeticionEvaluacion(Long.valueOf(i), "PeticionEvaluacion" + String.format("%03d", i)));
+    }
+
+    BDDMockito.given(
+        peticionEvaluacionRepository.findAllPeticionEvaluacionMemoria(ArgumentMatchers.<Specification<Memoria>>any(),
+            ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<String>any()))
+        .willAnswer(new Answer<Page<PeticionEvaluacion>>() {
+          @Override
+          public Page<PeticionEvaluacion> answer(InvocationOnMock invocation) throws Throwable {
+            List<PeticionEvaluacion> content = peticiones.subList(30, 40);
+            Page<PeticionEvaluacion> page = new PageImpl<>(content, PageRequest.of(3, 10), peticiones.size());
+            return page;
+          }
+        });
+
+    // when: Get page=3 with pagesize=10 asignables by convocatoria
+    Pageable paging = PageRequest.of(3, 10);
+    Page<PeticionEvaluacion> page = peticionEvaluacionService
+        .findAllPeticionesWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(null, paging, "user-001");
+
+    // then: A Page with ten Memorias are returned containing
+    // num referencia='NumRef-031' to 'NumRef-040'
+    Assertions.assertThat(page.getContent().size()).isEqualTo(10);
+    Assertions.assertThat(page.getNumber()).isEqualTo(3);
+    Assertions.assertThat(page.getSize()).isEqualTo(10);
+    Assertions.assertThat(page.getTotalElements()).isEqualTo(100);
+    for (int i = 0, j = 31; i < 10; i++, j++) {
+      PeticionEvaluacion peticion = page.getContent().get(i);
+      Assertions.assertThat(peticion.getTitulo()).isEqualTo("PeticionEvaluacion" + String.format("%03d", j));
     }
   }
 

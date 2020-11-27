@@ -92,7 +92,8 @@ public class PeticionEvaluacionController {
       @RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
-    Page<PeticionEvaluacion> page = service.findAll(query, paging);
+    Page<PeticionEvaluacion> page = service
+        .findAllPeticionesWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(query, paging, null);
 
     if (page.isEmpty()) {
       log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
@@ -377,6 +378,33 @@ public class PeticionEvaluacionController {
       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada {@link PeticionEvaluacion} de una
+   * persona responsable de memorias o creador de peticiones de evaluacion
+   * 
+   * @param query          filtro de {@link QueryCriteria}.
+   * @param paging         pageable
+   * @param authentication Authentication
+   * @return la lista de entidades {@link PeticionEvaluacion} paginadas.
+   */
+  @GetMapping("/memorias")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-VR-INV', 'ETI-PEV-V')")
+  ResponseEntity<Page<PeticionEvaluacion>> findAllPeticionEvaluacionMemoria(
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging, Authentication authentication) {
+    log.debug("findAllPeticionEvaluacionMemoria(List<QueryCriteria> query,Pageable paging) - start");
+    String personaRef = authentication.getName();
+    Page<PeticionEvaluacion> page = service
+        .findAllPeticionesWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(query, paging, personaRef);
+
+    if (page.isEmpty()) {
+      log.debug("findAllPeticionEvaluacionMemoria(List<QueryCriteria> query,Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    log.debug("findAllPeticionEvaluacionMemoria(List<QueryCriteria> query,Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

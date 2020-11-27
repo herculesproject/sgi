@@ -776,7 +776,7 @@ public class MemoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findMemoriaByPersonaPeticionEvaluacion_Unlimited_ReturnsFullMemoriaPeticionEvaluacionList() {
+  public void findAllMemoriasWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria_Unlimited_ReturnsFullMemoriaPeticionEvaluacionList() {
 
     List<MemoriaPeticionEvaluacion> memorias = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
@@ -787,8 +787,9 @@ public class MemoriaServiceTest extends BaseServiceTest {
         ArgumentMatchers.<Pageable>any(), ArgumentMatchers.<String>any())).willReturn(new PageImpl<>(memorias));
 
     // when: find unlimited Memorias de petición evaluación
-    Page<MemoriaPeticionEvaluacion> page = memoriaService.findAllByPersonaRefPeticionEvaluacion(null,
-        Pageable.unpaged(), "user-001");
+    Page<MemoriaPeticionEvaluacion> page = memoriaService
+        .findAllMemoriasWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(null, Pageable.unpaged(),
+            "user-001");
 
     // then: Obtiene Memorias de petición evaluación con sus fecha límite y de
     // evaluación
@@ -800,7 +801,7 @@ public class MemoriaServiceTest extends BaseServiceTest {
   }
 
   @Test
-  public void findMemoriaByPersonaPeticionEvaluacion_WithPaging_ReturnsPage() {
+  public void findAllMemoriasWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria_WithPaging_ReturnsPage() {
     // given: One hundred MemoriaPeticionEvaluacion
     List<MemoriaPeticionEvaluacion> memorias = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
@@ -826,8 +827,8 @@ public class MemoriaServiceTest extends BaseServiceTest {
 
     // when: Get page=3 with pagesize=10 asignables by convocatoria
     Pageable paging = PageRequest.of(3, 10);
-    Page<MemoriaPeticionEvaluacion> page = memoriaService.findAllByPersonaRefPeticionEvaluacion(null, paging,
-        "user-001");
+    Page<MemoriaPeticionEvaluacion> page = memoriaService
+        .findAllMemoriasWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(null, paging, "user-001");
 
     // then: A Page with ten Memorias are returned containing
     // num referencia='NumRef-031' to 'NumRef-040'
@@ -958,7 +959,6 @@ public class MemoriaServiceTest extends BaseServiceTest {
     memoria.setEstadoActual(tipoEstadoMemoria);
     memoria.setTitulo("Memoria" + String.format("%03d", id));
     memoria.setNumReferencia("numRef-" + String.format("%03d", id));
-
     memoria.setFechaEvaluacion(LocalDateTime.of(2020, 7, 15, 0, 0, 1));
     memoria.setFechaLimite(LocalDate.of(2020, 8, 18));
     return memoria;

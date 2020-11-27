@@ -207,7 +207,8 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
         root.get(Memoria_.retrospectiva), getFechaEvaluacion(root, cb, cq).alias("fechaEvaluacion"),
         getFechaLimite(root, cb, cq).alias("fechaLimite"),
         cb.equal(root.get(Memoria_.personaRef), personaRefConsulta != null ? personaRefConsulta : "")
-            .alias("isResponsable"));
+            .alias("isResponsable"),
+        root.get(Memoria_.activo));
 
     cq.where(cb.equal(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id), idPeticionEvaluacion),
         cb.isTrue(root.get(Memoria_.activo)));
@@ -304,17 +305,44 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     Root<Memoria> rootCount = countQuery.from(Memoria.class);
     countQuery.select(cb.count(rootCount));
 
+    List<Predicate> predicates = new ArrayList<Predicate>();
+    List<Predicate> predicatesCount = new ArrayList<Predicate>();
+
+    if (personaRefConsulta != null) {
+      Predicate predicateMemoria = cb.in(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id))
+          .value(getIdsPeticionEvaluacionMemoria(root, cb, cq, specs, personaRefConsulta));
+      Predicate predicateMemoriaCount = cb.in(rootCount.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id))
+          .value(getIdsPeticionEvaluacionMemoria(rootCount, cb, cq, specs, personaRefConsulta));
+
+      Predicate predicatePersonaRefPeticion = cb
+          .equal(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.personaRef), personaRefConsulta);
+      Predicate predicatePersonaRefPeticionCount = cb
+          .equal(rootCount.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.personaRef), personaRefConsulta);
+      Predicate predicatePersonaRefMemoria = cb.equal(root.get(Memoria_.personaRef), personaRefConsulta);
+      Predicate predicatePersonaRefMemoriaCount = cb.equal(rootCount.get(Memoria_.personaRef), personaRefConsulta);
+      predicates.add(cb.or(cb.or(predicatePersonaRefPeticion, predicatePersonaRefMemoria), predicateMemoria));
+      predicatesCount
+          .add(cb.or(cb.or(predicatePersonaRefPeticionCount, predicatePersonaRefMemoriaCount), predicateMemoriaCount));
+    }
+
     // Where
     if (specs != null) {
-      cq.where(specs.toPredicate(root, cq, cb));
-      countQuery.where(specs.toPredicate(rootCount, cq, cb));
+      Predicate predicateSpecs = specs.toPredicate(root, cq, cb);
+      predicates.add(predicateSpecs);
+      Predicate predicateSpecsCount = specs.toPredicate(rootCount, cq, cb);
+      predicatesCount.add(predicateSpecsCount);
     }
 
     cq.multiselect(root.get(Memoria_.id), root.get(Memoria_.numReferencia), root.get(Memoria_.titulo),
         root.get(Memoria_.comite), root.get(Memoria_.estadoActual),
         getFechaEvaluacion(root, cb, cq).alias("fechaEvaluacion"), getFechaLimite(root, cb, cq).alias("fechaLimite"),
         cb.equal(root.get(Memoria_.personaRef), personaRefConsulta != null ? personaRefConsulta : "")
-            .alias("isResponsable"));
+            .alias("isResponsable"),
+        root.get(Memoria_.activo)).distinct(true);
+
+    cq.where(predicates.toArray(new Predicate[] {}));
+
+    countQuery.where(predicatesCount.toArray(new Predicate[] {}));
 
     List<Order> orders = QueryUtils.toOrders(pageable.getSort(), root, cb);
     cq.orderBy(orders);
@@ -333,6 +361,40 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
 
     log.debug("findAllMemoriasEvaluaciones( Pageable pageable) - end");
     return returnValue;
+  }
+
+  /**
+   * Obtiene las peticiones de evaluación en las que es responsable de memoria
+   * 
+   * @param root
+   * @param cb
+   * @param cq
+   * @param specsMem
+   * @param personaRef
+   * @return
+   */
+  private Subquery<Long> getIdsPeticionEvaluacionMemoria(Root<Memoria> root, CriteriaBuilder cb,
+      CriteriaQuery<MemoriaPeticionEvaluacion> cq, Specification<Memoria> specsMem, String personaRef) {
+
+    log.debug(
+        "getActaConvocatoria(Root<ConvocatoriaReunion> root, CriteriaBuilder cb, CriteriaQuery<ConvocatoriaReunionDatosGenerales> cq, Long idConvocatoria) - start");
+
+    Subquery<Long> queryGetIdPeticionEvaluacion = cq.subquery(Long.class);
+    Root<Memoria> subqRoot = queryGetIdPeticionEvaluacion.from(Memoria.class);
+
+    List<Predicate> predicates = new ArrayList<Predicate>();
+    predicates.add(cb.isTrue(subqRoot.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.activo)));
+    predicates.add(cb.isTrue(subqRoot.get(Memoria_.activo)));
+    if (personaRef != null) {
+      predicates.add(cb.equal(subqRoot.get(Memoria_.personaRef), personaRef));
+    }
+
+    queryGetIdPeticionEvaluacion.select(subqRoot.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id))
+        .where(predicates.toArray(new Predicate[] {}));
+    log.debug(
+        "getActaConvocatoria(Root<ConvocatoriaReunion> root, CriteriaBuilder cb, CriteriaQuery<ConvocatoriaReunionDatosGenerales> cq, Long idConvocatoria) - end");
+
+    return queryGetIdPeticionEvaluacion;
   }
 
 }

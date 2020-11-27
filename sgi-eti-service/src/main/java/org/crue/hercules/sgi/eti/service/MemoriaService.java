@@ -135,37 +135,16 @@ public interface MemoriaService {
   void updateEstadoMemoria(Memoria memoria, long id);
 
   /**
-   * Obtener todas las entidades {@link Memoria} paginadas y/o filtradas por
-   * referencia de la persona
+   * Obtener todas las entidades {@link MemoriaPeticionEvaluacion} paginadas y/o
+   * filtradas por referencia de la persona
    *
    * @param pageable   la información de la paginación.
    * @param query      la información del filtro.
    * @param personaRef Referencia de la persona
    * @return la lista de entidades {@link Memoria} paginadas y/o filtradas.
    */
-  Page<Memoria> findAllByPersonaRef(List<QueryCriteria> query, Pageable pageable, String personaRef);
-
-  /**
-   * Devuelve las memorias de las peticiones de evaluación con su fecha límite y
-   * de evaluación.
-   * 
-   * @param pageable información de paginación
-   * @return lista de memorias de {@link PeticionEvaluacion}
-   */
-  Page<MemoriaPeticionEvaluacion> findAllMemoriasPeticionesEvaluacion(Pageable pageable);
-
-  /**
-   * Devuelve las memorias de las peticiones de evaluación con su fecha límite y
-   * de evaluación en las que la personaRef sea la creadora
-   * 
-   * @param paging     información de paginación
-   * @param query      la información del filtro.
-   * @param personaRef Referencia de la persona creadora de la petición de
-   *                   evaluación
-   * @return lista de memorias de {@link PeticionEvaluacion}
-   */
-  Page<MemoriaPeticionEvaluacion> findAllByPersonaRefPeticionEvaluacion(List<QueryCriteria> query, Pageable paging,
-      String personaRef);
+  Page<MemoriaPeticionEvaluacion> findAllMemoriasWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
+      List<QueryCriteria> query, Pageable pageable, String personaRef);
 
   /**
    * Actualiza la memoria a su estado anterior
