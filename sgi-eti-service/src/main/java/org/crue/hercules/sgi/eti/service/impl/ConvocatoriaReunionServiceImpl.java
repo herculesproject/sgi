@@ -7,6 +7,7 @@ import org.crue.hercules.sgi.eti.dto.ConvocatoriaReunionDatosGenerales;
 import org.crue.hercules.sgi.eti.exceptions.ConvocatoriaReunionNotFoundException;
 import org.crue.hercules.sgi.eti.model.ConvocatoriaReunion;
 import org.crue.hercules.sgi.eti.repository.ConvocatoriaReunionRepository;
+import org.crue.hercules.sgi.eti.repository.specification.ConvocatoriaReunionSpecifications;
 import org.crue.hercules.sgi.eti.service.ConvocatoriaReunionService;
 import org.crue.hercules.sgi.framework.data.jpa.domain.QuerySpecification;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -148,8 +149,10 @@ public class ConvocatoriaReunionServiceImpl implements ConvocatoriaReunionServic
   public Page<ConvocatoriaReunion> findAll(List<QueryCriteria> query, Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - start");
 
-    Specification<ConvocatoriaReunion> spec = new QuerySpecification<ConvocatoriaReunion>(query);
-    Page<ConvocatoriaReunion> returnValue = repository.findAll(spec, paging);
+    Specification<ConvocatoriaReunion> specByQuery = new QuerySpecification<ConvocatoriaReunion>(query);
+    Specification<ConvocatoriaReunion> specActivos = ConvocatoriaReunionSpecifications.activos();
+    Specification<ConvocatoriaReunion> specs = Specification.where(specActivos).and(specByQuery);
+    Page<ConvocatoriaReunion> returnValue = repository.findAll(specs, paging);
 
     log.debug("findAll(List<QueryCriteria> query, Pageable paging) - end");
 
