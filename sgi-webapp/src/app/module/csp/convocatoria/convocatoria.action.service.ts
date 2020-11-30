@@ -140,7 +140,7 @@ export class ConvocatoriaActionService extends ActionService {
     if (route.snapshot.data.configuracionSolicitud) {
       this.configuracionSolicitud = route.snapshot.data.configuracionSolicitud;
     }
-    let readonly = true;
+    let readonly = false;
     const unidadGestionRef = this.convocatoria.unidadGestionRef;
     if (unidadGestionRef) {
       readonly = !this.authService.hasAuthority(`CSP-CONV-C_${unidadGestionRef}`);
