@@ -35,7 +35,7 @@ export class MemoriaActionService extends ActionService {
     FORMULARIO: 'formulario',
     DOCUMENTACION: 'documentacion',
     EVALUACIONES: 'evaluaciones',
-    INFORMES: 'informes'
+    VERSIONES: 'versiones'
   };
 
   private memoria: IMemoria;
@@ -45,7 +45,7 @@ export class MemoriaActionService extends ActionService {
   private formularios: MemoriaFormularioFragment;
   private documentacion: MemoriaDocumentacionFragment;
   private evaluaciones: MemoriaEvaluacionesFragment;
-  private informes: MemoriaInformesFragment;
+  private versiones: MemoriaInformesFragment;
 
   constructor(
     fb: FormBuilder,
@@ -77,7 +77,7 @@ export class MemoriaActionService extends ActionService {
       bloqueService, apartadoService, respuestaService);
     this.documentacion = new MemoriaDocumentacionFragment(logger, this.memoria?.id, service, documentoService);
     this.evaluaciones = new MemoriaEvaluacionesFragment(logger, this.memoria?.id, service);
-    this.informes = new MemoriaInformesFragment(logger, this.memoria?.id, service);
+    this.versiones = new MemoriaInformesFragment(logger, this.memoria?.id, service);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     if (this.isEdit()) {
@@ -85,7 +85,7 @@ export class MemoriaActionService extends ActionService {
       this.addFragment(this.FRAGMENT.FORMULARIO, this.formularios);
       this.addFragment(this.FRAGMENT.DOCUMENTACION, this.documentacion);
       this.addFragment(this.FRAGMENT.EVALUACIONES, this.evaluaciones);
-      this.addFragment(this.FRAGMENT.INFORMES, this.informes);
+      this.addFragment(this.FRAGMENT.VERSIONES, this.versiones);
     }
 
   }

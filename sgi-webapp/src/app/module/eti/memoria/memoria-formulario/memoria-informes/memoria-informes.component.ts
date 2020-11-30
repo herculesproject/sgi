@@ -47,7 +47,7 @@ export class MemoriaInformesComponent extends FragmentComponent implements OnIni
     protected documentoService: DocumentoService,
     actionService: MemoriaActionService
   ) {
-    super(actionService.FRAGMENT.INFORMES, actionService);
+    super(actionService.FRAGMENT.VERSIONES, actionService);
     this.logger.debug(MemoriaInformesComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as MemoriaInformesFragment;
     this.logger.debug(MemoriaInformesComponent.name, 'constructor()', 'end');
