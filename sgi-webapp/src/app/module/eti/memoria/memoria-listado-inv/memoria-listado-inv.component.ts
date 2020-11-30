@@ -111,7 +111,8 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
       comite: new FormControl('', []),
       titulo: new FormControl('', []),
       numReferencia: new FormControl('', []),
-      tipoEstadoMemoria: new FormControl('', [])
+      tipoEstadoMemoria: new FormControl('', []),
+      solicitante: new FormControl('', [])
     });
 
     this.loadComites();
@@ -296,7 +297,10 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
    * @param personaRef referencia del persona seleccionado
    */
   public setUsuario(solicitante: IPersona) {
+    this.formGroup.controls.solicitante.setValue(solicitante.personaRef);
+    this.datosSolicitante = solicitante.nombre ? solicitante.nombre + ' ' + solicitante.primerApellido + ' ' + solicitante.segundoApellido : '';
     this.personaRef = solicitante?.personaRef;
+
   }
 
 
@@ -411,5 +415,14 @@ export class MemoriaListadoInvComponent extends AbstractTablePaginationComponent
     this.logger.debug(MemoriaListadoInvComponent.name, 'enviarSecretariaRetrospectiva(memoria: IMemoriaPeticionEvaluacion) - end');
   }
 
+  /**
+   * Clean filters an reload the table
+   */
+  onClearFilters(): void {
+    this.logger.debug(MemoriaListadoInvComponent.name, `${this.onClearFilters.name}()`, 'start');
+    super.onClearFilters();
+    this.setUsuario({} as IPersona);
+    this.logger.debug(MemoriaListadoInvComponent.name, `${this.onClearFilters.name}()`, 'end');
+  }
 
 }

@@ -133,7 +133,7 @@ export class ConvocatoriaReunionListadoComponent extends AbstractTablePagination
 
     this.logger.debug(ConvocatoriaReunionListadoComponent.name, 'buildFilters()', 'end');
 
-    return this.filter;
+    return filtro;
   }
 
 

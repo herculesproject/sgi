@@ -104,7 +104,8 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
       comite: new FormControl('', []),
       titulo: new FormControl('', []),
       numReferencia: new FormControl('', []),
-      tipoEstadoMemoria: new FormControl('', [])
+      tipoEstadoMemoria: new FormControl('', []),
+      solicitante: new FormControl('', []),
     });
 
     this.loadComites();
@@ -133,7 +134,7 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
     this.addFiltro(filtro, 'peticionEvaluacion.titulo', SgiRestFilterType.LIKE, this.formGroup.controls.titulo.value);
     this.addFiltro(filtro, 'numReferencia', SgiRestFilterType.EQUALS, this.formGroup.controls.numReferencia.value);
     this.addFiltro(filtro, 'estadoActual.id', SgiRestFilterType.EQUALS, this.formGroup.controls.tipoEstadoMemoria.value.id);
-    this.addFiltro(filtro, 'personaRef', SgiRestFilterType.EQUALS, this.formGroup.controls.personaRef.value);
+    this.addFiltro(filtro, 'personaRef', SgiRestFilterType.EQUALS, this.formGroup.controls.solicitante.value);
 
     this.logger.debug(MemoriaListadoGesComponent.name, 'createFilters()', 'end');
 
@@ -268,7 +269,10 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
    * @param personaRef referencia del persona seleccionado
    */
   public setUsuario(solicitante: IPersona) {
+    this.formGroup.controls.solicitante.setValue(solicitante.personaRef);
+    this.datosSolicitante = solicitante.nombre ? solicitante.nombre + ' ' + solicitante.primerApellido + ' ' + solicitante.segundoApellido : '';
     this.personaRef = solicitante?.personaRef;
+
   }
 
 
@@ -309,6 +313,16 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
     ).subscribe();
 
     this.suscripciones.push(dialogServiceSubscription);
+  }
+
+  /**
+   * Clean filters an reload the table
+   */
+  onClearFilters(): void {
+    this.logger.debug(MemoriaListadoGesComponent.name, `${this.onClearFilters.name}()`, 'start');
+    super.onClearFilters();
+    this.setUsuario({} as IPersona);
+    this.logger.debug(MemoriaListadoGesComponent.name, `${this.onClearFilters.name}()`, 'end');
   }
 
 }
