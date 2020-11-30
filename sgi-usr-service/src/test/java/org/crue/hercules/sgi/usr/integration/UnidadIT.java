@@ -110,6 +110,25 @@ public class UnidadIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
+  public void findByAcronimo_ReturnsUnidad() throws Exception {
+    String acronimo = "OPE";
+
+    final ResponseEntity<Unidad> response = restTemplate.exchange(CONTROLLER_BASE_PATH + "/acronimo/{acronimo}",
+        HttpMethod.GET, buildRequest(null, null), Unidad.class, acronimo);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    Unidad unidad = response.getBody();
+    Assertions.assertThat(unidad.getId()).as("getId()").isNotNull();
+    Assertions.assertThat(unidad.getNombre()).as("getNombre()").isEqualTo("nombre-001");
+    Assertions.assertThat(unidad.getAcronimo()).as("getAcronimo()").isEqualTo("OPE");
+    Assertions.assertThat(unidad.getDescripcion()).as("descripcion-001").isEqualTo(unidad.getDescripcion());
+    Assertions.assertThat(unidad.getActivo()).as("getActivo()").isEqualTo(true);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
   public void findAll_WithPagingSortingAndFiltering_ReturnsUnidadSubList() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-TDOC-V")));

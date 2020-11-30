@@ -192,4 +192,18 @@ public class UnidadServiceImpl implements UnidadService {
 
   }
 
+  /**
+   * Obtiene {@link Unidad} por su acrónimo.
+   *
+   * @param acronimo el acrónimo de la entidad {@link Unidad}.
+   * @return la entidad {@link Unidad}.
+   */
+  @Override
+  public Unidad findByAcronimo(String acronimo) {
+    log.debug("findByAcronimo(Long id)  - start");
+    final Unidad returnValue = repository.findByAcronimo(acronimo).orElseThrow(() -> new UnidadNotFoundException(null));
+    log.debug("findByAcronimo(Long id)  - end");
+    return returnValue;
+  }
+
 }

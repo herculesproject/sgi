@@ -427,6 +427,42 @@ public class UnidadControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "USR-UNI-V" })
+  public void findByAcronimo_WithExistingAcronimo_ReturnsUnidad() throws Exception {
+    // given: existing acronimo
+    BDDMockito.given(service.findByAcronimo(ArgumentMatchers.anyString())).willAnswer((InvocationOnMock invocation) -> {
+      return generarMockUnidad(1L);
+    });
+
+    // when: find by existing acronimo
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/acronimo/{acronimo}", "OPE")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: response is OK
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        // and the requested Unidad is resturned as JSON object
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "USR-UNI-V" })
+  public void findByAcronimo_WithNoExistingId_Returns404() throws Exception {
+    // given: no existing acronimo
+    BDDMockito.given(service.findByAcronimo(ArgumentMatchers.anyString())).will((InvocationOnMock invocation) -> {
+      throw new UnidadNotFoundException(1L);
+    });
+
+    // when: find by non existing acronimo
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + "/acronimo/{acronimo}", "OPE")
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print()).
+        // then: HTTP code 404 NotFound pressent
+        andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
   /**
    * Función que devuelve un objeto Unidad
    * 

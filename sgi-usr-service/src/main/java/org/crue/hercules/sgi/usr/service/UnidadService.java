@@ -63,6 +63,14 @@ public interface UnidadService {
   Unidad findById(Long id);
 
   /**
+   * Obtiene {@link Unidad} por su acrónimo.
+   *
+   * @param acronimo el acrónimo de la entidad {@link Unidad}.
+   * @return la entidad {@link Unidad}.
+   */
+  Unidad findByAcronimo(String acronimo);
+
+  /**
    * Recupera una lista de paginada de {@link Unidad} restringidas por los
    * permisos del usuario logueado.
    * 

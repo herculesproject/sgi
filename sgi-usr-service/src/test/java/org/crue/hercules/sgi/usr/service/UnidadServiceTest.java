@@ -353,6 +353,34 @@ public class UnidadServiceTest extends BaseServiceTest {
     }
   }
 
+  @Test
+  public void findByAcronimo_ReturnsUnidad() {
+    // given: Un Unidad con el acrónimo buscado
+    String acronimo = "OPE";
+    BDDMockito.given(repository.findByAcronimo(acronimo)).willReturn(Optional.of(generarMockUnidad(1L)));
+
+    // when: Buscamos el Unidad por su acrónimo
+    Unidad unidad = service.findByAcronimo(acronimo);
+
+    // then: el Unidad
+    Assertions.assertThat(unidad).as("isNotNull()").isNotNull();
+    Assertions.assertThat(unidad.getId()).as("getId()").isEqualTo(1L);
+    Assertions.assertThat(unidad.getNombre()).as("getNombre()").isEqualTo("nombre-1");
+    Assertions.assertThat(unidad.getAcronimo()).as("getAcronimo()").isEqualTo("OPE");
+    Assertions.assertThat(unidad.getActivo()).as("getActivo()").isEqualTo(true);
+  }
+
+  @Test
+  public void findByAcronimo_WithIdNotExist_ThrowsUnidadNotFoundException() throws Exception {
+    // given: Ningun Unidad con el acrónimo buscado
+    String acronimo = "OPE";
+    BDDMockito.given(repository.findByAcronimo(acronimo)).willReturn(Optional.empty());
+
+    // when: Buscamos el Unidad por su acrónimo
+    // then: lanza un UnidadNotFoundException
+    Assertions.assertThatThrownBy(() -> service.findByAcronimo(acronimo)).isInstanceOf(UnidadNotFoundException.class);
+  }
+
   /**
    * Función que devuelve un objeto Unidad
    * 

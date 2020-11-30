@@ -146,6 +146,21 @@ public class UnidadController {
   }
 
   /**
+   * Devuelve el {@link Unidad} con el acrónimo indicado.
+   * 
+   * @param acronimo Acrónimo de {@link Unidad}.
+   * @return {@link Unidad} correspondiente al acrónimo.
+   */
+  @GetMapping("/acronimo/{acronimo}")
+  // @PreAuthorize("hasAuthorityForAnyUO('USR-UNI-V')")
+  Unidad findByAcronimo(@PathVariable String acronimo) {
+    log.debug("findByAcronimo(String id) - start");
+    Unidad returnValue = service.findByAcronimo(acronimo);
+    log.debug("findByAcronimo(String id) - end");
+    return returnValue;
+  }
+
+  /**
    * Crea un nuevo {@link Unidad}.
    * 
    * @param unidad {@link Unidad} que se quiere crear.
