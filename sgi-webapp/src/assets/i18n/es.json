@@ -907,6 +907,7 @@
   "eti.convocatoriaReunion.formulario.datosGenerales.convocantes.titulo": "Convocantes",
   "eti.convocatoriaReunion.formulario.datosGenerales.fechaEvaluacion.error.vacio": "Introduzca la fecha de evaluación",
   "eti.convocatoriaReunion.formulario.datosGenerales.fechaEvaluacion.titulo": "Fecha evaluación",
+  "eti.convocatoriaReunion.formulario.datosGenerales.fechaLimite.error.after": "No puede ser anterior a fecha límite",
   "eti.convocatoriaReunion.formulario.datosGenerales.fechaLimite.error.vacio": "Introduzca la fecha límite",
   "eti.convocatoriaReunion.formulario.datosGenerales.fechaLimite.titulo": "Fecha límite",
   "eti.convocatoriaReunion.formulario.datosGenerales.horaInicio.error.NaN": "La hora inicio no es número",

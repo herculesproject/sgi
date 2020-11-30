@@ -16,6 +16,7 @@ import { IPersona } from '@core/models/sgp/persona';
 import { SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { DateValidator } from '@core/validators/date-validator';
 
 export class ConvocatoriaReunionDatosGeneralesFragment extends FormFragment<IConvocatoriaReunion> {
 
@@ -52,7 +53,11 @@ export class ConvocatoriaReunionDatosGeneralesFragment extends FormFragment<ICon
       lugar: ['', Validators.required],
       ordenDia: ['', Validators.required],
       convocantes: ['', Validators.required],
-    });
+    },
+      {
+        validators: [
+          DateValidator.isAfter('fechaLimite', 'fechaEvaluacion')]
+      });
 
     // En control del código solo aparece al editar
     if (this.isEdit()) {

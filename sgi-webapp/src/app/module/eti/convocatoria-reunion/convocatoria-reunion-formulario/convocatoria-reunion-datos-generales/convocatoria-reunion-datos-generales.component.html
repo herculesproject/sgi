@@ -47,6 +47,9 @@
         <mat-error *ngIf="formGroup.controls.fechaEvaluacion.errors?.required">
           {{'eti.convocatoriaReunion.formulario.datosGenerales.fechaEvaluacion.error.vacio' | translate}}
         </mat-error>
+        <mat-error *ngIf="formGroup.controls.fechaEvaluacion.errors?.after">
+          {{'eti.convocatoriaReunion.formulario.datosGenerales.fechaLimite.error.after' | translate}}
+        </mat-error>
       </mat-form-field>
     </div>
 
