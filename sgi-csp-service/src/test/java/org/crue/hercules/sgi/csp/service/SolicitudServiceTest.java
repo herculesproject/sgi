@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
@@ -246,7 +247,7 @@ public class SolicitudServiceTest {
 
     // when: Actualizamos el Solicitud
     Solicitud solicitudActualizada = service.update(solicitudoObservacionesActualizadas,
-        Arrays.asList(solicitud.getUnidadGestionRef()));
+        Arrays.asList(solicitud.getUnidadGestionRef()), Boolean.TRUE);
 
     // then: El Solicitud se actualiza correctamente.
     Assertions.assertThat(solicitudActualizada).as("isNotNull()").isNotNull();
@@ -278,7 +279,9 @@ public class SolicitudServiceTest {
 
     // when: Actualizamos el Solicitud
     // then: Lanza una excepcion porque el Solicitud no existe
-    Assertions.assertThatThrownBy(() -> service.update(solicitud, Arrays.asList(solicitud.getUnidadGestionRef())))
+    Assertions
+        .assertThatThrownBy(
+            () -> service.update(solicitud, Arrays.asList(solicitud.getUnidadGestionRef()), Boolean.TRUE))
         .isInstanceOf(SolicitudNotFoundException.class);
   }
 
@@ -292,8 +295,41 @@ public class SolicitudServiceTest {
 
     // when: Creamos el Solicitud
     // then: Lanza una excepcion porque no tiene creadorRef
-    Assertions.assertThatThrownBy(() -> service.update(solicitud, Arrays.asList(solicitud.getUnidadGestionRef())))
+    Assertions
+        .assertThatThrownBy(
+            () -> service.update(solicitud, Arrays.asList(solicitud.getUnidadGestionRef()), Boolean.TRUE))
         .isInstanceOf(IllegalArgumentException.class).hasMessage("Solicitud tiene que estar activo para actualizarse");
+  }
+
+  @Test
+  public void update_ConvocatoriaNull_ThrowsIllegalArgumentException() {
+    // given: Un nuevo Solicitud que no tiene creadorRef
+    Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
+    solicitud.setConvocatoria(null);
+    solicitud.setConvocatoriaExterna(null);
+
+    // when: Creamos el Solicitud
+    // then: Lanza una excepcion porque no tiene creadorRef
+    Assertions
+        .assertThatThrownBy(
+            () -> service.update(solicitud, Arrays.asList(solicitud.getUnidadGestionRef()), Boolean.TRUE))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Se debe seleccionar una convocatoria del SGI o convocatoria externa para actualizar Solicitud");
+  }
+
+  @Test
+  public void update_SolicitanteRefNull_ThrowsIllegalArgumentException() {
+    // given: Un nuevo Solicitud que no tiene creadorRef
+    Solicitud solicitud = generarMockSolicitud(1L, 1L, null);
+    solicitud.setSolicitanteRef(null);
+
+    // when: Creamos el Solicitud
+    // then: Lanza una excepcion porque no tiene creadorRef
+    Assertions
+        .assertThatThrownBy(
+            () -> service.update(solicitud, Arrays.asList(solicitud.getUnidadGestionRef()), Boolean.TRUE))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("El solicitante no puede ser null para actualizar Solicitud");
   }
 
   @Test
@@ -486,6 +522,7 @@ public class SolicitudServiceTest {
   private Solicitud generarMockSolicitud(Long id, Long convocatoriaId, String convocatoriaExterna) {
     EstadoSolicitud estadoSolicitud = new EstadoSolicitud();
     estadoSolicitud.setId(1L);
+    estadoSolicitud.setEstado(TipoEstadoSolicitudEnum.BORRADOR);
 
     Programa programa = new Programa();
     programa.setId(1L);

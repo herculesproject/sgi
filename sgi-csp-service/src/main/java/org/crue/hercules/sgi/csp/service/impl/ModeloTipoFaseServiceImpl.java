@@ -65,10 +65,10 @@ public class ModeloTipoFaseServiceImpl implements ModeloTipoFaseService {
         .orElseThrow(() -> new ModeloEjecucionNotFoundException(modeloTipoFase.getModeloEjecucion().getId())));
     Assert.isTrue(modeloTipoFase.getTipoFase().getActivo(), "El tipo Fase debe estar activo");
     modeloTipoFaseRepository.findByModeloEjecucionIdAndTipoFaseId(modeloTipoFase.getModeloEjecucion().getId(),
-        modeloTipoFase.getTipoFase().getId()).ifPresent(modeloTipoEnlaceExistente -> {
-          Assert.isTrue(!modeloTipoEnlaceExistente.getActivo(),
+        modeloTipoFase.getTipoFase().getId()).ifPresent(modeloTipoFaseExistente -> {
+          Assert.isTrue(!modeloTipoFaseExistente.getActivo(),
               "Ya existe una asociación activa para ese ModeloEjecucion y ese TipoFase");
-          modeloTipoFase.setId(modeloTipoEnlaceExistente.getId());
+          modeloTipoFase.setId(modeloTipoFaseExistente.getId());
         });
     Assert.isTrue(modeloTipoFase.getConvocatoria() || modeloTipoFase.getProyecto(),
         "Debe seleccionarse si la fase está disponible para proyectos o convocatorias");

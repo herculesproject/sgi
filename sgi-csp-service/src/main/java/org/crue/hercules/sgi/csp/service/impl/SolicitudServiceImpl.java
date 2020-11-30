@@ -110,18 +110,48 @@ public class SolicitudServiceImpl implements SolicitudService {
   /**
    * Actualiza los datos del {@link Solicitud}.
    * 
-   * @param solicitud         solicitudActualizar {@link Solicitud} con los datos
-   *                          actualizados.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion
-   *                          permitidas para el usuario.
+   * @param solicitud               solicitudActualizar {@link Solicitud} con los
+   *                                datos actualizados.
+   * @param unidadGestionRefs       lista de referencias de las unidades de
+   *                                gestion permitidas para el usuario.
+   * @param isAdministradorOrGestor Indicador de si el usuario que realiza la
+   *                                acutalización es administrador o gestor.
    * @return {@link Solicitud} actualizado.
    */
   @Override
   @Transactional
-  public Solicitud update(Solicitud solicitud, List<String> unidadGestionRefs) {
+  public Solicitud update(Solicitud solicitud, List<String> unidadGestionRefs, Boolean isAdministradorOrGestor) {
     log.debug("update(Solicitud solicitud) - start");
 
     Assert.notNull(solicitud.getId(), "Id no puede ser null para actualizar Solicitud");
+
+    Assert.notNull(solicitud.getSolicitanteRef(), "El solicitante no puede ser null para actualizar Solicitud");
+
+    Assert.isTrue(
+        solicitud.getConvocatoria() != null
+            || (solicitud.getConvocatoriaExterna() != null && !solicitud.getConvocatoriaExterna().isEmpty()),
+        "Se debe seleccionar una convocatoria del SGI o convocatoria externa para actualizar Solicitud");
+
+    if (isAdministradorOrGestor) {
+      Assert.isTrue(solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.BORRADOR.getValue())
+          || solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.PRESENTADA.getValue())
+          || solicitud.getEstado().getEstado().getValue()
+              .equals(TipoEstadoSolicitudEnum.ADMITIDA_PROVISIONAL.getValue())
+          || solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.ALEGADA_ADMISION.getValue())
+          || solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.ADMITIDA_DEFINITIVA.getValue())
+          || solicitud.getEstado().getEstado().getValue()
+              .equals(TipoEstadoSolicitudEnum.CONCECIDA_PROVISIONAL.getValue())
+          || solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.ALEGADA_CONCESION.getValue()),
+          "La solicitud no se encuentra en un estado adecuado para ser actualizada");
+    } else {
+      Assert.isTrue(
+          solicitud.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.BORRADOR.getValue())
+              || solicitud.getEstado().getEstado().getValue()
+                  .equals(TipoEstadoSolicitudEnum.EXCLUIDA_PROVISIONAL.getValue())
+              || solicitud.getEstado().getEstado().getValue()
+                  .equals(TipoEstadoSolicitudEnum.DENEGADA_PROVISIONAL.getValue()),
+          "La solicitud no se encuentra en un estado adecuado para ser actualizada");
+    }
 
     return repository.findById(solicitud.getId()).map((data) -> {
 
@@ -134,6 +164,13 @@ public class SolicitudServiceImpl implements SolicitudService {
       data.setSolicitanteRef(solicitud.getSolicitanteRef());
       data.setCodigoExterno(solicitud.getCodigoExterno());
       data.setObservaciones(solicitud.getObservaciones());
+
+      if (null == data.getConvocatoria()) {
+        data.setConvocatoriaExterna(solicitud.getConvocatoriaExterna());
+        if (data.getEstado().getEstado().getValue().equals(TipoEstadoSolicitudEnum.BORRADOR.getValue())) {
+          data.setCodigoExterno(solicitud.getCodigoExterno());
+        }
+      }
 
       Solicitud returnValue = repository.save(data);
 

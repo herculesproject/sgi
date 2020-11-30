@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
@@ -315,6 +316,7 @@ public class SolicitudIT {
   private Solicitud generarMockSolicitud(Long id) {
     EstadoSolicitud estadoSolicitud = new EstadoSolicitud();
     estadoSolicitud.setId(1L);
+    estadoSolicitud.setEstado(TipoEstadoSolicitudEnum.BORRADOR);
 
     Programa programa = new Programa();
     programa.setId(1L);

@@ -25,12 +25,14 @@ public interface SolicitudService {
   /**
    * Actualiza los datos del {@link Solicitud}.
    * 
-   * @param solicitud         {@link Solicitud} con los datos actualizados.
-   * @param unidadGestionRefs lista de referencias de las unidades de gestion
-   *                          permitidas para el usuario.
+   * @param solicitud               {@link Solicitud} con los datos actualizados.
+   * @param unidadGestionRefs       lista de referencias de las unidades de
+   *                                gestion permitidas para el usuario.
+   * @param isAdministradorOrGestor Indicador de si el usuario que realiza la
+   *                                acutalización es administrador o gestor.
    * @return solicitud {@link Solicitud} actualizado.
    */
-  Solicitud update(final Solicitud solicitud, List<String> unidadGestionRefs);
+  Solicitud update(final Solicitud solicitud, List<String> unidadGestionRefs, Boolean isAdministradorOrGestor);
 
   /**
    * Reactiva el {@link Solicitud}.
