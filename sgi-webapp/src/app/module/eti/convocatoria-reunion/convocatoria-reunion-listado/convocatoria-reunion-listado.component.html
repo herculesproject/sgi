@@ -134,10 +134,12 @@
           matTooltip="{{'botones.editar' | translate}}">
           <mat-icon color="primary">border_color</mat-icon>
         </button>
-        <button color="warn" mat-button *sgiHasAuthorityForAnyUO="'ETI-CNV-B'"
-          matTooltip="{{'botones.borrar' | translate}}" (click)="borrar(convocatoriaReunion.id, $event)">
-          <mat-icon>highlight_off</mat-icon>
-        </button>
+        <span *ngIf="convocatoriaReunion.activo ? true : false">
+          <button color="warn" mat-button *sgiHasAuthorityForAnyUO="'ETI-CNV-B'"
+            matTooltip="{{'botones.borrar' | translate}}" (click)="borrar(convocatoriaReunion.id, $event)">
+            <mat-icon>highlight_off</mat-icon>
+          </button>
+        </span>
         <ng-container *sgiHasAuthorityForAnyUO="'ETI-CNV-ENV'">
           <button color="accent" *ngIf="!convocatoriaReunion.fechaEnvio" mat-button
             matTooltip="{{'botones.enviar' | translate}}" (click)="enviar(convocatoriaReunion.id, $event)">
