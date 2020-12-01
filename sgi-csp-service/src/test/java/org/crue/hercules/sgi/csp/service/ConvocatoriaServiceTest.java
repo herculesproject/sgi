@@ -2203,32 +2203,32 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
       }
     });
 
-    // when: disable Convocatoria
-    Convocatoria disabledData = service.enable(convocatoria.getId());
+    // when: enable Convocatoria
+    Convocatoria enabledData = service.enable(convocatoria.getId());
 
     // then: Convocatoria is enabled
-    Assertions.assertThat(disabledData).isNotNull();
-    Assertions.assertThat(disabledData.getId()).isNotNull();
-    Assertions.assertThat(disabledData.getId()).isEqualTo(convocatoria.getId());
-    Assertions.assertThat(disabledData.getUnidadGestionRef()).isEqualTo(convocatoria.getUnidadGestionRef());
-    Assertions.assertThat(disabledData.getModeloEjecucion().getId())
+    Assertions.assertThat(enabledData).isNotNull();
+    Assertions.assertThat(enabledData.getId()).isNotNull();
+    Assertions.assertThat(enabledData.getId()).isEqualTo(convocatoria.getId());
+    Assertions.assertThat(enabledData.getUnidadGestionRef()).isEqualTo(convocatoria.getUnidadGestionRef());
+    Assertions.assertThat(enabledData.getModeloEjecucion().getId())
         .isEqualTo(convocatoria.getModeloEjecucion().getId());
-    Assertions.assertThat(disabledData.getCodigo()).isEqualTo(convocatoria.getCodigo());
-    Assertions.assertThat(disabledData.getAnio()).isEqualTo(convocatoria.getAnio());
-    Assertions.assertThat(disabledData.getTitulo()).isEqualTo(convocatoria.getTitulo());
-    Assertions.assertThat(disabledData.getObjeto()).isEqualTo(convocatoria.getObjeto());
-    Assertions.assertThat(disabledData.getObservaciones()).isEqualTo(convocatoria.getObservaciones());
-    Assertions.assertThat(disabledData.getFinalidad().getId()).isEqualTo(convocatoria.getFinalidad().getId());
-    Assertions.assertThat(disabledData.getRegimenConcurrencia().getId())
+    Assertions.assertThat(enabledData.getCodigo()).isEqualTo(convocatoria.getCodigo());
+    Assertions.assertThat(enabledData.getAnio()).isEqualTo(convocatoria.getAnio());
+    Assertions.assertThat(enabledData.getTitulo()).isEqualTo(convocatoria.getTitulo());
+    Assertions.assertThat(enabledData.getObjeto()).isEqualTo(convocatoria.getObjeto());
+    Assertions.assertThat(enabledData.getObservaciones()).isEqualTo(convocatoria.getObservaciones());
+    Assertions.assertThat(enabledData.getFinalidad().getId()).isEqualTo(convocatoria.getFinalidad().getId());
+    Assertions.assertThat(enabledData.getRegimenConcurrencia().getId())
         .isEqualTo(convocatoria.getRegimenConcurrencia().getId());
-    Assertions.assertThat(disabledData.getDestinatarios()).isEqualTo(convocatoria.getDestinatarios());
-    Assertions.assertThat(disabledData.getColaborativos()).isEqualTo(convocatoria.getColaborativos());
-    Assertions.assertThat(disabledData.getEstadoActual()).isEqualTo(convocatoria.getEstadoActual());
-    Assertions.assertThat(disabledData.getDuracion()).isEqualTo(convocatoria.getDuracion());
-    Assertions.assertThat(disabledData.getAmbitoGeografico().getId())
+    Assertions.assertThat(enabledData.getDestinatarios()).isEqualTo(convocatoria.getDestinatarios());
+    Assertions.assertThat(enabledData.getColaborativos()).isEqualTo(convocatoria.getColaborativos());
+    Assertions.assertThat(enabledData.getEstadoActual()).isEqualTo(convocatoria.getEstadoActual());
+    Assertions.assertThat(enabledData.getDuracion()).isEqualTo(convocatoria.getDuracion());
+    Assertions.assertThat(enabledData.getAmbitoGeografico().getId())
         .isEqualTo(convocatoria.getAmbitoGeografico().getId());
-    Assertions.assertThat(disabledData.getClasificacionCVN()).isEqualTo(convocatoria.getClasificacionCVN());
-    Assertions.assertThat(disabledData.getActivo()).isEqualTo(Boolean.TRUE);
+    Assertions.assertThat(enabledData.getClasificacionCVN()).isEqualTo(convocatoria.getClasificacionCVN());
+    Assertions.assertThat(enabledData.getActivo()).isEqualTo(Boolean.TRUE);
   }
 
   @Test
@@ -2240,7 +2240,7 @@ public class ConvocatoriaServiceTest extends BaseServiceTest {
 
     Assertions.assertThatThrownBy(
         // when: enable non existing Convocatoria
-        () -> service.disable(convocatoria.getId()))
+        () -> service.enable(convocatoria.getId()))
         // then: NotFoundException is thrown
         .isInstanceOf(ConvocatoriaNotFoundException.class);
   }

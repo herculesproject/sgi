@@ -1,4 +1,5 @@
 -- vacia la bd
+DELETE FROM csp.rol_socio;
 DELETE FROM csp.solicitud_modalidad;
 DELETE FROM csp.solicitud;
 DELETE FROM csp.estado_solicitud;
@@ -38,5 +39,4 @@ DELETE FROM csp.tipo_financiacion;
 DELETE FROM csp.tipo_hito;
 DELETE FROM csp.tipo_origen_fuente_financiacion;
 DELETE FROM csp.tipo_regimen_concurrencia;
-DELETE FROM csp.concepto_gasto;
 DELETE FROM csp.concepto_gasto;

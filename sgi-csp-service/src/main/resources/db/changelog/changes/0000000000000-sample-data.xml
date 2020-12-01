@@ -1393,4 +1393,47 @@
     </insert>
   </changeSet>
 
+  <changeSet context="dev" author="master" id="0000000000000-rol_socio">
+    <insert tableName="rol_socio">
+      <column name="id" valueSequenceNext="rol_socio_seq" />
+      <column name="abreviatura" value="LID" />
+      <column name="nombre" value="Lider" />
+      <column name="descripcion" value="Socio coordinador del proyecto" />
+      <column name="coordinador" value="true" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="rol_socio">
+      <column name="id" valueSequenceNext="rol_socio_seq" />
+      <column name="abreviatura" value="COL" />
+      <column name="nombre" value="Colaborador" />
+      <column name="descripcion" value="Socio colaborador" />
+      <column name="coordinador" value="true" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="rol_socio">
+      <column name="id" valueSequenceNext="rol_socio_seq" />
+      <column name="abreviatura" value="OTR" />
+      <column name="nombre" value="Otro" />
+      <column name="descripcion" value="Otro socio" />
+      <column name="coordinador" value="false" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="rol_socio">
+      <column name="id" valueSequenceNext="rol_socio_seq" />
+      <column name="abreviatura" value="SO1" />
+      <column name="nombre" value="Socio1" />
+      <column name="descripcion" value="Socio 1" />
+      <column name="coordinador" value="false" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="rol_socio">
+      <column name="id" valueSequenceNext="rol_socio_seq" />
+      <column name="abreviatura" value="SO1" />
+      <column name="nombre" value="Socio1" />
+      <column name="descripcion" value="Socio 1 eliminado" />
+      <column name="coordinador" value="false" />
+      <column name="activo" value="false" />
+    </insert>
+  </changeSet>
+
 </databaseChangeLog>
