@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.eti.repository.custom;
 
+import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.springframework.data.domain.Page;
@@ -22,7 +23,7 @@ public interface CustomPeticionEvaluacionRepository {
    * @param personaRefConsulta usuario
    * @return las entidades {@link PeticionEvaluacion} paginadas y filtradas
    */
-  Page<PeticionEvaluacion> findAllPeticionEvaluacionMemoria(Specification<Memoria> specsMem, Pageable pageable,
-      String personaRefConsulta);
+  Page<PeticionEvaluacionWithIsEliminable> findAllPeticionEvaluacionMemoria(Specification<Memoria> specsMem,
+      Pageable pageable, String personaRefConsulta);
 
 }

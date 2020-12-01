@@ -11,6 +11,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.assertj.core.api.Assertions;
 import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
+import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.dto.TareaWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Comite;
@@ -195,10 +196,10 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-PEV-VR-INV", "ETI-PEV-V" })
   public void findAll_Unlimited_ReturnsFullPeticionEvaluacionList() throws Exception {
     // given: One hundred PeticionEvaluacion
-    List<PeticionEvaluacion> peticionEvaluaciones = new ArrayList<>();
+    List<PeticionEvaluacionWithIsEliminable> peticionEvaluaciones = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      peticionEvaluaciones
-          .add(generarMockPeticionEvaluacion(Long.valueOf(i), "PeticionEvaluacion" + String.format("%03d", i)));
+      peticionEvaluaciones.add(generarMockPeticionEvaluacionWithIsEliminable(Long.valueOf(i),
+          "PeticionEvaluacion" + String.format("%03d", i)));
     }
 
     BDDMockito
@@ -646,10 +647,10 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-PEV-VR-INV", "ETI-PEV-V" })
   public void findAllPeticionEvaluacionMemoria_Unlimited_ReturnsFullPeticionEvaluacionList() throws Exception {
     // given: One hundred PeticionEvaluacion
-    List<PeticionEvaluacion> peticionEvaluaciones = new ArrayList<>();
+    List<PeticionEvaluacionWithIsEliminable> peticionEvaluaciones = new ArrayList<>();
     for (int i = 1; i <= 100; i++) {
-      peticionEvaluaciones
-          .add(generarMockPeticionEvaluacion(Long.valueOf(i), "PeticionEvaluacion" + String.format("%03d", i)));
+      peticionEvaluaciones.add(generarMockPeticionEvaluacionWithIsEliminable(Long.valueOf(i),
+          "PeticionEvaluacion" + String.format("%03d", i)));
     }
 
     BDDMockito
@@ -986,6 +987,10 @@ public class PeticionEvaluacionControllerTest extends BaseControllerTest {
     tarea.setEliminable(true);
 
     return tarea;
+  }
+
+  public PeticionEvaluacionWithIsEliminable generarMockPeticionEvaluacionWithIsEliminable(Long id, String titulo) {
+    return new PeticionEvaluacionWithIsEliminable(generarMockPeticionEvaluacion(id, titulo), true);
   }
 
 }

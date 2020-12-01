@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.eti.repository.custom;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -12,10 +13,14 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
+
+import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.Memoria_;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion_;
+import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria_;
+import org.crue.hercules.sgi.eti.util.Constantes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -37,11 +42,11 @@ public class CustomPeticionEvaluacionRepositoryImpl implements CustomPeticionEva
   private EntityManager entityManager;
 
   @Override
-  public Page<PeticionEvaluacion> findAllPeticionEvaluacionMemoria(Specification<Memoria> specsMem, Pageable pageable,
-      String personaRefConsulta) {
+  public Page<PeticionEvaluacionWithIsEliminable> findAllPeticionEvaluacionMemoria(Specification<Memoria> specsMem,
+      Pageable pageable, String personaRefConsulta) {
     // Crete query
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-    CriteriaQuery<PeticionEvaluacion> cq = cb.createQuery(PeticionEvaluacion.class);
+    CriteriaQuery<PeticionEvaluacionWithIsEliminable> cq = cb.createQuery(PeticionEvaluacionWithIsEliminable.class);
     Root<PeticionEvaluacion> root = cq.from(PeticionEvaluacion.class);
 
     CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
@@ -78,6 +83,8 @@ public class CustomPeticionEvaluacionRepositoryImpl implements CustomPeticionEva
       }
     }
 
+    cq.multiselect(root.alias("peticionEvaluacion"), isNotEliminable(root, cb, cq).isNull().alias("eliminable"));
+
     cq.where(predicates.toArray(new Predicate[] {}));
     countQuery.where(predicatesCount.toArray(new Predicate[] {}));
 
@@ -85,14 +92,15 @@ public class CustomPeticionEvaluacionRepositoryImpl implements CustomPeticionEva
     cq.orderBy(orders);
 
     Long count = entityManager.createQuery(countQuery).getSingleResult();
-    TypedQuery<PeticionEvaluacion> typedQuery = entityManager.createQuery(cq);
+    TypedQuery<PeticionEvaluacionWithIsEliminable> typedQuery = entityManager.createQuery(cq);
     if (pageable != null && pageable.isPaged()) {
       typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
       typedQuery.setMaxResults(pageable.getPageSize());
     }
 
-    List<PeticionEvaluacion> result = typedQuery.getResultList();
-    Page<PeticionEvaluacion> returnValue = new PageImpl<PeticionEvaluacion>(result, pageable, count);
+    List<PeticionEvaluacionWithIsEliminable> result = typedQuery.getResultList();
+    Page<PeticionEvaluacionWithIsEliminable> returnValue = new PageImpl<PeticionEvaluacionWithIsEliminable>(result,
+        pageable, count);
     return returnValue;
   }
 
@@ -107,10 +115,10 @@ public class CustomPeticionEvaluacionRepositoryImpl implements CustomPeticionEva
    * @return
    */
   private Subquery<Long> getIdsPeticionEvaluacionMemoria(Root<PeticionEvaluacion> root, CriteriaBuilder cb,
-      CriteriaQuery<PeticionEvaluacion> cq, Specification<Memoria> specsMem, String personaRef) {
+      CriteriaQuery<PeticionEvaluacionWithIsEliminable> cq, Specification<Memoria> specsMem, String personaRef) {
 
     log.debug(
-        "getActaConvocatoria(Root<ConvocatoriaReunion> root, CriteriaBuilder cb, CriteriaQuery<ConvocatoriaReunionDatosGenerales> cq, Long idConvocatoria) - start");
+        "getIdsPeticionEvaluacionMemoria(Root<PeticionEvaluacion> root, CriteriaBuilder cb, CriteriaQuery<PeticionEvaluacionWithIsEliminable> cq, Specification<Memoria> specsMem, String personaRef) - start");
 
     Subquery<Long> queryGetIdPeticionEvaluacion = cq.subquery(Long.class);
     Root<Memoria> subqRoot = queryGetIdPeticionEvaluacion.from(Memoria.class);
@@ -134,9 +142,38 @@ public class CustomPeticionEvaluacionRepositoryImpl implements CustomPeticionEva
     queryGetIdPeticionEvaluacion.select(subqRoot.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id))
         .where(predicates.toArray(new Predicate[] {}));
     log.debug(
-        "getActaConvocatoria(Root<ConvocatoriaReunion> root, CriteriaBuilder cb, CriteriaQuery<ConvocatoriaReunionDatosGenerales> cq, Long idConvocatoria) - end");
+        "getIdsPeticionEvaluacionMemoria(Root<PeticionEvaluacion> root, CriteriaBuilder cb, CriteriaQuery<PeticionEvaluacionWithIsEliminable> cq, Specification<Memoria> specsMem, String personaRef) - end");
 
     return queryGetIdPeticionEvaluacion;
+  }
+
+  /**
+   * Informa si una petición de evaluación se puede eliminar o no
+   * 
+   * @param root
+   * @param cb
+   * @param cq
+   * @return
+   */
+
+  private Subquery<Long> isNotEliminable(Root<PeticionEvaluacion> root, CriteriaBuilder cb,
+      CriteriaQuery<PeticionEvaluacionWithIsEliminable> cq) {
+    log.debug("isNotEliminable : {} - start");
+
+    Subquery<Long> queryNotEliminable = cq.subquery(Long.class);
+    Root<Memoria> rootQueryNotEliminable = queryNotEliminable.from(Memoria.class);
+
+    queryNotEliminable.select(cb.min(rootQueryNotEliminable.get(Memoria_.id)))
+        .where(
+            cb.not(rootQueryNotEliminable.get(Memoria_.estadoActual).get(TipoEstadoMemoria_.id)
+                .in(Arrays.asList(Constantes.TIPO_ESTADO_MEMORIA_EN_ELABORACION,
+                    Constantes.TIPO_ESTADO_MEMORIA_COMPLETADA))),
+            cb.equal(rootQueryNotEliminable.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id),
+                root.get(PeticionEvaluacion_.id)));
+
+    log.debug("isNotEliminable : {} - end");
+
+    return queryNotEliminable;
   }
 
 }

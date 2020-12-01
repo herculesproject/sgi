@@ -3,6 +3,8 @@ package org.crue.hercules.sgi.eti.service;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import java.util.List;
+
+import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -71,15 +73,16 @@ public interface PeticionEvaluacionService {
   Page<PeticionEvaluacion> findAllByPersonaRef(List<QueryCriteria> query, Pageable pageable, String personaRef);
 
   /**
-   * Obtiene una lista paginada y filtrada {@link PeticionEvaluacion} de una
-   * persona responsable de memorias o creador de peticiones de evaluacion
+   * Obtiene una lista paginada y filtrada
+   * {@link PeticionEvaluacionWithIsEliminable} de una persona responsable de
+   * memorias o creador de peticiones de evaluacion
    * 
    * @param query      Criterios de búsqueda
    * @param pageable   datos paginación
    * @param personaRef usuario
-   * @return las entidades {@link PeticionEvaluacion}
+   * @return las entidades {@link PeticionEvaluacionWithIsEliminable}
    */
-  Page<PeticionEvaluacion> findAllPeticionesWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
+  Page<PeticionEvaluacionWithIsEliminable> findAllPeticionesWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
       List<QueryCriteria> query, Pageable pageable, String personaRef);
 
 }

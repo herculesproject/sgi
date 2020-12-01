@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.crue.hercules.sgi.eti.dto.EquipoTrabajoWithIsEliminable;
 import org.crue.hercules.sgi.eti.dto.MemoriaPeticionEvaluacion;
+import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.dto.TareaWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.EquipoTrabajoNotFoundException;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
@@ -80,19 +81,21 @@ public class PeticionEvaluacionController {
   }
 
   /**
-   * Devuelve una lista paginada y filtrada {@link PeticionEvaluacion}.
+   * Devuelve una lista paginada y filtrada
+   * {@link PeticionEvaluacionWithIsEliminable}.
    * 
    * @param query  filtro de {@link QueryCriteria}.
    * @param paging pageable
-   * @return la lista de entidades {@link PeticionEvaluacion} paginadas.
+   * @return la lista de entidades {@link PeticionEvaluacionWithIsEliminable}
+   *         paginadas.
    */
   @GetMapping()
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-VR-INV', 'ETI-PEV-V')")
-  ResponseEntity<Page<PeticionEvaluacion>> findAll(
+  ResponseEntity<Page<PeticionEvaluacionWithIsEliminable>> findAll(
       @RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging) {
     log.debug("findAll(List<QueryCriteria> query,Pageable paging) - start");
-    Page<PeticionEvaluacion> page = service
+    Page<PeticionEvaluacionWithIsEliminable> page = service
         .findAllPeticionesWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(query, paging, null);
 
     if (page.isEmpty()) {
@@ -392,12 +395,12 @@ public class PeticionEvaluacionController {
    */
   @GetMapping("/memorias")
   @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-PEV-VR-INV', 'ETI-PEV-V')")
-  ResponseEntity<Page<PeticionEvaluacion>> findAllPeticionEvaluacionMemoria(
+  ResponseEntity<Page<PeticionEvaluacionWithIsEliminable>> findAllPeticionEvaluacionMemoria(
       @RequestParam(name = "q", required = false) List<QueryCriteria> query,
       @RequestPageable(sort = "s") Pageable paging, Authentication authentication) {
     log.debug("findAllPeticionEvaluacionMemoria(List<QueryCriteria> query,Pageable paging) - start");
     String personaRef = authentication.getName();
-    Page<PeticionEvaluacion> page = service
+    Page<PeticionEvaluacionWithIsEliminable> page = service
         .findAllPeticionesWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(query, paging, personaRef);
 
     if (page.isEmpty()) {

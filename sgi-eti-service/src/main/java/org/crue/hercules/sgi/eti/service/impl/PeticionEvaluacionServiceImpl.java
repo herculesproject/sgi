@@ -1,6 +1,8 @@
 package org.crue.hercules.sgi.eti.service.impl;
 
 import java.util.List;
+
+import org.crue.hercules.sgi.eti.dto.PeticionEvaluacionWithIsEliminable;
 import org.crue.hercules.sgi.eti.exceptions.PeticionEvaluacionNotFoundException;
 import org.crue.hercules.sgi.eti.model.Memoria;
 import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
@@ -204,7 +206,7 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
    * @return las entidades {@link PeticionEvaluacion}
    */
   @Override
-  public Page<PeticionEvaluacion> findAllPeticionesWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
+  public Page<PeticionEvaluacionWithIsEliminable> findAllPeticionesWithPersonaRefCreadorPeticionesEvaluacionOrResponsableMemoria(
       List<QueryCriteria> query, Pageable pageable, String personaRef) {
     log.debug(
         "findAllPeticionEvaluacionMemoria(List<QueryCriteria> query, Pageable pageable, String personaRef) - start");
@@ -214,8 +216,8 @@ public class PeticionEvaluacionServiceImpl implements PeticionEvaluacionService 
       specsMemoria = Specification.where(specByQueryMem);
     }
 
-    Page<PeticionEvaluacion> returnValue = peticionEvaluacionRepository.findAllPeticionEvaluacionMemoria(specsMemoria,
-        pageable, personaRef);
+    Page<PeticionEvaluacionWithIsEliminable> returnValue = peticionEvaluacionRepository
+        .findAllPeticionEvaluacionMemoria(specsMemoria, pageable, personaRef);
     log.debug(
         "findAllPeticionEvaluacionMemoria(List<QueryCriteria> query, Pageable pageable,  String personaRef) - end");
     return returnValue;
