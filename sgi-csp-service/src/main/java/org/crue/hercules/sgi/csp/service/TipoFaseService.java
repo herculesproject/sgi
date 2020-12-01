@@ -2,7 +2,6 @@ package org.crue.hercules.sgi.csp.service;
 
 import java.util.List;
 
-import org.crue.hercules.sgi.csp.exceptions.TipoFaseNotFoundException;
 import org.crue.hercules.sgi.csp.model.TipoFase;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.springframework.data.domain.Page;
@@ -58,11 +57,19 @@ public interface TipoFaseService {
   TipoFase findById(Long id);
 
   /**
-   * Desactiva el {@link TipoFase} por id.
+   * Reactiva el {@link TipoFase}.
    *
-   * @param id el id de la entidad {@link TipoFase}.
+   * @param id Id del {@link TipoFase}.
    * @return la entidad {@link TipoFase} persistida.
    */
-  TipoFase disable(Long id) throws TipoFaseNotFoundException;
+  TipoFase enable(Long id);
+
+  /**
+   * Desactiva el {@link TipoFase}.
+   *
+   * @param id Id del {@link TipoFase}.
+   * @return la entidad {@link TipoFase} persistida.
+   */
+  TipoFase disable(Long id);
 
 }

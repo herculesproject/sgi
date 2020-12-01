@@ -31,6 +31,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class ModeloEjecucionIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
+  private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
   private static final String MODELO_EJECUCION_CONTROLLER_BASE_PATH = "/modeloejecuciones";
 
   private HttpEntity<ModeloEjecucion> buildRequest(HttpHeaders headers, ModeloEjecucion entity) throws Exception {
@@ -88,14 +90,37 @@ public class ModeloEjecucionIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void delete_Return204() throws Exception {
+  public void reactivar_ReturnModeloEjecucion() throws Exception {
     Long idModeloEjecucion = 1L;
 
     final ResponseEntity<ModeloEjecucion> response = restTemplate.exchange(
-        MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, HttpMethod.DELETE, buildRequest(null, null),
-        ModeloEjecucion.class, idModeloEjecucion);
+        MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null), ModeloEjecucion.class, idModeloEjecucion);
 
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    ModeloEjecucion modeloEjecucionDisabled = response.getBody();
+    Assertions.assertThat(modeloEjecucionDisabled.getId()).as("getId()").isEqualTo(idModeloEjecucion);
+    Assertions.assertThat(modeloEjecucionDisabled.getNombre()).as("getNombre()").isEqualTo("nombre-1");
+    Assertions.assertThat(modeloEjecucionDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(modeloEjecucionDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void desactivar_ReturnModeloEjecucion() throws Exception {
+    Long idModeloEjecucion = 1L;
+
+    final ResponseEntity<ModeloEjecucion> response = restTemplate.exchange(
+        MODELO_EJECUCION_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null), ModeloEjecucion.class, idModeloEjecucion);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    ModeloEjecucion modeloEjecucionDisabled = response.getBody();
+    Assertions.assertThat(modeloEjecucionDisabled.getId()).as("getId()").isEqualTo(idModeloEjecucion);
+    Assertions.assertThat(modeloEjecucionDisabled.getNombre()).as("getNombre()").isEqualTo("nombre-1");
+    Assertions.assertThat(modeloEjecucionDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(modeloEjecucionDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.FALSE);
   }
 
   @Sql

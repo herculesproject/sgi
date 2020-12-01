@@ -29,6 +29,14 @@ public interface TipoDocumentoService {
   TipoDocumento update(TipoDocumento tipoDocumentoActualizar);
 
   /**
+   * Reactiva el {@link TipoDocumento}.
+   *
+   * @param id Id del {@link TipoDocumento}.
+   * @return la entidad {@link TipoDocumento} persistida.
+   */
+  TipoDocumento enable(Long id);
+
+  /**
    * Desactiva el {@link TipoDocumento}.
    *
    * @param id Id del {@link TipoDocumento}.

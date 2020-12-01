@@ -30,6 +30,14 @@ public interface ModeloEjecucionService {
   ModeloEjecucion update(ModeloEjecucion modeloEjecucionActualizar);
 
   /**
+   * Reactiva el {@link ModeloEjecucion}.
+   *
+   * @param id Id del {@link ModeloEjecucion}.
+   * @return la entidad {@link ModeloEjecucion} persistida.
+   */
+  ModeloEjecucion enable(Long id);
+
+  /**
    * Desactiva el {@link ModeloEjecucion}.
    *
    * @param id Id del {@link ModeloEjecucion}.

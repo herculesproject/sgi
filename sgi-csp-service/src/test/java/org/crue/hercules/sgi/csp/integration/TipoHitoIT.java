@@ -25,6 +25,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class TipoHitoIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
+  private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
   private static final String TIPO_HITO_CONTROLLER_BASE_PATH = "/tipohitos";
 
   private HttpEntity<TipoHito> buildRequest(HttpHeaders headers, TipoHito entity) throws Exception {
@@ -78,27 +80,37 @@ public class TipoHitoIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void delete_Return204() throws Exception {
-
+  public void reactivar_ReturnTipoHito() throws Exception {
     Long idTipoHito = 1L;
 
-    final ResponseEntity<TipoHito> response = restTemplate.exchange(TIPO_HITO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.DELETE, buildRequest(null, null), TipoHito.class, idTipoHito);
+    final ResponseEntity<TipoHito> response = restTemplate.exchange(
+        TIPO_HITO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null), TipoHito.class, idTipoHito);
 
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    TipoHito tipoHitoDisabled = response.getBody();
+    Assertions.assertThat(tipoHitoDisabled.getId()).as("getId()").isEqualTo(idTipoHito);
+    Assertions.assertThat(tipoHitoDisabled.getNombre()).as("getNombre()").isEqualTo("nombre1");
+    Assertions.assertThat(tipoHitoDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("descripción1");
+    Assertions.assertThat(tipoHitoDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
   }
 
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void delete_withId_DoNotGetTipoHito() throws Exception {
+  public void desactivar_ReturnTipoHito() throws Exception {
+    Long idTipoHito = 1L;
 
-    final ResponseEntity<TipoHito> response = restTemplate.exchange(TIPO_HITO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.DELETE, buildRequest(null, null), TipoHito.class, 2L);
+    final ResponseEntity<TipoHito> response = restTemplate.exchange(
+        TIPO_HITO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null), TipoHito.class, idTipoHito);
 
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    TipoHito tipoHitoDisabled = response.getBody();
+    Assertions.assertThat(tipoHitoDisabled.getId()).as("getId()").isEqualTo(idTipoHito);
+    Assertions.assertThat(tipoHitoDisabled.getNombre()).as("getNombre()").isEqualTo("nombre1");
+    Assertions.assertThat(tipoHitoDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("descripción1");
+    Assertions.assertThat(tipoHitoDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.FALSE);
   }
 
   @Sql

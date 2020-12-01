@@ -42,7 +42,7 @@ public class TipoHitoServiceImpl implements TipoHitoService {
 
     Assert.isNull(tipoHito.getId(), "TipoHito id tiene que ser null para crear un nuevo tipoHito");
     Assert.isTrue(!(tipoHitoRepository.findByNombreAndActivoIsTrue(tipoHito.getNombre()).isPresent()),
-        "Ya existe un TipoHito activo con el nombre " + tipoHito.getNombre());
+        "Ya existe un TipoHito activo con el nombre '" + tipoHito.getNombre() + "'");
 
     tipoHito.setActivo(Boolean.TRUE);
     TipoHito returnValue = tipoHitoRepository.save(tipoHito);
@@ -65,13 +65,13 @@ public class TipoHitoServiceImpl implements TipoHitoService {
     Assert.notNull(tipoHitoActualizar.getId(), "TipoHito id no puede ser null para actualizar");
     tipoHitoRepository.findByNombreAndActivoIsTrue(tipoHitoActualizar.getNombre()).ifPresent((tipoHitoExistente) -> {
       Assert.isTrue(tipoHitoActualizar.getId() == tipoHitoExistente.getId(),
-          "Ya existe un TipoHito activo con el nombre " + tipoHitoExistente.getNombre());
+          "Ya existe un TipoHito activo con el nombre '" + tipoHitoExistente.getNombre() + "'");
     });
 
     return tipoHitoRepository.findById(tipoHitoActualizar.getId()).map(tipoHito -> {
       tipoHito.setNombre(tipoHitoActualizar.getNombre());
       tipoHito.setDescripcion(tipoHitoActualizar.getDescripcion());
-      tipoHito.setActivo(tipoHitoActualizar.getActivo());
+
       TipoHito returnValue = tipoHitoRepository.save(tipoHito);
       log.debug("update(TipoHito tipoHitoActualizar) - end");
       return returnValue;
@@ -133,24 +133,56 @@ public class TipoHitoServiceImpl implements TipoHitoService {
   }
 
   /**
-   * Elimina el {@link TipoHito} por id.
+   * Reactiva el {@link TipoHito}.
    *
-   * @param id el id de la entidad {@link TipoHito}.
+   * @param id Id del {@link TipoHito}.
+   * @return la entidad {@link TipoHito} persistida.
    */
   @Override
   @Transactional
-  public TipoHito disable(Long id) throws TipoHitoNotFoundException {
-    log.debug("disable(Long id) start");
-    Assert.notNull(id, "El id no puede ser nulo");
+  public TipoHito enable(Long id) {
+    log.debug("enable(Long id) - start");
+
+    Assert.notNull(id, "TipoHito id no puede ser null para reactivar un TipoHito");
 
     return tipoHitoRepository.findById(id).map(tipoHito -> {
-      tipoHito.setActivo(false);
+      if (tipoHito.getActivo()) {
+        return tipoHito;
+      }
 
+      Assert.isTrue(!(tipoHitoRepository.findByNombreAndActivoIsTrue(tipoHito.getNombre()).isPresent()),
+          "Ya existe un TipoHito activo con el nombre '" + tipoHito.getNombre() + "'");
+
+      tipoHito.setActivo(true);
+      TipoHito returnValue = tipoHitoRepository.save(tipoHito);
+      log.debug("enable(Long id) - end");
+      return returnValue;
+    }).orElseThrow(() -> new TipoHitoNotFoundException(id));
+  }
+
+  /**
+   * Desactiva el {@link TipoHito}.
+   *
+   * @param id Id del {@link TipoHito}.
+   * @return la entidad {@link TipoHito} persistida.
+   */
+  @Override
+  @Transactional
+  public TipoHito disable(Long id) {
+    log.debug("disable(Long id) - start");
+
+    Assert.notNull(id, "TipoHito id no puede ser null para desactivar un TipoHito");
+
+    return tipoHitoRepository.findById(id).map(tipoHito -> {
+      if (!tipoHito.getActivo()) {
+        return tipoHito;
+      }
+
+      tipoHito.setActivo(false);
       TipoHito returnValue = tipoHitoRepository.save(tipoHito);
       log.debug("disable(Long id) - end");
       return returnValue;
     }).orElseThrow(() -> new TipoHitoNotFoundException(id));
-
   }
 
 }

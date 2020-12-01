@@ -45,7 +45,7 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
 
     Assert.isNull(tipoDocumento.getId(), "TipoDocumento id tiene que ser null para crear un nuevo TipoDocumento");
     Assert.isTrue(!(tipoDocumentoRepository.findByNombreAndActivoIsTrue(tipoDocumento.getNombre()).isPresent()),
-        "Ya existe un TipoDocumento activo con el nombre " + tipoDocumento.getNombre());
+        "Ya existe un TipoDocumento activo con el nombre '" + tipoDocumento.getNombre() + "'");
 
     tipoDocumento.setActivo(Boolean.TRUE);
     TipoDocumento returnValue = tipoDocumentoRepository.save(tipoDocumento);
@@ -70,18 +70,45 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
     tipoDocumentoRepository.findByNombreAndActivoIsTrue(tipoDocumentoActualizar.getNombre())
         .ifPresent((tipoDocumentoExistente) -> {
           Assert.isTrue(tipoDocumentoActualizar.getId() == tipoDocumentoExistente.getId(),
-              "Ya existe un TipoDocumento activo con el nombre " + tipoDocumentoExistente.getNombre());
+              "Ya existe un TipoDocumento activo con el nombre '" + tipoDocumentoExistente.getNombre() + "'");
         });
 
     return tipoDocumentoRepository.findById(tipoDocumentoActualizar.getId()).map(tipoDocumento -> {
       tipoDocumento.setNombre(tipoDocumentoActualizar.getNombre());
       tipoDocumento.setDescripcion(tipoDocumentoActualizar.getDescripcion());
-      tipoDocumento.setActivo(tipoDocumentoActualizar.getActivo());
 
       TipoDocumento returnValue = tipoDocumentoRepository.save(tipoDocumento);
       log.debug("update(TipoDocumento tipoDocumento) - end");
       return returnValue;
     }).orElseThrow(() -> new TipoDocumentoNotFoundException(tipoDocumentoActualizar.getId()));
+  }
+
+  /**
+   * Reactiva el {@link TipoDocumento}.
+   *
+   * @param id Id del {@link TipoDocumento}.
+   * @return la entidad {@link TipoDocumento} persistida.
+   */
+  @Override
+  @Transactional
+  public TipoDocumento enable(Long id) {
+    log.debug("enable(Long id) - start");
+
+    Assert.notNull(id, "TipoDocumento id no puede ser null para reactivar un TipoDocumento");
+
+    return tipoDocumentoRepository.findById(id).map(tipoDocumento -> {
+      if (tipoDocumento.getActivo()) {
+        return tipoDocumento;
+      }
+
+      Assert.isTrue(!(tipoDocumentoRepository.findByNombreAndActivoIsTrue(tipoDocumento.getNombre()).isPresent()),
+          "Ya existe un TipoDocumento activo con el nombre '" + tipoDocumento.getNombre() + "'");
+
+      tipoDocumento.setActivo(true);
+      TipoDocumento returnValue = tipoDocumentoRepository.save(tipoDocumento);
+      log.debug("enable(Long id) - end");
+      return returnValue;
+    }).orElseThrow(() -> new TipoDocumentoNotFoundException(id));
   }
 
   /**
@@ -98,8 +125,11 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
     Assert.notNull(id, "TipoDocumento id no puede ser null para desactivar un TipoDocumento");
 
     return tipoDocumentoRepository.findById(id).map(tipoDocumento -> {
-      tipoDocumento.setActivo(false);
+      if (!tipoDocumento.getActivo()) {
+        return tipoDocumento;
+      }
 
+      tipoDocumento.setActivo(false);
       TipoDocumento returnValue = tipoDocumentoRepository.save(tipoDocumento);
       log.debug("disable(Long id) - end");
       return returnValue;

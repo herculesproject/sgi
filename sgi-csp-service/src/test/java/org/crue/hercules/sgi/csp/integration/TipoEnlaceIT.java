@@ -25,6 +25,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class TipoEnlaceIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
+  private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
   private static final String CONTROLLER_BASE_PATH = "/tipoenlaces";
 
   private HttpEntity<TipoEnlace> buildRequest(HttpHeaders headers, TipoEnlace entity) throws Exception {
@@ -83,17 +85,37 @@ public class TipoEnlaceIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void delete_Return204() throws Exception {
-    // given: existing TipoEnlace to be disabled
-    Long id = 1L;
+  public void reactivar_ReturnTipoEnlace() throws Exception {
+    Long idTipoEnlace = 1L;
 
-    // when: disable TipoEnlace
-    final ResponseEntity<TipoEnlace> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.DELETE, buildRequest(null, null), TipoEnlace.class, id);
+    final ResponseEntity<TipoEnlace> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, HttpMethod.PATCH, buildRequest(null, null),
+        TipoEnlace.class, idTipoEnlace);
 
-    // then: TipoEnlace is disabled
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    TipoEnlace tipoEnlaceDisabled = response.getBody();
+    Assertions.assertThat(tipoEnlaceDisabled.getId()).as("getId()").isEqualTo(idTipoEnlace);
+    Assertions.assertThat(tipoEnlaceDisabled.getNombre()).as("getNombre()").isEqualTo("nombre-1");
+    Assertions.assertThat(tipoEnlaceDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(tipoEnlaceDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
+  }
 
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void desactivar_ReturnTipoEnlace() throws Exception {
+    Long idTipoEnlace = 1L;
+
+    final ResponseEntity<TipoEnlace> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null), TipoEnlace.class, idTipoEnlace);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    TipoEnlace tipoEnlaceDisabled = response.getBody();
+    Assertions.assertThat(tipoEnlaceDisabled.getId()).as("getId()").isEqualTo(idTipoEnlace);
+    Assertions.assertThat(tipoEnlaceDisabled.getNombre()).as("getNombre()").isEqualTo("nombre-1");
+    Assertions.assertThat(tipoEnlaceDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(tipoEnlaceDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.FALSE);
   }
 
   @Sql

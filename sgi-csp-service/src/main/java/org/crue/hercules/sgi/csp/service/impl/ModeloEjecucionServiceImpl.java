@@ -45,7 +45,7 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
 
     Assert.isNull(modeloEjecucion.getId(), "ModeloEjecucion id tiene que ser null para crear un nuevo ModeloEjecucion");
     Assert.isTrue(!(modeloEjecucionRepository.findByNombreAndActivoIsTrue(modeloEjecucion.getNombre()).isPresent()),
-        "Ya existe un ModeloEjecucion activo con el nombre " + modeloEjecucion.getNombre());
+        "Ya existe un ModeloEjecucion activo con el nombre '" + modeloEjecucion.getNombre() + "'");
 
     modeloEjecucion.setActivo(true);
 
@@ -72,18 +72,45 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
     modeloEjecucionRepository.findByNombreAndActivoIsTrue(modeloEjecucionActualizar.getNombre())
         .ifPresent((modeloEjecucionExistente) -> {
           Assert.isTrue(modeloEjecucionActualizar.getId() == modeloEjecucionExistente.getId(),
-              "Ya existe un ModeloEjecucion activo con el nombre " + modeloEjecucionExistente.getNombre());
+              "Ya existe un ModeloEjecucion activo con el nombre '" + modeloEjecucionExistente.getNombre() + "'");
         });
 
     return modeloEjecucionRepository.findById(modeloEjecucionActualizar.getId()).map(modeloEjecucion -> {
       modeloEjecucion.setNombre(modeloEjecucionActualizar.getNombre());
       modeloEjecucion.setDescripcion(modeloEjecucionActualizar.getDescripcion());
-      modeloEjecucion.setActivo(modeloEjecucionActualizar.getActivo());
 
       ModeloEjecucion returnValue = modeloEjecucionRepository.save(modeloEjecucion);
       log.debug("update(ModeloEjecucion modeloEjecucionActualizar) - end");
       return returnValue;
     }).orElseThrow(() -> new ModeloEjecucionNotFoundException(modeloEjecucionActualizar.getId()));
+  }
+
+  /**
+   * Reactiva el {@link ModeloEjecucion}.
+   *
+   * @param id Id del {@link ModeloEjecucion}.
+   * @return la entidad {@link ModeloEjecucion} persistida.
+   */
+  @Override
+  @Transactional
+  public ModeloEjecucion enable(Long id) {
+    log.debug("enable(Long id) - start");
+
+    Assert.notNull(id, "ModeloEjecucion id no puede ser null para reactivar un ModeloEjecucion");
+
+    return modeloEjecucionRepository.findById(id).map(modeloEjecucion -> {
+      if (modeloEjecucion.getActivo()) {
+        return modeloEjecucion;
+      }
+
+      Assert.isTrue(!(modeloEjecucionRepository.findByNombreAndActivoIsTrue(modeloEjecucion.getNombre()).isPresent()),
+          "Ya existe un ModeloEjecucion activo con el nombre '" + modeloEjecucion.getNombre() + "'");
+
+      modeloEjecucion.setActivo(true);
+      ModeloEjecucion returnValue = modeloEjecucionRepository.save(modeloEjecucion);
+      log.debug("enable(Long id) - end");
+      return returnValue;
+    }).orElseThrow(() -> new ModeloEjecucionNotFoundException(id));
   }
 
   /**
@@ -100,8 +127,11 @@ public class ModeloEjecucionServiceImpl implements ModeloEjecucionService {
     Assert.notNull(id, "ModeloEjecucion id no puede ser null para desactivar un ModeloEjecucion");
 
     return modeloEjecucionRepository.findById(id).map(modeloEjecucion -> {
-      modeloEjecucion.setActivo(false);
+      if (!modeloEjecucion.getActivo()) {
+        return modeloEjecucion;
+      }
 
+      modeloEjecucion.setActivo(false);
       ModeloEjecucion returnValue = modeloEjecucionRepository.save(modeloEjecucion);
       log.debug("disable(Long id) - end");
       return returnValue;

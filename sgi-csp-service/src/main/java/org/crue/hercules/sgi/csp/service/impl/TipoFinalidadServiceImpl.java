@@ -45,7 +45,7 @@ public class TipoFinalidadServiceImpl implements TipoFinalidadService {
 
     Assert.isNull(tipoFinalidad.getId(), "Id tiene que ser null para crear TipoFinalidad");
     Assert.isTrue(!(repository.findByNombreAndActivoIsTrue(tipoFinalidad.getNombre()).isPresent()),
-        "Ya existe un TipoFinalidad activo con el nombre " + tipoFinalidad.getNombre());
+        "Ya existe un TipoFinalidad activo con el nombre '" + tipoFinalidad.getNombre() + "'");
 
     tipoFinalidad.setActivo(Boolean.TRUE);
     TipoFinalidad returnValue = repository.save(tipoFinalidad);
@@ -69,18 +69,45 @@ public class TipoFinalidadServiceImpl implements TipoFinalidadService {
     Assert.notNull(tipoFinalidad.getId(), "Id no puede ser null para actualizar TipoFinalidad");
     repository.findByNombreAndActivoIsTrue(tipoFinalidad.getNombre()).ifPresent((tipoFinalidadExistente) -> {
       Assert.isTrue(tipoFinalidad.getId() == tipoFinalidadExistente.getId(),
-          "Ya existe un TipoFinalidad activo con el nombre " + tipoFinalidadExistente.getNombre());
+          "Ya existe un TipoFinalidad activo con el nombre '" + tipoFinalidadExistente.getNombre() + "'");
     });
 
     return repository.findById(tipoFinalidad.getId()).map((data) -> {
       data.setNombre(tipoFinalidad.getNombre());
       data.setDescripcion(tipoFinalidad.getDescripcion());
-      data.setActivo(tipoFinalidad.getActivo());
 
       TipoFinalidad returnValue = repository.save(data);
       log.debug("update(TipoFinalidad tipoFinalidad) - end");
       return returnValue;
     }).orElseThrow(() -> new TipoFinalidadNotFoundException(tipoFinalidad.getId()));
+  }
+
+  /**
+   * Reactiva el {@link TipoFinalidad}.
+   *
+   * @param id Id del {@link TipoFinalidad}.
+   * @return la entidad {@link TipoFinalidad} persistida.
+   */
+  @Override
+  @Transactional
+  public TipoFinalidad enable(Long id) {
+    log.debug("enable(Long id) - start");
+
+    Assert.notNull(id, "TipoFinalidad id no puede ser null para reactivar un TipoFinalidad");
+
+    return repository.findById(id).map(tipoFinalidad -> {
+      if (tipoFinalidad.getActivo()) {
+        return tipoFinalidad;
+      }
+
+      Assert.isTrue(!(repository.findByNombreAndActivoIsTrue(tipoFinalidad.getNombre()).isPresent()),
+          "Ya existe un TipoFinalidad activo con el nombre '" + tipoFinalidad.getNombre() + "'");
+
+      tipoFinalidad.setActivo(true);
+      TipoFinalidad returnValue = repository.save(tipoFinalidad);
+      log.debug("enable(Long id) - end");
+      return returnValue;
+    }).orElseThrow(() -> new TipoFinalidadNotFoundException(id));
   }
 
   /**
@@ -97,8 +124,11 @@ public class TipoFinalidadServiceImpl implements TipoFinalidadService {
     Assert.notNull(id, "TipoFinalidad id no puede ser null para desactivar un TipoFinalidad");
 
     return repository.findById(id).map(tipoFinalidad -> {
-      tipoFinalidad.setActivo(false);
+      if (!tipoFinalidad.getActivo()) {
+        return tipoFinalidad;
+      }
 
+      tipoFinalidad.setActivo(false);
       TipoFinalidad returnValue = repository.save(tipoFinalidad);
       log.debug("disable(Long id) - end");
       return returnValue;

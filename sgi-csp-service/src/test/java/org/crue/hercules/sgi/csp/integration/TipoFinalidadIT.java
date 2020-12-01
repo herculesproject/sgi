@@ -25,6 +25,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class TipoFinalidadIT extends BaseIT {
 
   private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
+  private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
   private static final String CONTROLLER_BASE_PATH = "/tipofinalidades";
 
   private HttpEntity<TipoFinalidad> buildRequest(HttpHeaders headers, TipoFinalidad entity) throws Exception {
@@ -84,17 +86,37 @@ public class TipoFinalidadIT extends BaseIT {
   @Sql
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
-  public void delete_Return204() throws Exception {
-    // given: existing TipoFinalidad to be disabled
-    Long id = 1L;
+  public void reactivar_ReturnTipoFinalidad() throws Exception {
+    Long idTipoFinalidad = 1L;
 
-    // when: disable TipoFinalidad
-    final ResponseEntity<TipoFinalidad> response = restTemplate.exchange(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID,
-        HttpMethod.DELETE, buildRequest(null, null), TipoFinalidad.class, id);
+    final ResponseEntity<TipoFinalidad> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, HttpMethod.PATCH, buildRequest(null, null),
+        TipoFinalidad.class, idTipoFinalidad);
 
-    // then: TipoFinalidad is disabled
-    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    TipoFinalidad tipoFinalidadDisabled = response.getBody();
+    Assertions.assertThat(tipoFinalidadDisabled.getId()).as("getId()").isEqualTo(idTipoFinalidad);
+    Assertions.assertThat(tipoFinalidadDisabled.getNombre()).as("getNombre()").isEqualTo("nombre-1");
+    Assertions.assertThat(tipoFinalidadDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(tipoFinalidadDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
+  }
 
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void desactivar_ReturnTipoFinalidad() throws Exception {
+    Long idTipoFinalidad = 1L;
+
+    final ResponseEntity<TipoFinalidad> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, HttpMethod.PATCH,
+        buildRequest(null, null), TipoFinalidad.class, idTipoFinalidad);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    TipoFinalidad tipoFinalidadDisabled = response.getBody();
+    Assertions.assertThat(tipoFinalidadDisabled.getId()).as("getId()").isEqualTo(idTipoFinalidad);
+    Assertions.assertThat(tipoFinalidadDisabled.getNombre()).as("getNombre()").isEqualTo("nombre-1");
+    Assertions.assertThat(tipoFinalidadDisabled.getDescripcion()).as("getDescripcion()").isEqualTo("descripcion-1");
+    Assertions.assertThat(tipoFinalidadDisabled.getActivo()).as("getActivo()").isEqualTo(Boolean.FALSE);
   }
 
   @Sql

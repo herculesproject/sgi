@@ -42,7 +42,7 @@ public class TipoFaseServiceImpl implements TipoFaseService {
 
     Assert.isNull(tipoFase.getId(), "tipoFase id no puede ser null para crear un nuevo tipoFase");
     Assert.isTrue(!(tipoFaseRepository.findByNombreAndActivoIsTrue(tipoFase.getNombre()).isPresent()),
-        "Ya existe un TipoFase activo con el nombre " + tipoFase.getNombre());
+        "Ya existe un TipoFase activo con el nombre '" + tipoFase.getNombre() + "'");
 
     tipoFase.setActivo(Boolean.TRUE);
     TipoFase returnValue = tipoFaseRepository.save(tipoFase);
@@ -65,13 +65,12 @@ public class TipoFaseServiceImpl implements TipoFaseService {
     Assert.notNull(tipoFaseActualizar.getId(), "TipoFase id no puede ser null para actualizar");
     tipoFaseRepository.findByNombreAndActivoIsTrue(tipoFaseActualizar.getNombre()).ifPresent((tipoFaseExistente) -> {
       Assert.isTrue(tipoFaseActualizar.getId() == tipoFaseExistente.getId(),
-          "Ya existe un TipoFase activo con el nombre " + tipoFaseExistente.getNombre());
+          "Ya existe un TipoFase activo con el nombre '" + tipoFaseExistente.getNombre() + "'");
     });
 
     return tipoFaseRepository.findById(tipoFaseActualizar.getId()).map(tipoFase -> {
       tipoFase.setNombre(tipoFaseActualizar.getNombre());
       tipoFase.setDescripcion(tipoFaseActualizar.getDescripcion());
-      tipoFase.setActivo(tipoFaseActualizar.getActivo());
       TipoFase returnValue = tipoFaseRepository.save(tipoFase);
       log.debug("update(TipoFase tipoFaseActualizar) - end");
       return returnValue;
@@ -136,23 +135,56 @@ public class TipoFaseServiceImpl implements TipoFaseService {
   }
 
   /**
-   * Desactiva el {@link TipoFase} por id.
+   * Reactiva el {@link TipoFase}.
    *
-   * @param id el id de la entidad {@link TipoFase}.
+   * @param id Id del {@link TipoFase}.
+   * @return la entidad {@link TipoFase} persistida.
    */
   @Override
   @Transactional
-  public TipoFase disable(Long id) throws TipoFaseNotFoundException {
-    log.debug("disable(Long id) - start");
-    Assert.notNull(id, "El id no puede ser nulo");
-    return tipoFaseRepository.findById(id).map(tipoFase -> {
-      tipoFase.setActivo(false);
+  public TipoFase enable(Long id) {
+    log.debug("enable(Long id) - start");
 
+    Assert.notNull(id, "TipoFase id no puede ser null para reactivar un TipoFase");
+
+    return tipoFaseRepository.findById(id).map(tipoFase -> {
+      if (tipoFase.getActivo()) {
+        return tipoFase;
+      }
+
+      Assert.isTrue(!(tipoFaseRepository.findByNombreAndActivoIsTrue(tipoFase.getNombre()).isPresent()),
+          "Ya existe un TipoFase activo con el nombre '" + tipoFase.getNombre() + "'");
+
+      tipoFase.setActivo(true);
+      TipoFase returnValue = tipoFaseRepository.save(tipoFase);
+      log.debug("enable(Long id) - end");
+      return returnValue;
+    }).orElseThrow(() -> new TipoFaseNotFoundException(id));
+  }
+
+  /**
+   * Desactiva el {@link TipoFase}.
+   *
+   * @param id Id del {@link TipoFase}.
+   * @return la entidad {@link TipoFase} persistida.
+   */
+  @Override
+  @Transactional
+  public TipoFase disable(Long id) {
+    log.debug("disable(Long id) - start");
+
+    Assert.notNull(id, "TipoFase id no puede ser null para desactivar un TipoFase");
+
+    return tipoFaseRepository.findById(id).map(tipoFase -> {
+      if (!tipoFase.getActivo()) {
+        return tipoFase;
+      }
+
+      tipoFase.setActivo(false);
       TipoFase returnValue = tipoFaseRepository.save(tipoFase);
       log.debug("disable(Long id) - end");
       return returnValue;
     }).orElseThrow(() -> new TipoFaseNotFoundException(id));
-
   }
 
 }

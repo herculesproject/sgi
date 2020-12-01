@@ -41,6 +41,8 @@ public class TipoFinalidadControllerTest extends BaseControllerTest {
   private TipoFinalidadService service;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
+  private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
   private static final String CONTROLLER_BASE_PATH = "/tipofinalidades";
 
   @Test
@@ -149,33 +151,88 @@ public class TipoFinalidadControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TFIN-B" })
-  public void delete_WithExistingId_Return204() throws Exception {
+  @WithMockUser(username = "user", authorities = { "CSP-TFIN-X" })
+  public void reactivar_WithExistingId_ReturnTipoFinalidad() throws Exception {
     // given: existing id
-    TipoFinalidad data = generarMockTipoFinalidad(1L, Boolean.TRUE);
-    BDDMockito.given(service.disable(ArgumentMatchers.<Long>any())).willReturn(data);
+    TipoFinalidad tipoFinalidad = generarMockTipoFinalidad(1L, Boolean.FALSE);
 
-    // when: delete by id
+    BDDMockito.given(service.enable(ArgumentMatchers.<Long>any())).willAnswer((InvocationOnMock invocation) -> {
+      TipoFinalidad tipoFinalidadEnabled = new TipoFinalidad();
+      BeanUtils.copyProperties(tipoFinalidad, tipoFinalidadEnabled);
+      tipoFinalidadEnabled.setActivo(Boolean.TRUE);
+      return tipoFinalidadEnabled;
+    });
+
+    // when: enable by id
     mockMvc
-        .perform(MockMvcRequestBuilders.delete(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, data.getId())
+        .perform(MockMvcRequestBuilders
+            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, tipoFinalidad.getId())
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
-        // then: 204
-        .andExpect(MockMvcResultMatchers.status().isNoContent());
+        // then: return enabled TipoFinalidad
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(tipoFinalidad.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(tipoFinalidad.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(tipoFinalidad.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.TRUE));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TFIN-X" })
+  public void reactivar_NoExistingId_Return404() throws Exception {
+    // given: non existing id
+    Long id = 1L;
+
+    BDDMockito.willThrow(new TipoFinalidadNotFoundException(id)).given(service).enable(ArgumentMatchers.<Long>any());
+
+    // when: enable by non existing id
+    mockMvc
+        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: 404 error
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-TFIN-B" })
-  public void delete_NoExistingId_Return404() throws Exception {
+  public void desactivar_WithExistingId_ReturnTipoFinalidad() throws Exception {
+    // given: existing id
+    Long idBuscado = 1L;
+    TipoFinalidad tipoFinalidad = generarMockTipoFinalidad(idBuscado, Boolean.TRUE);
+
+    BDDMockito.given(service.disable(ArgumentMatchers.<Long>any())).willAnswer((InvocationOnMock invocation) -> {
+      TipoFinalidad tipoFinalidadDisabled = new TipoFinalidad();
+      BeanUtils.copyProperties(tipoFinalidad, tipoFinalidadDisabled);
+      tipoFinalidadDisabled.setActivo(false);
+      return tipoFinalidadDisabled;
+    });
+
+    // when: disable by id
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, idBuscado)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: return disabled TipoFinalidad
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(idBuscado))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(tipoFinalidad.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(tipoFinalidad.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.FALSE));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TFIN-B" })
+  public void desactivar_NoExistingId_Return404() throws Exception {
     // given: non existing id
     Long id = 1L;
-
-    BDDMockito.willThrow(new TipoFinalidadNotFoundException(id)).given(service).findById(ArgumentMatchers.<Long>any());
     BDDMockito.willThrow(new TipoFinalidadNotFoundException(id)).given(service).disable(ArgumentMatchers.<Long>any());
 
-    // when: delete by non existing id
+    // when: disable by non existing id
     mockMvc
-        .perform(MockMvcRequestBuilders.delete(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, id)
+        .perform(MockMvcRequestBuilders.patch(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, id)
             .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())

@@ -12,15 +12,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
@@ -76,17 +75,33 @@ public class TipoFinalidadController {
   }
 
   /**
-   * Desactiva {@link TipoFinalidad} con id indicado.
+   * Reactiva el {@link TipoFinalidad} con id indicado.
    * 
    * @param id Identificador de {@link TipoFinalidad}.
+   * @return {@link TipoFinalidad} actualizado.
    */
-  @DeleteMapping("/{id}")
-  // @PreAuthorize("hasAuthorityForAnyUO('CSP-TFIN-B')")
-  @ResponseStatus(value = HttpStatus.NO_CONTENT)
-  void deleteById(@PathVariable Long id) {
-    log.debug("deleteById(Long id) - start");
-    service.disable(id);
-    log.debug("deleteById(Long id) - end");
+  @PatchMapping("/{id}/reactivar")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-R')")
+  TipoFinalidad reactivar(@PathVariable Long id) {
+    log.debug("reactivar(Long id) - start");
+    TipoFinalidad returnValue = service.enable(id);
+    log.debug("reactivar(Long id) - end");
+    return returnValue;
+  }
+
+  /**
+   * Desactiva el {@link TipoFinalidad} con id indicado.
+   * 
+   * @param id Identificador de {@link TipoFinalidad}.
+   * @return {@link TipoFinalidad} actualizado.
+   */
+  @PatchMapping("/{id}/desactivar")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-ME-B')")
+  TipoFinalidad desactivar(@PathVariable Long id) {
+    log.debug("desactivar(Long id) - start");
+    TipoFinalidad returnValue = service.disable(id);
+    log.debug("desactivar(Long id) - end");
+    return returnValue;
   }
 
   /**

@@ -31,6 +31,14 @@ public interface TipoFinalidadService {
   TipoFinalidad update(final TipoFinalidad tipoFinalidadActualizar);
 
   /**
+   * Reactiva el {@link TipoFinalidad}.
+   *
+   * @param id Id del {@link TipoFinalidad}.
+   * @return la entidad {@link TipoFinalidad} persistida.
+   */
+  TipoFinalidad enable(Long id);
+
+  /**
    * Desactiva el {@link TipoFinalidad}.
    *
    * @param id Id del {@link TipoFinalidad}.

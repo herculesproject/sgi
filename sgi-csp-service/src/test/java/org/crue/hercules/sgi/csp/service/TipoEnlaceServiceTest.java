@@ -94,7 +94,7 @@ public class TipoEnlaceServiceTest extends BaseServiceTest {
         () -> service.create(newData))
         // then: throw exception as Nombre already exists
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un TipoEnlace activo con el nombre %s", newData.getNombre());
+        .hasMessage("Ya existe un TipoEnlace activo con el nombre '%s'", newData.getNombre());
   }
 
   @Test
@@ -167,16 +167,70 @@ public class TipoEnlaceServiceTest extends BaseServiceTest {
         () -> service.update(data))
         // then: throw exception as Nombre already exists
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un TipoEnlace activo con el nombre %s", data.getNombre());
+        .hasMessage("Ya existe un TipoEnlace activo con el nombre '%s'", data.getNombre());
   }
 
   @Test
-  public void disable_WithExistingId_ReturnsTipoEnlace() {
-    // given: existing TipoEnlace
-    TipoEnlace data = generarMockTipoEnlace(1L, Boolean.TRUE);
+  public void enable_ReturnsTipoEnlace() {
+    // given: Un nuevo TipoEnlace inactivo
+    TipoEnlace tipoEnlace = generarMockTipoEnlace(1L, Boolean.FALSE);
 
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(data));
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(tipoEnlace));
+    BDDMockito.given(repository.save(ArgumentMatchers.<TipoEnlace>any())).willAnswer(new Answer<TipoEnlace>() {
+      @Override
+      public TipoEnlace answer(InvocationOnMock invocation) throws Throwable {
+        TipoEnlace givenData = invocation.getArgument(0, TipoEnlace.class);
+        givenData.setActivo(Boolean.TRUE);
+        return givenData;
+      }
+    });
 
+    // when: activamos el TipoEnlace
+    TipoEnlace tipoEnlaceActualizado = service.enable(tipoEnlace.getId());
+
+    // then: El TipoEnlace se activa correctamente.
+    Assertions.assertThat(tipoEnlaceActualizado).as("isNotNull()").isNotNull();
+    Assertions.assertThat(tipoEnlaceActualizado.getId()).as("getId()").isEqualTo(1L);
+    Assertions.assertThat(tipoEnlaceActualizado.getNombre()).as("getNombre()").isEqualTo(tipoEnlace.getNombre());
+    Assertions.assertThat(tipoEnlaceActualizado.getDescripcion()).as("getDescripcion()")
+        .isEqualTo(tipoEnlace.getDescripcion());
+    Assertions.assertThat(tipoEnlaceActualizado.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
+
+  }
+
+  @Test
+  public void enable_WithIdNotExist_ThrowsTipoFinanciacionNotFoundException() {
+    // given: Un id de un TipoEnlace que no existe
+    Long idNoExiste = 1L;
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
+    // when: activamos el TipoEnlace
+    // then: Lanza una excepcion porque el TipoEnlace no existe
+    Assertions.assertThatThrownBy(() -> service.enable(idNoExiste)).isInstanceOf(TipoEnlaceNotFoundException.class);
+  }
+
+  @Test
+  public void enable_WithDuplicatedNombre_ThrowsIllegalArgumentException() {
+    // given: Un TipoEnlace inactivo con nombre existente
+    TipoEnlace tipoEnlaceExistente = generarMockTipoEnlace(2L, Boolean.TRUE);
+    TipoEnlace tipoEnlace = generarMockTipoEnlace(1L, Boolean.FALSE);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(tipoEnlace));
+    BDDMockito.given(repository.findByNombreAndActivoIsTrue(ArgumentMatchers.<String>any()))
+        .willReturn(Optional.of(tipoEnlaceExistente));
+
+    // when: activamos el TipoEnlace
+    // then: Lanza una excepcion porque el TipoEnlace no existe
+    Assertions.assertThatThrownBy(() -> service.enable(tipoEnlace.getId())).isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Ya existe un TipoEnlace activo con el nombre '%s'", tipoEnlace.getNombre());
+
+  }
+
+  @Test
+  public void disable_ReturnsTipoEnlace() {
+    // given: Un nuevo TipoEnlace activo
+    TipoEnlace tipoEnlace = generarMockTipoEnlace(1L, Boolean.TRUE);
+
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.of(tipoEnlace));
     BDDMockito.given(repository.save(ArgumentMatchers.<TipoEnlace>any())).willAnswer(new Answer<TipoEnlace>() {
       @Override
       public TipoEnlace answer(InvocationOnMock invocation) throws Throwable {
@@ -186,30 +240,27 @@ public class TipoEnlaceServiceTest extends BaseServiceTest {
       }
     });
 
-    // when: disable TipoEnlace
-    TipoEnlace disabledData = service.disable(data.getId());
+    // when: Desactivamos el TipoEnlace
+    TipoEnlace tipoEnlaceActualizado = service.disable(tipoEnlace.getId());
 
-    // then: TipoEnlace is disabled
-    Assertions.assertThat(disabledData).isNotNull();
-    Assertions.assertThat(disabledData.getId()).isNotNull();
-    Assertions.assertThat(disabledData.getId()).isEqualTo(data.getId());
-    Assertions.assertThat(disabledData.getNombre()).isEqualTo(data.getNombre());
-    Assertions.assertThat(disabledData.getDescripcion()).isEqualTo(data.getDescripcion());
-    Assertions.assertThat(disabledData.getActivo()).isEqualTo(Boolean.FALSE);
+    // then: El TipoEnlace se desactiva correctamente.
+    Assertions.assertThat(tipoEnlaceActualizado).as("isNotNull()").isNotNull();
+    Assertions.assertThat(tipoEnlaceActualizado.getId()).as("getId()").isEqualTo(1L);
+    Assertions.assertThat(tipoEnlaceActualizado.getNombre()).as("getNombre()").isEqualTo(tipoEnlace.getNombre());
+    Assertions.assertThat(tipoEnlaceActualizado.getDescripcion()).as("getDescripcion()")
+        .isEqualTo(tipoEnlace.getDescripcion());
+    Assertions.assertThat(tipoEnlaceActualizado.getActivo()).as("getActivo()").isEqualTo(false);
+
   }
 
   @Test
-  public void disable_WithNoExistingId_ThrowsNotFoundException() throws Exception {
-    // given: no existing id
-    TipoEnlace data = generarMockTipoEnlace(1L, Boolean.TRUE);
-
-    BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.empty());
-
-    Assertions.assertThatThrownBy(
-        // when: update non existing TipoEnlace
-        () -> service.disable(data.getId()))
-        // then: NotFoundException is thrown
-        .isInstanceOf(TipoEnlaceNotFoundException.class);
+  public void disable_WithIdNotExist_ThrowsTipoEnlaceNotFoundException() {
+    // given: Un id de un TipoEnlace que no existe
+    Long idNoExiste = 1L;
+    BDDMockito.given(repository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
+    // when: desactivamos el TipoEnlace
+    // then: Lanza una excepcion porque el TipoEnlace no existe
+    Assertions.assertThatThrownBy(() -> service.disable(idNoExiste)).isInstanceOf(TipoEnlaceNotFoundException.class);
   }
 
   @Test

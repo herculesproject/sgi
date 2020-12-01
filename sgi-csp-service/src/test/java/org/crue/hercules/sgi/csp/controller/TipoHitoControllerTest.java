@@ -16,6 +16,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.springframework.beans.BeanUtils;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
@@ -38,6 +39,8 @@ public class TipoHitoControllerTest extends BaseControllerTest {
   @MockBean
   private TipoHitoService tipoHitoService;
   private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
+  private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
   private static final String TIPO_HITO_CONTROLLER_BASE_PATH = "/tipohitos";
 
   @Test
@@ -310,38 +313,96 @@ public class TipoHitoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-THIT-B" })
-  public void deleteById_Returns204() throws Exception {
-    // given: TipoHito con el id buscado
-    Long idBuscado = 1L;
+  @WithMockUser(username = "user", authorities = { "CSP-THIT-X" })
+  public void reactivar_WithExistingId_ReturnTipoHito() throws Exception {
+    // given: existing id
     TipoHito tipoHito = generarMockTipoHito(1L);
+    tipoHito.setActivo(Boolean.FALSE);
+    BDDMockito.given(tipoHitoService.enable(ArgumentMatchers.<Long>any())).willAnswer((InvocationOnMock invocation) -> {
+      TipoHito tipoHitoEnabled = new TipoHito();
+      BeanUtils.copyProperties(tipoHito, tipoHitoEnabled);
+      tipoHitoEnabled.setActivo(Boolean.TRUE);
+      return tipoHitoEnabled;
+    });
 
-    BDDMockito.given(tipoHitoService.disable(ArgumentMatchers.<Long>any())).willReturn(tipoHito);
-
-    // when: Eliminamos el TipoHito por su id
+    // when: enable by id
     mockMvc
-        .perform(MockMvcRequestBuilders.delete(TIPO_HITO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, idBuscado)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .perform(MockMvcRequestBuilders
+            .patch(TIPO_HITO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, tipoHito.getId())
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
-        // then: Devuelve un 204
-        .andExpect(MockMvcResultMatchers.status().isNoContent());
+        // then: return enabled TipoHito
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(tipoHito.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(tipoHito.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(tipoHito.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.TRUE));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-THIT-X" })
+  public void reactivar_NoExistingId_Return404() throws Exception {
+    // given: non existing id
+    Long id = 1L;
+
+    BDDMockito.willThrow(new TipoHitoNotFoundException(id)).given(tipoHitoService).enable(ArgumentMatchers.<Long>any());
+
+    // when: enable by non existing id
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .patch(TIPO_HITO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: 404 error
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-THIT-B" })
-  public void deleteById_WithIdNotExist_Returns404() throws Exception {
-    // given: Ningun TipoHito con el id buscado
+  public void desactivar_WithExistingId_ReturnTipoHito() throws Exception {
+    // given: existing id
     Long idBuscado = 1L;
-    BDDMockito.given(tipoHitoService.disable(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
-      throw new TipoHitoNotFoundException(invocation.getArgument(0));
-    });
+    TipoHito tipoHito = generarMockTipoHito(idBuscado);
 
-    // when: Eliminamos el TipoHito por su id
+    BDDMockito.given(tipoHitoService.disable(ArgumentMatchers.<Long>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          TipoHito tipoHitoDisabled = new TipoHito();
+          BeanUtils.copyProperties(tipoHito, tipoHitoDisabled);
+          tipoHitoDisabled.setActivo(false);
+          return tipoHitoDisabled;
+        });
+
+    // when: disable by id
     mockMvc
-        .perform(MockMvcRequestBuilders.delete(TIPO_HITO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, idBuscado)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .perform(MockMvcRequestBuilders
+            .patch(TIPO_HITO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, idBuscado)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
-        // then: Devuelve un 404
+        // then: return disabled TipoHito
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(idBuscado))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(tipoHito.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(tipoHito.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.FALSE));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-THIT-B" })
+  public void desactivar_NoExistingId_Return404() throws Exception {
+    // given: non existing id
+    Long id = 1L;
+    BDDMockito.willThrow(new TipoHitoNotFoundException(id)).given(tipoHitoService)
+        .disable(ArgumentMatchers.<Long>any());
+
+    // when: disable by non existing id
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .patch(TIPO_HITO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: 404 error
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 

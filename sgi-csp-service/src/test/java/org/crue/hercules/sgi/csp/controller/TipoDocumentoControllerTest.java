@@ -16,6 +16,7 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.springframework.beans.BeanUtils;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
@@ -39,6 +40,8 @@ public class TipoDocumentoControllerTest extends BaseControllerTest {
   private TipoDocumentoService tipoDocumentoService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
+  private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
+  private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
   private static final String TIPO_DOCUMENTO_CONTROLLER_BASE_PATH = "/tipodocumentos";
 
   @Test
@@ -153,38 +156,99 @@ public class TipoDocumentoControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @WithMockUser(username = "user", authorities = { "CSP-TDOC-B" })
-  public void deleteById_Returns204() throws Exception {
-    // given: TipoDocumento con el id buscado
-    Long idBuscado = 1L;
+  @WithMockUser(username = "user", authorities = { "CSP-TDOC-X" })
+  public void reactivar_WithExistingId_ReturnTipoDocumento() throws Exception {
+    // given: existing id
     TipoDocumento tipoDocumento = generarMockTipoDocumento(1L);
+    tipoDocumento.setActivo(Boolean.FALSE);
+    BDDMockito.given(tipoDocumentoService.enable(ArgumentMatchers.<Long>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          TipoDocumento tipoDocumentoEnabled = new TipoDocumento();
+          BeanUtils.copyProperties(tipoDocumento, tipoDocumentoEnabled);
+          tipoDocumentoEnabled.setActivo(Boolean.TRUE);
+          return tipoDocumentoEnabled;
+        });
 
-    BDDMockito.given(tipoDocumentoService.disable(ArgumentMatchers.<Long>any())).willReturn(tipoDocumento);
-
-    // when: Eliminamos el TipoDocumento por su id
+    // when: enable by id
     mockMvc
-        .perform(MockMvcRequestBuilders.delete(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, idBuscado)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .perform(MockMvcRequestBuilders
+            .patch(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR,
+                tipoDocumento.getId())
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
-        // then: Devuelve un 204
-        .andExpect(MockMvcResultMatchers.status().isNoContent());
+        // then: return enabled TipoDocumento
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(tipoDocumento.getId()))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(tipoDocumento.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(tipoDocumento.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.TRUE));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TDOC-X" })
+  public void reactivar_NoExistingId_Return404() throws Exception {
+    // given: non existing id
+    Long id = 1L;
+
+    BDDMockito.willThrow(new TipoDocumentoNotFoundException(id)).given(tipoDocumentoService)
+        .enable(ArgumentMatchers.<Long>any());
+
+    // when: enable by non existing id
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .patch(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_REACTIVAR, id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: 404 error
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 
   @Test
   @WithMockUser(username = "user", authorities = { "CSP-TDOC-B" })
-  public void deleteById_WithIdNotExist_Returns404() throws Exception {
-    // given: Ningun TipoDocumento con el id buscado
+  public void desactivar_WithExistingId_ReturnTipoDocumento() throws Exception {
+    // given: existing id
     Long idBuscado = 1L;
-    BDDMockito.given(tipoDocumentoService.disable(ArgumentMatchers.anyLong())).will((InvocationOnMock invocation) -> {
-      throw new TipoDocumentoNotFoundException(invocation.getArgument(0));
-    });
+    TipoDocumento tipoDocumento = generarMockTipoDocumento(idBuscado);
 
-    // when: Eliminamos el TipoDocumento por su id
+    BDDMockito.given(tipoDocumentoService.disable(ArgumentMatchers.<Long>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          TipoDocumento tipoDocumentoDisabled = new TipoDocumento();
+          BeanUtils.copyProperties(tipoDocumento, tipoDocumentoDisabled);
+          tipoDocumentoDisabled.setActivo(false);
+          return tipoDocumentoDisabled;
+        });
+
+    // when: disable by id
     mockMvc
-        .perform(MockMvcRequestBuilders.delete(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID, idBuscado)
-            .with(SecurityMockMvcRequestPostProcessors.csrf()))
+        .perform(MockMvcRequestBuilders
+            .patch(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, idBuscado)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON))
         .andDo(MockMvcResultHandlers.print())
-        // then: Devuelve un 404
+        // then: return disabled TipoDocumento
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(idBuscado))
+        .andExpect(MockMvcResultMatchers.jsonPath("nombre").value(tipoDocumento.getNombre()))
+        .andExpect(MockMvcResultMatchers.jsonPath("descripcion").value(tipoDocumento.getDescripcion()))
+        .andExpect(MockMvcResultMatchers.jsonPath("activo").value(Boolean.FALSE));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-TDOC-B" })
+  public void desactivar_NoExistingId_Return404() throws Exception {
+    // given: non existing id
+    Long id = 1L;
+    BDDMockito.willThrow(new TipoDocumentoNotFoundException(id)).given(tipoDocumentoService)
+        .disable(ArgumentMatchers.<Long>any());
+
+    // when: disable by non existing id
+    mockMvc
+        .perform(MockMvcRequestBuilders
+            .patch(TIPO_DOCUMENTO_CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_PARAMETER_DESACTIVAR, id)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: 404 error
         .andExpect(MockMvcResultMatchers.status().isNotFound());
   }
 

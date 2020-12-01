@@ -89,7 +89,7 @@ public class ModeloEjecucionServiceTest extends BaseServiceTest {
     // then: Lanza una excepcion porque hay otro ModeloEjecucion con ese nombre
     Assertions.assertThatThrownBy(() -> modeloEjecucionService.create(modeloEjecucionNew))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un ModeloEjecucion activo con el nombre %s", modeloEjecucionNew.getNombre());
+        .hasMessage("Ya existe un ModeloEjecucion activo con el nombre '%s'", modeloEjecucionNew.getNombre());
   }
 
   @Test
@@ -130,6 +130,69 @@ public class ModeloEjecucionServiceTest extends BaseServiceTest {
   }
 
   @Test
+  public void enable_ReturnsModeloEjecucion() {
+    // given: Un nuevo ModeloEjecucion inactivo
+    ModeloEjecucion modeloEjecucion = generarMockModeloEjecucion(1L);
+    modeloEjecucion.setActivo(Boolean.FALSE);
+
+    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(modeloEjecucion));
+    BDDMockito.given(modeloEjecucionRepository.save(ArgumentMatchers.<ModeloEjecucion>any()))
+        .willAnswer(new Answer<ModeloEjecucion>() {
+          @Override
+          public ModeloEjecucion answer(InvocationOnMock invocation) throws Throwable {
+            ModeloEjecucion givenData = invocation.getArgument(0, ModeloEjecucion.class);
+            givenData.setActivo(Boolean.TRUE);
+            return givenData;
+          }
+        });
+
+    // when: activamos el ModeloEjecucion
+    ModeloEjecucion modeloEjecucionActualizado = modeloEjecucionService.enable(modeloEjecucion.getId());
+
+    // then: El ModeloEjecucion se activa correctamente.
+    Assertions.assertThat(modeloEjecucionActualizado).as("isNotNull()").isNotNull();
+    Assertions.assertThat(modeloEjecucionActualizado.getId()).as("getId()").isEqualTo(1L);
+    Assertions.assertThat(modeloEjecucionActualizado.getNombre()).as("getNombre()")
+        .isEqualTo(modeloEjecucion.getNombre());
+    Assertions.assertThat(modeloEjecucionActualizado.getDescripcion()).as("getDescripcion()")
+        .isEqualTo(modeloEjecucion.getDescripcion());
+    Assertions.assertThat(modeloEjecucionActualizado.getActivo()).as("getActivo()").isEqualTo(Boolean.TRUE);
+
+  }
+
+  @Test
+  public void enable_WithIdNotExist_ThrowsTipoFinanciacionNotFoundException() {
+    // given: Un id de un ModeloEjecucion que no existe
+    Long idNoExiste = 1L;
+    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any())).willReturn(Optional.empty());
+    // when: activamos el ModeloEjecucion
+    // then: Lanza una excepcion porque el ModeloEjecucion no existe
+    Assertions.assertThatThrownBy(() -> modeloEjecucionService.enable(idNoExiste))
+        .isInstanceOf(ModeloEjecucionNotFoundException.class);
+  }
+
+  @Test
+  public void enable_WithDuplicatedNombre_ThrowsIllegalArgumentException() {
+    // given: Un ModeloEjecucion inactivo con nombre existente
+    ModeloEjecucion modeloEjecucionExistente = generarMockModeloEjecucion(2L);
+    ModeloEjecucion modeloEjecucion = generarMockModeloEjecucion(1L);
+    modeloEjecucion.setActivo(Boolean.FALSE);
+
+    BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any()))
+        .willReturn(Optional.of(modeloEjecucion));
+    BDDMockito.given(modeloEjecucionRepository.findByNombreAndActivoIsTrue(ArgumentMatchers.<String>any()))
+        .willReturn(Optional.of(modeloEjecucionExistente));
+
+    // when: activamos el ModeloEjecucion
+    // then: Lanza una excepcion porque el ModeloEjecucion no existe
+    Assertions.assertThatThrownBy(() -> modeloEjecucionService.enable(modeloEjecucion.getId()))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Ya existe un ModeloEjecucion activo con el nombre '%s'", modeloEjecucion.getNombre());
+
+  }
+
+  @Test
   public void disable_ReturnsModeloEjecucion() {
     // given: Un nuevo ModeloEjecucion activo
     ModeloEjecucion modeloEjecucion = generarMockModeloEjecucion(1L);
@@ -137,7 +200,14 @@ public class ModeloEjecucionServiceTest extends BaseServiceTest {
     BDDMockito.given(modeloEjecucionRepository.findById(ArgumentMatchers.<Long>any()))
         .willReturn(Optional.of(modeloEjecucion));
     BDDMockito.given(modeloEjecucionRepository.save(ArgumentMatchers.<ModeloEjecucion>any()))
-        .will((InvocationOnMock invocation) -> invocation.getArgument(0));
+        .willAnswer(new Answer<ModeloEjecucion>() {
+          @Override
+          public ModeloEjecucion answer(InvocationOnMock invocation) throws Throwable {
+            ModeloEjecucion givenData = invocation.getArgument(0, ModeloEjecucion.class);
+            givenData.setActivo(Boolean.FALSE);
+            return givenData;
+          }
+        });
 
     // when: Desactivamos el ModeloEjecucion
     ModeloEjecucion modeloEjecucionActualizado = modeloEjecucionService.disable(modeloEjecucion.getId());
@@ -178,7 +248,7 @@ public class ModeloEjecucionServiceTest extends BaseServiceTest {
     // nombre
     Assertions.assertThatThrownBy(() -> modeloEjecucionService.update(modeloEjecucionUpdated))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("Ya existe un ModeloEjecucion activo con el nombre %s", modeloEjecucionUpdated.getNombre());
+        .hasMessage("Ya existe un ModeloEjecucion activo con el nombre '%s'", modeloEjecucionUpdated.getNombre());
   }
 
   @Test

@@ -30,6 +30,14 @@ public interface TipoEnlaceService {
   TipoEnlace update(final TipoEnlace tipoEnlaceActualizar);
 
   /**
+   * Reactiva el {@link TipoEnlace}.
+   *
+   * @param id Id del {@link TipoEnlace}.
+   * @return la entidad {@link TipoEnlace} persistida.
+   */
+  TipoEnlace enable(Long id);
+
+  /**
    * Desactiva el {@link TipoEnlace}.
    *
    * @param id Id del {@link TipoEnlace}.
