@@ -1,11 +1,14 @@
 package org.crue.hercules.sgi.csp.service.impl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
 import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.ConfiguracionSolicitudNotFoundException;
@@ -323,18 +326,121 @@ public class SolicitudServiceImpl implements SolicitudService {
       query = new ArrayList<>();
     }
 
-    List<QueryCriteria> querySinReferenciaConvocatoria = query.stream()
-        .filter(queryCriteria -> !queryCriteria.getKey().equals("referenciaConvocatoria")).collect(Collectors.toList());
+    List<QueryCriteria> querySolicitud = query.stream()
+        .filter(queryCriteria -> !queryCriteria.getKey().equals("referenciaConvocatoria")
+            && !queryCriteria.getKey().startsWith("convocatoria.configuracionSolicitud")
+            && !queryCriteria.getKey().startsWith("convocatoria.entidadFinanciadora")
+            && !queryCriteria.getKey().startsWith("convocatoria.entidadConvocante"))
+        .collect(Collectors.toList());
 
-    Specification<Solicitud> specByQuery = new QuerySpecification<Solicitud>(querySinReferenciaConvocatoria);
+    Specification<Solicitud> specByQuery = new QuerySpecification<Solicitud>(querySolicitud);
     Specification<Solicitud> specByUnidadGestionRefIn = SolicitudSpecifications.unidadGestionRefIn(unidadGestionRefs);
     Specification<Solicitud> specs = Specification.where(specByUnidadGestionRefIn).and(specByQuery);
 
-    if (query.size() > querySinReferenciaConvocatoria.size()) {
-      String referenciaConvocatoria = query.stream()
-          .filter(queryCriteria -> queryCriteria.getKey().equals("referenciaConvocatoria")).findFirst().get()
-          .getValue();
-      specs = specs.and(SolicitudSpecifications.byReferenciaConvocatoria(referenciaConvocatoria));
+    // Referencia Convocatoria
+    if (query.size() > querySolicitud.size()) {
+      List<QueryCriteria> referenciaConvocatoria = query.stream()
+          .filter(queryCriteria -> queryCriteria.getKey().equals("referenciaConvocatoria"))
+          .collect(Collectors.toList());
+      if (CollectionUtils.isNotEmpty(referenciaConvocatoria)) {
+        specs = specs.and(SolicitudSpecifications.byReferenciaConvocatoria(referenciaConvocatoria.get(0).getValue()));
+      }
+
+    }
+
+    // Fecha de inicio de la convocatoria fase
+    // Desde
+    if (query.size() > querySolicitud.size()) {
+      List<QueryCriteria> fechaInicioFasePresentacionSolicitudes = query.stream()
+          .filter(queryCriteria -> queryCriteria.getKey()
+              .equals("convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaInicio.desde"))
+          .collect(Collectors.toList());
+      if (CollectionUtils.isNotEmpty(fechaInicioFasePresentacionSolicitudes)) {
+        specs = specs.and(SolicitudSpecifications.byFechaInicioDesdeConfiguracionSolicitud(
+            LocalDate.parse(fechaInicioFasePresentacionSolicitudes.get(0).getValue())));
+      }
+    }
+
+    // Hasta
+    if (query.size() > querySolicitud.size()) {
+      List<QueryCriteria> fechaInicioFasePresentacionSolicitudes = query.stream()
+          .filter(queryCriteria -> queryCriteria.getKey()
+              .equals("convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaInicio.hasta"))
+          .collect(Collectors.toList());
+      if (CollectionUtils.isNotEmpty(fechaInicioFasePresentacionSolicitudes)) {
+        specs = specs.and(SolicitudSpecifications.byFechaInicioHastaConfiguracionSolicitud(
+            LocalDate.parse(fechaInicioFasePresentacionSolicitudes.get(0).getValue())));
+      }
+    }
+
+    // Fecha fin de la convocatoria fase
+    // Desde
+    if (query.size() > querySolicitud.size()) {
+      List<QueryCriteria> fechaInicioFasePresentacionSolicitudes = query.stream()
+          .filter(queryCriteria -> queryCriteria.getKey()
+              .equals("convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaFin.desde"))
+          .collect(Collectors.toList());
+      if (CollectionUtils.isNotEmpty(fechaInicioFasePresentacionSolicitudes)) {
+        specs = specs.and(SolicitudSpecifications.byFechaFinDesdeConfiguracionSolicitud(
+            LocalDate.parse(fechaInicioFasePresentacionSolicitudes.get(0).getValue())));
+      }
+    }
+
+    // Hasta
+    if (query.size() > querySolicitud.size()) {
+      List<QueryCriteria> fechaInicioFasePresentacionSolicitudes = query.stream()
+          .filter(queryCriteria -> queryCriteria.getKey()
+              .equals("convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaFin.hasta"))
+          .collect(Collectors.toList());
+      if (CollectionUtils.isNotEmpty(fechaInicioFasePresentacionSolicitudes)) {
+        specs = specs.and(SolicitudSpecifications.byFechaFinHastaConfiguracionSolicitud(
+            LocalDate.parse(fechaInicioFasePresentacionSolicitudes.get(0).getValue())));
+      }
+    }
+
+    // Entidad financiadora
+    if (query.size() > querySolicitud.size()) {
+      List<QueryCriteria> convocatoriaEntidadFinanciadora = query.stream()
+          .filter(queryCriteria -> queryCriteria.getKey().equals("convocatoria.entidadFinanciadora.entidadRef"))
+          .collect(Collectors.toList());
+      if (CollectionUtils.isNotEmpty(convocatoriaEntidadFinanciadora)) {
+        specs = specs.and(SolicitudSpecifications
+            .byConvocatoriaEntidadFinanciadora(convocatoriaEntidadFinanciadora.get(0).getValue()));
+      }
+    }
+
+    // Entidad financiadora fuente financiación
+    if (query.size() > querySolicitud.size()) {
+      List<QueryCriteria> convocatoriaEntidadFinanciadoraFuenteFinanciacionId = query.stream()
+          .filter(
+              queryCriteria -> queryCriteria.getKey().equals("convocatoria.entidadFinanciadora.fuenteFinanciacion.id"))
+          .collect(Collectors.toList());
+      if (CollectionUtils.isNotEmpty(convocatoriaEntidadFinanciadoraFuenteFinanciacionId)) {
+        specs = specs.and(SolicitudSpecifications.byConvocatoriaEntidadFinanciadoraFinanciacionId(
+            Long.valueOf(convocatoriaEntidadFinanciadoraFuenteFinanciacionId.get(0).getValue())));
+      }
+    }
+
+    // Entidad convocante
+    if (query.size() > querySolicitud.size()) {
+      List<QueryCriteria> convocatoriaEntidadConvocante = query.stream()
+          .filter(queryCriteria -> queryCriteria.getKey().equals("convocatoria.entidadConvocante.entidadRef"))
+          .collect(Collectors.toList());
+      if (CollectionUtils.isNotEmpty(convocatoriaEntidadConvocante)) {
+        specs = specs.and(
+            SolicitudSpecifications.byConvocatoriaEntidadConvocante(convocatoriaEntidadConvocante.get(0).getValue()));
+      }
+    }
+
+    // Entidad convocante programa
+    if (query.size() > querySolicitud.size()) {
+      List<QueryCriteria> convocatoriaEntidadConvocanteProgramaId = query.stream()
+          .filter(queryCriteria -> queryCriteria.getKey().equals("convocatoria.entidadConvocante.programa.id"))
+          .collect(Collectors.toList());
+      if (CollectionUtils.isNotEmpty(convocatoriaEntidadConvocanteProgramaId)) {
+        specs = specs.and(SolicitudSpecifications.byConvocatoriaEntidadConvocanteProgramaId(
+            Long.valueOf(convocatoriaEntidadConvocanteProgramaId.get(0).getValue())));
+      }
     }
 
     Page<Solicitud> returnValue = repository.findAll(specs, paging);
