@@ -1,4 +1,5 @@
 -- vacia la bd
+DELETE FROM csp.rol_proyecto;
 DELETE FROM csp.rol_socio;
 DELETE FROM csp.solicitud_modalidad;
 DELETE FROM csp.solicitud;
