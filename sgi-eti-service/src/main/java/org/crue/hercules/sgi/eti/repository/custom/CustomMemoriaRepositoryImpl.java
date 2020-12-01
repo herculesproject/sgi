@@ -206,9 +206,7 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
         root.get(Memoria_.comite), root.get(Memoria_.estadoActual), root.get(Memoria_.requiereRetrospectiva),
         root.get(Memoria_.retrospectiva), getFechaEvaluacion(root, cb, cq).alias("fechaEvaluacion"),
         getFechaLimite(root, cb, cq).alias("fechaLimite"),
-        cb.equal(root.get(Memoria_.personaRef), personaRefConsulta != null ? personaRefConsulta : "")
-            .alias("isResponsable"),
-        root.get(Memoria_.activo));
+        isResponsable(root, cb, cq, personaRefConsulta).isNotNull().alias("isResponsable"), root.get(Memoria_.activo));
 
     cq.where(cb.equal(root.get(Memoria_.peticionEvaluacion).get(PeticionEvaluacion_.id), idPeticionEvaluacion),
         cb.isTrue(root.get(Memoria_.activo)));
@@ -336,9 +334,8 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
     cq.multiselect(root.get(Memoria_.id), root.get(Memoria_.numReferencia), root.get(Memoria_.titulo),
         root.get(Memoria_.comite), root.get(Memoria_.estadoActual),
         getFechaEvaluacion(root, cb, cq).alias("fechaEvaluacion"), getFechaLimite(root, cb, cq).alias("fechaLimite"),
-        cb.equal(root.get(Memoria_.personaRef), personaRefConsulta != null ? personaRefConsulta : "")
-            .alias("isResponsable"),
-        root.get(Memoria_.activo)).distinct(true);
+        isResponsable(root, cb, cq, personaRefConsulta).isNotNull().alias("isResponsable"), root.get(Memoria_.activo))
+        .distinct(true);
 
     cq.where(predicates.toArray(new Predicate[] {}));
 
@@ -395,6 +392,31 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
         "getActaConvocatoria(Root<ConvocatoriaReunion> root, CriteriaBuilder cb, CriteriaQuery<ConvocatoriaReunionDatosGenerales> cq, Long idConvocatoria) - end");
 
     return queryGetIdPeticionEvaluacion;
+  }
+
+  /**
+   * Identifica si es responsable de la memoria el usuario de la consulta
+   * 
+   * @param root               root
+   * @param cb                 criteria builder
+   * @param cq                 criteria query
+   * @param personaRefConsulta usuario de la consulta
+   * @return subquery que la persona es responsable
+   */
+  private Subquery<Memoria> isResponsable(Root<Memoria> root, CriteriaBuilder cb,
+      CriteriaQuery<MemoriaPeticionEvaluacion> cq, String personaRefConsulta) {
+    log.debug("isResponsable : {} - start");
+
+    Subquery<Memoria> queryResponsable = cq.subquery(Memoria.class);
+    Root<Memoria> rootQueryResponsable = queryResponsable.from(Memoria.class);
+
+    queryResponsable.select(rootQueryResponsable).where(
+        cb.equal(rootQueryResponsable.get(Memoria_.id), root.get(Memoria_.id)),
+        cb.equal(root.get(Memoria_.personaRef), personaRefConsulta != null ? personaRefConsulta : ""));
+
+    log.debug("isResponsable : {} - end");
+
+    return queryResponsable;
   }
 
 }

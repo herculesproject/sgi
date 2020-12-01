@@ -376,6 +376,54 @@
       <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M10')" />
       <column name="activo" value="true" />
     </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" value="15" />
+      <column name="nombre" value="Resumen Anónimo no técnico RANT" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M20')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" value="16" />
+      <column name="nombre" value="Solicitud Razonada dirigida al Comité Habilitado y al Órgano Competente" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M20')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" value="17" />
+      <column name="nombre" value="Documentación adicional" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M20')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" value="18" />
+      <column name="nombre" value="Acreditaciones" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" value="19" />
+      <column name="nombre" value="Notificación de uso de Agentes biológicos" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" value="20" />
+      <column name="nombre" value="Seguro de responsabilidad" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" value="21" />
+      <column name="nombre" value="Protocolo de actuación" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
+      <column name="activo" value="true" />
+    </insert>
+    <insert tableName="tipo_documento">
+      <column name="id" value="22" />
+      <column name="nombre" value="Documentación adicional" />
+      <column name="formulario_id" valueComputed="(select id from eti.formulario where nombre='M30')" />
+      <column name="activo" value="true" />
+    </insert>
   </changeSet>
 
   <changeSet context="!unit-test AND !integration-test" author="master" id="0000000000000-tipo_memoria">
