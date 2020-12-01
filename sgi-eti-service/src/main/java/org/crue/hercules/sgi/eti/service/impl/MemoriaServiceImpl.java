@@ -133,7 +133,7 @@ public class MemoriaServiceImpl implements MemoriaService {
     memoria.setRequiereRetrospectiva(Boolean.FALSE);
 
     // Versión
-    memoria.setVersion(1);
+    memoria.setVersion(0);
 
     // Activo
     memoria.setActivo(Boolean.TRUE);
