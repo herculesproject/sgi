@@ -119,7 +119,7 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
    * versión con valor 1 ) o reevaluadas (campo versión con valor > 1 ) que se van
    * a revisar o se han revisado en la reunión de evaluación asociada a la acta.Se
    * obtiene sumando el número de evaluaciones asociadas a la convocatoria del
-   * acta que son de tipo Memoria
+   * acta que son de tipo Memoria y revisión mínima sea false
    * 
    * 
    * @param root      Query root
@@ -144,7 +144,8 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
                 root.get(Acta_.convocatoriaReunion).get(ConvocatoriaReunion_.id)),
             cb.equal(subqRoot.get(Evaluacion_.tipoEvaluacion), tipoEvaluacionMemoria),
             (iniciales) ? cb.equal(subqRoot.get(Evaluacion_.version), 1)
-                : cb.greaterThan(subqRoot.get(Evaluacion_.version), 1)));
+                : cb.greaterThan(subqRoot.get(Evaluacion_.version), 1),
+            cb.equal(subqRoot.get(Evaluacion_.esRevMinima), false)));
 
     log.debug(
         "getNumEvaluaciones(Root<Acta> root, CriteriaBuilder cb, CriteriaQuery<ActaWithNumEvaluaciones> cq, boolean iniciales) - end");
@@ -154,7 +155,7 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
 
   /**
    * Recupera el número evaluaciones que no se encuentren evaluadas, es decir, que
-   * tengan un dictamen.
+   * tengan un dictamen y revisión mínima sea false
    * 
    * @param root Query root
    * @param cb   Criteria builder
@@ -172,7 +173,8 @@ public class CustomActaRepositoryImpl implements CustomActaRepository {
     queryNumEvaluaciones.select(cb.count(subqRoot.get(Evaluacion_.id)))
         .where(cb.and(cb.isNull(subqRoot.get(Evaluacion_.dictamen)), cb.isTrue(subqRoot.get(Evaluacion_.activo)),
             cb.equal(subqRoot.get(Evaluacion_.convocatoriaReunion).get(ConvocatoriaReunion_.id),
-                root.get(Acta_.convocatoriaReunion).get(ConvocatoriaReunion_.id))));
+                root.get(Acta_.convocatoriaReunion).get(ConvocatoriaReunion_.id)),
+            cb.equal(subqRoot.get(Evaluacion_.esRevMinima), false)));
     log.debug(
         "getNumEvaluacionesNoEvaluadas(Root<Acta> root, CriteriaBuilder cb, CriteriaQuery<ActaWithNumEvaluaciones> cq) - end");
     return queryNumEvaluaciones;
