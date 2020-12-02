@@ -3,7 +3,7 @@
   "version": "0.0.1-SNAPSHOT",
   "scripts": {
     "ng": "ng",
-    "start": "node ./generate-config.js && ng serve --host 0.0.0.0 --allowedHosts sgi-webapp",
+    "start": "node ./generate-config.js && ng serve --host 0.0.0.0 --allowedHosts 0.0.0.0 --disableHostCheck",
     "build": "node ./generate-config.js && ng build",
     "test": "node ./generate-config.js && ng test",
     "test-ci": "node ./generate-config.js && ng test --no-watch --no-progress --browsers=ChromeHeadlessCI",
