@@ -102,11 +102,13 @@
             matTooltip="{{'eti.peticionEvaluacion.listado.editar' | translate}}">
             <mat-icon color="primary">border_color</mat-icon>
           </button>
-          <button mat-button color="warn" *sgiHasAuthorityForAnyUO="'ETI-PEV-BR-INV'"
-            matTooltip="{{'eti.peticionEvaluacion.listado.borrar' | translate}}"
-            (click)="borrar(peticionEvaluacion.id, $event)">
-            <mat-icon>highlight_off</mat-icon>
-          </button>
+          <ng-container *ngIf="peticionEvaluacion.eliminable">
+            <button mat-button color="warn" *sgiHasAuthorityForAnyUO="'ETI-PEV-BR-INV'"
+              matTooltip="{{'eti.peticionEvaluacion.listado.borrar' | translate}}"
+              (click)="borrar(peticionEvaluacion.id, $event)">
+              <mat-icon>highlight_off</mat-icon>
+            </button>
+          </ng-container>
         </ng-container>
       </td>
     </ng-container>
