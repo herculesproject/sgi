@@ -292,7 +292,7 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
     this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name,
       `getDatosForm()`, 'start');
     const entidadConvocante = this.data.entidadConvocanteData.entidadConvocante;
-    entidadConvocante.value.entidadRef = this.empresa.personaRef;
+    entidadConvocante.value.entidad = this.empresa;
     const plan = this.formGroup.get('plan').value;
     const programa = this.checkedNode?.programa?.value;
     entidadConvocante.value.programa = programa ? programa : plan;

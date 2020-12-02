@@ -162,12 +162,12 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
         this.loadUnidadGestion();
         return this.convocatoriaService.findAllConvocatoriaEntidadGestora(key).pipe(
           switchMap((listResult) => {
-            const convocatoriasEntidadConvocantes = listResult.items;
-            if (convocatoriasEntidadConvocantes.length > 0) {
-              const entidadRef = convocatoriasEntidadConvocantes[0].entidadRef;
+            const convocatoriasEntidadGestoras = listResult.items;
+            if (convocatoriasEntidadGestoras.length > 0) {
+              const entidadRef = convocatoriasEntidadGestoras[0].entidadRef;
               this.getFormGroup().controls.entidadGestoraRef.setValue(entidadRef);
               this.loadEmpresaEconomica(entidadRef);
-              this.convocatoriaEntidadGestora = convocatoriasEntidadConvocantes[0];
+              this.convocatoriaEntidadGestora = convocatoriasEntidadGestoras[0];
             }
             return of(this.convocatoria);
           })

@@ -263,7 +263,7 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
               }),
               switchMap(convocatoriaListado => {
                 if (convocatoriaListado.entidadFinanciadora.id) {
-                  return this.empresaEconomicaService.findById(convocatoriaListado.entidadConvocante.entidadRef).pipe(
+                  return this.empresaEconomicaService.findById(convocatoriaListado.entidadConvocante.entidad.personaRef).pipe(
                     map(empresaEconomica => {
                       convocatoriaListado.entidadConvocanteEmpresa = empresaEconomica;
                       return empresaEconomica;

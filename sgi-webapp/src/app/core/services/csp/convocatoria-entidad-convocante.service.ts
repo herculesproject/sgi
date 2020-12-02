@@ -29,7 +29,6 @@ export class ConvocatoriaEntidadConvocanteService
       return {
         id: value.id,
         convocatoria: value.convocatoria,
-        entidadRef: value.entidadRef,
         entidad: { personaRef: value.entidadRef } as IEmpresaEconomica,
         programa: value.programa
       };

@@ -83,7 +83,7 @@ export class ConvocatoriaEntidadesConvocantesFragment extends Fragment implement
 
   private loadEmpresaEconomica(data: ConvocatoriaEntidadConvocanteData): Observable<ConvocatoriaEntidadConvocanteData> {
     this.logger.debug(ConvocatoriaEntidadesConvocantesFragment.name, `loadEmpresaEconomica()`, 'start');
-    const entidadRef = data.entidadConvocante.value.entidadRef;
+    const entidadRef = data.entidadConvocante.value.entidad.personaRef;
     return this.empresaEconomicaService.findById(entidadRef).pipe(
       map(empresaEconomica => {
         data.empresaEconomica = empresaEconomica;
