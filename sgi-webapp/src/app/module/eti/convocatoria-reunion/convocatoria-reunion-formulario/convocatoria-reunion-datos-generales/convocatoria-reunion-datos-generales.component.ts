@@ -10,12 +10,11 @@ import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { TipoConvocatoriaReunionService } from '@core/services/eti/tipo-convocatoria-reunion.service';
 import { IEvaluador } from '@core/models/eti/evaluador';
 import { IPersona } from '@core/models/sgp/persona';
-import { FormGroupUtil } from '@core/utils/form-group-util';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { Observable, of, Subscription } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { map, startWith, switchMap, tap } from 'rxjs/operators';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { ConvocatoriaReunionActionService } from '../../convocatoria-reunion.action.service';
 import { FormFragmentComponent } from '@core/component/fragment.component';
@@ -51,14 +50,14 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
 
 
   constructor(
-    protected readonly logger: NGXLogger,
-    private readonly comiteService: ComiteService,
-    private readonly evaluadorService: EvaluadorService,
-    private readonly tipoConvocatoriaReunionService: TipoConvocatoriaReunionService,
-    private readonly snackBarService: SnackBarService,
-    private readonly personaFisicaService: PersonaFisicaService,
-    private readonly actionService: ConvocatoriaReunionActionService,
-    private readonly convocatoriaReunionService: ConvocatoriaReunionService
+    protected logger: NGXLogger,
+    private comiteService: ComiteService,
+    private evaluadorService: EvaluadorService,
+    private tipoConvocatoriaReunionService: TipoConvocatoriaReunionService,
+    private snackBarService: SnackBarService,
+    private personaFisicaService: PersonaFisicaService,
+    private actionService: ConvocatoriaReunionActionService,
+    private convocatoriaReunionService: ConvocatoriaReunionService
   ) {
     super(actionService.FRAGMENT.DATOS_GENERALES, actionService);
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'constructor()', 'start');
@@ -104,7 +103,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
 
   ngOnDestroy() {
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'ngOnDestroy()', 'start');
-    this.subscriptions?.forEach(x => x.unsubscribe());
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'ngOnDestroy()', 'end');
   }
 
@@ -112,63 +111,47 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
    * Recupera un listado de los comites que hay en el sistema.
    */
   private getComites(): void {
-    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
-      'getComites()',
-      'start');
-
-    const comitesSelectSubscription = this.comiteService
-      .findAll()
+    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'getComites()', 'start');
+    const comitesSelectSubscription = this.comiteService.findAll()
       .subscribe(
         (response: SgiRestListResult<IComite>) => {
           this.comites = response.items;
-
           this.filteredComites = this.formGroup.controls.comite.valueChanges
             .pipe(
               startWith(''),
               map(value => this.filterComite(value))
             );
         },
-        () => {
+        (error) => {
           this.snackBarService.showError(MSG_ERROR_LOAD_COMITES);
+          this.logger.error(ConvocatoriaReunionDatosGeneralesComponent.name, 'getComites()', error);
         }
       );
-
     this.subscriptions.push(comitesSelectSubscription);
-
-    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
-      'getComites()',
-      'end');
+    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'getComites()', 'end');
   }
 
   /**
    * Recupera un listado de los tipos de convocatoria reunion que hay en el sistema.
    */
   private getTiposConvocatoriaReunion(): void {
-    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
-      'getTiposConvocatoriaReunion()',
-      'start');
-
-    const tipoConvocatoriaSelectReunionSubscription = this.tipoConvocatoriaReunionService
-      .findAll()
+    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'getTiposConvocatoriaReunion()', 'start');
+    const tipoConvocatoriaSelectReunionSubscription = this.tipoConvocatoriaReunionService.findAll()
       .subscribe(
-        (response: SgiRestListResult<TipoConvocatoriaReunion>) => {
+        (response) => {
           this.tiposConvocatoriaReunion = response.items;
-
           this.filteredTiposConvocatoriaReunion = this.formGroup.controls.tipoConvocatoriaReunion.valueChanges
             .pipe(
               startWith(''),
               map(value => this.filterTipoConvocatoriaReunion(value))
             );
         },
-        () => {
+        (error) => {
           this.snackBarService.showError(MSG_ERROR_LOAD_TIPOS_CONVOCATORIA);
+          this.logger.error(ConvocatoriaReunionDatosGeneralesComponent.name, 'getTiposConvocatoriaReunion()', error);
         });
-
     this.subscriptions.push(tipoConvocatoriaSelectReunionSubscription);
-
-    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
-      'getTiposConvocatoriaReunion()',
-      'end');
+    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'getTiposConvocatoriaReunion()', 'end');
   }
 
 
@@ -176,37 +159,29 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
    * Recupera el listado de convocantes correspondiente al comite seleccionado.
    */
   getConvocantesComite(): void {
-    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
-      'getConvocantesComite()',
-      'start');
-
-    const convocantesSelectSubscription =
-      this.formGroup.controls.comite.valueChanges.pipe(
-        switchMap((comite: IComite | string) => {
-          if (typeof comite === 'string' || !comite.id) {
-            return of([]);
-          }
-          return this.getConvocantes(comite);
-        })
-      ).subscribe(
-        (convocantes: IEvaluador[]) => {
-          this.formFragment.convocantes = convocantes;
-          this.formFragment.evaluadoresComite = convocantes;
-        },
-        () => {
-          this.snackBarService.showError(MSG_ERROR_LOAD_CONVOCANTES);
+    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'getConvocantesComite()', 'start');
+    const convocantesSelectSubscription = this.formGroup.controls.comite.valueChanges.pipe(
+      switchMap((comite: IComite | string) => {
+        if (typeof comite === 'string' || !comite.id) {
+          return of([]);
         }
-      );
-
-
+        return this.getConvocantes(comite);
+      })
+    ).subscribe(
+      (convocantes) => {
+        this.formFragment.evaluadoresComite = convocantes;
+      },
+      (error) => {
+        this.snackBarService.showError(MSG_ERROR_LOAD_CONVOCANTES);
+        this.logger.error(ConvocatoriaReunionDatosGeneralesComponent.name, 'getConvocantesComite()', error);
+      }
+    );
     this.subscriptions.push(convocantesSelectSubscription);
-
-    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
-      'getConvocantesComite()',
-      'end');
+    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'getConvocantesComite()', 'end');
   }
 
   private getConvocantes(comite: IComite): Observable<IEvaluador[]> {
+    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, `getConvocantes(comite: ${comite})`, 'start');
     const filterComite = {
       field: 'comite.id',
       type: SgiRestFilterType.EQUALS,
@@ -214,7 +189,7 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
     };
     return this.evaluadorService.findAll({ filters: [filterComite] })
       .pipe(
-        switchMap((listadoConvocantes: SgiRestListResult<IEvaluador>) => {
+        switchMap((listadoConvocantes) => {
           const personaRefsConvocantes = listadoConvocantes.items.map((convocante: IEvaluador) => convocante.personaRef);
           const convocantesWithDatosPersona$ = this.personaFisicaService.findByPersonasRefs(personaRefsConvocantes)
             .pipe(
@@ -224,10 +199,11 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
             );
           return convocantesWithDatosPersona$;
         }),
-        switchMap((convocantes: IEvaluador[]) => {
+        switchMap((convocantes) => {
           this.getAsistentes(convocantes);
           return of(convocantes);
-        })
+        }),
+        tap(() => this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, `getConvocantes(comite: ${comite})`, 'end'))
       );
   }
 
@@ -238,13 +214,17 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
    * @param evaluadores Evaluadores
    */
   private loadDatosPersona(listado: SgiRestListResult<IPersona>, evaluadores: IEvaluador[]): IEvaluador[] {
+    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
+      `loadDatosPersona(listado: ${listado}, evaluadores: ${evaluadores})`, 'start');
     const personas = listado.items;
-    evaluadores.forEach((convocante: IEvaluador) => {
+    evaluadores.forEach((convocante) => {
       const datosPersonaConvocante = personas.find((persona: IPersona) => convocante.personaRef === persona.personaRef);
       convocante.nombre = datosPersonaConvocante?.nombre;
       convocante.primerApellido = datosPersonaConvocante?.primerApellido;
       convocante.segundoApellido = datosPersonaConvocante?.segundoApellido;
     });
+    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
+      `loadDatosPersona(listado: ${listado}, evaluadores: ${evaluadores})`, 'end');
     return evaluadores;
   }
 
@@ -254,6 +234,8 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
    * @param convocantes Convocantes
    */
   private getAsistentes(convocantes: IEvaluador[]): Observable<SgiRestListResult<IAsistente>> {
+    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
+      `getAsistentes(convocantes: ${convocantes})`, 'start');
     const id = this.actionService?.convocatoriaReunion?.id;
     if (id) {
       return this.convocatoriaReunionService.findAsistentes(id).pipe(
@@ -267,9 +249,13 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
           });
           this.formGroup.get('convocantes').setValue(asistentesFormGroup);
           return of(asistentes);
-        })
+        }),
+        tap(() => this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
+          `getAsistentes(convocantes: ${convocantes})`, 'end'))
       );
     }
+    this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name,
+      `getAsistentes(convocantes: ${convocantes})`, 'end');
     return of();
   }
 
@@ -344,10 +330,8 @@ export class ConvocatoriaReunionDatosGeneralesComponent extends FormFragmentComp
    */
   getDatosConvocantesFormulario(): IEvaluador[] {
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'getDatosConvocantesFormulario()', 'end');
-    const convocantes = FormGroupUtil.getValue(this.formGroup, 'convocantes');
-
+    const convocantes: IEvaluador[] = this.formGroup.controls.convocantes.value;
     this.logger.debug(ConvocatoriaReunionDatosGeneralesComponent.name, 'getDatosConvocantesFormulario()', 'end');
-
     return convocantes;
   }
 }
