@@ -121,8 +121,8 @@
       <th mat-header-cell *matHeaderCellDef> {{'csp.solicitud.listado.acciones' | translate}} </th>
       <td mat-cell *matCellDef="let element;let i=index;">
         <ng-container>
-          <button *ngIf="(element.estado.estado === TipoEstadoSolicitud.BORRADOR && element.activo === true)" mat-button
-            matTooltip="{{'botones.editar' | translate}}" [routerLink]="[element.id]">
+          <button *ngIf="element.activo === true" mat-button matTooltip="{{'botones.editar' | translate}}"
+            [routerLink]="[element.id]">
             <mat-icon color="primary">border_color</mat-icon>
           </button>
         </ng-container>

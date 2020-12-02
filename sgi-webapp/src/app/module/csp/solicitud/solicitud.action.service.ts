@@ -11,6 +11,7 @@ import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service'
 import { NGXLogger } from 'ngx-logger';
 import { SolicitudDatosGeneralesFragment } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.fragment';
 import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 
 
@@ -35,7 +36,8 @@ export class SolicitudActionService extends ActionService {
     empresaEconomicaService: EmpresaEconomicaService,
     personaFisicaService: PersonaFisicaService,
     solicitudModalidadService: SolicitudModalidadService,
-    unidadGestionService: UnidadGestionService
+    unidadGestionService: UnidadGestionService,
+    sgiAuthService: SgiAuthService
   ) {
     super();
     this.solicitud = {} as ISolicitud;
@@ -45,7 +47,7 @@ export class SolicitudActionService extends ActionService {
     }
 
     this.datosGenerales = new SolicitudDatosGeneralesFragment(logger, this.solicitud?.id, solicitudService, configuracionSolicitudService,
-      convocatoriaService, empresaEconomicaService, personaFisicaService, solicitudModalidadService, unidadGestionService);
+      convocatoriaService, empresaEconomicaService, personaFisicaService, solicitudModalidadService, unidadGestionService, sgiAuthService);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
 

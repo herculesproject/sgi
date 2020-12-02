@@ -10,6 +10,7 @@ import { FlexModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SolicitudActionService } from '../../solicitud.action.service';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 describe('SolicitudDatosGeneralesComponent', () => {
   let component: SolicitudDatosGeneralesComponent;
@@ -32,7 +33,8 @@ describe('SolicitudDatosGeneralesComponent', () => {
         RouterTestingModule,
       ],
       providers: [
-        SolicitudActionService
+        SolicitudActionService,
+        SgiAuthService
       ],
     })
       .compileComponents();

@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SharedModule } from '@shared/shared.module';
 import { SolicitudActionService } from '../solicitud.action.service';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 describe('SolicitudEditarComponent', () => {
   let component: SolicitudEditarComponent;
@@ -37,7 +38,8 @@ describe('SolicitudEditarComponent', () => {
         SharedModule
       ],
       providers: [
-        SolicitudActionService
+        SolicitudActionService,
+        SgiAuthService
       ],
     })
       .compileComponents();

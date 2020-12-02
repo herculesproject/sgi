@@ -21,6 +21,7 @@ import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.se
 import { SolicitudModalidadService } from '@core/services/csp/solicitud-modalidad.service';
 import { IConvocatoriaEntidadConvocante } from '@core/models/csp/convocatoria-entidad-convocante';
 import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 
 export interface SolicitudModalidadEntidadConvocanteListado {
@@ -41,6 +42,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
   entidadesConvocantesModalidad$ = new BehaviorSubject<SolicitudModalidadEntidadConvocanteListado[]>([]);
 
   public showComentariosEstado$ = new BehaviorSubject<boolean>(false);
+  public disabledSolicitante = false;
   convocatoriaRequired = false;
   convocatoriaExternaRequired = false;
 
@@ -53,7 +55,8 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     private empresaEconomicaService: EmpresaEconomicaService,
     private personaFisicaService: PersonaFisicaService,
     private solicitudModalidadService: SolicitudModalidadService,
-    private unidadGestionService: UnidadGestionService
+    private unidadGestionService: UnidadGestionService,
+    private sgiAuthService: SgiAuthService
   ) {
     super(key, true);
     this.setComplete(true);
@@ -117,9 +120,9 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       solicitante: new FormControl('', Validators.required),
       convocatoria: new FormControl(''),
       comentariosEstado: new FormControl({ value: '', disabled: true }),
-      convocatoriaExterna: new FormControl({ value: '', disabled: this.isEdit() }),
+      convocatoriaExterna: new FormControl(''),
       tipoFormulario: new FormControl({ value: '', disabled: this.isEdit() }),
-      unidadGestion: new FormControl({ value: '', disabled: this.isEdit() }),
+      unidadGestion: new FormControl({ value: '' }),
       codigoExterno: new FormControl('', Validators.maxLength(50)),
       codigoRegistro: new FormControl({ value: '', disabled: true }),
       observaciones: new FormControl('', Validators.maxLength(2000))
@@ -649,6 +652,50 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       convocatoriaExternaControl.updateValueAndValidity({ emitEvent: false });
       tipoFormularioControl.updateValueAndValidity({ emitEvent: false });
       unidadGestionControl.updateValueAndValidity({ emitEvent: false });
+    } else {
+      // Investigador solo puede modificar en los estados Borrador, Excluida provisional, Denegada provisional
+      // Gestor o administrador solo pued modificar en los estados Borrador,  Presentada, Admitida provisional
+      // Alegada admisión, Admitida definitiva, Concedida provisional, Alegada concesión
+      if (solicitud && ((this.sgiAuthService.hasAuthorityForAnyUO('CSP-SOL-C-INV') &&
+        (solicitud.estado.estado !== TipoEstadoSolicitud.BORRADOR
+          && solicitud.estado.estado !== TipoEstadoSolicitud.EXCLUIDA_PROVISIONAL
+          && solicitud.estado.estado !== TipoEstadoSolicitud.DENEGADA_PROVISIONAL))
+        || (this.sgiAuthService.hasAuthorityForAnyUO('CSP-SOL-C') &&
+          (solicitud.estado.estado !== TipoEstadoSolicitud.BORRADOR
+            && solicitud.estado.estado !== TipoEstadoSolicitud.PRESENTADA
+            && solicitud.estado.estado !== TipoEstadoSolicitud.ADMITIDA_PROVISIONAL
+            && solicitud.estado.estado !== TipoEstadoSolicitud.ADMITIDA_DEFINITIVA
+            && solicitud.estado.estado !== TipoEstadoSolicitud.CONCECIDA_PROVISIONAL
+            && solicitud.estado.estado !== TipoEstadoSolicitud.ALEGADA_CONCESION)))) {
+
+        form.controls.estado.disable({ emitEvent: false });
+        form.controls.estado.updateValueAndValidity({ emitEvent: false });
+        form.controls.solicitante.disable({ emitEvent: false });
+        form.controls.solicitante.updateValueAndValidity({ emitEvent: false });
+        convocatoriaControl.disable({ emitEvent: false });
+        convocatoriaControl.updateValueAndValidity({ emitEvent: false });
+        convocatoriaExternaControl.disable({ emitEvent: false });
+        convocatoriaExternaControl.updateValueAndValidity({ emitEvent: false });
+        tipoFormularioControl.disable({ emitEvent: false });
+        tipoFormularioControl.updateValueAndValidity({ emitEvent: false });
+        form.controls.codigoExterno.disable({ emitEvent: false });
+        form.controls.codigoExterno.updateValueAndValidity({ emitEvent: false });
+        form.controls.codigoRegistro.disable({ emitEvent: false });
+        form.controls.codigoRegistro.updateValueAndValidity({ emitEvent: false });
+        form.controls.observaciones.disable({ emitEvent: false });
+        form.controls.observaciones.updateValueAndValidity({ emitEvent: false });
+        unidadGestionControl.disable({ emitEvent: false });
+        unidadGestionControl.updateValueAndValidity({ emitEvent: false });
+
+        this.disabledSolicitante = true;
+
+
+      } else if (convocatoriaSolicitud) {
+        unidadGestionControl.disable({ emitEvent: false });
+        unidadGestionControl.updateValueAndValidity({ emitEvent: false });
+        convocatoriaExternaControl.disable({ emitEvent: false });
+        convocatoriaExternaControl.updateValueAndValidity({ emitEvent: false });
+      }
     }
 
     this.convocatoriaRequired = !convocatoriaExternaSolicitud;

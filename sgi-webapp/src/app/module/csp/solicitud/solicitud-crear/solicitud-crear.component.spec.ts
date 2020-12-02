@@ -13,6 +13,7 @@ import { FlexModule, FlexLayoutModule } from '@angular/flex-layout';
 import { SharedModule } from '@shared/shared.module';
 import { SolicitudCrearComponent } from './solicitud-crear.component';
 import { SolicitudActionService } from '../solicitud.action.service';
+import { SgiAuthService } from '@sgi/framework/auth';
 
 describe('SolicitudCrearComponent', () => {
   let component: SolicitudCrearComponent;
@@ -38,7 +39,8 @@ describe('SolicitudCrearComponent', () => {
         SharedModule
       ],
       providers: [
-        SolicitudActionService
+        SolicitudActionService,
+        SgiAuthService
       ],
     })
       .compileComponents();
