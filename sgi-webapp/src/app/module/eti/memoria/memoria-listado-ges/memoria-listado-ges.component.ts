@@ -22,12 +22,12 @@ import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria
 import { MEMORIAS_ROUTE } from '../memoria-route-names';
 import { IMemoria } from '@core/models/eti/memoria';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { BuscarPersonaComponent } from '@shared/buscar-persona/buscar-persona.component';
 
 const MSG_BUTTON_SAVE = marker('footer.eti.peticionEvaluacion.crear');
 const MSG_ERROR = marker('eti.memoria.listado.error');
 const TEXT_USER_TITLE = marker('eti.peticionEvaluacion.listado.buscador.solicitante');
 const TEXT_USER_BUTTON = marker('eti.peticionEvaluacion.listado.buscador.buscar.solicitante');
-const MSG_ERROR_LISTADO_MEMORIAS = marker('eti.memoria.listado.error');
 const MSG_ESTADO_ANTERIOR_OK = marker('eti.memoria.listado.volverEstadoAnterior.ok');
 const MSG_ESTADO_ANTERIOR_ERROR = marker('eti.memoria.listado.volverEstadoAnterior.error');
 const MSG_RECUPERAR_ESTADO = marker('eti.memoria.listado.volverEstadoAnterior.confirmacion');
@@ -51,6 +51,7 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(BuscarPersonaComponent, { static: false }) private buscarPersona: BuscarPersonaComponent;
 
 
   memorias$: Observable<IMemoriaPeticionEvaluacion[]>;
@@ -65,8 +66,6 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
   textoUsuarioLabel = TEXT_USER_TITLE;
   textoUsuarioInput = TEXT_USER_TITLE;
   textoUsuarioButton = TEXT_USER_BUTTON;
-  personaRef: string;
-  datosSolicitante: string;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -126,9 +125,7 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
   }
 
   protected createFilters(): SgiRestFilter[] {
-
     this.logger.debug(MemoriaListadoGesComponent.name, 'createFilters()', 'start');
-
     const filtro: SgiRestFilter[] = [];
     this.addFiltro(filtro, 'comite.id', SgiRestFilterType.EQUALS, this.formGroup.controls.comite.value.id);
     this.addFiltro(filtro, 'peticionEvaluacion.titulo', SgiRestFilterType.LIKE, this.formGroup.controls.titulo.value);
@@ -137,7 +134,6 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
     this.addFiltro(filtro, 'personaRef', SgiRestFilterType.EQUALS, this.formGroup.controls.solicitante.value);
 
     this.logger.debug(MemoriaListadoGesComponent.name, 'createFilters()', 'end');
-
     return filtro;
   }
 
@@ -145,9 +141,7 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
     this.logger.debug(MemoriaListadoGesComponent.name, 'loadTable()', 'start');
     this.memorias$ = this.getObservableLoadTable(reset);
     this.logger.debug(MemoriaListadoGesComponent.name, 'loadTable()', 'end');
-
   }
-
 
   /**
    * Devuelve el nombre de un comité.
@@ -266,13 +260,10 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
 
   /**
    * Setea el persona seleccionado a través del componente
-   * @param personaRef referencia del persona seleccionado
+   * @param solicitante persona seleccionada
    */
   public setUsuario(solicitante: IPersona) {
     this.formGroup.controls.solicitante.setValue(solicitante.personaRef);
-    this.datosSolicitante = solicitante.nombre ? solicitante.nombre + ' ' + solicitante.primerApellido + ' ' + solicitante.segundoApellido : '';
-    this.personaRef = solicitante?.personaRef;
-
   }
 
 
@@ -321,7 +312,7 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
   onClearFilters(): void {
     this.logger.debug(MemoriaListadoGesComponent.name, `${this.onClearFilters.name}()`, 'start');
     super.onClearFilters();
-    this.setUsuario({} as IPersona);
+    this.buscarPersona.clear();
     this.logger.debug(MemoriaListadoGesComponent.name, `${this.onClearFilters.name}()`, 'end');
   }
 

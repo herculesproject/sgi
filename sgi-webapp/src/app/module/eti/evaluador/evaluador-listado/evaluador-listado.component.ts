@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Observable, of, merge, Subscription } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 
 import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
@@ -25,6 +25,7 @@ import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { BuscarPersonaComponent } from '@shared/buscar-persona/buscar-persona.component';
 
 
 const MSG_BUTTON_SAVE = marker('footer.eti.evaluador.crear');
@@ -50,25 +51,17 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(BuscarPersonaComponent, { static: false }) private buscarPersona: BuscarPersonaComponent;
 
   evaluadores$: Observable<IEvaluador[]> = of();
 
   comiteListado: IComite[];
-  comitesSubscription: Subscription;
   filteredComites: Observable<IComite[]>;
-
-  dialogServiceSubscription: Subscription;
-  dialogServiceSubscriptionGetSubscription: Subscription;
-  evaluadorServiceDeleteSubscription: Subscription;
 
   textoCrear = MSG_BUTTON_SAVE;
   textoUsuarioLabel = TEXT_USER_TITLE;
   textoUsuarioInput = TEXT_USER_TITLE;
   textoUsuarioButton = TEXT_USER_BUTTON;
-  datosUsuarioEvaluador: string;
-  personaRef: string;
-
-  personaServiceOneSubscritpion: Subscription;
 
   personasRef: string[];
 
@@ -137,7 +130,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
 
     }
 
-    this.addFiltro(filtro, 'personaRef', SgiRestFilterType.EQUALS, this.personaRef);
+    this.addFiltro(filtro, 'personaRef', SgiRestFilterType.EQUALS, this.formGroup.controls.solicitante.value);
 
 
     this.logger.debug(EvaluadorListadoComponent.name, 'createFilters()', 'end');
@@ -211,30 +204,13 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
     return evaluadores;
   }
 
-  private buildFilterPersonasRef(): SgiRestFilter[] {
-    this.logger.debug(EvaluadorListadoComponent.name, 'buildFilterPersonasRef()', 'start');
-
-    this.filter = [];
-    if (this.personasRef) {
-      const filterPersonaRef: SgiRestFilter = {
-        field: 'personaRefs',
-        type: SgiRestFilterType.EQUALS,
-        value: this.personasRef.toString(),
-      };
-
-      this.filter.push(filterPersonaRef);
-    }
-    this.logger.debug(EvaluadorListadoComponent.name, 'buildFilterPersonasRef()', 'end');
-    return this.filter;
-  }
-
   /**
    * Devuelve los datos de persona del evaluador
    * @param evaluador el evaluador
    * returns el evaluador con los datos de persona
    */
   loadDatosUsuario(evaluador: IEvaluador): IEvaluador {
-    this.personaServiceOneSubscritpion = this.personaFisicaService.getInformacionBasica(evaluador.personaRef)
+    const personaServiceOneSubscription = this.personaFisicaService.getInformacionBasica(evaluador.personaRef)
       .subscribe(
         (persona: IPersona) => {
           evaluador.nombre = persona.nombre;
@@ -252,6 +228,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
           );
         }
       );
+    this.suscripciones.push(personaServiceOneSubscription);
     return evaluador;
   }
 
@@ -273,7 +250,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
       'getComites()',
       'start');
 
-    this.comitesSubscription = this.comiteService.findAll().subscribe(
+    const comitesSubscription = this.comiteService.findAll().subscribe(
       (response) => {
         this.comiteListado = response.items;
 
@@ -283,6 +260,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
             map(value => this.filterComite(value))
           );
       });
+    this.suscripciones.push(comitesSubscription);
 
     this.logger.debug(EvaluadorListadoComponent.name,
       'getComites()',
@@ -320,10 +298,10 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
     $event.stopPropagation();
     $event.preventDefault();
 
-    this.dialogServiceSubscriptionGetSubscription = this.dialogService.showConfirmation(MSG_DELETE).subscribe(
+    const dialogServiceSubscriptionGetSubscription = this.dialogService.showConfirmation(MSG_DELETE).subscribe(
       (aceptado: boolean) => {
         if (aceptado) {
-          this.evaluadorServiceDeleteSubscription = this.evaluadoresService
+          const evaluadorServiceDeleteSubscription = this.evaluadoresService
             .deleteById(evaluadorId)
             .pipe(
               map(() => {
@@ -332,10 +310,11 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
             ).subscribe(() => {
               this.snackBarService.showSuccess(MSG_SUCCESS);
             });
+          this.suscripciones.push(evaluadorServiceDeleteSubscription);
         }
         aceptado = false;
       });
-
+    this.suscripciones.push(dialogServiceSubscriptionGetSubscription);
     this.logger.debug(EvaluadorListadoComponent.name,
       'borrar(evaluadorId: number, $event: Event) - end');
   }
@@ -347,8 +326,6 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
   public setUsuario(persona: IPersona) {
     this.logger.debug(EvaluadorListadoComponent.name, `${this.setUsuario.name}()`, 'start');
     this.formGroup.controls.solicitante.setValue(persona.personaRef);
-    this.datosUsuarioEvaluador = persona.nombre ? persona.nombre + ' ' + persona.primerApellido + ' ' + persona.segundoApellido : '';
-    this.personaRef = persona.personaRef;
     this.logger.debug(EvaluadorListadoComponent.name, `${this.setUsuario.name}()`, 'end');
   }
 
@@ -360,7 +337,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
   onClearFilters(): void {
     this.logger.debug(EvaluadorListadoComponent.name, `${this.onClearFilters.name}()`, 'start');
     super.onClearFilters();
-    this.setUsuario({} as IPersona);
+    this.buscarPersona.clear();
     this.logger.debug(EvaluadorListadoComponent.name, `${this.onClearFilters.name}()`, 'end');
   }
 

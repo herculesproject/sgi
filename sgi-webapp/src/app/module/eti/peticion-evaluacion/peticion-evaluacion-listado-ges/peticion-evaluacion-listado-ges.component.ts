@@ -12,23 +12,22 @@ import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-propert
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { ROUTE_NAMES } from '@core/route.names';
 import { ComiteService } from '@core/services/eti/comite.service';
-import { MemoriaService } from '@core/services/eti/memoria.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { TipoEstadoMemoriaService } from '@core/services/eti/tipo-estado-memoria.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
-import { Observable, of, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, startWith, catchError, switchMap } from 'rxjs/operators';
 import { AbstractTablePaginationComponent } from '@core/component/abstract-table-pagination.component';
+import { BuscarPersonaComponent } from '@shared/buscar-persona/buscar-persona.component';
 
 
 const MSG_BUTTON_SAVE = marker('footer.eti.peticionEvaluacion.crear');
 const MSG_ERROR = marker('eti.peticionEvaluacion.listado.error');
 const TEXT_USER_TITLE = marker('eti.peticionEvaluacion.listado.buscador.solicitante');
 const TEXT_USER_BUTTON = marker('eti.peticionEvaluacion.listado.buscador.buscar.solicitante');
-const LISTADO_ERROR = marker('eti.peticionEvaluacion.listado.error');
 
 @Component({
   selector: 'sgi-peticion-evaluacion-listado-ges',
@@ -36,7 +35,6 @@ const LISTADO_ERROR = marker('eti.peticionEvaluacion.listado.error');
   styleUrls: ['./peticion-evaluacion-listado-ges.component.scss']
 })
 export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginationComponent<IPeticionEvaluacion> implements OnInit {
-
 
   ROUTE_NAMES = ROUTE_NAMES;
 
@@ -46,36 +44,24 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
   displayedColumns: string[];
   totalElementos: number;
 
-  datosUsuarioSolicitante: string;
-
   textoCrear = MSG_BUTTON_SAVE;
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(BuscarPersonaComponent, { static: false }) private buscarPersona: BuscarPersonaComponent;
 
   peticionesEvaluacion$: Observable<IPeticionEvaluacion[]> = of();
   memorias$: Observable<IMemoria[]> = of();
 
   comiteListado: IComite[];
-  comitesSubscription: Subscription;
   filteredComites: Observable<IComite[]>;
 
   estadoMemoriaListado: TipoEstadoMemoria[];
-  estadosMemoriaSubscription: Subscription;
   filteredEstadosMemoria: Observable<TipoEstadoMemoria[]>;
-
-
-  dialogServiceSubscription: Subscription;
-  dialogServiceSubscriptionGetSubscription: Subscription;
-  peticionEvaluacionServiceDeleteSubscription: Subscription;
-  memoriaServiceSubscription: Subscription;
-  personaServiceOneSubscritpion: Subscription;
 
   textoUsuarioLabel = TEXT_USER_TITLE;
   textoUsuarioInput = TEXT_USER_TITLE;
   textoUsuarioButton = TEXT_USER_BUTTON;
-  personaRef: string;
-  datosSolicitante: string;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -83,7 +69,6 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
     protected readonly snackBarService: SnackBarService,
     private readonly comiteService: ComiteService,
     private readonly tipoEstadoMemoriaService: TipoEstadoMemoriaService,
-    private readonly memoriaService: MemoriaService,
     private readonly personaFisicaService: PersonaFisicaService
   ) {
     super(logger, snackBarService, MSG_ERROR);
@@ -123,9 +108,51 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
 
   protected createObservable(): Observable<SgiRestListResult<IPeticionEvaluacion>> {
     this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'createObservable()', 'start');
-    const observable$ = this.peticionesEvaluacionService.findAll(this.getFindOptions());
-    this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'createObservable()', 'end');
-    return observable$;
+    return this.peticionesEvaluacionService.findAll(this.getFindOptions()).pipe(
+      map((response) => {
+        // Return the values
+        return response;
+      }),
+      switchMap((response) => {
+        if (!response.items || response.items.length === 0) {
+          this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'createObservable()', 'end');
+          return of({} as SgiRestListResult<IPeticionEvaluacion>);
+        }
+        const personaRefsEvaluadores = new Set<string>();
+
+        response.items.forEach((peticionEvaluacion: IPeticionEvaluacion) => {
+          personaRefsEvaluadores.add(peticionEvaluacion?.personaRef);
+        });
+
+        const personaSubscription = this.personaFisicaService.findByPersonasRefs([...personaRefsEvaluadores]).subscribe((result) => {
+          const personas = result.items;
+          response.items.forEach((peticionEvaluacion: IPeticionEvaluacion) => {
+            const datosPersona = personas.find((persona) =>
+              peticionEvaluacion.personaRef === persona.personaRef);
+            peticionEvaluacion.nombre = datosPersona?.nombre;
+            peticionEvaluacion.primerApellido = datosPersona?.primerApellido;
+            peticionEvaluacion.segundoApellido = datosPersona?.segundoApellido;
+          });
+        });
+        this.suscripciones.push(personaSubscription);
+        this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'createObservable()', 'end');
+        let peticionesListado: SgiRestListResult<IPeticionEvaluacion>;
+        return of(peticionesListado = {
+          page: response.page,
+          total: response.total,
+          items: response.items
+        });
+      }),
+      catchError(() => {
+        this.snackBarService.showError(MSG_ERROR);
+        this.logger.debug(
+          PeticionEvaluacionListadoGesComponent.name,
+          'createObservable()',
+          'end'
+        );
+        return of({} as SgiRestListResult<IPeticionEvaluacion>);
+      })
+    );
   }
 
 
@@ -134,181 +161,26 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
     this.displayedColumns = ['solicitante', 'codigo', 'titulo', 'fuenteFinanciacion', 'fechaInicio', 'fechaFin', 'acciones'];
     this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'initColumns()', 'end');
   }
+
   protected createFilters(): SgiRestFilter[] {
     this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'createFilters()', 'start');
-    this.filter = [];
-    if (this.formGroup.controls.codigo.value) {
-      this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'createFilters()', 'codigo');
-      const filterCodigo: SgiRestFilter = {
-        field: 'codigo',
-        type: SgiRestFilterType.LIKE,
-        value: this.formGroup.controls.codigo.value,
-      };
 
-      this.filter.push(filterCodigo);
+    const filtro: SgiRestFilter[] = [];
 
-    }
-
-    if (this.formGroup.controls.titulo.value) {
-      this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'createFilters()', 'titulo');
-      const filterTitulo: SgiRestFilter = {
-        field: 'titulo',
-        type: SgiRestFilterType.LIKE,
-        value: this.formGroup.controls.titulo.value,
-      };
-
-      this.filter.push(filterTitulo);
-
-    }
-
-    if (this.personaRef) {
-      this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'createFilters()', 'persona ref');
-      const filterPersonaRef: SgiRestFilter = {
-        field: 'personaRef',
-        type: SgiRestFilterType.EQUALS,
-        value: this.personaRef,
-      };
-
-      this.filter.push(filterPersonaRef);
-
-    }
+    this.addFiltro(filtro, 'peticionEvaluacion.codigo', SgiRestFilterType.LIKE, this.formGroup.controls.codigo.value);
+    this.addFiltro(filtro, 'peticionEvaluacion.titulo', SgiRestFilterType.LIKE, this.formGroup.controls.titulo.value);
+    this.addFiltro(filtro, 'comite.id', SgiRestFilterType.EQUALS, this.formGroup.controls.comite.value.id);
+    this.addFiltro(filtro, 'estadoActual.id', SgiRestFilterType.EQUALS, this.formGroup.controls.tipoEstadoMemoria.value.id);
+    this.addFiltro(filtro, 'peticionEvaluacion.personaRef', SgiRestFilterType.EQUALS, this.formGroup.controls.solicitante.value);
 
     this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'createFilters()', 'end');
-    return this.filter;
+    return filtro;
   }
 
   protected loadTable(reset?: boolean) {
     this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'loadTable()', 'start');
     this.peticionesEvaluacion$ = this.getObservableLoadTable(reset);
     this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'loadTable()', 'end');
-  }
-
-  loadDatosUsuario(peticionesEvaluacion: IPeticionEvaluacion[]): IPeticionEvaluacion[] {
-
-    peticionesEvaluacion.forEach((peticionEvaluacion) => {
-      this.personaServiceOneSubscritpion = this.personaFisicaService.getInformacionBasica(peticionEvaluacion.personaRef)
-        .subscribe(
-          (persona: IPersona) => {
-            peticionEvaluacion.nombre = persona.nombre;
-            peticionEvaluacion.primerApellido = persona.primerApellido;
-            peticionEvaluacion.segundoApellido = persona.segundoApellido;
-            peticionEvaluacion.identificadorNumero = persona.identificadorNumero;
-            peticionEvaluacion.identificadorLetra = persona.identificadorLetra;
-            if (this.personaRef) {
-              this.datosSolicitante = persona.nombre + ' ' + persona.primerApellido + ' ' +
-                persona.segundoApellido + '(' + persona.identificadorNumero + persona.identificadorLetra + ')';
-            }
-          },
-          () => {
-            this.snackBarService.showError(LISTADO_ERROR);
-            this.logger.debug(
-              PeticionEvaluacionListadoGesComponent.name,
-              'loadDatosUsuario()',
-              'end'
-            );
-          }
-        );
-    });
-
-    return peticionesEvaluacion;
-
-  }
-
-  private filterPeticionEvaluacionByFilters(peticionesEvaluacion: IPeticionEvaluacion[]): IPeticionEvaluacion[] {
-    const peticionesEvaluacionByComiteExists: IPeticionEvaluacion[] = new Array();
-    this.peticionesEvaluacion$ = of();
-    peticionesEvaluacion.forEach((peticionEvaluacion, i) => {
-      this.memoriaServiceSubscription = this.memoriaService
-        .findAll({
-          filters: this.buildFiltersMemoria(peticionEvaluacion.id)
-        })
-        .subscribe(
-          (response) => {
-            const memorias: IMemoria[] = response.items;
-            if (memorias && memorias.length > 0) {
-              if (peticionesEvaluacionByComiteExists.indexOf(peticionEvaluacion) === -1) {
-                peticionesEvaluacionByComiteExists.push(peticionEvaluacion);
-              }
-            }
-            if (i === (peticionesEvaluacion.length - 1)) {
-              this.peticionesEvaluacion$ = of(peticionesEvaluacionByComiteExists);
-            }
-          },
-          () => {
-            this.snackBarService.showError(LISTADO_ERROR);
-            this.logger.debug(
-              PeticionEvaluacionListadoGesComponent.name,
-              'filterPeticionEvaluacionByComite()',
-              'end'
-            );
-          }
-        );
-    });
-    return peticionesEvaluacionByComiteExists;
-  }
-
-  private buildFiltersMemoria(idPeticionEvaluacion?: number): SgiRestFilter[] {
-    this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'buildFiltersMemoria()', 'start');
-
-    this.filter = [];
-    if (this.formGroup.controls.comite.value) {
-      this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'buildFiltersMemoria()', 'comite');
-      const filterComite: SgiRestFilter = {
-        field: 'comite.id',
-        type: SgiRestFilterType.EQUALS,
-        value: this.formGroup.controls.comite.value.id,
-      };
-
-      this.filter.push(filterComite);
-
-    }
-
-    if (this.formGroup.controls.tipoEstadoMemoria.value) {
-      this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'buildFiltersMemoria()', 'estadoMemoria');
-      const filterEstadoMemoria: SgiRestFilter = {
-        field: 'estadoActual.id',
-        type: SgiRestFilterType.EQUALS,
-        value: this.formGroup.controls.tipoEstadoMemoria.value.id,
-      };
-
-      this.filter.push(filterEstadoMemoria);
-
-    }
-
-    if (this.formGroup.controls.codigo.value) {
-      this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'buildFilters()', 'codigo');
-      const filterCodigo: SgiRestFilter = {
-        field: 'peticionEvaluacion.codigo',
-        type: SgiRestFilterType.LIKE,
-        value: this.formGroup.controls.codigo.value,
-      };
-
-      this.filter.push(filterCodigo);
-
-    }
-
-    if (this.formGroup.controls.titulo.value) {
-      this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'buildFilters()', 'titulo');
-      const filterTitulo: SgiRestFilter = {
-        field: 'peticionEvaluacion.titulo',
-        type: SgiRestFilterType.LIKE,
-        value: this.formGroup.controls.titulo.value,
-      };
-
-      this.filter.push(filterTitulo);
-
-    }
-
-    if (idPeticionEvaluacion) {
-      const filterPeticionEvaluacion: SgiRestFilter = {
-        field: 'peticionEvaluacion.id',
-        type: SgiRestFilterType.EQUALS,
-        value: idPeticionEvaluacion.toString(),
-      };
-      this.filter.push(filterPeticionEvaluacion);
-    }
-
-    return this.filter;
   }
 
 
@@ -343,7 +215,7 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
       'getComites()',
       'start');
 
-    this.comitesSubscription = this.comiteService.findAll().subscribe(
+    const comitesSubscription = this.comiteService.findAll().subscribe(
       (response) => {
         this.comiteListado = response.items;
 
@@ -353,6 +225,8 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
             map(value => this.filterComite(value))
           );
       });
+
+    this.suscripciones.push(comitesSubscription);
 
     this.logger.debug(PeticionEvaluacionListadoGesComponent.name,
       'getComites()',
@@ -367,7 +241,7 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
       'getEstadosMemoria()',
       'start');
 
-    this.estadosMemoriaSubscription = this.tipoEstadoMemoriaService.findAll().subscribe(
+    const estadosMemoriaSubscription = this.tipoEstadoMemoriaService.findAll().subscribe(
       (response) => {
         this.estadoMemoriaListado = response.items;
 
@@ -377,6 +251,8 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
             map(value => this.filterEstadoMemoria(value))
           );
       });
+
+    this.suscripciones.push(estadosMemoriaSubscription);
 
     this.logger.debug(PeticionEvaluacionListadoGesComponent.name,
       'getEstadosMemoria()',
@@ -426,27 +302,12 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
 
   /**
    * Setea el persona seleccionado a través del componente
-   * @param personaRef referencia del persona seleccionado
+   * @param solicitante persona seleccionado
    */
   public setUsuario(solicitante: IPersona) {
-    this.logger.debug(PeticionEvaluacionListadoGesComponent.name,
-      'setUsuario()',
-      'start');
+    this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'setUsuario()', 'start');
     this.formGroup.controls.solicitante.setValue(solicitante.personaRef);
-    this.datosSolicitante =
-      solicitante.nombre ? solicitante.nombre + ' ' + solicitante.primerApellido + ' ' + solicitante.segundoApellido : '';
-    this.personaRef = solicitante?.personaRef;
-
-    this.logger.debug(PeticionEvaluacionListadoGesComponent.name,
-      'setUsuario()',
-      'end');
-  }
-
-  /**
-   * Load table data
-   */
-  public onSearch() {
-    this.loadTable(true);
+    this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'setUsuario()', 'end');
   }
 
   /**
@@ -454,16 +315,9 @@ export class PeticionEvaluacionListadoGesComponent extends AbstractTablePaginati
    */
   public onClearFilters() {
 
-    this.logger.debug(PeticionEvaluacionListadoGesComponent.name,
-      'onClearFilters()',
-      'start');
+    this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'onClearFilters()', 'start');
     super.onClearFilters();
-    this.setUsuario({} as IPersona);
-    this.logger.debug(PeticionEvaluacionListadoGesComponent.name,
-      'onClearFilters()',
-      'end');
+    this.buscarPersona.clear();
+    this.logger.debug(PeticionEvaluacionListadoGesComponent.name, 'onClearFilters()', 'end');
   }
-
-
-
 }

@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { IPersonaDialogo } from '@core/models/eti/persona-dialogo';
 import { IPersona } from '@core/models/sgp/persona';
 import { NGXLogger } from 'ngx-logger';
 import { BuscarPersonaDialogoComponent } from './dialogo/buscar-persona-dialogo.component';
@@ -17,8 +16,7 @@ const TEXT_USER_BUTTON = marker('eti.buscarUsuario.boton.buscar');
 export class BuscarPersonaComponent implements OnChanges {
 
   datosUsuario: string;
-  usuarioDialogo: IPersonaDialogo;
-  persona: IPersona;
+  private persona: IPersona;
 
   @Input() required = false;
   @Input() disabled = false;
@@ -31,21 +29,6 @@ export class BuscarPersonaComponent implements OnChanges {
   usuarioSeleccionado: EventEmitter<IPersona> = new EventEmitter();
 
   constructor(public dialog: MatDialog, private readonly logger: NGXLogger) {
-    this.usuarioDialogo = {
-      nombre: '',
-      apellidos: '',
-      numIdentificadorPersonal: ''
-    };
-    this.persona = {
-      nombre: '',
-      primerApellido: '',
-      segundoApellido: '',
-      identificadorLetra: '',
-      identificadorNumero: '',
-      personaRef: '',
-      nivelAcademico: '',
-      vinculacion: ''
-    };
     this.datosUsuario = this.datosUsuarioTexto;
   }
 
@@ -56,24 +39,34 @@ export class BuscarPersonaComponent implements OnChanges {
   }
 
   formularioBuscarUsuario(): void {
+    this.persona = {} as IPersona;
     const dialogRef = this.dialog.open(BuscarPersonaDialogoComponent, {
       width: '600px',
       data: this.persona
     });
 
-    dialogRef.afterClosed().subscribe(persona => {
-      if (persona) {
-        this.datosUsuario = persona.nombre + ' ' + persona.primerApellido + ' ' +
-          persona.segundoApellido + '(' + persona.identificadorNumero + persona.identificadorLetra + ')';
-        this.selectUsuario(persona);
-      }
+    dialogRef.afterClosed().subscribe((persona: IPersona) => {
+      this.selectUsuario(persona);
     });
+  }
+
+  private emitValue() {
+    this.usuarioSeleccionado.emit(this.persona);
   }
 
   selectUsuario(persona: IPersona) {
     this.logger.debug(BuscarPersonaComponent.name, 'selectUsuario(persona: Persona)', 'start');
-    this.usuarioSeleccionado.emit(persona);
+    this.persona = persona;
+    this.datosUsuario = persona !== null ? persona.nombre + ' ' + persona.primerApellido + ' ' +
+      persona.segundoApellido + '(' + persona.identificadorNumero + persona.identificadorLetra + ')' : '';
+    this.emitValue();
     this.logger.debug(BuscarPersonaComponent.name, 'selectUsuario(persona: Persona)', 'end');
+  }
+
+  clear() {
+    this.persona = null;
+    this.datosUsuario = null;
+    this.emitValue();
   }
 
 }

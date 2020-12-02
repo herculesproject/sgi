@@ -35,9 +35,6 @@ export class BuscarPersonaDialogoComponent implements AfterViewInit {
 
   personas$: Observable<IPersona[]> = of();
 
-  usuarioDialogo: IPersonaDialogo;
-  persona: IPersona;
-
   constructor(
     public dialogRef: MatDialogRef<BuscarPersonaDialogoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: IPersona,
@@ -66,17 +63,6 @@ export class BuscarPersonaDialogoComponent implements AfterViewInit {
     this.fxLayoutProperties.layout = 'row wrap';
     this.fxLayoutProperties.xs = 'column';
 
-    this.persona = {
-      nombre: '',
-      primerApellido: '',
-      segundoApellido: '',
-      identificadorLetra: '',
-      identificadorNumero: '',
-      personaRef: '',
-      nivelAcademico: '',
-      vinculacion: ''
-    };
-
   }
 
   onNoClick(): void {
@@ -96,7 +82,7 @@ export class BuscarPersonaDialogoComponent implements AfterViewInit {
             direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
             field: 'personaRef'
           },
-          filters: this.buildFilters(this.dialogRef.componentInstance.data)
+          filters: this.buildFilters(this.data)
         }
       )
       .pipe(
