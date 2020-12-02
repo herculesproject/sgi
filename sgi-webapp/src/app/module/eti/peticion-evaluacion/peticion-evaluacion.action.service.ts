@@ -64,7 +64,7 @@ export class PeticionEvaluacionActionService extends ActionService {
       new PeticionEvaluacionDatosGeneralesFragment(
         fb, this.peticionEvaluacion?.id, peticionEvaluacionService, sgiAuthService, this.readonly);
     this.equipoInvestigadorListado = new EquipoInvestigadorListadoFragment(
-      this.peticionEvaluacion?.id, logger, personaFisicaService, equipoTrabajoService, peticionEvaluacionService, sgiAuthService);
+      this.peticionEvaluacion?.id, logger, personaFisicaService, peticionEvaluacionService, sgiAuthService);
     this.memoriasListado = new MemoriasListadoFragment(this.peticionEvaluacion?.id, peticionEvaluacionService, memoriaService);
     this.tareas = new PeticionEvaluacionTareasFragment(this.peticionEvaluacion?.id, logger, personaFisicaService, tareaService,
       peticionEvaluacionService, this.equipoInvestigadorListado, this.memoriasListado);

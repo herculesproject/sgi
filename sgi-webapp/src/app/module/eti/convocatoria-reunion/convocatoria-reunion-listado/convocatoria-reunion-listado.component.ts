@@ -101,7 +101,7 @@ export class ConvocatoriaReunionListadoComponent extends AbstractTablePagination
   }
   protected initColumns(): void {
     this.logger.debug(ConvocatoriaReunionListadoComponent.name, 'initColumns()', 'start');
-    this.displayedColumns = ['comite', 'fecha-evaluacion', 'codigo', 'hora', 'lugar', 'tipoConvocatoriaReunion', 'fechaEnvio', 'acciones'];
+    this.displayedColumns = ['comite', 'fechaEvaluacion', 'codigo', 'horaInicio', 'lugar', 'tipoConvocatoriaReunion', 'fechaEnvio', 'acciones'];
     this.logger.debug(ConvocatoriaReunionListadoComponent.name, 'initColumns()', 'end');
   }
 

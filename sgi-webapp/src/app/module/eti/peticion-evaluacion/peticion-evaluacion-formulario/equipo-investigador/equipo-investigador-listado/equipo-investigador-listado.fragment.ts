@@ -1,8 +1,6 @@
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
-import { IPeticionEvaluacion } from '@core/models/eti/peticion-evaluacion';
 import { IPersona } from '@core/models/sgp/persona';
 import { Fragment } from '@core/services/action-service';
-import { EquipoTrabajoService } from '@core/services/eti/equipo-trabajo.service';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { Observable, of, BehaviorSubject, from, zip, merge } from 'rxjs';
 import { map, mergeMap, endWith, switchMap, tap, takeLast } from 'rxjs/operators';
@@ -23,7 +21,6 @@ export class EquipoInvestigadorListadoFragment extends Fragment {
     key: number,
     private logger: NGXLogger,
     private personaFisicaService: PersonaFisicaService,
-    private equipoTrabajoService: EquipoTrabajoService,
     private peticionEvaluacionService: PeticionEvaluacionService,
     private sgiAuthService: SgiAuthService
   ) {

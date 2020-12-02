@@ -6,14 +6,14 @@
 
     <!-- Referencia memoria -->
     <ng-container matColumnDef="numReferencia">
-      <th mat-header-cell *matHeaderCellDef>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'eti.peticionEvaluacion.formulario.memorias.listado.referenciaMemoria' | translate}} </th>
       <td mat-cell *matCellDef="let wrapper"> {{ wrapper.value.numReferencia }}</td>
     </ng-container>
 
     <!-- Comite -->
-    <ng-container matColumnDef="comite.id">
-      <th mat-header-cell *matHeaderCellDef>
+    <ng-container matColumnDef="comite">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'eti.peticionEvaluacion.formulario.memorias.listado.comite' | translate}}
       </th>
       <td mat-cell *matCellDef="let wrapper">
@@ -22,8 +22,8 @@
     </ng-container>
 
     <!-- Estado -->
-    <ng-container matColumnDef="estadoActual.id">
-      <th mat-header-cell *matHeaderCellDef>
+    <ng-container matColumnDef="estadoActual">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'eti.peticionEvaluacion.formulario.memoria.listado.estado' | translate}}
       </th>
       <td mat-cell *matCellDef="let wrapper">
@@ -33,7 +33,7 @@
 
     <!-- Fecha evaluacion -->
     <ng-container matColumnDef="fechaEvaluacion">
-      <th mat-header-cell *matHeaderCellDef>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'eti.peticionEvaluacion.formulario.memoria.listado.fechaEvaluacion' | translate}}
       </th>
       <td mat-cell *matCellDef="let wrapper">
@@ -43,7 +43,7 @@
 
     <!-- Fecha limite -->
     <ng-container matColumnDef="fechaLimite">
-      <th mat-header-cell *matHeaderCellDef>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'eti.peticionEvaluacion.formulario.memoria.listado.fechaLimite' | translate}}
       </th>
       <td mat-cell *matCellDef="let wrapper">

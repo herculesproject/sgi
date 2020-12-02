@@ -42,8 +42,6 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
 
   datasource: MatTableDataSource<StatusWrapper<IEquipoTrabajo>> = new MatTableDataSource<StatusWrapper<IEquipoTrabajo>>();
 
-  personaRefUsuarioLogeado: string;
-
   private subscriptions: Subscription[] = [];
   private listadoFragment: EquipoInvestigadorListadoFragment;
 
@@ -76,6 +74,17 @@ export class EquipoInvestigadorListadoComponent extends FragmentComponent implem
     this.listadoFragment.equiposTrabajo$.subscribe((equiposTrabajo) => {
       this.datasource.data = equiposTrabajo;
     });
+    this.datasource.sortingDataAccessor =
+      (wrapper: StatusWrapper<IEquipoTrabajo>, property: string) => {
+        switch (property) {
+          case 'numDocumento':
+            return wrapper.value?.identificadorNumero + wrapper.value?.identificadorLetra;
+          case 'nombreCompleto':
+            return wrapper.value?.nombre + ' ' + wrapper.value?.primerApellido + ' ' + wrapper.value?.segundoApellido;
+          default:
+            return wrapper.value[property];
+        }
+      };
     this.logger.debug(EquipoInvestigadorListadoComponent.name, 'ngOnInit() - end');
   }
 

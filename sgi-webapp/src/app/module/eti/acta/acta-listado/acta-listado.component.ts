@@ -119,7 +119,7 @@ export class ActaListadoComponent extends AbstractTablePaginationComponent<IActa
 
   protected initColumns(): void {
     this.logger.debug(ActaListadoComponent.name, 'initColumns()', 'start');
-    this.displayedColumns = ['comite', 'fechaEvaluacion', 'numero', 'convocatoria',
+    this.displayedColumns = ['convocatoriaReunion.comite', 'convocatoriaReunion.fechaEvaluacion', 'numero', 'convocatoriaReunion.tipoConvocatoriaReunion',
       'numeroIniciales', 'numeroRevisiones', 'numeroTotal', 'estadoActual.nombre', 'acciones'];
     this.logger.debug(ActaListadoComponent.name, 'initColumns()', 'end');
   }

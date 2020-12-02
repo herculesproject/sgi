@@ -109,8 +109,8 @@
     </ng-container>
 
     <!-- Estado activo/inactivo Column -->
-    <ng-container matColumnDef="activo">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.evaluador.listado.estado.titulo' | translate}}
+    <ng-container matColumnDef="estado">
+      <th mat-header-cell *matHeaderCellDef> {{'eti.evaluador.listado.estado.titulo' | translate}}
       </th>
       <td mat-cell *matCellDef="let evaluador">
         {{evaluador.activo === true ? ('eti.evaluador.listado.estado.activo' | translate) : ('eti.evaluador.listado.estado.inactivo' | translate)}}

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { Subscription, BehaviorSubject, Observable, of } from 'rxjs';
+import { Subscription, BehaviorSubject } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,9 +16,6 @@ import { FragmentComponent } from '@core/component/fragment.component';
 import { ConvocatoriaReunionActionService } from '../../../convocatoria-reunion.action.service';
 import { ConvocatoriaReunionAsignacionMemoriasListadoFragment } from './convocatoria-reunion-asignacion-memorias-listado.fragment';
 import { MatTableDataSource } from '@angular/material/table';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-
-const MSG_ERROR_ELIMINAR = marker('eti.convocatoriaReunion.formulario.asignacionMemorias.eliminar.imposible');
 
 @Component({
   selector: 'sgi-convocatoria-reunion-asignacion-memorias-listado',
@@ -33,7 +30,7 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
   displayedColumns: string[];
 
   datasource: MatTableDataSource<StatusWrapper<IEvaluacion>> = new MatTableDataSource<StatusWrapper<IEvaluacion>>();
-  evaluaciones$: BehaviorSubject<StatusWrapper<IEvaluacion>[]> = new BehaviorSubject<StatusWrapper<IEvaluacion>[]>([]);
+  private evaluaciones$: BehaviorSubject<StatusWrapper<IEvaluacion>[]> = new BehaviorSubject<StatusWrapper<IEvaluacion>[]>([]);
 
   private listadoFragment: ConvocatoriaReunionAsignacionMemoriasListadoFragment;
   disableAsignarMemorias: boolean;
@@ -52,7 +49,7 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
     this.listadoFragment = this.fragment as ConvocatoriaReunionAsignacionMemoriasListadoFragment;
     this.evaluaciones$ = (this.fragment as ConvocatoriaReunionAsignacionMemoriasListadoFragment).evaluaciones$;
 
-    this.displayedColumns = ['referencia', 'version', 'dictamen.nombre', 'acciones'];
+    this.displayedColumns = ['numReferencia', 'evaluador1', 'evaluador2', 'acciones'];
   }
 
   ngOnInit(): void {
@@ -67,6 +64,20 @@ export class ConvocatoriaReunionAsignacionMemoriasListadoComponent extends Fragm
         this.disableAsignarMemorias = value;
       }
     ));
+
+    this.datasource.sortingDataAccessor =
+      (wrapper: StatusWrapper<IEvaluacion>, property: string) => {
+        switch (property) {
+          case 'numReferencia':
+            return wrapper.value.memoria?.numReferencia;
+          case 'evaluador1':
+            return wrapper.value.evaluador1?.nombre + wrapper.value.evaluador1?.primerApellido + wrapper.value.evaluador1?.segundoApellido;
+          case 'evaluador2':
+            return wrapper.value.evaluador2?.nombre + wrapper.value.evaluador2?.primerApellido + wrapper.value.evaluador2?.segundoApellido;
+          default:
+            return wrapper.value[property];
+        }
+      };
     this.logger.debug(ConvocatoriaReunionAsignacionMemoriasListadoComponent.name, 'ngOnInit()', 'start');
   }
 

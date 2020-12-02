@@ -43,7 +43,7 @@ export class EvaluacionListadoAnteriorMemoriaComponent extends AbstractTableWith
 
   protected initColumns(): void {
     this.logger.debug(EvaluacionListadoAnteriorMemoriaComponent.name, 'initColumns()', 'start');
-    this.columnas = ['memoria.numReferencia', 'version', 'fechaDictamen', 'dictamen.nombre', 'numComentarios', 'pdf'];
+    this.columnas = ['evaluacion.memoria.numReferencia', 'evaluacion.version', 'evaluacion.fechaDictamen', 'evaluacion.dictamen.nombre', 'numComentarios', 'pdf'];
     this.logger.debug(EvaluacionListadoAnteriorMemoriaComponent.name, 'initColumns()', 'end');
   }
 

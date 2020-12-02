@@ -1,11 +1,11 @@
 import { Fragment } from '@core/services/action-service';
-import { Observable, of, BehaviorSubject, from, merge, concat } from 'rxjs';
-import { map, mergeMap, endWith, switchMap, tap, takeLast } from 'rxjs/operators';
+import { Observable, of, BehaviorSubject, from, merge } from 'rxjs';
+import { map, mergeMap, tap, takeLast } from 'rxjs/operators';
 import { ITarea } from '@core/models/eti/tarea';
 import { TareaService } from '@core/services/eti/tarea.service';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { SgiRestFilter, SgiRestFilterType, SgiRestListResult } from '@sgi/framework/http';
+import { SgiRestFilter } from '@sgi/framework/http';
 import { IEquipoTrabajo } from '@core/models/eti/equipo-trabajo';
 import { PeticionEvaluacionService } from '@core/services/eti/peticion-evaluacion.service';
 import { IMemoria } from '@core/models/eti/memoria';

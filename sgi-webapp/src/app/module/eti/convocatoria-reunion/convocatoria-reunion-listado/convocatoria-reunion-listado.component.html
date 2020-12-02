@@ -81,7 +81,7 @@
     </ng-container>
 
     <!-- Fecha evaluacion Column -->
-    <ng-container matColumnDef="fecha-evaluacion">
+    <ng-container matColumnDef="fechaEvaluacion">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'eti.convocatoriaReunion.listado.fechaEvaluacion' | translate}} </th>
       <td mat-cell *matCellDef="let convocatoriaReunion"> {{convocatoriaReunion.fechaEvaluacion | date:'dd/MM/yyyy'}}
@@ -90,13 +90,13 @@
 
     <!-- Codigo Column -->
     <ng-container matColumnDef="codigo">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.convocatoriaReunion.listado.codigo' | translate}}
+      <th mat-header-cell *matHeaderCellDef> {{'eti.convocatoriaReunion.listado.codigo' | translate}}
       </th>
       <td mat-cell *matCellDef="let convocatoriaReunion"> {{convocatoriaReunion.codigo}} </td>
     </ng-container>
 
     <!-- Hora Column -->
-    <ng-container matColumnDef="hora">
+    <ng-container matColumnDef="horaInicio">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'eti.convocatoriaReunion.listado.hora' | translate}}
       </th>
       <td mat-cell *matCellDef="let convocatoriaReunion">

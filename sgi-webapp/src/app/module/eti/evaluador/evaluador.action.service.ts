@@ -33,7 +33,7 @@ export class EvaluadorActionService extends ActionService {
       this.enableEdit();
     }
     this.datosGenerales = new EvaluadorDatosGeneralesFragment(fb, this.evaluador?.id, service, personaService);
-    this.conflictoInteres = new EvaluadorConflictosInteresFragment(fb, this.evaluador?.id, logger, service,
+    this.conflictoInteres = new EvaluadorConflictosInteresFragment(this.evaluador?.id, logger, service,
       personaService, conflictoInteresService);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);

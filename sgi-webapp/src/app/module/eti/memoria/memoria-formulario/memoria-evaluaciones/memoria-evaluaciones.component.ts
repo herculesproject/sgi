@@ -29,7 +29,7 @@ export class MemoriaEvaluacionesComponent extends FragmentComponent implements O
 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
-  displayedColumns: string[] = ['tipoEvaluacion.nombre', 'version', 'dictamen.nombre', 'informeEvaluacion',
+  displayedColumns: string[] = ['tipoEvaluacion', 'version', 'dictamen', 'informeEvaluacion',
     'informeFavorable'];
   elementosPagina: number[] = [5, 10, 25, 100];
   dataSource: MatTableDataSource<StatusWrapper<IEvaluacion>> = new MatTableDataSource<StatusWrapper<IEvaluacion>>();
@@ -59,6 +59,18 @@ export class MemoriaEvaluacionesComponent extends FragmentComponent implements O
       this.dataSource.data = elements;
     }));
     this.logger.debug(MemoriaEvaluacionesComponent.name, 'ngOnInit()', 'end');
+
+    this.dataSource.sortingDataAccessor =
+      (wrapper: StatusWrapper<IEvaluacion>, property: string) => {
+        switch (property) {
+          case 'tipoEvaluacion':
+            return wrapper.value.tipoEvaluacion?.nombre;
+          case 'dictamen':
+            return wrapper.value.dictamen?.nombre;
+          default:
+            return wrapper.value[property];
+        }
+      };
 
   }
 

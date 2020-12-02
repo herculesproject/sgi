@@ -1,10 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject } from 'rxjs';
-import { ITarea } from '@core/models/eti/tarea';
 import { MatDialog } from '@angular/material/dialog';
 import { ConvocatoriaReunionService } from '@core/services/eti/convocatoria-reunion.service';
 import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
@@ -18,6 +16,8 @@ import { EvaluadorConflictosInteresFragment } from './evaluador-conflictos-inter
 import { EvaluadorConflictosInteresModalComponent } from '../evaluador-conflictos-interes-modal/evaluador-conflictos-interes-modal.component';
 import { EvaluadorActionService } from '../../../evaluador.action.service';
 import { DialogService } from '@core/services/dialog.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 const MSG_CONFIRM_DELETE = marker('eti.evaluador.conflictoInteres.formulario.listado.eliminar');
 
@@ -36,6 +36,8 @@ export class EvaluadorConflictosInteresListadoComponent extends FragmentComponen
   private listadoFragment: EvaluadorConflictosInteresFragment;
 
   datasource: MatTableDataSource<StatusWrapper<IConflictoInteres>> = new MatTableDataSource<StatusWrapper<IConflictoInteres>>();
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
     protected readonly logger: NGXLogger,
@@ -49,7 +51,7 @@ export class EvaluadorConflictosInteresListadoComponent extends FragmentComponen
     super(actionService.FRAGMENT.CONFLICTO_INTERES, actionService);
     this.listadoFragment = this.fragment as EvaluadorConflictosInteresFragment;
 
-    this.displayedColumns = ['identificadorNumero', 'nombre', 'acciones'];
+    this.displayedColumns = ['identificador', 'nombreCompleto', 'acciones'];
 
   }
 
@@ -60,6 +62,20 @@ export class EvaluadorConflictosInteresListadoComponent extends FragmentComponen
     this.listadoFragment.conflictos$.subscribe((conflictoInteres) => {
       this.datasource.data = conflictoInteres;
     });
+    this.datasource.paginator = this.paginator;
+    this.datasource.sort = this.sort;
+
+    this.datasource.sortingDataAccessor =
+      (wrapper: StatusWrapper<IConflictoInteres>, property: string) => {
+        switch (property) {
+          case 'identificador':
+            return wrapper.value.identificadorNumero + wrapper.value.identificadorLetra;
+          case 'nombreCompleto':
+            return wrapper.value.nombre + ' ' + wrapper.value.primerApellido + ' ' + wrapper.value.segundoApellido;
+          default:
+            return wrapper.value[property];
+        }
+      };
 
     this.logger.debug(EvaluadorConflictosInteresListadoComponent.name, 'ngOnInit() - end');
   }

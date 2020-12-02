@@ -56,7 +56,7 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  displayedColumnsDocumentoMemoria: string[] = ['documentoRef', 'tipoDocumento.nombre', 'aportado', 'acciones'];
+  displayedColumnsDocumentoMemoria: string[] = ['documentoRef', 'tipoDocumento', 'aportado', 'acciones'];
   elementosPaginaDocumentoMemoria: number[] = [5, 10, 25, 100];
 
   displayedColumnsSeguimientoAnual: string[] = ['documentoRef', 'acciones'];
@@ -117,6 +117,15 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
       this.logger.debug(MemoriaDocumentacionComponent.name, 'ngOnInit()', 'end');
     });
 
+    this.dataSourceDocumentoMemoria.sortingDataAccessor =
+      (wrapper: StatusWrapper<IDocumentacionMemoria>, property: string) => {
+        switch (property) {
+          case 'tipoDocumento':
+            return wrapper.value.tipoDocumento?.nombre;
+          default:
+            return wrapper.value[property];
+        }
+      };
 
     this.dataSourceSeguimientoAnual = new MatTableDataSource<StatusWrapper<IDocumentacionMemoria>>();
     this.dataSourceSeguimientoAnual.paginator = this.paginatorSeguimientoAnual;
@@ -126,6 +135,14 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
       this.logger.debug(MemoriaDocumentacionComponent.name, 'ngOnInit()', 'end');
     });
 
+    this.dataSourceSeguimientoAnual.sortingDataAccessor =
+      (wrapper: StatusWrapper<IDocumentacionMemoria>, property: string) => {
+        switch (property) {
+          default:
+            return wrapper.value[property];
+        }
+      };
+
     this.dataSourceSeguimientoFinal = new MatTableDataSource<StatusWrapper<IDocumentacionMemoria>>();
     this.dataSourceSeguimientoFinal.paginator = this.paginatorSeguimientoFinal;
     this.dataSourceSeguimientoFinal.sort = this.sortSeguimientoFinal;
@@ -133,6 +150,14 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
       this.dataSourceSeguimientoFinal.data = elements;
       this.logger.debug(MemoriaDocumentacionComponent.name, 'ngOnInit()', 'end');
     });
+
+    this.dataSourceSeguimientoFinal.sortingDataAccessor =
+      (wrapper: StatusWrapper<IDocumentacionMemoria>, property: string) => {
+        switch (property) {
+          default:
+            return wrapper.value[property];
+        }
+      };
 
     this.dataSourceRetrospectiva = new MatTableDataSource<StatusWrapper<IDocumentacionMemoria>>();
     this.dataSourceRetrospectiva.paginator = this.paginatorRetrospectiva;
@@ -142,7 +167,13 @@ export class MemoriaDocumentacionComponent extends FragmentComponent implements 
       this.logger.debug(MemoriaDocumentacionComponent.name, 'ngOnInit()', 'end');
     });
 
-
+    this.dataSourceRetrospectiva.sortingDataAccessor =
+      (wrapper: StatusWrapper<IDocumentacionMemoria>, property: string) => {
+        switch (property) {
+          default:
+            return wrapper.value[property];
+        }
+      };
 
     this.logger.debug(MemoriaDocumentacionComponent.name, 'ngOnInit()', 'end');
 

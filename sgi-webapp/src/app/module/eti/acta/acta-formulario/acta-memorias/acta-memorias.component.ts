@@ -34,7 +34,7 @@ export class ActaMemoriasComponent extends FragmentComponent implements OnInit {
     formService: ActaActionService
   ) {
     super(formService.FRAGMENT.MEMORIAS, formService);
-    this.displayedColumns = ['referencia', 'version', 'dictamen.nombre', 'informe'];
+    this.displayedColumns = ['numReferencia', 'version', 'dictamen.nombre', 'informe'];
     this.memorias$ = (this.fragment as ActaMemoriasFragment).memorias$;
   }
 }

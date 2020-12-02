@@ -113,7 +113,7 @@ export class EvaluadorListadoComponent extends AbstractTablePaginationComponent<
 
   protected initColumns(): void {
     this.logger.debug(EvaluadorListadoComponent.name, 'initColumns()', 'start');
-    this.displayedColumns = ['nombre', 'identificadorNumero', 'comite', 'cargoComite', 'fechaAlta', 'fechaBaja', 'activo', 'acciones'];
+    this.displayedColumns = ['nombre', 'identificadorNumero', 'comite', 'cargoComite', 'fechaAlta', 'fechaBaja', 'estado', 'acciones'];
     this.logger.debug(EvaluadorListadoComponent.name, 'initColumns()', 'end');
   }
 

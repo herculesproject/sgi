@@ -120,7 +120,7 @@ export class MemoriaListadoGesComponent extends AbstractTablePaginationComponent
   }
   protected initColumns(): void {
     this.logger.debug(MemoriaListadoGesComponent.name, 'initColumns()', 'start');
-    this.displayedColumns = ['num_referencia', 'comite', 'estado', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
+    this.displayedColumns = ['numReferencia', 'comite', 'estadoActual', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
     this.logger.debug(MemoriaListadoGesComponent.name, 'initColumns()', 'end');
   }
 

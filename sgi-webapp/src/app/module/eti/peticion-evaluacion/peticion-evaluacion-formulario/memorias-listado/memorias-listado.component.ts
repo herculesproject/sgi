@@ -46,7 +46,7 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
   fxLayoutProperties: FxLayoutProperties;
 
   elementosPagina: number[] = [5, 10, 25, 100];
-  displayedColumns: string[] = ['numReferencia', 'comite.id', 'estadoActual.id', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
+  displayedColumns: string[] = ['numReferencia', 'comite', 'estadoActual', 'fechaEvaluacion', 'fechaLimite', 'acciones'];
   disableEnviarSecretaria = true;
 
   datasource: MatTableDataSource<StatusWrapper<IMemoria>> = new MatTableDataSource<StatusWrapper<IMemoria>>();
@@ -83,6 +83,18 @@ export class MemoriasListadoComponent extends FragmentComponent implements OnIni
       this.disableEnviarSecretaria = status.changes;
     }
     ));
+
+    this.datasource.sortingDataAccessor =
+      (wrapper: StatusWrapper<IMemoria>, property: string) => {
+        switch (property) {
+          case 'comite':
+            return wrapper.value.comite?.comite;
+          case 'estadoActual':
+            return wrapper.value.estadoActual?.nombre;
+          default:
+            return wrapper.value[property];
+        }
+      };
     this.logger.debug(MemoriasListadoComponent.name, 'ngOnInit()', 'start');
   }
 

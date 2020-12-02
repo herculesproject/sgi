@@ -83,7 +83,7 @@ export class SeguimientoListadoComponent extends AbstractTablePaginationComponen
 
   protected initColumns(): void {
     this.logger.debug(SeguimientoListadoComponent.name, 'initColumns()', 'start');
-    this.columnas = ['memoria.comite.comite', 'tipoEvaluacion', 'convocatoriaReunion.fechaEvaluacion',
+    this.columnas = ['memoria.comite.comite', 'tipoEvaluacion.nombre', 'convocatoriaReunion.fechaEvaluacion',
       'memoria.numReferencia', 'solicitante', 'version', 'acciones'];
     this.logger.debug(SeguimientoListadoComponent.name, 'initColumns()', 'end');
   }

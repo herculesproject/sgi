@@ -1,10 +1,9 @@
-import { ITarea } from '@core/models/eti/tarea';
 import { Fragment } from '@core/services/action-service';
 import { PersonaService } from '@core/services/sgp/persona.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { SgiRestFilter, SgiRestFilterType } from '@sgi/framework/http';
+import { SgiRestFilter } from '@sgi/framework/http';
 import { BehaviorSubject, from, Observable, of, merge } from 'rxjs';
-import { endWith, map, mergeMap, takeLast, tap } from 'rxjs/operators';
+import { map, mergeMap, takeLast, tap } from 'rxjs/operators';
 import { EvaluadorService } from '@core/services/eti/evaluador.service';
 import { IConflictoInteres } from '@core/models/eti/conflicto-interes';
 import { ConflictoInteresService } from '@core/services/eti/conflicto-interes.service';
@@ -14,11 +13,9 @@ import { NGXLogger } from 'ngx-logger';
 export class EvaluadorConflictosInteresFragment extends Fragment {
 
   conflictos$: BehaviorSubject<StatusWrapper<IConflictoInteres>[]> = new BehaviorSubject<StatusWrapper<IConflictoInteres>[]>([]);
-  filter: SgiRestFilter[];
   private deleted: StatusWrapper<IConflictoInteres>[] = [];
 
   constructor(
-    private fb: FormBuilder,
     key: number,
     private logger: NGXLogger,
     private evaluadorService: EvaluadorService,
@@ -42,6 +39,7 @@ export class EvaluadorConflictosInteresFragment extends Fragment {
             this.personaService.findById(conflictoInteres.personaConflictoRef).pipe(
               map((usuarioInfo) => {
                 conflictoInteres.identificadorNumero = usuarioInfo.identificadorNumero;
+                conflictoInteres.identificadorLetra = usuarioInfo.identificadorLetra;
                 conflictoInteres.nombre = usuarioInfo.nombre;
                 conflictoInteres.primerApellido = usuarioInfo.primerApellido;
                 conflictoInteres.segundoApellido = usuarioInfo.segundoApellido;

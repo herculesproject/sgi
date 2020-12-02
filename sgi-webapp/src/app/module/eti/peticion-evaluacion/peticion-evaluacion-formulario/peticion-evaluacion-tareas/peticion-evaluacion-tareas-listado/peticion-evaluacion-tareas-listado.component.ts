@@ -58,8 +58,8 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
     this.tareas$ = (this.fragment as PeticionEvaluacionTareasFragment).tareas$;
     this.listadoFragment = this.fragment as PeticionEvaluacionTareasFragment;
 
-    this.displayedColumns = ['equipoTrabajo.nombre', 'memoria.numRerecencia', 'tarea',
-      'formacionEspecifica.nombre', 'organismo', 'acciones'];
+    this.displayedColumns = ['nombreCompleto', 'numReferencia', 'tarea',
+      'formacionEspecifica', 'organismo', 'acciones'];
 
   }
 
@@ -71,6 +71,23 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
     this.listadoFragment.tareas$.subscribe((tarea) => {
       this.datasource.data = tarea;
     });
+
+    this.datasource.sortingDataAccessor =
+      (wrapper: StatusWrapper<ITarea>, property: string) => {
+        switch (property) {
+          case 'nombreCompleto':
+            return wrapper.value.equipoTrabajo?.nombre + ' ' + wrapper.value.equipoTrabajo?.primerApellido + ' ' +
+              wrapper.value.equipoTrabajo?.segundoApellido;
+          case 'numReferencia':
+            return wrapper.value.memoria?.numReferencia;
+          case 'tarea':
+            return wrapper.value.tipoTarea ? wrapper.value.tipoTarea?.nombre : wrapper.value.tarea;
+          case 'formacionEspecifica':
+            return wrapper.value.formacionEspecifica ? wrapper.value.formacionEspecifica?.nombre : wrapper.value.formacion;
+          default:
+            return wrapper.value[property];
+        }
+      };
     this.logger.debug(PeticionEvaluacionTareasListadoComponent.name, 'ngOnInit() - end');
   }
 
@@ -82,17 +99,8 @@ export class PeticionEvaluacionTareasListadoComponent extends FragmentComponent 
 
 
     const tarea: ITarea = {
-      organismo: null,
-      anio: null,
-      memoria: null,
-      equipoTrabajo: null,
-      formacion: null,
-      formacionEspecifica: null,
-      tarea: null,
-      tipoTarea: null,
-      id: null,
       eliminable: true
-    };
+    } as ITarea;
 
     const equiposTrabajo: IEquipoTrabajo[] = this.listadoFragment.equiposTrabajo;
     const memorias: IMemoria[] = this.listadoFragment.memorias;

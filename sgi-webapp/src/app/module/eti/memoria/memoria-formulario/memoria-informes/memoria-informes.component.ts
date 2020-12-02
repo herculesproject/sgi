@@ -28,7 +28,7 @@ export class MemoriaInformesComponent extends FragmentComponent implements OnIni
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  displayedColumns: string[] = ['nombre', 'acciones'];
+  displayedColumns: string[] = ['version', 'acciones'];
   elementosPagina: number[] = [5, 10, 25, 100];
 
   dataSourceInforme: MatTableDataSource<StatusWrapper<IInforme>> = new MatTableDataSource<StatusWrapper<IInforme>>();
@@ -63,6 +63,16 @@ export class MemoriaInformesComponent extends FragmentComponent implements OnIni
     this.subscriptions.push(this.formPart?.informes$.subscribe(elements => {
       this.dataSourceInforme.data = elements;
     }));
+
+    this.dataSourceInforme.sortingDataAccessor =
+      (wrapper: StatusWrapper<IInforme>, property: string) => {
+        switch (property) {
+          case 'version':
+            return wrapper.value.memoria?.numReferencia + '_v' + wrapper.value.version;
+          default:
+            return wrapper.value[property];
+        }
+      };
     this.logger.debug(MemoriaInformesComponent.name, 'ngOnInit()', 'end');
   }
 

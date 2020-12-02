@@ -35,7 +35,7 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
   columnas: string[];
   elementosPagina: number[];
   tipoComentario$: Observable<TipoComentario>;
-  
+
   dataSource: MatTableDataSource<StatusWrapper<IComentario>> = new MatTableDataSource<StatusWrapper<IComentario>>();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -53,8 +53,8 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
     this.logger.debug(EvaluacionComentariosComponent.name, 'constructor()', 'start');
     this.formPart = this.fragment as EvaluacionComentarioFragment;
     this.elementosPagina = [5, 10, 25, 100];
-    this.columnas = ['apartado.bloque', 'apartado.padre',
-      'apartado', 'texto', 'acciones'];
+    this.columnas = ['bloque', 'apartado',
+      'subApartado', 'texto', 'acciones'];
     this.logger.debug(EvaluacionComentariosComponent.name, 'constructor()', 'end');
   }
 
@@ -67,6 +67,20 @@ export class EvaluacionComentariosComponent extends FragmentComponent implements
       this.dataSource.data = elements;
       this.logger.debug(EvaluacionComentariosComponent.name, 'ngOnInit()', 'end');
     }));
+
+    this.dataSource.sortingDataAccessor =
+      (wrapper: StatusWrapper<IComentario>, property: string) => {
+        switch (property) {
+          case 'bloque':
+            return wrapper.value.apartado?.bloque.nombre;
+          case 'apartado':
+            return this.getApartadoNombre(wrapper.value);
+          case 'subApartado':
+            return this.getSubApartadoNombre(wrapper.value);
+          default:
+            return wrapper.value[property];
+        }
+      };
   }
 
   ngOnDestroy(): void {
