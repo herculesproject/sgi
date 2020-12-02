@@ -209,7 +209,7 @@ export class PeticionEvaluacionTareasModalComponent implements OnInit, OnDestroy
    */
   getMemoria(memoria: IMemoria): string {
 
-    return memoria?.titulo;
+    return memoria?.numReferencia;
 
   }
 
