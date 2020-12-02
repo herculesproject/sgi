@@ -11,11 +11,17 @@ import { SgiRestListResult, SgiRestFilterType, SgiRestFilter } from '@sgi/framew
 import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { NGXLogger } from 'ngx-logger';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, startWith } from 'rxjs/operators';
 import { IPersona } from '@core/models/sgp/persona';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { TipoEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { DialogService } from '@core/services/dialog.service';
+import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
+import { IPrograma } from '@core/models/csp/programa';
+import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
+import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion.service';
+import { ProgramaService } from '@core/services/csp/programa.service';
+import { DateUtils } from '@core/utils/date-utils';
 
 const MSG_BUTTON_NEW = marker('footer.csp.solicitud.crear');
 const MSG_ERROR = marker('csp.solicitud.listado.error');
@@ -25,7 +31,12 @@ const MSG_ERROR_DEACTIVATE = marker('csp.solicitud.listado.desactivar.error');
 const MSG_REACTIVATE = marker('csp.solicitud.listado.reactivar');
 const MSG_SUCCESS_REACTIVATE = marker('csp.solicitud.listado.reactivar.correcto');
 const MSG_ERROR_REACTIVATE = marker('csp.solicitud.listado.reactivar.error');
+const MSG_ERROR_FUENTE_FINANCIACION_INIT = marker('csp.solicitud.listado.fuente.financiacion.error');
+const MSG_ERROR_PLAN_INVESTIGACION_INIT = marker('csp.solicitud.listado.plan.investigacion.error');
 
+const LABEL_SOLICITANTES = marker('csp.solicitud.solicitante');
+const LABEL_EMPRESA_CONVOCANTE = marker('csp.solicitud.entidad.convocante');
+const LABEL_FINANCIADORA = marker('csp.solicitud.entidad.financiadora');
 
 @Component({
   selector: 'sgi-solicitud-listado',
@@ -42,13 +53,26 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
   textoCrear = MSG_BUTTON_NEW;
 
   tiposEstadoSolicitud: TipoEstadoSolicitud[];
+  busquedaAvanzada = false;
+  private fuenteFinanciacionFiltered: IFuenteFinanciacion[] = [];
+  fuenteFinanciacion$: Observable<IFuenteFinanciacion[]>;
+  private planInvestigacionFiltered: IPrograma[] = [];
+  planInvestigaciones$: Observable<IPrograma[]>;
+  LABEL_SOLICITANTES = LABEL_SOLICITANTES;
+  LABEL_EMPRESA_CONVOCANTE = LABEL_EMPRESA_CONVOCANTE;
+  LABEL_FINANCIADORA = LABEL_FINANCIADORA;
+  empresaConvocanteText = '';
+  empresaFinanciadoraText = '';
+  personaText = '';
 
   constructor(
-    protected readonly logger: NGXLogger,
-    private readonly dialogService: DialogService,
-    protected readonly snackBarService: SnackBarService,
-    private readonly solicitudService: SolicitudService,
-    private readonly personaFisicaService: PersonaFisicaService
+    protected logger: NGXLogger,
+    private dialogService: DialogService,
+    protected snackBarService: SnackBarService,
+    private solicitudService: SolicitudService,
+    private personaFisicaService: PersonaFisicaService,
+    private fuenteFinanciacionService: FuenteFinanciacionService,
+    private programaService: ProgramaService
   ) {
     super(logger, snackBarService, MSG_ERROR);
     this.logger.debug(SolicitudListadoComponent.name, 'constructor()', 'start');
@@ -72,15 +96,30 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     this.formGroup = new FormGroup({
       referenciaConvocatoria: new FormControl(''),
       estadoSolicitud: new FormControl(''),
+
+      plazoAbierto: new FormControl(false),
+      fechaInicioDesde: new FormControl(undefined),
+      fechaInicioHasta: new FormControl(undefined),
+      fechaFinDesde: new FormControl(undefined),
+      fechaFinHasta: new FormControl(undefined),
+      solicitante: new FormControl(undefined),
+      activo: new FormControl(undefined),
+      añoConvocatoria: new FormControl(undefined),
+      tituloConvocatoria: new FormControl(undefined),
+      entidadConvocante: new FormControl(undefined),
+      planInvestigacion: new FormControl(undefined),
+      entidadFinanciadora: new FormControl(undefined),
+      fuenteFinanciacion: new FormControl(undefined)
     });
 
     this.loadTiposEstadoSolicitud();
-
+    this.getFuentesFinanciacion();
+    this.getPlanesInvestigacion();
     this.logger.debug(SolicitudListadoComponent.name, 'ngOnInit()', 'end');
   }
 
   protected createObservable(): Observable<SgiRestListResult<ISolicitud>> {
-    this.logger.debug(SolicitudListadoComponent.name, `${this.createObservable.name}()`, 'start');
+    this.logger.debug(SolicitudListadoComponent.name, `createObservable()`, 'start');
     const observable$ = this.solicitudService.findAllTodos(this.getFindOptions()).pipe(
       switchMap((response) => {
         if (response.total === 0) {
@@ -89,13 +128,13 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
 
         const solicitudes = response.items;
 
-        const personaRefsSolicitantes = solicitudes.map((solicitud: ISolicitud) => solicitud.solicitante.personaRef);
+        const personaRefsSolicitantes = solicitudes.map((solicitud) => solicitud.solicitante.personaRef);
         const solicitudesWithDatosSolicitante$ = this.personaFisicaService.findByPersonasRefs([...personaRefsSolicitantes]).pipe(
-          map((result: SgiRestListResult<IPersona>) => {
+          map((result) => {
             const personas = result.items;
 
-            solicitudes.forEach((solicitud: ISolicitud) => {
-              solicitud.solicitante = personas.find((persona: IPersona) =>
+            solicitudes.forEach((solicitud) => {
+              solicitud.solicitante = personas.find((persona) =>
                 solicitud.solicitante.personaRef === persona.personaRef);
             });
 
@@ -107,12 +146,12 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       })
     );
 
-    this.logger.debug(SolicitudListadoComponent.name, `${this.createObservable.name}()`, 'end');
+    this.logger.debug(SolicitudListadoComponent.name, `createObservable()`, 'end');
     return observable$;
   }
 
   protected initColumns(): void {
-    this.logger.debug(SolicitudListadoComponent.name, `${this.initColumns.name}()`, 'start');
+    this.logger.debug(SolicitudListadoComponent.name, `initColumns()`, 'start');
     this.columnas = [
       'referencia',
       'convocatoria.titulo',
@@ -123,31 +162,59 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       'activo',
       'acciones'
     ];
-    this.logger.debug(SolicitudListadoComponent.name, `${this.initColumns.name}()`, 'end');
+    this.logger.debug(SolicitudListadoComponent.name, `initColumns()`, 'end');
   }
 
   protected loadTable(reset?: boolean): void {
-    this.logger.debug(SolicitudListadoComponent.name, `${this.loadTable.name}(${reset})`, 'start');
+    this.logger.debug(SolicitudListadoComponent.name, `loadTable(${reset})`, 'start');
     this.solicitudes$ = this.getObservableLoadTable(reset);
-    this.logger.debug(SolicitudListadoComponent.name, `${this.loadTable.name}(${reset})`, 'end');
+    this.logger.debug(SolicitudListadoComponent.name, `loadTable(${reset})`, 'end');
   }
 
   protected createFilters(): SgiRestFilter[] {
-    this.logger.debug(SolicitudListadoComponent.name, `${this.createFilters.name}()`, 'start');
-    const filtros = [];
-
+    this.logger.debug(SolicitudListadoComponent.name, `createFilters()`, 'start');
+    let filtros: SgiRestFilter[] = [];
     this.addFiltro(filtros, 'referenciaConvocatoria', SgiRestFilterType.LIKE, this.formGroup.controls.referenciaConvocatoria.value);
     this.addFiltro(filtros, 'estado.estado', SgiRestFilterType.EQUALS, Object.keys(TipoEstadoSolicitud)
       .filter(key => TipoEstadoSolicitud[key] === this.formGroup.controls.estadoSolicitud.value)[0]);
-    this.logger.debug(SolicitudListadoComponent.name, `${this.createFilters.name}()`, 'end');
+    if (this.busquedaAvanzada) {
+      filtros = this.createFiltersAvanzados(filtros);
+    }
+    this.logger.debug(SolicitudListadoComponent.name, `createFilters()`, 'end');
     return filtros;
   }
 
+  private createFiltersAvanzados(filtros: SgiRestFilter[]): SgiRestFilter[] {
+    const controls = this.formGroup.controls;
+    if (controls.plazoAbierto.value) {
+      this.addFiltro(filtros, 'convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaInicio.desde',
+        SgiRestFilterType.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(controls.fechaInicioDesde.value));
+      this.addFiltro(filtros, 'convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaInicio.hasta',
+        SgiRestFilterType.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(controls.fechaInicioHasta.value));
+      this.addFiltro(filtros, 'convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaFin.desde',
+        SgiRestFilterType.GREATHER_OR_EQUAL, DateUtils.formatFechaAsISODate(controls.fechaFinDesde.value));
+      this.addFiltro(filtros, 'convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaFin.hasta',
+        SgiRestFilterType.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(controls.fechaFinHasta.value));
+    }
+    this.addFiltro(filtros, 'solicitanteRef', SgiRestFilterType.LIKE, controls.solicitante.value);
+    this.addFiltro(filtros, 'activo', SgiRestFilterType.EQUALS, controls.activo.value);
+    this.addFiltro(filtros, 'convocatoria.anio', SgiRestFilterType.EQUALS, controls.añoConvocatoria.value);
+    this.addFiltro(filtros, 'convocatoria.titulo', SgiRestFilterType.LIKE, controls.tituloConvocatoria.value);
+    this.addFiltro(filtros, 'convocatoria.entidadConvocante.entidadRef', SgiRestFilterType.EQUALS,
+      controls.entidadConvocante.value?.personaRef);
+    this.addFiltro(filtros, 'convocatoria.entidadConvocante.programa.id', SgiRestFilterType.EQUALS,
+      controls.planInvestigacion.value?.id);
+    this.addFiltro(filtros, 'convocatoria.entidadFinanciadora.entidadRef', SgiRestFilterType.EQUALS,
+      controls.entidadFinanciadora.value?.personaRef);
+    this.addFiltro(filtros, 'convocatoria.entidadFinanciadora.fuenteFinanciacion.id', SgiRestFilterType.EQUALS,
+      controls.fuenteFinanciacion.value?.id);
+    return filtros;
+  }
 
-  loadTiposEstadoSolicitud() {
-    this.logger.debug(SolicitudListadoComponent.name, 'loadTiposJustificacion()', 'start');
+  loadTiposEstadoSolicitud(): void {
+    this.logger.debug(SolicitudListadoComponent.name, 'loadTiposEstadoSolicitud()', 'start');
     this.tiposEstadoSolicitud = Object.keys(TipoEstadoSolicitud).map(key => TipoEstadoSolicitud[key]);
-    this.logger.debug(SolicitudListadoComponent.name, 'loadTiposJustificacion()', 'end');
+    this.logger.debug(SolicitudListadoComponent.name, 'loadTiposEstadoSolicitud()', 'end');
   }
 
   /**
@@ -163,19 +230,20 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         } else {
           return of();
         }
-      })).subscribe(
-        () => {
-          this.snackBarService.showSuccess(MSG_SUCCESS_REACTIVATE);
-          this.loadTable();
-          this.logger.debug(SolicitudListadoComponent.name,
-            `activateSolicitud(solicitud: ${solicitud})`, 'end');
-        },
-        () => {
-          this.snackBarService.showError(MSG_ERROR_REACTIVATE);
-          this.logger.error(SolicitudListadoComponent.name,
-            `activateSolicitud(solicitud: ${solicitud})`, 'error');
-        }
-      );
+      })
+    ).subscribe(
+      () => {
+        this.snackBarService.showSuccess(MSG_SUCCESS_REACTIVATE);
+        this.loadTable();
+        this.logger.debug(SolicitudListadoComponent.name,
+          `activateSolicitud(solicitud: ${solicitud})`, 'end');
+      },
+      (error) => {
+        this.snackBarService.showError(MSG_ERROR_REACTIVATE);
+        this.logger.error(SolicitudListadoComponent.name,
+          `activateSolicitud(solicitud: ${solicitud})`, error);
+      }
+    );
     this.suscripciones.push(subcription);
   }
 
@@ -192,20 +260,139 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
         } else {
           return of();
         }
-      })).subscribe(
-        () => {
-          this.snackBarService.showSuccess(MSG_SUCCESS_DEACTIVATE);
-          this.loadTable();
-          this.logger.debug(SolicitudListadoComponent.name,
-            `deactivateSolicitud(solicitud: ${solicitud})`, 'end');
-        },
-        () => {
-          this.snackBarService.showError(MSG_ERROR_DEACTIVATE);
-          this.logger.error(SolicitudListadoComponent.name,
-            `deactivateSolicitud(solicitud: ${solicitud})`, 'error');
-        }
-      );
+      })
+    ).subscribe(
+      () => {
+        this.snackBarService.showSuccess(MSG_SUCCESS_DEACTIVATE);
+        this.loadTable();
+        this.logger.debug(SolicitudListadoComponent.name,
+          `deactivateSolicitud(solicitud: ${solicitud})`, 'end');
+      },
+      (error) => {
+        this.snackBarService.showError(MSG_ERROR_DEACTIVATE);
+        this.logger.error(SolicitudListadoComponent.name,
+          `deactivateSolicitud(solicitud: ${solicitud})`, error);
+      }
+    );
     this.suscripciones.push(subcription);
   }
 
+  toggleBusquedaAvanzada(): void {
+    this.logger.debug(SolicitudListadoComponent.name, `toggleBusquedaAvanzada()`, 'start');
+    this.busquedaAvanzada = !this.busquedaAvanzada;
+    this.cleanBusquedaAvanzado();
+    this.logger.debug(SolicitudListadoComponent.name, `toggleBusquedaAvanzada()`, 'end');
+  }
+
+  onClearFilters(): void {
+    this.logger.debug(SolicitudListadoComponent.name, `onClearFilters()`, 'start');
+    super.onClearFilters();
+    this.cleanBusquedaAvanzado();
+    this.logger.debug(SolicitudListadoComponent.name, `onClearFilters()`, 'end');
+  }
+
+  private cleanBusquedaAvanzado(): void {
+    this.logger.debug(SolicitudListadoComponent.name, `cleanBusquedaAvanzado()`, 'start');
+    this.formGroup.controls.plazoAbierto.setValue(false);
+    this.formGroup.controls.fechaInicioDesde.setValue(undefined);
+    this.formGroup.controls.fechaInicioHasta.setValue(undefined);
+    this.formGroup.controls.fechaFinDesde.setValue(undefined);
+    this.formGroup.controls.fechaFinHasta.setValue(undefined);
+    this.formGroup.controls.solicitante.setValue(undefined);
+    this.formGroup.controls.activo.setValue(undefined);
+    this.formGroup.controls.añoConvocatoria.setValue(undefined);
+    this.formGroup.controls.entidadConvocante.setValue(undefined);
+    this.formGroup.controls.entidadFinanciadora.setValue(undefined);
+    this.empresaConvocanteText = '';
+    this.empresaFinanciadoraText = '';
+    this.personaText = '';
+    this.logger.debug(SolicitudListadoComponent.name, `cleanBusquedaAvanzado()`, 'end');
+  }
+
+  setEmpresaConvocante(empresa: IEmpresaEconomica): void {
+    this.logger.debug(SolicitudListadoComponent.name,
+      `setEmpresaConvocante(empresa: ${empresa})`, 'start');
+    this.formGroup.controls.entidadConvocante.setValue(empresa);
+    this.empresaConvocanteText = empresa.razonSocial;
+    this.logger.debug(SolicitudListadoComponent.name,
+      `setEmpresaConvocante(empresa: ${empresa})`, 'end');
+  }
+
+  setEmpresaFinanciadora(empresa: IEmpresaEconomica): void {
+    this.logger.debug(SolicitudListadoComponent.name,
+      `setEmpresaFinanciadora(empresa: ${empresa})`, 'start');
+    this.formGroup.controls.entidadFinanciadora.setValue(empresa);
+    this.empresaFinanciadoraText = empresa.razonSocial;
+    this.logger.debug(SolicitudListadoComponent.name,
+      `setEmpresaFinanciadora(empresa: ${empresa})`, 'end');
+  }
+
+  setSolicitante(persona: IPersona): void {
+    this.logger.debug(SolicitudListadoComponent.name,
+      `setSolicitante(persona: ${persona})`, 'start');
+    this.formGroup.controls.solicitante.setValue(persona.personaRef);
+    this.personaText = `${persona.nombre} ${persona.primerApellido} ${persona.segundoApellido}`;
+    this.logger.debug(SolicitudListadoComponent.name,
+      `setSolicitante(persona: ${persona})`, 'end');
+  }
+
+  private getFuentesFinanciacion(): void {
+    this.logger.debug(SolicitudListadoComponent.name, `getFuentesFinanciacion()`, 'start');
+    this.suscripciones.push(
+      this.fuenteFinanciacionService.findAll().subscribe(
+        (res) => {
+          this.fuenteFinanciacionFiltered = res.items;
+          this.fuenteFinanciacion$ = this.formGroup.controls.fuenteFinanciacion.valueChanges
+            .pipe(
+              startWith(''),
+              map(value => this.filtroFuenteFinanciacion(value))
+            );
+          this.logger.debug(SolicitudListadoComponent.name, `getFuentesFinanciacion()`, 'end');
+        },
+        (error) => {
+          this.snackBarService.showError(MSG_ERROR_FUENTE_FINANCIACION_INIT);
+          this.logger.error(SolicitudListadoComponent.name, `getFuentesFinanciacion()`, error);
+        }
+      )
+    );
+  }
+
+  private filtroFuenteFinanciacion(value: string): IFuenteFinanciacion[] {
+    const filterValue = value?.toString().toLowerCase();
+    return this.fuenteFinanciacionFiltered.filter(fuente => fuente.nombre.toLowerCase().includes(filterValue));
+  }
+
+  getFuenteFinanciacion(fuente?: IFuenteFinanciacion): string | undefined {
+    return typeof fuente === 'string' ? fuente : fuente?.nombre;
+  }
+
+  private getPlanesInvestigacion(): void {
+    this.logger.debug(SolicitudListadoComponent.name, `getPlanesInvestigacion()`, 'start');
+    this.suscripciones.push(
+      this.programaService.findAllPlan().subscribe(
+        (res) => {
+          this.planInvestigacionFiltered = res.items;
+          this.planInvestigaciones$ = this.formGroup.controls.planInvestigacion.valueChanges
+            .pipe(
+              startWith(''),
+              map(value => this.filtroPlanInvestigacion(value))
+            );
+          this.logger.debug(SolicitudListadoComponent.name, `getPlanesInvestigacion()`, 'end');
+        },
+        (error) => {
+          this.snackBarService.showError(MSG_ERROR_PLAN_INVESTIGACION_INIT);
+          this.logger.error(SolicitudListadoComponent.name, `getPlanesInvestigacion()`, error);
+        }
+      )
+    );
+  }
+
+  private filtroPlanInvestigacion(value: string): IPrograma[] {
+    const filterValue = value?.toString().toLowerCase();
+    return this.planInvestigacionFiltered.filter(fuente => fuente.nombre.toLowerCase().includes(filterValue));
+  }
+
+  getPlanInvestigacion(programa?: IPrograma): string | undefined {
+    return typeof programa === 'string' ? programa : programa?.nombre;
+  }
 }

@@ -6,7 +6,7 @@ import { NGXLogger } from 'ngx-logger';
 import { BuscarPersonaDialogoComponent } from './dialogo/buscar-persona-dialogo.component';
 
 const TEXT_USER_TITLE = marker('eti.buscarUsuario.titulo');
-const TEXT_USER_BUTTON = marker('eti.buscarUsuario.boton.buscar');
+const TEXT_USER_BUTTON = marker('botones.buscar');
 
 @Component({
   selector: 'sgi-buscar-persona',

@@ -30,9 +30,9 @@ export class FormGroupUtil {
   static getNumErrors(formGroup: FormGroup): number {
     let errors = 0;
     if (formGroup) {
-      const list: string[] = Object.keys(formGroup.controls);
-      list.forEach((key: string) => {
-        const abstractControl: AbstractControl = formGroup.get(key);
+      const list = Object.keys(formGroup.controls);
+      list.forEach((key) => {
+        const abstractControl = formGroup.get(key);
         if (this.getError(formGroup, key) != null) {
           errors++;
           abstractControl.markAllAsTouched();
@@ -55,7 +55,7 @@ export class FormGroupUtil {
    */
   static checkError(formGroup: FormGroup, key: string): boolean {
     if (formGroup) {
-      const abstractControl: AbstractControl = formGroup.get(key);
+      const abstractControl = formGroup.get(key);
       if (abstractControl) {
         return (
           abstractControl.invalid &&
@@ -78,7 +78,7 @@ export class FormGroupUtil {
    */
   static getError(formGroup: FormGroup, key: string): ValidationErrors {
     if (formGroup) {
-      const abstractControl: AbstractControl = formGroup.get(key);
+      const abstractControl = formGroup.get(key);
       if (abstractControl) {
         return abstractControl.errors;
       }
@@ -99,7 +99,7 @@ export class FormGroupUtil {
    */
   static getValue(formGroup: FormGroup, key: string): any {
     if (formGroup) {
-      const abstractControl: AbstractControl = formGroup.get(key);
+      const abstractControl = formGroup.get(key);
       if (abstractControl) {
         return abstractControl.value;
       }
@@ -118,7 +118,7 @@ export class FormGroupUtil {
    */
   static setValue(formGroup: FormGroup, key: string, value: any): void {
     if (formGroup) {
-      const abstractControl: AbstractControl = formGroup.get(key);
+      const abstractControl = formGroup.get(key);
       if (abstractControl) {
         abstractControl.setValue(value);
       } else {
@@ -139,7 +139,7 @@ export class FormGroupUtil {
    */
   static changeValidator(formGroup: FormGroup, key: string, validator: ValidatorFn[], initValue?: any): void {
     if (formGroup) {
-      const abstractControl: AbstractControl = formGroup.get(key);
+      const abstractControl = formGroup.get(key);
       if (abstractControl) {
         formGroup.setControl(key, new FormControl(initValue, validator));
       } else {
@@ -176,8 +176,8 @@ export class FormGroupUtil {
    */
   static clean(formGroup: FormGroup): void {
     if (formGroup) {
-      const list: string[] = Object.keys(formGroup.controls);
-      list.forEach((key: string) => {
+      const list = Object.keys(formGroup.controls);
+      list.forEach((key) => {
         this.setValue(formGroup, key, '');
       });
     } else {
