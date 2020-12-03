@@ -378,9 +378,13 @@ public class PeticionEvaluacionIT extends BaseIT {
     Assertions.assertThat(response.getHeaders().getFirst("X-Total-Count")).isEqualTo("8");
 
     // Contiene de id='6' a '8'
-    Assertions.assertThat(memoriasPeticionEvaluacion.get(0).getId()).isEqualTo(6);
-    Assertions.assertThat(memoriasPeticionEvaluacion.get(1).getId()).isEqualTo(7);
-    Assertions.assertThat(memoriasPeticionEvaluacion.get(2).getId()).isEqualTo(8);
+    List<Long> ids = new ArrayList<>();
+    for (MemoriaPeticionEvaluacion memoria : memoriasPeticionEvaluacion) {
+      ids.add(memoria.getId());
+    }
+    Assertions.assertThat(ids.contains(6L)).isTrue();
+    Assertions.assertThat(ids.contains(7L)).isTrue();
+    Assertions.assertThat(ids.contains(8L)).isTrue();
   }
 
   @Sql
