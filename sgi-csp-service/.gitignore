@@ -28,9 +28,8 @@ target/
 build/
 
 ### VS Code ###
-.vscode/
-.history/*
-.vscode-server/bin/*
-!.vscode-server/bin/.gitkeep
-.vscode-server/extensions/*
-!.vscode-server/extensions/.gitkeep
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
