@@ -17,6 +17,7 @@ import { MemoriaInformesFragment } from './memoria-informes.fragment';
 import { IDocumento } from '@core/models/sgdoc/documento';
 import { switchMap } from 'rxjs/operators';
 import { DocumentoService, triggerDownloadToUser } from '@core/services/sgdoc/documento.service';
+import { TIPO_EVALUACION } from '@core/models/eti/tipo-evaluacion';
 
 @Component({
   selector: 'sgi-memoria-informes',
@@ -99,6 +100,21 @@ export class MemoriaInformesComponent extends FragmentComponent implements OnIni
       this.logger.debug(MemoriaInformesComponent.name,
         'visualizarInforme(documentoRef: string) - end');
     });
+  }
+
+  getVersion(informe: IInforme) {
+    switch (informe.tipoEvaluacion.id) {
+      case TIPO_EVALUACION.MEMORIA:
+        return informe.memoria?.numReferencia + '_v' + informe.version;
+      case TIPO_EVALUACION.RETROSPECTIVA:
+        return informe.memoria?.numReferencia + '_R_v' + informe.version;
+      case TIPO_EVALUACION.SEGUIMIENTO_ANUAL:
+        return informe.memoria?.numReferencia + '_SA_v' + informe.version;
+      case TIPO_EVALUACION.SEGUIMIENTO_FINAL:
+        return informe.memoria?.numReferencia + '_SF_v' + informe.version;
+      default:
+        return '';
+    }
   }
 
   ngOnDestroy(): void {
