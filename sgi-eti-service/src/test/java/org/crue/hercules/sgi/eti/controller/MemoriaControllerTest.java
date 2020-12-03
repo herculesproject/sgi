@@ -1498,11 +1498,16 @@ public class MemoriaControllerTest extends BaseControllerTest {
   }
 
   public Informe generarMockInforme(Long id, Memoria memoria) {
+    TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
+    tipoEvaluacion.setId(1L);
+    tipoEvaluacion.setActivo(true);
+    tipoEvaluacion.setNombre("Memoria");
 
     Informe informe = new Informe();
     informe.setId(id);
     informe.setDocumentoRef("TipoDocumento" + id);
     informe.setMemoria(memoria);
+    informe.setTipoEvaluacion(tipoEvaluacion);
 
     return informe;
   }

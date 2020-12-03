@@ -34,6 +34,9 @@ INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, 
 -- FORMULARIO 
 INSERT INTO eti.formulario (id, nombre, descripcion) VALUES (1, 'M10', 'Descripcion');
 
+ -- TIPO EVALUACION 
+INSERT INTO eti.tipo_evaluacion (id, nombre, activo) VALUES (1, 'Memoria', true);
+
 -- INFORME
-INSERT INTO eti.informe (id, memoria_id, documento_ref, version)
- VALUES (1, 1, 'DocumentoFormulario1', 1);
+INSERT INTO eti.informe (id, memoria_id, documento_ref, version, tipo_evaluacion_id)
+ VALUES (1, 1, 'DocumentoFormulario1', 1, 1);

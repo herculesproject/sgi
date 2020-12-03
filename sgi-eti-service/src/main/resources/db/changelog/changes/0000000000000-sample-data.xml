@@ -820,36 +820,42 @@
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="documento_ref" value="M10/2019/001_v1" />
       <column name="version" value="1" />
+      <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
     </insert>
     <insert tableName="informe">
       <column name="id" valueSequenceNext="informe_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="documento_ref" value="M10/2019/001_v2" />
       <column name="version" value="2" />
+      <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
     </insert>
     <insert tableName="informe">
       <column name="id" valueSequenceNext="informe_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M10/2019/001')" />
       <column name="documento_ref" value="M10/2019/001_SA_v1" />
       <column name="version" value="1" />
+      <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Seguimiento anual')" />
     </insert>
     <insert tableName="informe">
       <column name="id" valueSequenceNext="informe_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/001')" />
       <column name="documento_ref" value="M20/2020/001_v1" />
       <column name="version" value="1" />
+      <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
     </insert>
     <insert tableName="informe">
       <column name="id" valueSequenceNext="informe_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/001')" />
       <column name="documento_ref" value="M20/2020/001_v2" />
       <column name="version" value="2" />
+      <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
     </insert>
     <insert tableName="informe">
       <column name="id" valueSequenceNext="informe_seq" />
       <column name="memoria_id" valueComputed="(select id from eti.memoria where num_referencia='M20/2020/002')" />
       <column name="documento_ref" value="M20/2020/002_v1" />
       <column name="version" value="1" />
+      <column name="tipo_evaluacion_id" valueComputed="(select id from eti.tipo_evaluacion where nombre='Memoria')" />
     </insert>
   </changeSet>
   <changeSet context="dev" author="master" id="0000000000000-comentario">

@@ -31,6 +31,8 @@ VALUES(1, 1, '2020-07-01');
 INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, titulo, persona_ref, tipo_memoria_id, estado_actual_id, fecha_envio_secretaria, requiere_retrospectiva, retrospectiva_id, version, activo)
  VALUES (1, 'ref-5588', 1, 1, 'Memoria1', 'userref-55698', 1, 1, null, false, 1, 1, true);
 
+INSERT INTO eti.tipo_evaluacion (id, nombre, activo) VALUES (1, 'Memoria', true);
+
 -- INFORME
-INSERT INTO eti.informe (id, memoria_id, documento_ref, version)
- VALUES (1, 1, 'DocumentoFormulario1', 1);
+INSERT INTO eti.informe (id, memoria_id, documento_ref, version, tipo_evaluacion_id)
+ VALUES (1, 1, 'DocumentoFormulario1', 1, 1);

@@ -462,6 +462,9 @@
         <constraints nullable="false" />
       </column>
       <column name="memoria_id" type="BIGINT" />
+      <column name="tipo_evaluacion_id" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
     </createTable>
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-44">
@@ -854,57 +857,60 @@
     <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="informe" constraintName="FK_INFORME_MEMORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="memoria" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-97">
-    <addForeignKeyConstraint baseColumnNames="comite_id" baseTableName="memoria" constraintName="FK_MEMORIA_COMITE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="comite" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="tipo_evaluacion_id" baseTableName="informe" constraintName="FK_INFORME_TIPOEVALUACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_evaluacion" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-98">
-    <addForeignKeyConstraint baseColumnNames="estado_actual_id" baseTableName="memoria" constraintName="FK_MEMORIA_ESTADOACTUAL" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_estado_memoria" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="comite_id" baseTableName="memoria" constraintName="FK_MEMORIA_COMITE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="comite" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-99">
-    <addForeignKeyConstraint baseColumnNames="memoria_original_id" baseTableName="memoria" constraintName="FK_MEMORIA_MEMORIAORIGINAL" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="memoria" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="estado_actual_id" baseTableName="memoria" constraintName="FK_MEMORIA_ESTADOACTUAL" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_estado_memoria" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-100">
-    <addForeignKeyConstraint baseColumnNames="peticion_evaluacion_id" baseTableName="memoria" constraintName="FK_MEMORIA_PETICIONEVALUACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="peticion_evaluacion" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="memoria_original_id" baseTableName="memoria" constraintName="FK_MEMORIA_MEMORIAORIGINAL" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="memoria" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-101">
-    <addForeignKeyConstraint baseColumnNames="retrospectiva_id" baseTableName="memoria" constraintName="FK_MEMORIA_RETROSPECTIVA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="retrospectiva" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="peticion_evaluacion_id" baseTableName="memoria" constraintName="FK_MEMORIA_PETICIONEVALUACION" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="peticion_evaluacion" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-102">
-    <addForeignKeyConstraint baseColumnNames="tipo_memoria_id" baseTableName="memoria" constraintName="FK_MEMORIA_TIPOMEMORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_memoria" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="retrospectiva_id" baseTableName="memoria" constraintName="FK_MEMORIA_RETROSPECTIVA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="retrospectiva" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-103">
-    <addForeignKeyConstraint baseColumnNames="tipo_actividad_id" baseTableName="peticion_evaluacion" constraintName="FK_PETICIONEVALUACION_TIPOACTIVIDAD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_actividad" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="tipo_memoria_id" baseTableName="memoria" constraintName="FK_MEMORIA_TIPOMEMORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_memoria" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-104">
-    <addForeignKeyConstraint baseColumnNames="tipo_investigacion_tutelada_id" baseTableName="peticion_evaluacion" constraintName="FK_PETICIONEVALUACION_TIPOINVESTIGACIONTUTELADA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_investigacion_tutelada" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="tipo_actividad_id" baseTableName="peticion_evaluacion" constraintName="FK_PETICIONEVALUACION_TIPOACTIVIDAD" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_actividad" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-105">
-    <addForeignKeyConstraint baseColumnNames="apartado_id" baseTableName="respuesta" constraintName="FK_RESPUESTA_APARTADO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="apartado" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="tipo_investigacion_tutelada_id" baseTableName="peticion_evaluacion" constraintName="FK_PETICIONEVALUACION_TIPOINVESTIGACIONTUTELADA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_investigacion_tutelada" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-106">
-    <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="respuesta" constraintName="FK_RESPUESTA_MEMORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="memoria" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="apartado_id" baseTableName="respuesta" constraintName="FK_RESPUESTA_APARTADO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="apartado" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-107">
-    <addForeignKeyConstraint baseColumnNames="estado_retrospectiva_id" baseTableName="retrospectiva" constraintName="FK_RETROSPECTIVA_ESTADORETROSPECTIVA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="estado_retrospectiva" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="respuesta" constraintName="FK_RESPUESTA_MEMORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="memoria" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-108">
-    <addForeignKeyConstraint baseColumnNames="equipo_trabajo_id" baseTableName="tarea" constraintName="FK_TAREA_EQUIPOTRABAJO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="equipo_trabajo" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="estado_retrospectiva_id" baseTableName="retrospectiva" constraintName="FK_RETROSPECTIVA_ESTADORETROSPECTIVA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="estado_retrospectiva" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-109">
-    <addForeignKeyConstraint baseColumnNames="formacion_especifica_id" baseTableName="tarea" constraintName="FK_TAREA_FORMACIONESPECIFICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="formacion_especifica" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="equipo_trabajo_id" baseTableName="tarea" constraintName="FK_TAREA_EQUIPOTRABAJO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="equipo_trabajo" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-110">
-    <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="tarea" constraintName="FK_TAREA_MEMORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="memoria" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="formacion_especifica_id" baseTableName="tarea" constraintName="FK_TAREA_FORMACIONESPECIFICA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="formacion_especifica" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-111">
-    <addForeignKeyConstraint baseColumnNames="tipo_tarea_id" baseTableName="tarea" constraintName="FK_TAREA_TIPOTAREA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_tarea" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="memoria_id" baseTableName="tarea" constraintName="FK_TAREA_MEMORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="memoria" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-112">
-    <addForeignKeyConstraint baseColumnNames="formulario_id" baseTableName="tipo_documento" constraintName="FK_TIPODOCUMENTO_FORMULARIO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="formulario" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="tipo_tarea_id" baseTableName="tarea" constraintName="FK_TAREA_TIPOTAREA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_tarea" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-113">
-    <addForeignKeyConstraint baseColumnNames="comite_id" baseTableName="tipo_memoria_comite" constraintName="FK_TIPOMEMORIACOMITE_COMITE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="comite" validate="true" />
+    <addForeignKeyConstraint baseColumnNames="formulario_id" baseTableName="tipo_documento" constraintName="FK_TIPODOCUMENTO_FORMULARIO" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="formulario" validate="true" />
   </changeSet>
   <changeSet author="user (generated)" id="0000000000000-114">
+    <addForeignKeyConstraint baseColumnNames="comite_id" baseTableName="tipo_memoria_comite" constraintName="FK_TIPOMEMORIACOMITE_COMITE" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="comite" validate="true" />
+  </changeSet>
+  <changeSet author="user (generated)" id="0000000000000-115">
     <addForeignKeyConstraint baseColumnNames="tipo_memoria_id" baseTableName="tipo_memoria_comite" constraintName="FK_TIPOMEMORIACOMITE_TIPOMEMORIA" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="tipo_memoria" validate="true" />
   </changeSet>
 </databaseChangeLog>

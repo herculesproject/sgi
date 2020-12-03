@@ -15,6 +15,7 @@ import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -68,9 +69,14 @@ public class InformeIT extends BaseIT {
   @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
   @Test
   public void addInforme_ReturnsInforme() throws Exception {
+    TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
+    tipoEvaluacion.setId(1L);
+    tipoEvaluacion.setActivo(true);
+    tipoEvaluacion.setNombre("Memoria");
 
     Informe nuevoInforme = new Informe();
     nuevoInforme.setDocumentoRef("DocumentoFormulario1");
+    nuevoInforme.setTipoEvaluacion(tipoEvaluacion);
 
     restTemplate.exchange(INFORME_CONTROLLER_BASE_PATH, HttpMethod.POST, buildRequest(null, nuevoInforme),
         Informe.class);
@@ -287,11 +293,17 @@ public class InformeIT extends BaseIT {
         new Retrospectiva(id, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), LocalDate.now()), 3,
         "CodOrganoCompetente", Boolean.TRUE, null);
 
+    TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
+    tipoEvaluacion.setId(1L);
+    tipoEvaluacion.setActivo(true);
+    tipoEvaluacion.setNombre("Memoria");
+
     Informe informe = new Informe();
     informe.setId(id);
     informe.setDocumentoRef(documentoRef);
     informe.setMemoria(memoria);
     informe.setVersion(3);
+    informe.setTipoEvaluacion(tipoEvaluacion);
 
     return informe;
   }

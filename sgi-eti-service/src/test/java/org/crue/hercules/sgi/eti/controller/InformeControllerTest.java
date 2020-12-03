@@ -18,6 +18,7 @@ import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.service.InformeService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -84,7 +85,7 @@ public class InformeControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-INFORMEFORMULARIO-EDITAR" })
   public void newInforme_ReturnsInforme() throws Exception {
     // given: Un informe nuevo
-    String nuevoInformeJson = "{\"documentoRef\": \"Documento1\", \"version\": \"2\"}";
+    String nuevoInformeJson = "{\"documentoRef\": \"Documento1\", \"version\": \"2\", \"idTipoEvaluacion\": \"1\"}";
 
     Informe informe = generarMockInforme(1L, "Documento1");
 
@@ -105,7 +106,7 @@ public class InformeControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-INFORMEFORMULARIO-EDITAR" })
   public void newInforme_Error_Returns400() throws Exception {
     // given: Un informe nuevo que produce un error al crearse
-    String nuevoInformeJson = "{\"documentoRef\": \"Documento1\", \"version\": \"2\"}";
+    String nuevoInformeJson = "{\"documentoRef\": \"Documento1\", \"version\": \"2\", \"idTipoEvaluacion\": \"1\"}";
 
     BDDMockito.given(informeService.create(ArgumentMatchers.<Informe>any())).willThrow(new IllegalArgumentException());
 
@@ -124,7 +125,7 @@ public class InformeControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-INFORMEFORMULARIO-EDITAR" })
   public void replaceInforme_ReturnsInforme() throws Exception {
     // given: Un informe a modificar
-    String replaceInformeJson = "{\"id\": 1, \"documentoRef\": \"Documento1\", \"version\": \"2\"}";
+    String replaceInformeJson = "{\"id\": 1, \"documentoRef\": \"Documento1\", \"version\": \"2\", \"idTipoEvaluacion\": \"1\"}";
 
     Informe informe = generarMockInforme(1L, "Replace Documento1");
 
@@ -145,7 +146,7 @@ public class InformeControllerTest extends BaseControllerTest {
   @WithMockUser(username = "user", authorities = { "ETI-INFORMEFORMULARIO-EDITAR" })
   public void replaceInforme_NotFound() throws Exception {
     // given: Un informe a modificar
-    String replaceInformeJson = "{\"id\": 1, \"documentoRef\": \"Documento1\", \"version\": \"2\"}";
+    String replaceInformeJson = "{\"id\": 1, \"documentoRef\": \"Documento1\", \"version\": \"2\", \"idTipoEvaluacion\": \"1\"}";
 
     BDDMockito.given(informeService.update(ArgumentMatchers.<Informe>any())).will((InvocationOnMock invocation) -> {
       throw new InformeNotFoundException(((Informe) invocation.getArgument(0)).getId());
@@ -379,11 +380,17 @@ public class InformeControllerTest extends BaseControllerTest {
         new Retrospectiva(id, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), LocalDate.now()), 3,
         "CodOrganoCompetente", Boolean.TRUE, null);
 
+    TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
+    tipoEvaluacion.setId(1L);
+    tipoEvaluacion.setActivo(true);
+    tipoEvaluacion.setNombre("Memoria");
+
     Informe informe = new Informe();
     informe.setId(id);
     informe.setDocumentoRef(documentoRef);
     informe.setMemoria(memoria);
     informe.setVersion(3);
+    informe.setTipoEvaluacion(tipoEvaluacion);
 
     return informe;
   }

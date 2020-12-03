@@ -48,20 +48,23 @@ INSERT INTO eti.memoria (id, num_referencia, peticion_evaluacion_id, comite_id, 
 -- FORMULARIO 
 INSERT INTO eti.formulario (id, nombre, descripcion) VALUES (1, 'M10', 'Descripcion');
 
+ -- TIPO EVALUACION 
+INSERT INTO eti.tipo_evaluacion (id, nombre, activo) VALUES (1, 'Memoria', true);
+
 -- INFORME
-INSERT INTO eti.informe (id, memoria_id, documento_ref, version)
- VALUES (1, 1, 'DocumentoFormulario001', 1);
- INSERT INTO eti.informe (id, memoria_id, documento_ref, version)
- VALUES (2, 2, 'DocumentoFormulario002', 2);
- INSERT INTO eti.informe (id, memoria_id, documento_ref, version)
- VALUES (3, 3, 'DocumentoFormulario003', 3);
- INSERT INTO eti.informe (id, memoria_id, documento_ref, version)
- VALUES (4, 4, 'DocumentoFormulario4', 4);
- INSERT INTO eti.informe (id, memoria_id, documento_ref, version)
- VALUES (5, 5, 'DocumentoFormulario5', 5);
- INSERT INTO eti.informe (id, memoria_id, documento_ref, version)
- VALUES (6, 6, 'DocumentoFormulario6', 6);
- INSERT INTO eti.informe (id, memoria_id, documento_ref, version)
- VALUES (7, 7, 'DocumentoFormulario7', 7);
- INSERT INTO eti.informe (id, memoria_id, documento_ref, version)
- VALUES (8, 8, 'DocumentoFormulario8', 8);
+INSERT INTO eti.informe (id, memoria_id, documento_ref, version, tipo_evaluacion_id)
+ VALUES (1, 1, 'DocumentoFormulario001', 1, 1);
+ INSERT INTO eti.informe (id, memoria_id, documento_ref, version, tipo_evaluacion_id)
+ VALUES (2, 2, 'DocumentoFormulario002', 2, 1);
+ INSERT INTO eti.informe (id, memoria_id, documento_ref, version, tipo_evaluacion_id)
+ VALUES (3, 3, 'DocumentoFormulario003', 3, 1);
+ INSERT INTO eti.informe (id, memoria_id, documento_ref, version, tipo_evaluacion_id)
+ VALUES (4, 4, 'DocumentoFormulario4', 4, 1);
+ INSERT INTO eti.informe (id, memoria_id, documento_ref, version, tipo_evaluacion_id)
+ VALUES (5, 5, 'DocumentoFormulario5', 5, 1);
+ INSERT INTO eti.informe (id, memoria_id, documento_ref, version, tipo_evaluacion_id)
+ VALUES (6, 6, 'DocumentoFormulario6', 6, 1);
+ INSERT INTO eti.informe (id, memoria_id, documento_ref, version, tipo_evaluacion_id)
+ VALUES (7, 7, 'DocumentoFormulario7', 7, 1);
+ INSERT INTO eti.informe (id, memoria_id, documento_ref, version, tipo_evaluacion_id)
+ VALUES (8, 8, 'DocumentoFormulario8', 8, 1);

@@ -16,6 +16,7 @@ import org.crue.hercules.sgi.eti.model.PeticionEvaluacion;
 import org.crue.hercules.sgi.eti.model.Retrospectiva;
 import org.crue.hercules.sgi.eti.model.TipoActividad;
 import org.crue.hercules.sgi.eti.model.TipoEstadoMemoria;
+import org.crue.hercules.sgi.eti.model.TipoEvaluacion;
 import org.crue.hercules.sgi.eti.model.TipoMemoria;
 import org.crue.hercules.sgi.eti.repository.InformeRepository;
 import org.crue.hercules.sgi.eti.service.impl.InformeServiceImpl;
@@ -296,11 +297,17 @@ public class InformeServiceTest extends BaseServiceTest {
         new Retrospectiva(id, new EstadoRetrospectiva(1L, "Pendiente", Boolean.TRUE), LocalDate.now()), 3,
         "codOrganoCompetente", Boolean.TRUE, null);
 
+    TipoEvaluacion tipoEvaluacion = new TipoEvaluacion();
+    tipoEvaluacion.setId(1L);
+    tipoEvaluacion.setActivo(true);
+    tipoEvaluacion.setNombre("Memoria");
+
     Informe informe = new Informe();
     informe.setId(id);
     informe.setDocumentoRef(documentoRef);
     informe.setMemoria(memoria);
     informe.setVersion(3);
+    informe.setTipoEvaluacion(tipoEvaluacion);
 
     return informe;
   }
