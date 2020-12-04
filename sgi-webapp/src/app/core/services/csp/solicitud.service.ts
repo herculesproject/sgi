@@ -165,4 +165,18 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
       );
   }
 
+  /**
+   * Recupera listado de historico estado
+   * @param id solicitud
+   * @param options opciones de búsqueda.
+   */
+  findEstadoSolicitud(solicitudId: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IEstadoSolicitud>> {
+    this.logger.debug(SolicitudService.name, `findEstadoSolicitud(${solicitudId}, ${options})`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${solicitudId}/estadosolicitudes`;
+    return this.find<IEstadoSolicitud, IEstadoSolicitud>(endpointUrl, options)
+      .pipe(
+        tap(() => this.logger.debug(SolicitudService.name, `findEstadoSolicitud(${solicitudId}, ${options})`, '-', 'end'))
+      );
+  }
+
 }

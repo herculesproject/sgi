@@ -11,6 +11,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { SolicitudResolver } from './solicitud.resolver';
 import { SolicitudModalidadEntidadConvocanteModalComponent } from './modals/solicitud-modalidad-entidad-convocante-modal/solicitud-modalidad-entidad-convocante-modal.component';
+import { SolicitudHistoricoEstadosComponent } from './solicitud-formulario/solicitud-historico-estados/solicitud-historico-estados.component';
 
 
 
@@ -20,7 +21,8 @@ import { SolicitudModalidadEntidadConvocanteModalComponent } from './modals/soli
     SolicitudEditarComponent,
     SolicitudListadoComponent,
     SolicitudDatosGeneralesComponent,
-    SolicitudModalidadEntidadConvocanteModalComponent
+    SolicitudModalidadEntidadConvocanteModalComponent,
+    SolicitudHistoricoEstadosComponent
   ],
   imports: [
     CommonModule,

@@ -12,6 +12,7 @@ import { NGXLogger } from 'ngx-logger';
 import { SolicitudDatosGeneralesFragment } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.fragment';
 import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
 import { SgiAuthService } from '@sgi/framework/auth';
+import { SolicitudHistoricoEstadosFragment } from './solicitud-formulario/solicitud-historico-estados/solicitud-historico-estados.fragment';
 
 
 
@@ -19,11 +20,12 @@ import { SgiAuthService } from '@sgi/framework/auth';
 export class SolicitudActionService extends ActionService {
 
   public readonly FRAGMENT = {
-    DATOS_GENERALES: 'datosGenerales'
+    DATOS_GENERALES: 'datosGenerales',
+    HISTORICO_ESTADOS: 'historicoEstados'
   };
 
   private datosGenerales: SolicitudDatosGeneralesFragment;
-
+  private historicoEstado: SolicitudHistoricoEstadosFragment;
 
   private solicitud: ISolicitud;
 
@@ -49,7 +51,10 @@ export class SolicitudActionService extends ActionService {
     this.datosGenerales = new SolicitudDatosGeneralesFragment(logger, this.solicitud?.id, solicitudService, configuracionSolicitudService,
       convocatoriaService, empresaEconomicaService, personaFisicaService, solicitudModalidadService, unidadGestionService, sgiAuthService);
 
+    this.historicoEstado = new SolicitudHistoricoEstadosFragment(logger, this.solicitud?.id, solicitudService);
+
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
+    this.addFragment(this.FRAGMENT.HISTORICO_ESTADOS, this.historicoEstado);
 
   }
 
