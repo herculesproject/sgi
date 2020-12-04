@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.csp.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.assertj.core.api.Assertions;
+import org.crue.hercules.sgi.csp.enums.TipoEstadoSolicitudEnum;
 import org.crue.hercules.sgi.csp.enums.TipoFormularioSolicitudEnum;
 import org.crue.hercules.sgi.csp.exceptions.SolicitudNotFoundException;
 import org.crue.hercules.sgi.csp.model.Convocatoria;
@@ -14,6 +16,7 @@ import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
+import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -49,11 +52,15 @@ public class SolicitudControllerTest extends BaseControllerTest {
   @MockBean
   private SolicitudModalidadService solicitudModalidadService;
 
+  @MockBean
+  private EstadoSolicitudService estadoSolicitudService;
+
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
   private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
   private static final String CONTROLLER_BASE_PATH = "/solicitudes";
   private static final String PATH_SOLICITUD_MODALIDADES = "/solicitudmodalidades";
+  private static final String PATH_ESTADOS_SOLICITUD = "/estadosolicitudes";
   private static final String PATH_TODOS = "/todos";
 
   @Test
@@ -529,6 +536,99 @@ public class SolicitudControllerTest extends BaseControllerTest {
   }
 
   /**
+   * 
+   * SOLICITUD ESTADOS
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
+  public void findAllEstadoSolicitud_ReturnsPage() throws Exception {
+    // given: Una lista con 37 SolicitudModalidad para la Solicitud
+    Long solicitudId = 1L;
+
+    List<EstadoSolicitud> estadosSolicitud = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      estadosSolicitud.add(generarMockEstadoSolicitud(i));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(
+            estadoSolicitudService.findAllBySolicitud(ArgumentMatchers.<Long>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > estadosSolicitud.size() ? estadosSolicitud.size() : toIndex;
+          List<EstadoSolicitud> content = estadosSolicitud.subList(fromIndex, toIndex);
+          Page<EstadoSolicitud> pageResponse = new PageImpl<>(content, pageable, estadosSolicitud.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ESTADOS_SOLICITUD, solicitudId)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page)
+                .header("X-Page-Size", pageSize).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los SolicitudModalidad del 31 al
+        // 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<EstadoSolicitud> estadosSolicitudResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<EstadoSolicitud>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      EstadoSolicitud estadoSolicitud = estadosSolicitudResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(estadoSolicitud.getComentario()).isEqualTo("Estado-" + i);
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
+  public void findAllEstadoSolicitud_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de EstadoSolicitud para la
+    // Solicitud
+    Long solicitudId = 1L;
+    List<EstadoSolicitud> estadosSolicitud = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(
+            estadoSolicitudService.findAllBySolicitud(ArgumentMatchers.<Long>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(1, Pageable.class);
+          Page<EstadoSolicitud> pageResponse = new PageImpl<>(estadosSolicitud, pageable, 0);
+          return pageResponse;
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ESTADOS_SOLICITUD, solicitudId)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page)
+                .header("X-Page-Size", pageSize).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
    * Función que devuelve un objeto Solicitud
    * 
    * @param id id del Solicitud
@@ -584,6 +684,23 @@ public class SolicitudControllerTest extends BaseControllerTest {
     solicitudModalidad.setPrograma(programa);
 
     return solicitudModalidad;
+  }
+
+  /**
+   * Función que devuelve un objeto EstadoSolicitud
+   * 
+   * @param id id del EstadoSolicitud
+   * @return el objeto EstadoSolicitud
+   */
+  private EstadoSolicitud generarMockEstadoSolicitud(Long id) {
+    EstadoSolicitud estadoSolicitud = new EstadoSolicitud();
+    estadoSolicitud.setId(id);
+    estadoSolicitud.setComentario("Estado-" + id);
+    estadoSolicitud.setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+    estadoSolicitud.setFechaEstado(LocalDateTime.now());
+    estadoSolicitud.setIdSolicitud(1L);
+
+    return estadoSolicitud;
   }
 
 }

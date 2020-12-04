@@ -47,6 +47,7 @@ public class SolicitudIT {
   private static final String PATH_PARAMETER_REACTIVAR = "/reactivar";
   private static final String CONTROLLER_BASE_PATH = "/solicitudes";
   private static final String PATH_SOLICITUD_MODALIDADES = "/solicitudmodalidades";
+  private static final String PATH_ESTADOS_SOLICITUD = "/estadosolicitudes";
   private static final String PATH_TODOS = "/todos";
 
   private HttpEntity<Solicitud> buildRequest(HttpHeaders headers, Solicitud entity) throws Exception {
@@ -305,6 +306,47 @@ public class SolicitudIT {
         .isEqualTo("entidad-" + String.format("%03d", 2));
     Assertions.assertThat(solicitudModalidades.get(2).getEntidadRef()).as("get(2).getEntidadRef()")
         .isEqualTo("entidad-" + String.format("%03d", 1));
+  }
+
+  /**
+   * 
+   * SOLICITUD ESTADOS
+   * 
+   */
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllEstadoSolicitud_WithPagingSortingAndFiltering_ReturnsEstadoSolicitudSubList() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "id-";
+
+    Long solicitudId = 1L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + PATH_ESTADOS_SOLICITUD)
+        .queryParam("s", sort).buildAndExpand(solicitudId).toUri();
+
+    final ResponseEntity<List<EstadoSolicitud>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<EstadoSolicitud>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<EstadoSolicitud> estadosSolicitud = response.getBody();
+    Assertions.assertThat(estadosSolicitud.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
+    Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+    Assertions.assertThat(estadosSolicitud.get(0).getEstado()).as("get(0).getEstado()")
+        .isEqualTo(TipoEstadoSolicitudEnum.EXCLUIDA);
+    Assertions.assertThat(estadosSolicitud.get(1).getEstado()).as("get(1).getEstado()")
+        .isEqualTo(TipoEstadoSolicitudEnum.PRESENTADA);
+    Assertions.assertThat(estadosSolicitud.get(2).getEstado()).as("get(2).getEstado()")
+        .isEqualTo(TipoEstadoSolicitudEnum.BORRADOR);
   }
 
   /**

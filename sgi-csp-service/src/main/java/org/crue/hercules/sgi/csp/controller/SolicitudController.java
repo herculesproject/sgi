@@ -8,8 +8,10 @@ import javax.validation.Valid;
 
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
+import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
+import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -45,15 +47,20 @@ public class SolicitudController {
   /** SolicitudModalidad service */
   private final SolicitudModalidadService solicitudModalidadService;
 
+  /** EstadoSolicitud service */
+  private final EstadoSolicitudService estadoSolicitudService;
+
   /**
    * Instancia un nuevo SolicitudController.
    * 
    * @param solicitudService          {@link SolicitudService}.
    * @param solicitudModalidadService {@link solicitudModalidadService}.
    */
-  public SolicitudController(SolicitudService solicitudService, SolicitudModalidadService solicitudModalidadService) {
+  public SolicitudController(SolicitudService solicitudService, SolicitudModalidadService solicitudModalidadService,
+      EstadoSolicitudService estadoSolicitudService) {
     this.service = solicitudService;
     this.solicitudModalidadService = solicitudModalidadService;
+    this.estadoSolicitudService = estadoSolicitudService;
   }
 
   /**
@@ -267,6 +274,30 @@ public class SolicitudController {
     }
 
     log.debug("findAllSolicitudModalidad(Long id, List<QueryCriteria> query, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada de {@link EstadoSolicitud} de la
+   * {@link Solicitud}.
+   * 
+   * @param id     Identificador de {@link Solicitud}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/estadosolicitudes")
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-SOL-V')")
+  ResponseEntity<Page<EstadoSolicitud>> findAllEstadoSolicitud(@PathVariable Long id,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllEstadoSolicitud(Long id, Pageable paging) - start");
+    Page<EstadoSolicitud> page = estadoSolicitudService.findAllBySolicitud(id, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllEstadoSolicitud(Long id, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllEstadoSolicitud(Long id, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

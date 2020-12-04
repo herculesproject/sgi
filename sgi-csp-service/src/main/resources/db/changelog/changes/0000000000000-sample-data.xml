@@ -1361,6 +1361,13 @@
       <column name="fecha_estado" value="2020-11-07 12:00:00" />
       <column name="comentario" value="comentario3" />
     </insert>
+    <insert tableName="estado_solicitud">
+      <column name="id" valueSequenceNext="estado_solicitud_seq" />
+      <column name="id_solicitud" valueComputed="(select id from csp.solicitud where codigo_registro_interno = 'SGI_SLC3202011071200')" />
+      <column name="estado" value="Presentada" />
+      <column name="fecha_estado" value="2020-12-01 12:00:00" />
+      <column name="comentario" value="comentario3 presentada" />
+    </insert>
   </changeSet>
 
   <changeSet context="dev" author="master" id="0000000000000-solicitud-update_estado">
