@@ -16,12 +16,10 @@ import org.crue.hercules.sgi.eti.repository.TipoMemoriaComiteRepository;
 import org.crue.hercules.sgi.eti.service.impl.TipoMemoriaComiteServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -32,7 +30,6 @@ import org.springframework.data.jpa.domain.Specification;
 /**
  * TipoMemoriaComiteServiceTest
  */
-@ExtendWith(MockitoExtension.class)
 public class TipoMemoriaComiteServiceTest extends BaseServiceTest {
 
   @Mock

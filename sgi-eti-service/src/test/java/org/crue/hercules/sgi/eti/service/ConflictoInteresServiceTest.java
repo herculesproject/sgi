@@ -15,16 +15,13 @@ import org.crue.hercules.sgi.eti.repository.EvaluadorRepository;
 import org.crue.hercules.sgi.eti.service.impl.ConflictoInteresServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * ConflictoInteresServiceTest
  */
-@ExtendWith(MockitoExtension.class)
 public class ConflictoInteresServiceTest extends BaseServiceTest {
 
   @Mock
