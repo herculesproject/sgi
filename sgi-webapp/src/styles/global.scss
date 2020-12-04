@@ -20,7 +20,7 @@ body {
 /**/
 
 .layout-components {
-  section {
+   section {
     h2 {
       font-weight: bold;
     }
@@ -28,8 +28,30 @@ body {
   }
 }
 
+
 /**/
 /** FIN Layout estructura */
+/**/
+
+/**/
+/** Layout contenido */
+/**/
+
+// Mostramos scroll dentro del contenido del componente con footer //
+.scrollable-panel-with-footer{
+  max-height: calc(100vh - #{$headerHeight} - #{$breadcrumHeight} - #{$footerHeight});
+  overflow: auto;
+}
+
+// Mostramos scroll dentro del contenido del componente SIN footer //
+.scrollable-panel{
+  max-height: calc(100vh - #{$headerHeight} - #{$breadcrumHeight});
+  overflow: auto;
+}
+
+
+/**/
+/** Layout contenido */
 /**/
 
 
@@ -220,12 +242,12 @@ mat-form-field {
   margin: 13px 0;
   padding: 10px;
   border-radius: 5px;
-  color: #156db4;
-  background-color: #bfe2ee;
+  color: map-get($palette-primary, 500);
+  background-color: map-get($palette-primary, 100);
   text-align: center;
-  -webkit-box-shadow: 0 5px 6px -6px #999;
-   -moz-box-shadow: 0 5px 6px -6px #999;
-        box-shadow: 0 5px 6px -6px #999;
+  -webkit-box-shadow: 0 5px 6px -6px map-get($palette-grease, 200);
+   -moz-box-shadow: 0 5px 6px -6px map-get($palette-grease, 200);
+        box-shadow: 0 5px 6px -6px map-get($palette-grease, 200);
 }
 
 /**/
