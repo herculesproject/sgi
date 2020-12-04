@@ -54,8 +54,7 @@
     </table>
     <!-- Botón asignacion memoria -->
     <div class="separation-button">
-      <button mat-button color="three" [disabled]="disableAsignarMemorias" (click)="openDialogAsignarMemoria()"
-        mat-button>
+      <button mat-raised-button color="three" [disabled]="disableAsignarMemorias" (click)="openDialogAsignarMemoria()">
         <mat-icon>add_box</mat-icon>
         {{'eti.convocatoriaReunion.formulario.asignacionMemorias.nuevaMemoria' | translate}}
       </button>

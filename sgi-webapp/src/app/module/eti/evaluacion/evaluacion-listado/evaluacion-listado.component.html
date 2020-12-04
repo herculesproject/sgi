@@ -5,10 +5,13 @@
     <!-- Buscador de Gestión de Evaluaciones -->
 
     <!--Persona-->
-    <div class="buscador">
-      <sgi-buscar-persona [textoLabel]="textoUsuarioLabel" [textoInput]="textoUsuarioInput"
-        [textoButton]="textoUsuarioButton" [datosUsuarioTexto]="datosUsuarioSolicitante" (usuarioSeleccionado)="
+    <div class="buscador" [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs"
+      [fxLayout]="fxLayoutProperties.layout" fxLayoutGap="fxLayoutProperties.gap" ngClass.gt-xs="ml-10">
+      <div class="col">
+        <sgi-buscar-persona [textoLabel]="textoUsuarioLabel" [textoInput]="textoUsuarioInput"
+          [textoButton]="textoUsuarioButton" [datosUsuarioTexto]="datosUsuarioSolicitante" (usuarioSeleccionado)="
                                         setPersona($event)"></sgi-buscar-persona>
+      </div>
     </div>
 
     <form [formGroup]="formGroup" [fxLayout.xs]="fxLayoutProperties.xs" [fxLayout]="fxLayoutProperties.layout"
@@ -92,10 +95,10 @@
       </div>
       <div class="buttons-final">
         <div class="col filter-button">
-          <button color="primary" aria-label="Center Align" md-button mat-raised-button (click)="onSearch()">
+          <button color="primary" aria-label="Center Align" mat-raised-button (click)="onSearch()">
             <mat-icon>search</mat-icon> {{'botones.buscar'| translate}}
           </button>
-          <button color="warn" class="md-primary" aria-label="Center Align" md-button (click)="onClearFilters()"
+          <button color="warn" class="md-primary" aria-label="Center Align" (click)="onClearFilters()"
             mat-button>{{'botones.limpiar'| translate}}
           </button>
         </div>
@@ -108,8 +111,7 @@
     <div class="col filter-button">
       <a href="/pentaho/api/repos/saiku-adhoc/edit#query/open/L3B1YmxpYy_DiXRpY2EvTGlzdGFkbyBkZSBldmFsdWFjaW9uZXMuYWRob2M?biplugin=true/viewer?userid=admin&password=password&output-type=pdf&showParameters=false"
         target="_blank">
-        <button id="boton-demo" color="primary" class="md-primary" aria-label="Center Align" md-button
-          mat-raised-button>
+        <button id="boton-demo" color="primary" class="md-primary" aria-label="Center Align" mat-raised-button>
           <mat-icon>table_chart</mat-icon>
         </button>
       </a>

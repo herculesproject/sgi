@@ -5,7 +5,7 @@
   <main>
     <form [formGroup]="formGroup">
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
-        <mat-form-field appearance="fill" fxFill>
+        <mat-form-field fxFill>
           <mat-label>{{'eti.comentario.editar.bloque.titulo' | translate}}</mat-label>
           <input matInput formControlName="bloque" type="text" id="bloque"
             placeholder="{{'eti.comentario.editar.bloque.titulo' | translate}}" required
@@ -24,7 +24,7 @@
         </mat-form-field>
       </div>
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
-        <mat-form-field appearance="fill" fxFill *ngIf="apartados?.length > 0">
+        <mat-form-field fxFill *ngIf="apartados?.length > 0">
           <mat-label>{{'eti.comentario.editar.apartado.titulo' | translate}}</mat-label>
           <input matInput formControlName="apartado" type="text" id="apartado"
             placeholder="{{'eti.comentario.editar.apartado.titulo' | translate}}" required
@@ -44,7 +44,7 @@
       </div>
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign"
         *ngIf="subapartados?.length > 0">
-        <mat-form-field appearance="fill" fxFill>
+        <mat-form-field fxFill>
           <mat-label>{{'eti.comentario.editar.subapartado.titulo' | translate}}</mat-label>
           <input matInput formControlName="subapartado" type="text" id="subapartado"
             placeholder="{{'eti.comentario.editar.subapartado.titulo' | translate}}"
@@ -60,7 +60,7 @@
         </mat-form-field>
       </div>
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
-        <mat-form-field appearance="fill" fxFill>
+        <mat-form-field fxFill>
           <mat-label>{{'eti.comentario.editar.comentario.titulo' | translate}}</mat-label>
           <textarea matInput formControlName="comentario" type="text" id="comentario"
             placeholder="{{'eti.comentario.editar.comentario.titulo' | translate}}" required>

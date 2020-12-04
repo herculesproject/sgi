@@ -34,31 +34,12 @@
         {{'eti.evaluador.listado.estado.activo' | translate}}</mat-checkbox>
     </div>
 
-    <!-- Num documento
-    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-      [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field appearance="fill">
-        <mat-label>{{'eti.acta.listado.numeroDocumento' | translate}}</mat-label>
-        <input matInput type="text" placeholder="{{'eti.acta.listado.numeroDocumento' | translate}}"
-          formControlName="numIdentificadorPersonal">
-      </mat-form-field>
-    </div>
-
-     Nombre
-    <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-      [fxFlexOrder]="fxFlexProperties.order">
-      <mat-form-field appearance="fill">
-        <mat-label>{{'eti.acta.listado.nombre' | translate}}</mat-label>
-        <input matInput type="text" placeholder="{{'eti.acta.listado.nombre' | translate}}" formControlName="nombre">
-      </mat-form-field>
-    </div>-->
-
     <div class="buttons-final">
       <div class="col filter-button">
-        <button color="primary" aria-label="Center Align" md-button mat-raised-button (click)="onSearch()">
+        <button color="primary" aria-label="Center Align" mat-raised-button (click)="onSearch()">
           <mat-icon>search</mat-icon> {{'botones.buscar'| translate}}
         </button>
-        <button color="warn" aria-label="Center Align" md-button (click)="onClearFilters()"
+        <button color="warn" aria-label="Center Align" (click)="onClearFilters()"
           mat-button>{{'botones.limpiar'| translate}}
         </button>
       </div>

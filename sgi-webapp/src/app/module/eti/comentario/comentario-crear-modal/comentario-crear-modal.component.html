@@ -5,7 +5,7 @@
   <main>
     <form [formGroup]="formGroup">
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
-        <mat-form-field appearance="fill" fxFill>
+        <mat-form-field fxFill>
           <mat-label>{{'eti.comentario.crear.bloque.titulo' | translate}}</mat-label>
           <input matInput formControlName="bloque" type="text" id="bloque"
             placeholder="{{'eti.comentario.crear.bloque.titulo' | translate}}" required
@@ -25,7 +25,7 @@
       </div>
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
 
-        <mat-form-field appearance="fill" fxFill>
+        <mat-form-field fxFill>
           <mat-label>{{'eti.comentario.crear.apartado.titulo' | translate}}</mat-label>
           <input matInput formControlName="apartado" type="text" id="apartado"
             placeholder="{{'eti.comentario.crear.apartado.titulo' | translate}}" required
@@ -44,7 +44,7 @@
         </mat-form-field>
       </div>
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
-        <mat-form-field appearance="fill" fxFill>
+        <mat-form-field fxFill>
           <mat-label>{{'eti.comentario.crear.subapartado.titulo' | translate}}</mat-label>
           <input matInput formControlName="subapartado" type="text" id="subapartado"
             placeholder="{{'eti.comentario.crear.subapartado.titulo' | translate}}"
@@ -60,7 +60,7 @@
         </mat-form-field>
       </div>
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
-        <mat-form-field appearance="fill" fxFill>
+        <mat-form-field fxFill>
           <mat-label>{{'eti.comentario.crear.comentario.titulo' | translate}}</mat-label>
           <textarea matInput formControlName="comentario" type="text" id="comentario"
             placeholder="{{'eti.comentario.crear.comentario.titulo' | translate}}" required>
