@@ -29,6 +29,7 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
 
   disableRegistrar = false;
 
+
   constructor(
     protected readonly logger: NGXLogger,
     protected readonly snackBarService: SnackBarService,
@@ -47,6 +48,7 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
         this.disableRegistrar = status.changes || status.errors;
       }
     ));
+
   }
 
   saveOrUpdate(): void {

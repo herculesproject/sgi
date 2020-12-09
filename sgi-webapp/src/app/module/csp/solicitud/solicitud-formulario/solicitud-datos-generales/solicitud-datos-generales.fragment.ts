@@ -532,6 +532,9 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
         return entidadesConvocantesModalidad;
       }),
       mergeMap(entidadesConvocantesModalidad => {
+        if (entidadesConvocantesModalidad.length === 0) {
+          return of([]);
+        }
         return from(entidadesConvocantesModalidad).pipe(
           mergeMap((element) => {
             return this.empresaEconomicaService.findById(element.entidadConvocante.entidad.personaRef).pipe(

@@ -12,9 +12,11 @@ import { TipoFormularioSolicitud } from '@core/enums/tipo-formulario-solicitud';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 import { ISolicitudModalidadBackend, SolicitudModalidadService } from './solicitud-modalidad.service';
 import { ISolicitudDocumento } from '@core/models/csp/solicitud-documento';
+import { SolicitudHitoService } from './solicitud-hito.service';
+import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
 
 
 interface ISolicitudBackend {
@@ -196,5 +198,39 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
         '-', 'end'))
     );
   }
+
+  /**
+  * Recupera los hitos de la solicitud
+  *
+  * @param solicitudId Id de la solicitud
+  * @param options opciones de busqueda
+  * @returns observable con la lista de modalidades de la solicitud
+  */
+  findHitosSolicitud(solicitudId: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitudHito>> {
+    this.logger.debug(SolicitudService.name,
+      `findHitosSolicitud(${solicitudId}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+
+    const endpointUrl = `${this.endpointUrl}/${solicitudId}/solicitudhitos`;
+    return this.find<ISolicitudHito, ISolicitudHito>(endpointUrl, options)
+      .pipe(
+        tap(() => this.logger.debug(SolicitudService.name,
+          `findHitosSolicitud(${solicitudId}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+      );
+  }
+
+  /**
+   * Comprueba si una solicitud está asociada a una convocatoria SGI.
+   *
+   * @param id Id de la solicitud.
+   */
+  hasConvocatoriaSGI(id: number): Observable<boolean> {
+    this.logger.debug(SolicitudService.name, `hasConvocatoriaSGI(id: ${id})`, '-', 'start');
+    const url = `${this.endpointUrl}/${id}/convocatoria-sgi`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(x => x.status === 200),
+      tap(() => this.logger.debug(SolicitudService.name, `hasConvocatoriaSGI(id: ${id})`, '-', 'end'))
+    );
+  }
+
 
 }

@@ -16,6 +16,11 @@ import { SolicitudHistoricoEstadosFragment } from './solicitud-formulario/solici
 import { SolicitudDocumentosFragment } from './solicitud-formulario/solicitud-documentos/solicitud-documentos.fragment';
 import { ConvocatoriaDocumentoService } from '@core/services/csp/convocatoria-documento.service';
 import { SolicitudDocumentoService } from '@core/services/csp/solicitud-documento.service';
+import { SolicitudHitosFragment } from './solicitud-formulario/solicitud-hitos/solicitud-hitos.fragment';
+import { BehaviorSubject } from 'rxjs';
+import { SolicitudHitoService } from '@core/services/csp/solicitud-hito.service';
+
+
 
 @Injectable()
 export class SolicitudActionService extends ActionService {
@@ -23,14 +28,20 @@ export class SolicitudActionService extends ActionService {
   public readonly FRAGMENT = {
     DATOS_GENERALES: 'datosGenerales',
     HISTORICO_ESTADOS: 'historicoEstados',
-    DOCUMENTOS: 'documentos'
+    DOCUMENTOS: 'documentos',
+    HITOS: 'hitos',
   };
 
   private datosGenerales: SolicitudDatosGeneralesFragment;
   private historicoEstado: SolicitudHistoricoEstadosFragment;
   private documentos: SolicitudDocumentosFragment;
 
+  private hitos: SolicitudHitosFragment;
+
+
   private solicitud: ISolicitud;
+
+  public showHitos$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private logger: NGXLogger,
@@ -41,12 +52,16 @@ export class SolicitudActionService extends ActionService {
     empresaEconomicaService: EmpresaEconomicaService,
     personaFisicaService: PersonaFisicaService,
     solicitudModalidadService: SolicitudModalidadService,
+    solicitudHitoService: SolicitudHitoService,
     unidadGestionService: UnidadGestionService,
     sgiAuthService: SgiAuthService,
     convocatoriaDocumentoService: ConvocatoriaDocumentoService,
     solicitudDocumentoService: SolicitudDocumentoService
   ) {
     super();
+
+
+
     this.solicitud = {} as ISolicitud;
     if (route.snapshot.data.solicitud) {
       this.solicitud = route.snapshot.data.solicitud;
@@ -58,8 +73,24 @@ export class SolicitudActionService extends ActionService {
     this.documentos = new SolicitudDocumentosFragment(logger, this.solicitud?.id, this.solicitud?.convocatoria?.id,
       configuracionSolicitudService, solicitudService, solicitudDocumentoService);
 
+
+    this.hitos = new SolicitudHitosFragment(logger, this.solicitud?.id, solicitudHitoService, solicitudService, sgiAuthService);
+
+    if (this.solicitud?.id) {
+      solicitudService.hasConvocatoriaSGI(this.solicitud.id).subscribe((hasConvocatoriaSgi) => {
+        if (hasConvocatoriaSgi) {
+
+          this.showHitos$.next(true);
+        }
+
+      });
+    }
+
+
     this.historicoEstado = new SolicitudHistoricoEstadosFragment(logger, this.solicitud?.id, solicitudService);
 
+
+    this.addFragment(this.FRAGMENT.HITOS, this.hitos);
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.HISTORICO_ESTADOS, this.historicoEstado);
     this.addFragment(this.FRAGMENT.DOCUMENTOS, this.documentos);

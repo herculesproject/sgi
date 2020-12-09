@@ -16,6 +16,7 @@ import { SolicitudCrearComponent } from './solicitud-crear/solicitud-crear.compo
 import { SolicitudEditarComponent } from './solicitud-editar/solicitud-editar.component';
 import { SolicitudListadoComponent } from './solicitud-listado/solicitud-listado.component';
 import { SolicitudDatosGeneralesComponent } from './solicitud-formulario/solicitud-datos-generales/solicitud-datos-generales.component';
+import { SolicitudHitosComponent } from './solicitud-formulario/solicitud-hitos/solicitud-hitos.component';
 import { SolicitudHistoricoEstadosComponent } from './solicitud-formulario/solicitud-historico-estados/solicitud-historico-estados.component';
 import { SolicitudDocumentosComponent } from './solicitud-formulario/solicitud-documentos/solicitud-documentos.component';
 
@@ -74,6 +75,11 @@ const routes: SgiRoutes = [
       {
         path: SOLICITUD_ROUTE_NAMES.DATOS_GENERALES,
         component: SolicitudDatosGeneralesComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: SOLICITUD_ROUTE_NAMES.HITOS,
+        component: SolicitudHitosComponent,
         canDeactivate: [FragmentGuard]
       },
       {
