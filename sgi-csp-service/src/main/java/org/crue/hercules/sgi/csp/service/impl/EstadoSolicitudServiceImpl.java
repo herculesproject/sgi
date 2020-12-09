@@ -50,8 +50,7 @@ public class EstadoSolicitudServiceImpl implements EstadoSolicitudService {
   /**
    * Obtiene las {@link EstadoSolicitud} para una {@link Solicitud}.
    *
-   * @param solicitudId el id de la {@link Solicitud}.
-   * @param query       la información del filtro.
+   * @param idSolicitud el id de la {@link Solicitud}.
    * @param paging      la información de la paginación.
    * @return la lista de entidades {@link EstadoSolicitud} de la {@link Solicitud}
    *         paginadas.

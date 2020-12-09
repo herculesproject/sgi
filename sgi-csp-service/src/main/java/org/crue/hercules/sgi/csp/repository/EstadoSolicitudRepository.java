@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.repository;
 
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
+import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +14,7 @@ public interface EstadoSolicitudRepository
    * Obtiene las {@link EstadoSolicitud} para una {@link Solicitud}.
    *
    * @param idSolicitud el id de la {@link Solicitud}.
-   * @param pageable    la información de la paginación.
+   * @param paging      la información de la paginación.
    * @return la lista de entidades {@link EstadoSolicitud} de la {@link Solicitud}
    *         paginadas.
    */
