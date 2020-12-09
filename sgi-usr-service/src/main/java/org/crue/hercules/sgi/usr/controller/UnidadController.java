@@ -1,5 +1,6 @@
 package org.crue.hercules.sgi.usr.controller;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -13,10 +14,12 @@ import org.crue.hercules.sgi.usr.service.UnidadService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -117,7 +120,11 @@ public class UnidadController {
       return null;
     }).filter(Objects::nonNull).distinct().collect(Collectors.toList());
 
-    Page<Unidad> page = service.findAllRestringidos(query, acronimosUnidadGestion, paging);
+    Page<Unidad> page = new PageImpl<Unidad>(Collections.emptyList());
+
+    if (!CollectionUtils.isEmpty(acronimosUnidadGestion)) {
+      page = service.findAllRestringidos(query, acronimosUnidadGestion, paging);
+    }
 
     if (page.isEmpty()) {
       log.debug(
