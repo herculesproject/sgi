@@ -223,7 +223,7 @@ public class EvaluacionController {
    * @return la lista de entidades {@link Comentario} paginadas.
    */
   @GetMapping("/{id}/comentarios-gestor")
-  @PreAuthorize("hasAuthorityForAnyUO('ETI-EVC-EVAL')")
+  @PreAuthorize("hasAnyAuthorityForAnyUO('ETI-EVC-EVAL', 'ETI-PEV-ER-INV')")
   ResponseEntity<Page<Comentario>> getComentariosGestor(@PathVariable Long id,
       @RequestPageable(sort = "s") Pageable pageable) {
     log.debug("getComentariosGestor(Long id, Pageable pageable) - start");
