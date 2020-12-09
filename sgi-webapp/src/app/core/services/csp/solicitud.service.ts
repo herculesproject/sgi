@@ -14,6 +14,7 @@ import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ISolicitudModalidadBackend, SolicitudModalidadService } from './solicitud-modalidad.service';
+import { ISolicitudDocumento } from '@core/models/csp/solicitud-documento';
 
 
 interface ISolicitudBackend {
@@ -177,6 +178,23 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
       .pipe(
         tap(() => this.logger.debug(SolicitudService.name, `findEstadoSolicitud(${solicitudId}, ${options})`, '-', 'end'))
       );
+  }
+
+  /**
+   * Recupera todos los documentos
+   *
+   * @param id Id de la solicitud
+   * @param options Opciones de busqueda
+   * @returns observable con la lista de documentos de la solicitud
+   */
+  findDocumentos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitudDocumento>> {
+    this.logger.debug(SolicitudService.name,
+      `findDocumentos(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+    const url = `${this.endpointUrl}/${id}/solicituddocumentos`;
+    return this.find<ISolicitudDocumento, ISolicitudDocumento>(url, options).pipe(
+      tap(() => this.logger.debug(SolicitudService.name, `findDocumentos(${id}, ${options ? JSON.stringify(options) : options}`,
+        '-', 'end'))
+    );
   }
 
 }

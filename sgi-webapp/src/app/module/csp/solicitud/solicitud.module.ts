@@ -12,8 +12,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SolicitudResolver } from './solicitud.resolver';
 import { SolicitudModalidadEntidadConvocanteModalComponent } from './modals/solicitud-modalidad-entidad-convocante-modal/solicitud-modalidad-entidad-convocante-modal.component';
 import { SolicitudHistoricoEstadosComponent } from './solicitud-formulario/solicitud-historico-estados/solicitud-historico-estados.component';
-
-
+import { SolicitudDocumentosComponent } from './solicitud-formulario/solicitud-documentos/solicitud-documentos.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +21,8 @@ import { SolicitudHistoricoEstadosComponent } from './solicitud-formulario/solic
     SolicitudListadoComponent,
     SolicitudDatosGeneralesComponent,
     SolicitudModalidadEntidadConvocanteModalComponent,
-    SolicitudHistoricoEstadosComponent
+    SolicitudHistoricoEstadosComponent,
+    SolicitudDocumentosComponent
   ],
   imports: [
     CommonModule,

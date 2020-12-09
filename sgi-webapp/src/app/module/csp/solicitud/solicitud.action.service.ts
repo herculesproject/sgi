@@ -13,24 +13,27 @@ import { SolicitudDatosGeneralesFragment } from './solicitud-formulario/solicitu
 import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-solicitud.service';
 import { SgiAuthService } from '@sgi/framework/auth';
 import { SolicitudHistoricoEstadosFragment } from './solicitud-formulario/solicitud-historico-estados/solicitud-historico-estados.fragment';
-
-
+import { SolicitudDocumentosFragment } from './solicitud-formulario/solicitud-documentos/solicitud-documentos.fragment';
+import { ConvocatoriaDocumentoService } from '@core/services/csp/convocatoria-documento.service';
+import { SolicitudDocumentoService } from '@core/services/csp/solicitud-documento.service';
 
 @Injectable()
 export class SolicitudActionService extends ActionService {
 
   public readonly FRAGMENT = {
     DATOS_GENERALES: 'datosGenerales',
-    HISTORICO_ESTADOS: 'historicoEstados'
+    HISTORICO_ESTADOS: 'historicoEstados',
+    DOCUMENTOS: 'documentos'
   };
 
   private datosGenerales: SolicitudDatosGeneralesFragment;
   private historicoEstado: SolicitudHistoricoEstadosFragment;
+  private documentos: SolicitudDocumentosFragment;
 
   private solicitud: ISolicitud;
 
   constructor(
-    logger: NGXLogger,
+    private logger: NGXLogger,
     route: ActivatedRoute,
     solicitudService: SolicitudService,
     configuracionSolicitudService: ConfiguracionSolicitudService,
@@ -39,7 +42,9 @@ export class SolicitudActionService extends ActionService {
     personaFisicaService: PersonaFisicaService,
     solicitudModalidadService: SolicitudModalidadService,
     unidadGestionService: UnidadGestionService,
-    sgiAuthService: SgiAuthService
+    sgiAuthService: SgiAuthService,
+    convocatoriaDocumentoService: ConvocatoriaDocumentoService,
+    solicitudDocumentoService: SolicitudDocumentoService
   ) {
     super();
     this.solicitud = {} as ISolicitud;
@@ -50,12 +55,18 @@ export class SolicitudActionService extends ActionService {
 
     this.datosGenerales = new SolicitudDatosGeneralesFragment(logger, this.solicitud?.id, solicitudService, configuracionSolicitudService,
       convocatoriaService, empresaEconomicaService, personaFisicaService, solicitudModalidadService, unidadGestionService, sgiAuthService);
+    this.documentos = new SolicitudDocumentosFragment(logger, this.solicitud?.id, this.solicitud?.convocatoria?.id,
+      configuracionSolicitudService, solicitudService, solicitudDocumentoService);
 
     this.historicoEstado = new SolicitudHistoricoEstadosFragment(logger, this.solicitud?.id, solicitudService);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.HISTORICO_ESTADOS, this.historicoEstado);
+    this.addFragment(this.FRAGMENT.DOCUMENTOS, this.documentos);
 
   }
 
+  getDatosGeneralesSolicitud(): ISolicitud {
+    return this.datosGenerales.isInitialized() ? this.datosGenerales.solicitud : this.solicitud;
+  }
 }

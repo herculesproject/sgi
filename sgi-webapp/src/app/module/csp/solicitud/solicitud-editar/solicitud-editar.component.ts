@@ -64,7 +64,7 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
 
 
   registrar(): void {
-    //TODO: Implementar
+    // TODO: Implementar
   }
 
 }
