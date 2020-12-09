@@ -10,7 +10,7 @@ import { NGXLogger } from 'ngx-logger';
 import { PETICION_EVALUACION_ROUTE_NAMES } from '../peticion-evaluacion-route-names';
 import { PeticionEvaluacionActionService } from '../peticion-evaluacion.action.service';
 
-const MSG_BUTTON_EDIT = marker('botones.aceptar');
+const MSG_BUTTON_SAVE = marker('botones.guardar');
 const MSG_SUCCESS = marker('eti.peticionEvaluacion.editar.correcto');
 const MSG_ERROR = marker('eti.peticionEvaluacion.editar.error');
 
@@ -31,7 +31,7 @@ const MSG_ERROR = marker('eti.peticionEvaluacion.editar.error');
 export class PeticionEvaluacionEditarComponent extends ActionComponent {
   PETICION_EVALUACION_ROUTE_NAMES = PETICION_EVALUACION_ROUTE_NAMES;
 
-  textoCrear = MSG_BUTTON_EDIT;
+  textoCrear = MSG_BUTTON_SAVE;
 
   constructor(
     protected readonly logger: NGXLogger,

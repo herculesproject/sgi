@@ -11,7 +11,7 @@ import { DialogService } from '@core/services/dialog.service';
 import { ACTA_ROUTE_NAMES } from '../acta-route-names';
 import { ActionService } from '@core/services/action-service';
 
-const MSG_BUTTON_EDIT = marker('botones.aceptar');
+const MSG_BUTTON_SAVE = marker('botones.guardar');
 const MSG_SUCCESS = marker('eti.acta.editar.correcto');
 const MSG_ERROR = marker('eti.acta.editar.error');
 
@@ -32,7 +32,7 @@ const MSG_ERROR = marker('eti.acta.editar.error');
 export class ActaEditarComponent extends ActionComponent {
   ACTA_ROUTE_NAMES = ACTA_ROUTE_NAMES;
 
-  textoCrear = MSG_BUTTON_EDIT;
+  textoCrear = MSG_BUTTON_SAVE;
 
   constructor(
     protected readonly logger: NGXLogger,

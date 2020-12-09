@@ -8,7 +8,7 @@ import { NGXLogger } from 'ngx-logger';
 import { CONVOCATORIA_REUNION_ROUTE_NAMES } from '../convocatoria-reunion-route-names';
 import { ConvocatoriaReunionActionService } from '../convocatoria-reunion.action.service';
 
-const MSG_BUTTON_EDIT = marker('botones.aceptar');
+const MSG_BUTTON_SAVE = marker('botones.guardar');
 const MSG_SUCCESS = marker('eti.convocatoriaReunion.editar.correcto');
 const MSG_ERROR = marker('eti.convocatoriaReunion.editar.error');
 
@@ -25,7 +25,7 @@ const MSG_ERROR = marker('eti.convocatoriaReunion.editar.error');
 export class ConvocatoriaReunionEditarComponent extends ActionComponent {
   CONVOCATORIA_REUNION_ROUTE_NAMES = CONVOCATORIA_REUNION_ROUTE_NAMES;
 
-  textoCrear = MSG_BUTTON_EDIT;
+  textoCrear = MSG_BUTTON_SAVE;
 
   constructor(
     protected readonly logger: NGXLogger,

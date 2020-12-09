@@ -18,7 +18,7 @@ import { PETICION_EVALUACION_ROUTE_NAMES } from '../peticion-evaluacion-route-na
 import { PeticionEvaluacionActionService } from '../peticion-evaluacion.action.service';
 
 
-const MSG_BUTTON_SAVE = marker('botones.aniadir');
+const MSG_BUTTON_SAVE = marker('botones.guardar');
 const MSG_ERROR = marker('eti.peticionEvaluacion.crear.error');
 const MSG_SUCCESS = marker('eti.peticionEvaluacion.crear.correcto');
 

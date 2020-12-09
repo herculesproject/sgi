@@ -4,7 +4,7 @@ import { NGXLogger } from 'ngx-logger';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
-const MSG_BUTTON_SAVE = marker('botones.aniadir');
+const MSG_BUTTON_SAVE = marker('botones.guardar');
 const MSG_SUCCESS = marker('eti.convocatoriaReunion.crear.correcto');
 const MSG_ERROR = marker('eti.convocatoriaReunion.crear.error');
 
