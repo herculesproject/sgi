@@ -14,6 +14,8 @@ import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
+import org.crue.hercules.sgi.csp.model.SolicitudHito;
+import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,6 +57,8 @@ public class SolicitudController {
 
   /** SolicitudDocumento service */
   private final SolicitudDocumentoService solicitudDocumentoService;
+  /** SolicitudHito service */
+  private final SolicitudHitoService solicitudHitoService;
 
   /**
    * Instancia un nuevo SolicitudController.
@@ -62,13 +67,16 @@ public class SolicitudController {
    * @param solicitudModalidadService {@link SolicitudModalidadService}.
    * @param solicitudDocumentoService {@link SolicitudDocumentoService}
    * @param estadoSolicitudService    {@link EstadoSolicitudService}.
+   * @param solicitudHitoService      {@link SolicitudHitoService}.
    */
   public SolicitudController(SolicitudService solicitudService, SolicitudModalidadService solicitudModalidadService,
-      EstadoSolicitudService estadoSolicitudService, SolicitudDocumentoService solicitudDocumentoService) {
+      EstadoSolicitudService estadoSolicitudService, SolicitudDocumentoService solicitudDocumentoService,
+      SolicitudHitoService solicitudHitoService) {
     this.service = solicitudService;
     this.solicitudModalidadService = solicitudModalidadService;
     this.estadoSolicitudService = estadoSolicitudService;
     this.solicitudDocumentoService = solicitudDocumentoService;
+    this.solicitudHitoService = solicitudHitoService;
   }
 
   /**
@@ -286,7 +294,7 @@ public class SolicitudController {
   }
 
   /**
-   * Devuelve una lista paginada de {@link EstadoSolicitud} de la
+   * Devuelve una lista paginada y filtrada de {@link SolicitudHito} de la
    * {@link Solicitud}.
    * 
    * @param id     Identificador de {@link Solicitud}.
@@ -306,6 +314,31 @@ public class SolicitudController {
     }
 
     log.debug("findAllEstadoSolicitud(Long id, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+
+  }
+
+  /**
+   * Devuelve una lista paginada de {@link SolicitudHito}
+   * 
+   * @param id     Identificador de {@link Solicitud}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/solicitudhitos")
+  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
+  ResponseEntity<Page<SolicitudHito>> findAllSolicitudHito(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllSolicitudHito(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<SolicitudHito> page = solicitudHitoService.findAllBySolicitud(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllSolicitudHito(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllSolicitudModalidad(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 
@@ -332,6 +365,22 @@ public class SolicitudController {
 
     log.debug("findAllSolicitudDocumentos(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Comprueba si la soliciutd está asociada a una convocatoria SGI.
+   * 
+   * @param id Identificador de {@link Solicitud}.
+   * @return HTTP 200 si se encuentra asociada a convocatoria SGI y HTTP 204 si
+   *         no.
+   */
+  @RequestMapping(path = "/{id}/convocatoria-sgi", method = RequestMethod.HEAD)
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-RSOC-V')")
+  public ResponseEntity<?> hasConvocatoriaSgi(@PathVariable Long id) {
+    log.debug("hasConvocatoriaSgi(Long id) - start");
+    Boolean returnValue = service.hasConvocatoriaSgi(id);
+    log.debug("hasConvocatoriaSgi(Long id) - end");
+    return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
 }

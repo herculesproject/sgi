@@ -449,6 +449,25 @@ public class SolicitudServiceImpl implements SolicitudService {
   }
 
   /**
+   * Comprueba si la soliciutd está asociada a una convocatoria SGI.
+   * 
+   * @param id Identificador de {@link Solicitud}.
+   * @return indicador de si se encuentra asociado o no la solicitud a una
+   *         convocatoria SGI
+   */
+  @Override
+  public boolean hasConvocatoriaSgi(Long id) {
+    log.debug("hasConvocatoriaSgi(Long id) - start");
+    Assert.notNull(id, "Solicitud id no puede ser null para comprobar su convocatoria");
+
+    return repository.findById(id).map(solicitud -> {
+
+      log.debug("hasConvocatoriaSgi(Long id) - end");
+      return solicitud.getConvocatoria() != null;
+    }).orElseThrow(() -> new SolicitudNotFoundException(id));
+  }
+
+  /**
    * Genera el codigo de registro interno de la solicitud
    * 
    * @param solicitudId

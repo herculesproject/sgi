@@ -1419,6 +1419,32 @@
       <column name="tipo_documento_id" valueComputed="(select id from csp.tipo_documento where nombre = 'nombre-004')" />
     </insert>
   </changeSet>
+  <changeSet context="dev" author="master" id="0000000000000-solicitud_hito">
+    <insert tableName="solicitud_hito">
+      <column name="id" valueSequenceNext="solicitud_hito_seq" />
+      <column name="solicitud_id" valueComputed="(select id from csp.solicitud where codigo_registro_interno = 'SGI_SLC3202011071200')"></column>
+      <column name="tipo_hito_id" valueComputed="(select id from csp.tipo_hito where nombre = 'Hito1')"></column>
+      <column name="fecha" value="2021-10-22" />
+      <column name="comentario" value="comentario1" />
+      <column name="genera_aviso" value="true" />
+    </insert>
+    <insert tableName="solicitud_hito">
+      <column name="id" valueSequenceNext="solicitud_hito_seq" />
+      <column name="solicitud_id" valueComputed="(select id from csp.solicitud where codigo_registro_interno = 'SGI_SLC3202011071200')"></column>
+      <column name="tipo_hito_id" valueComputed="(select id from csp.tipo_hito where nombre = 'Hito2')"></column>
+      <column name="fecha" value="2021-10-23" />
+      <column name="comentario" value="comentario2" />
+      <column name="genera_aviso" value="true" />
+    </insert>
+    <insert tableName="solicitud_hito">
+      <column name="id" valueSequenceNext="solicitud_hito_seq" />
+      <column name="solicitud_id" valueComputed="(select id from csp.solicitud where codigo_registro_interno = 'SGI_SLC3202011071200')"></column>
+      <column name="tipo_hito_id" valueComputed="(select id from csp.tipo_hito where nombre = 'Hito3')"></column>
+      <column name="fecha" value="2021-10-24" />
+      <column name="comentario" value="comentario3" />
+      <column name="genera_aviso" value="true" />
+    </insert>
+  </changeSet>
 
   <changeSet context="dev" author="master" id="0000000000000-rol_socio">
     <insert tableName="rol_socio">

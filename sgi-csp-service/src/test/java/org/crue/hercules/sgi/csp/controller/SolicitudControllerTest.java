@@ -1,6 +1,7 @@
 package org.crue.hercules.sgi.csp.controller;
 
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,8 +17,11 @@ import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
+import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
+import org.crue.hercules.sgi.csp.model.TipoHito;
+import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
@@ -60,6 +64,9 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
   @MockBean
   private SolicitudDocumentoService solicitudDocumentoService;
+
+  @MockBean
+  private SolicitudHitoService solicitudHitoService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
@@ -729,6 +736,97 @@ public class SolicitudControllerTest extends BaseControllerTest {
   }
 
   /**
+   * 
+   * SOLICITUD HITO
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void findAllSolicitudHito_ReturnsPage() throws Exception {
+    // given: Una lista con 37 SolicitudHito para la Solicitud
+    Long solicitudId = 1L;
+
+    List<SolicitudHito> solicitudHitos = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      solicitudHitos.add(generarSolicitudHito(i, i, i));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(solicitudHitoService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > solicitudHitos.size() ? solicitudHitos.size() : toIndex;
+          List<SolicitudHito> content = solicitudHitos.subList(fromIndex, toIndex);
+          Page<SolicitudHito> pageResponse = new PageImpl<>(content, pageable, solicitudHitos.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudhitos", solicitudId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los SolicitudModalidad del 31 al
+        // 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<SolicitudHito> solicitudHitoResponse = mapper.readValue(requestResult.getResponse().getContentAsString(),
+        new TypeReference<List<SolicitudHito>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      SolicitudHito solicitudHito = solicitudHitoResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(solicitudHito.getComentario()).isEqualTo("comentario-" + String.format("%02d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void findAllSolicitudHito_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de SolicitudHito para la
+    // Solicitud
+    Long solicitudId = 1L;
+    List<SolicitudHito> solicitudHitos = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(solicitudHitoService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          Page<SolicitudHito> pageResponse = new PageImpl<>(solicitudHitos, pageable, 0);
+          return pageResponse;
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudhitos", solicitudId)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page).header("X-Page-Size", pageSize)
+            .accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
    * Función que devuelve un objeto Solicitud
    * 
    * @param id id del Solicitud
@@ -822,6 +920,26 @@ public class SolicitudControllerTest extends BaseControllerTest {
     estadoSolicitud.setIdSolicitud(1L);
 
     return estadoSolicitud;
+  }
+
+  /**
+   * Función que devuelve un objeto SolicitudHito
+   * 
+   * @param solicitudHitoId
+   * @param solicitudId
+   * @param tipoDocumentoId
+   * @return el objeto SolicitudHito
+   */
+  private SolicitudHito generarSolicitudHito(Long solicitudHitoId, Long solicitudId, Long tipoDocumentoId) {
+
+    SolicitudHito solicitudHito = SolicitudHito.builder().id(solicitudHitoId)
+        .solicitud(Solicitud.builder().id(solicitudId).build()).comentario("comentario-" + solicitudHitoId)
+        .fecha(LocalDate.now()).generaAviso(Boolean.TRUE).tipoHito(TipoHito.builder().id(tipoDocumentoId).build())
+        .build();
+
+    solicitudHito.getSolicitud().setEstado(new EstadoSolicitud());
+    solicitudHito.getSolicitud().getEstado().setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+    return solicitudHito;
   }
 
 }

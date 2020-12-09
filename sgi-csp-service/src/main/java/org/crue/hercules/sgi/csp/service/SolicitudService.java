@@ -85,4 +85,13 @@ public interface SolicitudService {
    */
   Page<Solicitud> findAllTodosRestringidos(List<QueryCriteria> query, Pageable paging, List<String> unidadGestionRefs);
 
+  /**
+   * Comprueba si la soliciutd está asociada a una convocatoria SGI.
+   * 
+   * @param id Identificador de {@link Solicitud}.
+   * @return indicador de si se encuentra asociado o no la solicitud a una
+   *         convocatoria SGI
+   */
+  boolean hasConvocatoriaSgi(Long id);
+
 }
