@@ -72,7 +72,7 @@
           <mat-select placeholder="{{'csp.convocatoria.documentos.documento.fase' | translate}}" formControlName="fase"
             [compareWith]="compareFase">
             <mat-option [value]="null"></mat-option>
-            <mat-option *ngFor="let fase of fases" [value]="fase">{{fase.nombre}}</mat-option>
+            <mat-option *ngFor="let fase of tipoFases$ | async" [value]="fase">{{fase.nombre}}</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field class="input-form">

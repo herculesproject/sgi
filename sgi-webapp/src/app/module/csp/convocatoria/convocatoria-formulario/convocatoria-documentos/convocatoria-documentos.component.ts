@@ -16,7 +16,8 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { StatusWrapper } from '@core/utils/status-wrapper';
 import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { NGXLogger } from 'ngx-logger';
-import { Subscription } from 'rxjs';
+import { Observable, of, pipe, Subscription } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { ConvocatoriaActionService } from '../../convocatoria.action.service';
 import { ConvocatoriaDocumentosFragment, NodeDocumento } from './convocatoria-documentos.fragment';
 
@@ -59,11 +60,11 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
   }
 
   fileToUpload: FileModel;
-  fases: ITipoFase[] = [];
   tiposDocumento: ITipoDocumento[] = [];
 
   disableUpload = true;
 
+  tipoFases$: Observable<ITipoFase[]> = of([]);
   private tipoDocumentosFase = new Map<number, ITipoDocumento[]>();
 
   private getLevel = (node: NodeDocumento) => node.level;
@@ -122,30 +123,27 @@ export class ConvocatoriaDocumentosComponent extends FragmentComponent implement
       observaciones: new FormControl('')
     }));
     this.group.initialize();
-    this.subscriptions.push(this.modeloEjecucionService.findModeloTipoDocumento(this.actionService.modeloEjecucionId).subscribe(
-      (tipos) => {
-        const fases = new Map<number, ITipoFase>();
-
-        tipos.items.forEach((tipo) => {
-          const idTipoFase = tipo.modeloTipoFase ? tipo.modeloTipoFase.tipoFase.id : null;
-          if (idTipoFase) {
-            let tipoFase = fases.get(idTipoFase);
-            if (!tipoFase) {
-              tipoFase = tipo.modeloTipoFase.tipoFase;
-              fases.set(idTipoFase, tipoFase);
+    const id = this.actionService.modeloEjecucionId;
+    this.subscriptions.push(
+      this.modeloEjecucionService.findModeloTipoDocumento(id).pipe(
+        tap(() => {
+          this.tipoFases$ = this.modeloEjecucionService.findModeloTipoFaseModeloEjecucion(id).pipe(
+            map(modeloTipoFases => modeloTipoFases.items.map(modeloTipoFase => modeloTipoFase.tipoFase))
+          );
+        })
+      ).subscribe(
+        (tipos) => {
+          tipos.items.forEach((tipo) => {
+            const idTipoFase = tipo.modeloTipoFase ? tipo.modeloTipoFase.tipoFase.id : null;
+            let tiposDocumentos = this.tipoDocumentosFase.get(idTipoFase);
+            if (!tiposDocumentos) {
+              tiposDocumentos = [];
+              this.tipoDocumentosFase.set(idTipoFase, tiposDocumentos);
             }
-          }
-          let tiposDocumentos = this.tipoDocumentosFase.get(idTipoFase);
-          if (!tiposDocumentos) {
-            tiposDocumentos = [];
-            this.tipoDocumentosFase.set(idTipoFase, tiposDocumentos);
-          }
-          tiposDocumentos.push(tipo.tipoDocumento);
-        });
-        fases.forEach((fase) => {
-          this.fases.push(fase);
-        });
-      })
+            tiposDocumentos.push(tipo.tipoDocumento);
+          });
+        }
+      )
     );
     this.subscriptions.push(this.formGroup.controls.fase.valueChanges.subscribe((value: ITipoFase) => {
       if (this.viewMode === VIEW_MODE.EDIT || this.viewMode === VIEW_MODE.NEW) {
