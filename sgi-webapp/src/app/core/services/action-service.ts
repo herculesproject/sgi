@@ -37,7 +37,7 @@ export interface IActionService {
   getActionLinks(): ActionLink[];
 }
 
-interface GroupStatus {
+export interface GroupStatus {
   /**
    * The nested form group is filled. Only meaningful on creation
    */
@@ -530,6 +530,7 @@ export class Group implements IGroup {
   private initialState: any;
   private subscriptions: Subscription[] = [];
   private editing: boolean;
+  initialized = false;
 
   load(form: FormGroup): void {
     this.form = form;
@@ -537,29 +538,32 @@ export class Group implements IGroup {
   }
 
   initialize(): void {
-    this.subscriptions.push(this.form.valueChanges.subscribe((ev) => {
-      if (this.editing) {
-        this.checkChanges();
-        if (this.isValid()) {
-          this.publishComplete(true);
-        }
-      }
-      else {
-        this.publishChanges(true);
-      }
-    }));
-
-    this.subscriptions.push(this.form.statusChanges.subscribe((ev) => {
-      this.checkErrors();
-      if (!this.editing) {
-        if (this.isValid() && !this.hasErrors()) {
-          this.publishComplete(true);
+    if (!this.initialized) {
+      this.subscriptions.push(this.form.valueChanges.subscribe((ev) => {
+        if (this.editing) {
+          this.checkChanges();
+          if (this.isValid()) {
+            this.publishComplete(true);
+          }
         }
         else {
-          this.publishComplete(false);
+          this.publishChanges(true);
         }
-      }
-    }));
+      }));
+
+      this.subscriptions.push(this.form.statusChanges.subscribe((ev) => {
+        this.checkErrors();
+        if (!this.editing) {
+          if (this.isValid() && !this.hasErrors()) {
+            this.publishComplete(true);
+          }
+          else {
+            this.publishComplete(false);
+          }
+        }
+      }));
+      this.initialized = true;
+    }
   }
 
   patch(value: { [key: string]: any }) {

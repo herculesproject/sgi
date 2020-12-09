@@ -1,4 +1,4 @@
-import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import { StepperSelectionEvent, STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 import { FragmentComponent } from '@core/component/fragment.component';
@@ -11,6 +11,12 @@ import { IBlock, MemoriaFormularioFragment } from './memoria-formulario.fragment
   selector: 'sgi-memoria-formulario',
   templateUrl: './memoria-formulario.component.html',
   styleUrls: ['./memoria-formulario.component.scss'],
+  providers: [
+    {
+      provide: STEPPER_GLOBAL_OPTIONS,
+      useValue: { displayDefaultIndicatorType: false }
+    }
+  ],
   encapsulation: ViewEncapsulation.None
 })
 export class MemoriaFormularioComponent extends FragmentComponent implements OnInit, OnDestroy {
@@ -50,5 +56,14 @@ export class MemoriaFormularioComponent extends FragmentComponent implements OnI
 
   onStepChange(stepperEvent: StepperSelectionEvent): void {
     this.memoriaFormularioFragment.selectedIndex$.next(stepperEvent.selectedIndex);
+  }
+
+  nextStep(): void {
+    this.memoriaFormularioFragment.performChecks(true);
+    this.stepper.next();
+  }
+
+  previousStep(): void {
+    this.stepper.previous();
   }
 }

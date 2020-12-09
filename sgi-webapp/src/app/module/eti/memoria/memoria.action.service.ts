@@ -23,7 +23,7 @@ import { ApartadoService } from '@core/services/eti/apartado.service';
 import { TipoEstadoMemoria } from '@core/models/eti/tipo-estado-memoria';
 import { IRetrospectiva } from '@core/models/eti/retrospectiva';
 import { DocumentoService } from '@core/services/sgdoc/documento.service';
-import { of } from 'rxjs';
+import { EvaluacionService } from '@core/services/eti/evaluacion.service';
 
 const MSG_PETICIONES_EVALUACION = marker('eti.memoria.link.peticionEvaluacion');
 
@@ -58,7 +58,8 @@ export class MemoriaActionService extends ActionService {
     formularioService: FormularioService,
     bloqueService: BloqueService,
     apartadoService: ApartadoService,
-    respuestaService: RespuestaService
+    respuestaService: RespuestaService,
+    evaluacionService: EvaluacionService
   ) {
     super();
     this.memoria = {} as IMemoria;
@@ -74,7 +75,7 @@ export class MemoriaActionService extends ActionService {
     this.datosGenerales = new MemoriaDatosGeneralesFragment(fb, logger, this.readonly, this.memoria?.id, service, personaFisicaService,
       peticionEvaluacionService);
     this.formularios = new MemoriaFormularioFragment(logger, this.memoria?.id, this.memoria?.comite, formularioService,
-      bloqueService, apartadoService, respuestaService);
+      bloqueService, apartadoService, respuestaService, service, evaluacionService);
     this.documentacion = new MemoriaDocumentacionFragment(logger, this.memoria?.id, service, documentoService);
     this.evaluaciones = new MemoriaEvaluacionesFragment(logger, this.memoria?.id, service);
     this.versiones = new MemoriaInformesFragment(logger, this.memoria?.id, service);
