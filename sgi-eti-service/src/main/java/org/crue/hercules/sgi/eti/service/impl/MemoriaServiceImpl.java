@@ -510,6 +510,7 @@ public class MemoriaServiceImpl implements MemoriaService {
           if (memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA
               || memoria.getEstadoActual().getId() == Constantes.TIPO_ESTADO_MEMORIA_EN_SECRETARIA_REVISION_MINIMA) {
             // se eliminan los informes en caso de que las memorias tengan alguno asociado
+            memoria.setVersion(memoria.getVersion() - 1);
             informeService.deleteInformeMemoria(memoria.getId());
           }
 
@@ -564,17 +565,23 @@ public class MemoriaServiceImpl implements MemoriaService {
 
     if (memoria.getRetrospectiva() == null || !cambiarEstadoRetrospectiva) {
       List<EstadoMemoria> estadosMemoria = estadoMemoriaRepository
-          .findAllByMemoriaIdOrderByFechaEstadoDesc(memoria.getId()).stream()
+          .findAllByMemoriaIdOrderByFechaEstadoDesc(memoria.getId());
+
+      Optional<EstadoMemoria> estadoAnteriorMemoria = estadosMemoria.stream()
           .filter(estadoMemoria -> estadoMemoria.getTipoEstadoMemoria().getId() != memoria.getEstadoActual().getId())
-          .collect(Collectors.toList());
+          .findFirst();
 
-      Assert.isTrue(estadosMemoria.size() > 0, "No se puede recuperar el estado anterior de la memoria");
+      Assert.isTrue(estadoAnteriorMemoria.isPresent(), "No se puede recuperar el estado anterior de la memoria");
 
-      EstadoMemoria estadoAnteriorMemoria = estadosMemoria.get(0);
+      Optional<EstadoMemoria> estadoMemoriaActual = estadosMemoria.stream()
+          .filter(estadoMemoria -> estadoMemoria.getTipoEstadoMemoria().getId() == memoria.getEstadoActual().getId())
+          .findAny();
 
-      estadoMemoriaRepository
-          .save(new EstadoMemoria(null, memoria, estadoAnteriorMemoria.getTipoEstadoMemoria(), LocalDateTime.now()));
-      memoria.setEstadoActual(estadoAnteriorMemoria.getTipoEstadoMemoria());
+      Assert.isTrue(estadoMemoriaActual.isPresent(), "No se puede recuperar el estado actual de la memoria");
+
+      memoria.setEstadoActual(estadoAnteriorMemoria.get().getTipoEstadoMemoria());
+      // eliminamos el estado a cambiar en el histórico
+      estadoMemoriaRepository.deleteById(estadoMemoriaActual.get().getId());
     } else {
       // El estado anterior de la retrospectiva es el estado con id anterior al que
       // tiene actualmente
@@ -669,9 +676,9 @@ public class MemoriaServiceImpl implements MemoriaService {
       return memoria;
     }).orElseThrow(() -> new MemoriaNotFoundException(idMemoria));
 
-    // FALTA: crear un fichero en formato pdf con los datos del proyecto y con los
-    // datos del formulario y subirlo al gestor documental y que el sistema guarde
-    // en informes el identificador del documento.
+    // TODO crear un fichero en formato pdf con los datos del proyecto y con
+    // los datos del formulario y subirlo al gestor documental y que el sistema
+    // guarde en informes el identificador del documento.
 
     log.debug("enviarSecretaria(Long id) - end");
   }
