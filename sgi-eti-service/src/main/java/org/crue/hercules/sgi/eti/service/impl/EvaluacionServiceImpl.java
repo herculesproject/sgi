@@ -195,7 +195,7 @@ public class EvaluacionServiceImpl implements EvaluacionService {
       evaluacion.setVersion(evaluacion.getMemoria().getVersion() + 1);
       evaluacion.getMemoria().setVersion(evaluacion.getVersion());
     } else {
-      evaluacionRepository.findFirstByMemoriaIdOrderByVersionDesc(evaluacion.getMemoria().getId())
+      evaluacionRepository.findFirstByMemoriaIdAndActivoTrueOrderByVersionDesc(evaluacion.getMemoria().getId())
           .map(evaluacionAnterior -> {
 
             if (evaluacionAnterior != null) {

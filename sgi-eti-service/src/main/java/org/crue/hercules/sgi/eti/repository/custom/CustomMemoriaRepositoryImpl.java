@@ -250,7 +250,9 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
 
     queryFechaEvaluacion.select(subqRoot.get(Evaluacion_.convocatoriaReunion).get(ConvocatoriaReunion_.fechaEvaluacion))
         .where(cb.equal(subqRoot.get(Evaluacion_.memoria).get(Memoria_.id), root.get(Memoria_.id)),
-            cb.equal(subqRoot.get(Evaluacion_.version), root.get(Memoria_.version)));
+            cb.equal(subqRoot.get(Evaluacion_.version), root.get(Memoria_.version)),
+            cb.equal(subqRoot.get(Evaluacion_.activo), true),
+            cb.equal(subqRoot.get(Evaluacion_.memoria).get(Memoria_.activo), true));
 
     log.debug("getFechaEvaluacion : {} - end");
 
@@ -274,7 +276,9 @@ public class CustomMemoriaRepositoryImpl implements CustomMemoriaRepository {
 
     queryFechaLimite.select(subqRoot.get(Evaluacion_.convocatoriaReunion).get(ConvocatoriaReunion_.fechaLimite)).where(
         cb.equal(subqRoot.get(Evaluacion_.memoria).get(Memoria_.id), root.get(Memoria_.id)),
-        cb.equal(subqRoot.get(Evaluacion_.version), root.get(Memoria_.version)));
+        cb.equal(subqRoot.get(Evaluacion_.version), root.get(Memoria_.version)),
+        cb.equal(subqRoot.get(Evaluacion_.activo), true),
+        cb.equal(subqRoot.get(Evaluacion_.memoria).get(Memoria_.activo), true));
 
     log.debug("getFechaLimite : {} - end");
 

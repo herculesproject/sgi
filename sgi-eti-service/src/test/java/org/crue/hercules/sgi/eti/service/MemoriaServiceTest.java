@@ -918,7 +918,7 @@ public class MemoriaServiceTest extends BaseServiceTest {
     BDDMockito.given(memoriaRepository.findById(1L)).willReturn(Optional.of(memoria));
 
     Evaluacion evaluacion = generarMockEvaluacion(Long.valueOf(1), String.format("%03d", 1), 6L, 1L, 1);
-    BDDMockito.given(evaluacionRepository.findFirstByMemoriaIdOrderByVersionDesc(memoria.getId()))
+    BDDMockito.given(evaluacionRepository.findFirstByMemoriaIdAndActivoTrueOrderByVersionDesc(memoria.getId()))
         .willReturn(Optional.of(evaluacion));
 
     Memoria memoriaActualizada = generarMockMemoria(1L, "numRef-111", "Memoria1", 2, 4L);

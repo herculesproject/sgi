@@ -656,7 +656,7 @@ public class MemoriaServiceImpl implements MemoriaService {
       }
 
       if (crearEvaluacion) {
-        evaluacionRepository.findFirstByMemoriaIdOrderByVersionDesc(memoria.getId()).map(evaluacion -> {
+        evaluacionRepository.findFirstByMemoriaIdAndActivoTrueOrderByVersionDesc(memoria.getId()).map(evaluacion -> {
           Evaluacion evaluacionNueva = new Evaluacion();
           BeanUtils.copyProperties(evaluacion, evaluacionNueva);
           evaluacionNueva.setId(null);
