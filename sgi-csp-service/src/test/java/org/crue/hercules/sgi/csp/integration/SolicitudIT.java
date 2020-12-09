@@ -11,6 +11,7 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
@@ -347,6 +348,41 @@ public class SolicitudIT {
         .isEqualTo(TipoEstadoSolicitudEnum.PRESENTADA);
     Assertions.assertThat(estadosSolicitud.get(2).getEstado()).as("get(2).getEstado()")
         .isEqualTo(TipoEstadoSolicitudEnum.BORRADOR);
+  }
+
+  /**
+   * 
+   * SOLICITUD DOCUMENTOS
+   * 
+   */
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findAllSolicitudDocumento_WithPagingSortingAndFiltering_ReturnsSolicitudDocumentoSubList()
+      throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.set("Authorization", String.format("bearer %s", tokenBuilder.buildToken("user", "CSP-SOL-E")));
+    headers.add("X-Page", "0");
+    headers.add("X-Page-Size", "10");
+    String sort = "id-";
+    String filter = "documentoRef~%-00%";
+
+    Long solicitudId = 1L;
+
+    URI uri = UriComponentsBuilder.fromUriString(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicituddocumentos")
+        .queryParam("s", sort).queryParam("q", filter).buildAndExpand(solicitudId).toUri();
+
+    final ResponseEntity<List<SolicitudDocumento>> response = restTemplate.exchange(uri, HttpMethod.GET,
+        buildRequest(headers, null), new ParameterizedTypeReference<List<SolicitudDocumento>>() {
+        });
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    final List<SolicitudDocumento> solicitudDocumentos = response.getBody();
+    Assertions.assertThat(solicitudDocumentos.size()).isEqualTo(3);
+    HttpHeaders responseHeaders = response.getHeaders();
+    Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
+    Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
   }
 
   /**

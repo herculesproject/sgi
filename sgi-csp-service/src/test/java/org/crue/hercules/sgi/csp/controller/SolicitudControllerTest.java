@@ -15,8 +15,11 @@ import org.crue.hercules.sgi.csp.model.Convocatoria;
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Programa;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
+import org.crue.hercules.sgi.csp.model.TipoDocumento;
+import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -54,6 +57,9 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
   @MockBean
   private EstadoSolicitudService estadoSolicitudService;
+
+  @MockBean
+  private SolicitudDocumentoService solicitudDocumentoService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
@@ -444,7 +450,7 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
   /**
    * 
-   * CONVOCATORIA ENTIDAD FINANCIADORA
+   * Solicitud modalidad
    * 
    */
 
@@ -494,12 +500,12 @@ public class SolicitudControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
         .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
 
-    List<SolicitudModalidad> convocatoriaEntidadFinanciadorasResponse = mapper
+    List<SolicitudModalidad> solicitudModalidadResponse = mapper
         .readValue(requestResult.getResponse().getContentAsString(), new TypeReference<List<SolicitudModalidad>>() {
         });
 
     for (int i = 31; i <= 37; i++) {
-      SolicitudModalidad solicitudModalidad = convocatoriaEntidadFinanciadorasResponse.get(i - (page * pageSize) - 1);
+      SolicitudModalidad solicitudModalidad = solicitudModalidadResponse.get(i - (page * pageSize) - 1);
       Assertions.assertThat(solicitudModalidad.getEntidadRef()).isEqualTo("entidad-" + String.format("%03d", i));
     }
   }
@@ -629,6 +635,100 @@ public class SolicitudControllerTest extends BaseControllerTest {
   }
 
   /**
+   * 
+   * Solicitud documentos
+   * 
+   */
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void findAllSolicitudDocumento_ReturnsPage() throws Exception {
+    // given: Una lista con 37 SolicitudDocumentos para la Solicitud
+    Long solicitudId = 1L;
+
+    List<SolicitudDocumento> solicitudDocumento = new ArrayList<>();
+    for (long i = 1; i <= 37; i++) {
+      solicitudDocumento.add(generarSolicitudDocumento(i, i, i));
+    }
+
+    Integer page = 3;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(solicitudDocumentoService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          int size = pageable.getPageSize();
+          int index = pageable.getPageNumber();
+          int fromIndex = size * index;
+          int toIndex = fromIndex + size;
+          toIndex = toIndex > solicitudDocumento.size() ? solicitudDocumento.size() : toIndex;
+          List<SolicitudDocumento> content = solicitudDocumento.subList(fromIndex, toIndex);
+          Page<SolicitudDocumento> pageResponse = new PageImpl<>(content, pageable, solicitudDocumento.size());
+          return pageResponse;
+        });
+
+    // when: Get page=3 with pagesize=10
+    MvcResult requestResult = mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicituddocumentos", solicitudId)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page)
+                .header("X-Page-Size", pageSize).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve la pagina 3 con los SolicitudDocumentos del 31 al
+        // 37
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page", "3"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Total-Count", "7"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Page-Size", "10"))
+        .andExpect(MockMvcResultMatchers.header().string("X-Total-Count", "37"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(7))).andReturn();
+
+    List<SolicitudDocumento> solicitudDocumentoResponse = mapper
+        .readValue(requestResult.getResponse().getContentAsString(), new TypeReference<List<SolicitudDocumento>>() {
+        });
+
+    for (int i = 31; i <= 37; i++) {
+      SolicitudDocumento solicitudDocumentoRecuperado = solicitudDocumentoResponse.get(i - (page * pageSize) - 1);
+      Assertions.assertThat(solicitudDocumentoRecuperado.getDocumentoRef())
+          .isEqualTo("documentoRef-" + String.format("%02d", i));
+    }
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-CENTGES-V" })
+  public void findAllSolicitudDocumento_EmptyList_Returns204() throws Exception {
+    // given: Una lista vacia de SolicitudDocumentos para la
+    // Solicitud
+    Long solicitudId = 1L;
+    List<SolicitudDocumento> solicitudDocumentos = new ArrayList<>();
+
+    Integer page = 0;
+    Integer pageSize = 10;
+
+    BDDMockito
+        .given(solicitudDocumentoService.findAllBySolicitud(ArgumentMatchers.<Long>any(),
+            ArgumentMatchers.<List<QueryCriteria>>any(), ArgumentMatchers.<Pageable>any()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          Pageable pageable = invocation.getArgument(2, Pageable.class);
+          Page<SolicitudDocumento> pageResponse = new PageImpl<>(solicitudDocumentos, pageable, 0);
+          return pageResponse;
+        });
+
+    // when: Get page=0 with pagesize=10
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicituddocumentos", solicitudId)
+                .with(SecurityMockMvcRequestPostProcessors.csrf()).header("X-Page", page)
+                .header("X-Page-Size", pageSize).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  /**
    * Función que devuelve un objeto Solicitud
    * 
    * @param id id del Solicitud
@@ -684,6 +784,27 @@ public class SolicitudControllerTest extends BaseControllerTest {
     solicitudModalidad.setPrograma(programa);
 
     return solicitudModalidad;
+  }
+
+  /**
+   * Función que devuelve un objeto SolicitudDocumento
+   * 
+   * @param solicitudDocumentoId
+   * @param convocatoriaId
+   * @param areaTematicaId
+   * @return el objeto SolicitudDocumento
+   */
+  private SolicitudDocumento generarSolicitudDocumento(Long solicitudDocumentoId, Long solicitudId,
+      Long tipoDocumentoId) {
+
+    SolicitudDocumento solicitudDocumento = SolicitudDocumento.builder().id(solicitudDocumentoId)
+        .solicitud(Solicitud.builder().id(solicitudId).build()).comentario("comentarios-" + solicitudDocumentoId)
+        .documentoRef("documentoRef-" + solicitudDocumentoId).nombre("nombreDocumento-" + solicitudDocumentoId)
+        .tipoDocumento(TipoDocumento.builder().id(tipoDocumentoId).build()).build();
+
+    solicitudDocumento.getSolicitud().setEstado(new EstadoSolicitud());
+    solicitudDocumento.getSolicitud().getEstado().setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+    return solicitudDocumento;
   }
 
   /**

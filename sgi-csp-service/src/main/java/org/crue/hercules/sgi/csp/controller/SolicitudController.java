@@ -10,8 +10,10 @@ import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 
 import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud;
+import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
 import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
+import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
@@ -50,17 +52,23 @@ public class SolicitudController {
   /** EstadoSolicitud service */
   private final EstadoSolicitudService estadoSolicitudService;
 
+  /** SolicitudDocumento service */
+  private final SolicitudDocumentoService solicitudDocumentoService;
+
   /**
    * Instancia un nuevo SolicitudController.
    * 
    * @param solicitudService          {@link SolicitudService}.
-   * @param solicitudModalidadService {@link solicitudModalidadService}.
+   * @param solicitudModalidadService {@link SolicitudModalidadService}.
+   * @param solicitudDocumentoService {@link SolicitudDocumentoService}
+   * @param estadoSolicitudService    {@link EstadoSolicitudService}.
    */
   public SolicitudController(SolicitudService solicitudService, SolicitudModalidadService solicitudModalidadService,
-      EstadoSolicitudService estadoSolicitudService) {
+      EstadoSolicitudService estadoSolicitudService, SolicitudDocumentoService solicitudDocumentoService) {
     this.service = solicitudService;
     this.solicitudModalidadService = solicitudModalidadService;
     this.estadoSolicitudService = estadoSolicitudService;
+    this.solicitudDocumentoService = solicitudDocumentoService;
   }
 
   /**
@@ -298,6 +306,31 @@ public class SolicitudController {
     }
 
     log.debug("findAllEstadoSolicitud(Long id, Pageable paging) - end");
+    return new ResponseEntity<>(page, HttpStatus.OK);
+  }
+
+  /**
+   * Devuelve una lista paginada y filtrada de {@link SolicitudDocumento} de la
+   * {@link Solicitud}.
+   * 
+   * @param id     Identificador de {@link Solicitud}.
+   * @param query  filtro de {@link QueryCriteria}.
+   * @param paging pageable.
+   */
+  @GetMapping("/{id}/solicituddocumentos")
+  // @PreAuthorize("hasAnyAuthorityForAnyUO('CSP-SOL-C', 'CSP-SOL-E')")
+  ResponseEntity<Page<SolicitudDocumento>> findAllSolicitudDocumentos(@PathVariable Long id,
+      @RequestParam(name = "q", required = false) List<QueryCriteria> query,
+      @RequestPageable(sort = "s") Pageable paging) {
+    log.debug("findAllSolicitudDocumentos(Long id, List<QueryCriteria> query, Pageable paging) - start");
+    Page<SolicitudDocumento> page = solicitudDocumentoService.findAllBySolicitud(id, query, paging);
+
+    if (page.isEmpty()) {
+      log.debug("findAllSolicitudDocumentos(Long id, List<QueryCriteria> query, Pageable paging) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("findAllSolicitudDocumentos(Long id, List<QueryCriteria> query, Pageable paging) - end");
     return new ResponseEntity<>(page, HttpStatus.OK);
   }
 

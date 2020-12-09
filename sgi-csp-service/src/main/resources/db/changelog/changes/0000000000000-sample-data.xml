@@ -1400,6 +1400,26 @@
     </insert>
   </changeSet>
 
+
+  <changeSet context="dev" author="master" id="0000000000000-solicitud_documento">
+    <insert tableName="solicitud_documento">
+      <column name="id" valueSequenceNext="solicitud_documento_seq" />
+      <column name="solicitud_id" valueComputed="(select id from csp.solicitud where codigo_registro_interno = 'SGI_SLC1202011061027')"></column>
+      <column name="comentario" value="Añadido documento doc_SGI_SLC1202011061027" />
+      <column name="documento_ref" value="documentoRef-001" />
+      <column name="nombre" value="doc_SGI_SLC1202011061027.pdf" />
+      <column name="tipo_documento_id" valueComputed="(select id from csp.tipo_documento where nombre = 'nombre-003')" />
+    </insert>
+    <insert tableName="solicitud_documento">
+      <column name="id" valueSequenceNext="solicitud_documento_seq" />
+      <column name="solicitud_id" valueComputed="(select id from csp.solicitud where codigo_registro_interno = 'SGI_SLC1202011061027')"></column>
+      <column name="comentario" value="Añadido documento doc_SGI_SLC1202011061027_2" />
+      <column name="documento_ref" value="documentoRef-003" />
+      <column name="nombre" value="doc_SGI_SLC1202011061027_2.pdf" />
+      <column name="tipo_documento_id" valueComputed="(select id from csp.tipo_documento where nombre = 'nombre-004')" />
+    </insert>
+  </changeSet>
+
   <changeSet context="dev" author="master" id="0000000000000-rol_socio">
     <insert tableName="rol_socio">
       <column name="id" valueSequenceNext="rol_socio_seq" />
