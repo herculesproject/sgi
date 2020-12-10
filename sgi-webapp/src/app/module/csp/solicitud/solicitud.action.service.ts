@@ -89,9 +89,8 @@ export class SolicitudActionService extends ActionService {
 
     this.historicoEstado = new SolicitudHistoricoEstadosFragment(logger, this.solicitud?.id, solicitudService);
 
-
-    this.addFragment(this.FRAGMENT.HITOS, this.hitos);
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
+    this.addFragment(this.FRAGMENT.HITOS, this.hitos);
     this.addFragment(this.FRAGMENT.HISTORICO_ESTADOS, this.historicoEstado);
     this.addFragment(this.FRAGMENT.DOCUMENTOS, this.documentos);
 
