@@ -55,7 +55,7 @@ public class SgiWebConfig implements WebMvcConfigurer {
   @Override
   public void addCorsMappings(CorsRegistry registry) {
     log.debug("addCorsMappings(CorsRegistry registry) - start");
-    registry.addMapping("/**").allowedMethods("GET", "POST", "PUT", "DELETE").exposedHeaders(
+    registry.addMapping("/**").allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH").exposedHeaders(
         PageMappingJackson2HttpMessageConverter.DEFAULT_PAGE_HEADER,
         PageMappingJackson2HttpMessageConverter.DEFAULT_PAGE_SIZE_HEADER,
         PageMappingJackson2HttpMessageConverter.DEFAULT_PAGE_COUNT_HEADER,
