@@ -29,11 +29,6 @@ speed-measure-plugin*.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-.history/*
-.vscode-server/bin/*
-!.vscode-server/bin/.gitkeep
-.vscode-server/extensions/*
-!.vscode-server/extensions/.gitkeep
 
 # misc
 /.sass-cache
