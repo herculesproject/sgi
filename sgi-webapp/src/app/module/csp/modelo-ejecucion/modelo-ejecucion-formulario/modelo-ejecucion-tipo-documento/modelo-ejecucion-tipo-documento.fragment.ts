@@ -122,9 +122,12 @@ export class ModeloEjecucionTipoDocumentoFragment extends Fragment {
         id: this.getKey(),
         activo: true
       } as IModeloEjecucion;
-      const fase = modeloTipoFases.find(element =>
-        element.tipoFase.id === wrapper.value.modeloTipoFase.tipoFase.id);
-      wrapper.value.modeloTipoFase = fase;
+
+      if (wrapper.value.modeloTipoFase.tipoFase != null) {
+        const fase = modeloTipoFases.find(element =>
+          element.tipoFase.id === wrapper.value.modeloTipoFase.tipoFase.id);
+        wrapper.value.modeloTipoFase = fase;
+      }
     });
     createdModelos = createdModelos.filter(x => x.value.modeloTipoFase);
     return from(createdModelos).pipe(
