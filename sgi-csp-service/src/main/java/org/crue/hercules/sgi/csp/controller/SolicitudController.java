@@ -12,11 +12,13 @@ import org.crue.hercules.sgi.csp.model.EstadoSolicitud;
 import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoDatosService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.crue.hercules.sgi.framework.web.bind.annotation.RequestPageable;
@@ -57,26 +59,32 @@ public class SolicitudController {
 
   /** SolicitudDocumento service */
   private final SolicitudDocumentoService solicitudDocumentoService;
+
   /** SolicitudHito service */
   private final SolicitudHitoService solicitudHitoService;
+
+  /** SolicitudProyectoDatosService service */
+  private final SolicitudProyectoDatosService solicitudProyectoDatosService;
 
   /**
    * Instancia un nuevo SolicitudController.
    * 
-   * @param solicitudService          {@link SolicitudService}.
-   * @param solicitudModalidadService {@link SolicitudModalidadService}.
-   * @param solicitudDocumentoService {@link SolicitudDocumentoService}
-   * @param estadoSolicitudService    {@link EstadoSolicitudService}.
-   * @param solicitudHitoService      {@link SolicitudHitoService}.
+   * @param solicitudService              {@link SolicitudService}.
+   * @param solicitudModalidadService     {@link SolicitudModalidadService}.
+   * @param solicitudDocumentoService     {@link SolicitudDocumentoService}
+   * @param estadoSolicitudService        {@link EstadoSolicitudService}.
+   * @param solicitudHitoService          {@link SolicitudHitoService}.
+   * @param solicitudProyectoDatosService {@link SolicitudProyectoDatosService}
    */
   public SolicitudController(SolicitudService solicitudService, SolicitudModalidadService solicitudModalidadService,
       EstadoSolicitudService estadoSolicitudService, SolicitudDocumentoService solicitudDocumentoService,
-      SolicitudHitoService solicitudHitoService) {
+      SolicitudHitoService solicitudHitoService, SolicitudProyectoDatosService solicitudProyectoDatosService) {
     this.service = solicitudService;
     this.solicitudModalidadService = solicitudModalidadService;
     this.estadoSolicitudService = estadoSolicitudService;
     this.solicitudDocumentoService = solicitudDocumentoService;
     this.solicitudHitoService = solicitudHitoService;
+    this.solicitudProyectoDatosService = solicitudProyectoDatosService;
   }
 
   /**
@@ -368,7 +376,7 @@ public class SolicitudController {
   }
 
   /**
-   * Comprueba si la soliciutd está asociada a una convocatoria SGI.
+   * Comprueba si la solicitud está asociada a una convocatoria SGI.
    * 
    * @param id Identificador de {@link Solicitud}.
    * @return HTTP 200 si se encuentra asociada a convocatoria SGI y HTTP 204 si
@@ -381,6 +389,27 @@ public class SolicitudController {
     Boolean returnValue = service.hasConvocatoriaSgi(id);
     log.debug("hasConvocatoriaSgi(Long id) - end");
     return returnValue ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  /**
+   * Recupera un {@link SolicitudProyectoDatos} de una solicitud
+   * 
+   * @param id Identificador de {@link Solicitud}.
+   * @return {@link SolicitudProyectoDatos}
+   */
+  @RequestMapping(path = "/{id}/solicitudproyectodatos", method = RequestMethod.GET)
+  // @PreAuthorize("hasAuthorityForAnyUO('CSP-RSOC-V')")
+  public ResponseEntity<SolicitudProyectoDatos> findSolictudProyectoDatos(@PathVariable Long id) {
+    log.debug("findSolictudProyectoDatos(Long id) - start");
+    SolicitudProyectoDatos returnValue = solicitudProyectoDatosService.findBySolicitud(id);
+
+    if (returnValue == null) {
+      log.debug("SolicitudProyectoDatos findSolictudProyectoDatos(Long id) - end");
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    log.debug("SolicitudProyectoDatos findSolictudProyectoDatos(Long id) - end");
+    return new ResponseEntity<>(returnValue, HttpStatus.OK);
   }
 
 }

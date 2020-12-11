@@ -4,6 +4,7 @@ DELETE FROM csp.rol_socio;
 DELETE FROM csp.solicitud_hito;
 DELETE FROM csp.solicitud_modalidad;
 DELETE FROM csp.solicitud_documento;
+DELETE FROM csp.solicitud_proyecto_datos;
 DELETE FROM csp.solicitud;
 DELETE FROM csp.estado_solicitud;
 DELETE FROM csp.convocatoria_documento;

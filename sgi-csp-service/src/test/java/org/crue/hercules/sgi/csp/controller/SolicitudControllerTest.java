@@ -19,12 +19,14 @@ import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.csp.service.EstadoSolicitudService;
 import org.crue.hercules.sgi.csp.model.TipoHito;
 import org.crue.hercules.sgi.csp.service.SolicitudHitoService;
 import org.crue.hercules.sgi.csp.model.TipoDocumento;
 import org.crue.hercules.sgi.csp.service.SolicitudDocumentoService;
 import org.crue.hercules.sgi.csp.service.SolicitudModalidadService;
+import org.crue.hercules.sgi.csp.service.SolicitudProyectoDatosService;
 import org.crue.hercules.sgi.csp.service.SolicitudService;
 import org.crue.hercules.sgi.framework.data.search.QueryCriteria;
 import org.hamcrest.Matchers;
@@ -67,6 +69,9 @@ public class SolicitudControllerTest extends BaseControllerTest {
 
   @MockBean
   private SolicitudHitoService solicitudHitoService;
+
+  @MockBean
+  private SolicitudProyectoDatosService solicitudProyectoDatosService;
 
   private static final String PATH_PARAMETER_ID = "/{id}";
   private static final String PATH_PARAMETER_DESACTIVAR = "/desactivar";
@@ -826,6 +831,48 @@ public class SolicitudControllerTest extends BaseControllerTest {
         .andExpect(MockMvcResultMatchers.status().isNoContent());
   }
 
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
+  public void findSolicitudProyectoDatos_ReturnsSolicitudProyectoDatos() throws Exception {
+    // given: existing id
+    BDDMockito.given(solicitudProyectoDatosService.findBySolicitud(ArgumentMatchers.anyLong()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          return generarSolicitudProyectoDatos(invocation.getArgument(0), invocation.getArgument(0));
+        });
+
+    // when: find by not existing solicitud id
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectodatos", 1L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: response is OK
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        // and the requested Solicitud is resturned as JSON object
+        .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
+        .andExpect(MockMvcResultMatchers.jsonPath("titulo").value("titulo-1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("solicitud.id").value(1L))
+        .andExpect(MockMvcResultMatchers.jsonPath("colaborativo").value(Boolean.TRUE))
+        .andExpect(MockMvcResultMatchers.jsonPath("presupuestoPorEntidades").value(Boolean.TRUE));
+  }
+
+  @Test
+  @WithMockUser(username = "user", authorities = { "CSP-SOL-V" })
+  public void findSolicitudProyectoDatos_Returns404() throws Exception {
+    // given: existing id
+    BDDMockito.given(solicitudProyectoDatosService.findBySolicitud(ArgumentMatchers.anyLong()))
+        .willAnswer((InvocationOnMock invocation) -> {
+          throw new SolicitudNotFoundException(1L);
+        });
+
+    // when: find by existing solicitud id
+    mockMvc
+        .perform(MockMvcRequestBuilders.get(CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectodatos", 2L)
+            .with(SecurityMockMvcRequestPostProcessors.csrf()).accept(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        // then: Devuelve un 204
+        .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
   /**
    * Función que devuelve un objeto Solicitud
    * 
@@ -940,6 +987,25 @@ public class SolicitudControllerTest extends BaseControllerTest {
     solicitudHito.getSolicitud().setEstado(new EstadoSolicitud());
     solicitudHito.getSolicitud().getEstado().setEstado(TipoEstadoSolicitudEnum.BORRADOR);
     return solicitudHito;
+  }
+
+  /**
+   * Función que devuelve un objeto SolicitudProyectoDatos
+   * 
+   * @param solicitudProyectoDatosId
+   * @param solicitudId
+   * @return el objeto SolicitudProyectoDatos
+   */
+  private SolicitudProyectoDatos generarSolicitudProyectoDatos(Long solicitudProyectoDatosId, Long solicitudId) {
+
+    SolicitudProyectoDatos solicitudProyectoDatos = SolicitudProyectoDatos.builder().id(solicitudProyectoDatosId)
+        .solicitud(Solicitud.builder().id(solicitudId).build()).titulo("titulo-" + solicitudProyectoDatosId)
+        .acronimo("acronimo-" + solicitudProyectoDatosId).colaborativo(Boolean.TRUE)
+        .presupuestoPorEntidades(Boolean.TRUE).build();
+
+    solicitudProyectoDatos.getSolicitud().setEstado(new EstadoSolicitud());
+    solicitudProyectoDatos.getSolicitud().getEstado().setEstado(TipoEstadoSolicitudEnum.BORRADOR);
+    return solicitudProyectoDatos;
   }
 
 }

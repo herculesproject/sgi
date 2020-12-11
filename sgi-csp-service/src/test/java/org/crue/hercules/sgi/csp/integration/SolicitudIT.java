@@ -14,6 +14,7 @@ import org.crue.hercules.sgi.csp.model.Solicitud;
 import org.crue.hercules.sgi.csp.model.SolicitudDocumento;
 import org.crue.hercules.sgi.csp.model.SolicitudHito;
 import org.crue.hercules.sgi.csp.model.SolicitudModalidad;
+import org.crue.hercules.sgi.csp.model.SolicitudProyectoDatos;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer;
 import org.crue.hercules.sgi.framework.test.security.Oauth2WireMockInitializer.TokenBuilder;
 import org.junit.jupiter.api.Test;
@@ -419,6 +420,24 @@ public class SolicitudIT {
     Assertions.assertThat(responseHeaders.getFirst("X-Page")).as("X-Page").isEqualTo("0");
     Assertions.assertThat(responseHeaders.getFirst("X-Page-Size")).as("X-Page-Size").isEqualTo("10");
     Assertions.assertThat(responseHeaders.getFirst("X-Total-Count")).as("X-Total-Count").isEqualTo("3");
+
+  }
+
+  @Sql
+  @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:cleanup.sql")
+  @Test
+  public void findSolicitudProyectoDatos_ReturnsSolicitudProyectoDatosSubList() throws Exception {
+    Long idSolicitud = 1L;
+
+    final ResponseEntity<SolicitudProyectoDatos> response = restTemplate.exchange(
+        CONTROLLER_BASE_PATH + PATH_PARAMETER_ID + "/solicitudproyectodatos", HttpMethod.GET, buildRequest(null, null),
+        SolicitudProyectoDatos.class, idSolicitud);
+
+    Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    SolicitudProyectoDatos solicitudProyectoDatos = response.getBody();
+    Assertions.assertThat(solicitudProyectoDatos.getSolicitud().getId()).as("getSolicitud().getId()")
+        .isEqualTo(idSolicitud);
+    Assertions.assertThat(solicitudProyectoDatos.getTitulo()).as("getTitulo()").isEqualTo("titulo-1");
 
   }
 
