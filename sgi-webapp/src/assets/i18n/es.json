@@ -173,6 +173,7 @@
   "csp.convocatoria.configuracionSolicitud.añadir": "Añadir documento requerido",
   "csp.convocatoria.configuracionSolicitud.baremacion": "Seleccione tipo de baremación",
   "csp.convocatoria.configuracionSolicitud.descripcion": "Descripción",
+  "csp.convocatoria.configuracionSolicitud.documentos.title": "Listado de documentos requeridos",
   "csp.convocatoria.configuracionSolicitud.error.cargar": "csp.convocatoria.configuracionSolicitud.error.cargar",
   "csp.convocatoria.configuracionSolicitud.fasePresentacionSolicitudes": "Seleccione plazo de presentación de solicitudes",
   "csp.convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.requerido": "Presentación de solicitudes es requerido",
