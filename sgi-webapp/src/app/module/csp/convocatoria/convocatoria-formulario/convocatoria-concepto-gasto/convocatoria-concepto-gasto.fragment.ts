@@ -289,7 +289,7 @@ export class ConvocatoriaConceptoGastoFragment extends FormFragment<IConvocatori
 
   private applyCostesIndirectos() {
     this.logger.debug(ConvocatoriaConceptoGastoFragment.name, `applyCostesIndirectos()`, 'start');
-    if (this.getFormGroup().controls.costeIndirecto.value != null) {
+    if (this.getFormGroup()?.controls.costeIndirecto.value != null) {
       this.convocatoriaConceptoGastoPermitido$.value.forEach(wrapper => {
         if (wrapper.value.conceptoGasto.id === this.getFormGroup().controls.costeIndirecto.value.id
           && wrapper.value.porcentajeCosteIndirecto !== this.getFormGroup().controls.porcentajeCosteIndirecto.value) {

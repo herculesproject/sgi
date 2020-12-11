@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { ActionService, IFragment } from '@core/services/action-service';
+import { ActionService } from '@core/services/action-service';
 import { ActivatedRoute } from '@angular/router';
 
 import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
@@ -41,8 +41,8 @@ import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-
 import { DocumentoRequeridoService } from '@core/services/csp/documento-requerido.service';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { StatusWrapper } from '@core/utils/status-wrapper';
-import { Observable, throwError, from, of } from 'rxjs';
-import { filter, switchMap, concatMap, tap, takeLast, } from 'rxjs/operators';
+import { Observable, throwError, of } from 'rxjs';
+import { switchMap, tap, } from 'rxjs/operators';
 
 import { ConvocatoriaConceptoGastoCodigoEcFragment } from './convocatoria-formulario/convocatoria-concepto-gasto-codigo-ec/convocatoria-concepto-gasto-codigo-ec.fragment';
 import { ConvocatoriaConceptoGastoCodigoEcService } from '@core/services/csp/convocatoria-concepto-gasto-codigo-ec.service';
@@ -318,6 +318,11 @@ export class ConvocatoriaActionService extends ActionService {
       return this.plazosFases.saveOrUpdate().pipe(
         switchMap(() => {
           this.plazosFases.refreshInitialState(true);
+          return this.elegibilidad.saveOrUpdate();
+        }),
+        switchMap(() => {
+          this.elegibilidad.refreshInitialState(true);
+
           return super.saveOrUpdate();
         }),
         tap(() => this.logger.debug(ConvocatoriaActionService.name,
@@ -334,6 +339,11 @@ export class ConvocatoriaActionService extends ActionService {
         }),
         switchMap(() => {
           this.plazosFases.refreshInitialState(true);
+          return this.elegibilidad.saveOrUpdate();
+        }),
+        switchMap(() => {
+          this.elegibilidad.refreshInitialState(true);
+
           return super.saveOrUpdate();
         }),
         tap(() => this.logger.debug(ConvocatoriaActionService.name,
