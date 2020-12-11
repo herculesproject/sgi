@@ -1389,14 +1389,14 @@
     <insert tableName="solicitud_modalidad">
       <column name="id" valueSequenceNext="solicitud_modalidad_seq" />
       <column name="solicitud_id" valueComputed="(select id from csp.solicitud where codigo_registro_interno = 'SGI_SLC1202011061027')"></column>
-      <column name="entidad_ref" value="ent-001" />
-      <column name="programa_id" valueComputed="(select id from csp.programa where nombre = 'nombre-007')"></column>
+      <column name="entidad_ref" value="ent-002" />
+      <column name="programa_id" valueComputed="(select id from csp.programa where nombre = 'nombre-003')"></column>
     </insert>
     <insert tableName="solicitud_modalidad">
       <column name="id" valueSequenceNext="solicitud_modalidad_seq" />
       <column name="solicitud_id" valueComputed="(select id from csp.solicitud where codigo_registro_interno = 'SGI_SLC1202011061027')"></column>
       <column name="entidad_ref" value="ent-003" />
-      <column name="programa_id" valueComputed="(select id from csp.programa where nombre = 'nombre-008')"></column>
+      <column name="programa_id" valueComputed="(select id from csp.programa where nombre = 'nombre-007')"></column>
     </insert>
   </changeSet>
 

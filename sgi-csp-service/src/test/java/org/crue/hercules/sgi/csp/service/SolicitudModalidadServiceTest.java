@@ -66,11 +66,12 @@ public class SolicitudModalidadServiceTest {
 
     BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudModalidad.getSolicitud()));
-    BDDMockito.given(programaRepository.findById(1L)).willReturn(Optional.of(solicitudModalidad.getPrograma()));
+    BDDMockito.given(programaRepository.findById(2L)).willReturn(Optional.of(solicitudModalidad.getPrograma()));
+    BDDMockito.given(programaRepository.findById(1L))
+        .willReturn(Optional.of(solicitudModalidad.getPrograma().getPadre()));
     BDDMockito.given(convocatoriaEntidadConvocanteRepository
         .findByConvocatoriaIdAndEntidadRef(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
         .willReturn(Optional.of(generarMockConvocatoriaEntidadConvocante(1L)));
-    BDDMockito.given(programaRepository.existsByPadreIdAndActivoIsTrue(1L)).willReturn(false);
 
     BDDMockito.given(repository.save(ArgumentMatchers.<SolicitudModalidad>any()))
         .will((InvocationOnMock invocation) -> {
@@ -187,16 +188,15 @@ public class SolicitudModalidadServiceTest {
     SolicitudModalidad solicitudModalidad = generarMockSolicitudModalidad(null);
 
     Programa padre = new Programa();
-    padre.setId(2L);
+    padre.setId(3L);
     solicitudModalidad.getPrograma().setPadre(padre);
 
     BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudModalidad.getSolicitud()));
-    BDDMockito.given(programaRepository.findById(1L)).willReturn(Optional.of(solicitudModalidad.getPrograma()));
+    BDDMockito.given(programaRepository.findById(2L)).willReturn(Optional.of(solicitudModalidad.getPrograma()));
     BDDMockito.given(convocatoriaEntidadConvocanteRepository
         .findByConvocatoriaIdAndEntidadRef(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
-        .willReturn(Optional.of(generarMockConvocatoriaEntidadConvocante(2L)));
-    BDDMockito.given(programaRepository.findById(2L)).willReturn(Optional.empty());
+        .willReturn(Optional.of(generarMockConvocatoriaEntidadConvocante(4L)));
 
     // when: Creamos el SolicitudModalidad
     // then: Lanza una excepcion
@@ -205,9 +205,11 @@ public class SolicitudModalidadServiceTest {
   }
 
   @Test
-  public void create_WithProgramaNoHoja_ThrowsIllegalArgumentException() {
-    // given: Un nuevo SolicitudModalidad y la modalidad seleccionada no es una hoja
+  public void create_WithProgramaNodoRaiz_ThrowsIllegalArgumentException() {
+    // given: Un nuevo SolicitudModalidad y la modalidad seleccionada es el nodo
+    // raiz
     SolicitudModalidad solicitudModalidad = generarMockSolicitudModalidad(null);
+    solicitudModalidad.setPrograma(solicitudModalidad.getPrograma().getPadre());
 
     BDDMockito.given(solicitudRepository.findById(ArgumentMatchers.anyLong()))
         .willReturn(Optional.of(solicitudModalidad.getSolicitud()));
@@ -215,12 +217,11 @@ public class SolicitudModalidadServiceTest {
     BDDMockito.given(convocatoriaEntidadConvocanteRepository
         .findByConvocatoriaIdAndEntidadRef(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
         .willReturn(Optional.of(generarMockConvocatoriaEntidadConvocante(1L)));
-    BDDMockito.given(programaRepository.existsByPadreIdAndActivoIsTrue(1L)).willReturn(true);
 
     // when: Creamos el SolicitudModalidad
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.create(solicitudModalidad)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La modalidad seleccionada no es una hoja del arbol");
+        .hasMessage("La modalidad seleccionada es el nodo raiz del arbol");
   }
 
   @Test
@@ -228,15 +229,16 @@ public class SolicitudModalidadServiceTest {
     // given: Un nuevo SolicitudModalidad con las observaciones actualizadas
     SolicitudModalidad solicitudModalidad = generarMockSolicitudModalidad(3L);
     SolicitudModalidad solicitudModalidadProgramaActualizado = generarMockSolicitudModalidad(3L);
-    solicitudModalidadProgramaActualizado.getPrograma().setId(1L);
+    solicitudModalidadProgramaActualizado.getPrograma().setId(4L);
 
-    BDDMockito.given(programaRepository.findById(ArgumentMatchers.anyLong()))
+    BDDMockito.given(programaRepository.findById(4L))
         .willReturn(Optional.of(solicitudModalidadProgramaActualizado.getPrograma()));
+    BDDMockito.given(programaRepository.findById(1L))
+        .willReturn(Optional.of(solicitudModalidadProgramaActualizado.getPrograma().getPadre()));
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitudModalidad));
     BDDMockito.given(convocatoriaEntidadConvocanteRepository
         .findByConvocatoriaIdAndEntidadRef(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
         .willReturn(Optional.of(generarMockConvocatoriaEntidadConvocante(1L)));
-    BDDMockito.given(programaRepository.existsByPadreIdAndActivoIsTrue(ArgumentMatchers.anyLong())).willReturn(false);
 
     BDDMockito.given(repository.save(ArgumentMatchers.<SolicitudModalidad>any()))
         .will((InvocationOnMock invocation) -> invocation.getArgument(0));
@@ -290,15 +292,14 @@ public class SolicitudModalidadServiceTest {
     SolicitudModalidad solicitudModalidad = generarMockSolicitudModalidad(1L);
 
     Programa padre = new Programa();
-    padre.setId(2L);
+    padre.setId(3L);
     solicitudModalidad.getPrograma().setPadre(padre);
 
-    BDDMockito.given(programaRepository.findById(1L)).willReturn(Optional.of(solicitudModalidad.getPrograma()));
+    BDDMockito.given(programaRepository.findById(2L)).willReturn(Optional.of(solicitudModalidad.getPrograma()));
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitudModalidad));
     BDDMockito.given(convocatoriaEntidadConvocanteRepository
         .findByConvocatoriaIdAndEntidadRef(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
-        .willReturn(Optional.of(generarMockConvocatoriaEntidadConvocante(2L)));
-    BDDMockito.given(programaRepository.findById(2L)).willReturn(Optional.empty());
+        .willReturn(Optional.of(generarMockConvocatoriaEntidadConvocante(4L)));
 
     // when: Actualizamos el SolicitudModalidad
     // then: Lanza una excepcion
@@ -307,22 +308,22 @@ public class SolicitudModalidadServiceTest {
   }
 
   @Test
-  public void update_WithProgramaNoHoja_ThrowsIllegalArgumentException() {
-    // given: Un SolicitudModalidad actualizado y la modalidad seleccionada no es
-    // una hoja
+  public void update_WithProgramaNodoRaiz_ThrowsIllegalArgumentException() {
+    // given: Un SolicitudModalidad actualizado y la modalidad seleccionada es el
+    // nodo raiz
     SolicitudModalidad solicitudModalidad = generarMockSolicitudModalidad(1L);
+    solicitudModalidad.setPrograma(solicitudModalidad.getPrograma().getPadre());
 
     BDDMockito.given(programaRepository.findById(1L)).willReturn(Optional.of(solicitudModalidad.getPrograma()));
     BDDMockito.given(repository.findById(ArgumentMatchers.anyLong())).willReturn(Optional.of(solicitudModalidad));
     BDDMockito.given(convocatoriaEntidadConvocanteRepository
         .findByConvocatoriaIdAndEntidadRef(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
         .willReturn(Optional.of(generarMockConvocatoriaEntidadConvocante(1L)));
-    BDDMockito.given(programaRepository.existsByPadreIdAndActivoIsTrue(1L)).willReturn(true);
 
     // when: Actualizamos el SolicitudModalidad
     // then: Lanza una excepcion
     Assertions.assertThatThrownBy(() -> service.update(solicitudModalidad)).isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("La modalidad seleccionada no es una hoja del arbol");
+        .hasMessage("La modalidad seleccionada es el nodo raiz del arbol");
   }
 
   @Test
@@ -440,11 +441,15 @@ public class SolicitudModalidadServiceTest {
     Programa programa = new Programa();
     programa.setId(1L);
 
+    Programa modalidad = new Programa();
+    modalidad.setId(2L);
+    modalidad.setPadre(programa);
+
     SolicitudModalidad solicitudModalidad = new SolicitudModalidad();
     solicitudModalidad.setId(id);
     solicitudModalidad.setEntidadRef("entidadRef");
     solicitudModalidad.setSolicitud(solicitud);
-    solicitudModalidad.setPrograma(programa);
+    solicitudModalidad.setPrograma(modalidad);
 
     return solicitudModalidad;
   }

@@ -82,14 +82,15 @@ public class SolicitudModalidadServiceImpl implements SolicitudModalidadService 
     Assert.isTrue(convocatoriaEntidadConvocante.isPresent(),
         "No existe ninguna ConvocatoriaEntidadConvocante con el entidadRef para la convocatoria seleccionada");
 
+    // Comprobar que la modalidad seleccionada no es el nodo raiz del arbol
+    Assert.isTrue(
+        !solicitudModalidad.getPrograma().getId().equals(convocatoriaEntidadConvocante.get().getPrograma().getId()),
+        "La modalidad seleccionada es el nodo raiz del arbol");
+
     Assert.isTrue(
         isModalidadDescencientePrograma(solicitudModalidad.getPrograma(),
             convocatoriaEntidadConvocante.get().getPrograma()),
         "La modalidad seleccionada no pertenece al arbol del programa de la convocatoria");
-
-    // Comprobar que la modalidad seleccionada es una hoja
-    Assert.isTrue(!programaRepository.existsByPadreIdAndActivoIsTrue(solicitudModalidad.getPrograma().getId()),
-        "La modalidad seleccionada no es una hoja del arbol");
 
     SolicitudModalidad returnValue = repository.save(solicitudModalidad);
 
@@ -124,14 +125,15 @@ public class SolicitudModalidadServiceImpl implements SolicitudModalidadService 
       Optional<ConvocatoriaEntidadConvocante> convocatoriaEntidadConvocante = convocatoriaEntidadConvocanteRepository
           .findByConvocatoriaIdAndEntidadRef(data.getSolicitud().getConvocatoria().getId(), data.getEntidadRef());
 
+      // Comprobar que la modalidad seleccionada no es el nodo raiz del arbol
+      Assert.isTrue(
+          !solicitudModalidad.getPrograma().getId().equals(convocatoriaEntidadConvocante.get().getPrograma().getId()),
+          "La modalidad seleccionada es el nodo raiz del arbol");
+
       Assert.isTrue(
           isModalidadDescencientePrograma(solicitudModalidad.getPrograma(),
               convocatoriaEntidadConvocante.get().getPrograma()),
           "La modalidad seleccionada no pertenece al arbol del programa de la convocatoria");
-
-      // Comprobar que la modalidad seleccionada es una hoja
-      Assert.isTrue(!programaRepository.existsByPadreIdAndActivoIsTrue(solicitudModalidad.getPrograma().getId()),
-          "La modalidad seleccionada no es una hoja del arbol");
 
       data.setPrograma(solicitudModalidad.getPrograma());
       SolicitudModalidad returnValue = repository.save(data);

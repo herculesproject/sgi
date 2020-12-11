@@ -133,7 +133,7 @@ public class SolicitudModalidadIT {
     solicitud.setId(1L);
 
     Programa programa = new Programa();
-    programa.setId(1L);
+    programa.setId(2L);
 
     SolicitudModalidad solicitudModalidad = new SolicitudModalidad();
     solicitudModalidad.setId(id);
