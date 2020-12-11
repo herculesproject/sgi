@@ -13,7 +13,7 @@ import { IsEntityValidator } from '@core/validators/is-entity-validador';
 import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http';
 import { NGXLogger } from 'ngx-logger';
 import { merge, Observable, of, BehaviorSubject, from, EMPTY } from 'rxjs';
-import { map, tap, switchMap, mergeMap, catchError } from 'rxjs/operators';
+import { map, tap, switchMap, mergeMap, catchError, takeLast } from 'rxjs/operators';
 import { IPrograma } from '@core/models/csp/programa';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
 import { StatusWrapper } from '@core/utils/status-wrapper';
@@ -492,7 +492,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
   private loadEntidadesConvocantesModalidad(solicitudId: number, convocatoriaId: number):
     Observable<SolicitudModalidadEntidadConvocanteListado[]> {
     this.logger.debug(SolicitudDatosGeneralesFragment.name,
-      `loadEntidadesConvocantesModalidad(solicitudId: ${solicitudId}), convocatoriaId: ${convocatoriaId})`, 'start');
+      `loadEntidadesConvocantesModalidad(solicitudId: ${solicitudId}, convocatoriaId: ${convocatoriaId})`, 'start');
 
     return this.convocatoriaService.findAllConvocatoriaEntidadConvocantes(convocatoriaId).pipe(
       map(resultEntidadConvocantes => {
@@ -526,6 +526,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
               catchError(() => of(element))
             );
           }),
+          takeLast(1),
           switchMap(() => of(entidadesConvocantesModalidad))
         );
       }),
@@ -550,7 +551,7 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
       }),
       tap(() => {
         this.logger.debug(SolicitudDatosGeneralesFragment.name,
-          `loadEntidadesConvocantesModalidad(solicitudId: ${solicitudId}), convocatoriaId: ${convocatoriaId})`, 'end');
+          `loadEntidadesConvocantesModalidad(solicitudId: ${solicitudId}, convocatoriaId: ${convocatoriaId})`, 'end');
       })
     );
   }

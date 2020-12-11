@@ -2,7 +2,6 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { IPrograma } from '@core/models/csp/programa';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
 import { BaseModalComponent } from '@core/component/base-modal.component';
-import { FormGroupUtil } from '@core/utils/form-group-util';
 import { NGXLogger } from 'ngx-logger';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -74,9 +73,12 @@ export class SolicitudModalidadEntidadConvocanteModalComponent
   extends BaseModalComponent<SolicitudModalidadEntidadConvocanteModalData, SolicitudModalidadEntidadConvocanteModalComponent>
   implements OnInit {
 
+  fxFlexPropertiesTree: FxFlexProperties;
+
   isEdit = false;
 
   checkedNode: NodePrograma;
+  rootNode: NodePrograma;
 
   dataSource = new MatTreeNestedDataSource<NodePrograma>();
   nodeMap = new Map<number, NodePrograma>();
@@ -101,6 +103,12 @@ export class SolicitudModalidadEntidadConvocanteModalComponent
     this.fxFlexProperties.md = '0 1 calc(33%-10px)';
     this.fxFlexProperties.gtMd = '0 1 calc(20%-10px)';
     this.fxFlexProperties.order = '2';
+
+    this.fxFlexPropertiesTree = new FxFlexProperties();
+    this.fxFlexPropertiesTree.sm = '0 1 calc(100%-10px)';
+    this.fxFlexPropertiesTree.md = '0 1 calc(100%-10px)';
+    this.fxFlexPropertiesTree.gtMd = '0 1 calc(100%-10px)';
+    this.fxFlexPropertiesTree.order = '2';
 
     this.fxLayoutProperties = new FxLayoutProperties();
     this.fxLayoutProperties.gap = '20px';
@@ -172,6 +180,7 @@ export class SolicitudModalidadEntidadConvocanteModalComponent
       `getTreePrograma(rootPrograma: ${rootPrograma}, checkedPrograma?: ${checkedPrograma})`, 'start');
 
     const node = new NodePrograma(rootPrograma);
+    this.rootNode = node;
     this.nodeMap.set(node.programa.id, node);
     return this.getChilds(node).pipe(map(() => node)).pipe(
       tap(() => {

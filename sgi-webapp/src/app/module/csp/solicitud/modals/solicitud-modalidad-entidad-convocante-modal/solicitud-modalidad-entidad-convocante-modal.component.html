@@ -37,17 +37,22 @@
 
         <!-- Modalidad -->
 
-        <div class="programa" [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
-          [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
+        <div class="programa" [fxFlex.sm]="fxFlexPropertiesTree.sm" [fxFlex.md]="fxFlexPropertiesTree.md"
+          [fxFlex.gt-md]="fxFlexPropertiesTree.gtMd" [fxFlexOrder]="fxFlexPropertiesTree.order">
 
-          <div class="arbol" [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
-            [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
+          <div class="arbol" [fxFlex.sm]="fxFlexPropertiesTree.sm" [fxFlex.md]="fxFlexPropertiesTree.md"
+            [fxFlex.gt-md]="fxFlexPropertiesTree.gtMd" [fxFlexOrder]="fxFlexPropertiesTree.order">
             <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="arbol-tree">
               <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
                 <li class="mat-tree-node">
                   <button mat-icon-button disabled></button>
-                  <mat-checkbox class="checkbox" color="primary" [checked]="node === checkedNode"
-                    (change)="onCheckNode(node, $event)">
+
+                  <mat-label *ngIf="node === rootNode">
+                    {{node.programa.nombre}}
+                  </mat-label>
+
+                  <mat-checkbox *ngIf="node !== rootNode" class="checkbox" color="primary"
+                    [checked]="node === checkedNode" (change)="onCheckNode(node, $event)">
                     {{node.programa.nombre}}
                   </mat-checkbox>
                 </li>
@@ -60,9 +65,15 @@
                         {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
                       </mat-icon>
                     </button>
-                    <mat-label>
+
+                    <mat-label *ngIf="node === rootNode">
                       {{node.programa.nombre}}
                     </mat-label>
+
+                    <mat-checkbox *ngIf="node !== rootNode" class="checkbox" color="primary"
+                      [checked]="node === checkedNode" (change)="onCheckNode(node, $event)">
+                      {{node.programa.nombre}}
+                    </mat-checkbox>
                   </div>
                   <ul [class.arbol-invisible]="!treeControl.isExpanded(node)">
                     <ng-container matTreeNodeOutlet></ng-container>
