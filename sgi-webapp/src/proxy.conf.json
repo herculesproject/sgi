@@ -4,6 +4,7 @@
     "pathRewrite": {
       "^/api/eti": ""
     },
+    "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"
   },
@@ -12,6 +13,7 @@
     "pathRewrite": {
       "^/api/csp": ""
     },
+    "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"
   },
@@ -20,6 +22,7 @@
     "pathRewrite": {
       "^/api/usr": ""
     },
+    "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"
   },
@@ -28,6 +31,7 @@
     "pathRewrite": {
       "^/api/sgp": "/sgp"
     },
+    "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"
   },
@@ -36,6 +40,7 @@
     "pathRewrite": {
       "^/api/sge": "/sge"
     },
+    "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"
   },
@@ -44,11 +49,13 @@
     "pathRewrite": {
       "^/api/sgdoc": "/sgdoc"
     },
+    "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"
   },
   "/pentaho": {
     "target": "http://192.168.3.50:8080",
+    "changeOrigin": true,
     "secure": false,
     "logLevel": "debug"
   }
