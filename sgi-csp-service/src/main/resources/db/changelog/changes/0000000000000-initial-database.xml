@@ -140,6 +140,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="area_tematicaPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
@@ -155,6 +159,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="concepto_gastoPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
@@ -169,6 +177,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="configuracion_solicitudPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="baremacion_ref" type="VARCHAR(255)" />
       <column name="formulario_solicitud" type="VARCHAR(50)" />
       <column name="importe_maximo_solicitud" type="DECIMAL(19, 2)" />
@@ -184,6 +196,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoriaPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
@@ -219,6 +235,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_area_tematicaPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="observaciones" type="VARCHAR(2000)" />
       <column name="area_tematica_id" type="BIGINT">
         <constraints nullable="false" />
@@ -233,6 +253,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_concepto_gastoPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="importe_maximo" type="DOUBLE" />
       <column name="num_meses" type="INT" />
       <column name="observaciones" type="VARCHAR(250)" />
@@ -251,6 +275,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_concepto_gasto_codigo_ecPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="codigo_economico_ref" type="VARCHAR(50)">
         <constraints nullable="false" />
       </column>
@@ -267,6 +295,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_documentoPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="documento_ref" type="VARCHAR(250)">
         <constraints nullable="false" />
       </column>
@@ -289,6 +321,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_enlacePK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="descripcion" type="VARCHAR(250)" />
       <column name="url" type="VARCHAR(250)">
         <constraints nullable="false" />
@@ -304,6 +340,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_entidad_convocantePK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="entidad_ref" type="VARCHAR(50)">
         <constraints nullable="false" />
       </column>
@@ -318,6 +358,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_entidad_financiadoraPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="entidad_ref" type="VARCHAR(50)">
         <constraints nullable="false" />
       </column>
@@ -334,6 +378,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_entidad_gestoraPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="entidad_ref" type="VARCHAR(255)">
         <constraints nullable="false" />
       </column>
@@ -347,6 +395,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_fasePK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="fecha_fin" type="date">
         <constraints nullable="false" />
       </column>
@@ -367,6 +419,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_hitoPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="comentario" type="VARCHAR(2000)" />
       <column name="fecha" type="date">
         <constraints nullable="false" />
@@ -387,6 +443,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_periodo_justificacionPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="fecha_fin_presentacion" type="date" />
       <column name="fecha_inicio_presentacion" type="date" />
       <column name="mes_final" type="INT">
@@ -410,6 +470,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="convocatoria_periodo_seguimiento_cientificoPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="fecha_fin_presentacion" type="date" />
       <column name="fecha_inicio_presentacion" type="date" />
       <column name="mes_final" type="INT">
@@ -432,6 +496,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="documento_requerido_solicitudPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="observaciones" type="VARCHAR(250)" />
       <column name="configuracion_solicitud_id" type="BIGINT">
         <constraints nullable="false" />
@@ -446,6 +514,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="estado_solicitudPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="comentario" type="VARCHAR(2000)" />
       <column name="estado" type="VARCHAR(50)">
         <constraints nullable="false" />
@@ -463,6 +535,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="fuente_financiacionPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
@@ -486,6 +562,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_ejecucionPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
@@ -500,6 +580,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_tipo_documentoPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
@@ -517,6 +601,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_tipo_enlacePK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
@@ -533,6 +621,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_tipo_fasePK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
@@ -558,6 +650,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_tipo_finalidadPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
@@ -574,6 +670,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_tipo_hitoPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="false" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
@@ -599,6 +699,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="modelo_unidadPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
@@ -615,6 +719,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="programaPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
@@ -630,6 +738,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="requisito_equipoPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="anios_nivel_academico" type="INT" />
       <column name="anios_vinculacion" type="INT" />
       <column name="edad_maxima" type="INT" />
@@ -652,6 +764,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="requisito_ipPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="anios_nivel_academico" type="INT" />
       <column name="anios_vinculacion" type="INT" />
       <column name="edad_maxima" type="INT" />
@@ -675,6 +791,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="rol_proyectoPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="abreviatura" type="VARCHAR(5)">
         <constraints nullable="false" />
       </column>
@@ -698,6 +818,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="rol_socioPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="abreviatura" type="VARCHAR(5)">
         <constraints nullable="false" />
       </column>
@@ -716,6 +840,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="solicitudPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
@@ -744,6 +872,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="solicitud_documentoPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="comentario" type="VARCHAR(2000)" />
       <column name="documento_ref" type="VARCHAR(50)">
         <constraints nullable="false" />
@@ -762,6 +894,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="solicitud_hitoPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="comentario" type="VARCHAR(2000)" />
       <column name="fecha" type="date">
         <constraints nullable="false" />
@@ -782,6 +918,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="solicitud_modalidadPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="entidad_ref" type="VARCHAR(50)">
         <constraints nullable="false" />
       </column>
@@ -798,6 +938,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="solicitud_proyecto_datosPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column name="acronimo" type="VARCHAR(50)" />
       <column name="check_list_ref" type="VARCHAR(2000)" />
       <column defaultValueBoolean="false" name="colaborativo" type="BOOLEAN">
@@ -827,6 +971,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_ambito_geograficoPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
@@ -840,6 +988,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_documentoPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
@@ -854,6 +1006,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_enlacePK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
@@ -868,6 +1024,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_fasePK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
@@ -882,6 +1042,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_finalidadPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
@@ -896,6 +1060,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_financiacionPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
@@ -910,6 +1078,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_hitoPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
@@ -924,6 +1096,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_origen_fuente_financiacionPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
@@ -937,6 +1113,10 @@
       <column name="id" type="BIGINT">
         <constraints nullable="false" primaryKey="true" primaryKeyName="tipo_regimen_concurrenciaPK" />
       </column>
+      <column name="created_by" type="VARCHAR(255)" />
+      <column name="creation_date" type="TIMESTAMP" />
+      <column name="last_modified_by" type="VARCHAR(255)" />
+      <column name="last_modified_date" type="TIMESTAMP" />
       <column defaultValueBoolean="true" name="activo" type="BOOLEAN">
         <constraints nullable="false" />
       </column>
