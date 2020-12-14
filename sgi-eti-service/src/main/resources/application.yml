@@ -73,9 +73,9 @@ spring:
     #frameoptions:
       #enable: false
   # H2 console
-  #h2:
-    #console:
-      #enabled: true
+  h2:
+    console:
+      enabled: false
       #path: /h2-console
       #settings:
         #web-allow-others: true
