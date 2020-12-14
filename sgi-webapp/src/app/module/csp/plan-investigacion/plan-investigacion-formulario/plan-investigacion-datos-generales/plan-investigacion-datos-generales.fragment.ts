@@ -1,4 +1,4 @@
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IPrograma } from '@core/models/csp/programa';
 import { FormFragment } from '@core/services/action-service';
 import { ProgramaService } from '@core/services/csp/programa.service';
@@ -26,8 +26,8 @@ export class PlanInvestigacionDatosGeneralesFragment extends FormFragment<IProgr
     this.logger.debug(PlanInvestigacionDatosGeneralesFragment.name,
       `${this.buildFormGroup.name}()`, 'start');
     const fb = new FormGroup({
-      nombre: new FormControl(''),
-      descripcion: new FormControl(''),
+      nombre: new FormControl('', [Validators.maxLength(50)]),
+      descripcion: new FormControl('', [Validators.maxLength(250)]),
     });
     this.logger.debug(PlanInvestigacionDatosGeneralesFragment.name,
       `${this.buildFormGroup.name}()`, 'end');

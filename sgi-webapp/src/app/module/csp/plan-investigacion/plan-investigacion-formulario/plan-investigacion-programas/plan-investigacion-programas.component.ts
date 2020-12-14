@@ -77,8 +77,8 @@ export class PlanInvestigacionProgramasComponent extends FragmentComponent imple
       this.dataSource.data = programas;
     });
     this.formGroup = new FormGroup({
-      nombre: new FormControl('', Validators.required),
-      descripcion: new FormControl('')
+      nombre: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+      descripcion: new FormControl('', [Validators.maxLength(250)]),
     });
     this.switchToNone();
     this.logger.debug(PlanInvestigacionProgramasComponent.name, 'ngOnInit()', 'end');

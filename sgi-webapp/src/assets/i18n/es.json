@@ -560,6 +560,7 @@
   "csp.plan.investigacion.programa.editar": "Editar",
   "csp.plan.investigacion.programa.eliminar": "Eliminar",
   "csp.plan.investigacion.programa.listado.borrar": "¿Desea eliminar el programa?",
+  "csp.plan.investigacion.programa.maximo.error": "Se excede el máximo de caracteres",
   "csp.plan.investigacion.programa.no.padre": "Aún no se ha creado ningún programa para el plan de investigación",
   "csp.plan.investigacion.programa.nombre": "Nombre",
   "csp.plan.investigacion.programa.nombre.error": "El nombre es requerido",
