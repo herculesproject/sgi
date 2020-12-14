@@ -34,7 +34,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
 
   solicitud: ISolicitud;
 
-  selectedSolicitante: IPersona;
   selectedConvocatoria: IConvocatoria;
 
   entidadesConvocantes = [] as IConvocatoriaEntidadConvocante[];
@@ -375,24 +374,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
   }
 
   /**
-   * Setea el solicitante seleccionado en el formulario
-   *
-   * @param solicitante un solicitante
-   */
-  setSolicitante(solicitante: IPersona): void {
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, `setSolicitante(${solicitante})`, 'start');
-
-    this.selectedSolicitante = solicitante;
-    this.getFormGroup().controls.solicitante.setValue(solicitante);
-
-    this.logger.debug(SolicitudDatosGeneralesFragment.name, `setSolicitante(${solicitante})`, 'end');
-  }
-
-  get solicitanteText(): string {
-    return this.selectedSolicitante ? `${this.selectedSolicitante.nombre} ${this.selectedSolicitante.primerApellido} ${this.selectedSolicitante.segundoApellido}` : '';
-  }
-
-  /**
    * Setea la convocatoria seleccionada en el formulario y los campos que dependende de esta (tipo formulario, unidad gestión y modalidades)
    *
    * @param convocatoria una convocatoria
@@ -460,7 +441,6 @@ export class SolicitudDatosGeneralesFragment extends FormFragment<ISolicitud> {
     return this.personaFisicaService.getInformacionBasica(solicitanteRef).pipe(
       tap(solicitante => {
         this.solicitud.solicitante = solicitante;
-        this.selectedSolicitante = this.solicitud.solicitante;
         this.logger.debug(SolicitudDatosGeneralesFragment.name,
           `loadSolicitante(solicitanteRef: ${solicitanteRef})`, 'end');
       })

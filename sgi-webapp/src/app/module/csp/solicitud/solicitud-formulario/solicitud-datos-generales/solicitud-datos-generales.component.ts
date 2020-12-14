@@ -21,7 +21,6 @@ import { SolicitudModalidadEntidadConvocanteModalData, SolicitudModalidadEntidad
 import { MatDialog } from '@angular/material/dialog';
 
 const MSG_ERROR_INIT = marker('csp.solicitud.datosGenerales.error.cargar');
-const LABEL_BUSCADOR_SOLICITANTES = marker('csp.solicitud.datosGenerales.solicitante');
 
 @Component({
   selector: 'sgi-solicitud-datos-generales',
@@ -29,8 +28,6 @@ const LABEL_BUSCADOR_SOLICITANTES = marker('csp.solicitud.datosGenerales.solicit
   styleUrls: ['./solicitud-datos-generales.component.scss']
 })
 export class SolicitudDatosGeneralesComponent extends FormFragmentComponent<ISolicitud> implements OnInit, OnDestroy {
-
-  labelBuscadorSolicitantes = LABEL_BUSCADOR_SOLICITANTES;
 
   formPart: SolicitudDatosGeneralesFragment;
 

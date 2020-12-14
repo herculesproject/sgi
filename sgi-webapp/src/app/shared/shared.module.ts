@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MaterialDesignModule } from '@material/material-design.module';
 import { TranslateModule } from '@ngx-translate/core';
@@ -18,6 +18,7 @@ import { BuscarEmpresaEconomicaDialogoComponent } from './buscar-empresa-economi
 import { ActionFooterButtonComponent } from './action-footer-button/action-footer-button.component';
 import { BuscarConvocatoriaComponent } from './buscar-convocatoria/buscar-convocatoria.component';
 import { BuscarConvocatoriaDialogoComponent } from './buscar-convocatoria/dialogo/buscar-convocatoria-dialogo.component';
+import { SelectPersonaComponent } from './select-persona/select-persona.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { BuscarConvocatoriaDialogoComponent } from './buscar-convocatoria/dialog
     BuscarEmpresaEconomicaComponent,
     BuscarEmpresaEconomicaDialogoComponent,
     BuscarConvocatoriaComponent,
-    BuscarConvocatoriaDialogoComponent
+    BuscarConvocatoriaDialogoComponent,
+    SelectPersonaComponent
   ],
   imports: [
     CommonModule,
@@ -56,9 +58,9 @@ import { BuscarConvocatoriaDialogoComponent } from './buscar-convocatoria/dialog
     BuscarConvocatoriaComponent,
     BuscarConvocatoriaDialogoComponent,
     ActionFragmentMenuItemComponent,
-    ActionFragmentLinkItemComponent
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    ActionFragmentLinkItemComponent,
+    SelectPersonaComponent
+  ]
 })
 export class SharedModule {
 }

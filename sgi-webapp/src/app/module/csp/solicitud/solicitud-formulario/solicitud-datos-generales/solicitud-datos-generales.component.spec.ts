@@ -11,6 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SolicitudActionService } from '../../solicitud.action.service';
 import { SgiAuthService } from '@sgi/framework/auth';
+import { SharedModule } from '@shared/shared.module';
 
 describe('SolicitudDatosGeneralesComponent', () => {
   let component: SolicitudDatosGeneralesComponent;
@@ -31,6 +32,7 @@ describe('SolicitudDatosGeneralesComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule,
+        SharedModule
       ],
       providers: [
         SolicitudActionService,

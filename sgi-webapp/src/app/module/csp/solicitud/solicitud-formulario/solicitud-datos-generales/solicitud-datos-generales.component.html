@@ -28,11 +28,12 @@
     <!-- Solicitante -->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
-
-      <sgi-buscar-persona [textoLabel]="labelBuscadorSolicitantes" [textoInput]="labelBuscadorSolicitantes"
-        [datosUsuarioTexto]="formPart.solicitanteText" [required]="true" [disabled]="formPart.disabledSolicitante"
-        (usuarioSeleccionado)="formPart.setSolicitante($event)">
-      </sgi-buscar-persona>
+      <mat-form-field fxFill>
+        <mat-label>{{'csp.solicitud.datosGenerales.solicitante' | translate}}</mat-label>
+        <sgi-select-persona placeholder="{{'csp.solicitud.datosGenerales.solicitante' | translate}}"
+          formControlName="solicitante" [disabled]="formPart.disabledSolicitante" required>
+        </sgi-select-persona>
+      </mat-form-field>
     </div>
 
     <!-- Convocatoria -->

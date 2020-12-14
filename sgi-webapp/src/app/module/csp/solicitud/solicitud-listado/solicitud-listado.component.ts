@@ -12,7 +12,6 @@ import { SolicitudService } from '@core/services/csp/solicitud.service';
 import { NGXLogger } from 'ngx-logger';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { switchMap, map, startWith } from 'rxjs/operators';
-import { IPersona } from '@core/models/sgp/persona';
 import { PersonaFisicaService } from '@core/services/sgp/persona-fisica.service';
 import { TipoEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { DialogService } from '@core/services/dialog.service';
@@ -34,7 +33,6 @@ const MSG_ERROR_REACTIVATE = marker('csp.solicitud.listado.reactivar.error');
 const MSG_ERROR_FUENTE_FINANCIACION_INIT = marker('csp.solicitud.listado.fuente.financiacion.error');
 const MSG_ERROR_PLAN_INVESTIGACION_INIT = marker('csp.solicitud.listado.plan.investigacion.error');
 
-const LABEL_SOLICITANTES = marker('csp.solicitud.solicitante');
 const LABEL_EMPRESA_CONVOCANTE = marker('csp.solicitud.entidad.convocante');
 const LABEL_FINANCIADORA = marker('csp.solicitud.entidad.financiadora');
 
@@ -58,12 +56,10 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
   fuenteFinanciacion$: Observable<IFuenteFinanciacion[]>;
   private planInvestigacionFiltered: IPrograma[] = [];
   planInvestigaciones$: Observable<IPrograma[]>;
-  LABEL_SOLICITANTES = LABEL_SOLICITANTES;
   LABEL_EMPRESA_CONVOCANTE = LABEL_EMPRESA_CONVOCANTE;
   LABEL_FINANCIADORA = LABEL_FINANCIADORA;
   empresaConvocanteText = '';
   empresaFinanciadoraText = '';
-  personaText = '';
 
   constructor(
     protected logger: NGXLogger,
@@ -196,7 +192,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
       this.addFiltro(filtros, 'convocatoria.configuracionSolicitud.fasePresentacionSolicitudes.fechaFin.hasta',
         SgiRestFilterType.LOWER_OR_EQUAL, DateUtils.formatFechaAsISODate(controls.fechaFinHasta.value));
     }
-    this.addFiltro(filtros, 'solicitanteRef', SgiRestFilterType.LIKE, controls.solicitante.value);
+    this.addFiltro(filtros, 'solicitanteRef', SgiRestFilterType.LIKE, controls.solicitante.value?.personaRef);
     this.addFiltro(filtros, 'activo', SgiRestFilterType.EQUALS, controls.activo.value);
     this.addFiltro(filtros, 'convocatoria.anio', SgiRestFilterType.EQUALS, controls.añoConvocatoria.value);
     this.addFiltro(filtros, 'convocatoria.titulo', SgiRestFilterType.LIKE, controls.tituloConvocatoria.value);
@@ -305,7 +301,6 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     this.formGroup.controls.entidadFinanciadora.setValue(undefined);
     this.empresaConvocanteText = '';
     this.empresaFinanciadoraText = '';
-    this.personaText = '';
     this.logger.debug(SolicitudListadoComponent.name, `cleanBusquedaAvanzado()`, 'end');
   }
 
@@ -325,15 +320,6 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     this.empresaFinanciadoraText = empresa.razonSocial;
     this.logger.debug(SolicitudListadoComponent.name,
       `setEmpresaFinanciadora(empresa: ${empresa})`, 'end');
-  }
-
-  setSolicitante(persona: IPersona): void {
-    this.logger.debug(SolicitudListadoComponent.name,
-      `setSolicitante(persona: ${persona})`, 'start');
-    this.formGroup.controls.solicitante.setValue(persona.personaRef);
-    this.personaText = `${persona.nombre} ${persona.primerApellido} ${persona.segundoApellido}`;
-    this.logger.debug(SolicitudListadoComponent.name,
-      `setSolicitante(persona: ${persona})`, 'end');
   }
 
   private getFuentesFinanciacion(): void {

@@ -123,9 +123,12 @@
           <!-- solicitante -->
           <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
             [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
-            <sgi-buscar-persona [textoLabel]="LABEL_SOLICITANTES" [textoInput]="LABEL_SOLICITANTES"
-              [datosUsuarioTexto]="personaText" (usuarioSeleccionado)="setSolicitante($event)">
-            </sgi-buscar-persona>
+            <mat-form-field fxFill>
+              <mat-label>{{'csp.solicitud.solicitante' | translate}}</mat-label>
+              <sgi-select-persona placeholder="{{'csp.solicitud.solicitante' | translate}}"
+                formControlName="solicitante">
+              </sgi-select-persona>
+            </mat-form-field>
           </div>
 
           <!-- activo -->
