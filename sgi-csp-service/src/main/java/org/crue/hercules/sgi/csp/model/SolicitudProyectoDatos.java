@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -59,6 +60,7 @@ public class SolicitudProyectoDatos extends BaseEntity {
 
   /** Duracion */
   @Column(name = "duracion", nullable = true)
+  @Min(1)
   private Integer duracion;
 
   /** Colaborativo */
