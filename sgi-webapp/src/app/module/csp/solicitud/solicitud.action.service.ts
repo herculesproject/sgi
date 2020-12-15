@@ -17,8 +17,11 @@ import { SolicitudDocumentosFragment } from './solicitud-formulario/solicitud-do
 import { ConvocatoriaDocumentoService } from '@core/services/csp/convocatoria-documento.service';
 import { SolicitudDocumentoService } from '@core/services/csp/solicitud-documento.service';
 import { SolicitudHitosFragment } from './solicitud-formulario/solicitud-hitos/solicitud-hitos.fragment';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { SolicitudHitoService } from '@core/services/csp/solicitud-hito.service';
+import { SolicitudProyectoFichaGeneralFragment } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.fragment';
+import { SolicitudProyectoDatosService } from '@core/services/csp/solicitud-proyecto-datos.service';
+import { switchMap, tap } from 'rxjs/operators';
 
 
 
@@ -29,22 +32,23 @@ export class SolicitudActionService extends ActionService {
     DATOS_GENERALES: 'datosGenerales',
     HISTORICO_ESTADOS: 'historicoEstados',
     DOCUMENTOS: 'documentos',
+    PROYECTO_DATOS: 'proyectoDatos',
     HITOS: 'hitos',
   };
 
   private datosGenerales: SolicitudDatosGeneralesFragment;
   private historicoEstado: SolicitudHistoricoEstadosFragment;
   private documentos: SolicitudDocumentosFragment;
-
+  private proyectoDatos: SolicitudProyectoFichaGeneralFragment;
   private hitos: SolicitudHitosFragment;
 
+  solicitud: ISolicitud;
 
-  private solicitud: ISolicitud;
-
-  public showHitos$ = new BehaviorSubject<boolean>(false);
+  showHitos$ = new BehaviorSubject<boolean>(false);
+  isSociosColaboradores = false;
 
   constructor(
-    private logger: NGXLogger,
+    logger: NGXLogger,
     route: ActivatedRoute,
     solicitudService: SolicitudService,
     configuracionSolicitudService: ConfiguracionSolicitudService,
@@ -55,13 +59,10 @@ export class SolicitudActionService extends ActionService {
     solicitudHitoService: SolicitudHitoService,
     unidadGestionService: UnidadGestionService,
     sgiAuthService: SgiAuthService,
-    convocatoriaDocumentoService: ConvocatoriaDocumentoService,
-    solicitudDocumentoService: SolicitudDocumentoService
+    solicitudDocumentoService: SolicitudDocumentoService,
+    solicitudProyectoDatosService: SolicitudProyectoDatosService
   ) {
     super();
-
-
-
     this.solicitud = {} as ISolicitud;
     if (route.snapshot.data.solicitud) {
       this.solicitud = route.snapshot.data.solicitud;
@@ -72,28 +73,24 @@ export class SolicitudActionService extends ActionService {
       convocatoriaService, empresaEconomicaService, personaFisicaService, solicitudModalidadService, unidadGestionService, sgiAuthService);
     this.documentos = new SolicitudDocumentosFragment(logger, this.solicitud?.id, this.solicitud?.convocatoria?.id,
       configuracionSolicitudService, solicitudService, solicitudDocumentoService);
-
-
     this.hitos = new SolicitudHitosFragment(logger, this.solicitud?.id, solicitudHitoService, solicitudService, sgiAuthService);
 
     if (this.solicitud?.id) {
       solicitudService.hasConvocatoriaSGI(this.solicitud.id).subscribe((hasConvocatoriaSgi) => {
         if (hasConvocatoriaSgi) {
-
           this.showHitos$.next(true);
         }
-
       });
     }
-
-
     this.historicoEstado = new SolicitudHistoricoEstadosFragment(logger, this.solicitud?.id, solicitudService);
+    this.proyectoDatos = new SolicitudProyectoFichaGeneralFragment(logger, this.solicitud, solicitudService,
+      solicitudProyectoDatosService, convocatoriaService, this);
 
     this.addFragment(this.FRAGMENT.DATOS_GENERALES, this.datosGenerales);
     this.addFragment(this.FRAGMENT.HITOS, this.hitos);
     this.addFragment(this.FRAGMENT.HISTORICO_ESTADOS, this.historicoEstado);
     this.addFragment(this.FRAGMENT.DOCUMENTOS, this.documentos);
-
+    this.addFragment(this.FRAGMENT.PROYECTO_DATOS, this.proyectoDatos);
   }
 
   getDatosGeneralesSolicitud(): ISolicitud {

@@ -270,11 +270,10 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
 
   private loadAreaData(data: AreaTematicaData): AreaTematicaData {
     this.logger.debug(ConvocatoriaDatosGeneralesFragment.name, `loadData(data: ${data})`, 'start');
-    let areaTematica = data.convocatoriaAreaTematica.value.areaTematica;
+    const areaTematica = data.convocatoriaAreaTematica.value.areaTematica;
     if (areaTematica) {
       const result = this.getSecondLevelAreaTematica(areaTematica);
       const padre = result.padre ? result.padre : areaTematica;
-      areaTematica = padre.id === areaTematica.id ? undefined : areaTematica;
       const element: AreaTematicaData = {
         padre,
         observaciones: data.convocatoriaAreaTematica.value.observaciones,

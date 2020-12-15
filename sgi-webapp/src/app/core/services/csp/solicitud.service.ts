@@ -11,12 +11,12 @@ import { SgiBaseConverter } from '@sgi/framework/core';
 import { TipoFormularioSolicitud } from '@core/enums/tipo-formulario-solicitud';
 import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 import { ISolicitudModalidad } from '@core/models/csp/solicitud-modalidad';
-import { Observable } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { tap, map, catchError } from 'rxjs/operators';
 import { ISolicitudModalidadBackend, SolicitudModalidadService } from './solicitud-modalidad.service';
 import { ISolicitudDocumento } from '@core/models/csp/solicitud-documento';
-import { SolicitudHitoService } from './solicitud-hito.service';
 import { ISolicitudHito } from '@core/models/csp/solicitud-hito';
+import { ISolicitudProyectoDatos } from '@core/models/csp/solicitud-proyecto-datos';
 
 
 interface ISolicitudBackend {
@@ -200,12 +200,12 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
   }
 
   /**
-  * Recupera los hitos de la solicitud
-  *
-  * @param solicitudId Id de la solicitud
-  * @param options opciones de busqueda
-  * @returns observable con la lista de modalidades de la solicitud
-  */
+   * Recupera los hitos de la solicitud
+   *
+   * @param solicitudId Id de la solicitud
+   * @param options opciones de busqueda
+   * @returns observable con la lista de modalidades de la solicitud
+   */
   findHitosSolicitud(solicitudId: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<ISolicitudHito>> {
     this.logger.debug(SolicitudService.name,
       `findHitosSolicitud(${solicitudId}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
@@ -232,5 +232,16 @@ export class SolicitudService extends SgiMutableRestService<number, ISolicitudBa
     );
   }
 
-
+  /**
+   * Devuelve los datos del proyecto de una solicitud
+   *
+   * @param solicitudId Id de la solicitud
+   */
+  findSolicitudProyectoDatos(solicitudId: number): Observable<ISolicitudProyectoDatos> {
+    this.logger.debug(SolicitudService.name, `findSolicitudProyectoDatos(${solicitudId})`, '-', 'start');
+    const endpointUrl = `${this.endpointUrl}/${solicitudId}/solicitudproyectodatos`;
+    return this.http.get<ISolicitudProyectoDatos>(endpointUrl).pipe(
+      tap(() => this.logger.debug(SolicitudService.name, `findSolicitudProyectoDatos(${solicitudId})`, '-', 'end')),
+    );
+  }
 }

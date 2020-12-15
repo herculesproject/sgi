@@ -5,6 +5,10 @@
         [title]="'label.datos-generales' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.DATOS_GENERALES)">
       </sgi-action-fragment-menu-item>
+      <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.PROYECTO_DATOS]" *ngIf="tipoEstandar"
+        [title]="'csp.solicitud.menu.proyectoDatos' | translate"
+        [fragment]="actionService.getFragment(actionService.FRAGMENT.PROYECTO_DATOS)">
+      </sgi-action-fragment-menu-item>
       <sgi-action-fragment-menu-item [route]="[SOLICITUD_ROUTE_NAMES.DOCUMENTOS]"
         [title]="'csp.solicitud.menu.documentos' | translate"
         [fragment]="actionService.getFragment(actionService.FRAGMENT.DOCUMENTOS)">

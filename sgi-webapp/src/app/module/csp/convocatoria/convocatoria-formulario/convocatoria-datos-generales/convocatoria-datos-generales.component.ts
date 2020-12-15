@@ -1,37 +1,36 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { IConvocatoria } from '@core/models/csp/convocatoria';
-import { FormFragmentComponent } from '@core/component/fragment.component';
-import { NGXLogger } from 'ngx-logger';
-import { SnackBarService } from '@core/services/snack-bar.service';
-import { ConvocatoriaActionService } from '../../convocatoria.action.service';
-import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
-import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
-import { Observable, Subscription, BehaviorSubject, of } from 'rxjs';
-import { ModeloEjecucionService } from '@core/services/csp/modelo-ejecucion.service';
-import { startWith, map } from 'rxjs/operators';
-import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-import { UnidadGestionService } from '@core/services/csp/unidad-gestion.service';
-import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
-import { ITipoAmbitoGeografico } from '@core/models/csp/tipo-ambito-geografico';
-import { TipoAmbitoGeograficoService } from '@core/services/csp/tipo-ambito-geografico.service';
-import { ITipoRegimenConcurrencia } from '@core/models/csp/tipo-regimen-concurrencia';
-import { TipoRegimenConcurrenciaService } from '@core/services/csp/tipo-regimen-concurrencia.service';
-import { StatusWrapper } from '@core/utils/status-wrapper';
-import { AreaTematicaData, ConvocatoriaDatosGeneralesFragment } from './convocatoria-datos-generales.fragment';
-import { IModeloEjecucion, ITipoFinalidad } from '@core/models/csp/tipos-configuracion';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { GLOBAL_CONSTANTS } from '@core/utils/global-constants';
-import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
-import { MatDialog } from '@angular/material/dialog';
-import { ModeloUnidadService } from '@core/services/csp/modelo-unidad.service';
-import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
-import { TipoDestinatario } from '@core/enums/tipo-destinatario';
-import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
-import { IAreaTematica } from '@core/models/csp/area-tematica';
-import { ConvocatoriaAreaTematicaModalComponent } from '../../modals/convocatoria-area-tematica-modal/convocatoria-area-tematica-modal.component';
-import { DialogService } from '@core/services/dialog.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {IConvocatoria} from '@core/models/csp/convocatoria';
+import {FormFragmentComponent} from '@core/component/fragment.component';
+import {NGXLogger} from 'ngx-logger';
+import {SnackBarService} from '@core/services/snack-bar.service';
+import {ConvocatoriaActionService} from '../../convocatoria.action.service';
+import {FxFlexProperties} from '@core/models/shared/flexLayout/fx-flex-properties';
+import {FxLayoutProperties} from '@core/models/shared/flexLayout/fx-layout-properties';
+import {Observable, of, Subscription} from 'rxjs';
+import {ModeloEjecucionService} from '@core/services/csp/modelo-ejecucion.service';
+import {map, startWith} from 'rxjs/operators';
+import {marker} from '@biesbjerg/ngx-translate-extract-marker';
+import {UnidadGestionService} from '@core/services/csp/unidad-gestion.service';
+import {IUnidadGestion} from '@core/models/usr/unidad-gestion';
+import {ITipoAmbitoGeografico} from '@core/models/csp/tipo-ambito-geografico';
+import {TipoAmbitoGeograficoService} from '@core/services/csp/tipo-ambito-geografico.service';
+import {ITipoRegimenConcurrencia} from '@core/models/csp/tipo-regimen-concurrencia';
+import {TipoRegimenConcurrenciaService} from '@core/services/csp/tipo-regimen-concurrencia.service';
+import {StatusWrapper} from '@core/utils/status-wrapper';
+import {AreaTematicaData, ConvocatoriaDatosGeneralesFragment} from './convocatoria-datos-generales.fragment';
+import {IModeloEjecucion, ITipoFinalidad} from '@core/models/csp/tipos-configuracion';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {GLOBAL_CONSTANTS} from '@core/utils/global-constants';
+import {IConvocatoriaAreaTematica} from '@core/models/csp/convocatoria-area-tematica';
+import {MatDialog} from '@angular/material/dialog';
+import {ModeloUnidadService} from '@core/services/csp/modelo-unidad.service';
+import {SgiRestFilter, SgiRestFilterType, SgiRestFindOptions} from '@sgi/framework/http';
+import {TipoDestinatario} from '@core/enums/tipo-destinatario';
+import {ClasificacionCVN} from '@core/enums/clasificacion-cvn';
+import {ConvocatoriaAreaTematicaModalComponent} from '../../modals/convocatoria-area-tematica-modal/convocatoria-area-tematica-modal.component';
+import {DialogService} from '@core/services/dialog.service';
 
 const MSG_ERROR_INIT = marker('csp.convocatoria.datos.generales.error.cargar');
 const LABEL_BUSCADOR_EMPRESAS_ECONOMICAS = marker('csp.convocatoria.entidad.gestora');
@@ -45,8 +44,6 @@ const MSG_DELETE = marker('csp.convocatoria.area.tematica.listado.borrar');
 export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<IConvocatoria> implements OnInit {
   formPart: ConvocatoriaDatosGeneralesFragment;
   label = LABEL_BUSCADOR_EMPRESAS_ECONOMICAS;
-
-  areasTematicas$: BehaviorSubject<StatusWrapper<IAreaTematica>[]>;
 
   fxFlexProperties: FxFlexProperties;
   fxFlexPropertiesOne: FxFlexProperties;
@@ -215,8 +212,7 @@ export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<I
         this.subscriptions.push(
           this.modeloEjecucionService.findModeloTipoFinalidad(id, options).pipe(
             map(res => {
-              const tipoFinalidades = res.items.map(modeloTipoFinalidad => modeloTipoFinalidad.tipoFinalidad);
-              return tipoFinalidades;
+              return res.items.map(modeloTipoFinalidad => modeloTipoFinalidad.tipoFinalidad);
             })
           ).subscribe(
             tipoFinalidades => {

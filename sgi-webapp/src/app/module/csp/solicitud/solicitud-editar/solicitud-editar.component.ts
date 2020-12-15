@@ -7,6 +7,7 @@ import { SnackBarService } from '@core/services/snack-bar.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DialogService } from '@core/services/dialog.service';
 import { SolicitudActionService } from '../solicitud.action.service';
+import { TipoFormularioSolicitud } from '@core/enums/tipo-formulario-solicitud';
 
 const MSG_BUTTON_EDIT = marker('botones.guardar');
 const MSG_BUTTON_REGISTRAR = marker('csp.convocatoria.registrar');
@@ -27,28 +28,38 @@ export class SolicitudEditarComponent extends ActionComponent implements OnInit 
   textoCrear = MSG_BUTTON_EDIT;
   textoRegistrar = MSG_BUTTON_REGISTRAR;
 
+  tipoEstandar = false;
   disableRegistrar = false;
 
 
   constructor(
-    protected readonly logger: NGXLogger,
-    protected readonly snackBarService: SnackBarService,
+    protected logger: NGXLogger,
+    protected snackBarService: SnackBarService,
     router: Router,
     route: ActivatedRoute,
     public actionService: SolicitudActionService,
     dialogService: DialogService) {
-
     super(router, route, actionService, dialogService);
   }
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.isTipoEstandar();
     this.subscriptions.push(this.actionService.status$.subscribe(
       status => {
         this.disableRegistrar = status.changes || status.errors;
       }
     ));
+  }
 
+  /**
+   * Comprueba que el tipo de la solcitud sea "Estándar"
+   */
+  isTipoEstandar(): void {
+    this.logger.debug(SolicitudEditarComponent.name, 'isTipoEstandar()', 'start');
+    const formularioSolicitud = this.actionService.getDatosGeneralesSolicitud().formularioSolicitud;
+    this.tipoEstandar = formularioSolicitud === TipoFormularioSolicitud.ESTANDAR;
+    this.logger.debug(SolicitudEditarComponent.name, 'isTipoEstandar()', 'end');
   }
 
   saveOrUpdate(): void {

@@ -19,6 +19,7 @@ import { SolicitudDatosGeneralesComponent } from './solicitud-formulario/solicit
 import { SolicitudHitosComponent } from './solicitud-formulario/solicitud-hitos/solicitud-hitos.component';
 import { SolicitudHistoricoEstadosComponent } from './solicitud-formulario/solicitud-historico-estados/solicitud-historico-estados.component';
 import { SolicitudDocumentosComponent } from './solicitud-formulario/solicitud-documentos/solicitud-documentos.component';
+import { SolicitudProyectoFichaGeneralComponent } from './solicitud-formulario/solicitud-proyecto-ficha-general/solicitud-proyecto-ficha-general.component';
 
 
 const MSG_EDIT_TITLE = marker('csp.solicitud.editar.titulo');
@@ -75,6 +76,11 @@ const routes: SgiRoutes = [
       {
         path: SOLICITUD_ROUTE_NAMES.DATOS_GENERALES,
         component: SolicitudDatosGeneralesComponent,
+        canDeactivate: [FragmentGuard]
+      },
+      {
+        path: SOLICITUD_ROUTE_NAMES.PROYECTO_DATOS,
+        component: SolicitudProyectoFichaGeneralComponent,
         canDeactivate: [FragmentGuard]
       },
       {
