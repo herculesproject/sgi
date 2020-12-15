@@ -33,7 +33,6 @@ import {ConvocatoriaAreaTematicaModalComponent} from '../../modals/convocatoria-
 import {DialogService} from '@core/services/dialog.service';
 
 const MSG_ERROR_INIT = marker('csp.convocatoria.datos.generales.error.cargar');
-const LABEL_BUSCADOR_EMPRESAS_ECONOMICAS = marker('csp.convocatoria.entidad.gestora');
 const MSG_DELETE = marker('csp.convocatoria.area.tematica.listado.borrar');
 
 @Component({
@@ -43,7 +42,6 @@ const MSG_DELETE = marker('csp.convocatoria.area.tematica.listado.borrar');
 })
 export class ConvocatoriaDatosGeneralesComponent extends FormFragmentComponent<IConvocatoria> implements OnInit {
   formPart: ConvocatoriaDatosGeneralesFragment;
-  label = LABEL_BUSCADOR_EMPRESAS_ECONOMICAS;
 
   fxFlexProperties: FxFlexProperties;
   fxFlexPropertiesOne: FxFlexProperties;

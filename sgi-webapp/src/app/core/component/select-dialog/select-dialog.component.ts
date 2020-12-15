@@ -150,12 +150,15 @@ export abstract class SelectDialogComponent<D, T> implements
     this.stateChanges.complete();
   }
 
+  protected getDialogData(): any {
+    return {};
+  }
+
   showDialog(): void {
     if (!this.disabled) {
       this.dialogOpen = true;
       const dialogRef = this.dialog.open(this.dialogToShow, {
-        width: '600px',
-        data: {}
+        data: this.getDialogData()
       });
 
       dialogRef.afterOpened().subscribe(() => {
@@ -205,8 +208,10 @@ export abstract class SelectDialogComponent<D, T> implements
         this.showDialog();
       } else if ((keyCode === BACKSPACE || keyCode === DELETE) && !hasModifierKey(event)) {
         event.preventDefault();
-        this._value = null;
-        this.propagateChanges();
+        if (this._value) {
+          this._value = null;
+          this.propagateChanges();
+        }
       }
     }
   }
@@ -234,10 +239,8 @@ export abstract class SelectDialogComponent<D, T> implements
   }
 
   /** Emits change event to set the model value. */
-  private propagateChanges(fallbackValue?: any): void {
-    let valueToEmit: any = null;
-
-    valueToEmit = this.value ? this.value : fallbackValue;
+  private propagateChanges(): void {
+    const valueToEmit = this.value;
 
     this._value = valueToEmit;
     this.onChange(valueToEmit);

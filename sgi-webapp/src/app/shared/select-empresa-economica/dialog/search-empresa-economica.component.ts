@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, Inject } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, Inject, OnInit } from '@angular/core';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
@@ -13,20 +13,21 @@ import { NGXLogger } from 'ngx-logger';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { tap, map, catchError } from 'rxjs/operators';
 import { EmpresaEconomicaService } from '@core/services/sgp/empresa-economica.service';
+import { FormControl, FormGroup } from '@angular/forms';
 
 const MSG_LISTADO_ERROR = marker('sgp.buscadorEmpresaEconomica.listado.error');
 
-export interface EmpresaEconomicaModalData {
-  empresaEconomica: IEmpresaEconomica;
-  selectedEmpresa?: IEmpresaEconomica[];
+export interface SearchEmpresaEconomicaModalData {
+  filter?: IEmpresaEconomica[];
 }
 
 @Component({
-  templateUrl: './buscar-empresa-economica-dialogo.component.html',
-  styleUrls: ['./buscar-empresa-economica-dialogo.component.scss']
+  templateUrl: './search-empresa-economica.component.html',
+  styleUrls: ['./search-empresa-economica.component.scss']
 })
-export class BuscarEmpresaEconomicaDialogoComponent implements AfterViewInit {
+export class SearchEmpresaEconomicaModalComponent implements OnInit, AfterViewInit {
 
+  formGroup: FormGroup;
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
@@ -41,8 +42,8 @@ export class BuscarEmpresaEconomicaDialogoComponent implements AfterViewInit {
   empresasEconomicas$: Observable<IEmpresaEconomica[]> = of();
 
   constructor(
-    public dialogRef: MatDialogRef<BuscarEmpresaEconomicaDialogoComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: EmpresaEconomicaModalData,
+    public dialogRef: MatDialogRef<SearchEmpresaEconomicaModalComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: SearchEmpresaEconomicaModalData,
     private empresaEconomicaService: EmpresaEconomicaService,
     private logger: NGXLogger,
     private snackBarService: SnackBarService
@@ -59,15 +60,22 @@ export class BuscarEmpresaEconomicaDialogoComponent implements AfterViewInit {
     this.fxLayoutProperties.xs = 'column';
   }
 
+  ngOnInit(): void {
+    this.formGroup = new FormGroup({
+      numeroDocumento: new FormControl(),
+      razonSocial: new FormControl()
+    });
+  }
+
   ngAfterViewInit(): void {
-    this.logger.debug(BuscarEmpresaEconomicaDialogoComponent.name, 'ngAfterViewInit()', 'start');
+    this.logger.debug(SearchEmpresaEconomicaModalComponent.name, 'ngAfterViewInit()', 'start');
     merge(
       this.paginator.page,
       this.sort.sortChange
     ).pipe(
       tap(() => this.buscarEmpresasEconomicas())
     ).subscribe();
-    this.logger.debug(BuscarEmpresaEconomicaDialogoComponent.name, 'ngAfterViewInit()', 'end');
+    this.logger.debug(SearchEmpresaEconomicaModalComponent.name, 'ngAfterViewInit()', 'end');
   }
 
   closeModal(empresaEconomica?: IEmpresaEconomica): void {
@@ -75,7 +83,7 @@ export class BuscarEmpresaEconomicaDialogoComponent implements AfterViewInit {
   }
 
   buscarEmpresasEconomicas(reset?: boolean): void {
-    this.logger.debug(BuscarEmpresaEconomicaDialogoComponent.name,
+    this.logger.debug(SearchEmpresaEconomicaModalComponent.name,
       `buscarEmpresasEconomicas()`, 'start');
     const options: SgiRestFindOptions = {
       page: {
@@ -86,7 +94,7 @@ export class BuscarEmpresaEconomicaDialogoComponent implements AfterViewInit {
         direction: SgiRestSortDirection.fromSortDirection(this.sort.direction),
         field: this.sort.active
       },
-      filters: this.buildFilters(this.dialogRef.componentInstance.data.empresaEconomica)
+      filters: this.getFilters()
     };
     this.empresasEconomicas$ = this.empresaEconomicaService.findAll(options)
       .pipe(
@@ -97,7 +105,7 @@ export class BuscarEmpresaEconomicaDialogoComponent implements AfterViewInit {
           if (reset) {
             this.paginator.pageIndex = 0;
           }
-          this.logger.debug(BuscarEmpresaEconomicaDialogoComponent.name,
+          this.logger.debug(SearchEmpresaEconomicaModalComponent.name,
             `buscarEmpresasEconomicas()`, 'end');
           // Return the values
           return response.items;
@@ -107,47 +115,45 @@ export class BuscarEmpresaEconomicaDialogoComponent implements AfterViewInit {
           this.paginator.firstPage();
           this.totalElementos = 0;
           this.snackBarService.showError(MSG_LISTADO_ERROR);
-          this.logger.error(BuscarEmpresaEconomicaDialogoComponent.name,
+          this.logger.error(SearchEmpresaEconomicaModalComponent.name,
             `buscarEmpresasEconomicas()`, error);
           return of([]);
         })
       );
   }
 
-  private buildFilters(empresaEconomica: IEmpresaEconomica): SgiRestFilter[] {
-    this.logger.debug(BuscarEmpresaEconomicaDialogoComponent.name, `buildFilters()`, 'start');
+  private getFilters(): SgiRestFilter[] {
+    this.logger.debug(SearchEmpresaEconomicaModalComponent.name, `buildFilters()`, 'start');
     this.filter = [];
-    if (empresaEconomica.numeroDocumento) {
-      const filterNumeroDocumento: SgiRestFilter = {
-        field: 'numeroDocumento',
-        type: SgiRestFilterType.LIKE,
-        value: empresaEconomica.numeroDocumento,
-      };
+    const filterNumeroDocumento: SgiRestFilter = {
+      field: 'numeroDocumento',
+      type: SgiRestFilterType.LIKE,
+      value: this.formGroup.controls.numeroDocumento.value,
+    };
 
-      this.filter.push(filterNumeroDocumento);
-    }
-    if (empresaEconomica.razonSocial) {
-      const filterRazonSocial: SgiRestFilter = {
-        field: 'razonSocial',
-        type: SgiRestFilterType.LIKE,
-        value: empresaEconomica.razonSocial,
-      };
+    this.filter.push(filterNumeroDocumento);
 
-      this.filter.push(filterRazonSocial);
-    }
-    this.logger.debug(BuscarEmpresaEconomicaDialogoComponent.name, `buildFilters()`, 'end');
+    const filterRazonSocial: SgiRestFilter = {
+      field: 'razonSocial',
+      type: SgiRestFilterType.LIKE,
+      value: this.formGroup.controls.razonSocial.value,
+    };
+
+    this.filter.push(filterRazonSocial);
+
+    this.logger.debug(SearchEmpresaEconomicaModalComponent.name, `buildFilters()`, 'end');
     return this.filter;
   }
 
   checkSelectedEmpresa(empresa: IEmpresaEconomica) {
-    this.logger.debug(BuscarEmpresaEconomicaDialogoComponent.name,
+    this.logger.debug(SearchEmpresaEconomicaModalComponent.name,
       `checkSelectedEmpresa()`, 'start');
-    if (!this.data.selectedEmpresa) {
+    if (!this.data.filter) {
       return true;
     }
-    const index = this.data.selectedEmpresa.findIndex(x => x.personaRef === empresa.personaRef);
+    const index = this.data.filter.findIndex(x => x.personaRef === empresa.personaRef);
     const result = index < 0;
-    this.logger.debug(BuscarEmpresaEconomicaDialogoComponent.name,
+    this.logger.debug(SearchEmpresaEconomicaModalComponent.name,
       `checkSelectedEmpresa()`, 'end');
     return result;
   }

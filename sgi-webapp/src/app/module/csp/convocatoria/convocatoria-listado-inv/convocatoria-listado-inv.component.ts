@@ -33,8 +33,6 @@ import { TipoFinalidadService } from '@core/services/csp/tipo-finalidad.service'
 
 const MSG_ERROR = marker('csp.convocatoria.listado.error');
 const MSG_ERROR_INIT = marker('csp.convocatoria.listado.error.cargar');
-const LABEL_BUSCADOR_EMPRESAS_CONVOCANTE = marker('csp.convocatoria.entidad.convocante');
-const LABEL_BUSCADOR_EMPRESAS_FINANCIADORAS = marker('csp.convocatoria.listado.entidad.financiadora');
 
 interface IConvocatoriaListado {
   convocatoria: IConvocatoria;
@@ -56,14 +54,8 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
   convocatorias$: Observable<IConvocatoriaListado[]>;
-  labelConvocante = LABEL_BUSCADOR_EMPRESAS_CONVOCANTE;
-  labelFinanciadora = LABEL_BUSCADOR_EMPRESAS_FINANCIADORAS;
 
   busquedaAvanzada = false;
-
-  selectedEmpresaConvocante: IEmpresaEconomica;
-  selectedEmpresaFinanciadora: IEmpresaEconomica;
-  convocatoriaEntidadGestora: IConvocatoriaEntidadGestora;
 
   private finalidadFiltered = [] as ITipoFinalidad[];
   finalidades$: Observable<ITipoFinalidad[]>;
@@ -76,12 +68,6 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
 
   private areaTematicaFiltered = [] as IAreaTematica[];
   areaTematica$: Observable<IAreaTematica[]>;
-
-  empresaConvocante: string;
-  empresaFinanciadora: string;
-
-  empresaConvocanteText: string;
-  empresaFinanciadoraText: string;
 
   constructor(
     protected logger: NGXLogger,
@@ -274,8 +260,6 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
     this.addFiltro(filtros, 'abiertoPlazoPresentacionSolicitud', SgiRestFilterType.EQUALS,
       true);
 
-    //  this.addFiltro(filtros, 'aplicarFiltroPerfil', SgiRestFilterType.EQUALS, true);
-
     this.logger.debug(ConvocatoriaListadoInvComponent.name, `${this.createFilters.name}()`, 'end');
     return filtros;
   }
@@ -294,20 +278,10 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
 
     this.addFiltro(filtros, 'finalidad.id', SgiRestFilterType.EQUALS, this.formGroup.controls.finalidad.value.id);
     this.addFiltro(filtros, 'ambitoGeografico.id', SgiRestFilterType.EQUALS, this.formGroup.controls.ambitoGeografico.value.id);
-    if (this.formGroup.controls.entidadConvocante.value) {
-      this.addFiltro(filtros, 'convocatoriaEntidadConvocante.entidadRef',
-        SgiRestFilterType.LIKE, this.formGroup.controls.entidadConvocante.value);
-    } else {
-      this.addFiltro(filtros, 'convocatoriaEntidadConvocante.entidadRef',
-        SgiRestFilterType.LIKE, this.empresaFinanciadora);
-    }
-    if (this.formGroup.controls.entidadFinanciadora.value) {
-      this.addFiltro(filtros, 'convocatoriaEntidadFinanciadora.entidadRef',
-        SgiRestFilterType.LIKE, this.formGroup.controls.entidadFinanciadora.value);
-    } else {
-      this.addFiltro(filtros, 'convocatoriaEntidadFinanciadora.entidadRef',
-        SgiRestFilterType.LIKE, this.empresaConvocante);
-    }
+    this.addFiltro(filtros, 'convocatoriaEntidadConvocante.entidadRef',
+      SgiRestFilterType.EQUALS, this.formGroup.controls.entidadConvocante.value?.personaRef);
+    this.addFiltro(filtros, 'convocatoriaEntidadFinanciadora.entidadRef',
+      SgiRestFilterType.EQUALS, this.formGroup.controls.entidadFinanciadora.value?.personaRef);
     this.addFiltro(filtros, 'fuenteFinanciacion.id', SgiRestFilterType.EQUALS, this.formGroup.controls.fuenteFinanciacion.value.id);
     this.addFiltro(filtros, 'areaTematica.id', SgiRestFilterType.EQUALS, this.formGroup.controls.areaTematica.value.id);
     this.logger.debug(ConvocatoriaListadoInvComponent.name, `${this.createFilters.name}()`, 'end');
@@ -316,19 +290,7 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
 
   onClearFilters() {
     this.logger.debug(ConvocatoriaListadoInvComponent.name, `${this.onClearFilters.name}()`, 'start');
-    this.formGroup.controls.codigo.setValue('');
-    this.formGroup.controls.titulo.setValue('');
-    this.formGroup.controls.finalidad.setValue('');
-    this.formGroup.controls.anio.setValue('');
-    this.formGroup.controls.abiertoPlazoPresentacionSolicitud.setValue('');
-    this.formGroup.controls.aplicarFiltro.setValue('');
-    this.formGroup.controls.ambitoGeografico.setValue('');
-    this.empresaConvocante = '';
-    this.empresaFinanciadora = '';
-    this.formGroup.controls.fuenteFinanciacion.setValue('');
-    this.formGroup.controls.areaTematica.setValue('');
-    this.setEmpresaFinanciadora({} as IEmpresaEconomica);
-    this.setEmpresaConvocante({} as IEmpresaEconomica);
+    this.formGroup.reset();
     this.onSearch();
     this.logger.debug(ConvocatoriaListadoInvComponent.name, `${this.onClearFilters.name}()`, 'end');
   }
@@ -519,23 +481,5 @@ export class ConvocatoriaListadoInvComponent extends AbstractTablePaginationComp
     this.formGroup.controls.aplicarFiltro.setValue(!this.busquedaAvanzada);
     this.onSearch();
     this.logger.debug(ConvocatoriaListadoInvComponent.name, `${this.toggleBusquedaAvanzada.name}()`, 'end');
-  }
-
-  setEmpresaFinanciadora(empresa: IEmpresaEconomica): void {
-    this.logger.debug(ConvocatoriaListadoInvComponent.name,
-      `${this.setEmpresaFinanciadora.name}(value: ${empresa})`, 'start');
-    this.formGroup.controls.entidadFinanciadora.setValue(empresa.personaRef);
-    this.empresaFinanciadoraText = empresa.razonSocial;
-    this.logger.debug(ConvocatoriaListadoInvComponent.name,
-      `${this.setEmpresaFinanciadora.name}(value: ${empresa})`, 'end');
-  }
-
-  setEmpresaConvocante(empresa: IEmpresaEconomica): void {
-    this.logger.debug(ConvocatoriaListadoInvComponent.name,
-      `${this.setEmpresaConvocante.name}(value: ${empresa})`, 'start');
-    this.formGroup.controls.entidadConvocante.setValue(empresa.personaRef);
-    this.empresaConvocanteText = empresa.razonSocial;
-    this.logger.debug(ConvocatoriaListadoInvComponent.name,
-      `${this.setEmpresaConvocante.name}(value: ${empresa})`, 'end');
   }
 }

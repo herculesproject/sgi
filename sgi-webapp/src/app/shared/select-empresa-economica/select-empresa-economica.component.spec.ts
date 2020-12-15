@@ -10,11 +10,11 @@ import { MaterialDesignModule } from '@material/material-design.module';
 import { SgiAuthModule, SgiAuthService } from '@sgi/framework/auth';
 import { LoggerTestingModule } from 'ngx-logger/testing';
 
-import { BuscarEmpresaEconomicaComponent } from './buscar-empresa-economica.component';
+import { SelectEmpresaEconomicaComponent } from './select-empresa-economica.component';
 
-describe('BuscarEmpresaEconomicaComponent', () => {
-  let component: BuscarEmpresaEconomicaComponent;
-  let fixture: ComponentFixture<BuscarEmpresaEconomicaComponent>;
+describe('SelectEmpresaEconomicaComponent', () => {
+  let component: SelectEmpresaEconomicaComponent;
+  let fixture: ComponentFixture<SelectEmpresaEconomicaComponent>;
 
   beforeEach(async(() => {
     const mockDialogRef = {
@@ -45,12 +45,12 @@ describe('BuscarEmpresaEconomicaComponent', () => {
         { provide: MAT_DIALOG_DATA, useValue: matDialogData },
         SgiAuthService
       ],
-      declarations: [BuscarEmpresaEconomicaComponent, HeaderComponent],
+      declarations: [SelectEmpresaEconomicaComponent, HeaderComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BuscarEmpresaEconomicaComponent);
+    fixture = TestBed.createComponent(SelectEmpresaEconomicaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

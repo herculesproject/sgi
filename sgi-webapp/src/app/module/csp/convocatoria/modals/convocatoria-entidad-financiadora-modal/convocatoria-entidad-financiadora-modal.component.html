@@ -7,23 +7,16 @@
     <form [formGroup]="formGroup">
       <!-- Empresa económica -->
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
-        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-          [fxFlexOrder]="fxFlexProperties.order">
-          <div class="wrapper">
-            <div class="fields-wrapper">
-              <mat-form-field fxFill>
-                <mat-label>{{'csp.convocatoria.entidades-financiadoras.modal.nombre' | translate}}</mat-label>
-                <input matInput type="text" id="nombreEmpresa" formControlName="nombreEmpresa" readonly
-                  placeholder="{{'csp.convocatoria.entidades-financiadoras.modal.nombre' | translate}}" required>
-                <mat-error *ngIf="formGroup.controls.nombreEmpresa.errors?.required">
-                  {{'csp.convocatoria.entidades-financiadoras.modal.nombre.error.requerido' | translate}}
-                </mat-error>
-              </mat-form-field>
-            </div>
-            <button color="primary" md-button mat-raised-button [disabled]="data.empresa.personaRef"
-              *ngIf="!data.readonly" (click)="selectEmpresaEconomica()">{{'botones.buscar' | translate}}</button>
-          </div>
-        </div>
+        <mat-form-field class="input-form">
+          <mat-label>{{'csp.convocatoria.entidades-financiadoras.modal.entidadFinanciadora' | translate}}</mat-label>
+          <sgi-select-empresa-economica formControlName="empresaEconomica"
+            placeholder="{{'csp.convocatoria.entidades-financiadoras.modal.entidadFinanciadora' | translate}}"
+            [disabled]="data.empresa || data.readonly" [filter]="data.selectedEmpresas" required>
+          </sgi-select-empresa-economica>
+          <mat-error *ngIf="formGroup.controls.empresaEconomica.errors?.required">
+            {{'csp.convocatoria.entidades-financiadoras.modal.entidadFinanciadora.error.requerido' | translate}}
+          </mat-error>
+        </mat-form-field>
       </div>
 
       <!-- Fuente de financiación -->

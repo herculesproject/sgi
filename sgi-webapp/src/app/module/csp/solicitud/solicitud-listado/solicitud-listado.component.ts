@@ -17,7 +17,6 @@ import { TipoEstadoSolicitud } from '@core/models/csp/estado-solicitud';
 import { DialogService } from '@core/services/dialog.service';
 import { IFuenteFinanciacion } from '@core/models/csp/fuente-financiacion';
 import { IPrograma } from '@core/models/csp/programa';
-import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion.service';
 import { ProgramaService } from '@core/services/csp/programa.service';
 import { DateUtils } from '@core/utils/date-utils';
@@ -32,9 +31,6 @@ const MSG_SUCCESS_REACTIVATE = marker('csp.solicitud.listado.reactivar.correcto'
 const MSG_ERROR_REACTIVATE = marker('csp.solicitud.listado.reactivar.error');
 const MSG_ERROR_FUENTE_FINANCIACION_INIT = marker('csp.solicitud.listado.fuente.financiacion.error');
 const MSG_ERROR_PLAN_INVESTIGACION_INIT = marker('csp.solicitud.listado.plan.investigacion.error');
-
-const LABEL_EMPRESA_CONVOCANTE = marker('csp.solicitud.entidad.convocante');
-const LABEL_FINANCIADORA = marker('csp.solicitud.entidad.financiadora');
 
 @Component({
   selector: 'sgi-solicitud-listado',
@@ -56,10 +52,6 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
   fuenteFinanciacion$: Observable<IFuenteFinanciacion[]>;
   private planInvestigacionFiltered: IPrograma[] = [];
   planInvestigaciones$: Observable<IPrograma[]>;
-  LABEL_EMPRESA_CONVOCANTE = LABEL_EMPRESA_CONVOCANTE;
-  LABEL_FINANCIADORA = LABEL_FINANCIADORA;
-  empresaConvocanteText = '';
-  empresaFinanciadoraText = '';
 
   constructor(
     protected logger: NGXLogger,
@@ -299,27 +291,7 @@ export class SolicitudListadoComponent extends AbstractTablePaginationComponent<
     this.formGroup.controls.añoConvocatoria.setValue(undefined);
     this.formGroup.controls.entidadConvocante.setValue(undefined);
     this.formGroup.controls.entidadFinanciadora.setValue(undefined);
-    this.empresaConvocanteText = '';
-    this.empresaFinanciadoraText = '';
     this.logger.debug(SolicitudListadoComponent.name, `cleanBusquedaAvanzado()`, 'end');
-  }
-
-  setEmpresaConvocante(empresa: IEmpresaEconomica): void {
-    this.logger.debug(SolicitudListadoComponent.name,
-      `setEmpresaConvocante(empresa: ${empresa})`, 'start');
-    this.formGroup.controls.entidadConvocante.setValue(empresa);
-    this.empresaConvocanteText = empresa.razonSocial;
-    this.logger.debug(SolicitudListadoComponent.name,
-      `setEmpresaConvocante(empresa: ${empresa})`, 'end');
-  }
-
-  setEmpresaFinanciadora(empresa: IEmpresaEconomica): void {
-    this.logger.debug(SolicitudListadoComponent.name,
-      `setEmpresaFinanciadora(empresa: ${empresa})`, 'start');
-    this.formGroup.controls.entidadFinanciadora.setValue(empresa);
-    this.empresaFinanciadoraText = empresa.razonSocial;
-    this.logger.debug(SolicitudListadoComponent.name,
-      `setEmpresaFinanciadora(empresa: ${empresa})`, 'end');
   }
 
   private getFuentesFinanciacion(): void {

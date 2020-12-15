@@ -114,7 +114,7 @@ export class ConvocatoriaEntidadesFinanciadorasComponent extends FragmentCompone
   openModal(wrapper?: StatusWrapper<ConvocatoriaEntidadFinanciadoraData>): void {
     this.logger.debug(ConvocatoriaEntidadesFinanciadorasComponent.name, `openModal()`, 'start');
     const data: ConvocatoriaEntidadFinanciadoraDataModal = {
-      empresa: wrapper ? wrapper.value.empresa : {} as IEmpresaEconomica,
+      empresa: wrapper?.value?.empresa,
       entidad: wrapper ? wrapper.value.entidad : {} as IConvocatoriaEntidadFinanciadora,
       selectedEmpresas: this.selectedEmpresas,
       readonly: this.formPart.readonly

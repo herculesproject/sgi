@@ -52,7 +52,6 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
     this.isDisableRegistrar();
     this.subscriptions.push(this.actionService.status$.subscribe(
       status => {
-        console.warn(this.disable)
         this.disableRegistrar = status.changes || status.errors;
       }
     ));

@@ -157,10 +157,11 @@
           <!-- Entidad convocantes -->
           <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
             [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
-            <sgi-buscar-empresa-economica [textoLabel]="labelConvocante" [textoInput]="labelConvocante"
-              [datosEmpresaEconomicaTexto]="empresaConvocanteText" [readonly]="false"
-              (empresaEconomicaSeleccionada)="setEmpresaConvocante($event)">
-            </sgi-buscar-empresa-economica>
+            <mat-form-field class="input-form">
+              <mat-label>{{'csp.convocatoria.entidad.convocante' | translate}}</mat-label>
+              <sgi-select-empresa-economica placeholder="{{'csp.convocatoria.entidad.convocante' | translate}}"
+                formControlName="entidadConvocante"></sgi-select-empresa-economica>
+            </mat-form-field>
           </div>
 
         </div>
@@ -171,10 +172,12 @@
           <!-- Entidad financiadora -->
           <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md"
             [fxFlex.gt-md]="fxFlexProperties.gtMd" [fxFlexOrder]="fxFlexProperties.order">
-            <sgi-buscar-empresa-economica [textoLabel]="labelFinanciadora" [textoInput]="labelFinanciadora"
-              [datosEmpresaEconomicaTexto]="empresaFinanciadoraText" [readonly]="false"
-              (empresaEconomicaSeleccionada)="setEmpresaFinanciadora($event)">
-            </sgi-buscar-empresa-economica>
+            <mat-form-field class="input-form">
+              <mat-label>{{'csp.convocatoria.listado.entidad.financiadora' | translate}}</mat-label>
+              <sgi-select-empresa-economica
+                placeholder="{{'csp.convocatoria.listado.entidad.financiadora' | translate}}"
+                formControlName="entidadFinanciadora"></sgi-select-empresa-economica>
+            </mat-form-field>
           </div>
 
           <!-- Fuente financiacion -->

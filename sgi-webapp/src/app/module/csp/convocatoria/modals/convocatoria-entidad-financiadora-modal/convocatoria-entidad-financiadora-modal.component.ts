@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { BaseModalComponent } from '@core/component/base-modal.component';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
@@ -12,10 +12,6 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { FuenteFinanciacionService } from '@core/services/csp/fuente-financiacion.service';
 import { TipoFinanciacionService } from '@core/services/csp/tipo-financiacion.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
-import { BuscarEmpresaEconomicaComponent } from '@shared/buscar-empresa-economica/buscar-empresa-economica.component';
-import {
-  BuscarEmpresaEconomicaDialogoComponent, EmpresaEconomicaModalData
-} from '@shared/buscar-empresa-economica/dialogo/buscar-empresa-economica-dialogo.component';
 import { NGXLogger } from 'ngx-logger';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -38,7 +34,6 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent extends
 
   fuentesFinanciacion$: Observable<IFuenteFinanciacion[]>;
   tiposFinanciacion$: Observable<ITipoFinalidad[]>;
-  private empresa: IEmpresaEconomica;
   textSaveOrUpdate: string;
 
   constructor(
@@ -47,8 +42,7 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent extends
     public matDialogRef: MatDialogRef<ConvocatoriaEntidadFinanciadoraModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaEntidadFinanciadoraDataModal,
     private tipoFinanciacionService: TipoFinanciacionService,
-    private fuenteFinanciacionService: FuenteFinanciacionService,
-    public dialog: MatDialog
+    private fuenteFinanciacionService: FuenteFinanciacionService
   ) {
     super(logger, snackBarService, matDialogRef, data.entidad);
     this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, 'constructor()', 'start');
@@ -68,15 +62,14 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent extends
     super.ngOnInit();
     this.loadFuentesFinanciacion();
     this.loadTiposFinanciacion();
-    this.empresa = this.data.empresa;
-    this.textSaveOrUpdate = this.data.empresa.personaRef ? MSG_ACEPTAR : MSG_ANADIR;
+    this.textSaveOrUpdate = this.data.empresa ? MSG_ACEPTAR : MSG_ANADIR;
     this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, 'ngOnInit()', 'end');
   }
 
   protected getDatosForm(): IConvocatoriaEntidadFinanciadora {
     this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `getDatosForm()`, 'start');
     const entidad = this.data.entidad;
-    entidad.entidadRef = this.empresa.personaRef;
+    entidad.entidadRef = this.formGroup.get('empresaEconomica').value?.personaRef;
     entidad.fuenteFinanciacion = this.formGroup.get('fuenteFinanciacion').value;
     entidad.tipoFinanciacion = this.formGroup.get('tipoFinanciacion').value;
     entidad.porcentajeFinanciacion = this.formGroup.get('porcentajeFinanciacion').value;
@@ -87,7 +80,7 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent extends
   protected getFormGroup(): FormGroup {
     this.logger.debug(ConvocatoriaEntidadFinanciadoraModalComponent.name, `getFormGroup()`, 'start');
     const formGroup = new FormGroup({
-      nombreEmpresa: new FormControl(this.data.empresa.razonSocial),
+      empresaEconomica: new FormControl(this.data.empresa),
       fuenteFinanciacion: new FormControl(this.data.entidad.fuenteFinanciacion),
       tipoFinanciacion: new FormControl(this.data.entidad.tipoFinanciacion),
       porcentajeFinanciacion: new FormControl(this.data.entidad.porcentajeFinanciacion)
@@ -127,24 +120,5 @@ export class ConvocatoriaEntidadFinanciadoraModalComponent extends
 
   getNombreTipoFinanciacion(tipoFinanciacion: ITipoFinanciacion): string {
     return tipoFinanciacion?.nombre;
-  }
-
-  selectEmpresaEconomica(): void {
-    this.logger.debug(BuscarEmpresaEconomicaComponent.name, `selectEmpresaEconomica()`, 'start');
-    const data: EmpresaEconomicaModalData = {
-      empresaEconomica: this.empresa ? this.empresa : {} as IEmpresaEconomica,
-      selectedEmpresa: this.data.selectedEmpresas
-    };
-    const dialogRef = this.dialog.open(BuscarEmpresaEconomicaDialogoComponent, {
-      width: '1000px',
-      data
-    });
-    dialogRef.afterClosed().subscribe(empresaEconomica => {
-      if (empresaEconomica) {
-        this.empresa = empresaEconomica;
-        this.formGroup.get('nombreEmpresa').setValue(empresaEconomica.razonSocial);
-      }
-    });
-    this.logger.debug(BuscarEmpresaEconomicaComponent.name, `selectEmpresaEconomica()`, 'end');
   }
 }

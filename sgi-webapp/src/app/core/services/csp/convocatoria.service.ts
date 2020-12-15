@@ -19,6 +19,7 @@ import { IConvocatoriaConceptoGastoCodigoEc } from '@core/models/csp/convocatori
 import { IConvocatoriaDocumento } from '@core/models/csp/convocatoria-documento';
 import { ConvocatoriaEntidadConvocanteService, IConvocatoriaEntidadConvocanteBackend } from './convocatoria-entidad-convocante.service';
 import { IConvocatoriaEntidadGestora } from '@core/models/csp/convocatoria-entidad-gestora';
+import { ConvocatoriaEntidadGestoraService, IConvocatoriaEntidadGestoraBackend } from './convocatoria-entidad-gestora.service';
 
 @Injectable({
   providedIn: 'root'
@@ -175,8 +176,8 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
     SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaEntidadGestora>> {
     this.logger.debug(ConvocatoriaService.name,
       `${this.findAllConvocatoriaFases.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
-    return this.find<IConvocatoriaEntidadGestora, IConvocatoriaEntidadGestora>(
-      `${this.endpointUrl}/${id}/convocatoriaentidadgestoras`, options).pipe(
+    return this.find<IConvocatoriaEntidadGestoraBackend, IConvocatoriaEntidadGestora>(
+      `${this.endpointUrl}/${id}/convocatoriaentidadgestoras`, options, ConvocatoriaEntidadGestoraService.CONVERTER).pipe(
         tap(() => this.logger.debug(ConvocatoriaService.name,
           `${this.findAllConvocatoriaFases.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
       );

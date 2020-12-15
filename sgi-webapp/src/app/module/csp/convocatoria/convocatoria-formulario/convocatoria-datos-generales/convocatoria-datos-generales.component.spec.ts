@@ -11,6 +11,7 @@ import { ConvocatoriaDatosGeneralesComponent } from './convocatoria-datos-genera
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexModule } from '@angular/flex-layout';
 import { SgiAuthService } from '@sgi/framework/auth';
+import { SharedModule } from '@shared/shared.module';
 
 describe('ConvocatoriaDatosGeneralesComponent', () => {
   let component: ConvocatoriaDatosGeneralesComponent;
@@ -31,6 +32,7 @@ describe('ConvocatoriaDatosGeneralesComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         RouterTestingModule,
+        SharedModule
       ],
       providers: [
         ConvocatoriaActionService,

@@ -1,16 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NGXLogger } from 'ngx-logger';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-properties';
 import { FxFlexProperties } from '@core/models/shared/flexLayout/fx-flex-properties';
 
 import { ProgramaService } from '@core/services/csp/programa.service';
 import { BaseModalComponent } from '@core/component/base-modal.component';
-import {
-  BuscarEmpresaEconomicaDialogoComponent, EmpresaEconomicaModalData
-} from '@shared/buscar-empresa-economica/dialogo/buscar-empresa-economica-dialogo.component';
 import { IEmpresaEconomica } from '@core/models/sgp/empresa-economica';
 import { IPrograma } from '@core/models/csp/programa';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
@@ -88,7 +85,6 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
   fxFlexProperties: FxFlexProperties;
   fxLayoutProperties: FxLayoutProperties;
 
-  private empresa: IEmpresaEconomica;
   planes$: Observable<IPrograma[]>;
   private programaFiltered = [] as IPrograma[];
 
@@ -108,7 +104,6 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
     @Inject(MAT_DIALOG_DATA) public data: ConvocatoriaEntidadConvocanteModalData,
     protected snackBarService: SnackBarService,
     private programaService: ProgramaService,
-    private dialog: MatDialog,
     private dialogService: DialogService
   ) {
     super(logger, snackBarService, matDialogRef, data);
@@ -127,7 +122,7 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
     if (!data.entidadConvocanteData) {
       data.entidadConvocanteData = {
         entidadConvocante: new StatusWrapper<IConvocatoriaEntidadConvocante>({} as IConvocatoriaEntidadConvocante),
-        empresaEconomica: {} as IEmpresaEconomica,
+        empresaEconomica: undefined,
         modalidad: undefined,
         plan: undefined,
         programa: undefined,
@@ -143,7 +138,6 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
   ngOnInit() {
     this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name, 'ngOnInit()', 'start');
     super.ngOnInit();
-    this.empresa = this.data.entidadConvocanteData.empresaEconomica;
     this.subscriptions.push(this.programaTree$.subscribe(
       (programas) => {
         this.dataSource.data = programas;
@@ -277,7 +271,7 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
   protected getFormGroup(): FormGroup {
     this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name, `getFormGroup()`, 'start');
     const formGroup = new FormGroup({
-      nombreEmpresa: new FormControl(this.data.entidadConvocanteData.empresaEconomica.razonSocial, Validators.required),
+      empresaEconomica: new FormControl(this.data.entidadConvocanteData.empresaEconomica, Validators.required),
       plan: new FormControl(this.data.entidadConvocanteData.plan, IsEntityValidator.isValid()),
       programa: new FormControl(this.data.entidadConvocanteData.entidadConvocante.value.programa?.id)
     });
@@ -292,37 +286,18 @@ export class ConvocatoriaEntidadConvocanteModalComponent extends
     this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name,
       `getDatosForm()`, 'start');
     const entidadConvocante = this.data.entidadConvocanteData.entidadConvocante;
-    entidadConvocante.value.entidad = this.empresa;
+    entidadConvocante.value.entidad = this.formGroup.get('empresaEconomica').value;
     const plan = this.formGroup.get('plan').value;
     const programa = this.checkedNode?.programa?.value;
     entidadConvocante.value.programa = programa ? programa : plan;
     if (plan === '' && !programa) {
       entidadConvocante.value.programa = undefined;
     }
-    this.data.entidadConvocanteData.empresaEconomica = this.empresa;
+    this.data.entidadConvocanteData.empresaEconomica = this.formGroup.get('empresaEconomica').value;
     this.data.entidadConvocanteData.modalidad = entidadConvocante.value.programa;
     this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name,
       `getDatosForm()`, 'start');
     return this.data;
-  }
-
-  selectEmpresaEconomica(): void {
-    this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name, `selectEmpresaEconomica()`, 'start');
-    const data: EmpresaEconomicaModalData = {
-      empresaEconomica: this.empresa ? this.empresa : {} as IEmpresaEconomica,
-      selectedEmpresa: this.data.selectedEmpresas
-    };
-    const dialogRef = this.dialog.open(BuscarEmpresaEconomicaDialogoComponent, {
-      width: '1000px',
-      data
-    });
-    dialogRef.afterClosed().subscribe(empresaEconomica => {
-      if (empresaEconomica) {
-        this.empresa = empresaEconomica;
-        this.formGroup.get('nombreEmpresa').setValue(empresaEconomica.razonSocial);
-      }
-    });
-    this.logger.debug(ConvocatoriaEntidadConvocanteModalComponent.name, `selectEmpresaEconomica()`, 'end');
   }
 
   onCheckNode(node: NodePrograma, $event: MatCheckboxChange): void {

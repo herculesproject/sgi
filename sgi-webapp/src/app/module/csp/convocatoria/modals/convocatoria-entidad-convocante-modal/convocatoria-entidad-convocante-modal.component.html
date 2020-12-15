@@ -6,24 +6,16 @@
   <main>
     <form class="form-inline" [formGroup]="formGroup">
       <div [fxLayout]="fxLayoutProperties.layout" [fxLayoutAlign]="fxLayoutProperties.layoutAlign">
-        <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
-          [fxFlexOrder]="fxFlexProperties.order">
-          <div class="wrapper">
-            <div class="fields-wrapper">
-              <mat-form-field fxFill>
-                <mat-label>{{'csp.convocatoria.entidades.convocantes' | translate}}</mat-label>
-                <input matInput type="text" id="nombreEmpresa" formControlName="nombreEmpresa" readonly
-                  placeholder="{{'csp.convocatoria.entidades.convocantes' | translate}}" required>
-                <mat-error *ngIf="formGroup.controls.nombreEmpresa.errors?.required">
-                  {{'csp.convocatoria.entidades.convocantes.error.requerido' | translate}}
-                </mat-error>
-              </mat-form-field>
-            </div>
-            <button color="primary" md-button mat-raised-button *ngIf="!data.readonly"
-              [disabled]="data.entidadConvocanteData.empresaEconomica?.personaRef"
-              (click)="selectEmpresaEconomica()">{{'botones.buscar' | translate}}</button>
-          </div>
-        </div>
+        <mat-form-field class="input-form">
+          <mat-label>{{'csp.convocatoria.entidades.convocantes' | translate}}</mat-label>
+          <sgi-select-empresa-economica formControlName="empresaEconomica"
+            placeholder="{{'csp.convocatoria.entidades.convocantes' | translate}}" [disabled]="data.readonly"
+            [filter]="data.selectedEmpresas" required>
+          </sgi-select-empresa-economica>
+          <mat-error *ngIf="formGroup.controls.empresaEconomica.errors?.required">
+            {{'csp.convocatoria.entidades.convocantes.error.requerido' | translate}}
+          </mat-error>
+        </mat-form-field>
       </div>
       <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
         [fxFlexOrder]="fxFlexProperties.order">

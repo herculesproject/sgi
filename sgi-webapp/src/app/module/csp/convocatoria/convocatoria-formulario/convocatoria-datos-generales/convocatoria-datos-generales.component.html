@@ -250,10 +250,11 @@
     <!-- Empresa Economica -->
     <div [fxFlex.sm]="fxFlexProperties.sm" [fxFlex.md]="fxFlexProperties.md" [fxFlex.gt-md]="fxFlexProperties.gtMd"
       [fxFlexOrder]="fxFlexProperties.order">
-      <sgi-buscar-empresa-economica [textoLabel]="label" [textoInput]="label"
-        [datosEmpresaEconomicaTexto]="formPart.empresaEconomicaText" [readonly]="formPart.readonly"
-        (empresaEconomicaSeleccionada)="formPart.setEmpresaEconomica($event)">
-      </sgi-buscar-empresa-economica>
+      <mat-form-field class="input-form">
+        <mat-label>{{'csp.convocatoria.entidad.gestora' | translate}}</mat-label>
+        <sgi-select-empresa-economica placeholder="{{'csp.convocatoria.entidad.gestora' | translate}}"
+          formControlName="entidadGestora"></sgi-select-empresa-economica>
+      </mat-form-field>
     </div>
 
     <!-- Objeto -->

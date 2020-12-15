@@ -21,6 +21,7 @@ import { ClasificacionCVN } from '@core/enums/clasificacion-cvn';
 import { TipoDestinatario } from '@core/enums/tipo-destinatario';
 import { ConvocatoriaAreaTematicaService } from '@core/services/csp/convocatoria-area-tematica.service';
 import { IAreaTematica } from '@core/models/csp/area-tematica';
+import { IUnidadGestion } from '@core/models/usr/unidad-gestion';
 
 export interface AreaTematicaData {
   padre: IAreaTematica;
@@ -33,8 +34,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
   private convocatoriaAreaTematicaEliminadas: StatusWrapper<IConvocatoriaAreaTematica>[] = [];
 
   convocatoria: IConvocatoria;
-  selectedEmpresaEconomica: IEmpresaEconomica;
-  convocatoriaEntidadGestora: IConvocatoriaEntidadGestora;
+  private convocatoriaEntidadGestora: IConvocatoriaEntidadGestora;
 
   constructor(
     private logger: NGXLogger,
@@ -92,8 +92,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       objeto: new FormControl('',
         Validators.maxLength(2000)),
       observaciones: new FormControl('',
-        Validators.maxLength(2000)),
-      entidadGestoraRef: new FormControl(''),
+        Validators.maxLength(2000))
     });
     if (this.readonly) {
       form.disable();
@@ -159,17 +158,29 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
     return this.convocatoriaService.findById(key).pipe(
       switchMap((value) => {
         this.convocatoria = value;
-        this.loadUnidadGestion();
+        return this.getUnidadGestion(value.unidadGestionRef).pipe(
+          map(unidadGestion => {
+            this.getFormGroup().get('unidadGestion').setValue(unidadGestion);
+            return value;
+          })
+        );
+      }),
+      switchMap((convocatoria) => {
         return this.convocatoriaService.findAllConvocatoriaEntidadGestora(key).pipe(
           switchMap((listResult) => {
             const convocatoriasEntidadGestoras = listResult.items;
             if (convocatoriasEntidadGestoras.length > 0) {
-              const entidadRef = convocatoriasEntidadGestoras[0].entidadRef;
-              this.getFormGroup().controls.entidadGestoraRef.setValue(entidadRef);
-              this.loadEmpresaEconomica(entidadRef);
               this.convocatoriaEntidadGestora = convocatoriasEntidadGestoras[0];
+              return this.empresaEconomicaService.findById(this.convocatoriaEntidadGestora.empresaEconomica.personaRef).pipe(
+                map((empresaEconomica) => {
+                  this.getFormGroup().get('entidadGestora').setValue(empresaEconomica);
+                  return convocatoria;
+                })
+              );
             }
-            return of(this.convocatoria);
+            else {
+              return of(convocatoria);
+            }
           })
         );
       }),
@@ -177,9 +188,9 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       tap(() => this.checkVinculaciones(key)),
       tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
         `initializer(key: ${key})`, 'end')),
-      catchError(() => {
+      catchError((error) => {
         this.logger.error(ConvocatoriaDatosGeneralesFragment.name,
-          `initializer(key: ${key})`, 'error');
+          `initializer(key: ${key})`, error);
         return EMPTY;
       })
     );
@@ -209,48 +220,27 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       `checkUnidadModelo(key: ${id})`, 'end');
   }
 
-  private loadEmpresaEconomica(personaRef: string): void {
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `loadEmpresaEconomica(personaRef: ${personaRef})`, 'start');
-    const subscription = this.empresaEconomicaService.findById(personaRef).subscribe(
-      empresaEconomica => {
-        this.selectedEmpresaEconomica = empresaEconomica;
-        this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-          `loadEmpresaEconomica(personaRef: ${personaRef})`, 'end');
-      },
-      (error) => {
-        this.logger.error(ConvocatoriaDatosGeneralesFragment.name,
-          `loadEmpresaEconomica(personaRef: ${personaRef})`, error);
-      }
-    );
-    this.subscriptions.push(subscription);
-  }
-
-  private loadUnidadGestion(): void {
+private getUnidadGestion(unidadGestionRef: string): Observable<IUnidadGestion> {
     this.logger.debug(ConvocatoriaDatosGeneralesFragment.name, `loadUnidadGestion()`, 'start');
     const options = {
       filters: [
         {
           field: 'acronimo',
           type: SgiRestFilterType.LIKE,
-          value: this.convocatoria.unidadGestionRef,
+          value: unidadGestionRef,
         } as SgiRestFilter
       ]
     } as SgiRestFindOptions;
-    const subscription = this.unidadGestionService.findAll(options).subscribe(
-      result => {
-        if (result.items.length > 0) {
-          this.getFormGroup().get('unidadGestion').setValue(result.items[0]);
+    return this.unidadGestionService.findAll(options).pipe(
+      map(list => {
+        if (list.items.length === 1) {
+          return list.items[0];
         }
-        this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-          `loadUnidadGestion()`, 'end');
-      },
-      (error) => {
-        this.logger.error(ConvocatoriaDatosGeneralesFragment.name,
-          `loadUnidadGestion()`, error);
-      }
+        else {
+          return undefined;
+        }
+      })
     );
-    this.subscriptions.push(subscription);
   }
 
   private loadAreasTematicas(id: number): void {
@@ -376,7 +366,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       `create(convocatoria: ${convocatoria})`, 'start');
     return this.convocatoriaService.create(convocatoria).pipe(
       tap(result => this.convocatoria = result),
-      switchMap((result) => this.saveOrUpdateConvocatoriaEntidadConvocante(result)),
+      switchMap((result) => this.saveOrUpdateConvocatoriaEntidadGestora(result)),
       switchMap((result) => this.saveOrUpdateAreasTematicas(result)),
       tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
         `create(convocatoria: ${convocatoria})`, 'end'))
@@ -388,75 +378,77 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
       `update(convocatoria: ${convocatoria})`, 'start');
     return this.convocatoriaService.update(convocatoria.id, convocatoria).pipe(
       tap(result => this.convocatoria = result),
-      switchMap((result) => this.saveOrUpdateConvocatoriaEntidadConvocante(result)),
+      switchMap((result) => this.saveOrUpdateConvocatoriaEntidadGestora(result)),
       switchMap((result) => this.saveOrUpdateAreasTematicas(result)),
       tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
         `update(convocatoria: ${convocatoria})`, 'end'))
     );
   }
 
-  private saveOrUpdateConvocatoriaEntidadConvocante(result: IConvocatoria): Observable<IConvocatoria> {
+  private saveOrUpdateConvocatoriaEntidadGestora(result: IConvocatoria): Observable<IConvocatoria> {
     this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `saveOrUpdateConvocatoriaEntidadConvocante(result: ${result})`, 'start');
-    let observable$ = of({});
-    const entidadRef = this.getFormGroup().controls.entidadGestoraRef.value;
+      `saveOrUpdateConvocatoriaEntidadGestora(result: ${result})`, 'start');
+    let observable$ = of();
+    const entidadRef = this.getFormGroup().controls.entidadGestora.value?.personaRef;
     this.convocatoriaEntidadGestora.convocatoria = result;
-    if (entidadRef) {
-      observable$ = this.convocatoriaEntidadGestora.id ?
-        this.updateConvocatoriaEntidadConvocante() : this.createConvocatoriaEntidadConvocante();
+    if (entidadRef !== this.convocatoriaEntidadGestora.empresaEconomica?.personaRef) {
+      if (!entidadRef) {
+        observable$ = this.deleteConvocatoriaEntidadGestora();
+      }
+      else {
+        observable$ = this.convocatoriaEntidadGestora.id ?
+          this.updateConvocatoriaEntidadGestora() : this.createConvocatoriaEntidadGestora();
+      }
     }
     return observable$.pipe(
       switchMap(() => of(result)),
       tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-        `saveOrUpdateConvocatoriaEntidadConvocante(result: ${result})`, 'end'))
+        `saveOrUpdateConvocatoriaEntidadGestora(result: ${result})`, 'end'))
     );
   }
 
-  private createConvocatoriaEntidadConvocante(): Observable<IConvocatoriaEntidadGestora> {
+  private createConvocatoriaEntidadGestora(): Observable<IConvocatoriaEntidadGestora> {
     this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `createConvocatoriaEntidadConvocante()`, 'start');
+      `createConvocatoriaEntidadGestora()`, 'start');
+    this.convocatoriaEntidadGestora.empresaEconomica = this.getFormGroup().controls.entidadGestora.value;
     return this.convocatoriaEntidadGestoraService.create(this.convocatoriaEntidadGestora).pipe(
-      tap(result => this.convocatoriaEntidadGestora = result),
+      tap(result => {
+        this.convocatoriaEntidadGestora = result;
+        this.convocatoriaEntidadGestora.empresaEconomica = this.getFormGroup().controls.entidadGestora.value;
+      }),
       tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-        `createConvocatoriaEntidadConvocante()`, 'end'))
+        `createConvocatoriaEntidadGestora()`, 'end'))
     );
   }
 
-  private updateConvocatoriaEntidadConvocante(): Observable<IConvocatoriaEntidadGestora> {
+  private updateConvocatoriaEntidadGestora(): Observable<IConvocatoriaEntidadGestora> {
     this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `updateConvocatoriaEntidadConvocante()`, 'start');
+      `updateConvocatoriaEntidadGestora()`, 'start');
+    this.convocatoriaEntidadGestora.empresaEconomica = this.getFormGroup().controls.entidadGestora.value;
     return this.convocatoriaEntidadGestoraService.update(
       this.convocatoriaEntidadGestora.id, this.convocatoriaEntidadGestora).pipe(
-        tap(result => this.convocatoriaEntidadGestora = result),
+        tap(result => {
+          this.convocatoriaEntidadGestora = result;
+          this.convocatoriaEntidadGestora.empresaEconomica = this.getFormGroup().controls.entidadGestora.value;
+        }),
         tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-          `updateConvocatoriaEntidadConvocante()`, 'end'))
+          `updateConvocatoriaEntidadGestora()`, 'end'))
       );
   }
 
-  setEmpresaEconomica(empresaEconomica: IEmpresaEconomica): void {
+  private deleteConvocatoriaEntidadGestora(): Observable<void> {
     this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `setEmpresaEconomica(value: ${empresaEconomica})`, 'start');
-    const entidadRef = empresaEconomica.personaRef;
-    if (this.isEdit()) {
-      const changed = this.getFormGroup().controls.entidadGestoraRef.value !== entidadRef;
-      this.setChanges(changed);
-    } else if (!this.isEdit()) {
-      this.setComplete(!!empresaEconomica);
-      this.setChanges(!!empresaEconomica);
-    }
-    this.selectedEmpresaEconomica = empresaEconomica;
-    this.convocatoriaEntidadGestora.entidadRef = entidadRef;
-    this.getFormGroup().controls.entidadGestoraRef.setValue(entidadRef);
-    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
-      `setEmpresaEconomica(value: ${empresaEconomica})`, 'end');
-  }
-
-  getEmpresaEconomica(): IEmpresaEconomica {
-    return this.selectedEmpresaEconomica;
-  }
-
-  get empresaEconomicaText(): string {
-    return this.selectedEmpresaEconomica ? this.selectedEmpresaEconomica.razonSocial : '';
+      `deleteConvocatoriaEntidadGestora()`, 'start');
+    this.convocatoriaEntidadGestora.empresaEconomica = this.getFormGroup().controls.entidadGestora.value;
+    return this.convocatoriaEntidadGestoraService.deleteById(
+      this.convocatoriaEntidadGestora.id).pipe(
+        tap(() => {
+          this.convocatoriaEntidadGestora = {} as IConvocatoriaEntidadGestora;
+          this.convocatoriaEntidadGestora.empresaEconomica = {} as IEmpresaEconomica;
+        }),
+        tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
+          `deleteConvocatoriaEntidadGestora()`, 'end'))
+      );
   }
 
   deleteConvocatoriaAreaTematica(data: AreaTematicaData) {

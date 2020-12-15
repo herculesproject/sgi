@@ -3,14 +3,16 @@
 
   <!-- Buscador -->
   <div class="dialog-modal" mat-dialog-content>
-    <mat-form-field>
-      <mat-label>{{'sgp.buscadorEmpresaEconomica.numeroDocumento' | translate}}</mat-label>
-      <input matInput [(ngModel)]="data.empresaEconomica.numeroDocumento">
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>{{'sgp.buscadorEmpresaEconomica.razonSocial' | translate}}</mat-label>
-      <input matInput [(ngModel)]="data.empresaEconomica.razonSocial">
-    </mat-form-field>
+    <form [formGroup]="formGroup">
+      <mat-form-field>
+        <mat-label>{{'sgp.buscadorEmpresaEconomica.numeroDocumento' | translate}}</mat-label>
+        <input matInput formControlName="numeroDocumento">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>{{'sgp.buscadorEmpresaEconomica.razonSocial' | translate}}</mat-label>
+        <input matInput formControlName="razonSocial">
+      </mat-form-field>
+    </form>
 
     <div class="separacion">
       <button color="primary" md-button mat-raised-button
