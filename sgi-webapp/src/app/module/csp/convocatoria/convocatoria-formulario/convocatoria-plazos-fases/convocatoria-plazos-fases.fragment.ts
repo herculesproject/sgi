@@ -7,10 +7,9 @@ import { tap, map, mergeMap, takeLast } from 'rxjs/operators';
 import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { ConvocatoriaFaseService } from '@core/services/csp/convocatoria-fase.service';
-import { ITipoFase } from '@core/models/csp/tipos-configuracion';
 
 export class ConvocatoriaPlazosFasesFragment extends Fragment {
-  plazosFase$: BehaviorSubject<StatusWrapper<IConvocatoriaFase>[]>;
+  plazosFase$ = new BehaviorSubject<StatusWrapper<IConvocatoriaFase>[]>([]);
   private fasesEliminadas: StatusWrapper<IConvocatoriaFase>[] = [];
 
   constructor(
@@ -23,7 +22,6 @@ export class ConvocatoriaPlazosFasesFragment extends Fragment {
     super(key);
     this.logger.debug(ConvocatoriaPlazosFasesFragment.name, 'constructor()', 'start');
     this.setComplete(true);
-    this.plazosFase$ = new BehaviorSubject<StatusWrapper<IConvocatoriaFase>[]>([]);
     this.logger.debug(ConvocatoriaPlazosFasesFragment.name, 'constructor()', 'end');
   }
 
@@ -122,7 +120,8 @@ export class ConvocatoriaPlazosFasesFragment extends Fragment {
             tap(() => this.logger.debug(ConvocatoriaPlazosFasesFragment.name,
               `${this.deleteFase.name}()`, 'end'))
           );
-      }));
+      })
+    );
   }
 
   private createFases(): Observable<void> {
@@ -148,7 +147,8 @@ export class ConvocatoriaPlazosFasesFragment extends Fragment {
           tap(() => this.logger.debug(ConvocatoriaPlazosFasesFragment.name,
             `${this.createFases.name}()`, 'end'))
         );
-      }));
+      })
+    );
   }
 
   private updateFases(): Observable<void> {

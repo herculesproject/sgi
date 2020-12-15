@@ -142,7 +142,7 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
       convocatoriaConceptoGastoCodigoEcsTabla,
       convocatoriaConceptoGastos,
       editModal: true,
-      readonly: this.formPart.readonly
+      readonly: this.formPart.readonly,
     };
 
     const config = {
@@ -204,7 +204,7 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
       convocatoriaConceptoGastoCodigoEcsTabla: listadoTabla,
       convocatoriaConceptoGastos: listadoGastos,
       editModal: false,
-      readonly: this.formPart.readonly
+      readonly: this.formPart.readonly,
     };
 
     const config = {
@@ -214,9 +214,9 @@ export class ConvocatoriaConceptoGastoCodigoEcComponent extends FragmentComponen
     };
     const dialogRef = this.matDialog.open(ConvocatoriaConceptoGastoCodigoEcModalComponent, config);
     dialogRef.afterClosed().subscribe(
-      (convocatoriaConceptoGastoCodigoEc: IConvocatoriaConceptoGastoCodigoEc) => {
-        if (convocatoriaConceptoGastoCodigoEc) {
-          this.formPart.addConvocatoriaConceptoGastoCodigoEc(convocatoriaConceptoGastoCodigoEc);
+      (result) => {
+        if (result) {
+          this.formPart.addConvocatoriaConceptoGastoCodigoEc(result);
         }
         this.logger.debug(ConvocatoriaConceptoGastoCodigoEcModalComponent.name, `openModalCrear()`, 'end');
       }

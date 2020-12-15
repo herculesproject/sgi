@@ -325,34 +325,28 @@
         </td>
       </ng-container>
 
-
       <!-- Acciones Column -->
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef> {{'csp.convocatoria.listado.acciones' | translate}} </th>
         <td mat-cell *matCellDef="let element">
           <ng-container>
             <button mat-button matTooltip="{{'botones.ver' | translate}}"
-              *ngIf="!authService.hasAuthority('CSP-CONV-C_'+ element.convocatoria.unidadGestionRef)"
-              [routerLink]="[element.convocatoria.id]">
+              *ngIf="!mapModificable.get(element.convocatoria.id)" [routerLink]="[element.convocatoria.id]">
               <mat-icon color="primary">visibility</mat-icon>
             </button>
           </ng-container>
           <ng-container>
-            <button *ngIf="authService.hasAuthority('CSP-CONV-C_'+ element.convocatoria.unidadGestionRef) 
-          && (element.convocatoria.estadoActual === 'Borrador' || element.convocatoria.estadoActual === 'Registrada')
-           && element.convocatoria.activo === true" mat-button matTooltip="{{'botones.editar' | translate}}"
-              [routerLink]="[element.convocatoria.id]">
+            <button *ngIf="mapModificable.get(element.convocatoria.id) && element.convocatoria.activo === true"
+              mat-button matTooltip="{{'botones.editar' | translate}}" [routerLink]="[element.convocatoria.id]">
               <mat-icon color="primary">border_color</mat-icon>
             </button>
           </ng-container>
           <ng-container>
-            <button *ngIf="authService.hasAuthority('CSP-CONV-C_'+ element.convocatoria.unidadGestionRef) 
-            && element.convocatoria.estadoActual === 'Borrador' && element.convocatoria.activo === true" mat-button
-              matTooltip="{{'botones.borrar' | translate}}" (click)="deactivateConvocatoria(element)">
+            <button *ngIf="mapModificable.get(element.convocatoria.id) && element.convocatoria.activo === true"
+              mat-button matTooltip="{{'botones.borrar' | translate}}" (click)="deactivateConvocatoria(element)">
               <mat-icon color="warn">highlight_off</mat-icon>
             </button>
-            <button *ngIf="authService.hasAuthority('CSP-CONV-C_'+ element.convocatoria.unidadGestionRef) 
-            && element.convocatoria.estadoActual === 'Borrador' && element.convocatoria.activo === false"
+            <button *ngIf="mapModificable.get(element.convocatoria.id) && element.convocatoria.activo === false"
               (click)="activeConvocatoria(element)" mat-button matTooltip="{{'botones.reactivar' | translate}}">
               <mat-icon color="accent">add_circle_outline</mat-icon>
             </button>

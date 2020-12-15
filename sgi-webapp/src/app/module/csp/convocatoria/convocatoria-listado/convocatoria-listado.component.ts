@@ -4,7 +4,7 @@ import { FxLayoutProperties } from '@core/models/shared/flexLayout/fx-layout-pro
 import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions, SgiRestListResult } from '@sgi/framework/http/';
 import { NGXLogger } from 'ngx-logger';
 import { FormGroup, FormControl } from '@angular/forms';
-import { from, Observable, of, Subscription } from 'rxjs';
+import { from, merge, Observable, of, Subscription } from 'rxjs';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { catchError, map, mergeMap, startWith, switchMap, tap } from 'rxjs/operators';
 
@@ -107,6 +107,8 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
   empresaConvocanteText: string;
   empresaFinanciadoraText: string;
 
+  mapModificable: Map<number, boolean> = new Map();
+
   constructor(
     protected logger: NGXLogger,
     protected snackBarService: SnackBarService,
@@ -177,6 +179,18 @@ export class ConvocatoriaListadoComponent extends AbstractTablePaginationCompone
   protected createObservable(): Observable<SgiRestListResult<IConvocatoriaListado>> {
     this.logger.debug(ConvocatoriaListadoComponent.name, `${this.createObservable.name}()`, 'start');
     const observable$ = this.convocatoriaService.findAllTodos(this.getFindOptions()).pipe(
+      switchMap((result) => {
+        return from(result.items).pipe(
+          mergeMap(element => {
+            return this.convocatoriaService.modificable(element.id).pipe(
+              tap(value => {
+                this.mapModificable.set(element.id, value);
+              })
+            );
+          }),
+          switchMap(() => of(result))
+        );
+      }),
       map(result => {
         const convocatorias = result.items.map((convocatoria) => {
           return {

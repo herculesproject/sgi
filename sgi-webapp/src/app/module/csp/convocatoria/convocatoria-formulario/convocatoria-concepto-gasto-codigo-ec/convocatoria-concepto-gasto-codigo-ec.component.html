@@ -10,7 +10,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'csp.convocatoria.concepto-gasto-codigo-ec.listado.concepto-gasto-codigo-ec.nombre' | translate}} </th>
       <td mat-cell *matCellDef="let convocatoriaConceptoGastoCodigoEc">
-        {{convocatoriaConceptoGastoCodigoEc.value.convocatoriaConceptoGasto.conceptoGasto.nombre}}
+        {{convocatoriaConceptoGastoCodigoEc.value.convocatoriaConceptoGasto?.conceptoGasto.nombre}}
       </td>
     </ng-container>
 
@@ -98,7 +98,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{'csp.convocatoria.concepto-gasto-codigo-ec.listado.concepto-gasto-codigo-ec.nombre' | translate}} </th>
       <td mat-cell *matCellDef="let convocatoriaConceptoGastoCodigoEc">
-        {{convocatoriaConceptoGastoCodigoEc.value.convocatoriaConceptoGasto.conceptoGasto.nombre}}
+        {{convocatoriaConceptoGastoCodigoEc.value.convocatoriaConceptoGasto?.conceptoGasto.nombre}}
       </td>
     </ng-container>
 

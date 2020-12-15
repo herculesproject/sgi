@@ -43,7 +43,7 @@ const routes: SgiRoutes = [
     canActivate: [SgiAuthGuard],
     canDeactivate: [ActionGuard],
     resolve: {
-      convocatoria: ConvocatoriaResolver,
+      convocatoriaId: ConvocatoriaResolver,
       configuracionSolicitud: ConfiguracionSolicitudResolver
     },
     data: {

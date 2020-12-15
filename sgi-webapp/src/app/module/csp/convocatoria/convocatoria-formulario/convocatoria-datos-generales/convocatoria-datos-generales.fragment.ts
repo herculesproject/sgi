@@ -174,6 +174,7 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
         );
       }),
       tap(() => this.loadAreasTematicas(key)),
+      tap(() => this.checkVinculaciones(key)),
       tap(() => this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
         `initializer(key: ${key})`, 'end')),
       catchError(() => {
@@ -182,6 +183,30 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
         return EMPTY;
       })
     );
+  }
+
+  private checkVinculaciones(id: number): void {
+    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
+      `checkUnidadModelo(key: ${id})`, 'start');
+    if (id) {
+      const subscription = this.convocatoriaService.vinculaciones(id).subscribe(
+        status => {
+          if (status) {
+            this.getFormGroup().controls.unidadGestion.disable();
+            this.getFormGroup().controls.modeloEjecucion.disable();
+            this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
+              `checkUnidadModelo(key: ${id})`, 'end');
+          }
+        },
+        error => {
+          this.logger.error(ConvocatoriaDatosGeneralesFragment.name,
+            `checkUnidadModelo(key: ${id})`, error);
+        }
+      );
+      this.subscriptions.push(subscription);
+    }
+    this.logger.debug(ConvocatoriaDatosGeneralesFragment.name,
+      `checkUnidadModelo(key: ${id})`, 'end');
   }
 
   private loadEmpresaEconomica(personaRef: string): void {
@@ -288,42 +313,42 @@ export class ConvocatoriaDatosGeneralesFragment extends FormFragment<IConvocator
 
   getValue(): IConvocatoria {
     this.logger.debug(ConvocatoriaDatosGeneralesFragment.name, `getValue()`, 'start');
-    const form = this.getFormGroup().value;
-    this.convocatoria.unidadGestionRef = form.unidadGestion.acronimo;
-    if (form.modeloEjecucion) {
-      this.convocatoria.modeloEjecucion = form.modeloEjecucion;
-    } else {
+    const form = this.getFormGroup().controls;
+    this.convocatoria.unidadGestionRef = form.unidadGestion.value.acronimo;
+    if (typeof form.modeloEjecucion.value === 'string') {
       this.convocatoria.modeloEjecucion = undefined;
+    } else {
+      this.convocatoria.modeloEjecucion = form.modeloEjecucion.value;
     }
-    this.convocatoria.codigo = form.codigo;
-    this.convocatoria.anio = form.anio;
-    this.convocatoria.titulo = form.titulo;
-    this.convocatoria.objeto = form.objeto;
-    this.convocatoria.observaciones = form.observaciones;
-    if (typeof form.finalidad === 'string') {
+    this.convocatoria.codigo = form.codigo.value;
+    this.convocatoria.anio = form.anio.value;
+    this.convocatoria.titulo = form.titulo.value;
+    this.convocatoria.objeto = form.objeto.value;
+    this.convocatoria.observaciones = form.observaciones.value;
+    if (typeof form.finalidad.value === 'string') {
       this.convocatoria.finalidad = undefined;
     } else {
-      this.convocatoria.finalidad = form.finalidad;
+      this.convocatoria.finalidad = form.finalidad.value;
     }
-    if (typeof form.regimenConcurrencia === 'string') {
+    if (typeof form.regimenConcurrencia.value === 'string') {
       this.convocatoria.regimenConcurrencia = undefined;
     } else {
-      this.convocatoria.regimenConcurrencia = form.regimenConcurrencia;
+      this.convocatoria.regimenConcurrencia = form.regimenConcurrencia.value;
     }
-    if (form.destinatarios?.length > 0) {
-      this.convocatoria.destinatarios = form.destinatarios;
+    if (form.destinatarios.value?.length > 0) {
+      this.convocatoria.destinatarios = form.destinatarios.value;
     } else {
       this.convocatoria.destinatarios = undefined;
     }
-    this.convocatoria.colaborativos = form.colaborativos;
-    this.convocatoria.duracion = form.duracion;
-    if (typeof form.ambitoGeografico === 'string') {
+    this.convocatoria.colaborativos = form.colaborativos.value;
+    this.convocatoria.duracion = form.duracion.value;
+    if (typeof form.ambitoGeografico.value === 'string') {
       this.convocatoria.ambitoGeografico = undefined;
     } else {
-      this.convocatoria.ambitoGeografico = form.ambitoGeografico;
+      this.convocatoria.ambitoGeografico = form.ambitoGeografico.value;
     }
-    if (form.clasificacionCVN?.length > 0) {
-      this.convocatoria.clasificacionCVN = form.clasificacionCVN;
+    if (form.clasificacionCVN.value?.length > 0) {
+      this.convocatoria.clasificacionCVN = form.clasificacionCVN.value;
     } else {
       this.convocatoria.clasificacionCVN = undefined;
     }

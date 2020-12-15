@@ -17,6 +17,7 @@ import { SgiRestListResult } from '@sgi/framework/http/types';
 import { DateValidator } from '@core/validators/date-validator';
 import { SelectValidator } from '@core/validators/select-validator';
 import { DateUtils } from '@core/utils/date-utils';
+import { DateRange, RangeDateValidator } from '@core/validators/range-date-validator';
 
 const MSG_ERROR_FORM_GROUP = marker('form-group.error');
 const MSG_ERROR_INIT = marker('csp.convocatoria.concepto-gasto-codigo-ec.error.cargar');
@@ -98,6 +99,22 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
       });
     if (this.data.readonly) {
       this.formGroup.disable();
+    }
+    if (this.data.editModal) {
+      this.formGroup.controls.convocatoriaConceptoGasto.disable();
+      this.formGroup.controls.codigoEconomicoRef.disable();
+      this.formGroup.controls.observaciones.disable();
+    } else {
+      const dateRanges: DateRange[] = [];
+      this.data.convocatoriaConceptoGastoCodigoEcsTabla.forEach(conceptoGasto => {
+        const dateRange: DateRange = {
+          fechaInicio: conceptoGasto.fechaInicio,
+          fechaFin: conceptoGasto.fechaFin
+        };
+        dateRanges.push(dateRange);
+      });
+      this.formGroup.controls.fechaInicio.setValidators([RangeDateValidator.notOverlaps(dateRanges)]);
+      this.formGroup.controls.fechaFin.setValidators([RangeDateValidator.notOverlaps(dateRanges)]);
     }
     this.logger.debug(ConvocatoriaConceptoGastoCodigoEcModalComponent.name, 'initFormGroup()', 'end');
   }
@@ -284,8 +301,7 @@ export class ConvocatoriaConceptoGastoCodigoEcModalComponent implements OnInit, 
 
   ngOnDestroy(): void {
     this.logger.debug(ConvocatoriaConceptoGastoCodigoEcModalComponent.name, 'ngOnDestroy()', 'start');
-    this.suscripciones?.forEach(x => x.unsubscribe());
+    this.suscripciones.forEach(x => x.unsubscribe());
     this.logger.debug(ConvocatoriaConceptoGastoCodigoEcModalComponent.name, 'ngOnDestroy()', 'end');
   }
-
 }

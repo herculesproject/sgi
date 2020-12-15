@@ -143,8 +143,8 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
 
     if (this.actionService.isPlazosFasesInitialized()) {
       this.convocatoriaFaseFiltered = [];
-      this.actionService.getPlazosFases().forEach((x) => {
-        this.convocatoriaFaseFiltered.push(x.value);
+      this.actionService.getPlazosFases().forEach((wrapper) => {
+        this.convocatoriaFaseFiltered.push(wrapper.value);
       });
     } else {
       const id = Number(this.formPart.getKey());
@@ -208,7 +208,7 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
    */
   habilitarCampos(): void {
     this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name,
-      `${this.habilitarCampos.name}()`, 'start');
+      `habilitarCampos()`, 'start');
     const tipoFase = this.formGroup.controls.fasePresentacionSolicitudes.value;
     if (tipoFase) {
       this.convocatoriaFase = tipoFase;
@@ -219,7 +219,7 @@ export class ConvocatoriaConfiguracionSolicitudesComponent extends
       this.formGroup.controls.fechaFinFase.patchValue('');
     }
     this.logger.debug(ConvocatoriaConfiguracionSolicitudesComponent.name,
-      `${this.habilitarCampos.name}()`, 'end');
+      `habilitarCampos()`, 'end');
   }
 
 

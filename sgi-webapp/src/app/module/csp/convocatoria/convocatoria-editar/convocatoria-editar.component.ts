@@ -8,6 +8,7 @@ import { CONVOCATORIA_ROUTE_NAMES } from '../convocatoria-route-names';
 import { DialogService } from '@core/services/dialog.service';
 import { SnackBarService } from '@core/services/snack-bar.service';
 import { TipoEstadoConvocatoria } from '@core/enums/tipo-estado-convocatoria';
+import { ConvocatoriaService } from '@core/services/csp/convocatoria.service';
 
 const MSG_BUTTON_EDIT = marker('botones.guardar');
 const MSG_BUTTON_REGISTRAR = marker('csp.convocatoria.registrar');
@@ -30,25 +31,29 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
   textoCrear = MSG_BUTTON_EDIT;
   textoRegistrar = MSG_BUTTON_REGISTRAR;
 
-  disableRegistrar = false;
+  disableRegistrar = true;
+  disable = true;
 
   constructor(
-    protected readonly logger: NGXLogger,
-    protected readonly snackBarService: SnackBarService,
+    protected logger: NGXLogger,
+    protected snackBarService: SnackBarService,
     router: Router,
     route: ActivatedRoute,
     public actionService: ConvocatoriaActionService,
-    dialogService: DialogService) {
+    dialogService: DialogService,
+    private convocatoriaService: ConvocatoriaService
+  ) {
 
     super(router, route, actionService, dialogService);
   }
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.isDisableRegistrar();
     this.subscriptions.push(this.actionService.status$.subscribe(
       status => {
-        this.disableRegistrar = status.changes || status.errors
-          || this.isDisableRegistrar();
+        console.warn(this.disable)
+        this.disableRegistrar = status.changes || status.errors;
       }
     ));
   }
@@ -86,32 +91,52 @@ export class ConvocatoriaEditarComponent extends ActionComponent implements OnIn
   /**
    * Permite habilitar o deshabilitar el botón de registro en función de los datos de convocatoria
    */
-  private isDisableRegistrar(): boolean {
-    // Se deshabilita el botón de registrar si la convocatoria está en estado registrada
-    const convocatoria = this.actionService.getDatosGeneralesConvocatoria();
-    if (convocatoria.estadoActual === TipoEstadoConvocatoria.REGISTRADA) {
-      return true;
-    }
+  private isDisableRegistrar(): void {
+    this.logger.debug(ConvocatoriaEditarComponent.name, 'isDisableRegistrar()', 'start');
+    this.subscriptions.push(
+      this.convocatoriaService.findById(this.actionService.convocatoriaId).subscribe(
+        (convocatoria) => {
+          // Se deshabilita el botón de registrar si la convocatoria está en estado registrada
+          if (convocatoria.estadoActual === TipoEstadoConvocatoria.REGISTRADA) {
+            this.disable = true;
+            this.logger.debug(ConvocatoriaEditarComponent.name, 'isDisableRegistrar()', 'end');
+            return;
+          }
 
-    // a parte de los campos obligatoris, deben estar
-    if (!convocatoria.modeloEjecucion || !convocatoria.finalidad || !convocatoria.ambitoGeografico) {
-      return true;
-    }
+          // a parte de los campos obligatoris, deben estar
+          if (!convocatoria.modeloEjecucion || !convocatoria.finalidad || !convocatoria.ambitoGeografico) {
+            this.disable = true;
+            this.logger.debug(ConvocatoriaEditarComponent.name, 'isDisableRegistrar()', 'end');
+            return;
+          }
 
-    // Se obtienen los datos de la pestaña configuración solicitud y se realiza la validación oportuna
-    // sobre los campos correspondientes para saber si se puede registrar o no la convocatoria
-    const configuracionSolicitudes = this.actionService.getConfiguracionSolicitudesConvocatoria();
-    if (configuracionSolicitudes) {
-      // Si el campo de habilitar presentación de solicitudes es afirmativo
-      // se comprueba que el campo de presentación de solicitudes esté relleno
-      if (configuracionSolicitudes.tramitacionSGI) {
-        return !Boolean(configuracionSolicitudes.fasePresentacionSolicitudes);
-      }
-      // El campo de tipo de baremación debe estar cumplimentado
-      // El campo de tipo de formulario debe estar cumplimentado
-      return !Boolean(configuracionSolicitudes.baremacionRef) || !Boolean(configuracionSolicitudes.formularioSolicitud);
-    }
-    return false;
+          // Se obtienen los datos de la pestaña configuración solicitud y se realiza la validación oportuna
+          // sobre los campos correspondientes para saber si se puede registrar o no la convocatoria
+          const configuracionSolicitudes = this.actionService.getConfiguracionSolicitudesConvocatoria();
+          if (configuracionSolicitudes) {
+            // Si el campo de habilitar presentación de solicitudes es afirmativo
+            // se comprueba que el campo de presentación de solicitudes esté relleno
+            if (configuracionSolicitudes.tramitacionSGI && !configuracionSolicitudes.fasePresentacionSolicitudes) {
+              this.disable = true;
+              this.logger.debug(ConvocatoriaEditarComponent.name, 'isDisableRegistrar()', 'end');
+              return;
+            }
+            // El campo de tipo de baremación debe estar cumplimentado
+            // El campo de tipo de formulario debe estar cumplimentado
+            this.disable = !Boolean(configuracionSolicitudes.baremacionRef) ||
+              !Boolean(configuracionSolicitudes.formularioSolicitud);
+            this.logger.debug(ConvocatoriaEditarComponent.name, 'isDisableRegistrar()', 'end');
+            return;
+          }
+          this.disable = false;
+          this.logger.debug(ConvocatoriaEditarComponent.name, 'isDisableRegistrar()', 'end');
+        },
+        () => {
+          this.disable = true;
+          this.logger.error(ConvocatoriaEditarComponent.name, 'isDisableRegistrar()', 'error');
+        }
+      )
+    );
   }
 
 }

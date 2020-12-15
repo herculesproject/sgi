@@ -5,8 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@env';
 import { IConvocatoria } from '@core/models/csp/convocatoria';
 import { IConvocatoriaPeriodoJustificacion } from '@core/models/csp/convocatoria-periodo-justificacion';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { IConvocatoriaAreaTematica } from '@core/models/csp/convocatoria-area-tematica';
 import { IConvocatoriaEntidadFinanciadora } from '@core/models/csp/convocatoria-entidad-financiadora';
 import { IConvocatoriaEnlace } from '@core/models/csp/convocatoria-enlace';
@@ -37,9 +37,9 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
   }
 
   findAllTodos(options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoria>> {
-    this.logger.debug(ConvocatoriaService.name, `${this.findAllTodos.name}(`, '-', 'START');
+    this.logger.debug(ConvocatoriaService.name, `findAllTodos()`, '-', 'START');
     return this.find<IConvocatoria, IConvocatoria>(`${this.endpointUrl}/todos`, options).pipe(
-      tap(() => this.logger.debug(ConvocatoriaService.name, `${this.findAllTodos.name}()`, '-', 'END'))
+      tap(() => this.logger.debug(ConvocatoriaService.name, `findAllTodos()`, '-', 'END'))
     );
   }
 
@@ -49,9 +49,9 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
    * @returns listado de convocatorias
    */
   findAllRestringidos(options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoria>> {
-    this.logger.debug(ConvocatoriaService.name, `${this.findAllRestringidos.name}(`, '-', 'START');
+    this.logger.debug(ConvocatoriaService.name, `findAllRestringidos()`, '-', 'START');
     return this.find<IConvocatoria, IConvocatoria>(`${this.endpointUrl}/restringidos`, options).pipe(
-      tap(() => this.logger.debug(ConvocatoriaService.name, `${this.findAllRestringidos.name}()`, '-', 'END'))
+      tap(() => this.logger.debug(ConvocatoriaService.name, `findAllRestringidos()`, '-', 'END'))
     );
   }
 
@@ -61,9 +61,9 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
    * @returns listado de convocatorias
    */
   findAllTodosRestringidos(options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoria>> {
-    this.logger.debug(ConvocatoriaService.name, `${this.findAllTodos.name}(`, '-', 'START');
+    this.logger.debug(ConvocatoriaService.name, `findAllTodosRestringidos()`, '-', 'START');
     return this.find<IConvocatoria, IConvocatoria>(`${this.endpointUrl}/todos/restringidos`, options).pipe(
-      tap(() => this.logger.debug(ConvocatoriaService.name, `${this.findAllTodos.name}()`, '-', 'END'))
+      tap(() => this.logger.debug(ConvocatoriaService.name, `findAllTodosRestringidos()`, '-', 'END'))
     );
   }
 
@@ -112,11 +112,11 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
 
   findEntidadesFinanciadoras(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaEntidadFinanciadora>> {
     this.logger.debug(ConvocatoriaService.name,
-      `${this.findEntidadesFinanciadoras.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+      `findEntidadesFinanciadoras(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
     return this.find<IConvocatoriaEntidadFinanciadora, IConvocatoriaEntidadFinanciadora>(
       `${this.endpointUrl}/${id}/convocatoriaentidadfinanciadoras`, options).pipe(
         tap(() => this.logger.debug(ConvocatoriaService.name,
-          `${this.findEntidadesFinanciadoras.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+          `findEntidadesFinanciadoras(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
       );
   }
 
@@ -151,23 +151,23 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
   findAllConvocatoriaEntidadConvocantes(id: number, options?: SgiRestFindOptions):
     Observable<SgiRestListResult<IConvocatoriaEntidadConvocante>> {
     this.logger.debug(ConvocatoriaService.name,
-      `${this.findAllConvocatoriaEntidadConvocantes.name}(${id}, ${options ? JSON.stringify(options) : options})`, '-', 'start');
+      `findAllConvocatoriaEntidadConvocantes(${id}, ${options ? JSON.stringify(options) : options})`, '-', 'start');
     const endpointUrl = `${this.endpointUrl}/${id}/convocatoriaentidadconvocantes`;
     return this.find<IConvocatoriaEntidadConvocanteBackend, IConvocatoriaEntidadConvocante>(endpointUrl, options,
       ConvocatoriaEntidadConvocanteService.CONVERTER)
       .pipe(
         tap(() => this.logger.debug(ConvocatoriaService.name,
-          `${this.findAllConvocatoriaEntidadConvocantes.name}(${id}, ${options ? JSON.stringify(options) : options})`, '-', 'end'))
+          `findAllConvocatoriaEntidadConvocantes(${id}, ${options ? JSON.stringify(options) : options})`, '-', 'end'))
       );
   }
 
   findAllConvocatoriaFases(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaFase>> {
     this.logger.debug(ConvocatoriaService.name,
-      `${this.findAllConvocatoriaFases.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
+      `findAllConvocatoriaFases(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'start');
     return this.find<IConvocatoriaFase, IConvocatoriaFase>(
       `${this.endpointUrl}/${id}/convocatoriafases`, options).pipe(
         tap(() => this.logger.debug(ConvocatoriaService.name,
-          `${this.findAllConvocatoriaFases.name}(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
+          `findAllConvocatoriaFases(${id}, ${options ? JSON.stringify(options) : options}`, '-', 'end'))
       );
   }
 
@@ -188,18 +188,18 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
    * @returns listado de modelos de áreas temáticas.
    */
   findAreaTematicas(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaAreaTematica>> {
-    this.logger.debug(ConvocatoriaService.name, `${this.findAreaTematicas.name}(id: ${id})`, '-', 'START');
+    this.logger.debug(ConvocatoriaService.name, `findAreaTematicas(id: ${id})`, '-', 'START');
     return this.find<IConvocatoriaAreaTematica, IConvocatoriaAreaTematica>(
       `${this.endpointUrl}/${id}/convocatoriaareatematicas`, options).pipe(
-        tap(() => this.logger.debug(ConvocatoriaService.name, `${this.findAreaTematicas.name}(id: ${id})`, '-', 'END'))
+        tap(() => this.logger.debug(ConvocatoriaService.name, `findAreaTematicasid: ${id})`, '-', 'END'))
       );
   }
 
   findDocumentos(id: number, options?: SgiRestFindOptions): Observable<SgiRestListResult<IConvocatoriaDocumento>> {
-    this.logger.debug(ConvocatoriaService.name, `${this.findDocumentos.name}(id: ${id})`, '-', 'START');
+    this.logger.debug(ConvocatoriaService.name, `findDocumentos(id: ${id})`, '-', 'START');
     return this.find<IConvocatoriaDocumento, IConvocatoriaDocumento>(
       `${this.endpointUrl}/${id}/convocatoriadocumentos`, options).pipe(
-        tap(() => this.logger.debug(ConvocatoriaService.name, `${this.findDocumentos.name}(id: ${id})`, '-', 'END'))
+        tap(() => this.logger.debug(ConvocatoriaService.name, `findDocumentos(id: ${id})`, '-', 'END'))
       );
   }
 
@@ -236,7 +236,7 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
    * @param options opciones de búsqueda.
    */
   reactivar(id: number): Observable<void> {
-    this.logger.debug(ConvocatoriaService.name, `${this.reactivar.name}(`, '-', 'start');
+    this.logger.debug(ConvocatoriaService.name, `${this.reactivar.name}()`, '-', 'start');
     return this.http.patch<void>(`${this.endpointUrl}/${id}/reactivar`, undefined).pipe(
       tap(() => this.logger.debug(ConvocatoriaService.name, `${this.reactivar.name}()`, '-', 'end'))
     );
@@ -247,7 +247,7 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
    * @param options opciones de búsqueda.
    */
   desactivar(id: number): Observable<void> {
-    this.logger.debug(ConvocatoriaService.name, `${this.desactivar.name}(`, '-', 'start');
+    this.logger.debug(ConvocatoriaService.name, `${this.desactivar.name}()`, '-', 'start');
     return this.http.patch<void>(`${this.endpointUrl}/${id}/desactivar`, undefined).pipe(
       tap(() => this.logger.debug(ConvocatoriaService.name, `${this.desactivar.name}()`, '-', 'end'))
     );
@@ -286,10 +286,52 @@ export class ConvocatoriaService extends SgiRestService<number, IConvocatoria> {
    * @param id identificador de la convocatoria a registrar
    */
   registrar(id: number): Observable<void> {
-    this.logger.debug(ConvocatoriaService.name, `${this.registrar.name}(`, '-', 'start');
+    this.logger.debug(ConvocatoriaService.name, `registrar()`, '-', 'start');
     return this.http.patch<void>(`${this.endpointUrl}/${id}/registrar`, undefined).pipe(
-      tap(() => this.logger.debug(ConvocatoriaService.name, `${this.registrar.name}()`, '-', 'end'))
+      tap(() => this.logger.debug(ConvocatoriaService.name, `registrar()`, '-', 'end'))
     );
   }
 
+  /**
+   * Comprueba si existe una convocatoria
+   *
+   * @param id Id de la convocatoria
+   */
+  exists(id: number): Observable<boolean> {
+    this.logger.debug(ConvocatoriaService.name, `exists(id: ${id})`, '-', 'start');
+    const url = `${this.endpointUrl}/${id}`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(x => x.status === 200),
+      tap(() => this.logger.debug(ConvocatoriaService.name, `exists(id: ${id})`, '-', 'end')),
+    );
+  }
+
+  /**
+   * Comprueba si tiene permisos de edición de la convocatoria
+   *
+   * @param id Id de la convocatoria
+   */
+  modificable(id: number): Observable<boolean> {
+    this.logger.debug(ConvocatoriaService.name, `modificable(id: ${id})`, '-', 'start');
+    const url = `${this.endpointUrl}/${id}/modificable`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(x => x.status === 200),
+      tap(() => this.logger.debug(ConvocatoriaService.name, `modificable(id: ${id})`, '-', 'end')),
+    );
+  }
+
+  /**
+   * Comprueba si una convocatoria tiene tipos de fase, tipos de hito, tipo de enlaces
+   * y tipos de documentos relacionados
+   *
+   * @param id Id de la convocatoria
+   */
+  vinculaciones(id: number): Observable<boolean> {
+    this.logger.debug(ConvocatoriaService.name, `vinculaciones(id: ${id})`, '-', 'start');
+    const url = `${this.endpointUrl}/${id}/vinculaciones`;
+    return this.http.head(url, { observe: 'response' }).pipe(
+      map(x => x.status === 200),
+      tap(() => this.logger.debug(ConvocatoriaService.name, `vinculaciones(id: ${id})`, '-', 'end')),
+    );
+  }
 }

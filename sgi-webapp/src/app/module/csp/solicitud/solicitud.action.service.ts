@@ -14,7 +14,6 @@ import { ConfiguracionSolicitudService } from '@core/services/csp/configuracion-
 import { SgiAuthService } from '@sgi/framework/auth';
 import { SolicitudHistoricoEstadosFragment } from './solicitud-formulario/solicitud-historico-estados/solicitud-historico-estados.fragment';
 import { SolicitudDocumentosFragment } from './solicitud-formulario/solicitud-documentos/solicitud-documentos.fragment';
-import { ConvocatoriaDocumentoService } from '@core/services/csp/convocatoria-documento.service';
 import { SolicitudDocumentoService } from '@core/services/csp/solicitud-documento.service';
 import { SolicitudHitosFragment } from './solicitud-formulario/solicitud-hitos/solicitud-hitos.fragment';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';

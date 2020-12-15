@@ -16,7 +16,7 @@ export class ConvocatoriaRequisitosEquipoFragment extends FormFragment<IConvocat
     private logger: NGXLogger,
     key: number,
     private convocatoriaRequisitoEquipoService: ConvocatoriaRequisitoEquipoService,
-    private readonly: boolean
+    public readonly: boolean
   ) {
     super(key, true);
     this.logger.debug(ConvocatoriaRequisitosEquipoFragment.name, 'constructor()', 'start');

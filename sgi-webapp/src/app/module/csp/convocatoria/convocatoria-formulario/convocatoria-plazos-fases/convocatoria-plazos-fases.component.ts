@@ -15,6 +15,9 @@ import { IConvocatoriaFase } from '@core/models/csp/convocatoria-fase';
 import { DialogService } from '@core/services/dialog.service';
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
 import { SnackBarService } from '@core/services/snack-bar.service';
+import { TipoEstadoConvocatoria } from '@core/enums/tipo-estado-convocatoria';
+import { SolicitudService } from '@core/services/csp/solicitud.service';
+import { SgiRestFilter, SgiRestFilterType, SgiRestFindOptions } from '@sgi/framework/http';
 
 const MSG_DELETE = marker('csp.convocatoria.fase.listado.borrar');
 const MSG_ERROR = marker('csp.convocatoria.fase.listado.borrar.error');
@@ -44,7 +47,8 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
     protected snackBarService: SnackBarService,
     private actionService: ConvocatoriaActionService,
     private matDialog: MatDialog,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private solicitudService: SolicitudService
   ) {
     super(actionService.FRAGMENT.PLAZOS_FASES, actionService);
     this.logger.debug(ConvocatoriaPlazosFasesComponent.name, 'constructor()', 'start');
@@ -62,7 +66,6 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
     this.disableAddFase = !Boolean(this.actionService.getDatosGeneralesConvocatoria().modeloEjecucion);
 
     this.actionService.initializeConfiguracionSolicitud();
-
     this.subscriptions.push(this.formPart.plazosFase$.subscribe(elements => {
       this.dataSource.data = elements;
       this.logger.debug(ConvocatoriaPlazosFasesComponent.name, 'ngOnInit()', 'end');
@@ -118,7 +121,7 @@ export class ConvocatoriaPlazosFasesComponent extends FragmentComponent implemen
     if (this.actionService.isDelete(wrapper.value)) {
       this.subscriptions.push(
         this.dialogService.showConfirmation(MSG_DELETE).subscribe(
-          (aceptado: boolean) => {
+          (aceptado) => {
             if (aceptado) {
               this.formPart.deleteFase(wrapper);
             }

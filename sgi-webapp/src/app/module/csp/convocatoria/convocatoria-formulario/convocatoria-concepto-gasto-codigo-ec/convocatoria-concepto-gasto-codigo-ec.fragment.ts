@@ -38,7 +38,7 @@ export class ConvocatoriaConceptoGastoCodigoEcFragment extends Fragment {
 
         convocatoriaConceptoGastoCodigoEc.map(conv => {
           conv.convocatoriaConceptoGasto = this.elegibilidadFragment.convocatoriaConceptoGastoPermitido$.value.filter(
-            permitidos => permitidos.value.conceptoGasto.id === conv.convocatoriaConceptoGasto.conceptoGasto.id)[0].value;
+            permitidos => permitidos.value.conceptoGasto.id === conv.convocatoriaConceptoGasto.conceptoGasto.id)[0]?.value;
         });
 
         this.convocatoriaConceptoGastoCodigoEcPermitido$.next(convocatoriaConceptoGastoCodigoEc.map(
@@ -52,7 +52,7 @@ export class ConvocatoriaConceptoGastoCodigoEcFragment extends Fragment {
 
         convocatoriaConceptoGastoCodigoEc.map(conv => {
           conv.convocatoriaConceptoGasto = this.elegibilidadFragment.convocatoriaConceptoGastoNoPermitido$.value.filter(
-            noPermitidos => noPermitidos.value.conceptoGasto.id === conv.convocatoriaConceptoGasto.conceptoGasto.id)[0].value;
+            noPermitidos => noPermitidos.value.conceptoGasto.id === conv.convocatoriaConceptoGasto.conceptoGasto.id)[0]?.value;
         });
 
         this.convocatoriaConceptoGastoCodigoEcNoPermitido$.next(convocatoriaConceptoGastoCodigoEc.map(
